@@ -18,6 +18,11 @@ var _res_slot := {} # id -> [multimesh, índice, transform]
 var _fx: Array[Dictionary] = [] # proyectiles, marcadores, muertes, polvo
 var _rally_flag: Node3D
 var _time := 0.0
+var fog_on := true
+var _fog_img: Image
+var _fog_tex: ImageTexture
+var _fog_t := 0.0
+var _fog_tick := -1
 
 
 func setup(s: Sim, local_player: int) -> void:
@@ -25,6 +30,11 @@ func setup(s: Sim, local_player: int) -> void:
 	local = local_player
 	_build_ground()
 	_build_resources()
+	var n := sim.map.n
+	_fog_img = Image.create_from_data(n, n, false, Image.FORMAT_R8, sim.fog.grids[local])
+	_fog_tex = ImageTexture.create_from_image(_fog_img)
+	ground_mat.set_shader_parameter("fog_tex", _fog_tex)
+	ground_mat.set_shader_parameter("fog_on", fog_on)
 	_rally_flag = _make_flag()
 	_rally_flag.visible = false
 	add_child(_rally_flag)
@@ -100,6 +110,7 @@ func _build_resources() -> void:
 func _make_mm(mesh: Mesh, list: Array) -> MultiMeshInstance3D:
 	var mm := MultiMesh.new()
 	mm.transform_format = MultiMesh.TRANSFORM_3D
+	mm.use_colors = true
 	mm.mesh = mesh
 	mm.instance_count = list.size()
 	for i in list.size():
@@ -109,7 +120,8 @@ func _make_mm(mesh: Mesh, list: Array) -> MultiMeshInstance3D:
 		var jitter := Vector3(float(hsh % 7 - 3) * 0.04, 0, float((hsh / 7) % 7 - 3) * 0.04)
 		var t := Transform3D(Basis(Vector3.UP, float(hsh % 628) / 100.0).scaled(Vector3(s, s * (0.9 + float(hsh % 23) / 100.0), s)), to_world(e.x, e.y) + jitter)
 		mm.set_instance_transform(i, t)
-		_res_slot[e.id] = [mm, i, t]
+		mm.set_instance_color(i, Color.WHITE)
+		_res_slot[e.id] = [mm, i, t, e.tx, e.ty, -1]
 	var mmi := MultiMeshInstance3D.new()
 	mmi.multimesh = mm
 	add_child(mmi)
@@ -240,6 +252,8 @@ func _on_hit(ev: Dictionary) -> void:
 	var a: SimEntity = sim.by_id.get(ev["a"])
 	var b: SimEntity = sim.by_id.get(ev["b"])
 	var va: Dictionary = visuals.get(ev["a"], {})
+	if a != null and b != null and fog_state(a) < 2 and fog_state(b) < 2:
+		return
 	if ev["ranged"] and a != null:
 		var from := to_world(a.x, a.y, 0.85 if a.is_unit() else 3.0)
 		var to := to_world(b.x, b.y, 0.45) if b != null else from
@@ -312,14 +326,53 @@ func render(alpha: float, delta: float) -> void:
 				_render_building(e, v, delta)
 			"rock":
 				var k := 0.45 + 0.55 * float(e.amount) / float(v["max"])
-				(v["node"] as Node3D).scale = Vector3(1, k, 1)
+				var rock: MeshInstance3D = v["node"]
+				rock.scale = Vector3(1, k, 1)
+				var fs := fog_state(e)
+				rock.visible = fs > 0
+				rock.material_overlay = Meshes.fog_overlay() if fs == 1 else null
 	_render_rally()
 	_render_fx(delta)
+	_render_fog(delta)
+
+
+## Estado de niebla del jugador local (2 = visible) para una entidad.
+func fog_state(e: SimEntity) -> int:
+	if not fog_on or e.owner == local:
+		return 2
+	if sim.fog.is_visible(local, e):
+		return 2
+	return 1 if sim.fog.is_explored(local, e) else 0
+
+
+func _render_fog(delta: float) -> void:
+	if not fog_on:
+		return
+	_fog_t -= delta
+	if _fog_t > 0.0 or _fog_tick == sim.tick:
+		return
+	_fog_t = 0.1
+	_fog_tick = sim.tick
+	_fog_img.set_data(sim.map.n, sim.map.n, false, Image.FORMAT_R8, sim.fog.grids[local])
+	_fog_tex.update(_fog_img)
+	# Árboles y arbustos: ocultos sin explorar, atenuados fuera de la vista.
+	for id in _res_slot:
+		var slot: Array = _res_slot[id]
+		var st := sim.fog.state(local, slot[3], slot[4])
+		if st == slot[5]:
+			continue
+		slot[5] = st
+		var mm: MultiMesh = slot[0]
+		if st == 0:
+			mm.set_instance_transform(slot[1], Transform3D(Basis().scaled(Vector3.ZERO), Vector3.ZERO))
+		else:
+			mm.set_instance_transform(slot[1], slot[2])
+			mm.set_instance_color(slot[1], Color.WHITE if st == 2 else Color(0.42, 0.44, 0.48))
 
 
 func _render_unit(e: SimEntity, v: Dictionary, alpha: float, delta: float) -> void:
 	var node: Node3D = v["node"]
-	node.visible = e.inside < 0
+	node.visible = e.inside < 0 and fog_state(e) == 2
 	if not node.visible:
 		v["prev"] = v["cur"]
 		return
@@ -365,6 +418,9 @@ func _render_unit(e: SimEntity, v: Dictionary, alpha: float, delta: float) -> vo
 func _render_building(e: SimEntity, v: Dictionary, delta: float) -> void:
 	var struct: MeshInstance3D = v["struct"]
 	var found: MeshInstance3D = v["found"]
+	var fs := fog_state(e)
+	(v["node"] as Node3D).visible = fs > 0
+	struct.material_overlay = Meshes.fog_overlay() if fs == 1 else null
 	if e.built:
 		found.visible = false
 		v["pop"] = maxf(0.0, float(v["pop"]) - delta * 2.5)

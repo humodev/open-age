@@ -26,5 +26,11 @@
     "costo": { "alimento": 60, "madera": 25, "riqueza": 10 }, "tiempo_ms": 16000,
     "pv": 140, "armadura": 3, "ataque": 8, "alcance": 650, "cadencia_ms": 1500,
     "velocidad": 1100, "vision": 7500, "radio": 280
+  },
+  "explorador": {
+    "nombre": "Explorador", "funcion": "explorador", "edad_min": 1, "pob": 1,
+    "costo": { "alimento": 80 }, "tiempo_ms": 20000,
+    "pv": 70, "armadura": 0, "ataque": 2, "alcance": 400, "cadencia_ms": 1500,
+    "velocidad": 2100, "vision": 11000, "radio": 220
   }
 }

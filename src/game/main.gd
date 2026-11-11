@@ -10,6 +10,7 @@ extends Node3D
 ##   --cam=x,z,zoom     posición de cámara para la captura
 ##   --select=tipo      selecciona entidades de ese tipo del jugador local antes de la captura
 ##   --demo=base|batalla  escena armada para revisar modelos y combate
+##   --nofog            sin niebla de guerra (automático en --aivai)
 ##   --autotest         prueba de punta a punta con eventos reales de mouse y teclado
 
 const MAX_STEPS_PER_FRAME := 8
@@ -102,6 +103,7 @@ func _new_game() -> void:
 
 	view = WorldView.new()
 	view.name = "World"
+	view.fog_on = not (aivai or _args.has("nofog") or _args.get("demo", "") == "batalla")
 	add_child(view)
 	view.setup(sim, local)
 
@@ -368,7 +370,11 @@ func _autotest() -> void:
 	check.call("Ctrl+1 asigna el grupo", ctrl.groups.has(1))
 
 	speed = 4.0
-	await get_tree().create_timer(10.0).timeout
+	# Espera hasta que entre el primer alimento (máximo 20 s reales).
+	for i in 40:
+		if sim.players[local]["stats"]["recolectado"] > 0:
+			break
+		await get_tree().create_timer(0.5).timeout
 	var house_progress := 0
 	for e in sim.actives:
 		if e.owner == local and e.type == "casa":

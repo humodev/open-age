@@ -61,6 +61,9 @@ var rally_y: int
 var rally_target: int = -1
 var farmer: int = -1
 var garrison: Array[int] = [] # unidades alojadas
+var capital := false # el centro inicial cuenta como hito (docs/05, "Victoria")
+var workers_prev: int = 0 # constructores del tick anterior
+var workers_now: int = 0
 
 # --- Recursos ---
 var res_kind: String = ""
@@ -80,4 +83,4 @@ func is_resource() -> bool:
 
 
 func is_military() -> bool:
-	return cat == Cat.UNIT and fn != "civil"
+	return cat == Cat.UNIT and fn != "civil" and fn != "explorador"

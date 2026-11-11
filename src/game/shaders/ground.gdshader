@@ -13,6 +13,9 @@ uniform vec4 bases = vec4(-100.0);
 varying vec3 wpos;
 
 uniform sampler2D noise_tex : filter_linear_mipmap, repeat_enable;
+// Niebla: 0 sin explorar, 1 explorado, 2 visible (bytes crudos de SimFog).
+uniform sampler2D fog_tex : filter_linear;
+uniform bool fog_on = false;
 
 float fbm(vec2 p) {
 	return texture(noise_tex, p).r;
@@ -41,6 +44,11 @@ void fragment() {
 	// Fuera del mapa.
 	float inside = step(0.0, p.x) * step(0.0, p.y) * step(p.x, map_size) * step(p.y, map_size);
 	col = mix(col * 0.28, col, inside);
+	if (fog_on) {
+		float f = texture(fog_tex, p / map_size).r * 255.0 / 2.0;
+		float light = f < 0.5 ? mix(0.04, 0.42, f * 2.0) : mix(0.42, 1.0, (f - 0.5) * 2.0);
+		col *= light;
+	}
 	ALBEDO = col;
 	ROUGHNESS = 0.97;
 }

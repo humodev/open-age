@@ -40,7 +40,7 @@ Se pagan al encolar. Cancelar devuelve el costo completo. Construir descuenta al
 
 - Los edificios ocupan un rectángulo de casillas (`tam`). No se pueden superponer a otros edificios ni a recursos, ni salir del mapa.
 - Al colocarse aparece un **cimiento**. Los aldeanos asignados suman progreso; el edificio gana vida en proporción.
-- Varios constructores suman progreso de forma lineal en H1. Rendimientos decrecientes: ver A-008.
+- Rendimientos decrecientes (P-006, como AoE4): con *n* constructores la obra tarda `tiempo × 3/(n+2)`. Se desactiva con `reglas.json` → `construccion_decreciente`.
 - Los edificios con `deposito` aceptan esos recursos. Los que tienen `produce` entrenan unidades por cola.
 
 ## Reparación
@@ -129,7 +129,7 @@ Condiciones comunes (`01`, capa común), configurables por partida:
 
 | Condición | Regla | Estado |
 |---|---|---|
-| **Hitos** | Pierde quien se queda sin centros e hitos terminados | H1 |
+| **Hitos** | Pierde quien se queda sin su centro inicial (capital) ni hitos de edad terminados. Los centros extra no cuentan | H1 |
 | **Rendición** | El jugador abandona | H1 |
 | **Maravilla** | Construir y defender una maravilla durante un tiempo | H2 |
 | **Sitios sagrados** | Controlar todos los sitios sagrados durante un tiempo | H2 |
@@ -151,7 +151,7 @@ En el prototipo gris todas las facciones usan las mismas unidades genéricas, un
 
 | Clave | Función |
 |---|---|
-| `centro` | Produce aldeanos, depósito universal, población, dispara |
+| `centro` | Produce aldeanos y exploradores, depósito universal, población, guarnición y andanadas. El inicial es la capital y cuenta como hito |
 | `casa` | Población |
 | `deposito` | Depósito de los cuatro recursos |
 | `granja` | Alimento infinito, transitable |

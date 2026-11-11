@@ -23,6 +23,7 @@ const DESCS := {
 	"calma": "Los aldeanos salen y vuelven a su trabajo.",
 	"expulsar": "Saca a todas las unidades alojadas.",
 	"aldeano": "Recolecta, construye y repara la economía.",
+	"explorador": "Rápido y de visión amplia. Descubre el mapa; pelea mal.",
 	"guerrero": "Choque: rápido, vence a la distancia; pierde contra la línea.",
 	"hondero": "Distancia: frágil, vence a la línea; pierde contra el choque.",
 	"lancero": "Línea: lento y resistente, vence al choque; pierde contra la distancia.",
@@ -83,7 +84,7 @@ func _prune() -> void:
 	var keep: Array[int] = []
 	for id in selection:
 		var e: SimEntity = sim.by_id.get(id)
-		if e != null and e.alive and e.inside < 0:
+		if e != null and e.alive and e.inside < 0 and (not e.is_unit() or view.fog_state(e) == 2):
 			keep.append(id)
 	if keep.size() != selection.size():
 		_set_selection(keep)
@@ -121,7 +122,7 @@ func pick(screen: Vector2) -> int:
 		if not e.is_unit() or e.inside >= 0:
 			continue
 		var v: Dictionary = view.visuals.get(e.id, {})
-		if v.is_empty():
+		if v.is_empty() or view.fog_state(e) < 2:
 			continue
 		var wp: Vector3 = (v["node"] as Node3D).position + Vector3(0, 0.45, 0)
 		if cam.cam.is_position_behind(wp):
@@ -134,7 +135,7 @@ func pick(screen: Vector2) -> int:
 		return best
 	var g := cam.ground_at(screen)
 	var occ := sim.map.occupant(int(floor(g.x)), int(floor(g.z)))
-	if occ >= 0 and sim.by_id.has(occ):
+	if occ >= 0 and sim.by_id.has(occ) and view.fog_state(sim.by_id[occ]) > 0:
 		return occ
 	return -1
 

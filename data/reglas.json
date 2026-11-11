@@ -10,6 +10,9 @@
   "danio_minimo": 1,
   "recursos_iniciales": { "alimento": 200, "madera": 200, "piedra": 100, "riqueza": 100 },
   "aldeanos_iniciales": 6,
+  "exploradores_iniciales": 1,
+  "niebla_cada_ticks": 5,
+  "construccion_decreciente": true,
   "contadores": {
     "choque":    { "distancia": 200, "linea": 60,  "edificio": 45 },
     "distancia": { "linea": 175,     "choque": 70, "edificio": 20 },

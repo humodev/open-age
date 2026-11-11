@@ -37,7 +37,7 @@ func think() -> void:
 				continue
 			if e.fn == "civil":
 				vill.append(e)
-			else:
+			elif e.is_military():
 				army.append(e)
 		elif e.is_building():
 			if not by_type.has(e.type):
@@ -386,7 +386,7 @@ func _attack(army: Array[SimEntity]) -> void:
 	var best_d := 1 << 60
 	var ref := army[0]
 	for e in sim.actives:
-		if e.alive and e.is_building() and e.owner >= 0 and e.owner != player and e.def.get("hito", false):
+		if e.alive and e.is_building() and e.owner >= 0 and e.owner != player and (e.def.get("hito", false) or e.capital):
 			var d := sim.dist_to(ref, e)
 			if d < best_d:
 				target = e

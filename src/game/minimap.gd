@@ -11,6 +11,9 @@ var _tex: ImageTexture
 var _refresh := 0.0
 var _pings: Array[Dictionary] = []
 var _drag := false
+var _fog_img: Image
+var _fog_mini: ImageTexture
+var _fog_t := 0.0
 
 
 func setup(s: Sim, c: RtsCamera, controller: Controller, local_player: int) -> void:
@@ -22,7 +25,20 @@ func setup(s: Sim, c: RtsCamera, controller: Controller, local_player: int) -> v
 	var n := sim.map.n
 	_img = Image.create(n, n, false, Image.FORMAT_RGBA8)
 	_tex = ImageTexture.create_from_image(_img)
+	_fog_img = Image.create(n, n, false, Image.FORMAT_LA8)
+	_fog_mini = ImageTexture.create_from_image(_fog_img)
 	_rebuild()
+
+
+func _rebuild_fog() -> void:
+	var g: PackedByteArray = sim.fog.grids[local]
+	var la := PackedByteArray()
+	la.resize(g.size() * 2)
+	var alpha := [235, 120, 0]
+	for i in g.size():
+		la[i * 2 + 1] = alpha[g[i]]
+	_fog_img.set_data(sim.map.n, sim.map.n, false, Image.FORMAT_LA8, la)
+	_fog_mini.update(_fog_img)
 
 
 func _rebuild() -> void:
@@ -70,6 +86,10 @@ func _process(delta: float) -> void:
 	if _refresh <= 0.0:
 		_refresh = 2.0
 		_rebuild()
+	_fog_t -= delta
+	if _fog_t <= 0.0 and ctrl.view != null and ctrl.view.fog_on:
+		_fog_t = 0.5
+		_rebuild_fog()
 	for p in _pings:
 		p["t"] += delta
 	_pings = _pings.filter(func(p: Dictionary) -> bool: return p["t"] < 3.0)
@@ -82,12 +102,16 @@ func _draw() -> void:
 	var n := float(sim.map.n)
 	draw_set_transform_matrix(xf)
 	draw_texture_rect(_tex, Rect2(0, 0, n, n), false)
+	if ctrl.view.fog_on:
+		draw_texture_rect(_fog_mini, Rect2(0, 0, n, n), false)
 	for e in sim.actives:
+		if ctrl.view.fog_state(e) == 0 or (e.is_unit() and ctrl.view.fog_state(e) < 2) or e.inside >= 0:
+			continue
 		var col := Palette.team(e.owner)
 		if e.is_building():
 			draw_rect(Rect2(e.tx, e.ty, e.w, e.h), col if e.built else Color(col, 0.55))
 	for e in sim.actives:
-		if e.is_unit():
+		if e.is_unit() and e.inside < 0 and ctrl.view.fog_state(e) == 2:
 			draw_rect(Rect2(e.x / 1000.0 - 0.9, e.y / 1000.0 - 0.9, 1.8, 1.8), Palette.team(e.owner).lightened(0.15))
 	draw_set_transform_matrix(Transform2D.IDENTITY)
 	# Borde del mapa.

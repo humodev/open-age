@@ -560,7 +560,7 @@ class SelectionPanel:
 				draw_string(Hud.font, Vector2(sx, 92), s[0], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Palette.UI_DIM)
 				draw_string(Hud.font_b, Vector2(sx, 112), s[1], HORIZONTAL_ALIGNMENT_LEFT, -1, 17, Palette.UI_TEXT)
 				sx += 92
-			var fn_names := {"civil": "Civil", "choque": "Choque", "distancia": "Distancia", "linea": "Línea"}
+			var fn_names := {"civil": "Civil", "choque": "Choque", "distancia": "Distancia", "linea": "Línea", "explorador": "Exploración", "asedio": "Asedio"}
 			draw_string(Hud.font_b, Vector2(0, 36), fn_names.get(e.fn, ""), HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, 14, Palette.UI_ACCENT)
 			var status := _status(e)
 			draw_string(Hud.font, Vector2(x, 146), status, HORIZONTAL_ALIGNMENT_LEFT, size.x - x - 16, 14, Palette.UI_TEXT)

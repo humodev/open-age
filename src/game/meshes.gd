@@ -14,6 +14,7 @@ static func mat(c: Color, rough: float = 0.88, emission: float = 0.0) -> Standar
 	var m := StandardMaterial3D.new()
 	m.albedo_color = c
 	m.roughness = rough
+	m.vertex_color_use_as_albedo = true # permite oscurecer instancias en la niebla
 	m.metallic_specular = 0.25
 	if emission > 0.0:
 		m.emission_enabled = true
@@ -123,6 +124,14 @@ static func unit_mesh(type: String, team: Color) -> ArrayMesh:
 			p.append([cyl(0.018, 0.018, 0.42, 6), xf(Vector3(0.12, 0.66, 0.2), Vector3(70, 0, 0)), Palette.WOOD_BEAM]) # brazo extendido
 			p.append([sphere(0.05, 6), xf(Vector3(0.12, 0.74, 0.4)), Palette.STONE_DARK])
 			p.append([box(0.22, 0.12, 0.08), xf(Vector3(-0.1, 0.42, -0.14)), shade]) # bolsa
+		"explorador":
+			# Corredor: cuerpo delgado inclinado hacia adelante, vincha de equipo, bastón y morral.
+			p.append([capsule(0.14, 0.62), xf(Vector3(0, 0.34, 0.03), Vector3(12, 0, 0)), clay])
+			p.append([sphere(0.11), xf(Vector3(0, 0.74, 0.1)), clay])
+			p.append([cyl(0.115, 0.115, 0.05), xf(Vector3(0, 0.78, 0.1)), team])
+			p.append([box(0.05, 0.05, 0.22), xf(Vector3(0, 0.78, -0.08)), team]) # cintas
+			p.append([cyl(0.015, 0.015, 1.05, 6), xf(Vector3(0.16, 0.5, 0.12), Vector3(18, 0, 0)), Palette.WOOD_BEAM])
+			p.append([box(0.18, 0.2, 0.1), xf(Vector3(-0.02, 0.48, -0.15)), shade])
 		"lancero":
 			p.append([capsule(0.2, 0.7), xf(Vector3(0, 0.37, 0)), clay])
 			p.append([sphere(0.125), xf(Vector3(0, 0.84, 0)), clay])
@@ -343,3 +352,16 @@ static func ring_material(color: Color) -> ShaderMaterial:
 	m.shader = preload("res://src/game/shaders/ring.gdshader")
 	m.set_shader_parameter("color", color)
 	return m
+
+
+static var _fog_overlay: StandardMaterial3D
+
+
+## Capa oscura para lo explorado que no se ve ahora.
+static func fog_overlay() -> StandardMaterial3D:
+	if _fog_overlay == null:
+		_fog_overlay = StandardMaterial3D.new()
+		_fog_overlay.albedo_color = Color(0.02, 0.03, 0.05, 0.55)
+		_fog_overlay.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		_fog_overlay.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	return _fog_overlay

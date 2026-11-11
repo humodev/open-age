@@ -31,7 +31,7 @@ func _draw() -> void:
 		if not (sel or hov or damaged or (e.is_building() and not e.built)):
 			continue
 		var v: Dictionary = view.visuals.get(e.id, {})
-		if v.is_empty():
+		if v.is_empty() or e.inside >= 0 or view.fog_state(e) < 2:
 			continue
 		var wp: Vector3 = (v["node"] as Node3D).position
 		wp.y += 1.2 if e.is_unit() else HEIGHTS.get(e.type, 2.0)

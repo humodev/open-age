@@ -43,4 +43,5 @@ Decisiones técnicas que el prototipo de H1 ya usa de forma provisional. Esperan
 | P-002 | 2026-11-10 | Tick de simulación de 100 ms (10 por segundo) con interpolación visual | Margen de rendimiento en GDScript con 200 unidades | Pendiente |
 | P-003 | 2026-11-10 | Datos de balance en JSON en `data/`, con unidades enteras (milésimas de casilla, milisegundos) | Legible por agentes y diffs; entero evita errores de redondeo | Pendiente |
 | P-004 | 2026-11-10 | Estética de maqueta para H1–H2 (`07`) | Cumple "nada de arte antes de H3" y aun así se lee y se ve cuidado | Pendiente |
+| P-006 | 2026-11-11 | Rendimiento decreciente de construcción: tiempo × 3/(n+2) con n constructores (resuelve A-008) | Igual que AoE4; evita que amontonar aldeanos haga gratis el avance rápido | Pendiente |
 | P-005 | 2026-11-10 | La IA corre dentro de la simulación y emite comandos como un jugador (`08`) | Partidas IA contra IA reproducibles como prueba | Pendiente |

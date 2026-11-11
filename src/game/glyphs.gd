@@ -27,6 +27,10 @@ static func draw(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
 			ci.draw_colored_polygon(_round_top(c + Vector2(0, s * 0.22), s * 0.3, s * 0.3), col)
 		"aldeano":
 			_figure(ci, c, s, col, 0.9)
+		"explorador":
+			_figure(ci, c + Vector2(-s * 0.08, 0), s, col, 0.85)
+			ci.draw_line(c + Vector2(s * 0.12, -s * 0.05), c + Vector2(s * 0.42, -s * 0.05), col, w)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(s * 0.46, -s * 0.05), c + Vector2(s * 0.34, -s * 0.16), c + Vector2(s * 0.34, s * 0.06)]), col)
 		"guerrero":
 			_figure(ci, c + Vector2(-s * 0.06, 0), s, col, 1.1)
 			ci.draw_line(c + Vector2(s * 0.12, s * 0.2), c + Vector2(s * 0.3, -s * 0.18), col, w * 1.2)

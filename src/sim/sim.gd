@@ -12,6 +12,7 @@ var data: SimData
 var tick: int = 0
 var tick_ms: int
 var map: SimMap
+var fog: SimFog
 var rng: SimRng
 var entities: Array[SimEntity] = [] # todas, en orden de id
 var actives: Array[SimEntity] = [] # unidades y edificios, en orden de id
@@ -38,6 +39,7 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null)
 	tick_ms = data.reglas["tick_ms"]
 	rng = SimRng.new(seed_value)
 	map = SimMap.new(data.reglas["mapa_tam"])
+	fog = SimFog.new(data.reglas["mapa_tam"], num_players)
 	for i in num_players:
 		players.append({
 			"id": i,
@@ -55,6 +57,8 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null)
 		})
 	_generate_map()
 	_update_players()
+	for pid in players.size():
+		_update_fog(pid)
 
 
 # ---------------------------------------------------------------- Comandos
@@ -473,6 +477,10 @@ func step() -> void:
 			ai.think()
 	_rebuild_hashes()
 	_update_players()
+	for b in actives:
+		if b.is_building() and not b.built:
+			b.workers_prev = b.workers_now
+			b.workers_now = 0
 	var count := actives.size()
 	for i in count:
 		var e := actives[i]
@@ -484,6 +492,10 @@ func step() -> void:
 		elif e.is_building():
 			_update_building(e)
 	_separate()
+	var every: int = data.reglas["niebla_cada_ticks"]
+	for pid in players.size():
+		if (tick + pid) % every == 0:
+			_update_fog(pid)
 	if _dirty:
 		_cleanup()
 	if tick % 10 == 5 and not game_over:
@@ -529,6 +541,14 @@ func _rebuild_hashes() -> void:
 					if not _ehash.has(ek):
 						_ehash[ek] = []
 					_ehash[ek].append(e)
+
+
+func _update_fog(pid: int) -> void:
+	var sources: Array = []
+	for e in actives:
+		if e.alive and e.owner == pid and e.inside < 0:
+			sources.append(e)
+	fog.update(pid, sources)
 
 
 # ---------------------------------------------------------------- Unidades
@@ -733,8 +753,14 @@ func _do_build(e: SimEntity) -> void:
 		_complete(b)
 		return
 	# La vida sube en proporción exacta al progreso; el daño recibido se conserva.
+	# Rendimiento decreciente (P-006): con n constructores la obra tarda tiempo × 3/(n+2).
+	b.workers_now += 1
+	var step_ms := tick_ms
+	if data.reglas["construccion_decreciente"]:
+		var nb := maxi(1, b.workers_prev)
+		step_ms = tick_ms * (nb + 2) / (3 * nb)
 	var before := (b.hp_max - 1) * b.progress / b.build_time
-	b.progress = mini(b.build_time, b.progress + tick_ms)
+	b.progress = mini(b.build_time, b.progress + step_ms)
 	var after := (b.hp_max - 1) * b.progress / b.build_time
 	b.hp = mini(b.hp_max, b.hp + after - before)
 	if b.progress >= b.build_time:
@@ -1246,7 +1272,7 @@ func _check_victory() -> void:
 	has_hito.resize(players.size())
 	has_hito.fill(false)
 	for b in actives:
-		if b.alive and b.is_building() and b.owner >= 0 and b.built and b.def.get("hito", false):
+		if b.alive and b.is_building() and b.owner >= 0 and b.built and (b.def.get("hito", false) or b.capital):
 			has_hito[b.owner] = true
 	for p in players:
 		if not p["defeated"] and not has_hito[p["id"]]:
@@ -1347,12 +1373,16 @@ func _generate_map() -> void:
 	bases = [b0, Vector2i(n - 4 - b0.x, n - 4 - b0.y)]
 	for pid in players.size():
 		var base := bases[pid % 2]
-		spawn_building("centro", pid, base.x, base.y, true)
+		spawn_building("centro", pid, base.x, base.y, true).capital = true
 		var count: int = data.reglas["aldeanos_iniciales"]
 		for i in count:
 			var ux := (base.x + i % 3 + (5 if pid == 0 else -2)) * P + P / 2
 			var uy := (base.y + i / 3 + (1 if pid == 0 else 1)) * P + P / 2
 			spawn_unit("aldeano", pid, ux, uy)
+		for i in int(data.reglas["exploradores_iniciales"]):
+			var sx := (base.x + (5 if pid == 0 else -2)) * P + P / 2
+			var sy := (base.y + 4 + i) * P + P / 2
+			spawn_unit("explorador", pid, sx, sy)
 
 	var c0 := Vector2i(b0.x + 2, b0.y + 2) # centro de la base 0
 	var dirs: Array[Vector2i] = [Vector2i(1, 0), Vector2i(1, 1), Vector2i(0, 1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1), Vector2i(0, -1), Vector2i(1, -1)]
