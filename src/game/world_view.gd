@@ -319,6 +319,10 @@ func render(alpha: float, delta: float) -> void:
 
 func _render_unit(e: SimEntity, v: Dictionary, alpha: float, delta: float) -> void:
 	var node: Node3D = v["node"]
+	node.visible = e.inside < 0
+	if not node.visible:
+		v["prev"] = v["cur"]
+		return
 	var body: MeshInstance3D = v["body"]
 	var prev: Vector3 = v["prev"]
 	var cur: Vector3 = v["cur"]

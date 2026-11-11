@@ -3,7 +3,7 @@ extends RefCounted
 ## Una entidad de la simulación. Las capacidades salen de `def` (datos), no de subclases.
 
 enum Cat { UNIT, BUILDING, RESOURCE }
-enum Order { IDLE, MOVE, ATTACK_MOVE, ATTACK, GATHER, RETURN, BUILD }
+enum Order { IDLE, MOVE, ATTACK_MOVE, ATTACK, GATHER, RETURN, BUILD, GARRISON }
 
 var id: int
 var owner: int = -1 # -1 = naturaleza
@@ -47,6 +47,7 @@ var carry_res: String = ""
 var carry: int = 0
 var anchored := false # trabajando quieto: la separación lo empuja menos
 var stuck: int = 0
+var inside: int = -1 # id del edificio que la aloja
 
 # --- Edificios ---
 var built := true
@@ -59,6 +60,7 @@ var rally_x: int
 var rally_y: int
 var rally_target: int = -1
 var farmer: int = -1
+var garrison: Array[int] = [] # unidades alojadas
 
 # --- Recursos ---
 var res_kind: String = ""

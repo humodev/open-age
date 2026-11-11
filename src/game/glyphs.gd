@@ -72,6 +72,43 @@ static func draw(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
 			for i in 4:
 				var ww := s * (0.8 - i * 0.18)
 				ci.draw_rect(Rect2(Vector2(c.x - ww / 2, c.y + s * 0.26 - i * s * 0.17), Vector2(ww, s * 0.15)), col.darkened(0.08 * (3 - i)))
+		"hito_economia":
+			draw(ci, "hito", r, col)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(0, -s * 0.46), c + Vector2(s * 0.12, -s * 0.32), c + Vector2(0, -s * 0.18), c + Vector2(-s * 0.12, -s * 0.32)]), Palette.RES["riqueza"])
+		"hito_guerra":
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.38, -s * 0.05), Vector2(s * 0.76, s * 0.4)), col)
+			for i in 4:
+				ci.draw_rect(Rect2(c + Vector2(-s * 0.38 + i * s * 0.22, -s * 0.16), Vector2(s * 0.12, s * 0.12)), col)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.12, -s * 0.42), Vector2(s * 0.24, s * 0.4)), col.darkened(0.2))
+			ci.draw_line(c + Vector2(-s * 0.2, s * 0.25), c + Vector2(s * 0.2, s * 0.02), Palette.UI_BAD, w)
+			ci.draw_line(c + Vector2(-s * 0.2, s * 0.02), c + Vector2(s * 0.2, s * 0.25), Palette.UI_BAD, w)
+		"carga":
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.32, -s * 0.1), c + Vector2(s * 0.32, -s * 0.1), c + Vector2(s * 0.24, s * 0.34), c + Vector2(-s * 0.24, s * 0.34)]), col)
+			ci.draw_arc(c + Vector2(0, -s * 0.1), s * 0.22, PI, TAU, 10, col, w)
+			for i in 3:
+				ci.draw_line(c + Vector2(-s * 0.22 + i * s * 0.22, -s * 0.02), c + Vector2(-s * 0.18 + i * s * 0.18, s * 0.3), col.darkened(0.35), w * 0.6)
+		"escudo":
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.3, -s * 0.36), c + Vector2(s * 0.3, -s * 0.36), c + Vector2(s * 0.3, 0), c + Vector2(0, s * 0.4), c + Vector2(-s * 0.3, 0)]), col)
+			ci.draw_line(c + Vector2(0, -s * 0.3), c + Vector2(0, s * 0.3), col.darkened(0.35), w)
+		"vida":
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.1, -s * 0.34), Vector2(s * 0.2, s * 0.68)), col)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.34, -s * 0.1), Vector2(s * 0.68, s * 0.2)), col)
+		"velocidad":
+			for i in 2:
+				var o := Vector2(-s * 0.18 + i * s * 0.26, 0)
+				ci.draw_colored_polygon(PackedVector2Array([c + o + Vector2(-s * 0.14, -s * 0.3), c + o + Vector2(s * 0.14, 0), c + o + Vector2(-s * 0.14, s * 0.3)]), col)
+		"campana":
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.32, s * 0.22), c + Vector2(-s * 0.2, -s * 0.2), c + Vector2(0, -s * 0.34), c + Vector2(s * 0.2, -s * 0.2), c + Vector2(s * 0.32, s * 0.22)]), col)
+			ci.draw_circle(c + Vector2(0, s * 0.32), s * 0.08, col)
+		"calma":
+			draw(ci, "campana", r, Color(col, 0.5))
+			ci.draw_line(c + Vector2(-s * 0.38, -s * 0.38), c + Vector2(s * 0.38, s * 0.38), Palette.UI_GOOD, w * 1.2)
+		"refugio":
+			draw(ci, "casa", r, col)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.1, s * 0.3), c + Vector2(-s * 0.1, s * 0.1), c + Vector2(-s * 0.2, s * 0.1), c + Vector2(0, -s * 0.06), c + Vector2(s * 0.2, s * 0.1), c + Vector2(s * 0.1, s * 0.1), c + Vector2(s * 0.1, s * 0.3)]), Palette.UI_GOOD)
+		"expulsar":
+			draw(ci, "casa", r, col)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.1, -s * 0.06), c + Vector2(-s * 0.1, s * 0.14), c + Vector2(-s * 0.2, s * 0.14), c + Vector2(0, s * 0.34), c + Vector2(s * 0.2, s * 0.14), c + Vector2(s * 0.1, s * 0.14), c + Vector2(s * 0.1, -s * 0.06)]), Palette.UI_ACCENT)
 		"detener":
 			ci.draw_rect(Rect2(c - Vector2(s * 0.24, s * 0.24), Vector2(s * 0.48, s * 0.48)), col)
 		"atacar":

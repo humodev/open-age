@@ -1,0 +1,365 @@
+{
+  "_doc": "Investigaciones de la capa común (docs/05, 'Investigaciones'). ranura = posición en la grilla de comandos (0..11). efectos: ver docs/05.",
+  "hachas": {
+    "nombre": "Herramientas de tala",
+    "edificio": "deposito",
+    "ranura": 0,
+    "edad_min": 1,
+    "costo": {
+      "alimento": 50,
+      "madera": 75
+    },
+    "tiempo_ms": 25000,
+    "icono": "madera",
+    "efectos": [
+      {
+        "tipo": "tasa",
+        "recurso": "madera",
+        "pct": 15
+      }
+    ]
+  },
+  "hachas_2": {
+    "nombre": "Tala organizada",
+    "edificio": "deposito",
+    "ranura": 0,
+    "edad_min": 3,
+    "requiere": "hachas",
+    "costo": {
+      "alimento": 200,
+      "madera": 150
+    },
+    "tiempo_ms": 40000,
+    "icono": "madera",
+    "efectos": [
+      {
+        "tipo": "tasa",
+        "recurso": "madera",
+        "pct": 15
+      }
+    ]
+  },
+  "canteria": {
+    "nombre": "Cantería",
+    "edificio": "deposito",
+    "ranura": 1,
+    "edad_min": 2,
+    "costo": {
+      "alimento": 100,
+      "madera": 100
+    },
+    "tiempo_ms": 30000,
+    "icono": "piedra",
+    "efectos": [
+      {
+        "tipo": "tasa",
+        "recurso": "piedra",
+        "pct": 20
+      }
+    ]
+  },
+  "orfebreria": {
+    "nombre": "Trabajo de la riqueza",
+    "edificio": "deposito",
+    "ranura": 2,
+    "edad_min": 2,
+    "costo": {
+      "alimento": 100,
+      "madera": 100
+    },
+    "tiempo_ms": 30000,
+    "icono": "riqueza",
+    "efectos": [
+      {
+        "tipo": "tasa",
+        "recurso": "riqueza",
+        "pct": 20
+      }
+    ]
+  },
+  "cestas": {
+    "nombre": "Cestas de carga",
+    "edificio": "centro",
+    "ranura": 1,
+    "edad_min": 1,
+    "costo": {
+      "alimento": 75,
+      "madera": 50
+    },
+    "tiempo_ms": 25000,
+    "icono": "carga",
+    "efectos": [
+      {
+        "tipo": "carga",
+        "n": 3
+      }
+    ]
+  },
+  "riego": {
+    "nombre": "Riego",
+    "edificio": "centro",
+    "ranura": 2,
+    "edad_min": 2,
+    "costo": {
+      "alimento": 75,
+      "madera": 150
+    },
+    "tiempo_ms": 35000,
+    "icono": "granja",
+    "efectos": [
+      {
+        "tipo": "tasa",
+        "recurso": "granja",
+        "pct": 20
+      }
+    ]
+  },
+  "riego_2": {
+    "nombre": "Terrazas de cultivo",
+    "edificio": "centro",
+    "ranura": 2,
+    "edad_min": 3,
+    "requiere": "riego",
+    "costo": {
+      "alimento": 200,
+      "madera": 250
+    },
+    "tiempo_ms": 45000,
+    "icono": "granja",
+    "efectos": [
+      {
+        "tipo": "tasa",
+        "recurso": "granja",
+        "pct": 20
+      }
+    ]
+  },
+  "mamposteria": {
+    "nombre": "Mampostería",
+    "edificio": "centro",
+    "ranura": 3,
+    "edad_min": 2,
+    "costo": {
+      "madera": 100,
+      "piedra": 100
+    },
+    "tiempo_ms": 35000,
+    "icono": "casa",
+    "efectos": [
+      {
+        "tipo": "edificio_vida_pct",
+        "pct": 25
+      }
+    ]
+  },
+  "vigias": {
+    "nombre": "Vigías",
+    "edificio": "centro",
+    "ranura": 4,
+    "edad_min": 2,
+    "costo": {
+      "madera": 75,
+      "riqueza": 75
+    },
+    "tiempo_ms": 30000,
+    "icono": "torre",
+    "efectos": [
+      {
+        "tipo": "edificio_ataque",
+        "n": 2
+      },
+      {
+        "tipo": "edificio_alcance",
+        "n": 1000
+      }
+    ]
+  },
+  "armas_1": {
+    "nombre": "Armas templadas",
+    "edificio": "cuartel",
+    "ranura": 4,
+    "edad_min": 2,
+    "costo": {
+      "alimento": 100,
+      "riqueza": 50
+    },
+    "tiempo_ms": 35000,
+    "icono": "atacar",
+    "efectos": [
+      {
+        "tipo": "ataque",
+        "funciones": [
+          "choque",
+          "distancia",
+          "linea"
+        ],
+        "n": 1
+      }
+    ]
+  },
+  "armas_2": {
+    "nombre": "Armas reforzadas",
+    "edificio": "cuartel",
+    "ranura": 4,
+    "edad_min": 3,
+    "requiere": "armas_1",
+    "costo": {
+      "alimento": 200,
+      "riqueza": 150
+    },
+    "tiempo_ms": 45000,
+    "icono": "atacar",
+    "efectos": [
+      {
+        "tipo": "ataque",
+        "funciones": [
+          "choque",
+          "distancia",
+          "linea"
+        ],
+        "n": 1
+      }
+    ]
+  },
+  "armas_3": {
+    "nombre": "Armas de maestría",
+    "edificio": "cuartel",
+    "ranura": 4,
+    "edad_min": 4,
+    "requiere": "armas_2",
+    "costo": {
+      "alimento": 300,
+      "riqueza": 250
+    },
+    "tiempo_ms": 60000,
+    "icono": "atacar",
+    "efectos": [
+      {
+        "tipo": "ataque",
+        "funciones": [
+          "choque",
+          "distancia",
+          "linea"
+        ],
+        "n": 2
+      }
+    ]
+  },
+  "escudos_1": {
+    "nombre": "Escudos de cuero",
+    "edificio": "cuartel",
+    "ranura": 5,
+    "edad_min": 2,
+    "costo": {
+      "madera": 100,
+      "riqueza": 50
+    },
+    "tiempo_ms": 35000,
+    "icono": "escudo",
+    "efectos": [
+      {
+        "tipo": "armadura",
+        "funciones": [
+          "choque",
+          "distancia",
+          "linea"
+        ],
+        "n": 1
+      }
+    ]
+  },
+  "escudos_2": {
+    "nombre": "Escudos acolchados",
+    "edificio": "cuartel",
+    "ranura": 5,
+    "edad_min": 3,
+    "requiere": "escudos_1",
+    "costo": {
+      "madera": 200,
+      "riqueza": 150
+    },
+    "tiempo_ms": 45000,
+    "icono": "escudo",
+    "efectos": [
+      {
+        "tipo": "armadura",
+        "funciones": [
+          "choque",
+          "distancia",
+          "linea"
+        ],
+        "n": 1
+      }
+    ]
+  },
+  "escudos_3": {
+    "nombre": "Escudos de maestría",
+    "edificio": "cuartel",
+    "ranura": 5,
+    "edad_min": 4,
+    "requiere": "escudos_2",
+    "costo": {
+      "madera": 300,
+      "riqueza": 250
+    },
+    "tiempo_ms": 60000,
+    "icono": "escudo",
+    "efectos": [
+      {
+        "tipo": "armadura",
+        "funciones": [
+          "choque",
+          "distancia",
+          "linea"
+        ],
+        "n": 1
+      }
+    ]
+  },
+  "marcha": {
+    "nombre": "Marcha forzada",
+    "edificio": "cuartel",
+    "ranura": 6,
+    "edad_min": 2,
+    "costo": {
+      "alimento": 100,
+      "riqueza": 75
+    },
+    "tiempo_ms": 30000,
+    "icono": "velocidad",
+    "efectos": [
+      {
+        "tipo": "velocidad_pct",
+        "funciones": [
+          "choque",
+          "distancia",
+          "linea"
+        ],
+        "pct": 10
+      }
+    ]
+  },
+  "adiestramiento": {
+    "nombre": "Adiestramiento",
+    "edificio": "cuartel",
+    "ranura": 7,
+    "edad_min": 3,
+    "costo": {
+      "alimento": 200,
+      "riqueza": 150
+    },
+    "tiempo_ms": 45000,
+    "icono": "vida",
+    "efectos": [
+      {
+        "tipo": "vida_pct",
+        "funciones": [
+          "choque",
+          "distancia",
+          "linea"
+        ],
+        "pct": 15
+      }
+    ]
+  }
+}

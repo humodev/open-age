@@ -15,7 +15,7 @@ func _init() -> void:
 		for i in 600:
 			s.step()
 			for ev in s.events:
-				if ev["t"] in ["age", "defeat", "victory"]:
+				if ev["t"] in ["age", "defeat", "victory", "tech", "alarm"]:
 					print("  [%s] %s" % [_t(s.tick), ev])
 		var line := "%s " % _t(s.tick)
 		for pid in 2:

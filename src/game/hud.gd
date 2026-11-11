@@ -90,7 +90,7 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 	add_child(_tip)
 
 	_notice = Label.new()
-	_anchor(_notice, Vector2(0.5, 0), Rect2(-300, 74, 600, 30))
+	_anchor(_notice, Vector2(0.5, 0), Rect2(-400, 74, 800, 60))
 	_notice.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_notice.add_theme_font_override("font", font_b)
 	_notice.add_theme_font_size_override("font_size", 19)
@@ -127,9 +127,15 @@ func blocks(m: Vector2) -> bool:
 	return false
 
 
-func notify(msg: String) -> void:
+func notify(msg: String, secs: float = 2.6) -> void:
 	_notice.text = msg
-	_notice_t = 2.6
+	_notice_t = secs
+
+
+func queue_icon(item: String) -> String:
+	if item.begins_with("@"):
+		return sim.data.tecnologias[item.substr(1)]["icono"]
+	return item
 
 
 func on_events(events: Array) -> void:
@@ -142,9 +148,16 @@ func on_events(events: Array) -> void:
 			"age":
 				var name: String = sim.data.edades[ev["age"] - 1]["nombre"]
 				if pid == local:
-					notify("Edad %s alcanzada · %s" % [Sim._roman(ev["age"]), name])
+					var hdef: Dictionary = sim.data.edificios.get(ev.get("hito", ""), {})
+					notify("Edad %s alcanzada · %s\n%s" % [Sim._roman(ev["age"]), name, ctrl.effects_text(hdef.get("efectos", []))], 5.0)
 				else:
 					notify("%s llegó a la edad %s" % [Palette.TEAM_NAMES[pid], Sim._roman(ev["age"])])
+			"tech":
+				if pid == local:
+					notify("Investigación terminada: %s" % sim.data.tecnologias[ev["tech"]]["nombre"])
+			"alarm":
+				if pid == local:
+					notify("¡Campana! Los aldeanos se refugian")
 			"alert":
 				if pid == local:
 					notify("¡Nos atacan!")
@@ -421,12 +434,13 @@ class CommandCard:
 		var sel := hud.ctrl.selected_entities()
 		if sel.size() >= 1 and sel[0].is_building() and not sel[0].queue.is_empty():
 			var b := sel[0]
+			var head: String = b.queue[0].trim_prefix("@")
 			for c in cmds:
-				if c["id"] == b.queue[0]:
+				if c["id"] == head:
 					var r := _slot_rect(c["slot"])
-					var k := float(b.queue_progress) / float(hud.sim.data.unidades[b.queue[0]]["tiempo_ms"])
+					var k := float(b.queue_progress) / float(hud.sim.data.queue_time(b.queue[0]))
 					draw_rect(Rect2(r.position + Vector2(4, r.size.y - 6), Vector2((r.size.x - 8) * k, 3)), Palette.UI_ACCENT)
-					var n := b.queue.count(c["id"])
+					var n := b.queue.count(b.queue[0])
 					draw_string(Hud.font_b, r.position + Vector2(0, 16), str(n), HORIZONTAL_ALIGNMENT_RIGHT, r.size.x - 6, 14, Palette.UI_ACCENT)
 
 
@@ -530,8 +544,6 @@ class SelectionPanel:
 		_portrait(Rect2(14, 14, 112, 112), e)
 		var x := 142.0
 		var name: String = e.def.get("nombre", e.type)
-		if e.type == "hito":
-			name = "Hito de edad"
 		draw_string(Hud.font_b, Vector2(x, 36), name, HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Palette.UI_TEXT)
 		var who := "Naturaleza" if e.owner < 0 else ("Tu pueblo" if e.owner == hud.local else "Rival · %s" % Palette.TEAM_NAMES[e.owner])
 		draw_string(Hud.font, Vector2(x, 58), who, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Palette.UI_DIM)
@@ -564,6 +576,10 @@ class SelectionPanel:
 			return
 		if e.def.has("pob"):
 			draw_string(Hud.font, Vector2(0, 36), "+%d población" % e.def["pob"], HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, 13, Palette.UI_DIM)
+		var cap := sim.garrison_cap(e)
+		if cap > 0:
+			var shots: int = int(e.def.get("flechas", 1)) + e.garrison.size()
+			draw_string(Hud.font_b, Vector2(0, 58), "Guarnición %d/%d · %d flechas" % [e.garrison.size(), cap, shots], HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, 13, Palette.UI_ACCENT if not e.garrison.is_empty() else Palette.UI_DIM)
 		if e.def.get("fuente", "") != "":
 			var f: SimEntity = sim.by_id.get(e.farmer)
 			draw_string(Hud.font, Vector2(x, 96), "Trabajada por un aldeano" if f != null and f.alive and f.target == e.id else "Sin aldeano asignado", HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Palette.UI_TEXT)
@@ -576,9 +592,9 @@ class SelectionPanel:
 				sb.bg_color = Color(1, 1, 1, 0.08 if i < e.queue.size() else 0.03)
 				draw_style_box(sb, r)
 				if i < e.queue.size():
-					Glyphs.draw(self, e.queue[i], r.grow(-9), Palette.UI_TEXT)
+					Glyphs.draw(self, hud.queue_icon(e.queue[i]), r.grow(-9), Palette.UI_ACCENT if e.queue[i].begins_with("@") else Palette.UI_TEXT)
 					if i == 0:
-						var k := float(e.queue_progress) / float(sim.data.unidades[e.queue[0]]["tiempo_ms"])
+						var k := float(e.queue_progress) / float(sim.data.queue_time(e.queue[0]))
 						_bar(Rect2(r.position.x + 3, r.end.y - 6, r.size.x - 6, 3), k, Palette.UI_ACCENT)
 					var idx: int = i
 					var bid := e.id

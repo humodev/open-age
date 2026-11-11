@@ -10,6 +10,7 @@ var player: int
 var wave := 0
 var last_attack := -100000
 var rally := Vector2i(-1, -1)
+var calm_since := 0
 
 # Perfil equilibrado de H1. En H2 pasa a data/ia/ (docs/08).
 var ratio_early := {"alimento": 52, "madera": 33, "riqueza": 10, "piedra": 5}
@@ -32,6 +33,8 @@ func think() -> void:
 		if not e.alive or e.owner != player:
 			continue
 		if e.is_unit():
+			if e.inside >= 0:
+				continue
 			if e.fn == "civil":
 				vill.append(e)
 			else:
@@ -54,7 +57,52 @@ func think() -> void:
 	_economy(p, vill, centro, saving)
 	_buildings(p, vill, centro, by_type, saving)
 	_production(p, vill, army, centro, by_type, saving)
+	_research(p, by_type, saving)
+	_alarm(p, vill, army, centro)
 	_military(army, centro)
+
+
+## Abundancia para llegar a la edad II, guerra para la III, abundancia para la IV.
+func _hito_type(p: Dictionary) -> String:
+	return "hito_guerra" if p["age"] == 2 else "hito_economia"
+
+
+func _research(p: Dictionary, by_type: Dictionary, saving: bool) -> void:
+	if saving:
+		return
+	var reserve := 150
+	for tech: String in sim.data.tecnologias:
+		var t: Dictionary = sim.data.tecnologias[tech]
+		if sim.research_block(player, tech) != "":
+			continue
+		var surplus := true
+		for k in t["costo"]:
+			if p["res"][k] < t["costo"][k] + reserve:
+				surplus = false
+		if not surplus:
+			continue
+		for b: SimEntity in by_type.get(t["edificio"], []):
+			if b.built and b.queue.size() < 2:
+				sim.push_command({"t": "research", "player": player, "building": b.id, "tech": tech})
+				return
+
+
+## Campana si el enemigo llega a la base con más tropas que las propias; calma pasado el peligro.
+func _alarm(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], centro: SimEntity) -> void:
+	var enemies := 0
+	for e in sim.actives:
+		if e.alive and e.owner >= 0 and e.owner != player and e.is_military() and sim.dist_to(e, centro) < 16000:
+			enemies += 1
+	var defenders := 0
+	for u in army:
+		if sim.dist_to(u, centro) < 20000:
+			defenders += 1
+	if enemies > 0:
+		calm_since = sim.tick
+	if not p["alarm"] and enemies >= 2 and enemies > defenders:
+		sim.push_command({"t": "alarm", "player": player, "on": true})
+	elif p["alarm"] and enemies == 0 and sim.tick - calm_since > 100:
+		sim.push_command({"t": "alarm", "player": player, "on": false})
 
 
 # ---------------------------------------------------------------- Economía
@@ -62,7 +110,7 @@ func think() -> void:
 func _economy(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, saving: bool) -> void:
 	var ratio: Dictionary = (ratio_early if p["age"] < 2 else ratio_late).duplicate()
 	# Ajuste por banco: menos gente en lo que sobra, más en lo que falta para el hito.
-	var hito_cost: Dictionary = sim.data.cost_of("hito", p["age"]) if saving else {}
+	var hito_cost: Dictionary = sim.data.cost_of(_hito_type(p), p["age"]) if saving else {}
 	for k in Sim.RES_KINDS:
 		if p["res"][k] > 600:
 			ratio[k] = ratio[k] / 3
@@ -130,7 +178,7 @@ func _wants_hito(p: Dictionary, n_vill: int, by_type: Dictionary) -> bool:
 	if n_vill < need:
 		return false
 	# Solo ahorra si el hito está al alcance: cada recurso cubre al menos la mitad.
-	var cost: Dictionary = sim.data.cost_of("hito", p["age"])
+	var cost: Dictionary = sim.data.cost_of(_hito_type(p), p["age"])
 	for k in cost:
 		if p["res"][k] * 2 < cost[k]:
 			return sim.tick % 1200 < 400 # ahorro intermitente para no congelar el ejército
@@ -150,8 +198,8 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 	if p["pop_cap"] < sim.data.reglas["pob_max"] and p["pop_cap"] - p["pop"] <= margin and not unbuilt.has("casa"):
 		_try_build("casa", p, vill, centro, 1)
 	# Hito.
-	if saving and sim.can_afford(player, sim.data.cost_of("hito", p["age"])):
-		_try_build("hito", p, vill, centro, 4)
+	if saving and sim.can_afford(player, sim.data.cost_of(_hito_type(p), p["age"])):
+		_try_build(_hito_type(p), p, vill, centro, 4)
 		return
 	# Cuartel.
 	var n_cuartel: int = by_type.get("cuartel", []).size()
@@ -258,7 +306,8 @@ func _production(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], 
 	if saving and not threatened:
 		return
 	var order := _counter_order(p)
-	for b: SimEntity in by_type.get("cuartel", []):
+	var producers: Array = by_type.get("cuartel", []) + by_type.get("hito_guerra", [])
+	for b: SimEntity in producers:
 		if not b.built:
 			continue
 		if not b.rally_set:

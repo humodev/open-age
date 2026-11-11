@@ -7,6 +7,7 @@ var unidades: Dictionary
 var edificios: Dictionary
 var recursos: Dictionary
 var edades: Array
+var tecnologias: Dictionary
 
 
 static func load_default() -> SimData:
@@ -16,6 +17,7 @@ static func load_default() -> SimData:
 	d.edificios = _load("res://data/edificios.json")
 	d.recursos = _load("res://data/recursos.json")
 	d.edades = _load("res://data/edades.json")["edades"]
+	d.tecnologias = _load("res://data/tecnologias.json")
 	return d
 
 
@@ -50,14 +52,20 @@ static func _to_int(v: Variant, path: String) -> Variant:
 func def_of(type: String) -> Dictionary:
 	if unidades.has(type):
 		return unidades[type]
+	if tecnologias.has(type):
+		return tecnologias[type]
 	if edificios.has(type):
 		return edificios[type]
 	return recursos.get(type, {})
 
 
-## Costo efectivo: el hito cuesta según la edad de destino.
+func is_hito(type: String) -> bool:
+	return edificios.get(type, {}).get("avanza_edad", false)
+
+
+## Costo efectivo: los hitos cuestan según la edad de destino.
 func cost_of(type: String, age: int) -> Dictionary:
-	if type == "hito":
+	if is_hito(type):
 		if age >= edades.size():
 			return {}
 		return edades[age].get("hito_costo", {})
@@ -65,8 +73,15 @@ func cost_of(type: String, age: int) -> Dictionary:
 
 
 func build_time_of(type: String, age: int) -> int:
-	if type == "hito":
+	if is_hito(type):
 		if age >= edades.size():
 			return 0
 		return edades[age].get("hito_tiempo_ms", 0)
 	return def_of(type).get("tiempo_ms", 0)
+
+
+## Tiempo de un elemento de cola: unidad o investigación ("@clave").
+func queue_time(item: String) -> int:
+	if item.begins_with("@"):
+		return tecnologias[item.substr(1)]["tiempo_ms"]
+	return unidades[item]["tiempo_ms"]

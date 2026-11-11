@@ -8,7 +8,8 @@ const P := 1000
 const O := SimEntity.Order
 const SLOT_KEYS: Array[int] = [KEY_Q, KEY_W, KEY_E, KEY_R, KEY_A, KEY_S, KEY_D, KEY_F, KEY_Z, KEY_X, KEY_C, KEY_V]
 const SLOT_LABELS: Array[String] = ["Q", "W", "E", "R", "A", "S", "D", "F", "Z", "X", "C", "V"]
-const VILLAGER_BUILDS := {0: "casa", 1: "granja", 2: "deposito", 3: "cuartel", 4: "torre", 6: "centro", 7: "hito"}
+const VILLAGER_BUILDS := {0: "casa", 1: "granja", 2: "deposito", 3: "cuartel", 4: "torre", 6: "centro", 8: "hito_economia", 9: "hito_guerra"}
+const RES_LABEL := {"alimento": "alimento", "granja": "granjas", "madera": "madera", "piedra": "piedra", "riqueza": "riqueza", "*": "todos los recursos"}
 
 const DESCS := {
 	"casa": "Aumenta la población máxima.",
@@ -17,7 +18,10 @@ const DESCS := {
 	"cuartel": "Entrena unidades de choque, distancia y línea.",
 	"torre": "Defensa a distancia.",
 	"centro": "Nuevo centro: aldeanos, depósito, población y defensa. Cuenta como hito.",
-	"hito": "Al terminarse, avanza de edad. Cuenta para la victoria.",
+	"refugio": "Las unidades entran al edificio propio más cercano con lugar. Cada una suma una flecha.",
+	"campana": "Todos los aldeanos cercanos se refugian en centros y torres.",
+	"calma": "Los aldeanos salen y vuelven a su trabajo.",
+	"expulsar": "Saca a todas las unidades alojadas.",
 	"aldeano": "Recolecta, construye y repara la economía.",
 	"guerrero": "Choque: rápido, vence a la distancia; pierde contra la línea.",
 	"hondero": "Distancia: frágil, vence a la línea; pierde contra el choque.",
@@ -79,7 +83,7 @@ func _prune() -> void:
 	var keep: Array[int] = []
 	for id in selection:
 		var e: SimEntity = sim.by_id.get(id)
-		if e != null and e.alive:
+		if e != null and e.alive and e.inside < 0:
 			keep.append(id)
 	if keep.size() != selection.size():
 		_set_selection(keep)
@@ -114,7 +118,7 @@ func pick(screen: Vector2) -> int:
 	var best := -1
 	var best_d := 26.0 * 40.0 / cam.zoom
 	for e in sim.actives:
-		if not e.is_unit():
+		if not e.is_unit() or e.inside >= 0:
 			continue
 		var v: Dictionary = view.visuals.get(e.id, {})
 		if v.is_empty():
@@ -150,22 +154,24 @@ func commands() -> Array[Dictionary]:
 		for slot in VILLAGER_BUILDS:
 			var type: String = VILLAGER_BUILDS[slot]
 			var def: Dictionary = sim.data.edificios[type]
-			var cmd := {"slot": slot, "id": type, "icon": type, "kind": "build", "name": def["nombre"], "cost": sim.data.cost_of(type, age), "desc": DESCS.get(type, ""), "locked": ""}
+			var cmd := {"slot": slot, "id": type, "icon": type, "kind": "build", "name": def["nombre"], "cost": sim.data.cost_of(type, age), "desc": DESCS.get(type, def.get("desc", "")), "locked": ""}
 			if age < def.get("edad_min", 1):
 				cmd["locked"] = "Requiere edad %s" % Sim._roman(def["edad_min"])
-			if type == "hito":
+			if sim.data.is_hito(type):
 				if age >= sim.data.edades.size():
 					cmd["locked"] = "Edad máxima alcanzada"
-					cmd["name"] = "Hito"
 				else:
-					cmd["name"] = "Hito: avanzar a edad %s · %s" % [Sim._roman(age + 1), sim.data.edades[age]["nombre"]]
+					cmd["name"] = "%s · avanzar a edad %s" % [def["nombre"], Sim._roman(age + 1)]
+					cmd["desc"] = "%s\n%s\n%s" % [def.get("desc", ""), effects_text(def.get("efectos", [])), unlocks_text(age + 1)]
 					if sim.hito_in_progress(local):
 						cmd["locked"] = "Ya hay un hito en obra"
 			out.append(cmd)
 		out.append({"slot": 5, "id": "detener", "icon": "detener", "kind": "stop", "name": "Detener", "cost": {}, "desc": DESCS["detener"], "locked": ""})
+		out.append({"slot": 7, "id": "refugio", "icon": "refugio", "kind": "garrison", "name": "Refugiarse", "cost": {}, "desc": DESCS["refugio"], "locked": ""})
 	elif first.is_unit():
 		out.append({"slot": 4, "id": "atacar", "icon": "atacar", "kind": "amove", "name": "Atacar en movimiento", "cost": {}, "desc": DESCS["atacar"], "locked": ""})
 		out.append({"slot": 5, "id": "detener", "icon": "detener", "kind": "stop", "name": "Detener", "cost": {}, "desc": DESCS["detener"], "locked": ""})
+		out.append({"slot": 7, "id": "refugio", "icon": "refugio", "kind": "garrison", "name": "Refugiarse", "cost": {}, "desc": DESCS["refugio"], "locked": ""})
 	elif first.is_building() and first.built:
 		var i := 0
 		for type: String in first.def.get("produce", []):
@@ -175,6 +181,20 @@ func commands() -> Array[Dictionary]:
 				cmd["locked"] = "Requiere edad %s" % Sim._roman(udef["edad_min"])
 			out.append(cmd)
 			i += 1
+		# Investigaciones: en cada ranura, la primera de la cadena que falta.
+		var used := {}
+		for tech: String in sim.data.tecnologias:
+			var t: Dictionary = sim.data.tecnologias[tech]
+			if t["edificio"] != first.type or used.has(t["ranura"]) or sim.players[local]["techs"].has(tech):
+				continue
+			used[t["ranura"]] = true
+			var why := sim.research_block(local, tech)
+			out.append({"slot": t["ranura"], "id": tech, "icon": t["icono"], "kind": "research", "name": t["nombre"], "cost": t["costo"], "desc": effects_text(t["efectos"]), "locked": why, "tech": true, "building": first.id})
+		if first.type == "centro":
+			var on: bool = sim.players[local]["alarm"]
+			out.append({"slot": 8, "id": "calma" if on else "campana", "icon": "calma" if on else "campana", "kind": "alarm", "name": "Toque de calma" if on else "Campana", "cost": {}, "desc": DESCS["calma" if on else "campana"], "locked": "", "on": not on})
+		if first.def.get("guarnicion", 0) > 0:
+			out.append({"slot": 11, "id": "expulsar", "icon": "expulsar", "kind": "ungarrison", "name": "Expulsar guarnición", "cost": {}, "desc": DESCS["expulsar"], "locked": "" if not first.garrison.is_empty() else "No hay unidades alojadas"})
 	return out
 
 
@@ -200,6 +220,16 @@ func run_command(cmd: Dictionary) -> void:
 						sim.push_command({"t": "train", "player": local, "building": e.id, "type": cmd["id"]})
 		"stop":
 			sim.push_command({"t": "stop", "player": local, "ids": _own_unit_ids()})
+		"research":
+			sim.push_command({"t": "research", "player": local, "building": cmd["building"], "tech": cmd["id"]})
+		"garrison":
+			sim.push_command({"t": "garrison", "player": local, "ids": _own_unit_ids(), "building": -1})
+		"alarm":
+			sim.push_command({"t": "alarm", "player": local, "on": cmd["on"]})
+		"ungarrison":
+			for e in selected_entities():
+				if e.is_building() and e.owner == local:
+					sim.push_command({"t": "ungarrison", "player": local, "building": e.id})
 		"amove":
 			mode = "amove"
 			Input.set_default_cursor_shape(Input.CURSOR_CROSS)
@@ -317,7 +347,7 @@ func _box_select(r: Rect2, add: bool) -> void:
 	var units: Array[int] = []
 	var buildings: Array[int] = []
 	for e in sim.actives:
-		if e.owner != local:
+		if e.owner != local or e.inside >= 0:
 			continue
 		var v: Dictionary = view.visuals.get(e.id, {})
 		if v.is_empty():
@@ -397,7 +427,7 @@ func _place() -> void:
 			ids.append(e.id)
 	sim.push_command({"t": "build", "player": local, "ids": ids, "type": place_type, "tx": tile.x, "ty": tile.y})
 	view.add_marker(_ghost.position, Palette.UI_ACCENT)
-	if not Input.is_key_pressed(KEY_SHIFT) or place_type == "hito":
+	if not Input.is_key_pressed(KEY_SHIFT) or sim.data.is_hito(place_type):
 		cancel_mode()
 
 
@@ -479,3 +509,51 @@ func center_on_selection() -> void:
 
 func select_ids(ids: Array[int]) -> void:
 	_set_selection(ids)
+
+
+## Texto de efectos generado desde los datos: los números no se escriben a mano (D-008).
+func effects_text(efectos: Array) -> String:
+	var parts: Array[String] = []
+	for ef: Dictionary in efectos:
+		match ef["tipo"]:
+			"tasa":
+				parts.append("+%d%% de recolección de %s" % [ef["pct"], RES_LABEL.get(ef["recurso"], ef["recurso"])])
+			"carga":
+				parts.append("+%d de carga por viaje" % ef["n"])
+			"ataque":
+				parts.append("+%d de ataque militar" % ef["n"])
+			"armadura":
+				parts.append("+%d de armadura militar" % ef["n"])
+			"vida_pct":
+				parts.append("+%d%% de vida militar" % ef["pct"])
+			"velocidad_pct":
+				parts.append("+%d%% de velocidad militar" % ef["pct"])
+			"edificio_vida_pct":
+				parts.append("+%d%% de vida de los edificios" % ef["pct"])
+			"edificio_ataque":
+				parts.append("+%d de ataque de centros, torres e hitos" % ef["n"])
+			"edificio_alcance":
+				parts.append("+%.1f casillas de alcance de los edificios" % (ef["n"] / 1000.0))
+	return " · ".join(parts)
+
+
+## Qué se habilita al llegar a una edad, leído de los datos.
+func unlocks_text(age: int) -> String:
+	var names: Array[String] = []
+	for k in sim.data.unidades:
+		if sim.data.unidades[k].get("edad_min", 1) == age:
+			names.append(sim.data.unidades[k]["nombre"])
+	for k in sim.data.edificios:
+		if sim.data.edificios[k].get("edad_min", 1) == age:
+			names.append(sim.data.edificios[k]["nombre"])
+	var techs := 0
+	for k in sim.data.tecnologias:
+		if sim.data.tecnologias[k].get("edad_min", 1) == age:
+			techs += 1
+	var bonus: int = sim.data.edades[age - 1].get("bono_ataque", 0)
+	var txt := "Edad %s habilita: %s" % [Sim._roman(age), ", ".join(names)] if not names.is_empty() else "Edad %s habilita:" % Sim._roman(age)
+	if techs > 0:
+		txt += "%s%d investigaciones" % [", " if not names.is_empty() else " ", techs]
+	if bonus > 0:
+		txt += ". Ataque militar +%d%%." % bonus
+	return txt

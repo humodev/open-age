@@ -2,7 +2,7 @@ class_name Overlay
 extends Control
 ## Barras de vida, progreso de obra y rectángulo de selección (docs/07, legibilidad).
 
-const HEIGHTS := {"centro": 3.2, "casa": 1.7, "deposito": 1.8, "granja": 0.6, "cuartel": 2.3, "torre": 3.7, "hito": 3.2}
+const HEIGHTS := {"centro": 3.2, "casa": 1.7, "deposito": 1.8, "granja": 0.6, "cuartel": 2.3, "torre": 3.7, "hito_economia": 3.2, "hito_guerra": 3.5}
 
 var sim: Sim
 var ctrl: Controller

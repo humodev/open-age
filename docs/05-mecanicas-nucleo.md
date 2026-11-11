@@ -43,6 +43,36 @@ Se pagan al encolar. Cancelar devuelve el costo completo. Construir descuenta al
 - Varios constructores suman progreso de forma lineal en H1. Rendimientos decrecientes: ver A-008.
 - Los edificios con `deposito` aceptan esos recursos. Los que tienen `produce` entrenan unidades por cola.
 
+## Reparación
+
+Un aldeano con orden sobre un edificio propio dañado lo repara a la velocidad de construcción. En H1 reparar no cuesta recursos; ver A-012.
+
+## Guarnición y defensa de la base
+
+Sirve para que una economía sin ejército pueda sobrevivir a la presión temprana (palanca "ventanas de tiempo", `01`).
+- Los edificios con `guarnicion` alojan hasta esa cantidad de unidades. Las alojadas no reciben daño ni ocupan lugar en el mapa, pero siguen contando población.
+- Los edificios con `ataque` disparan una **andanada** cada `cadencia_ms`: `flechas` propias más una por unidad alojada.
+- **Campana** (desde el centro): los aldeanos dentro de `radio_campana` se refugian en el edificio propio con lugar más cercano. El **toque de calma** los saca y vuelven a recolectar lo que recolectaban.
+- Si el edificio cae, las unidades alojadas salen vivas.
+- Orden "Refugiarse" para cualquier unidad; clic derecho sobre un edificio propio con guarnición también aloja.
+
+## Investigaciones
+
+- Viven en `data/tecnologias.json`. Cada una tiene edificio, ranura en la grilla, edad mínima, requisito opcional, costo, tiempo y `efectos`.
+- Se encolan en el edificio como una unidad y se pagan al encolar. Una investigación solo puede estar en una cola a la vez.
+- Tipos de efecto de la capa común (son el contrato del módulo; las civilizaciones reutilizan los mismos tipos):
+
+| Tipo | Parámetros | Efecto |
+|---|---|---|
+| `tasa` | `recurso` (o `*`), `pct` | Recolección más rápida |
+| `carga` | `n` | Más carga por viaje |
+| `ataque` / `armadura` | `funciones`, `n` | Suma a unidades de esas funciones |
+| `vida_pct` / `velocidad_pct` | `funciones`, `pct` | Porcentaje sobre la base |
+| `edificio_vida_pct` | `pct` | Vida de todos los edificios |
+| `edificio_ataque` / `edificio_alcance` | `n` | Andanadas de centros, torres e hitos |
+
+- Los efectos son por jugador y se acumulan. Vida y velocidad se recalculan al instante; la vida actual conserva su proporción.
+
 ## Producción
 
 - Cada edificio productor tiene una cola (`reglas.json` → `cola_max`). Solo el primer elemento avanza.
@@ -77,9 +107,16 @@ Fuera del triángulo (`02-alcance-y-epoca.md`). Regla de la capa común:
 ## Edades
 
 - Cuatro edades (`02-alcance-y-epoca.md`). En la capa común se avanza construyendo un **hito**: un edificio que, al terminarse, sube la edad del jugador. Cada civilización reemplaza el hito genérico por su mecánica de avance (obra estatal, asamblea, fundación de aldea, iglesia) usando el mismo módulo con otros parámetros.
-- Solo puede haber un hito en construcción a la vez. El costo y el tiempo dependen de la edad de destino (`edades.json`).
-- Cada edad habilita unidades y edificios (`edad_min` en los datos) y una bonificación de ataque militar.
-- Regla de opciones (`01`, palancas): cada avance ofrece al menos dos hitos con efectos distintos. En H1 hay uno solo; las opciones llegan en H2.
+- Solo puede haber un hito en construcción a la vez. El costo y el tiempo dependen de la edad de destino (`edades.json`) y son iguales para todas las opciones.
+- Cada edad habilita unidades, edificios e investigaciones (`edad_min`) y una bonificación de ataque militar.
+- Regla de opciones (`01`, palancas): cada avance ofrece dos hitos. El hito queda en el mapa y su efecto es permanente (`efectos`, mismos tipos que las investigaciones):
+
+| Hito genérico | Qué da |
+|---|---|
+| `hito_economia` (abundancia) | Recolección más rápida, depósito de todo, población |
+| `hito_guerra` (guerra) | Entrena tropas, dispara andanadas, aloja guarnición, más vida militar |
+
+Las civilizaciones reemplazan estos dos por los suyos (obra estatal, asamblea, fundación, iglesia o monasterio) con el mismo módulo.
 
 ## Visión y niebla
 
@@ -120,4 +157,4 @@ En el prototipo gris todas las facciones usan las mismas unidades genéricas, un
 | `granja` | Alimento infinito, transitable |
 | `cuartel` | Produce unidades militares |
 | `torre` | Defensa a distancia; desde edad II |
-| `hito` | Avanza de edad; cuenta para la victoria por hitos |
+| `hito_economia`, `hito_guerra` | Avanzan de edad; cuentan para la victoria por hitos |

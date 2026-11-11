@@ -6,6 +6,7 @@
   "cola_max": 5,
   "radio_rebusca": 10000,
   "radio_retomar": 30000,
+  "radio_campana": 25000,
   "danio_minimo": 1,
   "recursos_iniciales": { "alimento": 200, "madera": 200, "piedra": 100, "riqueza": 100 },
   "aldeanos_iniciales": 6,

@@ -158,7 +158,8 @@ func _demo(kind: String) -> void:
 		place.call("granja", b.x + 5, b.y + 3, true)
 		place.call("torre", b.x + 1, b.y + 8, true)
 		place.call("deposito", b.x - 4, b.y - 2, true)
-		place.call("hito", b.x + 10, b.y + 1, false)
+		place.call("hito_economia", b.x + 10, b.y + 1, false)
+		place.call("hito_guerra", b.x - 6, b.y + 12, true)
 		for i in 6:
 			sim.spawn_unit(["guerrero", "hondero", "lancero"][i % 3], 0, (b.x + 10 + i % 3) * 1000 + 500, (b.y + 7 + i / 3) * 1000 + 500)
 	elif kind == "batalla":
@@ -367,13 +368,30 @@ func _autotest() -> void:
 	check.call("Ctrl+1 asigna el grupo", ctrl.groups.has(1))
 
 	speed = 4.0
-	await get_tree().create_timer(8.0).timeout
+	await get_tree().create_timer(10.0).timeout
 	var house_progress := 0
 	for e in sim.actives:
 		if e.owner == local and e.type == "casa":
 			house_progress = e.progress
 	check.call("los aldeanos construyen la casa (%d ms)" % house_progress, house_progress > 0)
 	check.call("entra alimento al banco (%d)" % sim.players[local]["res"]["alimento"], sim.players[local]["stats"]["recolectado"] > 0)
+	# 6. Campana desde el centro (Z): los aldeanos se refugian y el centro dispara más.
+	_key_tap(KEY_H)
+	await _frames(3)
+	_key_tap(KEY_Z)
+	await get_tree().create_timer(3.0).timeout
+	var inside := 0
+	for e in sim.actives:
+		if e.owner == local and e.inside >= 0:
+			inside += 1
+	check.call("la campana refugia aldeanos (%d)" % inside, inside >= 5)
+	_key_tap(KEY_Z)
+	await get_tree().create_timer(1.0).timeout
+	inside = 0
+	for e in sim.actives:
+		if e.owner == local and e.inside >= 0:
+			inside += 1
+	check.call("el toque de calma los saca (%d)" % inside, inside == 0)
 	var img := get_viewport().get_texture().get_image()
 	img.save_png("screenshots/autotest.png")
 	for r in results:

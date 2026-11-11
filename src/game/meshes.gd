@@ -216,8 +216,8 @@ static func building_mesh(type: String, team: Color) -> ArrayMesh:
 				p.append([box(0.2, 0.25, 0.2), xf(Vector3(cos(a) * 0.7, 3.22, sin(a) * 0.7), Vector3(0, -rad_to_deg(a), 0)), shade])
 			p.append([box(0.1, 0.35, 0.05), xf(Vector3(0, 1.4, 0.75)), Palette.WOOD_BEAM])
 			_banner(p, Vector3(0, 3.0, 0), 1.2, team)
-		"hito":
-			# Plataforma escalonada: obra estatal genérica de la capa común.
+		"hito_economia":
+			# Plataforma escalonada con depósitos circulares: hito de la abundancia.
 			p.append([box(3.9, 0.5, 3.9), xf(Vector3(0, 0.25, 0)), dark])
 			p.append([box(3.1, 0.5, 3.1), xf(Vector3(0, 0.75, 0)), shade])
 			p.append([box(2.3, 0.5, 2.3), xf(Vector3(0, 1.25, 0)), clay])
@@ -227,6 +227,31 @@ static func building_mesh(type: String, team: Color) -> ArrayMesh:
 			p.append([box(0.7, 2.0, 0.08), xf(Vector3(0, 1.0, 1.75), Vector3(-45, 0, 0)), Palette.CLAY_DARK]) # escalinata
 			for c in [Vector2(-1.75, -1.75), Vector2(1.75, -1.75), Vector2(-1.75, 1.75), Vector2(1.75, 1.75)]:
 				_banner(p, Vector3(c.x, 0.5, c.y), 1.4, team)
+			for c in [Vector2(-1.2, -1.3), Vector2(1.2, -1.3)]:
+				p.append([cyl(0.32, 0.36, 0.6, 12), xf(Vector3(c.x, 0.8, c.y)), shade])
+				p.append([cyl(0.0, 0.4, 0.35, 12), xf(Vector3(c.x, 1.28, c.y)), roof])
+			p.append([box(0.5, 0.12, 0.5), xf(Vector3(0, 2.78, 0)), Palette.WEALTH, 0.4])
+		"hito_guerra":
+			# Recinto amurallado con torre central: hito de la guerra.
+			p.append([box(3.9, 0.25, 3.9), xf(Vector3(0, 0.125, 0)), dark])
+			for side in [Vector3(0, 0, -1.7), Vector3(0, 0, 1.7)]:
+				p.append([box(3.6, 0.9, 0.35), xf(side + Vector3(0, 0.7, 0)), shade])
+			for side in [Vector3(-1.7, 0, 0), Vector3(1.7, 0, 0)]:
+				p.append([box(0.35, 0.9, 3.6), xf(side + Vector3(0, 0.7, 0)), shade])
+			for i in 7:
+				var o := -1.62 + i * 0.54
+				for e2 in [Vector3(o, 1.25, -1.7), Vector3(o, 1.25, 1.7), Vector3(-1.7, 1.25, o), Vector3(1.7, 1.25, o)]:
+					p.append([box(0.24, 0.22, 0.24), xf(e2), shade])
+			p.append([box(1.0, 0.75, 0.12), xf(Vector3(0, 0.6, 1.88)), Palette.WOOD_BEAM]) # portón
+			p.append([box(1.5, 2.2, 1.5), xf(Vector3(0, 1.35, -0.2)), clay])
+			p.append([box(1.7, 0.3, 1.7), xf(Vector3(0, 2.55, -0.2)), shade])
+			for i in 4:
+				var a := TAU * i / 4.0 + PI / 4.0
+				p.append([box(0.3, 0.3, 0.3), xf(Vector3(cos(a) * 0.7, 2.85, -0.2 + sin(a) * 0.7)), shade])
+			p.append([box(1.52, 0.12, 0.12), xf(Vector3(0, 2.0, 0.56)), team])
+			_banner(p, Vector3(0, 2.7, -0.2), 1.6, team)
+			for c in [Vector2(-1.7, 1.7), Vector2(1.7, 1.7)]:
+				_banner(p, Vector3(c.x, 1.15, c.y), 1.2, team)
 	var mesh := merge(p)
 	_cache[key] = mesh
 	return mesh

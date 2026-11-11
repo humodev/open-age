@@ -31,6 +31,7 @@ Las decisiones cerradas no se reabren sin una entrada "Propuesta" aprobada. Form
 | A-009 | ¿`AStarGrid2D` es determinista entre plataformas? | Confiar y medir en H5; caminos propios en enteros | Riesgo para el lockstep (`06`) |
 | A-010 | ¿Andenes cuentan como mecánica económica de Tawantinsuyu o como fuente de alimento? | Fuente de alimento (propuesta en la ficha); ranura económica | Presupuesto por civilización (`01`) |
 | A-011 | ¿Cómo pierden los mapuches con la victoria por hitos? | Sus lof cuentan como hitos; condición de victoria propia | Debe respetar "no hay capital que tomar" sin crear victorias exclusivas (`05`) |
+| A-012 | ¿Reparar cuesta recursos? | Gratis (H1); un porcentaje del costo | Gratis favorece al defensor |
 
 ## Propuestas
 
