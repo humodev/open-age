@@ -1,0 +1,384 @@
+extends Node3D
+## Arranque y bucle de ticks (docs/06-arquitectura.md, "Bucle").
+##
+## Argumentos (después de `--`):
+##   --aivai            IA contra IA, la cámara sigue al jugador 0
+##   --seed=N           semilla del mapa
+##   --speed=N          multiplicador de velocidad inicial
+##   --shot=ruta.png    guarda una captura y sale
+##   --shot-at=S        segundos de juego antes de la captura
+##   --cam=x,z,zoom     posición de cámara para la captura
+##   --select=tipo      selecciona entidades de ese tipo del jugador local antes de la captura
+##   --demo=base|batalla  escena armada para revisar modelos y combate
+##   --autotest         prueba de punta a punta con eventos reales de mouse y teclado
+
+const MAX_STEPS_PER_FRAME := 8
+
+var sim: Sim
+var view: WorldView
+var cam: RtsCamera
+var ctrl: Controller
+var hud: Hud
+var local := 0
+var speed := 1.0
+var paused := false
+var _acc := 0.0
+var _args := {}
+var _seed := 0
+var _shot_done := false
+
+
+func _ready() -> void:
+	for a in OS.get_cmdline_user_args():
+		var kv := a.trim_prefix("--").split("=", true, 1)
+		_args[kv[0]] = kv[1] if kv.size() > 1 else "1"
+	_seed = int(_args.get("seed", str(randi() % 100000)))
+	speed = float(_args.get("speed", "1"))
+	_build_environment()
+	_new_game()
+
+
+func _build_environment() -> void:
+	var sun := DirectionalLight3D.new()
+	sun.rotation_degrees = Vector3(-52, 150, 0)
+	sun.light_color = Color(1.0, 0.95, 0.86)
+	sun.light_energy = 1.35
+	sun.shadow_enabled = true
+	sun.shadow_blur = 1.6
+	sun.directional_shadow_max_distance = 110.0
+	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS
+	sun.shadow_bias = 0.03
+	sun.shadow_normal_bias = 1.2
+	add_child(sun)
+	var fill := DirectionalLight3D.new()
+	fill.rotation_degrees = Vector3(-35, -40, 0)
+	fill.light_color = Color(0.7, 0.8, 1.0)
+	fill.light_energy = 0.25
+	add_child(fill)
+
+	var env := Environment.new()
+	var sky_mat := ProceduralSkyMaterial.new()
+	sky_mat.sky_top_color = Color(0.36, 0.5, 0.68)
+	sky_mat.sky_horizon_color = Color(0.74, 0.78, 0.8)
+	sky_mat.ground_horizon_color = Color(0.5, 0.52, 0.48)
+	sky_mat.ground_bottom_color = Color(0.25, 0.27, 0.24)
+	var sky := Sky.new()
+	sky.sky_material = sky_mat
+	env.background_mode = Environment.BG_SKY
+	env.sky = sky
+	env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
+	env.ambient_light_energy = 0.75
+	env.tonemap_mode = Environment.TONE_MAPPER_AGX
+	env.tonemap_exposure = 1.05
+	env.ssao_enabled = true
+	env.ssao_radius = 1.4
+	env.ssao_intensity = 2.2
+	env.ssao_power = 1.4
+	env.glow_enabled = true
+	env.glow_intensity = 0.25
+	env.glow_bloom = 0.04
+	env.fog_enabled = true
+	env.fog_light_color = Color(0.68, 0.74, 0.8)
+	env.fog_density = 0.0012
+	env.fog_sky_affect = 0.0
+	env.adjustment_enabled = true
+	env.adjustment_saturation = 1.12
+	env.adjustment_contrast = 1.04
+	var we := WorldEnvironment.new()
+	we.environment = env
+	add_child(we)
+
+
+func _new_game() -> void:
+	sim = Sim.new(_seed)
+	var aivai := _args.has("aivai")
+	sim.ais = []
+	for pid in sim.players.size():
+		if pid != local or aivai:
+			sim.ais.append(SimAI.new(sim, pid))
+
+	if _args.has("demo"):
+		_demo(_args["demo"])
+
+	view = WorldView.new()
+	view.name = "World"
+	add_child(view)
+	view.setup(sim, local)
+
+	cam = RtsCamera.new()
+	cam.name = "Camera"
+	cam.map_size = sim.map.n
+	add_child(cam)
+	var base := sim.bases[local]
+	cam.look_at_point(Vector3(base.x + 6, 0, base.y + 6))
+	if _args.has("shot"):
+		cam.edge_pan = false
+
+	ctrl = Controller.new()
+	ctrl.name = "Controller"
+	add_child(ctrl)
+	ctrl.setup(sim, view, cam, local)
+
+	var layer := CanvasLayer.new()
+	layer.name = "UI"
+	add_child(layer)
+	hud = Hud.new()
+	layer.add_child(hud)
+	hud.setup(self, sim, ctrl, cam, local)
+	ctrl.hud = hud
+	if _args.has("autotest"):
+		cam.edge_pan = false
+		_autotest.call_deferred()
+	if _args.has("shot"):
+		# Captura reproducible: ninguna entrada real afecta la partida.
+		ctrl.enabled = false
+		get_viewport().gui_disable_input = true
+
+
+func _demo(kind: String) -> void:
+	var b := sim.bases[0]
+	if kind == "base":
+		var place := func(type: String, tx0: int, ty0: int, built: bool) -> void:
+			var spot := Vector2i(-1, -1)
+			for r in 8:
+				for dy in range(-r, r + 1):
+					for dx in range(-r, r + 1):
+						if spot.x < 0 and sim.can_place(type, tx0 + dx, ty0 + dy):
+							spot = Vector2i(tx0 + dx, ty0 + dy)
+			if spot.x >= 0:
+				var e := sim.spawn_building(type, 0, spot.x, spot.y, built)
+				if not built:
+					e.build_time = sim.data.build_time_of(type, 1)
+					e.progress = e.build_time / 2
+					e.hp = e.hp_max / 2
+		place.call("casa", b.x - 3, b.y + 6, true)
+		place.call("casa", b.x - 3, b.y + 9, true)
+		place.call("cuartel", b.x + 6, b.y + 7, true)
+		place.call("granja", b.x + 5, b.y - 1, true)
+		place.call("granja", b.x + 5, b.y + 3, true)
+		place.call("torre", b.x + 1, b.y + 8, true)
+		place.call("deposito", b.x - 4, b.y - 2, true)
+		place.call("hito", b.x + 10, b.y + 1, false)
+		for i in 6:
+			sim.spawn_unit(["guerrero", "hondero", "lancero"][i % 3], 0, (b.x + 10 + i % 3) * 1000 + 500, (b.y + 7 + i / 3) * 1000 + 500)
+	elif kind == "batalla":
+		var c := sim.map.n / 2
+		var types := ["guerrero", "hondero", "lancero"]
+		var ids := [[], []]
+		for pid in 2:
+			for i in 30:
+				var x := (c - 7 + pid * 14 + (i % 5) * (1 if pid == 0 else -1)) * 1000 + 500
+				var y := (c - 4 + i / 5) * 1000 + 500
+				var u := sim.spawn_unit(types[i % 3], pid, x, y)
+				ids[pid].append(u.id)
+		sim.push_command({"t": "move", "player": 0, "ids": ids[0], "x": (c + 6) * 1000, "y": c * 1000, "amove": true})
+		sim.push_command({"t": "move", "player": 1, "ids": ids[1], "x": (c - 6) * 1000, "y": c * 1000, "amove": true})
+
+
+func restart() -> void:
+	for n in [view, cam, ctrl, hud.get_parent()]:
+		n.queue_free()
+	_seed = randi() % 100000
+	paused = false
+	_acc = 0.0
+	await get_tree().process_frame
+	_new_game()
+
+
+func set_paused(p: bool) -> void:
+	paused = p
+
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	var k := event as InputEventKey
+	if not k.pressed or k.echo:
+		return
+	if k.physical_keycode == KEY_F3:
+		speed = 2.0 if speed == 1.0 else (4.0 if speed == 2.0 else 1.0)
+	elif k.physical_keycode == KEY_PAUSE or k.physical_keycode == KEY_F10:
+		hud.toggle_menu()
+
+
+func _process(delta: float) -> void:
+	if not paused:
+		_acc += delta * speed
+		var tick_s := sim.tick_ms / 1000.0
+		var steps := 0
+		while _acc >= tick_s and steps < MAX_STEPS_PER_FRAME:
+			sim.step()
+			view.on_tick(sim.events)
+			hud.on_events(sim.events)
+			_acc -= tick_s
+			steps += 1
+		if steps == MAX_STEPS_PER_FRAME:
+			_acc = 0.0
+		view.render(_acc / tick_s, delta)
+	else:
+		view.render(1.0, 0.0)
+	_maybe_shot()
+
+
+func _maybe_shot() -> void:
+	if not _args.has("shot") or _shot_done:
+		return
+	var at := float(_args.get("shot-at", "2"))
+	if sim.tick * sim.tick_ms / 1000.0 < at:
+		return
+	_shot_done = true
+	if _args.has("cam"):
+		var c: PackedStringArray = (_args["cam"] as String).split(",")
+		cam.look_at_point(Vector3(float(c[0]), 0, float(c[1])))
+		if c.size() > 2:
+			cam.zoom = float(c[2])
+			cam.set("_zoom_target", float(c[2]))
+	if _args.has("select"):
+		var ids: Array[int] = []
+		for e in sim.actives:
+			if e.owner == local and e.type == _args["select"]:
+				ids.append(e.id)
+		ctrl.select_ids(ids)
+	paused = true
+	for i in 12:
+		await get_tree().process_frame
+	var img := get_viewport().get_texture().get_image()
+	var path: String = _args["shot"]
+	img.save_png(path)
+	print("captura: ", path)
+	get_tree().quit()
+
+
+# ---------------------------------------------------------------- Prueba de punta a punta
+
+func _frames(n: int) -> void:
+	for i in n:
+		await get_tree().process_frame
+
+
+func _mouse(pos: Vector2, button: int, pressed: bool) -> void:
+	var mv := InputEventMouseMotion.new()
+	mv.position = pos
+	mv.global_position = pos
+	Input.parse_input_event(mv)
+	if button == 0:
+		return
+	var mb := InputEventMouseButton.new()
+	mb.position = pos
+	mb.global_position = pos
+	mb.button_index = button
+	mb.pressed = pressed
+	Input.parse_input_event(mb)
+
+
+func _key_tap(code: int) -> void:
+	for pressed in [true, false]:
+		var k := InputEventKey.new()
+		k.physical_keycode = code
+		k.keycode = code
+		k.pressed = pressed
+		Input.parse_input_event(k)
+
+
+func _screen(x_tiles: float, z_tiles: float) -> Vector2:
+	return cam.cam.unproject_position(Vector3(x_tiles, 0, z_tiles))
+
+
+func _autotest() -> void:
+	var results: Array[String] = []
+	var ok := true
+	var check := func(name: String, cond: bool) -> void:
+		results.append(("OK    " if cond else "FALLO ") + name)
+	await _frames(20)
+	var base := sim.bases[local]
+	cam.look_at_point(Vector3(base.x + 2, 0, base.y + 2))
+	await _frames(5)
+
+	# 1. Selección por arrastre.
+	var lo := Vector2(INF, INF)
+	var hi := Vector2(-INF, -INF)
+	for e in sim.actives:
+		if e.owner == local and e.fn == "civil":
+			var sp := cam.cam.unproject_position(WorldView.to_world(e.x, e.y, 0.3))
+			lo = lo.min(sp)
+			hi = hi.max(sp)
+	_mouse(lo - Vector2(30, 30), MOUSE_BUTTON_LEFT, true)
+	await _frames(2)
+	_mouse((lo + hi) / 2, 0, false)
+	await _frames(2)
+	_mouse(hi + Vector2(30, 30), 0, false)
+	await _frames(2)
+	_mouse(hi + Vector2(30, 30), MOUSE_BUTTON_LEFT, false)
+	await _frames(3)
+	check.call("selección por arrastre de 6 aldeanos (%d)" % ctrl.selection.size(), ctrl.selection.size() == 6)
+
+	# 2. Clic derecho en arbustos: recolectar.
+	var bush: SimEntity = sim.find_resource(local, "alimento", base.x * 1000, base.y * 1000, 30000)
+	var bush_sp := cam.cam.unproject_position(WorldView.to_world(bush.x, bush.y, 0.2))
+	_mouse(bush_sp, MOUSE_BUTTON_RIGHT, true)
+	_mouse(bush_sp, MOUSE_BUTTON_RIGHT, false)
+	await _frames(40)
+	var gathering := 0
+	for e in sim.actives:
+		if e.owner == local and e.fn == "civil" and e.order == SimEntity.Order.GATHER:
+			gathering += 1
+	check.call("clic derecho en arbustos pone a recolectar (%d)" % gathering, gathering == 6)
+
+	# 3. Tecla Q y clic: casa.
+	var spot := Vector2i(-1, -1)
+	for r in range(5, 12):
+		for d in range(-r, r + 1):
+			if spot.x < 0 and sim.can_place("casa", base.x + d, base.y + r):
+				spot = Vector2i(base.x + d, base.y + r)
+	_key_tap(KEY_Q)
+	await _frames(2)
+	check.call("Q entra en modo de construcción", ctrl.mode == "place" and ctrl.place_type == "casa")
+	var house_sp := _screen(spot.x + 1.0, spot.y + 1.0)
+	_mouse(house_sp, 0, false)
+	await _frames(3)
+	_mouse(house_sp, MOUSE_BUTTON_LEFT, true)
+	_mouse(house_sp, MOUSE_BUTTON_LEFT, false)
+	await get_tree().create_timer(0.4).timeout
+	var houses := 0
+	for e in sim.actives:
+		if e.owner == local and e.type == "casa":
+			houses += 1
+	check.call("clic coloca el cimiento de la casa", houses == 1)
+	check.call("se descontó la madera (%d)" % sim.players[local]["res"]["madera"], sim.players[local]["res"]["madera"] == 150)
+
+	# 4. Tecla H selecciona el centro; Q entrena un aldeano.
+	_key_tap(KEY_H)
+	await _frames(3)
+	var centro: SimEntity = sim.by_id.get(ctrl.selection[0]) if ctrl.selection.size() == 1 else null
+	check.call("H selecciona el centro", centro != null and centro.type == "centro")
+	_key_tap(KEY_Q)
+	await get_tree().create_timer(0.3).timeout
+	check.call("Q en el centro encola un aldeano", centro != null and centro.queue.size() == 1)
+
+	# 5. Grupo de control.
+	var k := InputEventKey.new()
+	k.physical_keycode = KEY_1
+	k.keycode = KEY_1
+	k.ctrl_pressed = true
+	k.pressed = true
+	Input.parse_input_event(k)
+	k = k.duplicate()
+	k.pressed = false
+	Input.parse_input_event(k)
+	await _frames(2)
+	check.call("Ctrl+1 asigna el grupo", ctrl.groups.has(1))
+
+	speed = 4.0
+	await get_tree().create_timer(8.0).timeout
+	var house_progress := 0
+	for e in sim.actives:
+		if e.owner == local and e.type == "casa":
+			house_progress = e.progress
+	check.call("los aldeanos construyen la casa (%d ms)" % house_progress, house_progress > 0)
+	check.call("entra alimento al banco (%d)" % sim.players[local]["res"]["alimento"], sim.players[local]["stats"]["recolectado"] > 0)
+	var img := get_viewport().get_texture().get_image()
+	img.save_png("screenshots/autotest.png")
+	for r in results:
+		print(r)
+		if r.begins_with("FALLO"):
+			ok = false
+	print("AUTOTEST: ", "OK" if ok else "FALLO")
+	get_tree().quit(0 if ok else 1)

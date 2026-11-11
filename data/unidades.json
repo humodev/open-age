@@ -1,0 +1,30 @@
+{
+  "_doc": "Unidades comunes de H1. velocidad: milesimas de casilla/s. tasa: milesimas de recurso/s. alcance, vision, radio: milesimas de casilla.",
+  "aldeano": {
+    "nombre": "Aldeano", "funcion": "civil", "edad_min": 1, "pob": 1,
+    "costo": { "alimento": 50 }, "tiempo_ms": 18000,
+    "pv": 50, "armadura": 0, "ataque": 3, "alcance": 400, "cadencia_ms": 1500,
+    "velocidad": 1250, "vision": 7000, "radio": 220,
+    "carga": 10,
+    "tasa": { "alimento": 1000, "granja": 750, "madera": 850, "piedra": 700, "riqueza": 700 },
+    "construye": ["casa", "granja", "deposito", "cuartel", "torre", "hito", "centro"]
+  },
+  "guerrero": {
+    "nombre": "Guerrero de choque", "funcion": "choque", "edad_min": 1, "pob": 1,
+    "costo": { "alimento": 60, "riqueza": 25 }, "tiempo_ms": 16000,
+    "pv": 120, "armadura": 1, "ataque": 11, "alcance": 450, "cadencia_ms": 1250,
+    "velocidad": 1600, "vision": 8000, "radio": 260
+  },
+  "hondero": {
+    "nombre": "Hondero", "funcion": "distancia", "edad_min": 1, "pob": 1,
+    "costo": { "alimento": 30, "madera": 45 }, "tiempo_ms": 15000,
+    "pv": 65, "armadura": 0, "ataque": 7, "alcance": 5500, "cadencia_ms": 1750,
+    "velocidad": 1250, "vision": 8500, "radio": 220
+  },
+  "lancero": {
+    "nombre": "Lancero con escudo", "funcion": "linea", "edad_min": 2, "pob": 1,
+    "costo": { "alimento": 60, "madera": 25, "riqueza": 10 }, "tiempo_ms": 16000,
+    "pv": 140, "armadura": 3, "ataque": 8, "alcance": 650, "cadencia_ms": 1500,
+    "velocidad": 1100, "vision": 7500, "radio": 280
+  }
+}

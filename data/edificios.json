@@ -1,0 +1,39 @@
+{
+  "_doc": "Edificios comunes de H1. tam en casillas. Ver docs/05-mecanicas-nucleo.md.",
+  "centro": {
+    "nombre": "Centro", "edad_min": 2, "tam": [4, 4], "pv": 2400, "armadura": 1,
+    "costo": { "madera": 400, "piedra": 300 }, "tiempo_ms": 120000, "vision": 10000,
+    "pob": 10, "deposito": ["alimento", "madera", "piedra", "riqueza"],
+    "produce": ["aldeano"], "hito": true,
+    "ataque": 6, "alcance": 7000, "cadencia_ms": 2000
+  },
+  "casa": {
+    "nombre": "Casa", "edad_min": 1, "tam": [2, 2], "pv": 450, "armadura": 1,
+    "costo": { "madera": 50 }, "tiempo_ms": 18000, "vision": 4000, "pob": 10
+  },
+  "deposito": {
+    "nombre": "Depósito", "edad_min": 1, "tam": [2, 2], "pv": 600, "armadura": 1,
+    "costo": { "madera": 75 }, "tiempo_ms": 20000, "vision": 5000,
+    "deposito": ["alimento", "madera", "piedra", "riqueza"]
+  },
+  "granja": {
+    "nombre": "Granja", "edad_min": 1, "tam": [3, 3], "pv": 300, "armadura": 0,
+    "costo": { "madera": 60 }, "tiempo_ms": 12000, "vision": 2000,
+    "transitable": true, "fuente": "alimento"
+  },
+  "cuartel": {
+    "nombre": "Cuartel", "edad_min": 1, "tam": [3, 3], "pv": 1200, "armadura": 2,
+    "costo": { "madera": 150 }, "tiempo_ms": 35000, "vision": 6000,
+    "produce": ["guerrero", "hondero", "lancero"]
+  },
+  "torre": {
+    "nombre": "Torre", "edad_min": 2, "tam": [2, 2], "pv": 1000, "armadura": 2,
+    "costo": { "madera": 50, "piedra": 150 }, "tiempo_ms": 45000, "vision": 9000,
+    "ataque": 9, "alcance": 7500, "cadencia_ms": 1500
+  },
+  "hito": {
+    "nombre": "Hito", "edad_min": 1, "tam": [4, 4], "pv": 3000, "armadura": 2,
+    "costo": {}, "tiempo_ms": 0, "vision": 7000,
+    "avanza_edad": true, "hito": true, "pob": 5
+  }
+}

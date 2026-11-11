@@ -1,0 +1,19 @@
+{
+  "_doc": "Reglas comunes. Ver docs/05-mecanicas-nucleo.md. Distancias en milesimas de casilla, tiempos en ms.",
+  "tick_ms": 100,
+  "mapa_tam": 128,
+  "pob_max": 200,
+  "cola_max": 5,
+  "radio_rebusca": 10000,
+  "radio_retomar": 30000,
+  "danio_minimo": 1,
+  "recursos_iniciales": { "alimento": 200, "madera": 200, "piedra": 100, "riqueza": 100 },
+  "aldeanos_iniciales": 6,
+  "contadores": {
+    "choque":    { "distancia": 200, "linea": 60,  "edificio": 45 },
+    "distancia": { "linea": 175,     "choque": 70, "edificio": 20 },
+    "linea":     { "choque": 225,    "distancia": 80, "edificio": 40 },
+    "civil":     { "edificio": 30 },
+    "edificio":  { }
+  }
+}
