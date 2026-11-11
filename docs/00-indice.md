@@ -27,6 +27,7 @@ RTS histórico con la calidad, legibilidad y asimetría de Age of Empires IV, pr
 | `07-arte-y-ui.md` | Guía de estilo, legibilidad, interfaz, controles | Borrador v1 |
 | `08-ia-rival.md` | Comportamiento de la IA de escaramuza | Borrador v1 |
 | `09-estado.md` | Estado de los hitos y próximos pasos | Vigente |
+| `investigacion/` | Informes de investigación histórica y de referencia (no son decisiones) | En curso |
 | `data/*.json` | Números de balance (fuente de verdad, D-008) | Vigente |
 
 ## Glosario mínimo
