@@ -14,10 +14,11 @@
   "niebla_cada_ticks": 5,
   "construccion_decreciente": true,
   "contadores": {
-    "choque":    { "distancia": 200, "linea": 60,  "edificio": 45 },
-    "distancia": { "linea": 175,     "choque": 70, "edificio": 20 },
+    "choque":    { "distancia": 200, "linea": 60,  "edificio": 45, "asedio": 150 },
+    "distancia": { "linea": 175,     "choque": 70, "edificio": 20, "asedio": 15 },
     "linea":     { "choque": 225,    "distancia": 80, "edificio": 40 },
     "civil":     { "edificio": 30 },
-    "edificio":  { }
+    "asedio":    { "edificio": 400, "choque": 0, "distancia": 0, "linea": 0, "civil": 0, "explorador": 0 },
+    "edificio":  { "asedio": 30 }
   }
 }

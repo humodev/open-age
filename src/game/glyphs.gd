@@ -113,6 +113,20 @@ static func draw(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
 		"expulsar":
 			draw(ci, "casa", r, col)
 			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.1, -s * 0.06), c + Vector2(-s * 0.1, s * 0.14), c + Vector2(-s * 0.2, s * 0.14), c + Vector2(0, s * 0.34), c + Vector2(s * 0.2, s * 0.14), c + Vector2(s * 0.1, s * 0.14), c + Vector2(s * 0.1, -s * 0.06)]), Palette.UI_ACCENT)
+		"empalizada":
+			for i in 4:
+				var x := c.x - s * 0.33 + i * s * 0.22
+				ci.draw_colored_polygon(PackedVector2Array([Vector2(x - s * 0.08, c.y + s * 0.36), Vector2(x - s * 0.08, c.y - s * 0.18), Vector2(x, c.y - s * 0.34), Vector2(x + s * 0.08, c.y - s * 0.18), Vector2(x + s * 0.08, c.y + s * 0.36)]), col)
+		"puerta":
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.36, -s * 0.3), Vector2(s * 0.12, s * 0.66)), col)
+			ci.draw_rect(Rect2(c + Vector2(s * 0.24, -s * 0.3), Vector2(s * 0.12, s * 0.66)), col)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.36, -s * 0.36), Vector2(s * 0.72, s * 0.1)), col)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.2, -s * 0.12), Vector2(s * 0.4, s * 0.48)), col.darkened(0.3))
+		"ariete":
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.36, s * 0.1), c + Vector2(-s * 0.2, -s * 0.24), c + Vector2(s * 0.2, -s * 0.24), c + Vector2(s * 0.36, s * 0.1)]), col)
+			ci.draw_line(c + Vector2(-s * 0.3, s * 0.1), c + Vector2(s * 0.46, s * 0.1), col.darkened(0.3), w * 1.6)
+			ci.draw_circle(c + Vector2(-s * 0.22, s * 0.3), s * 0.09, col)
+			ci.draw_circle(c + Vector2(s * 0.22, s * 0.3), s * 0.09, col)
 		"detener":
 			ci.draw_rect(Rect2(c - Vector2(s * 0.24, s * 0.24), Vector2(s * 0.48, s * 0.48)), col)
 		"atacar":

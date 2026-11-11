@@ -8,7 +8,7 @@ const P := 1000
 const O := SimEntity.Order
 const SLOT_KEYS: Array[int] = [KEY_Q, KEY_W, KEY_E, KEY_R, KEY_A, KEY_S, KEY_D, KEY_F, KEY_Z, KEY_X, KEY_C, KEY_V]
 const SLOT_LABELS: Array[String] = ["Q", "W", "E", "R", "A", "S", "D", "F", "Z", "X", "C", "V"]
-const VILLAGER_BUILDS := {0: "casa", 1: "granja", 2: "deposito", 3: "cuartel", 4: "torre", 6: "centro", 8: "hito_economia", 9: "hito_guerra"}
+const VILLAGER_BUILDS := {0: "casa", 1: "granja", 2: "deposito", 3: "cuartel", 4: "torre", 6: "centro", 8: "hito_economia", 9: "hito_guerra", 10: "empalizada", 11: "puerta"}
 const RES_LABEL := {"alimento": "alimento", "granja": "granjas", "madera": "madera", "piedra": "piedra", "riqueza": "riqueza", "*": "todos los recursos"}
 
 const DESCS := {
@@ -22,6 +22,9 @@ const DESCS := {
 	"campana": "Todos los aldeanos cercanos se refugian en centros y torres.",
 	"calma": "Los aldeanos salen y vuelven a su trabajo.",
 	"expulsar": "Saca a todas las unidades alojadas.",
+	"empalizada": "Cerco barato de troncos. Arrastrá para trazar una línea.",
+	"puerta": "Deja pasar solo a tus unidades. Se puede poner sobre una empalizada propia.",
+	"ariete": "Asedio: derriba edificios. No ataca unidades; vulnerable al choque.",
 	"aldeano": "Recolecta, construye y repara la economía.",
 	"explorador": "Rápido y de visión amplia. Descubre el mapa; pelea mal.",
 	"guerrero": "Choque: rápido, vence a la distancia; pierde contra la línea.",
@@ -41,8 +44,12 @@ var mode := "" # "", "place", "amove"
 var place_type := ""
 var groups := {}
 var enabled := true
+var mouse_override := Vector2(-1, -1) # posición virtual para pruebas automáticas
 
 var _ghost: MeshInstance3D
+var _line_drag := false
+var _line_start := Vector2i.ZERO
+var _line_ghosts: Array[MeshInstance3D] = []
 var _ghost_mat: StandardMaterial3D
 var press_pos := Vector2.ZERO
 var _pressing := false
@@ -240,6 +247,8 @@ func cancel_mode() -> void:
 	mode = ""
 	place_type = ""
 	_ghost.visible = false
+	_line_drag = false
+	_show_line([])
 	view.set_grid(false)
 	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 
@@ -255,7 +264,7 @@ func _process(_delta: float) -> void:
 	if not enabled:
 		return
 	_prune()
-	var m := get_viewport().get_mouse_position()
+	var m := mouse_pos()
 	view.hovered = -1 if _over_hud(m) or dragging else pick(m)
 	if mode == "place":
 		var tam: Array = sim.data.edificios[place_type]["tam"]
@@ -263,9 +272,18 @@ func _process(_delta: float) -> void:
 		var tx := int(floor(g.x - tam[0] / 2.0 + 0.5))
 		var ty := int(floor(g.z - tam[1] / 2.0 + 0.5))
 		_ghost.position = Vector3(tx + tam[0] / 2.0, 0.02, ty + tam[1] / 2.0)
-		var ok := sim.can_place(place_type, tx, ty) and sim.can_afford(local, sim.data.cost_of(place_type, sim.players[local]["age"]))
+		var ok := sim.can_place(place_type, tx, ty, local) and sim.can_afford(local, sim.data.cost_of(place_type, sim.players[local]["age"]))
 		_ghost_mat.albedo_color = Color(0.5, 1.0, 0.6, 0.55) if ok else Color(1.0, 0.35, 0.3, 0.55)
 		_ghost.set_meta("tile", Vector2i(tx, ty))
+		if _line_drag:
+			_ghost.visible = false
+			_show_line(line_tiles(_line_start, Vector2i(tx, ty)))
+		else:
+			_ghost.visible = true
+
+
+func mouse_pos() -> Vector2:
+	return mouse_override if mouse_override.x >= 0 else get_viewport().get_mouse_position()
 
 
 func _over_hud(m: Vector2) -> bool:
@@ -285,6 +303,10 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and not event.pressed and event.button_index == MOUSE_BUTTON_LEFT and _line_drag:
+		_finish_line()
+		get_viewport().set_input_as_handled()
+		return
 	# La suelta del arrastre puede ocurrir sobre la interfaz.
 	if event is InputEventMouseButton and not event.pressed and event.button_index == MOUSE_BUTTON_LEFT and _pressing:
 		_left_release(event.position)
@@ -295,6 +317,10 @@ func _input(event: InputEvent) -> void:
 
 func _mouse_button(mb: InputEventMouseButton) -> void:
 	if mb.button_index == MOUSE_BUTTON_LEFT and mb.pressed:
+		if mode == "place" and sim.data.edificios[place_type].get("linea", false):
+			_line_drag = true
+			_line_start = _ghost.get_meta("tile", Vector2i.ZERO)
+			return
 		if mode == "place":
 			_place()
 			return
@@ -415,7 +441,7 @@ func _right_click(pos: Vector2) -> void:
 func _place() -> void:
 	var tile: Vector2i = _ghost.get_meta("tile", Vector2i(-1, -1))
 	var cost := sim.data.cost_of(place_type, sim.players[local]["age"])
-	if not sim.can_place(place_type, tile.x, tile.y):
+	if not sim.can_place(place_type, tile.x, tile.y, local):
 		hud_notify("No se puede construir ahí")
 		return
 	if not sim.can_afford(local, cost):
@@ -558,3 +584,61 @@ func unlocks_text(age: int) -> String:
 	if bonus > 0:
 		txt += ". Ataque militar +%d%%." % bonus
 	return txt
+
+
+## Casillas de una línea 4-conexa (sin huecos en diagonal por donde colarse).
+static func line_tiles(a: Vector2i, b: Vector2i) -> Array:
+	var out := [[a.x, a.y]]
+	var x := a.x
+	var y := a.y
+	var dx := absi(b.x - a.x)
+	var dy := -absi(b.y - a.y)
+	var sx := 1 if a.x < b.x else -1
+	var sy := 1 if a.y < b.y else -1
+	var err := dx + dy
+	while (x != b.x or y != b.y) and out.size() < 80:
+		var e2 := 2 * err
+		if e2 - dy > dx - e2:
+			err += dy
+			x += sx
+		else:
+			err += dx
+			y += sy
+		out.append([x, y])
+	return out
+
+
+func _show_line(tiles: Array) -> void:
+	while _line_ghosts.size() < tiles.size():
+		var g := MeshInstance3D.new()
+		g.mesh = Meshes.building_mesh("empalizada", Palette.team(local))
+		g.material_override = _ghost_mat.duplicate()
+		g.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		view.add_child(g)
+		_line_ghosts.append(g)
+	var cost := sim.data.cost_of(place_type, sim.players[local]["age"]) if place_type != "" else {}
+	var budget: int = sim.players[local]["res"].get("madera", 0)
+	for i in _line_ghosts.size():
+		var g := _line_ghosts[i]
+		g.visible = i < tiles.size()
+		if not g.visible:
+			continue
+		var t: Array = tiles[i]
+		g.position = Vector3(t[0] + 0.5, 0.02, t[1] + 0.5)
+		budget -= int(cost.get("madera", 0))
+		var ok := sim.can_place(place_type, t[0], t[1], local) and budget >= 0
+		(g.material_override as StandardMaterial3D).albedo_color = Color(0.5, 1.0, 0.6, 0.55) if ok else Color(1.0, 0.35, 0.3, 0.55)
+
+
+func _finish_line() -> void:
+	_line_drag = false
+	var tile: Vector2i = _ghost.get_meta("tile", _line_start)
+	var tiles := line_tiles(_line_start, tile)
+	var ids := []
+	for e in selected_entities():
+		if e.owner == local and e.fn == "civil":
+			ids.append(e.id)
+	sim.push_command({"t": "build_line", "player": local, "ids": ids, "type": place_type, "tiles": tiles})
+	_show_line([])
+	if not Input.is_key_pressed(KEY_SHIFT):
+		cancel_mode()

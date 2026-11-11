@@ -22,10 +22,36 @@ Qué está hecho, qué falta y qué sigue. Se actualiza al cerrar cada sesión d
 | 200 unidades sin caídas de rendimiento | Hecho, con margen | `tests/bench.gd`: promedio ≈4,5 ms por tick contra 100 ms de presupuesto; peor tick ≈67 ms (ver riesgos) |
 | Simulación determinista desde H1 | Hecho | `tests/test_determinism.gd`: mismo hash en 3.000 ticks |
 
+## Capa común contra AoE4
+
+Comparación con la referencia de calidad (D-001). Detalle con fuentes en `investigacion/aoe4-capa-comun.md`.
+
+| Sistema | Estado |
+|---|---|
+| Recolección, depósitos, granjas, población | Hecho |
+| Centro con guarnición y andanadas, campana | Hecho (2026-11-11) |
+| Investigaciones por edificio con cadenas por edad | Hecho (2026-11-11) |
+| Dos hitos por edad con efecto permanente | Hecho (2026-11-11) |
+| Reparación | Hecho; gratis (A-012) |
+| Niebla de guerra y explorador | Hecho (2026-11-11) |
+| Empalizada y puerta | Hecho (2026-11-11). Falta muralla de piedra |
+| Asedio (ariete) | Hecho (2026-11-11) |
+| Rendimiento decreciente de construcción | Hecho (P-006) |
+| Solo la capital cuenta como hito | Hecho |
+| Menú de inicio | Hecho |
+| Caza y ganado | Falta: hoy la apertura de alimento es casi única (arbusto y después granja) |
+| Mercado y comercio por riqueza | Falta |
+| Sitios sagrados (victoria y riqueza tardía) | Falta |
+| Colas de órdenes con Mayúsculas, puntos de ruta | Falta |
+| Muralla de piedra, torres sobre muralla | Falta |
+| Sonido | H3 |
+| Repeticiones (gratis con lockstep: semilla + comandos) | Falta |
+
 ## Cómo correr
 
 ```
-godot --path .                                  # jugar contra la IA
+godot --path .                                  # menú de inicio
+godot --path . -- --seed=42                     # directo a una escaramuza
 godot --path . -- --aivai                       # mirar IA contra IA
 godot --path . -- --demo=batalla                # 30 contra 30 en el centro
 godot --path . -- --autotest                    # prueba de controles de punta a punta
@@ -51,14 +77,15 @@ Velocidad de juego: `F3` (×1, ×2, ×4). Pausa: `Esc` sin selección, o `F10`.
 - Semilla 7: el jugador 0 avanzó a edad II a los 4:10 sin ejército; el jugador 1 presionó con 5 unidades a los 4:00, le destruyó la economía y ganó a los 16:00. Es una primera señal de "ventanas de tiempo" (`01`, palancas): avanzar rápido tiene un costo explotable. Falta comprobar que la presión no domine siempre (test de las tres aperturas, H2).
 - Semilla 1234: partida pareja, ambos en edad III a los 13:30; ganador a los 26:40.
 
+- Semilla 7 tras agregar guarnición, campana, investigaciones, arietes y empalizadas: el jugador que antes caía a los 16:00 resiste la presión temprana. Pero a los 40:00 no hay ganador: ninguna IA llega a la edad IV (le falta riqueza y piedra) y las defensas aguantan. Es ajuste de la IA (`08`), no de la capa común.
+
 ## Riesgos y deudas conocidas
 
 | Tema | Detalle | Cuándo |
 |---|---|---|
 | Pico de búsqueda de caminos | Una orden a 200 unidades calcula 200 caminos en un tick (≈67 ms). Solución prevista: caminos compartidos por grupo o repartir el cálculo entre ticks | Antes de H2 |
-| Sin niebla de guerra | Mapuches y guaraníes la necesitan para sigilo y emboscada (`05`) | H2 |
-| Sin asedio | El daño a edificios viene del triángulo con multiplicador reducido (`reglas.json` → `contadores.edificio`) | H2 |
-| Un solo hito por edad | `01` exige dos opciones por avance | H2 |
+| IA sin cierre | Partidas largas sin ganador; no usa empalizadas ni llega a edad IV | Antes de H2 |
+| IA ve todo | No respeta la niebla todavía (`08`) | H2 |
 | Sin sonido | Fuera de alcance de H1 | H3 |
 | Fuente incluida | Fira Sans (OFL) en `assets/fonts/` | — |
 | `AStarGrid2D` entre plataformas | A-009 | H5 |

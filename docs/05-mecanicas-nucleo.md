@@ -100,9 +100,11 @@ daño = max(minimo, ataque × multiplicador[función atacante][función objetivo
 - Edificios con `ataque` (centro, torre) disparan solos a unidades enemigas en alcance.
 
 ### Asedio y defensas
-Fuera del triángulo (`02-alcance-y-epoca.md`). Regla de la capa común:
+Fuera del triángulo (`02-alcance-y-epoca.md`). Reglas de la capa común:
 - Las unidades del triángulo hacen daño reducido a edificios (`contadores` → `edificio`).
-- El daño real a edificios viene de unidades de asedio y de mecánicas propias (galgas, incendio). Llegan en H2 con las civilizaciones.
+- **Ariete** (`asedio`, desde la edad II, en el cuartel): solo ataca edificios y con un multiplicador muy alto. Es vulnerable al choque y casi inmune a la distancia. Es el asedio genérico; cada civilización lo reemplaza por el suyo (`investigacion/` propone, por ejemplo, el cañón de tacuara guaraní o los proyectiles incendiarios incas).
+- **Empalizada**: cerco de troncos de una casilla, barato, que se coloca arrastrando una línea 4-conexa (sin huecos en diagonal).
+- **Puerta**: deja pasar solo a su dueño y se puede poner sobre una empalizada propia. Cada jugador tiene su propia grilla de caminos (`06`).
 
 ## Edades
 
@@ -120,8 +122,10 @@ Las civilizaciones reemplazan estos dos por los suyos (obra estatal, asamblea, f
 
 ## Visión y niebla
 
-- Cada entidad ve en un radio (`vision`). Lo no visto se muestra como explorado o negro.
-- **Fuera de H1**: la niebla llega en H2, porque sigilo en bosque y emboscada (mapuches, guaraníes) dependen de ella. La simulación ya guarda `vision` en todas las entidades.
+- Cada entidad ve en un radio (`vision`). Estados por casilla y por jugador: sin explorar, explorado y visible. Se calcula en la simulación cada `niebla_cada_ticks`, porque sigilo y emboscada (H2) dependen de ella.
+- Las unidades enemigas solo se ven en casillas visibles. Los edificios y recursos explorados quedan a la vista, atenuados.
+- Cada jugador empieza con un **explorador**: a pie (no hay caballo para todos, pilar 2), rápido, de visión amplia y débil en combate.
+- La IA de H1 todavía ve todo el mapa (`08`).
 
 ## Victoria
 
@@ -142,10 +146,12 @@ En el prototipo gris todas las facciones usan las mismas unidades genéricas, un
 
 | Clave de datos | Función | Notas |
 |---|---|---|
-| `aldeano` | civil | Recolecta, construye, pelea mal |
+| `aldeano` | civil | Recolecta, construye, repara, pelea mal |
+| `explorador` | explorador | Descubre el mapa; fuera del triángulo |
 | `guerrero` | choque | Rápido, cuerpo a cuerpo |
 | `hondero` | distancia | Frágil, alcance largo |
 | `lancero` | línea | Lento, armadura alta; desde edad II |
+| `ariete` | asedio | Solo edificios; desde edad II |
 
 ## Edificios comunes de H1
 
@@ -156,5 +162,6 @@ En el prototipo gris todas las facciones usan las mismas unidades genéricas, un
 | `deposito` | Depósito de los cuatro recursos |
 | `granja` | Alimento infinito, transitable |
 | `cuartel` | Produce unidades militares |
-| `torre` | Defensa a distancia; desde edad II |
+| `torre` | Defensa a distancia y guarnición; desde edad II |
+| `empalizada`, `puerta` | Cerco y paso propio |
 | `hito_economia`, `hito_guerra` | Avanzan de edad; cuentan para la victoria por hitos |

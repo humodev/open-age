@@ -132,6 +132,19 @@ static func unit_mesh(type: String, team: Color) -> ArrayMesh:
 			p.append([box(0.05, 0.05, 0.22), xf(Vector3(0, 0.78, -0.08)), team]) # cintas
 			p.append([cyl(0.015, 0.015, 1.05, 6), xf(Vector3(0.16, 0.5, 0.12), Vector3(18, 0, 0)), Palette.WOOD_BEAM])
 			p.append([box(0.18, 0.2, 0.1), xf(Vector3(-0.02, 0.48, -0.15)), shade])
+		"ariete":
+			# Armazón con techo a dos aguas, ruedas y tronco con punta.
+			for z in [-0.45, 0.45]:
+				for x in [-0.42, 0.42]:
+					p.append([cyl(0.18, 0.18, 0.08, 12), xf(Vector3(x, 0.18, z), Vector3(0, 0, 90)), Palette.TRUNK])
+			p.append([box(0.8, 0.08, 1.3), xf(Vector3(0, 0.3, 0)), Palette.WOOD_BEAM])
+			for z in [-0.5, 0.5]:
+				for x in [-0.36, 0.36]:
+					p.append([box(0.07, 0.6, 0.07), xf(Vector3(x, 0.62, z)), Palette.WOOD_BEAM])
+			p.append([prism(0.95, 0.4, 1.4), xf(Vector3(0, 1.1, 0)), Palette.ROOF])
+			p.append([box(0.97, 0.06, 1.42), xf(Vector3(0, 0.92, 0)), team])
+			p.append([cyl(0.1, 0.11, 1.5, 8), xf(Vector3(0, 0.62, 0.15), Vector3(90, 0, 0)), Palette.TRUNK])
+			p.append([cyl(0.0, 0.12, 0.25, 8), xf(Vector3(0, 0.62, 1.02), Vector3(90, 0, 0)), Palette.STONE_DARK])
 		"lancero":
 			p.append([capsule(0.2, 0.7), xf(Vector3(0, 0.37, 0)), clay])
 			p.append([sphere(0.125), xf(Vector3(0, 0.84, 0)), clay])
@@ -225,6 +238,21 @@ static func building_mesh(type: String, team: Color) -> ArrayMesh:
 				p.append([box(0.2, 0.25, 0.2), xf(Vector3(cos(a) * 0.7, 3.22, sin(a) * 0.7), Vector3(0, -rad_to_deg(a), 0)), shade])
 			p.append([box(0.1, 0.35, 0.05), xf(Vector3(0, 1.4, 0.75)), Palette.WOOD_BEAM])
 			_banner(p, Vector3(0, 3.0, 0), 1.2, team)
+		"empalizada":
+			# Troncos aguzados en tres por dos: se leen como un cerco continuo.
+			for ix in 3:
+				for iz in 2:
+					var o := Vector3(-0.32 + ix * 0.32, 0, -0.14 + iz * 0.28)
+					var hgt := 1.05 + float((ix + iz) % 2) * 0.12
+					p.append([cyl(0.12, 0.13, hgt, 7), xf(o + Vector3(0, hgt / 2.0, 0)), Palette.WOOD_BEAM])
+					p.append([cyl(0.0, 0.12, 0.2, 7), xf(o + Vector3(0, hgt + 0.1, 0)), Palette.TRUNK])
+		"puerta":
+			for x in [-0.42, 0.42]:
+				p.append([cyl(0.13, 0.14, 1.5, 8), xf(Vector3(x, 0.75, 0)), Palette.WOOD_BEAM])
+				p.append([cyl(0.0, 0.13, 0.22, 8), xf(Vector3(x, 1.61, 0)), Palette.TRUNK])
+			p.append([box(1.0, 0.12, 0.16), xf(Vector3(0, 1.3, 0)), Palette.WOOD_BEAM])
+			p.append([box(0.7, 0.9, 0.08), xf(Vector3(0, 0.5, 0)), Palette.TRUNK])
+			p.append([box(0.3, 0.25, 0.04), xf(Vector3(0, 1.1, 0.1)), team])
 		"hito_economia":
 			# Plataforma escalonada con depósitos circulares: hito de la abundancia.
 			p.append([box(3.9, 0.5, 3.9), xf(Vector3(0, 0.25, 0)), dark])

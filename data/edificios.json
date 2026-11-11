@@ -25,7 +25,7 @@
   "cuartel": {
     "nombre": "Cuartel", "edad_min": 1, "tam": [3, 3], "pv": 1200, "armadura": 2,
     "costo": { "madera": 150 }, "tiempo_ms": 35000, "vision": 6000,
-    "produce": ["guerrero", "hondero", "lancero"]
+    "produce": ["guerrero", "hondero", "lancero", "ariete"]
   },
   "torre": {
     "nombre": "Torre", "edad_min": 2, "tam": [2, 2], "pv": 1000, "armadura": 2,
@@ -49,5 +49,13 @@
     "guarnicion": 10, "flechas": 3, "ataque": 6, "alcance": 7500, "cadencia_ms": 2000,
     "efectos": [{ "tipo": "vida_pct", "funciones": ["choque", "distancia", "linea"], "pct": 10 }],
     "desc": "Avanza de edad. Entrena tropas, dispara flechas, aloja guarnición y fortalece al ejército."
+  },
+  "empalizada": {
+    "nombre": "Empalizada", "edad_min": 1, "tam": [1, 1], "pv": 300, "armadura": 0,
+    "costo": { "madera": 4 }, "tiempo_ms": 3000, "vision": 1000, "linea": true
+  },
+  "puerta": {
+    "nombre": "Puerta", "edad_min": 1, "tam": [1, 1], "pv": 500, "armadura": 0,
+    "costo": { "madera": 20 }, "tiempo_ms": 8000, "vision": 2000, "puerta": true
   }
 }

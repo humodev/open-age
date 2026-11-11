@@ -38,7 +38,7 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null)
 	data = data_override if data_override != null else SimData.load_default()
 	tick_ms = data.reglas["tick_ms"]
 	rng = SimRng.new(seed_value)
-	map = SimMap.new(data.reglas["mapa_tam"])
+	map = SimMap.new(data.reglas["mapa_tam"], num_players)
 	fog = SimFog.new(data.reglas["mapa_tam"], num_players)
 	for i in num_players:
 		players.append({
@@ -85,6 +85,8 @@ func _apply(c: Dictionary) -> void:
 			_cmd_target(pid, _own_units(pid, c.get("ids", [])), c["target"])
 		"build":
 			_cmd_build(pid, _own_units(pid, c.get("ids", [])), c["type"], c["tx"], c["ty"])
+		"build_line":
+			_cmd_build_line(pid, _own_units(pid, c.get("ids", [])), c["type"], c["tiles"])
 		"train":
 			_cmd_train(pid, c["building"], c["type"])
 		"cancel":
@@ -124,7 +126,7 @@ func _own_units(pid: int, ids: Array) -> Array[SimEntity]:
 	return out
 
 
-func _cmd_move(_pid: int, units: Array[SimEntity], x: int, y: int, amove: bool) -> void:
+func _cmd_move(pid: int, units: Array[SimEntity], x: int, y: int, amove: bool) -> void:
 	var n := units.size()
 	if n == 0:
 		return
@@ -137,8 +139,8 @@ func _cmd_move(_pid: int, units: Array[SimEntity], x: int, y: int, amove: bool) 
 		var e := units[i]
 		var gx := x + (i % cols) * sp - (cols - 1) * sp / 2
 		var gy := y + (i / cols) * sp - (rows - 1) * sp / 2
-		var t := map.nearest_free(clampi(gx / P, 0, map.n - 1), clampi(gy / P, 0, map.n - 1), 8)
-		if t.x >= 0 and map.is_solid(gx / P, gy / P):
+		var t := map.nearest_free(clampi(gx / P, 0, map.n - 1), clampi(gy / P, 0, map.n - 1), 8, pid)
+		if t.x >= 0 and map.is_solid(gx / P, gy / P, pid):
 			gx = t.x * P + P / 2
 			gy = t.y * P + P / 2
 		e.target = -1
@@ -156,7 +158,10 @@ func _cmd_target(pid: int, units: Array[SimEntity], target_id: int) -> void:
 	var plain: Array[SimEntity] = []
 	for e in units:
 		if t.owner >= 0 and t.owner != pid:
-			_order_attack(e, t)
+			if t.is_unit() and e.def.get("solo_edificios", false):
+				plain.append(e)
+			else:
+				_order_attack(e, t)
 		elif t.is_resource():
 			if e.fn == "civil":
 				_order_gather(e, t)
@@ -201,9 +206,10 @@ func _cmd_build(pid: int, units: Array[SimEntity], type: String, tx: int, ty: in
 	if not can_afford(pid, cost):
 		_notify(pid, "Recursos insuficientes")
 		return
-	if not can_place(type, tx, ty):
+	if not can_place(type, tx, ty, pid):
 		_notify(pid, "No se puede construir ahí")
 		return
+	_replace_wall(type, tx, ty, pid)
 	_pay(pid, cost)
 	var b := spawn_building(type, pid, tx, ty, false)
 	b.build_time = data.build_time_of(type, p["age"])
@@ -907,15 +913,15 @@ func _spawn_from(b: SimEntity, type: String) -> void:
 func _spawn_tile(b: SimEntity) -> Vector2i:
 	for r in range(1, 6):
 		for xx in range(b.tx - r, b.tx + b.w + r):
-			if not map.is_solid(xx, b.ty + b.h - 1 + r):
+			if not map.is_solid(xx, b.ty + b.h - 1 + r, b.owner):
 				return Vector2i(xx, b.ty + b.h - 1 + r)
 		for yy in range(b.ty - r, b.ty + b.h + r):
-			if not map.is_solid(b.tx + b.w - 1 + r, yy):
+			if not map.is_solid(b.tx + b.w - 1 + r, yy, b.owner):
 				return Vector2i(b.tx + b.w - 1 + r, yy)
-			if not map.is_solid(b.tx - r, yy):
+			if not map.is_solid(b.tx - r, yy, b.owner):
 				return Vector2i(b.tx - r, yy)
 		for xx in range(b.tx - r, b.tx + b.w + r):
-			if not map.is_solid(xx, b.ty - r):
+			if not map.is_solid(xx, b.ty - r, b.owner):
 				return Vector2i(xx, b.ty - r)
 	return Vector2i(b.tx, b.ty + b.h)
 
@@ -932,14 +938,14 @@ func _set_goal(e: SimEntity, gx: int, gy: int, target_id: int = -1) -> void:
 	e.stuck = 0
 	var from := Vector2i(e.x / P, e.y / P)
 	var to := Vector2i(gx / P, gy / P)
-	if map.is_solid(from.x, from.y):
-		var f2 := map.nearest_free(from.x, from.y, 6)
+	if map.is_solid(from.x, from.y, e.owner):
+		var f2 := map.nearest_free(from.x, from.y, 6, e.owner)
 		e.path = [from] as Array[Vector2i]
 		if f2.x >= 0:
-			e.path.append_array(map.find_path(f2, to))
+			e.path.append_array(map.find_path(f2, to, e.owner))
 		e.path_i = 1
 	else:
-		e.path = map.find_path(from, to)
+		e.path = map.find_path(from, to, e.owner)
 		e.path_i = 1
 
 
@@ -953,7 +959,7 @@ func _follow(e: SimEntity) -> bool:
 		var last := e.path_i == e.path.size() - 1
 		var px := wp.x * P + P / 2
 		var py := wp.y * P + P / 2
-		if last and wp == goal_tile and not map.is_solid(wp.x, wp.y):
+		if last and wp == goal_tile and not map.is_solid(wp.x, wp.y, e.owner):
 			px = e.goal_x
 			py = e.goal_y
 		if not last and dist(e.x, e.y, px, py) < 380:
@@ -963,7 +969,7 @@ func _follow(e: SimEntity) -> bool:
 			e.path_i += 1
 			return e.path_i >= e.path.size()
 		return false
-	if map.is_solid(goal_tile.x, goal_tile.y):
+	if map.is_solid(goal_tile.x, goal_tile.y, e.owner):
 		return true
 	return _step_toward(e, e.goal_x, e.goal_y)
 
@@ -994,14 +1000,14 @@ func _try_move(e: SimEntity, nx: int, ny: int) -> int:
 	var lim := map.n * P - 50
 	nx = clampi(nx, 50, lim)
 	ny = clampi(ny, 50, lim)
-	if map.is_solid(e.x / P, e.y / P) or not map.is_solid(nx / P, ny / P):
+	if map.is_solid(e.x / P, e.y / P, e.owner) or not map.is_solid(nx / P, ny / P, e.owner):
 		e.x = nx
 		e.y = ny
 		return 2
-	if not map.is_solid(nx / P, e.y / P):
+	if not map.is_solid(nx / P, e.y / P, e.owner):
 		e.x = nx
 		return 1
-	if not map.is_solid(e.x / P, ny / P):
+	if not map.is_solid(e.x / P, ny / P, e.owner):
 		e.y = ny
 		return 1
 	return 0
@@ -1074,6 +1080,7 @@ func _separate() -> void:
 # ---------------------------------------------------------------- Consultas
 
 func find_enemy(e: SimEntity, radius: int, units_only: bool) -> SimEntity:
+	var buildings_only: bool = e.is_unit() and e.def.get("solo_edificios", false)
 	var best: SimEntity = null
 	var best_score := 1 << 60
 	var x0 := maxi(0, (e.x - radius) / EC)
@@ -1087,6 +1094,8 @@ func find_enemy(e: SimEntity, radius: int, units_only: bool) -> SimEntity:
 				if not o.alive or o.owner < 0 or o.owner == e.owner:
 					continue
 				if units_only and not o.is_unit():
+					continue
+				if buildings_only and not o.is_building():
 					continue
 				var d := dist_to(e, o)
 				if d > radius:
@@ -1243,11 +1252,56 @@ func _refund(pid: int, cost: Dictionary) -> void:
 		players[pid]["res"][k] += cost[k]
 
 
-func can_place(type: String, tx: int, ty: int) -> bool:
+func can_place(type: String, tx: int, ty: int, pid: int = -1) -> bool:
 	var tam: Array = data.edificios[type]["tam"]
 	if tx < 0 or ty < 0 or tx + tam[0] > map.n or ty + tam[1] > map.n:
 		return false
+	if data.edificios[type].get("puerta", false) and _own_wall_at(tx, ty, pid) != null:
+		return true
 	return map.is_free_rect(tx, ty, tam[0], tam[1])
+
+
+## Empalizada propia en la casilla (una puerta puede reemplazarla).
+func _own_wall_at(tx: int, ty: int, pid: int) -> SimEntity:
+	var w: SimEntity = by_id.get(map.occupant(tx, ty))
+	if w != null and w.alive and w.owner == pid and w.def.get("linea", false):
+		return w
+	return null
+
+
+func _replace_wall(type: String, tx: int, ty: int, pid: int) -> void:
+	if not data.edificios[type].get("puerta", false):
+		return
+	var w := _own_wall_at(tx, ty, pid)
+	if w != null:
+		_kill(w)
+
+
+## Construcción en línea (empalizadas): un cimiento por casilla; los aldeanos siguen de uno al siguiente.
+func _cmd_build_line(pid: int, units: Array[SimEntity], type: String, tiles: Array) -> void:
+	var def: Dictionary = data.edificios.get(type, {})
+	if not def.get("linea", false):
+		return
+	var cost := data.cost_of(type, players[pid]["age"])
+	var first: SimEntity = null
+	var placed := 0
+	for t in tiles:
+		if not can_afford(pid, cost):
+			_notify(pid, "Recursos insuficientes")
+			break
+		if not can_place(type, t[0], t[1], pid):
+			continue
+		_pay(pid, cost)
+		var b := spawn_building(type, pid, t[0], t[1], false)
+		placed += 1
+		if first == null:
+			first = b
+	if first == null:
+		return
+	events.append({"t": "placed", "id": first.id, "player": pid})
+	for e in units:
+		if e.fn == "civil":
+			_order_build(e, first)
 
 
 func hito_in_progress(pid: int) -> bool:
@@ -1339,7 +1393,7 @@ func spawn_building(type: String, owner: int, tx: int, ty: int, built: bool) -> 
 	e.built = built
 	e.hp = e.hp_max if built else 1
 	e.build_time = data.build_time_of(type, players[owner]["age"]) if owner >= 0 else 0
-	map.mark(tx, ty, e.w, e.h, e.id, not def.get("transitable", false))
+	map.mark(tx, ty, e.w, e.h, e.id, not def.get("transitable", false), owner if def.get("puerta", false) else -1)
 	return e
 
 

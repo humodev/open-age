@@ -100,8 +100,8 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 	_notice.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_notice)
 
-	_menu = _make_dialog("Pausa", "", [["Reanudar", func() -> void: toggle_menu()], ["Nueva partida", func() -> void: main.restart()], ["Salir", func() -> void: get_tree().quit()]])
-	_end = _make_dialog("", "", [["Seguir mirando", func() -> void: _end.visible = false], ["Nueva partida", func() -> void: main.restart()], ["Salir", func() -> void: get_tree().quit()]])
+	_menu = _make_dialog("Pausa", "", [["Reanudar", func() -> void: toggle_menu()], ["Nueva partida", func() -> void: main.restart()], ["Menú principal", func() -> void: main.to_menu()], ["Salir", func() -> void: get_tree().quit()]])
+	_end = _make_dialog("", "", [["Seguir mirando", func() -> void: _end.visible = false], ["Nueva partida", func() -> void: main.restart()], ["Menú principal", func() -> void: main.to_menu()], ["Salir", func() -> void: get_tree().quit()]])
 	_end_title = _end.get_meta("title")
 	_end_body = _end.get_meta("body")
 

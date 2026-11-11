@@ -2,7 +2,7 @@ class_name Overlay
 extends Control
 ## Barras de vida, progreso de obra y rectángulo de selección (docs/07, legibilidad).
 
-const HEIGHTS := {"centro": 3.2, "casa": 1.7, "deposito": 1.8, "granja": 0.6, "cuartel": 2.3, "torre": 3.7, "hito_economia": 3.2, "hito_guerra": 3.5}
+const HEIGHTS := {"centro": 3.2, "casa": 1.7, "deposito": 1.8, "granja": 0.6, "cuartel": 2.3, "torre": 3.7, "hito_economia": 3.2, "hito_guerra": 3.5, "empalizada": 1.4, "puerta": 1.8}
 
 var sim: Sim
 var ctrl: Controller
@@ -34,7 +34,7 @@ func _draw() -> void:
 		if v.is_empty() or e.inside >= 0 or view.fog_state(e) < 2:
 			continue
 		var wp: Vector3 = (v["node"] as Node3D).position
-		wp.y += 1.2 if e.is_unit() else HEIGHTS.get(e.type, 2.0)
+		wp.y += (1.6 if e.type == "ariete" else 1.2) if e.is_unit() else HEIGHTS.get(e.type, 2.0)
 		if cam.cam.is_position_behind(wp):
 			continue
 		var sp := cam.cam.unproject_position(wp)
@@ -52,7 +52,7 @@ func _draw() -> void:
 			draw_rect(pr.grow(1), Color(0, 0, 0, 0.6))
 			draw_rect(Rect2(pr.position, Vector2(pr.size.x * pk, pr.size.y)), Palette.UI_ACCENT)
 	if ctrl.dragging:
-		var m := get_viewport().get_mouse_position()
+		var m := ctrl.mouse_pos()
 		var box := Rect2(ctrl.press_pos, m - ctrl.press_pos).abs()
 		draw_rect(box, Color(1, 1, 1, 0.07))
 		draw_rect(box, Color(1, 1, 1, 0.75), false, 1.0)

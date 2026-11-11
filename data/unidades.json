@@ -32,5 +32,11 @@
     "costo": { "alimento": 80 }, "tiempo_ms": 20000,
     "pv": 70, "armadura": 0, "ataque": 2, "alcance": 400, "cadencia_ms": 1500,
     "velocidad": 2100, "vision": 11000, "radio": 220
+  },
+  "ariete": {
+    "nombre": "Ariete", "funcion": "asedio", "edad_min": 2, "pob": 3,
+    "costo": { "madera": 200, "riqueza": 60 }, "tiempo_ms": 30000,
+    "pv": 400, "armadura": 2, "ataque": 45, "alcance": 450, "cadencia_ms": 3000,
+    "velocidad": 750, "vision": 5000, "radio": 420, "solo_edificios": true
   }
 }

@@ -10,6 +10,7 @@ extends Node3D
 ##   --cam=x,z,zoom     posición de cámara para la captura
 ##   --select=tipo      selecciona entidades de ese tipo del jugador local antes de la captura
 ##   --demo=base|batalla  escena armada para revisar modelos y combate
+##   --menu             fuerza el menú de inicio (sin argumentos se abre solo)
 ##   --nofog            sin niebla de guerra (automático en --aivai)
 ##   --autotest         prueba de punta a punta con eventos reales de mouse y teclado
 
@@ -27,6 +28,9 @@ var _acc := 0.0
 var _args := {}
 var _seed := 0
 var _shot_done := false
+var _menu_mode := false
+var _menu: MainMenu
+var _drift := 0.0
 
 
 func _ready() -> void:
@@ -35,6 +39,7 @@ func _ready() -> void:
 		_args[kv[0]] = kv[1] if kv.size() > 1 else "1"
 	_seed = int(_args.get("seed", str(randi() % 100000)))
 	speed = float(_args.get("speed", "1"))
+	_menu_mode = _args.is_empty() or _args.has("menu")
 	_build_environment()
 	_new_game()
 
@@ -92,7 +97,7 @@ func _build_environment() -> void:
 
 func _new_game() -> void:
 	sim = Sim.new(_seed)
-	var aivai := _args.has("aivai")
+	var aivai := _args.has("aivai") or _menu_mode
 	sim.ais = []
 	for pid in sim.players.size():
 		if pid != local or aivai:
@@ -128,6 +133,15 @@ func _new_game() -> void:
 	layer.add_child(hud)
 	hud.setup(self, sim, ctrl, cam, local)
 	ctrl.hud = hud
+	if _menu_mode:
+		hud.visible = false
+		ctrl.enabled = false
+		cam.edge_pan = false
+		speed = 1.0
+		_menu = MainMenu.new()
+		layer.add_child(_menu)
+		_menu.play.connect(func(sd: int) -> void: _start({"seed": str(sd)}))
+		_menu.watch.connect(func(sd: int) -> void: _start({"aivai": "1", "seed": str(sd)}))
 	if _args.has("autotest"):
 		cam.edge_pan = false
 		_autotest.call_deferred()
@@ -162,6 +176,11 @@ func _demo(kind: String) -> void:
 		place.call("deposito", b.x - 4, b.y - 2, true)
 		place.call("hito_economia", b.x + 10, b.y + 1, false)
 		place.call("hito_guerra", b.x - 6, b.y + 12, true)
+		for i in 9:
+			var wt := Vector2i(b.x - 8 + i, b.y - 5)
+			if sim.can_place("empalizada", wt.x, wt.y, 0):
+				sim.spawn_building("puerta" if i == 4 else "empalizada", 0, wt.x, wt.y, true)
+		sim.spawn_unit("ariete", 0, (b.x + 13) * 1000, (b.y + 10) * 1000)
 		for i in 6:
 			sim.spawn_unit(["guerrero", "hondero", "lancero"][i % 3], 0, (b.x + 10 + i % 3) * 1000 + 500, (b.y + 7 + i / 3) * 1000 + 500)
 	elif kind == "batalla":
@@ -178,10 +197,23 @@ func _demo(kind: String) -> void:
 		sim.push_command({"t": "move", "player": 1, "ids": ids[1], "x": (c - 6) * 1000, "y": c * 1000, "amove": true})
 
 
-func restart() -> void:
+func _start(args: Dictionary) -> void:
+	_args = args
+	_menu_mode = false
+	speed = 1.0
+	restart(int(args.get("seed", str(randi() % 100000))))
+
+
+func to_menu() -> void:
+	_args = {}
+	_menu_mode = true
+	restart()
+
+
+func restart(seed_value: int = -1) -> void:
 	for n in [view, cam, ctrl, hud.get_parent()]:
 		n.queue_free()
-	_seed = randi() % 100000
+	_seed = seed_value if seed_value >= 0 else randi() % 100000
 	paused = false
 	_acc = 0.0
 	await get_tree().process_frame
@@ -194,7 +226,7 @@ func set_paused(p: bool) -> void:
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	var k := event as InputEventKey
-	if not k.pressed or k.echo:
+	if not k.pressed or k.echo or _menu_mode:
 		return
 	if k.physical_keycode == KEY_F3:
 		speed = 2.0 if speed == 1.0 else (4.0 if speed == 2.0 else 1.0)
@@ -216,6 +248,11 @@ func _process(delta: float) -> void:
 		if steps == MAX_STEPS_PER_FRAME:
 			_acc = 0.0
 		view.render(_acc / tick_s, delta)
+		if _menu_mode:
+			# Cámara de fondo que recorre el mapa despacio.
+			_drift += delta * 0.035
+			var c := sim.map.n / 2.0
+			cam.look_at_point(Vector3(c + cos(_drift) * 30.0, 0, c + sin(_drift * 1.3) * 30.0))
 	else:
 		view.render(1.0, 0.0)
 	_maybe_shot()
@@ -258,6 +295,7 @@ func _frames(n: int) -> void:
 
 
 func _mouse(pos: Vector2, button: int, pressed: bool) -> void:
+	ctrl.mouse_override = pos
 	var mv := InputEventMouseMotion.new()
 	mv.position = pos
 	mv.global_position = pos
@@ -381,7 +419,42 @@ func _autotest() -> void:
 			house_progress = e.progress
 	check.call("los aldeanos construyen la casa (%d ms)" % house_progress, house_progress > 0)
 	check.call("entra alimento al banco (%d)" % sim.players[local]["res"]["alimento"], sim.players[local]["stats"]["recolectado"] > 0)
-	# 6. Campana desde el centro (Z): los aldeanos se refugian y el centro dispara más.
+	# 6. Empalizada por arrastre (C): un cimiento por casilla.
+	var vill_ids: Array[int] = []
+	for e in sim.actives:
+		if e.owner == local and e.fn == "civil" and e.inside < 0:
+			vill_ids.append(e.id)
+	ctrl.select_ids(vill_ids)
+	await _frames(2)
+	_key_tap(KEY_C)
+	await _frames(2)
+	# Una fila libre delante de la base (lejos del panel inferior).
+	var row := base.y + 8
+	for r in range(8, 14):
+		var free := 0
+		for dx in 6:
+			if sim.can_place("empalizada", base.x + 4 + dx, base.y + r, local):
+				free += 1
+		if free == 6:
+			row = base.y + r
+			break
+	var w0 := _screen(base.x + 4.5, row + 0.5)
+	var w1 := _screen(base.x + 9.5, row + 0.5)
+	_mouse(w0, 0, false)
+	await _frames(3)
+	_mouse(w0, MOUSE_BUTTON_LEFT, true)
+	await _frames(2)
+	_mouse(w1, 0, false)
+	await _frames(3)
+	_mouse(w1, MOUSE_BUTTON_LEFT, false)
+	await get_tree().create_timer(0.4).timeout
+	var walls := 0
+	for e in sim.actives:
+		if e.owner == local and e.type == "empalizada":
+			walls += 1
+	check.call("arrastrar coloca una línea de empalizada (%d)" % walls, walls >= 5)
+
+	# 7. Campana desde el centro (Z): los aldeanos se refugian y el centro dispara más.
 	_key_tap(KEY_H)
 	await _frames(3)
 	_key_tap(KEY_Z)

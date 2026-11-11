@@ -314,6 +314,11 @@ func _production(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], 
 			sim.push_command({"t": "rally", "player": player, "building": b.id, "x": rally.x, "y": rally.y})
 		if b.queue.size() >= 2:
 			continue
+		# Arietes desde la edad II: sin asedio los ataques no derriban edificios.
+		if p["age"] >= 2 and b.type == "cuartel" and _count(army, "ariete") < 1 + wave / 2 and army.size() >= 6:
+			if sim.can_afford(player, sim.data.cost_of("ariete", p["age"])):
+				sim.push_command({"t": "train", "player": player, "building": b.id, "type": "ariete"})
+				continue
 		# La preferida si alcanza; si no, la siguiente que se pueda pagar.
 		for type in order:
 			if sim.can_afford(player, sim.data.cost_of(type, p["age"])):
@@ -397,3 +402,11 @@ func _attack(army: Array[SimEntity]) -> void:
 	for u in army:
 		ids.append(u.id)
 	sim.push_command({"t": "move", "player": player, "ids": ids, "x": target.x, "y": target.y + 3000 * (1 if player == 1 else -1), "amove": true})
+
+
+func _count(list: Array[SimEntity], type: String) -> int:
+	var n := 0
+	for e in list:
+		if e.type == type:
+			n += 1
+	return n

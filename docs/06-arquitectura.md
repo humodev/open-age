@@ -26,6 +26,7 @@ src/sim/         Simulación determinista (sin nodos)
   sim_map.gd     Grilla, generación del mapa, búsqueda de caminos
   sim_data.gd    Carga de datos a enteros
   sim_rng.gd     Generador pseudoaleatorio propio
+  sim_fog.gd     Visión y niebla por jugador
   sim_ai.gd      IA de escaramuza (emite comandos como un jugador)
 src/game/        Presentación
   main.gd        Arranque, bucle de ticks, argumentos de línea de comandos
@@ -74,7 +75,7 @@ Máquina de estados de unidades: `INACTIVA`, `MOVER`, `ATACAR_MOVIENDO`, `ATACAR
 
 ## Movimiento
 
-- **Caminos**: A* sobre la grilla de casillas, con diagonales solo si no cortan esquinas. Las casillas de edificios y recursos son sólidas, salvo las de edificios transitables (granjas).
+- **Caminos**: A* sobre la grilla de casillas, con diagonales solo si no cortan esquinas. Las casillas de edificios y recursos son sólidas, salvo las de edificios transitables (granjas). Hay una grilla por jugador: sus puertas son pasables para él y sólidas para los demás.
 - **Grupo**: una orden de movimiento reparte destinos en formación alrededor del punto, en orden de `id`.
 - **Separación**: tabla espacial de celdas; las unidades superpuestas se empujan a la mitad cada una sin entrar en casillas sólidas.
 - **Persecución**: contra unidades se recalcula el camino cuando el objetivo cambia de casilla, como máximo cada pocos ticks; a corta distancia se avanza en línea recta.

@@ -1,36 +1,58 @@
 class_name SimMap
 extends RefCounted
-## Grilla del mapa: casillas sólidas, ocupación para construir y búsqueda de caminos.
+## Grilla del mapa: casillas sólidas, puertas, ocupación para construir y búsqueda de caminos.
+## Cada jugador tiene su propia grilla de caminos porque sus puertas solo lo dejan pasar a él.
 
-const P := 1000 # milésimas por casilla
+const P := 1000
 
 var n: int
-var solid := PackedByteArray() # bloquea caminos
+var solid := PackedByteArray() # bloquea a todos
+var gate_owner := PackedInt32Array() # dueño de la puerta en la casilla, -1 sin puerta
 var occupied := PackedInt32Array() # id de la entidad que ocupa la casilla, -1 libre
-var astar := AStarGrid2D.new()
+var astar: AStarGrid2D # puertas cerradas para todos
+var astars: Array[AStarGrid2D] = [] # una por jugador
 
 
-func _init(size: int) -> void:
+func _init(size: int, num_players: int = 2) -> void:
 	n = size
 	solid.resize(n * n)
 	occupied.resize(n * n)
 	occupied.fill(-1)
-	astar.region = Rect2i(0, 0, n, n)
-	astar.cell_size = Vector2(1, 1)
-	astar.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
-	astar.default_compute_heuristic = AStarGrid2D.HEURISTIC_OCTILE
-	astar.default_estimate_heuristic = AStarGrid2D.HEURISTIC_OCTILE
-	astar.update()
+	gate_owner.resize(n * n)
+	gate_owner.fill(-1)
+	astar = _new_astar()
+	for i in num_players:
+		astars.append(_new_astar())
+
+
+func _new_astar() -> AStarGrid2D:
+	var a := AStarGrid2D.new()
+	a.region = Rect2i(0, 0, n, n)
+	a.cell_size = Vector2(1, 1)
+	a.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
+	a.default_compute_heuristic = AStarGrid2D.HEURISTIC_OCTILE
+	a.default_estimate_heuristic = AStarGrid2D.HEURISTIC_OCTILE
+	a.update()
+	return a
+
+
+func _grid(pid: int) -> AStarGrid2D:
+	return astars[pid] if pid >= 0 and pid < astars.size() else astar
 
 
 func in_bounds(tx: int, ty: int) -> bool:
 	return tx >= 0 and ty >= 0 and tx < n and ty < n
 
 
-func is_solid(tx: int, ty: int) -> bool:
+## Sólida para el jugador `pid` (-1: puertas cerradas para todos).
+func is_solid(tx: int, ty: int, pid: int = -1) -> bool:
 	if not in_bounds(tx, ty):
 		return true
-	return solid[ty * n + tx] != 0
+	var idx := ty * n + tx
+	if solid[idx] != 0:
+		return true
+	var g := gate_owner[idx]
+	return g >= 0 and g != pid
 
 
 func occupant(tx: int, ty: int) -> int:
@@ -47,15 +69,24 @@ func is_free_rect(tx: int, ty: int, w: int, h: int) -> bool:
 	return true
 
 
-func mark(tx: int, ty: int, w: int, h: int, id: int, blocks: bool) -> void:
+func mark(tx: int, ty: int, w: int, h: int, id: int, blocks: bool, gate_pid: int = -1) -> void:
 	for yy in range(ty, ty + h):
 		for xx in range(tx, tx + w):
 			if not in_bounds(xx, yy):
 				continue
-			occupied[yy * n + xx] = id
-			if blocks:
-				solid[yy * n + xx] = 1
-				astar.set_point_solid(Vector2i(xx, yy), true)
+			var idx := yy * n + xx
+			var cell := Vector2i(xx, yy)
+			occupied[idx] = id
+			if gate_pid >= 0:
+				gate_owner[idx] = gate_pid
+				astar.set_point_solid(cell, true)
+				for p in astars.size():
+					astars[p].set_point_solid(cell, p != gate_pid)
+			elif blocks:
+				solid[idx] = 1
+				astar.set_point_solid(cell, true)
+				for a in astars:
+					a.set_point_solid(cell, true)
 
 
 func clear(tx: int, ty: int, w: int, h: int) -> void:
@@ -63,38 +94,43 @@ func clear(tx: int, ty: int, w: int, h: int) -> void:
 		for xx in range(tx, tx + w):
 			if not in_bounds(xx, yy):
 				continue
-			occupied[yy * n + xx] = -1
-			solid[yy * n + xx] = 0
-			astar.set_point_solid(Vector2i(xx, yy), false)
+			var idx := yy * n + xx
+			var cell := Vector2i(xx, yy)
+			occupied[idx] = -1
+			solid[idx] = 0
+			gate_owner[idx] = -1
+			astar.set_point_solid(cell, false)
+			for a in astars:
+				a.set_point_solid(cell, false)
 
 
 ## ¿La huella tiene al menos una casilla vecina libre?
-func has_free_neighbor(tx: int, ty: int, w: int, h: int) -> bool:
+func has_free_neighbor(tx: int, ty: int, w: int, h: int, pid: int = -1) -> bool:
 	for xx in range(tx - 1, tx + w + 1):
-		if not is_solid(xx, ty - 1) or not is_solid(xx, ty + h):
+		if not is_solid(xx, ty - 1, pid) or not is_solid(xx, ty + h, pid):
 			return true
 	for yy in range(ty, ty + h):
-		if not is_solid(tx - 1, yy) or not is_solid(tx + w, yy):
+		if not is_solid(tx - 1, yy, pid) or not is_solid(tx + w, yy, pid):
 			return true
 	return false
 
 
 ## Casilla libre más cercana a (tx, ty) buscando en anillos.
-func nearest_free(tx: int, ty: int, max_r: int = 12) -> Vector2i:
-	if not is_solid(tx, ty):
+func nearest_free(tx: int, ty: int, max_r: int = 12, pid: int = -1) -> Vector2i:
+	if not is_solid(tx, ty, pid):
 		return Vector2i(tx, ty)
 	for r in range(1, max_r + 1):
 		for dy in range(-r, r + 1):
 			for dx in range(-r, r + 1):
 				if absi(dx) != r and absi(dy) != r:
 					continue
-				if not is_solid(tx + dx, ty + dy):
+				if not is_solid(tx + dx, ty + dy, pid):
 					return Vector2i(tx + dx, ty + dy)
 	return Vector2i(-1, -1)
 
 
-func find_path(from: Vector2i, to: Vector2i) -> Array[Vector2i]:
-	if is_solid(from.x, from.y):
+func find_path(from: Vector2i, to: Vector2i, pid: int = -1) -> Array[Vector2i]:
+	if is_solid(from.x, from.y, pid):
 		return [] as Array[Vector2i]
 	to = Vector2i(clampi(to.x, 0, n - 1), clampi(to.y, 0, n - 1))
-	return astar.get_id_path(from, to, true)
+	return _grid(pid).get_id_path(from, to, true)
