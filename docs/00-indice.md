@@ -27,6 +27,7 @@ RTS histórico con la calidad, legibilidad y asimetría de Age of Empires IV, pr
 | `07-arte-y-ui.md` | Guía de estilo, legibilidad, interfaz, controles | Borrador v1 |
 | `08-ia-rival.md` | Comportamiento de la IA de escaramuza | Borrador v1 |
 | `09-estado.md` | Estado de los hitos y próximos pasos | Vigente |
+| `10-terreno-y-mapas.md` | Plan de terreno: relieve real en campañas, mapas inspirados en geografías, materiales y modelos integrados al suelo | Plan |
 | `investigacion/` | Informes de investigación histórica y de referencia (no son decisiones) | Vigente: 7 informes |
 | `campanas/` | Índice y criterios de las seis campañas; los datos ejecutables están en `data/campanas/` | Vigente |
 | `data/civs/*.json` | Las seis civilizaciones como datos: reemplazos, unidades y edificios propios, hitos y módulos | Vigente |
