@@ -415,6 +415,9 @@ static func rock_mesh(kind: String) -> ArrayMesh:
 	var p: Array = []
 	var base := Palette.STONE if kind != "riqueza" else Palette.WEALTH_ROCK
 	var dark := Palette.STONE_DARK if kind != "riqueza" else Palette.WEALTH_ROCK.darkened(0.15)
+	if kind == "penasco":
+		base = Color("8a8378")
+		dark = Color("6b655c")
 	p.append([box(1.0, 0.7, 0.9), xf(Vector3(-0.25, 0.3, -0.1), Vector3(8, 25, 6)), base])
 	p.append([box(0.8, 0.55, 0.7), xf(Vector3(0.4, 0.25, 0.3), Vector3(-6, -20, 10)), dark])
 	p.append([box(0.6, 0.45, 0.6), xf(Vector3(0.3, 0.22, -0.5), Vector3(12, 40, -8)), base])

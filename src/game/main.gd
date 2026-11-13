@@ -7,6 +7,7 @@ extends Node3D
 ##   --speed=N          multiplicador de velocidad inicial
 ##   --shot=ruta.png    guarda una captura y sale
 ##   --shot-at=S        segundos de juego antes de la captura
+##   --estilo=pacifica|normal|acosadora|agresiva  estilo de juego de la IA
 ##   --cam=x,z,zoom[,inclinación]  posición de cámara para la captura
 ##   --select=tipo      selecciona entidades de ese tipo del jugador local antes de la captura
 ##   --demo=base|batalla  escena armada para revisar modelos y combate
@@ -129,7 +130,9 @@ func _new_game() -> void:
 		sim = Sim.new(_seed, 2, null, Sim.intify(r["opciones"]))
 		sim.ais = []
 		for pid in r["ias"]:
-			sim.ais.append(SimAI.new(sim, int(pid), r.get("dificultad", "normal")))
+			var rai := SimAI.new(sim, int(pid), r.get("dificultad", "normal"))
+			rai.personality = r.get("estilo", "normal")
+			sim.ais.append(rai)
 		sim.schedule(Sim.intify(r["comandos"]))
 		_build_scene(true)
 		ctrl.enabled = false
@@ -142,10 +145,12 @@ func _new_game() -> void:
 	var ai_ids := []
 	for pid in sim.players.size():
 		if pid != local or aivai:
-			sim.ais.append(SimAI.new(sim, pid, _args.get("dificultad", "normal")))
+			var ai := SimAI.new(sim, pid, _args.get("dificultad", "normal"))
+			ai.personality = _args.get("estilo", "normal")
+			sim.ais.append(ai)
 			ai_ids.append(pid)
 	opts["terreno"] = sim.terrain
-	_replay_meta = {"semilla": _seed, "opciones": opts, "ias": ai_ids, "dificultad": _args.get("dificultad", "normal")}
+	_replay_meta = {"semilla": _seed, "opciones": opts, "ias": ai_ids, "dificultad": _args.get("dificultad", "normal"), "estilo": _args.get("estilo", "normal")}
 	_build_scene(aivai)
 
 
@@ -198,8 +203,8 @@ func _build_scene(aivai: bool) -> void:
 		speed = 1.0
 		_menu = MainMenu.new()
 		layer.add_child(_menu)
-		_menu.play.connect(func(sd: int, civ: String, rival: String) -> void: _start({"seed": str(sd), "civ": civ, "rival": rival, "dificultad": _menu.difficulty(), "terreno": _menu.terrain()}))
-		_menu.watch.connect(func(sd: int, civ: String, rival: String) -> void: _start({"aivai": "1", "seed": str(sd), "civ": civ, "rival": rival, "terreno": _menu.terrain()}))
+		_menu.play.connect(func(sd: int, civ: String, rival: String) -> void: _start({"seed": str(sd), "civ": civ, "rival": rival, "dificultad": _menu.difficulty(), "estilo": _menu.style(), "terreno": _menu.terrain()}))
+		_menu.watch.connect(func(sd: int, civ: String, rival: String) -> void: _start({"aivai": "1", "seed": str(sd), "civ": civ, "rival": rival, "estilo": _menu.style(), "dificultad": _menu.difficulty(), "terreno": _menu.terrain()}))
 		_menu.campaigns.connect(_open_campaigns.bind(layer))
 		_menu.replay.connect(func() -> void: _start({"replay": "1"}))
 		if _args.get("abrir", "") == "campanas":

@@ -48,7 +48,9 @@ func _rebuild() -> void:
 			var k := float((x * 7 + y * 13) % 5) / 40.0
 			var c := Palette.GROUND_A.lerp(Palette.GROUND_B, 0.35 + k).lightened(sim.map.h_at(x, y) * 0.09)
 			var w := sim.map.water[y * sim.map.n + x]
-			if w == 1:
+			if sim.map.rock[y * n + x] != 0:
+				c = Color("5d5853")
+			elif w == 1:
 				c = Color("2b4d5e")
 			elif w == 2:
 				c = Color("4f7478")

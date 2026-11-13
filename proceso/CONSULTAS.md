@@ -115,3 +115,9 @@ a) Aceptarlo como el precio de "no hay capital" y mirarlo en el torneo *(recomen
 a) Sí, con las propuestas de la sección 11 del diseño final *(recomendado)* · b) Dejarlas
 
 **Respuesta:**
+
+### C-21 · ¿La IA "Pacífica" puede ganar por sitios sagrados?
+Hoy controla el mapa y toma sitios, así que puede ganar por ellos sin atacarte.
+a) Sí, es parte de su juego: los sitios hay que disputarlos *(recomendado)* · b) No: toma sitios pero no cuenta para su victoria · c) No toma sitios
+
+**Respuesta:**

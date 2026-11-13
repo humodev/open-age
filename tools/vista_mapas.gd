@@ -39,7 +39,9 @@ func _vista(s: Sim) -> Image:
 			var h := s.map.h_at(x, y)
 			var c := Color(0.42, 0.55, 0.3).lerp(Color(0.75, 0.68, 0.5), h / 3.0)
 			var w := s.map.water[y * n + x]
-			if w == 1:
+			if s.map.rock[y * n + x] != 0:
+				c = Color(0.35, 0.33, 0.32)
+			elif w == 1:
 				c = Color(0.16, 0.33, 0.55)
 			elif w == 2:
 				c = Color(0.45, 0.62, 0.75)

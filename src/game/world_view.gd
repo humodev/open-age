@@ -43,6 +43,7 @@ func setup(s: Sim, local_player: int) -> void:
 	_build_ground()
 	_build_resources()
 	_build_clutter()
+	_build_crags()
 	var n := sim.map.n
 	_fog_img = Image.create_from_data(n, n, false, Image.FORMAT_R8, sim.fog.grids[local])
 	_fog_tex = ImageTexture.create_from_image(_fog_img)
@@ -143,7 +144,10 @@ func _build_terrain() -> void:
 					var tx: int = clampi(i + dx, 0, n - 1)
 					var tz: int = clampi(j + dz, 0, n - 1)
 					var w := map.water[tz * n + tx]
-					sum += -0.9 if w == 1 else (-0.55 if w == 2 else float(map.h_at(tx, tz)) * LEVEL_H)
+					if map.rock[tz * n + tx] != 0:
+						sum += (float(map.h_at(tx, tz)) + 1.5 + float((tx * 7 + tz * 13) % 5) * 0.12) * LEVEL_H # peñasco
+					else:
+						sum += -0.9 if w == 1 else (-0.55 if w == 2 else float(map.h_at(tx, tz)) * LEVEL_H)
 					cnt += 1
 			raw[j * vn + i] = sum / cnt
 	# Suavizado para lomas redondeadas; las mesetas guardan sus paredes.
@@ -309,10 +313,15 @@ func _water_texture() -> ImageTexture:
 	for j in vn:
 		for i in vn:
 			var wet := false
+			var deep := false
 			for d in [Vector2i(-1, -1), Vector2i(0, -1), Vector2i(-1, 0), Vector2i(0, 0)]:
 				if map.is_water(i + d.x, j + d.y):
 					wet = true
+					if map.water[clampi(j + d.y, 0, map.n - 1) * map.n + clampi(i + d.x, 0, map.n - 1)] == 1:
+						deep = true
 			var depth := clampf((-0.18 - _vh[j * vn + i]) / 0.7, 0.0, 1.0) if wet else 0.0
+			if wet and not deep:
+				depth = minf(depth, 0.1) # vado: agua baja que se ve cruzable
 			var f: Vector2 = flow.get(Vector2i(i, j), Vector2.ZERO)
 			img.set_pixel(i, j, Color(depth, 1.0 if flow.has(Vector2i(i, j)) else 0.0, f.x * 0.5 + 0.5, f.y * 0.5 + 0.5))
 	return ImageTexture.create_from_image(img)
@@ -440,6 +449,35 @@ func _build_clutter() -> void:
 		mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		mmi.visibility_range_end = 70.0 # de lejos no se ven y no se pagan
 		add_child(mmi)
+
+
+## Peñascos: bloques de roca sobre las casillas que no se pasan, para que se lean
+## como barrera y no como loma (docs/10).
+func _build_crags() -> void:
+	var map := sim.map
+	var n := map.n
+	var list: Array[Transform3D] = []
+	for ty in n:
+		for tx in n:
+			if map.rock[ty * n + tx] == 0:
+				continue
+			var hsh := _hash(tx * 7919 + ty * 104729 + 5)
+			var p := Vector3(tx + 0.5 + float(hsh % 40 - 20) / 100.0, 0, ty + 0.5 + float((hsh / 40) % 40 - 20) / 100.0)
+			p.y = height_at(p.x, p.z) - 0.3
+			var sc := 1.1 + float((hsh / 7) % 60) / 100.0
+			var b := Basis(Vector3.UP, float(hsh % 628) / 100.0).scaled(Vector3(sc, sc * (0.8 + float(hsh % 50) / 100.0), sc))
+			list.append(Transform3D(b, p))
+	if list.is_empty():
+		return
+	var mm := MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D
+	mm.mesh = Meshes.rock_mesh("penasco")
+	mm.instance_count = list.size()
+	for i in list.size():
+		mm.set_instance_transform(i, list[i])
+	var mmi := MultiMeshInstance3D.new()
+	mmi.multimesh = mm
+	add_child(mmi)
 
 
 func _build_resources() -> void:

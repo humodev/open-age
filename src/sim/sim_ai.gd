@@ -9,9 +9,13 @@ var sim: Sim
 var player: int
 var wave := 0
 var last_attack := -100000
+var last_raid := 0 # incursiones y control del mapa: por tiempo transcurrido, no por tick exacto
+var last_spot := 0
+var last_road := 0
+var last_site := 0
 var rally := Vector2i(-1, -1)
 var calm_since := 0
-var personality := "normal" # pasiva, normal, agresiva (campañas)
+var personality := "normal" # estilo: pacifica, normal, acosadora, agresiva (reglas.json → estilos_ia); pasiva en campañas
 var level: Dictionary = {} # dificultad (reglas.json → dificultades)
 
 # Perfil equilibrado de H1. En H2 pasa a data/ia/ (docs/08).
@@ -241,7 +245,8 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 			_try_build(t, p, vill, centro, 2)
 			break
 	# Caminos (módulo caminos): une a la capital el primer edificio desconectado.
-	if sim.dp(player).has_mod("caminos") and sim.tick % 200 == player * 20 and not unbuilt.has("camino"):
+	if sim.dp(player).has_mod("caminos") and sim.tick - last_road >= 200 and not unbuilt.has("camino"):
+		last_road = sim.tick
 		for k in by_type:
 			if k == "camino":
 				continue
@@ -422,18 +427,25 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 		if not ids.is_empty():
 			sim.push_command({"t": "move", "player": player, "ids": ids, "x": threat.x, "y": threat.y, "amove": true})
 		return
-	var need: int = int(level["ataque_base"]) + int(level["ataque_paso"]) * wave
-	var gap: int = level["ataque_espera_ticks"]
-	if personality == "agresiva":
-		need = 4 + 3 * wave
-		gap = 320
-	if personality != "pasiva" and army.size() >= need and sim.tick - last_attack > gap:
+	var st: Dictionary = sim.data.reglas.get("estilos_ia", {}).get(personality, {})
+	var need: int = int(st.get("ataque_base", level["ataque_base"])) + int(st.get("ataque_paso", level["ataque_paso"])) * wave
+	var gap: int = int(st.get("ataque_espera_ticks", level["ataque_espera_ticks"]))
+	var attacks: bool = st.get("ataca_base", personality != "pasiva")
+	if attacks and army.size() >= need and sim.tick - last_attack > gap:
 		wave += 1
 		last_attack = sim.tick
 		_attack(army)
 		return
-	# Incursiones (malón, correría): las unidades más rápidas golpean la economía rival.
-	if sim.dp(player).civ.get("ia_incursiones", false) and sim.tick % 900 == (player * 97) % 900 and army.size() >= 5:
+	# Los estilos que no atacan la base no entran en ella: quien quede adentro vuelve.
+	if not attacks and st.has("respeta_radio"):
+		# Las incursiones entran y salen: solo vuelve quien ya terminó (está ocioso).
+		_leash(army, int(st["respeta_radio"]), st.get("incursiones", "no") == "si")
+	# Incursiones (malón, correría, acoso): las unidades más rápidas golpean la economía rival.
+	var raids: String = st.get("incursiones", "civ")
+	var raid_on: bool = raids == "si" or (raids == "civ" and bool(sim.dp(player).civ.get("ia_incursiones", false)))
+	var every := int(st.get("incursion_cada_ticks", 900))
+	if raid_on and sim.tick - last_raid >= every and army.size() >= 5:
+		last_raid = sim.tick
 		var prey: SimEntity = null
 		var best_d := 1 << 60
 		for e in sim.actives:
@@ -447,14 +459,26 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 			fast.sort_custom(func(a: SimEntity, b: SimEntity) -> bool: return a.speed > b.speed)
 			var ids := []
 			for u in fast:
-				if ids.size() >= 5:
+				if ids.size() >= int(st.get("incursion_tam", 5)):
 					break
 				if u.order == O.IDLE or u.order == O.MOVE:
 					ids.append(u.id)
 			if not ids.is_empty():
 				sim.push_command({"t": "move", "player": player, "ids": ids, "x": prey.x, "y": prey.y, "amove": true})
+	# Control del mapa: la mitad del ejército ocioso ocupa un punto disputado.
+	if st.get("controla_mapa", false) and sim.tick - last_spot >= 600 and army.size() >= 6:
+		last_spot = sim.tick
+		var spot := _map_spot(int(st.get("respeta_radio", 0)))
+		if spot.x >= 0:
+			var ids := []
+			for u in army:
+				if u.order == O.IDLE and ids.size() < army.size() / 2:
+					ids.append(u.id)
+			if not ids.is_empty():
+				sim.push_command({"t": "move", "player": player, "ids": ids, "x": spot.x, "y": spot.y, "amove": true})
 	# Sitios sagrados: un grupo chico va a tomar el más cercano que no controla.
-	if sim.tick % 300 == player * 50 and army.size() >= 6:
+	if sim.tick - last_site >= 300 and army.size() >= 6:
+		last_site = sim.tick
 		var site: SimEntity = null
 		var best := 1 << 60
 		for e in sim.actives:
@@ -477,6 +501,50 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 			idle.append(u.id)
 	if not idle.is_empty():
 		sim.push_command({"t": "move", "player": player, "ids": idle, "x": rally.x, "y": rally.y})
+
+
+## Base rival: sus edificios principales (capital, centros e hitos).
+func _enemy_cores() -> Array[SimEntity]:
+	var out: Array[SimEntity] = []
+	for e in sim.actives:
+		if e.alive and e.is_building() and e.owner >= 0 and e.owner != player and (e.capital or e.def.get("hito", false) or e.def.has("produce") and e.def.get("deposito", []).size() > 2):
+			out.append(e)
+	return out
+
+
+## Vuelve al punto de reunión quien haya entrado a la base rival.
+func _leash(army: Array[SimEntity], radius: int, idle_only: bool = false) -> void:
+	var cores := _enemy_cores()
+	var back := []
+	for u in army:
+		if idle_only and u.order != O.IDLE:
+			continue
+		for c in cores:
+			if Sim.dist(u.x, u.y, c.x, c.y) < radius:
+				back.append(u.id)
+				break
+	if not back.is_empty():
+		sim.push_command({"t": "move", "player": player, "ids": back, "x": rally.x, "y": rally.y})
+
+
+## Punto del mapa para ocupar: un sitio sagrado ajeno, o el centro del mapa,
+## siempre fuera del radio de las bases rivales si el estilo lo pide.
+func _map_spot(radius: int) -> Vector2i:
+	var cores := _enemy_cores()
+	var options: Array[Vector2i] = []
+	for e in sim.actives:
+		if e.alive and e.def.get("sagrado", false) and e.holder != player:
+			options.append(Vector2i(e.x, e.y))
+	var c := sim.map.n * P / 2
+	options.append(Vector2i(c, c))
+	for o in options:
+		var ok := true
+		for core in cores:
+			if radius > 0 and Sim.dist(o.x, o.y, core.x, core.y) < radius:
+				ok = false
+		if ok:
+			return o
+	return Vector2i(-1, -1)
 
 
 func _attack(army: Array[SimEntity]) -> void:

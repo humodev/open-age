@@ -11,6 +11,7 @@ var gate_owner := PackedInt32Array() # dueño de la puerta en la casilla, -1 sin
 var occupied := PackedInt32Array() # id de la entidad que ocupa la casilla, -1 libre, -3 agua
 var height := PackedByteArray() # nivel de altura entero (D-027)
 var water := PackedByteArray() # 0 tierra, 1 agua profunda (sólida), 2 vado (transitable, no edificable)
+var rock := PackedByteArray() # 1 peñasco o barranco: no se pasa ni se edifica (docs/10)
 var astar: AStarGrid2D # puertas cerradas para todos
 var astars: Array[AStarGrid2D] = [] # una por jugador
 
@@ -24,6 +25,7 @@ func _init(size: int, num_players: int = 2) -> void:
 	gate_owner.fill(-1)
 	height.resize(n * n)
 	water.resize(n * n)
+	rock.resize(n * n)
 	astar = _new_astar()
 	for i in num_players:
 		astars.append(_new_astar())
@@ -164,6 +166,24 @@ func set_water(tx: int, ty: int, kind: int) -> void:
 	astar.set_point_solid(cell, block)
 	for a in astars:
 		a.set_point_solid(cell, block)
+
+
+## Peñasco: sólido para todos, como el agua profunda, pero es roca.
+func set_rock(tx: int, ty: int) -> void:
+	if not in_bounds(tx, ty) or water[ty * n + tx] != 0:
+		return
+	var idx := ty * n + tx
+	rock[idx] = 1
+	occupied[idx] = -3
+	solid[idx] = 1
+	var cell := Vector2i(tx, ty)
+	astar.set_point_solid(cell, true)
+	for a in astars:
+		a.set_point_solid(cell, true)
+
+
+func is_rock(tx: int, ty: int) -> bool:
+	return in_bounds(tx, ty) and rock[ty * n + tx] != 0
 
 
 ## ¿Huella pareja y en tierra?

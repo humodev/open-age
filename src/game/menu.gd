@@ -14,6 +14,8 @@ var _info: Label
 var _keys: Array = []
 var _diff: OptionButton
 var _map: OptionButton
+var _style: OptionButton
+var _style_keys: Array = []
 var _map_keys: Array = []
 var _plate: TextureRect
 
@@ -88,6 +90,24 @@ func _ready() -> void:
 	_diff.selected = 1
 	drow.add_child(_diff)
 	box.add_child(drow)
+	var srow := HBoxContainer.new()
+	srow.add_theme_constant_override("separation", 12)
+	var sl := Label.new()
+	sl.text = "Estilo de la IA"
+	sl.custom_minimum_size = Vector2(110, 0)
+	sl.add_theme_font_override("font", Hud.font)
+	sl.add_theme_color_override("font_color", Palette.UI_DIM)
+	srow.add_child(sl)
+	_style = OptionButton.new()
+	_style.custom_minimum_size = Vector2(270, 38)
+	_style.add_theme_font_override("font", Hud.font_b)
+	_style_keys = data.reglas["estilos_ia"].keys()
+	for k in _style_keys:
+		_style.add_item(data.reglas["estilos_ia"][k]["nombre"])
+		_style.set_item_tooltip(_style.item_count - 1, data.reglas["estilos_ia"][k].get("descripcion", ""))
+	_style.selected = maxi(0, _style_keys.find("normal"))
+	srow.add_child(_style)
+	box.add_child(srow)
 	var mrow := HBoxContainer.new()
 	mrow.add_theme_constant_override("separation", 12)
 	var ml := Label.new()
@@ -150,16 +170,11 @@ func _ready() -> void:
 
 	var hint := Label.new()
 	hint.text = "Clic izquierdo: seleccionar · Clic derecho: ordenar · Q W E R / A S D F / Z X C V: grilla de comandos\nH: centro · . : aldeano inactivo · Ctrl+1…9: grupos · F3: velocidad · Esc: pausa"
-	hint.anchor_top = 1.0
-	hint.anchor_bottom = 1.0
-	hint.offset_left = 110
-	hint.offset_top = -86
-	hint.offset_right = 1400
-	hint.offset_bottom = -30
+	# Va dentro de la columna, debajo de "Salir": así no se pisa cuando el menú crece.
 	hint.add_theme_font_override("font", Hud.font)
-	hint.add_theme_font_size_override("font_size", 15)
+	hint.add_theme_font_size_override("font_size", 14)
 	hint.add_theme_color_override("font_color", Color(Palette.UI_DIM, 0.85))
-	add_child(hint)
+	box.add_child(hint)
 
 
 func _seed() -> int:
@@ -233,3 +248,8 @@ func difficulty() -> String:
 ## Tipo de mapa elegido ("" = al azar).
 func terrain() -> String:
 	return "" if _map.selected <= 0 else str(_map_keys[_map.selected - 1])
+
+
+## Estilo de juego de la IA, independiente de la dificultad.
+func style() -> String:
+	return str(_style_keys[maxi(0, _style.selected)])

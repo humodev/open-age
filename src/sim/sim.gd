@@ -29,6 +29,7 @@ var winner := -1
 var terrain := ""
 var water_form := "" # forma del agua elegida (cruce, lago, costados, anillo, brazos)
 var rivers: Array = [] # trazos de río para la imagen; no son estado
+var _fort_gaps: Array = [] # [jugador, casillas, puerta] de las salidas de cada fortín
 var _opts: Dictionary = {}
 
 var _pending := {} # tick -> Array[Dictionary]
@@ -1680,6 +1681,8 @@ func _generate_map() -> void:
 			var sy := (base.y + 4 + i) * P + P / 2
 			spawn_unit(dd.civ.get("explorador", "explorador"), pid, sx, sy)
 
+	_spawn_fort_walls()
+
 	var c0 := Vector2i(b0.x + 2, b0.y + 2) # centro de la base 0
 	var dirs: Array[Vector2i] = [Vector2i(1, 0), Vector2i(1, 1), Vector2i(0, 1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1), Vector2i(0, -1), Vector2i(1, -1)]
 	# Barajar direcciones con el generador de la partida.
@@ -1846,6 +1849,10 @@ func _generate_terrain() -> void:
 		var c := Vector2i(rng.range_i(10, map.n - 11), rng.range_i(10, map.n - 11))
 		if not _near_base(c, 18):
 			_lake_blob(c, rng.range_i(int(lr[0]), int(lr[1])))
+	if td.has("fortines"):
+		_fort_rings(td["fortines"])
+	if int(td.get("penascos", 0)) > 0:
+		_crags(int(td["penascos"]))
 	_ensure_crossings()
 
 
@@ -1988,6 +1995,8 @@ func _water_layout(rd: Dictionary) -> void:
 			_moat(w)
 		"ninguno":
 			pass
+		"islas":
+			_islands()
 		"brazos":
 			_river_through_center(w, fe, false)
 			_river_parallel(int(rd.get("brazos", 15)), maxi(1, w - 1), maxi(6, fe - 3))
@@ -2090,6 +2099,138 @@ func _river_parallel(shift: int, width: int, fe: int) -> void:
 	_record_river(path)
 
 
+## Fortín natural (como las mesetas encerradas de AoE4): un cerco de peñas casi
+## cuadrado alrededor de cada base, con una salida de `hueco` casillas en cada
+## lado. Las salidas arrancan cerradas con la empalizada y la puerta de la civ.
+func _fort_rings(fd: Dictionary) -> void:
+	var n := map.n
+	var r := int(fd.get("radio", 18))
+	var thick := int(fd.get("grosor", 3))
+	var half := int(fd.get("hueco", 5)) / 2
+	var sd := rng.range_i(1, 1 << 20)
+	var c := bases[0] + Vector2i(2, 2)
+	for ty in range(c.y - r - thick - 3, c.y + r + thick + 4):
+		for tx in range(c.x - r - thick - 3, c.x + r + thick + 4):
+			if not map.in_bounds(tx, ty):
+				continue
+			var dx := tx - c.x
+			var dy := ty - c.y
+			var across := absi(dy) if absi(dx) >= absi(dy) else absi(dx)
+			if across <= half:
+				continue # salida
+			# Borde irregular, salvo junto a las salidas, para que la empalizada las cierre justo.
+			var wob := 0 if across <= half + 2 else (_vnoise(tx, ty, 6, sd) - 500) / 250
+			var cheb := maxi(absi(dx), absi(dy)) + wob
+			if cheb >= r and cheb < r + thick:
+				_set_rock_sym(Vector2i(tx, ty))
+	# Salidas: la línea del medio del cerco, de lado a lado del hueco.
+	var mid := r + thick / 2
+	for side: Vector2i in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+		var tiles: Array[Vector2i] = []
+		var perp := Vector2i(side.y, side.x)
+		for k in range(-half, half + 1):
+			tiles.append(c + side * mid + perp * k)
+		var gate := c + side * mid
+		_fort_gaps.append([0, tiles, gate])
+		var mt: Array[Vector2i] = []
+		for t in tiles:
+			mt.append(_mirror(t, 1, 1))
+		_fort_gaps.append([1, mt, _mirror(gate, 1, 1)])
+
+
+## Cierra las salidas del fortín con la empalizada y la puerta de cada civ.
+func _spawn_fort_walls() -> void:
+	for g in _fort_gaps:
+		var pid: int = g[0]
+		if pid >= players.size():
+			continue
+		var dd := dp(pid)
+		for t: Vector2i in g[1]:
+			var type := "puerta" if t == g[2] else "empalizada"
+			if not dd.edificios.has(type) or not map.in_bounds(t.x, t.y) or not map.is_free_rect(t.x, t.y, 1, 1):
+				continue
+			spawn_building(type, pid, t.x, t.y, true)
+
+
+## Peñascos sueltos: manchones de roca que no se pasan, simétricos.
+func _crags(count: int) -> void:
+	var n := map.n
+	var made := 0
+	var tries := 0
+	while made < count and tries < count * 20:
+		tries += 1
+		var c := Vector2i(rng.range_i(6, n - 7), rng.range_i(6, n - 7))
+		if _near_base(c, 20) or _near_base(_mirror(c, 1, 1), 20) or absi(c.x - n / 2) + absi(c.y - n / 2) < 12:
+			continue
+		var r := rng.range_i(1, 3)
+		var sd := rng.range_i(1, 1 << 20)
+		for dy in range(-r - 1, r + 2):
+			for dx in range(-r - 1, r + 2):
+				var t := c + Vector2i(dx, dy)
+				var rr := r * 10 + (_vnoise(t.x, t.y, 3, sd) - 500) * 12 / 1000
+				if (dx * dx + dy * dy) * 100 <= rr * rr:
+					_set_rock_sym(t)
+		made += 1
+
+
+func _set_rock_sym(t: Vector2i) -> void:
+	var m := _mirror(t, 1, 1)
+	if not map.in_bounds(t.x, t.y) or _near_base(t, 10) or _near_base(m, 10):
+		return
+	map.set_rock(t.x, t.y)
+	map.set_rock(m.x, m.y)
+
+
+## Islas: cada base en su isla, una isla grande al centro y dos en los
+## costados, unidas por bajíos que se vadean (el juego no tiene barcos, D-020).
+func _islands() -> void:
+	var n := map.n
+	var c0 := bases[0] + Vector2i(2, 2)
+	var mid := Vector2i(n / 2, n / 2)
+	var fa := Vector2i(n * 3 / 4, n / 4)
+	var isl := [[c0, 27], [mid, 14], [fa, 13]]
+	var sd := rng.range_i(1, 1 << 20)
+	for ty in n:
+		for tx in n:
+			var t := Vector2i(tx, ty)
+			var m := _mirror(t, 1, 1)
+			if ty * n + tx > m.y * n + m.x:
+				continue
+			var land := false
+			for it in isl:
+				for cc: Vector2i in [it[0], _mirror(it[0], 1, 1)]:
+					var r: int = it[1]
+					var rr := r * 10 + (_vnoise(tx, ty, 7, sd) - 500) * r * 7 / 1000
+					var d2 := (tx - cc.x) * (tx - cc.x) + (ty - cc.y) * (ty - cc.y)
+					if d2 * 100 <= rr * rr:
+						land = true
+			if not land:
+				_set_water_sym(t, 1)
+	for pair in [[c0, mid], [c0, fa], [c0, _mirror(fa, 1, 1)], [fa, mid]]:
+		_causeway(pair[0], pair[1])
+
+
+## Bajío: convierte en vado el agua a lo largo de un camino con meandros.
+func _causeway(a: Vector2i, b: Vector2i) -> void:
+	var d := b - a
+	var m := maxi(1, maxi(absi(d.x), absi(d.y)))
+	var perp := Vector2i(-d.y, d.x)
+	var plen := maxi(1, maxi(absi(perp.x), absi(perp.y)))
+	var off := 0
+	var vel := 0
+	for k in m + 1:
+		var lim := mini(60, mini(k, m - k) * 10)
+		var p := a + Vector2i(d.x * k / m, d.y * k / m) + Vector2i(perp.x * off / (10 * plen), perp.y * off / (10 * plen))
+		for dy in range(-1, 2):
+			for dx in range(-1, 2):
+				var t := p + Vector2i(dx, dy)
+				if map.in_bounds(t.x, t.y) and map.water[t.y * map.n + t.x] == 1:
+					_set_water_sym(t, 2)
+		if rng.range_i(0, 1) == 0:
+			vel = clampi(vel + rng.range_i(-2, 2), -6, 6)
+		off = clampi(off + vel, -lim, lim)
+
+
 ## Pincel de río: agua (o vado) y cauce rebajado alrededor. Un vado nunca
 ## vuelve a ser agua profunda, así el paso queda entero.
 func _paint_river(p: Vector2i, width: int, ford: bool) -> void:
@@ -2180,7 +2321,7 @@ func _bases_connected() -> bool:
 		var p: Vector2i = stack.pop_back()
 		for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
 			var q: Vector2i = p + d
-			if map.in_bounds(q.x, q.y) and seen[q.y * n + q.x] == 0 and map.water[q.y * n + q.x] != 1:
+			if map.in_bounds(q.x, q.y) and seen[q.y * n + q.x] == 0 and map.water[q.y * n + q.x] != 1 and map.rock[q.y * n + q.x] == 0:
 				seen[q.y * n + q.x] = 1
 				stack.append(q)
 	for i in range(1, mini(players.size(), bases.size())):

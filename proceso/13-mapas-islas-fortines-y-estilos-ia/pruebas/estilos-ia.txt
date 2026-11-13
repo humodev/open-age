@@ -1,0 +1,9 @@
+pacifica   semilla  3  dentro de la base:     0  bajas que causó:  45  edificios destruidos:  0  sitios: 0  
+pacifica   semilla 11  dentro de la base:     0  bajas que causó:  31  edificios destruidos:  0  sitios: 3  ganó 1
+normal     semilla  3  dentro de la base:    13  bajas que causó:  45  edificios destruidos:  0  sitios: 2  
+normal     semilla 11  dentro de la base:   152  bajas que causó:  40  edificios destruidos:  0  sitios: 3  ganó 1
+acosadora  semilla  3  dentro de la base:    40  bajas que causó:  71  edificios destruidos:  0  sitios: 3  
+acosadora  semilla 11  dentro de la base:    87  bajas que causó:  37  edificios destruidos:  0  sitios: 3  ganó 1
+agresiva   semilla  3  dentro de la base:     3  bajas que causó:  38  edificios destruidos:  0  sitios: 0  
+agresiva   semilla 11  dentro de la base:   329  bajas que causó:  22  edificios destruidos:  0  sitios: 3  ganó 1
+ESTILOS: OK

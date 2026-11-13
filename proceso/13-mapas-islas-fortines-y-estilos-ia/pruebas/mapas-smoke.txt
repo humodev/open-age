@@ -1,0 +1,14 @@
+llano            tawantinsuyu vs etiopia      20:00  | edad 3 pob 60 edif 79  | edad 3 pob 72 edif 45
+montana          mapuches     vs palmares     20:00  | edad 3 pob 73 edif 45  | edad 3 pob 54 edif 36
+rio              guaranies    vs ayutthaya    17:44  | edad 3 pob 49 edif 28  | edad 2 pob 78 edif 43  ganó guaranies
+bosque           etiopia      vs tawantinsuyu 20:00  | edad 2 pob 44 edif 27  | edad 3 pob 76 edif 92
+valle            palmares     vs mapuches     20:00  | edad 3 pob 158 edif 53  | edad 2 pob 9 edif 4 ⚠
+altiplano        ayutthaya    vs guaranies    20:00  | edad 3 pob 82 edif 44  | edad 3 pob 76 edif 37
+bosque_templado  tawantinsuyu vs etiopia      20:00  | edad 2 pob 5 edif 27  | edad 3 pob 96 edif 43
+selva            mapuches     vs palmares     20:00  | edad 3 pob 57 edif 38  | edad 3 pob 92 edif 45
+mesetas          guaranies    vs ayutthaya    13:44  | edad 2 pob 47 edif 27  | edad 2 pob 56 edif 44  ganó ayutthaya
+delta            etiopia      vs tawantinsuyu 12:47  | edad 1 pob 28 edif 22  | edad 2 pob 58 edif 72  ganó tawantinsuyu
+sierra           palmares     vs mapuches     12:32  | edad 1 pob 17 edif 6  | edad 2 pob 56 edif 41  ganó mapuches
+islas            ayutthaya    vs guaranies     9:45  | edad 2 pob 45 edif 30  | edad 2 pob 30 edif 20  ganó ayutthaya
+fortines         tawantinsuyu vs etiopia      20:00  | edad 3 pob 75 edif 88  | edad 3 pob 23 edif 52
+MAPAS: 1 jugadores trabados
