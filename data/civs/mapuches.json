@@ -32,7 +32,7 @@
   "guerrero": {
    "nombre": "Weichafe",
    "velocidad": 1750,
-   "ataque": 12,
+   "ataque": 13,
    "costo": {
     "alimento": 55,
     "riqueza": 20
@@ -376,7 +376,8 @@
   }
  },
  "ia_unidades": [
-  "jinete"
+  "jinete",
+  "guerrero"
  ],
  "debilidad": "Batalla frontal y asedio: sin piedra ni torres.",
  "ia_edificios": [

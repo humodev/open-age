@@ -29,12 +29,17 @@ def sh(args):
 
 def make(name, desc):
     img = os.path.join(ROOT, "assets", "generados", "conceptos", name + ".png")
+    raw = os.path.join(ROOT, ".cache", "meshy", "modelos", name + ".glb")
     glb = os.path.join(ROOT, "assets", "generados", "modelos", name + ".glb")
     out = []
     if not os.path.exists(img):
         out.append(sh(["imagen", img, "nano-banana-2", STYLE + ". Subject: " + desc + ".", "--aspect=1:1", "--fondo"]))
-    if not os.path.exists(glb):
-        out.append(sh(["modelo", glb, img, "--poli=9000"]))
+    if not os.path.exists(raw) and not os.path.exists(glb):
+        out.append(sh(["modelo", raw, img, "--poli=9000"]))
+    if os.path.exists(raw) and not os.path.exists(glb):
+        tris = "30000" if name.endswith("centro") or name.endswith("lof") else "15000"
+        subprocess.run(["blender", "--background", "--python", os.path.join(ROOT, "tools", "optimizar_glb.py"), "--", raw, glb, tris, "1024"], capture_output=True)
+        out.append("optimizado")
     return name + ": " + " | ".join(out)
 
 

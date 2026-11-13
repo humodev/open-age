@@ -238,7 +238,8 @@ func _make_visual(e: SimEntity) -> Dictionary:
 	var team := Palette.team(e.owner)
 	var v := {"node": root, "type": e.type, "owner": e.owner}
 	if e.is_unit():
-		var body: Node3D = _model_for(e.owner, e.type, maxf(0.9, e.radius / 1000.0 * 2.6), true)
+		var msize := 2.6 if e.def.get("elefante", false) else (1.7 if e.def.get("montado", false) else 0.9)
+		var body: Node3D = _model_for(e.owner, e.type, msize, true)
 		if body == null:
 			body = MeshInstance3D.new()
 			(body as MeshInstance3D).mesh = unit_mesh_for(e)
@@ -312,8 +313,33 @@ func _model_for(owner: int, type: String, size: float, unit: bool) -> Node3D:
 	if unit:
 		inst.rotation.y = 0.0
 	holder.add_child(inst)
-	_each_geo(holder, func(g: GeometryInstance3D) -> void: g.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON)
+	_each_geo(holder, func(g: GeometryInstance3D) -> void:
+		g.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+		_matte(g))
 	return holder
+
+
+static var _matte_cache := {}
+
+
+## Materiales mates como la maqueta: sin metal, rugosos y un poco más claros.
+static func _matte(g: GeometryInstance3D) -> void:
+	if not g is MeshInstance3D or (g as MeshInstance3D).mesh == null:
+		return
+	var mi := g as MeshInstance3D
+	for i in mi.mesh.get_surface_count():
+		var m := mi.mesh.surface_get_material(i)
+		if not m is StandardMaterial3D:
+			continue
+		if not _matte_cache.has(m):
+			var c := (m as StandardMaterial3D).duplicate() as StandardMaterial3D
+			c.metallic = 0.0
+			c.roughness = 0.92
+			c.metallic_specular = 0.2
+			c.albedo_color = Color(1.18, 1.15, 1.1)
+			c.cull_mode = BaseMaterial3D.CULL_DISABLED # las mallas generadas son de una sola cara
+			_matte_cache[m] = c
+		mi.set_surface_override_material(i, _matte_cache[m])
 
 
 static func _aabb(n: Node, xf: Transform3D) -> AABB:

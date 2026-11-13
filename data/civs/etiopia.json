@@ -31,7 +31,7 @@
    "montado": true,
    "velocidad": 2100,
    "pv": 170,
-   "pob": 2,
+   "pob": 1,
    "costo": {
     "alimento": 70,
     "riqueza": 35
@@ -40,7 +40,11 @@
   "hondero": {
    "nombre": "Jabalinero",
    "alcance": 4000,
-   "ataque": 10
+   "ataque": 10,
+   "costo": {
+    "alimento": 35,
+    "madera": 35
+   }
   },
   "lancero": {
    "nombre": "Chewa",

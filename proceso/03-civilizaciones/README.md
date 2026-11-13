@@ -58,3 +58,12 @@ Después del torneo 1 bajaron guaraníes y Palmares y subieron mapuches y Etiop�
 | Láminas | Introducción | Campañas |
 |---|---|---|
 | ![](11-laminas-ia.jpg) | ![](09-intro-con-lamina.jpg) | ![](10-campanas-con-lamina.jpg) |
+19. **Modelos 3D generados con Meshy.** Ocho piezas: las seis capitales, el elefante de guerra y el kona montado. El flujo es texto → concepto aislado → modelo 3D, con 288 créditos. Los originales pesaban entre 27 y 233 MB. `tools/optimizar_glb.py` los pasa por Blender y quedan en 13 MB entre todos.
+   - Primer intento a 9.000 triángulos: los modelos se rompieron, con agujeros y astillas.
+   - Con 30.000 triángulos para edificios, 15.000 para unidades y materiales de doble cara, se ven enteros.
+   - La vista los escala a su huella, los apoya en el suelo, les agrega el estandarte del equipo y les da material mate como la maqueta.
+20. **Torneo 3** (`torneo-3.txt`): Palmares 7, Tawantinsuyu 7, Ayutthaya 6, guaraníes 6, mapuches 2, Etiopía 2. Las IA de incursión ya juegan su estilo, pero mapuches y Etiopía siguen abajo: nuevo ajuste al jinete noble (1 de población) y al weichafe (ataque 13).
+
+| Conceptos | Capitales en el juego |
+|---|---|
+| ![](13-conceptos-meshy.jpg) | ![](12-capitales-meshy.jpg) |
