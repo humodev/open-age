@@ -131,7 +131,18 @@ Los edificios generados se apoyan sobre un pasto uniforme y parecen bloques suel
       - Mapuches: la ruka grande con su rewe, sin el cerco sobre una placa.
 
       Los viejos quedan en `.cache/meshy/viejos`.
-    - **Pruebas**: determinismo OK; humo de civilizaciones sin errores; autotest OK. El torneo de balance con la velocidad nueva está en curso.
+    - **Pruebas**: determinismo OK; humo de civilizaciones sin errores; autotest OK. Torneo de balance con la velocidad nueva, 30 partidas de 30 minutos ([resultado](pruebas/torneo-tras-escala-y-velocidad.txt)). Victorias por destrucción de hitos sobre 10 partidas, contra el torneo anterior:
+
+      | Civ | Antes | Ahora |
+      |---|---|---|
+      | Ayutthaya | 3 | 6 |
+      | Tawantinsuyu | 4 | 5 |
+      | Guaraníes | 7 | 4 |
+      | Mapuches | 0 | 4 |
+      | Palmares | 3 | 4 |
+      | Etiopía | 0 | 2 |
+
+      Ojo: los mapas de este torneo incluyen los 11 tipos nuevos, así que no se compara solo el efecto de la velocidad.
 
 | Conceptos nuevos, sin base | Palmares |
 |---|---|
