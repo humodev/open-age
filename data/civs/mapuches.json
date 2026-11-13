@@ -28,7 +28,11 @@
   "guerrero": {
    "nombre": "Weichafe",
    "velocidad": 1750,
-   "ataque": 12
+   "ataque": 12,
+   "costo": {
+    "alimento": 55,
+    "riqueza": 20
+   }
   },
   "hondero": {
    "nombre": "Arquero",
@@ -39,10 +43,10 @@
   },
   "jinete": {
    "nombre": "Kona montado",
-   "edad_min": 3,
+   "edad_min": 2,
    "costo": {
     "alimento": 60,
-    "kullin": 45
+    "kullin": 35
    }
   }
  },
@@ -98,8 +102,8 @@
     "aldeano",
     "explorador"
    ],
-   "guarnicion": 6,
-   "flechas": 1,
+   "guarnicion": 8,
+   "flechas": 2,
    "ataque": 4,
    "alcance": 6000,
    "cadencia_ms": 2000,

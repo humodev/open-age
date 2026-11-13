@@ -47,11 +47,11 @@
    "edad_min": 2,
    "pob": 4,
    "costo": {
-    "alimento": 200,
-    "riqueza": 140
+    "alimento": 220,
+    "riqueza": 160
    },
    "tiempo_ms": 34000,
-   "pv": 720,
+   "pv": 640,
    "armadura": 3,
    "ataque": 22,
    "alcance": 700,
@@ -60,7 +60,7 @@
    "vision": 9000,
    "radio": 620,
    "area": 1600,
-   "area_pct": 55,
+   "area_pct": 45,
    "elefante": true
   },
   "compania_japonesa": {

@@ -41,3 +41,15 @@ Completar el juego como "un Age of Empires 4 indie del sur global": arte, animac
 16. **Video** de una batalla entre Ayutthaya y Etiopía grabado con el *movie maker* de Godot: [`07-batalla-ayutthaya-vs-etiopia.mp4`](07-batalla-ayutthaya-vs-etiopia.mp4).
 
 ![](08-sitio-sagrado.jpg)
+17. **Balance por torneo** (`tests/torneo.gd`): todas contra todas, ida y vuelta, partidas de hasta 30 minutos. Los resultados completos están en `torneo-1.txt` y `torneo-2.txt`. Victorias contando destrucción y puntos:
+
+| Civilización | Torneo 1 | Torneo 2 |
+|---|---|---|
+| Palmares | 9 | 8 |
+| Guaraníes | 8 | 6 |
+| Ayutthaya | 5 | 8 |
+| Tawantinsuyu | 4 | 5 |
+| Etiopía | 4 | 3 |
+| Mapuches | 1 | 1 |
+
+Después del torneo 1 bajaron guaraníes y Palmares y subieron mapuches y Etiopía. En el torneo 2 terminaron por destrucción 22 de 30 partidas, contra 15 en el primero. Después del torneo 2 bajan los elefantes y suben el lof y la caballería mapuche (desde la edad II) y el jinete noble. Los mapuches siguen débiles en IA contra IA, en parte porque la IA no explota el enjambre de lof y el sigilo: es trabajo pendiente de la IA más que de los números.

@@ -27,7 +27,7 @@
    "nombre": "Jinete noble",
    "montado": true,
    "velocidad": 2100,
-   "pv": 150,
+   "pv": 170,
    "pob": 2,
    "costo": {
     "alimento": 70,
