@@ -1,0 +1,217 @@
+{
+  "civ": "etiopia",
+  "titulo": "La corte que camina",
+  "resumen": "Un escriba de la corte, en la Gondar recién fundada, relee las crónicas reales para contar cómo un reino sin capital sobrevivió a la guerra con Adal y eligió, al fin, quedarse quieto.",
+  "misiones": [
+    {
+      "id": "etiopia-1",
+      "titulo": "La luz de Debre Berhan",
+      "anio": "1445",
+      "lugar": "Gomit, en Dawaro, y Debre Berhan",
+      "intro": [
+        "Escribo en Gondar, donde por primera vez en trescientos años el rey duerme cada noche en el mismo lugar. Antes no era así. El reino era una ciudad que caminaba: tiendas, iglesias, mercado y tesoro, levantados en un llano y desarmados cuando el llano se cansaba.",
+        "Las crónicas que copio empiezan con Zara Yaqob. En 1445 el sultán Badlay de Adal entró en Dawaro con su ejército. El rey no lo esperó en un palacio, porque no tenía palacio: llevó la corte hacia él.",
+        "Un rey sin capital gobierna con la tierra. A cada señor, a cada regimiento y a cada monasterio le da el derecho a cobrar tributo de un pedazo de tierra, el gult, y se lo puede quitar cuando quiere. Por eso los señores vienen cuando él los llama."
+      ],
+      "epilogo": [
+        "Badlay murió en Gomit. Once años después, Zara Yaqob vio una luz en el cielo, fundó una iglesia en ese lugar y la llamó Debre Berhan, monte de la luz. Se quedó allí casi el resto de su vida: la primera vez que la corte que caminaba se sentó.",
+        "Pero un rey sentado deja de ver lo que pasa lejos. Después de él, la corte volvió a caminar."
+      ],
+      "fuentes": [
+        "Crónica de Zara Yaqob, en Jules Perruchon, Les chroniques de Zar'a Yâ'eqôb et de Ba'eda Mâryâm (1893)",
+        "Taddesse Tamrat, Church and State in Ethiopia 1270-1527 (Oxford, 1972)",
+        "Ronald J. Horvath, The Wandering Capitals of Ethiopia (Journal of African History 10:2, 1969)",
+        "Francisco Álvares, Verdadera información de las tierras del Preste Juan (1540), caps. CXX-CXXV sobre el campamento real"
+      ],
+      "mapa": { "semilla": 1445, "terreno": "montana" },
+      "jugador": {
+        "edad": 1,
+        "recursos": { "alimento": 400, "madera": 450, "piedra": 100, "riqueza": 200 },
+        "aldeanos": 10,
+        "tropas": [ { "tipo": "jinete", "n": 6 }, { "tipo": "guerrero", "n": 4 }, { "tipo": "hondero", "n": 6 } ]
+      },
+      "rivales": [
+        { "nombre": "Sultanato de Adal (ejército de Badlay)", "faccion": "invasores", "ia": "normal", "edad": 1 }
+      ],
+      "objetivos": [
+        { "id": "o1", "texto": "Armá el kätäma: plantá el estandarte y levantá 5 tiendas de señores (casas) alrededor de la tienda real.", "tipo": "construir", "params": { "tipo": "casa", "n": 5 }, "secundario": false },
+        { "id": "o2", "texto": "Asigná tierras en gult: 4 parcelas trabajadas con bueyes (granjas) que pagan tributo a la corte.", "tipo": "construir", "params": { "tipo": "granja", "n": 4 }, "secundario": false },
+        { "id": "o3", "texto": "En Gomit, rompé el ejército de Badlay: matá a 25.", "tipo": "matar", "params": { "n": 25 }, "secundario": false },
+        { "id": "o4", "texto": "Tomá el campamento de Badlay.", "tipo": "destruir_hitos", "params": { "jugador": 1 }, "secundario": false },
+        { "id": "o5", "texto": "Llevá el tabot en procesión y consagrá la iglesia de Debre Berhan (avanzá a la edad II).", "tipo": "edad", "params": { "n": 2 }, "secundario": false, "oculto": true },
+        { "id": "o6", "texto": "Que la tienda real no caiga.", "tipo": "proteger", "params": { "tipo": "centro", "jugador": 0 }, "secundario": true }
+      ],
+      "eventos": [
+        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Zara Yaqob", "texto": "Que se levante la corte. Vamos hacia Dawaro." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o2" }, "accion": { "tipo": "recursos", "params": { "alimento": 200, "madera": 0, "piedra": 0, "riqueza": 200 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o2" }, "accion": { "tipo": "dialogo", "params": { "quien": "Escriba de Gondar", "texto": "Llega el primer tributo: grano, miel y caballos. El que recibe tierra sabe que también se la pueden quitar." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 150 }, "accion": { "tipo": "refuerzos", "params": { "jugador": 0, "tipo": "jinete", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 150 }, "accion": { "tipo": "dialogo", "params": { "quien": "Escriba de Gondar", "texto": "Convocatoria: los señores llegan a la corte con su gente. Mientras estén aquí, sus tierras no pagan." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 240 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 245 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 8 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 420 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 425 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "hondero", "n": 8 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 600 }, "accion": { "tipo": "recursos", "params": { "alimento": 0, "madera": 0, "piedra": 0, "riqueza": 150 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "objetivo_nuevo", "params": { "id": "o5" } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "dialogo", "params": { "quien": "Zara Yaqob", "texto": "Que los sacerdotes preparen el tabot. Donde se pose, habrá iglesia." } } }
+      ]
+    },
+    {
+      "id": "etiopia-2",
+      "titulo": "La montaña de los príncipes",
+      "anio": "1531",
+      "lugar": "Amba Geshen, en Amhara",
+      "intro": [
+        "En 1529, en Shimbra Kure, el imán Ahmad ibn Ibrahim de Adal venció al ejército de Lebna Dengel. Las crónicas de Adal cuentan que tenía menos hombres y mejor caballería. Las nuestras callan. Callar también es una forma de escribir.",
+        "Durante catorce años los ejércitos del imán recorrieron el reino. Quemaron iglesias, se llevaron el oro de los monasterios, y el rey anduvo de montaña en montaña. Pero había lugares donde no se podía entrar.",
+        "Amba Geshen es una meseta de paredes de piedra con un solo camino. Allí vivían, encerrados por ley, los príncipes de la casa real, y allí se guardaba el tesoro. En 1531 el imán llegó al pie de la montaña."
+      ],
+      "epilogo": [
+        "Amba Geshen resistió en 1531 y otra vez en 1533. Cayó en 1540, cuando ya no quedaba quién la abasteciera. Ese mismo año Lebna Dengel murió refugiado en Debre Damo, una montaña a la que solo se sube trepando por una cuerda de cuero.",
+        "Su hijo Galawdewos heredó un reino que era casi solo montañas. Desde una de ellas mandó a buscar a los portugueses."
+      ],
+      "fuentes": [
+        "Shihab al-Din Arab Faqih, Futuh al-Habasha, trad. P. L. Stenhouse (Tsehai, 2003)",
+        "Francisco Álvares, Verdadera información de las tierras del Preste Juan (1540), cap. LVIII",
+        "Shumet Sishagn, Ayele Tariku y Temesgen Gebeyehu, A History of Amba Prisons and Imprisonment in Gojjam (Ethiopian Journal of Social Sciences 9:1, 2023)",
+        "Library of Congress, Ethiopia: A Country Study (1991)"
+      ],
+      "mapa": { "semilla": 1531, "terreno": "montana" },
+      "jugador": {
+        "edad": 2,
+        "recursos": { "alimento": 500, "madera": 400, "piedra": 650, "riqueza": 300 },
+        "aldeanos": 10,
+        "tropas": [ { "tipo": "hondero", "n": 12 }, { "tipo": "lancero", "n": 8 }, { "tipo": "guerrero", "n": 4 } ]
+      },
+      "rivales": [
+        { "nombre": "Ejército del imán Ahmad (Adal)", "faccion": "invasores", "ia": "agresiva", "edad": 3 }
+      ],
+      "objetivos": [
+        { "id": "o1", "texto": "Fortificá el único acceso de la amba con 3 torres.", "tipo": "construir", "params": { "tipo": "torre", "n": 3 }, "secundario": false },
+        { "id": "o2", "texto": "Llená los graneros de la cima (800 de alimento): una amba no se toma, se rinde por hambre.", "tipo": "recolectar", "params": { "recurso": "alimento", "n": 800 }, "secundario": false },
+        { "id": "o3", "texto": "Resistí el primer asalto del imán.", "tipo": "sobrevivir", "params": { "segundos": 600 }, "secundario": false },
+        { "id": "o4", "texto": "Que no caiga la amba: allí están los príncipes y el tesoro.", "tipo": "proteger", "params": { "tipo": "centro", "jugador": 0 }, "secundario": false },
+        { "id": "o5", "texto": "El imán vuelve dos años después: rompé su segundo asalto en el camino (matá a 30).", "tipo": "matar", "params": { "n": 30 }, "secundario": false, "oculto": true },
+        { "id": "o6", "texto": "Abatí a 5 de los arcabuceros que el imán trajo de Arabia.", "tipo": "destruir", "params": { "tipo": "arcabucero", "n": 5, "jugador": 1 }, "secundario": true }
+      ],
+      "eventos": [
+        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Guardián de la amba", "texto": "Que suban si pueden. El camino es de a uno." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 180 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 10 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 185 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 400 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 405 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 8 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o2" }, "accion": { "tipo": "dialogo", "params": { "quien": "Escriba de Gondar", "texto": "Con los graneros llenos, el que espera abajo tiene más hambre que el que espera arriba." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "dialogo", "params": { "quien": "Escriba de Gondar", "texto": "El imán se fue. Volvió dos años después, con más gente y más pólvora." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "objetivo_nuevo", "params": { "id": "o5" } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 8 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 8 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 10 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "recursos", "params": { "alimento": 300, "madera": 0, "piedra": 200, "riqueza": 0 } } }
+      ]
+    },
+    {
+      "id": "etiopia-3",
+      "titulo": "Wayna Daga",
+      "anio": "1543",
+      "lugar": "Wayna Daga, cerca del lago Tana",
+      "intro": [
+        "Galawdewos tenía dieciocho años. En 1541 habían desembarcado en Massawa cuatrocientos portugueses con mosquetes, pedidos por su padre. Su madre, la reina Seble Wongel, los recibió y caminó con ellos.",
+        "En Wofla, en 1542, el imán los venció, se quedó con sus armas y mató a su capitán, Cristóvão da Gama. Quedaron unos doscientos. Los turcos le habían prestado al imán sus propios mosqueteros, y él, confiado, los devolvió.",
+        "Galawdewos convocó a los señores que le quedaban. Cada uno trajo su gente, y mientras estuvieran en campaña sus tierras no pagaban: era ahora o nunca. En febrero de 1543 los dos ejércitos se encontraron en Wayna Daga."
+      ],
+      "epilogo": [
+        "El imán cayó en la batalla. Portugueses y etíopes discutieron después quién lo había matado, y las crónicas de los dos dicen que fueron ellos. Su viuda, Bati del Wambara, juró venganza y la cumplió en parte años después. Hay que escribir su nombre, porque las crónicas de los vencedores lo olvidan.",
+        "Los portugueses se quedaron. Sus hijos se casaron con nuestras hijas, y después llegaron sus sacerdotes. Ochenta años más tarde un rey se haría católico por ellos, y el reino entero pagaría el precio de aquella ayuda."
+      ],
+      "fuentes": [
+        "Crónica de Galawdewos, ed. W. E. Conzelman, Chronique de Galâwdêwos (1895)",
+        "Miguel de Castanhoso, Dos feitos de D. Christovam da Gama em Ethiopia (1564)",
+        "Shihab al-Din Arab Faqih, Futuh al-Habasha, trad. P. L. Stenhouse (2003)",
+        "Richard Pankhurst, Linguistic and Cultural Data on the Penetration of Fire-Arms into Ethiopia (Journal of Ethiopian Studies 9:1, 1971)"
+      ],
+      "mapa": { "semilla": 1543, "terreno": "llano" },
+      "jugador": {
+        "edad": 3,
+        "recursos": { "alimento": 800, "madera": 500, "piedra": 200, "riqueza": 300 },
+        "aldeanos": 14,
+        "tropas": [ { "tipo": "jinete", "n": 10 }, { "tipo": "lancero", "n": 6 }, { "tipo": "hondero", "n": 10 }, { "tipo": "arcabucero", "n": 6 } ]
+      },
+      "rivales": [
+        { "nombre": "Ejército del imán Ahmad (Adal)", "faccion": "invasores", "ia": "agresiva", "edad": 3 }
+      ],
+      "objetivos": [
+        { "id": "o1", "texto": "Pagá la remonta: sin tributo de las tierras de pasto no hay caballos. Juntá 500 de riqueza.", "tipo": "recolectar", "params": { "recurso": "riqueza", "n": 500 }, "secundario": false },
+        { "id": "o2", "texto": "Formá el cuerpo central, el de la puerta: 10 lanceros más.", "tipo": "entrenar", "params": { "tipo": "lancero", "n": 10 }, "secundario": false },
+        { "id": "o3", "texto": "Rompé el ejército del imán (matá a 40). Los mosqueteros portugueses van en vanguardia.", "tipo": "matar", "params": { "n": 40 }, "secundario": false },
+        { "id": "o4", "texto": "Tomá el campamento del imán.", "tipo": "destruir_hitos", "params": { "jugador": 1 }, "secundario": false },
+        { "id": "o5", "texto": "Mantené con vida a los mosqueteros portugueses: no van a venir más.", "tipo": "proteger", "params": { "tipo": "arcabucero", "jugador": 0 }, "secundario": true }
+      ],
+      "eventos": [
+        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Galawdewos", "texto": "Mi padre murió en una montaña. Yo bajo al llano." } } },
+        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Seble Wongel", "texto": "Los portugueses pelean por su rey y por su fe. No te olvides de que el reino es tuyo." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o1" }, "accion": { "tipo": "refuerzos", "params": { "jugador": 0, "tipo": "jinete", "n": 8 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o1" }, "accion": { "tipo": "dialogo", "params": { "quien": "Escriba de Gondar", "texto": "Llegan los caballos de Gojjam y de Damot. Cada jinete cuesta una tierra que este año no paga." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 200 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 8 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 205 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 8 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 210 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 4 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 420 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 8 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 425 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "hondero", "n": 8 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 600 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 8 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 605 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 6 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "dialogo", "params": { "quien": "Escriba de Gondar", "texto": "El imán cayó. Dos crónicas dicen quién lo mató, y no dicen lo mismo." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "revelar", "params": {} } }
+      ]
+    },
+    {
+      "id": "etiopia-4",
+      "titulo": "Gondar",
+      "anio": "1636",
+      "lugar": "Gondar, al norte del lago Tana",
+      "intro": [
+        "En 1622 el rey Susenyos se hizo católico, y el patriarca que mandó Roma ordenó volver a bautizarnos, volver a ordenar a nuestros sacerdotes y cambiar nuestras fiestas. El reino se levantó. Fueron diez años de guerra entre nosotros.",
+        "En 1632, después de una batalla en la que murieron miles de campesinos, Susenyos devolvió la fe antigua y dejó el trono a su hijo Fasiladas. Fasiladas echó a los jesuitas.",
+        "Después hizo lo que ningún rey había hecho en trescientos años: eligió un lugar y se quedó. En Gondar, sobre las rutas del comercio, empezó a levantar un castillo de piedra. Los maestros fueron nuestros, albañiles beta israel y artesanos que habían aprendido de todos.",
+        "Pero en Lasta había señores que no querían un rey quieto."
+      ],
+      "epilogo": [
+        "Fasiladas terminó su castillo, y sus hijos y nietos le agregaron otros, hasta que Gondar fue una ciudad de piedra con iglesias, baños y bibliotecas. En esta ciudad escribo.",
+        "Un rey quieto es más fuerte, y también más fácil de encontrar. Ya hay grandes señores que llegan a Gondar sin que nadie los llame, y algunos miran el trono como se mira una tierra de gult: algo que se da y se quita. Lo anoto para el que lea después."
+      ],
+      "fuentes": [
+        "Crónica de Susenyos, ed. F. M. Esteves Pereira, Chronica de Susenyos, rei de Ethiopia (1892)",
+        "UNESCO, Fasil Ghebbi, Gondar Region",
+        "Library of Congress, Ethiopia: A Country Study (1991)",
+        "Merid Wolde Aregay, Southern Ethiopia and the Christian Kingdom 1508-1708 (tesis, Londres, 1971)"
+      ],
+      "mapa": { "semilla": 1636, "terreno": "montana" },
+      "jugador": {
+        "edad": 3,
+        "recursos": { "alimento": 1500, "madera": 800, "piedra": 400, "riqueza": 1000 },
+        "aldeanos": 20,
+        "tropas": [ { "tipo": "jinete", "n": 10 }, { "tipo": "lancero", "n": 8 }, { "tipo": "hondero", "n": 10 } ]
+      },
+      "rivales": [
+        { "nombre": "Señores rebeldes de Lasta", "faccion": "etiopia", "ia": "agresiva", "edad": 3 }
+      ],
+      "objetivos": [
+        { "id": "o1", "texto": "Juntá 800 de piedra para el castillo.", "tipo": "recolectar", "params": { "recurso": "piedra", "n": 800 }, "secundario": false },
+        { "id": "o2", "texto": "Levantá 4 torres del recinto real, el Fasil Ghebbi.", "tipo": "construir", "params": { "tipo": "torre", "n": 4 }, "secundario": false },
+        { "id": "o3", "texto": "Asentá la corte para siempre: el recinto real (avanzá a la edad IV).", "tipo": "edad", "params": { "n": 4 }, "secundario": false },
+        { "id": "o4", "texto": "Resistí las incursiones de Lasta mientras se construye.", "tipo": "sobrevivir", "params": { "segundos": 600 }, "secundario": false },
+        { "id": "o5", "texto": "Llevá la guerra a Lasta y rompé el poder de sus señores.", "tipo": "destruir_hitos", "params": { "jugador": 1 }, "secundario": true, "oculto": true },
+        { "id": "o6", "texto": "Que el castillo no caiga: una corte quieta no tiene adónde ir.", "tipo": "proteger", "params": { "tipo": "centro", "jugador": 0 }, "secundario": true }
+      ],
+      "eventos": [
+        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Fasiladas", "texto": "Mi padre caminó toda su vida. Yo me quedo." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o1" }, "accion": { "tipo": "refuerzos", "params": { "jugador": 0, "tipo": "arcabucero", "n": 6 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o1" }, "accion": { "tipo": "dialogo", "params": { "quien": "Escriba de Gondar", "texto": "Llegan mosquetes comprados por la costa. Esta vez se pagan con oro y no con la fe." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 200 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 8 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 205 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 450 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 10 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 455 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "lancero", "n": 6 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "objetivo_nuevo", "params": { "id": "o5" } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "dialogo", "params": { "quien": "Fasiladas", "texto": "La corte ya no camina. Ahora que vengan ellos, si se atreven." } } }
+      ]
+    }
+  ]
+}

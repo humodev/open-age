@@ -15,3 +15,17 @@ Completar el juego como "un Age of Empires 4 indie del sur global": arte, animac
 | Río con vados | Mesetas de montaña |
 |---|---|
 | ![](01-terreno-rio.jpg) | ![](02-terreno-montana.jpg) |
+5. **Sistema de civilizaciones.** Cada civilización es un JSON en `data/civs/` que reemplaza y agrega sobre la capa común. La simulación pide la tabla de cada jugador con `dp(pid)`, sin código propio por civilización (test del módulo).
+6. **Módulos con parámetros** (`src/sim/sim_mods.gd`): recurso propio (mit'a, kulliñ, fama), caminos con bono de conexión, saqueo, liberación, acogida, sigilo con emboscada, relevo, obra colectiva (potirõ) y defensa en altura. Varias mecánicas son propiedades de datos, como la renta del gult, la base móvil de la corte etíope, la roza que deja un yerbal y los elefantes con daño en área.
+7. **Seis civilizaciones jugables** contra la IA, que también aprendió a jugarlas: encuentra su capital, usa sus hitos, entrena desde cualquier edificio militar y construye los edificios propios de cada una. La prueba de humo (`tests/civ_smoke.gd`) detectó y corrigió dos fallas: la IA buscaba lugar sin mirar el relieve, y la fama de Palmares estaba mal calibrada.
+8. **Arte por civilización** (`src/game/civ_meshes.gd`): arquitectura, vestimenta, caballo, elefante y corte en marcha.
+9. **Menú** con elección de pueblo y rival, y descripción de cada civilización.
+10. **Seis campañas en datos** (`data/campanas/`, 24 misiones), escritas por agentes con el mismo esquema ejecutable y narradas desde adentro.
+
+| Tawantinsuyu | Mapuches |
+|---|---|
+| ![](03-civ-tawantinsuyu.jpg) | ![](03-civ-mapuches.jpg) |
+| **Guaraníes** | **Etiopía** |
+| ![](03-civ-guaranies.jpg) | ![](03-civ-etiopia.jpg) |
+| **Palmares** | **Ayutthaya** |
+| ![](03-civ-palmares.jpg) | ![](03-civ-ayutthaya.jpg) |

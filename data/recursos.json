@@ -3,5 +3,6 @@
   "arbol":    { "nombre": "Árbol",      "recurso": "madera",   "cantidad": 120, "tam": [1, 1] },
   "arbusto":  { "nombre": "Arbustos",   "recurso": "alimento", "cantidad": 150, "tam": [1, 1] },
   "roca":     { "nombre": "Afloramiento de piedra", "recurso": "piedra", "cantidad": 800, "tam": [2, 2] },
-  "riqueza":  { "nombre": "Yacimiento de riqueza",  "recurso": "riqueza", "cantidad": 1400, "tam": [2, 2] }
+  "riqueza":  { "nombre": "Yacimiento de riqueza",  "recurso": "riqueza", "cantidad": 1400, "tam": [2, 2] },
+  "yerbal":   { "nombre": "Yerbal (capuera)", "recurso": "riqueza", "cantidad": 400, "tam": [3, 3] }
 }

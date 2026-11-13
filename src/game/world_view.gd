@@ -239,20 +239,21 @@ func _make_visual(e: SimEntity) -> Dictionary:
 	var v := {"node": root, "type": e.type, "owner": e.owner}
 	if e.is_unit():
 		var body := MeshInstance3D.new()
-		body.mesh = Meshes.unit_mesh(e.type, team)
+		body.mesh = unit_mesh_for(e)
 		root.add_child(body)
-		root.add_child(Meshes.team_disc(team, 0.3 if e.fn != "civil" else 0.25))
+		root.add_child(Meshes.team_disc(team, maxf(0.25, e.radius / 1000.0 + 0.05)))
 		var carry := MeshInstance3D.new()
 		carry.mesh = Meshes.box(0.2, 0.18, 0.16)
 		carry.position = Vector3(0, 0.5, -0.2)
 		carry.visible = false
 		body.add_child(carry)
-		var ring := _ring(0, Vector2(0.85, 0.85))
+		var rr := maxf(0.85, e.radius / 500.0 + 0.3)
+		var ring := _ring(0, Vector2(rr, rr))
 		root.add_child(ring)
 		v.merge({"kind": "unit", "body": body, "carry": carry, "ring": ring, "yaw": 0.0, "lunge": 0.0, "spawn": 0.0, "phase": randf() * TAU})
 	else:
 		var struct := MeshInstance3D.new()
-		struct.mesh = Meshes.building_mesh(e.type, team)
+		struct.mesh = building_mesh_for(e.owner, e.type, e.def)
 		root.add_child(struct)
 		var found := MeshInstance3D.new()
 		found.mesh = Meshes.foundation_mesh(e.w, e.h)
@@ -265,6 +266,30 @@ func _make_visual(e: SimEntity) -> Dictionary:
 	v["cur"] = root.position
 	v["prev"] = root.position
 	return v
+
+
+## Malla de unidad según la civilización del dueño (CivMeshes) o la de la capa común.
+func unit_mesh_for(e: SimEntity) -> Mesh:
+	var style: Dictionary = sim.dp(e.owner).civ.get("estilo", {})
+	if style.is_empty():
+		return Meshes.unit_mesh(e.type, Palette.team(e.owner))
+	return CivMeshes.unit(e.type, e.def, Palette.team(e.owner), style)
+
+
+## Malla de edificio según la civilización; los hitos eligen forma por opción y edad.
+func building_mesh_for(owner: int, type: String, def: Dictionary) -> Mesh:
+	var dd := sim.dp(owner)
+	var style: Dictionary = dd.civ.get("estilo", {})
+	if style.is_empty():
+		return Meshes.building_mesh(type, Palette.team(owner))
+	var variant := 0
+	var tier := 0
+	for row in dd.hitos.size():
+		var idx: int = (dd.hitos[row] as Array).find(type)
+		if idx >= 0:
+			variant = idx
+			tier = row
+	return CivMeshes.building(type, def, Palette.team(owner), style, variant, tier)
 
 
 func _ring(shape: int, size: Vector2) -> MeshInstance3D:

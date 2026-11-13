@@ -43,7 +43,7 @@ func think() -> void:
 			if not by_type.has(e.type):
 				by_type[e.type] = []
 			by_type[e.type].append(e)
-			if e.type == "centro" and e.built and centro == null:
+			if e.built and (e.capital or centro == null and (e.def.get("produce", []) as Array).has("aldeano")):
 				centro = e
 	if centro == null:
 		if not army.is_empty():
@@ -62,17 +62,18 @@ func think() -> void:
 	_military(army, centro)
 
 
-## Abundancia para llegar a la edad II, guerra para la III, abundancia para la IV.
+## Opción económica para la edad II, militar para la III, económica para la IV (de la civilización).
 func _hito_type(p: Dictionary) -> String:
-	return "hito_guerra" if p["age"] == 2 else "hito_economia"
+	var opts: Array = sim.dp(player).hitos[clampi(p["age"] - 1, 0, 2)]
+	return opts[1] if p["age"] == 2 and opts.size() > 1 else opts[0]
 
 
 func _research(p: Dictionary, by_type: Dictionary, saving: bool) -> void:
 	if saving:
 		return
 	var reserve := 150
-	for tech: String in sim.data.tecnologias:
-		var t: Dictionary = sim.data.tecnologias[tech]
+	for tech: String in sim.dp(player).tecnologias:
+		var t: Dictionary = sim.dp(player).tecnologias[tech]
 		if sim.research_block(player, tech) != "":
 			continue
 		var surplus := true
@@ -110,7 +111,7 @@ func _alarm(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], centr
 func _economy(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, saving: bool) -> void:
 	var ratio: Dictionary = (ratio_early if p["age"] < 2 else ratio_late).duplicate()
 	# Ajuste por banco: menos gente en lo que sobra, más en lo que falta para el hito.
-	var hito_cost: Dictionary = sim.data.cost_of(_hito_type(p), p["age"]) if saving else {}
+	var hito_cost: Dictionary = sim.dp(player).cost_of(_hito_type(p), p["age"]) if saving else {}
 	for k in Sim.RES_KINDS:
 		if p["res"][k] > 600:
 			ratio[k] = ratio[k] / 3
@@ -137,7 +138,7 @@ func _economy(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, saving: 
 		var kind := _most(counts, ratio, vill.size() + 1, false)
 		var t := sim.find_resource(player, kind, centro.x, centro.y, 40000, -1, v.id)
 		if t == null and kind == "alimento":
-			if sim.can_afford(player, sim.data.cost_of("granja", p["age"])):
+			if sim.can_afford(player, sim.dp(player).cost_of("granja", p["age"])):
 				var site := _site("granja", centro, 0)
 				if site.x >= 0:
 					sim.push_command({"t": "build", "player": player, "ids": [v.id], "type": "granja", "tx": site.x, "ty": site.y})
@@ -170,7 +171,7 @@ func _most(counts: Dictionary, ratio: Dictionary, total: int, over: bool) -> Str
 # ---------------------------------------------------------------- Construcción
 
 func _wants_hito(p: Dictionary, n_vill: int, by_type: Dictionary) -> bool:
-	if p["age"] >= sim.data.edades.size() or sim.hito_in_progress(player):
+	if p["age"] >= sim.dp(player).edades.size() or sim.hito_in_progress(player):
 		return false
 	var need: int = 13 + 8 * (int(p["age"]) - 1)
 	if p["age"] >= 2 and not by_type.has("cuartel"):
@@ -178,7 +179,7 @@ func _wants_hito(p: Dictionary, n_vill: int, by_type: Dictionary) -> bool:
 	if n_vill < need:
 		return false
 	# Solo ahorra si el hito está al alcance: cada recurso cubre al menos la mitad.
-	var cost: Dictionary = sim.data.cost_of(_hito_type(p), p["age"])
+	var cost: Dictionary = sim.dp(player).cost_of(_hito_type(p), p["age"])
 	for k in cost:
 		if p["res"][k] * 2 < cost[k]:
 			return sim.tick % 1200 < 400 # ahorro intermitente para no congelar el ejército
@@ -198,7 +199,7 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 	if p["pop_cap"] < sim.data.reglas["pob_max"] and p["pop_cap"] - p["pop"] <= margin and not unbuilt.has("casa"):
 		_try_build("casa", p, vill, centro, 1)
 	# Hito.
-	if saving and sim.can_afford(player, sim.data.cost_of(_hito_type(p), p["age"])):
+	if saving and sim.can_afford(player, sim.dp(player).cost_of(_hito_type(p), p["age"])):
 		_try_build(_hito_type(p), p, vill, centro, 4)
 		return
 	# Cuartel.
@@ -213,11 +214,21 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 			var far := _far_gather_point(vill, kind)
 			if far != null:
 				var site := _site_near("deposito", Vector2i(far.x / P, far.y / P), 1)
-				if site.x >= 0 and sim.can_afford(player, sim.data.cost_of("deposito", p["age"])):
+				if site.x >= 0 and sim.can_afford(player, sim.dp(player).cost_of("deposito", p["age"])):
 					sim.push_command({"t": "build", "player": player, "ids": [_nearest_villager(vill, far.x, far.y).id], "type": "deposito", "tx": site.x, "ty": site.y})
 				break
+	# Edificios propios de la civilización (corral, gult, mocambo, kraal...), uno por paso.
+	var wanted := {}
+	for t: String in sim.dp(player).civ.get("ia_edificios", []):
+		wanted[t] = int(wanted.get(t, 0)) + 1
+	for t: String in wanted:
+		var have: int = (by_type.get(t, []) as Array).size()
+		var def: Dictionary = sim.dp(player).edificios.get(t, {})
+		if have < int(wanted[t]) and not unbuilt.has(t) and int(def.get("edad_min", 1)) <= p["age"] and vill.size() >= 10 + have * 6:
+			_try_build(t, p, vill, centro, 2)
+			break
 	# Torre.
-	if p["age"] >= 2 and by_type.get("torre", []).size() < 1 and p["res"]["piedra"] >= 250:
+	if p["age"] >= 2 and sim.dp(player).edificios.has("torre") and by_type.get("torre", []).size() < 1 and p["res"]["piedra"] >= 250:
 		_try_build("torre", p, vill, centro, 1)
 
 
@@ -237,7 +248,7 @@ func _far_gather_point(vill: Array[SimEntity], kind: String) -> SimEntity:
 
 
 func _try_build(type: String, p: Dictionary, vill: Array[SimEntity], centro: SimEntity, workers: int) -> void:
-	if not sim.can_afford(player, sim.data.cost_of(type, p["age"])):
+	if not sim.can_afford(player, sim.dp(player).cost_of(type, p["age"])):
 		return
 	var site := _site(type, centro, 1)
 	if site.x < 0:
@@ -280,10 +291,12 @@ func _site(type: String, centro: SimEntity, margin: int) -> Vector2i:
 
 ## Busca un lugar libre en anillos alrededor de `c`, dejando `margin` casillas de paso.
 func _site_near(type: String, c: Vector2i, margin: int, min_r: int = 1) -> Vector2i:
-	var tam: Array = sim.data.edificios[type]["tam"]
+	if not sim.dp(player).edificios.has(type):
+		return Vector2i(-1, -1)
+	var tam: Array = sim.dp(player).edificios[type]["tam"]
 	var w: int = tam[0]
 	var h: int = tam[1]
-	for r in range(min_r, 24):
+	for r in range(min_r, 30):
 		for dy in range(-r, r + 1):
 			for dx in range(-r, r + 1):
 				if absi(dx) != r and absi(dy) != r:
@@ -292,7 +305,7 @@ func _site_near(type: String, c: Vector2i, margin: int, min_r: int = 1) -> Vecto
 				var ty := c.y + dy - h / 2
 				if tx < 2 or ty < 2 or tx + w > sim.map.n - 2 or ty + h > sim.map.n - 2:
 					continue
-				if sim.map.is_free_rect(tx - margin, ty - margin, w + margin * 2, h + margin * 2):
+				if sim.map.is_free_rect(tx - margin, ty - margin, w + margin * 2, h + margin * 2) and sim.can_place(type, tx, ty, player):
 					return Vector2i(tx, ty)
 	return Vector2i(-1, -1)
 
@@ -300,13 +313,17 @@ func _site_near(type: String, c: Vector2i, margin: int, min_r: int = 1) -> Vecto
 # ---------------------------------------------------------------- Producción
 
 func _production(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], centro: SimEntity, by_type: Dictionary, saving: bool) -> void:
-	if centro.queue.is_empty() and vill.size() < max_villagers:
+	if centro.queue.is_empty() and vill.size() < max_villagers and (centro.def.get("produce", []) as Array).has("aldeano"):
 		sim.push_command({"t": "train", "player": player, "building": centro.id, "type": "aldeano"})
 	var threatened := _threat(centro) != null
 	if saving and not threatened:
 		return
 	var order := _counter_order(p)
-	var producers: Array = by_type.get("cuartel", []) + by_type.get("hito_guerra", [])
+	var producers: Array = []
+	for k in by_type:
+		for b: SimEntity in by_type[k]:
+			if b.built and b.capital == false and _makes_military(b):
+				producers.append(b)
 	for b: SimEntity in producers:
 		if not b.built:
 			continue
@@ -316,12 +333,12 @@ func _production(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], 
 			continue
 		# Arietes desde la edad II: sin asedio los ataques no derriban edificios.
 		if p["age"] >= 2 and b.type == "cuartel" and _count(army, "ariete") < 1 + wave / 2 and army.size() >= 6:
-			if sim.can_afford(player, sim.data.cost_of("ariete", p["age"])):
+			if sim.can_afford(player, sim.dp(player).cost_of("ariete", p["age"])):
 				sim.push_command({"t": "train", "player": player, "building": b.id, "type": "ariete"})
 				continue
 		# La preferida si alcanza; si no, la siguiente que se pueda pagar.
 		for type in order:
-			if sim.can_afford(player, sim.data.cost_of(type, p["age"])):
+			if sim.can_afford(player, sim.dp(player).cost_of(type, p["age"])):
 				sim.push_command({"t": "train", "player": player, "building": b.id, "type": type})
 				break
 
@@ -339,11 +356,16 @@ func _counter_order(p: Dictionary) -> Array[String]:
 	var pick := {"choque": "lancero", "distancia": "guerrero", "linea": "hondero"}[top] as String
 	if counts[top] == 0:
 		pick = ["hondero", "guerrero", "lancero"][(sim.tick / 160) % 3]
-	var out: Array[String] = [pick]
+	var out: Array[String] = []
+	for t: String in sim.dp(player).civ.get("ia_unidades", []):
+		if (sim.tick / 50 + out.size()) % 3 == 0:
+			out.append(t)
+	out.append(pick)
 	for t: String in ["hondero", "guerrero", "lancero"]:
 		if not out.has(t):
 			out.append(t)
-	return out.filter(func(t: String) -> bool: return sim.data.unidades[t]["edad_min"] <= p["age"])
+	var dd := sim.dp(player)
+	return out.filter(func(t: String) -> bool: return dd.unidades.has(t) and dd.unidades[t]["edad_min"] <= p["age"])
 
 
 # ---------------------------------------------------------------- Ejército
@@ -410,3 +432,11 @@ func _count(list: Array[SimEntity], type: String) -> int:
 		if e.type == type:
 			n += 1
 	return n
+
+
+func _makes_military(b: SimEntity) -> bool:
+	for t: String in b.def.get("produce", []):
+		var u: Dictionary = sim.dp(player).unidades.get(t, {})
+		if not u.is_empty() and u["funcion"] in ["choque", "distancia", "linea"]:
+			return true
+	return false

@@ -48,6 +48,9 @@ var carry: int = 0
 var anchored := false # trabajando quieto: la separación lo empuja menos
 var stuck: int = 0
 var inside: int = -1 # id del edificio que la aloja
+var last_combat: int = -100000 # último tick en que pegó o recibió un golpe
+var slow_until: int = -1 # frenada (boleadoras) hasta este tick
+var shots: int = 0 # disparos hechos (munición limitada)
 
 # --- Edificios ---
 var built := true
@@ -61,7 +64,7 @@ var rally_y: int
 var rally_target: int = -1
 var farmer: int = -1
 var garrison: Array[int] = [] # unidades alojadas
-var capital := false # el centro inicial cuenta como hito (docs/05, "Victoria")
+var capital := false # el centro inicial cuenta como hito (docs/05, "Victoria"); viaja con la base móvil
 var workers_prev: int = 0 # constructores del tick anterior
 var workers_now: int = 0
 

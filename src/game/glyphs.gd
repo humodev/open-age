@@ -127,6 +127,24 @@ static func draw(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
 			ci.draw_line(c + Vector2(-s * 0.3, s * 0.1), c + Vector2(s * 0.46, s * 0.1), col.darkened(0.3), w * 1.6)
 			ci.draw_circle(c + Vector2(-s * 0.22, s * 0.3), s * 0.09, col)
 			ci.draw_circle(c + Vector2(s * 0.22, s * 0.3), s * 0.09, col)
+		"jinete":
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.36, s * 0.1), c + Vector2(s * 0.3, s * 0.1), c + Vector2(s * 0.42, -s * 0.12), c + Vector2(s * 0.3, s * 0.18), c + Vector2(-s * 0.3, s * 0.2)]), col)
+			for x in [-0.28, -0.14, 0.14, 0.26]:
+				ci.draw_line(c + Vector2(s * x, s * 0.18), c + Vector2(s * x, s * 0.42), col, w)
+			ci.draw_circle(c + Vector2(-s * 0.02, -s * 0.28), s * 0.09, col)
+			ci.draw_line(c + Vector2(-s * 0.02, -s * 0.2), c + Vector2(-s * 0.02, s * 0.05), col, w * 1.4)
+		"elefante":
+			ci.draw_colored_polygon(_ngon(c + Vector2(-s * 0.05, 0), s * 0.32, 14, 0.0), col)
+			ci.draw_line(c + Vector2(s * 0.28, -s * 0.05), c + Vector2(s * 0.42, s * 0.32), col, w * 1.6)
+			for x in [-0.26, -0.08, 0.1]:
+				ci.draw_line(c + Vector2(s * x, s * 0.2), c + Vector2(s * x, s * 0.42), col, w * 1.8)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.22, -s * 0.46), Vector2(s * 0.3, s * 0.16)), col.darkened(0.3))
+		"arcabuz":
+			_figure(ci, c + Vector2(-s * 0.1, 0), s, col, 0.85)
+			ci.draw_line(c + Vector2(-s * 0.05, s * 0.05), c + Vector2(s * 0.42, -s * 0.22), col.darkened(0.3), w * 1.3)
+		"camino":
+			for i in 3:
+				ci.draw_rect(Rect2(c + Vector2(-s * 0.36 + i * s * 0.25, -s * 0.12 + (i % 2) * s * 0.08), Vector2(s * 0.2, s * 0.2)), col)
 		"detener":
 			ci.draw_rect(Rect2(c - Vector2(s * 0.24, s * 0.24), Vector2(s * 0.48, s * 0.48)), col)
 		"atacar":
@@ -137,6 +155,36 @@ static func draw(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
 			draw(ci, {"arbol": "madera", "arbusto": "alimento", "roca": "piedra"}[kind], r, col)
 		_:
 			ci.draw_circle(c, s * 0.25, col)
+
+
+const KNOWN := ["aldeano", "guerrero", "hondero", "lancero", "explorador", "ariete", "centro", "casa", "granja", "deposito", "cuartel", "torre", "hito", "hito_economia", "hito_guerra", "empalizada", "puerta"]
+
+
+## Ícono para cualquier tipo, también los propios de cada civilización, deducido de sus datos.
+static func resolve(def: Dictionary, type: String) -> String:
+	if type in KNOWN:
+		return type
+	if def.has("funcion"):
+		if def.get("elefante", false):
+			return "elefante"
+		if def.get("montado", false):
+			return "jinete"
+		if def.get("polvora", false):
+			return "arcabuz"
+		return {"civil": "aldeano", "choque": "guerrero", "distancia": "hondero", "linea": "lancero", "explorador": "explorador", "asedio": "ariete"}.get(def["funcion"], "aldeano")
+	if def.get("avanza_edad", false):
+		return "hito_guerra" if def.has("produce") or def.has("flechas") else "hito_economia"
+	if def.get("camino", false):
+		return "camino"
+	if (def.get("produce", []) as Array).has("aldeano") or def.get("cuenta_victoria", false):
+		return "centro"
+	if def.has("produce"):
+		return "cuartel"
+	if def.has("fuente") or def.has("renta"):
+		return "granja"
+	if def.has("deposito"):
+		return "deposito"
+	return "casa"
 
 
 static func _figure(ci: CanvasItem, c: Vector2, s: float, col: Color, k: float) -> void:

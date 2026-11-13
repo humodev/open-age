@@ -1,0 +1,461 @@
+{
+ "nombre": "Tawantinsuyu",
+ "adjetivo": "inca",
+ "frase": "El imperio que se construye como una red.",
+ "region": "Andes, 1438–1572",
+ "descripcion": "Economía de turnos de trabajo (mit'a), red de caminos que conecta y acelera, qollqas que levan escuadrones y andenes que hacen rendir las laderas.",
+ "estilo": {
+  "forma": "inca",
+  "arcilla": "#d8c6a6",
+  "techo": "#9c7b52",
+  "acento": "#b39a7a"
+ },
+ "edades": [
+  "Ayllu",
+  "Suyu",
+  "Tawantinsuyu",
+  "Inkarri"
+ ],
+ "unidades": {
+  "aldeano": {
+   "nombre": "Runa"
+  },
+  "explorador": {
+   "nombre": "Chaski",
+   "velocidad": 2500,
+   "vision": 13000
+  },
+  "guerrero": {
+   "nombre": "Guerrero de porra"
+  },
+  "hondero": {
+   "nombre": "Hondero",
+   "alcance": 6000
+  },
+  "lancero": {
+   "nombre": "Lancero con escudo",
+   "edad_min": 1
+  },
+  "ariete": {
+   "nombre": "Hondero de piedra caliente",
+   "alcance": 6000,
+   "ataque": 32,
+   "velocidad": 1200,
+   "pv": 110,
+   "radio": 240,
+   "pob": 1,
+   "cadencia_ms": 3500,
+   "costo": {
+    "alimento": 60,
+    "madera": 40,
+    "mita": 20
+   }
+  }
+ },
+ "unidades_nuevas": {
+  "boleador": {
+   "nombre": "Boleador",
+   "funcion": "distancia",
+   "edad_min": 2,
+   "pob": 1,
+   "costo": {
+    "alimento": 40,
+    "madera": 30,
+    "mita": 10
+   },
+   "tiempo_ms": 15000,
+   "pv": 70,
+   "armadura": 0,
+   "ataque": 4,
+   "alcance": 4500,
+   "cadencia_ms": 2200,
+   "velocidad": 1300,
+   "vision": 8000,
+   "radio": 220,
+   "frena_ms": 3000
+  },
+  "awqa": {
+   "nombre": "Leva (awqa runa)",
+   "funcion": "linea",
+   "edad_min": 1,
+   "pob": 1,
+   "costo": {
+    "alimento": 25,
+    "mita": 30
+   },
+   "tiempo_ms": 5000,
+   "pv": 105,
+   "armadura": 2,
+   "ataque": 7,
+   "alcance": 650,
+   "cadencia_ms": 1500,
+   "velocidad": 1150,
+   "vision": 7000,
+   "radio": 260
+  }
+ },
+ "edificios": {
+  "centro": {
+   "nombre": "Llaqta"
+  },
+  "casa": {
+   "nombre": "Kancha"
+  },
+  "deposito": {
+   "nombre": "Tambo"
+  },
+  "granja": {
+   "nombre": "Chacra"
+  },
+  "cuartel": {
+   "nombre": "Kallanka"
+  },
+  "torre": {
+   "nombre": "Pukara",
+   "pv": 1500,
+   "armadura": 5,
+   "edad_min": 1,
+   "costo": {
+    "piedra": 150,
+    "mita": 20
+   }
+  }
+ },
+ "sin_edificios": [
+  "empalizada",
+  "puerta",
+  "hito_economia",
+  "hito_guerra"
+ ],
+ "edificios_nuevos": {
+  "camino": {
+   "nombre": "Qhapaq Ñan (camino)",
+   "edad_min": 1,
+   "tam": [
+    1,
+    1
+   ],
+   "pv": 200,
+   "armadura": 0,
+   "costo": {
+    "mita": 2
+   },
+   "tiempo_ms": 1500,
+   "vision": 1000,
+   "transitable": true,
+   "linea": true,
+   "camino": true,
+   "ranura": 10,
+   "desc": "Acelera a quien lo transite. Une los edificios a la llaqta: los conectados producen más rápido."
+  },
+  "anden": {
+   "nombre": "Andén",
+   "edad_min": 1,
+   "tam": [
+    3,
+    3
+   ],
+   "pv": 300,
+   "armadura": 0,
+   "costo": {
+    "madera": 40,
+    "mita": 15
+   },
+   "tiempo_ms": 12000,
+   "vision": 2000,
+   "transitable": true,
+   "fuente": "alimento",
+   "permite_ladera": true,
+   "bono_ladera_pct": 60,
+   "ranura": 11,
+   "desc": "Granja en terrazas: rinde mucho más en lomas y laderas."
+  },
+  "qollqa": {
+   "nombre": "Qollqa",
+   "edad_min": 1,
+   "tam": [
+    2,
+    2
+   ],
+   "pv": 500,
+   "armadura": 2,
+   "costo": {
+    "piedra": 40,
+    "mita": 20
+   },
+   "tiempo_ms": 15000,
+   "vision": 4000,
+   "produce": [
+    "awqa"
+   ],
+   "deposito": [
+    "alimento"
+   ],
+   "ranura": 7,
+   "desc": "Depósito estatal: guarda turnos de mit'a y leva escuadrones al instante."
+  },
+  "ushnu": {
+   "nombre": "Ushnu y plaza",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Más mit'a por runa: la fiesta en la plaza sostiene los turnos.",
+   "efectos": [
+    {
+     "tipo": "tasa",
+     "recurso": "alimento",
+     "pct": 10
+    }
+   ],
+   "costo_extra": {
+    "mita": 60
+   },
+   "renta": {
+    "mita": 20
+   }
+  },
+  "pukara_mayor": {
+   "nombre": "Pukara de frontera",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3600,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Fortaleza con guarnición y andanadas; habilita la leva rápida.",
+   "efectos": [
+    {
+     "tipo": "armadura",
+     "funciones": [
+      "choque",
+      "distancia",
+      "linea"
+     ],
+     "n": 1
+    }
+   ],
+   "costo_extra": {
+    "mita": 60
+   },
+   "guarnicion": 10,
+   "flechas": 3,
+   "ataque": 6,
+   "alcance": 7500,
+   "cadencia_ms": 2000,
+   "produce": [
+    "awqa",
+    "hondero"
+   ]
+  },
+  "aqllawasi": {
+   "nombre": "Aqllawasi",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "El tejido de cumbi convierte el trabajo en riqueza.",
+   "efectos": [],
+   "costo_extra": {
+    "mita": 120
+   },
+   "renta": {
+    "riqueza": 40
+   }
+  },
+  "kallanka_real": {
+   "nombre": "Kallanka real",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Gran galpón de guerra: tropas con veteranía.",
+   "efectos": [
+    {
+     "tipo": "ataque",
+     "funciones": [
+      "choque",
+      "distancia",
+      "linea"
+     ],
+     "n": 2
+    }
+   ],
+   "costo_extra": {
+    "mita": 120
+   },
+   "produce": [
+    "guerrero",
+    "hondero",
+    "lancero",
+    "boleador"
+   ]
+  },
+  "qorikancha": {
+   "nombre": "Qorikancha",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Templo que reúne las huacas: recolección y caminos.",
+   "efectos": [
+    {
+     "tipo": "tasa",
+     "recurso": "*",
+     "pct": 15
+    }
+   ],
+   "costo_extra": {
+    "mita": 200
+   }
+  },
+  "vilcabamba": {
+   "nombre": "Vilcabamba",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Reducto de montaña: resistencia y captura de caballos y arcabuces.",
+   "efectos": [
+    {
+     "tipo": "vida_pct",
+     "funciones": [
+      "choque",
+      "distancia",
+      "linea"
+     ],
+     "pct": 20
+    }
+   ],
+   "costo_extra": {
+    "mita": 200
+   },
+   "produce": [
+    "jinete",
+    "arcabucero"
+   ],
+   "guarnicion": 12,
+   "flechas": 3,
+   "ataque": 7,
+   "alcance": 7500,
+   "cadencia_ms": 2000
+  }
+ },
+ "hitos": [
+  [
+   "ushnu",
+   "pukara_mayor"
+  ],
+  [
+   "aqllawasi",
+   "kallanka_real"
+  ],
+  [
+   "qorikancha",
+   "vilcabamba"
+  ]
+ ],
+ "construye": [
+  "casa",
+  "granja",
+  "deposito",
+  "cuartel",
+  "torre",
+  "centro",
+  "camino",
+  "anden",
+  "qollqa"
+ ],
+ "produce": {
+  "centro": [
+   "aldeano",
+   "explorador"
+  ],
+  "cuartel": [
+   "guerrero",
+   "hondero",
+   "lancero",
+   "boleador",
+   "ariete"
+  ]
+ },
+ "modulos": {
+  "recurso_propio": {
+   "clave": "mita",
+   "nombre": "Mit'a",
+   "color": "#c98a3b",
+   "icono": "carga",
+   "por_aldeano": 4,
+   "inicial": 60,
+   "tope": 200,
+   "tope_por_edificio": {
+    "qollqa": 100,
+    "centro": 50
+   }
+  },
+  "caminos": {
+   "velocidad_pct": 35,
+   "bono_conectado_pct": 20,
+   "penal_desconectado_pct": 10
+  }
+ },
+ "ia_unidades": [
+  "boleador"
+ ],
+ "debilidad": "Arranque lento; cortar caminos y quemar qollqas frena todo.",
+ "ia_edificios": [
+  "qollqa"
+ ]
+}

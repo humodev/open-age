@@ -22,12 +22,15 @@ RTS histórico con la calidad, legibilidad y asimetría de Age of Empires IV, pr
 | `03-matriz-de-roles.md` | Las 4 civilizaciones iniciales, función por función | Borrador v1 |
 | `04-decisiones.md` | Decisiones cerradas y abiertas | Vigente |
 | `05-mecanicas-nucleo.md` | Economía, combate, contadores, victoria | Borrador v1 |
-| `civs/<nombre>.md` | Ficha por civilización; plantilla en `civs/_plantilla.md` | Borrador v1 (Tawantinsuyu, mapuches); esqueleto (guaraníes, Etiopía) |
+| `civs/<nombre>.md` | Ficha por civilización; plantilla en `civs/_plantilla.md` | Seis fichas; los datos vigentes están en `data/civs/` |
 | `06-arquitectura.md` | Motor, simulación determinista, datos, multijugador | Borrador v1 |
 | `07-arte-y-ui.md` | Guía de estilo, legibilidad, interfaz, controles | Borrador v1 |
 | `08-ia-rival.md` | Comportamiento de la IA de escaramuza | Borrador v1 |
 | `09-estado.md` | Estado de los hitos y próximos pasos | Vigente |
-| `investigacion/` | Informes de investigación histórica y de referencia (no son decisiones) | En curso |
+| `investigacion/` | Informes de investigación histórica y de referencia (no son decisiones) | Vigente: 7 informes |
+| `campanas/` | Índice y criterios de las seis campañas; los datos ejecutables están en `data/campanas/` | Vigente |
+| `data/civs/*.json` | Las seis civilizaciones como datos: reemplazos, unidades y edificios propios, hitos y módulos | Vigente |
+| `../proceso/` | Registro paso a paso del desarrollo y consultas al autor | Vigente |
 | `data/*.json` | Números de balance (fuente de verdad, D-008) | Vigente |
 
 ## Glosario mínimo

@@ -1,0 +1,385 @@
+{
+ "nombre": "Ayutthaya",
+ "adjetivo": "siamés",
+ "frase": "La ciudad isla que comercia con el mundo y pelea sobre elefantes.",
+ "region": "Siam, 1351–1767",
+ "descripcion": "Arrozales que rinden junto al agua, barrios extranjeros que pagan y alquilan compañías, y elefantes de guerra que arrasan en área.",
+ "estilo": {
+  "forma": "ayutthaya",
+  "arcilla": "#e2d2b2",
+  "techo": "#9e3b2a",
+  "acento": "#c9a227"
+ },
+ "edades": [
+  "Mueang",
+  "Krung Si",
+  "Ekkarat",
+  "Mueang Tha"
+ ],
+ "unidades": {
+  "aldeano": {
+   "nombre": "Phrai"
+  },
+  "explorador": {
+   "nombre": "Jinete explorador"
+  },
+  "guerrero": {
+   "nombre": "Infantería de dap"
+  },
+  "hondero": {
+   "nombre": "Arquero"
+  },
+  "lancero": {
+   "nombre": "Lancero"
+  },
+  "arcabucero": {
+   "nombre": "Compañía portuguesa",
+   "edad_min": 2,
+   "costo": {
+    "riqueza": 110
+   }
+  }
+ },
+ "unidades_nuevas": {
+  "chang_suek": {
+   "nombre": "Elefante de guerra (chang suek)",
+   "funcion": "choque",
+   "edad_min": 2,
+   "pob": 4,
+   "costo": {
+    "alimento": 200,
+    "riqueza": 140
+   },
+   "tiempo_ms": 34000,
+   "pv": 720,
+   "armadura": 3,
+   "ataque": 22,
+   "alcance": 700,
+   "cadencia_ms": 2200,
+   "velocidad": 1050,
+   "vision": 9000,
+   "radio": 620,
+   "area": 1600,
+   "area_pct": 55,
+   "elefante": true
+  },
+  "compania_japonesa": {
+   "nombre": "Compañía japonesa",
+   "funcion": "choque",
+   "edad_min": 2,
+   "pob": 1,
+   "costo": {
+    "riqueza": 95
+   },
+   "tiempo_ms": 12000,
+   "pv": 140,
+   "armadura": 2,
+   "ataque": 13,
+   "alcance": 450,
+   "cadencia_ms": 1150,
+   "velocidad": 1550,
+   "vision": 8000,
+   "radio": 260
+  }
+ },
+ "edificios": {
+  "centro": {
+   "nombre": "Wang (palacio)"
+  },
+  "casa": {
+   "nombre": "Ruean"
+  },
+  "deposito": {
+   "nombre": "Phra Khlang (almacén)"
+  },
+  "granja": {
+   "nombre": "Arrozal",
+   "bono_agua_pct": 45,
+   "tasa_clave": "granja"
+  },
+  "cuartel": {
+   "nombre": "Cuartel de la guardia"
+  },
+  "torre": {
+   "nombre": "Fortín de río"
+  }
+ },
+ "sin_edificios": [
+  "hito_economia",
+  "hito_guerra"
+ ],
+ "edificios_nuevos": {
+  "kraal": {
+   "nombre": "Kraal de elefantes",
+   "edad_min": 2,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 1400,
+   "armadura": 2,
+   "costo": {
+    "madera": 200,
+    "riqueza": 50
+   },
+   "tiempo_ms": 40000,
+   "vision": 6000,
+   "produce": [
+    "chang_suek"
+   ],
+   "ranura": 7,
+   "desc": "Corral real donde se doman y entrenan los elefantes de guerra."
+  },
+  "barrio_japones": {
+   "nombre": "Barrio japonés",
+   "edad_min": 2,
+   "tam": [
+    3,
+    3
+   ],
+   "pv": 900,
+   "armadura": 1,
+   "costo": {
+    "madera": 150
+   },
+   "tiempo_ms": 30000,
+   "vision": 5000,
+   "renta": {
+    "riqueza": 8
+   },
+   "produce": [
+    "compania_japonesa"
+   ],
+   "ranura": 10,
+   "desc": "Comerciantes y soldados japoneses: pagan renta y alquilan compañías."
+  },
+  "barrio_portugues": {
+   "nombre": "Barrio portugués",
+   "edad_min": 2,
+   "tam": [
+    3,
+    3
+   ],
+   "pv": 900,
+   "armadura": 1,
+   "costo": {
+    "madera": 150
+   },
+   "tiempo_ms": 30000,
+   "vision": 5000,
+   "renta": {
+    "riqueza": 8
+   },
+   "produce": [
+    "arcabucero"
+   ],
+   "ranura": 11,
+   "desc": "Comerciantes y artilleros portugueses: renta y compañías de arcabuces."
+  },
+  "wat": {
+   "nombre": "Wat Mahathat",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Templo mayor: méritos y recolección.",
+   "efectos": [
+    {
+     "tipo": "tasa",
+     "recurso": "*",
+     "pct": 12
+    }
+   ]
+  },
+  "kraal_real": {
+   "nombre": "Kraal real",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "La reserva real de elefantes: elefantes más fuertes.",
+   "efectos": [
+    {
+     "tipo": "vida_pct",
+     "funciones": [
+      "choque"
+     ],
+     "pct": 15
+    }
+   ],
+   "produce": [
+    "chang_suek"
+   ]
+  },
+  "puerto_real": {
+   "nombre": "Puerto real",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "El almacén vende a los barcos de cada monzón.",
+   "efectos": [],
+   "renta": {
+    "riqueza": 55
+   }
+  },
+  "fortaleza_rio": {
+   "nombre": "Fortaleza de la isla",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 4500,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Murallas sobre el río: andanadas y guarnición.",
+   "efectos": [
+    {
+     "tipo": "edificio_vida_pct",
+     "pct": 25
+    }
+   ],
+   "guarnicion": 15,
+   "flechas": 4,
+   "ataque": 7,
+   "alcance": 8000,
+   "cadencia_ms": 2000
+  },
+  "junco_tributo": {
+   "nombre": "Junco de tributo",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Misión a China: comercio y prestigio.",
+   "efectos": [
+    {
+     "tipo": "tasa",
+     "recurso": "*",
+     "pct": 15
+    }
+   ],
+   "renta": {
+    "riqueza": 40
+   }
+  },
+  "guardia_extranjera": {
+   "nombre": "Guardia extranjera",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Compañías de todas las naciones al servicio del rey.",
+   "efectos": [
+    {
+     "tipo": "ataque",
+     "funciones": [
+      "choque",
+      "distancia",
+      "linea"
+     ],
+     "n": 2
+    }
+   ],
+   "produce": [
+    "compania_japonesa",
+    "arcabucero",
+    "chang_suek"
+   ]
+  }
+ },
+ "hitos": [
+  [
+   "wat",
+   "kraal_real"
+  ],
+  [
+   "puerto_real",
+   "fortaleza_rio"
+  ],
+  [
+   "junco_tributo",
+   "guardia_extranjera"
+  ]
+ ],
+ "construye": [
+  "casa",
+  "granja",
+  "deposito",
+  "cuartel",
+  "torre",
+  "centro",
+  "kraal",
+  "barrio_japones",
+  "barrio_portugues"
+ ],
+ "produce": {
+  "cuartel": [
+   "guerrero",
+   "hondero",
+   "lancero",
+   "ariete"
+  ]
+ },
+ "modulos": {},
+ "ia_unidades": [
+  "chang_suek"
+ ],
+ "debilidad": "Elefantes caros; sin agua cerca los arrozales rinden poco.",
+ "ia_edificios": [
+  "kraal",
+  "barrio_japones",
+  "barrio_portugues"
+ ]
+}

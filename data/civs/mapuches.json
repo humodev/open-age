@@ -1,0 +1,377 @@
+{
+ "nombre": "Mapuches",
+ "adjetivo": "mapuche",
+ "frase": "No hay capital que tomar.",
+ "region": "Wallmapu, 1546–1793",
+ "descripcion": "Lof dispersos sin centro único, malón que trae ganado, relevo de escuadrones, sigilo en el monte y el caballo desde la edad III.",
+ "estilo": {
+  "forma": "mapuche",
+  "arcilla": "#cfc2a3",
+  "techo": "#8a7a4e",
+  "acento": "#6b5a3a"
+ },
+ "edades": [
+  "Lof",
+  "Rewe",
+  "Ayllarewe",
+  "Butalmapu"
+ ],
+ "inicio_edificio": "lof",
+ "explorador": "explorador",
+ "unidades": {
+  "aldeano": {
+   "nombre": "Che"
+  },
+  "explorador": {
+   "nombre": "Werken"
+  },
+  "guerrero": {
+   "nombre": "Weichafe",
+   "velocidad": 1750
+  },
+  "hondero": {
+   "nombre": "Arquero",
+   "alcance": 5500
+  },
+  "lancero": {
+   "nombre": "Lanza larga"
+  },
+  "jinete": {
+   "nombre": "Kona montado",
+   "edad_min": 3,
+   "costo": {
+    "alimento": 60,
+    "kullin": 45
+   }
+  }
+ },
+ "edificios": {
+  "casa": {
+   "nombre": "Ruka"
+  },
+  "cuartel": {
+   "nombre": "Ruka de guerra"
+  },
+  "granja": {
+   "nombre": "Chacra"
+  },
+  "deposito": {
+   "nombre": "Troje"
+  },
+  "empalizada": {
+   "nombre": "Empalizada con foso",
+   "costo": {
+    "madera": 2
+   }
+  }
+ },
+ "sin_edificios": [
+  "centro",
+  "torre",
+  "hito_economia",
+  "hito_guerra"
+ ],
+ "edificios_nuevos": {
+  "lof": {
+   "nombre": "Lof",
+   "edad_min": 1,
+   "tam": [
+    3,
+    3
+   ],
+   "pv": 1300,
+   "armadura": 1,
+   "costo": {
+    "madera": 160
+   },
+   "tiempo_ms": 40000,
+   "vision": 9000,
+   "pob": 8,
+   "deposito": [
+    "alimento",
+    "madera",
+    "piedra",
+    "riqueza"
+   ],
+   "produce": [
+    "aldeano",
+    "explorador"
+   ],
+   "guarnicion": 6,
+   "flechas": 1,
+   "ataque": 4,
+   "alcance": 6000,
+   "cadencia_ms": 2000,
+   "cuenta_victoria": true,
+   "ranura": 6,
+   "desc": "Asentamiento familiar. No hay capital: cada lof es un centro chico."
+  },
+  "corral": {
+   "nombre": "Corral",
+   "edad_min": 1,
+   "tam": [
+    3,
+    3
+   ],
+   "pv": 400,
+   "armadura": 0,
+   "costo": {
+    "madera": 75
+   },
+   "tiempo_ms": 15000,
+   "vision": 3000,
+   "transitable": true,
+   "ranura": 7,
+   "desc": "El ganado crece en los corrales: genera kulliñ."
+  },
+  "rewe_malon": {
+   "nombre": "Rewe del toqui de malón",
+   "edad_min": 1,
+   "tam": [
+    3,
+    3
+   ],
+   "pv": 1800,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Toqui de malón: más botín por edificio y weichafe más rápidos.",
+   "efectos": [
+    {
+     "tipo": "velocidad_pct",
+     "funciones": [
+      "choque"
+     ],
+     "pct": 10
+    }
+   ],
+   "costo_extra": {
+    "kullin": 30
+   }
+  },
+  "rewe_lonko": {
+   "nombre": "Rewe del lonko",
+   "edad_min": 1,
+   "tam": [
+    3,
+    3
+   ],
+   "pv": 1800,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Lonko de lof: el ganado crece más rápido.",
+   "efectos": [
+    {
+     "tipo": "tasa",
+     "recurso": "*",
+     "pct": 10
+    }
+   ],
+   "renta": {
+    "kullin": 20
+   },
+   "costo_extra": {
+    "kullin": 30
+   }
+  },
+  "rewe_caballeria": {
+   "nombre": "Rewe del toqui de caballería",
+   "edad_min": 1,
+   "tam": [
+    3,
+    3
+   ],
+   "pv": 2000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "El caballo llega antes y más barato.",
+   "efectos": [
+    {
+     "tipo": "vida_pct",
+     "funciones": [
+      "choque"
+     ],
+     "pct": 15
+    }
+   ],
+   "produce": [
+    "jinete"
+   ],
+   "costo_extra": {
+    "kullin": 60
+   }
+  },
+  "rewe_monte": {
+   "nombre": "Rewe del toqui del monte",
+   "edad_min": 1,
+   "tam": [
+    3,
+    3
+   ],
+   "pv": 2000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Más trampas y relevo más fuerte cerca del bosque.",
+   "efectos": [
+    {
+     "tipo": "armadura",
+     "funciones": [
+      "choque",
+      "distancia",
+      "linea"
+     ],
+     "n": 1
+    }
+   ],
+   "costo_extra": {
+    "kullin": 60
+   }
+  },
+  "parlamento": {
+   "nombre": "Parlamento",
+   "edad_min": 1,
+   "tam": [
+    3,
+    3
+   ],
+   "pv": 2200,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Frontera con agasajos y feria: comercio de ganado.",
+   "efectos": [],
+   "renta": {
+    "riqueza": 40,
+    "kullin": 20
+   },
+   "costo_extra": {
+    "kullin": 100
+   }
+  },
+  "weichan": {
+   "nombre": "Gran weichan",
+   "edad_min": 1,
+   "tam": [
+    3,
+    3
+   ],
+   "pv": 2200,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Alzamiento: bono contra fuertes y torres.",
+   "efectos": [
+    {
+     "tipo": "ataque",
+     "funciones": [
+      "choque",
+      "distancia",
+      "linea"
+     ],
+     "n": 3
+    }
+   ],
+   "costo_extra": {
+    "kullin": 100
+   }
+  }
+ },
+ "hitos": [
+  [
+   "rewe_malon",
+   "rewe_lonko"
+  ],
+  [
+   "rewe_caballeria",
+   "rewe_monte"
+  ],
+  [
+   "parlamento",
+   "weichan"
+  ]
+ ],
+ "construye": [
+  "casa",
+  "granja",
+  "deposito",
+  "cuartel",
+  "lof",
+  "corral",
+  "empalizada",
+  "puerta"
+ ],
+ "produce": {
+  "cuartel": [
+   "guerrero",
+   "hondero",
+   "lancero",
+   "jinete"
+  ]
+ },
+ "modulos": {
+  "recurso_propio": {
+   "clave": "kullin",
+   "nombre": "Kulliñ (ganado)",
+   "color": "#a0663a",
+   "icono": "alimento",
+   "por_aldeano": 0,
+   "por_edificio": {
+    "corral": 6
+   },
+   "inicial": 20,
+   "tope": 120,
+   "tope_por_edificio": {
+    "corral": 60
+   }
+  },
+  "saqueo": {
+   "recurso": "kullin",
+   "pct_danio_edificio": 12,
+   "por_aldeano": 6
+  },
+  "sigilo": {
+   "radio_deteccion": 3500,
+   "emboscada_pct": 40
+  },
+  "relevo": {
+   "espera_ms": 6000,
+   "pct_por_seg": 3
+  }
+ },
+ "ia_unidades": [
+  "jinete"
+ ],
+ "debilidad": "Batalla frontal y asedio: sin piedra ni torres.",
+ "ia_edificios": [
+  "corral",
+  "lof",
+  "lof"
+ ]
+}

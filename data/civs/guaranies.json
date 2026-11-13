@@ -1,0 +1,329 @@
+{
+ "nombre": "Guaraníes",
+ "adjetivo": "guaraní",
+ "frase": "El pueblo que se mueve con el río y el monte.",
+ "region": "Paraná y Paraguay, 1500–1756",
+ "descripcion": "Roza que se vuelve yerbal, trabajo colectivo (potirõ) que acelera las obras, arqueros que emboscan desde el monte y la bifurcación misión o monte.",
+ "estilo": {
+  "forma": "guarani",
+  "arcilla": "#cdb98f",
+  "techo": "#7d6a3c",
+  "acento": "#5c7a3a"
+ },
+ "edades": [
+  "Tekoha",
+  "Amundá",
+  "Mbororé",
+  "Tava"
+ ],
+ "unidades": {
+  "aldeano": {
+   "nombre": "Ava",
+   "tasa": {
+    "alimento": 1000,
+    "granja": 750,
+    "roza": 1250,
+    "madera": 900,
+    "piedra": 650,
+    "riqueza": 800
+   }
+  },
+  "explorador": {
+   "nombre": "Baqueano"
+  },
+  "guerrero": {
+   "nombre": "Guerrero de macana"
+  },
+  "hondero": {
+   "nombre": "Arquero",
+   "alcance": 6500,
+   "ataque": 8
+  },
+  "lancero": {
+   "nombre": "Lancero",
+   "pv": 115
+  },
+  "ariete": {
+   "nombre": "Cañón de tacuara",
+   "alcance": 6500,
+   "ataque": 38,
+   "velocidad": 1000,
+   "pv": 140,
+   "radio": 300,
+   "pob": 2,
+   "cadencia_ms": 3500,
+   "municion": 6,
+   "costo": {
+    "madera": 120,
+    "riqueza": 40
+   }
+  },
+  "arcabucero": {
+   "nombre": "Milicia arcabucera",
+   "edad_min": 3
+  }
+ },
+ "edificios": {
+  "centro": {
+   "nombre": "Oga guasu"
+  },
+  "casa": {
+   "nombre": "Oga"
+  },
+  "deposito": {
+   "nombre": "Tapyi"
+  },
+  "cuartel": {
+   "nombre": "Aty de guerra"
+  },
+  "granja": {
+   "nombre": "Kokue (roza)",
+   "tasa_clave": "roza",
+   "cantidad": 700,
+   "deja": "yerbal",
+   "costo": {
+    "madera": 45
+   }
+  }
+ },
+ "sin_edificios": [
+  "torre",
+  "hito_economia",
+  "hito_guerra"
+ ],
+ "edificios_nuevos": {
+  "karai_palabra": {
+   "nombre": "Casa del karai",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "La palabra del karai: trabajo colectivo más fuerte.",
+   "efectos": [
+    {
+     "tipo": "tasa",
+     "recurso": "*",
+     "pct": 10
+    }
+   ]
+  },
+  "aty_guasu": {
+   "nombre": "Aty guasu",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Gran asamblea: más arqueros y emboscadas.",
+   "efectos": [
+    {
+     "tipo": "ataque",
+     "funciones": [
+      "distancia"
+     ],
+     "n": 2
+    }
+   ],
+   "produce": [
+    "hondero",
+    "guerrero"
+   ]
+  },
+  "mision": {
+   "nombre": "Pueblo de misión",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Base fija con talleres y milicias con armas de fuego, a cambio de convocatorias.",
+   "efectos": [
+    {
+     "tipo": "edificio_vida_pct",
+     "pct": 25
+    }
+   ],
+   "produce": [
+    "arcabucero",
+    "lancero"
+   ],
+   "renta": {
+    "riqueza": 25
+   },
+   "guarnicion": 12,
+   "flechas": 3,
+   "ataque": 6,
+   "alcance": 7000,
+   "cadencia_ms": 2000
+  },
+  "monte": {
+   "nombre": "Monte libre",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Seguir libres en el monte: sigilo y guerrilla reforzados.",
+   "efectos": [
+    {
+     "tipo": "velocidad_pct",
+     "funciones": [
+      "choque",
+      "distancia",
+      "linea"
+     ],
+     "pct": 12
+    },
+    {
+     "tipo": "vida_pct",
+     "funciones": [
+      "choque",
+      "distancia",
+      "linea"
+     ],
+     "pct": 10
+    }
+   ]
+  },
+  "tava": {
+   "nombre": "Tava fortificada",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Pueblo defendido por su propio ejército.",
+   "efectos": [
+    {
+     "tipo": "armadura",
+     "funciones": [
+      "choque",
+      "distancia",
+      "linea"
+     ],
+     "n": 2
+    }
+   ],
+   "guarnicion": 15,
+   "flechas": 4,
+   "ataque": 7,
+   "alcance": 7500,
+   "cadencia_ms": 2000
+  },
+  "yvy_marane": {
+   "nombre": "Ñande retã",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Esta tierra tiene dueño: todo el pueblo en armas.",
+   "efectos": [
+    {
+     "tipo": "ataque",
+     "funciones": [
+      "choque",
+      "distancia",
+      "linea"
+     ],
+     "n": 3
+    }
+   ]
+  }
+ },
+ "hitos": [
+  [
+   "karai_palabra",
+   "aty_guasu"
+  ],
+  [
+   "mision",
+   "monte"
+  ],
+  [
+   "tava",
+   "yvy_marane"
+  ]
+ ],
+ "construye": [
+  "casa",
+  "granja",
+  "deposito",
+  "cuartel",
+  "centro",
+  "empalizada",
+  "puerta"
+ ],
+ "produce": {
+  "cuartel": [
+   "guerrero",
+   "hondero",
+   "lancero",
+   "ariete"
+  ]
+ },
+ "modulos": {
+  "sigilo": {
+   "radio_deteccion": 3000,
+   "emboscada_pct": 50
+  },
+  "obra_colectiva": {
+   "pct_por_constructor": 15
+  }
+ },
+ "ia_unidades": [
+  "hondero",
+  "hondero"
+ ],
+ "debilidad": "Campo abierto: unidades frágiles y sin torres de piedra.",
+ "ia_edificios": []
+}

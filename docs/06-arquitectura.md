@@ -27,6 +27,7 @@ src/sim/         Simulación determinista (sin nodos)
   sim_data.gd    Carga de datos a enteros
   sim_rng.gd     Generador pseudoaleatorio propio
   sim_fog.gd     Visión y niebla por jugador
+  sim_mods.gd    Módulos de civilización (recurso propio, caminos, saqueo, liberación, acogida, sigilo, relevo, obra colectiva, defensa en altura)
   sim_ai.gd      IA de escaramuza (emite comandos como un jugador)
 src/game/        Presentación
   main.gd        Arranque, bucle de ticks, argumentos de línea de comandos
@@ -86,7 +87,8 @@ Máquina de estados de unidades: `INACTIVA`, `MOVER`, `ATACAR_MOVIENDO`, `ATACAR
 JSON en `data/`, legible por agentes y por diffs de git. Convenciones:
 - Claves en español sin tildes ni eñes (`pob`, `edad_min`, `vision`).
 - Distancias en milésimas de casilla; velocidades en milésimas de casilla por segundo; tasas en milésimas de unidad de recurso por segundo; tiempos en milisegundos.
-- Las civilizaciones (H2) serán archivos `data/civs/<clave>.json` que reemplazan unidades por función y activan módulos con parámetros.
+- Las civilizaciones son archivos `data/civs/<clave>.json`. `SimData._merge` arma una tabla completa por civilización (unidades, edificios, investigaciones, edades, hitos, módulos) con la misma interfaz que la capa común, y la simulación consulta `dp(pid)`.
+- Propiedades de datos que no necesitan módulo: `renta` (produce sin aldeanos), `empaca_en` y `despliega_en` (base móvil), `cantidad` y `deja` (roza que se agota y deja otra fuente), `permite_ladera` y `bono_ladera_pct` (andenes), `bono_agua_pct` (arrozales), `area` (daño en área), `frena_ms` (boleadoras), `municion` (se rompe), `espinas` (cerca que hiere), `oculto`, `acoge` y `cuenta_victoria`.
 
 ## Presentación
 

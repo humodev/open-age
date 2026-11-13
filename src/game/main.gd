@@ -12,6 +12,8 @@ extends Node3D
 ##   --demo=base|batalla  escena armada para revisar modelos y combate
 ##   --menu             fuerza el menú de inicio (sin argumentos se abre solo)
 ##   --terreno=llano|montana|rio|bosque  tipo de mapa
+##   --civ=clave        civilización propia (tawantinsuyu, mapuches, guaranies, etiopia, palmares, ayutthaya, azar)
+##   --rival=clave      civilización de la IA rival
 ##   --nofog            sin niebla de guerra (automático en --aivai)
 ##   --autotest         prueba de punta a punta con eventos reales de mouse y teclado
 
@@ -97,7 +99,17 @@ func _build_environment() -> void:
 
 
 func _new_game() -> void:
-	sim = Sim.new(_seed, 2, null, {"terreno": _args.get("terreno", "")})
+	var civ_keys: Array = SimData.load_default().civs.keys()
+	civ_keys.sort()
+	var mine: String = _args.get("civ", "")
+	var rival: String = _args.get("rival", "")
+	var rng := RandomNumberGenerator.new()
+	rng.seed = _seed
+	if mine == "" or mine == "azar":
+		mine = civ_keys[rng.randi() % civ_keys.size()]
+	if rival == "" or rival == "azar":
+		rival = civ_keys[rng.randi() % civ_keys.size()]
+	sim = Sim.new(_seed, 2, null, {"terreno": _args.get("terreno", ""), "civs": [mine, rival]})
 	var aivai := _args.has("aivai") or _menu_mode
 	sim.ais = []
 	for pid in sim.players.size():
@@ -141,8 +153,8 @@ func _new_game() -> void:
 		speed = 1.0
 		_menu = MainMenu.new()
 		layer.add_child(_menu)
-		_menu.play.connect(func(sd: int) -> void: _start({"seed": str(sd)}))
-		_menu.watch.connect(func(sd: int) -> void: _start({"aivai": "1", "seed": str(sd)}))
+		_menu.play.connect(func(sd: int, civ: String, rival: String) -> void: _start({"seed": str(sd), "civ": civ, "rival": rival}))
+		_menu.watch.connect(func(sd: int, civ: String, rival: String) -> void: _start({"aivai": "1", "seed": str(sd), "civ": civ, "rival": rival}))
 	if _args.has("autotest"):
 		cam.edge_pan = false
 		_autotest.call_deferred()
@@ -156,16 +168,18 @@ func _demo(kind: String) -> void:
 	var b := sim.bases[0]
 	if kind == "base":
 		var place := func(type: String, tx0: int, ty0: int, built: bool) -> void:
+			if not sim.dp(0).edificios.has(type):
+				return
 			var spot := Vector2i(-1, -1)
 			for r in 8:
 				for dy in range(-r, r + 1):
 					for dx in range(-r, r + 1):
-						if spot.x < 0 and sim.can_place(type, tx0 + dx, ty0 + dy):
+						if spot.x < 0 and sim.can_place(type, tx0 + dx, ty0 + dy, 0):
 							spot = Vector2i(tx0 + dx, ty0 + dy)
 			if spot.x >= 0:
 				var e := sim.spawn_building(type, 0, spot.x, spot.y, built)
 				if not built:
-					e.build_time = sim.data.build_time_of(type, 1)
+					e.build_time = sim.dp(0).build_time_of(type, 1)
 					e.progress = e.build_time / 2
 					e.hp = e.hp_max / 2
 		place.call("casa", b.x - 3, b.y + 6, true)
@@ -175,14 +189,27 @@ func _demo(kind: String) -> void:
 		place.call("granja", b.x + 5, b.y + 3, true)
 		place.call("torre", b.x + 1, b.y + 8, true)
 		place.call("deposito", b.x - 4, b.y - 2, true)
-		place.call("hito_economia", b.x + 10, b.y + 1, false)
-		place.call("hito_guerra", b.x - 6, b.y + 12, true)
+		var extra_i := 0
+		for k in sim.dp(0).civ.get("edificios_nuevos", {}):
+			var kd: Dictionary = sim.dp(0).edificios[k]
+			if kd.get("avanza_edad", false) or kd.get("linea", false):
+				continue
+			place.call(k, b.x - 8 + extra_i * 5, b.y + 14, true)
+			extra_i += 1
+		place.call(sim.dp(0).hitos[0][0], b.x + 10, b.y + 1, false)
+		place.call(sim.dp(0).hitos[0][1], b.x - 6, b.y + 12, true)
 		for i in 9:
 			var wt := Vector2i(b.x - 8 + i, b.y - 5)
-			if sim.can_place("empalizada", wt.x, wt.y, 0):
+			if sim.dp(0).edificios.has("empalizada") and sim.can_place("empalizada", wt.x, wt.y, 0):
 				sim.spawn_building("puerta" if i == 4 else "empalizada", 0, wt.x, wt.y, true)
-		sim.spawn_unit("ariete", 0, (b.x + 13) * 1000, (b.y + 10) * 1000)
-		for i in 6:
+		var showcase: Array = ["guerrero", "hondero", "lancero"]
+		for k in sim.dp(0).civ.get("unidades_nuevas", {}):
+			showcase.append(k)
+		if sim.dp(0).unidades.has("jinete"):
+			showcase.append("jinete")
+		for i in showcase.size():
+			sim.spawn_unit(showcase[i], 0, (b.x + 10 + i % 4) * 1000 + 500, (b.y + 7 + i / 4) * 1000 + 500)
+		for i in 0:
 			sim.spawn_unit(["guerrero", "hondero", "lancero"][i % 3], 0, (b.x + 10 + i % 3) * 1000 + 500, (b.y + 7 + i / 3) * 1000 + 500)
 	elif kind == "batalla":
 		var c := sim.map.n / 2
@@ -453,7 +480,8 @@ func _autotest() -> void:
 	for e in sim.actives:
 		if e.owner == local and e.type == "empalizada":
 			walls += 1
-	check.call("arrastrar coloca una línea de empalizada (%d)" % walls, walls >= 5)
+	if sim.dp(local).edificios.has("empalizada"):
+		check.call("arrastrar coloca una línea de empalizada (%d)" % walls, walls >= 5)
 
 	# 7. Campana desde el centro (Z): los aldeanos se refugian y el centro dispara más.
 	_key_tap(KEY_H)

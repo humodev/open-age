@@ -1,0 +1,371 @@
+{
+ "nombre": "Palmares",
+ "adjetivo": "palmarista",
+ "frase": "La libertad que llega sola y se esconde en la sierra.",
+ "region": "Serra da Barriga y alrededores, 1605–1714",
+ "descripcion": "No entrena aldeanos: la gente llega por la fama. Mocambos ocultos, correrías que liberan, cercas con estrepes que hieren a quien las ataca.",
+ "estilo": {
+  "forma": "palmares",
+  "arcilla": "#c9b28a",
+  "techo": "#6f5a34",
+  "acento": "#7d6b4f"
+ },
+ "edades": [
+  "Mocambo",
+  "Palmares",
+  "Angola Janga",
+  "Cucaú o Quilombo"
+ ],
+ "unidades": {
+  "aldeano": {
+   "nombre": "Palmarista"
+  },
+  "explorador": {
+   "nombre": "Batedor"
+  },
+  "guerrero": {
+   "nombre": "Gente de guerra"
+  },
+  "hondero": {
+   "nombre": "Flecheiro"
+  },
+  "lancero": {
+   "nombre": "Lanceiro"
+  },
+  "arcabucero": {
+   "nombre": "Espingardeiro de resgate",
+   "edad_min": 2,
+   "costo": {
+    "alimento": 60,
+    "riqueza": 80
+   }
+  }
+ },
+ "edificios": {
+  "centro": {
+   "nombre": "Cerca real"
+  },
+  "casa": {
+   "nombre": "Casa de palha"
+  },
+  "granja": {
+   "nombre": "Roça de mandioca",
+   "pv": 500
+  },
+  "cuartel": {
+   "nombre": "Casa de guerra"
+  },
+  "empalizada": {
+   "nombre": "Cerca con estrepes",
+   "espinas": 4,
+   "pv": 380
+  },
+  "deposito": {
+   "nombre": "Paiol"
+  }
+ },
+ "sin_edificios": [
+  "torre",
+  "hito_economia",
+  "hito_guerra"
+ ],
+ "edificios_nuevos": {
+  "mocambo": {
+   "nombre": "Mocambo",
+   "edad_min": 1,
+   "tam": [
+    3,
+    3
+   ],
+   "pv": 900,
+   "armadura": 1,
+   "costo": {
+    "madera": 130
+   },
+   "tiempo_ms": 35000,
+   "vision": 7000,
+   "pob": 8,
+   "deposito": [
+    "alimento",
+    "madera",
+    "piedra",
+    "riqueza"
+   ],
+   "oculto": true,
+   "acoge": true,
+   "cuenta_victoria": true,
+   "guarnicion": 6,
+   "flechas": 1,
+   "ataque": 4,
+   "alcance": 6000,
+   "cadencia_ms": 2000,
+   "ranura": 7,
+   "desc": "Aldea escondida en el monte: invisible para el rival hasta que se acerca. La gente que llega puede instalarse acá."
+  },
+  "quilombo_central": {
+   "nombre": "Macaco",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "El mocambo del rey: más gente llega y más fama.",
+   "efectos": [],
+   "renta": {
+    "fama": 40
+   }
+  },
+  "mocambo_guerra": {
+   "nombre": "Mocambo de guerra",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Gente de guerra entrenada en la sierra.",
+   "efectos": [
+    {
+     "tipo": "ataque",
+     "funciones": [
+      "choque",
+      "distancia",
+      "linea"
+     ],
+     "n": 1
+    }
+   ],
+   "produce": [
+    "guerrero",
+    "hondero",
+    "arcabucero"
+   ]
+  },
+  "cerca_real": {
+   "nombre": "Cerca real en anillos",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Tres anillos de cerca: guarnición y andanadas.",
+   "efectos": [
+    {
+     "tipo": "edificio_vida_pct",
+     "pct": 30
+    }
+   ],
+   "guarnicion": 15,
+   "flechas": 4,
+   "ataque": 7,
+   "alcance": 7500,
+   "cadencia_ms": 2000,
+   "espinas": 6
+  },
+  "ferraria": {
+   "nombre": "Ferraria grande",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Herrerías: estrepes de hierro y armas propias.",
+   "efectos": [
+    {
+     "tipo": "ataque",
+     "funciones": [
+      "choque",
+      "distancia",
+      "linea"
+     ],
+     "n": 2
+    },
+    {
+     "tipo": "armadura",
+     "funciones": [
+      "choque",
+      "distancia",
+      "linea"
+     ],
+     "n": 1
+    }
+   ],
+   "produce": [
+    "arcabucero"
+   ]
+  },
+  "pacto_cucau": {
+   "nombre": "Pacto de Cucaú",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "El pacto de Gana Zumba: tierras y paz, a cambio de cerrar la puerta a quienes llegan.",
+   "efectos": [
+    {
+     "tipo": "tasa",
+     "recurso": "*",
+     "pct": 25
+    }
+   ],
+   "renta": {
+    "riqueza": 40
+   }
+  },
+  "guerra_zumbi": {
+   "nombre": "Guerra de Zumbi",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Rechazar el pacto: toda la gente en armas.",
+   "efectos": [
+    {
+     "tipo": "ataque",
+     "funciones": [
+      "choque",
+      "distancia",
+      "linea"
+     ],
+     "n": 3
+    },
+    {
+     "tipo": "vida_pct",
+     "funciones": [
+      "choque",
+      "distancia",
+      "linea"
+     ],
+     "pct": 15
+    }
+   ],
+   "renta": {
+    "fama": 30
+   }
+  }
+ },
+ "hitos": [
+  [
+   "quilombo_central",
+   "mocambo_guerra"
+  ],
+  [
+   "cerca_real",
+   "ferraria"
+  ],
+  [
+   "pacto_cucau",
+   "guerra_zumbi"
+  ]
+ ],
+ "construye": [
+  "casa",
+  "granja",
+  "deposito",
+  "cuartel",
+  "centro",
+  "mocambo",
+  "empalizada",
+  "puerta"
+ ],
+ "produce": {
+  "centro": [
+   "explorador"
+  ],
+  "cuartel": [
+   "guerrero",
+   "hondero",
+   "lancero",
+   "arcabucero"
+  ]
+ },
+ "modulos": {
+  "recurso_propio": {
+   "clave": "fama",
+   "nombre": "Fama",
+   "color": "#d6a34a",
+   "icono": "pob",
+   "por_edificio": {
+    "centro": 30,
+    "mocambo": 15,
+    "casa": 2
+   },
+   "inicial": 60,
+   "tope": 300,
+   "por_aldeano": 0
+  },
+  "acogida": {
+   "recurso": "fama",
+   "costo": 20
+  },
+  "liberacion": {
+   "aldeanos": 2
+  },
+  "saqueo": {
+   "recurso": "fama",
+   "pct_danio_edificio": 6,
+   "por_aldeano": 0
+  },
+  "sigilo": {
+   "radio_deteccion": 3000,
+   "emboscada_pct": 30
+  }
+ },
+ "ia_unidades": [
+  "arcabucero"
+ ],
+ "debilidad": "Sin caballo ni asedio; el hambre ante un cerco largo.",
+ "ia_edificios": [
+  "mocambo",
+  "mocambo"
+ ]
+}

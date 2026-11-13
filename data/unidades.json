@@ -7,7 +7,7 @@
     "velocidad": 1250, "vision": 7000, "radio": 220,
     "carga": 10,
     "tasa": { "alimento": 1000, "granja": 750, "madera": 850, "piedra": 700, "riqueza": 700 },
-    "construye": ["casa", "granja", "deposito", "cuartel", "torre", "hito", "centro"]
+    "construye": ["casa", "granja", "deposito", "cuartel", "torre", "centro", "empalizada", "puerta"]
   },
   "guerrero": {
     "nombre": "Guerrero de choque", "funcion": "choque", "edad_min": 1, "pob": 1,
@@ -38,5 +38,17 @@
     "costo": { "madera": 200, "riqueza": 60 }, "tiempo_ms": 30000,
     "pv": 400, "armadura": 2, "ataque": 45, "alcance": 450, "cadencia_ms": 3000,
     "velocidad": 750, "vision": 5000, "radio": 420, "solo_edificios": true
+  },
+  "jinete": {
+    "nombre": "Jinete", "funcion": "choque", "edad_min": 2, "pob": 2,
+    "costo": { "alimento": 100, "riqueza": 70 }, "tiempo_ms": 22000,
+    "pv": 170, "armadura": 1, "ataque": 13, "alcance": 500, "cadencia_ms": 1250,
+    "velocidad": 2200, "vision": 9000, "radio": 380, "montado": true
+  },
+  "arcabucero": {
+    "nombre": "Arcabucero", "funcion": "distancia", "edad_min": 3, "pob": 1,
+    "costo": { "alimento": 60, "riqueza": 70 }, "tiempo_ms": 20000,
+    "pv": 80, "armadura": 0, "ataque": 16, "alcance": 5500, "cadencia_ms": 3200,
+    "velocidad": 1150, "vision": 8000, "radio": 220, "polvora": true
   }
 }

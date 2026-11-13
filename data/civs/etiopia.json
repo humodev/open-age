@@ -1,0 +1,340 @@
+{
+ "nombre": "Etiopía",
+ "adjetivo": "etíope",
+ "frase": "La corte que camina.",
+ "region": "Imperio salomónico, 1434–1769",
+ "descripcion": "La corte (kätäma) se desarma y se muda; el gult asigna tierras que rinden sin trabajo; caballería desde la edad I y defensa en la altura.",
+ "estilo": {
+  "forma": "etiopia",
+  "arcilla": "#d5c3a0",
+  "techo": "#8f6b45",
+  "acento": "#948670"
+ },
+ "edades": [
+  "Kätäma",
+  "Gult",
+  "Ras",
+  "Gondar"
+ ],
+ "unidades": {
+  "aldeano": {
+   "nombre": "Gäbbar"
+  },
+  "explorador": {
+   "nombre": "Mensajero"
+  },
+  "guerrero": {
+   "nombre": "Jinete noble",
+   "montado": true,
+   "velocidad": 2100,
+   "pv": 150,
+   "pob": 2,
+   "costo": {
+    "alimento": 80,
+    "riqueza": 40
+   }
+  },
+  "hondero": {
+   "nombre": "Jabalinero",
+   "alcance": 4000,
+   "ataque": 9
+  },
+  "lancero": {
+   "nombre": "Chewa",
+   "pv": 155
+  },
+  "arcabucero": {
+   "nombre": "Mosquetero",
+   "edad_min": 4
+  }
+ },
+ "unidades_nuevas": {
+  "carpa_real": {
+   "nombre": "Corte en marcha",
+   "funcion": "explorador",
+   "edad_min": 1,
+   "pob": 0,
+   "costo": {},
+   "tiempo_ms": 1000,
+   "pv": 2000,
+   "armadura": 3,
+   "ataque": 0,
+   "alcance": 0,
+   "cadencia_ms": 9999,
+   "velocidad": 650,
+   "vision": 9000,
+   "radio": 900,
+   "despliega_en": "centro"
+  }
+ },
+ "edificios": {
+  "centro": {
+   "nombre": "Kätäma (corte)",
+   "empaca_en": "carpa_real"
+  },
+  "casa": {
+   "nombre": "Tukul"
+  },
+  "cuartel": {
+   "nombre": "Campamento de chewa"
+  },
+  "torre": {
+   "nombre": "Torre de la amba"
+  }
+ },
+ "sin_edificios": [
+  "hito_economia",
+  "hito_guerra"
+ ],
+ "edificios_nuevos": {
+  "gult": {
+   "nombre": "Gult",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 500,
+   "armadura": 0,
+   "costo": {
+    "alimento": 120,
+    "madera": 80
+   },
+   "tiempo_ms": 25000,
+   "vision": 3000,
+   "transitable": true,
+   "renta": {
+    "riqueza": 12,
+    "alimento": 8
+   },
+   "ranura": 7,
+   "desc": "Tierra asignada a un señor o un monasterio: rinde tributo sin aldeanos."
+  },
+  "iglesia": {
+   "nombre": "Iglesia",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Comunidad y tabot: recolección y vida.",
+   "efectos": [
+    {
+     "tipo": "tasa",
+     "recurso": "*",
+     "pct": 10
+    },
+    {
+     "tipo": "vida_pct",
+     "funciones": [
+      "choque",
+      "distancia",
+      "linea"
+     ],
+     "pct": 5
+    }
+   ]
+  },
+  "monasterio": {
+   "nombre": "Monasterio",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Escritura y defensa: edificios más fuertes.",
+   "efectos": [
+    {
+     "tipo": "edificio_vida_pct",
+     "pct": 25
+    }
+   ],
+   "renta": {
+    "riqueza": 20
+   }
+  },
+  "amba": {
+   "nombre": "Amba fortificada",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 4200,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Meseta fortificada: refugio, tesoro y andanadas.",
+   "efectos": [
+    {
+     "tipo": "armadura",
+     "funciones": [
+      "choque",
+      "distancia",
+      "linea"
+     ],
+     "n": 1
+    }
+   ],
+   "guarnicion": 15,
+   "flechas": 4,
+   "ataque": 7,
+   "alcance": 8000,
+   "cadencia_ms": 2000
+  },
+  "remonta": {
+   "nombre": "Remonta",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Caballos como tributo: caballería más fuerte.",
+   "efectos": [
+    {
+     "tipo": "vida_pct",
+     "funciones": [
+      "choque"
+     ],
+     "pct": 20
+    }
+   ],
+   "produce": [
+    "guerrero"
+   ]
+  },
+  "gondar": {
+   "nombre": "Recinto de Gondar",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 5000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "La corte se asienta: castillo y capital fija.",
+   "efectos": [
+    {
+     "tipo": "edificio_vida_pct",
+     "pct": 30
+    }
+   ],
+   "guarnicion": 20,
+   "flechas": 5,
+   "ataque": 8,
+   "alcance": 8000,
+   "cadencia_ms": 2000
+  },
+  "alianza": {
+   "nombre": "Alianza con armas de fuego",
+   "edad_min": 1,
+   "tam": [
+    4,
+    4
+   ],
+   "pv": 3000,
+   "armadura": 2,
+   "costo": {},
+   "tiempo_ms": 0,
+   "vision": 7000,
+   "avanza_edad": true,
+   "hito": true,
+   "pob": 5,
+   "desc": "Mosquetes por comercio y alianza, con su precio.",
+   "efectos": [
+    {
+     "tipo": "ataque",
+     "funciones": [
+      "choque",
+      "distancia",
+      "linea"
+     ],
+     "n": 2
+    }
+   ],
+   "produce": [
+    "arcabucero"
+   ]
+  }
+ },
+ "hitos": [
+  [
+   "iglesia",
+   "monasterio"
+  ],
+  [
+   "amba",
+   "remonta"
+  ],
+  [
+   "gondar",
+   "alianza"
+  ]
+ ],
+ "construye": [
+  "casa",
+  "granja",
+  "deposito",
+  "cuartel",
+  "torre",
+  "centro",
+  "gult",
+  "empalizada",
+  "puerta"
+ ],
+ "produce": {
+  "cuartel": [
+   "guerrero",
+   "hondero",
+   "lancero",
+   "ariete"
+  ]
+ },
+ "modulos": {
+  "defensa_altura": {
+   "pct": 25
+  }
+ },
+ "ia_unidades": [
+  "guerrero"
+ ],
+ "debilidad": "Unidades caras y pocas; fuera de la altura pierde su ventaja.",
+ "ia_edificios": [
+  "gult",
+  "gult"
+ ]
+}

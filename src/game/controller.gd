@@ -8,7 +8,7 @@ const P := 1000
 const O := SimEntity.Order
 const SLOT_KEYS: Array[int] = [KEY_Q, KEY_W, KEY_E, KEY_R, KEY_A, KEY_S, KEY_D, KEY_F, KEY_Z, KEY_X, KEY_C, KEY_V]
 const SLOT_LABELS: Array[String] = ["Q", "W", "E", "R", "A", "S", "D", "F", "Z", "X", "C", "V"]
-const VILLAGER_BUILDS := {0: "casa", 1: "granja", 2: "deposito", 3: "cuartel", 4: "torre", 6: "centro", 8: "hito_economia", 9: "hito_guerra", 10: "empalizada", 11: "puerta"}
+const DEFAULT_SLOTS := {"casa": 0, "granja": 1, "deposito": 2, "cuartel": 3, "torre": 4, "centro": 6, "empalizada": 10, "puerta": 11}
 const RES_LABEL := {"alimento": "alimento", "granja": "granjas", "madera": "madera", "piedra": "piedra", "riqueza": "riqueza", "*": "todos los recursos"}
 
 const DESCS := {
@@ -159,14 +159,15 @@ func commands() -> Array[Dictionary]:
 	var age: int = p["age"]
 	var first := sel[0]
 	if _has_villager():
-		for slot in VILLAGER_BUILDS:
-			var type: String = VILLAGER_BUILDS[slot]
-			var def: Dictionary = sim.data.edificios[type]
-			var cmd := {"slot": slot, "id": type, "icon": type, "kind": "build", "name": def["nombre"], "cost": sim.data.cost_of(type, age), "desc": DESCS.get(type, def.get("desc", "")), "locked": ""}
+		var slots := villager_slots()
+		for slot in slots:
+			var type: String = slots[slot]
+			var def: Dictionary = sim.dp(local).edificios[type]
+			var cmd := {"slot": slot, "id": type, "icon": Glyphs.resolve(def, type), "kind": "build", "name": def["nombre"], "cost": sim.dp(local).cost_of(type, age), "desc": DESCS.get(type, def.get("desc", "")), "locked": ""}
 			if age < def.get("edad_min", 1):
 				cmd["locked"] = "Requiere edad %s" % Sim._roman(def["edad_min"])
-			if sim.data.is_hito(type):
-				if age >= sim.data.edades.size():
+			if sim.dp(local).is_hito(type):
+				if age >= sim.dp(local).edades.size():
 					cmd["locked"] = "Edad máxima alcanzada"
 				else:
 					cmd["name"] = "%s · avanzar a edad %s" % [def["nombre"], Sim._roman(age + 1)]
@@ -183,16 +184,16 @@ func commands() -> Array[Dictionary]:
 	elif first.is_building() and first.built:
 		var i := 0
 		for type: String in first.def.get("produce", []):
-			var udef: Dictionary = sim.data.unidades[type]
-			var cmd := {"slot": i, "id": type, "icon": type, "kind": "train", "name": udef["nombre"], "cost": sim.data.cost_of(type, age), "desc": DESCS.get(type, ""), "locked": "", "building": first.id}
+			var udef: Dictionary = sim.dp(local).unidades[type]
+			var cmd := {"slot": i, "id": type, "icon": Glyphs.resolve(udef, type), "kind": "train", "name": udef["nombre"], "cost": sim.dp(local).cost_of(type, age), "desc": DESCS.get(type, ""), "locked": "", "building": first.id}
 			if age < udef.get("edad_min", 1):
 				cmd["locked"] = "Requiere edad %s" % Sim._roman(udef["edad_min"])
 			out.append(cmd)
 			i += 1
 		# Investigaciones: en cada ranura, la primera de la cadena que falta.
 		var used := {}
-		for tech: String in sim.data.tecnologias:
-			var t: Dictionary = sim.data.tecnologias[tech]
+		for tech: String in sim.dp(local).tecnologias:
+			var t: Dictionary = sim.dp(local).tecnologias[tech]
 			if t["edificio"] != first.type or used.has(t["ranura"]) or sim.players[local]["techs"].has(tech):
 				continue
 			used[t["ranura"]] = true
@@ -203,6 +204,31 @@ func commands() -> Array[Dictionary]:
 			out.append({"slot": 8, "id": "calma" if on else "campana", "icon": "calma" if on else "campana", "kind": "alarm", "name": "Toque de calma" if on else "Campana", "cost": {}, "desc": DESCS["calma" if on else "campana"], "locked": "", "on": not on})
 		if first.def.get("guarnicion", 0) > 0:
 			out.append({"slot": 11, "id": "expulsar", "icon": "expulsar", "kind": "ungarrison", "name": "Expulsar guarnición", "cost": {}, "desc": DESCS["expulsar"], "locked": "" if not first.garrison.is_empty() else "No hay unidades alojadas"})
+	return out
+
+
+## Ranura de cada edificio que construye el aldeano de la civilización local; los hitos de la edad siguiente van en Z y X.
+func villager_slots() -> Dictionary:
+	var dd := sim.dp(local)
+	var out := {}
+	var pending: Array[String] = []
+	for type: String in dd.unidades["aldeano"].get("construye", []):
+		if not dd.edificios.has(type) or dd.is_hito(type):
+			continue
+		var slot: int = dd.edificios[type].get("ranura", DEFAULT_SLOTS.get(type, -1))
+		if slot >= 0 and not out.has(slot):
+			out[slot] = type
+		else:
+			pending.append(type)
+	for type in pending:
+		for slot in [7, 5, 6, 4, 10, 11]:
+			if not out.has(slot) and slot != 5 and slot != 7:
+				out[slot] = type
+				break
+	var age: int = sim.players[local]["age"]
+	var opts: Array = dd.hitos[mini(age, dd.hitos.size()) - 1] if age <= dd.hitos.size() else dd.hitos[-1]
+	for i in mini(2, opts.size()):
+		out[8 + i] = opts[i]
 	return out
 
 
@@ -217,7 +243,7 @@ func run_command(cmd: Dictionary) -> void:
 				return
 			mode = "place"
 			place_type = cmd["id"]
-			_ghost.mesh = Meshes.building_mesh(place_type, Palette.team(local))
+			_ghost.mesh = view.building_mesh_for(local, place_type, sim.dp(local).edificios[place_type])
 			_ghost.visible = true
 			view.set_grid(true)
 		"train":
@@ -267,12 +293,12 @@ func _process(_delta: float) -> void:
 	var m := mouse_pos()
 	view.hovered = -1 if _over_hud(m) or dragging else pick(m)
 	if mode == "place":
-		var tam: Array = sim.data.edificios[place_type]["tam"]
+		var tam: Array = sim.dp(local).edificios[place_type]["tam"]
 		var g := cam.ground_at(m)
 		var tx := int(floor(g.x - tam[0] / 2.0 + 0.5))
 		var ty := int(floor(g.z - tam[1] / 2.0 + 0.5))
 		_ghost.position = Vector3(tx + tam[0] / 2.0, 0.02, ty + tam[1] / 2.0)
-		var ok := sim.can_place(place_type, tx, ty, local) and sim.can_afford(local, sim.data.cost_of(place_type, sim.players[local]["age"]))
+		var ok := sim.can_place(place_type, tx, ty, local) and sim.can_afford(local, sim.dp(local).cost_of(place_type, sim.players[local]["age"]))
 		_ghost_mat.albedo_color = Color(0.5, 1.0, 0.6, 0.55) if ok else Color(1.0, 0.35, 0.3, 0.55)
 		_ghost.set_meta("tile", Vector2i(tx, ty))
 		if _line_drag:
@@ -317,7 +343,7 @@ func _input(event: InputEvent) -> void:
 
 func _mouse_button(mb: InputEventMouseButton) -> void:
 	if mb.button_index == MOUSE_BUTTON_LEFT and mb.pressed:
-		if mode == "place" and sim.data.edificios[place_type].get("linea", false):
+		if mode == "place" and sim.dp(local).edificios[place_type].get("linea", false):
 			_line_drag = true
 			_line_start = _ghost.get_meta("tile", Vector2i.ZERO)
 			return
@@ -440,7 +466,7 @@ func _right_click(pos: Vector2) -> void:
 
 func _place() -> void:
 	var tile: Vector2i = _ghost.get_meta("tile", Vector2i(-1, -1))
-	var cost := sim.data.cost_of(place_type, sim.players[local]["age"])
+	var cost := sim.dp(local).cost_of(place_type, sim.players[local]["age"])
 	if not sim.can_place(place_type, tile.x, tile.y, local):
 		hud_notify("No se puede construir ahí")
 		return
@@ -454,7 +480,7 @@ func _place() -> void:
 			ids.append(e.id)
 	sim.push_command({"t": "build", "player": local, "ids": ids, "type": place_type, "tx": tile.x, "ty": tile.y})
 	view.add_marker(_ghost.position, Palette.UI_ACCENT)
-	if not Input.is_key_pressed(KEY_SHIFT) or sim.data.is_hito(place_type):
+	if not Input.is_key_pressed(KEY_SHIFT) or sim.dp(local).is_hito(place_type):
 		cancel_mode()
 
 
@@ -567,17 +593,17 @@ func effects_text(efectos: Array) -> String:
 ## Qué se habilita al llegar a una edad, leído de los datos.
 func unlocks_text(age: int) -> String:
 	var names: Array[String] = []
-	for k in sim.data.unidades:
-		if sim.data.unidades[k].get("edad_min", 1) == age:
-			names.append(sim.data.unidades[k]["nombre"])
-	for k in sim.data.edificios:
-		if sim.data.edificios[k].get("edad_min", 1) == age:
-			names.append(sim.data.edificios[k]["nombre"])
+	for k in sim.dp(local).unidades:
+		if sim.dp(local).unidades[k].get("edad_min", 1) == age:
+			names.append(sim.dp(local).unidades[k]["nombre"])
+	for k in sim.dp(local).edificios:
+		if sim.dp(local).edificios[k].get("edad_min", 1) == age:
+			names.append(sim.dp(local).edificios[k]["nombre"])
 	var techs := 0
-	for k in sim.data.tecnologias:
-		if sim.data.tecnologias[k].get("edad_min", 1) == age:
+	for k in sim.dp(local).tecnologias:
+		if sim.dp(local).tecnologias[k].get("edad_min", 1) == age:
 			techs += 1
-	var bonus: int = sim.data.edades[age - 1].get("bono_ataque", 0)
+	var bonus: int = sim.dp(local).edades[age - 1].get("bono_ataque", 0)
 	var txt := "Edad %s habilita: %s" % [Sim._roman(age), ", ".join(names)] if not names.is_empty() else "Edad %s habilita:" % Sim._roman(age)
 	if techs > 0:
 		txt += "%s%d investigaciones" % [", " if not names.is_empty() else " ", techs]
@@ -611,12 +637,12 @@ static func line_tiles(a: Vector2i, b: Vector2i) -> Array:
 func _show_line(tiles: Array) -> void:
 	while _line_ghosts.size() < tiles.size():
 		var g := MeshInstance3D.new()
-		g.mesh = Meshes.building_mesh("empalizada", Palette.team(local))
+		g.mesh = view.building_mesh_for(local, place_type, sim.dp(local).edificios[place_type])
 		g.material_override = _ghost_mat.duplicate()
 		g.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		view.add_child(g)
 		_line_ghosts.append(g)
-	var cost := sim.data.cost_of(place_type, sim.players[local]["age"]) if place_type != "" else {}
+	var cost := sim.dp(local).cost_of(place_type, sim.players[local]["age"]) if place_type != "" else {}
 	var budget: int = sim.players[local]["res"].get("madera", 0)
 	for i in _line_ghosts.size():
 		var g := _line_ghosts[i]

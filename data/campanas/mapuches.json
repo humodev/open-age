@@ -1,0 +1,217 @@
+{
+  "civ": "mapuches",
+  "titulo": "El hacha y el canelo",
+  "resumen": "Una tejedora de Purén cuenta, el año del parlamento de Quilín, cómo los lof sin capital pelearon contra un imperio a caballo, le quitaron el caballo y terminaron obligándolo a sentarse a hablar.",
+  "misiones": [
+    {
+      "id": "mapuches-1",
+      "titulo": "El hacha negra",
+      "anio": "1553",
+      "lugar": "Tucapel",
+      "intro": [
+        "Me pidieron que hable antes del parlamento, porque yo anudo el pron: la cuerda que cuenta los días que faltan para juntarse. Mi abuela anudaba otra, la de la guerra. Esta historia es de su tiempo.",
+        "Los wingka llegaron con caballos y fuertes de palo y se repartieron nuestras tierras como si nadie viviera en ellas. Pero aquí no había un rey al que vencer. Había lof, cada uno con su gente, sus siembras y su lonko. Para tomar esta tierra había que tomarla lof por lof.",
+        "Un muchacho llamado Lautaro había cuidado los caballos de Valdivia. Volvió sabiendo cómo montaban, cómo peleaban y cuándo se cansaban. Los lonko se juntaron en koyagtun y alzaron el hacha negra: la guerra tenía toqui.",
+        "El plan era simple. No pelear todos juntos. Atacar en oleadas, retirarse, descansar y volver."
+      ],
+      "epilogo": [
+        "Valdivia murió en Tucapel en los últimos días de 1553. Con él murieron muchos yanakuna traídos del norte, que no habían elegido esa guerra. Los wingka escribieron que fue obra del demonio. Fue obra de un muchacho que había mirado bien.",
+        "Después de Tucapel muchos lonko volvieron a sus siembras. El hacha negra se baja cuando termina la guerra. Así es entre nosotros, aunque al toqui no le guste."
+      ],
+      "fuentes": [
+        "Memoria Chilena, El toqui Lautaro (ca. 1534-1557)",
+        "Jerónimo de Vivar, Crónica y relación copiosa y verdadera de los reinos de Chile (1558)",
+        "Guillaume Boccara, Guerre et ethnogenèse mapuche dans le Chili colonial (1998)",
+        "José Bengoa, Historia del pueblo mapuche (LOM, 2000)",
+        "Museo Chileno de Arte Precolombino, Toki kura, ficha MChAP 575"
+      ],
+      "mapa": { "semilla": 1553, "terreno": "bosque" },
+      "jugador": {
+        "edad": 1,
+        "recursos": { "alimento": 250, "madera": 400, "piedra": 0, "riqueza": 150 },
+        "aldeanos": 8,
+        "tropas": [ { "tipo": "guerrero", "n": 6 }, { "tipo": "hondero", "n": 6 } ]
+      },
+      "rivales": [
+        { "nombre": "Fuerte de Tucapel y hueste de Valdivia", "faccion": "invasores", "ia": "normal", "edad": 2 }
+      ],
+      "objetivos": [
+        { "id": "o1", "texto": "Fundá 3 lof lejos uno de otro (depósitos separados): no hay capital que tomar.", "tipo": "construir", "params": { "tipo": "deposito", "n": 3 }, "secundario": false },
+        { "id": "o2", "texto": "Juntá 400 de alimento para recibir a los delegados de cada lof.", "tipo": "recolectar", "params": { "recurso": "alimento", "n": 400 }, "secundario": false },
+        { "id": "o3", "texto": "Convocá el koyagtun: que cada lof mande su delegado y se elija toqui (avanzá a la edad II).", "tipo": "edad", "params": { "n": 2 }, "secundario": false },
+        { "id": "o4", "texto": "Quemá el fuerte de Tucapel.", "tipo": "destruir_hitos", "params": { "jugador": 1 }, "secundario": false },
+        { "id": "o5", "texto": "Valdivia viene a ver qué pasó. Recibilo en oleadas: retirá a los cansados, que descansen y vuelvan. Matá a 20 de su columna.", "tipo": "matar", "params": { "n": 20 }, "secundario": false, "oculto": true },
+        { "id": "o6", "texto": "Que siempre quede al menos un lof en pie.", "tipo": "proteger", "params": { "tipo": "deposito", "jugador": 0 }, "secundario": true }
+      ],
+      "eventos": [
+        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Lautaro", "texto": "Ellos se cansan. Los caballos también. Nosotros nos turnamos." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 240 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 3 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "dialogo", "params": { "quien": "Tejedora de Purén", "texto": "El hacha pasó de mano en mano por los lof. Cada lonko que la tocó puso su gente." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "refuerzos", "params": { "jugador": 0, "tipo": "guerrero", "n": 6 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "objetivo_nuevo", "params": { "id": "o5" } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 8 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 10 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "dialogo", "params": { "quien": "Lautaro", "texto": "Primera oleada adelante. Cuando se canse, que vuelva al monte y salga la segunda." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 720 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 5 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 725 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 3 } } }
+      ]
+    },
+    {
+      "id": "mapuches-2",
+      "titulo": "Lo que no llega a casa no cuenta",
+      "anio": "1554",
+      "lugar": "Cuesta de Marigüeñu y Concepción",
+      "intro": [
+        "Al año siguiente, Francisco de Villagra subió la cuesta de Marigüeñu con caballos, arcabuces y cañones. Lautaro lo esperó arriba, donde a los caballos les falta el aire.",
+        "Malón no es guerra. La guerra se hace por la tierra; el malón, para llevarse lo que el otro guardó. Se entra rápido, se toma el ganado y se vuelve antes de que el otro se arme. Lo que no llega a casa no cuenta.",
+        "Si Villagra caía, Concepción quedaba sola, con sus sementeras, sus corrales y sus depósitos."
+      ],
+      "epilogo": [
+        "Concepción ardió. Los wingka la volvieron a fundar, y Lautaro la volvió a quemar. Tres años después lo sorprendieron dormido en Mataquito, lejos de su tierra. Ninguna guerra se gana con un solo hombre, y ninguna se pierde con uno solo.",
+        "Las armas de fuego las probamos en Quiapo, cuatro años después, detrás de una empalizada. Perdimos. No sabíamos hacer pólvora, y la que quitábamos se acababa. Nos quedamos con lo que sí podíamos criar: caballos."
+      ],
+      "fuentes": [
+        "Memoria Chilena, Batalla de Marigüeñu",
+        "Alonso de Góngora Marmolejo, Historia de todas las cosas que han acaecido en el Reino de Chile (1575)",
+        "Guillaume Boccara, Etnogénesis mapuche (Hispanic American Historical Review 79:3, 1999)",
+        "J. Mendoza Pinto y A. Castro González, artículo sobre el impacto de las armas de fuego en la cultura mapuche (Cuadernos CANELA 31, 2021)"
+      ],
+      "mapa": { "semilla": 1554, "terreno": "montana" },
+      "jugador": {
+        "edad": 2,
+        "recursos": { "alimento": 400, "madera": 400, "piedra": 0, "riqueza": 100 },
+        "aldeanos": 10,
+        "tropas": [ { "tipo": "guerrero", "n": 10 }, { "tipo": "hondero", "n": 8 }, { "tipo": "lancero", "n": 4 } ]
+      },
+      "rivales": [
+        { "nombre": "Hueste de Villagra y Concepción", "faccion": "invasores", "ia": "agresiva", "edad": 2 }
+      ],
+      "objetivos": [
+        { "id": "o1", "texto": "En la cuesta de Marigüeñu, golpeá y retirate en oleadas: matá a 25 de la columna de Villagra.", "tipo": "matar", "params": { "n": 25 }, "secundario": false },
+        { "id": "o2", "texto": "Malón: arrasá 6 sementeras y corrales de Concepción (granjas).", "tipo": "destruir", "params": { "tipo": "granja", "n": 6, "jugador": 1 }, "secundario": false },
+        { "id": "o3", "texto": "Traé el ganado a los lof: el botín solo cuenta cuando llega. Juntá 600 de riqueza.", "tipo": "recolectar", "params": { "recurso": "riqueza", "n": 600 }, "secundario": false },
+        { "id": "o4", "texto": "Que Concepción quede vacía.", "tipo": "destruir_hitos", "params": { "jugador": 1 }, "secundario": false },
+        { "id": "o5", "texto": "Recogé las armas de fuego que dejen: abatí 6 arcabuceros.", "tipo": "destruir", "params": { "tipo": "arcabucero", "n": 6, "jugador": 1 }, "secundario": true }
+      ],
+      "eventos": [
+        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Lautaro", "texto": "Que suban. Arriba los esperamos, y no todos a la vez." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 60 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 65 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 5 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 200 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 205 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 8 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 210 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 3 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o1" }, "accion": { "tipo": "dialogo", "params": { "quien": "Tejedora de Purén", "texto": "Villagra bajó la cuesta mucho más rápido de lo que la había subido. Concepción quedó sola." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o1" }, "accion": { "tipo": "revelar", "params": {} } },
+        { "cuando": { "tipo": "objetivo", "valor": "o2" }, "accion": { "tipo": "recursos", "params": { "alimento": 200, "madera": 0, "piedra": 0, "riqueza": 200 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o5" }, "accion": { "tipo": "dialogo", "params": { "quien": "Un weichafe", "texto": "Tenemos los arcabuces. Nos falta la pólvora, y nadie sabe hacerla." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o5" }, "accion": { "tipo": "recursos", "params": { "alimento": 0, "madera": 0, "piedra": 0, "riqueza": 150 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 600 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 6 } } }
+      ]
+    },
+    {
+      "id": "mapuches-3",
+      "titulo": "Curalaba",
+      "anio": "1598",
+      "lugar": "Curalaba, a orillas del río Lumaco",
+      "intro": [
+        "Pasaron cuarenta años. Los caballos que habíamos quitado tuvieron crías, y las crías tuvieron crías. Para entonces teníamos más que ellos, y nuestros jinetes llevaban lanzas largas como dos hombres.",
+        "Los wingka mandaban sus malocas a quemar nuestras siembras y a cazar gente para venderla. El gobernador, Martín García Óñez de Loyola, recorría las tierras de Purén con su escolta.",
+        "Pelantaru y Anganamón lo siguieron sin que los viera. La noche del 23 de diciembre acampó en Curalaba, junto al río. No puso guardia."
+      ],
+      "epilogo": [
+        "En pocos años quedaron vacías Valdivia, La Imperial, Angol, Villarrica, Osorno y las demás ciudades del sur. Los wingka se fueron al norte del Biobío. Ellos lo llamaron un desastre; nosotros no le pusimos un nombre tan triste.",
+        "Pero la guerra no terminó. El rey mandó plata todos los años para pagar soldados de oficio, y en 1608 firmó que podían esclavizarnos. Del otro lado del río, la guerra se volvió un negocio."
+      ],
+      "fuentes": [
+        "Memoria Chilena, La Guerra de Arauco (1550-1656)",
+        "Tom D. Dillehay, Monuments, Empires, and Resistance: The Araucanian Polity and Ritual Narratives (Cambridge UP, 2007)",
+        "Alonso González de Nájera, Desengaño y reparo de la guerra del Reino de Chile (1614)",
+        "Memoria Chilena, Estrategias y Esclavitud indígena"
+      ],
+      "mapa": { "semilla": 1598, "terreno": "bosque" },
+      "jugador": {
+        "edad": 2,
+        "recursos": { "alimento": 800, "madera": 500, "piedra": 200, "riqueza": 600 },
+        "aldeanos": 14,
+        "tropas": [ { "tipo": "guerrero", "n": 10 }, { "tipo": "hondero", "n": 8 }, { "tipo": "lancero", "n": 6 } ]
+      },
+      "rivales": [
+        { "nombre": "Campamento de Óñez de Loyola", "faccion": "invasores", "ia": "normal", "edad": 3 },
+        { "nombre": "Ciudades del sur", "faccion": "invasores", "ia": "pasiva", "edad": 3 }
+      ],
+      "objetivos": [
+        { "id": "o1", "texto": "Convocá el ayllarewe: que varios rewe elijan juntos un toqui de caballería (avanzá a la edad III).", "tipo": "edad", "params": { "n": 3 }, "secundario": false },
+        { "id": "o2", "texto": "Armá 8 lanceros más: picas largas contra los caballos de ellos.", "tipo": "entrenar", "params": { "tipo": "lancero", "n": 8 }, "secundario": false },
+        { "id": "o3", "texto": "Trasnochada: caé de madrugada sobre el campamento de Curalaba.", "tipo": "destruir_hitos", "params": { "jugador": 1 }, "secundario": false },
+        { "id": "o4", "texto": "Alzamiento general: que se vacíen las ciudades del sur.", "tipo": "destruir_hitos", "params": { "jugador": 2 }, "secundario": false, "oculto": true },
+        { "id": "o5", "texto": "Protegé las sementeras de las malocas: que no quemen todas las granjas.", "tipo": "proteger", "params": { "tipo": "granja", "jugador": 0 }, "secundario": true }
+      ],
+      "eventos": [
+        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Pelantaru", "texto": "Un fuerte no se ataca. Se ataca al que duerme fuera de él." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 180 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 4 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o1" }, "accion": { "tipo": "refuerzos", "params": { "jugador": 0, "tipo": "jinete", "n": 10 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o1" }, "accion": { "tipo": "dialogo", "params": { "quien": "Tejedora de Purén", "texto": "Esos caballos eran nietos de los que Lautaro aprendió a montar. Ya no eran de ellos." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 360 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 4 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 365 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 4 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "dialogo", "params": { "quien": "Anganamón", "texto": "El gobernador está muerto. Que lo sepan en todas las ciudades." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "objetivo_nuevo", "params": { "id": "o4" } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "revelar", "params": {} } },
+        { "cuando": { "tipo": "tiempo", "valor": 900 }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "arcabucero", "n": 6 } } }
+      ]
+    },
+    {
+      "id": "mapuches-4",
+      "titulo": "Quilín",
+      "anio": "1641",
+      "lugar": "La frontera del Biobío y los llanos de Quilín",
+      "intro": [
+        "Ahora llego a mi tiempo. Durante treinta años los wingka cruzaron el río a buscar esclavos, y Lientur lo cruzó al revés a buscar ganado. En Las Cangrejeras derrotó a su ejército, y Maulicán se llevó prisionero a un capitán joven que vivió entre nosotros y comió de nuestra comida.",
+        "Los lonko de los cuatro butalmapu, costa, llanos, precordillera y cordillera, decidieron que era tiempo de hablar. No para rendirse: para que el río quedara como raya y que de este lado no entrara nadie armado.",
+        "Un parlamento no se gana conversando. Se gana llegando con tanto ganado, tantos caballos y tantos lof en pie que al otro le convenga más pagar regalos que pagar soldados."
+      ],
+      "epilogo": [
+        "En enero de 1641, en Quilín, el gobernador entró con ramas de canelo y se sacrificó un chilihueque. El Biobío quedó como frontera, y dos años después el rey de España firmó lo que habíamos acordado.",
+        "No fue la paz para siempre. Hubo alzamientos, ferias, abusos y otros parlamentos, casi cincuenta en ciento sesenta años. Pero desde Quilín, cada vez que alguien quiso cruzar el río, primero tuvo que sentarse a hablar con nosotros."
+      ],
+      "fuentes": [
+        "José Manuel Zavala Cepeda (ed.), Los parlamentos hispano-mapuches 1593-1803: textos fundamentales (2015)",
+        "Jonathan Sauer, When Chile's Indigenous Made the Spanish Back Down (Americas Quarterly, 2022)",
+        "Francisco Núñez de Pineda y Bascuñán, Cautiverio feliz (1673)",
+        "Memoria Chilena, Esclavitud indígena",
+        "Leonardo León Solís, Maloqueros y conchavadores en Araucanía y las Pampas, 1700-1800 (1991)"
+      ],
+      "mapa": { "semilla": 1641, "terreno": "rio" },
+      "jugador": {
+        "edad": 3,
+        "recursos": { "alimento": 1200, "madera": 600, "piedra": 400, "riqueza": 600 },
+        "aldeanos": 18,
+        "tropas": [ { "tipo": "jinete", "n": 8 }, { "tipo": "guerrero", "n": 8 }, { "tipo": "hondero", "n": 8 }, { "tipo": "lancero", "n": 6 } ]
+      },
+      "rivales": [
+        { "nombre": "Ejército de oficio de la frontera", "faccion": "invasores", "ia": "normal", "edad": 3 }
+      ],
+      "objetivos": [
+        { "id": "o1", "texto": "Malón al otro lado del río: arrasá 5 estancias (granjas) y traé el ganado.", "tipo": "destruir", "params": { "tipo": "granja", "n": 5, "jugador": 1 }, "secundario": false },
+        { "id": "o2", "texto": "Juntá el kulliñ: ganado y ponchos para llegar fuertes al parlamento (1200 de riqueza).", "tipo": "recolectar", "params": { "recurso": "riqueza", "n": 1200 }, "secundario": false },
+        { "id": "o3", "texto": "Que no quede ningún cuartel de ellos de este lado del Biobío: destruí 2.", "tipo": "destruir", "params": { "tipo": "cuartel", "n": 2, "jugador": 1 }, "secundario": false },
+        { "id": "o4", "texto": "Convocá a los cuatro butalmapu al parlamento (avanzá a la edad IV).", "tipo": "edad", "params": { "n": 4 }, "secundario": false },
+        { "id": "o5", "texto": "Mientras se habla en Quilín, que ningún soldado cruce el río.", "tipo": "sobrevivir", "params": { "segundos": 300 }, "secundario": false, "oculto": true },
+        { "id": "o6", "texto": "Protegé las sementeras de las malocas esclavistas.", "tipo": "proteger", "params": { "tipo": "granja", "jugador": 0 }, "secundario": true }
+      ],
+      "eventos": [
+        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Lientur", "texto": "Ellos vienen por gente. Nosotros vamos por vacas. Veremos quién se cansa primero." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 240 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 5 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 245 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 3 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o1" }, "accion": { "tipo": "recursos", "params": { "alimento": 200, "madera": 0, "piedra": 0, "riqueza": 300 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o2" }, "accion": { "tipo": "dialogo", "params": { "quien": "Tejedora de Purén", "texto": "Los ponchos que tejimos ese invierno valían más que un fuerte. Lo sabían ellos y lo sabíamos nosotras." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 600 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 605 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "lancero", "n": 6 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "objetivo_nuevo", "params": { "id": "o5" } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "dialogo", "params": { "quien": "Lincopichón", "texto": "Que el Biobío sea la raya. De allá, ustedes; de acá, nosotros. Y que nadie venga a buscar esclavos." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 6 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 4 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o5" }, "accion": { "tipo": "dialogo", "params": { "quien": "Tejedora de Purén", "texto": "Desaté el último nudo del pron. El parlamento empezó." } } }
+      ]
+    }
+  ]
+}

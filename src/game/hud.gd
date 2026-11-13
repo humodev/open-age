@@ -55,7 +55,7 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 	_top = TopBar.new()
 	_top.hud = self
 	_top.position = Vector2(12, 10)
-	_top.size = Vector2(620, 46)
+	_top.size = Vector2(760, 46)
 	add_child(_top)
 	_blockers.append(_top)
 
@@ -134,8 +134,8 @@ func notify(msg: String, secs: float = 2.6) -> void:
 
 func queue_icon(item: String) -> String:
 	if item.begins_with("@"):
-		return sim.data.tecnologias[item.substr(1)]["icono"]
-	return item
+		return sim.dp(local).tecnologias[item.substr(1)]["icono"]
+	return Glyphs.resolve(sim.dp(local).unidades.get(item, {}), item)
 
 
 func on_events(events: Array) -> void:
@@ -146,15 +146,15 @@ func on_events(events: Array) -> void:
 				if pid == local:
 					notify(ev["msg"])
 			"age":
-				var name: String = sim.data.edades[ev["age"] - 1]["nombre"]
+				var name: String = sim.dp(pid).edades[ev["age"] - 1]["nombre"]
 				if pid == local:
-					var hdef: Dictionary = sim.data.edificios.get(ev.get("hito", ""), {})
+					var hdef: Dictionary = sim.dp(pid).edificios.get(ev.get("hito", ""), {})
 					notify("Edad %s alcanzada · %s\n%s" % [Sim._roman(ev["age"]), name, ctrl.effects_text(hdef.get("efectos", []))], 5.0)
 				else:
 					notify("%s llegó a la edad %s" % [Palette.TEAM_NAMES[pid], Sim._roman(ev["age"])])
 			"tech":
 				if pid == local:
-					notify("Investigación terminada: %s" % sim.data.tecnologias[ev["tech"]]["nombre"])
+					notify("Investigación terminada: %s" % sim.dp(pid).tecnologias[ev["tech"]]["nombre"])
 			"alarm":
 				if pid == local:
 					notify("¡Campana! Los aldeanos se refugian")
@@ -320,6 +320,15 @@ class TopBar:
 			draw_string(Hud.font_b, Vector2(x + 34, 30), str(p["res"][k]), HORIZONTAL_ALIGNMENT_LEFT, -1, 19, Palette.UI_TEXT)
 			draw_string(Hud.font, Vector2(x + 34 + 58, 30), str(workers[k]), HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Palette.UI_DIM)
 			x += 120
+		var dd := sim.dp(hud.local)
+		if dd.has_mod("recurso_propio"):
+			var rp: Dictionary = dd.mod("recurso_propio")
+			var col := Color(rp.get("color", "#cccccc"))
+			Glyphs.draw(self, rp.get("icono", "riqueza"), Rect2(x, 9, 28, 28), col)
+			var cap: int = p.get("tope_" + rp["clave"], 0)
+			draw_string(Hud.font_b, Vector2(x + 34, 30), str(p["res"].get(rp["clave"], 0)), HORIZONTAL_ALIGNMENT_LEFT, -1, 19, col.lightened(0.3))
+			draw_string(Hud.font, Vector2(x + 34 + 44, 30), "/%d" % cap if cap > 0 else "", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Palette.UI_DIM)
+			x += 130
 		draw_line(Vector2(x - 6, 10), Vector2(x - 6, size.y - 10), Palette.UI_LINE, 1)
 		var full: bool = p["pop"] >= p["pop_cap"]
 		Glyphs.draw(self, "pob", Rect2(x + 6, 9, 26, 28), Palette.UI_BAD if full else Palette.UI_TEXT)
@@ -337,7 +346,7 @@ class ClockBar:
 		draw_style_box(Hud.panel_box(), Rect2(Vector2.ZERO, size))
 		var sim := hud.sim
 		var age: int = sim.players[hud.local]["age"]
-		var name: String = sim.data.edades[age - 1]["nombre"]
+		var name: String = sim.dp(hud.local).edades[age - 1]["nombre"]
 		draw_string(Hud.font_b, Vector2(16, 30), "Edad %s" % Sim._roman(age), HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Palette.UI_ACCENT)
 		draw_string(Hud.font, Vector2(16 + 84, 30), name, HORIZONTAL_ALIGNMENT_LEFT, 150, 16, Palette.UI_TEXT)
 		var secs := sim.tick * sim.tick_ms / 1000
@@ -438,7 +447,7 @@ class CommandCard:
 			for c in cmds:
 				if c["id"] == head:
 					var r := _slot_rect(c["slot"])
-					var k := float(b.queue_progress) / float(hud.sim.data.queue_time(b.queue[0]))
+					var k := float(b.queue_progress) / float(hud.sim.dp(b.owner).queue_time(b.queue[0]))
 					draw_rect(Rect2(r.position + Vector2(4, r.size.y - 6), Vector2((r.size.x - 8) * k, 3)), Palette.UI_ACCENT)
 					var n := b.queue.count(b.queue[0])
 					draw_string(Hud.font_b, r.position + Vector2(0, 16), str(n), HORIZONTAL_ALIGNMENT_RIGHT, r.size.x - 6, 14, Palette.UI_ACCENT)
@@ -478,10 +487,16 @@ class Tooltip:
 		if not cost.is_empty():
 			var res: Dictionary = hud.sim.players[hud.local]["res"]
 			var x := 14.0
-			for k in Sim.RES_KINDS:
+			var keys: Array = Sim.RES_KINDS.duplicate()
+			for k in cost:
+				if not keys.has(k):
+					keys.append(k)
+			for k in keys:
 				if not cost.has(k):
 					continue
-				Glyphs.draw(self, k, Rect2(x, y + 2, 20, 20), Palette.RES[k])
+				var rp: Dictionary = hud.sim.dp(hud.local).mod("recurso_propio")
+				var col: Color = Palette.RES.get(k, Color(rp.get("color", "#cccccc")))
+				Glyphs.draw(self, k if Palette.RES.has(k) else rp.get("icono", "riqueza"), Rect2(x, y + 2, 20, 20), col)
 				var ok: bool = res.get(k, 0) >= cost[k]
 				draw_string(Hud.font_b, Vector2(x + 24, y + 18), str(cost[k]), HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Palette.UI_TEXT if ok else Palette.UI_BAD)
 				x += 78
@@ -531,7 +546,7 @@ class SelectionPanel:
 		sb.border_color = Color(team, 0.7) if e.owner >= 0 else Palette.UI_LINE
 		sb.set_border_width_all(1)
 		draw_style_box(sb, r)
-		var icon := e.type if not e.is_resource() else e.res_kind
+		var icon := Glyphs.resolve(e.def, e.type) if not e.is_resource() else e.res_kind
 		var col: Color = Palette.UI_TEXT if not e.is_resource() else Palette.RES[e.res_kind]
 		Glyphs.draw(self, icon, r.grow(-18), col)
 
@@ -594,7 +609,7 @@ class SelectionPanel:
 				if i < e.queue.size():
 					Glyphs.draw(self, hud.queue_icon(e.queue[i]), r.grow(-9), Palette.UI_ACCENT if e.queue[i].begins_with("@") else Palette.UI_TEXT)
 					if i == 0:
-						var k := float(e.queue_progress) / float(sim.data.queue_time(e.queue[0]))
+						var k := float(e.queue_progress) / float(sim.dp(e.owner).queue_time(e.queue[0]))
 						_bar(Rect2(r.position.x + 3, r.end.y - 6, r.size.x - 6, 3), k, Palette.UI_ACCENT)
 					var idx: int = i
 					var bid := e.id
@@ -643,7 +658,7 @@ class SelectionPanel:
 			sb.border_color = Color(1, 1, 1, 0.08)
 			sb.set_border_width_all(1)
 			draw_style_box(sb, r)
-			Glyphs.draw(self, type, r.grow(-12), Palette.UI_TEXT)
+			Glyphs.draw(self, Glyphs.resolve((list[0] as SimEntity).def, type), r.grow(-12), Palette.UI_TEXT)
 			draw_string(Hud.font_b, r.position + Vector2(0, r.size.y - 6), str(list.size()), HORIZONTAL_ALIGNMENT_RIGHT, r.size.x - 6, 16, Palette.UI_ACCENT)
 			var hp := 0
 			var hpm := 0

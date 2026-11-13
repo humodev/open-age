@@ -1,0 +1,211 @@
+{
+  "civ": "guaranies",
+  "titulo": "Esta tierra tiene dueño",
+  "resumen": "Un escribano del cabildo de San Miguel, en guaraní y después de Caiboaté, cuenta dos siglos de monte, río y pacto: de las empalizadas de Lambaré a la última defensa de Sepé Tiaraju.",
+  "misiones": [
+    {
+      "id": "guaranies-1",
+      "titulo": "Lambaré",
+      "anio": "1537",
+      "lugar": "Lambaré, sobre el río Paraguay",
+      "intro": [
+        "Escribo en nuestra lengua, con las letras que trajeron los padres, en el cabildo de San Miguel. Lo que cuento lo aprendí de los viejos, que lo aprendieron de la palabra de los karai. La palabra no se pierde mientras alguien la diga.",
+        "Antes de que llegaran, el tekoha estaba en el monte, cerca del agua. Nunca en el campo abierto: el campo es para cazar, no para vivir. Cada pocos años se abría una roça nueva, y la vieja se volvía huerto, y el huerto volvía a ser monte.",
+        "En 1537 subieron por el río unos hombres de hierro con arcabuces. En Lambaré los viejos cavaron fosos tapados con paja y tierra, con estacas de madera dura en el fondo, y levantaron dos empalizadas. Detrás esperaban cuatro mil arcos."
+      ],
+      "epilogo": [
+        "Los arcabuces rompieron la empalizada, y al tercer día los mburuvicha pactaron. Pactaron como se pacta entre nosotros: como parientes que se deben ayuda. Así fundaron los españoles Asunción, con nuestra comida y nuestros brazos.",
+        "Pero un pariente no es un criado. Cuando empezaron a tratarnos como criados, y en 1556 nos repartieron en encomiendas, el parentesco se rompió. Hubo alzamientos durante décadas."
+      ],
+      "fuentes": [
+        "Ulrico Schmidl, Viaje al Río de la Plata (1567), caps. 20-22",
+        "Francisco Silva Noelli et al., Ñande reko: fundamentos dos conhecimentos tradicionais ambientais Guaraní (Rev. Bras. Ling. Antrop. 11:1, 2019)",
+        "Maria Cristina Bohn Martins, Acerca da guerra e da paz nas crônicas jesuíticas das reduções (Estudos Ibero-Americanos, 2007)",
+        "Macarena Perusset, Un acercamiento a los procesos de etnogénesis en el Paraguay colonial (Gazeta de Antropología 23, 2007)"
+      ],
+      "mapa": { "semilla": 15371, "terreno": "bosque" },
+      "jugador": {
+        "edad": 1,
+        "recursos": { "alimento": 300, "madera": 500, "piedra": 0, "riqueza": 50 },
+        "aldeanos": 10,
+        "tropas": [ { "tipo": "hondero", "n": 10 }, { "tipo": "guerrero", "n": 6 } ]
+      },
+      "rivales": [
+        { "nombre": "Hueste de Juan de Ayolas", "faccion": "invasores", "ia": "agresiva", "edad": 2 }
+      ],
+      "objetivos": [
+        { "id": "o1", "texto": "Abrí 3 roças en el monte, nunca en el campo abierto. Cuando una se canse, abrí otra: la vieja vuelve a ser monte.", "tipo": "construir", "params": { "tipo": "granja", "n": 3 }, "secundario": false },
+        { "id": "o2", "texto": "Levantá la doble empalizada de Lambaré (30 tramos) y cavá los fosos delante.", "tipo": "construir", "params": { "tipo": "empalizada", "n": 30 }, "secundario": false },
+        { "id": "o3", "texto": "Reuní los arcos de las casas grandes: 12 arqueros más (honderos en el prototipo).", "tipo": "entrenar", "params": { "tipo": "hondero", "n": 12 }, "secundario": false },
+        { "id": "o4", "texto": "Resistí tres días el asalto.", "tipo": "sobrevivir", "params": { "segundos": 480 }, "secundario": false },
+        { "id": "o5", "texto": "Los mburuvicha deciden pactar: juntá 500 de alimento para el convite que sella el parentesco.", "tipo": "recolectar", "params": { "recurso": "alimento", "n": 500 }, "secundario": false, "oculto": true },
+        { "id": "o6", "texto": "Que caigan en los fosos: emboscá desde el monte y matá a 15.", "tipo": "matar", "params": { "n": 15 }, "secundario": true }
+      ],
+      "eventos": [
+        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Mburuvicha de Lambaré", "texto": "Que vengan por el campo. El monte es nuestro." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 200 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 5 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 205 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 4 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 360 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 365 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "lancero", "n": 4 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 460 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 8 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "dialogo", "params": { "quien": "Mburuvicha de Lambaré", "texto": "No se van y nosotros no podemos echarlos. Entonces que sean parientes, y que cumplan como parientes." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "objetivo_nuevo", "params": { "id": "o5" } } }
+      ]
+    },
+    {
+      "id": "guaranies-2",
+      "titulo": "Río abajo",
+      "anio": "1631",
+      "lugar": "Guairá, ríos Paranapanema y Paraná",
+      "intro": [
+        "Noventa años después, muchos de los nuestros vivían en pueblos con los padres de la Compañía. No todos lo eligieron igual. Unos fueron porque allí no entraba el encomendero. Otros, como Ñezú, que era cacique y karai, dijeron que no, y en 1628 echaron a los padres por la fuerza.",
+        "Del este venían los de São Paulo con sus auxiliares tupí, a cazar gente para sus plantaciones. Entraban en los pueblos del Guairá a la hora de misa, porque así era más fácil atarlos.",
+        "En 1631 decidimos irnos. Doce mil personas en canoas y balsas, río abajo, con lo que se pudiera cargar, hasta el salto donde el río se vuelve agua que cae y hubo que seguir por tierra."
+      ],
+      "epilogo": [
+        "Llegamos al Paraná muchos menos de los que salimos. Fundamos de nuevo Loreto y San Ignacio, con los mismos nombres, porque el nombre de un pueblo también se carga en la canoa.",
+        "Los padres escribieron un libro sobre aquel viaje y se pusieron adelante. Nosotros aprendimos otra cosa: que huir no alcanza si el que caza puede seguirte. La próxima vez los íbamos a esperar armados."
+      ],
+      "fuentes": [
+        "Antonio Ruiz de Montoya, Conquista espiritual hecha por los religiosos de la Compañía de Jesús (1639)",
+        "Mercedes Avellaneda y Lía Quarleri, Las milicias guaraníes en el Paraguay y Río de la Plata (Estudos Ibero-Americanos XXXIII:1, 2007)",
+        "Memoria Chilena, el éxodo del Guairá",
+        "UFRGS/NEABI, O encontro entre os Guarani e os jesuítas na província do Paraguai (sobre Ñezú)"
+      ],
+      "mapa": { "semilla": 1631, "terreno": "rio" },
+      "jugador": {
+        "edad": 2,
+        "recursos": { "alimento": 600, "madera": 300, "piedra": 200, "riqueza": 400 },
+        "aldeanos": 20,
+        "tropas": [ { "tipo": "hondero", "n": 12 }, { "tipo": "guerrero", "n": 6 } ]
+      },
+      "rivales": [
+        { "nombre": "Bandeira paulista", "faccion": "invasores", "ia": "agresiva", "edad": 2 },
+        { "nombre": "Auxiliares tupí de la bandeira", "faccion": "guaranies", "ia": "normal", "edad": 2 }
+      ],
+      "objetivos": [
+        { "id": "o1", "texto": "Cortá 600 de madera para canoas y balsas.", "tipo": "recolectar", "params": { "recurso": "madera", "n": 600 }, "secundario": false },
+        { "id": "o2", "texto": "Aguantá a la bandeira mientras se cargan las balsas.", "tipo": "sobrevivir", "params": { "segundos": 420 }, "secundario": false },
+        { "id": "o3", "texto": "El karai elige el lugar: fundá el pueblo nuevo río abajo, lejos del viejo y junto al agua (avanzá a la edad III).", "tipo": "edad", "params": { "n": 3 }, "secundario": false },
+        { "id": "o4", "texto": "Que llegue la gente: si no quedan aldeanos, no hay pueblo que fundar.", "tipo": "proteger", "params": { "tipo": "aldeano", "jugador": 0 }, "secundario": false },
+        { "id": "o5", "texto": "Emboscá a los perseguidores desde la orilla del monte: matá a 15.", "tipo": "matar", "params": { "n": 15 }, "secundario": true }
+      ],
+      "eventos": [
+        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Una anciana de Loreto", "texto": "Lo que no entra en la canoa se queda. Los muertos también se quedan." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 120 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 4 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 125 }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "guerrero", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 300 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 420 }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "hondero", "n": 8 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o2" }, "accion": { "tipo": "dialogo", "params": { "quien": "Escribano de San Miguel", "texto": "Las balsas salieron de noche. Detrás quedaron las roças viejas, que algún día volverán a ser monte." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o2" }, "accion": { "tipo": "recursos", "params": { "alimento": 300, "madera": 0, "piedra": 0, "riqueza": 0 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 660 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 6 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "dialogo", "params": { "quien": "Una anciana de Loreto", "texto": "Este lugar se va a llamar Loreto, como el otro. Así los muertos saben dónde buscarnos." } } }
+      ]
+    },
+    {
+      "id": "guaranies-3",
+      "titulo": "Mbororé",
+      "anio": "1641",
+      "lugar": "Boca del arroyo Mbororé, río Uruguay",
+      "intro": [
+        "Diez años después, la bandeira bajó por el río Uruguay en cientos de canoas: cuatrocientos cincuenta paulistas y casi tres mil tupí. Esta vez los esperábamos.",
+        "El rey había dado permiso para que tuviéramos armas de fuego. Eran pocas, unos trescientos arcabuces, y había que cuidar que no se mojaran. Lo demás lo hicimos nosotros: arcos, hondas, canoas y cañones de tacuara forrados en cuero, que aguantaban pocos tiros pero se hacían en un día.",
+        "Mandaba Nicolás Ñeenguirú, capitán general. Las canoas las mandaba Ignacio Abiarú. El 11 de marzo, en la boca del Mbororé, el río se llenó."
+      ],
+      "epilogo": [
+        "Pelearon días. Los paulistas se encerraron en una empalizada en la orilla, y cuando salieron a escapar por el monte, en el monte los esperábamos. Fue la última gran bandeira contra nuestros pueblos.",
+        "Desde entonces fuimos milicia del rey: vigilábamos su frontera a cambio de no ir a la mita. Sitiamos Colonia tres veces por él. En 1649 nos quitaron los arcabuces por miedo a que los usáramos para nosotros, y tardaron veintisiete años en devolverlos. Los sueldos que prometieron no llegaron nunca."
+      ],
+      "fuentes": [
+        "Mercedes Avellaneda y Lía Quarleri, Las milicias guaraníes en el Paraguay y Río de la Plata (Estudos Ibero-Americanos XXXIII:1, 2007)",
+        "Maria Cristina Bohn Martins, Acerca da guerra e da paz nas crônicas jesuíticas das reduções (Estudos Ibero-Americanos, 2007)",
+        "Beatriz Fernández Herrero, La utopía de América (1992), citada por Avellaneda y Quarleri",
+        "Antonio Ruiz de Montoya, Conquista espiritual (1639)"
+      ],
+      "mapa": { "semilla": 16411, "terreno": "rio" },
+      "jugador": {
+        "edad": 2,
+        "recursos": { "alimento": 700, "madera": 900, "piedra": 100, "riqueza": 400 },
+        "aldeanos": 16,
+        "tropas": [ { "tipo": "hondero", "n": 16 }, { "tipo": "guerrero", "n": 10 }, { "tipo": "lancero", "n": 6 }, { "tipo": "arcabucero", "n": 6 } ]
+      },
+      "rivales": [
+        { "nombre": "Bandeira paulista", "faccion": "invasores", "ia": "agresiva", "edad": 2 },
+        { "nombre": "Auxiliares tupí de la bandeira", "faccion": "guaranies", "ia": "normal", "edad": 2 }
+      ],
+      "objetivos": [
+        { "id": "o1", "texto": "Fabricá 3 cañones de tacuara (ariete en el prototipo): baratos, rápidos y de pocos tiros.", "tipo": "entrenar", "params": { "tipo": "ariete", "n": 3 }, "secundario": false },
+        { "id": "o2", "texto": "Estacá la orilla y cerrá el paso del río (20 tramos de empalizada).", "tipo": "construir", "params": { "tipo": "empalizada", "n": 20 }, "secundario": false },
+        { "id": "o3", "texto": "Batalla en el río: frená la vanguardia de la bandeira (matá a 40).", "tipo": "matar", "params": { "n": 40 }, "secundario": false },
+        { "id": "o4", "texto": "Cercá el campamento paulista de la orilla hasta que se rinda.", "tipo": "destruir_hitos", "params": { "jugador": 1 }, "secundario": false },
+        { "id": "o5", "texto": "Cuidá los arcabuces: si se pierden todos, el rey no manda más.", "tipo": "proteger", "params": { "tipo": "arcabucero", "jugador": 0 }, "secundario": true }
+      ],
+      "eventos": [
+        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Nicolás Ñeenguirú", "texto": "Que bajen. Este río era nuestro antes de que ellos tuvieran nombre." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o1" }, "accion": { "tipo": "dialogo", "params": { "quien": "Ignacio Abiarú", "texto": "Los cañones van en la orilla del monte, donde no los ven. Cuando se rajen, se hacen otros." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 150 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 155 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 160 }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "hondero", "n": 10 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 400 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 8 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 405 }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "guerrero", "n": 10 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 600 }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "hondero", "n": 8 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "dialogo", "params": { "quien": "Ignacio Abiarú", "texto": "Se retiran a la orilla y se encierran. Que no salgan de ahí." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "revelar", "params": {} } }
+      ]
+    },
+    {
+      "id": "guaranies-4",
+      "titulo": "Esta tierra tiene dueño",
+      "anio": "1754",
+      "lugar": "Los siete pueblos, vados del río Jacuí",
+      "intro": [
+        "En 1750 dos reyes que nunca vinieron firmaron en Madrid que siete de nuestros pueblos pasaban a Portugal. Nos mandaron cruzar el río Uruguay y dejar las iglesias que habíamos levantado, los yerbales que habíamos plantado y los muertos.",
+        "Los cabildos escribieron al gobernador. Decían que esas tierras eran nuestras desde siempre y que las habíamos defendido para el rey con nuestra sangre. Nadie contestó.",
+        "Sepé Tiaraju era alférez del cabildo de San Miguel y mandaba la artillería. Cuando llegaron los demarcadores, dicen que les dijo: esta tierra tiene dueño. Lo seguro es que no los dejó pasar."
+      ],
+      "epilogo": [
+        "En 1754 los dos ejércitos se volvieron sin cruzar. Al año siguiente vinieron juntos y con más cañones. Sepé murió el 7 de febrero de 1756. Tres días después, en Caiboaté, en campo abierto, que nunca fue nuestro, cayeron más de mil quinientos de los nuestros en una tarde.",
+        "Los siete pueblos se vaciaron. En 1761 los mismos reyes anularon el tratado, como quien borra una cuenta. Del otro lado del río la gente empezó a llamar santo a Sepé, aunque ningún obispo lo hiciera. Escribo esto para que conste: esta tierra sigue teniendo dueño."
+      ],
+      "fuentes": [
+        "Tadeo Xavier Henis, Diario histórico de la rebelión y guerra de los pueblos guaranis (1754), Colección De Angelis",
+        "Mercedes Avellaneda y Lía Quarleri, Las milicias guaraníes en el Paraguay y Río de la Plata (Estudos Ibero-Americanos XXXIII:1, 2007)",
+        "Tau Golin, A Guerra Guaranítica (1998)",
+        "Barbara Ganson, The Guaraní under Spanish Rule in the Río de la Plata (Stanford UP, 2003)"
+      ],
+      "mapa": { "semilla": 1754, "terreno": "rio" },
+      "jugador": {
+        "edad": 3,
+        "recursos": { "alimento": 1200, "madera": 1000, "piedra": 300, "riqueza": 800 },
+        "aldeanos": 20,
+        "tropas": [ { "tipo": "hondero", "n": 14 }, { "tipo": "guerrero", "n": 10 }, { "tipo": "lancero", "n": 10 }, { "tipo": "jinete", "n": 6 }, { "tipo": "arcabucero", "n": 4 } ]
+      },
+      "rivales": [
+        { "nombre": "Ejército portugués de Gomes Freire", "faccion": "invasores", "ia": "agresiva", "edad": 4 },
+        { "nombre": "Ejército español de Andonaegui", "faccion": "invasores", "ia": "normal", "edad": 4 }
+      ],
+      "objetivos": [
+        { "id": "o1", "texto": "Fortificá los vados con estacadas (24 tramos de empalizada).", "tipo": "construir", "params": { "tipo": "empalizada", "n": 24 }, "secundario": false },
+        { "id": "o2", "texto": "Emplazá 4 cañones de tacuara en la orilla del monte (ariete en el prototipo).", "tipo": "entrenar", "params": { "tipo": "ariete", "n": 4 }, "secundario": false },
+        { "id": "o3", "texto": "Que no crucen el río: aguantá a las columnas de los dos reyes.", "tipo": "sobrevivir", "params": { "segundos": 600 }, "secundario": false },
+        { "id": "o4", "texto": "Peleá cerca de casa: si cae el pueblo, la gente se dispersa.", "tipo": "proteger", "params": { "tipo": "centro", "jugador": 0 }, "secundario": false },
+        { "id": "o5", "texto": "Hostigá a las columnas desde el monte hasta que se vuelvan: matá a 40.", "tipo": "matar", "params": { "n": 40 }, "secundario": false },
+        { "id": "o6", "texto": "Que los cabildos de los siete pueblos decidan juntos (avanzá a la edad IV).", "tipo": "edad", "params": { "n": 4 }, "secundario": true }
+      ],
+      "eventos": [
+        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Sepé Tiaraju", "texto": "Esta tierra tiene dueño." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 150 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 8 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 155 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 4 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o1" }, "accion": { "tipo": "refuerzos", "params": { "jugador": 0, "tipo": "jinete", "n": 6 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o1" }, "accion": { "tipo": "dialogo", "params": { "quien": "Escribano de San Miguel", "texto": "Llegaron jinetes minuanes y charrúas. No eran de los pueblos, pero tampoco querían a los demarcadores en su campo." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 330 }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "arcabucero", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 335 }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "jinete", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 340 }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "lancero", "n": 4 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 480 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "ariete", "n": 2 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 485 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 8 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 560 }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "jinete", "n": 6 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "dialogo", "params": { "quien": "Escribano de San Miguel", "texto": "Ese año se volvieron. El río estaba crecido y sus pólvoras mojadas, y nosotros estábamos en casa." } } }
+      ]
+    }
+  ]
+}

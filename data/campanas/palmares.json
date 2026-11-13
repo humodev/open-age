@@ -1,0 +1,232 @@
+{
+  "civ": "palmares",
+  "titulo": "Lo más oculto",
+  "resumen": "Una mujer nacida en Palmares cuenta, hacia 1700 y desde un mocambo de la sierra que todavía no encontraron, cómo la gente que llegaba de los ingenios levantó cercas de hierro, pactó y se negó a pactar, y siguió viva después de la caída de la Barriga.",
+  "misiones": [
+    {
+      "id": "palmares-1",
+      "titulo": "Cuatro fraguas",
+      "anio": "1645",
+      "lugar": "Sertão de Alagoas, entre los ríos Paraíba y Mundaú",
+      "intro": [
+        "Yo nací en Palmares. Lo digo primero porque un día eso valió un papel, y porque los que llegaron después tuvieron que ganarse lo que a mí me tocó al nacer.",
+        "Mi madre llegó de un ingenio de Sirinhaém con la ropa puesta. Antes de ella habían llegado otros, y antes de ellos otros, desde que hay ingenios. En la mata de palmeras nadie los esperaba: se esperaban entre ellos. Así se hace un mocambo.",
+        "Cuando yo era chica, en la costa mandaban los holandeses. Peleaban con los portugueses por el azúcar, y los dos se acordaban de nosotros cuando les faltaban brazos. En nuestro mocambo había roças, una casa donde se juntaba el consejo y cuatro fraguas. El hierro no se saca de la tierra: se trae.",
+        "Un día los que vigilaban el camino avisaron que subía una columna de la Compañía, con guías que conocían el monte."
+      ],
+      "epilogo": [
+        "Encontraron el mocambo vacío. Contaron unas doscientas veinte casas, una iglesia, cuatro fraguas y la casa del consejo, y lo anotaron todo en su diario. Nosotros ya estábamos en otro lado. La mandioca que dejamos enterrada nos esperó hasta que volvimos.",
+        "El que escribió ese diario nos describió mejor que nadie de los suyos, y nunca nos vio la cara. Así se conoce a la gente que sabe esconderse: por lo que deja."
+      ],
+      "fuentes": [
+        "Johan Blaer y Jürgens Reijmbach, Diário da viagem do capitão João Blaer aos Palmares em 1645 (Revista do Instituto Arqueológico Pernambucano 56, 1902)",
+        "Silvia Hunold Lara, O território dos Palmares: cartografia, história e política (Afro-Ásia 64, 2021)",
+        "Felipe Aguiar Damasceno, A ocupação das terras dos Palmares de Pernambuco (tesis, UFRJ, 2018)",
+        "Linda Heywood y John Thornton, Central Africans, Atlantic Creoles, and the Foundation of the Americas, 1585-1660 (Cambridge UP, 2007)"
+      ],
+      "mapa": { "semilla": 1645, "terreno": "bosque" },
+      "jugador": {
+        "edad": 1,
+        "recursos": { "alimento": 200, "madera": 300, "piedra": 0, "riqueza": 50 },
+        "aldeanos": 6,
+        "tropas": [ { "tipo": "guerrero", "n": 4 }, { "tipo": "hondero", "n": 4 } ]
+      },
+      "rivales": [
+        { "nombre": "Columna de la Compañía de las Indias Occidentales", "faccion": "invasores", "ia": "normal", "edad": 2 }
+      ],
+      "objetivos": [
+        { "id": "o1", "texto": "Abrí 4 roças en la mata (granjas): milho para ahora, mandioca para cuando haga falta.", "tipo": "construir", "params": { "tipo": "granja", "n": 4 }, "secundario": false },
+        { "id": "o2", "texto": "Juntá 400 de alimento. La mandioca que queda enterrada no la quema nadie.", "tipo": "recolectar", "params": { "recurso": "alimento", "n": 400 }, "secundario": false },
+        { "id": "o3", "texto": "Levantá 2 fraguas (cuarteles en el prototipo). Cada una hace humo, y el humo se ve: cuanto más se trabaja, más fácil es encontrarnos.", "tipo": "construir", "params": { "tipo": "cuartel", "n": 2 }, "secundario": false },
+        { "id": "o4", "texto": "Reuní al consejo en su casa y cerrá un anillo nuevo de la cerca (avanzá a la edad II).", "tipo": "edad", "params": { "n": 2 }, "secundario": false },
+        { "id": "o5", "texto": "La columna encontró el camino. No la esperes en la cerca: aguantá en la mata mientras la gente se va a otro mocambo. Que encuentren las casas, no a las personas.", "tipo": "sobrevivir", "params": { "segundos": 300 }, "secundario": false, "oculto": true },
+        { "id": "o6", "texto": "Hostigá la columna desde la mata sin dar batalla: matá a 12.", "tipo": "matar", "params": { "n": 12 }, "secundario": true },
+        { "id": "o7", "texto": "Que nadie quede atrás: protegé a los aldeanos.", "tipo": "proteger", "params": { "tipo": "aldeano", "jugador": 0 }, "secundario": true }
+      ],
+      "eventos": [
+        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Dumbi", "texto": "Cada sendero que abrimos es un sendero que ellos pueden seguir. Abrí los que hagan falta, y ni uno más." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 180 }, "accion": { "tipo": "refuerzos", "params": { "jugador": 0, "tipo": "aldeano", "n": 3 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 180 }, "accion": { "tipo": "dialogo", "params": { "quien": "Anciana de Camuanga", "texto": "Llegaron tres de un ingenio de Porto Calvo. Nadie les preguntó nada hasta que comieron." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 300 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 3 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "dialogo", "params": { "quien": "Anciana de Camuanga", "texto": "El hierro llegaba de los ingenios de a un machete, de a una azada. En la fragua se volvía punta de lanza o estrepe." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 480 }, "accion": { "tipo": "refuerzos", "params": { "jugador": 0, "tipo": "aldeano", "n": 3 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "objetivo_nuevo", "params": { "id": "o5" } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "dialogo", "params": { "quien": "Dumbi", "texto": "Que lleguen. Que cuenten las casas. Nosotros no vamos a estar." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 8 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 6 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o5" }, "accion": { "tipo": "dialogo", "params": { "quien": "Anciana de Camuanga", "texto": "Volvimos cuando se fueron. La mandioca seguía donde la habíamos dejado." } } }
+      ]
+    },
+    {
+      "id": "palmares-2",
+      "titulo": "La cerca real",
+      "anio": "1677",
+      "lugar": "Macaco, al noroeste de Porto Calvo",
+      "intro": [
+        "Cuando crecí, Palmares ya no era un mocambo: era una tierra. Tenía rey, Gana Zumba, y cada mocambo tenía un potentado que era pariente del rey o llevaba nombre de pariente. Su madre, Aca Inene, gobernaba el suyo. Su hermano Gana Zona, otro. Gana quiere decir señor en la lengua de Angola, de donde venían casi todos los viejos.",
+        "Macaco era la cerca del rey: una palizada de pau a pique con estrepes de hierro clavados alrededor para el que llegara corriendo y, adentro, más casas de las que yo sabía contar, y una capilla.",
+        "En 1675 vino Manuel Lopes y quemó una ciudad grande. En esa guerra hirieron a nuestro general de las armas, al que ellos llamaban el Zambi. Dos años después vino Fernão Carrilho, con soldados de los terços y hombres que habían peleado en Angola. Venía a quedarse."
+      ],
+      "epilogo": [
+        "Carrilho entró en Macaco y puso su arraial adentro de nuestra cerca. Se llevó a la reina y a dos hijos del rey, y mató a otros cuatro y al maestre de campo. Él mismo lo escribió años después, para que le pagaran el servicio. Lo que no escribió es que la mayoría de la gente ya estaba en Subupira, y después en Amaro.",
+        "En un año el rey había perdido una esposa y seis hijos. En junio de 1678 mandó a Recife una embajada con un papel. Unos dijeron que se rendía. Otros, que hacía lo que en Angola hace un soba que no quiere morir: jurarle al más fuerte y quedarse con su tierra y su gente."
+      ],
+      "fuentes": [
+        "Relação das guerras feitas aos Palmares de Pernambuco no tempo do governador D. Pedro de Almeida, de 1675 a 1678 (atribuida al padre Antônio da Silva)",
+        "Silvia Hunold Lara y Phablo Roberto Marchis Fachin (orgs.), Guerra contra Palmares: o manuscrito de 1678 (Chão, 2021)",
+        "Silvia Hunold Lara, O território dos Palmares: cartografia, história e política (Afro-Ásia 64, 2021)",
+        "Revista Pesquisa FAPESP, Documentos originais revelam novos aspectos da história de Palmares (2022)"
+      ],
+      "mapa": { "semilla": 1677, "terreno": "bosque" },
+      "jugador": {
+        "edad": 2,
+        "recursos": { "alimento": 600, "madera": 800, "piedra": 100, "riqueza": 200 },
+        "aldeanos": 14,
+        "tropas": [ { "tipo": "guerrero", "n": 10 }, { "tipo": "hondero", "n": 8 }, { "tipo": "lancero", "n": 6 }, { "tipo": "arcabucero", "n": 2 } ]
+      },
+      "rivales": [
+        { "nombre": "Tropa de Fernão Carrilho", "faccion": "invasores", "ia": "agresiva", "edad": 3 }
+      ],
+      "objetivos": [
+        { "id": "o1", "texto": "Cerrá el anillo nuevo de la cerca real y clavá la estrepería por fuera (30 tramos de empalizada).", "tipo": "construir", "params": { "tipo": "empalizada", "n": 30 }, "secundario": false },
+        { "id": "o2", "texto": "Vinculá dos mocambos de la parentela, Subupira y Amaro (depósitos), cada uno con su potentado.", "tipo": "construir", "params": { "tipo": "deposito", "n": 2 }, "secundario": false },
+        { "id": "o3", "texto": "Levantá el tercer anillo de la cerca real (avanzá a la edad III). Mientras se levanta, la estrepería de afuera queda desarmada.", "tipo": "edad", "params": { "n": 3 }, "secundario": false },
+        { "id": "o4", "texto": "Carrilho plantó su arraial frente a la cerca. Sostenela mientras la gente sale por el monte hacia Subupira y Amaro.", "tipo": "sobrevivir", "params": { "segundos": 420 }, "secundario": false, "oculto": true },
+        { "id": "o5", "texto": "Que siempre quede en pie un mocambo de la parentela: ahí va la gente.", "tipo": "proteger", "params": { "tipo": "deposito", "jugador": 0 }, "secundario": true },
+        { "id": "o6", "texto": "Que cada paso entre los estrepes les cueste: matá a 25.", "tipo": "matar", "params": { "n": 25 }, "secundario": true }
+      ],
+      "eventos": [
+        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Gana Zumba", "texto": "Una cerca no es para morir adentro. Es para que el que viene pague cada palmo y nosotros tengamos tiempo." } } },
+        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Aca Inene", "texto": "Mi mocambo está lejos de acá. Si esto cae, que vengan." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 240 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 245 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 4 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o2" }, "accion": { "tipo": "dialogo", "params": { "quien": "Anciana de Camuanga", "texto": "Un potentado no trabaja la roça: cuida a su gente y responde por ella. Cada mocambo vinculado era una boca más y un brazo menos." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "objetivo_nuevo", "params": { "id": "o4" } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "dialogo", "params": { "quien": "Zambi, general de las armas", "texto": "Que la gente salga por el lado del monte. Nosotros cerramos la puerta detrás." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 10 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 10 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "lancero", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 720 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "hondero", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 725 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 6 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "dialogo", "params": { "quien": "Anciana de Camuanga", "texto": "Cuando Carrilho entró encontró las casas. La gente, casi toda, ya estaba en Subupira." } } }
+      ]
+    },
+    {
+      "id": "palmares-3",
+      "titulo": "El papel de Cucaú",
+      "anio": "1678",
+      "lugar": "Cucaú, al sur de Sirinhaém",
+      "intro": [
+        "El papel decía esto: que obedeceríamos al gobierno de Pernambuco; que nos darían tierras en Cucaú; que los nacidos en Palmares seríamos libres y podríamos plantar y vender como vasallos. Y que los que no habían nacido en Palmares volverían a sus dueños.",
+        "Yo había nacido en Palmares. Mi marido había llegado de un ingenio de Sirinhaém. El papel me hacía libre a mí y a él lo devolvía.",
+        "Gana Zumba eligió Cucaú porque tenía palmeras para el sustento y quedaba cerca de lo nuestro. Fuimos entre trescientos y cuatrocientos, de tres mocambos, con él y con Gana Zona. Zumbi se quedó en lo más oculto de la mata con la gente de guerra. Mi marido se fue con él. Yo fui con mi hermano a Cucaú.",
+        "Ninguno de los dos estaba del todo equivocado. Por eso dolió tanto."
+      ],
+      "epilogo": [
+        "Al año siguiente mataron a Gana Zumba en Cucaú. Dicen que con veneno, y dicen que fue gente de Zumbi. Yo no lo vi y no lo digo. Lo que sí vi fue el cerco: tres meses, hasta que no quedó qué comer.",
+        "Se llevaron a unos doscientos, nacidos y no nacidos, con papel o sin papel. Los que pudimos salimos por el monte a buscar a Zumbi. En 1682 el rey de Portugal firmó que el acuerdo valía y mandó averiguar qué había pasado. En Cucaú ya no quedaba nadie para contárselo."
+      ],
+      "fuentes": [
+        "Papel que levaram os negros dos Palmares (22 de junio de 1678), en Lara y Fachin (orgs.), Guerra contra Palmares (2021)",
+        "Silvia Hunold Lara, Palmares & Cucaú: o aprendizado da dominação (Edusp, 2021)",
+        "John K. Thornton, Palmares revisitado (Afro-Ásia 65, 2022)",
+        "Revista Pesquisa FAPESP, Documentos originais revelam novos aspectos da história de Palmares (2022)"
+      ],
+      "mapa": { "semilla": 1678, "terreno": "llano" },
+      "jugador": {
+        "edad": 3,
+        "recursos": { "alimento": 500, "madera": 500, "piedra": 100, "riqueza": 200 },
+        "aldeanos": 16,
+        "tropas": [ { "tipo": "guerrero", "n": 6 }, { "tipo": "hondero", "n": 6 }, { "tipo": "lancero", "n": 4 } ]
+      },
+      "rivales": [
+        { "nombre": "Tropas de Pernambuco y moradores armados", "faccion": "invasores", "ia": "pasiva", "edad": 3 }
+      ],
+      "objetivos": [
+        { "id": "o1", "texto": "Abrí las roças de Cucaú (6 granjas). Acá se planta a la vista: el papel lo permite.", "tipo": "construir", "params": { "tipo": "granja", "n": 6 }, "secundario": false },
+        { "id": "o2", "texto": "Vendé farinha a los moradores sin esconderte: el comercio legal ya no delata a nadie (600 de riqueza).", "tipo": "recolectar", "params": { "recurso": "riqueza", "n": 600 }, "secundario": false },
+        { "id": "o3", "texto": "Asentá a la gente en Cucaú como vasallos con tierra (avanzá a la edad IV por la vía del pacto).", "tipo": "edad", "params": { "n": 4 }, "secundario": false },
+        { "id": "o4", "texto": "Mataron a Gana Zumba y el pacto se rompió. Cucaú está cercada: aguantá con lo que haya en los paióis.", "tipo": "sobrevivir", "params": { "segundos": 480 }, "secundario": false, "oculto": true },
+        { "id": "o5", "texto": "Que los que puedan salgan por el monte hacia la gente de Zumbi: protegé a los aldeanos.", "tipo": "proteger", "params": { "tipo": "aldeano", "jugador": 0 }, "secundario": true, "oculto": true },
+        { "id": "o6", "texto": "Llená los paióis antes de que haga falta (800 de alimento).", "tipo": "recolectar", "params": { "recurso": "alimento", "n": 800 }, "secundario": true }
+      ],
+      "eventos": [
+        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Gana Zumba", "texto": "En Angola, el soba que le jura al más fuerte conserva su tierra y su gente. Eso es lo que firmé." } } },
+        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Zumbi", "texto": "Firmaste por la mitad de la gente. La otra mitad se queda conmigo." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o1" }, "accion": { "tipo": "dialogo", "params": { "quien": "Anciana de Camuanga", "texto": "Era la primera vez que plantábamos sin mirar para atrás." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o2" }, "accion": { "tipo": "dialogo", "params": { "quien": "Anciana de Camuanga", "texto": "Los moradores compraban sin preguntar de dónde éramos. El papel les ahorraba la pregunta, y a nosotros la respuesta." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "objetivo_nuevo", "params": { "id": "o4" } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "objetivo_nuevo", "params": { "id": "o5" } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "dialogo", "params": { "quien": "Gana Zona", "texto": "El rey está muerto. Cerrá la cerca y contá la farinha." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 8 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 6 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "lancero", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 1200 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 6 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "dialogo", "params": { "quien": "Anciana de Camuanga", "texto": "Salimos de noche, de a pocos, por donde no había roça ni camino. Mi hermano no salió." } } }
+      ]
+    },
+    {
+      "id": "palmares-4",
+      "titulo": "Tres cercas",
+      "anio": "1694",
+      "lugar": "Outeiro da Barriga",
+      "intro": [
+        "Desde 1680 cambió la palabra que usaban para nombrarnos. Dejaron de decir mocambos y empezaron a decir quilombo, que en Angola es el campamento de guerra. No se equivocaban.",
+        "Zumbi no era rey como Gana Zumba. Ellos lo llamaban capitán, y a veces corsario. Los mocambos ya no eran parientes unos de otros: eran gente que se juntaba para pelear y gente que llegaba. Las correrías a los ingenios traían hierro, pólvora y personas.",
+        "En la Barriga levantamos tres cercas, con fuego y estrepería por fuera. En 1692 llegó Domingos Jorge Velho, un paulista contratado por el gobierno, con una tropa hecha sobre todo de indígenas y mamelucos que conocían el monte mejor que los soldados de la costa."
+      ],
+      "epilogo": [
+        "Velho no pudo entrar en 1692, y escribió que la cerca tenía tres vueltas y mucho fuego. En febrero de 1694 volvió con los terços de Pernambuco y entró. Contaron doscientas treinta y dos casas y cuarenta tiendas de herreros. Se llevaron entre trescientas cincuenta y quinientas personas.",
+        "Zumbi salió vivo. Lo mataron el 20 de noviembre del año siguiente, en la sierra. Después mandó Camuanga, y después otros, cuyos nombres ellos anotaron cuando quemaban sus mocambos. Este en el que hablo todavía no lo encontraron.",
+        "Hay nombres que no están en sus papeles y que la gente igual repite. Yo también los repito."
+      ],
+      "fuentes": [
+        "Carta de Domingos Jorge Velho, 27 de noviembre de 1692 (BNP), citada en Lara, O território dos Palmares (2021)",
+        "Maria Lêda Oliveira, A primeira rellação do último assalto a Palmares (Afro-Ásia 33, 2005)",
+        "Silvia Hunold Lara, O território dos Palmares: cartografia, história e política (Afro-Ásia 64, 2021)",
+        "Flávio dos Santos Gomes (org.), Mocambos de Palmares: histórias e fontes (séculos XVI-XIX) (2010)",
+        "Brasil de Fato, entrevista a Silvia Hunold Lara (22 de noviembre de 2023)"
+      ],
+      "mapa": { "semilla": 1694, "terreno": "montana" },
+      "jugador": {
+        "edad": 3,
+        "recursos": { "alimento": 800, "madera": 900, "piedra": 200, "riqueza": 400 },
+        "aldeanos": 16,
+        "tropas": [ { "tipo": "guerrero", "n": 12 }, { "tipo": "hondero", "n": 10 }, { "tipo": "lancero", "n": 8 }, { "tipo": "arcabucero", "n": 6 } ]
+      },
+      "rivales": [
+        { "nombre": "Tropa de Domingos Jorge Velho (paulistas, mamelucos e indígenas)", "faccion": "invasores", "ia": "agresiva", "edad": 3 },
+        { "nombre": "Terços de Pernambuco (Bernardo Vieira de Melo)", "faccion": "invasores", "ia": "pasiva", "edad": 3 },
+        { "nombre": "Ingenios de Porto Calvo", "faccion": "invasores", "ia": "pasiva", "edad": 2 }
+      ],
+      "objetivos": [
+        { "id": "o1", "texto": "Correría al ingenio: rompé su casa de molienda y su guardia (hito de economía). La gente que sale camina hacia la mata, y deja rastro.", "tipo": "destruir", "params": { "tipo": "hito_economia", "n": 1, "jugador": 3 }, "secundario": false },
+        { "id": "o2", "texto": "Levantá la tercera cerca de la Barriga, con estrepería por fuera (40 tramos de empalizada).", "tipo": "construir", "params": { "tipo": "empalizada", "n": 40 }, "secundario": false },
+        { "id": "o3", "texto": "Quilombo: la cerca se militariza y manda la gente de guerra (avanzá a la edad IV por la vía de Zumbi).", "tipo": "edad", "params": { "n": 4 }, "secundario": false },
+        { "id": "o4", "texto": "Rechazá el asalto de Velho: matá a 40.", "tipo": "matar", "params": { "n": 40 }, "secundario": false },
+        { "id": "o5", "texto": "Febrero de 1694: llegaron los terços. Sostené la cerca el tiempo que haga falta para que la gente salga por el monte.", "tipo": "sobrevivir", "params": { "segundos": 300 }, "secundario": false, "oculto": true },
+        { "id": "o6", "texto": "Fundá 2 mocambos nuevos lejos de la Barriga, en lo más oculto de la mata (depósitos).", "tipo": "construir", "params": { "tipo": "deposito", "n": 2 }, "secundario": false, "oculto": true }
+      ],
+      "eventos": [
+        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Zumbi", "texto": "Cada correría trae hierro y trae gente. Y deja un rastro hasta acá. Las dos cosas son ciertas." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 200 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 205 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "hondero", "n": 6 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o1" }, "accion": { "tipo": "refuerzos", "params": { "jugador": 0, "tipo": "aldeano", "n": 6 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o1" }, "accion": { "tipo": "recursos", "params": { "alimento": 0, "madera": 0, "piedra": 0, "riqueza": 200 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o1" }, "accion": { "tipo": "dialogo", "params": { "quien": "Anciana de Camuanga", "texto": "Esa noche subieron seis. Una todavía traía la azada del ingenio. La mandamos a la fragua." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 12 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "hondero", "n": 10 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 8 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 900 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "lancero", "n": 6 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "dialogo", "params": { "quien": "Camuanga", "texto": "Velho se fue a escribir cartas. Va a volver con más gente." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "objetivo_nuevo", "params": { "id": "o5" } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "objetivo_nuevo", "params": { "id": "o6" } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "arcabucero", "n": 10 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "guerrero", "n": 10 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "lancero", "n": 8 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "dialogo", "params": { "quien": "Zumbi", "texto": "Que la cerca aguante hasta que salga el último. Después, la mata." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o6" }, "accion": { "tipo": "dialogo", "params": { "quien": "Anciana de Camuanga", "texto": "Salí por el lado del monte con dos chicos que no eran míos. Ahora sí lo son." } } }
+      ]
+    }
+  ]
+}

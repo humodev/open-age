@@ -13,6 +13,7 @@ var tick: int = 0
 var tick_ms: int
 var map: SimMap
 var fog: SimFog
+var mods: SimMods
 var rng: SimRng
 var entities: Array[SimEntity] = [] # todas, en orden de id
 var actives: Array[SimEntity] = [] # unidades y edificios, en orden de id
@@ -43,6 +44,7 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null,
 	fog = SimFog.new(data.reglas["mapa_tam"], num_players)
 	fog.map = map
 	fog.vision_per_level = data.reglas["vision_por_nivel"]
+	mods = SimMods.new(self)
 	for i in num_players:
 		players.append({
 			"id": i,
@@ -57,7 +59,15 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null,
 			"pending": {}, # investigaciones en cola
 			"mods": {}, # modificadores acumulados (docs/05, "Investigaciones")
 			"alarm": false,
+			"civ": (opts.get("civs", []) as Array)[i] if i < (opts.get("civs", []) as Array).size() else "",
 		})
+	for p in players:
+		var dd := data.for_civ(p["civ"])
+		if dd.has_mod("recurso_propio"):
+			var rp: Dictionary = dd.mod("recurso_propio")
+			p["res"][rp["clave"]] = int(rp.get("inicial", 0))
+		for k in dd.civ.get("recursos_iniciales", {}):
+			p["res"][k] = dd.civ["recursos_iniciales"][k]
 	terrain = opts.get("terreno", "")
 	if terrain == "":
 		var kinds: Array = data.reglas["terrenos"]
@@ -66,6 +76,13 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null,
 	_update_players()
 	for pid in players.size():
 		_update_fog(pid)
+
+
+## Datos de la civilización del jugador (capa común si no tiene).
+func dp(pid: int) -> SimData:
+	if pid < 0 or pid >= players.size():
+		return data
+	return data.for_civ(players[pid]["civ"])
 
 
 # ---------------------------------------------------------------- Comandos
@@ -108,6 +125,10 @@ func _apply(c: Dictionary) -> void:
 			_cmd_ungarrison(pid, c["building"])
 		"alarm":
 			_cmd_alarm(pid, c.get("on", true))
+		"pack":
+			_cmd_pack(pid, c["building"])
+		"unpack":
+			_cmd_unpack(pid, c["unit"])
 		"stop":
 			for e in _own_units(pid, c.get("ids", [])):
 				_set_idle(e)
@@ -116,7 +137,7 @@ func _apply(c: Dictionary) -> void:
 				var e: SimEntity = by_id.get(id)
 				if e != null and e.owner == pid and not e.is_resource():
 					if e.is_building() and not e.built:
-						_refund(pid, data.cost_of(e.type, players[pid]["age"]))
+						_refund(pid, dp(pid).cost_of(e.type, players[pid]["age"]))
 					_kill(e)
 		"resign":
 			_defeat(pid)
@@ -197,19 +218,19 @@ func _cmd_target(pid: int, units: Array[SimEntity], target_id: int) -> void:
 
 func _cmd_build(pid: int, units: Array[SimEntity], type: String, tx: int, ty: int) -> void:
 	var p := players[pid]
-	if not data.edificios.has(type):
+	if not dp(pid).edificios.has(type):
 		return
-	var def: Dictionary = data.edificios[type]
+	var def: Dictionary = dp(pid).edificios[type]
 	if p["age"] < def.get("edad_min", 1):
 		_notify(pid, "Requiere edad %s" % _roman(def.get("edad_min", 1)))
 		return
 	if def.get("avanza_edad", false):
-		if p["age"] >= data.edades.size():
+		if p["age"] >= dp(pid).edades.size():
 			return
 		if hito_in_progress(pid):
 			_notify(pid, "Ya hay un hito en obra")
 			return
-	var cost := data.cost_of(type, p["age"])
+	var cost := dp(pid).cost_of(type, p["age"])
 	if not can_afford(pid, cost):
 		_notify(pid, "Recursos insuficientes")
 		return
@@ -219,7 +240,7 @@ func _cmd_build(pid: int, units: Array[SimEntity], type: String, tx: int, ty: in
 	_replace_wall(type, tx, ty, pid)
 	_pay(pid, cost)
 	var b := spawn_building(type, pid, tx, ty, false)
-	b.build_time = data.build_time_of(type, p["age"])
+	b.build_time = dp(pid).build_time_of(type, p["age"])
 	events.append({"t": "placed", "id": b.id, "player": pid})
 	for e in units:
 		if e.fn == "civil":
@@ -233,13 +254,13 @@ func _cmd_train(pid: int, bid: int, type: String) -> void:
 	if not (b.def.get("produce", []) as Array).has(type):
 		return
 	var p := players[pid]
-	if p["age"] < data.unidades[type].get("edad_min", 1):
-		_notify(pid, "Requiere edad %s" % _roman(data.unidades[type]["edad_min"]))
+	if p["age"] < dp(pid).unidades[type].get("edad_min", 1):
+		_notify(pid, "Requiere edad %s" % _roman(dp(pid).unidades[type]["edad_min"]))
 		return
 	if b.queue.size() >= data.reglas["cola_max"]:
 		_notify(pid, "Cola llena")
 		return
-	var cost := data.cost_of(type, p["age"])
+	var cost := dp(pid).cost_of(type, p["age"])
 	if not can_afford(pid, cost):
 		_notify(pid, "Recursos insuficientes")
 		return
@@ -260,12 +281,12 @@ func _cmd_cancel(pid: int, bid: int, index: int) -> void:
 	if type.begins_with("@"):
 		players[pid]["pending"].erase(type.substr(1))
 		type = type.substr(1)
-	_refund(pid, data.cost_of(type, players[pid]["age"]))
+	_refund(pid, dp(pid).cost_of(type, players[pid]["age"]))
 
 
 ## ¿Se puede investigar `tech` ahora? Devuelve "" o el motivo.
 func research_block(pid: int, tech: String) -> String:
-	var t: Dictionary = data.tecnologias.get(tech, {})
+	var t: Dictionary = dp(pid).tecnologias.get(tech, {})
 	var p := players[pid]
 	if t.is_empty():
 		return "Desconocida"
@@ -274,7 +295,7 @@ func research_block(pid: int, tech: String) -> String:
 	if p["pending"].has(tech):
 		return "En investigación"
 	if t.has("requiere") and not p["techs"].has(t["requiere"]):
-		return "Requiere %s" % data.tecnologias[t["requiere"]]["nombre"]
+		return "Requiere %s" % dp(pid).tecnologias[t["requiere"]]["nombre"]
 	if p["age"] < t.get("edad_min", 1):
 		return "Requiere edad %s" % _roman(t["edad_min"])
 	return ""
@@ -284,7 +305,7 @@ func _cmd_research(pid: int, bid: int, tech: String) -> void:
 	var b: SimEntity = by_id.get(bid)
 	if b == null or not b.alive or b.owner != pid or not b.built:
 		return
-	var t: Dictionary = data.tecnologias.get(tech, {})
+	var t: Dictionary = dp(pid).tecnologias.get(tech, {})
 	if t.is_empty() or t["edificio"] != b.type:
 		return
 	var why := research_block(pid, tech)
@@ -300,6 +321,43 @@ func _cmd_research(pid: int, bid: int, tech: String) -> void:
 	_pay(pid, t["costo"])
 	players[pid]["pending"][tech] = true
 	b.queue.append("@" + tech)
+
+
+## Base móvil (kätäma etíope): el edificio se desarma en una unidad lenta que lo lleva.
+func _cmd_pack(pid: int, bid: int) -> void:
+	var b: SimEntity = by_id.get(bid)
+	if b == null or not b.alive or b.owner != pid or not b.built or not b.def.has("empaca_en") or not b.queue.is_empty():
+		return
+	var kind: String = b.def["empaca_en"]
+	var tile := Vector2i(b.tx + b.w / 2, b.ty + b.h / 2)
+	var ratio := b.hp * 100 / b.hp_max
+	var was_capital := b.capital
+	b.capital = false
+	_kill(b)
+	var u := spawn_unit(kind, pid, tile.x * P + P / 2, tile.y * P + P / 2)
+	u.hp = maxi(1, u.hp_max * ratio / 100)
+	u.capital = was_capital
+	events.append({"t": "packed", "id": u.id, "player": pid})
+
+
+func _cmd_unpack(pid: int, uid: int) -> void:
+	var u: SimEntity = by_id.get(uid)
+	if u == null or not u.alive or u.owner != pid or not u.def.has("despliega_en"):
+		return
+	var kind: String = u.def["despliega_en"]
+	var tam: Array = dp(pid).edificios[kind]["tam"]
+	var tx: int = u.x / P - int(tam[0]) / 2
+	var ty: int = u.y / P - int(tam[1]) / 2
+	if not can_place(kind, tx, ty, pid):
+		_notify(pid, "No hay lugar parejo para armar la corte")
+		return
+	var ratio := u.hp * 100 / u.hp_max
+	var was_capital := u.capital
+	_kill(u)
+	var b := spawn_building(kind, pid, tx, ty, true)
+	b.hp = maxi(1, b.hp_max * ratio / 100)
+	b.capital = was_capital
+	events.append({"t": "built", "id": b.id, "player": pid})
 
 
 func _cmd_garrison(_pid: int, units: Array[SimEntity], bid: int) -> void:
@@ -505,6 +563,8 @@ func step() -> void:
 		elif e.is_building():
 			_update_building(e)
 	_separate()
+	if tick % 10 == 0:
+		mods.tick_second()
 	var every: int = data.reglas["niebla_cada_ticks"]
 	for pid in players.size():
 		if (tick + pid) % every == 0:
@@ -697,18 +757,58 @@ func _do_gather(e: SimEntity) -> void:
 	e.anchored = true
 	if t.is_building():
 		t.farmer = e.id
-	var rate_key: String = "granja" if t.is_building() else kind
-	var rate: int = int(e.def["tasa"].get(rate_key, 0)) * (100 + mod(e.owner, "tasa:" + rate_key)) / 100
+	var rate_key: String = String(t.def.get("tasa_clave", "granja")) if t.is_building() else kind
+	var rate: int = int(e.def["tasa"].get(rate_key, e.def["tasa"].get("granja", 0))) * (100 + mod(e.owner, "tasa:" + rate_key) + _site_bonus(t)) / 100
 	e.carry_res = kind
 	e.gather_acc += rate * tick_ms / 1000
 	while e.gather_acc >= 1000 and e.carry < cap:
 		e.gather_acc -= 1000
 		e.carry += 1
-		if t.is_resource():
+		if t.is_resource() or t.def.has("cantidad"):
 			t.amount -= 1
 			if t.amount <= 0:
-				_kill(t)
+				_exhaust(t)
 				break
+
+
+## Bonificación por sitio de una granja: ladera (andenes) o agua cercana (arrozales).
+func _site_bonus(t: SimEntity) -> int:
+	if not t.is_building():
+		return 0
+	var bonus := 0
+	if t.def.has("bono_ladera_pct"):
+		for yy in range(t.ty, t.ty + t.h):
+			for xx in range(t.tx, t.tx + t.w):
+				if map.is_slope(xx, yy) or map.h_at(xx, yy) > 0:
+					return int(t.def["bono_ladera_pct"])
+	if t.def.has("bono_agua_pct") and _near_water(t.tx, t.ty, t.w, t.h, 2):
+		bonus += int(t.def["bono_agua_pct"])
+	return bonus
+
+
+func _near_water(tx: int, ty: int, w: int, h: int, r: int) -> bool:
+	for yy in range(ty - r, ty + h + r):
+		for xx in range(tx - r, tx + w + r):
+			if map.is_water(xx, yy):
+				return true
+	return false
+
+
+## Fuente agotada. Una chacra de roza deja otra fuente en su lugar (sucesión del monte).
+func _exhaust(t: SimEntity) -> void:
+	var leaves: String = t.def.get("deja", "")
+	var tx := t.tx
+	var ty := t.ty
+	_kill(t)
+	if leaves != "" and data.recursos.has(leaves):
+		spawn_resource(leaves, tx, ty)
+		events.append({"t": "succession", "x": tx, "y": ty, "type": leaves})
+
+
+## Aparece una unidad junto a un edificio (acogida, liberación, refuerzos).
+func spawn_near(b: SimEntity, type: String, owner: int = -2) -> SimEntity:
+	var tile := _spawn_tile(b)
+	return spawn_unit(type, b.owner if owner == -2 else owner, tile.x * P + P / 2, tile.y * P + P / 2)
 
 
 func _do_return(e: SimEntity) -> void:
@@ -759,7 +859,7 @@ func _do_build(e: SimEntity) -> void:
 	e.anchored = true
 	if b.built:
 		# Reparación: a la velocidad de construcción, sin costo en H1.
-		var t_rep: int = maxi(1, data.build_time_of(b.type, 1))
+		var t_rep: int = maxi(1, dp(b.owner).build_time_of(b.type, 1))
 		b.hp = mini(b.hp_max, b.hp + maxi(1, b.hp_max * tick_ms / t_rep))
 		return
 	if b.build_time <= 0:
@@ -768,10 +868,7 @@ func _do_build(e: SimEntity) -> void:
 	# La vida sube en proporción exacta al progreso; el daño recibido se conserva.
 	# Rendimiento decreciente (P-006): con n constructores la obra tarda tiempo × 3/(n+2).
 	b.workers_now += 1
-	var step_ms := tick_ms
-	if data.reglas["construccion_decreciente"]:
-		var nb := maxi(1, b.workers_prev)
-		step_ms = tick_ms * (nb + 2) / (3 * nb)
+	var step_ms := mods.build_step(b, maxi(1, b.workers_prev))
 	var before := (b.hp_max - 1) * b.progress / b.build_time
 	b.progress = mini(b.build_time, b.progress + step_ms)
 	var after := (b.hp_max - 1) * b.progress / b.build_time
@@ -787,7 +884,7 @@ func _complete(b: SimEntity) -> void:
 	_apply_stats(b)
 	if b.def.get("avanza_edad", false):
 		var p := players[b.owner]
-		p["age"] = mini(data.edades.size(), p["age"] + 1)
+		p["age"] = mini(dp(b.owner).edades.size(), p["age"] + 1)
 		_apply_effects(b.owner, b.def.get("efectos", []))
 		events.append({"t": "age", "player": b.owner, "age": p["age"], "hito": b.type})
 
@@ -799,7 +896,7 @@ func _hit(a: SimEntity, t: SimEntity) -> void:
 	else:
 		atk += mod(a.owner, "ataque:" + a.fn)
 	if a.owner >= 0 and (a.is_military() or a.is_building()):
-		var bonus: int = data.edades[players[a.owner]["age"] - 1].get("bono_ataque", 0)
+		var bonus: int = dp(a.owner).edades[players[a.owner]["age"] - 1].get("bono_ataque", 0)
 		atk = atk * (100 + bonus) / 100
 	var mult: int = data.reglas["contadores"].get(a.fn, {}).get(t.fn, 100)
 	var armor: int = int(t.def.get("armadura", 0)) + (mod(t.owner, "armadura:" + t.fn) if t.is_unit() else 0)
@@ -809,7 +906,30 @@ func _hit(a: SimEntity, t: SimEntity) -> void:
 		if dh > 0:
 			atk = atk * (100 + dh * int(data.reglas["bono_altura_pct"])) / 100
 	var dmg := maxi(data.reglas["danio_minimo"], atk * mult / 100 - armor)
+	dmg = mods.damage(a, t, dmg)
 	t.hp -= dmg
+	# Espinas (cerca con estrepes de Palmares): devuelve daño al atacante cuerpo a cuerpo.
+	if t.def.has("espinas") and a.is_unit() and int(a.def.get("alcance", 0)) <= 1500:
+		a.hp -= int(t.def["espinas"])
+		if a.hp <= 0:
+			mods.on_kill(a, t)
+			_kill(a)
+	mods.on_hit(a, t, dmg)
+	# Daño en área (elefantes): una fracción a los enemigos cercanos al objetivo.
+	if a.def.has("area") and t.is_unit():
+		var r: int = a.def["area"]
+		for o in actives:
+			if o != t and o.alive and o.is_unit() and o.inside < 0 and o.owner >= 0 and o.owner != a.owner and absi(o.x - t.x) <= r and absi(o.y - t.y) <= r:
+				o.hp -= maxi(1, dmg * int(a.def.get("area_pct", 50)) / 100)
+				if o.hp <= 0:
+					mods.on_kill(o, a)
+					_kill(o)
+	# Munición limitada (cañón de tacuara): se rompe tras n disparos.
+	if a.def.has("municion"):
+		a.shots += 1
+		if a.shots >= int(a.def["municion"]):
+			a.hp = 0
+			_kill(a)
 	var ranged: bool = a.def.get("alcance", 0) > 1500
 	events.append({"t": "hit", "a": a.id, "b": t.id, "ranged": ranged, "dmg": dmg})
 	if t.owner >= 0:
@@ -824,6 +944,7 @@ func _hit(a: SimEntity, t: SimEntity) -> void:
 			players[t.owner]["stats"]["muertes"] += 1
 		if a.owner >= 0:
 			players[a.owner]["stats"]["bajas"] += 1
+		mods.on_kill(t, a)
 		_kill(t)
 
 
@@ -836,6 +957,7 @@ func _kill(e: SimEntity) -> void:
 	if e.is_building() or e.is_resource():
 		map.clear(e.tx, e.ty, e.w, e.h)
 	if e.is_building():
+		mods.on_building_removed(e)
 		_eject(e)
 		for item in e.queue:
 			if item.begins_with("@"):
@@ -868,12 +990,12 @@ func _update_building(b: SimEntity) -> void:
 		var item: String = b.queue[0]
 		var p := players[b.owner]
 		var is_tech := item.begins_with("@")
-		if not is_tech and b.queue_progress == 0 and p["pop"] + int(data.unidades[item].get("pob", 1)) > p["pop_cap"]:
+		if not is_tech and b.queue_progress == 0 and p["pop"] + int(dp(b.owner).unidades[item].get("pob", 1)) > p["pop_cap"]:
 			if (tick + b.id) % 100 == 0:
 				_notify(b.owner, "Población llena")
 		else:
-			b.queue_progress += tick_ms
-			if b.queue_progress >= data.queue_time(item):
+			b.queue_progress += tick_ms * mods.production_pct(b) / 100
+			if b.queue_progress >= dp(b.owner).queue_time(item):
 				b.queue.remove_at(0)
 				b.queue_progress = 0
 				if is_tech:
@@ -902,7 +1024,7 @@ func _finish_tech(pid: int, tech: String) -> void:
 	var p := players[pid]
 	p["pending"].erase(tech)
 	p["techs"][tech] = true
-	_apply_effects(pid, data.tecnologias[tech]["efectos"])
+	_apply_effects(pid, dp(pid).tecnologias[tech]["efectos"])
 	events.append({"t": "tech", "player": pid, "tech": tech})
 
 
@@ -995,13 +1117,14 @@ func _step_toward(e: SimEntity, px: int, py: int) -> bool:
 		return true
 	var nx := px
 	var ny := py
-	if d > e.speed:
-		nx = e.x + dx * e.speed / d
-		ny = e.y + dy * e.speed / d
+	var spd := mods.speed(e)
+	if d > spd:
+		nx = e.x + dx * spd / d
+		ny = e.y + dy * spd / d
 	var moved := _try_move(e, nx, ny)
 	if moved == 2:
 		e.stuck = 0
-		return d <= e.speed
+		return d <= spd
 	if moved == 0:
 		e.stuck += 1
 	return false
@@ -1108,6 +1231,8 @@ func find_enemy(e: SimEntity, radius: int, units_only: bool) -> SimEntity:
 				if units_only and not o.is_unit():
 					continue
 				if buildings_only and not o.is_building():
+					continue
+				if mods.is_hidden_now(o) and not mods.detected_by(o, e.owner):
 					continue
 				var d := dist_to(e, o)
 				if d > radius:
@@ -1265,12 +1390,25 @@ func _refund(pid: int, cost: Dictionary) -> void:
 
 
 func can_place(type: String, tx: int, ty: int, pid: int = -1) -> bool:
-	var tam: Array = data.edificios[type]["tam"]
+	if not dp(pid).edificios.has(type):
+		return false
+	var tam: Array = dp(pid).edificios[type]["tam"]
 	if tx < 0 or ty < 0 or tx + tam[0] > map.n or ty + tam[1] > map.n:
 		return false
-	if data.edificios[type].get("puerta", false) and _own_wall_at(tx, ty, pid) != null:
+	if dp(pid).edificios[type].get("puerta", false) and _own_wall_at(tx, ty, pid) != null:
 		return true
-	return map.is_free_rect(tx, ty, tam[0], tam[1]) and map.is_flat(tx, ty, tam[0], tam[1])
+	var def: Dictionary = dp(pid).edificios.get(type, data.edificios.get(type, {}))
+	if not map.is_free_rect(tx, ty, tam[0], tam[1]):
+		return false
+	if def.get("requiere_agua", false) and not _near_water(tx, ty, tam[0], tam[1], 2):
+		return false
+	if def.get("permite_ladera", false):
+		for yy in range(ty, ty + tam[1]):
+			for xx in range(tx, tx + tam[0]):
+				if map.is_water(xx, yy):
+					return false
+		return true
+	return map.is_flat(tx, ty, tam[0], tam[1])
 
 
 ## Empalizada propia en la casilla (una puerta puede reemplazarla).
@@ -1282,7 +1420,7 @@ func _own_wall_at(tx: int, ty: int, pid: int) -> SimEntity:
 
 
 func _replace_wall(type: String, tx: int, ty: int, pid: int) -> void:
-	if not data.edificios[type].get("puerta", false):
+	if not dp(pid).edificios[type].get("puerta", false):
 		return
 	var w := _own_wall_at(tx, ty, pid)
 	if w != null:
@@ -1291,10 +1429,10 @@ func _replace_wall(type: String, tx: int, ty: int, pid: int) -> void:
 
 ## Construcción en línea (empalizadas): un cimiento por casilla; los aldeanos siguen de uno al siguiente.
 func _cmd_build_line(pid: int, units: Array[SimEntity], type: String, tiles: Array) -> void:
-	var def: Dictionary = data.edificios.get(type, {})
+	var def: Dictionary = dp(pid).edificios.get(type, {})
 	if not def.get("linea", false):
 		return
-	var cost := data.cost_of(type, players[pid]["age"])
+	var cost := dp(pid).cost_of(type, players[pid]["age"])
 	var first: SimEntity = null
 	var placed := 0
 	for t in tiles:
@@ -1338,7 +1476,7 @@ func _check_victory() -> void:
 	has_hito.resize(players.size())
 	has_hito.fill(false)
 	for b in actives:
-		if b.alive and b.is_building() and b.owner >= 0 and b.built and (b.def.get("hito", false) or b.capital):
+		if b.alive and b.is_building() and b.owner >= 0 and b.built and (b.def.get("hito", false) or b.capital or b.def.get("cuenta_victoria", false)):
 			has_hito[b.owner] = true
 	for p in players:
 		if not p["defeated"] and not has_hito[p["id"]]:
@@ -1378,7 +1516,7 @@ func _new_entity(cat: int, type: String, owner: int, def: Dictionary) -> SimEnti
 
 
 func spawn_unit(type: String, owner: int, x: int, y: int) -> SimEntity:
-	var def: Dictionary = data.unidades[type]
+	var def: Dictionary = dp(owner).unidades[type]
 	var e := _new_entity(SimEntity.Cat.UNIT, type, owner, def)
 	e.x = x
 	e.y = y
@@ -1392,7 +1530,7 @@ func spawn_unit(type: String, owner: int, x: int, y: int) -> SimEntity:
 
 
 func spawn_building(type: String, owner: int, tx: int, ty: int, built: bool) -> SimEntity:
-	var def: Dictionary = data.edificios[type]
+	var def: Dictionary = dp(owner).edificios[type]
 	var e := _new_entity(SimEntity.Cat.BUILDING, type, owner, def)
 	e.tx = tx
 	e.ty = ty
@@ -1404,8 +1542,11 @@ func spawn_building(type: String, owner: int, tx: int, ty: int, built: bool) -> 
 	_apply_stats(e)
 	e.built = built
 	e.hp = e.hp_max if built else 1
-	e.build_time = data.build_time_of(type, players[owner]["age"]) if owner >= 0 else 0
+	e.build_time = dp(owner).build_time_of(type, players[owner]["age"]) if owner >= 0 else 0
 	map.mark(tx, ty, e.w, e.h, e.id, not def.get("transitable", false), owner if def.get("puerta", false) else -1)
+	if def.has("cantidad"):
+		e.amount = def["cantidad"]
+	mods.on_building_placed(e)
 	return e
 
 
@@ -1440,8 +1581,11 @@ func _generate_map() -> void:
 	_generate_terrain()
 	for pid in players.size():
 		var base := bases[pid % 2]
-		spawn_building("centro", pid, base.x, base.y, true).capital = true
-		var count: int = data.reglas["aldeanos_iniciales"]
+		var dd := dp(pid)
+		var start: String = dd.civ.get("inicio_edificio", "centro")
+		var sb := spawn_building(start, pid, base.x, base.y, true)
+		sb.capital = true
+		var count: int = dd.civ.get("aldeanos_iniciales", data.reglas["aldeanos_iniciales"])
 		for i in count:
 			var ux := (base.x + i % 3 + (5 if pid == 0 else -2)) * P + P / 2
 			var uy := (base.y + i / 3 + (1 if pid == 0 else 1)) * P + P / 2
@@ -1449,7 +1593,7 @@ func _generate_map() -> void:
 		for i in int(data.reglas["exploradores_iniciales"]):
 			var sx := (base.x + (5 if pid == 0 else -2)) * P + P / 2
 			var sy := (base.y + 4 + i) * P + P / 2
-			spawn_unit("explorador", pid, sx, sy)
+			spawn_unit(dd.civ.get("explorador", "explorador"), pid, sx, sy)
 
 	var c0 := Vector2i(b0.x + 2, b0.y + 2) # centro de la base 0
 	var dirs: Array[Vector2i] = [Vector2i(1, 0), Vector2i(1, 1), Vector2i(0, 1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1), Vector2i(0, -1), Vector2i(1, -1)]
