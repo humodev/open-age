@@ -34,6 +34,9 @@ var _dialog_who: Label
 var _dialog_text: Label
 var _dialog_queue: Array[Dictionary] = []
 var _dialog_t := 0.0
+# --- ficha ---
+var ficha: Ficha
+# --- fin ficha ---
 
 
 static func load_fonts() -> void:
@@ -102,6 +105,11 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 	_tip.hud = self
 	_tip.visible = false
 	add_child(_tip)
+	# --- ficha ---
+	ficha = Ficha.new()
+	ficha.setup(self)
+	add_child(ficha)
+	# --- fin ficha ---
 
 	_notice = Label.new()
 	_anchor(_notice, Vector2(0.5, 0), Rect2(-400, 74, 800, 60))
@@ -323,6 +331,14 @@ func toggle_menu() -> void:
 
 
 func show_tip(cmd: Dictionary, anchor: Rect2) -> void:
+	# --- ficha ---
+	if ficha != null and Ficha.handles(cmd):
+		_tip.visible = false
+		ficha.show_command(cmd, anchor)
+		return
+	if ficha != null:
+		ficha.hide_command()
+	# --- fin ficha ---
 	_tip.set("cmd", cmd)
 	_tip.visible = true
 	var sz: Vector2 = _tip.call("measure")
@@ -333,6 +349,10 @@ func show_tip(cmd: Dictionary, anchor: Rect2) -> void:
 
 func hide_tip() -> void:
 	_tip.visible = false
+	# --- ficha ---
+	if ficha != null:
+		ficha.hide_command()
+	# --- fin ficha ---
 
 
 func _process(delta: float) -> void:
@@ -734,6 +754,7 @@ class SelectionPanel:
 
 	func _draw() -> void:
 		_hits.clear()
+		hud.ficha.zones_begin(self) # --- ficha ---
 		draw_style_box(Hud.panel_box(), Rect2(Vector2.ZERO, size))
 		var sel := hud.ctrl.selected_entities()
 		if sel.is_empty():
@@ -752,6 +773,7 @@ class SelectionPanel:
 		sb.border_color = Color(team, 0.7) if e.owner >= 0 else Palette.UI_LINE
 		sb.set_border_width_all(1)
 		draw_style_box(sb, r)
+		hud.ficha.zone(self, r, {"id": e.id}) # --- ficha ---
 		var icon := Glyphs.resolve(e.def, e.type) if not e.is_resource() else e.res_kind
 		var col: Color = Palette.UI_TEXT if not e.is_resource() else Palette.RES[e.res_kind]
 		Glyphs.draw(self, icon, r.grow(-18), col)
@@ -818,6 +840,7 @@ class SelectionPanel:
 				sb.bg_color = Color(1, 1, 1, 0.08 if i < e.queue.size() else 0.03)
 				draw_style_box(sb, r)
 				if i < e.queue.size():
+					hud.ficha.zone(self, r, {"type": e.queue[i].trim_prefix("@"), "owner": e.owner}) # --- ficha ---
 					Glyphs.draw(self, hud.queue_icon(e.queue[i]), r.grow(-9), Palette.UI_ACCENT if e.queue[i].begins_with("@") else Palette.UI_TEXT)
 					if i == 0:
 						var k := float(e.queue_progress) / float(sim.dp(e.owner).queue_time(e.queue[0]))
@@ -869,6 +892,7 @@ class SelectionPanel:
 			sb.border_color = Color(1, 1, 1, 0.08)
 			sb.set_border_width_all(1)
 			draw_style_box(sb, r)
+			hud.ficha.zone(self, r, {"id": (list[0] as SimEntity).id, "n": list.size()}) # --- ficha ---
 			Glyphs.draw(self, Glyphs.resolve((list[0] as SimEntity).def, type), r.grow(-12), Palette.UI_TEXT)
 			draw_string(Hud.font_b, r.position + Vector2(0, r.size.y - 6), str(list.size()), HORIZONTAL_ALIGNMENT_RIGHT, r.size.x - 6, 16, Palette.UI_ACCENT)
 			var hp := 0
