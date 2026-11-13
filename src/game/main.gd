@@ -109,6 +109,61 @@ func _build_environment() -> void:
 	var we := WorldEnvironment.new()
 	we.environment = env
 	add_child(we)
+	_sun = sun
+	_fill = fill
+	_env = env
+	_sky_mat = sky_mat
+
+
+# --- ambiente por bioma (etapa 16, paisaje) ---
+# Luz, cielo, niebla y posproceso según el tipo de mapa (data/ambiente.json).
+var _sun: DirectionalLight3D
+var _fill: DirectionalLight3D
+var _env: Environment
+var _sky_mat: ProceduralSkyMaterial
+
+
+func _apply_ambiente(terrain: String) -> void:
+	var a := Ambiente.of(terrain)
+	var so: Dictionary = a["sol"]
+	_sun.rotation_degrees = Vector3(-float(so["altura"]), float(so["rumbo"]), 0)
+	_sun.light_color = Ambiente.col(so["color"])
+	_sun.light_energy = Ambiente.pct(so["energia"])
+	# Sombras suaves: el desenfoque es casi gratis; el tamaño del sol (sombras que se
+	# abren con la distancia, PCSS) cuesta un 25 % de cuadros, así que va en 0.
+	_sun.light_angular_distance = Ambiente.pct(so["tamano"])
+	_sun.shadow_blur = Ambiente.pct(so["desenfoque"])
+	_fill.light_color = Ambiente.col(a["relleno"]["color"])
+	_fill.light_energy = Ambiente.pct(a["relleno"]["energia"])
+	var ci: Dictionary = a["cielo"]
+	_sky_mat.sky_top_color = Ambiente.col(ci["cenit"])
+	_sky_mat.sky_horizon_color = Ambiente.col(ci["horizonte"])
+	_sky_mat.ground_horizon_color = Ambiente.col(ci["suelo"])
+	_sky_mat.ground_bottom_color = Ambiente.col(ci["suelo"]).darkened(0.5)
+	_sky_mat.sun_angle_max = 20.0
+	_env.ambient_light_energy = Ambiente.pct(a["ambiente"])
+	_env.tonemap_exposure = Ambiente.pct(a["exposicion"])
+	_env.adjustment_saturation = Ambiente.pct(a["saturacion"])
+	_env.adjustment_contrast = Ambiente.pct(a["contraste"])
+	# Niebla de distancia: empieza lejos de la cámara y crece suave hasta el horizonte.
+	var ni: Dictionary = a["niebla"]
+	_env.fog_mode = Environment.FOG_MODE_DEPTH
+	_env.fog_light_color = Ambiente.col(ni["color"])
+	_env.fog_density = Ambiente.pct(ni["maxima"])
+	_env.fog_depth_begin = float(ni["desde"])
+	_env.fog_depth_end = float(ni["hasta"])
+	_env.fog_depth_curve = 1.6
+	_env.fog_aerial_perspective = 0.3
+	_env.fog_sky_affect = 0.0
+	# Oclusión ambiental y brillo moderados.
+	_env.ssao_radius = 1.2
+	_env.ssao_intensity = 1.8
+	_env.ssao_power = 1.5
+	_env.ssao_detail = 0.6
+	_env.glow_intensity = 0.3
+	_env.glow_bloom = 0.05
+	_env.glow_hdr_threshold = 1.1
+# --- fin ambiente por bioma ---
 
 
 func _new_game() -> void:
@@ -164,6 +219,7 @@ func _build_scene(aivai: bool) -> void:
 	view.fog_on = not (aivai or _args.has("nofog") or _args.get("demo", "") == "batalla")
 	add_child(view)
 	view.setup(sim, local)
+	_apply_ambiente(sim.terrain) # --- ambiente por bioma ---
 
 	cam = RtsCamera.new()
 	cam.name = "Camera"
