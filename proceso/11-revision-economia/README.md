@@ -31,3 +31,15 @@ Cinco agentes con perfiles distintos. Leen el repositorio sin tocarlo y escriben
    Se les pasó a los perfiles de sistemas económicos, facciones y balance. Cada uno agrega a su documento una sección "Dependencia territorial": qué parte de la riqueza puede ser disputable en cada edad, cómo se remonta al perder el centro y cómo medirlo en el torneo.
 4. Llegó el quinto informe, el de balance, con partidas medidas: a los mapuches no les falta riqueza en la apertura. Pierden en el medio juego por la IA (elige el rewe militar y queda trabada ahorrando) y por la poca vida de sus edificios de victoria. Etiopía, en cambio, tiene un problema de diseño: el gult cuesta alimento justo cuando falta y paga riqueza, que le sobra.
 5. **Síntesis** en [`docs/diseno/revision-economia/00-sintesis.md`](../../docs/diseno/revision-economia/00-sintesis.md): el diagnóstico compartido, el modelo "una riqueza, seis motores", los límites de la dependencia territorial, las discrepancias entre perfiles y el orden de trabajo. Decisiones para el autor: C-10 a C-13 en `CONSULTAS.md`. No se aplicó ningún cambio al juego.
+6. **Observación del autor (2026-11-13)**, después de leer la síntesis explicada sin nombres:
+   > "Siento que hay algunas mecánicas de algunas civs que requieren acción para obtener riqueza, además de poner algo a hacer, como poner a picar, y cuando se acabe la mina ir a picar a otro lado. Es algo diferente tener que estar pendiente de algo, rápidamente. Que una sea tradear ya es un problema, porque tradear van a poder todos: se siente que ellos no tuvieran mecánica."
+
+   Quedan dos criterios nuevos:
+   - el **costo de atención** de cada mecánica tiene que ser parejo entre civs;
+   - una mecánica que pueden hacer todas, como el comercio, **no cuenta como identidad**.
+7. **Fase de investigación** antes de volver al equipo. Tres agentes escriben en [`docs/diseno/investigacion-aoe4/`](../../docs/diseno/investigacion-aoe4/):
+   - **01:** el catálogo de mecánicas económicas de todas las civs de AoE4, con su costo de atención y su historia de parches.
+   - **02:** la voz de los jugadores: foros, Reddit, notas de parche, prensa y creadores.
+   - **03:** otros RTS. AoE2, AoE3 (con los africanos), el favor de Age of Mythology, el macro de StarCraft II, Northgard y Company of Heroes.
+
+   Después, los cinco perfiles revisan sus propuestas con ese material.
