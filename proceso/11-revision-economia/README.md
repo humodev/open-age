@@ -99,3 +99,13 @@ Cinco agentes con perfiles distintos. Leen el repositorio sin tocarlo y escriben
        - fiel a la historia.
 
     Recién entonces se presenta al autor y, si lo aprueba, se implementa.
+12. **Cerró la ronda 2** con el informe de balance ([v2/05](../../docs/diseno/revision-economia/v2/05-balance-y-aperturas.md)):
+    - **Métricas de atención medibles:** pendientes de la mecánica propia, órdenes propias por minuto y decisiones por edad.
+    - **Reglas para lo pasivo:** repago de 5 a 8 minutos y como máximo 0,8 aldeanos por renta.
+    - **Peso del motor propio:** entre 30 y 60 % de la riqueza al minuto 15.
+    - **Medido hoy:** Tawantinsuyu pide 2,2 órdenes por minuto por los caminos, y la mit'a pasa el 43 % del tiempo en el tope.
+13. **Preguntas del autor para la ronda 3:**
+    > "¿Por qué la sal? ¿Estaba disponible en todos estos lugares?"
+    > "Deberían poder jugar en un mapa sin agua e igual tener una estrategia viable; si no, el juego se desarma."
+
+    **Arranca la ronda 3** con la consigna [`v3/00-consigna.md`](../../docs/diseno/revision-economia/v3/00-consigna.md): las diez observaciones del autor, las preguntas A a F y una lista de control de 10 puntos. Primero, un diseñador líder consolida un diseño único con números iniciales.
