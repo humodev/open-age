@@ -11,6 +11,8 @@ const SLOT_LABELS: Array[String] = ["Q", "W", "E", "R", "A", "S", "D", "F", "Z",
 const DEFAULT_SLOTS := {"casa": 0, "granja": 1, "deposito": 2, "cuartel": 3, "torre": 4, "centro": 6, "empalizada": 10, "puerta": 11}
 const RES_LABEL := {"alimento": "alimento", "granja": "granjas", "madera": "madera", "piedra": "piedra", "riqueza": "riqueza", "*": "todos los recursos"}
 
+const MundoColocacion := preload("res://src/game/ui/mundo_colocacion.gd") # --- mundo ---
+
 const DESCS := {
 	"casa": "Aumenta la población máxima.",
 	"granja": "Alimento infinito y lento. Un aldeano por granja.",
@@ -59,6 +61,9 @@ var _last_click_id := -1
 var _idle_cycle := 0
 var _last_group_key := -1
 var _last_group_ms := 0
+# --- mundo ---
+var cola: RefCounted # órdenes en cola con mayúsculas (src/game/ui/mundo_cola.gd)
+# --- fin mundo ---
 
 
 func setup(s: Sim, v: WorldView, c: RtsCamera, local_player: int) -> void:
@@ -266,6 +271,10 @@ func run_command(cmd: Dictionary) -> void:
 					for k in (5 if shift else 1):
 						sim.push_command({"t": "train", "player": local, "building": e.id, "type": cmd["id"]})
 		"stop":
+			# --- mundo ---
+			if cola != null:
+				cola.limpiar(_own_unit_ids())
+			# --- fin mundo ---
 			sim.push_command({"t": "stop", "player": local, "ids": _own_unit_ids()})
 		"research":
 			sim.push_command({"t": "research", "player": local, "building": cmd["building"], "tech": cmd["id"]})
@@ -371,6 +380,14 @@ func _mouse_button(mb: InputEventMouseButton) -> void:
 			return
 		if mode == "amove":
 			var g := cam.ground_at(mb.position)
+			# --- mundo ---
+			if cola != null and Input.is_key_pressed(KEY_SHIFT):
+				cola.orden_amove(_own_unit_ids(), g)
+				view.add_marker(g, Palette.UI_BAD)
+				return
+			if cola != null:
+				cola.limpiar(_own_unit_ids())
+			# --- fin mundo ---
 			sim.push_command({"t": "move", "player": local, "ids": _own_unit_ids(), "x": int(g.x * P), "y": int(g.z * P), "amove": true})
 			view.add_marker(g, Palette.UI_BAD)
 			if not Input.is_key_pressed(KEY_SHIFT):
@@ -468,6 +485,11 @@ func _right_click(pos: Vector2) -> void:
 	var ids := _own_unit_ids()
 	if not ids.is_empty():
 		var t: SimEntity = sim.by_id.get(target)
+		# --- mundo ---
+		if cola != null and cola.orden_derecha(ids, t, g, Input.is_key_pressed(KEY_SHIFT)):
+			view.add_marker(g, Color(Palette.UI_GOOD, 0.6))
+			return
+		# --- fin mundo ---
 		if t != null and t.id not in ids and not (t.is_unit() and t.owner == local):
 			sim.push_command({"t": "target", "player": local, "ids": ids, "target": t.id})
 			var col := Palette.UI_BAD if t.owner >= 0 and t.owner != local else Palette.UI_ACCENT
@@ -487,7 +509,7 @@ func _place() -> void:
 	var tile: Vector2i = _ghost.get_meta("tile", Vector2i(-1, -1))
 	var cost := sim.dp(local).cost_of(place_type, sim.players[local]["age"])
 	if not sim.can_place(place_type, tile.x, tile.y, local):
-		hud_notify("No se puede construir ahí")
+		hud_notify(MundoColocacion.motivo(sim, local, place_type, tile.x, tile.y)) # --- mundo ---
 		return
 	if not sim.can_afford(local, cost):
 		hud_notify("Recursos insuficientes")
