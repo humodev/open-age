@@ -17,3 +17,4 @@ Las preguntas para el autor están en [`CONSULTAS.md`](CONSULTAS.md) y se revisa
 | [09 · Tutorial y prueba de campañas](09-tutorial-y-prueba-de-campanas/README.md) | 2026-11-13 09:30 a 10:00 | Tutorial, campañas jugadas por la IA, corrección de la acogida |
 | [10 · Terreno y mapas](10-terreno-y-mapas/README.md) | 2026-11-13 10:30 a 12:00 | Hecho: suelo con texturas; 11 tipos de mapa; relieve real (Copernicus + OSM) en las 24 misiones; huella aplanada; detalle del suelo; música; escala y velocidad; capitales sin base |
 | [11 · Revisión de la economía](11-revision-economia/README.md) | 2026-11-13 desde 12:00 | En curso: cinco informes y síntesis listos; esperan las decisiones C-10 a C-13 |
+| [12 · Formas de mapa y agua](12-formas-de-mapa-y-agua/README.md) | 2026-11-13 | Hecho: seis formas de agua al azar por tipo de mapa (cruce, lago, costados, anillo, brazos, ninguno), lagunas irregulares, agua con profundidad, corriente y espuma |

@@ -191,6 +191,30 @@ func _build_terrain() -> void:
 		_water_mat = ShaderMaterial.new()
 		_water_mat.shader = preload("res://src/game/shaders/water.gdshader")
 		_water_mat.set_shader_parameter("map_size", float(n))
+		_water_mat.set_shader_parameter("water_tex", _water_texture())
+		var rip := FastNoiseLite.new()
+		rip.noise_type = FastNoiseLite.TYPE_SIMPLEX
+		rip.frequency = 0.035
+		rip.fractal_octaves = 3
+		var rtex := NoiseTexture2D.new()
+		rtex.width = 256
+		rtex.height = 256
+		rtex.seamless = true
+		rtex.as_normal_map = true
+		rtex.bump_strength = 6.0
+		rtex.generate_mipmaps = true
+		rtex.noise = rip
+		_water_mat.set_shader_parameter("ripple", rtex)
+		var fz := FastNoiseLite.new()
+		fz.noise_type = FastNoiseLite.TYPE_CELLULAR
+		fz.frequency = 0.06
+		var ftex := NoiseTexture2D.new()
+		ftex.width = 256
+		ftex.height = 256
+		ftex.seamless = true
+		ftex.generate_mipmaps = true
+		ftex.noise = fz
+		_water_mat.set_shader_parameter("foam_noise", ftex)
 		wmi.material_override = _water_mat
 		wmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		add_child(wmi)
@@ -262,6 +286,36 @@ func _flatten_footprint(e: SimEntity) -> void:
 	for cz in range(c0.y, c1.y + 1):
 		for cx in range(c0.x, c1.x + 1):
 			_rebuild_chunk(cx, cz)
+
+
+## Datos del agua por vértice: R profundidad (0 orilla, 1 hondo), G río (0 lago)
+## y BA dirección de la corriente, tomada del trazo de cada río (docs/10).
+func _water_texture() -> ImageTexture:
+	var map := sim.map
+	var vn := _vn
+	var flow := {} # casilla -> Vector2
+	for path: Array in sim.rivers:
+		for i in path.size():
+			var a: Vector2i = path[maxi(0, i - 2)]
+			var b: Vector2i = path[mini(path.size() - 1, i + 2)]
+			var dir := Vector2(b - a).normalized()
+			var p: Vector2i = path[i]
+			for dy in range(-4, 5):
+				for dx in range(-4, 5):
+					var t := p + Vector2i(dx, dy)
+					if not flow.has(t):
+						flow[t] = dir
+	var img := Image.create(vn, vn, false, Image.FORMAT_RGBA8)
+	for j in vn:
+		for i in vn:
+			var wet := false
+			for d in [Vector2i(-1, -1), Vector2i(0, -1), Vector2i(-1, 0), Vector2i(0, 0)]:
+				if map.is_water(i + d.x, j + d.y):
+					wet = true
+			var depth := clampf((-0.18 - _vh[j * vn + i]) / 0.7, 0.0, 1.0) if wet else 0.0
+			var f: Vector2 = flow.get(Vector2i(i, j), Vector2.ZERO)
+			img.set_pixel(i, j, Color(depth, 1.0 if flow.has(Vector2i(i, j)) else 0.0, f.x * 0.5 + 0.5, f.y * 0.5 + 0.5))
+	return ImageTexture.create_from_image(img)
 
 
 ## Mezcla del suelo: R tierra pisada, G barro, B pasto seco (docs/10).

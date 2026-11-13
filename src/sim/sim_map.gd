@@ -158,12 +158,12 @@ func set_water(tx: int, ty: int, kind: int) -> void:
 	water[idx] = kind
 	height[idx] = 0
 	occupied[idx] = -3
-	if kind == 1:
-		solid[idx] = 1
-		var cell := Vector2i(tx, ty)
-		astar.set_point_solid(cell, true)
-		for a in astars:
-			a.set_point_solid(cell, true)
+	var cell := Vector2i(tx, ty)
+	var block := kind == 1
+	solid[idx] = 1 if block else 0
+	astar.set_point_solid(cell, block)
+	for a in astars:
+		a.set_point_solid(cell, block)
 
 
 ## ¿Huella pareja y en tierra?

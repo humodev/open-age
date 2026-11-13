@@ -27,6 +27,8 @@ var events: Array[Dictionary] = []
 var game_over := false
 var winner := -1
 var terrain := ""
+var water_form := "" # forma del agua elegida (cruce, lago, costados, anillo, brazos)
+var rivers: Array = [] # trazos de río para la imagen; no son estado
 var _opts: Dictionary = {}
 
 var _pending := {} # tick -> Array[Dictionary]
@@ -1838,25 +1840,13 @@ func _generate_terrain() -> void:
 	else:
 		_relief_hills(int(td.get("colinas", 4)), int(td.get("nivel_max", 2)))
 	if td.has("rio"):
-		var rd: Dictionary = td["rio"]
-		_river(0, int(rd.get("ancho", 1)), int(rd.get("vados", 22)))
-		if rd.has("brazos"):
-			_river(int(rd["brazos"]), maxi(1, int(rd.get("ancho", 1)) - 1), maxi(6, int(rd.get("vados", 22)) - 3))
-	var lakes := int(td.get("lagunas", 0))
+		_water_layout(td["rio"])
 	var lr: Array = td.get("laguna_radio", [2, 3])
-	for k in lakes:
+	for k in int(td.get("lagunas", 0)):
 		var c := Vector2i(rng.range_i(10, map.n - 11), rng.range_i(10, map.n - 11))
-		if _near_base(c, 18):
-			continue
-		var r := rng.range_i(int(lr[0]), int(lr[1]))
-		for dy in range(-r, r + 1):
-			for dx in range(-r, r + 1):
-				if dx * dx + dy * dy <= r * r + rng.range_i(0, r) - r / 2:
-					var t := c + Vector2i(dx, dy)
-					var m := _mirror(t, 1, 1)
-					if map.in_bounds(t.x, t.y) and not _near_base(t, 13) and not _near_base(m, 13):
-						map.set_water(t.x, t.y, 1)
-						map.set_water(m.x, m.y, 1)
+		if not _near_base(c, 18):
+			_lake_blob(c, rng.range_i(int(lr[0]), int(lr[1])))
+	_ensure_crossings()
 
 
 ## Colinas redondas en mesetas de nivel 1..top (mapas clásicos).
@@ -1979,33 +1969,225 @@ static func _lattice(x: int, y: int, sd: int) -> int:
 
 
 ## Río por la antidiagonal (que la simetría deja fija), corrido `shift` casillas.
-func _river(shift: int, width: int, ford_every: int) -> void:
+## Forma del agua, elegida al azar entre las del tipo de mapa (como los mapas
+## de AoE4: la misma idea con otra forma en cada semilla). Todo respeta la
+## simetría puntual porque cada casilla se pinta junto con su espejo.
+func _water_layout(rd: Dictionary) -> void:
+	var forms: Array = rd.get("formas", ["cruce"])
+	water_form = str(forms[rng.range_i(0, forms.size() - 1)])
+	var w := int(rd.get("ancho", 1))
+	var fe := int(rd.get("vados", 22))
+	match water_form:
+		"cruce":
+			_river_through_center(w, fe, false)
+		"lago":
+			_river_through_center(w, fe, true)
+		"costados":
+			_side_river(w, fe)
+		"anillo":
+			_moat(w)
+		"ninguno":
+			pass
+		"brazos":
+			_river_through_center(w, fe, false)
+			_river_parallel(int(rd.get("brazos", 15)), maxi(1, w - 1), maxi(6, fe - 3))
+
+
+## Río que pasa por el centro con un ángulo al azar y meandros suaves. Se
+## dibuja solo la mitad; el espejo completa la otra.
+func _river_through_center(w: int, fe: int, lake: bool) -> void:
+	var n := map.n
+	var dirs: Array[Vector2i] = [Vector2i(1, -1), Vector2i(2, -1), Vector2i(1, -2), Vector2i(1, 0), Vector2i(0, 1)]
+	var d := dirs[rng.range_i(0, dirs.size() - 1)]
+	var m := maxi(absi(d.x), absi(d.y))
+	var perp := Vector2i(-d.y, d.x)
+	var c := Vector2i(n / 2, n / 2)
+	var lake_r := 0
+	if lake:
+		lake_r = rng.range_i(9, 13)
+		_lake_blob(c, lake_r)
+	var off := 0 # desvío lateral en décimas de casilla
+	var vel := 0
+	var path: Array[Vector2i] = []
+	var k := 0
+	while k < n:
+		var p := c + Vector2i(d.x * k / m, d.y * k / m) + Vector2i(perp.x * off / (10 * m), perp.y * off / (10 * m))
+		if not map.in_bounds(p.x, p.y):
+			break
+		path.append(p)
+		_paint_river(p, w, k > lake_r and (k % fe) < 3)
+		if rng.range_i(0, 2) == 0:
+			vel = clampi(vel + rng.range_i(-2, 2), -6, 6)
+		off = clampi(off + vel, -90, 90)
+		k += 1
+	_record_river(path)
+
+
+## Ríos a los costados: cada uno encierra una esquina sin base, con sus
+## recursos detrás. El espejo pone el otro en la esquina opuesta.
+func _side_river(w: int, fe: int) -> void:
+	var n := map.n
+	var a := Vector2i(rng.range_i(n * 50 / 100, n * 70 / 100), -2)
+	var b := Vector2i(n + 1, rng.range_i(n * 30 / 100, n * 50 / 100))
+	_record_river(_meander(a, b, w, fe, 0))
+
+
+## Traza un río de `a` a `b` con meandros (desvío lateral con inercia) y lo pinta.
+func _meander(a: Vector2i, b: Vector2i, w: int, fe: int, no_ford_until: int) -> Array[Vector2i]:
+	var d := b - a
+	var m := maxi(absi(d.x), absi(d.y))
+	var perp := Vector2i(-d.y, d.x)
+	var plen := maxi(1, maxi(absi(perp.x), absi(perp.y)))
+	var off := 0 # décimas de casilla
+	var vel := 0
+	var path: Array[Vector2i] = []
+	for k in m + 1:
+		# El desvío se apaga en los extremos para que el río llegue a su destino.
+		var lim := mini(140, mini(k, m - k) * 12)
+		var p := a + Vector2i(d.x * k / m, d.y * k / m) + Vector2i(perp.x * off / (10 * plen), perp.y * off / (10 * plen))
+		if map.in_bounds(p.x, p.y):
+			path.append(p)
+			_paint_river(p, w, k > no_ford_until and (k % fe) < 3)
+		if rng.range_i(0, 1) == 0:
+			vel = clampi(vel + rng.range_i(-3, 3), -9, 9)
+		off = clampi(off + vel, -lim, lim)
+	return path
+
+
+## Foso en anillo alrededor de una loma central, con cuatro vados.
+func _moat(w: int) -> void:
+	var n := map.n
+	var c := Vector2i(n / 2, n / 2)
+	var r := rng.range_i(13, 17)
+	for ty in range(c.y - r - w - 2, c.y + r + w + 3):
+		for tx in range(c.x - r - w - 2, c.x + r + w + 3):
+			var dx := tx - c.x
+			var dy := ty - c.y
+			var d2 := dx * dx + dy * dy
+			var t := Vector2i(tx, ty)
+			if d2 < r * r:
+				if map.in_bounds(tx, ty) and not map.is_water(tx, ty):
+					map.height[ty * n + tx] = maxi(map.height[ty * n + tx], 1)
+				continue
+			if d2 > (r + w + 1) * (r + w + 1):
+				continue
+			var ford := absi(dx) <= 1 or absi(dy) <= 1
+			_set_water_sym(t, 2 if ford else 1)
+
+
+## Brazo paralelo al río central (deltas).
+func _river_parallel(shift: int, width: int, fe: int) -> void:
 	var n := map.n
 	var off := 0
-	for i in range(0, n / 2 + 1 if shift == 0 else n + shift):
+	var path: Array[Vector2i] = []
+	for i in range(0, n + shift):
 		if rng.range_i(0, 3) == 0:
 			off = clampi(off + rng.range_i(-1, 1), -6, 6)
-		var x := i + off + shift
-		var y := n - 1 - i + off + shift
-		for w in range(-width, width + 1):
-			for d in [Vector2i(w, 0), Vector2i(0, w)]:
-				var t: Vector2i = Vector2i(x, y) + d
-				var m := _mirror(t, 1, 1)
-				if not map.in_bounds(t.x, t.y) or _near_base(t, 12) or _near_base(m, 12):
-					continue
-				var kind := 2 if (i % ford_every) < 3 else 1
-				map.set_water(t.x, t.y, kind)
-				map.set_water(m.x, m.y, kind)
-		# El río baja el terreno a su alrededor: cauce llano y barranca escalonada.
-		for dy in range(-width - 4, width + 5):
-			for dx in range(-width - 4, width + 5):
-				var t := Vector2i(x + dx, y + dy)
-				if not map.in_bounds(t.x, t.y):
-					continue
-				var cap := 0 if maxi(absi(dx), absi(dy)) <= width + 2 else 1
-				var m := _mirror(t, 1, 1)
-				map.height[t.y * n + t.x] = mini(map.height[t.y * n + t.x], cap)
-				map.height[m.y * n + m.x] = mini(map.height[m.y * n + m.x], cap)
+		var p := Vector2i(i + off + shift, n - 1 - i + off + shift)
+		if map.in_bounds(p.x, p.y):
+			path.append(p)
+		_paint_river(p, width, (i % fe) < 3)
+	_record_river(path)
+
+
+## Pincel de río: agua (o vado) y cauce rebajado alrededor. Un vado nunca
+## vuelve a ser agua profunda, así el paso queda entero.
+func _paint_river(p: Vector2i, width: int, ford: bool) -> void:
+	var n := map.n
+	for dy in range(-width, width + 1):
+		for dx in range(-width, width + 1):
+			if absi(dx) + absi(dy) > width + 1:
+				continue
+			var t := p + Vector2i(dx, dy)
+			if not map.in_bounds(t.x, t.y):
+				continue
+			var cur := map.water[t.y * n + t.x]
+			if cur == 2 or (cur == 1 and not ford):
+				continue
+			_set_water_sym(t, 2 if ford else 1)
+	for dy in range(-width - 4, width + 5):
+		for dx in range(-width - 4, width + 5):
+			var t := p + Vector2i(dx, dy)
+			if not map.in_bounds(t.x, t.y):
+				continue
+			var cap := 0 if maxi(absi(dx), absi(dy)) <= width + 2 else 1
+			var m := _mirror(t, 1, 1)
+			map.height[t.y * n + t.x] = mini(map.height[t.y * n + t.x], cap)
+			map.height[m.y * n + m.x] = mini(map.height[m.y * n + m.x], cap)
+
+
+func _set_water_sym(t: Vector2i, kind: int) -> void:
+	var m := _mirror(t, 1, 1)
+	if not map.in_bounds(t.x, t.y) or _near_base(t, 12) or _near_base(m, 12):
+		return
+	map.set_water(t.x, t.y, kind)
+	map.set_water(m.x, m.y, kind)
+
+
+## Laguna de borde irregular (ruido de valor), con su espejo.
+func _lake_blob(c: Vector2i, r: int) -> void:
+	var sd := rng.range_i(1, 1 << 20)
+	var e := r + r / 2 + 1
+	for dy in range(-e, e + 1):
+		for dx in range(-e, e + 1):
+			var t := c + Vector2i(dx, dy)
+			var rr := r * 10 + (_vnoise(t.x, t.y, 5, sd) - 500) * r * 9 / 1000 # décimas: borde con entrantes
+			if (dx * dx + dy * dy) * 100 <= rr * rr:
+				if not _near_base(t, 13) and not _near_base(_mirror(t, 1, 1), 13):
+					_set_water_sym(t, 1)
+
+
+## Trazo del río para la imagen (dirección de la corriente). No es estado.
+func _record_river(path: Array[Vector2i]) -> void:
+	if path.size() < 2:
+		return
+	# La mitad espejada va al revés, así la corriente sigue un solo sentido
+	# en los ríos que cruzan por el centro.
+	var mp: Array[Vector2i] = []
+	for i in range(path.size() - 1, -1, -1):
+		mp.append(_mirror(path[i], 1, 1))
+	rivers.append(mp + path if path[0].distance_squared_to(Vector2i(map.n / 2, map.n / 2)) < 9 else path)
+	if path[0].distance_squared_to(Vector2i(map.n / 2, map.n / 2)) >= 9:
+		rivers.append(mp)
+
+
+## Si el agua deja una base aislada, agrega vados en franjas (simétricas)
+## hasta que haya paso.
+func _ensure_crossings() -> void:
+	var n := map.n
+	if players.size() < 2:
+		return
+	for step in [12, 8, 5, 3]:
+		if _bases_connected():
+			return
+		for ty in n:
+			for tx in n:
+				if map.water[ty * n + tx] == 1 and (tx % step == 0 or ty % step == 0):
+					var t := Vector2i(tx, ty)
+					var m := _mirror(t, 1, 1)
+					map.set_water(t.x, t.y, 2)
+					map.set_water(m.x, m.y, 2)
+
+
+func _bases_connected() -> bool:
+	var n := map.n
+	var a := bases[0] + Vector2i(2, 2)
+	var seen := PackedByteArray()
+	seen.resize(n * n)
+	var stack: Array[Vector2i] = [a]
+	seen[a.y * n + a.x] = 1
+	while not stack.is_empty():
+		var p: Vector2i = stack.pop_back()
+		for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			var q: Vector2i = p + d
+			if map.in_bounds(q.x, q.y) and seen[q.y * n + q.x] == 0 and map.water[q.y * n + q.x] != 1:
+				seen[q.y * n + q.x] = 1
+				stack.append(q)
+	for i in range(1, mini(players.size(), bases.size())):
+		var b := bases[i] + Vector2i(2, 2)
+		if seen[b.y * n + b.x] == 0:
+			return false
+	return true
 
 
 # ---------------------------------------------------------------- Hash
