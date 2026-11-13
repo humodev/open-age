@@ -327,10 +327,106 @@ static func foundation_mesh(w: int, h: int) -> ArrayMesh:
 
 # ---------------------------------------------------------------- Recursos
 
+## Modelos del paisaje generados con Meshy (tools/generar_naturaleza.py, proceso/16-paisaje).
+## nombre: [alto máximo, ancho máximo, hundido en metros, estirado vertical]; se escala para
+## entrar en los dos. La arcilla se estira para que las vasijas se lean desde la cámara del juego.
+const NATURE := {
+	"pino": [2.1, 1.3, 0.06], "latifoliada": [1.9, 1.7, 0.06], "araucaria": [2.4, 1.7, 0.06],
+	"palmera": [2.3, 1.7, 0.06], "copa_plana": [1.6, 1.9, 0.06], "arbusto": [0.7, 1.05, 0.04],
+	"roca": [1.2, 2.0, 0.1], "arcilla": [1.4, 2.1, 0.06, 1.6], "penasco": [1.3, 1.25, 0.05], "yerbal": [1.9, 2.9, 0.08],
+}
+## Ajuste de color por modelo sobre la textura (la latifoliada sale muy clara, la arcilla muy saturada).
+const NATURE_TINT := {"latifoliada": Color(0.9, 0.95, 0.9), "arbusto": Color(1.15, 1.15, 1.1), "arcilla": Color(0.88, 0.84, 0.84)}
+const TREE_MODELS := ["pino", "latifoliada", "araucaria", "palmera", "copa_plana"] # índice = especie de reglas.json
+const RESOURCE_MODELS := {"roca": "roca", "riqueza": "arcilla", "penasco": "penasco", "yerbal": "yerbal"}
+
+
+## Malla de un modelo del paisaje, ya escalada, centrada y apoyada en y = 0, con material
+## mate y niveles de detalle. null si el GLB no está (quedan los procedurales).
+static func nature_mesh(name: String) -> ArrayMesh:
+	var key := "nat_" + name
+	if _cache.has(key):
+		return _cache[key]
+	_cache[key] = null
+	var path := "res://assets/generados/naturaleza/%s.glb" % name
+	if not NATURE.has(name) or not ResourceLoader.exists(path):
+		return null
+	var root: Node = (load(path) as PackedScene).instantiate()
+	var parts: Array = [] # [malla, transform]
+	_collect_meshes(root, Transform3D.IDENTITY, parts)
+	root.free()
+	if parts.is_empty():
+		return null
+	var box := AABB()
+	for i in parts.size():
+		var b: AABB = parts[i][1] * (parts[i][0] as Mesh).get_aabb()
+		box = b if i == 0 else box.merge(b)
+	var fit: Array = NATURE[name]
+	var k := minf(float(fit[0]) / maxf(box.size.y, 0.001), float(fit[1]) / maxf(maxf(box.size.x, box.size.z), 0.001))
+	var center := box.get_center()
+	var ky := k * (float(fit[3]) if fit.size() > 3 else 1.0)
+	var norm := Transform3D(Basis().scaled(Vector3(k, ky, k)), Vector3(-center.x * k, -box.position.y * ky - float(fit[2]), -center.z * k))
+	var im := ImporterMesh.new()
+	for part in parts:
+		var m: Mesh = part[0]
+		for s in m.get_surface_count():
+			var st := SurfaceTool.new()
+			st.begin(Mesh.PRIMITIVE_TRIANGLES)
+			st.append_from(m, s, norm * (part[1] as Transform3D))
+			im.add_surface(Mesh.PRIMITIVE_TRIANGLES, st.commit_to_arrays(), [], {}, _nature_mat(m.surface_get_material(s), NATURE_TINT.get(name, Color(1.04, 1.03, 1.0))))
+	if name == "arbusto":
+		# Bayas bien visibles: es alimento y desde la cámara del juego el modelo se lee como mata lisa.
+		var berries: Array = []
+		var top := box.size.y * k
+		var rad := maxf(box.size.x, box.size.z) * k * 0.5
+		for i in 11:
+			var a := TAU * i / 11.0 + float(i % 3) * 0.4
+			var ring := 0.55 + float(i % 3) * 0.15
+			var y := top * (0.78 - ring * 0.35) - float(fit[2])
+			berries.append([sphere(0.045, 5), xf(Vector3(cos(a) * rad * ring, y, sin(a) * rad * ring)), Palette.BERRY if i % 4 != 0 else Color("6b3a7a")])
+		var bm := merge(berries)
+		for s in bm.get_surface_count():
+			im.add_surface(Mesh.PRIMITIVE_TRIANGLES, bm.surface_get_arrays(s), [], {}, bm.surface_get_material(s))
+	im.generate_lods(25.0, 60.0, [])
+	var mesh := im.get_mesh()
+	_cache[key] = mesh
+	return mesh
+
+
+static func _collect_meshes(n: Node, xf: Transform3D, out: Array) -> void:
+	var t := xf
+	if n is Node3D:
+		t = xf * (n as Node3D).transform
+	if n is MeshInstance3D and (n as MeshInstance3D).mesh != null:
+		out.append([(n as MeshInstance3D).mesh, t])
+	for c in n.get_children():
+		_collect_meshes(c, t, out)
+
+
+## Mate como los edificios generados, de doble cara (las hojas de Meshy son de una sola) y
+## con el color de instancia como multiplicador, para atenuar en la niebla.
+static func _nature_mat(src: Material, tint: Color) -> StandardMaterial3D:
+	var m := StandardMaterial3D.new()
+	if src is BaseMaterial3D:
+		m.albedo_texture = (src as BaseMaterial3D).albedo_texture
+	m.albedo_color = tint
+	m.metallic = 0.0
+	m.roughness = 0.95
+	m.metallic_specular = 0.15
+	m.cull_mode = BaseMaterial3D.CULL_DISABLED
+	m.vertex_color_use_as_albedo = true
+	return m
+
+
 static func tree_mesh(variant: int) -> ArrayMesh:
 	var key := "tree_%d" % variant
 	if _cache.has(key):
 		return _cache[key]
+	if variant >= 0 and variant < TREE_MODELS.size():
+		var model := nature_mesh(TREE_MODELS[variant])
+		if model != null:
+			_cache[key] = model
+			return model
 	var p: Array = []
 	if variant == 0:
 		p.append([cyl(0.07, 0.1, 0.5, 6), xf(Vector3(0, 0.25, 0)), Palette.TRUNK])
@@ -398,6 +494,10 @@ static func clutter_mesh(kind: int) -> ArrayMesh:
 static func bush_mesh() -> ArrayMesh:
 	if _cache.has("bush"):
 		return _cache["bush"]
+	var model := nature_mesh("arbusto")
+	if model != null:
+		_cache["bush"] = model
+		return model
 	var p: Array = []
 	p.append([sphere(0.36, 10), xf(Vector3(0, 0.22, 0), Vector3.ZERO, Vector3(1, 0.7, 1)), Palette.BUSH])
 	p.append([sphere(0.22, 8), xf(Vector3(0.22, 0.2, 0.12), Vector3.ZERO, Vector3(1, 0.8, 1)), Palette.BUSH])
@@ -412,9 +512,30 @@ static func bush_mesh() -> ArrayMesh:
 static func rock_mesh(kind: String) -> ArrayMesh:
 	if _cache.has(kind):
 		return _cache[kind]
+	if RESOURCE_MODELS.has(kind):
+		var model := nature_mesh(RESOURCE_MODELS[kind])
+		if model != null:
+			_cache[kind] = model
+			return model
 	var p: Array = []
-	var base := Palette.STONE if kind != "riqueza" else Palette.WEALTH_ROCK
-	var dark := Palette.STONE_DARK if kind != "riqueza" else Palette.WEALTH_ROCK.darkened(0.15)
+	if kind == "riqueza":
+		# Barreal de respaldo: montículo de arcilla rojiza y vasijas apiladas, nada de piedra.
+		var clay := Color("b0623a")
+		var pot := Color("c97b4a")
+		p.append([sphere(0.95, 10), xf(Vector3(-0.15, 0.0, 0.0), Vector3.ZERO, Vector3(1, 0.22, 0.85)), clay])
+		p.append([cyl(0.5, 0.45, 0.06, 10), xf(Vector3(-0.3, 0.2, -0.05)), clay.darkened(0.3)])
+		var pots := [Vector3(0.55, 0, 0.35), Vector3(0.75, 0, -0.1), Vector3(0.45, 0, -0.45), Vector3(0.62, 0.36, 0.1)]
+		for i in pots.size():
+			var at: Vector3 = pots[i]
+			var r := 0.17 - (i % 2) * 0.03
+			p.append([sphere(r, 8), xf(at + Vector3(0, r, 0), Vector3.ZERO, Vector3(1, 1.1, 1)), pot.darkened((i % 3) * 0.08)])
+			p.append([cyl(r * 0.5, r * 0.6, r * 0.5, 8), xf(at + Vector3(0, r * 2.15, 0)), pot.darkened(0.12)])
+		p.append([sphere(0.15, 8), xf(Vector3(0.2, 0.12, 0.6), Vector3(0, 0, 80)), pot])
+		var clay_mesh := merge(p)
+		_cache[kind] = clay_mesh
+		return clay_mesh
+	var base := Palette.STONE
+	var dark := Palette.STONE_DARK
 	if kind == "penasco":
 		base = Color("8a8378")
 		dark = Color("6b655c")
@@ -422,11 +543,6 @@ static func rock_mesh(kind: String) -> ArrayMesh:
 	p.append([box(0.8, 0.55, 0.7), xf(Vector3(0.4, 0.25, 0.3), Vector3(-6, -20, 10)), dark])
 	p.append([box(0.6, 0.45, 0.6), xf(Vector3(0.3, 0.22, -0.5), Vector3(12, 40, -8)), base])
 	p.append([box(0.5, 0.35, 0.5), xf(Vector3(-0.5, 0.17, 0.55), Vector3(0, 10, 12)), dark])
-	if kind == "riqueza":
-		var tilts := [Vector3(12, 0, -8), Vector3(-15, 0, 10), Vector3(5, 0, 18), Vector3(-10, 0, -14), Vector3(18, 0, 4), Vector3(-6, 0, -20), Vector3(0, 0, 12)]
-		var spots := [Vector3(-0.2, 0.7, -0.1), Vector3(0.35, 0.55, 0.35), Vector3(0.25, 0.5, -0.45), Vector3(-0.45, 0.4, 0.5), Vector3(0.05, 0.62, 0.1), Vector3(-0.55, 0.45, -0.35), Vector3(0.55, 0.4, -0.05)]
-		for i in spots.size():
-			p.append([cyl(0.0, 0.16, 0.55, 5), xf(spots[i], tilts[i]), Palette.WEALTH, 0.6])
 	var mesh := merge(p)
 	_cache[kind] = mesh
 	return mesh

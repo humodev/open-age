@@ -99,6 +99,8 @@ Generado con Meshy (`tools/meshy_api.py`, modelo de imagen `nano-banana-2`) a pa
 |---|---|
 | `generados/laminas/<civ>.jpg` | Láminas de las seis civilizaciones: menú de campañas, introducción y epílogo de misión, elección de pueblo |
 | `generados/modelos/*.glb` | Modelos 3D de edificios y unidades emblemáticas (texto → imagen de concepto → `multi-image-to-3d`) |
+| `generados/naturaleza/*.glb` | Modelos del paisaje: pino (ciprés), latifoliada, araucaria, palmera (pindó), copa plana (queñua), arbusto, roca, arcilla con vasijas, peñasco y yerbal (`tools/generar_naturaleza.py`: concepto → `multi-image-to-3d`, y `remesh` en los de hoja fina; optimizados con Blender) |
+| `generados/conceptos/naturaleza/*.png` | Imágenes de concepto de esos modelos |
 
 ## Texturas del suelo (CC0, ambientCG)
 
