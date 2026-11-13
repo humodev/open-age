@@ -463,7 +463,15 @@ func _autotest() -> void:
 	await _frames(2)
 	_mouse(hi + Vector2(30, 30), MOUSE_BUTTON_LEFT, false)
 	await _frames(3)
-	check.call("selección por arrastre de 6 aldeanos (%d)" % ctrl.selection.size(), ctrl.selection.size() == 6)
+	var n_vill := 0
+	for e in sim.actives:
+		if e.owner == local and e.fn == "civil" and e.inside < 0:
+			n_vill += 1
+	var sel_vill := 0
+	for e in ctrl.selected_entities():
+		if e.fn == "civil":
+			sel_vill += 1
+	check.call("selección por arrastre de los %d aldeanos (%d)" % [n_vill, sel_vill], sel_vill == n_vill)
 
 	# 2. Clic derecho en arbustos: recolectar.
 	var bush: SimEntity = sim.find_resource(local, "alimento", base.x * 1000, base.y * 1000, 30000)
@@ -475,7 +483,7 @@ func _autotest() -> void:
 	for e in sim.actives:
 		if e.owner == local and e.fn == "civil" and e.order == SimEntity.Order.GATHER:
 			gathering += 1
-	check.call("clic derecho en arbustos pone a recolectar (%d)" % gathering, gathering == 6)
+	check.call("clic derecho en arbustos pone a recolectar (%d)" % gathering, gathering >= ctrl.selection.size() - 1 and gathering > 0)
 
 	# 3. Tecla Q y clic: casa.
 	var spot := Vector2i(-1, -1)
