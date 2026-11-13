@@ -126,11 +126,57 @@ func _conversions(pid: int, p: Dictionary) -> void:
 
 ## Renta: edificios que producen sin aldeanos (gult etíope, barrios del puerto).
 func _rents(pid: int, _p: Dictionary) -> void:
+	var capital: SimEntity = null
+	for e in sim.actives:
+		if e.alive and e.owner == pid and e.is_building() and e.capital:
+			capital = e
+			break
 	for e in sim.actives:
 		if e.alive and e.owner == pid and e.is_building() and e.built and e.def.has("renta"):
 			var r: Dictionary = e.def["renta"]
+			# Renta mejor cerca de la capital (gult etíope junto a la corte).
+			if e.def.has("renta_cerca_capital") and capital != null and Sim.dist(e.x, e.y, capital.x, capital.y) <= int(e.def.get("radio_capital", 14000)):
+				r = e.def["renta_cerca_capital"]
+			var origin := "propio" if e.def.get("motor", false) else "renta"
+			var boost := 100 + sim.mod(pid, "motor") if e.def.get("motor", false) else 100
 			for k in r:
-				_gain(pid, k, int(r[k]) * P / 60, "renta")
+				_gain(pid, k, int(r[k]) * P / 60 * (boost if k == "riqueza" else 100) / 100, origin)
+	if has(pid, "corte_extrae") and capital != null:
+		_court_extract(pid, capital)
+
+
+## La corte etíope extrae riqueza sin aldeanos de la arcilla propia o del centro
+## cercana (nunca de la del rival). Lo del centro cuenta para el techo de lo disputado.
+func _court_extract(pid: int, court: SimEntity) -> void:
+	var cfg := m(pid, "corte_extrae")
+	var by_age: Array = cfg["por_edad"]
+	var per_min := int(by_age[clampi(int(sim.players[pid]["age"]) - 1, 0, by_age.size() - 1)])
+	var r := int(cfg.get("radio", 12000)) + court.w * P / 2 + 1000 # borde a borde, aproximado
+	var best: SimEntity = null
+	var best_d := 1 << 60
+	for t in sim.entities:
+		if t.alive and t.is_resource() and t.type == "riqueza" and t.amount > 0 and (t.res_owner == pid or t.res_owner < 0):
+			var d := Sim.dist(t.x, t.y, court.x, court.y)
+			if d <= r and (d < best_d or (d == best_d and best != null and t.id < best.id)):
+				best = t
+				best_d = d
+	if best == null:
+		return
+	var k := "%d:corte" % pid
+	var acc: int = int(_acc.get(k, 0)) + per_min * P / 60
+	var whole := mini(acc / P, best.amount)
+	if best.res_owner < 0:
+		whole = mini(whole, sim.disputed_room(pid))
+	_acc[k] = acc - (acc / P) * P
+	if whole <= 0:
+		return
+	best.amount -= whole
+	sim.players[pid]["res"]["riqueza"] = int(sim.players[pid]["res"]["riqueza"]) + whole
+	sim.ledger(pid, "disputado" if best.res_owner < 0 else "propio", "riqueza", whole)
+	if best.res_owner < 0:
+		sim.disputed_add(pid, whole)
+	if best.amount <= 0:
+		sim._exhaust(best)
 
 
 ## Acogida: la población llega sola según la fama (Palmares).

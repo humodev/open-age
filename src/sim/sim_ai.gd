@@ -301,7 +301,11 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 	for t: String in wanted:
 		var have: int = (by_type.get(t, []) as Array).size()
 		var def: Dictionary = sim.dp(player).edificios.get(t, {})
-		if have < int(wanted[t]) and not unbuilt.has(t) and int(def.get("edad_min", 1)) <= p["age"] and vill.size() >= 10 + have * 6:
+		# Piezas de motor: hasta el máximo de la edad (y no la lista fija de los datos).
+		if def.has("maximo_por_edad"):
+			var maxes: Array = def["maximo_por_edad"]
+			wanted[t] = int(maxes[clampi(int(p["age"]) - 1, 0, maxes.size() - 1)]) + sim.mods.engine_max_bonus(player, t)
+		if have < int(wanted[t]) and not unbuilt.has(t) and int(def.get("edad_min", 1)) <= p["age"] and vill.size() >= 10 + have * (3 if def.has("maximo_por_edad") else 6):
 			_try_build(t, p, vill, centro, 2)
 			break
 	# Caminos (módulo caminos): une a la capital el primer edificio desconectado.

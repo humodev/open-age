@@ -92,3 +92,9 @@ El autor preguntó en qué punto estaba la economía: se había avanzado varias 
     - **Traza en paz:** edad II a las 8:05 y motor al 35 % en el minuto 15.
     - **Falta:** +5 de fama por mocambo junto al monte, y las incursiones a los ingenios (etapa 4).
 11. **Otro reloj desalineado en la IA** (`_engine`): se pasó a tiempo transcurrido, igual que las incursiones de la etapa 13.
+12. **Etapa 3c, Etiopía (primera parte):**
+    - **La corte extrae riqueza sin aldeanos:** 12 / 16 / 20 / 24 por minuto según la edad, de la arcilla propia o del centro a 12 casillas. Nunca de la del rival, y lo del centro cuenta para el techo de lo disputado.
+    - **Gult rebalanceado:** cuesta 100 de madera + 40 de alimento y rinde 3 de alimento + 17 de riqueza, o 21 de riqueza si está a 14 casillas o menos de la corte. Máximo 2 / 3 / 4 / 6 y separación de 6 casillas. La tecnología del motor lo mejora.
+    - **IA:** construye las piezas de motor hasta el máximo de la edad. Antes, una lista fija de los datos la dejaba en 2 gult.
+    - **Traza en paz:** edad II a las 6:49 y motor (corte + gult) ~49 % de la riqueza entre los minutos 15 y 25. Compuerta cumplida.
+    - **Falta (segunda parte):** fundar una corte nueva (sin la carpa en escaramuza), la fiesta de llegada, la opción señor o regimiento y Gondar como capital fija.
