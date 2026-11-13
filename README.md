@@ -10,7 +10,7 @@ RTS histórico con asimetría radical, protagonizado por civilizaciones del sur 
 
 | | |
 |---|---|
-| ![Capitales generadas](proceso/03-civilizaciones/12-capitales-meshy.jpg) | ![Seis arquitecturas](proceso/03-civilizaciones/03-civ-mapuches.jpg) |
+| ![Capitales generadas](proceso/08-arte-con-ia/05-capitales-en-juego.jpg) | ![Seis arquitecturas](proceso/04-seis-civilizaciones/02-mapuches.jpg) |
 
 **Qué hay:** seis civilizaciones asimétricas con sus propios módulos de mecánica y su arquitectura, escaramuza contra la IA en tres dificultades y cuatro tipos de mapa, sitios sagrados, mercado, seis campañas (24 misiones) más un tutorial, sonido CC0, láminas y modelos 3D generados con IA (Meshy, marcados en `assets/CREDITOS.md`) y repeticiones.
 

@@ -9,4 +9,4 @@
    - `godot --headless --path . -s tests/bench.gd`
 6. Antes de entregar cambios en la interfaz o los controles, correr `godot --path . -- --autotest --civ=guaranies --terreno=llano` y revisar una captura (`-- --shot=screenshots/x.png --shot-at=3`).
 7. Cambios en civilizaciones o en la IA: `tests/civ_smoke.gd`. Cambios en campañas o en el motor de escenarios: `tests/campaign_smoke.gd`. Balance: `tests/torneo.gd -- --minutes=30 --seeds=2`.
-8. El registro del proceso va en `proceso/` y las preguntas para el autor, en `proceso/CONSULTAS.md`.
+8. **Proceso, en cada push**: cada etapa de trabajo tiene su carpeta numerada en `proceso/`, con su `README.md` (pedido, paso a paso, tropiezos, commits), sus capturas, sus videos y los resultados de las pruebas. El índice `proceso/README.md` se actualiza en el mismo commit; nunca se acumula todo en una sola etapa. Las preguntas para el autor van a `proceso/CONSULTAS.md`, y se revisa si las contestó antes de cada push.
