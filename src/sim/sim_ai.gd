@@ -240,6 +240,18 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 		if have < int(wanted[t]) and not unbuilt.has(t) and int(def.get("edad_min", 1)) <= p["age"] and vill.size() >= 10 + have * 6:
 			_try_build(t, p, vill, centro, 2)
 			break
+	# Caminos (módulo caminos): une a la capital el primer edificio desconectado.
+	if sim.dp(player).has_mod("caminos") and sim.tick % 200 == player * 20 and not unbuilt.has("camino"):
+		for k in by_type:
+			if k == "camino":
+				continue
+			for bb: SimEntity in by_type[k]:
+				if bb.built and not bb.capital and not sim.mods.connected(bb):
+					var tiles := _road_tiles(Vector2i(bb.tx + bb.w / 2, bb.ty + bb.h / 2), Vector2i(centro.tx + centro.w / 2, centro.ty + centro.h / 2))
+					if not tiles.is_empty():
+						var v := _nearest_villager(vill, bb.x, bb.y)
+						sim.push_command({"t": "build_line", "player": player, "ids": [v.id], "type": "camino", "tiles": tiles})
+					return
 	# Mercado desde la edad II.
 	if p["age"] >= 2 and not by_type.has("mercado") and vill.size() >= 20:
 		_try_build("mercado", p, vill, centro, 2)
@@ -502,3 +514,20 @@ func _near_site(u: SimEntity) -> bool:
 		if e.def.get("sagrado", false) and absi(e.x - u.x) < 5000 and absi(e.y - u.y) < 5000:
 			return true
 	return false
+
+
+## Casillas libres de un camino recto (4-conexo) entre dos puntos; las ocupadas se saltean.
+func _road_tiles(a: Vector2i, b: Vector2i) -> Array:
+	var out := []
+	var x := a.x
+	var y := a.y
+	var guard := 0
+	while (x != b.x or y != b.y) and guard < 80:
+		guard += 1
+		if absi(b.x - x) >= absi(b.y - y):
+			x += signi(b.x - x)
+		else:
+			y += signi(b.y - y)
+		if sim.can_place("camino", x, y, player):
+			out.append([x, y])
+	return out
