@@ -1,0 +1,130 @@
+{
+  "_nota": "Ambiente visual por tipo de mapa (docs/10, etapa 16). Solo imagen: no lo lee la simulación ni es balance. Colores en hexadecimal; el resto, enteros (porcentajes, grados o metros). Cada mapa pisa solo lo que cambia respecto de 'base'.",
+  "base": {
+    "sol": {"color": "fff2dc", "energia": 135, "altura": 52, "rumbo": 150, "tamano": 0, "desenfoque": 220},
+    "relleno": {"color": "b3ccff", "energia": 25},
+    "cielo": {"cenit": "5c80ad", "horizonte": "bdc7cc", "suelo": "80857a"},
+    "ambiente": 75,
+    "exposicion": 105,
+    "saturacion": 112,
+    "contraste": 104,
+    "niebla": {"color": "aebdcc", "desde": 55, "hasta": 260, "maxima": 45},
+    "agua": {"hondo": "12334a", "bajo": "3a6b68", "turbio": "6b6b4c", "espuma": "dfe8e4", "turbidez": 25, "reflejo": 55},
+    "suelo": {"seco": "ffffff", "tierra": "ffffff", "roca": "ffffff", "alto": "8fa860", "humedo": 55},
+    "detalle": {
+      "pasto": ["5a7d36", "6e8f3e"],
+      "seco": ["a39556", "b5a463"],
+      "alto": ["58782f", "7d9440"],
+      "flores": ["e8d25a", "f0ece2", "c9604a"],
+      "juncos": "6f8a3c",
+      "piedras": "8f8a80",
+      "densidad": 40,
+      "pasto_alto": 40,
+      "flores_pct": 6,
+      "juncos_pct": 70,
+      "viento": 100
+    }
+  },
+  "rio": {
+    "agua": {"turbidez": 40, "turbio": "6e6a48"}
+  },
+  "selva": {
+    "sol": {"color": "ffe4b8", "energia": 140, "altura": 48},
+    "cielo": {"cenit": "6f97b8", "horizonte": "d6dbc8", "suelo": "6e7a5c"},
+    "ambiente": 80,
+    "saturacion": 118,
+    "niebla": {"color": "b9c6b0", "desde": 40, "hasta": 200, "maxima": 55},
+    "agua": {"hondo": "1b3324", "bajo": "41603a", "turbio": "6a6a3e", "espuma": "d9dcc6", "turbidez": 45, "reflejo": 45},
+    "suelo": {"tierra": "c98a6a", "alto": "6f9a4c", "humedo": 65},
+    "detalle": {
+      "pasto": ["456f2c", "5b8434"],
+      "alto": ["3f6e26", "5d8a35"],
+      "flores": ["d9433a", "f08a24", "a24fc4", "f2d24a"],
+      "juncos": "4f7a2e",
+      "pasto_alto": 60,
+      "flores_pct": 9
+    }
+  },
+  "delta": {
+    "sol": {"color": "ffeccc"},
+    "cielo": {"horizonte": "d2d8d0"},
+    "niebla": {"color": "bccac6", "desde": 45, "hasta": 220, "maxima": 50},
+    "agua": {"hondo": "203a33", "bajo": "4d6a4c", "turbio": "6f6c48", "turbidez": 42, "reflejo": 50},
+    "suelo": {"tierra": "b08a6c", "humedo": 70},
+    "detalle": {"flores": ["f2efe0", "f2d24a", "8f6cc8"], "juncos": "6a8a3a", "pasto_alto": 55, "juncos_pct": 90}
+  },
+  "islas": {
+    "agua": {"hondo": "0f3d52", "bajo": "2f7f7a", "turbidez": 15, "reflejo": 60}
+  },
+  "altiplano": {
+    "sol": {"color": "fffaf0", "energia": 160, "altura": 62, "desenfoque": 130},
+    "relleno": {"color": "a8c4ff", "energia": 20},
+    "cielo": {"cenit": "2b5b9c", "horizonte": "a8c2dc", "suelo": "8a8574"},
+    "ambiente": 62,
+    "exposicion": 100,
+    "saturacion": 104,
+    "contraste": 110,
+    "niebla": {"color": "c2d2e2", "desde": 90, "hasta": 400, "maxima": 25},
+    "agua": {"hondo": "0a2846", "bajo": "2a6880", "turbio": "5f7378", "espuma": "f2f6f8", "turbidez": 10, "reflejo": 70},
+    "suelo": {"seco": "f2d79a", "roca": "d8ccc0", "alto": "b9a254", "humedo": 50},
+    "detalle": {
+      "pasto": ["8a8a48", "9a9150"],
+      "seco": ["c2a557", "d1b466"],
+      "alto": ["b69a4a", "cfb35e"],
+      "flores": ["9b6cc8", "f2d24a"],
+      "juncos": "9a9a48",
+      "pasto_alto": 55,
+      "flores_pct": 3,
+      "juncos_pct": 95,
+      "viento": 150
+    }
+  },
+  "valle": {
+    "sol": {"color": "fff6e6", "energia": 145, "altura": 56},
+    "cielo": {"cenit": "3f6aa5", "horizonte": "b4c8d8"},
+    "niebla": {"color": "bccbd8", "desde": 70, "hasta": 320, "maxima": 35},
+    "agua": {"hondo": "0e2e48", "bajo": "336f7c", "turbidez": 15, "reflejo": 65},
+    "suelo": {"seco": "f4dca8", "alto": "a49a54"},
+    "detalle": {"seco": ["b8a058", "c9b066"], "juncos": "8a9446", "viento": 130}
+  },
+  "montana": {
+    "sol": {"color": "fff4e4", "energia": 140, "altura": 55},
+    "cielo": {"cenit": "4a72a8"},
+    "agua": {"hondo": "0e3048", "bajo": "336e78", "turbidez": 15},
+    "suelo": {"roca": "e6e0d8"},
+    "detalle": {"viento": 130}
+  },
+  "mesetas": {
+    "sol": {"color": "ffe8c8", "energia": 145},
+    "cielo": {"cenit": "557cb0", "horizonte": "d2cdc0"},
+    "niebla": {"color": "cfc6b6", "desde": 60, "hasta": 280, "maxima": 40},
+    "suelo": {"tierra": "d29a78", "roca": "e8b896", "seco": "f8e2b0"},
+    "detalle": {"flores": ["e8d25a", "d9603a"], "flores_pct": 4}
+  },
+  "bosque_templado": {
+    "sol": {"color": "fff0dc", "energia": 125, "altura": 46},
+    "cielo": {"cenit": "6a87a8", "horizonte": "c4ccd0"},
+    "ambiente": 82,
+    "niebla": {"color": "a9b8bc", "desde": 40, "hasta": 220, "maxima": 50},
+    "agua": {"hondo": "102c30", "bajo": "2f5a54", "turbidez": 30},
+    "suelo": {"alto": "6d9050", "humedo": 65},
+    "detalle": {
+      "pasto": ["4c7334", "5d8540"],
+      "alto": ["4a7030", "62883f"],
+      "flores": ["f2efe6", "f2d24a", "d27aa0"],
+      "pasto_alto": 50
+    }
+  },
+  "bosque": {
+    "niebla": {"color": "aab9b8", "desde": 45, "hasta": 230, "maxima": 48},
+    "detalle": {"pasto_alto": 50}
+  },
+  "sierra": {
+    "sol": {"color": "ffeed4"},
+    "suelo": {"tierra": "c09474"},
+    "detalle": {"flores": ["e8d25a", "d9433a", "f0ece2"]}
+  },
+  "fortines": {
+    "suelo": {"tierra": "c8a07e"}
+  }
+}

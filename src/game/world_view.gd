@@ -117,6 +117,13 @@ func _build_ground() -> void:
 		ground_mat.set_shader_parameter(pair[0], load(T % pair[1]))
 	var tn: Array = sim.terrain_def().get("tinte", [100, 100, 100]) # porcentajes
 	ground_mat.set_shader_parameter("tint", Color(tn[0] / 100.0, tn[1] / 100.0, tn[2] / 100.0))
+	# Tintes del suelo por bioma (data/ambiente.json → suelo).
+	var su: Dictionary = Ambiente.of(sim.terrain)["suelo"]
+	ground_mat.set_shader_parameter("dry_tint", Ambiente.col(su["seco"]))
+	ground_mat.set_shader_parameter("dirt_tint", Ambiente.col(su["tierra"]))
+	ground_mat.set_shader_parameter("rock_tint", Ambiente.col(su["roca"]))
+	ground_mat.set_shader_parameter("lush_col", Ambiente.col(su["alto"]))
+	ground_mat.set_shader_parameter("wet_k", Ambiente.pct(su["humedo"]))
 	_build_splat()
 	var b0 := sim.bases[0] + Vector2i(2, 2)
 	var b1 := sim.bases[1] + Vector2i(2, 2)
@@ -161,21 +168,76 @@ func _build_terrain() -> void:
 						acc += raw[(j + dz) * vn + i + dx]
 				out[j * vn + i] = acc / 9.0
 		raw = out
+	# Orillas sin escalones: el borde del agua sigue la forma de cada casilla, así
+	# que se suaviza más cerca de la orilla, donde se ve la línea (etapa 16).
+	var shore := PackedInt32Array()
+	for j in range(2, vn - 2):
+		for i in range(2, vn - 2):
+			var wet := 0
+			for dz in range(-3, 3):
+				for dx in range(-3, 3):
+					if map.is_water(i + dx, j + dz):
+						wet += 1
+			if wet > 0 and wet < 36 and map.rock[clampi(j, 0, n - 1) * n + clampi(i, 0, n - 1)] == 0:
+				shore.append(j * vn + i)
+	# Donde el vértice toca dos o más casillas de agua, el suavizado puede hundir
+	# pero no levantar: los arroyos de una casilla no quedan en seco.
+	var keep := PackedFloat32Array()
+	keep.resize(shore.size())
+	for k in shore.size():
+		var i := shore[k] % vn
+		var j := shore[k] / vn
+		var touch := 0
+		for d in [Vector2i(-1, -1), Vector2i(0, -1), Vector2i(-1, 0), Vector2i(0, 0)]:
+			if map.is_water(i + d.x, j + d.y):
+				touch += 1
+		keep[k] = minf(raw[shore[k]], -0.3) if touch >= 2 else INF
+	for pass_i in 4:
+		var out := raw.duplicate()
+		for k in shore.size():
+			var idx := shore[k]
+			var acc := 0.0
+			for dz in [-vn, 0, vn]:
+				for dx in [-1, 0, 1]:
+					acc += raw[idx + dz + dx]
+			out[idx] = minf(acc / 9.0, keep[k])
+		raw = out
 	# Ondulación suave para que el llano no sea una mesa (solo imagen; docs/10).
 	var noise := FastNoiseLite.new()
 	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
 	noise.seed = hash(sim.terrain) ^ sim.entities.size()
 	noise.frequency = 0.045
 	noise.fractal_octaves = 3
+	# Cerca del agua la ondulación se apaga de a poco (si se corta de golpe, la
+	# orilla queda con dientes).
+	var wd := PackedInt32Array()
+	wd.resize(n * n)
+	wd.fill(99)
+	var front: Array[Vector2i] = []
+	for tz in n:
+		for tx in n:
+			if map.water[tz * n + tx] != 0:
+				wd[tz * n + tx] = 0
+				front.append(Vector2i(tx, tz))
+	for step in 4:
+		var nxt: Array[Vector2i] = []
+		for t in front:
+			for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+				var q: Vector2i = t + d
+				if q.x >= 0 and q.y >= 0 and q.x < n and q.y < n and wd[q.y * n + q.x] > step + 1:
+					wd[q.y * n + q.x] = step + 1
+					nxt.append(q)
+		front = nxt
 	for j in vn:
 		for i in vn:
-			var near_water := false
-			for d in [Vector2i(-1, -1), Vector2i(0, -1), Vector2i(-1, 0), Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-2, -1), Vector2i(1, -1)]:
-				if map.is_water(i + d.x, j + d.y):
-					near_water = true
-					break
-			if not near_water:
-				raw[j * vn + i] += noise.get_noise_2d(i, j) * RELIEF_AMP
+			var dmin := 99
+			for d in [Vector2i(-1, -1), Vector2i(0, -1), Vector2i(-1, 0), Vector2i(0, 0)]:
+				var tx := clampi(i + d.x, 0, n - 1)
+				var tz := clampi(j + d.y, 0, n - 1)
+				dmin = mini(dmin, wd[tz * n + tx])
+			var k := clampf((dmin - 1) / 3.0, 0.0, 1.0)
+			if k > 0.0:
+				raw[j * vn + i] += noise.get_noise_2d(i, j) * RELIEF_AMP * k
 	_vh = raw
 	_vn = vn
 	for cz in ceili(n / float(CHUNK)):
@@ -196,6 +258,22 @@ func _build_terrain() -> void:
 		_water_mat.shader = preload("res://src/game/shaders/water.gdshader")
 		_water_mat.set_shader_parameter("map_size", float(n))
 		_water_mat.set_shader_parameter("water_tex", _water_texture())
+		# Agua y reflejo por bioma (data/ambiente.json → agua, cielo, sol).
+		var amb := Ambiente.of(sim.terrain)
+		var ag: Dictionary = amb["agua"]
+		for pair in [["deep", "hondo"], ["shallow", "bajo"], ["silt", "turbio"], ["foam_col", "espuma"]]:
+			_water_mat.set_shader_parameter(pair[0], Ambiente.col(ag[pair[1]]))
+		_water_mat.set_shader_parameter("turbidity", Ambiente.pct(ag["turbidez"]))
+		_water_mat.set_shader_parameter("reflect_k", Ambiente.pct(ag["reflejo"]))
+		_water_mat.set_shader_parameter("sky_top", Ambiente.col(amb["cielo"]["cenit"]))
+		_water_mat.set_shader_parameter("sky_hor", Ambiente.col(amb["cielo"]["horizonte"]))
+		var sun := Basis.from_euler(Vector3(deg_to_rad(-float(amb["sol"]["altura"])), deg_to_rad(float(amb["sol"]["rumbo"])), 0.0))
+		_water_mat.set_shader_parameter("sun_dir", sun.z)
+		var ondas := OndasAgua.new()
+		ondas.name = "OndasAgua"
+		ondas.view = self
+		ondas.mat = _water_mat
+		add_child(ondas)
 		var rip := FastNoiseLite.new()
 		rip.noise_type = FastNoiseLite.TYPE_SIMPLEX
 		rip.frequency = 0.035
@@ -310,20 +388,31 @@ func _water_texture() -> ImageTexture:
 					if not flow.has(t):
 						flow[t] = dir
 	var img := Image.create(vn, vn, false, Image.FORMAT_RGBA8)
+	var ford := Image.create(vn, vn, false, Image.FORMAT_L8)
 	for j in vn:
 		for i in vn:
 			var wet := false
 			var deep := false
+			var shallow := 0
 			for d in [Vector2i(-1, -1), Vector2i(0, -1), Vector2i(-1, 0), Vector2i(0, 0)]:
 				if map.is_water(i + d.x, j + d.y):
 					wet = true
 					if map.water[clampi(j + d.y, 0, map.n - 1) * map.n + clampi(i + d.x, 0, map.n - 1)] == 1:
 						deep = true
+					else:
+						shallow += 1
 			var depth := clampf((-0.18 - _vh[j * vn + i]) / 0.7, 0.0, 1.0) if wet else 0.0
 			if wet and not deep:
 				depth = minf(depth, 0.1) # vado: agua baja que se ve cruzable
 			var f: Vector2 = flow.get(Vector2i(i, j), Vector2.ZERO)
 			img.set_pixel(i, j, Color(depth, 1.0 if flow.has(Vector2i(i, j)) else 0.0, f.x * 0.5 + 0.5, f.y * 0.5 + 0.5))
+			ford.set_pixel(i, j, Color(shallow / 4.0, 0, 0))
+	# Cuatro veces más fina y con interpolación cúbica: los bordes de la mezcla no
+	# muestran el escalón de cada casilla (etapa 16).
+	img.resize(vn * 4, vn * 4, Image.INTERPOLATE_CUBIC)
+	ford.resize(vn * 4, vn * 4, Image.INTERPOLATE_CUBIC)
+	if _water_mat != null:
+		_water_mat.set_shader_parameter("ford_tex", ImageTexture.create_from_image(ford))
 	return ImageTexture.create_from_image(img)
 
 
@@ -348,6 +437,35 @@ func _build_splat() -> void:
 		_paint_dirt(Vector2(b.x + 2, b.y + 2), 6.5, 0.85)
 	_splat_tex = ImageTexture.create_from_image(_splat_img)
 	ground_mat.set_shader_parameter("splat", _splat_tex)
+	# Segunda mezcla: R manchas de pasto alto (las mismas que usa el detalle), G pedregal
+	# al pie de los peñascos.
+	var img2 := Image.create(res, res, false, Image.FORMAT_RG8)
+	var lush := DetalleSuelo.lush_noise(sim.terrain)
+	var lush_k := Ambiente.pct(Ambiente.of(sim.terrain)["detalle"]["pasto_alto"])
+	var rocks: Array[Vector2i] = []
+	for ty in n:
+		for tx in n:
+			if map.rock[ty * n + tx] != 0:
+				rocks.append(Vector2i(tx, ty))
+	var scree := PackedFloat32Array()
+	scree.resize(n * n)
+	for r in rocks:
+		for dy in range(-3, 4):
+			for dx in range(-3, 4):
+				var t := r + Vector2i(dx, dy)
+				if t.x < 0 or t.y < 0 or t.x >= n or t.y >= n:
+					continue
+				var k := clampf(1.0 - (Vector2(dx, dy).length() - 0.8) / 2.6, 0.0, 1.0)
+				scree[t.y * n + t.x] = maxf(scree[t.y * n + t.x], k)
+	for y in res:
+		for x in res:
+			var fx := (x + 0.5) / SPLAT_RES
+			var fy := (y + 0.5) / SPLAT_RES
+			var l := DetalleSuelo.lush_at(lush, fx, fy, lush_k)
+			if map.is_water(int(fx), int(fy)):
+				l = 0.0
+			img2.set_pixel(x, y, Color(l, scree[int(fy) * n + int(fx)], 0.0))
+	ground_mat.set_shader_parameter("splat2", ImageTexture.create_from_image(img2))
 
 
 ## Pinta tierra pisada en un círculo (centro y radio en casillas).
@@ -408,47 +526,120 @@ static func _contact_tex() -> Texture2D:
 	return _contact
 
 
-## Matas, piedritas y flores sueltas según el bioma; solo imagen (docs/10).
+## Detalle del suelo según el bioma; solo imagen (docs/10, etapa 16): matas, pasto
+## alto en manchas, flores, piedritas en laderas y juncos o totora en las orillas.
+## Las hojas se mueven con el viento (shaders/grass.gdshader). Se agrupa en
+## bloques de 32 casillas para que la cámara descarte lo que no ve.
 func _build_clutter() -> void:
 	var map := sim.map
 	var n := map.n
 	var dry: float = sim.terrain_def().get("seco", 10) / 100.0
-	var lists: Array[Array] = [[], [], [], []]
+	var det: Dictionary = Ambiente.of(sim.terrain)["detalle"]
+	var dens := int(det["densidad"])
+	var flower_pct := int(det["flores_pct"])
+	var reed_pct := int(det["juncos_pct"])
+	var lush := DetalleSuelo.lush_noise(sim.terrain)
+	var lush_k := Ambiente.pct(det["pasto_alto"])
+	const BLOCK := 32
+	var nb := ceili(n / float(BLOCK))
+	var kinds := 6
+	var lists := [] # bloque * kinds + tipo -> [[transform, tx, ty, brillo]]
+	lists.resize(nb * nb * kinds)
+	for i in lists.size():
+		lists[i] = []
+	var sides := [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]
 	for ty in n:
 		for tx in n:
-			if map.is_water(tx, ty) or map.occupant(tx, ty) != -1:
+			if map.occupant(tx, ty) != -1:
 				continue
 			var hsh := _hash(tx * 7919 + ty * 104729 + 17)
-			if hsh % 100 >= 38:
-				continue
-			var kind := 0
 			var roll := (hsh / 100) % 100
-			if map.is_slope(tx, ty) or roll < 14:
-				kind = 2
-			elif roll < 14 + int(dry * 70.0):
-				kind = 1
-			elif roll > 93 and dry < 0.5:
-				kind = 3
 			var ox := float((hsh / 10000) % 80) / 100.0 + 0.1
 			var oz := float((hsh / 800000) % 80) / 100.0 + 0.1
+			var kind := -1
+			# Orilla: hacia qué lado está el agua honda (los vados quedan despejados).
+			var to_water := Vector2.ZERO
+			var near_ford := false
+			var w := map.water[ty * n + tx]
+			for d: Vector2i in sides:
+				if not map.in_bounds(tx + d.x, ty + d.y):
+					continue
+				var wd := map.water[(ty + d.y) * n + tx + d.x]
+				if w == 0 and wd == 1:
+					to_water += Vector2(d)
+				elif w == 1 and wd == 0:
+					to_water -= Vector2(d) # desde el agua, hacia la tierra
+				if wd == 2 or w == 2:
+					near_ford = true
+			if w == 2 or near_ford:
+				continue
+			if to_water != Vector2.ZERO:
+				var reed_roll := (hsh / 37) % 100
+				if reed_roll < (reed_pct if w == 0 else reed_pct * 2 / 3):
+					kind = DetalleSuelo.JUNCOS
+					var tw := to_water.normalized()
+					# En tierra, contra el agua; en el agua, pegado a la orilla.
+					ox = 0.5 + tw.x * (0.38 if w == 0 else 0.3) + float(hsh % 21 - 10) / 100.0
+					oz = 0.5 + tw.y * (0.38 if w == 0 else 0.3) + float((hsh / 21) % 21 - 10) / 100.0
+			if kind == -1 and w != 0:
+				continue
+			if kind == -1:
+				var l := DetalleSuelo.lush_at(lush, tx + 0.5, ty + 0.5, lush_k)
+				if map.is_slope(tx, ty) or map.rock[ty * n + tx] != 0:
+					if hsh % 100 < dens:
+						kind = DetalleSuelo.PIEDRAS
+				elif l > 0.35 and hsh % 100 < 80:
+					kind = DetalleSuelo.FLORES if roll < flower_pct * 2 else DetalleSuelo.PASTO_ALTO
+				elif hsh % 100 < dens:
+					if roll < 10:
+						kind = DetalleSuelo.PIEDRAS
+					elif roll < 10 + flower_pct and dry < 0.6:
+						kind = DetalleSuelo.FLORES
+					elif roll < 14 + int(dry * 70.0):
+						kind = DetalleSuelo.MATA_SECA
+					else:
+						kind = DetalleSuelo.MATA
+			if kind == -1:
+				continue
 			var p := Vector3(tx + ox, 0, ty + oz)
 			p.y = height_at(p.x, p.z) - 0.02
 			var sc := 1.15 + float((hsh / 7) % 50) / 100.0
-			lists[kind].append([Transform3D(Basis(Vector3.UP, float(hsh % 628) / 100.0).scaled(Vector3(sc, sc, sc)), p), tx, ty])
-	for kind in 4:
+			var b := 0.85 + float((hsh / 13) % 25) / 100.0
+			var blk := (ty / BLOCK) * nb + tx / BLOCK
+			lists[blk * kinds + kind].append([Transform3D(Basis(Vector3.UP, float(hsh % 628) / 100.0).scaled(Vector3(sc, sc, sc)), p), tx, ty, b])
+	var meshes := []
+	for kind in kinds:
+		meshes.append(DetalleSuelo.mesh(kind, det))
+	var gm := DetalleSuelo.material()
+	gm.set_shader_parameter("map_size", float(n))
+	gm.set_shader_parameter("wind", Ambiente.pct(det["viento"]))
+	gm.set_shader_parameter("fog_on", false)
+	for li in lists.size():
+		var list: Array = lists[li]
+		if list.is_empty():
+			continue
+		var kind := li % kinds
 		var mm := MultiMesh.new()
 		mm.transform_format = MultiMesh.TRANSFORM_3D
-		mm.mesh = Meshes.clutter_mesh(kind)
-		mm.instance_count = lists[kind].size()
-		for i in lists[kind].size():
-			var it: Array = lists[kind][i]
+		mm.use_colors = true
+		mm.mesh = meshes[kind]
+		mm.instance_count = list.size()
+		for i in list.size():
+			var it: Array = list[i]
 			mm.set_instance_transform(i, it[0])
+			mm.set_instance_color(i, Color(it[3], it[3], it[3]))
 			_clutter_at[Vector2i(it[1], it[2])] = [mm, i, it[0]]
 		var mmi := MultiMeshInstance3D.new()
 		mmi.multimesh = mm
+		mmi.material_override = gm
 		mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		mmi.visibility_range_end = 70.0 # de lejos no se ven y no se pagan
+		mmi.visibility_range_end = 95.0 # de lejos no se ven y no se pagan
 		add_child(mmi)
+	# La niebla se crea después del detalle (setup); se le pasa al terminar.
+	(func() -> void:
+		if _fog_tex != null:
+			gm.set_shader_parameter("fog_tex", _fog_tex)
+			gm.set_shader_parameter("fog_on", fog_on)).call_deferred()
 
 
 ## Peñascos: bloques de roca sobre las casillas que no se pasan, para que se lean
