@@ -37,6 +37,8 @@ var _menu_mode := false
 var _menu: MainMenu
 var _drift := 0.0
 var audio: GameAudio
+var _replay_meta := {}
+const REPLAY := "user://ultima_partida.json"
 
 
 func _ready() -> void:
@@ -120,12 +122,29 @@ func _new_game() -> void:
 		mine = civ_keys[rng.randi() % civ_keys.size()]
 	if rival == "" or rival == "azar":
 		rival = civ_keys[rng.randi() % civ_keys.size()]
-	sim = Sim.new(_seed, 2, null, {"terreno": _args.get("terreno", ""), "civs": [mine, rival]})
+	if _args.has("replay") and FileAccess.file_exists(REPLAY):
+		var r: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(REPLAY))
+		_seed = int(r["semilla"])
+		sim = Sim.new(_seed, 2, null, Sim.intify(r["opciones"]))
+		sim.ais = []
+		for pid in r["ias"]:
+			sim.ais.append(SimAI.new(sim, int(pid), r.get("dificultad", "normal")))
+		sim.schedule(Sim.intify(r["comandos"]))
+		_build_scene(true)
+		ctrl.enabled = false
+		hud.notify("Repetición de la última partida", 4.0)
+		return
+	var opts := {"terreno": _args.get("terreno", ""), "civs": [mine, rival]}
+	sim = Sim.new(_seed, 2, null, opts)
 	var aivai := _args.has("aivai") or _menu_mode
 	sim.ais = []
+	var ai_ids := []
 	for pid in sim.players.size():
 		if pid != local or aivai:
 			sim.ais.append(SimAI.new(sim, pid, _args.get("dificultad", "normal")))
+			ai_ids.append(pid)
+	opts["terreno"] = sim.terrain
+	_replay_meta = {"semilla": _seed, "opciones": opts, "ias": ai_ids, "dificultad": _args.get("dificultad", "normal")}
 	_build_scene(aivai)
 
 
@@ -181,6 +200,7 @@ func _build_scene(aivai: bool) -> void:
 		_menu.play.connect(func(sd: int, civ: String, rival: String) -> void: _start({"seed": str(sd), "civ": civ, "rival": rival, "dificultad": _menu.difficulty()}))
 		_menu.watch.connect(func(sd: int, civ: String, rival: String) -> void: _start({"aivai": "1", "seed": str(sd), "civ": civ, "rival": rival}))
 		_menu.campaigns.connect(_open_campaigns.bind(layer))
+		_menu.replay.connect(func() -> void: _start({"replay": "1"}))
 		if _args.get("abrir", "") == "campanas":
 			_open_campaigns.call_deferred(layer)
 		elif _args.get("abrir", "") == "intro":
@@ -318,6 +338,22 @@ func mission_over(result: String) -> void:
 	hud.get_parent().add_child(CampaignUI.story(m, true, buttons))
 
 
+## Guarda la partida como repetición (solo escaramuzas con jugador humano).
+func save_replay() -> void:
+	if _replay_meta.is_empty() or _menu_mode or _args.has("aivai") or _args.has("replay") or sim == null or sim.recording.is_empty():
+		return
+	var r := _replay_meta.duplicate()
+	r["comandos"] = sim.recording
+	var f := FileAccess.open(REPLAY, FileAccess.WRITE)
+	if f != null:
+		f.store_string(JSON.stringify(r))
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		save_replay()
+
+
 func to_menu() -> void:
 	_args = {}
 	_menu_mode = true
@@ -325,6 +361,7 @@ func to_menu() -> void:
 
 
 func restart(seed_value: int = -1) -> void:
+	save_replay()
 	for n in [view, cam, ctrl, hud.get_parent()]:
 		n.queue_free()
 	_seed = seed_value if seed_value >= 0 else randi() % 100000

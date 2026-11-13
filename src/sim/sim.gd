@@ -30,6 +30,7 @@ var terrain := ""
 var _opts: Dictionary = {}
 
 var _pending := {} # tick -> Array[Dictionary]
+var recording: Array = [] # comandos externos (humanos) para repeticiones
 var _in_step := false
 var _grid := {} # celda de 1 casilla -> unidades (separación)
 var _ehash := {} # celda de EC -> unidades y edificios (búsqueda)
@@ -96,9 +97,37 @@ func push_command(cmd: Dictionary, delay: int = 0) -> void:
 	if _in_step:
 		at = maxi(at, tick + 1)
 	cmd["tick"] = at
+	if not _in_step:
+		recording.append(cmd.duplicate(true))
 	if not _pending.has(at):
 		_pending[at] = []
 	_pending[at].append(cmd)
+
+
+## Convierte lo leído de JSON a enteros donde corresponde (JSON no distingue 5 de 5.0).
+static func intify(v: Variant) -> Variant:
+	if v is float and v == floorf(v):
+		return int(v)
+	if v is Array:
+		var out := []
+		for x in v:
+			out.append(intify(x))
+		return out
+	if v is Dictionary:
+		var d := {}
+		for k in v:
+			d[k] = intify(v[k])
+		return d
+	return v
+
+
+## Repetición: programa comandos grabados en sus ticks originales.
+func schedule(cmds: Array) -> void:
+	for c: Dictionary in cmds:
+		var at: int = c["tick"]
+		if not _pending.has(at):
+			_pending[at] = []
+		_pending[at].append(c)
 
 
 func _apply(c: Dictionary) -> void:

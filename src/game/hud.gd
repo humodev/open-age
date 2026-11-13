@@ -241,6 +241,7 @@ func on_events(events: Array) -> void:
 
 
 func _show_end(winner: int) -> void:
+	main.save_replay()
 	_end.visible = true
 	var p: Dictionary = sim.players[local]
 	var st: Dictionary = p["stats"]

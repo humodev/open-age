@@ -5,6 +5,7 @@ extends Control
 signal play(seed_value: int, civ: String, rival: String)
 signal watch(seed_value: int, civ: String, rival: String)
 signal campaigns
+signal replay
 
 var _seed_edit: LineEdit
 var _civ: OptionButton
@@ -111,6 +112,8 @@ func _ready() -> void:
 	row.add_child(_seed_edit)
 	box.add_child(row)
 
+	if FileAccess.file_exists("user://ultima_partida.json"):
+		box.add_child(_button("Ver la última partida", func() -> void: replay.emit()))
 	var gap2 := Control.new()
 	gap2.custom_minimum_size = Vector2(0, 10)
 	box.add_child(gap2)
