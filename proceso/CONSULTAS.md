@@ -21,10 +21,16 @@ a) Sí *(por defecto)* · b) Cambiar Palmares por tupinambá · c) Cambiar Ayutt
 Para retratos y láminas de campaña puedo usar generación de imágenes, o quedarme con arte procedural y libre (CC0).
 a) Solo procedural y CC0 *(por defecto)* · b) Generadas por IA, marcadas como tales
 
-**Respuesta:**
+**Respuesta:** b, con Meshy (respondido en el chat el 2026-11-13). Se usa con un tope de unos 400 créditos; ver C-05.
 
 ### C-04 · Música
 Si no aparece música libre que suene a estas regiones:
 a) Solo ambiente y efectos, sin música *(por defecto)* · b) Música procedural simple generada por el juego
+
+**Respuesta:**
+
+### C-05 · Presupuesto de Meshy
+El saldo (1.442 créditos) se comparte con apex-open. Usé hasta unos 400: láminas de civilización y de campaña, más los modelos 3D clave. ¿Gasto más para modelar todas las unidades y edificios?
+a) No, con eso alcanza *(por defecto)* · b) Sí, hasta ___ créditos más
 
 **Respuesta:**

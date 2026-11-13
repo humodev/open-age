@@ -53,3 +53,8 @@ Completar el juego como "un Age of Empires 4 indie del sur global": arte, animac
 | Mapuches | 1 | 1 |
 
 Después del torneo 1 bajaron guaraníes y Palmares y subieron mapuches y Etiopía. En el torneo 2 terminaron por destrucción 22 de 30 partidas, contra 15 en el primero. Después del torneo 2 bajan los elefantes y suben el lof y la caballería mapuche (desde la edad II) y el jinete noble. Los mapuches siguen débiles en IA contra IA, en parte porque la IA no explota el enjambre de lof y el sigilo: es trabajo pendiente de la IA más que de los números.
+18. **Arte generado con IA** (C-03 respondida en el chat). Se usa Meshy con la clave de apex-open, que no se versiona. Seis láminas de civilización (36 créditos más 6 para rehacer la guaraní, que había salido con borde de papel) en el menú de campañas, la introducción y el epílogo de misión, y la elección de pueblo. Todo queda registrado en `assets/generados/registro.jsonl`.
+
+| Láminas | Introducción | Campañas |
+|---|---|---|
+| ![](11-laminas-ia.jpg) | ![](09-intro-con-lamina.jpg) | ![](10-campanas-con-lamina.jpg) |

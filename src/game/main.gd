@@ -205,7 +205,7 @@ func _build_scene(aivai: bool) -> void:
 		if _args.get("abrir", "") == "campanas":
 			_open_campaigns.call_deferred(layer)
 		elif _args.get("abrir", "") == "intro":
-			layer.add_child(CampaignUI.story(_mission_data("palmares", 0), false, [["Comenzar", func() -> void: pass], ["Volver", func() -> void: pass]]))
+			layer.add_child(CampaignUI.story(_mission_data("palmares", 0), false, [["Comenzar", func() -> void: pass], ["Volver", func() -> void: pass]], "palmares"))
 	if _args.has("autotest"):
 		cam.edge_pan = false
 		_autotest.call_deferred()
@@ -298,7 +298,7 @@ func _open_campaigns(layer: CanvasLayer) -> void:
 		_menu.visible = true)
 	ui.start_mission.connect(func(civ: String, idx: int) -> void:
 		var m: Dictionary = _mission_data(civ, idx)
-		var intro := CampaignUI.story(m, false, [["Comenzar", func() -> void: _start({"campana": civ, "mision": str(idx)})], ["Volver", func() -> void: layer.get_child(layer.get_child_count() - 1).queue_free()]])
+		var intro := CampaignUI.story(m, false, [["Comenzar", func() -> void: _start({"campana": civ, "mision": str(idx)})], ["Volver", func() -> void: layer.get_child(layer.get_child_count() - 1).queue_free()]], civ)
 		layer.add_child(intro))
 
 
@@ -336,7 +336,7 @@ func mission_over(result: String) -> void:
 		m["epilogo"] = ["La historia no terminó así. Volvé a intentarlo."]
 	buttons.append(["Menú principal", func() -> void: to_menu()])
 	paused = true
-	hud.get_parent().add_child(CampaignUI.story(m, true, buttons))
+	hud.get_parent().add_child(CampaignUI.story(m, true, buttons, civ))
 
 
 ## Guarda la partida como repetición (solo escaramuzas con jugador humano).

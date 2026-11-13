@@ -12,6 +12,12 @@ var _list: VBoxContainer
 var _detail: VBoxContainer
 
 
+## Lámina de una civilización (generada con IA, ver assets/CREDITOS.md), o null.
+static func plate(civ: String) -> Texture2D:
+	var path := "res://assets/generados/laminas/%s.jpg" % civ
+	return load(path) if ResourceLoader.exists(path) else null
+
+
 static func load_campaigns() -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	var order := ["tawantinsuyu", "mapuches", "guaranies", "etiopia", "palmares", "ayutthaya"]
@@ -96,6 +102,14 @@ func _show(i: int) -> void:
 		ch.queue_free()
 	var c := _campaigns[i]
 	var won: int = int(progress().get(c["civ"], 0))
+	var tex := plate(c["civ"])
+	if tex != null:
+		var tr := TextureRect.new()
+		tr.texture = tex
+		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		tr.custom_minimum_size = Vector2(0, 300)
+		_detail.add_child(tr)
 	_detail.add_child(_label(c["titulo"], 36, Palette.UI_TEXT, true))
 	_detail.add_child(_label(c.get("resumen", ""), 18, Palette.UI_DIM))
 	for mi in (c["misiones"] as Array).size():
@@ -167,7 +181,7 @@ static func _button(text: String, cb: Callable, width: int) -> Button:
 # ---------------------------------------------------------------- Introducción y epílogo
 
 ## Pantalla de texto a página completa: introducción o epílogo de una misión.
-static func story(m: Dictionary, epilogue: bool, buttons: Array) -> Control:
+static func story(m: Dictionary, epilogue: bool, buttons: Array, civ: String = "") -> Control:
 	Hud.load_fonts()
 	var root := Control.new()
 	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -176,6 +190,19 @@ static func story(m: Dictionary, epilogue: bool, buttons: Array) -> Control:
 	bg.color = Color(0.03, 0.035, 0.045, 1.0)
 	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	root.add_child(bg)
+	var tex := plate(civ)
+	if tex != null:
+		var art := TextureRect.new()
+		art.texture = tex
+		art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		art.modulate = Color(0.32, 0.32, 0.34)
+		root.add_child(art)
+		var veil := ColorRect.new()
+		veil.color = Color(0.02, 0.025, 0.03, 0.45)
+		veil.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		root.add_child(veil)
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	root.add_child(center)

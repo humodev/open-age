@@ -2,3 +2,6 @@
 export/
 *.tmp
 /screenshots/
+
+.secrets/
+.cache/

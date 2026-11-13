@@ -13,6 +13,7 @@ var _rival: OptionButton
 var _info: Label
 var _keys: Array = []
 var _diff: OptionButton
+var _plate: TextureRect
 
 
 func _ready() -> void:
@@ -38,7 +39,7 @@ func _ready() -> void:
 	box.anchor_top = 0.5
 	box.anchor_bottom = 0.5
 	box.offset_left = 110
-	box.offset_top = -330
+	box.offset_top = -420
 	box.offset_right = 640
 	box.offset_bottom = 260
 	box.add_theme_constant_override("separation", 14)
@@ -85,6 +86,12 @@ func _ready() -> void:
 	_diff.selected = 1
 	drow.add_child(_diff)
 	box.add_child(drow)
+	_plate = TextureRect.new()
+	_plate.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_plate.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	_plate.custom_minimum_size = Vector2(520, 150)
+	_plate.visible = false
+	box.add_child(_plate)
 	_info = Label.new()
 	_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_info.custom_minimum_size = Vector2(520, 70)
@@ -189,7 +196,10 @@ func _pick(ob: OptionButton) -> String:
 func _describe(data: SimData) -> void:
 	if _civ.selected <= 0:
 		_info.text = "Seis pueblos, seis formas de jugar. Elegí uno o dejá que decida la suerte."
+		_plate.visible = false
 		return
+	_plate.texture = CampaignUI.plate(_keys[_civ.selected - 1])
+	_plate.visible = _plate.texture != null
 	var c: Dictionary = data.civs[_keys[_civ.selected - 1]].civ
 	_info.text = "«%s»  %s\n%s" % [c.get("frase", ""), c.get("region", ""), c.get("descripcion", "")]
 

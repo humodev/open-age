@@ -71,3 +71,12 @@ Los archivos fueron recortados, mezclados, normalizados y convertidos a Ogg Vorb
 | tierra_pasto_color.jpg, tierra_pasto_normal.jpg | https://ambientcg.com/view?id=Ground037 | ambientCG (Lennart Demes) | CC0 |
 
 Los mapas normales están en formato OpenGL (`NormalGL`), que es el que usa Godot.
+
+## Arte generado con IA (C-03)
+
+Generado con Meshy (`tools/meshy_api.py`, modelo de imagen `nano-banana-2`) a partir de prompts propios, sin nombres de juegos ni obras ajenas como entrada. Cada tarea, con su prompt completo y los créditos usados, queda en `assets/generados/registro.jsonl`. Es material generado por IA y se marca como tal.
+
+| Archivo | Uso |
+|---|---|
+| `generados/laminas/<civ>.jpg` | Láminas de las seis civilizaciones: menú de campañas, introducción y epílogo de misión, elección de pueblo |
+| `generados/modelos/*.glb` | Modelos 3D de edificios y unidades emblemáticas (texto → imagen de concepto → `multi-image-to-3d`) |
