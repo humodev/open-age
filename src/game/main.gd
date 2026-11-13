@@ -38,6 +38,7 @@ var _menu: MainMenu
 var _drift := 0.0
 var audio: GameAudio
 var _replay_meta := {}
+var _perf_t := 0.0
 const REPLAY := "user://ultima_partida.json"
 
 
@@ -410,6 +411,11 @@ func _process(delta: float) -> void:
 	else:
 		view.render(1.0, 0.0)
 	_maybe_shot()
+	if _args.has("perf"):
+		_perf_t += delta
+		if _perf_t >= 5.0:
+			_perf_t = 0.0
+			print("perf: %d fps · tick %d · %d entidades activas · %d objetos dibujados" % [Engine.get_frames_per_second(), sim.tick, sim.actives.size(), RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME)])
 
 
 func _maybe_shot() -> void:
