@@ -16,4 +16,4 @@ Las preguntas para el autor están en [`CONSULTAS.md`](CONSULTAS.md) y se revisa
 | [08 · Arte con IA](08-arte-con-ia/README.md) | 2026-11-13 08:50 a 09:51 | Láminas y modelos 3D con Meshy, optimización con Blender |
 | [09 · Tutorial y prueba de campañas](09-tutorial-y-prueba-de-campanas/README.md) | 2026-11-13 09:30 a 10:00 | Tutorial, campañas jugadas por la IA, corrección de la acogida |
 | [10 · Terreno y mapas](10-terreno-y-mapas/README.md) | 2026-11-13 10:30 a 12:00 | Hecho: suelo con texturas; 11 tipos de mapa; relieve real (Copernicus + OSM) en las 24 misiones; huella aplanada; detalle del suelo; música; escala y velocidad; capitales sin base |
-| [11 · Revisión de la economía](11-revision-economia/README.md) | 2026-11-13 desde 12:00 | En curso: equipo de cinco perfiles de diseño revisa el modelo de recursos |
+| [11 · Revisión de la economía](11-revision-economia/README.md) | 2026-11-13 desde 12:00 | En curso: cinco informes y síntesis listos; esperan las decisiones C-10 a C-13 |

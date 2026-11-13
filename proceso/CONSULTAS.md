@@ -57,3 +57,24 @@ Ahora una casa mide unas tres veces un aldeano y todos andan un 10 % más lento.
 a) Están bien · b) Aldeanos todavía grandes · c) Todavía rápidos · d) Ahora demasiado lentos
 
 **Respuesta:**
+
+### C-10 · Modelo de la riqueza (resumen en `docs/diseno/revision-economia/00-sintesis.md`)
+a) "Una riqueza, seis motores": un solo recurso, con nombre e ícono por civ, y que cada civ produce con su propio motor pacífico desde la edad I *(recomendado)* · b) Solo cambiar la imagen y los nombres, sin tocar las reglas · c) Un cuarto recurso distinto para cada civ
+
+**Respuesta:**
+
+### C-11 · ¿Qué hay junto a cada base?
+a) Una salina chica que se agota, más el paisaje propio de la civ; nada dorado *(recomendado)* · b) Dejar los dos yacimientos, pero con otro aspecto · c) Nada común: solo el motor propio
+
+**Respuesta:**
+
+### C-12 · Kulliñ mapuche
+a) El kulliñ pasa a ser la riqueza mapuche: el ganado crece en el corral y el botín que supera el tope se vuelve riqueza *(recomendado)* · b) Mantenerlos separados, como hoy
+
+**Respuesta:**
+
+### C-13 · ¿Arranco ya con los arreglos "sin arrepentimiento"?
+Son la IA mapuche, la campana, la vida de los edificios mapuches, el costo del gult, los colores y el tooltip de riqueza. Valen para cualquier modelo.
+a) Sí, mientras decidís el resto *(recomendado)* · b) No, esperá
+
+**Respuesta:**

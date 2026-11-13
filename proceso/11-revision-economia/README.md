@@ -24,3 +24,10 @@ Cinco agentes con perfiles distintos. Leen el repositorio sin tocarlo y escriben
 
 ## Paso a paso
 1. Se lanzó el equipo (en curso).
+2. Llegaron cuatro de los cinco informes: UX y mapas, facciones, historia y sistemas económicos. Coinciden en el diagnóstico: en la edad I las seis civs sacan la riqueza del mismo yacimiento junto a la base. El malón mapuche da kulliñ, no riqueza, y el gult etíope rinde menos que un aldeano en la mina.
+3. **Observación del autor (2026-11-13)**, sobre la idea de sacar la riqueza común de la base y llevarla lejos (salinas, ferias en el centro):
+   > "Que el cuarto recurso esté tan lejos y en otro lado significa que no debería ser TAN determinante, ¿no? Si no, una vez que perdés esa región te quedás sin ese recurso y ya perdiste. El juego se vuelve controlar ese recurso y nada más, y deja al rival sin opciones. Ojo con eso."
+
+   Se les pasó a los perfiles de sistemas económicos, facciones y balance. Cada uno agrega a su documento una sección "Dependencia territorial": qué parte de la riqueza puede ser disputable en cada edad, cómo se remonta al perder el centro y cómo medirlo en el torneo.
+4. Llegó el quinto informe, el de balance, con partidas medidas: a los mapuches no les falta riqueza en la apertura. Pierden en el medio juego por la IA (elige el rewe militar y queda trabada ahorrando) y por la poca vida de sus edificios de victoria. Etiopía, en cambio, tiene un problema de diseño: el gult cuesta alimento justo cuando falta y paga riqueza, que le sobra.
+5. **Síntesis** en [`docs/diseno/revision-economia/00-sintesis.md`](../../docs/diseno/revision-economia/00-sintesis.md): el diagnóstico compartido, el modelo "una riqueza, seis motores", los límites de la dependencia territorial, las discrepancias entre perfiles y el orden de trabajo. Decisiones para el autor: C-10 a C-13 en `CONSULTAS.md`. No se aplicó ningún cambio al juego.
