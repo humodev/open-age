@@ -233,6 +233,8 @@ func villager_slots() -> Dictionary:
 
 
 func run_command(cmd: Dictionary) -> void:
+	if hud != null and hud.main.get("audio") != null:
+		hud.main.audio.ui("clic" if cmd.get("locked", "") == "" else "error", -12.0)
 	if cmd.get("locked", "") != "":
 		hud_notify(cmd["locked"])
 		return

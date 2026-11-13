@@ -965,7 +965,7 @@ func _kill(e: SimEntity, killer: SimEntity = null) -> void:
 		for item in e.queue:
 			if item.begins_with("@"):
 				players[e.owner]["pending"].erase(item.substr(1))
-	events.append({"t": "died", "id": e.id, "owner": e.owner, "type": e.type, "cat": e.cat, "by": killer.owner if killer != null else -1})
+	events.append({"t": "died", "id": e.id, "owner": e.owner, "type": e.type, "cat": e.cat, "by": killer.owner if killer != null else -1, "x": e.x, "y": e.y})
 
 
 func _cleanup() -> void:

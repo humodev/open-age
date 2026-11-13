@@ -35,6 +35,7 @@ var _shot_done := false
 var _menu_mode := false
 var _menu: MainMenu
 var _drift := 0.0
+var audio: GameAudio
 
 
 func _ready() -> void:
@@ -45,6 +46,11 @@ func _ready() -> void:
 	speed = float(_args.get("speed", "1"))
 	_menu_mode = _args.is_empty() or _args.has("menu")
 	_build_environment()
+	audio = GameAudio.new()
+	audio.name = "Audio"
+	add_child(audio)
+	if _args.has("shot") or _args.has("autotest") or _args.has("mute"):
+		AudioServer.set_bus_mute(0, true)
 	_new_game()
 
 
@@ -153,6 +159,11 @@ func _build_scene(aivai: bool) -> void:
 	layer.add_child(hud)
 	hud.setup(self, sim, ctrl, cam, local)
 	ctrl.hud = hud
+	audio.sim = sim
+	audio.cam = cam
+	audio.local = local
+	audio.ambient(true)
+	audio.music("menu" if _menu_mode else "paz")
 	if _menu_mode:
 		hud.visible = false
 		ctrl.enabled = false
@@ -335,6 +346,7 @@ func _process(delta: float) -> void:
 			sim.step()
 			view.on_tick(sim.events)
 			hud.on_events(sim.events)
+			audio.on_events(sim.events)
 			_acc -= tick_s
 			steps += 1
 		if steps == MAX_STEPS_PER_FRAME:
