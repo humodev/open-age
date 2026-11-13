@@ -5,6 +5,11 @@ extends Node3D
 const P := 1000.0
 const LEVEL_H := 1.7 # metros por nivel de altura
 static var _vh := PackedFloat32Array() # alturas de vértices (n+1)²
+const SPLAT_RES := 2 # píxeles de mezcla por casilla
+const BIOME_TINT := {"llano": Color(1.0, 1.0, 0.97), "montana": Color(1.04, 1.0, 0.9), "bosque": Color(0.9, 0.98, 0.9), "rio": Color(0.96, 1.02, 0.96)}
+const BIOME_DRY := {"llano": 0.15, "montana": 0.45, "bosque": 0.0, "rio": 0.05}
+var _splat_img: Image
+var _splat_tex: ImageTexture
 static var _vn := 0
 const O := SimEntity.Order
 
@@ -102,6 +107,11 @@ func _build_ground() -> void:
 	tex.generate_mipmaps = true
 	tex.noise = noise
 	ground_mat.set_shader_parameter("noise_tex", tex)
+	var T := "res://assets/texturas/suelo/%s.jpg"
+	for pair in [["t_grass", "pasto_color"], ["t_dry", "pasto_seco_color"], ["t_dirt", "tierra_color"], ["t_mud", "barro_color"], ["t_rock", "roca_color"], ["n_grass", "pasto_normal"], ["n_dirt", "tierra_normal"], ["n_rock", "roca_normal"]]:
+		ground_mat.set_shader_parameter(pair[0], load(T % pair[1]))
+	ground_mat.set_shader_parameter("tint", BIOME_TINT.get(sim.terrain, Color.WHITE))
+	_build_splat()
 	var b0 := sim.bases[0] + Vector2i(2, 2)
 	var b1 := sim.bases[1] + Vector2i(2, 2)
 	ground_mat.set_shader_parameter("bases", Vector4(b0.x, b0.y, b1.x, b1.y))
@@ -181,6 +191,81 @@ func _build_terrain() -> void:
 		wmi.material_override = _water_mat
 		wmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		add_child(wmi)
+
+
+## Mezcla del suelo: R tierra pisada, G barro, B pasto seco (docs/10).
+func _build_splat() -> void:
+	var map := sim.map
+	var n := map.n
+	var res := n * SPLAT_RES
+	_splat_img = Image.create(res, res, false, Image.FORMAT_RGBA8)
+	var dry: float = BIOME_DRY.get(sim.terrain, 0.1)
+	for y in res:
+		for x in res:
+			var tx := x / SPLAT_RES
+			var ty := y / SPLAT_RES
+			var wet := 0.0
+			for d in [Vector2i(0, 0), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1), Vector2i(2, 0), Vector2i(-2, 0), Vector2i(0, 2), Vector2i(0, -2)]:
+				if map.is_water(tx + d.x, ty + d.y):
+					wet = maxf(wet, 1.0 - (absf(d.x) + absf(d.y)) * 0.3)
+			_splat_img.set_pixel(x, y, Color(0.0, wet, clampf(dry + map.h_at(tx, ty) * 0.12, 0.0, 1.0), 1.0))
+	# Tierra pisada alrededor de cada base inicial.
+	for b in sim.bases.slice(0, sim.players.size()):
+		_paint_dirt(Vector2(b.x + 2, b.y + 2), 6.5, 0.85)
+	_splat_tex = ImageTexture.create_from_image(_splat_img)
+	ground_mat.set_shader_parameter("splat", _splat_tex)
+
+
+## Pinta tierra pisada en un círculo (centro y radio en casillas).
+func _paint_dirt(c: Vector2, r: float, strength: float) -> void:
+	var res := _splat_img.get_width()
+	var k := float(SPLAT_RES)
+	for y in range(int((c.y - r) * k), int((c.y + r) * k) + 1):
+		for x in range(int((c.x - r) * k), int((c.x + r) * k) + 1):
+			if x < 0 or y < 0 or x >= res or y >= res:
+				continue
+			var d := Vector2(x / k, y / k).distance_to(c) / r
+			if d > 1.0:
+				continue
+			var px := _splat_img.get_pixel(x, y)
+			px.r = maxf(px.r, strength * (1.0 - d * d))
+			_splat_img.set_pixel(x, y, px)
+
+
+## Edificio nuevo: tierra pisada alrededor y sombra de contacto.
+func _settle_building(e: SimEntity, root: Node3D) -> void:
+	if e.def.get("sagrado", false) or e.def.get("linea", false):
+		return
+	if not e.def.get("transitable", false):
+		_paint_dirt(Vector2(e.tx + e.w / 2.0, e.ty + e.h / 2.0), maxf(e.w, e.h) * 0.85 + 0.8, 0.9 if e.capital else 0.75)
+		if _splat_tex != null:
+			_splat_tex.update(_splat_img)
+		var dec := Decal.new()
+		dec.texture_albedo = _contact_tex()
+		dec.size = Vector3(e.w * 1.25, 2.0, e.h * 1.25)
+		dec.modulate = Color(0, 0, 0, 0.55)
+		dec.position.y = 0.2
+		dec.cull_mask = 1
+		root.add_child(dec)
+
+
+static var _contact: Texture2D
+
+
+static func _contact_tex() -> Texture2D:
+	if _contact == null:
+		var g := Gradient.new()
+		g.set_color(0, Color(0, 0, 0, 0.75))
+		g.set_color(1, Color(0, 0, 0, 0.0))
+		var t := GradientTexture2D.new()
+		t.gradient = g
+		t.fill = GradientTexture2D.FILL_RADIAL
+		t.fill_from = Vector2(0.5, 0.5)
+		t.fill_to = Vector2(1.0, 0.5)
+		t.width = 128
+		t.height = 128
+		_contact = t
+	return _contact
 
 
 func _build_resources() -> void:
@@ -268,6 +353,7 @@ func _make_visual(e: SimEntity) -> Dictionary:
 		var ring := _ring(1, Vector2(e.w + 0.3, e.h + 0.3))
 		root.add_child(ring)
 		v.merge({"kind": "building", "struct": struct, "found": found, "ring": ring, "pop": 0.0})
+		_settle_building(e, root)
 		if e.def.get("sagrado", false):
 			var flag := MeshInstance3D.new()
 			flag.mesh = Meshes.box(0.05, 0.5, 0.6)
@@ -308,6 +394,8 @@ func _model_for(owner: int, type: String, size: float, unit: bool) -> Node3D:
 		return null
 	var k := size / horiz
 	var holder := Node3D.new()
+	if not unit:
+		holder.position.y = -0.08 # asentado: apenas hundido en el suelo
 	inst.scale = Vector3.ONE * k
 	inst.position = Vector3(-(box.position.x + box.size.x / 2.0) * k, -box.position.y * k, -(box.position.z + box.size.z / 2.0) * k)
 	if unit:

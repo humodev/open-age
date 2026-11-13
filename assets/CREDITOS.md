@@ -80,3 +80,13 @@ Generado con Meshy (`tools/meshy_api.py`, modelo de imagen `nano-banana-2`) a pa
 |---|---|
 | `generados/laminas/<civ>.jpg` | Láminas de las seis civilizaciones: menú de campañas, introducción y epílogo de misión, elección de pueblo |
 | `generados/modelos/*.glb` | Modelos 3D de edificios y unidades emblemáticas (texto → imagen de concepto → `multi-image-to-3d`) |
+
+## Texturas del suelo (CC0, ambientCG)
+
+| Archivo | Fuente | Licencia |
+|---|---|---|
+| `texturas/suelo/pasto_*` | https://ambientcg.com/view?id=Ground037 | CC0 |
+| `texturas/suelo/pasto_seco_*` | https://ambientcg.com/view?id=Grass004 | CC0 |
+| `texturas/suelo/tierra_*` | https://ambientcg.com/view?id=Ground054 | CC0 |
+| `texturas/suelo/barro_*` | https://ambientcg.com/view?id=Ground049C | CC0 |
+| `texturas/suelo/roca_*` | https://ambientcg.com/view?id=Rock030 | CC0 |

@@ -24,9 +24,7 @@ static func building(type: String, def: Dictionary, team: Color, style: Dictiona
 	var w: float = def["tam"][0]
 	var d: float = def["tam"][1]
 	var base_y := 0.0
-	if not def.get("transitable", false) and not def.get("camino", false):
-		p.append([Meshes.box(w - 0.15, 0.14, d - 0.15), Meshes.xf(Vector3(0, 0.07, 0)), Palette.DIRT.lerp(pal[0], 0.35).darkened(0.1)])
-		base_y = 0.14
+	# Sin plinto: el suelo pintado (tierra pisada) ya asienta el edificio (docs/10).
 	if def.get("avanza_edad", false):
 		_monument(p, forma, variant, tier, w, d, pal, team)
 	elif def.get("camino", false):
@@ -116,8 +114,10 @@ static func _hut(p: Array, forma: String, at: Vector3, w: float, d: float, h: fl
 
 
 static func _center(p: Array, forma: String, w: float, d: float, pal: Array, team: Color, by: float) -> void:
-	p.append([Meshes.box(w - 0.5, 0.18, d - 0.5), Meshes.xf(Vector3(0, by + 0.09, 0)), pal[0].darkened(0.12)])
-	by += 0.18
+	# Patio apisonado apenas elevado, con borde de piedras sueltas en lugar de una losa.
+	for i in 16:
+		var a := TAU * i / 16.0
+		p.append([Meshes.sphere(0.12, 6), Meshes.xf(Vector3(cos(a) * w * 0.46, by + 0.05, sin(a) * d * 0.46), Vector3.ZERO, Vector3(1.3, 0.6, 1.0)), Palette.STONE.darkened(0.1)])
 	_hut(p, forma, Vector3(0, by, -d * 0.08), w * 0.55, d * 0.5, 1.5, pal)
 	_hut(p, forma, Vector3(-w * 0.3, by, d * 0.25), w * 0.28, d * 0.26, 0.9, pal)
 	_hut(p, forma, Vector3(w * 0.3, by, d * 0.25), w * 0.28, d * 0.26, 0.9, pal)
