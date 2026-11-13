@@ -27,7 +27,8 @@
   },
   "guerrero": {
    "nombre": "Weichafe",
-   "velocidad": 1750
+   "velocidad": 1750,
+   "ataque": 12
   },
   "hondero": {
    "nombre": "Arquero",
@@ -79,10 +80,10 @@
     3,
     3
    ],
-   "pv": 1300,
+   "pv": 1600,
    "armadura": 1,
    "costo": {
-    "madera": 160
+    "madera": 130
    },
    "tiempo_ms": 40000,
    "vision": 9000,
@@ -344,7 +345,7 @@
    "icono": "alimento",
    "por_aldeano": 0,
    "por_edificio": {
-    "corral": 6
+    "corral": 8
    },
    "inicial": 20,
    "tope": 120,
@@ -354,7 +355,7 @@
   },
   "saqueo": {
    "recurso": "kullin",
-   "pct_danio_edificio": 12,
+   "pct_danio_edificio": 16,
    "por_aldeano": 6
   },
   "sigilo": {
@@ -363,7 +364,7 @@
   },
   "relevo": {
    "espera_ms": 6000,
-   "pct_por_seg": 3
+   "pct_por_seg": 4
   }
  },
  "ia_unidades": [

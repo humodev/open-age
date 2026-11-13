@@ -30,14 +30,14 @@
    "pv": 150,
    "pob": 2,
    "costo": {
-    "alimento": 80,
-    "riqueza": 40
+    "alimento": 70,
+    "riqueza": 35
    }
   },
   "hondero": {
    "nombre": "Jabalinero",
    "alcance": 4000,
-   "ataque": 9
+   "ataque": 10
   },
   "lancero": {
    "nombre": "Chewa",
@@ -104,8 +104,8 @@
    "vision": 3000,
    "transitable": true,
    "renta": {
-    "riqueza": 12,
-    "alimento": 8
+    "riqueza": 15,
+    "alimento": 12
    },
    "ranura": 7,
    "desc": "Tierra asignada a un señor o un monasterio: rinde tributo sin aldeanos."

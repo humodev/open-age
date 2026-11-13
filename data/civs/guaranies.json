@@ -36,8 +36,8 @@
   },
   "hondero": {
    "nombre": "Arquero",
-   "alcance": 6500,
-   "ataque": 8
+   "alcance": 6000,
+   "ataque": 7
   },
   "lancero": {
    "nombre": "Lancero",
@@ -79,7 +79,7 @@
   "granja": {
    "nombre": "Kokue (roza)",
    "tasa_clave": "roza",
-   "cantidad": 700,
+   "cantidad": 550,
    "deja": "yerbal",
    "costo": {
     "madera": 45
@@ -318,7 +318,7 @@
    "emboscada_pct": 50
   },
   "obra_colectiva": {
-   "pct_por_constructor": 15
+   "pct_por_constructor": 8
   }
  },
  "ia_unidades": [
