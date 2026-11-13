@@ -33,6 +33,10 @@ func _circle(r: int) -> PackedInt32Array:
 	return out
 
 
+var map: SimMap
+var vision_per_level := 0
+
+
 func update(pid: int, sources: Array) -> void:
 	var g := grids[pid]
 	var prev := _visible[pid]
@@ -43,6 +47,8 @@ func update(pid: int, sources: Array) -> void:
 		var cx := e.x / P
 		var cy := e.y / P
 		var r: int = int(e.def.get("vision", 0)) / P
+		if map != null:
+			r += map.h_at(cx, cy) * vision_per_level / P
 		if e.is_building():
 			r += maxi(e.w, e.h) / 2
 		var offs := _circle(r)

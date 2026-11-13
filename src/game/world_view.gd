@@ -3,6 +3,9 @@ extends Node3D
 ## Dibuja el estado de la simulación. No decide nada (docs/06-arquitectura.md).
 
 const P := 1000.0
+const LEVEL_H := 1.7 # metros por nivel de altura
+static var _vh := PackedFloat32Array() # alturas de vértices (n+1)²
+static var _vn := 0
 const O := SimEntity.Order
 
 var sim: Sim
@@ -23,6 +26,7 @@ var _fog_img: Image
 var _fog_tex: ImageTexture
 var _fog_t := 0.0
 var _fog_tick := -1
+var _water_mat: ShaderMaterial
 
 
 func setup(s: Sim, local_player: int) -> void:
@@ -35,6 +39,9 @@ func setup(s: Sim, local_player: int) -> void:
 	_fog_tex = ImageTexture.create_from_image(_fog_img)
 	ground_mat.set_shader_parameter("fog_tex", _fog_tex)
 	ground_mat.set_shader_parameter("fog_on", fog_on)
+	if _water_mat != null:
+		_water_mat.set_shader_parameter("fog_tex", _fog_tex)
+		_water_mat.set_shader_parameter("fog_on", fog_on)
 	_rally_flag = _make_flag()
 	_rally_flag.visible = false
 	add_child(_rally_flag)
@@ -44,7 +51,26 @@ func setup(s: Sim, local_player: int) -> void:
 
 
 static func to_world(x: int, y: int, h: float = 0.0) -> Vector3:
-	return Vector3(x / P, h, y / P)
+	var wx := x / P
+	var wz := y / P
+	return Vector3(wx, h + height_at(wx, wz), wz)
+
+
+## Altura del terreno suavizado en un punto del mundo (interpolación bilineal).
+static func height_at(wx: float, wz: float) -> float:
+	if _vn == 0:
+		return 0.0
+	var fx := clampf(wx, 0.0, _vn - 1.001)
+	var fz := clampf(wz, 0.0, _vn - 1.001)
+	var ix := int(fx)
+	var iz := int(fz)
+	var tx := fx - ix
+	var tz := fz - iz
+	var a := _vh[iz * _vn + ix]
+	var b := _vh[iz * _vn + ix + 1]
+	var c := _vh[(iz + 1) * _vn + ix]
+	var d := _vh[(iz + 1) * _vn + ix + 1]
+	return lerpf(lerpf(a, b, tx), lerpf(c, d, tx), tz)
 
 
 # ---------------------------------------------------------------- Construcción de la escena
@@ -81,7 +107,80 @@ func _build_ground() -> void:
 	ground_mat.set_shader_parameter("bases", Vector4(b0.x, b0.y, b1.x, b1.y))
 	mi.material_override = ground_mat
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	mi.position.y = -1.4 # el borde exterior queda debajo de cauces y orillas
 	add_child(mi)
+	_build_terrain()
+
+
+## Malla de terreno con alturas suavizadas y plano de agua (D-027).
+func _build_terrain() -> void:
+	var map := sim.map
+	var n := map.n
+	var vn := n + 1
+	var raw := PackedFloat32Array()
+	raw.resize(vn * vn)
+	for j in vn:
+		for i in vn:
+			var sum := 0.0
+			var cnt := 0
+			for dz in [-1, 0]:
+				for dx in [-1, 0]:
+					var tx: int = clampi(i + dx, 0, n - 1)
+					var tz: int = clampi(j + dz, 0, n - 1)
+					var w := map.water[tz * n + tx]
+					sum += -0.9 if w == 1 else (-0.3 if w == 2 else float(map.h_at(tx, tz)) * LEVEL_H)
+					cnt += 1
+			raw[j * vn + i] = sum / cnt
+	# Dos pasadas de suavizado para lomas redondeadas.
+	for pass_i in 2:
+		var out := raw.duplicate()
+		for j in range(1, vn - 1):
+			for i in range(1, vn - 1):
+				var acc := 0.0
+				for dz in [-1, 0, 1]:
+					for dx in [-1, 0, 1]:
+						acc += raw[(j + dz) * vn + i + dx]
+				out[j * vn + i] = acc / 9.0
+		raw = out
+	_vh = raw
+	_vn = vn
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for j in n:
+		for i in n:
+			var v00 := Vector3(i, raw[j * vn + i], j)
+			var v10 := Vector3(i + 1, raw[j * vn + i + 1], j)
+			var v01 := Vector3(i, raw[(j + 1) * vn + i], j + 1)
+			var v11 := Vector3(i + 1, raw[(j + 1) * vn + i + 1], j + 1)
+			st.add_vertex(v00)
+			st.add_vertex(v10)
+			st.add_vertex(v11)
+			st.add_vertex(v00)
+			st.add_vertex(v11)
+			st.add_vertex(v01)
+	st.generate_normals()
+	var mi := MeshInstance3D.new()
+	mi.mesh = st.commit()
+	mi.material_override = ground_mat
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+	add_child(mi)
+	var has_water := false
+	for w in map.water:
+		if w != 0:
+			has_water = true
+			break
+	if has_water:
+		var plane := PlaneMesh.new()
+		plane.size = Vector2(n, n)
+		var wmi := MeshInstance3D.new()
+		wmi.mesh = plane
+		wmi.position = Vector3(n / 2.0, -0.18, n / 2.0)
+		_water_mat = ShaderMaterial.new()
+		_water_mat.shader = preload("res://src/game/shaders/water.gdshader")
+		_water_mat.set_shader_parameter("map_size", float(n))
+		wmi.material_override = _water_mat
+		wmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		add_child(wmi)
 
 
 func _build_resources() -> void:

@@ -10,7 +10,9 @@ uniform float map_size = 128.0;
 uniform float grid_alpha = 0.0;
 uniform vec4 bases = vec4(-100.0);
 
+uniform vec3 rock : source_color = vec3(0.55, 0.52, 0.46);
 varying vec3 wpos;
+varying vec3 wnorm;
 
 uniform sampler2D noise_tex : filter_linear_mipmap, repeat_enable;
 // Niebla: 0 sin explorar, 1 explorado, 2 visible (bytes crudos de SimFog).
@@ -23,6 +25,7 @@ float fbm(vec2 p) {
 
 void vertex() {
 	wpos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	wnorm = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
 }
 
 void fragment() {
@@ -36,6 +39,11 @@ void fragment() {
 	float d1 = length(p - bases.zw) + edge;
 	float dirt_amt = (1.0 - smoothstep(5.0, 7.5, d0)) + (1.0 - smoothstep(5.0, 7.5, d1));
 	col = mix(col, dirt * (0.9 + fbm(p * 0.3) * 0.15), clamp(dirt_amt, 0.0, 1.0) * 0.6);
+	// Altura y laderas: arriba más seco, laderas de piedra, orillas de barro.
+	col = mix(col, col * vec3(1.08, 1.04, 0.9), clamp(wpos.y / 2.5, 0.0, 1.0) * 0.5);
+	float slope = 1.0 - wnorm.y;
+	col = mix(col, rock * (0.9 + fbm(p * 0.2) * 0.2), smoothstep(0.1, 0.32, slope) * 0.7);
+	col = mix(col, dirt * 0.75, smoothstep(-0.05, -0.35, wpos.y));
 	// Grilla de construcción.
 	vec2 g = abs(fract(p) - 0.5);
 	float gw = fwidth(p.x) * 1.2;

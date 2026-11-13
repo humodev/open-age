@@ -120,6 +120,12 @@ Fuera del triángulo (`02-alcance-y-epoca.md`). Reglas de la capa común:
 
 Las civilizaciones reemplazan estos dos por los suyos (obra estatal, asamblea, fundación, iglesia o monasterio) con el mismo módulo.
 
+## Relieve y agua (D-027)
+
+- Cada casilla tiene una altura entera. Los tipos de mapa son llano, montaña, río y bosque (`reglas.json` → `terrenos`); las campañas eligen el suyo.
+- Ataque a distancia desde más arriba: `+bono_altura_pct` por nivel de diferencia. Visión: `+vision_por_nivel` por nivel.
+- El agua profunda es intransitable. Los vados se caminan pero no se edifican. Los edificios exigen terreno parejo.
+
 ## Visión y niebla
 
 - Cada entidad ve en un radio (`vision`). Estados por casilla y por jugador: sin explorar, explorado y visible. Se calcula en la simulación cada `niebla_cada_ticks`, porque sigilo y emboscada (H2) dependen de ella.

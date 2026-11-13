@@ -8,7 +8,9 @@ const P := 1000
 var n: int
 var solid := PackedByteArray() # bloquea a todos
 var gate_owner := PackedInt32Array() # dueño de la puerta en la casilla, -1 sin puerta
-var occupied := PackedInt32Array() # id de la entidad que ocupa la casilla, -1 libre
+var occupied := PackedInt32Array() # id de la entidad que ocupa la casilla, -1 libre, -3 agua
+var height := PackedByteArray() # nivel de altura entero (D-027)
+var water := PackedByteArray() # 0 tierra, 1 agua profunda (sólida), 2 vado (transitable, no edificable)
 var astar: AStarGrid2D # puertas cerradas para todos
 var astars: Array[AStarGrid2D] = [] # una por jugador
 
@@ -20,6 +22,8 @@ func _init(size: int, num_players: int = 2) -> void:
 	occupied.fill(-1)
 	gate_owner.resize(n * n)
 	gate_owner.fill(-1)
+	height.resize(n * n)
+	water.resize(n * n)
 	astar = _new_astar()
 	for i in num_players:
 		astars.append(_new_astar())
@@ -134,3 +138,48 @@ func find_path(from: Vector2i, to: Vector2i, pid: int = -1) -> Array[Vector2i]:
 		return [] as Array[Vector2i]
 	to = Vector2i(clampi(to.x, 0, n - 1), clampi(to.y, 0, n - 1))
 	return _grid(pid).get_id_path(from, to, true)
+
+
+func h_at(tx: int, ty: int) -> int:
+	if not in_bounds(tx, ty):
+		return 0
+	return height[ty * n + tx]
+
+
+func is_water(tx: int, ty: int) -> bool:
+	return in_bounds(tx, ty) and water[ty * n + tx] != 0
+
+
+## Agua: la profunda es sólida para todos; el vado se camina pero no se edifica.
+func set_water(tx: int, ty: int, kind: int) -> void:
+	if not in_bounds(tx, ty):
+		return
+	var idx := ty * n + tx
+	water[idx] = kind
+	height[idx] = 0
+	occupied[idx] = -3
+	if kind == 1:
+		solid[idx] = 1
+		var cell := Vector2i(tx, ty)
+		astar.set_point_solid(cell, true)
+		for a in astars:
+			a.set_point_solid(cell, true)
+
+
+## ¿Huella pareja y en tierra?
+func is_flat(tx: int, ty: int, w: int, h: int) -> bool:
+	var h0 := h_at(tx, ty)
+	for yy in range(ty, ty + h):
+		for xx in range(tx, tx + w):
+			if h_at(xx, yy) != h0 or is_water(xx, yy):
+				return false
+	return true
+
+
+## ¿La casilla está en ladera (algún vecino a otra altura)?
+func is_slope(tx: int, ty: int) -> bool:
+	var h0 := h_at(tx, ty)
+	for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+		if in_bounds(tx + d.x, ty + d.y) and h_at(tx + d.x, ty + d.y) != h0:
+			return true
+	return false

@@ -24,6 +24,7 @@ var ais: Array = []
 var events: Array[Dictionary] = []
 var game_over := false
 var winner := -1
+var terrain := ""
 
 var _pending := {} # tick -> Array[Dictionary]
 var _in_step := false
@@ -34,12 +35,14 @@ var _dirty := false
 const RC := 8
 
 
-func _init(seed_value: int, num_players: int = 2, data_override: SimData = null) -> void:
+func _init(seed_value: int, num_players: int = 2, data_override: SimData = null, opts: Dictionary = {}) -> void:
 	data = data_override if data_override != null else SimData.load_default()
 	tick_ms = data.reglas["tick_ms"]
 	rng = SimRng.new(seed_value)
 	map = SimMap.new(data.reglas["mapa_tam"], num_players)
 	fog = SimFog.new(data.reglas["mapa_tam"], num_players)
+	fog.map = map
+	fog.vision_per_level = data.reglas["vision_por_nivel"]
 	for i in num_players:
 		players.append({
 			"id": i,
@@ -55,6 +58,10 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null)
 			"mods": {}, # modificadores acumulados (docs/05, "Investigaciones")
 			"alarm": false,
 		})
+	terrain = opts.get("terreno", "")
+	if terrain == "":
+		var kinds: Array = data.reglas["terrenos"]
+		terrain = kinds[rng.range_i(0, kinds.size() - 1)]
 	_generate_map()
 	_update_players()
 	for pid in players.size():
@@ -796,6 +803,11 @@ func _hit(a: SimEntity, t: SimEntity) -> void:
 		atk = atk * (100 + bonus) / 100
 	var mult: int = data.reglas["contadores"].get(a.fn, {}).get(t.fn, 100)
 	var armor: int = int(t.def.get("armadura", 0)) + (mod(t.owner, "armadura:" + t.fn) if t.is_unit() else 0)
+	# Altura (D-027): quien dispara desde más arriba pega más fuerte.
+	if int(a.def.get("alcance", 0)) > 1500:
+		var dh := map.h_at(a.x / P, a.y / P) - map.h_at(t.x / P, t.y / P)
+		if dh > 0:
+			atk = atk * (100 + dh * int(data.reglas["bono_altura_pct"])) / 100
 	var dmg := maxi(data.reglas["danio_minimo"], atk * mult / 100 - armor)
 	t.hp -= dmg
 	var ranged: bool = a.def.get("alcance", 0) > 1500
@@ -1258,7 +1270,7 @@ func can_place(type: String, tx: int, ty: int, pid: int = -1) -> bool:
 		return false
 	if data.edificios[type].get("puerta", false) and _own_wall_at(tx, ty, pid) != null:
 		return true
-	return map.is_free_rect(tx, ty, tam[0], tam[1])
+	return map.is_free_rect(tx, ty, tam[0], tam[1]) and map.is_flat(tx, ty, tam[0], tam[1])
 
 
 ## Empalizada propia en la casilla (una puerta puede reemplazarla).
@@ -1425,6 +1437,7 @@ func _generate_map() -> void:
 	var n := map.n
 	var b0 := Vector2i(22, 22)
 	bases = [b0, Vector2i(n - 4 - b0.x, n - 4 - b0.y)]
+	_generate_terrain()
 	for pid in players.size():
 		var base := bases[pid % 2]
 		spawn_building("centro", pid, base.x, base.y, true).capital = true
@@ -1476,7 +1489,8 @@ func _generate_map() -> void:
 	# Bosques.
 	var tries := 0
 	var made := 0
-	while made < 13 and tries < 200:
+	var forests := 22 if terrain == "bosque" else 13
+	while made < forests and tries < 300:
 		tries += 1
 		var c := Vector2i(rng.range_i(5, n - 6), rng.range_i(5, n - 6))
 		if _near_base(c, 17) or absi(c.x - c.y) < 6 and absi(c.x + c.y - n) < 20:
@@ -1550,6 +1564,73 @@ func _cluster_sym(type: String, c: Vector2i, count: int) -> void:
 		if map.occupant(t.x, t.y) == -1 and map.occupant(m.x, m.y) == -1 and map.in_bounds(t.x, t.y):
 			spawn_resource(type, t.x, t.y)
 			spawn_resource(type, m.x, m.y)
+
+
+## Relieve y agua con simetría puntual; las bases quedan llanas (D-027).
+func _generate_terrain() -> void:
+	var n := map.n
+	var hills := {"llano": 4, "montana": 11, "rio": 4, "bosque": 5}.get(terrain, 4) as int
+	var top := 3 if terrain == "montana" else 2
+	# Colinas: mesetas de nivel 1..top con bordes irregulares.
+	var made := 0
+	var tries := 0
+	while made < hills and tries < 200:
+		tries += 1
+		var c := Vector2i(rng.range_i(6, n - 7), rng.range_i(6, n - 7))
+		if _near_base(c, 15):
+			continue
+		var r := rng.range_i(4, 9)
+		var lvl := rng.range_i(1, top)
+		for l in range(1, lvl + 1):
+			var rr := r - (l - 1) * 2
+			if rr < 2:
+				break
+			for dy in range(-rr, rr + 1):
+				for dx in range(-rr, rr + 1):
+					if dx * dx + dy * dy > rr * rr + rng.range_i(0, rr):
+						continue
+					var t := c + Vector2i(dx, dy)
+					var m := _mirror(t, 1, 1)
+					if not map.in_bounds(t.x, t.y) or _near_base(t, 11) or _near_base(m, 11):
+						continue
+					if map.h_at(t.x, t.y) < l:
+						map.height[t.y * n + t.x] = l
+						map.height[m.y * n + m.x] = l
+		made += 1
+	# Río: cruza el mapa por la antidiagonal (que la simetría deja fija), con vados.
+	if terrain == "rio" or terrain == "bosque":
+		var width := 2 if terrain == "rio" else 1
+		var off := 0
+		var ford_every := 22
+		for i in range(0, n / 2 + 1):
+			if rng.range_i(0, 3) == 0:
+				off = clampi(off + rng.range_i(-1, 1), -6, 6)
+			var x := i + off
+			var y := n - 1 - i + off
+			for w in range(-width, width + 1):
+				for d in [Vector2i(w, 0), Vector2i(0, w)]:
+					var t: Vector2i = Vector2i(x, y) + d
+					var m := _mirror(t, 1, 1)
+					if not map.in_bounds(t.x, t.y) or _near_base(t, 12) or _near_base(m, 12):
+						continue
+					var kind := 2 if (i % ford_every) < 3 else 1
+					map.set_water(t.x, t.y, kind)
+					map.set_water(m.x, m.y, kind)
+	# Lagunas chicas en el llano.
+	if terrain == "llano":
+		for k in 3:
+			var c := Vector2i(rng.range_i(10, n - 11), rng.range_i(10, n - 11))
+			if _near_base(c, 18):
+				continue
+			var r := rng.range_i(2, 3)
+			for dy in range(-r, r + 1):
+				for dx in range(-r, r + 1):
+					if dx * dx + dy * dy <= r * r:
+						var t := c + Vector2i(dx, dy)
+						var m := _mirror(t, 1, 1)
+						if map.in_bounds(t.x, t.y):
+							map.set_water(t.x, t.y, 1)
+							map.set_water(m.x, m.y, 1)
 
 
 # ---------------------------------------------------------------- Hash

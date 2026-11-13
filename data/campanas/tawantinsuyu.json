@@ -1,0 +1,220 @@
+{
+  "civ": "tawantinsuyu",
+  "titulo": "Los nudos del camino",
+  "resumen": "Un khipukamayuq de Tinta lee en sus cuerdas cómo los ayllus del Cusco tejieron una red de trabajo y caminos, la estiraron hasta romperla, la defendieron y la volvieron a levantar, de Pachakutiq a Micaela Bastidas.",
+  "misiones": [
+    {
+      "id": "tawantinsuyu-1",
+      "titulo": "Los que se quedaron",
+      "anio": "1438",
+      "lugar": "Cusco y la llanura de Yawarpampa",
+      "intro": [
+        "Me llaman khipukamayuq: guardo lo que dicen las cuerdas. Esta es la más vieja que tengo, y empieza con un abandono. Los chankas bajaban sobre el Cusco, y el inca Wiraqocha se retiró con su heredero Urqon a Xaquixaguana. El Cusco se quedaba sin señor.",
+        "Se quedó un hijo menor, Kusi Yupanki, con unos pocos capitanes. No tenía ejército: tenía ayllus. Y a un ayllu no se le ordena. Se le pide trabajo por turnos, la mit'a, y se le devuelve con comida, chicha y fiesta en la plaza. Así se paga el trabajo en estas tierras.",
+        "Los cronistas escribieron después que las piedras del campo se volvieron guerreros, los pururawka. Los nudos dicen otra cosa: que los ayllus vecinos esperaron a ver quién resistía, y que bajaron cuando vieron la plaza llena y la obra en pie."
+      ],
+      "epilogo": [
+        "Kusi Yupanki venció en Yawarpampa, la llanura de sangre, y tomó el nombre de Pachakutiq: el que da vuelta el mundo. Dio vuelta también a su padre: el inca que se había ido no volvió a mandar.",
+        "Lo primero que hizo después no fue otra guerra, fue una cuenta: ayllu por ayllu, cuántas manos, cuántos turnos, cuánta comida se les debía. De esa cuenta salió todo lo demás. También una deuda: cada señor muerto conservaba lo que había ganado, y el que venía detrás tenía que ganar lo suyo."
+      ],
+      "fuentes": [
+        "Juan de Betanzos, Suma y narración de los Incas (1551)",
+        "Pedro Sarmiento de Gamboa, Historia de los Incas (1572)",
+        "María Rostworowski, Historia del Tahuantinsuyu (IEP, 1988)",
+        "John V. Murra, The Economic Organization of the Inka State (1956/1980)",
+        "Terence N. D'Altroy, The Incas (Blackwell, 2002)"
+      ],
+      "mapa": { "semilla": 1438, "terreno": "montana" },
+      "jugador": {
+        "edad": 1,
+        "recursos": { "alimento": 300, "madera": 250, "piedra": 100, "riqueza": 150 },
+        "aldeanos": 6,
+        "tropas": [ { "tipo": "guerrero", "n": 4 }, { "tipo": "hondero", "n": 4 } ]
+      },
+      "rivales": [
+        { "nombre": "Confederación chanka", "faccion": "tawantinsuyu", "ia": "agresiva", "edad": 1 }
+      ],
+      "objetivos": [
+        { "id": "o1", "texto": "Llamá a los ayllus a la mit'a: sumá 6 runa (aldeanos) a los que ya trabajan.", "tipo": "entrenar", "params": { "tipo": "aldeano", "n": 6 }, "secundario": false },
+        { "id": "o2", "texto": "Prepará la fiesta de reciprocidad en la plaza: juntá 500 de alimento. Sin fiesta no hay turnos de mit'a.", "tipo": "recolectar", "params": { "recurso": "alimento", "n": 500 }, "secundario": false },
+        { "id": "o3", "texto": "Levantá la primera obra estatal con los turnos de mit'a (avanzá a la edad II).", "tipo": "edad", "params": { "n": 2 }, "secundario": false },
+        { "id": "o4", "texto": "Resistí el asalto chanka sobre el Cusco.", "tipo": "sobrevivir", "params": { "segundos": 540 }, "secundario": false },
+        { "id": "o5", "texto": "Perseguí a los chankas hasta Yawarpampa y rompé su campamento.", "tipo": "destruir_hitos", "params": { "jugador": 1 }, "secundario": false, "oculto": true },
+        { "id": "o6", "texto": "No abandones el Cusco: que el centro siga en pie.", "tipo": "proteger", "params": { "tipo": "centro", "jugador": 0 }, "secundario": true }
+      ],
+      "eventos": [
+        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Kusi Yupanki", "texto": "Mi padre se fue. Los ayllus no. Que se junten en la plaza y que nadie se vaya con hambre." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o2" }, "accion": { "tipo": "dialogo", "params": { "quien": "Khipukamayuq", "texto": "Hubo fiesta, y los turnos se anudaron. Cada nudo es una mano que vuelve mañana." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 180 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 5 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 330 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 335 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "hondero", "n": 4 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "refuerzos", "params": { "jugador": 0, "tipo": "guerrero", "n": 8 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "dialogo", "params": { "quien": "Khipukamayuq", "texto": "Los ayllus de los cerros vieron la obra en pie y bajaron. Después los llamaron pururawka, piedras que se vuelven gente." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 480 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 8 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 485 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "hondero", "n": 6 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "objetivo_nuevo", "params": { "id": "o5" } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "dialogo", "params": { "quien": "Kusi Yupanki", "texto": "Se retiran a su campamento. No los dejemos volver a juntarse." } } }
+      ]
+    },
+    {
+      "id": "tawantinsuyu-2",
+      "titulo": "La frontera de piedra",
+      "anio": "c. 1500",
+      "lugar": "Pambamarca, norte del Chinchaysuyu",
+      "intro": [
+        "Tres generaciones después de Pachakutiq, la red llegaba a tierras donde nadie hablaba nuestra lengua. Wayna Qhapaq, su nieto, no heredó las tierras de su padre: esas quedaron con la momia y su panaqa. Lo suyo lo tenía que ganar, y lo fue a ganar al norte.",
+        "Los cayambes y los caranquis no esperaron a que llegara el camino. Levantaron fuertes en las crestas, frente a los nuestros. Pambamarca fue durante años una frontera de piedra contra piedra, y ninguno de los dos lados estaba defendiendo su casa: los dos defendían lo que creían suyo.",
+        "Aquí no se gana con valor. Se gana con depósitos llenos a una jornada del frente, con honderos que van y vuelven por turnos y con fuertes en la altura. Los nudos de esta cuerda son casi todos de maíz y de chuño."
+      ],
+      "epilogo": [
+        "Los nudos dicen que la guerra duró años y que terminó a orillas de una laguna que desde entonces se llama Yawarqocha, laguna de sangre. No dicen cuántos cayambes quedaron, porque esa cuenta no la llevábamos nosotros. Después llegaron los mitmaq: familias traídas de lejos para vigilar a los vencidos, y familias vencidas llevadas lejos.",
+        "Wayna Qhapaq murió en Tumipampa de una peste que llegó antes que los barbudos. Dejó dos hijos y una red demasiado grande para un solo señor."
+      ],
+      "fuentes": [
+        "Samuel Connell y Chad Gifford, Proyecto Arqueológico Pambamarca (Antiquity, project gallery)",
+        "Terence N. D'Altroy y Timothy K. Earle, Staple Finance, Wealth Finance, and Storage in the Inka Political Economy (Current Anthropology, 1985)",
+        "John Hyslop, The Inka Road System (1984)",
+        "Pedro Cieza de León, El señorío de los incas (c. 1553)",
+        "Pedro Sarmiento de Gamboa, Historia de los Incas (1572)"
+      ],
+      "mapa": { "semilla": 1500, "terreno": "montana" },
+      "jugador": {
+        "edad": 2,
+        "recursos": { "alimento": 500, "madera": 600, "piedra": 450, "riqueza": 300 },
+        "aldeanos": 12,
+        "tropas": [ { "tipo": "hondero", "n": 6 }, { "tipo": "lancero", "n": 4 }, { "tipo": "guerrero", "n": 4 } ]
+      },
+      "rivales": [
+        { "nombre": "Cayambes y caranquis", "faccion": "tawantinsuyu", "ia": "normal", "edad": 2 }
+      ],
+      "objetivos": [
+        { "id": "o1", "texto": "Construí una hilera de 4 qollqa (depósitos) en la ladera, a una jornada del frente.", "tipo": "construir", "params": { "tipo": "deposito", "n": 4 }, "secundario": false },
+        { "id": "o2", "texto": "Levantá 3 pukara (torres) en las crestas, frente a los fuertes cayambes.", "tipo": "construir", "params": { "tipo": "torre", "n": 3 }, "secundario": false },
+        { "id": "o3", "texto": "Leva por turnos: formá una chunka, un escuadrón de 10 honderos, con el stock de las qollqa.", "tipo": "entrenar", "params": { "tipo": "hondero", "n": 10 }, "secundario": false },
+        { "id": "o4", "texto": "Herencia dividida: levantá la obra estatal de Wayna Qhapaq lejos de la de su padre, al final del camino (avanzá a la edad III).", "tipo": "edad", "params": { "n": 3 }, "secundario": false },
+        { "id": "o5", "texto": "Tomá los fuertes de cresta de los cayambes.", "tipo": "destruir_hitos", "params": { "jugador": 1 }, "secundario": false },
+        { "id": "o6", "texto": "Que no caiga ninguna hilera entera de qollqa.", "tipo": "proteger", "params": { "tipo": "deposito", "jugador": 0 }, "secundario": true }
+      ],
+      "eventos": [
+        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Wayna Qhapaq", "texto": "Mi padre tiene sus tierras. Yo tengo este camino y lo que haya al final." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 240 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 6 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o1" }, "accion": { "tipo": "recursos", "params": { "alimento": 300, "madera": 0, "piedra": 0, "riqueza": 0 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o1" }, "accion": { "tipo": "dialogo", "params": { "quien": "Khipukamayuq", "texto": "Qollqa llenas: el ejército come sin saquear a nadie. Los que hoy son enemigos mañana van a pagar turnos." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 480 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 485 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "hondero", "n": 6 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "dialogo", "params": { "quien": "Wayna Qhapaq", "texto": "Que esta chunka cumpla su turno y vuelva a su chacra. La próxima la manda otro ayllu." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 720 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "lancero", "n": 6 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "revelar", "params": {} } }
+      ]
+    },
+    {
+      "id": "tawantinsuyu-3",
+      "titulo": "El agua de Ollantaytambo",
+      "anio": "1537",
+      "lugar": "Ollantaytambo, valle del Willkamayu",
+      "intro": [
+        "Esta cuerda la anudé con lo que contó Titu Kusi, hijo de Manco Inka, cuando ya vivía en Vilcabamba. Dice que los barbudos coronaron a su padre para que les sirviera, y que les sirvió hasta que entendió qué querían: todo.",
+        "En 1536 Manco salió del Cusco y volvió con los ayllus de los cuatro suyus. Casi un año duró el cerco. Los honderos tiraban piedras calientes envueltas en algodón y los techos de paja ardían. No todos estaban con él: cañaris y chachapoyas peleaban del lado de los barbudos. Tenían cuentas pendientes con los incas, y nadie se las había pagado.",
+        "Cuando se levantó el cerco, Manco se replegó a Ollantaytambo. Hasta ahí fue a buscarlo Hernando Pizarro, con jinetes y aliados, por la llanura del río. Manco tenía terrazas, honderos y algo que ellos no tenían: sabía dónde estaban los canales."
+      ],
+      "epilogo": [
+        "Hernando Pizarro se retiró de noche y dejó las tiendas. Fue la primera vez que los barbudos huyeron de nosotros en campo abierto.",
+        "Manco subió después a Vilcabamba, y allí aprendió a montar los caballos que les quitaba. Su reino en la selva alta duró treinta y cinco años. En 1572 llevaron a su hijo Túpac Amaru al Cusco y lo degollaron en la plaza. Pero la cuerda no se terminó ahí."
+      ],
+      "fuentes": [
+        "Titu Cusi Yupanqui, Instrucción del Inga don Diego de Castro Titu Cussi Yupangui (1570)",
+        "John Hemming, The Conquest of the Incas (1970)",
+        "Pedro Pizarro, Relación del descubrimiento y conquista de los reinos del Perú (1571)",
+        "Felipe Guaman Poma de Ayala, Nueva corónica y buen gobierno (c. 1615)"
+      ],
+      "mapa": { "semilla": 1537, "terreno": "montana" },
+      "jugador": {
+        "edad": 2,
+        "recursos": { "alimento": 600, "madera": 600, "piedra": 200, "riqueza": 200 },
+        "aldeanos": 12,
+        "tropas": [ { "tipo": "hondero", "n": 10 }, { "tipo": "lancero", "n": 6 }, { "tipo": "guerrero", "n": 8 } ]
+      },
+      "rivales": [
+        { "nombre": "Hueste de Hernando Pizarro", "faccion": "invasores", "ia": "agresiva", "edad": 2 },
+        { "nombre": "Auxiliares cañaris", "faccion": "tawantinsuyu", "ia": "normal", "edad": 2 }
+      ],
+      "objetivos": [
+        { "id": "o1", "texto": "Leva por turnos: reuní 12 honderos más con el stock de las qollqa. Sus piedras calientes queman la paja.", "tipo": "entrenar", "params": { "tipo": "hondero", "n": 12 }, "secundario": false },
+        { "id": "o2", "texto": "Cavá pozos con estacas y cerrá la llanura (20 tramos de empalizada): los caballos no pasan por ahí.", "tipo": "construir", "params": { "tipo": "empalizada", "n": 20 }, "secundario": false },
+        { "id": "o3", "texto": "Aguantá desde las terrazas el ataque de Hernando Pizarro.", "tipo": "sobrevivir", "params": { "segundos": 420 }, "secundario": false },
+        { "id": "o4", "texto": "Manco abrió los canales y la llanura se anega: matá a 25 enemigos atascados en el barro.", "tipo": "matar", "params": { "n": 25 }, "secundario": false, "oculto": true },
+        { "id": "o5", "texto": "Derribá 6 jinetes: cada caballo que cae es uno que aprenderemos a montar.", "tipo": "destruir", "params": { "tipo": "jinete", "n": 6, "jugador": 1 }, "secundario": true },
+        { "id": "o6", "texto": "Que el pueblo de Ollantaytambo siga en pie.", "tipo": "proteger", "params": { "tipo": "centro", "jugador": 0 }, "secundario": true }
+      ],
+      "eventos": [
+        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Manco Inka", "texto": "Que suban si quieren. Las compuertas se abren cuando yo lo diga." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 150 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 160 }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "guerrero", "n": 8 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 300 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 305 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 4 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 360 }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "lancero", "n": 6 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "dialogo", "params": { "quien": "Manco Inka", "texto": "¡Ahora! Abran los canales." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "objetivo_nuevo", "params": { "id": "o4" } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 10 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "guerrero", "n": 10 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o5" }, "accion": { "tipo": "dialogo", "params": { "quien": "Khipukamayuq", "texto": "Titu Kusi cuenta que un año después su padre ya andaba a caballo. Lo que se captura también se aprende." } } }
+      ]
+    },
+    {
+      "id": "tawantinsuyu-4",
+      "titulo": "Tinta",
+      "anio": "1780",
+      "lugar": "Tungasuca, Pomacanchi y Sangarará",
+      "intro": [
+        "Ahora hablo de lo que vi. Doscientos años después de Vilcabamba, la mit'a ya no era nuestra: era la de Potosí, que se tragaba a uno de cada siete hombres. Los corregidores nos vendían a la fuerza mulas y paños que no queríamos, y en los obrajes se tejía encerrado.",
+        "José Gabriel Condorcanqui era kuraka de Tungasuca y descendía de los incas de Vilcabamba. Se hizo llamar Túpac Amaru. El 4 de noviembre de 1780 apresó al corregidor Arriaga, y días después lo ahorcó en la plaza.",
+        "Las cuentas las llevaba Micaela Bastidas. Ella firmaba los pasaportes, juntaba la pólvora, la coca y la comida, y le escribía a su marido que no perdiera tiempo. Yo le anudaba las cuentas.",
+        "Del Cusco salió una columna a buscarnos. No venían solo españoles: también kurakas leales al rey, como Mateo Pumakawa. Aquí nadie estaba de un solo lado."
+      ],
+      "epilogo": [
+        "Vencimos en Sangarará el 18 de noviembre. Micaela pedía marchar sobre el Cusco esa misma semana; José Gabriel esperó, y cuando llegamos, en enero, el Cusco ya tenía refuerzos. En abril los capturaron. El 18 de mayo de 1781 los mataron en la plaza del Cusco, a él, a Micaela y a su hijo Hipólito, y repartieron los cuerpos por los pueblos para que todos vieran.",
+        "No vieron lo que esperaban. En el altiplano, Túpac Katari y Bartolina Sisa ya tenían cercada La Paz. Las cuerdas se cortan. Los nudos no se desatan."
+      ],
+      "fuentes": [
+        "Charles F. Walker, The Tupac Amaru Rebellion (Harvard University Press, 2014)",
+        "Sergio Serulnikov, Revolution in the Andes: The Age of Túpac Amaru (Duke University Press, 2013)",
+        "Peter Bakewell, Miners of the Red Mountain: Indian Labor in Potosí, 1545-1650 (1984)",
+        "Colección Documental del Bicentenario de la Revolución Emancipadora de Túpac Amaru (1980-1982), cartas de Micaela Bastidas"
+      ],
+      "mapa": { "semilla": 1780, "terreno": "montana" },
+      "jugador": {
+        "edad": 3,
+        "recursos": { "alimento": 600, "madera": 400, "piedra": 200, "riqueza": 300 },
+        "aldeanos": 20,
+        "tropas": [ { "tipo": "hondero", "n": 10 }, { "tipo": "guerrero", "n": 6 } ]
+      },
+      "rivales": [
+        { "nombre": "Corregimiento y milicias del Cusco", "faccion": "invasores", "ia": "normal", "edad": 3 },
+        { "nombre": "Milicias de Mateo Pumakawa", "faccion": "tawantinsuyu", "ia": "normal", "edad": 3 }
+      ],
+      "objetivos": [
+        { "id": "o1", "texto": "Levantamiento: armá a los ayllus de Tinta. Convertí población en 15 guerreros.", "tipo": "entrenar", "params": { "tipo": "guerrero", "n": 15 }, "secundario": false },
+        { "id": "o2", "texto": "Abrí los obrajes de Pomacanchi y Parapuquio y liberá a los que tejían encerrados.", "tipo": "destruir", "params": { "tipo": "hito_economia", "n": 2, "jugador": 1 }, "secundario": false },
+        { "id": "o3", "texto": "Micaela organiza el abasto: juntá 1200 de alimento para sostener el levantamiento.", "tipo": "recolectar", "params": { "recurso": "alimento", "n": 1200 }, "secundario": false },
+        { "id": "o4", "texto": "Derrotá en Sangarará a la columna que salió del Cusco.", "tipo": "matar", "params": { "n": 30 }, "secundario": false },
+        { "id": "o5", "texto": "Micaela pide pólvora y plomo: juntá 400 de riqueza para comprarlos.", "tipo": "recolectar", "params": { "recurso": "riqueza", "n": 400 }, "secundario": true },
+        { "id": "o6", "texto": "Micaela escribe: marchá ya sobre el Cusco, antes de que lleguen los refuerzos de Lima.", "tipo": "destruir_hitos", "params": { "jugador": 1 }, "secundario": true, "oculto": true }
+      ],
+      "eventos": [
+        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Túpac Amaru", "texto": "Desde hoy no hay reparto, no hay obraje y no hay mita para Potosí." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o1" }, "accion": { "tipo": "dialogo", "params": { "quien": "Micaela Bastidas", "texto": "Gente hay. Lo que falta es tiempo. Que no se nos vaya en esperar." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o2" }, "accion": { "tipo": "refuerzos", "params": { "jugador": 0, "tipo": "guerrero", "n": 10 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o2" }, "accion": { "tipo": "dialogo", "params": { "quien": "Khipukamayuq", "texto": "Los que salieron de los obrajes no volvieron a sus casas. Se vinieron con nosotros." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 300 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 6 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 305 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 4 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 330 }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "guerrero", "n": 8 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 540 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 8 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 545 }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "hondero", "n": 8 } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "objetivo_nuevo", "params": { "id": "o6" } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "dialogo", "params": { "quien": "Micaela Bastidas", "texto": "Ganamos en Sangarará. Ahora al Cusco, ahora, mientras tienen miedo." } } },
+        { "cuando": { "tipo": "tiempo", "valor": 900 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 10 } } },
+        { "cuando": { "tipo": "tiempo", "valor": 905 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 8 } } }
+      ]
+    }
+  ]
+}

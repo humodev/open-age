@@ -13,6 +13,9 @@
   "exploradores_iniciales": 1,
   "niebla_cada_ticks": 5,
   "construccion_decreciente": true,
+  "bono_altura_pct": 15,
+  "vision_por_nivel": 1500,
+  "terrenos": ["llano", "montana", "rio", "bosque"],
   "contadores": {
     "choque":    { "distancia": 200, "linea": 60,  "edificio": 45, "asedio": 150 },
     "distancia": { "linea": 175,     "choque": 70, "edificio": 20, "asedio": 15 },

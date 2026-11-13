@@ -11,6 +11,7 @@ extends Node3D
 ##   --select=tipo      selecciona entidades de ese tipo del jugador local antes de la captura
 ##   --demo=base|batalla  escena armada para revisar modelos y combate
 ##   --menu             fuerza el menú de inicio (sin argumentos se abre solo)
+##   --terreno=llano|montana|rio|bosque  tipo de mapa
 ##   --nofog            sin niebla de guerra (automático en --aivai)
 ##   --autotest         prueba de punta a punta con eventos reales de mouse y teclado
 
@@ -96,7 +97,7 @@ func _build_environment() -> void:
 
 
 func _new_game() -> void:
-	sim = Sim.new(_seed)
+	sim = Sim.new(_seed, 2, null, {"terreno": _args.get("terreno", "")})
 	var aivai := _args.has("aivai") or _menu_mode
 	sim.ais = []
 	for pid in sim.players.size():

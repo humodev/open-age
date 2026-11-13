@@ -47,8 +47,9 @@ func _apply() -> void:
 	focus.z = clampf(focus.z, -4.0, map_size + 4.0)
 	var pitch := deg_to_rad(PITCH_DEG)
 	var back := -forward_xz() * cos(pitch) * zoom
-	cam.position = focus + back + Vector3(0, sin(pitch) * zoom, 0)
-	cam.look_at(focus, Vector3.UP)
+	var fh := WorldView.height_at(focus.x, focus.z)
+	cam.position = focus + Vector3(0, fh, 0) + back + Vector3(0, sin(pitch) * zoom, 0)
+	cam.look_at(focus + Vector3(0, fh, 0), Vector3.UP)
 
 
 func _process(delta: float) -> void:
@@ -102,5 +103,9 @@ func ground_at(screen: Vector2) -> Vector3:
 	var d := cam.project_ray_normal(screen)
 	if absf(d.y) < 0.0001:
 		return focus
+	# Intersección con el terreno: punto fijo sobre la altura suavizada.
 	var t := -o.y / d.y
+	for i in 6:
+		var p := o + d * t
+		t = (WorldView.height_at(p.x, p.z) - o.y) / d.y
 	return o + d * t

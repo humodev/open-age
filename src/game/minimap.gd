@@ -46,7 +46,13 @@ func _rebuild() -> void:
 	for y in n:
 		for x in n:
 			var k := float((x * 7 + y * 13) % 5) / 40.0
-			_img.set_pixel(x, y, Palette.GROUND_A.lerp(Palette.GROUND_B, 0.35 + k))
+			var c := Palette.GROUND_A.lerp(Palette.GROUND_B, 0.35 + k).lightened(sim.map.h_at(x, y) * 0.09)
+			var w := sim.map.water[y * sim.map.n + x]
+			if w == 1:
+				c = Color("2b4d5e")
+			elif w == 2:
+				c = Color("4f7478")
+			_img.set_pixel(x, y, c)
 	for e in sim.entities:
 		if not e.alive or not e.is_resource():
 			continue

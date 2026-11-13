@@ -7,3 +7,11 @@ Completar el juego como "un Age of Empires 4 indie del sur global": arte, animac
 1. **Decisiones delegadas cerradas** (`docs/04-decisiones.md`, D-012 a D-028): las seis propuestas técnicas, las preguntas abiertas que tenían recomendación fundada y la corrección de documentos según las fuentes. Las preguntas que son gusto del autor van a `CONSULTAS.md`.
 2. **Civilizaciones nuevas elegidas**: Quilombo dos Palmares (Brasil, 1605–1694) y Ayutthaya (Siam, 1351–1767). Se descartaron los maratas porque se superponían con Etiopía (fuertes de montaña) y con los mapuches (incursiones).
 3. **Cuatro agentes en paralelo**: investigación de Palmares, investigación de Ayutthaya, campañas de las cuatro civilizaciones originales en un formato de datos ejecutable, y audio y texturas CC0.
+4. **Relieve y agua (D-027).** Cada casilla tiene una altura entera. Hay ríos con vados y lagunas, y cuatro tipos de mapa: llano, montaña, río y bosque, con simetría entre las bases.
+   - En la simulación, quien dispara desde más alto pega más fuerte y ve más lejos, y solo se construye en terreno parejo.
+   - En la imagen, el terreno es una malla con laderas de roca y el agua está animada.
+   - Tropiezos: el plano exterior tapaba el cauce del río, y por error se invirtió el orden de los vértices. Se resolvió mirando las capturas una por una.
+
+| Río con vados | Mesetas de montaña |
+|---|---|
+| ![](01-terreno-rio.jpg) | ![](02-terreno-montana.jpg) |
