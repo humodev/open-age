@@ -145,6 +145,10 @@ static func draw(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
 		"camino":
 			for i in 3:
 				ci.draw_rect(Rect2(c + Vector2(-s * 0.36 + i * s * 0.25, -s * 0.12 + (i % 2) * s * 0.08), Vector2(s * 0.2, s * 0.2)), col)
+		"mercado":
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.42, -s * 0.05), c + Vector2(0, -s * 0.36), c + Vector2(s * 0.42, -s * 0.05)]), col.darkened(0.15))
+			for i in 3:
+				ci.draw_rect(Rect2(c + Vector2(-s * 0.36 + i * s * 0.26, -s * 0.05), Vector2(s * 0.2, s * 0.36)), col if i != 1 else Palette.WEALTH)
 		"detener":
 			ci.draw_rect(Rect2(c - Vector2(s * 0.24, s * 0.24), Vector2(s * 0.48, s * 0.48)), col)
 		"atacar":
@@ -157,7 +161,7 @@ static func draw(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
 			ci.draw_circle(c, s * 0.25, col)
 
 
-const KNOWN := ["aldeano", "guerrero", "hondero", "lancero", "explorador", "ariete", "centro", "casa", "granja", "deposito", "cuartel", "torre", "hito", "hito_economia", "hito_guerra", "empalizada", "puerta"]
+const KNOWN := ["mercado", "aldeano", "guerrero", "hondero", "lancero", "explorador", "ariete", "centro", "casa", "granja", "deposito", "cuartel", "torre", "hito", "hito_economia", "hito_guerra", "empalizada", "puerta"]
 
 
 ## Ícono para cualquier tipo, también los propios de cada civilización, deducido de sus datos.

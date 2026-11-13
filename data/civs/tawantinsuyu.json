@@ -416,7 +416,8 @@
   "centro",
   "camino",
   "anden",
-  "qollqa"
+  "qollqa",
+  "mercado"
  ],
  "produce": {
   "centro": [
@@ -448,7 +449,7 @@
   "caminos": {
    "velocidad_pct": 35,
    "bono_conectado_pct": 20,
-   "penal_desconectado_pct": 10
+   "penal_desconectado_pct": 0
   }
  },
  "ia_unidades": [

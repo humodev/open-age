@@ -43,6 +43,14 @@ static func building(type: String, def: Dictionary, team: Color, style: Dictiona
 		_center(p, forma, w, d, pal, team, base_y)
 	elif type == "torre":
 		_tower(p, forma, pal, team, base_y)
+	elif def.get("mercado", false):
+		for i in 3:
+			var o := Vector3(-w * 0.3 + i * w * 0.3, base_y, d * 0.1 - (i % 2) * d * 0.25)
+			for c in [Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, 1)]:
+				p.append([Meshes.box(0.06, 0.8, 0.06), Meshes.xf(o + Vector3(c.x * 0.32, 0.4, c.y * 0.32)), pal[1].darkened(0.35)])
+			p.append([Meshes.prism(0.8, 0.3, 0.8), Meshes.xf(o + Vector3(0, 0.95, 0)), [pal[1], Palette.WEALTH.darkened(0.2), team][i]])
+			p.append([Meshes.box(0.6, 0.3, 0.4), Meshes.xf(o + Vector3(0, 0.15, 0)), pal[0].darkened(0.1)])
+		Meshes._banner(p, Vector3(w * 0.42, base_y, -d * 0.42), 1.8, team)
 	elif def.has("produce"):
 		_barracks(p, forma, w, d, pal, team, base_y, type)
 	elif def.has("deposito"):

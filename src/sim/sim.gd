@@ -126,6 +126,8 @@ func _apply(c: Dictionary) -> void:
 			_cmd_ungarrison(pid, c["building"])
 		"alarm":
 			_cmd_alarm(pid, c.get("on", true))
+		"trade":
+			_cmd_trade(pid, c["building"], c["recurso"], c["op"])
 		"pack":
 			_cmd_pack(pid, c["building"])
 		"unpack":
@@ -322,6 +324,43 @@ func _cmd_research(pid: int, bid: int, tech: String) -> void:
 	_pay(pid, t["costo"])
 	players[pid]["pending"][tech] = true
 	b.queue.append("@" + tech)
+
+
+## Mercado: compra o vende un lote por riqueza; el precio sube al comprar y baja al vender.
+func _cmd_trade(pid: int, bid: int, kind: String, op: String) -> void:
+	var b: SimEntity = by_id.get(bid)
+	if b == null or not b.alive or b.owner != pid or not b.built or not b.def.get("mercado", false):
+		return
+	if not kind in ["alimento", "madera", "piedra"]:
+		return
+	var cfg: Dictionary = data.reglas["mercado"]
+	var p := players[pid]
+	var price: int = trade_price(pid, kind)
+	var lot: int = cfg["lote"]
+	var res: Dictionary = p["res"]
+	if op == "comprar":
+		if int(res["riqueza"]) < price:
+			_notify(pid, "Falta riqueza")
+			return
+		res["riqueza"] -= price
+		res[kind] += lot
+		p["precios"][kind] = mini(int(cfg["maximo"]), price + int(cfg["paso"]))
+	else:
+		if int(res[kind]) < lot:
+			_notify(pid, "No alcanza para vender")
+			return
+		res[kind] -= lot
+		res["riqueza"] += price * (100 - int(cfg["comision_pct"])) / 100
+		p["precios"][kind] = maxi(int(cfg["minimo"]), price - int(cfg["paso"]))
+	events.append({"t": "trade", "player": pid})
+
+
+func trade_price(pid: int, kind: String) -> int:
+	var p := players[pid]
+	if not p.has("precios"):
+		var start: int = data.reglas["mercado"]["precio_inicial"]
+		p["precios"] = {"alimento": start, "madera": start, "piedra": start}
+	return p["precios"][kind]
 
 
 ## Base móvil (kätäma etíope): el edificio se desarma en una unidad lenta que lo lleva.

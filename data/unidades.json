@@ -7,7 +7,7 @@
     "velocidad": 1250, "vision": 7000, "radio": 220,
     "carga": 10,
     "tasa": { "alimento": 1000, "granja": 750, "madera": 850, "piedra": 700, "riqueza": 700 },
-    "construye": ["casa", "granja", "deposito", "cuartel", "torre", "centro", "empalizada", "puerta"]
+    "construye": ["casa", "granja", "deposito", "cuartel", "torre", "centro", "empalizada", "puerta", "mercado"]
   },
   "guerrero": {
     "nombre": "Guerrero de choque", "funcion": "choque", "edad_min": 1, "pob": 1,

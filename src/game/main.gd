@@ -144,6 +144,12 @@ func _build_scene(aivai: bool) -> void:
 	add_child(cam)
 	var base := sim.bases[local]
 	cam.look_at_point(Vector3(base.x + 6, 0, base.y + 6))
+	if _args.has("cam") and not _args.has("shot"):
+		var cc: PackedStringArray = (_args["cam"] as String).split(",")
+		cam.look_at_point(Vector3(float(cc[0]), 0, float(cc[1])))
+		if cc.size() > 2:
+			cam.zoom = float(cc[2])
+			cam.set("_zoom_target", float(cc[2]))
 	if _args.has("shot"):
 		cam.edge_pan = false
 
@@ -236,9 +242,13 @@ func _demo(kind: String) -> void:
 			sim.spawn_unit(["guerrero", "hondero", "lancero"][i % 3], 0, (b.x + 10 + i % 3) * 1000 + 500, (b.y + 7 + i / 3) * 1000 + 500)
 	elif kind == "batalla":
 		var c := sim.map.n / 2
-		var types := ["guerrero", "hondero", "lancero"]
 		var ids := [[], []]
 		for pid in 2:
+			var types: Array = ["guerrero", "hondero", "lancero"]
+			for k in sim.dp(pid).civ.get("unidades_nuevas", {}):
+				var ud: Dictionary = sim.dp(pid).unidades[k]
+				if ud.get("funcion", "") in ["choque", "distancia", "linea"]:
+					types.append(k)
 			for i in 30:
 				var x := (c - 7 + pid * 14 + (i % 5) * (1 if pid == 0 else -1)) * 1000 + 500
 				var y := (c - 4 + i / 5) * 1000 + 500

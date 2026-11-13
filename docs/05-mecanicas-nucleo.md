@@ -43,6 +43,10 @@ Se pagan al encolar. Cancelar devuelve el costo completo. Construir descuenta al
 - Rendimientos decrecientes (P-006, como AoE4): con *n* constructores la obra tarda `tiempo × 3/(n+2)`. Se desactiva con `reglas.json` → `construccion_decreciente`.
 - Los edificios con `deposito` aceptan esos recursos. Los que tienen `produce` entrenan unidades por cola.
 
+## Mercado
+
+Desde la edad II. Vende o compra lotes de alimento, madera o piedra por riqueza (`reglas.json` → `mercado`). Cada compra sube el precio de ese recurso para ese jugador y cada venta lo baja, entre un mínimo y un máximo. La venta paga una comisión.
+
 ## Reparación
 
 Un aldeano con orden sobre un edificio propio dañado lo repara a la velocidad de construcción. En H1 reparar no cuesta recursos; ver A-012.

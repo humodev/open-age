@@ -57,5 +57,10 @@
   "puerta": {
     "nombre": "Puerta", "edad_min": 1, "tam": [1, 1], "pv": 500, "armadura": 0,
     "costo": { "madera": 20 }, "tiempo_ms": 8000, "vision": 2000, "puerta": true
+  },
+  "mercado": {
+    "nombre": "Mercado", "edad_min": 2, "tam": [3, 3], "pv": 1500, "armadura": 1,
+    "costo": { "madera": 175 }, "tiempo_ms": 35000, "vision": 6000, "mercado": true, "ranura": 5,
+    "desc": "Compra y vende alimento, madera y piedra por riqueza. Los precios se mueven con cada operación."
   }
 }

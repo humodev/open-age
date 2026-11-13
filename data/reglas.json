@@ -16,6 +16,7 @@
   "bono_altura_pct": 15,
   "vision_por_nivel": 1500,
   "terrenos": ["llano", "montana", "rio", "bosque"],
+  "mercado": { "lote": 100, "precio_inicial": 100, "paso": 4, "minimo": 25, "maximo": 300, "comision_pct": 30 },
   "contadores": {
     "choque":    { "distancia": 200, "linea": 60,  "edificio": 45, "asedio": 150 },
     "distancia": { "linea": 175,     "choque": 70, "edificio": 20, "asedio": 15 },

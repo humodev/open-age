@@ -59,6 +59,7 @@ func think() -> void:
 	_buildings(p, vill, centro, by_type, saving)
 	_production(p, vill, army, centro, by_type, saving)
 	_research(p, by_type, saving)
+	_trade(p, by_type)
 	_alarm(p, vill, army, centro)
 	_military(army, centro)
 
@@ -228,6 +229,9 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 		if have < int(wanted[t]) and not unbuilt.has(t) and int(def.get("edad_min", 1)) <= p["age"] and vill.size() >= 10 + have * 6:
 			_try_build(t, p, vill, centro, 2)
 			break
+	# Mercado desde la edad II.
+	if p["age"] >= 2 and not by_type.has("mercado") and vill.size() >= 20:
+		_try_build("mercado", p, vill, centro, 2)
 	# Torre.
 	if p["age"] >= 2 and sim.dp(player).edificios.has("torre") and by_type.get("torre", []).size() < 1 and p["res"]["piedra"] >= 250:
 		_try_build("torre", p, vill, centro, 1)
@@ -446,3 +450,20 @@ func _makes_military(b: SimEntity) -> bool:
 		if not u.is_empty() and u["funcion"] in ["choque", "distancia", "linea"]:
 			return true
 	return false
+
+
+## Mercado: vende excedentes cuando falta riqueza y compra lo que falta cuando sobra riqueza.
+func _trade(p: Dictionary, by_type: Dictionary) -> void:
+	var markets: Array = by_type.get("mercado", [])
+	if markets.is_empty() or not (markets[0] as SimEntity).built:
+		return
+	var m: SimEntity = markets[0]
+	var res: Dictionary = p["res"]
+	for k in ["alimento", "madera", "piedra"]:
+		if int(res[k]) > 900 and int(res["riqueza"]) < 400:
+			sim.push_command({"t": "trade", "player": player, "building": m.id, "recurso": k, "op": "vender"})
+			return
+	for k in ["alimento", "madera"]:
+		if int(res[k]) < 100 and int(res["riqueza"]) > 700:
+			sim.push_command({"t": "trade", "player": player, "building": m.id, "recurso": k, "op": "comprar"})
+			return
