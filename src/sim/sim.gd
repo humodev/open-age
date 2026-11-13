@@ -66,6 +66,8 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null,
 			"pending": {}, # investigaciones en cola
 			"mods": {}, # modificadores acumulados (docs/05, "Investigaciones")
 			"alarm": false,
+			"disp": [0, 0, 0, 0, 0], # baldes de lo disputado (se crean siempre: leerlos no cambia el estado)
+			"disp_min": 0,
 			"civ": (opts.get("civs", []) as Array)[i] if i < (opts.get("civs", []) as Array).size() else "",
 		})
 	for p in players:
@@ -1664,12 +1666,11 @@ func _disp_buckets(pid: int) -> Array:
 	var p := players[pid]
 	var nb := int(data.reglas.get("disputado", {}).get("baldes", 5))
 	var minute := tick / 600
-	if not p.has("disp"):
+	if (p["disp"] as Array).size() != nb:
 		var arr := []
 		arr.resize(nb)
 		arr.fill(0)
 		p["disp"] = arr
-		p["disp_min"] = minute
 	while int(p["disp_min"]) < minute:
 		p["disp_min"] = int(p["disp_min"]) + 1
 		(p["disp"] as Array)[int(p["disp_min"]) % nb] = 0
