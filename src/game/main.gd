@@ -19,6 +19,7 @@ extends Node3D
 ##   --dificultad=facil|normal|dificil
 ##   --nofog            sin niebla de guerra (automático en --aivai)
 ##   --autotest         prueba de punta a punta con eventos reales de mouse y teclado
+##   --panel=a,b        abre paneles de información antes de la captura (economia, edad, pueblo, sucesos, puntaje, fin)
 
 const MAX_STEPS_PER_FRAME := 8
 
@@ -445,6 +446,14 @@ func _maybe_shot() -> void:
 			if e.owner == local and e.type == _args["select"]:
 				ids.append(e.id)
 		ctrl.select_ids(ids)
+	# --- paneles --- (--panel=economia,edad,pueblo,sucesos,puntaje,fin para las capturas)
+	if _args.has("panel") and hud.paneles != null:
+		for w in (_args["panel"] as String).split(","):
+			if w == "fin":
+				hud.paneles.show_end(local)
+			else:
+				hud.paneles.toggle(w)
+	# --- fin paneles ---
 	paused = true
 	for i in 12:
 		await get_tree().process_frame
@@ -649,6 +658,38 @@ func _autotest() -> void:
 		if e.owner == local and e.inside >= 0:
 			inside += 1
 	check.call("el toque de calma los saca (%d)" % inside, inside == 0)
+	# --- paneles --- (teclas, botón de cierre y clic en el registro)
+	var pn = hud.paneles
+	_key_tap(KEY_F2)
+	await _frames(3)
+	check.call("F2 abre el panel de economía", pn.economia.visible)
+	var close_at: Vector2 = pn.economia.global_position + Vector2(pn.economia.size.x - 30, 20)
+	_mouse(close_at, MOUSE_BUTTON_LEFT, true)
+	_mouse(close_at, MOUSE_BUTTON_LEFT, false)
+	await _frames(3)
+	check.call("el ✕ cierra el panel de economía", not pn.economia.visible)
+	_key_tap(KEY_F4)
+	await _frames(3)
+	check.call("F4 abre el avance de edad", pn.edad.visible)
+	_key_tap(KEY_F4)
+	_key_tap(KEY_F1)
+	await _frames(3)
+	check.call("F1 abre la ficha del pueblo", pn.pueblo.visible)
+	_key_tap(KEY_F1)
+	await _frames(3)
+	check.call("F1 la cierra", not pn.pueblo.visible)
+	pn.datos.add_log("prueba", Palette.UI_TEXT, base.x * 1000 + 20000, base.y * 1000 + 20000)
+	_key_tap(KEY_F5)
+	await _frames(3)
+	var row_at: Vector2 = pn.sucesos.global_position + Vector2(100, 40)
+	_mouse(row_at, MOUSE_BUTTON_LEFT, true)
+	_mouse(row_at, MOUSE_BUTTON_LEFT, false)
+	await _frames(3)
+	var want := Vector2(base.x + 20, base.y + 20)
+	check.call("F5 despliega el registro y el clic lleva la cámara (%.0f, %.0f)" % [cam.focus.x, cam.focus.z], pn.sucesos.expanded and Vector2(cam.focus.x, cam.focus.z).distance_to(want) < 2.0)
+	_key_tap(KEY_F5)
+	await _frames(2)
+	# --- fin paneles ---
 	var img := get_viewport().get_texture().get_image()
 	img.save_png("screenshots/autotest.png")
 	for r in results:

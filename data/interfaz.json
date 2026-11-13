@@ -1,0 +1,14 @@
+{
+  "_doc": "Valores de la interfaz que no tocan la simulación (src/game/ui/panel_*.gd). El puntaje es solo informativo: no decide la partida.",
+  "puntaje": {
+    "_doc": "Puntaje en vivo = recursos juntados / recursos_por_punto + bajas x por_baja + edificios enemigos destruidos x por_edificio_destruido + (edad - 1) x por_edad + investigaciones x por_investigacion",
+    "recursos_por_punto": 10,
+    "por_baja": 6,
+    "por_edificio_destruido": 25,
+    "por_edad": 150,
+    "por_investigacion": 20
+  },
+  "muestreo_s": 30,
+  "ventana_ingreso_s": 60,
+  "sucesos_max": 80
+}
