@@ -7,4 +7,6 @@
 5. Antes de entregar cambios en la simulación, correr:
    - `godot --headless --path . -s tests/test_determinism.gd`
    - `godot --headless --path . -s tests/bench.gd`
-6. Antes de entregar cambios en la interfaz o los controles, correr `godot --path . -- --autotest` y revisar una captura (`-- --shot=screenshots/x.png --shot-at=3`).
+6. Antes de entregar cambios en la interfaz o los controles, correr `godot --path . -- --autotest --civ=guaranies --terreno=llano` y revisar una captura (`-- --shot=screenshots/x.png --shot-at=3`).
+7. Cambios en civilizaciones o en la IA: `tests/civ_smoke.gd`. Cambios en campañas o en el motor de escenarios: `tests/campaign_smoke.gd`. Balance: `tests/torneo.gd -- --minutes=30 --seeds=2`.
+8. El registro del proceso va en `proceso/` y las preguntas para el autor, en `proceso/CONSULTAS.md`.

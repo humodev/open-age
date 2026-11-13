@@ -460,12 +460,30 @@ func render(alpha: float, delta: float) -> void:
 	_render_fog(delta)
 
 
+func tick_counter() -> int:
+	return sim.tick
+
+
+var _stealth_tick := -1
+var _stealth := {}
+
+
+## Enemigo escondido que el jugador local no detecta (se recalcula una vez por tick).
+func _stealthed(e: SimEntity) -> bool:
+	if _stealth_tick != sim.tick:
+		_stealth_tick = sim.tick
+		_stealth.clear()
+	if not _stealth.has(e.id):
+		_stealth[e.id] = sim.mods.is_hidden_now(e) and not sim.mods.detected_by(e, local)
+	return _stealth[e.id]
+
+
 ## Estado de niebla del jugador local (2 = visible) para una entidad.
 func fog_state(e: SimEntity) -> int:
 	if not fog_on or e.owner == local:
 		return 2
 	if sim.fog.is_visible(local, e):
-		return 2
+		return 0 if _stealthed(e) else 2
 	return 1 if sim.fog.is_explored(local, e) else 0
 
 
@@ -501,6 +519,10 @@ func _render_unit(e: SimEntity, v: Dictionary, alpha: float, delta: float) -> vo
 		v["prev"] = v["cur"]
 		return
 	var body: MeshInstance3D = v["body"]
+	# Sigilo: las unidades propias escondidas en el monte se ven translúcidas.
+	if e.owner == local and (tick_counter() + e.id) % 5 == 0:
+		v["hidden"] = sim.mods.is_hidden_now(e)
+	body.transparency = 0.45 if v.get("hidden", false) else 0.0
 	var prev: Vector3 = v["prev"]
 	var cur: Vector3 = v["cur"]
 	node.position = prev.lerp(cur, alpha)

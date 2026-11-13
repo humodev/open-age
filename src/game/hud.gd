@@ -716,6 +716,11 @@ class SelectionPanel:
 		if e.def.get("fuente", "") != "":
 			var f: SimEntity = sim.by_id.get(e.farmer)
 			draw_string(Hud.font, Vector2(x, 96), "Trabajada por un aldeano" if f != null and f.alive and f.target == e.id else "Sin aldeano asignado", HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Palette.UI_TEXT)
+		var dd := sim.dp(e.owner)
+		if e.owner == hud.local and e.capital and dd.has_mod("acogida"):
+			var ac: Dictionary = dd.mod("acogida")
+			var have: int = sim.players[e.owner]["res"].get(ac["recurso"], 0)
+			draw_string(Hud.font, Vector2(x, 140), "La gente llega sola: %d/%d de fama para la próxima persona" % [mini(have, ac["costo"]), ac["costo"]], HORIZONTAL_ALIGNMENT_LEFT, size.x - x - 16, 13, Palette.UI_ACCENT)
 		if not e.queue.is_empty() or e.def.has("produce"):
 			var qx := x
 			for i in sim.data.reglas["cola_max"]:

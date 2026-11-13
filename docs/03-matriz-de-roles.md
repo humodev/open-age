@@ -1,96 +1,66 @@
-# 03 — Matriz de roles: las cuatro civilizaciones iniciales
+# 03 — Matriz de roles: las seis civilizaciones
 
-Este documento define cómo se juega cada civilización, función por función. Son hipótesis de diseño: no hay números (van en datos) y lo histórico está pendiente de fuente `[verificar]`. Las reglas que deben cumplir están en `01-vision-y-pilares.md`.
+Cómo se juega cada civilización, función por función. Los números están en `data/civs/`. La historia y sus fuentes están en `investigacion/`. Esta versión (2026-11-13) incorpora las correcciones de D-025 y las dos civilizaciones nuevas de D-026.
 
-## Los cuatro arquetipos
+## Los seis arquetipos
 
 | Civilización | Arquetipo | Frase |
 |---|---|---|
 | Tawantinsuyu | La red | "El imperio que se construye como una red." |
 | Mapuches | El enjambre | "No hay capital que tomar." |
 | Guaraníes | El monte | "El pueblo que se mueve con el río y el monte." |
-| Etiopía | El bastión | "La fortaleza en la montaña." |
+| Etiopía | La corte que camina | "La corte que camina." |
+| Palmares | El refugio | "La libertad que llega sola y se esconde en la sierra." |
+| Ayutthaya | El puerto | "La ciudad isla que comercia con el mundo y pelea sobre elefantes." |
 
 ## Matriz
 
-| Función | Tawantinsuyu | Mapuches | Guaraníes | Etiopía |
-|---|---|---|---|---|
-| **Alimento** | Andenes: terrazas que rinden más en pendiente | Cultivo chico, recolección y ganado | Chacras de roza: rinden mucho pero agotan el suelo | Arado con bueyes en el altiplano |
-| **Riqueza** | Tejidos y depósitos (qollqas) llenados por la mita | Malón: saquear edificios y caravanas enemigas; ganado | Yerba mate; más tarde ganado | Tributo: se asignan tierras a nobles y regimientos; iglesias |
-| **Expansión** | Todo edificio debe estar conectado por camino | Lof dispersos, baratos, sin centro único | La aldea (tekoha) se desarma y se muda | Campamento real móvil que luego se asienta |
-| **Avance de edad** | Obra estatal construida con turnos de mita | Asamblea que elige un toqui, con bonificación a elección | Fundar una aldea nueva lejos de la anterior, guiados por un karai | Fundar iglesia o monasterio; luego el recinto real |
-| **Movilidad** | Caminos que aceleran tropas; chasquis; tambos | Infantería ligera; desde edad III, la mejor caballería ligera | Canoas por río; cruzan el monte sin penalidad | Caballería desde la edad I |
-| **Choque** | Guerreros de porra | Weichafe con maza; luego lanceros montados | Guerreros de macana | Caballería noble |
-| **Distancia** | Honderos; boleadores que frenan al choque | Boleadoras, hondas y arcos | Arqueros (su núcleo); luego milicias con arma de fuego | Jabalineros y arqueros; luego mosqueteros |
-| **Línea** | Lanceros con escudo | Lanza larga contra caballería | Débil: pocas opciones | Regimientos profesionales con escudo |
-| **Asedio** | Galgas desde altura; proyectiles incendiarios | Débil: incendio y cerco | Flechas incendiarias; cañones de caña en edad tardía | Limitado; cañones tardíos |
-| **Defensa** | Pucarás: los mejores muros de piedra | Sin piedra: empalizadas con fosos, sigilo en bosque | Empalizadas y emboscada | Bonificación fuerte en altura; castillos de piedra tardíos |
-| **Adopción** | Captura tardía y limitada de caballos y arcabuces | Captura temprana del caballo | Alianza: las misiones traen armas de fuego y un costo | Comercio y alianza: armas de fuego |
-| **Pico de poder** | Edad III, con la red completa | Edad III, al adoptar el caballo | Edad II–III, con arqueros en mapa boscoso | Edad IV, con élite y castillos |
-| **Debilidad** | Arranque lento; la red se puede cortar | Batalla frontal y asedio; economía tardía depende del saqueo | Campo abierto; unidades frágiles | Unidades caras y pocas; depende de la altura |
-| **Victoria preferida** | Maravilla o dominio económico | Desgaste: arruinar la economía rival | Sitios sagrados y control del mapa | Aguantar y cerrar con ejército de élite |
-
-## Aperturas posibles
-
-No son guiones: son ejemplos del espacio de decisiones que cada civilización debe ofrecer. El jugador elige, y se espera que la comunidad encuentre órdenes de construcción que aquí no figuran. Sirven para verificar el test de los cinco minutos y el de las tres aperturas (`01-vision-y-pilares.md`).
-
-### Tawantinsuyu
-La decisión central es en qué gastar los turnos de mita.
-- **Red rápida (económica)**: mita a andenes, qollqas y caminos. Economía enorme en edad III, vulnerable antes.
-- **Obra primero (avance rápido)**: toda la mita a la primera obra estatal para llegar antes a la edad II.
-- **Leva temprana (presión)**: mita convertida en honderos, con un tambo adelantado cerca del rival.
-- Opciones de avance: cada edad ofrece dos obras estatales, una orientada a economía y otra a ejército o defensa.
-
-### Mapuches
-La decisión central es cuántos lof fundar y cuándo empezar a saquear.
-- **Malón temprano (presión)**: pocos lof, guerreros ligeros hostigando desde el minuto tres.
-- **Muchos lof (económica)**: tres o cuatro asentamientos dispersos antes de producir ejército.
-- **Carrera al caballo (avance rápido)**: defensa en el bosque y avance directo a la edad III.
-- Opciones de avance: en cada asamblea se elige entre toquis con bonificaciones distintas.
-
-### Guaraníes
-La decisión central es cuándo y hacia dónde mudar la aldea.
-- **Arqueros tempranos (presión)**: producción militar inmediata y emboscadas desde el monte.
-- **Roza intensiva (económica)**: muchas chacras y mudanzas frecuentes para mantener el rendimiento.
-- **Río arriba (avance rápido)**: canoas para fundar pronto una aldea lejana, que es lo que avanza de edad, y controlar los yerbales.
-- Opciones de avance: la aldea nueva puede fundarse sobre río (comercio y movilidad) o en monte (defensa y sigilo).
-
-### Etiopía
-La decisión central es dónde plantar el campamento real y qué asignar primero.
-- **Jinetes tempranos (presión)**: aprovechar que es la única con caballería en edad I para hostigar.
-- **Tributo temprano (económica)**: asignar tierras cuanto antes, a costa de tener menos tropas.
-- **Iglesia primero (avance rápido)**: fundación inmediata y defensa pasiva en altura.
-- Opciones de avance: iglesia (economía y moral) o monasterio (tecnología y defensa).
+| Función | Tawantinsuyu | Mapuches | Guaraníes | Etiopía | Palmares | Ayutthaya |
+|---|---|---|---|---|---|---|
+| **Alimento** | Andenes: rinden más en lomas y laderas | Chacras y ganado | Roza que rinde mucho, se agota y deja un yerbal | Granjas y el tributo del gult | Roças de mandioca | Arrozales que rinden junto al agua |
+| **Riqueza** | Tejido de cumbi (aqllawasi) | Malón: el daño a edificios trae ganado | Yerbales (la capuera) | Gult: tierras que rinden sin trabajo | Correrías y resgate | Barrios extranjeros y puerto real |
+| **Recurso propio** | Mit'a (turnos de trabajo) | Kulliñ (ganado) | — | — | Fama | — |
+| **Expansión** | Qhapaq Ñan: los conectados producen más | Lof dispersos, sin capital | Oga guasu; obra colectiva (potirõ) | La corte (kätäma) se desarma y se muda | Mocambos ocultos que acogen gente | Barrios extranjeros |
+| **Población** | Normal | Normal | Normal | Normal | No entrena aldeanos: llegan por la fama y por las liberaciones | Normal |
+| **Avance de edad** | Obra estatal con turnos de mit'a | Rewe del toqui elegido (cuesta ganado) | Karai o asamblea; en la edad III, misión o monte | Iglesia o monasterio; amba o remonta; Gondar o alianza | Cercas en anillos; en la edad IV, el pacto de Cucaú o la guerra de Zumbi | Wat o kraal; puerto o fortaleza; junco de tributo o guardia extranjera |
+| **Movilidad** | Caminos (aceleran a todos); chaski | Weichafe rápido; kona montado desde la edad III | Sigilo y emboscada en el monte | Jinetes nobles desde la edad I | Sigilo en el monte | Jinete explorador |
+| **Choque** | Guerrero de porra | Weichafe | Guerrero de macana | Jinete noble | Gente de guerra | Infantería de dap; compañía japonesa |
+| **Distancia** | Hondero; boleador que frena | Arquero | Arquero (su núcleo) | Jabalinero | Flecheiro; espingardeiro | Arquero; compañía portuguesa |
+| **Línea** | Lancero con escudo; leva (awqa) | Lanza larga | Lancero (débil al inicio) | Chewa | Lanceiro | Lancero |
+| **Asedio** | Hondero de piedra caliente (incendiario) | Débil: sin asedio propio | Cañón de tacuara (se rompe) | Ariete | Débil: sin asedio | Ariete y elefantes |
+| **Defensa** | Pukara de piedra (galgas como defensa) | Empalizada con foso; sigilo | Empalizadas; emboscada | Defensa en altura; amba | Cerca con estrepes que hiere | Fortín de río; fortaleza de la isla |
+| **Adopción** | Vilcabamba: caballos y arcabuces capturados | Caballo por el ganado | Misión: milicias arcabuceras | Alianza: mosqueteros | Resgate: armas compradas | Compañías extranjeras |
+| **Debilidad** | Arranque lento; cortar la red | Batalla frontal y asedio | Campo abierto | Unidades caras; fuera de la altura | Sin caballo ni asedio; el hambre ante un cerco | Elefantes caros; sin agua |
 
 ## Arco tardío (edades III y IV)
 
-**Tawantinsuyu — resistencia y rebelión**: puede replegarse a un reducto de montaña y lanzar un levantamiento que convierte población en ejército. Referencias: Vilcabamba, Túpac Amaru II `[verificar]`.
+- **Tawantinsuyu**: el Qorikancha o el reducto de Vilcabamba.
+- **Mapuches**: el parlamento (frontera con renta) o el gran weichan.
+- **Guaraníes**: el pueblo de misión o el monte libre (D-019).
+- **Etiopía**: la corte se asienta en Gondar o se alía para conseguir pólvora.
+- **Palmares**: el pacto de Cucaú, que da tierras y paz a cambio de cerrar la puerta a quienes llegan, o la guerra de Zumbi. Las dos opciones son viables.
+- **Ayutthaya**: el junco de tributo a China o la guardia extranjera.
 
-**Mapuches — la frontera**: el caballo transforma su ejército, y los parlamentos permiten fijar una frontera que da ingresos mientras se respete. Referencias: Lautaro, Guerra de Arauco, Parlamento de Quilín `[verificar]`.
+## Módulos y propiedades que usan
 
-**Guaraníes — misión o monte**: en la edad III eligen entre las misiones (base fija, milicias con armas de fuego, talleres) o seguir libres en el monte (sigilo y guerrilla reforzados). Referencias: Mbororé, Guerra Guaranítica, Sepé Tiaraju `[verificar]`. Esta bifurcación duplica trabajo; ver decisión abierta en `04-decisiones.md`.
-
-**Etiopía — el reino asentado**: el campamento móvil se convierte en capital fija con castillos, y aparecen los mosqueteros. Referencias: Gondar y el recinto de Fasilides, guerra contra Adal, contacto portugués `[verificar]`.
-
-## Módulos que estas civilizaciones exigen
-
-Lista para `06-arquitectura.md`. Cada uno debe ser reutilizable por futuras civilizaciones.
-
-| Módulo | Lo usa | Reutilizable para |
-|---|---|---|
-| Red de caminos con bonificación de velocidad y conexión obligatoria | Tawantinsuyu | Otras civilizaciones con infraestructura |
-| Trabajo por turnos (mano de obra estatal) | Tawantinsuyu | Sistemas de tributo en trabajo |
-| Bonificación por pendiente o altura | Tawantinsuyu, Etiopía | Cualquier civilización de montaña |
-| Asentamientos múltiples sin centro único | Mapuches | Confederaciones |
-| Saqueo que genera recursos | Mapuches | Civilizaciones de incursión |
-| Avance de edad por elección con bonificación | Mapuches | Variantes de monumento |
-| Edificios desmontables y base móvil | Guaraníes, Etiopía | Pueblos nómadas |
-| Agotamiento de suelo | Guaraníes | Agricultura itinerante |
-| Transporte fluvial | Guaraníes | Civilizaciones de río y costa |
-| Sigilo en bosque | Mapuches, Guaraníes | Cualquier guerrilla |
-| Tributo por asignación de tierras | Etiopía | Sistemas feudales no europeos |
-| Adopción (captura, comercio, alianza) | Todas | Todas |
+| Módulo o propiedad (`06`) | Lo usa |
+|---|---|
+| `recurso_propio` | Tawantinsuyu, mapuches, Palmares |
+| `caminos` | Tawantinsuyu |
+| `saqueo` | Mapuches, Palmares |
+| `liberacion`, `acogida` | Palmares |
+| `sigilo` | Mapuches, guaraníes, Palmares |
+| `relevo` | Mapuches |
+| `obra_colectiva` | Guaraníes |
+| `defensa_altura` | Etiopía |
+| `renta` | Etiopía (gult), Ayutthaya, varios hitos |
+| Base móvil (`empaca_en`) | Etiopía |
+| Roza (`cantidad` y `deja`) | Guaraníes |
+| Andenes (`permite_ladera`) | Tawantinsuyu |
+| Arrozales (`bono_agua_pct`) | Ayutthaya |
+| Daño en área (`area`) | Ayutthaya (elefantes) |
+| Espinas | Palmares |
 
 ## Candidatas para después
 
-Kongo, Malí y Songhai, mexicas, Ashanti, Chola o Maratha, Majapahit, jemeres, y los quilombos y Haití como facciones de la era de la rebelión.
+Kongo, Malí y Songhai, mexicas, Ashanti, maratas, Majapahit, jemeres y Haití como facción de la era de la rebelión.

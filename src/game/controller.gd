@@ -177,6 +177,8 @@ func commands() -> Array[Dictionary]:
 			out.append(cmd)
 		out.append({"slot": 5, "id": "detener", "icon": "detener", "kind": "stop", "name": "Detener", "cost": {}, "desc": DESCS["detener"], "locked": ""})
 		out.append({"slot": 7, "id": "refugio", "icon": "refugio", "kind": "garrison", "name": "Refugiarse", "cost": {}, "desc": DESCS["refugio"], "locked": ""})
+	elif first.is_unit() and first.def.has("despliega_en"):
+		out.append({"slot": 0, "id": "armar", "icon": "centro", "kind": "unpack", "name": "Armar la corte aquí", "cost": {}, "desc": "La corte se asienta donde está: vuelve a ser la capital.", "locked": "", "unit": first.id})
 	elif first.is_unit():
 		out.append({"slot": 4, "id": "atacar", "icon": "atacar", "kind": "amove", "name": "Atacar en movimiento", "cost": {}, "desc": DESCS["atacar"], "locked": ""})
 		out.append({"slot": 5, "id": "detener", "icon": "detener", "kind": "stop", "name": "Detener", "cost": {}, "desc": DESCS["detener"], "locked": ""})
@@ -202,6 +204,8 @@ func commands() -> Array[Dictionary]:
 		if first.type == "centro":
 			var on: bool = sim.players[local]["alarm"]
 			out.append({"slot": 8, "id": "calma" if on else "campana", "icon": "calma" if on else "campana", "kind": "alarm", "name": "Toque de calma" if on else "Campana", "cost": {}, "desc": DESCS["calma" if on else "campana"], "locked": "", "on": not on})
+		if first.def.has("empaca_en"):
+			out.append({"slot": 7, "id": "desarmar", "icon": "carga", "kind": "pack", "name": "Desarmar la corte", "cost": {}, "desc": "La corte se levanta y camina con su gente: viaja lenta y se vuelve a armar donde haga falta.", "locked": "" if first.queue.is_empty() else "Esperá que termine la cola", "building": first.id})
 		if first.def.get("guarnicion", 0) > 0:
 			out.append({"slot": 11, "id": "expulsar", "icon": "expulsar", "kind": "ungarrison", "name": "Expulsar guarnición", "cost": {}, "desc": DESCS["expulsar"], "locked": "" if not first.garrison.is_empty() else "No hay unidades alojadas"})
 	return out
@@ -262,6 +266,10 @@ func run_command(cmd: Dictionary) -> void:
 			sim.push_command({"t": "garrison", "player": local, "ids": _own_unit_ids(), "building": -1})
 		"alarm":
 			sim.push_command({"t": "alarm", "player": local, "on": cmd["on"]})
+		"pack":
+			sim.push_command({"t": "pack", "player": local, "building": cmd["building"]})
+		"unpack":
+			sim.push_command({"t": "unpack", "player": local, "unit": cmd["unit"]})
 		"ungarrison":
 			for e in selected_entities():
 				if e.is_building() and e.owner == local:
