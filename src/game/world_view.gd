@@ -238,8 +238,10 @@ func _make_visual(e: SimEntity) -> Dictionary:
 	var team := Palette.team(e.owner)
 	var v := {"node": root, "type": e.type, "owner": e.owner}
 	if e.is_unit():
-		var body := MeshInstance3D.new()
-		body.mesh = unit_mesh_for(e)
+		var body: Node3D = _model_for(e.owner, e.type, maxf(0.9, e.radius / 1000.0 * 2.6), true)
+		if body == null:
+			body = MeshInstance3D.new()
+			(body as MeshInstance3D).mesh = unit_mesh_for(e)
 		root.add_child(body)
 		root.add_child(Meshes.team_disc(team, maxf(0.25, e.radius / 1000.0 + 0.05)))
 		var carry := MeshInstance3D.new()
@@ -252,8 +254,12 @@ func _make_visual(e: SimEntity) -> Dictionary:
 		root.add_child(ring)
 		v.merge({"kind": "unit", "body": body, "carry": carry, "ring": ring, "yaw": 0.0, "lunge": 0.0, "spawn": 0.0, "phase": randf() * TAU})
 	else:
-		var struct := MeshInstance3D.new()
-		struct.mesh = building_mesh_for(e.owner, e.type, e.def)
+		var struct: Node3D = _model_for(e.owner, e.type, minf(e.w, e.h) * 0.98, false)
+		if struct == null:
+			struct = MeshInstance3D.new()
+			(struct as MeshInstance3D).mesh = building_mesh_for(e.owner, e.type, e.def)
+		else:
+			Meshes.team_banner(struct, Vector3(e.w * 0.42, 0, -e.h * 0.42), Palette.team(e.owner))
 		root.add_child(struct)
 		var found := MeshInstance3D.new()
 		found.mesh = Meshes.foundation_mesh(e.w, e.h)
@@ -277,6 +283,63 @@ func _make_visual(e: SimEntity) -> Dictionary:
 	v["cur"] = root.position
 	v["prev"] = root.position
 	return v
+
+
+static var _models := {} # ruta -> PackedScene (o null si no existe)
+
+
+## Modelo GLB generado (assets/generados/modelos) declarado por la civilización en estilo.modelos.
+## Se escala para que su mayor lado horizontal mida `size` y se apoya en el suelo.
+func _model_for(owner: int, type: String, size: float, unit: bool) -> Node3D:
+	var name: String = sim.dp(owner).civ.get("estilo", {}).get("modelos", {}).get(type, "")
+	if name == "":
+		return null
+	var path := "res://assets/generados/modelos/%s.glb" % name
+	if not _models.has(path):
+		_models[path] = load(path) if ResourceLoader.exists(path) else null
+	var ps: PackedScene = _models[path]
+	if ps == null:
+		return null
+	var inst: Node3D = ps.instantiate()
+	var box := _aabb(inst, Transform3D.IDENTITY)
+	var horiz := maxf(box.size.x, box.size.z)
+	if horiz <= 0.0001:
+		return null
+	var k := size / horiz
+	var holder := Node3D.new()
+	inst.scale = Vector3.ONE * k
+	inst.position = Vector3(-(box.position.x + box.size.x / 2.0) * k, -box.position.y * k, -(box.position.z + box.size.z / 2.0) * k)
+	if unit:
+		inst.rotation.y = 0.0
+	holder.add_child(inst)
+	_each_geo(holder, func(g: GeometryInstance3D) -> void: g.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON)
+	return holder
+
+
+static func _aabb(n: Node, xf: Transform3D) -> AABB:
+	var out := AABB()
+	var first := true
+	var t := xf
+	if n is Node3D:
+		t = xf * (n as Node3D).transform
+	if n is MeshInstance3D and (n as MeshInstance3D).mesh != null:
+		var b := t * (n as MeshInstance3D).mesh.get_aabb()
+		out = b
+		first = false
+	for c in n.get_children():
+		var cb := _aabb(c, t)
+		if cb.size == Vector3.ZERO:
+			continue
+		out = cb if first else out.merge(cb)
+		first = false
+	return out
+
+
+static func _each_geo(n: Node, f: Callable) -> void:
+	if n is GeometryInstance3D:
+		f.call(n)
+	for c in n.get_children():
+		_each_geo(c, f)
 
 
 ## Malla de unidad según la civilización del dueño (CivMeshes) o la de la capa común.
@@ -529,11 +592,13 @@ func _render_unit(e: SimEntity, v: Dictionary, alpha: float, delta: float) -> vo
 	if not node.visible:
 		v["prev"] = v["cur"]
 		return
-	var body: MeshInstance3D = v["body"]
+	var body: Node3D = v["body"]
 	# Sigilo: las unidades propias escondidas en el monte se ven translúcidas.
 	if e.owner == local and (tick_counter() + e.id) % 5 == 0:
 		v["hidden"] = sim.mods.is_hidden_now(e)
-	body.transparency = 0.45 if v.get("hidden", false) else 0.0
+	if v.get("hidden", false) != v.get("hidden_drawn", false):
+		v["hidden_drawn"] = v.get("hidden", false)
+		_each_geo(body, func(g: GeometryInstance3D) -> void: g.transparency = 0.45 if v["hidden_drawn"] else 0.0)
 	var prev: Vector3 = v["prev"]
 	var cur: Vector3 = v["cur"]
 	node.position = prev.lerp(cur, alpha)
@@ -583,13 +648,16 @@ func _render_unit(e: SimEntity, v: Dictionary, alpha: float, delta: float) -> vo
 
 
 func _render_building(e: SimEntity, v: Dictionary, delta: float) -> void:
-	var struct: MeshInstance3D = v["struct"]
+	var struct: Node3D = v["struct"]
 	var found: MeshInstance3D = v["found"]
 	if v.has("flag"):
 		(v["flag"] as MeshInstance3D).material_override = Meshes.mat(Palette.team(e.holder) if e.holder >= 0 else Color("e8e2d4"), 0.6, 0.25)
 	var fs := fog_state(e)
 	(v["node"] as Node3D).visible = fs > 0
-	struct.material_overlay = Meshes.fog_overlay() if fs == 1 else null
+	if fs != int(v.get("fog_drawn", -1)):
+		v["fog_drawn"] = fs
+		var ov := Meshes.fog_overlay() if fs == 1 else null
+		_each_geo(struct, func(g: GeometryInstance3D) -> void: g.material_overlay = ov)
 	if e.built:
 		found.visible = false
 		v["pop"] = maxf(0.0, float(v["pop"]) - delta * 2.5)

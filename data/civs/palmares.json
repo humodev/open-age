@@ -8,7 +8,10 @@
   "forma": "palmares",
   "arcilla": "#c9b28a",
   "techo": "#6f5a34",
-  "acento": "#7d6b4f"
+  "acento": "#7d6b4f",
+  "modelos": {
+   "centro": "palmares_centro"
+  }
  },
  "edades": [
   "Mocambo",
@@ -374,5 +377,6 @@
    "mocambo",
    "deposito"
   ]
- }
+ },
+ "ia_incursiones": true
 }

@@ -8,7 +8,10 @@
   "forma": "etiopia",
   "arcilla": "#d5c3a0",
   "techo": "#8f6b45",
-  "acento": "#948670"
+  "acento": "#948670",
+  "modelos": {
+   "centro": "etiopia_centro"
+  }
  },
  "edades": [
   "Kätäma",

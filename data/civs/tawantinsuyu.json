@@ -8,7 +8,10 @@
   "forma": "inca",
   "arcilla": "#d8c6a6",
   "techo": "#9c7b52",
-  "acento": "#b39a7a"
+  "acento": "#b39a7a",
+  "modelos": {
+   "centro": "tawantinsuyu_centro"
+  }
  },
  "edades": [
   "Ayllu",

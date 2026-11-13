@@ -8,7 +8,11 @@
   "forma": "mapuche",
   "arcilla": "#cfc2a3",
   "techo": "#8a7a4e",
-  "acento": "#6b5a3a"
+  "acento": "#6b5a3a",
+  "modelos": {
+   "lof": "mapuches_lof",
+   "jinete": "mapuches_jinete"
+  }
  },
  "edades": [
   "Lof",
@@ -388,5 +392,6 @@
   "centro": [
    "lof"
   ]
- }
+ },
+ "ia_incursiones": true
 }

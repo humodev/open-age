@@ -432,6 +432,27 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 		last_attack = sim.tick
 		_attack(army)
 		return
+	# Incursiones (malón, correría): las unidades más rápidas golpean la economía rival.
+	if sim.dp(player).civ.get("ia_incursiones", false) and sim.tick % 900 == (player * 97) % 900 and army.size() >= 5:
+		var prey: SimEntity = null
+		var best_d := 1 << 60
+		for e in sim.actives:
+			if e.alive and e.owner >= 0 and e.owner != player and e.inside < 0 and (e.fn == "civil" or e.def.has("fuente") or e.def.has("deposito")):
+				var d := Sim.dist(e.x, e.y, rally.x, rally.y)
+				if d < best_d:
+					best_d = d
+					prey = e
+		if prey != null:
+			var fast := army.duplicate()
+			fast.sort_custom(func(a: SimEntity, b: SimEntity) -> bool: return a.speed > b.speed)
+			var ids := []
+			for u in fast:
+				if ids.size() >= 5:
+					break
+				if u.order == O.IDLE or u.order == O.MOVE:
+					ids.append(u.id)
+			if not ids.is_empty():
+				sim.push_command({"t": "move", "player": player, "ids": ids, "x": prey.x, "y": prey.y, "amove": true})
 	# Sitios sagrados: un grupo chico va a tomar el más cercano que no controla.
 	if sim.tick % 300 == player * 50 and army.size() >= 6:
 		var site: SimEntity = null

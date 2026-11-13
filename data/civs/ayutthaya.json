@@ -8,7 +8,11 @@
   "forma": "ayutthaya",
   "arcilla": "#e2d2b2",
   "techo": "#9e3b2a",
-  "acento": "#c9a227"
+  "acento": "#c9a227",
+  "modelos": {
+   "centro": "ayutthaya_centro",
+   "chang_suek": "ayutthaya_elefante"
+  }
  },
  "edades": [
   "Mueang",

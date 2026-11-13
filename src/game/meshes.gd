@@ -399,3 +399,12 @@ static func fog_overlay() -> StandardMaterial3D:
 		_fog_overlay.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 		_fog_overlay.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	return _fog_overlay
+
+
+## Estandarte de equipo suelto para modelos importados (los GLB no traen el color del jugador).
+static func team_banner(parent: Node3D, at: Vector3, team: Color) -> void:
+	var p: Array = []
+	_banner(p, at, 2.4, team)
+	var mi := MeshInstance3D.new()
+	mi.mesh = merge(p)
+	parent.add_child(mi)
