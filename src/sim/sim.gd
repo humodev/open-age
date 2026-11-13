@@ -592,7 +592,7 @@ func _apply_stats(e: SimEntity) -> void:
 		e.hp = maxi(1, e.hp * new_max / e.hp_max)
 	e.hp_max = new_max
 	if e.is_unit():
-		e.speed = int(e.def["velocidad"]) * (100 + mod(e.owner, "vel:" + e.fn)) / 100 * tick_ms / 1000
+		e.speed = int(e.def["velocidad"]) * (100 + mod(e.owner, "vel:" + e.fn)) / 100 * int(data.reglas.get("velocidad_pct", 100)) / 100 * tick_ms / 1000
 
 
 func _cmd_rally(pid: int, bid: int, x: int, y: int, target_id: int) -> void:

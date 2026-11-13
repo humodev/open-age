@@ -7,15 +7,17 @@ import subprocess, sys, os
 from concurrent.futures import ThreadPoolExecutor
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-STYLE = ("Stylized 3D game asset for a historical real-time strategy game, miniature diorama look, matte hand-painted "
-         "textures, soft natural colors, clean readable silhouette, single isolated object centered on a plain white "
-         "background, three-quarter view from slightly above, no ground plane, no people, no text")
+# Sin "diorama": esa palabra traía bases y losas de terreno bajo el edificio (docs/10, paso 5).
+STYLE = ("Stylized 3D game asset for a historical real-time strategy game, matte hand-painted "
+         "textures, soft natural colors, clean readable silhouette, one single building at full scale, isolated and centered "
+         "on a plain white background, three-quarter view from slightly above, standing directly on nothing: no base, "
+         "no platform, no terrain slab, no ground, no grass, no people, no text")
 ASSETS = {
     "tawantinsuyu_centro": "an Inca administrative compound of the 15th century: fitted stone walls with trapezoidal doorways and niches, a large rectangular hall with a steep hip roof of golden thatch, a small stone platform in front, square footprint",
-    "mapuches_lof": "a Mapuche family homestead of the 16th century: a large oval ruka house with a thick thatched roof reaching the ground, a small door, a woven wooden fence around it and a carved wooden post, square footprint",
+    "mapuches_lof": "a large Mapuche ruka house of the 16th century: a big oval house with a thick thatched roof reaching the ground, a small door and a carved wooden rewe post standing beside it, square footprint",
     "guaranies_centro": "a Guarani communal long house of the 16th century: a very long house with a thatched gable roof that reaches the ground, wooden posts, two small doors, square footprint",
-    "etiopia_centro": "an Ethiopian royal camp centerpiece of the 16th century: a large richly decorated royal tent with red and white fabric, surrounded by smaller white tents and a round thatched tukul, square footprint",
-    "palmares_centro": "a fortified quilombo village of the 17th century in Brazil: palm-thatched wattle-and-daub houses inside a ring of sharpened wooden palisade stakes with a gate, square footprint",
+    "etiopia_centro": "the royal tent of a 16th-century Ethiopian emperor: one large richly decorated tent of red and white fabric with two tall poles and pennants and embroidered borders, square footprint",
+    "palmares_centro": "the council house of a 17th-century quilombo in Brazil: one large rectangular wattle-and-daub building with a tall steep palm-thatched roof, wide eaves on wooden posts and a short section of sharpened palisade stakes on one side, square footprint",
     "ayutthaya_centro": "a Siamese royal palace hall of the 17th century: whitewashed walls on a raised platform, steep multi-tiered red roofs with golden finials and curved gable ornaments, square footprint",
     "ayutthaya_elefante": "a war elephant of 17th-century Siam with an ornate wooden howdah, red and gold cloth, ivory tusks, walking pose, side three-quarter view",
     "tawantinsuyu_casa": "a small Andean stone house of the 15th century: fitted grey stone walls, one trapezoidal doorway, steep hip roof of golden thatch, compact square footprint",

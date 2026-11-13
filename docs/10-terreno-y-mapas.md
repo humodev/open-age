@@ -40,7 +40,8 @@ Cada uno tiene su paleta, su vegetación y su distribución de recursos.
 
 ## Estado (2026-11-13)
 - Hecho: materiales del suelo y edificios asentados; 11 tipos de mapa con relieve continuo; relieve real en las 24 misiones (`tools/relieve_real.py`, `data/relieve/`); huella aplanada; detalle del suelo por bioma.
-- Falta: escala y velocidad, y modelos de Meshy sin base (paso 5).
+- Hecho también: escala coherente (`reglas.json` → `escala_visual`), velocidad al 90 %, zancada atada a la distancia, y tres modelos de Meshy regenerados sin base.
+- Falta: mirar con el autor si la escala y la velocidad quedaron bien a ×1.
 
 ## 5. Orden propuesto
 1. Mezcla de materiales y edificios integrados al suelo (es lo que más cambia la imagen).

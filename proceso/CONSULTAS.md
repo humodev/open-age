@@ -51,3 +51,9 @@ Las grabaciones las publicó el propio intérprete en dominio público, pero sue
 a) Dejarla solo en el menú o en la paz, no en el combate *(por defecto)* · b) Dejarla como está · c) Sacarla
 
 **Respuesta:**
+
+### C-09 · ¿Quedaron bien la escala y la velocidad?
+Ahora una casa mide unas tres veces un aldeano y todos andan un 10 % más lento. Para probarlo, jugá a velocidad ×1, no con el autotest, que corre a ×4.
+a) Están bien · b) Aldeanos todavía grandes · c) Todavía rápidos · d) Ahora demasiado lentos
+
+**Respuesta:**

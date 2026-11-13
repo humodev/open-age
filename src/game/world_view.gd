@@ -10,6 +10,7 @@ const CHUNK := 16 # casillas por trozo de malla del terreno
 const RELIEF_AMP := 0.22 # ondulación visual sobre los niveles de la simulación
 var _splat_img: Image
 var _chunks := {} # Vector2i -> MeshInstance3D
+var _unit_k := 1.0 # escala de las unidades (reglas.json, escala_visual)
 var _clutter_at := {} # casilla -> [multimesh, índice] del detalle del suelo
 var _splat_tex: ImageTexture
 static var _vn := 0
@@ -450,6 +451,8 @@ func _make_visual(e: SimEntity) -> Dictionary:
 		if body == null:
 			body = MeshInstance3D.new()
 			(body as MeshInstance3D).mesh = unit_mesh_for(e)
+		_unit_k = float(sim.data.reglas.get("escala_visual", {}).get("unidad_pct", 100)) / 100.0
+		body.scale = Vector3.ONE * _unit_k
 		root.add_child(body)
 		root.add_child(Meshes.team_disc(team, maxf(0.25, e.radius / 1000.0 + 0.05)))
 		var carry := MeshInstance3D.new()
@@ -468,6 +471,7 @@ func _make_visual(e: SimEntity) -> Dictionary:
 			(struct as MeshInstance3D).mesh = building_mesh_for(e.owner, e.type, e.def)
 		else:
 			Meshes.team_banner(struct, Vector3(e.w * 0.42, 0, -e.h * 0.42), Palette.team(e.owner))
+		struct = _stretch_to_scale(e, struct)
 		root.add_child(struct)
 		var found := MeshInstance3D.new()
 		found.mesh = Meshes.foundation_mesh(e.w, e.h)
@@ -576,6 +580,37 @@ static func _each_geo(n: Node, f: Callable) -> void:
 		f.call(n)
 	for c in n.get_children():
 		_each_geo(c, f)
+
+
+## Escala coherente (docs/10, paso 5): cada edificio llega al menos a la altura
+## de su categoría, para que una casa mida unas tres veces un aldeano.
+func _stretch_to_scale(e: SimEntity, struct: Node3D) -> Node3D:
+	var ev: Dictionary = sim.data.reglas.get("escala_visual", {})
+	var mins: Dictionary = ev.get("altura_min_cm", {})
+	var cat := ""
+	var dd := sim.dp(e.owner)
+	if e.capital or e.type == dd.civ.get("inicio_edificio", "centro") or e.type == "centro":
+		cat = "capital"
+	elif e.type == "casa" or e.type == dd.civ.get("casa", ""):
+		cat = "casa"
+	elif e.type.begins_with("torre") or e.def.get("torre", false):
+		cat = "torre"
+	else:
+		for row in dd.hitos:
+			if (row as Array).has(e.type):
+				cat = "hito"
+		if cat == "" and e.def.has("entrena"):
+			cat = "produccion"
+	var outer := Node3D.new()
+	outer.add_child(struct)
+	if cat == "" or not mins.has(cat) or e.def.get("transitable", false):
+		return outer
+	var h := _aabb(struct, Transform3D.IDENTITY).size.y
+	if h < 0.3:
+		return outer
+	var want := float(mins[cat]) / 100.0
+	struct.scale.y *= clampf(want / h, 1.0, float(ev.get("estirar_max_pct", 150)) / 100.0)
+	return outer
 
 
 ## Malla de unidad según la civilización del dueño (CivMeshes) o la de la capa común.
@@ -837,7 +872,10 @@ func _render_unit(e: SimEntity, v: Dictionary, alpha: float, delta: float) -> vo
 		_each_geo(body, func(g: GeometryInstance3D) -> void: g.transparency = 0.45 if v["hidden_drawn"] else 0.0)
 	var prev: Vector3 = v["prev"]
 	var cur: Vector3 = v["cur"]
+	var before := node.position
 	node.position = prev.lerp(cur, alpha)
+	# El paso sigue a la distancia recorrida: no patina a ninguna velocidad de juego.
+	v["walk"] = float(v.get("walk", 0.0)) + Vector2(node.position.x - before.x, node.position.z - before.z).length()
 	var move := cur - prev
 	var moving := move.length_squared() > 0.00004
 	var want: float = v["yaw"]
@@ -858,12 +896,13 @@ func _render_unit(e: SimEntity, v: Dictionary, alpha: float, delta: float) -> vo
 	var heavy: bool = e.def.get("elefante", false)
 	var mounted: bool = e.def.get("montado", false)
 	if moving:
-		var freq := 4.5 if heavy else (14.0 if mounted else 11.0)
+		var stride := 3.2 if heavy else (6.5 if mounted else 9.0) # radianes por casilla
 		var amp := 0.05 if heavy else (0.09 if mounted else 0.06)
-		bob = absf(sin(_time * freq + phase)) * amp
-		tilt = sin(_time * freq + phase) * (0.025 if heavy else 0.06)
+		var w := float(v["walk"]) * stride + phase
+		bob = absf(sin(w)) * amp * _unit_k
+		tilt = sin(w) * (0.025 if heavy else 0.06)
 		if heavy:
-			body.rotation.z = sin(_time * freq * 0.5 + phase) * 0.04
+			body.rotation.z = sin(w * 0.5) * 0.04
 	elif e.order == O.ATTACK and e.anchored and int(e.def.get("alcance", 0)) > 1500:
 		# Tensar antes del disparo: se inclina hacia atrás a medida que se recarga.
 		var k := 1.0 - clampf(float(e.cooldown) / float(maxi(1, int(e.def.get("cadencia_ms", 1000)))), 0.0, 1.0)
@@ -875,7 +914,7 @@ func _render_unit(e: SimEntity, v: Dictionary, alpha: float, delta: float) -> vo
 	body.position = Vector3(0, bob, lunge * 0.22)
 	body.rotation.x = tilt + lunge * 0.3
 	v["spawn"] = maxf(0.0, float(v["spawn"]) - delta * 3.0)
-	body.scale = Vector3.ONE * (1.0 - float(v["spawn"]) * 0.7)
+	body.scale = Vector3.ONE * _unit_k * (1.0 - float(v["spawn"]) * 0.7)
 	var carry: MeshInstance3D = v["carry"]
 	carry.visible = e.carry > 0
 	if carry.visible:

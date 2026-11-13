@@ -15,6 +15,8 @@
   "construccion_decreciente": true,
   "bono_altura_pct": 15,
   "vision_por_nivel": 1500,
+  "velocidad_pct": 90,
+  "escala_visual": { "unidad_pct": 82, "estirar_max_pct": 170, "altura_min_cm": { "casa": 220, "produccion": 270, "torre": 420, "capital": 360, "hito": 380 } },
   "terrenos": {
     "llano": {"nombre": "Llanura", "colinas": 4, "nivel_max": 2, "lagunas": 3, "bosques": 13, "seco": 15, "tinte": [100, 100, 97], "arboles": [0, 1]},
     "montana": {"nombre": "Montaña", "colinas": 11, "nivel_max": 3, "bosques": 13, "seco": 45, "tinte": [104, 100, 90], "arboles": [0, 1]},

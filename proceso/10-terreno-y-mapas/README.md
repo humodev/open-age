@@ -118,6 +118,25 @@ Los edificios generados se apoyan sobre un pasto uniforme y parecen bloques suel
 |---|
 | ![](14-mision-isla-de-ayutthaya.jpg) |
 
-Pendiente en esta etapa:
-- Modelos de Meshy sin base.
-- Escala y velocidad (paso 10).
+14. **Escala, velocidad y modelos sin base** (la observación del paso 10).
+    - **Medición**: el aldeano medía 0,92 casillas, las casas entre 1,1 y 2,0, y el centro de Palmares 1,0, porque era un diorama de una aldea entera dentro de una empalizada.
+    - **Tabla de escala** en `reglas.json` → `escala_visual`:
+      - Las unidades se dibujan al 82 %.
+      - Cada edificio llega al menos a la altura mínima de su categoría: casa 2,2; producción 2,7; capital 3,6; hito 3,8; torre 4,2. Para eso se estira en vertical hasta un 170 %.
+      - Una casa mide así unas tres veces un aldeano.
+    - **Velocidad**: `velocidad_pct` = 90 para todas las unidades. Además, el paso de la animación sigue a la distancia recorrida y no al reloj, así que la zancada coincide a ×1 y a ×4, y nadie patina. El autotest corre a ×4, y eso explicaba buena parte de la velocidad que se vio.
+    - **Meshy sin base**: el estilo decía "miniature diorama look" y eso traía losas de terreno. Se cambió por "un solo edificio a escala real, sin base ni plataforma ni suelo" y se regeneraron tres modelos por 108 créditos:
+      - Palmares: la casa de consejo del quilombo, en lugar de la aldea en miniatura.
+      - Etiopía: la tienda imperial sola, sin la losa con carpas.
+      - Mapuches: la ruka grande con su rewe, sin el cerco sobre una placa.
+
+      Los viejos quedan en `.cache/meshy/viejos`.
+    - **Pruebas**: determinismo OK; humo de civilizaciones sin errores; autotest OK. El torneo de balance con la velocidad nueva está en curso.
+
+| Conceptos nuevos, sin base | Palmares |
+|---|---|
+| ![](15-conceptos-sin-base.jpg) | ![](16-escala-nueva-palmares.jpg) |
+| **Etiopía** | **Mapuches** |
+| ![](17-escala-nueva-etiopia.jpg) | ![](18-escala-nueva-mapuches.jpg) |
+
+Antes y después de la escala, en Palmares: [paso 10](11-escala-aldeanos-vs-casas-palmares.jpg) → [ahora](16-escala-nueva-palmares.jpg).
