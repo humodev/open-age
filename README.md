@@ -6,8 +6,13 @@ RTS histórico con asimetría radical, protagonizado por civilizaciones del sur 
 
 **Estado:** seis civilizaciones jugables en escaramuza contra la IA y seis campañas (24 misiones). Ver [`docs/09-estado.md`](docs/09-estado.md) y el registro paso a paso en [`proceso/`](proceso/README.md).
 
-![Base en estética de maqueta](docs/img/h1-base.jpg)
-![Batalla de 30 contra 30](docs/img/h1-batalla.jpg)
+![Ayutthaya](assets/generados/laminas/ayutthaya.jpg)
+
+| | |
+|---|---|
+| ![Capitales generadas](proceso/03-civilizaciones/12-capitales-meshy.jpg) | ![Seis arquitecturas](proceso/03-civilizaciones/03-civ-mapuches.jpg) |
+
+**Qué hay:** seis civilizaciones asimétricas con sus propios módulos de mecánica y su arquitectura, escaramuza contra la IA en tres dificultades y cuatro tipos de mapa, sitios sagrados, mercado, seis campañas (24 misiones) más un tutorial, sonido CC0, láminas y modelos 3D generados con IA (Meshy, marcados en `assets/CREDITOS.md`) y repeticiones.
 
 ## Jugar
 
