@@ -139,7 +139,7 @@
    "ranura": 7,
    "desc": "El ganado crece en los corrales: genera kulliñ."
   },
-  "rewe_malon": {
+  "rewe_malon": { "eje": "militar",
    "nombre": "Rewe del toqui de malón",
    "edad_min": 1,
    "tam": [
@@ -168,7 +168,7 @@
     "kullin": 30
    }
   },
-  "rewe_lonko": {
+  "rewe_lonko": { "eje": "economia",
    "nombre": "Rewe del lonko",
    "edad_min": 1,
    "tam": [
@@ -198,7 +198,7 @@
     "kullin": 30
    }
   },
-  "rewe_caballeria": {
+  "rewe_caballeria": { "eje": "militar",
    "nombre": "Rewe del toqui de caballería",
    "edad_min": 1,
    "tam": [
@@ -230,7 +230,7 @@
     "kullin": 60
    }
   },
-  "rewe_monte": {
+  "rewe_monte": { "eje": "economia",
    "nombre": "Rewe del toqui del monte",
    "edad_min": 1,
    "tam": [
@@ -261,7 +261,7 @@
     "kullin": 60
    }
   },
-  "parlamento": {
+  "parlamento": { "eje": "economia",
    "nombre": "Parlamento",
    "edad_min": 1,
    "tam": [
@@ -278,15 +278,12 @@
    "pob": 5,
    "desc": "Frontera con agasajos y feria: comercio de ganado.",
    "efectos": [],
-   "renta": {
-    "riqueza": 40,
-    "kullin": 20
-   },
+   "renta": {"kullin": 20},
    "costo_extra": {
     "kullin": 100
    }
   },
-  "weichan": {
+  "weichan": { "eje": "militar",
    "nombre": "Gran weichan",
    "edad_min": 1,
    "tam": [

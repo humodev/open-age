@@ -181,7 +181,7 @@
    "ranura": 11,
    "desc": "Comerciantes y artilleros portugueses: renta y compañías de arcabuces."
   },
-  "wat": {
+  "wat": { "eje": "economia",
    "nombre": "Wat Mahathat",
    "edad_min": 1,
    "tam": [
@@ -205,7 +205,7 @@
     }
    ]
   },
-  "kraal_real": {
+  "kraal_real": { "eje": "militar",
    "nombre": "Kraal real",
    "edad_min": 1,
    "tam": [
@@ -234,7 +234,7 @@
     "chang_suek"
    ]
   },
-  "puerto_real": {
+  "puerto_real": { "eje": "economia",
    "nombre": "Puerto real",
    "edad_min": 1,
    "tam": [
@@ -250,12 +250,9 @@
    "hito": true,
    "pob": 5,
    "desc": "El almacén vende a los barcos de cada monzón.",
-   "efectos": [],
-   "renta": {
-    "riqueza": 55
-   }
+   "efectos": []
   },
-  "fortaleza_rio": {
+  "fortaleza_rio": { "eje": "militar",
    "nombre": "Fortaleza de la isla",
    "edad_min": 1,
    "tam": [
@@ -283,7 +280,7 @@
    "alcance": 8000,
    "cadencia_ms": 2000
   },
-  "junco_tributo": {
+  "junco_tributo": { "eje": "economia",
    "nombre": "Junco de tributo",
    "edad_min": 1,
    "tam": [
@@ -305,12 +302,9 @@
      "recurso": "*",
      "pct": 15
     }
-   ],
-   "renta": {
-    "riqueza": 40
-   }
+   ]
   },
-  "guardia_extranjera": {
+  "guardia_extranjera": { "eje": "militar",
    "nombre": "Guardia extranjera",
    "edad_min": 1,
    "tam": [

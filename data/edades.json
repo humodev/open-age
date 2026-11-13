@@ -2,7 +2,7 @@
   "_doc": "Nombres genericos (docs/02-alcance-y-epoca.md). Costo y tiempo del hito que lleva A esa edad. bono_ataque en porcentaje para unidades militares.",
   "edades": [
     { "nombre": "Asentamiento", "bono_ataque": 0 },
-    { "nombre": "Consolidación", "bono_ataque": 10, "hito_costo": { "alimento": 400, "riqueza": 200 }, "hito_tiempo_ms": 60000 },
+    { "nombre": "Consolidación", "bono_ataque": 10, "hito_costo": { "alimento": 500, "riqueza": 300 }, "hito_tiempo_ms": 60000 },
     { "nombre": "Apogeo", "bono_ataque": 20, "hito_costo": { "alimento": 1000, "riqueza": 600, "piedra": 200 }, "hito_tiempo_ms": 90000 },
     { "nombre": "Pólvora y rebelión", "bono_ataque": 35, "hito_costo": { "alimento": 1800, "riqueza": 1200, "piedra": 400 }, "hito_tiempo_ms": 120000 }
   ]

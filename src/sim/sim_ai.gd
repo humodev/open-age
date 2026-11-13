@@ -12,6 +12,7 @@ var last_attack := -100000
 var last_raid := 0 # incursiones y control del mapa: por tiempo transcurrido, no por tick exacto
 var last_spot := 0
 var last_road := 0
+var _no_route := {} # edificio -> tick desde el que se vuelve a intentar el camino
 var last_site := 0
 var rally := Vector2i(-1, -1)
 var calm_since := 0
@@ -75,21 +76,32 @@ func think() -> void:
 	_production(p, vill, army, centro, by_type, saving)
 	_research(p, by_type, saving)
 	_trade(p, by_type)
+	_engine(p, vill, centro, by_type, saving)
 	_alarm(p, vill, army, centro)
 	_military(army, centro)
 
 
-## Opción económica para la edad II, militar para la III, económica para la IV (de la civilización).
+## Eje del hito según la edad: económico para la II, militar para la III y
+## económico para la IV; el estilo agresivo va siempre por lo militar. Cada hito
+## declara su eje en los datos ("eje"), así no depende del orden de la lista.
 func _hito_type(p: Dictionary) -> String:
-	var opts: Array = sim.dp(player).hitos[clampi(p["age"] - 1, 0, 2)]
-	return opts[1] if p["age"] == 2 and opts.size() > 1 else opts[0]
+	var dd := sim.dp(player)
+	var opts: Array = dd.hitos[clampi(p["age"] - 1, 0, 2)]
+	var want := "militar" if p["age"] == 2 or personality == "agresiva" else "economia"
+	for o: String in opts:
+		if dd.edificios.get(o, {}).get("eje", "") == want:
+			return o
+	return opts[0]
 
 
 func _research(p: Dictionary, by_type: Dictionary, saving: bool) -> void:
 	if saving or not level["investiga"]:
 		return
 	var reserve := 150
-	for tech: String in sim.dp(player).tecnologias:
+	var techs: Array = sim.dp(player).tecnologias.keys()
+	# La tecnología del motor va primero (crítica 03, regla 5).
+	techs.sort_custom(func(a: String, b: String) -> bool: return bool(sim.dp(player).tecnologias[a].get("motor", false)) and not bool(sim.dp(player).tecnologias[b].get("motor", false)))
+	for tech: String in techs:
 		var t: Dictionary = sim.dp(player).tecnologias[tech]
 		if sim.research_block(player, tech) != "":
 			continue
@@ -118,8 +130,8 @@ func _alarm(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], centr
 	if enemies > 0:
 		calm_since = sim.tick
 	if not p["alarm"] and enemies >= 2 and enemies > defenders:
-		sim.push_command({"t": "alarm", "player": player, "on": true})
-	elif p["alarm"] and enemies == 0 and sim.tick - calm_since > 100:
+		sim.push_command({"t": "alarm", "player": player, "on": true, "max": enemies * int(sim.data.reglas.get("ia_campana_por_enemigo", 3))})
+	elif p["alarm"] and enemies == 0 and sim.tick - calm_since > int(sim.data.reglas.get("ia_campana_calma_ticks", 50)):
 		sim.push_command({"t": "alarm", "player": player, "on": false})
 
 
@@ -203,6 +215,41 @@ func _wants_hito(p: Dictionary, n_vill: int, by_type: Dictionary) -> bool:
 	return true
 
 
+## Motor propio de cada civ (docs/diseno/revision-economia/v3/04, §9.3).
+func _engine(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_type: Dictionary, saving: bool) -> void:
+	if vill.size() < 8 or sim.tick % 50 != (player * 25) % 50:
+		return
+	var dd := sim.dp(player)
+	match dd.clave:
+		"tawantinsuyu":
+			var want_res := 60 if saving else 0
+			if int(p.get("reserva_mita", 0)) != want_res:
+				sim.push_command({"t": "reserve", "player": player, "res": "mita", "n": want_res})
+			var shops: Array = by_type.get("taller_tejido", [])
+			if not dd.edificios.has("taller_tejido") or (saving and p["age"] == 1) or (p["age"] == 1 and shops.size() >= 1):
+				return
+			var cfg: Dictionary = dd.mod("recurso_propio")
+			var by_age: Array = cfg.get("por_aldeano_por_edad", [cfg.get("por_aldeano", 4)])
+			var income := vill.size() * int(by_age[clampi(int(p["age"]) - 1, 0, by_age.size() - 1)])
+			var cost: Dictionary = dd.cost_of("taller_tejido", p["age"])
+			if income - 30 * shops.size() >= 30 and int(p["res"]["madera"]) >= int(cost.get("madera", 0)) + 60:
+				_try_build("taller_tejido", p, vill, centro, 1)
+
+
+## Reserva del próximo hito: no gastar un recurso propio (mit'a, fama, kulliñ)
+## por debajo de lo que pide el hito siguiente (crítica 03, regla 2).
+func _keeps_reserve(p: Dictionary, cost: Dictionary) -> bool:
+	if p["age"] >= sim.dp(player).edades.size():
+		return true
+	var need: Dictionary = sim.dp(player).cost_of(_hito_type(p), p["age"])
+	for k in cost:
+		if k in Sim.RES_KINDS or not need.has(k):
+			continue
+		if int(p["res"].get(k, 0)) - int(cost[k]) < int(need[k]):
+			return false
+	return true
+
+
 func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_type: Dictionary, saving: bool) -> void:
 	if vill.is_empty():
 		return
@@ -251,12 +298,13 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 			if k == "camino":
 				continue
 			for bb: SimEntity in by_type[k]:
-				if bb.built and not bb.capital and not sim.mods.connected(bb):
-					var tiles := _road_tiles(Vector2i(bb.tx + bb.w / 2, bb.ty + bb.h / 2), Vector2i(centro.tx + centro.w / 2, centro.ty + centro.h / 2))
+				if bb.built and not bb.capital and not sim.mods.connected(bb) and sim.tick >= int(_no_route.get(bb.id, 0)):
+					var tiles := _road_tiles(bb, centro)
 					if not tiles.is_empty():
 						var v := _nearest_villager(vill, bb.x, bb.y)
 						sim.push_command({"t": "build_line", "player": player, "ids": [v.id], "type": "camino", "tiles": tiles})
-					return
+						return
+					_no_route[bb.id] = sim.tick + 1200 # sin paso: se reintenta en 2 minutos
 	# Mercado desde la edad II.
 	if p["age"] >= 2 and not by_type.has("mercado") and vill.size() >= 20:
 		_try_build("mercado", p, vill, centro, 2)
@@ -365,13 +413,17 @@ func _production(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], 
 		if b.queue.size() >= 2:
 			continue
 		# Arietes desde la edad II: sin asedio los ataques no derriban edificios.
-		if p["age"] >= 2 and b.type == "cuartel" and _count(army, "ariete") < 1 + wave / 2 and army.size() >= 6:
+		var makes: Array = b.def.get("produce", [])
+		if p["age"] >= 2 and makes.has("ariete") and _count(army, "ariete") < 1 + wave / 2 and army.size() >= 6:
 			if sim.can_afford(player, sim.dp(player).cost_of("ariete", p["age"])):
 				sim.push_command({"t": "train", "player": player, "building": b.id, "type": "ariete"})
 				continue
 		# La preferida si alcanza; si no, la siguiente que se pueda pagar.
 		for type in order:
-			if sim.can_afford(player, sim.dp(player).cost_of(type, p["age"])):
+			if not makes.has(type) or p["age"] < int(sim.dp(player).unidades.get(type, {}).get("edad_min", 1)):
+				continue # solo lo que este edificio produce y la edad permite (antes repetía órdenes rechazadas)
+			var c := sim.dp(player).cost_of(type, p["age"])
+			if sim.can_afford(player, c) and _keeps_reserve(p, c):
 				sim.push_command({"t": "train", "player": player, "building": b.id, "type": type})
 				break
 
@@ -407,7 +459,7 @@ func _threat(centro: SimEntity) -> SimEntity:
 	var best: SimEntity = null
 	var best_d := 22000
 	for e in sim.actives:
-		if e.alive and e.owner >= 0 and e.owner != player and e.is_unit():
+		if e.alive and e.owner >= 0 and e.owner != player and (e.is_military() or e.fn == "explorador"):
 			var d := sim.dist_to(e, centro)
 			if d < best_d:
 				best = e
@@ -428,6 +480,8 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 			sim.push_command({"t": "move", "player": player, "ids": ids, "x": threat.x, "y": threat.y, "amove": true})
 		return
 	var st: Dictionary = sim.data.reglas.get("estilos_ia", {}).get(personality, {})
+	if personality == "paz": # solo para las pruebas de economía: no pelea fuera de su base
+		st = {"ataca_base": false, "incursiones": "no", "controla_mapa": false}
 	var need: int = int(st.get("ataque_base", level["ataque_base"])) + int(st.get("ataque_paso", level["ataque_paso"])) * wave
 	var gap: int = int(st.get("ataque_espera_ticks", level["ataque_espera_ticks"]))
 	var attacks: bool = st.get("ataca_base", personality != "pasiva")
@@ -606,17 +660,66 @@ func _near_site(u: SimEntity) -> bool:
 
 
 ## Casillas libres de un camino recto (4-conexo) entre dos puntos; las ocupadas se saltean.
-func _road_tiles(a: Vector2i, b: Vector2i) -> Array:
+## Camino de un edificio a la capital por búsqueda en anchura: rodea lo ocupado,
+## aprovecha los caminos que ya existen y devuelve solo las casillas nuevas.
+## Vacío si no hay paso (antes trazaba en línea recta y dejaba huecos: caso F).
+func _road_tiles(from_b: SimEntity, to_b: SimEntity) -> Array:
+	var n := sim.map.n
+	var lo := Vector2i(maxi(0, mini(from_b.tx, to_b.tx) - 8), maxi(0, mini(from_b.ty, to_b.ty) - 8))
+	var hi := Vector2i(mini(n - 1, maxi(from_b.tx + from_b.w, to_b.tx + to_b.w) + 8), mini(n - 1, maxi(from_b.ty + from_b.h, to_b.ty + to_b.h) + 8))
+	var prev := {}
+	var queue: Array[Vector2i] = []
+	for t in _ring(from_b):
+		if _road_ok(t):
+			prev[t] = t
+			queue.append(t)
+	var goal := {}
+	for t in _ring(to_b):
+		goal[t] = true
+	var head := 0
+	var end := Vector2i(-1, -1)
+	while head < queue.size():
+		var c: Vector2i = queue[head]
+		head += 1
+		if goal.has(c):
+			end = c
+			break
+		for d: Vector2i in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			var q: Vector2i = c + d
+			if q.x < lo.x or q.y < lo.y or q.x > hi.x or q.y > hi.y or prev.has(q) or not _road_ok(q):
+				continue
+			prev[q] = c
+			queue.append(q)
 	var out := []
-	var x := a.x
-	var y := a.y
-	var guard := 0
-	while (x != b.x or y != b.y) and guard < 80:
-		guard += 1
-		if absi(b.x - x) >= absi(b.y - y):
-			x += signi(b.x - x)
-		else:
-			y += signi(b.y - y)
-		if sim.can_place("camino", x, y, player):
-			out.append([x, y])
+	if end.x < 0:
+		return out
+	var cur := end
+	while true:
+		if not _is_road(cur):
+			out.append([cur.x, cur.y])
+		var back: Vector2i = prev[cur]
+		if back == cur:
+			break
+		cur = back
 	return out
+
+
+func _ring(b: SimEntity) -> Array[Vector2i]:
+	var out: Array[Vector2i] = []
+	for x in range(b.tx, b.tx + b.w):
+		out.append(Vector2i(x, b.ty - 1))
+		out.append(Vector2i(x, b.ty + b.h))
+	for y in range(b.ty, b.ty + b.h):
+		out.append(Vector2i(b.tx - 1, y))
+		out.append(Vector2i(b.tx + b.w, y))
+	return out
+
+
+func _is_road(t: Vector2i) -> bool:
+	var id := sim.map.occupant(t.x, t.y)
+	var e: SimEntity = sim.by_id.get(id) if id >= 0 else null
+	return e != null and e.type == "camino"
+
+
+func _road_ok(t: Vector2i) -> bool:
+	return _is_road(t) or sim.can_place("camino", t.x, t.y, player)

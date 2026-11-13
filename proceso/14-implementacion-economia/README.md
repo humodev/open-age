@@ -9,3 +9,51 @@ Diseño: [`docs/diseno/revision-economia/v3/04-diseno-final.md`](../../docs/dise
 - **Decisiones pendientes (C-14 a C-20).** Mientras el autor no conteste, se aplica la opción recomendada de cada una. Todas quedan en datos (`reglas.json`, `data/civs/`), así que se pueden revertir sin tocar código.
 
 ## Paso a paso
+1. **Etapa 0, medición.** Herramientas para medir antes de cambiar nada:
+   - **Libro de ingresos por origen** en la simulación (`Sim.ledger`, solo estadística): casa, disputado, granja, sitios, saqueo, mercado, renta y motor propio.
+   - **Conteo de órdenes por tipo y por jugador.**
+   - **Modo "paz" de la IA** para las pruebas: no ataca ni hace incursiones.
+   - **`tests/economia.gd`:** 12 partidas de 30 minutos, con riqueza a los 5, 10, 20 y 30 minutos, origen de la riqueza, momento de cada edad y órdenes por minuto.
+   - [Línea de base en paz](pruebas/00-linea-de-base-paz.txt).
+2. **Lo que encontró la línea de base:**
+   - La IA repetía decenas de veces por minuto órdenes que el juego rechazaba: mapuches, 44 arietes por minuto sin tener asedio; Ayutthaya, 29 guerreros por minuto. Pedía unidades que ese edificio no produce. Se arregló.
+   - El motor propio aporta 0 % de la riqueza (esperado con el diseño viejo).
+   - Los sitios sagrados dan entre 10 y 16 %.
+3. **Etapa 1, IA común:**
+   - Hitos elegidos por eje: cada hito declara `"eje": "economia" | "militar"` en los datos. Antes elegía por el orden de la lista, y por eso los mapuches tomaban siempre el rewe militar.
+   - Reserva del recurso propio (mit'a, fama, kulliñ) para el próximo hito.
+   - Campana parcial: como máximo 3 aldeanos refugiados por enemigo, y se levanta a los 5 s de calma. Antes vaciaba toda la economía.
+   - Amenazas: solo cuentan soldados y exploradores.
+   - Caminos incas por búsqueda en anchura, que rodean lo ocupado. Si no hay paso, se reintenta a los 2 minutos.
+   - `is_military()` por lista blanca.
+   - Al cancelar se devuelve lo pagado.
+   - El hash del estado incluye todos los recursos y el terreno.
+4. **Compuerta de la etapa 1: no se cumple.** La edad II tiene que llegar entre 6:30 y 9:00; la medición dio:
+
+   | | En paz | Con guerra |
+   |---|---|---|
+   | Edad II | 8:00 a 10:35 | 7:37 a 12:42 |
+   | Peores | — | Etiopía 12:42, mapuches 10:55 |
+
+   [Medición en paz](pruebas/01-etapa1-paz.txt) · [con guerra](pruebas/01-etapa1-guerra.txt). Queda por investigar por qué la IA avanza tarde. Es lo próximo, antes de seguir con los motores.
+5. **Etapa 2, capa común** (implementada, sin medir todavía):
+   - **Arcilla (barreal) con dueño:** base 2×900, flanco 1500 a 18 casillas y centro 1000 por jugador.
+   - **Techo de lo disputado:** 15 / 40 / 80 / 120 r/min por edad, en una ventana de 5 baldes de un minuto. Con el techo lleno no se extrae arcilla ajena ni del centro, y los aldeanos no van a buscarla.
+   - **Hito II:** 500 de alimento + 300 de riqueza.
+   - **Mercado:** piso 40, paso 3; los precios vuelven solos hacia 100.
+   - **Sitios sagrados:** renta decreciente de 18 / 12 / 8.
+   - **Hitos sin renta de riqueza:** puerto real, junco, monasterio, misión, parlamento, Cucaú y aqllawasi. Macaco baja a 20 de fama; el ushnu y la guerra de Zumbi quedan sin renta.
+   - **Piezas de motor:** máximo por edad (`maximo_por_edad`), separación mínima y piezas extra que dan los hitos (`maximo_extra`).
+6. **Etapa 3a, Tawantinsuyu** (empezada, sin probar):
+   - Taller de tejido: 120 de madera + 20 de mit'a. Consume 30 de mit'a por minuto y da 24 de riqueza; si falta mit'a, rinde 1/3. Máximo 2 / 3 / 4 / 5, y uno más con el aqllawasi.
+   - Mit'a de 4 por runa en las edades I y II y de 3 desde la III.
+   - Reserva de mit'a (comando `reserve`).
+   - Tecnología común "Oficio maestro" (+25 % al motor, edad III, en el mercado).
+   - Reglas de IA: taller si sobra mit'a, reserva de 60 al ahorrar para un hito y la tecnología del motor primero.
+   - Falta: la capa 1 (arcilla unida por camino, +20 %) y el regalo de cumbi, que necesita los ingenios de la etapa 4.
+
+## Decisiones aplicadas por defecto
+El autor no contestó todavía C-14 a C-20, así que se aplicó la opción recomendada de cada una. Todas están en datos y se pueden revertir. La más visible es el hito II en 500 + 300 (C-15).
+
+## Tropiezo de proceso
+El autor preguntó en qué punto estaba la economía: se había avanzado varias horas sin documentar ni subir nada. Desde ahora, cada compuerta se documenta y se sube antes de seguir, con un resumen corto para el autor.

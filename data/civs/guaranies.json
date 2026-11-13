@@ -96,7 +96,7 @@
   "hito_guerra"
  ],
  "edificios_nuevos": {
-  "karai_palabra": {
+  "karai_palabra": { "eje": "economia",
    "nombre": "Casa del karai",
    "edad_min": 1,
    "tam": [
@@ -120,7 +120,7 @@
     }
    ]
   },
-  "aty_guasu": {
+  "aty_guasu": { "eje": "militar",
    "nombre": "Aty guasu",
    "edad_min": 1,
    "tam": [
@@ -150,7 +150,7 @@
     "guerrero"
    ]
   },
-  "mision": {
+  "mision": { "eje": "economia",
    "nombre": "Pueblo de misión",
    "edad_min": 1,
    "tam": [
@@ -176,16 +176,14 @@
     "arcabucero",
     "lancero"
    ],
-   "renta": {
-    "riqueza": 25
-   },
+   
    "guarnicion": 12,
    "flechas": 3,
    "ataque": 6,
    "alcance": 7000,
    "cadencia_ms": 2000
   },
-  "monte": {
+  "monte": { "eje": "militar",
    "nombre": "Monte libre",
    "edad_min": 1,
    "tam": [
@@ -222,7 +220,7 @@
     }
    ]
   },
-  "tava": {
+  "tava": { "eje": "economia",
    "nombre": "Tava fortificada",
    "edad_min": 1,
    "tam": [
@@ -255,7 +253,7 @@
    "alcance": 7500,
    "cadencia_ms": 2000
   },
-  "yvy_marane": {
+  "yvy_marane": { "eje": "militar",
    "nombre": "Ñande retã",
    "edad_min": 1,
    "tam": [

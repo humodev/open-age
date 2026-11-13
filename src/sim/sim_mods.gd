@@ -34,6 +34,7 @@ func tick_second() -> void:
 			continue
 		_own_resource(pid, p)
 		_rents(pid, p)
+		_conversions(pid, p)
 		if has(pid, "acogida"):
 			_welcome(pid, p)
 		if has(pid, "caminos") and sim.tick % 50 == 0:
@@ -59,19 +60,66 @@ func _own_resource(pid: int, p: Dictionary) -> void:
 		elif e.is_building() and e.built:
 			per_min += int(cfg.get("por_edificio", {}).get(e.type, 0))
 			cap += int(cfg.get("tope_por_edificio", {}).get(e.type, 0))
-	per_min += vill * int(cfg.get("por_aldeano", 0))
+	var per_v := int(cfg.get("por_aldeano", 0))
+	var by_age: Array = cfg.get("por_aldeano_por_edad", [])
+	if not by_age.is_empty():
+		per_v = int(by_age[clampi(int(p["age"]) - 1, 0, by_age.size() - 1)])
+	per_min += vill * per_v
 	_gain(pid, key, per_min * P / 60)
 	p["res"][key] = mini(p["res"].get(key, 0), cap)
 	p["tope_" + key] = cap
 
 
-func _gain(pid: int, key: String, milli: int) -> void:
-	var k := "%d:%s" % [pid, key]
+## Piezas extra de motor que dan los hitos ("maximo_extra": {"tipo": n} en el hito).
+func engine_max_bonus(pid: int, type: String) -> int:
+	var extra := 0
+	for e in sim.actives:
+		if e.alive and e.owner == pid and e.is_building() and e.built and e.def.has("maximo_extra"):
+			extra += int(e.def["maximo_extra"].get(type, 0))
+	return extra
+
+
+func _gain(pid: int, key: String, milli: int, origin: String = "propio") -> void:
+	var k := "%d:%s:%s" % [pid, key, origin]
 	var acc: int = _acc.get(k, 0) + milli
 	var whole := acc / P
 	_acc[k] = acc - whole * P
+	if whole != 0 and key == "riqueza" and origin in ["sitios", "saqueo"]:
+		whole = mini(whole, sim.disputed_room(pid)) # techo de lo disputado
+		sim.disputed_add(pid, whole)
 	if whole != 0:
 		sim.players[pid]["res"][key] = int(sim.players[pid]["res"].get(key, 0)) + whole
+		sim.ledger(pid, origin, key, whole)
+
+
+## Conversión (taller de tejido inca y otros motores): cada edificio consume por
+## minuto un recurso que esté por encima de la reserva del jugador y produce otro.
+## Si falta y la reserva es 0, rinde el piso (`piso_pct`); con reserva, nada.
+## La tecnología de motor suma su porcentaje (mod "motor"). Orden por id: determinista.
+func _conversions(pid: int, p: Dictionary) -> void:
+	var boost := 100 + sim.mod(pid, "motor")
+	for e in sim.actives:
+		if not (e.alive and e.owner == pid and e.is_building() and e.built and e.def.has("conversion")):
+			continue
+		var cv: Dictionary = e.def["conversion"]
+		var src: String = cv["de"]
+		var need := int(cv["consume_min"]) * P / 60 # milésimas por segundo
+		var reserve := int(p.get("reserva_" + src, 0))
+		var acc_k := "%d:conv:%d" % [pid, e.id]
+		var owed := int(_acc.get(acc_k, 0)) # milésimas consumidas que todavía no se descontaron
+		var pct := 100
+		if (int(p["res"].get(src, 0)) - reserve) * P - owed >= need:
+			owed += need
+			var whole := owed / P
+			p["res"][src] = int(p["res"][src]) - whole
+			_acc[acc_k] = owed - whole * P
+		elif reserve == 0:
+			pct = int(cv.get("piso_pct", 0))
+		else:
+			pct = 0
+		if pct > 0:
+			for k in cv["da"]:
+				_gain(pid, k, int(cv["da"][k]) * P / 60 * pct / 100 * boost / 100, "propio")
 
 
 ## Renta: edificios que producen sin aldeanos (gult etíope, barrios del puerto).
@@ -80,7 +128,7 @@ func _rents(pid: int, _p: Dictionary) -> void:
 		if e.alive and e.owner == pid and e.is_building() and e.built and e.def.has("renta"):
 			var r: Dictionary = e.def["renta"]
 			for k in r:
-				_gain(pid, k, int(r[k]) * P / 60)
+				_gain(pid, k, int(r[k]) * P / 60, "renta")
 
 
 ## Acogida: la población llega sola según la fama (Palmares).
@@ -146,7 +194,10 @@ func _sacred() -> void:
 	for site in sites:
 		if site.holder >= 0:
 			holds[site.holder] = int(holds.get(site.holder, 0)) + 1
-			_gain(site.holder, "riqueza", int(cfg["renta_riqueza"]) * P / 60)
+			# Renta decreciente: 18 / 12 / 8 por el 1.º, 2.º y 3.º sitio del mismo jugador.
+			var rank := int(holds[site.holder]) - 1
+			var rents: Array = cfg.get("renta_por_cantidad", [cfg["renta_riqueza"]])
+			_gain(site.holder, "riqueza", int(rents[mini(rank, rents.size() - 1)]) * P / 60, "sitios")
 	for p in sim.players:
 		var pid: int = p["id"]
 		if int(holds.get(pid, 0)) == sites.size() and not p["defeated"]:
@@ -266,7 +317,7 @@ func on_hit(a: SimEntity, t: SimEntity, dmg: int) -> void:
 		t.slow_until = sim.tick + int(a.def["frena_ms"]) / sim.tick_ms
 	if a.owner >= 0 and t.owner >= 0 and has(a.owner, "saqueo") and t.is_building():
 		var cfg := m(a.owner, "saqueo")
-		_gain(a.owner, cfg["recurso"], dmg * int(cfg["pct_danio_edificio"]) * P / 100)
+		_gain(a.owner, cfg["recurso"], dmg * int(cfg["pct_danio_edificio"]) * P / 100, "saqueo")
 
 
 func on_kill(e: SimEntity, killer: SimEntity) -> void:
@@ -274,7 +325,12 @@ func on_kill(e: SimEntity, killer: SimEntity) -> void:
 		return
 	if has(killer.owner, "saqueo") and e.fn == "civil":
 		var cfg := m(killer.owner, "saqueo")
-		sim.players[killer.owner]["res"][cfg["recurso"]] = int(sim.players[killer.owner]["res"].get(cfg["recurso"], 0)) + int(cfg.get("por_aldeano", 0))
+		var loot := int(cfg.get("por_aldeano", 0))
+		if cfg["recurso"] == "riqueza":
+			loot = mini(loot, sim.disputed_room(killer.owner))
+			sim.disputed_add(killer.owner, loot)
+		sim.players[killer.owner]["res"][cfg["recurso"]] = int(sim.players[killer.owner]["res"].get(cfg["recurso"], 0)) + loot
+		sim.ledger(killer.owner, "saqueo", cfg["recurso"], loot)
 	if has(killer.owner, "liberacion") and e.is_building() and e.built:
 		var n: int = m(killer.owner, "liberacion").get("por_edificio", {}).get(e.type, int(m(killer.owner, "liberacion").get("aldeanos", 1)))
 		for i in n:

@@ -57,6 +57,7 @@ var built := true
 var progress: int = 0
 var build_time: int = 0
 var queue: Array[String] = []
+var queue_paid: Array[Dictionary] = [] # lo que se pagó por cada elemento de la cola (se devuelve al cancelar)
 var queue_progress: int = 0
 var rally_set := false
 var rally_x: int
@@ -66,6 +67,7 @@ var farmer: int = -1
 var garrison: Array[int] = [] # unidades alojadas
 var capital := false # el centro inicial cuenta como hito (docs/05, "Victoria"); viaja con la base móvil
 var holder: int = -1 # sitio sagrado: jugador que lo controla
+var res_owner: int = -1 # arcilla de casa o de flanco: de quién es (-1: disputada)
 var capture: int = 0 # sitio sagrado: progreso de captura (ms) y por quién (aux)
 var workers_prev: int = 0 # constructores del tick anterior
 var workers_now: int = 0
@@ -87,5 +89,7 @@ func is_resource() -> bool:
 	return cat == Cat.RESOURCE
 
 
+## Militar por lista blanca: el ganado, los elefantes de carga y otras unidades
+## nuevas no cuentan como ejército (crítica 03b, trampa 1).
 func is_military() -> bool:
-	return cat == Cat.UNIT and fn != "civil" and fn != "explorador"
+	return cat == Cat.UNIT and fn in ["choque", "distancia", "linea", "asedio"]

@@ -106,7 +106,7 @@
    "ranura": 7,
    "desc": "Aldea escondida en el monte: invisible para el rival hasta que se acerca. La gente que llega puede instalarse acá."
   },
-  "quilombo_central": {
+  "quilombo_central": { "eje": "economia",
    "nombre": "Macaco",
    "edad_min": 1,
    "tam": [
@@ -123,11 +123,9 @@
    "pob": 5,
    "desc": "El mocambo del rey: más gente llega y más fama.",
    "efectos": [],
-   "renta": {
-    "fama": 40
-   }
+   "renta": {"fama": 20}
   },
-  "mocambo_guerra": {
+  "mocambo_guerra": { "eje": "militar",
    "nombre": "Mocambo de guerra",
    "edad_min": 1,
    "tam": [
@@ -160,7 +158,7 @@
     "arcabucero"
    ]
   },
-  "cerca_real": {
+  "cerca_real": { "eje": "economia",
    "nombre": "Cerca real en anillos",
    "edad_min": 1,
    "tam": [
@@ -189,7 +187,7 @@
    "cadencia_ms": 2000,
    "espinas": 6
   },
-  "ferraria": {
+  "ferraria": { "eje": "militar",
    "nombre": "Ferraria grande",
    "edad_min": 1,
    "tam": [
@@ -229,7 +227,7 @@
     "arcabucero"
    ]
   },
-  "pacto_cucau": {
+  "pacto_cucau": { "eje": "economia",
    "nombre": "Pacto de Cucaú",
    "edad_min": 1,
    "tam": [
@@ -251,12 +249,9 @@
      "recurso": "*",
      "pct": 25
     }
-   ],
-   "renta": {
-    "riqueza": 40
-   }
+   ]
   },
-  "guerra_zumbi": {
+  "guerra_zumbi": { "eje": "militar",
    "nombre": "Guerra de Zumbi",
    "edad_min": 1,
    "tam": [
@@ -291,10 +286,7 @@
      ],
      "pct": 15
     }
-   ],
-   "renta": {
-    "fama": 30
-   }
+   ]
   }
  },
  "hitos": [

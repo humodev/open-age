@@ -3,6 +3,6 @@
   "arbol":    { "nombre": "Árbol",      "recurso": "madera",   "cantidad": 120, "tam": [1, 1] },
   "arbusto":  { "nombre": "Arbustos",   "recurso": "alimento", "cantidad": 150, "tam": [1, 1] },
   "roca":     { "nombre": "Afloramiento de piedra", "recurso": "piedra", "cantidad": 800, "tam": [2, 2] },
-  "riqueza":  { "nombre": "Yacimiento de riqueza",  "recurso": "riqueza", "cantidad": 1400, "tam": [2, 2] },
+  "riqueza":  { "nombre": "Arcilla (barreal)", "recurso": "riqueza", "cantidad": 900, "tam": [2, 2], "desc": "Tus aldeanos sacan arcilla y hacen las vasijas de la fiesta: con lo que se sirve en ellas se convida, se ofrenda y se paga." },
   "yerbal":   { "nombre": "Yerbal (capuera)", "recurso": "riqueza", "cantidad": 400, "tam": [3, 3] }
 }

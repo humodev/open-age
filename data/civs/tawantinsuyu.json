@@ -132,6 +132,7 @@
   "hito_guerra"
  ],
  "edificios_nuevos": {
+    "taller_tejido": { "nombre": "Taller de tejido", "edad_min": 1, "tam": [2, 2], "pv": 600, "armadura": 1, "costo": { "madera": 120, "mita": 20 }, "tiempo_ms": 20000, "vision": 3000, "maximo_por_edad": [2, 3, 4, 5], "conversion": { "de": "mita", "consume_min": 30, "da": { "riqueza": 24 }, "piso_pct": 33 }, "motor": true, "desc": "Los turnos de mit'a que sobran se vuelven tela (awasqa y cumbi), que es riqueza: consume 30 de mit'a por minuto y da 24 de riqueza. Si falta mit'a, rinde un tercio." },
   "camino": {
    "nombre": "Qhapaq Ñan (camino)",
    "edad_min": 1,
@@ -198,7 +199,7 @@
    "ranura": 7,
    "desc": "Depósito estatal: guarda turnos de mit'a y leva escuadrones al instante."
   },
-  "ushnu": {
+  "ushnu": { "eje": "economia",
    "nombre": "Ushnu y plaza",
    "edad_min": 1,
    "tam": [
@@ -223,12 +224,9 @@
    ],
    "costo_extra": {
     "mita": 60
-   },
-   "renta": {
-    "mita": 20
    }
   },
-  "pukara_mayor": {
+  "pukara_mayor": { "eje": "militar",
    "nombre": "Pukara de frontera",
    "edad_min": 1,
    "tam": [
@@ -268,7 +266,7 @@
     "hondero"
    ]
   },
-  "aqllawasi": {
+  "aqllawasi": { "maximo_extra": { "taller_tejido": 1 }, "eje": "economia",
    "nombre": "Aqllawasi",
    "edad_min": 1,
    "tam": [
@@ -283,16 +281,13 @@
    "avanza_edad": true,
    "hito": true,
    "pob": 5,
-   "desc": "El tejido de cumbi convierte el trabajo en riqueza.",
+   "desc": "Casa de las tejedoras escogidas: un taller de tejido más en la edad III y cumbi fino.",
    "efectos": [],
    "costo_extra": {
     "mita": 120
-   },
-   "renta": {
-    "riqueza": 40
    }
   },
-  "kallanka_real": {
+  "kallanka_real": { "eje": "militar",
    "nombre": "Kallanka real",
    "edad_min": 1,
    "tam": [
@@ -329,7 +324,7 @@
     "boleador"
    ]
   },
-  "qorikancha": {
+  "qorikancha": { "eje": "economia",
    "nombre": "Qorikancha",
    "edad_min": 1,
    "tam": [
@@ -356,7 +351,7 @@
     "mita": 200
    }
   },
-  "vilcabamba": {
+  "vilcabamba": { "eje": "militar",
    "nombre": "Vilcabamba",
    "edad_min": 1,
    "tam": [
@@ -411,7 +406,7 @@
    "vilcabamba"
   ]
  ],
- "construye": [
+ "construye": [ "taller_tejido",
   "casa",
   "granja",
   "deposito",
@@ -442,7 +437,7 @@
    "nombre": "Mit'a",
    "color": "#c98a3b",
    "icono": "carga",
-   "por_aldeano": 4,
+   "por_aldeano": 4, "por_aldeano_por_edad": [4, 4, 3, 3],
    "inicial": 60,
    "tope": 200,
    "tope_por_edificio": {

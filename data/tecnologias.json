@@ -1,5 +1,17 @@
 {
   "_doc": "Investigaciones de la capa común (docs/05, 'Investigaciones'). ranura = posición en la grilla de comandos (0..11). efectos: ver docs/05.",
+  "oficio_motor": {
+    "nombre": "Oficio maestro",
+    "edificio": "mercado",
+    "ranura": 4,
+    "edad_min": 3,
+    "motor": true,
+    "costo": { "alimento": 200, "madera": 200, "riqueza": 100 },
+    "tiempo_ms": 45000,
+    "icono": "riqueza",
+    "desc": "El motor propio de tu pueblo rinde 25 % más.",
+    "efectos": [{ "tipo": "motor_pct", "pct": 25 }]
+  },
   "hachas": {
     "nombre": "Herramientas de tala",
     "edificio": "deposito",

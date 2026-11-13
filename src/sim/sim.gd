@@ -137,6 +137,10 @@ func _apply(c: Dictionary) -> void:
 	var pid: int = c.get("player", -1)
 	if pid < 0 or pid >= players.size() or players[pid]["defeated"]:
 		return
+	# Órdenes por tipo (stats): miden la atención que pide cada civ (docs/diseno/.../v3/04, §6).
+	var oc: Dictionary = players[pid]["stats"].get_or_add("ordenes", {})
+	var okey: String = c["t"] + (":" + str(c["type"]) if c.has("type") else "")
+	oc[okey] = int(oc.get(okey, 0)) + 1
 	match c["t"]:
 		"move":
 			_cmd_move(pid, _own_units(pid, c.get("ids", [])), c["x"], c["y"], c.get("amove", false))
@@ -159,7 +163,10 @@ func _apply(c: Dictionary) -> void:
 		"ungarrison":
 			_cmd_ungarrison(pid, c["building"])
 		"alarm":
-			_cmd_alarm(pid, c.get("on", true))
+			_cmd_alarm(pid, c.get("on", true), int(c.get("max", -1)))
+		"reserve":
+			# Reserva de un recurso propio que los motores de conversión no tocan.
+			players[pid]["reserva_" + str(c["res"])] = clampi(int(c["n"]), 0, 1000)
 		"trade":
 			_cmd_trade(pid, c["building"], c["recurso"], c["op"])
 		"pack":
@@ -303,6 +310,7 @@ func _cmd_train(pid: int, bid: int, type: String) -> void:
 		return
 	_pay(pid, cost)
 	b.queue.append(type)
+	b.queue_paid.append(cost.duplicate())
 
 
 func _cmd_cancel(pid: int, bid: int, index: int) -> void:
@@ -313,12 +321,16 @@ func _cmd_cancel(pid: int, bid: int, index: int) -> void:
 		index = b.queue.size() - 1
 	var type: String = b.queue[index]
 	b.queue.remove_at(index)
+	var paid: Dictionary = b.queue_paid[index] if index < b.queue_paid.size() else {}
+	if index < b.queue_paid.size():
+		b.queue_paid.remove_at(index)
 	if index == 0:
 		b.queue_progress = 0
 	if type.begins_with("@"):
 		players[pid]["pending"].erase(type.substr(1))
 		type = type.substr(1)
-	_refund(pid, dp(pid).cost_of(type, players[pid]["age"]))
+	# Se devuelve lo que se pagó, no el precio de ahora (con descuentos que cambian, crítica 03b).
+	_refund(pid, paid if not paid.is_empty() else dp(pid).cost_of(type, players[pid]["age"]))
 
 
 ## ¿Se puede investigar `tech` ahora? Devuelve "" o el motivo.
@@ -358,6 +370,7 @@ func _cmd_research(pid: int, bid: int, tech: String) -> void:
 	_pay(pid, t["costo"])
 	players[pid]["pending"][tech] = true
 	b.queue.append("@" + tech)
+	b.queue_paid.append((t["costo"] as Dictionary).duplicate())
 
 
 ## Mercado: compra o vende un lote por riqueza; el precio sube al comprar y baja al vender.
@@ -378,6 +391,7 @@ func _cmd_trade(pid: int, bid: int, kind: String, op: String) -> void:
 			return
 		res["riqueza"] -= price
 		res[kind] += lot
+		ledger(pid, "mercado", kind, lot)
 		p["precios"][kind] = mini(int(cfg["maximo"]), price + int(cfg["paso"]))
 	else:
 		if int(res[kind]) < lot:
@@ -385,6 +399,7 @@ func _cmd_trade(pid: int, bid: int, kind: String, op: String) -> void:
 			return
 		res[kind] -= lot
 		res["riqueza"] += price * (100 - int(cfg["comision_pct"])) / 100
+		ledger(pid, "mercado", "riqueza", price * (100 - int(cfg["comision_pct"])) / 100)
 		p["precios"][kind] = maxi(int(cfg["minimo"]), price - int(cfg["paso"]))
 	events.append({"t": "trade", "player": pid})
 
@@ -394,6 +409,19 @@ func trade_price(pid: int, kind: String) -> int:
 	if not p.has("precios"):
 		var start: int = data.reglas["mercado"]["precio_inicial"]
 		p["precios"] = {"alimento": start, "madera": start, "piedra": start}
+		p["precios_tick"] = tick
+	# Los precios vuelven de a poco al inicial (piso 40, paso 3, regreso de 1 cada 10 s).
+	var cfg: Dictionary = data.reglas["mercado"]
+	var every := int(cfg.get("regreso_cada_ticks", 0))
+	if every > 0:
+		var steps := (tick - int(p.get("precios_tick", tick))) / every
+		if steps > 0:
+			p["precios_tick"] = int(p.get("precios_tick", tick)) + steps * every
+			var base := int(cfg["precio_inicial"])
+			var mv := steps * int(cfg.get("regreso_paso", 1))
+			for k in p["precios"]:
+				var v := int(p["precios"][k])
+				p["precios"][k] = mini(base, v + mv) if v < base else maxi(base, v - mv)
 	return p["precios"][kind]
 
 
@@ -449,7 +477,9 @@ func _cmd_ungarrison(pid: int, bid: int) -> void:
 
 
 ## Campana: los aldeanos cercanos se refugian; al apagarla vuelven a trabajar.
-func _cmd_alarm(pid: int, on: bool) -> void:
+## Campana: los aldeanos se refugian. Con `max` >= 0 solo los `max` más cercanos al
+## enemigo (la IA no vacía la economía por un ataque chico; crítica de balance).
+func _cmd_alarm(pid: int, on: bool, max_n: int = -1) -> void:
 	players[pid]["alarm"] = on
 	if not on:
 		for e in actives:
@@ -463,13 +493,27 @@ func _cmd_alarm(pid: int, on: bool) -> void:
 				_eject(b)
 		return
 	var radius: int = data.reglas["radio_campana"]
+	var cands: Array[SimEntity] = []
 	for e in actives:
 		if e.alive and e.owner == pid and e.fn == "civil" and e.inside < 0:
-			var b := nearest_shelter(pid, e.x, e.y, e.id)
-			if b != null and dist_to(e, b) <= radius:
-				e.order = O.GARRISON
-				e.target = b.id
-				e.path_target = -1
+			cands.append(e)
+	if max_n >= 0 and cands.size() > max_n:
+		# Los más amenazados primero: distancia al soldado enemigo más cercano; desempate por id.
+		var danger := {}
+		for e in cands:
+			var best := 1 << 60
+			for o in actives:
+				if o.alive and o.owner >= 0 and o.owner != pid and o.is_military():
+					best = mini(best, Sim.dist(e.x, e.y, o.x, o.y))
+			danger[e.id] = best
+		cands.sort_custom(func(a: SimEntity, b: SimEntity) -> bool: return danger[a.id] < danger[b.id] or (danger[a.id] == danger[b.id] and a.id < b.id))
+		cands = cands.slice(0, max_n)
+	for e in cands:
+		var b := nearest_shelter(pid, e.x, e.y, e.id)
+		if b != null and dist_to(e, b) <= radius:
+			e.order = O.GARRISON
+			e.target = b.id
+			e.path_target = -1
 	events.append({"t": "alarm", "player": pid})
 
 
@@ -577,6 +621,8 @@ func _apply_effects(pid: int, efectos: Array) -> void:
 					_add_mod(pid, "vel:" + f, ef["pct"])
 			"edificio_vida_pct":
 				_add_mod(pid, "b_vida", ef["pct"])
+			"motor_pct":
+				_add_mod(pid, "motor", ef["pct"])
 			"edificio_ataque":
 				_add_mod(pid, "b_ataque", ef["n"])
 			"edificio_alcance":
@@ -836,6 +882,9 @@ func _do_gather(e: SimEntity) -> void:
 	var rate_key: String = String(t.def.get("tasa_clave", "granja")) if t.is_building() else kind
 	var rate: int = int(e.def["tasa"].get(rate_key, e.def["tasa"].get("granja", 0))) * (100 + mod(e.owner, "tasa:" + rate_key) + _site_bonus(t)) / 100
 	e.carry_res = kind
+	# Arcilla ajena o del centro: con el techo de lo disputado lleno, no se extrae.
+	if kind == "riqueza" and t.is_resource() and t.res_owner != e.owner and disputed_room(e.owner) - e.carry <= 0:
+		return
 	e.gather_acc += rate * tick_ms / 1000
 	while e.gather_acc >= 1000 and e.carry < cap:
 		e.gather_acc -= 1000
@@ -902,6 +951,10 @@ func _do_return(e: SimEntity) -> void:
 		return
 	players[e.owner]["res"][e.carry_res] += e.carry
 	players[e.owner]["stats"]["recolectado"] += e.carry
+	var origin := _gather_origin(e)
+	ledger(e.owner, origin, e.carry_res, e.carry)
+	if origin == "disputado" and e.carry_res == "riqueza":
+		disputed_add(e.owner, e.carry)
 	events.append({"t": "deposit", "id": e.id, "res": e.carry_res, "n": e.carry})
 	e.carry = 0
 	e.gather_acc = 0
@@ -1073,6 +1126,8 @@ func _update_building(b: SimEntity) -> void:
 			b.queue_progress += tick_ms * mods.production_pct(b) / 100
 			if b.queue_progress >= dp(b.owner).queue_time(item):
 				b.queue.remove_at(0)
+				if not b.queue_paid.is_empty():
+					b.queue_paid.remove_at(0)
 				b.queue_progress = 0
 				if is_tech:
 					_finish_tech(b.owner, item.substr(1))
@@ -1352,6 +1407,8 @@ func find_resource(owner: int, kind: String, x: int, y: int, max_d: int, exclude
 				for t: SimEntity in cell:
 					if not t.alive or t.id == exclude or t.res_kind != kind or t.amount <= 0:
 						continue
+					if kind == "riqueza" and t.res_owner != owner and disputed_room(owner) <= 0:
+						continue # techo de lo disputado lleno: no sirve ir a esa arcilla
 					var d := dist_to(probe, t)
 					if d < best_d or (d == best_d and best != null and t.id < best.id):
 						if not map.has_free_neighbor(t.tx, t.ty, t.w, t.h):
@@ -1476,6 +1533,8 @@ func can_place(type: String, tx: int, ty: int, pid: int = -1) -> bool:
 	var def: Dictionary = dp(pid).edificios.get(type, data.edificios.get(type, {}))
 	if not map.is_free_rect(tx, ty, tam[0], tam[1]):
 		return false
+	if pid >= 0 and (def.has("maximo_por_edad") or def.has("separacion")) and not _engine_slot_ok(type, def, tx, ty, pid):
+		return false
 	if def.get("requiere_agua", false) and not _near_water(tx, ty, tam[0], tam[1], 2):
 		return false
 	if def.get("permite_ladera", false):
@@ -1485,6 +1544,25 @@ func can_place(type: String, tx: int, ty: int, pid: int = -1) -> bool:
 					return false
 		return true
 	return map.is_flat(tx, ty, tam[0], tam[1])
+
+
+## Piezas de motor (docs/diseno/revision-economia/v3/04, §3.1): máximo por edad,
+## contando las que están en obra, y separación mínima entre piezas del mismo tipo.
+func _engine_slot_ok(type: String, def: Dictionary, tx: int, ty: int, pid: int) -> bool:
+	var maxes: Array = def.get("maximo_por_edad", [])
+	var sep := int(def.get("separacion", 0))
+	var count := 0
+	for e in actives:
+		if not e.alive or e.owner != pid or e.type != type:
+			continue
+		count += 1
+		if sep > 0 and maxi(absi(e.tx - tx), absi(e.ty - ty)) < sep:
+			return false
+	if not maxes.is_empty():
+		var age := clampi(int(players[pid]["age"]) - 1, 0, maxes.size() - 1)
+		if count >= int(maxes[age]) + int(mods.engine_max_bonus(pid, type)):
+			return false
+	return true
 
 
 ## Empalizada propia en la casilla (una puerta puede reemplazarla).
@@ -1557,6 +1635,68 @@ func _check_victory() -> void:
 	for p in players:
 		if not p["defeated"] and not has_hito[p["id"]]:
 			_defeat(p["id"])
+
+
+## Lo disputado: riqueza de lugares que se pelean (arcilla del centro, sitios,
+## botín), con techo por edad en una ventana de N baldes de un minuto
+## (docs/diseno/revision-economia/v3/04, §3.2). Devuelve cuánto entra todavía.
+func disputed_room(pid: int) -> int:
+	var cfg: Dictionary = data.reglas.get("disputado", {})
+	if cfg.is_empty() or pid < 0:
+		return 1 << 30
+	var caps: Array = cfg["tope_por_min"]
+	var cap := int(caps[clampi(int(players[pid]["age"]) - 1, 0, caps.size() - 1)]) * int(cfg["baldes"])
+	var sum := 0
+	for v in _disp_buckets(pid):
+		sum += int(v)
+	return maxi(0, cap - sum)
+
+
+func disputed_add(pid: int, n: int) -> void:
+	if n <= 0 or pid < 0:
+		return
+	var b := _disp_buckets(pid)
+	var nb := b.size()
+	b[(tick / 600) % nb] = int(b[(tick / 600) % nb]) + n
+
+
+func _disp_buckets(pid: int) -> Array:
+	var p := players[pid]
+	var nb := int(data.reglas.get("disputado", {}).get("baldes", 5))
+	var minute := tick / 600
+	if not p.has("disp"):
+		var arr := []
+		arr.resize(nb)
+		arr.fill(0)
+		p["disp"] = arr
+		p["disp_min"] = minute
+	while int(p["disp_min"]) < minute:
+		p["disp_min"] = int(p["disp_min"]) + 1
+		(p["disp"] as Array)[int(p["disp_min"]) % nb] = 0
+	return p["disp"]
+
+
+## Libro de ingresos por origen (stats, no estado): de dónde sale cada recurso.
+## Lo usan las pruebas de la economía (docs/diseno/revision-economia/v3/04, §9).
+func ledger(pid: int, origin: String, res: String, n: int) -> void:
+	if pid < 0 or pid >= players.size() or n == 0:
+		return
+	var book: Dictionary = players[pid]["stats"].get_or_add("origen", {})
+	var row: Dictionary = book.get_or_add(origin, {})
+	row[res] = int(row.get(res, 0)) + n
+
+
+## Recolección en casa (a 20 casillas de la base inicial) o en lo disputado.
+func _gather_origin(e: SimEntity) -> String:
+	var t: SimEntity = by_id.get(e.target)
+	if t == null:
+		return "recoleccion"
+	if t.is_building():
+		return "granja"
+	if t.type == "riqueza" and t.is_resource():
+		return "casa" if t.res_owner == e.owner else "disputado"
+	var b := bases[e.owner % bases.size()] + Vector2i(2, 2)
+	return "disputado" if Sim.dist(t.x, t.y, b.x * P, b.y * P) > 20 * P else "casa"
 
 
 ## Victoria directa (sitios sagrados): todos los demás pierden.
@@ -1705,8 +1845,10 @@ func _generate_map() -> void:
 	_blob_sym(c0 + _scale_dir(picks[1], 13), 4, 85)
 	_res_sym("roca", c0 + _scale_dir(picks[2], 10))
 	_res_sym("roca", c0 + _scale_dir(picks[2], 10) + Vector2i(2, -1))
-	_res_sym("riqueza", c0 + _scale_dir(picks[3], 10))
-	_res_sym("riqueza", c0 + _scale_dir(picks[3], 10) + Vector2i(-1, 2))
+	# Arcilla de casa (2 pozos) y de flanco: del jugador (docs/diseno/revision-economia/v3/04, §2.2).
+	var cl: Dictionary = data.reglas.get("arcilla", {})
+	_res_sym("riqueza", c0 + _scale_dir(picks[3], 10), int(cl.get("base", -1)), true)
+	_res_sym("riqueza", c0 + _scale_dir(picks[3], 10) + Vector2i(-1, 2), int(cl.get("base", -1)), true)
 	_blob_sym(c0 + _scale_dir(picks[4], 15), 3, 80)
 
 	# Bases extra (campañas con tres o cuatro jugadores): recursos propios sin simetría.
@@ -1729,10 +1871,9 @@ func _generate_map() -> void:
 
 	# Recursos disputados en el centro.
 	var mid := n / 2
-	_res_sym("riqueza", Vector2i(mid - 9, mid + 5))
-	_res_sym("riqueza", Vector2i(mid - 6, mid + 7))
-	_res_sym("riqueza", Vector2i(mid + 14, mid + 12))
-	_res_sym("riqueza", c0 + _scale_dir(picks[5], 18))
+	# Arcilla del centro (disputada) y de flanco (propia).
+	_res_sym("riqueza", Vector2i(mid - 9, mid + 5), int(cl.get("centro_por_jugador", -1)))
+	_res_sym("riqueza", c0 + _scale_dir(picks[5], int(cl.get("flanco_dist", 18))), int(cl.get("flanco", -1)), true)
 	_res_sym("roca", Vector2i(mid + 8, mid - 16))
 	_cluster_sym("arbusto", Vector2i(mid - 18, mid + 2), 6)
 
@@ -1782,7 +1923,9 @@ func _mirror(t: Vector2i, w: int, h: int) -> Vector2i:
 	return Vector2i(map.n - t.x - w, map.n - t.y - h)
 
 
-func _res_sym(type: String, t: Vector2i) -> void:
+## Recurso y su espejo. `amount` > 0 cambia la cantidad; `owner_pair` marca la
+## arcilla de casa: el original es del jugador 0 y el espejo del 1.
+func _res_sym(type: String, t: Vector2i, amount: int = -1, owner_pair: bool = false) -> void:
 	var tam: Array = data.recursos[type]["tam"]
 	var m := _mirror(t, tam[0], tam[1])
 	if t.x < 1 or t.y < 1 or t.x + tam[0] > map.n - 1 or t.y + tam[1] > map.n - 1:
@@ -1793,8 +1936,14 @@ func _res_sym(type: String, t: Vector2i) -> void:
 		for xx in range(t.x, t.x + tam[0]):
 			if map.is_water(xx, yy) or map.is_water(m.x + xx - t.x, m.y + yy - t.y):
 				return
-	spawn_resource(type, t.x, t.y)
-	spawn_resource(type, m.x, m.y)
+	var a := spawn_resource(type, t.x, t.y)
+	var b := spawn_resource(type, m.x, m.y)
+	if amount > 0:
+		a.amount = amount
+		b.amount = amount
+	if owner_pair:
+		a.res_owner = 0
+		b.res_owner = 1
 
 
 func _tree_sym(t: Vector2i) -> void:
@@ -2339,7 +2488,16 @@ func state_hash() -> int:
 		for v in [e.id, e.x, e.y, e.hp, e.order, e.target, e.carry, e.amount, e.progress, e.queue.size(), e.queue_progress, e.inside]:
 			h = ((h ^ (v & 0xffffffff)) * 16777619) & 0xffffffff
 	for p in players:
-		for k in RES_KINDS:
+		# Todos los recursos, también los propios (mit'a, fama, kulliñ), en orden fijo.
+		var keys: Array = (p["res"] as Dictionary).keys()
+		keys.sort()
+		for k in keys:
 			h = ((h ^ (int(p["res"][k]) & 0xffffffff)) * 16777619) & 0xffffffff
 		h = ((h ^ int(p["age"])) * 16777619) & 0xffffffff
+		h = ((h ^ int(p["pop"])) * 16777619) & 0xffffffff
+		for v in p.get("disp", []):
+			h = ((h ^ int(v)) * 16777619) & 0xffffffff
+	for i in map.water.size():
+		if map.water[i] != 0 or map.rock[i] != 0:
+			h = ((h ^ (i * 4 + map.water[i] + map.rock[i] * 3)) * 16777619) & 0xffffffff
 	return h

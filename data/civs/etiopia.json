@@ -118,7 +118,7 @@
    "ranura": 7,
    "desc": "Tierra asignada a un señor o un monasterio: rinde tributo sin aldeanos."
   },
-  "iglesia": {
+  "iglesia": { "eje": "economia",
    "nombre": "Iglesia",
    "edad_min": 1,
    "tam": [
@@ -151,7 +151,7 @@
     }
    ]
   },
-  "monasterio": {
+  "monasterio": { "eje": "militar",
    "nombre": "Monasterio",
    "edad_min": 1,
    "tam": [
@@ -172,12 +172,9 @@
      "tipo": "edificio_vida_pct",
      "pct": 25
     }
-   ],
-   "renta": {
-    "riqueza": 20
-   }
+   ]
   },
-  "amba": {
+  "amba": { "eje": "economia",
    "nombre": "Amba fortificada",
    "edad_min": 1,
    "tam": [
@@ -210,7 +207,7 @@
    "alcance": 8000,
    "cadencia_ms": 2000
   },
-  "remonta": {
+  "remonta": { "eje": "militar",
    "nombre": "Remonta",
    "edad_min": 1,
    "tam": [
@@ -239,7 +236,7 @@
     "guerrero"
    ]
   },
-  "gondar": {
+  "gondar": { "eje": "economia",
    "nombre": "Recinto de Gondar",
    "edad_min": 1,
    "tam": [
@@ -267,7 +264,7 @@
    "alcance": 8000,
    "cadencia_ms": 2000
   },
-  "alianza": {
+  "alianza": { "eje": "militar",
    "nombre": "Alianza con armas de fuego",
    "edad_min": 1,
    "tam": [

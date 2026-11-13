@@ -16,6 +16,10 @@
   "bono_altura_pct": 15,
   "vision_por_nivel": 1500,
   "velocidad_pct": 90,
+  "disputado": { "tope_por_min": [15, 40, 80, 120], "baldes": 5, "_doc": "Techo de riqueza que sale de lo disputado (arcilla del centro, sitios, botín), por edad, en una ventana de 5 minutos (docs/diseno/revision-economia/v3/04, §3.2)" },
+  "arcilla": { "base": 900, "flanco": 1500, "flanco_dist": 18, "centro_por_jugador": 1000 },
+  "ia_campana_por_enemigo": 3,
+  "ia_campana_calma_ticks": 50,
   "escala_visual": { "unidad_pct": 82, "estirar_max_pct": 170, "altura_min_cm": { "casa": 220, "produccion": 270, "torre": 420, "capital": 360, "hito": 380 } },
   "estilos_ia": {
     "pacifica": { "nombre": "Pacífica", "descripcion": "No ataca tu base. Se expande, toma sitios sagrados y recursos del mapa y pelea si la buscás afuera de tu base.", "ataca_base": false, "incursiones": "no", "controla_mapa": true, "respeta_radio": 26000 },
@@ -43,8 +47,8 @@
     "normal":  { "nombre": "Normal",  "piensa_cada_ticks": 10, "max_aldeanos": 42, "ataque_base": 7,  "ataque_paso": 4, "ataque_espera_ticks": 500,  "investiga": true },
     "dificil": { "nombre": "Difícil", "piensa_cada_ticks": 5,  "max_aldeanos": 60, "ataque_base": 6,  "ataque_paso": 3, "ataque_espera_ticks": 350,  "investiga": true }
   },
-  "sitios": { "cantidad": 3, "radio": 4000, "captura_ms": 10000, "renta_riqueza": 18, "victoria_ms": 300000 },
-  "mercado": { "lote": 100, "precio_inicial": 100, "paso": 4, "minimo": 25, "maximo": 300, "comision_pct": 30 },
+  "sitios": { "cantidad": 3, "radio": 4000, "captura_ms": 10000, "renta_riqueza": 18, "renta_por_cantidad": [18, 12, 8], "victoria_ms": 300000 },
+  "mercado": { "lote": 100, "precio_inicial": 100, "paso": 3, "minimo": 40, "maximo": 300, "comision_pct": 30, "regreso_cada_ticks": 100, "regreso_paso": 1 },
   "contadores": {
     "choque":    { "distancia": 200, "linea": 60,  "edificio": 45, "asedio": 150 },
     "distancia": { "linea": 175,     "choque": 70, "edificio": 20, "asedio": 15 },
