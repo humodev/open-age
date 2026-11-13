@@ -24,11 +24,12 @@ func _process(_delta: float) -> void:
 func _draw() -> void:
 	var view := ctrl.view
 	var zoom_k := clampf(40.0 / cam.zoom, 0.6, 1.6)
+	var all_bars := Input.is_key_pressed(KEY_ALT) and ctrl.enabled # --- mundo --- Alt: todas las barras
 	for e in sim.actives:
 		var sel := view.selected.has(e.id)
 		var hov := view.hovered == e.id
 		var damaged := e.hp < e.hp_max
-		if not (sel or hov or damaged or (e.is_building() and not e.built)):
+		if not (sel or hov or damaged or (e.is_building() and not e.built) or (all_bars and e.hp_max > 1)):
 			continue
 		var v: Dictionary = view.visuals.get(e.id, {})
 		if v.is_empty() or e.inside >= 0 or view.fog_state(e) < 2:
@@ -51,6 +52,17 @@ func _draw() -> void:
 			var pr := Rect2(r.position + Vector2(0, r.size.y + 3), Vector2(r.size.x, 3))
 			draw_rect(pr.grow(1), Color(0, 0, 0, 0.6))
 			draw_rect(Rect2(pr.position, Vector2(pr.size.x * pk, pr.size.y)), Palette.UI_ACCENT)
+			# --- mundo --- porcentaje de obra y constructores, al pasar el mouse o seleccionado
+			if (sel or hov) and Hud.font_b != null:
+				var txt := "%d%%" % int(pk * 100.0)
+				var wk := maxi(e.workers_now, e.workers_prev)
+				if wk > 0:
+					txt += " · %d %s" % [wk, "constructor" if wk == 1 else "constructores"]
+				var fs := 12
+				var tw := Hud.font_b.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+				var tp := Vector2(sp.x - tw / 2, pr.end.y + 13)
+				draw_string_outline(Hud.font_b, tp, txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, 3, Color(0, 0, 0, 0.7))
+				draw_string(Hud.font_b, tp, txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Palette.UI_ACCENT)
 	if ctrl.dragging:
 		var m := ctrl.mouse_pos()
 		var box := Rect2(ctrl.press_pos, m - ctrl.press_pos).abs()

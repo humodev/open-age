@@ -34,6 +34,10 @@ var _dialog_who: Label
 var _dialog_text: Label
 var _dialog_queue: Array[Dictionary] = []
 var _dialog_t := 0.0
+# --- mundo ---
+const MundoCapa := preload("res://src/game/ui/mundo_capa.gd")
+var _mundo: Control # información sobre el mundo 3D (src/game/ui/mundo_capa.gd)
+# --- fin mundo ---
 
 
 static func load_fonts() -> void:
@@ -76,6 +80,12 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 	_anchor(_mini, Vector2(0, 1), Rect2(12, -262, 250, 250))
 	add_child(_mini)
 	_blockers.append(_mini)
+	# --- mundo ---
+	_mundo = MundoCapa.new()
+	add_child(_mundo)
+	move_child(_mundo, overlay.get_index() + 1)
+	_mundo.setup(sim, ctrl, cam, _mini)
+	# --- fin mundo ---
 
 	_card = CommandCard.new()
 	_card.hud = self
@@ -196,6 +206,7 @@ func queue_icon(item: String) -> String:
 
 
 func on_events(events: Array) -> void:
+	_mundo.on_events(events) # --- mundo ---
 	for ev in events:
 		var pid: int = ev.get("player", -2)
 		match ev["t"]:

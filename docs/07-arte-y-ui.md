@@ -73,6 +73,17 @@ Distribución (convención del género, sin copiar piezas):
 - **Avisos** breves al centro: edad alcanzada, recursos insuficientes, población llena, ataque a la base.
 - Paneles oscuros y semitransparentes, esquinas apenas redondeadas, texto claro. Sin texturas decorativas en la etapa de maqueta.
 
+## Información en el mundo
+
+Lo que pasa en la partida se lee sobre el mapa, sin abrir paneles (`src/game/ui/mundo_*.gd`):
+
+- **Barras de vida** sobre lo dañado, lo seleccionado y lo que está bajo el mouse; en obra, el progreso con porcentaje y constructores.
+- **Textos flotantes**: "+N" de cada entrega en un depósito propio (se suman si caen juntas, con tope), golpes fuertes y "¡Edad II!".
+- **Al colocar un edificio**: alcance (y el de las defensas propias), radio de la campana, casillas que bloquean en rojo con el motivo, rendimiento del lugar (ladera, agua), máximo por edad ("2/3"), separación mínima y conexión por caminos.
+- **Indicadores**: "Zz" sobre los aldeanos ociosos, ícono del recurso que recolecta cada aldeano, punto de reunión con línea, orden en curso y órdenes en cola como líneas punteadas numeradas, alcance de torres seleccionadas.
+- **Sitios sagrados**: zona de captura con el color de quien lo tiene y anillo de progreso con el color de quien lo toma.
+- **Minimapa**: destello donde te pegan, sitios sagrados con su dueño, arcilla disputada, aldeanos ociosos; clic derecho para mover, encolar o fijar el punto de reunión.
+
 ## Controles
 
 | Acción | Entrada |
@@ -86,6 +97,8 @@ Distribución (convención del género, sin copiar piezas):
 | Grupos | `Ctrl + 1…9` para asignar, `1…9` para seleccionar |
 | Aldeano inactivo | `.` |
 | Centro | `H` |
+| Encolar órdenes | Mayúsculas + clic derecho (o + `A` y clic): se cumplen una tras otra |
+| Ver alcances y todas las barras de vida | Mantener `Alt` |
 | Mover la cámara | Flechas, bordes de pantalla, botón del medio |
 | Menú | `Esc` |
 

@@ -14,6 +14,10 @@ var _drag := false
 var _fog_img: Image
 var _fog_mini: ImageTexture
 var _fog_t := 0.0
+# --- mundo ---
+const MundoMinimapa := preload("res://src/game/ui/mundo_minimapa.gd")
+var _extra: RefCounted
+# --- fin mundo ---
 
 
 func setup(s: Sim, c: RtsCamera, controller: Controller, local_player: int) -> void:
@@ -27,6 +31,7 @@ func setup(s: Sim, c: RtsCamera, controller: Controller, local_player: int) -> v
 	_tex = ImageTexture.create_from_image(_img)
 	_fog_img = Image.create(n, n, false, Image.FORMAT_LA8)
 	_fog_mini = ImageTexture.create_from_image(_fog_img)
+	_extra = MundoMinimapa.new(sim, local) # --- mundo ---
 	_rebuild()
 
 
@@ -78,6 +83,13 @@ func ping(x: int, y: int) -> void:
 	_pings.append({"p": Vector2(x / 1000.0, y / 1000.0), "t": 0.0})
 
 
+# --- mundo ---
+## Destello chico donde golpean algo propio (más frecuente que el aviso "¡Nos atacan!").
+func flash(x: int, y: int) -> void:
+	_extra.flash(x, y)
+# --- fin mundo ---
+
+
 func _xf() -> Transform2D:
 	var n := float(sim.map.n)
 	var r := cam.right_xz()
@@ -101,6 +113,7 @@ func _process(delta: float) -> void:
 	for p in _pings:
 		p["t"] += delta
 	_pings = _pings.filter(func(p: Dictionary) -> bool: return p["t"] < 3.0)
+	_extra.process(delta) # --- mundo ---
 	queue_redraw()
 
 
@@ -121,6 +134,7 @@ func _draw() -> void:
 	for e in sim.actives:
 		if e.is_unit() and e.inside < 0 and ctrl.view.fog_state(e) == 2:
 			draw_rect(Rect2(e.x / 1000.0 - 0.9, e.y / 1000.0 - 0.9, 1.8, 1.8), Palette.team(e.owner).lightened(0.15))
+	_extra.draw(self, ctrl.view, 1.0 / xf.x.length()) # --- mundo ---
 	draw_set_transform_matrix(Transform2D.IDENTITY)
 	# Borde del mapa.
 	var corners := PackedVector2Array([xf * Vector2(0, 0), xf * Vector2(n, 0), xf * Vector2(n, n), xf * Vector2(0, n), xf * Vector2(0, 0)])
@@ -131,6 +145,7 @@ func _draw() -> void:
 	for sp in [Vector2(0, 0), Vector2(vs.x, 0), Vector2(vs.x, vs.y), Vector2(0, vs.y), Vector2(0, 0)]:
 		var g := cam.ground_at(sp)
 		quad.append(xf * Vector2(g.x, g.z))
+	draw_polyline(quad, Color(0, 0, 0, 0.5), 3.5, true) # --- mundo --- contorno para que se lea sobre el pasto claro
 	draw_polyline(quad, Color(1, 1, 1, 0.85), 1.5, true)
 	for p in _pings:
 		var k: float = fmod(p["t"], 1.0)
@@ -151,12 +166,38 @@ func _gui_input(event: InputEvent) -> void:
 				cam.look_at_point(Vector3(t.x, 0, t.y))
 		elif mb.button_index == MOUSE_BUTTON_RIGHT and mb.pressed:
 			var t := _to_tile(mb.position)
+			# --- mundo --- órdenes desde el minimapa: mover (o ataque en movimiento con A),
+			# encolar con mayúsculas y punto de reunión para edificios.
+			var g := Vector3(clampf(t.x, 0.5, sim.map.n - 0.5), 0, clampf(t.y, 0.5, sim.map.n - 0.5))
+			g.y = WorldView.height_at(g.x, g.z)
 			var ids := []
+			var shift := Input.is_key_pressed(KEY_SHIFT)
 			for e in ctrl.selected_entities():
 				if e.owner == local and e.is_unit():
 					ids.append(e.id)
 			if not ids.is_empty():
-				sim.push_command({"t": "move", "player": local, "ids": ids, "x": int(t.x * 1000), "y": int(t.y * 1000)})
+				var amove := ctrl.mode == "amove"
+				if shift and ctrl.cola != null:
+					if amove:
+						ctrl.cola.orden_amove(ids, g)
+					else:
+						ctrl.cola.orden_derecha(ids, null, g, true)
+				else:
+					if ctrl.cola != null:
+						ctrl.cola.limpiar(ids)
+					sim.push_command({"t": "move", "player": local, "ids": ids, "x": int(g.x * 1000), "y": int(g.z * 1000), "amove": amove})
+				ctrl.view.add_marker(g, Palette.UI_BAD if amove else Palette.UI_GOOD)
+				if amove and not shift:
+					ctrl.cancel_mode()
+			else:
+				var rally := false
+				for e in ctrl.selected_entities():
+					if e.owner == local and e.is_building() and e.def.has("produce"):
+						sim.push_command({"t": "rally", "player": local, "building": e.id, "x": int(g.x * 1000), "y": int(g.z * 1000), "target": -1})
+						rally = true
+				if rally:
+					ctrl.view.add_marker(g, Palette.UI_ACCENT)
+			# --- fin mundo ---
 		accept_event()
 	elif event is InputEventMouseMotion and _drag:
 		var t := _to_tile((event as InputEventMouseMotion).position)
