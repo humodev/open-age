@@ -146,6 +146,8 @@ func _economy(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, saving: 
 			ratio[k] = ratio[k] / 3
 		if hito_cost.has(k) and p["res"][k] < hito_cost[k]:
 			ratio[k] += 12
+		elif saving and k != "madera" and (not hito_cost.has(k) or p["res"][k] >= hito_cost[k]):
+			ratio[k] = ratio[k] / 3 # lo que ya alcanza para el hito libera gente para lo que falta
 	var counts := {"alimento": 0, "madera": 0, "piedra": 0, "riqueza": 0}
 	var idle: Array[SimEntity] = []
 	for v in vill:
@@ -207,7 +209,11 @@ func _wants_hito(p: Dictionary, n_vill: int, by_type: Dictionary) -> bool:
 		return false
 	if n_vill < need:
 		return false
-	# Solo ahorra si el hito está al alcance: cada recurso cubre al menos la mitad.
+	# En la edad I se ahorra apenas hay aldeanos suficientes, como en AoE: el avance
+	# a la II es la prioridad (compuerta de la etapa 1: edad II entre 6:30 y 9:00).
+	if p["age"] == 1:
+		return true
+	# Después, solo si el hito está al alcance: cada recurso cubre al menos la mitad.
 	var cost: Dictionary = sim.dp(player).cost_of(_hito_type(p), p["age"])
 	for k in cost:
 		if p["res"][k] * 2 < cost[k]:
