@@ -17,31 +17,31 @@ Las decisiones cerradas no se reabren sin una entrada "Propuesta" aprobada. Form
 | D-009 | 2026-11-10 | Cada civilización admite varias aperturas y órdenes de construcción viables, descubribles por la comunidad; el diseño no prescribe un orden | Decisión del autor; así funciona la escena de AoE4 |
 | D-010 | 2026-11-10 | El motor es Godot | Decisión del autor; proyecto en archivos de texto, apto para agentes |
 | D-011 | 2026-11-10 | Las cuatro civilizaciones iniciales son Tawantinsuyu, mapuches, guaraníes y Etiopía | Decisión del autor: priorizar a América Latina, que casi nunca está representada |
+| D-012 | 2026-11-13 | Simulación determinista separada de la presentación, en GDScript y con estado solo en enteros (era P-001) | Delegada por el autor |
+| D-013 | 2026-11-13 | Tick de 100 ms con interpolación visual (era P-002) | Delegada por el autor |
+| D-014 | 2026-11-13 | Datos de balance en JSON con unidades enteras (era P-003) | Delegada por el autor |
+| D-015 | 2026-11-13 | Estética de maqueta hasta definir el arte final; el arte final es estilizado y procedural, con audio libre (era P-004) | Delegada por el autor; "llevarlo hasta elegir arte" |
+| D-016 | 2026-11-13 | La IA corre dentro de la simulación y emite comandos (era P-005) | Delegada por el autor |
+| D-017 | 2026-11-13 | Rendimiento decreciente de construcción en la capa común; una civilización puede invertirlo con su módulo (potirõ guaraní) (era P-006, cierra A-008) | Delegada; resuelve la contradicción con `investigacion/guaranies.md` |
+| D-018 | 2026-11-13 | Las potencias coloniales y otros rivales históricos son facciones solo de IA y de campaña, bajo la clave `invasores` (cierra A-003) | Delegada; alcance y tono |
+| D-019 | 2026-11-13 | Los guaraníes tienen la bifurcación misión o monte, acotada a las dos opciones del avance a la edad III (cierra A-004) | Recomendación de `investigacion/guaranies.md` |
+| D-020 | 2026-11-13 | Sin combate naval; las canoas son transporte fluvial rápido (cierra A-006) | Alcance de una persona |
+| D-021 | 2026-11-13 | Impacto inmediato de proyectiles (cierra A-007) | Determinismo y rendimiento |
+| D-022 | 2026-11-13 | Los andenes son la fuente de alimento inca, no su ranura económica (cierra A-010) | Coincide la ficha con la investigación |
+| D-023 | 2026-11-13 | Los lof mapuches cuentan como centros y el rewe como hito; quien se queda sin hitos ve revelados sus centros al rival (cierra A-011) | Propuesta de `investigacion/mapuches.md` |
+| D-024 | 2026-11-13 | Reparar es gratis (cierra A-012) | Favorece la defensa económica pedida por el autor |
+| D-025 | 2026-11-13 | Se corrigen `03` y las fichas según las fuentes en las 15 contradicciones de `investigacion/README.md`, salvo donde la jugabilidad lo impida (queda anotado en la ficha) | Delegada; pilar 3 |
+| D-026 | 2026-11-13 | Se suman dos civilizaciones: Quilombo dos Palmares (Brasil) y Reino de Ayutthaya (Siam) | Pedido del autor: una de Brasil o Amazonía y otra, probablemente de Asia |
+| D-027 | 2026-11-13 | El mapa tiene relieve (alturas) y agua (ríos), porque varias mecánicas dependen de ellos (andenes, altura etíope, ríos guaraníes y siameses) | Necesario para la asimetría |
+| D-028 | 2026-11-13 | Cada civilización tiene una campaña de 4 misiones, narrada desde adentro | Pedido del autor |
 
 ## Abiertas
 
 | ID | Pregunta | Opciones | Nota |
 |---|---|---|---|
-| A-003 | ¿Las potencias coloniales son jugables? | Solo IA y escenarios; jugables más adelante; jugables desde el inicio | Afecta alcance y tono |
-| A-004 | ¿Los guaraníes tienen la bifurcación misión o monte? | Sí; no, un solo camino; sí pero después de H6 | Duplica el trabajo del arco tardío |
-| A-005 | Nombre definitivo del juego | — | "Proyecto Sur" es provisional |
-| A-006 | ¿Hay combate naval más allá de canoas de transporte? | No hasta después de H6; sí, limitado | Afecta a los guaraníes y a futuras civilizaciones del Índico |
-| A-007 | ¿Los proyectiles se pueden esquivar? | Impacto inmediato (H1); proyectiles simulados | Esquivar premia la microgestión, pero cuesta rendimiento y determinismo |
-| A-008 | ¿Varios constructores tienen rendimiento decreciente? | Lineal (H1); decreciente | Afecta el valor de las aperturas de avance rápido |
+| A-005 | Nombre definitivo del juego | Ver `proceso/CONSULTAS.md` | "Proyecto Sur" es provisional |
 | A-009 | ¿`AStarGrid2D` es determinista entre plataformas? | Confiar y medir en H5; caminos propios en enteros | Riesgo para el lockstep (`06`) |
-| A-010 | ¿Andenes cuentan como mecánica económica de Tawantinsuyu o como fuente de alimento? | Fuente de alimento (propuesta en la ficha); ranura económica | Presupuesto por civilización (`01`) |
-| A-011 | ¿Cómo pierden los mapuches con la victoria por hitos? | Sus lof cuentan como hitos; condición de victoria propia | Debe respetar "no hay capital que tomar" sin crear victorias exclusivas (`05`) |
-| A-012 | ¿Reparar cuesta recursos? | Gratis (H1); un porcentaje del costo | Gratis favorece al defensor |
 
-## Propuestas
+## Historial de propuestas
 
-Decisiones técnicas que el prototipo de H1 ya usa de forma provisional. Esperan aprobación del autor para pasar a "Cerradas".
-
-| ID | Fecha | Propuesta | Motivo | Estado |
-|---|---|---|---|---|
-| P-001 | 2026-11-10 | Simulación determinista separada de la presentación, en GDScript, con estado solo en enteros (`06`) | Habilita lockstep en H5 sin reescribir | Pendiente |
-| P-002 | 2026-11-10 | Tick de simulación de 100 ms (10 por segundo) con interpolación visual | Margen de rendimiento en GDScript con 200 unidades | Pendiente |
-| P-003 | 2026-11-10 | Datos de balance en JSON en `data/`, con unidades enteras (milésimas de casilla, milisegundos) | Legible por agentes y diffs; entero evita errores de redondeo | Pendiente |
-| P-004 | 2026-11-10 | Estética de maqueta para H1–H2 (`07`) | Cumple "nada de arte antes de H3" y aun así se lee y se ve cuidado | Pendiente |
-| P-006 | 2026-11-11 | Rendimiento decreciente de construcción: tiempo × 3/(n+2) con n constructores (resuelve A-008) | Igual que AoE4; evita que amontonar aldeanos haga gratis el avance rápido | Pendiente |
-| P-005 | 2026-11-10 | La IA corre dentro de la simulación y emite comandos como un jugador (`08`) | Partidas IA contra IA reproducibles como prueba | Pendiente |
+P-001 a P-006 se cerraron el 2026-11-13 como D-012 a D-017.
