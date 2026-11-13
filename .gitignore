@@ -5,3 +5,4 @@ export/
 
 .secrets/
 .cache/
+.claude/
