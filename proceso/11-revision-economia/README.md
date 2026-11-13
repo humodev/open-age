@@ -109,3 +109,22 @@ Cinco agentes con perfiles distintos. Leen el repositorio sin tocarlo y escriben
     > "Deberían poder jugar en un mapa sin agua e igual tener una estrategia viable; si no, el juego se desarma."
 
     **Arranca la ronda 3** con la consigna [`v3/00-consigna.md`](../../docs/diseno/revision-economia/v3/00-consigna.md): las diez observaciones del autor, las preguntas A a F y una lista de control de 10 puntos. Primero, un diseñador líder consolida un diseño único con números iniciales.
+14. **Ronda 3, iteraciones:**
+    - **Diseño líder.** La fuente común pasa a ser "Arcilla (barreal)", porque los seis pueblos tenían alfarería y la sal no la tenían todos. Cada civ explica su capa 1 (cómo usa la arcilla) y su capa 2 (su motor).
+    - **Modelo numérico** (`tools/modelo_economia.py`). La primera versión no pasaba ningún criterio medido.
+    - **Cinco críticas:**
+      - romperlo: 4 problemas críticos y 8 altos;
+      - jugador competitivo: "todos los motores se sienten el mismo edificio";
+      - programador de IA: entre 65 y 80 días;
+      - jugador nuevo: trampas para principiantes;
+      - historiador.
+    - **Diseño revisado**, más **segunda vuelta de tres críticas**, con 17 problemas nuevos, entre ellos la fiesta etíope como temporizador y los guaraníes que llegaban 4 minutos antes a la edad III.
+    - **Diseño final** ([`v3/04-diseno-final.md`](../../docs/diseno/revision-economia/v3/04-diseno-final.md)).
+15. **Resultado del diseño final (modelo):**
+    - riqueza entre civs dentro de ±12 %;
+    - edad II entre 6:30 y 8:50 y edad III entre 13:30 y 14:40;
+    - el motor propio aporta del 37 al 55 % entre los minutos 15 y 25;
+    - el ingreso del final es parejo (144–160 por minuto);
+    - ningún mapa favorece ni castiga más de 6 %.
+
+    Hay cuatro puntos fuera de banda, declarados en §8.3 del diseño. Costo estimado: de 62 a 67 días-persona en siete etapas. Para el autor quedan C-14 a C-20 en `CONSULTAS.md`.

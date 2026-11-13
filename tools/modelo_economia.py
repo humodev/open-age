@@ -23,8 +23,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PARAMS = os.path.join(ROOT, "docs", "diseno", "revision-economia", "v3", "parametros.json")
 CIVS = ["tawantinsuyu", "mapuches", "guaranies", "etiopia", "palmares", "ayutthaya"]
 DT = 10  # segundos por paso
-T_END = 40 * 60
-FASES = [("f1", 0, 5), ("f2", 5, 15), ("f3", 15, 30), ("f4", 30, 40)]
+T_END = 45 * 60   # v3-04: hasta el minuto 45 (crítica 01b)
+FASES = [("f1", 0, 5), ("f2", 5, 15), ("f3", 15, 30), ("f4", 30, 45)]
 
 # Supuestos del modelo que no están en parametros.json (se declaran en el informe).
 SUPUESTOS = {
@@ -80,6 +80,9 @@ def factores_terreno(nombre, t):
         "agua": min(0.4, agua),
         "madera_tasa": 0.9 + 0.1 * min(1.0, bosques / 13.0),   # más lejos a talar si hay pocos bosques
         "arbustos_extra": t.get("arbustos_extra", 0),
+        # v3-04: madera alcanzable por jugador (bosques espejados, bosquecito de la base y borde),
+        # estimada desde _generate_map: ~50 árboles de 120 por bosque y lado, ~65 en la base, ~45 por fila de borde.
+        "madera_mapa": 120 * (50 * bosques + 65 + 45 * t.get("borde", 3)),
     }
 
 
@@ -121,9 +124,25 @@ class Civ:
     def __init__(self, D, civ, terreno="llano", opts=None):
         self.D, self.civ = D, civ
         self.o = dict(SUPUESTOS)
-        self.o.update(opts or {})
         P = D.p
         self.pc = P["civs"].get(civ, {})
+        # v3-03: el diseño puede fijar opciones de corrida (modelo_opciones) en comun y en cada civ.
+        # Las de la línea de comandos o de las palancas pisan a estas.
+        self.o.update(P["comun"].get("modelo_opciones", {}))
+        if civ != "generica":
+            self.o.update(self.pc.get("modelo_opciones", {}))
+        else:
+            for k in ("sin_rentas_de_hito", "disputado_tope_min", "ingenio_cada_s"):
+                self.o.pop(k, None)
+        opts = dict(opts or {})
+        if opts.get("sin_rentas_de_hito") is False:
+            opts.pop("sin_rentas_de_hito")   # el False por defecto de la línea de comandos no pisa al diseño
+        self.o.update(opts)
+        if isinstance(self.o.get("disputado_tope_min"), dict):
+            self.o["disputado_tope_min"] = {int(k): v for k, v in self.o["disputado_tope_min"].items()}
+        self.maximo_edad = {}   # v3-03: efectos de hito que suben el máximo de piezas de una edad
+        self.cria_s = None      # v3-03: lonko
+        self.sub_pct = None     # v3-03: junco
         self.com = P["comun"]
         self.tf = factores_terreno(terreno, D.reglas["terrenos"][terreno])
         self.terreno = terreno
@@ -139,6 +158,9 @@ class Civ:
         self.granjas = 0
         self.arbustos = 8 * D.recursos["arbusto"]["cantidad"] + self.tf["arbustos_extra"] * D.recursos["arbusto"]["cantidad"]
         self.piedra_mapa = 2 * D.recursos["roca"]["cantidad"]
+        self.madera_mapa = float(self.tf["madera_mapa"]) * self.o.get("madera_alcanzable_pct", 100) / 100.0   # v3-04
+        self.cabeza_extra = 0.0      # v3-04: segundo lof mapuche
+        self.fiestas = set()         # v3-04: una fiesta por arcilla
         fc = self.com["fuente_comun"]
         if civ == "generica":  # datos actuales: dos yacimientos de 1400 en la base y uno a 18 casillas
             q = D.recursos["riqueza"]["cantidad"]
@@ -197,7 +219,9 @@ class Civ:
         return base * (100 + pct) / 100.0 * self.o["eficiencia"] / 100.0
 
     def maximo(self, tabla):
-        return int(tabla.get(str(self.age), tabla.get(self.age, 0))) + self.o.get("piezas_extra", 0)
+        base = int(tabla.get(str(self.age), tabla.get(self.age, 0)))
+        base = max(base, int(self.maximo_edad.get(str(self.age), 0)))
+        return base + self.o.get("piezas_extra", 0)
 
     # ------------------------------------------------------------ motores
     def _init_motor(self):
@@ -288,7 +312,9 @@ class Civ:
         r = 0.0
         if c == "tawantinsuyu":
             rp = self.D.civs[c]["modulos"]["recurso_propio"]
-            self.res["mita"] += rp["por_aldeano"] * self.vill * dtm
+            mpa = self.o.get("mita_por_aldeano_edad")
+            por_ald = float(mpa.get(str(self.age), rp["por_aldeano"])) if mpa else rp["por_aldeano"]
+            self.res["mita"] += por_ald * self.vill * dtm
             tope = rp["tope"] + rp["tope_por_edificio"]["centro"] + rp["tope_por_edificio"]["qollqa"] * self.qollqas
             n = len(self.piezas)
             if n:
@@ -297,7 +323,8 @@ class Civ:
                 if frac < 1.0 and self.res["mita"] < need:
                     self.pendiente(0.1)  # taller sin mit'a: decidir qué apagar (se cuenta por tramo)
                 self.res["mita"] -= need * frac
-                r = cp["da_riqueza_min"] * n * frac * dtm * self.motor_mult
+                piso = self.o.get("taller_piso_pct", 0) / 100.0   # v3-03: tejido doméstico sin mit'a
+                r = cp["da_riqueza_min"] * n * max(frac, piso) * dtm * self.motor_mult
             entope = self.res["mita"] >= tope
             self.res["mita"] = min(self.res["mita"], tope)
             self._tope(entope)
@@ -305,7 +332,9 @@ class Civ:
             tope_tec = 1 if "motor" in self.techs else 0
             for pz in self.piezas:
                 cap = cp["cabezas_tope"] + pz["pradera"] * (cp["cabezas_tope_pradera"] - cp["cabezas_tope"]) + tope_tec
-                pz["cabezas"] = min(cap, pz["cabezas"] + DT / cp["cria_s_por_cabeza"])
+                if "cabezas_tope_abs" in cp:
+                    cap = min(cap, cp["cabezas_tope_abs"])   # v3-04: pradera y tecnología no se suman
+                pz["cabezas"] = min(cap, pz["cabezas"] + DT / (self.cria_s or cp["cria_s_por_cabeza"]))
                 r += cp["riqueza_min_por_cabeza"] * int(pz["cabezas"]) * dtm
         elif c == "guaranies":
             pass  # la riqueza del yerbal la cuenta la recolección
@@ -314,10 +343,17 @@ class Civ:
             if self.corte_mudando_hasta is None:
                 pool = self.corte_en
                 if self.barreal.get(pool, 0) > 0:
-                    take = min(self.barreal[pool], c1["riqueza_min"] * dtm * self.motor_mult)
+                    epe = self.o.get("extrae_por_edad")
+                    ext = float(epe.get(str(self.age), c1["riqueza_min"])) if epe else c1["riqueza_min"]
+                    take = min(self.barreal[pool], ext * dtm * self.motor_mult)
                     self.barreal[pool] -= take
                     r += take
+                    if self.barreal[pool] <= 0 and pool not in self.agotado:
+                        self.agotado[pool] = self.t   # v3-03: también lo agota la corte
                 elif pool == "base" and not self.golpe_casa_activo():
+                    cim = self.o.get("cimiento_corte", {})
+                    if cim:
+                        self.pagar(cim)   # v3-04: el cimiento de la corte nueva cuesta
                     self.pendiente()  # la corte se comió su entorno: mudarla
                     self.orden(True, 2)  # empacar y desplegar
                     self.corte_mudando_hasta = self.t + self.o["mudanza_corte_s"]
@@ -325,12 +361,17 @@ class Civ:
             elif self.t >= self.corte_mudando_hasta:
                 self.corte_mudando_hasta = None
                 self.corte_en = "flanco"
+                fz = self.o.get("fiesta_s", 0)
+                if fz and "flanco" not in self.fiestas:   # v3-04: fiesta de llegada, una por arcilla
+                    self.fiestas.add("flanco")
+                    self.fiesta_hasta = self.t + fz
             rb, rc = dict(cp["renta_base"]), dict(cp["cerca_de_corte"]["renta"])
             if "gult_riqueza" in self.o:   # palanca: renta de riqueza del gult (base y cerca, en la misma proporción)
                 f = self.o["gult_riqueza"] / float(rb["riqueza"])
                 rb["riqueza"] = self.o["gult_riqueza"]; rc["riqueza"] = rc["riqueza"] * f
+            fiesta = 2.0 if self.t < getattr(self, "fiesta_hasta", -1) else 1.0
             for g in self.gults:
-                r += (rb["riqueza"] + g * (rc["riqueza"] - rb["riqueza"])) * dtm * self.motor_mult
+                r += (rb["riqueza"] + g * (rc["riqueza"] - rb["riqueza"])) * dtm * self.motor_mult * (1 + (fiesta - 1) * g)
                 self.res["alimento"] += (rb["alimento"] + g * (rc["alimento"] - rb["alimento"])) * dtm
                 self.acc["alimento"] += (rb["alimento"] + g * (rc["alimento"] - rb["alimento"])) * dtm
         elif c == "palmares":
@@ -338,9 +379,17 @@ class Civ:
         elif c == "ayutthaya":
             sp = cp["subproducto"]
             cap_min = sp["tope_riqueza_min"]
-            capas = self.almacenes * cap_min + (self.pc["barrios"]["chino"] and 8 * min(2, self.almacenes) if self.barrio_chino else 0)
+            if self.o.get("ayu_elefantes"):
+                # v3-03: elefantes del rey; depósito móvil: madera, arbustos y piedra; barrio chino +8 a cada uno
+                cap_min = sp.get("tope_por_edad", {}).get(str(self.age), cap_min)
+                capas = self.almacenes * (cap_min + (self.o.get("barrio_chino_tope", 8) if self.barrio_chino else 0) + self.o.get("tope_extra_hito", 0))
+                pct = (self.sub_pct or sp["pct"]) / 100.0
+                bruto = pct * (gathered_madera + gathered_arbustos + getattr(self, "_g_piedra", 0.0)) * self.motor_mult
+                bruto += self.o.get("ayu_granja_pct", 0) / 100.0 * getattr(self, "_g_granja", 0.0) * self.motor_mult   # v3-04: diezmo de arroz
+            else:
+                capas = self.almacenes * cap_min + (self.pc["barrios"]["chino"] and 8 * min(2, self.almacenes) if self.barrio_chino else 0)
+                bruto = sp["pct"] / 100.0 * (gathered_madera + gathered_arbustos * self.o["almacen_arbustos_pct"] / 100.0) * self.motor_mult
             capas *= self.motor_mult
-            bruto = sp["pct"] / 100.0 * (gathered_madera + gathered_arbustos * self.o["almacen_arbustos_pct"] / 100.0) * self.motor_mult
             r = min(bruto, capas * dtm)
             self._tope(bruto > capas * dtm * 1.0001 and self.almacenes < self.maximo(cp["maximo_por_edad"]))
         return r
@@ -388,7 +437,16 @@ class Civ:
                             continue  # el diseño cambia la renta 40 por la tecnología de motor
                         k = "riqueza" if k == "kullin" else k
                         self.rentas[k] = self.rentas.get(k, 0) + v
-                if self.civ == "tawantinsuyu" and tipo == "aqllawasi":
+                hm = self.pc.get("hitos_motor", {}).get(tipo)
+                if isinstance(hm, dict):   # v3-03: la renta del hito se cambia por un efecto sobre el motor
+                    for e, v in hm.get("maximo_edad", {}).items():
+                        self.maximo_edad[e] = max(self.maximo_edad.get(e, 0), v)
+                    if "cria_s" in hm: self.cria_s = hm["cria_s"]
+                    if "subproducto_pct" in hm: self.sub_pct = hm["subproducto_pct"]
+                    if "tope_extra" in hm: self.o["tope_extra_hito"] = self.o.get("tope_extra_hito", 0) + hm["tope_extra"]
+                    if "fama_min" in hm: self.rentas["fama"] = self.rentas.get("fama", 0) + hm["fama_min"]
+                via = str(self.pc.get("tecnologia_motor", {}).get("via", "hito"))
+                if self.civ == "tawantinsuyu" and tipo == "aqllawasi" and via.startswith("hito"):
                     self.techs.add("motor"); self.motor_mult = 1.25
             return
         if self.age >= 4:
@@ -442,13 +500,15 @@ class Civ:
             fama += self.rentas.get("fama", 0)
             self.res["fama"] += fama * dtm
             tope = ac["recurso_propio"]["tope"]
-            self._tope(self.res["fama"] >= tope)
+            if self.o.get("fama_sumidero") and self.vill >= o["aldeanos_max"] and self.res["fama"] > 100:
+                self.res["fama"] = 100.0   # v3-03: lo que sobra paga gente de guerra (sale del modelo económico)
+            self._tope(self.res["fama"] >= tope and self.vill < min(o["aldeanos_max"], self.pop_cap - 1))
             self.res["fama"] = min(self.res["fama"], tope)
             pausa = self.saving and "fama" in o.get("hito_extra_civ", {})   # la acogida espera mientras se junta fama para el hito
             while not pausa and self.res["fama"] >= ac["acogida"]["costo"] and self.vill < self.pop_cap - 1 and self.vill < o["aldeanos_max"]:
                 self.res["fama"] -= ac["acogida"]["costo"]; self.vill += 1
         else:
-            corte_quieta = not (self.civ == "etiopia" and self.corte_mudando_hasta is not None)
+            corte_quieta = not (self.civ == "etiopia" and self.corte_mudando_hasta is not None and not self.o.get("mudanza_sin_ventana"))
             if self.train_left <= 0 and self.vill < o["aldeanos_max"] and pop < self.pop_cap - 1 and corte_quieta:
                 if self.res["alimento"] >= 50:
                     self.res["alimento"] -= 50
@@ -456,6 +516,15 @@ class Civ:
             if self.train_left > 0 and corte_quieta:
                 self.train_left -= DT
                 if self.train_left <= 0:
+                    self.vill += 1
+        if self.civ == "mapuches" and self.o.get("lof_extra_entrena") and self.flanco_deposito and self.vill < o["aldeanos_max"] and self.vill < self.pop_cap - 1:
+            # v3-04 (C4): el segundo lof entrena aldeanos con +50 % de tiempo
+            if self.cabeza_extra <= 0 and self.res["alimento"] >= 100:
+                self.res["alimento"] -= 50
+                self.cabeza_extra = self.D.unidades["aldeano"]["tiempo_ms"] / 1000 * 1.5
+            if self.cabeza_extra > 0:
+                self.cabeza_extra -= DT
+                if self.cabeza_extra <= 0:
                     self.vill += 1
         # casas
         if self.pop_cap - self.vill <= 3 and not getattr(self, "falta_deposito", False) and self.pop_cap < 200 and self.res["madera"] >= 50:
@@ -523,9 +592,18 @@ class Civ:
             if self.civ == "tawantinsuyu":
                 tasa_g *= 1 + 0.6 * self.tf["ladera"] * 0.5      # andén en ladera (fuera de la base)
             if self.civ == "ayutthaya":
-                tasa_g *= 1 + 0.45 * self.tf["agua"]               # arrozal junto al agua (fuera de la base)
-            g["alimento"] += trab * self.tasa("granja", tasa_g) * dtm
-        g["madera"] += n["madera"] * self.tasa("madera", tn["madera"] * self.tf["madera_tasa"]) * dtm
+                tasa_g *= 1 + self.o.get("arrozal_agua_pct", 45) / 100.0 * self.tf["agua"]   # arrozal junto al agua (fuera de la base); v3-03: opción
+            self._g_granja = trab * self.tasa("granja", tasa_g) * dtm
+            g["alimento"] += self._g_granja
+        tm = tn["madera"] * self.tf["madera_tasa"]
+        if self.o.get("madera_finita") and self.madera_mapa <= 0:
+            tm *= self.o.get("madera_lejos_pct", 50) / 100.0     # v3-04: el bosque cercano se acabó; se tala lejos
+        mad = n["madera"] * self.tasa("madera", tm) * dtm
+        if self.o.get("madera_finita"):
+            self.madera_mapa -= mad
+            if self.madera_mapa <= 0 and "bosque" not in self.agotado:
+                self.agotado["bosque"] = self.t
+        g["madera"] += mad
         if n["piedra"] > 0 and self.piedra_mapa > 0:
             pp = min(self.piedra_mapa, n["piedra"] * self.tasa("piedra", tn["piedra"]) * dtm)
             self.piedra_mapa -= pp; g["piedra"] += pp
@@ -536,7 +614,7 @@ class Civ:
         if n["barreal"] > 0 and pools:
             tasa_b = tn["barreal"]
             if self.civ == "guaranies":
-                tasa_b *= self.pc["capa1"]["tasa_pct"] / 100.0 + 1
+                tasa_b *= self.o.get("arcilla_pct", self.pc["capa1"]["tasa_pct"]) / 100.0 + 1
             reparto_pools = {}
             if "centro" in pools:
                 reparto_pools["centro"] = n["barreal"] * o["disputado_parte_barreal"]
@@ -608,6 +686,7 @@ class Civ:
         if tdm and rdisp > tdm.get(self.age, 0) * dtm:
             rdisp = tdm.get(self.age, 0) * dtm
         # motor por piezas
+        self._g_piedra = g["piedra"]
         rmotor = (rmotor_lab + self.motor_paso(g["madera"], arb)) * self.o.get("motor_escala", 100) / 100.0
         # rentas de hito
         rh = self.rentas.get("riqueza", 0) * dtm
@@ -669,7 +748,7 @@ class Civ:
             self.rozas.append(float(self.o.get("roza_cantidad", cp["cantidad_alimento"])))
             self.rozas_hechas += 1
             self.rozas_max = max(self.rozas_max, len(self.rozas))
-        tasa = tn["roza"] * (1 + cp["bono_monte"]["pct"] / 100.0 * self.tf["monte"])
+        tasa = tn["roza"] * self.o.get("roza_tasa_pct", 100) / 100.0 * (1 + cp["bono_monte"]["pct"] / 100.0 * self.tf["monte"])
         food = 0.0
         quedan = []
         trab = min(agricultores, len(self.rozas))
@@ -682,7 +761,7 @@ class Civ:
             else:
                 tope = self.maximo(cp["yerbales_activos_tope"])
                 if len(self.yerbales) < tope:
-                    cant = 375 if "motor" in self.techs else self.yerbal_cant
+                    cant = self.yerbal_cant * 1.25 if "motor" in self.techs else self.yerbal_cant
                     self.yerbales.append(float(cant))
         self.rozas = quedan
         return food
@@ -747,6 +826,18 @@ def informe(D, args):
         out["civs"][civ]["renta_hito_pct_m15"] = round(100.0 * hit / tot, 1) if tot else 0
         w("  %-12s motor %5.1f %%  barreal %5.1f %%  hito %5.1f %%  (%.0f r/min)" % (civ, pct, 100.0 * bar / tot if tot else 0, 100.0 * hit / tot if tot else 0, tot / 2.0))
     w("")
+    # A3 de la crítica 01: ingreso de riqueza sostenido al final, sin lo disputado
+    w("Ingreso de riqueza entre los minutos 35-40 y 40-45 (r/min, motor); bosque cercano agotado")
+    for civ in CIVS + ["generica"]:
+        c = base[civ]
+        vals = []
+        for x, y in ((35, 40), (40, 45)):
+            a, b = acum(c, x), acum(c, y)
+            vals.append(round((b["motor_acum"] - a["motor_acum"]) / 5.0))
+        out["civs"].setdefault(civ, {})["ingreso_motor_m35_40_m40_45"] = vals
+        bq = c.agotado.get("bosque")
+        w("  %-12s motor m35-40 %4d   m40-45 %4d   bosque agotado %s" % (civ, vals[0], vals[1], "--:--" if bq is None else "%d:%02d" % (bq // 60, bq % 60)))
+    w("")
     # 4. edades
     w("Edades (m:ss) y aldeanos")
     for civ in CIVS + ["generica"]:
@@ -776,7 +867,8 @@ def informe(D, args):
         w("  %s: OPM más/menos ×%.2f   OPA más/menos ×%s" % (f, max(opms) / max(0.01, min(opms)), ("%.2f" % (max(opas) / min(opas))) if min(opas) > 0 else "inf"))
     w("")
     # 8. disputado y golpes
-    w("Lo disputado: parte de la riqueza que viene de lo disputado por edad (techo %s)" % P["comun"]["disputado"]["techo_pct_riqueza_por_edad"])
+    dsp = P["comun"]["disputado"]
+    w("Lo disputado: parte de la riqueza que viene de lo disputado por edad (techo %s; tope por minuto %s)" % (dsp.get("techo_pct_riqueza_por_edad", dsp.get("techo_pct_referencia")), dsp.get("tope_r_min_por_edad", "-")))
     disp = {civ: correr(D, civ, militar_pct=args.militar, disputado=True, sin_rentas_de_hito=args.sin_rentas_de_hito) for civ in CIVS}
     golpe = {civ: correr(D, civ, militar_pct=args.militar, disputado=True, golpe="disputado", golpe_t=600, sin_rentas_de_hito=args.sin_rentas_de_hito) for civ in CIVS}
     casa = {civ: correr(D, civ, militar_pct=args.militar, golpe="casa", golpe_t=600, sin_rentas_de_hito=args.sin_rentas_de_hito) for civ in CIVS}

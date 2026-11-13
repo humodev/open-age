@@ -1,198 +1,1012 @@
 {
-  "_doc": "Ronda 3, diseño líder (01-diseno-lider.md). Números iniciales para el modelo numérico. Unidades: recursos por minuto (r/min), segundos (s), casillas (cas). 'AE' = aldeano-equivalente: 30 de riqueza neta por minuto en el barreal (v2/05, R4). Nada de esto está en data/ todavía.",
-  "version": "v3-01",
-
+  "_doc": "Ronda 3, diseño final (04-diseno-final.md). Reemplaza v3-03. Números iniciales del diseño; tools/modelo_economia.py lo lee. Unidades: recursos por minuto (r/min), segundos (s), casillas (cas). AE = 30 de riqueza neta por minuto. Las claves 'modelo_opciones' son opciones de corrida del modelo; cada una corresponde a una regla escrita en el diseño (§2.6). Nada de esto está en data/ todavía.",
+  "version": "v3-04",
   "comun": {
     "ae_riqueza_min": 30,
-    "tasas_netas_por_aldeano_min": { "arbustos": 38, "granja": 36, "roza": 60, "madera": 34, "barreal": 30, "yerbal": 40, "piedra": 26 },
-    "curva_aldeanos": { "0": 6, "5": 19, "8": 26, "10": 30, "15": 40, "20": 48, "30": 58 },
-
+    "tasas_netas_por_aldeano_min": {
+      "arbustos": 38,
+      "granja": 36,
+      "roza": 60,
+      "madera": 34,
+      "barreal": 30,
+      "yerbal": 40,
+      "piedra": 26
+    },
     "fuente_comun": {
       "clave_recurso": "riqueza",
-      "nombre": "Barreal (arcilla)",
-      "reemplaza": "recursos.json -> riqueza ('Yacimiento de riqueza')",
-      "base":   { "cantidad": 900,  "por_jugador": 2, "distancia_cas": 10, "tam": [2, 2] },
-      "flanco": { "cantidad": 1500, "por_jugador": 1, "distancia_cas": 18, "tam": [3, 3], "nota": "de su lado del mapa; reemplaza picks[5]" },
-      "centro": { "cantidad": 1000, "pares": 2, "nota": "simétricos con _res_sym; lo disputado" },
+      "nombre": "Arcilla (barreal)",
+      "tooltip": "Tus aldeanos sacan arcilla y hacen las vasijas de la fiesta: con lo que se sirve en ellas se convida, se ofrenda y se paga.",
+      "base": {
+        "cantidad": 900,
+        "por_jugador": 2,
+        "distancia_cas": 10,
+        "tam": [
+          2,
+          2
+        ],
+        "dueno": "jugador"
+      },
+      "flanco": {
+        "cantidad": 1500,
+        "por_jugador": 1,
+        "distancia_cas": 18,
+        "tam": [
+          3,
+          3
+        ],
+        "dueno": "jugador"
+      },
+      "centro": {
+        "cantidad": 1000,
+        "pares": 2,
+        "dueno": "centro",
+        "nota": "1 por jugador, en pares espejados"
+      },
+      "claro_garantizado": "6x6 parejo a <=8 cas de cada arcilla, reservado antes de bosques y relieve",
       "tasa_aldeano_milesimas": 700,
-      "tecnologia": { "clave": "orfebreria", "nombre": "Alfarería fina", "edad": 2, "pct": 20 }
+      "tecnologia": {
+        "clave": "orfebreria",
+        "nombre": "Alfarería fina",
+        "edad": 2,
+        "pct": 20
+      }
     },
-
+    "hitos": {
+      "costo_edad2": {
+        "alimento": 500,
+        "riqueza": 300
+      },
+      "rentas_de_riqueza": "ninguna"
+    },
     "disputado": {
-      "techo_pct_riqueza_por_edad": { "1": 10, "2": 25, "3": 40, "4": 50 },
-      "sitios_sagrados": { "renta_por_orden_de_posesion": [18, 12, 8], "espejados": true },
+      "tope_r_min_por_edad": {
+        "1": 15,
+        "2": 40,
+        "3": 80,
+        "4": 120
+      },
+      "baldes": "5 baldes de 1 min; tope del balde = tope por minuto x 5 / 5",
+      "cuenta": [
+        "arcilla del centro (aldeanos y corte)",
+        "sitios",
+        "botín",
+        "cabezas de arreo (16 r cada una)",
+        "personas liberadas en ingenios (28 r cada una)",
+        "regalo de cumbi (su botín)"
+      ],
+      "por_encima_del_tope": "no se extrae: el aldeano queda quieto con aviso y la arcilla queda en el pozo; el botín y las cabezas se pierden",
+      "techo_pct_referencia": {
+        "1": 10,
+        "2": 25,
+        "3": 40,
+        "4": 50
+      },
+      "sitios_sagrados": {
+        "cantidad": "jugadores + 1",
+        "renta_por_orden_de_posesion": [
+          18,
+          12,
+          8
+        ],
+        "decreciente_por": "equipo"
+      },
       "ingenios_estancias_neutrales": {
-        "pares": 2, "edad_min": 1, "guardia_inicial": 4, "guardia_por_reconstruccion": 2,
-        "botin_riqueza": 150, "reconstruye_s": 240,
-        "bono_civ": { "mapuches": { "botin_pct": 150, "extra": "1 cabeza al corral más cercano" },
-                      "palmares": { "botin_pct": 150, "extra": "2 personas liberadas" } }
+        "forma": "edificio neutral hostil (owner -1, hostil true), flechas propias, no persigue, no cuenta para victoria",
+        "por_jugador": 1,
+        "edad_min": 2,
+        "pv": 1500,
+        "botin_riqueza": 150,
+        "botin_decreciente_mismo_jugador": [
+          150,
+          100,
+          50
+        ],
+        "reconstruye_s": 360,
+        "no_reaparece_si_enemigos_a_cas": 12,
+        "bono_civ": {
+          "mapuches": {
+            "extra": "al destruirlo: 2 cabezas de arreo (no por daño)"
+          },
+          "palmares": {
+            "extra": "al destruirlo: personas 2 / 1 / 0 por ingenio y por edad, que vuelven a pie"
+          },
+          "tawantinsuyu": {
+            "extra": "regalo de cumbi: el ingenio de su mitad, sin pelear, por 120 de mit'a"
+          }
+        }
       },
-      "mercado": { "minimo": 60, "paso": 3, "comision_pct": 30, "nota": "válvula de R1/05" }
+      "mercado": {
+        "minimo": 40,
+        "paso": 3,
+        "comision_pct": 30,
+        "regresa_a_100": "1 punto cada 10 s"
+      }
     },
-
     "reglas_balance": {
-      "repago_min": [5, 8],
+      "repago_min": [
+        5,
+        8
+      ],
       "renta_max_ae": 0.8,
-      "motor_pct_riqueza_m15": [30, 60],
-      "maximo_por_edad_pasivos": { "1": 2, "2": 3, "3": 4, "4": 5 },
-      "vecindad_R3": { "radio_cas": 8, "rinde_pct": [100, 70, 50], "nota": "R3 aplicado por cercanía, no por cantidad global" },
-      "tecnologia_motor_edad3_pct": 25,
-      "tecnologia_motor_costo": { "alimento": 200, "madera": 200, "riqueza": 100 }
-    },
-
-    "hitos_sin_cambio": {
-      "2": { "alimento": 400, "riqueza": 200 },
-      "3": { "alimento": 1000, "riqueza": 600, "piedra": 200 },
-      "4": { "alimento": 1800, "riqueza": 1200, "piedra": 400 }
-    },
-    "objetivos": { "edad2_min": [6.5, 9.0], "edad3_max_min": 20, "banda_riqueza_acumulada_pct": 15, "minutos_curva": [5, 10, 20, 30] }
-  },
-
-  "civs": {
-    "tawantinsuyu": {
-      "capa1": { "tipo": "mejor", "efecto": "barreal conectado", "condicion": "fuente a <=3 cas de un edificio propio conectado a la llaqta", "tasa_pct": 20 },
-      "capa2": {
-        "pieza": "taller_tejido",
-        "nombre": "Awasqa wasi (taller de tejido); cumbi desde la edad III",
-        "costo": { "madera": 120, "mita": 20 }, "tiempo_s": 25, "pv": 600,
-        "consume_mita_min": 30, "da_riqueza_min": 24, "interruptor": true,
-        "maximo_por_edad": { "1": 2, "2": 3, "3": 4, "4": 5 },
-        "repago_min": 5.0, "ae": 0.8
+      "motor_pct_riqueza_ventana_m15_m25": [
+        35,
+        65
+      ],
+      "techo_motor_edad4_r_min": [
+        135,
+        165
+      ],
+      "maximo_por_edad_pasivos": {
+        "1": 2,
+        "2": 3,
+        "3": 4,
+        "4": 5
       },
-      "recurso_propio": { "clave": "mita", "por_aldeano_min": 4, "inicial": 60, "tope": 200, "tope_por_edificio": { "qollqa": 100, "centro": 50 } },
-      "tecnologia_motor": { "nombre": "Cumbi", "via": "hito aqllawasi (edad III) en lugar de renta 40", "pct": 25 },
-      "semilla": "60 de mit'a inicial (ya existe)"
+      "separacion_minima_cas": {
+        "corral": 8,
+        "gult": 6,
+        "elefante_entregando": 8
+      },
+      "tecnologia_motor": {
+        "edad": 3,
+        "pct": 25,
+        "costo": {
+          "alimento": 200,
+          "madera": 200,
+          "riqueza": 100
+        },
+        "igual_para_las_seis": true
+      },
+      "tecnologia_motor_costo": {
+        "alimento": 200,
+        "madera": 200,
+        "riqueza": 100
+      },
+      "cola_guarda_costo_pagado": true,
+      "unidades_no_militares": [
+        "elefante_rey",
+        "cabeza_arreo"
+      ]
     },
-
-    "mapuches": {
-      "capa1": { "tipo": "igual", "nota": "el lof es depósito y centro chico: se planta junto al barreal de flanco" },
-      "capa2": {
-        "pieza": "corral",
-        "costo": { "madera": 120 }, "tiempo_s": 15, "pv": 600,
-        "cabezas_inicio": 1, "cabezas_tope": 5, "cabezas_tope_pradera": 6,
-        "pradera": "sin árboles a <=3 cas del corral",
-        "cria_s_por_cabeza": 45, "riqueza_min_por_cabeza": 4,
-        "faenar": { "orden": "faenar el corral entero", "alimento_por_cabeza": 40, "deja_cabezas": 1 },
-        "danio": "cada 20 % de vida perdida mata 1 cabeza",
-        "vecindad": true,
-        "maximo_por_edad": { "1": 2, "2": 3, "3": 4, "4": 5 },
-        "repago_min": 6.0, "ae": 0.67, "ae_pradera": 0.8
-      },
-      "fusion_kullin": "kullin -> riqueza en todos los costos (jinete 60a+35r; rewe III 60r; rewe IV 100r)",
-      "malon": { "modulo": "saqueo", "recurso": "riqueza", "pct_danio_edificio": 10, "por_aldeano": 6, "tope_min": 60, "arreo": "fase 2: botín como rebaño que camina al corral" },
-      "tecnologia_motor": { "nombre": "Crianza de caballares", "efecto": "+1 cabeza de tope", "pct_equivalente": 20 },
-      "semilla": "corral inicial construido con 1 cabeza (reemplaza 20 de kulliñ)"
+    "objetivos": {
+      "edad2_min": [
+        6.5,
+        9.0
+      ],
+      "edad3_max_min": 20,
+      "banda_riqueza_acumulada_pct": 15,
+      "minutos_curva": [
+        5,
+        10,
+        20,
+        30
+      ]
     },
-
-    "guaranies": {
-      "capa1": { "tipo": "mejor", "efecto": "tasa de riqueza 800 en vez de 700 (ya existe)", "tasa_pct": 14 },
-      "capa2": {
-        "pieza": "roza",
-        "costo": { "madera": 45 }, "cantidad_alimento": 750, "tasa_roza_milesimas": 1100,
-        "bono_monte": { "condicion": ">=4 árboles a <=2 cas", "pct": 15 },
-        "deja": "yerbal",
-        "yerbal": { "cantidad_riqueza": 300, "tasa_milesimas": 800 },
-        "pase_automatico": "el aldeano de la roza sigue en el yerbal",
-        "cola_rozas": { "maximo": 4, "donde": "punto de roza (bandera) de cada tapyi", "al_agotar_yerbal": "abre una roza de la cola junto a la bandera" },
-        "yerbales_activos_tope": { "1": 3, "2": 4, "3": 5, "4": 5 },
-        "sobre_el_tope": "la roza deja capuera (árboles jóvenes, madera) en vez de yerbal",
-        "ae_yerbal": 1.33
+    "modelo_opciones": {
+      "sin_rentas_de_hito": true,
+      "hito2_costo": {
+        "alimento": 500,
+        "riqueza": 300
       },
-      "tecnologia_motor": { "nombre": "Ka'a ete", "efecto": "yerbal 375", "pct": 25 },
-      "semilla": "yerbal viejo de 250 a <=8 cas de la base"
-    },
-
-    "etiopia": {
-      "capa1": { "tipo": "distinto", "efecto": "la corte extrae del barreal sin aldeanos", "condicion": "kätäma desplegada a <=8 cas de un barreal", "riqueza_min": 12, "fuentes_simultaneas": 1 },
-      "capa2": {
-        "pieza": "gult",
-        "costo": { "madera": 100, "alimento": 40 }, "tiempo_s": 25, "pv": 500,
-        "renta_base": { "alimento": 4, "riqueza": 14 },
-        "cerca_de_corte": { "radio_cas": 14, "pct": 33, "renta": { "alimento": 5, "riqueza": 19 } },
-        "asignacion": { "senor": "renta", "regimiento": "sin renta; -15 % costo de jinetes por gult (tope -30 %)" },
-        "vecindad": true, "vecindad_radio_cas": 6,
-        "maximo_por_edad": { "1": 2, "2": 3, "3": 4, "4": 5 },
-        "repago_min": { "lejos": 7.8, "cerca": 5.8 }, "ae": { "lejos": 0.6, "cerca": 0.8 }
+      "disputado_tope_min": {
+        "1": 15,
+        "2": 40,
+        "3": 80,
+        "4": 120
       },
-      "corte_movil": "empaca_en / despliega_en (ya existe)",
-      "tecnologia_motor": { "nombre": "Registro de los gult", "pct": 25 },
-      "semilla": "la corte ya extrae desde el minuto 0 si el barreal base queda a <=8 cas (generador)"
-    },
-
-    "palmares": {
-      "capa1": { "tipo": "igual", "nota": "los brazos llegan por fama, no se pagan" },
-      "capa2": {
-        "pieza": "oficio",
-        "puestos": { "mocambo": 3, "centro": 2 },
-        "riqueza_min_por_puesto": 15,
-        "puestos_totales_tope": { "1": 4, "2": 7, "3": 9, "4": 9 },
-        "cupo": "el jugador fija 0..3 por edificio; los recién llegados llenan el cupo libre más cercano",
-        "proteccion": "los del oficio están adentro: no se los mata sin destruir el edificio",
-        "ae_por_puesto": 0.5
-      },
-      "mocambo": { "costo": { "madera": 130 }, "quitar": "oculto", "bono_monte": { "condicion": ">=6 árboles a <=4 cas", "fama_min": 5 } },
-      "fama": { "por_edificio": { "centro": 24, "mocambo": 15, "casa": 2 }, "acogida_costo": 28, "tope": 300 },
-      "correria": "ingenios neutrales: botín x1,5 y 2 personas",
-      "tecnologia_motor": { "nombre": "Tendas de ferreiro", "pct": 25 },
-      "semilla": "60 de fama inicial (ya existe)"
-    },
-
-    "ayutthaya": {
-      "capa1": { "tipo": "igual" },
-      "capa2": {
-        "pieza": "almacen_real",
-        "nombre": "Phra Khlang (almacén real)",
-        "costo": { "madera": 200 }, "tiempo_s": 30, "pv": 900,
-        "deposito": ["alimento", "madera", "piedra", "riqueza"],
-        "subproducto": { "de": ["madera", "caza", "arbustos"], "pct": 25, "tope_riqueza_min": 24 },
-        "maximo_por_edad": { "1": 1, "2": 2, "3": 3, "4": 4 },
-        "repago_min_incremental": 5.2, "ae": 0.8
-      },
-      "barrios": {
-        "edad_min": 2, "maximo_por_edad": { "2": 1, "3": 2, "4": 3 },
-        "chino": { "costo": { "madera": 120 }, "efecto": "+8 de tope a cada almacén real a <=6 cas (hasta 2)" },
-        "japones": { "costo": { "madera": 150 }, "efecto": "compañía japonesa; -15 % si toca un cuartel", "renta": 0 },
-        "portugues": { "costo": { "madera": 150 }, "efecto": "compañía portuguesa; -15 % si toca un cuartel", "renta": 0 }
-      },
-      "arrozal_bono_agua_pct": 45,
-      "tecnologia_motor": { "nombre": "Monopolio real", "pct": 25 },
-      "semilla": "empieza con el almacén real construido (no paga su primer depósito)"
+      "ingenio_cada_s": 360,
+      "madera_finita": true,
+      "madera_lejos_pct": 50,
+      "madera_alcanzable_pct": 40
     }
   },
-
-  "terreno_pct_vs_llano_propio": {
-    "_doc": "Efecto esperado sobre la economía total al minuto 20. Objetivo: |x| <= 6 y diferencia entre civs en un mismo mapa <= 10 puntos.",
-    "mapas": ["llano", "montana", "rio", "bosque", "valle", "altiplano", "bosque_templado", "selva", "mesetas", "delta", "sierra"],
-    "tawantinsuyu": [0, 5, 0, -2, 5, 3, 0, -4, 3, -2, 3],
-    "mapuches":     [4, 0, 2, -2, 2, 4, -2, -4, 2, 0, -2],
-    "guaranies":    [-2, -2, 2, 4, -4, -5, 4, 5, -2, 2, 3],
-    "etiopia":      [2, 3, 0, -2, 2, 3, -3, -5, 4, -2, 0],
-    "palmares":     [-2, 0, 0, 3, -4, -5, 4, 4, 0, 0, 5],
-    "ayutthaya":    [0, -2, 3, 3, -5, -6, 3, 5, -4, 5, 2]
-  },
-
-  "esfuerzo_estimado": {
-    "_doc": "PMP: pendientes de la mecánica propia cada 10 min. OPA: órdenes propias del motor por minuto. OPM: órdenes económicas totales por minuto (común + motor), sin recolectar ni encolar aldeanos. Fases: f1 0-5, f2 5-15, f3 15-30, f4 final.",
-    "base_comun_opm": { "f1": 1.2, "f2": 0.9, "f3": 0.6, "f4": 0.5 },
-    "tawantinsuyu": { "pmp": [1, 1.5, 1.5, 2],   "opa": [0.4, 0.5, 0.4, 0.4],  "decisiones_por_edad": 3 },
-    "mapuches":     { "pmp": [0.5, 1.5, 1.5, 2], "opa": [0.4, 0.5, 0.35, 0.4], "decisiones_por_edad": 3 },
-    "guaranies":    { "pmp": [0.5, 1.5, 2, 2],   "opa": [0.4, 0.5, 0.45, 0.4], "decisiones_por_edad": 3 },
-    "etiopia":      { "pmp": [0.5, 1, 1.5, 2],   "opa": [0.4, 0.5, 0.4, 0.4],  "decisiones_por_edad": 3 },
-    "palmares":     { "pmp": [0.5, 1, 1, 1.5],   "opa": [0.4, 0.4, 0.33, 0.35], "decisiones_por_edad": 3 },
-    "ayutthaya":    { "pmp": [0.5, 1, 1.5, 1.5], "opa": [0.3, 0.35, 0.33, 0.33], "decisiones_por_edad": 3 }
-  },
-
-  "premodelo_grueso": {
-    "_doc": "Riqueza acumulada sin lo disputado (paso de 1 s, curva común de aldeanos, tasas netas de arriba, +25 % de tecnología de motor desde el minuto 19). No reemplaza al modelo numérico. Etiopía no suma el alimento del gult; los guaraníes no sufren el agotamiento del barreal ajeno.",
-    "riqueza_acumulada": {
-      "tawantinsuyu": { "5": 432, "10": 1129, "15": 1982, "20": 3111, "30": 5682 },
-      "mapuches":     { "5": 450, "10": 1104, "15": 1909, "20": 3100, "30": 5830 },
-      "guaranies":    { "5": 466, "10": 1134, "15": 1816, "20": 3268, "30": 6924 },
-      "etiopia":      { "5": 445, "10": 1126, "15": 1892, "20": 2868, "30": 5081 },
-      "palmares":     { "5": 402, "10": 1123, "15": 2114, "20": 3386, "30": 6110 },
-      "ayutthaya":    { "5": 442, "10": 1121, "15": 2050, "20": 3201, "30": 5686 }
+  "civs": {
+    "tawantinsuyu": {
+      "capa1": {
+        "tipo": "mejor",
+        "efecto": "arcilla unida por camino",
+        "tasa_pct": 20
+      },
+      "capa2": {
+        "pieza": "taller_tejido",
+        "costo": {
+          "madera": 120,
+          "mita": 20
+        },
+        "tiempo_s": 25,
+        "pv": 600,
+        "consume_mita_min": 30,
+        "da_riqueza_min": 24,
+        "reserva_mita": {
+          "valores": [
+            0,
+            60,
+            120
+          ],
+          "por_defecto": 0
+        },
+        "piso_sin_mita_pct": 33,
+        "piso_solo_con_reserva_0": true,
+        "maximo_por_edad": {
+          "1": 2,
+          "2": 3,
+          "3": 4,
+          "4": 5
+        },
+        "repago_min": 5.0,
+        "ae": 0.8
+      },
+      "recurso_propio": {
+        "clave": "mita",
+        "por_aldeano_min_por_edad": {
+          "1": 4,
+          "2": 4,
+          "3": 3,
+          "4": 3
+        },
+        "inicial": 60,
+        "tope": 200
+      },
+      "regalo_cumbi": {
+        "edad_min": 3,
+        "costo": {
+          "mita": 120
+        },
+        "objetivo": "ingenio de su mitad del mapa",
+        "da": "botín decreciente, sin pelear",
+        "queda": "tambo inca sin flechas; si lo destruyen, el ingenio vuelve a ser neutral a los 360 s"
+      },
+      "hitos_motor": {
+        "ushnu": "sin renta",
+        "aqllawasi": {
+          "maximo_edad": {
+            "3": 5
+          }
+        }
+      },
+      "tecnologia_motor": {
+        "nombre": "Cumbi",
+        "via": "investigación",
+        "pct": 25
+      },
+      "semilla": "60 de mit'a",
+      "modelo_opciones": {
+        "mita_por_aldeano_edad": {
+          "1": 4,
+          "2": 4,
+          "3": 3,
+          "4": 3
+        },
+        "taller_piso_pct": 33
+      }
     },
-    "motor_pct_tasa_m15": { "tawantinsuyu": 33, "mapuches": 35, "guaranies": 37, "etiopia": 28, "palmares": 38, "ayutthaya": 31 },
-    "alertas": ["guaranies +18 % a los 30 min", "etiopia -14 % a los 30 min y 28 % de motor al 15 (sin contar su alimento)", "palmares -9 % a los 5 min"]
+    "mapuches": {
+      "capa1": {
+        "tipo": "igual"
+      },
+      "capa2": {
+        "pieza": "corral",
+        "costo": {
+          "madera": 120
+        },
+        "tiempo_s": 15,
+        "pv": 600,
+        "cabezas_inicio": 1,
+        "cabezas_tope": 5,
+        "cabezas_tope_pradera": 6,
+        "cabezas_tope_abs": 6,
+        "cria_s_por_cabeza": 45,
+        "riqueza_min_por_cabeza": 4,
+        "danio": "cada 25 % de vida perdida mata 1 cabeza; nunca baja de 1; reparar no devuelve cabezas",
+        "kawin": {
+          "alimento_por_cabeza": 30,
+          "deja_cabezas": 1,
+          "sin_cria_s": 120,
+          "maximo": "1 por corral por edad",
+          "no_en_combate_s": 5
+        },
+        "maximo_por_edad": {
+          "1": 2,
+          "2": 3,
+          "3": 4,
+          "4": 5
+        },
+        "repago_min": 6.0,
+        "ae": 0.67,
+        "ae_pradera": 0.8
+      },
+      "malon_arreo": {
+        "de_granjas_casas_corrales": "1 cabeza cada 150 de daño real (la reparación no lo rehabilita)",
+        "de_ingenios": "2 cabezas solo al destruirlo",
+        "maximo_cabezas_min": 3,
+        "cabeza": {
+          "pv": 60,
+          "velocidad": 1100,
+          "pob": 0,
+          "seleccionable": false
+        },
+        "siempre_camina": "va al corral con lugar más cercano; si no hay, al más cercano y al llegar da 40 de alimento",
+        "cuenta_en_tope_disputado_r": 16
+      },
+      "lof_extra": "entrenan aldeanos con +50 % de tiempo",
+      "hitos_motor": {
+        "rewe_lonko": {
+          "cria_s": 35
+        },
+        "parlamento": {
+          "maximo_edad": {
+            "4": 6
+          }
+        }
+      },
+      "tecnologia_motor": {
+        "nombre": "Crianza de caballares",
+        "efecto": "+1 cabeza (sin pasar 6)"
+      },
+      "semilla": "corral inicial con 1 cabeza",
+      "modelo_opciones": {
+        "lof_extra_entrena": true
+      }
+    },
+    "guaranies": {
+      "capa1": {
+        "tipo": "mejor",
+        "efecto": "tasa de riqueza 800 en vez de 700 (ya existe)",
+        "tasa_pct": 14
+      },
+      "capa2": {
+        "pieza": "roza",
+        "costo": {
+          "madera": 90
+        },
+        "cantidad_alimento": 500,
+        "tasa_roza_milesimas": 1000,
+        "bono_monte": {
+          "condicion": ">=4 árboles a <=2 cas",
+          "pct": 15
+        },
+        "deja": "yerbal",
+        "yerbal": {
+          "cantidad_riqueza": 300,
+          "tasa_milesimas": 800,
+          "aldeanos_por_yerbal": 1,
+          "cosechable_por": "dueño y enemigos, nunca aliados"
+        },
+        "resiembra": {
+          "donde": "el mismo lugar, al agotarse el yerbal",
+          "interruptor": true,
+          "reserva_madera": 100,
+          "capuera_no_reabre": true
+        },
+        "modo_monte": {
+          "dejar_crecer": "por defecto",
+          "quemar_pct": 60
+        },
+        "roza_quemada": "con más del 50 % consumido deja igual el yerbal",
+        "yerbales_activos_tope": {
+          "1": 3,
+          "2": 4,
+          "3": 4,
+          "4": 4
+        },
+        "sobre_el_tope": "capuera (arbustos, 40 de madera)",
+        "emboscada": "el yerbal cuenta como monte para el sigilo de los arqueros",
+        "cola_rozas": {
+          "maximo": 4,
+          "nota": "prepago de la resiembra"
+        }
+      },
+      "hitos_motor": {
+        "mision": "sin renta; yerbal +50"
+      },
+      "tecnologia_motor": {
+        "nombre": "Ka'a ete",
+        "efecto": "yerbal +25 %"
+      },
+      "semilla": "yerbal viejo de 100",
+      "modelo_opciones": {
+        "roza_cantidad": 500,
+        "cola_automatica": true,
+        "semilla_yerbal": 100,
+        "roza_tasa_pct": 91
+      }
+    },
+    "etiopia": {
+      "nombre_riqueza": "Amole",
+      "capa1": {
+        "tipo": "distinto",
+        "radio_cas": 12,
+        "riqueza_min": 12,
+        "riqueza_min_por_edad": {
+          "1": 12,
+          "2": 16,
+          "3": 20,
+          "4": 24
+        },
+        "solo": "la capital; arcilla propia o del centro; lo del centro cuenta en el tope disputado"
+      },
+      "capa2": {
+        "pieza": "gult",
+        "costo": {
+          "madera": 100,
+          "alimento": 40
+        },
+        "tiempo_s": 25,
+        "pv": 500,
+        "renta_base": {
+          "alimento": 3,
+          "riqueza": 17
+        },
+        "cerca_de_corte": {
+          "radio_cas": 14,
+          "renta": {
+            "alimento": 3,
+            "riqueza": 21
+          },
+          "no_se_suma": true
+        },
+        "asignacion": {
+          "senor": "por defecto",
+          "regimiento": "desde la edad II; sin renta; -15 % a jinetes entrenados a <=14 cas, tope -30 %; no se cambia"
+        },
+        "maximo_por_edad": {
+          "1": 2,
+          "2": 3,
+          "3": 4,
+          "4": 6
+        },
+        "repago_min": {
+          "lejos": 7.0,
+          "cerca": 5.8
+        }
+      },
+      "corte_nueva": {
+        "costo": {
+          "madera": 150
+        },
+        "obra_s": 60,
+        "nace_con_vida_pct": 25,
+        "hereda_pct_de_vida": true,
+        "sin_flechas_ni_guarnicion_hasta_terminar": true,
+        "minimo_entre_fundaciones_s": 300,
+        "prohibido": "a <20 cas de centros, torres, cuarteles o edificios de >=150 de costo enemigos; o con enemigos en combate a <=15 cas",
+        "siempre_permitido": "los claros de las arcillas propias",
+        "si_cae_la_vieja": "se cancela el cimiento",
+        "fiesta": {
+          "s": 60,
+          "efecto": "gult a <=14 cas rinden x2",
+          "condicion": "corte nueva a >=25 cas de la anterior y a <=12 de una arcilla con >=300",
+          "maximo": "una por arcilla en la partida"
+        }
+      },
+      "gondar": "capital fija: extrae 24 de arcilla propia o del centro a <=16; ya no se funda",
+      "hitos_motor": {
+        "monasterio": {
+          "radio_cas": 16
+        }
+      },
+      "tecnologia_motor": {
+        "nombre": "Registro de los gult",
+        "pct": 25
+      },
+      "semilla": "la corte extrae desde el minuto 0",
+      "modelo_opciones": {
+        "extrae_por_edad": {
+          "1": 12,
+          "2": 16,
+          "3": 20,
+          "4": 24
+        },
+        "mudanza_sin_ventana": true,
+        "cimiento_corte": {
+          "madera": 150
+        },
+        "fiesta_s": 60
+      }
+    },
+    "palmares": {
+      "capa1": {
+        "tipo": "igual"
+      },
+      "capa2": {
+        "pieza": "oficio",
+        "oficios": [
+          "herrero",
+          "alfarero",
+          "cestero",
+          "tejedor de palma"
+        ],
+        "puestos": {
+          "mocambo": 3,
+          "centro": 2
+        },
+        "riqueza_min_por_puesto": 15,
+        "puestos_totales_tope": {
+          "1": 4,
+          "2": 7,
+          "3": 8,
+          "4": 8
+        },
+        "llenado": "automático; desalojar existe",
+        "paran_si": "el edificio pierde >=2 % de vida en 5 s o hay >=3 enemigos a <=6 cas",
+        "separado_de_guarnicion": true
+      },
+      "mocambo": {
+        "costo": {
+          "madera": 130
+        },
+        "quitar": "oculto",
+        "bono_monte": {
+          "condicion": ">=6 árboles a <=4 cas",
+          "fama_min": 5
+        }
+      },
+      "fama": {
+        "inicial": 90,
+        "por_edificio": {
+          "centro": 24,
+          "mocambo": 15,
+          "casa": 2
+        },
+        "acogida_costo": 28,
+        "tope": 300,
+        "hito2_extra": 90,
+        "guardar_para_hito": "botón, prendido por defecto",
+        "gente_de_guerra": "guerrero por 40 de fama + 30 a, respeta el tope de población"
+      },
+      "liberacion": {
+        "solo_de": "edificios habitados",
+        "maximo": "1 por edificio cada 60 s",
+        "por_encima_del_tope": "28 de fama",
+        "vuelven_a_pie": true
+      },
+      "hitos_motor": {
+        "quilombo_central": {
+          "fama_min": 20
+        },
+        "pacto_cucau": "sin renta",
+        "guerra_zumbi": "sin renta"
+      },
+      "tecnologia_motor": {
+        "nombre": "Tendas de ferreiro",
+        "pct": 25
+      },
+      "semilla": "90 de fama",
+      "modelo_opciones": {
+        "oficio_desde_s": 180,
+        "fama_inicial": 90,
+        "hito_extra_civ": {
+          "fama": 90
+        }
+      }
+    },
+    "ayutthaya": {
+      "capa1": {
+        "tipo": "igual"
+      },
+      "capa2": {
+        "pieza": "elefante_rey",
+        "unidad": true,
+        "fn": "no militar",
+        "entrena": "palacio",
+        "costo": {
+          "alimento": 80,
+          "madera": 80
+        },
+        "tiempo_s": 45,
+        "pv": 600,
+        "armadura_distancia": 0,
+        "ataque": 0,
+        "pob": 2,
+        "deposito_movil": [
+          "madera",
+          "alimento",
+          "piedra"
+        ],
+        "subproducto": {
+          "pct": 25,
+          "de": [
+            "madera",
+            "arbustos",
+            "piedra"
+          ],
+          "granja_pct": 10,
+          "tope_riqueza_min": 24,
+          "tope_por_edad": {
+            "1": 16,
+            "2": 24,
+            "3": 24,
+            "4": 24
+          }
+        },
+        "maximo_por_edad": {
+          "1": 1,
+          "2": 2,
+          "3": 3,
+          "4": 3
+        },
+        "sin_deposito_comun": true,
+        "repago_min": 6.7
+      },
+      "barrios": {
+        "edad_min": 2,
+        "maximo_por_edad": {
+          "2": 1,
+          "3": 2,
+          "4": 3
+        },
+        "chino": {
+          "costo": {
+            "madera": 100
+          },
+          "efecto": "+4 de tope a cada elefante; un solo barrio chino tiene efecto"
+        },
+        "japones": {
+          "costo": {
+            "madera": 150
+          },
+          "efecto": "compañía japonesa, -15 % si toca un cuartel"
+        },
+        "portugues": {
+          "costo": {
+            "madera": 150
+          },
+          "efecto": "compañía portuguesa, -15 % si toca un cuartel"
+        }
+      },
+      "arrozal_bono_agua_pct": 25,
+      "hitos_motor": {
+        "puerto_real": {
+          "maximo_edad": {
+            "3": 4,
+            "4": 4
+          }
+        },
+        "junco_tributo": {
+          "tope_extra": 4
+        }
+      },
+      "tecnologia_motor": {
+        "nombre": "Monopolio real",
+        "pct": 25
+      },
+      "semilla": "1 elefante del rey (tope 16 en la edad I)",
+      "modelo_opciones": {
+        "ayu_elefantes": true,
+        "arrozal_agua_pct": 25,
+        "ayu_granja_pct": 10,
+        "barrio_chino_tope": 4
+      }
+    }
+  },
+  "terreno_pct_vs_llano_propio": {
+    "mapas": [
+      "llano",
+      "montana",
+      "rio",
+      "bosque",
+      "valle",
+      "altiplano",
+      "bosque_templado",
+      "selva",
+      "mesetas",
+      "delta",
+      "sierra"
+    ],
+    "tawantinsuyu": [
+      0,
+      5,
+      0,
+      1,
+      3,
+      -3,
+      5,
+      0,
+      3,
+      -1,
+      5
+    ],
+    "mapuches": [
+      0,
+      0,
+      0,
+      0,
+      -1,
+      0,
+      0,
+      0,
+      -2,
+      -1,
+      0
+    ],
+    "guaranies": [
+      0,
+      0,
+      0,
+      2,
+      -5,
+      -5,
+      2,
+      2,
+      -3,
+      -2,
+      2
+    ],
+    "etiopia": [
+      0,
+      0,
+      0,
+      0,
+      -3,
+      -5,
+      0,
+      0,
+      -2,
+      -2,
+      0
+    ],
+    "palmares": [
+      0,
+      0,
+      0,
+      1,
+      -5,
+      -5,
+      1,
+      1,
+      -4,
+      -2,
+      0
+    ],
+    "ayutthaya": [
+      0,
+      1,
+      1,
+      1,
+      -3,
+      -4,
+      1,
+      0,
+      -4,
+      2,
+      -3
+    ],
+    "_doc": "Economía total al minuto 20 contra el llano de la misma civ, tomada del modelo v3-04. Objetivo |x| <= 6 y diferencia por mapa <= 10."
+  },
+  "resultado_modelo_v3_04": {
+    "_doc": "python3 tools/modelo_economia.py (llano, sin lo disputado, militar 35 %, hasta el minuto 45).",
+    "minutos": [
+      5,
+      10,
+      20,
+      30
+    ],
+    "riqueza_acumulada": {
+      "tawantinsuyu": [
+        268,
+        1207,
+        4516,
+        5891
+      ],
+      "mapuches": [
+        275,
+        1060,
+        4136,
+        5496
+      ],
+      "guaranies": [
+        331,
+        1032,
+        4232,
+        5687
+      ],
+      "etiopia": [
+        294,
+        1006,
+        4132,
+        5615
+      ],
+      "palmares": [
+        322,
+        1097,
+        3728,
+        6473
+      ],
+      "ayutthaya": [
+        283,
+        1101,
+        4549,
+        6150
+      ]
+    },
+    "desvio_pct": {
+      "tawantinsuyu": [
+        -9,
+        11,
+        7,
+        0
+      ],
+      "mapuches": [
+        -7,
+        -2,
+        -2,
+        -7
+      ],
+      "guaranies": [
+        12,
+        -5,
+        0,
+        -3
+      ],
+      "etiopia": [
+        -1,
+        -7,
+        -2,
+        -5
+      ],
+      "palmares": [
+        9,
+        1,
+        -12,
+        10
+      ],
+      "ayutthaya": [
+        -4,
+        2,
+        8,
+        5
+      ]
+    },
+    "edad2_edad3": {
+      "tawantinsuyu": [
+        "6:30",
+        "13:50"
+      ],
+      "mapuches": [
+        "6:50",
+        "14:40"
+      ],
+      "guaranies": [
+        "7:10",
+        "13:30"
+      ],
+      "etiopia": [
+        "8:50",
+        "14:10"
+      ],
+      "palmares": [
+        "6:40",
+        "14:10"
+      ],
+      "ayutthaya": [
+        "6:30",
+        "14:00"
+      ]
+    },
+    "motor_pct_m15_25": {
+      "tawantinsuyu": 55,
+      "mapuches": 41,
+      "guaranies": 51,
+      "etiopia": 53,
+      "palmares": 37,
+      "ayutthaya": 55
+    },
+    "motor_r_min_m40_45": {
+      "tawantinsuyu": 150,
+      "mapuches": 144,
+      "guaranies": 155,
+      "etiopia": 148,
+      "palmares": 150,
+      "ayutthaya": 160
+    },
+    "ayutthaya_m40_45_altiplano_valle": [
+      160,
+      160
+    ],
+    "tope_recurso_propio_pct": {
+      "mita": 20.7,
+      "fama": 7.4
+    },
+    "golpe_arcilla_casa_m10_retiene_pct": {
+      "tawantinsuyu": 74,
+      "mapuches": 29,
+      "guaranies": 87,
+      "etiopia": 94,
+      "palmares": 57,
+      "ayutthaya": 54
+    },
+    "fuera_de_banda": [
+      "mit'a en el tope 20,7 % (todo después del minuto 35; el modelo no gasta mit'a en levas)",
+      "mapuches retienen 29 % si pierden la arcilla de casa en el minuto 10 (sin demora de edad)",
+      "guaraníes: lo disputado es 27,8 % de su riqueza en la edad II (referencia 25 %; el tope absoluto se respeta)",
+      "Etiopía: edad II a las 8:50, en el borde de la banda"
+    ]
+  },
+  "esfuerzo_estimado": {
+    "_doc": "OPA del motor por minuto y PMP cada 10 min, fases 0-5 / 5-15 / 15-30 / final.",
+    "tawantinsuyu": {
+      "opa": [
+        0.4,
+        0.5,
+        0.4,
+        0.4
+      ],
+      "pmp": [
+        0.5,
+        1,
+        1,
+        1.5
+      ]
+    },
+    "mapuches": {
+      "opa": [
+        0.4,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "pmp": [
+        0.5,
+        1,
+        1.5,
+        2
+      ]
+    },
+    "guaranies": {
+      "opa": [
+        0.3,
+        0.3,
+        0.3,
+        0.3
+      ],
+      "pmp": [
+        0.5,
+        0.5,
+        1,
+        1
+      ]
+    },
+    "etiopia": {
+      "opa": [
+        0.4,
+        0.5,
+        0.4,
+        0.4
+      ],
+      "pmp": [
+        0.5,
+        1,
+        1,
+        1
+      ]
+    },
+    "palmares": {
+      "opa": [
+        0.3,
+        0.3,
+        0.3,
+        0.3
+      ],
+      "pmp": [
+        0.5,
+        1,
+        1,
+        1.5
+      ]
+    },
+    "ayutthaya": {
+      "opa": [
+        0.3,
+        0.4,
+        0.4,
+        0.4
+      ],
+      "pmp": [
+        0.5,
+        1,
+        1,
+        1.5
+      ]
+    }
   }
 }

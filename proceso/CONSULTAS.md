@@ -78,3 +78,40 @@ Son la IA mapuche, la campana, la vida de los edificios mapuches, el costo del g
 a) Sí, mientras decidís el resto *(recomendado)* · b) No, esperá
 
 **Respuesta:**
+
+> **C-10 a C-12 quedan reemplazadas** por las preguntas del diseño final de la ronda 3 (C-14 a C-20). Resumen en palabras llanas al principio de [`docs/diseno/revision-economia/v3/04-diseno-final.md`](../docs/diseno/revision-economia/v3/04-diseno-final.md).
+
+### C-14 · ¿Cómo medimos que el esfuerzo sea parejo?
+a) Umbrales absolutos: como máximo 0,6 órdenes por minuto y 2 pendientes cada 10 minutos por civ, y ninguna por encima de 1,5 veces la mediana *(recomendado)* · b) ×1,5 entre la que más y la que menos pide (falla porque guaraníes y Palmares piden muy poco)
+
+**Respuesta:**
+
+### C-15 · Costo del avance a la edad II
+a) 500 de alimento + 300 de riqueza, y se mide con la IA real; si pasa de los 9:00, vuelve a 400 + 250 *(recomendado)* · b) Dejarlo en 400 + 200 (algunas civs llegan antes de los 6:30)
+
+**Respuesta:**
+
+### C-16 · Cuando se acaba la arcilla de casa (minutos 13 a 24), el ingreso de riqueza cae a la mitad
+a) Aceptarlo: el final se pelea en el centro, con tope *(recomendado)* · b) Agregar una veta lenta en el flanco
+
+**Respuesta:**
+
+### C-17 · Etiopía en escaramuza: ¿la corte "se funda" en otro lugar en vez de viajar como carpa?
+a) Sí: sin carpa vulnerable ni derrota por empacar; la carpa queda para la campaña *(recomendado)* · b) Volver a la carpa que viaja
+
+**Respuesta:**
+
+### C-18 · ¿Ayutthaya sin depósitos comunes, con el elefante del rey como depósito?
+a) Sí *(recomendado)* · b) Que pueda construir depósitos comunes
+
+**Respuesta:**
+
+### C-19 · Mapuches: si pierden la arcilla de casa en el minuto 10, conservan el 29 % del ingreso de riqueza (no atrasan la edad)
+a) Aceptarlo como el precio de "no hay capital" y mirarlo en el torneo *(recomendado)* · b) Abaratar el lof de flanco de 110 a 80 de madera
+
+**Respuesta:**
+
+### C-20 · Cambiar las frases de Palmares ("se esconde") y Ayutthaya ("comercia con el mundo"), que contradicen el diseño
+a) Sí, con las propuestas de la sección 11 del diseño final *(recomendado)* · b) Dejarlas
+
+**Respuesta:**
