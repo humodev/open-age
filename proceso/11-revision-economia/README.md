@@ -70,3 +70,32 @@ Cinco agentes con perfiles distintos. Leen el repositorio sin tocarlo y escriben
    - cada mecánica explicada primero en palabras llanas.
 
    Se reemplazan las mecánicas de Ayutthaya y Palmares, que se apoyaban en el comercio, y el asesor histórico responde la pregunta del oro.
+10. **Observación del autor (2026-11-13)** sobre la ronda 2:
+    > "Lo de que tiene que estar oculto, y que si lo ven ya pierde valor, me parece raro: en el endgame casi todo está descubierto, hay outposts, muchas tropas por todo el mapa, traders; no va a haber lugar dónde poner las cosas. La salina chica va a estar siempre, pero ¿qué puede hacer cada civ desde eso? En Age el oro es una riqueza que siempre está ahí para minear, pero algunas civs tienen engines mejores que solo minear. ¿Acá tenemos esa posibilidad? ¿Cómo conviven estas diferentes mecánicas? Hay cosas que creo que el equipo las piensa una vez y no vuelve a analizar con más contexto y desde diferentes perspectivas. Antes de implementar debemos afinar al máximo: teorizarlas, planificar cómo va a resultar desde el comienzo hasta el final del juego, si está balanceado, si conlleva el mismo esfuerzo para todos."
+
+    Conclusiones:
+    - Se descarta todo motor que dependa de estar oculto.
+    - Cada civ tiene que explicar su relación con la fuente común: cómo la aprovecha mejor o distinto, como las minas de pozo malíes, el ovoo mongol o el aceite bizantino.
+    - Se cambia el método de trabajo.
+11. **Método nuevo (ronda 3 en adelante):**
+    1. **Un diseñador líder consolida** un solo diseño, un motor por civ, con:
+       - la relación con la salina y las fuentes comunes;
+       - la línea de tiempo de la partida: minutos 0–5, 5–15, 15–30 y final con el mapa revelado;
+       - el costo de atención por fase.
+    2. **Críticas cruzadas desde varias perspectivas:**
+       - romperlo (endgame, abusos, mapa revelado);
+       - jugador competitivo;
+       - jugador nuevo;
+       - programador de la IA;
+       - historiador.
+    3. **Modelo numérico antes de tocar el juego:** un script que simula, minuto a minuto, los ingresos de cada civ y las órdenes que pide al jugador.
+    4. **El líder revisa y vuelve a las críticas** hasta pasar una lista de control escrita:
+       - esfuerzo parejo;
+       - nada dominante ni inútil;
+       - nada que se rompa en el final;
+       - nada que dependa de un solo lugar;
+       - entendible en palabras llanas;
+       - jugable por la IA;
+       - fiel a la historia.
+
+    Recién entonces se presenta al autor y, si lo aprueba, se implementa.
