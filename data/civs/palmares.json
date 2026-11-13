@@ -95,7 +95,6 @@
     "piedra",
     "riqueza"
    ],
-   "oculto": true,
    "acoge": true,
    "cuenta_victoria": true,
    "guarnicion": 6,
@@ -104,9 +103,9 @@
    "alcance": 6000,
    "cadencia_ms": 2000,
    "ranura": 7,
-   "desc": "Aldea escondida en el monte: invisible para el rival hasta que se acerca. La gente que llega puede instalarse acá."
+   "desc": "Aldea en el monte. La gente que llega trabaja en sus oficios (herrero, alfarero, cestero, tejedor de palma): 3 puestos de 15 de riqueza por minuto que paran bajo asedio."
   },
-  "quilombo_central": { "eje": "economia",
+  "quilombo_central": { "costo_extra": { "fama": 90 }, "eje": "economia",
    "nombre": "Macaco",
    "edad_min": 1,
    "tam": [
@@ -125,7 +124,7 @@
    "efectos": [],
    "renta": {"fama": 20}
   },
-  "mocambo_guerra": { "eje": "militar",
+  "mocambo_guerra": { "costo_extra": { "fama": 90 }, "eje": "militar",
    "nombre": "Mocambo de guerra",
    "edad_min": 1,
    "tam": [
@@ -326,6 +325,7 @@
   ]
  },
  "modulos": {
+    "oficios": { "puestos": { "mocambo": 3, "cerca_real": 2 }, "por_min": 15, "tope_por_edad": [4, 7, 8, 8], "para_pct": 2, "para_enemigos": 3, "para_radio": 6000 },
   "recurso_propio": {
    "clave": "fama",
    "nombre": "Fama",
@@ -336,7 +336,7 @@
     "mocambo": 15,
     "casa": 2
    },
-   "inicial": 60,
+   "inicial": 90,
    "tope": 300,
    "por_aldeano": 0
   },

@@ -218,6 +218,10 @@ func commands() -> Array[Dictionary]:
 				out.append({"slot": 4 + ki, "id": "comprar_" + k, "icon": k, "kind": "trade", "op": "comprar", "recurso": k, "building": first.id, "name": "Comprar %d de %s" % [lot, Palette.RES_NAMES[k].to_lower()], "cost": {"riqueza": price}, "desc": "El precio sube con cada compra.", "locked": ""})
 		if first.def.has("empaca_en"):
 			out.append({"slot": 7, "id": "desarmar", "icon": "carga", "kind": "pack", "name": "Desarmar la corte", "cost": {}, "desc": "La corte se levanta y camina con su gente: viaja lenta y se vuelve a armar donde haga falta.", "locked": "" if first.queue.is_empty() else "Esperá que termine la cola", "building": first.id})
+		var oficios: Dictionary = sim.dp(local).mod("oficios") if sim.dp(local).has_mod("oficios") else {}
+		if int(oficios.get("puestos", {}).get(first.type, 0)) > 0:
+			var stop := " (parados: bajo asedio)" if not first.crafts.is_empty() and sim.mods.craft_stopped(first) else ""
+			out.append({"slot": 10, "id": "desalojar", "icon": "expulsar", "kind": "desalojar", "name": "Vaciar oficios (%d/%d)%s" % [first.crafts.size(), int(oficios["puestos"][first.type]), stop], "cost": {}, "desc": "La gente que trabaja en los oficios de este edificio (herrero, alfarero, cestero, tejedor de palma) sale a recolectar. Cada puesto da %d de riqueza por minuto mientras no haya asedio; los puestos se vuelven a llenar con la gente que llega." % int(oficios["por_min"]), "locked": "" if not first.crafts.is_empty() else "No hay nadie en los oficios", "building": first.id})
 		if first.def.get("guarnicion", 0) > 0:
 			out.append({"slot": 11, "id": "expulsar", "icon": "expulsar", "kind": "ungarrison", "name": "Expulsar guarnición", "cost": {}, "desc": DESCS["expulsar"], "locked": "" if not first.garrison.is_empty() else "No hay unidades alojadas"})
 	return out
@@ -288,6 +292,8 @@ func run_command(cmd: Dictionary) -> void:
 			sim.push_command({"t": "pack", "player": local, "building": cmd["building"]})
 		"unpack":
 			sim.push_command({"t": "unpack", "player": local, "unit": cmd["unit"]})
+		"desalojar":
+			sim.push_command({"t": "desalojar", "player": local, "building": cmd["building"]})
 		"ungarrison":
 			for e in selected_entities():
 				if e.is_building() and e.owner == local:

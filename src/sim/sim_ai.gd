@@ -12,6 +12,7 @@ var last_attack := -100000
 var last_raid := 0 # incursiones y control del mapa: por tiempo transcurrido, no por tick exacto
 var last_spot := 0
 var last_road := 0
+var last_engine := -1000
 var _no_route := {} # edificio -> tick desde el que se vuelve a intentar el camino
 var last_site := 0
 var rally := Vector2i(-1, -1)
@@ -223,16 +224,22 @@ func _wants_hito(p: Dictionary, n_vill: int, by_type: Dictionary) -> bool:
 
 ## Motor propio de cada civ (docs/diseno/revision-economia/v3/04, §9.3).
 func _engine(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_type: Dictionary, saving: bool) -> void:
-	if vill.size() < 8 or sim.tick % 50 != (player * 25) % 50:
+	if sim.tick - last_engine < 50:
 		return
+	last_engine = sim.tick
 	var dd := sim.dp(player)
 	match dd.clave:
+		"palmares":
+			# Guarda fama para el hito solo mientras ahorra para él; si no, la gente sigue llegando.
+			if bool(p.get("guardar_fama", true)) != saving:
+				sim.push_command({"t": "guardar", "player": player, "res": "fama", "on": saving})
 		"tawantinsuyu":
 			var want_res := 60 if saving else 0
 			if int(p.get("reserva_mita", 0)) != want_res:
 				sim.push_command({"t": "reserve", "player": player, "res": "mita", "n": want_res})
 			var shops: Array = by_type.get("taller_tejido", [])
-			if not dd.edificios.has("taller_tejido") or (saving and p["age"] == 1) or (p["age"] == 1 and shops.size() >= 1):
+			# En la edad I, un solo taller antes del hito II (aunque se esté ahorrando: rinde riqueza para el hito).
+			if vill.size() < 10 or not dd.edificios.has("taller_tejido") or (p["age"] == 1 and shops.size() >= 1):
 				return
 			var cfg: Dictionary = dd.mod("recurso_propio")
 			var by_age: Array = cfg.get("por_aldeano_por_edad", [cfg.get("por_aldeano", 4)])

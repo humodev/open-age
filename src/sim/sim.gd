@@ -162,10 +162,18 @@ func _apply(c: Dictionary) -> void:
 			_cmd_research(pid, c["building"], c["tech"])
 		"garrison":
 			_cmd_garrison(pid, _own_units(pid, c.get("ids", [])), c.get("building", -1))
+		"desalojar":
+			# Saca a la gente de los oficios de un edificio (Palmares).
+			var cb: SimEntity = by_id.get(c["building"])
+			if cb != null and cb.alive and cb.owner == pid:
+				eject_crafts(cb)
 		"ungarrison":
 			_cmd_ungarrison(pid, c["building"])
 		"alarm":
 			_cmd_alarm(pid, c.get("on", true), int(c.get("max", -1)))
+		"guardar":
+			# "Guardar <recurso> para el hito" (fama de Palmares): prendido por defecto.
+			players[pid]["guardar_" + str(c["res"])] = bool(c["on"])
 		"reserve":
 			# Reserva de un recurso propio que los motores de conversión no tocan.
 			players[pid]["reserva_" + str(c["res"])] = clampi(int(c["n"]), 0, 1000)
@@ -566,6 +574,25 @@ func _do_garrison(e: SimEntity) -> void:
 	e.y = b.y
 	b.garrison.append(e.id)
 	events.append({"t": "garrison", "id": e.id, "building": b.id})
+
+
+## Saca a la gente de los oficios: vuelven a ser aldeanos que recolectan.
+func eject_crafts(b: SimEntity) -> void:
+	var ids := b.crafts.duplicate()
+	b.crafts.clear()
+	for id in ids:
+		var e: SimEntity = by_id.get(id)
+		if e == null or not e.alive:
+			continue
+		e.inside = -1
+		var tile := _spawn_tile(b)
+		e.x = tile.x * P + P / 2
+		e.y = tile.y * P + P / 2
+		_set_idle(e)
+		var res := find_resource(e.owner, "alimento", e.x, e.y, data.reglas["radio_retomar"], -1, e.id)
+		if res != null:
+			_order_gather(e, res)
+		events.append({"t": "ungarrison", "id": e.id})
 
 
 ## Saca a todas las unidades alojadas. Los aldeanos vuelven a recolectar.
@@ -1090,6 +1117,7 @@ func _kill(e: SimEntity, killer: SimEntity = null) -> void:
 	if e.is_building():
 		mods.on_building_removed(e)
 		_eject(e)
+		eject_crafts(e)
 		for item in e.queue:
 			if item.begins_with("@"):
 				players[e.owner]["pending"].erase(item.substr(1))
@@ -1637,6 +1665,18 @@ func _check_victory() -> void:
 	for p in players:
 		if not p["defeated"] and not has_hito[p["id"]]:
 			_defeat(p["id"])
+
+
+## Lo que pide el próximo hito de un recurso propio (fama, mit'a) por encima del costo común.
+func hito_extra_need(pid: int, key: String) -> int:
+	var age := int(players[pid]["age"])
+	var dd := dp(pid)
+	if age > dd.hitos.size():
+		return 0
+	var need := 0
+	for h: String in dd.hitos[age - 1]:
+		need = maxi(need, int(dd.edificios.get(h, {}).get("costo_extra", {}).get(key, 0)))
+	return need
 
 
 ## Lo disputado: riqueza de lugares que se pelean (arcilla del centro, sitios,

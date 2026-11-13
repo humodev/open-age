@@ -8,6 +8,7 @@ const O := SimEntity.Order
 
 var sim: Sim
 var _acc := {} # acumuladores en milésimas: "pid:clave" -> int
+var _craft_hits := {} # edificio con oficios -> [[tick, daño], …] de los últimos 5 s
 var _roads := PackedByteArray() # casillas con camino
 var _connected := {} # id de edificio -> true si está conectado a la capital
 
@@ -35,6 +36,7 @@ func tick_second() -> void:
 		_own_resource(pid, p)
 		_rents(pid, p)
 		_conversions(pid, p)
+		_crafts_yield(pid)
 		if has(pid, "acogida"):
 			_welcome(pid, p)
 		if has(pid, "caminos") and sim.tick % 50 == 0:
@@ -138,6 +140,9 @@ func _welcome(pid: int, p: Dictionary) -> void:
 	var cost: int = cfg["costo"]
 	if int(p["res"].get(key, 0)) < cost or p["pop"] >= p["pop_cap"]:
 		return
+	# "Guardar fama para el hito" (prendido por defecto): no gasta la fama que pide el próximo hito.
+	if p.get("guardar_" + key, true) and int(p["res"].get(key, 0)) - cost < sim.hito_extra_need(pid, key):
+		return
 	var home: SimEntity = null
 	for e in sim.actives:
 		if e.alive and e.owner == pid and e.is_building() and e.built and (e.capital or e.def.get("acoge", false)):
@@ -148,6 +153,86 @@ func _welcome(pid: int, p: Dictionary) -> void:
 	p["res"][key] -= cost
 	var u := sim.spawn_near(home, "aldeano")
 	sim.events.append({"t": "trained", "id": u.id, "player": pid, "type": "aldeano"})
+	if has(pid, "oficios"):
+		craft_assign(u)
+
+
+# ---------------------------------------------------------------- Oficios (Palmares)
+
+## Puesto libre en el edificio que acoge más cercano a la capital (empate por id),
+## dentro del tope por edad. Devuelve true si la persona entró a trabajar.
+func craft_assign(u: SimEntity) -> bool:
+	var pid := u.owner
+	var cfg := m(pid, "oficios")
+	var tops: Array = cfg["tope_por_edad"]
+	var cap := int(tops[clampi(int(sim.players[pid]["age"]) - 1, 0, tops.size() - 1)])
+	var total := 0
+	var cap_b: SimEntity = null
+	for e in sim.actives:
+		if e.alive and e.owner == pid and e.is_building():
+			total += e.crafts.size()
+			if e.capital:
+				cap_b = e
+	if total >= cap:
+		return false
+	var best: SimEntity = null
+	var best_d := 1 << 60
+	for e in sim.actives:
+		if not (e.alive and e.owner == pid and e.is_building() and e.built):
+			continue
+		var slots := int(cfg["puestos"].get(e.type, 0))
+		if slots <= e.crafts.size():
+			continue
+		var d := Sim.dist(e.x, e.y, cap_b.x, cap_b.y) if cap_b != null else 0
+		if d < best_d or (d == best_d and best != null and e.id < best.id):
+			best = e
+			best_d = d
+	if best == null:
+		return false
+	u.inside = best.id
+	u.order = SimEntity.Order.IDLE
+	u.path.clear()
+	u.x = best.x
+	u.y = best.y
+	best.crafts.append(u.id)
+	sim.events.append({"t": "garrison", "id": u.id, "building": best.id})
+	return true
+
+
+## Los oficios rinden riqueza salvo que el edificio esté bajo asedio de verdad:
+## perdió el 2 % de la vida en 5 s o tiene 3 o más enemigos a 6 casillas.
+func _crafts_yield(pid: int) -> void:
+	if not has(pid, "oficios"):
+		return
+	var cfg := m(pid, "oficios")
+	var boost := 100 + sim.mod(pid, "motor")
+	var per := int(cfg["por_min"])
+	var working := 0
+	for e in sim.actives:
+		if not (e.alive and e.owner == pid and e.is_building() and not e.crafts.is_empty()):
+			continue
+		if craft_stopped(e):
+			continue
+		working += e.crafts.size()
+	if working > 0:
+		_gain(pid, "riqueza", working * per * P / 60 * boost / 100, "propio")
+
+
+func craft_stopped(e: SimEntity) -> bool:
+	var cfg := m(e.owner, "oficios")
+	var hits: Array = _craft_hits.get(e.id, [])
+	var dmg := 0
+	for h in hits:
+		if sim.tick - int(h[0]) <= 50:
+			dmg += int(h[1])
+	if dmg * 100 >= e.hp_max * int(cfg.get("para_pct", 2)):
+		return true
+	var r := int(cfg.get("para_radio", 6000))
+	var n := 0
+	for o in sim.actives:
+		if o.alive and o.owner >= 0 and o.owner != e.owner and o.is_military() and o.inside < 0 and absi(o.x - e.x) <= r and absi(o.y - e.y) <= r:
+			n += 1
+	return n >= int(cfg.get("para_enemigos", 3))
 
 
 ## Relevo: las unidades fuera de combate se curan.
@@ -313,6 +398,11 @@ func damage(a: SimEntity, t: SimEntity, dmg: int) -> int:
 func on_hit(a: SimEntity, t: SimEntity, dmg: int) -> void:
 	a.last_combat = sim.tick
 	t.last_combat = sim.tick
+	if t.is_building() and not t.crafts.is_empty():
+		var hits: Array = _craft_hits.get_or_add(t.id, [])
+		hits.append([sim.tick, dmg])
+		while not hits.is_empty() and sim.tick - int(hits[0][0]) > 50:
+			hits.pop_front()
 	if a.def.has("frena_ms") and t.is_unit():
 		t.slow_until = sim.tick + int(a.def["frena_ms"]) / sim.tick_ms
 	if a.owner >= 0 and t.owner >= 0 and has(a.owner, "saqueo") and t.is_building():
@@ -331,11 +421,29 @@ func on_kill(e: SimEntity, killer: SimEntity) -> void:
 			sim.disputed_add(killer.owner, loot)
 		sim.players[killer.owner]["res"][cfg["recurso"]] = int(sim.players[killer.owner]["res"].get(cfg["recurso"], 0)) + loot
 		sim.ledger(killer.owner, "saqueo", cfg["recurso"], loot)
-	if has(killer.owner, "liberacion") and e.is_building() and e.built:
-		var n: int = m(killer.owner, "liberacion").get("por_edificio", {}).get(e.type, int(m(killer.owner, "liberacion").get("aldeanos", 1)))
+	# Liberación (Palmares): solo de edificios habitados (casas, centros, los que suman
+	# población). Por encima del techo de población, cada persona da fama; los
+	# liberados vuelven a pie a la capital (docs/diseno/revision-economia/v3/04, §3.5.5).
+	var inhabited: bool = e.capital or int(e.def.get("pob", 0)) > 0 or bool(e.def.get("acoge", false))
+	if has(killer.owner, "liberacion") and e.is_building() and e.built and inhabited:
+		var lib := m(killer.owner, "liberacion")
+		var n: int = lib.get("por_edificio", {}).get(e.type, int(lib.get("aldeanos", 1)))
+		var kp: Dictionary = sim.players[killer.owner]
+		var home: SimEntity = null
+		for b in sim.actives:
+			if b.alive and b.owner == killer.owner and b.is_building() and b.capital:
+				home = b
+				break
 		for i in n:
+			if int(kp["pop"]) + i >= int(kp["pop_cap"]):
+				var fame := int(lib.get("fama_si_lleno", 28))
+				kp["res"]["fama"] = int(kp["res"].get("fama", 0)) + fame
+				sim.ledger(killer.owner, "liberacion", "fama", fame)
+				continue
 			var u := sim.spawn_near(e, "aldeano", killer.owner)
 			sim.events.append({"t": "freed", "id": u.id, "player": killer.owner})
+			if home != null:
+				sim.push_command({"t": "move", "player": killer.owner, "ids": [u.id], "x": home.x, "y": home.y})
 
 
 # ---------------------------------------------------------------- Sigilo

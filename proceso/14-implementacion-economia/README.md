@@ -71,3 +71,24 @@ El autor preguntó en qué punto estaba la economía: se había avanzado varias 
    - **Fuera de la banda de la edad II (6:30–9:00):** guaraníes 5:40 y mapuches 6:05. El arreglo de la roza guaraní (tasa y costo) está en su etapa, la 3d.
    - **Para vigilar:** la IA saca entre 22 % y 43 % de su riqueza vendiendo en el mercado, más que lo que piensa el diseño ("caro pero seguro"). Se revisa con los motores puestos.
    - **Lo disputado da 0 %:** la IA no va a la arcilla del centro. Llega en la etapa 4, con los ingenios.
+9. **Etapa 3a, Tawantinsuyu (compuerta cumplida).** Con un solo taller en la edad I aunque se esté ahorrando para el hito, como pide la regla 4 de la IA. Traza en paz, 25 minutos:
+
+   | Medida | Resultado |
+   |---|---|
+   | Edad II | 7:15 |
+   | Talleres en la edad III | 4 |
+   | Motor entre los minutos 15 y 25 | ~54 % de la riqueza (banda 45–65 %) |
+   | Mit'a | por debajo del tope todo el tiempo (318 / 350 en el minuto 10) |
+
+   Falta, porque depende de los ingenios (etapa 4): la capa 1 (arcilla unida por camino, +20 %) y el regalo de cumbi.
+10. **Etapa 3b, Palmares: oficios.**
+    - **Puestos:** 3 por mocambo y 2 en la cerca real, de 15 de riqueza por minuto cada uno. El tope por edad es 4 / 7 / 8 / 8.
+    - **Cómo se llenan:** con la gente que llega, en el edificio más cercano a la capital. Los oficios van separados de la guarnición: la campana no los vacía.
+    - **Cuándo paran:** cuando el edificio pierde el 2 % de su vida en 5 s o hay 3 o más soldados enemigos a 6 casillas. Así, un arquero solo no los apaga.
+    - **Botón para el jugador:** "Vaciar oficios", con el conteo y el aviso de parada.
+    - **Mocambo:** ya no es oculto.
+    - **Fama:** arranca en 90, y el hito II pide 90 de fama. "Guardar fama para el hito" está prendido por defecto para el jugador; la IA lo prende solo mientras ahorra para el hito. Prendido todo el tiempo, casi no llegaba gente: de 8 a 13 personas en 6 minutos y la edad II en el minuto 11.
+    - **Liberación:** solo de edificios habitados. Por encima del techo de población, cada persona da 28 de fama: esto arregla el 159/156 que vio el agente de paneles. Los liberados vuelven caminando a la capital.
+    - **Traza en paz:** edad II a las 8:05 y motor al 35 % en el minuto 15.
+    - **Falta:** +5 de fama por mocambo junto al monte, y las incursiones a los ingenios (etapa 4).
+11. **Otro reloj desalineado en la IA** (`_engine`): se pasó a tiempo transcurrido, igual que las incursiones de la etapa 13.
