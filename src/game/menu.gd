@@ -4,6 +4,7 @@ extends Control
 
 signal play(seed_value: int, civ: String, rival: String)
 signal watch(seed_value: int, civ: String, rival: String)
+signal campaigns
 
 var _seed_edit: LineEdit
 var _civ: OptionButton
@@ -75,6 +76,7 @@ func _ready() -> void:
 	box.add_child(_info)
 	_civ.item_selected.connect(func(_i: int) -> void: _describe(data))
 	_describe(data)
+	box.add_child(_button("Campañas", func() -> void: campaigns.emit()))
 	box.add_child(_button("Escaramuza contra la IA", func() -> void: play.emit(_seed(), _pick(_civ), _pick(_rival))))
 	box.add_child(_button("Mirar IA contra IA", func() -> void: watch.emit(_seed(), _pick(_civ), _pick(_rival))))
 

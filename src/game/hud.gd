@@ -28,6 +28,12 @@ var _end: PanelContainer
 var _end_title: Label
 var _end_body: Label
 var _blockers: Array[Control] = []
+var _objectives: Control
+var _dialog: PanelContainer
+var _dialog_who: Label
+var _dialog_text: Label
+var _dialog_queue: Array[Dictionary] = []
+var _dialog_t := 0.0
 
 
 static func load_fonts() -> void:
@@ -84,6 +90,14 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 	add_child(_sel)
 	_blockers.append(_sel)
 
+	if sim.scenario != null:
+		_objectives = ObjectivesPanel.new()
+		_objectives.hud = self
+		_objectives.position = Vector2(12, 66)
+		_objectives.size = Vector2(440, 40)
+		add_child(_objectives)
+		_build_dialog()
+
 	_tip = Tooltip.new()
 	_tip.hud = self
 	_tip.visible = false
@@ -116,6 +130,47 @@ static func _anchor(c: Control, at: Vector2, r: Rect2) -> void:
 	c.offset_top = r.position.y
 	c.offset_right = r.position.x + r.size.x
 	c.offset_bottom = r.position.y + r.size.y
+
+
+func _build_dialog() -> void:
+	_dialog = PanelContainer.new()
+	var sb := panel_box(10)
+	sb.bg_color = Color(0.06, 0.065, 0.075, 0.94)
+	sb.border_color = Color(Palette.UI_ACCENT, 0.35)
+	sb.content_margin_left = 22
+	sb.content_margin_right = 22
+	sb.content_margin_top = 14
+	sb.content_margin_bottom = 16
+	_dialog.add_theme_stylebox_override("panel", sb)
+	_anchor(_dialog, Vector2(0.5, 0), Rect2(-420, 140, 840, 10))
+	var vb := VBoxContainer.new()
+	vb.add_theme_constant_override("separation", 4)
+	_dialog.add_child(vb)
+	_dialog_who = Label.new()
+	_dialog_who.add_theme_font_override("font", font_b)
+	_dialog_who.add_theme_font_size_override("font_size", 17)
+	_dialog_who.add_theme_color_override("font_color", Palette.UI_ACCENT)
+	vb.add_child(_dialog_who)
+	_dialog_text = Label.new()
+	_dialog_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_dialog_text.custom_minimum_size = Vector2(796, 0)
+	_dialog_text.add_theme_font_size_override("font_size", 18)
+	vb.add_child(_dialog_text)
+	_dialog.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_dialog.visible = false
+	add_child(_dialog)
+
+
+func _next_dialog() -> void:
+	if _dialog_queue.is_empty():
+		_dialog.visible = false
+		return
+	var d: Dictionary = _dialog_queue.pop_front()
+	_dialog_who.text = d.get("quien", "")
+	_dialog_text.text = d.get("texto", "")
+	_dialog.visible = true
+	_dialog.reset_size()
+	_dialog_t = clampf(String(d.get("texto", "")).length() / 16.0, 5.0, 14.0)
 
 
 func blocks(m: Vector2) -> bool:
@@ -163,7 +218,22 @@ func on_events(events: Array) -> void:
 					notify("¡Nos atacan!")
 					_mini.ping(ev["x"], ev["y"])
 			"victory":
-				_show_end(ev["player"])
+				if sim.scenario == null:
+					_show_end(ev["player"])
+			"dialogo":
+				_dialog_queue.append(ev)
+				if not _dialog.visible:
+					_next_dialog()
+			"objetivo":
+				match ev["estado"]:
+					"hecho":
+						notify("✓ " + String(ev["texto"]).substr(0, 90))
+					"nuevo":
+						notify("Nuevo objetivo: " + String(ev["texto"]).substr(0, 80), 4.0)
+					"fallado":
+						notify("✗ " + String(ev["texto"]).substr(0, 90), 4.0)
+			"mision":
+				main.mission_over(ev["resultado"])
 
 
 func _show_end(winner: int) -> void:
@@ -194,6 +264,12 @@ func hide_tip() -> void:
 
 
 func _process(delta: float) -> void:
+	if _dialog != null and _dialog.visible:
+		_dialog_t -= delta
+		if _dialog_t <= 0.0:
+			_next_dialog()
+	if _objectives != null:
+		_objectives.queue_redraw()
 	_notice_t -= delta
 	_notice.modulate.a = clampf(_notice_t / 0.5, 0.0, 1.0)
 	_top.queue_redraw()
@@ -295,6 +371,48 @@ func _make_dialog(title: String, body: String, buttons: Array) -> PanelContainer
 	pc.visible = false
 	dim.visible = false
 	return pc
+
+
+# ---------------------------------------------------------------- Objetivos de campaña
+
+class ObjectivesPanel:
+	extends Control
+	var hud: Hud
+
+	func _ready() -> void:
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	func _draw() -> void:
+		var sc := hud.sim.scenario
+		if sc == null:
+			return
+		var list := sc.active_objectives()
+		var y := 34.0
+		var lines: Array = []
+		for o in list:
+			var txt: String = o["texto"]
+			var h := Hud.font.get_multiline_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, size.x - 50, 14).y
+			lines.append([o, h])
+			y += h + 8
+		draw_style_box(Hud.panel_box(8), Rect2(Vector2.ZERO, Vector2(size.x, y + 6)))
+		draw_string(Hud.font_b, Vector2(14, 24), "Objetivos", HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Palette.UI_ACCENT)
+		y = 34.0
+		for l in lines:
+			var o: Dictionary = l[0]
+			var st: String = o["estado"]
+			var col := Palette.UI_TEXT
+			var mark := "○"
+			if st == "hecho":
+				col = Palette.UI_GOOD
+				mark = "✓"
+			elif st == "fallado":
+				col = Palette.UI_BAD
+				mark = "✗"
+			if o.get("secundario", false) and st == "activo":
+				col = Palette.UI_DIM
+			draw_string(Hud.font_b, Vector2(14, y + 14), mark, HORIZONTAL_ALIGNMENT_LEFT, -1, 15, col)
+			draw_multiline_string(Hud.font, Vector2(36, y + 14), o["texto"], HORIZONTAL_ALIGNMENT_LEFT, size.x - 50, 14, -1, col)
+			y += float(l[1]) + 8
 
 
 # ---------------------------------------------------------------- Barra superior

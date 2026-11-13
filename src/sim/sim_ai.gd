@@ -11,6 +11,7 @@ var wave := 0
 var last_attack := -100000
 var rally := Vector2i(-1, -1)
 var calm_since := 0
+var personality := "normal" # pasiva, normal, agresiva (campañas)
 
 # Perfil equilibrado de H1. En H2 pasa a data/ia/ (docs/08).
 var ratio_early := {"alimento": 52, "madera": 33, "riqueza": 10, "piedra": 5}
@@ -394,7 +395,12 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 		if not ids.is_empty():
 			sim.push_command({"t": "move", "player": player, "ids": ids, "x": threat.x, "y": threat.y, "amove": true})
 		return
-	if army.size() >= 7 + 4 * wave and sim.tick - last_attack > 500:
+	var need := 7 + 4 * wave
+	var gap := 500
+	if personality == "agresiva":
+		need = 4 + 3 * wave
+		gap = 320
+	if personality != "pasiva" and army.size() >= need and sim.tick - last_attack > gap:
 		wave += 1
 		last_attack = sim.tick
 		_attack(army)

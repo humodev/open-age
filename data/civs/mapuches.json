@@ -373,5 +373,14 @@
   "corral",
   "lof",
   "lof"
- ]
+ ],
+ "alias_campana": {
+  "deposito": [
+   "lof",
+   "deposito"
+  ],
+  "centro": [
+   "lof"
+  ]
+ }
 }

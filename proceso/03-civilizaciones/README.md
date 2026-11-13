@@ -29,3 +29,10 @@ Completar el juego como "un Age of Empires 4 indie del sur global": arte, animac
 | ![](03-civ-guaranies.jpg) | ![](03-civ-etiopia.jpg) |
 | **Palmares** | **Ayutthaya** |
 | ![](03-civ-palmares.jpg) | ![](03-civ-ayutthaya.jpg) |
+11. **Motor de escenarios** (`src/sim/sim_scenario.gd`): ejecuta las 24 misiones dentro de la simulación, así que también son deterministas. Arma bases para hasta cuatro jugadores, evalúa los nueve tipos de objetivo y dispara diálogos, refuerzos, ataques desde el borde, recursos, revelado del mapa y objetivos nuevos. Las misiones nombran edificios genéricos ("depósito" por lof), y cada civilización declara sus equivalencias. Con `tests/campaign_smoke.gd` las 24 se arman y corren sin errores.
+12. **Facción `invasores`** (solo IA, D-018): huestes, terços y bandeiras, con caballería y pólvora desde temprano.
+13. **Interfaz de campañas**: menú con progreso guardado, introducción a página completa, panel de objetivos, caja de diálogo con el nombre de quien habla, y epílogo con fuentes al ganar.
+
+| Misión en juego | Menú de campañas | Introducción |
+|---|---|---|
+| ![](04-campana-mision.jpg) | ![](05-menu-campanas.jpg) | ![](06-intro-mision.jpg) |

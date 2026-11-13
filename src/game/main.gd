@@ -14,6 +14,7 @@ extends Node3D
 ##   --terreno=llano|montana|rio|bosque  tipo de mapa
 ##   --civ=clave        civilización propia (tawantinsuyu, mapuches, guaranies, etiopia, palmares, ayutthaya, azar)
 ##   --rival=clave      civilización de la IA rival
+##   --campana=clave --mision=N  juega una misión de campaña (N desde 0)
 ##   --nofog            sin niebla de guerra (automático en --aivai)
 ##   --autotest         prueba de punta a punta con eventos reales de mouse y teclado
 
@@ -99,7 +100,10 @@ func _build_environment() -> void:
 
 
 func _new_game() -> void:
-	var civ_keys: Array = SimData.load_default().civs.keys()
+	if _args.has("campana"):
+		_new_mission()
+		return
+	var civ_keys: Array = SimData.load_default().civs.keys().filter(func(k: String) -> bool: return not SimData.load_default().civs[k].civ.get("solo_ia", false))
 	civ_keys.sort()
 	var mine: String = _args.get("civ", "")
 	var rival: String = _args.get("rival", "")
@@ -115,7 +119,10 @@ func _new_game() -> void:
 	for pid in sim.players.size():
 		if pid != local or aivai:
 			sim.ais.append(SimAI.new(sim, pid))
+	_build_scene(aivai)
 
+
+func _build_scene(aivai: bool) -> void:
 	if _args.has("demo"):
 		_demo(_args["demo"])
 
@@ -155,6 +162,11 @@ func _new_game() -> void:
 		layer.add_child(_menu)
 		_menu.play.connect(func(sd: int, civ: String, rival: String) -> void: _start({"seed": str(sd), "civ": civ, "rival": rival}))
 		_menu.watch.connect(func(sd: int, civ: String, rival: String) -> void: _start({"aivai": "1", "seed": str(sd), "civ": civ, "rival": rival}))
+		_menu.campaigns.connect(_open_campaigns.bind(layer))
+		if _args.get("abrir", "") == "campanas":
+			_open_campaigns.call_deferred(layer)
+		elif _args.get("abrir", "") == "intro":
+			layer.add_child(CampaignUI.story(_mission_data("palmares", 0), false, [["Comenzar", func() -> void: pass], ["Volver", func() -> void: pass]]))
 	if _args.has("autotest"):
 		cam.edge_pan = false
 		_autotest.call_deferred()
@@ -230,6 +242,58 @@ func _start(args: Dictionary) -> void:
 	_menu_mode = false
 	speed = 1.0
 	restart(int(args.get("seed", str(randi() % 100000))))
+
+
+# ---------------------------------------------------------------- Campañas
+
+func _open_campaigns(layer: CanvasLayer) -> void:
+	var ui := CampaignUI.new()
+	layer.add_child(ui)
+	_menu.visible = false
+	ui.back.connect(func() -> void:
+		ui.queue_free()
+		_menu.visible = true)
+	ui.start_mission.connect(func(civ: String, idx: int) -> void:
+		var m: Dictionary = _mission_data(civ, idx)
+		var intro := CampaignUI.story(m, false, [["Comenzar", func() -> void: _start({"campana": civ, "mision": str(idx)})], ["Volver", func() -> void: layer.get_child(layer.get_child_count() - 1).queue_free()]])
+		layer.add_child(intro))
+
+
+static func _mission_data(civ: String, idx: int) -> Dictionary:
+	var camp: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/campanas/%s.json" % civ))
+	return camp["misiones"][idx]
+
+
+func _campaign_size(civ: String) -> int:
+	var camp: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/campanas/%s.json" % civ))
+	return (camp["misiones"] as Array).size()
+
+
+## Arma una misión de campaña: la simulación la crea el motor de escenarios.
+func _new_mission() -> void:
+	var civ: String = _args["campana"]
+	var idx := int(_args.get("mision", "0"))
+	sim = SimScenario.create(_mission_data(civ, idx), civ)
+	_build_scene(false)
+
+
+## Fin de misión: epílogo si se gana, y opciones para seguir.
+func mission_over(result: String) -> void:
+	var civ: String = _args["campana"]
+	var idx := int(_args.get("mision", "0"))
+	var m := _mission_data(civ, idx)
+	var buttons: Array = []
+	if result == "victoria":
+		CampaignUI.mark_won(civ, idx)
+		if idx + 1 < _campaign_size(civ):
+			buttons.append(["Siguiente misión", func() -> void: _start({"campana": civ, "mision": str(idx + 1)})])
+	else:
+		buttons.append(["Reintentar", func() -> void: _start({"campana": civ, "mision": str(idx)})])
+		m = m.duplicate()
+		m["epilogo"] = ["La historia no terminó así. Volvé a intentarlo."]
+	buttons.append(["Menú principal", func() -> void: to_menu()])
+	paused = true
+	hud.get_parent().add_child(CampaignUI.story(m, true, buttons))
 
 
 func to_menu() -> void:

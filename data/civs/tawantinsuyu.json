@@ -457,5 +457,11 @@
  "debilidad": "Arranque lento; cortar caminos y quemar qollqas frena todo.",
  "ia_edificios": [
   "qollqa"
- ]
+ ],
+ "alias_campana": {
+  "deposito": [
+   "qollqa",
+   "deposito"
+  ]
+ }
 }

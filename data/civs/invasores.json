@@ -1,0 +1,73 @@
+{
+ "nombre": "Invasores",
+ "adjetivo": "invasor",
+ "solo_ia": true,
+ "frase": "Huestes, terços, bandeiras y ejércitos que llegan a conquistar o a cobrar.",
+ "descripcion": "Facción solo de IA y de campaña (D-018): caballería y pólvora desde temprano, fuertes de piedra.",
+ "estilo": {
+  "forma": "fuerte",
+  "arcilla": "#cfc8bb",
+  "techo": "#8e4a38",
+  "acento": "#8f8a80"
+ },
+ "edades": [
+  "Hueste",
+  "Fuerte",
+  "Gobernación",
+  "Virreinato"
+ ],
+ "unidades": {
+  "aldeano": {
+   "nombre": "Auxiliar"
+  },
+  "guerrero": {
+   "nombre": "Rodelero"
+  },
+  "hondero": {
+   "nombre": "Ballestero"
+  },
+  "lancero": {
+   "nombre": "Piquero",
+   "edad_min": 1
+  },
+  "jinete": {
+   "edad_min": 1
+  },
+  "arcabucero": {
+   "edad_min": 2
+  }
+ },
+ "edificios": {
+  "centro": {
+   "nombre": "Fuerte",
+   "pv": 3000,
+   "armadura": 3,
+   "flechas": 3
+  },
+  "casa": {
+   "nombre": "Casa"
+  },
+  "cuartel": {
+   "nombre": "Cuartel"
+  },
+  "torre": {
+   "nombre": "Baluarte",
+   "edad_min": 1
+  }
+ },
+ "produce": {
+  "cuartel": [
+   "guerrero",
+   "hondero",
+   "lancero",
+   "jinete",
+   "arcabucero",
+   "ariete"
+  ]
+ },
+ "ia_unidades": [
+  "jinete",
+  "arcabucero"
+ ],
+ "ia_edificios": []
+}

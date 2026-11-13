@@ -381,5 +381,20 @@
   "kraal",
   "barrio_japones",
   "barrio_portugues"
- ]
+ ],
+ "alias_campana": {
+  "casa": [
+   "barrio_japones",
+   "barrio_portugues",
+   "casa"
+  ],
+  "jinete": [
+   "chang_suek",
+   "jinete"
+  ],
+  "arcabucero": [
+   "arcabucero",
+   "compania_japonesa"
+  ]
+ }
 }

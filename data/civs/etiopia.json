@@ -336,5 +336,11 @@
  "ia_edificios": [
   "gult",
   "gult"
- ]
+ ],
+ "alias_campana": {
+  "granja": [
+   "granja",
+   "gult"
+  ]
+ }
 }

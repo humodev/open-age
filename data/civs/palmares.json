@@ -367,5 +367,11 @@
  "ia_edificios": [
   "mocambo",
   "mocambo"
- ]
+ ],
+ "alias_campana": {
+  "deposito": [
+   "mocambo",
+   "deposito"
+  ]
+ }
 }

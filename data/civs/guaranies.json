@@ -325,5 +325,10 @@
   "hondero"
  ],
  "debilidad": "Campo abierto: unidades frágiles y sin torres de piedra.",
- "ia_edificios": []
+ "ia_edificios": [],
+ "alias_campana": {
+  "deposito": [
+   "deposito"
+  ]
+ }
 }

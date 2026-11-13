@@ -22,6 +22,7 @@ var next_id := 1
 var players: Array[Dictionary] = []
 var bases: Array[Vector2i] = []
 var ais: Array = []
+var scenario: SimScenario = null
 var events: Array[Dictionary] = []
 var game_over := false
 var winner := -1
@@ -573,6 +574,8 @@ func step() -> void:
 		_cleanup()
 	if tick % 10 == 5 and not game_over:
 		_check_victory()
+	if scenario != null:
+		scenario.on_step()
 	tick += 1
 	_in_step = false
 
@@ -945,10 +948,10 @@ func _hit(a: SimEntity, t: SimEntity) -> void:
 		if a.owner >= 0:
 			players[a.owner]["stats"]["bajas"] += 1
 		mods.on_kill(t, a)
-		_kill(t)
+		_kill(t, a)
 
 
-func _kill(e: SimEntity) -> void:
+func _kill(e: SimEntity, killer: SimEntity = null) -> void:
 	if not e.alive:
 		return
 	e.alive = false
@@ -962,7 +965,7 @@ func _kill(e: SimEntity) -> void:
 		for item in e.queue:
 			if item.begins_with("@"):
 				players[e.owner]["pending"].erase(item.substr(1))
-	events.append({"t": "died", "id": e.id})
+	events.append({"t": "died", "id": e.id, "owner": e.owner, "type": e.type, "cat": e.cat, "by": killer.owner if killer != null else -1})
 
 
 func _cleanup() -> void:
@@ -1032,7 +1035,7 @@ func _spawn_from(b: SimEntity, type: String) -> void:
 	var tile := _spawn_tile(b)
 	var u := spawn_unit(type, b.owner, tile.x * P + P / 2, tile.y * P + P / 2)
 	players[b.owner]["stats"]["entrenadas"] += 1
-	events.append({"t": "trained", "id": u.id, "player": b.owner})
+	events.append({"t": "trained", "id": u.id, "player": b.owner, "type": type})
 	if not b.rally_set:
 		return
 	var rt: SimEntity = by_id.get(b.rally_target)
@@ -1577,10 +1580,10 @@ func spawn_resource(type: String, tx: int, ty: int) -> SimEntity:
 func _generate_map() -> void:
 	var n := map.n
 	var b0 := Vector2i(22, 22)
-	bases = [b0, Vector2i(n - 4 - b0.x, n - 4 - b0.y)]
+	bases = [b0, Vector2i(n - 4 - b0.x, n - 4 - b0.y), Vector2i(b0.x, n - 4 - b0.y), Vector2i(n - 4 - b0.x, b0.y)]
 	_generate_terrain()
 	for pid in players.size():
-		var base := bases[pid % 2]
+		var base := bases[pid % 4]
 		var dd := dp(pid)
 		var start: String = dd.civ.get("inicio_edificio", "centro")
 		var sb := spawn_building(start, pid, base.x, base.y, true)
@@ -1621,6 +1624,15 @@ func _generate_map() -> void:
 	_res_sym("riqueza", c0 + _scale_dir(picks[3], 10) + Vector2i(-1, 2))
 	_blob_sym(c0 + _scale_dir(picks[4], 15), 3, 80)
 
+	# Bases extra (campañas con tres o cuatro jugadores): recursos propios sin simetría.
+	for extra in range(2, mini(players.size(), 4)):
+		var ce := bases[extra] + Vector2i(2, 2)
+		var dirx := Vector2i(signi(n / 2 - ce.x), signi(n / 2 - ce.y))
+		_cluster_sym("arbusto", ce + Vector2i(dirx.x * 7, 0), 6)
+		_res_sym("roca", ce + Vector2i(0, dirx.y * 9))
+		_res_sym("riqueza", ce + Vector2i(dirx.x * 9, dirx.y * 5))
+		_blob_sym(ce + Vector2i(dirx.x * 4, dirx.y * 13), 3, 80)
+
 	# Recursos disputados en el centro.
 	var mid := n / 2
 	_res_sym("riqueza", Vector2i(mid - 9, mid + 5))
@@ -1658,7 +1670,8 @@ func _scale_dir(d: Vector2i, dist_tiles: int) -> Vector2i:
 
 
 func _near_base(t: Vector2i, r: int) -> bool:
-	for b in bases:
+	for i in mini(maxi(players.size(), 2), bases.size()):
+		var b := bases[i]
 		var c := b + Vector2i(2, 2)
 		if absi(t.x - c.x) < r and absi(t.y - c.y) < r:
 			return true
