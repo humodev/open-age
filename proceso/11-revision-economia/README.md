@@ -43,3 +43,20 @@ Cinco agentes con perfiles distintos. Leen el repositorio sin tocarlo y escriben
    - **03:** otros RTS. AoE2, AoE3 (con los africanos), el favor de Age of Mythology, el macro de StarCraft II, Northgard y Company of Heroes.
 
    Después, los cinco perfiles revisan sus propuestas con ese material.
+8. Llegó la investigación, en [`docs/diseno/investigacion-aoe4/`](../../docs/diseno/investigacion-aoe4/):
+   - **01, catálogo de las 25 civs y variantes de AoE4** (hasta *Raiders of the North*, octubre de 2026): mecánicas con números de los archivos del juego, historia de parches y tasas de victoria del parche 17.0 (aoe4world). Patrones:
+     - lo pasivo acumulable siempre terminó recortado;
+     - la atención alta solo se tolera si rinde;
+     - "lo pongo y funciona" no da identidad (otomanos, 42 %);
+     - dan identidad las mecánicas que obligan a decidir dónde y qué (malíes, vikingos);
+     - un buen recurso propio es el subproducto de algo que el jugador ya hace.
+   - **02, la voz de los jugadores**, de los foros oficiales, las notas de parche y la prensa. Reddit no se pudo leer. Lecciones:
+     - nada de órdenes manuales repetidas;
+     - los puntos se controlan con desgaste y sin reinicio;
+     - el comercio se diferencia por la relación de cada civ con la ruta.
+   - **03, otros RTS.** Age of Mythology ya demostró en 2002 "una riqueza, seis motores" con el favor. Además:
+     - el favor nórdico, que sale de pelear, necesitó un piso pacífico en Retold;
+     - estar pendiente de algo suma si cada uso es una decisión, y es tedio si es un ritual;
+     - la civ comerciante necesita un verbo, un producto o un socio propio;
+     - los frenos contra la bola de nieve limitan al que gana, no le pagan al que pierde.
+   - **Límites:** se agotó el cupo de búsquedas web y algunos datos quedaron marcados [no verificado de primera mano].
