@@ -229,6 +229,21 @@ func _engine(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_type: 
 	last_engine = sim.tick
 	var dd := sim.dp(player)
 	match dd.clave:
+		"guaranies":
+			# Quemar (roza otra vez, sin yerbal) solo si falta alimento para el próximo hito.
+			var need := int(dd.cost_of(_hito_type(p), p["age"]).get("alimento", 0)) if p["age"] < dd.edades.size() else 0
+			var mode := "quemar" if saving and int(p["res"]["alimento"]) < need else "crecer"
+			if str(p.get("modo_monte", "crecer")) != mode:
+				sim.push_command({"t": "modo_monte", "player": player, "modo": mode})
+			# Rozas para la gente del alimento: las que se agotan pasan a yerbal o capuera.
+			# Una roza nueva solo si hay gente del alimento sin roza y el alimento no sobra.
+			var food_people := 0
+			for v in vill:
+				if v.gather_kind == "alimento" and (v.order == O.GATHER or v.order == O.RETURN or v.order == O.IDLE):
+					food_people += 1
+			var rozas: int = (by_type.get("granja", []) as Array).size()
+			if rozas < food_people and int(p["res"]["alimento"]) < 600 and int(p["res"]["madera"]) >= int(dd.cost_of("granja", p["age"]).get("madera", 0)) + 30:
+				_try_build("granja", p, vill, centro, 1)
 		"palmares":
 			# Guarda fama para el hito solo mientras ahorra para él; si no, la gente sigue llegando.
 			if bool(p.get("guardar_fama", true)) != saving:
@@ -659,6 +674,14 @@ func _trade(p: Dictionary, by_type: Dictionary) -> void:
 		return
 	var m: SimEntity = markets[0]
 	var res: Dictionary = p["res"]
+	# Lo que falta para el hito se compra con la riqueza que sobra por encima de lo que pide el hito.
+	if p["age"] < sim.dp(player).edades.size():
+		var hc: Dictionary = sim.dp(player).cost_of(_hito_type(p), p["age"])
+		var spare := int(res["riqueza"]) - int(hc.get("riqueza", 0))
+		for k in ["piedra", "alimento", "madera"]:
+			if int(res[k]) < int(hc.get(k, 0)) and spare >= sim.trade_price(player, k) + 50:
+				sim.push_command({"t": "trade", "player": player, "building": m.id, "recurso": k, "op": "comprar"})
+				return
 	for k in ["alimento", "madera", "piedra"]:
 		if int(res[k]) > 900 and int(res["riqueza"]) < 400:
 			sim.push_command({"t": "trade", "player": player, "building": m.id, "recurso": k, "op": "vender"})

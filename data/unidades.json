@@ -6,7 +6,7 @@
     "pv": 50, "armadura": 0, "ataque": 3, "alcance": 400, "cadencia_ms": 1500,
     "velocidad": 1250, "vision": 7000, "radio": 220,
     "carga": 10,
-    "tasa": { "alimento": 1000, "granja": 750, "madera": 850, "piedra": 700, "riqueza": 700 },
+    "tasa": { "alimento": 1000, "granja": 750, "madera": 850, "piedra": 700, "yerba": 700, "riqueza": 700 },
     "construye": ["casa", "granja", "deposito", "cuartel", "torre", "centro", "empalizada", "puerta", "mercado"]
   },
   "guerrero": {

@@ -26,7 +26,7 @@
    "tasa": {
     "alimento": 1000,
     "granja": 750,
-    "roza": 1250,
+    "roza": 1000, "yerba": 800,
     "madera": 900,
     "piedra": 650,
     "riqueza": 800
@@ -80,15 +80,7 @@
   "cuartel": {
    "nombre": "Aty de guerra"
   },
-  "granja": {
-   "nombre": "Kokue (roza)",
-   "tasa_clave": "roza",
-   "cantidad": 550,
-   "deja": "yerbal",
-   "costo": {
-    "madera": 45
-   }
-  }
+  "granja": {"nombre": "Kokue (roza)", "tasa_clave": "roza", "cantidad": 500, "deja": "yerbal", "capuera": "capuera", "yerbales_por_edad": [3, 4, 4, 4], "quemar_pct": 60, "costo": {"madera": 90}, "desc": "Chacra abierta en el monte: da alimento y, al agotarse, deja un yerbal que da riqueza; el mismo aldeano sigue ahí. Con el modo \"quemar\" se reabre al 60 % sin yerbal."}
  },
  "sin_edificios": [
   "torre",
@@ -314,6 +306,7 @@
    "ariete"
   ]
  },
+ "recursos_semilla": [{ "tipo": "yerbal", "cantidad": 100 }],
  "modulos": {
   "sigilo": {
    "radio_deteccion": 3000,

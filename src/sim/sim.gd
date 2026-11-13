@@ -171,6 +171,10 @@ func _apply(c: Dictionary) -> void:
 			_cmd_ungarrison(pid, c["building"])
 		"alarm":
 			_cmd_alarm(pid, c.get("on", true), int(c.get("max", -1)))
+		"modo_monte":
+			players[pid]["modo_monte"] = "quemar" if str(c["modo"]) == "quemar" else "crecer"
+		"resiembra":
+			players[pid]["resiembra"] = bool(c["on"])
 		"guardar":
 			# "Guardar <recurso> para el hito" (fama de Palmares): prendido por defecto.
 			players[pid]["guardar_" + str(c["res"])] = bool(c["on"])
@@ -908,7 +912,7 @@ func _do_gather(e: SimEntity) -> void:
 	e.anchored = true
 	if t.is_building():
 		t.farmer = e.id
-	var rate_key: String = String(t.def.get("tasa_clave", "granja")) if t.is_building() else kind
+	var rate_key: String = String(t.def.get("tasa_clave", "granja")) if t.is_building() else String(t.def.get("tasa_clave", kind))
 	var rate: int = int(e.def["tasa"].get(rate_key, e.def["tasa"].get("granja", 0))) * (100 + mod(e.owner, "tasa:" + rate_key) + _site_bonus(t)) / 100
 	e.carry_res = kind
 	# Arcilla ajena o del centro: con el techo de lo disputado lleno, no se extrae.
@@ -953,10 +957,65 @@ func _exhaust(t: SimEntity) -> void:
 	var leaves: String = t.def.get("deja", "")
 	var tx := t.tx
 	var ty := t.ty
+	var owner := t.owner if t.is_building() else t.res_owner
+	# Quienes trabajaban ahí siguen en el mismo lugar con lo que sigue (crítica 03b, trampa 5).
+	var workers: Array[SimEntity] = []
+	for u in actives:
+		if u.alive and u.is_unit() and u.target == t.id and (u.order == O.GATHER or u.order == O.RETURN):
+			workers.append(u)
 	_kill(t)
-	if leaves != "" and data.recursos.has(leaves):
-		spawn_resource(leaves, tx, ty)
-		events.append({"t": "succession", "x": tx, "y": ty, "type": leaves})
+	var next: SimEntity = null
+	if t.is_building() and leaves != "" and owner >= 0:
+		next = _roza_follows(t, owner, tx, ty)
+	elif t.is_resource() and t.def.has("reabre") and owner >= 0:
+		next = _roza_reopens(t, owner, tx, ty)
+	elif leaves != "" and data.recursos.has(leaves):
+		next = spawn_resource(leaves, tx, ty)
+	if next != null:
+		events.append({"t": "succession", "x": tx, "y": ty, "type": next.type})
+		for u in workers:
+			if u.order == O.GATHER:
+				_order_gather(u, next)
+
+
+## Roza guaraní agotada (docs/diseno/revision-economia/v3/04, §3.5.3): con "dejar
+## crecer" deja un yerbal del dueño (si no pasa el tope de yerbales activos; si no,
+## capuera); con "quemar", la roza se reabre al 60 % sin yerbal.
+func _roza_follows(t: SimEntity, owner: int, tx: int, ty: int) -> SimEntity:
+	var leaves: String = t.def["deja"]
+	var dd := dp(owner)
+	if players[owner].get("modo_monte", "crecer") == "quemar":
+		var again := spawn_building(t.type, owner, tx, ty, true)
+		again.amount = int(t.def.get("cantidad", 0)) * int(t.def.get("quemar_pct", 60)) / 100
+		return again
+	var caps: Array = t.def.get("yerbales_por_edad", [])
+	if not caps.is_empty():
+		var active := 0
+		for e in entities:
+			if e.alive and e.is_resource() and e.type == leaves and e.res_owner == owner:
+				active += 1
+		if active >= int(caps[clampi(int(players[owner]["age"]) - 1, 0, caps.size() - 1)]):
+			var cap_type: String = t.def.get("capuera", "")
+			return spawn_resource(cap_type, tx, ty) if data.recursos.has(cap_type) else null
+	var y := spawn_resource(leaves, tx, ty)
+	y.res_owner = owner
+	return y
+
+
+## Yerbal agotado: la roza se reabre sola en el mismo lugar si el dueño tiene la
+## madera (dejando una reserva). Si no alcanza, el suelo queda libre.
+func _roza_reopens(t: SimEntity, owner: int, tx: int, ty: int) -> SimEntity:
+	var type: String = t.def["reabre"]
+	var dd := dp(owner)
+	if not dd.edificios.has(type) or not players[owner].get("resiembra", true):
+		return null
+	var cost := dd.cost_of(type, players[owner]["age"])
+	var reserve := int(t.def.get("reserva_madera", 100))
+	if int(players[owner]["res"].get("madera", 0)) < int(cost.get("madera", 0)) + reserve or not can_afford(owner, cost):
+		events.append({"t": "notice", "player": owner, "text": "Rozas en espera: falta madera para reabrir"})
+		return null
+	_pay(owner, cost)
+	return spawn_building(type, owner, tx, ty, true)
 
 
 ## Aparece una unidad junto a un edificio (acogida, liberación, refuerzos).
@@ -1736,6 +1795,8 @@ func _gather_origin(e: SimEntity) -> String:
 		return "granja"
 	if t.type == "riqueza" and t.is_resource():
 		return "casa" if t.res_owner == e.owner else "disputado"
+	if t.is_resource() and t.def.has("reabre"):
+		return "propio" # yerbal: motor guaraní
 	var b := bases[e.owner % bases.size()] + Vector2i(2, 2)
 	return "disputado" if Sim.dist(t.x, t.y, b.x * P, b.y * P) > 20 * P else "casa"
 
@@ -1863,6 +1924,21 @@ func _generate_map() -> void:
 			spawn_unit(dd.civ.get("explorador", "explorador"), pid, sx, sy)
 
 	_spawn_fort_walls()
+	# Recursos semilla de cada civ (yerbal viejo guaraní, §3.5.3), cerca de su base.
+	for pid in players.size():
+		for sem: Dictionary in dp(pid).civ.get("recursos_semilla", []):
+			var base := bases[pid % 4]
+			var tam: Array = data.recursos[sem["tipo"]]["tam"]
+			var dirx := signi(map.n / 2 - base.x)
+			var diry := signi(map.n / 2 - base.y)
+			var spot := Vector2i(base.x + 2 - dirx * 8, base.y + 2 + diry * 5)
+			for r in 6:
+				var cand := spot + Vector2i(r * dirx, -r * diry)
+				if map.is_free_rect(cand.x - 1, cand.y - 1, tam[0] + 2, tam[1] + 2):
+					var y := spawn_resource(sem["tipo"], cand.x, cand.y)
+					y.amount = int(sem.get("cantidad", y.amount))
+					y.res_owner = pid
+					break
 
 	var c0 := Vector2i(b0.x + 2, b0.y + 2) # centro de la base 0
 	var dirs: Array[Vector2i] = [Vector2i(1, 0), Vector2i(1, 1), Vector2i(0, 1), Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(-1, -1), Vector2i(0, -1), Vector2i(1, -1)]

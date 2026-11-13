@@ -98,3 +98,26 @@ El autor preguntó en qué punto estaba la economía: se había avanzado varias 
     - **IA:** construye las piezas de motor hasta el máximo de la edad. Antes, una lista fija de los datos la dejaba en 2 gult.
     - **Traza en paz:** edad II a las 6:49 y motor (corte + gult) ~49 % de la riqueza entre los minutos 15 y 25. Compuerta cumplida.
     - **Falta (segunda parte):** fundar una corte nueva (sin la carpa en escaramuza), la fiesta de llegada, la opción señor o regimiento y Gondar como capital fija.
+    - El autotest con Etiopía falló una vez justo después de este cambio y pasó en las tres corridas siguientes. Parece intermitente (el autotest usa el mouse y el juego del autor está abierto en la misma pantalla). Queda anotado para vigilarlo.
+13. **Etapa 3d, Guaraníes: roza → yerbal → roza.**
+    - **Roza:** cuesta 90 de madera, tiene 500 de alimento y tasa 1000.
+    - **Al agotarse** deja un yerbal del dueño, de 300, y **el mismo aldeano sigue ahí** (se arregló la trampa 5: antes se iba a buscar otra cosa).
+    - **El yerbal agotado** reabre la roza en el mismo lugar si hay madera, dejando 100 de reserva. Si no, avisa "Rozas en espera".
+    - **Topes:** yerbales activos 3 / 4 / 4 / 4; por encima, la roza deja capuera (40 de madera).
+    - **Modo del monte:** "dejar crecer" por defecto, o "quemar", que reabre la roza al 60 % sin yerbal (comandos `modo_monte` y `resiembra`).
+    - **Semilla:** un yerbal viejo de 100 junto a la base.
+    - **El yerbal cuenta como motor propio** en el libro de ingresos.
+    - **IA:**
+      - quema solo si falta alimento para el hito;
+      - hace rozas nuevas solo si hay gente del alimento sin roza y el alimento no sobra (la primera versión hacía demasiadas y juntaba 6000 de alimento sin riqueza);
+      - **compra en el mercado lo que falta para el hito** con la riqueza que sobra. Se trababa en la edad II por 100 de piedra, con 2463 de riqueza en el banco.
+    - **Traza, 3 semillas:**
+
+      | | Resultado | Banda |
+      |---|---|---|
+      | Edad II | 5:58–6:26 | 6:30–9:00 |
+      | Edad III | 11:57–14:23 | desde 12:30 |
+      | Motor entre los minutos 15 y 25 | 66–83 % | hasta 65 % |
+
+      La edad II queda apenas antes de la banda y el motor queda arriba del tope. Es el punto que el diseñador líder dejó declarado fuera de banda: cuando se agota la arcilla de casa, casi todo sale del motor. Probar con una tasa de yerba más baja **subió** la proporción (83 %), así que se volvió a la tasa de la arcilla (800) y queda separada para poder ajustarla en el balance de la etapa 6.
+14. **Etiopía, compuerta.** Edad II a las 6:49 y motor ~49 %: dentro de la banda.
