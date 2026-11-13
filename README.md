@@ -1,6 +1,6 @@
-# Proyecto Sur
+# Raíces
 
-*Nombre provisional (A-005).*
+*Un RTS del sur global, 1400–1800.*
 
 RTS histórico con asimetría radical, protagonizado por civilizaciones del sur global, c. 1400–1800: **Tawantinsuyu, mapuches, guaraníes, Etiopía, Quilombo dos Palmares y Ayutthaya**. Cada una con su economía, su arquitectura, sus hitos y una campaña de cuatro misiones narrada desde adentro. Hecho en Godot por una persona con agentes de IA.
 

@@ -1,4 +1,4 @@
-# Proyecto Sur (nombre provisional) — Índice
+# Raíces — Índice
 
 RTS histórico con la calidad, legibilidad y asimetría de Age of Empires IV, protagonizado por civilizaciones del sur global, c. 1400–1800. Lo desarrolla una sola persona con agentes de IA. Este índice es lo primero que lee cualquier agente.
 

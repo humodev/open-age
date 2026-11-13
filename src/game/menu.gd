@@ -46,14 +46,14 @@ func _ready() -> void:
 	add_child(box)
 
 	var title := Label.new()
-	title.text = "Proyecto Sur"
+	title.text = "Raíces"
 	title.add_theme_font_override("font", load("res://assets/fonts/FiraSans-Bold.ttf"))
 	title.add_theme_font_size_override("font_size", 76)
 	title.add_theme_color_override("font_color", Palette.UI_TEXT)
 	box.add_child(title)
 
 	var sub := Label.new()
-	sub.text = "Prototipo H1 · Sur global, 1400–1800"
+	sub.text = "Seis pueblos del sur global, 1400–1800"
 	sub.add_theme_font_override("font", Hud.font)
 	sub.add_theme_font_size_override("font_size", 20)
 	sub.add_theme_color_override("font_color", Palette.UI_ACCENT)

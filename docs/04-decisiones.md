@@ -33,13 +33,14 @@ Las decisiones cerradas no se reabren sin una entrada "Propuesta" aprobada. Form
 | D-025 | 2026-11-13 | Se corrigen `03` y las fichas según las fuentes en las 15 contradicciones de `investigacion/README.md`, salvo donde la jugabilidad lo impida (queda anotado en la ficha) | Delegada; pilar 3 |
 | D-026 | 2026-11-13 | Se suman dos civilizaciones: Quilombo dos Palmares (Brasil) y Reino de Ayutthaya (Siam) | Pedido del autor: una de Brasil o Amazonía y otra, probablemente de Asia |
 | D-027 | 2026-11-13 | El mapa tiene relieve (alturas) y agua (ríos), porque varias mecánicas dependen de ellos (andenes, altura etíope, ríos guaraníes y siameses) | Necesario para la asimetría |
+| D-029 | 2026-11-13 | El juego se llama **Raíces** (cierra A-005) | Respuesta del autor a C-01 |
+| D-030 | 2026-11-13 | Se usa Meshy para arte generado, gastando lo necesario de forma eficiente (los créditos se renuevan cada mes) | Respuesta del autor a C-05 |
 | D-028 | 2026-11-13 | Cada civilización tiene una campaña de 4 misiones, narrada desde adentro | Pedido del autor |
 
 ## Abiertas
 
 | ID | Pregunta | Opciones | Nota |
 |---|---|---|---|
-| A-005 | Nombre definitivo del juego | Ver `proceso/CONSULTAS.md` | "Proyecto Sur" es provisional |
 | A-009 | ¿`AStarGrid2D` es determinista entre plataformas? | Confiar y medir en H5; caminos propios en enteros | Riesgo para el lockstep (`06`) |
 
 ## Historial de propuestas
