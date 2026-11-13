@@ -31,12 +31,19 @@ Cada uno tiene su paleta, su vegetación y su distribución de recursos.
 - **Hundir unos centímetros** cada modelo y sumar oclusión de contacto (calcomanía de sombra).
 - **Modelos generados sin base propia**: el prompt pide "sin plataforma ni suelo", porque varios conceptos salieron con base de diorama. Los que la traen se recortan en Blender.
 - **Caminos, campos y huellas** como pintura del suelo, no como objetos.
+- **Escala coherente**, observación del autor del 2026-11-13 en una partida de Palmares. Las casas y edificios chicos se ven diminutos al lado de los aldeanos, mientras el centro, que es un modelo generado, se ve grande. Se resuelve así:
+  - Una tabla de alturas de referencia en `data/`: aldeano, casa, edificio de producción, capital y torre, en metros y en casillas.
+  - Cada modelo, procedural o generado, se escala por esa altura y no solo por su huella.
+  - La regla de un aldeano adulto mide alrededor de un tercio de la altura de una casa.
+  - Se valida con una captura de lado a lado de cada civilización.
+- **Velocidad de las unidades**, la misma observación: los aldeanos parecen moverse demasiado rápido. Esa prueba corría a ×4, pero igual hay que medirla a ×1 contra el tamaño visual. Hoy el aldeano anda 1,25 casillas por segundo. Si la escala cambia, se revisan las velocidades en `data/unidades.json` y la cadencia de los pasos de la animación.
 
 ## 5. Orden propuesto
 1. Mezcla de materiales y edificios integrados al suelo (es lo que más cambia la imagen).
 2. Relieve continuo en la imagen y tipos de mapa nuevos.
 3. Recortes reales para las 24 misiones con su atribución.
 4. Detalle en el suelo y vegetación por bioma.
+5. Escala y velocidad (sección 4), junto con la regeneración de modelos sin base, para medir todos los modelos una sola vez.
 
 ## Riesgos
 - **Rendimiento**: la malla de 256×256, la mezcla de texturas y el detalle instanciado entran en el presupuesto actual (140 fps a ×6), pero hay que medirlos.

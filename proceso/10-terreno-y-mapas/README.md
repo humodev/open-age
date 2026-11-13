@@ -70,8 +70,23 @@ Los edificios generados se apoyan sobre un pasto uniforme y parecen bloques suel
 | **Sierra** | **Menú con selector de mapa** |
 | ![](09-mapa-sierra.jpg) | ![](10-menu-elegir-mapa.jpg) |
 
+9. **Música por pueblo.** Un agente juntó 12 pistas CC0 o de dominio público, con créditos en `assets/CREDITOS.md` y detalle en `assets/audio/musica/README.md`:
+   - Tawantinsuyu: flauta de pan y charango.
+   - Mapuches: pifilka en combate.
+   - Palmares: berimbau, ijexá y tambores.
+   - Ayutthaya: xilófono y la banda de 1934.
+   - Guaraníes: una pista genérica de selva.
+   - Etiopía: nada todavía.
+
+   `audio.gd` hace sonar la música del pueblo el doble que la general y no repite la misma pista dos veces seguidas. Nadie la escuchó aún, así que se espera la opinión del autor.
+10. **Observaciones del autor** al mirar la prueba de Palmares en la sierra:
+    - Los edificios chicos se ven diminutos al lado de aldeanos gigantes, y el centro generado se ve grande.
+    - Los aldeanos se mueven extremadamente rápido. Esa prueba corre a ×4, pero igual se mide a ×1.
+
+    Quedan registradas en `docs/10` (sección 4 y paso 5 del orden) y en `docs/09-estado.md`. Se ajustan cuando se regeneren los modelos: una tabla de alturas de referencia en `data/` y cada modelo escalado por altura, no solo por huella.
+
 Pendiente en esta etapa:
 - Relieve real (DEM) para las misiones con nombre.
 - Modelos de Meshy sin base.
 - Objetos sueltos en el suelo.
-- Música por civilización: el agente ya la trajo y falta integrarla.
+- Escala y velocidad (paso 10).

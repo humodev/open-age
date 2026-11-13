@@ -44,5 +44,7 @@ Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video,
 | Dificultades de la IA | Una sola; faltan tres niveles (H4) |
 | Animación | Procedural (paso, galope, trabajo, golpe, muerte); sin esqueletos |
 | Modelos generados | Solo capitales, casas, elefante y kona; el resto es la maqueta procedural (ver C-05) |
+| Escala visual | Edificios chicos diminutos frente a los aldeanos; la capital generada, grande. Se corrige en docs/10, paso 5 |
+| Velocidad aparente | Los aldeanos parecen rápidos; hay que medirlo a ×1 en docs/10, paso 5 |
 | Multijugador | H5 |
 | Naval | Fuera de alcance (D-020) |

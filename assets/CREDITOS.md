@@ -63,6 +63,25 @@ Los archivos fueron recortados, mezclados, normalizados y convertidos a Ogg Vorb
 | musica_flauta_de_pan.ogg | https://opengameart.org/content/pan-flute | mart | CC0 |
 | musica_marcha_batalla.ogg | https://opengameart.org/content/march-of-manganda | Eldritch Grim | CC0 |
 
+## Audio: música por civilización (`audio/musica/<civ>/`)
+
+Todas CC0 o dominio público. Convertidas a Ogg Vorbis estéreo 44,1 kHz (calidad 4) y normalizadas a −16 LUFS. Qué pista va a qué momento: `audio/musica/README.md`.
+
+| archivo | fuente (URL exacta) | autor | licencia |
+|---|---|---|---|
+| tawantinsuyu/musica_andes_flauta_de_pan_1.ogg | https://opengameart.org/content/peru-style-3 (`perustyle3_0.ogg`) | Tozan | CC0 |
+| tawantinsuyu/musica_andes_charango_1.ogg | https://archive.org/details/conMiCharango (`ConMiCharango.wav`) | pjgrau | CC0 1.0 |
+| mapuche/musica_mapuche_pifilka_1.ogg | https://archive.org/details/InstrumentosMapuches (`PifillkasGrupal01.mp3`) | Juan Huichal | Dominio público (dedicación del autor, http://creativecommons.org/licenses/publicdomain/) |
+| mapuche/musica_mapuche_pifilka_2.ogg | https://archive.org/details/InstrumentosMapuches (`PifillkasGrupal02.mp3`) | Juan Huichal | Dominio público (ídem) |
+| guarani/musica_guarani_selva_generica_1.ogg | https://opengameart.org/content/your-average-jungle-day (`an_average_day_in_the_jungle.wav`) | Umplix | CC0 |
+| quilombo/musica_quilombo_berimbau_iuna_1.ogg | https://commons.wikimedia.org/wiki/File:I%C3%BAna.ogg (filtro de ruido suave) | Djino (fuente declarada: Mestre Tucano Preto) | Dominio público (PD-self) |
+| quilombo/musica_quilombo_berimbau_angola_1.ogg | https://commons.wikimedia.org/wiki/File:Toque-de-angola.ogg (mono pasado a estéreo) | Andrew (usuario Aarchiba) | Dominio público (PD-self) |
+| quilombo/musica_quilombo_ijexa_1.ogg | https://commons.wikimedia.org/wiki/File:Ixeja.ogg | LeRoc | Dominio público (PD-self) |
+| quilombo/musica_quilombo_tambores_combate_1.ogg | https://opengameart.org/content/tropical-loop (`Tropical.wav`) | wipics | CC0 |
+| ayutthaya/musica_ayutthaya_maha_nimit_1.ogg | https://commons.wikimedia.org/wiki/File:Phleng_Maha_Nimit_(Tra_Nimitr)_-_Royal_Thai_Navy_Band.ogg (sin los 8,8 s de silencio inicial) | Composición: Jangwang Tua Patayakosol; interpretación: Banda de la Armada Real Tailandesa (1934) | Dominio público (PD-Thailand) |
+| ayutthaya/musica_ayutthaya_xilofono_1.ogg | https://opengameart.org/content/kingdom-of-a-million-elephants-under-a-white-parasol | Spring Spring | CC0 |
+| ayutthaya/musica_ayutthaya_combate_xilofono_1.ogg | https://opengameart.org/content/bamboo-blitz (`bamboo_blitz.flac`) | Tsorthan Grove | CC0 |
+
 ## Texturas (`texturas/`)
 
 | archivo | fuente (URL exacta) | autor | licencia |

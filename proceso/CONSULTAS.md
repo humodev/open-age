@@ -39,3 +39,15 @@ a) No, con eso alcanza *(por defecto)* · b) Sí, hasta ___ créditos más
 a) Arrancar ya con el plan de terreno y mapas (`docs/10`) · b) Cerrar antes balance e IA
 
 **Respuesta:** a) "Continuá acorde al plan con todo el trabajo" (2026-11-13). Etapa 10 en `proceso/`.
+
+### C-07 · ¿Aceptamos música con licencia CC BY-SA?
+Hay buenas grabaciones de siku y sikuri para Tawantinsuyu en Wikimedia, pero son CC BY-SA. Esa licencia obliga a dar crédito y a compartir con la misma licencia cualquier cambio que se haga a la pista, no al juego. Hoy solo se usa CC0 y dominio público.
+a) Sí, con crédito *(por defecto)* · b) No, solo CC0
+
+**Respuesta:**
+
+### C-08 · La pifilka mapuche tiene uso ceremonial (ngillatun)
+Las grabaciones las publicó el propio intérprete en dominio público, pero suenan en el combate.
+a) Dejarla solo en el menú o en la paz, no en el combate *(por defecto)* · b) Dejarla como está · c) Sacarla
+
+**Respuesta:**

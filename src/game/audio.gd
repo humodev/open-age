@@ -33,6 +33,20 @@ const MUSIC := {
 	"paz": ["musica/musica_tribal.ogg", "musica/musica_krakatoa_loop.ogg"],
 	"combate": "musica/musica_marcha_batalla.ogg",
 }
+## Música propia de cada pueblo; se alterna con la general (assets/audio/musica/README.md).
+const CIV_MUSIC := {
+	"tawantinsuyu": {"paz": ["musica/tawantinsuyu/musica_andes_flauta_de_pan_1.ogg", "musica/tawantinsuyu/musica_andes_charango_1.ogg", "musica/musica_flauta_de_pan.ogg"]},
+	"mapuches": {"combate": ["musica/mapuche/musica_mapuche_pifilka_1.ogg", "musica/mapuche/musica_mapuche_pifilka_2.ogg", "musica/musica_marcha_batalla.ogg"]},
+	"guaranies": {"paz": ["musica/guarani/musica_guarani_selva_generica_1.ogg"]},
+	"palmares": {
+		"paz": ["musica/quilombo/musica_quilombo_berimbau_iuna_1.ogg", "musica/quilombo/musica_quilombo_berimbau_angola_1.ogg", "musica/quilombo/musica_quilombo_ijexa_1.ogg"],
+		"combate": ["musica/quilombo/musica_quilombo_tambores_combate_1.ogg", "musica/musica_marcha_batalla.ogg"],
+	},
+	"ayutthaya": {
+		"paz": ["musica/ayutthaya/musica_ayutthaya_xilofono_1.ogg", "musica/ayutthaya/musica_ayutthaya_maha_nimit_1.ogg"],
+		"combate": ["musica/ayutthaya/musica_ayutthaya_combate_xilofono_1.ogg"],
+	},
+}
 
 var sim: Sim
 var cam: RtsCamera
@@ -43,6 +57,7 @@ var _next := 0
 var _music: AudioStreamPlayer
 var _ambient: AudioStreamPlayer
 var _mood := ""
+var _last_track := ""
 var _combat_until := 0.0
 var _clock := 0.0
 var _work_t := 0.0
@@ -121,7 +136,16 @@ func music(mood: String) -> void:
 
 func _play_music(mood: String, _again: bool) -> void:
 	var entry: Variant = MUSIC.get(mood, "")
-	var path: String = entry if entry is String else (entry as Array)[_rng.randi() % (entry as Array).size()]
+	var pool: Array = [entry] if entry is String else (entry as Array).duplicate()
+	if sim != null and mood != "menu" and local < sim.players.size():
+		var own: Array = CIV_MUSIC.get(sim.players[local]["civ"], {}).get(mood, [])
+		if not own.is_empty():
+			# La del pueblo suena el doble que la general.
+			pool = own + own + pool
+	if pool.size() > 1:
+		pool.erase(_last_track)
+	var path: String = pool[_rng.randi() % pool.size()]
+	_last_track = path
 	var s := _stream(path)
 	if s == null:
 		return
