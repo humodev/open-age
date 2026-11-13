@@ -34,6 +34,10 @@ var _dialog_who: Label
 var _dialog_text: Label
 var _dialog_queue: Array[Dictionary] = []
 var _dialog_t := 0.0
+# --- paneles --- (src/game/ui/panel_partida.gd)
+const PANELES := preload("res://src/game/ui/panel_partida.gd")
+var paneles: Control
+# --- fin paneles ---
 
 
 static func load_fonts() -> void:
@@ -120,6 +124,10 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 	_end = _make_dialog("", "", [["Seguir mirando", func() -> void: _end.visible = false], ["Nueva partida", func() -> void: main.restart()], ["Menú principal", func() -> void: main.to_menu()], ["Salir", func() -> void: get_tree().quit()]])
 	_end_title = _end.get_meta("title")
 	_end_body = _end.get_meta("body")
+	# --- paneles ---
+	paneles = PANELES.new()
+	paneles.setup(self)
+	# --- fin paneles ---
 
 
 ## Ancla un control a un punto relativo de la pantalla con márgenes fijos.
@@ -196,6 +204,10 @@ func queue_icon(item: String) -> String:
 
 
 func on_events(events: Array) -> void:
+	# --- paneles ---
+	if paneles != null:
+		paneles.on_events(events)
+	# --- fin paneles ---
 	for ev in events:
 		var pid: int = ev.get("player", -2)
 		match ev["t"]:
@@ -248,6 +260,10 @@ func _show_end(winner: int) -> void:
 	_end_title.text = "Victoria" if winner == local else "Derrota"
 	_end_title.add_theme_color_override("font_color", Palette.UI_ACCENT if winner == local else Palette.UI_BAD)
 	_end_body.text = "Tiempo %s · Edad %s\nRecursos recolectados %d · Unidades entrenadas %d\nBajas causadas %d · Pérdidas %d" % [_fmt_time(sim.tick * sim.tick_ms / 1000), Sim._roman(p["age"]), st["recolectado"], st["entrenadas"], st["bajas"], st["muertes"]]
+	# --- paneles ---
+	if paneles != null:
+		paneles.show_end(winner)
+	# --- fin paneles ---
 
 
 var _options: PanelContainer
