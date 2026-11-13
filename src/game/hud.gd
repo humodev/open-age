@@ -114,7 +114,9 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 	_notice.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_notice)
 
-	_menu = _make_dialog("Pausa", "", [["Reanudar", func() -> void: toggle_menu()], ["Nueva partida", func() -> void: main.restart()], ["Menú principal", func() -> void: main.to_menu()], ["Salir", func() -> void: get_tree().quit()]])
+	_menu = _make_dialog("Pausa", "", [["Reanudar", func() -> void: toggle_menu()], ["Cómo se juega (F1)", func() -> void: _toggle_help()], ["Opciones", func() -> void: _options.visible = true], ["Nueva partida", func() -> void: main.restart()], ["Menú principal", func() -> void: main.to_menu()], ["Salir", func() -> void: get_tree().quit()]])
+	_build_options()
+	_build_help()
 	_end = _make_dialog("", "", [["Seguir mirando", func() -> void: _end.visible = false], ["Nueva partida", func() -> void: main.restart()], ["Menú principal", func() -> void: main.to_menu()], ["Salir", func() -> void: get_tree().quit()]])
 	_end_title = _end.get_meta("title")
 	_end_body = _end.get_meta("body")
@@ -174,7 +176,7 @@ func _next_dialog() -> void:
 
 
 func blocks(m: Vector2) -> bool:
-	if _menu.visible or _end.visible:
+	if _menu.visible or _end.visible or (_options != null and _options.visible) or (_help != null and _help.visible):
 		return true
 	for c in _blockers:
 		if c.get_global_rect().has_point(m):
@@ -245,6 +247,73 @@ func _show_end(winner: int) -> void:
 	_end_title.text = "Victoria" if winner == local else "Derrota"
 	_end_title.add_theme_color_override("font_color", Palette.UI_ACCENT if winner == local else Palette.UI_BAD)
 	_end_body.text = "Tiempo %s · Edad %s\nRecursos recolectados %d · Unidades entrenadas %d\nBajas causadas %d · Pérdidas %d" % [_fmt_time(sim.tick * sim.tick_ms / 1000), Sim._roman(p["age"]), st["recolectado"], st["entrenadas"], st["bajas"], st["muertes"]]
+
+
+var _options: PanelContainer
+var _help: PanelContainer
+
+
+func _build_options() -> void:
+	_options = _make_dialog("Opciones", "", [["Cerrar", func() -> void: _options.visible = false]])
+	var vb: VBoxContainer = _options.get_child(0)
+	var at := 2
+	for bus in [["General", 0], ["Música", -1], ["Efectos", -2]]:
+		var row := HBoxContainer.new()
+		var l := Label.new()
+		l.text = bus[0]
+		l.custom_minimum_size = Vector2(110, 0)
+		row.add_child(l)
+		var sl := HSlider.new()
+		sl.min_value = 0
+		sl.max_value = 100
+		sl.value = 80
+		sl.custom_minimum_size = Vector2(220, 24)
+		var which: int = bus[1]
+		sl.value_changed.connect(func(v: float) -> void: _set_volume(which, v))
+		row.add_child(sl)
+		vb.add_child(row)
+		vb.move_child(row, at)
+		at += 1
+	var fs := CheckButton.new()
+	fs.text = "Pantalla completa"
+	fs.button_pressed = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
+	fs.toggled.connect(func(on: bool) -> void: DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if on else DisplayServer.WINDOW_MODE_MAXIMIZED))
+	vb.add_child(fs)
+	vb.move_child(fs, at)
+	var edge := CheckButton.new()
+	edge.text = "Mover la cámara con los bordes"
+	edge.button_pressed = cam.edge_pan
+	edge.toggled.connect(func(on: bool) -> void: cam.edge_pan = on)
+	vb.add_child(edge)
+	vb.move_child(edge, at + 1)
+
+
+func _set_volume(which: int, v: float) -> void:
+	var db := linear_to_db(maxf(v / 100.0, 0.0001))
+	if which == 0:
+		AudioServer.set_bus_volume_db(0, db)
+	elif main.get("audio") != null:
+		main.audio.set_volume(which == -1, db)
+
+
+func _build_help() -> void:
+	var dd := sim.dp(local)
+	var c: Dictionary = dd.civ
+	var civ_txt := ""
+	if not c.is_empty():
+		civ_txt = "%s — «%s»\n%s" % [c.get("nombre", ""), c.get("frase", ""), c.get("descripcion", "")]
+		if dd.has_mod("recurso_propio"):
+			civ_txt += "\nRecurso propio: %s." % dd.mod("recurso_propio")["nombre"]
+		civ_txt += "\nEdades: %s.\nDebilidad: %s" % [", ".join(c.get("edades", [])), c.get("debilidad", "")]
+	var controls := "Clic izquierdo: seleccionar (arrastrar para un grupo; doble clic: todos los del tipo)\nClic derecho: mover, atacar, recolectar, construir, reparar o alojar\nGrilla Q W E R / A S D F / Z X C V: construir, entrenar, investigar\nA y clic: atacar en movimiento · S: detener · Supr: eliminar\nCtrl + 1…9: grupos · H: centro · . : aldeano inactivo · Z en el centro: campana\nFlechas, bordes o botón del medio: cámara · F3: velocidad · Esc: pausa"
+	_help = _make_dialog("Cómo se juega", civ_txt + "\n\n" + controls, [["Cerrar", func() -> void: _help.visible = false]])
+	(_help.get_meta("body") as Label).horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	(_help.get_meta("body") as Label).custom_minimum_size = Vector2(760, 0)
+	(_help.get_meta("body") as Label).autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+
+
+func _toggle_help() -> void:
+	_help.visible = not _help.visible
 
 
 func toggle_menu() -> void:

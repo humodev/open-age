@@ -77,9 +77,20 @@ func _play(path: String, db: float, pitch: float = 1.0) -> void:
 	var p := _pool[_next]
 	_next = (_next + 1) % _pool.size()
 	p.stream = s
-	p.volume_db = db
+	p.volume_db = db + _fx_offset
 	p.pitch_scale = pitch
 	p.play()
+
+
+var _music_db := -12.0
+var _fx_offset := 0.0
+
+
+func set_volume(music_bus: bool, db: float) -> void:
+	if music_bus:
+		_music.volume_db = -12.0 + db
+	else:
+		_fx_offset = db
 
 
 func ui(kind: String, db: float = -6.0) -> void:

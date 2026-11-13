@@ -342,7 +342,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	var k := event as InputEventKey
 	if not k.pressed or k.echo or _menu_mode:
 		return
-	if k.physical_keycode == KEY_F3:
+	if k.physical_keycode == KEY_F1:
+		hud._toggle_help()
+	elif k.physical_keycode == KEY_F3:
 		speed = 2.0 if speed == 1.0 else (4.0 if speed == 2.0 else 1.0)
 	elif k.physical_keycode == KEY_PAUSE or k.physical_keycode == KEY_F10:
 		hud.toggle_menu()
@@ -512,7 +514,7 @@ func _autotest() -> void:
 	_key_tap(KEY_H)
 	await _frames(3)
 	var centro: SimEntity = sim.by_id.get(ctrl.selection[0]) if ctrl.selection.size() == 1 else null
-	check.call("H selecciona el centro", centro != null and centro.type == "centro")
+	check.call("H selecciona la capital", centro != null and (centro.capital or centro.type == "centro"))
 	_key_tap(KEY_Q)
 	await get_tree().create_timer(0.3).timeout
 	check.call("Q en el centro encola un aldeano", centro != null and centro.queue.size() == 1)
@@ -549,7 +551,8 @@ func _autotest() -> void:
 			vill_ids.append(e.id)
 	ctrl.select_ids(vill_ids)
 	await _frames(2)
-	_key_tap(KEY_C)
+	if ctrl.villager_slots().get(10, "") == "empalizada":
+		_key_tap(KEY_C)
 	await _frames(2)
 	# Una fila libre delante de la base (lejos del panel inferior).
 	var row := base.y + 8
@@ -575,7 +578,7 @@ func _autotest() -> void:
 	for e in sim.actives:
 		if e.owner == local and e.type == "empalizada":
 			walls += 1
-	if sim.dp(local).edificios.has("empalizada"):
+	if ctrl.villager_slots().get(10, "") == "empalizada":
 		check.call("arrastrar coloca una línea de empalizada (%d)" % walls, walls >= 5)
 
 	# 7. Campana desde el centro (Z): los aldeanos se refugian y el centro dispara más.

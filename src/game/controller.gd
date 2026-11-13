@@ -199,7 +199,7 @@ func commands() -> Array[Dictionary]:
 			used[t["ranura"]] = true
 			var why := sim.research_block(local, tech)
 			out.append({"slot": t["ranura"], "id": tech, "icon": t["icono"], "kind": "research", "name": t["nombre"], "cost": t["costo"], "desc": effects_text(t["efectos"]), "locked": why, "tech": true, "building": first.id})
-		if first.type == "centro":
+		if first.capital or first.type == "centro":
 			var on: bool = sim.players[local]["alarm"]
 			out.append({"slot": 8, "id": "calma" if on else "campana", "icon": "calma" if on else "campana", "kind": "alarm", "name": "Toque de calma" if on else "Campana", "cost": {}, "desc": DESCS["calma" if on else "campana"], "locked": "", "on": not on})
 		if first.def.get("mercado", false):
@@ -536,7 +536,7 @@ func _key(k: InputEventKey) -> void:
 		return
 	if code == KEY_H:
 		for e in sim.actives:
-			if e.owner == local and e.type == "centro":
+			if e.owner == local and e.is_building() and (e.capital or e.type == "centro"):
 				_set_selection([e.id] as Array[int])
 				center_on_selection()
 				return
