@@ -23,7 +23,7 @@
         "Ronald J. Horvath, The Wandering Capitals of Ethiopia (Journal of African History 10:2, 1969)",
         "Francisco Álvares, Verdadera información de las tierras del Preste Juan (1540), caps. CXX-CXXV sobre el campamento real"
       ],
-      "mapa": { "semilla": 1445, "terreno": "montana" },
+      "mapa": { "semilla": 1445, "terreno": "mesetas" },
       "jugador": {
         "edad": 1,
         "recursos": { "alimento": 400, "madera": 450, "piedra": 100, "riqueza": 200 },
@@ -76,7 +76,7 @@
         "Shumet Sishagn, Ayele Tariku y Temesgen Gebeyehu, A History of Amba Prisons and Imprisonment in Gojjam (Ethiopian Journal of Social Sciences 9:1, 2023)",
         "Library of Congress, Ethiopia: A Country Study (1991)"
       ],
-      "mapa": { "semilla": 1531, "terreno": "montana" },
+      "mapa": { "semilla": 1531, "terreno": "mesetas" },
       "jugador": {
         "edad": 2,
         "recursos": { "alimento": 500, "madera": 400, "piedra": 650, "riqueza": 300 },
@@ -183,7 +183,7 @@
         "Library of Congress, Ethiopia: A Country Study (1991)",
         "Merid Wolde Aregay, Southern Ethiopia and the Christian Kingdom 1508-1708 (tesis, Londres, 1971)"
       ],
-      "mapa": { "semilla": 1636, "terreno": "montana" },
+      "mapa": { "semilla": 1636, "terreno": "mesetas" },
       "jugador": {
         "edad": 3,
         "recursos": { "alimento": 1500, "madera": 800, "piedra": 400, "riqueza": 1000 },

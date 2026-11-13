@@ -24,7 +24,7 @@
         "Felipe Aguiar Damasceno, A ocupação das terras dos Palmares de Pernambuco (tesis, UFRJ, 2018)",
         "Linda Heywood y John Thornton, Central Africans, Atlantic Creoles, and the Foundation of the Americas, 1585-1660 (Cambridge UP, 2007)"
       ],
-      "mapa": { "semilla": 1645, "terreno": "bosque" },
+      "mapa": { "semilla": 1645, "terreno": "sierra" },
       "jugador": {
         "edad": 1,
         "recursos": { "alimento": 200, "madera": 300, "piedra": 0, "riqueza": 50 },
@@ -77,7 +77,7 @@
         "Silvia Hunold Lara, O território dos Palmares: cartografia, história e política (Afro-Ásia 64, 2021)",
         "Revista Pesquisa FAPESP, Documentos originais revelam novos aspectos da história de Palmares (2022)"
       ],
-      "mapa": { "semilla": 1677, "terreno": "bosque" },
+      "mapa": { "semilla": 1677, "terreno": "sierra" },
       "jugador": {
         "edad": 2,
         "recursos": { "alimento": 600, "madera": 800, "piedra": 100, "riqueza": 200 },
@@ -187,7 +187,7 @@
         "Flávio dos Santos Gomes (org.), Mocambos de Palmares: histórias e fontes (séculos XVI-XIX) (2010)",
         "Brasil de Fato, entrevista a Silvia Hunold Lara (22 de noviembre de 2023)"
       ],
-      "mapa": { "semilla": 1694, "terreno": "montana" },
+      "mapa": { "semilla": 1694, "terreno": "sierra" },
       "jugador": {
         "edad": 3,
         "recursos": { "alimento": 800, "madera": 900, "piedra": 200, "riqueza": 400 },

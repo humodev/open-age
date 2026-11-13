@@ -25,7 +25,7 @@
         "José Bengoa, Historia del pueblo mapuche (LOM, 2000)",
         "Museo Chileno de Arte Precolombino, Toki kura, ficha MChAP 575"
       ],
-      "mapa": { "semilla": 1553, "terreno": "bosque" },
+      "mapa": { "semilla": 1553, "terreno": "bosque_templado" },
       "jugador": {
         "edad": 1,
         "recursos": { "alimento": 250, "madera": 400, "piedra": 0, "riqueza": 150 },
@@ -128,7 +128,7 @@
         "Alonso González de Nájera, Desengaño y reparo de la guerra del Reino de Chile (1614)",
         "Memoria Chilena, Estrategias y Esclavitud indígena"
       ],
-      "mapa": { "semilla": 1598, "terreno": "bosque" },
+      "mapa": { "semilla": 1598, "terreno": "bosque_templado" },
       "jugador": {
         "edad": 2,
         "recursos": { "alimento": 800, "madera": 500, "piedra": 200, "riqueza": 600 },

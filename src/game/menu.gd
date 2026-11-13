@@ -13,6 +13,8 @@ var _rival: OptionButton
 var _info: Label
 var _keys: Array = []
 var _diff: OptionButton
+var _map: OptionButton
+var _map_keys: Array = []
 var _plate: TextureRect
 
 
@@ -86,6 +88,26 @@ func _ready() -> void:
 	_diff.selected = 1
 	drow.add_child(_diff)
 	box.add_child(drow)
+	var mrow := HBoxContainer.new()
+	mrow.add_theme_constant_override("separation", 12)
+	var ml := Label.new()
+	ml.text = "Mapa"
+	ml.custom_minimum_size = Vector2(110, 0)
+	ml.add_theme_font_override("font", Hud.font)
+	ml.add_theme_color_override("font_color", Palette.UI_DIM)
+	mrow.add_child(ml)
+	_map = OptionButton.new()
+	_map.custom_minimum_size = Vector2(270, 38)
+	_map.add_theme_font_override("font", Hud.font_b)
+	_map.add_item("Al azar")
+	_map_keys = data.reglas["terrenos"].keys()
+	for k in _map_keys:
+		_map.add_item(data.reglas["terrenos"][k]["nombre"])
+		var desc: String = data.reglas["terrenos"][k].get("descripcion", "")
+		if desc != "":
+			_map.set_item_tooltip(_map.item_count - 1, desc)
+	mrow.add_child(_map)
+	box.add_child(mrow)
 	_plate = TextureRect.new()
 	_plate.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_plate.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
@@ -206,3 +228,8 @@ func _describe(data: SimData) -> void:
 
 func difficulty() -> String:
 	return ["facil", "normal", "dificil"][maxi(0, _diff.selected)]
+
+
+## Tipo de mapa elegido ("" = al azar).
+func terrain() -> String:
+	return "" if _map.selected <= 0 else str(_map_keys[_map.selected - 1])

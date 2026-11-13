@@ -74,7 +74,7 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null,
 			p["res"][k] = dd.civ["recursos_iniciales"][k]
 	terrain = opts.get("terreno", "")
 	if terrain == "":
-		var kinds: Array = data.reglas["terrenos"]
+		var kinds: Array = data.reglas["terrenos"].keys()
 		terrain = kinds[rng.range_i(0, kinds.size() - 1)]
 	_generate_map()
 	_update_players()
@@ -1734,7 +1734,8 @@ func _generate_map() -> void:
 	# Bosques.
 	var tries := 0
 	var made := 0
-	var forests := 22 if terrain == "bosque" else 13
+	var td := terrain_def()
+	var forests := int(td.get("bosques", 13))
 	while made < forests and tries < 300:
 		tries += 1
 		var c := Vector2i(rng.range_i(5, n - 6), rng.range_i(5, n - 6))
@@ -1742,9 +1743,14 @@ func _generate_map() -> void:
 			continue
 		_blob_sym(c, rng.range_i(3, 6), 78)
 		made += 1
+	# Matorral suelto en mapas secos.
+	for k in int(td.get("arbustos_extra", 0)):
+		var c := Vector2i(rng.range_i(8, n - 9), rng.range_i(8, n - 9))
+		if not _near_base(c, 16):
+			_cluster_sym("arbusto", c, 5)
 	# Bordes boscosos.
 	for i in n:
-		for depth in 3:
+		for depth in int(td.get("borde", 3)):
 			var chance := 70 - depth * 25
 			if rng.range_i(0, 99) < chance:
 				_tree_sym(Vector2i(i, depth))
@@ -1778,6 +1784,10 @@ func _res_sym(type: String, t: Vector2i) -> void:
 		return
 	if not map.is_free_rect(t.x - 1, t.y - 1, tam[0] + 2, tam[1] + 2) or not map.is_free_rect(m.x - 1, m.y - 1, tam[0] + 2, tam[1] + 2):
 		return
+	for yy in range(t.y, t.y + tam[1]):
+		for xx in range(t.x, t.x + tam[0]):
+			if map.is_water(xx, yy) or map.is_water(m.x + xx - t.x, m.y + yy - t.y):
+				return
 	spawn_resource(type, t.x, t.y)
 	spawn_resource(type, m.x, m.y)
 
@@ -1786,7 +1796,7 @@ func _tree_sym(t: Vector2i) -> void:
 	var m := _mirror(t, 1, 1)
 	if not map.in_bounds(t.x, t.y) or _near_base(t, 9) or _near_base(m, 9):
 		return
-	if map.occupant(t.x, t.y) != -1 or map.occupant(m.x, m.y) != -1:
+	if map.occupant(t.x, t.y) != -1 or map.occupant(m.x, m.y) != -1 or map.is_water(t.x, t.y) or map.is_water(m.x, m.y):
 		return
 	spawn_resource("arbol", t.x, t.y)
 	spawn_resource("arbol", m.x, m.y)
@@ -1807,17 +1817,48 @@ func _cluster_sym(type: String, c: Vector2i, count: int) -> void:
 	for i in mini(count, offs.size()):
 		var t := c + offs[i]
 		var m := _mirror(t, 1, 1)
-		if map.occupant(t.x, t.y) == -1 and map.occupant(m.x, m.y) == -1 and map.in_bounds(t.x, t.y):
+		if map.occupant(t.x, t.y) == -1 and map.occupant(m.x, m.y) == -1 and map.in_bounds(t.x, t.y) and not map.is_water(t.x, t.y) and not map.is_water(m.x, m.y):
 			spawn_resource(type, t.x, t.y)
 			spawn_resource(type, m.x, m.y)
 
 
-## Relieve y agua con simetría puntual; las bases quedan llanas (D-027).
+## Parámetros del tipo de mapa (reglas.json, "terrenos").
+func terrain_def() -> Dictionary:
+	return data.reglas["terrenos"].get(terrain, data.reglas["terrenos"]["llano"])
+
+
+## Relieve y agua con simetría puntual; las bases quedan llanas (D-027, docs/10).
 func _generate_terrain() -> void:
+	var td := terrain_def()
+	if td.has("relieve"):
+		_relief_noise(td["relieve"])
+	else:
+		_relief_hills(int(td.get("colinas", 4)), int(td.get("nivel_max", 2)))
+	if td.has("rio"):
+		var rd: Dictionary = td["rio"]
+		_river(0, int(rd.get("ancho", 1)), int(rd.get("vados", 22)))
+		if rd.has("brazos"):
+			_river(int(rd["brazos"]), maxi(1, int(rd.get("ancho", 1)) - 1), maxi(6, int(rd.get("vados", 22)) - 3))
+	var lakes := int(td.get("lagunas", 0))
+	var lr: Array = td.get("laguna_radio", [2, 3])
+	for k in lakes:
+		var c := Vector2i(rng.range_i(10, map.n - 11), rng.range_i(10, map.n - 11))
+		if _near_base(c, 18):
+			continue
+		var r := rng.range_i(int(lr[0]), int(lr[1]))
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				if dx * dx + dy * dy <= r * r + rng.range_i(0, r) - r / 2:
+					var t := c + Vector2i(dx, dy)
+					var m := _mirror(t, 1, 1)
+					if map.in_bounds(t.x, t.y) and not _near_base(t, 13) and not _near_base(m, 13):
+						map.set_water(t.x, t.y, 1)
+						map.set_water(m.x, m.y, 1)
+
+
+## Colinas redondas en mesetas de nivel 1..top (mapas clásicos).
+func _relief_hills(hills: int, top: int) -> void:
 	var n := map.n
-	var hills := {"llano": 4, "montana": 11, "rio": 4, "bosque": 5}.get(terrain, 4) as int
-	var top := 3 if terrain == "montana" else 2
-	# Colinas: mesetas de nivel 1..top con bordes irregulares.
 	var made := 0
 	var tries := 0
 	while made < hills and tries < 200:
@@ -1843,40 +1884,95 @@ func _generate_terrain() -> void:
 						map.height[t.y * n + t.x] = l
 						map.height[m.y * n + m.x] = l
 		made += 1
-	# Río: cruza el mapa por la antidiagonal (que la simetría deja fija), con vados.
-	if terrain == "rio" or terrain == "bosque":
-		var width := 2 if terrain == "rio" else 1
-		var off := 0
-		var ford_every := 22
-		for i in range(0, n / 2 + 1):
-			if rng.range_i(0, 3) == 0:
-				off = clampi(off + rng.range_i(-1, 1), -6, 6)
-			var x := i + off
-			var y := n - 1 - i + off
-			for w in range(-width, width + 1):
-				for d in [Vector2i(w, 0), Vector2i(0, w)]:
-					var t: Vector2i = Vector2i(x, y) + d
-					var m := _mirror(t, 1, 1)
-					if not map.in_bounds(t.x, t.y) or _near_base(t, 12) or _near_base(m, 12):
-						continue
-					var kind := 2 if (i % ford_every) < 3 else 1
-					map.set_water(t.x, t.y, kind)
-					map.set_water(m.x, m.y, kind)
-	# Lagunas chicas en el llano.
-	if terrain == "llano":
-		for k in 3:
-			var c := Vector2i(rng.range_i(10, n - 11), rng.range_i(10, n - 11))
-			if _near_base(c, 18):
-				continue
-			var r := rng.range_i(2, 3)
-			for dy in range(-r, r + 1):
-				for dx in range(-r, r + 1):
-					if dx * dx + dy * dy <= r * r:
-						var t := c + Vector2i(dx, dy)
-						var m := _mirror(t, 1, 1)
-						if map.in_bounds(t.x, t.y):
-							map.set_water(t.x, t.y, 1)
-							map.set_water(m.x, m.y, 1)
+
+
+## Relieve orgánico: ruido de valor entero en dos octavas, cortado en niveles
+## por umbrales. Umbrales juntos hacen paredes (amba); separados, terrazas.
+func _relief_noise(rd: Dictionary) -> void:
+	var n := map.n
+	var sc := int(rd.get("escala", 14))
+	var cuts: Array = rd.get("umbrales", [60, 80])
+	var bias: String = rd.get("sesgo", "")
+	var s1 := rng.range_i(1, 1 << 20)
+	var s2 := rng.range_i(1, 1 << 20)
+	for ty in n:
+		for tx in n:
+			var idx := ty * n + tx
+			var m := _mirror(Vector2i(tx, ty), 1, 1)
+			if idx > m.y * n + m.x:
+				continue # la mitad espejada se copia
+			var v := (_vnoise(tx, ty, sc, s1) * 2 + _vnoise(tx, ty, maxi(3, sc / 2), s2)) / 30 # 0..100
+			if bias == "esquinas":
+				# Cordillera en las dos esquinas sin base (la antidiagonal).
+				var dc := mini(tx + (n - 1 - ty), (n - 1 - tx) + ty)
+				v += maxi(0, 46 - dc * 46 / (n * 6 / 10))
+			# Las bases quedan llanas, con rampa suave alrededor.
+			var db := 1 << 20
+			for i in mini(maxi(players.size(), 2), bases.size()):
+				var c := bases[i] + Vector2i(2, 2)
+				db = mini(db, maxi(absi(tx - c.x), absi(ty - c.y)))
+				var cm := _mirror(c, 1, 1)
+				db = mini(db, maxi(absi(tx - cm.x), absi(ty - cm.y)))
+			v -= maxi(0, (19 - db) * 9)
+			var lvl := 0
+			for cut in cuts:
+				if v >= int(cut):
+					lvl += 1
+			map.height[idx] = lvl
+			map.height[m.y * n + m.x] = lvl
+
+
+## Ruido de valor entero (0..1000) con interpolación suavizada; determinista.
+func _vnoise(x: int, y: int, sc: int, sd: int) -> int:
+	var gx := x / sc
+	var gy := y / sc
+	var fx := (x % sc) * 1000 / sc
+	var fy := (y % sc) * 1000 / sc
+	fx = fx * fx * (3000 - 2 * fx) / 1000000
+	fy = fy * fy * (3000 - 2 * fy) / 1000000
+	var a := _lattice(gx, gy, sd)
+	var b := _lattice(gx + 1, gy, sd)
+	var c := _lattice(gx, gy + 1, sd)
+	var d := _lattice(gx + 1, gy + 1, sd)
+	var top := a + (b - a) * fx / 1000
+	var bot := c + (d - c) * fx / 1000
+	return top + (bot - top) * fy / 1000
+
+
+static func _lattice(x: int, y: int, sd: int) -> int:
+	var h := (x * 374761393 + y * 668265263 + sd * 2147483647) & 0x7fffffff
+	h = ((h ^ (h >> 13)) * 1274126177) & 0x7fffffff
+	return (h ^ (h >> 16)) % 1001
+
+
+## Río por la antidiagonal (que la simetría deja fija), corrido `shift` casillas.
+func _river(shift: int, width: int, ford_every: int) -> void:
+	var n := map.n
+	var off := 0
+	for i in range(0, n / 2 + 1 if shift == 0 else n + shift):
+		if rng.range_i(0, 3) == 0:
+			off = clampi(off + rng.range_i(-1, 1), -6, 6)
+		var x := i + off + shift
+		var y := n - 1 - i + off + shift
+		for w in range(-width, width + 1):
+			for d in [Vector2i(w, 0), Vector2i(0, w)]:
+				var t: Vector2i = Vector2i(x, y) + d
+				var m := _mirror(t, 1, 1)
+				if not map.in_bounds(t.x, t.y) or _near_base(t, 12) or _near_base(m, 12):
+					continue
+				var kind := 2 if (i % ford_every) < 3 else 1
+				map.set_water(t.x, t.y, kind)
+				map.set_water(m.x, m.y, kind)
+		# El río baja el terreno a su alrededor: cauce llano y barranca escalonada.
+		for dy in range(-width - 4, width + 5):
+			for dx in range(-width - 4, width + 5):
+				var t := Vector2i(x + dx, y + dy)
+				if not map.in_bounds(t.x, t.y):
+					continue
+				var cap := 0 if maxi(absi(dx), absi(dy)) <= width + 2 else 1
+				var m := _mirror(t, 1, 1)
+				map.height[t.y * n + t.x] = mini(map.height[t.y * n + t.x], cap)
+				map.height[m.y * n + m.x] = mini(map.height[m.y * n + m.x], cap)
 
 
 # ---------------------------------------------------------------- Hash

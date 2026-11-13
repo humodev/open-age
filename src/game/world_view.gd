@@ -6,8 +6,7 @@ const P := 1000.0
 const LEVEL_H := 1.7 # metros por nivel de altura
 static var _vh := PackedFloat32Array() # alturas de vértices (n+1)²
 const SPLAT_RES := 2 # píxeles de mezcla por casilla
-const BIOME_TINT := {"llano": Color(1.0, 1.0, 0.97), "montana": Color(1.04, 1.0, 0.9), "bosque": Color(0.9, 0.98, 0.9), "rio": Color(0.96, 1.02, 0.96)}
-const BIOME_DRY := {"llano": 0.15, "montana": 0.45, "bosque": 0.0, "rio": 0.05}
+const RELIEF_AMP := 0.22 # ondulación visual sobre los niveles de la simulación
 var _splat_img: Image
 var _splat_tex: ImageTexture
 static var _vn := 0
@@ -110,7 +109,8 @@ func _build_ground() -> void:
 	var T := "res://assets/texturas/suelo/%s.jpg"
 	for pair in [["t_grass", "pasto_color"], ["t_dry", "pasto_seco_color"], ["t_dirt", "tierra_color"], ["t_mud", "barro_color"], ["t_rock", "roca_color"], ["n_grass", "pasto_normal"], ["n_dirt", "tierra_normal"], ["n_rock", "roca_normal"]]:
 		ground_mat.set_shader_parameter(pair[0], load(T % pair[1]))
-	ground_mat.set_shader_parameter("tint", BIOME_TINT.get(sim.terrain, Color.WHITE))
+	var tn: Array = sim.terrain_def().get("tinte", [100, 100, 100]) # porcentajes
+	ground_mat.set_shader_parameter("tint", Color(tn[0] / 100.0, tn[1] / 100.0, tn[2] / 100.0))
 	_build_splat()
 	var b0 := sim.bases[0] + Vector2i(2, 2)
 	var b1 := sim.bases[1] + Vector2i(2, 2)
@@ -141,8 +141,8 @@ func _build_terrain() -> void:
 					sum += -0.9 if w == 1 else (-0.3 if w == 2 else float(map.h_at(tx, tz)) * LEVEL_H)
 					cnt += 1
 			raw[j * vn + i] = sum / cnt
-	# Dos pasadas de suavizado para lomas redondeadas.
-	for pass_i in 2:
+	# Suavizado para lomas redondeadas; las mesetas guardan sus paredes.
+	for pass_i in int(sim.terrain_def().get("suavizado", 2)):
 		var out := raw.duplicate()
 		for j in range(1, vn - 1):
 			for i in range(1, vn - 1):
@@ -152,6 +152,21 @@ func _build_terrain() -> void:
 						acc += raw[(j + dz) * vn + i + dx]
 				out[j * vn + i] = acc / 9.0
 		raw = out
+	# Ondulación suave para que el llano no sea una mesa (solo imagen; docs/10).
+	var noise := FastNoiseLite.new()
+	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	noise.seed = hash(sim.terrain) ^ sim.entities.size()
+	noise.frequency = 0.045
+	noise.fractal_octaves = 3
+	for j in vn:
+		for i in vn:
+			var near_water := false
+			for d in [Vector2i(-1, -1), Vector2i(0, -1), Vector2i(-1, 0), Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-2, -1), Vector2i(1, -1)]:
+				if map.is_water(i + d.x, j + d.y):
+					near_water = true
+					break
+			if not near_water:
+				raw[j * vn + i] += noise.get_noise_2d(i, j) * RELIEF_AMP
 	_vh = raw
 	_vn = vn
 	var st := SurfaceTool.new()
@@ -199,7 +214,7 @@ func _build_splat() -> void:
 	var n := map.n
 	var res := n * SPLAT_RES
 	_splat_img = Image.create(res, res, false, Image.FORMAT_RGBA8)
-	var dry: float = BIOME_DRY.get(sim.terrain, 0.1)
+	var dry: float = sim.terrain_def().get("seco", 10) / 100.0
 	for y in res:
 		for x in res:
 			var tx := x / SPLAT_RES
@@ -269,14 +284,17 @@ static func _contact_tex() -> Texture2D:
 
 
 func _build_resources() -> void:
-	var trees: Array[Array] = [[], []]
+	var kinds: Array = sim.terrain_def().get("arboles", [0, 1])
+	var trees: Array[Array] = []
+	for k in kinds:
+		trees.append([])
 	var bushes: Array = []
 	for e in sim.entities:
 		if not e.is_resource():
 			continue
 		match e.type:
 			"arbol":
-				trees[_hash(e.id) % 2].append(e)
+				trees[_hash(e.id) % trees.size()].append(e)
 			"arbusto":
 				bushes.append(e)
 			_:
@@ -286,8 +304,8 @@ func _build_resources() -> void:
 				mi.rotation.y = float(_hash(e.id) % 360) * PI / 180.0
 				add_child(mi)
 				visuals[e.id] = {"node": mi, "kind": "rock", "max": e.amount, "cur": mi.position, "prev": mi.position}
-	for variant in 2:
-		_trees.append(_make_mm(Meshes.tree_mesh(variant), trees[variant]))
+	for k in kinds.size():
+		_trees.append(_make_mm(Meshes.tree_mesh(int(kinds[k])), trees[k]))
 	_bushes = _make_mm(Meshes.bush_mesh(), bushes)
 
 

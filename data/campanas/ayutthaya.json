@@ -322,7 +322,7 @@
    ],
    "mapa": {
     "semilla": 1688,
-    "terreno": "rio"
+    "terreno": "delta"
    },
    "jugador": {
     "edad": 3,
@@ -601,7 +601,7 @@
    ],
    "mapa": {
     "semilla": 1767,
-    "terreno": "rio"
+    "terreno": "delta"
    },
    "jugador": {
     "edad": 4,
@@ -950,7 +950,7 @@
    ],
    "mapa": {
     "semilla": 17671,
-    "terreno": "rio"
+    "terreno": "delta"
    },
    "jugador": {
     "edad": 2,

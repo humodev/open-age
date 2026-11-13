@@ -23,7 +23,7 @@
         "Maria Cristina Bohn Martins, Acerca da guerra e da paz nas crônicas jesuíticas das reduções (Estudos Ibero-Americanos, 2007)",
         "Macarena Perusset, Un acercamiento a los procesos de etnogénesis en el Paraguay colonial (Gazeta de Antropología 23, 2007)"
       ],
-      "mapa": { "semilla": 15371, "terreno": "bosque" },
+      "mapa": { "semilla": 15371, "terreno": "selva" },
       "jugador": {
         "edad": 1,
         "recursos": { "alimento": 300, "madera": 500, "piedra": 0, "riqueza": 50 },
@@ -72,7 +72,7 @@
         "Memoria Chilena, el éxodo del Guairá",
         "UFRGS/NEABI, O encontro entre os Guarani e os jesuítas na província do Paraguai (sobre Ñezú)"
       ],
-      "mapa": { "semilla": 1631, "terreno": "rio" },
+      "mapa": { "semilla": 1631, "terreno": "selva" },
       "jugador": {
         "edad": 2,
         "recursos": { "alimento": 600, "madera": 300, "piedra": 200, "riqueza": 400 },
@@ -173,7 +173,7 @@
         "Tau Golin, A Guerra Guaranítica (1998)",
         "Barbara Ganson, The Guaraní under Spanish Rule in the Río de la Plata (Stanford UP, 2003)"
       ],
-      "mapa": { "semilla": 1754, "terreno": "rio" },
+      "mapa": { "semilla": 1754, "terreno": "selva" },
       "jugador": {
         "edad": 3,
         "recursos": { "alimento": 1200, "madera": 1000, "piedra": 300, "riqueza": 800 },

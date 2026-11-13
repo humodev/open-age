@@ -12,6 +12,7 @@ const EDGE := 6
 var cam: Camera3D
 var focus := Vector3(24, 0, 24)
 var zoom := 32.0
+var pitch_deg := PITCH_DEG # las capturas de documentación pueden bajarlo
 var _zoom_target := 32.0
 var map_size := 128.0
 var edge_pan := true
@@ -45,7 +46,7 @@ func look_at_point(p: Vector3) -> void:
 func _apply() -> void:
 	focus.x = clampf(focus.x, -4.0, map_size + 4.0)
 	focus.z = clampf(focus.z, -4.0, map_size + 4.0)
-	var pitch := deg_to_rad(PITCH_DEG)
+	var pitch := deg_to_rad(pitch_deg)
 	var back := -forward_xz() * cos(pitch) * zoom
 	var fh := WorldView.height_at(focus.x, focus.z)
 	cam.position = focus + Vector3(0, fh, 0) + back + Vector3(0, sin(pitch) * zoom, 0)

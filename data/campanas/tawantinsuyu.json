@@ -26,7 +26,7 @@
    ],
    "mapa": {
     "semilla": 1438,
-    "terreno": "montana"
+    "terreno": "valle"
    },
    "jugador": {
     "edad": 1,
@@ -529,7 +529,7 @@
    ],
    "mapa": {
     "semilla": 1537,
-    "terreno": "montana"
+    "terreno": "valle"
    },
    "jugador": {
     "edad": 2,
@@ -806,7 +806,7 @@
    ],
    "mapa": {
     "semilla": 1780,
-    "terreno": "montana"
+    "terreno": "altiplano"
    },
    "jugador": {
     "edad": 3,

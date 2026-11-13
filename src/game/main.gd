@@ -7,11 +7,11 @@ extends Node3D
 ##   --speed=N          multiplicador de velocidad inicial
 ##   --shot=ruta.png    guarda una captura y sale
 ##   --shot-at=S        segundos de juego antes de la captura
-##   --cam=x,z,zoom     posición de cámara para la captura
+##   --cam=x,z,zoom[,inclinación]  posición de cámara para la captura
 ##   --select=tipo      selecciona entidades de ese tipo del jugador local antes de la captura
 ##   --demo=base|batalla  escena armada para revisar modelos y combate
 ##   --menu             fuerza el menú de inicio (sin argumentos se abre solo)
-##   --terreno=llano|montana|rio|bosque  tipo de mapa
+##   --terreno=<clave de reglas.json "terrenos"> tipo de mapa (llano, valle, delta…)
 ##   --civ=clave        civilización propia (tawantinsuyu, mapuches, guaranies, etiopia, palmares, ayutthaya, azar)
 ##   --rival=clave      civilización de la IA rival
 ##   --campana=clave --mision=N  juega una misión de campaña (N desde 0)
@@ -198,8 +198,8 @@ func _build_scene(aivai: bool) -> void:
 		speed = 1.0
 		_menu = MainMenu.new()
 		layer.add_child(_menu)
-		_menu.play.connect(func(sd: int, civ: String, rival: String) -> void: _start({"seed": str(sd), "civ": civ, "rival": rival, "dificultad": _menu.difficulty()}))
-		_menu.watch.connect(func(sd: int, civ: String, rival: String) -> void: _start({"aivai": "1", "seed": str(sd), "civ": civ, "rival": rival}))
+		_menu.play.connect(func(sd: int, civ: String, rival: String) -> void: _start({"seed": str(sd), "civ": civ, "rival": rival, "dificultad": _menu.difficulty(), "terreno": _menu.terrain()}))
+		_menu.watch.connect(func(sd: int, civ: String, rival: String) -> void: _start({"aivai": "1", "seed": str(sd), "civ": civ, "rival": rival, "terreno": _menu.terrain()}))
 		_menu.campaigns.connect(_open_campaigns.bind(layer))
 		_menu.replay.connect(func() -> void: _start({"replay": "1"}))
 		if _args.get("abrir", "") == "campanas":
@@ -432,6 +432,8 @@ func _maybe_shot() -> void:
 		if c.size() > 2:
 			cam.zoom = float(c[2])
 			cam.set("_zoom_target", float(c[2]))
+		if c.size() > 3:
+			cam.pitch_deg = float(c[3])
 	if _args.has("select"):
 		var ids: Array[int] = []
 		for e in sim.actives:

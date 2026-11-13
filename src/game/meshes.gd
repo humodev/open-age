@@ -336,6 +336,29 @@ static func tree_mesh(variant: int) -> ArrayMesh:
 		p.append([cyl(0.07, 0.1, 0.5, 6), xf(Vector3(0, 0.25, 0)), Palette.TRUNK])
 		p.append([cyl(0.0, 0.48, 0.95, 8), xf(Vector3(0, 0.85, 0)), Palette.FOLIAGE])
 		p.append([cyl(0.0, 0.36, 0.75, 8), xf(Vector3(0, 1.3, 0)), Palette.FOLIAGE])
+	elif variant == 2:
+		# Araucaria: tronco alto y ramas en pisos que terminan en copa de paraguas.
+		p.append([cyl(0.06, 0.11, 1.6, 6), xf(Vector3(0, 0.8, 0)), Palette.TRUNK])
+		for i in 5:
+			var a := TAU * i / 5.0
+			p.append([cyl(0.03, 0.04, 0.6, 4), xf(Vector3(cos(a) * 0.26, 1.45, sin(a) * 0.26), Vector3(0, -rad_to_deg(a), -70)), Palette.TRUNK])
+		p.append([cyl(0.62, 0.3, 0.22, 9), xf(Vector3(0, 1.62, 0)), Palette.FOLIAGE.darkened(0.15)])
+		p.append([cyl(0.4, 0.55, 0.18, 9), xf(Vector3(0, 1.48, 0)), Palette.FOLIAGE.darkened(0.25)])
+	elif variant == 3:
+		# Palmera: tronco curvo y hojas caídas.
+		for i in 4:
+			p.append([cyl(0.06, 0.075, 0.42, 6), xf(Vector3(i * 0.035, 0.2 + i * 0.4, 0), Vector3(0, 0, -4 - i * 3)), Palette.TRUNK])
+		var crown := Vector3(0.14, 1.72, 0)
+		for i in 7:
+			var a := TAU * i / 7.0
+			p.append([box(0.9, 0.03, 0.2), xf(crown + Vector3(cos(a) * 0.38, -0.12, sin(a) * 0.38), Vector3(0, -rad_to_deg(a), -24)), Palette.FOLIAGE_2])
+		p.append([sphere(0.12, 6), xf(crown), Palette.FOLIAGE.darkened(0.2)])
+	elif variant == 4:
+		# Árbol de altura (queñua, acacia): tronco torcido y copa ancha y plana.
+		p.append([cyl(0.06, 0.1, 0.7, 6), xf(Vector3(0, 0.35, 0), Vector3(0, 0, 8)), Palette.TRUNK])
+		p.append([cyl(0.04, 0.05, 0.4, 5), xf(Vector3(0.12, 0.8, 0.05), Vector3(10, 0, -30)), Palette.TRUNK])
+		p.append([sphere(0.6, 10), xf(Vector3(0.05, 1.0, 0), Vector3.ZERO, Vector3(1, 0.32, 0.9)), Palette.FOLIAGE.lerp(Color("8a8a4a"), 0.35)])
+		p.append([sphere(0.35, 8), xf(Vector3(-0.3, 0.92, 0.2), Vector3.ZERO, Vector3(1, 0.4, 1)), Palette.FOLIAGE.lerp(Color("8a8a4a"), 0.25)])
 	else:
 		p.append([cyl(0.07, 0.1, 0.55, 6), xf(Vector3(0, 0.27, 0)), Palette.TRUNK])
 		p.append([sphere(0.45, 10), xf(Vector3(0, 0.95, 0), Vector3.ZERO, Vector3(1, 0.9, 1)), Palette.FOLIAGE_2])
