@@ -10,7 +10,8 @@
   "techo": "#6f5a34",
   "acento": "#7d6b4f",
   "modelos": {
-   "centro": "palmares_centro"
+   "centro": "palmares_centro",
+   "casa": "palmares_casa"
   }
  },
  "edades": [

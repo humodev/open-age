@@ -10,7 +10,8 @@
   "techo": "#8f6b45",
   "acento": "#948670",
   "modelos": {
-   "centro": "etiopia_centro"
+   "centro": "etiopia_centro",
+   "casa": "etiopia_casa"
   }
  },
  "edades": [

@@ -11,7 +11,8 @@
   "acento": "#c9a227",
   "modelos": {
    "centro": "ayutthaya_centro",
-   "chang_suek": "ayutthaya_elefante"
+   "chang_suek": "ayutthaya_elefante",
+   "casa": "ayutthaya_casa"
   }
  },
  "edades": [

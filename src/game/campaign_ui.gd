@@ -20,11 +20,13 @@ static func plate(civ: String) -> Texture2D:
 
 static func load_campaigns() -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
-	var order := ["tawantinsuyu", "mapuches", "guaranies", "etiopia", "palmares", "ayutthaya"]
+	var order := ["tutorial", "tawantinsuyu", "mapuches", "guaranies", "etiopia", "palmares", "ayutthaya"]
 	for k in order:
 		var path := "res://data/campanas/%s.json" % k
 		if FileAccess.file_exists(path):
-			out.append(JSON.parse_string(FileAccess.get_file_as_string(path)))
+			var c: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+			c["_clave"] = k
+			out.append(c)
 	return out
 
 
@@ -89,8 +91,8 @@ func _ready() -> void:
 	for i in _campaigns.size():
 		var c := _campaigns[i]
 		var data := SimData.load_default().for_civ(c["civ"])
-		var won: int = int(prog.get(c["civ"], 0))
-		var name: String = data.civ.get("nombre", c["civ"])
+		var won: int = int(prog.get(c["_clave"], 0))
+		var name: String = "Tutorial" if c["_clave"] == "tutorial" else data.civ.get("nombre", c["civ"])
 		var idx := i
 		_list.add_child(_button("%s · %s   %d/4" % [name, c["titulo"], won], func() -> void: _show(idx), 430))
 	if not _campaigns.is_empty():
@@ -101,7 +103,7 @@ func _show(i: int) -> void:
 	for ch in _detail.get_children():
 		ch.queue_free()
 	var c := _campaigns[i]
-	var won: int = int(progress().get(c["civ"], 0))
+	var won: int = int(progress().get(c["_clave"], 0))
 	var tex := plate(c["civ"])
 	if tex != null:
 		var tr := TextureRect.new()
@@ -133,7 +135,7 @@ func _show(i: int) -> void:
 			if not intro.is_empty():
 				var l := _label(intro[0], 15, Palette.UI_DIM)
 				vb.add_child(l)
-			var civ: String = c["civ"]
+			var civ: String = c["_clave"]
 			var idx := mi
 			var row := HBoxContainer.new()
 			row.add_child(_button("Jugar" if mi >= won else "Volver a jugar", func() -> void: start_mission.emit(civ, idx), 220))

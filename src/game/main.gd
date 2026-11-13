@@ -314,9 +314,10 @@ func _campaign_size(civ: String) -> int:
 
 ## Arma una misión de campaña: la simulación la crea el motor de escenarios.
 func _new_mission() -> void:
-	var civ: String = _args["campana"]
+	var key: String = _args["campana"]
 	var idx := int(_args.get("mision", "0"))
-	sim = SimScenario.create(_mission_data(civ, idx), civ)
+	var camp: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/campanas/%s.json" % key))
+	sim = SimScenario.create(camp["misiones"][idx], camp["civ"])
 	_build_scene(false)
 
 

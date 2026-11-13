@@ -11,7 +11,8 @@
   "acento": "#6b5a3a",
   "modelos": {
    "lof": "mapuches_lof",
-   "jinete": "mapuches_jinete"
+   "jinete": "mapuches_jinete",
+   "casa": "mapuches_casa"
   }
  },
  "edades": [

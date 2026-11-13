@@ -1,0 +1,237 @@
+{
+ "civ": "guaranies",
+ "titulo": "Primeros pasos",
+ "resumen": "Aprendé a recolectar, construir, entrenar, defender y avanzar de edad.",
+ "misiones": [
+  {
+   "id": "tutorial-1",
+   "titulo": "Primeros pasos",
+   "anio": "",
+   "lugar": "Un claro junto al río",
+   "intro": [
+    "Antes de las grandes historias, lo básico: un pueblo vive de lo que junta, de lo que construye y de quienes lo defienden.",
+    "Seleccioná a tus aldeanos arrastrando el mouse sobre ellos. Con clic derecho sobre un recurso, se ponen a recolectar. La grilla de abajo a la derecha construye y entrena: cada botón tiene su tecla (Q, W, E, R…)."
+   ],
+   "epilogo": [
+    "Ya sabés lo necesario. Cada pueblo juega distinto: elegí uno en las campañas o en una escaramuza y descubrí su forma."
+   ],
+   "fuentes": [],
+   "mapa": {
+    "semilla": 2024,
+    "terreno": "llano"
+   },
+   "jugador": {
+    "edad": 1,
+    "recursos": {
+     "alimento": 200,
+     "madera": 250,
+     "piedra": 100,
+     "riqueza": 150
+    },
+    "aldeanos": 6,
+    "tropas": []
+   },
+   "rivales": [
+    {
+     "nombre": "Saqueadores",
+     "faccion": "invasores",
+     "ia": "pasiva",
+     "edad": 1
+    }
+   ],
+   "objetivos": [
+    {
+     "id": "o1",
+     "texto": "Juntá 300 de madera: seleccioná aldeanos y hacé clic derecho en un árbol.",
+     "tipo": "recolectar",
+     "params": {
+      "recurso": "madera",
+      "n": 300
+     },
+     "secundario": false
+    },
+    {
+     "id": "o2",
+     "texto": "Construí una casa (aldeanos seleccionados, tecla Q y clic en el suelo).",
+     "tipo": "construir",
+     "params": {
+      "tipo": "casa",
+      "n": 1
+     },
+     "secundario": false
+    },
+    {
+     "id": "o3",
+     "texto": "Entrená 3 aldeanos en el centro (tecla H para seleccionarlo, después Q).",
+     "tipo": "entrenar",
+     "params": {
+      "tipo": "aldeano",
+      "n": 3
+     },
+     "secundario": false,
+     "oculto": true
+    },
+    {
+     "id": "o4",
+     "texto": "Construí un cuartel (tecla R con aldeanos seleccionados).",
+     "tipo": "construir",
+     "params": {
+      "tipo": "cuartel",
+      "n": 1
+     },
+     "secundario": false,
+     "oculto": true
+    },
+    {
+     "id": "o5",
+     "texto": "Entrená 5 guerreros y defendé el pueblo de los saqueadores: abatí a 4.",
+     "tipo": "matar",
+     "params": {
+      "n": 4
+     },
+     "secundario": false,
+     "oculto": true
+    },
+    {
+     "id": "o6",
+     "texto": "Avanzá a la edad II: construí uno de los dos hitos (teclas Z o X).",
+     "tipo": "edad",
+     "params": {
+      "n": 2
+     },
+     "secundario": false,
+     "oculto": true
+    }
+   ],
+   "eventos": [
+    {
+     "cuando": {
+      "tipo": "inicio",
+      "valor": 0
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Arrastrá el mouse sobre tus aldeanos y mandalos al bosque con clic derecho."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o1"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Bien. Más gente necesita más casas: la población máxima está arriba, junto a los recursos."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o2"
+     },
+     "accion": {
+      "tipo": "objetivo_nuevo",
+      "params": {
+       "id": "o3"
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o2"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Más manos, más recursos. Seleccioná el centro con H y entrená aldeanos con Q."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o3"
+     },
+     "accion": {
+      "tipo": "objetivo_nuevo",
+      "params": {
+       "id": "o4"
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o4"
+     },
+     "accion": {
+      "tipo": "objetivo_nuevo",
+      "params": {
+       "id": "o5"
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o4"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Choque vence a distancia, distancia vence a línea, línea vence a choque. Y si te atacan, la campana (Z en el centro) refugia a tus aldeanos."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o4"
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "guerrero",
+       "n": 4
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o5"
+     },
+     "accion": {
+      "tipo": "objetivo_nuevo",
+      "params": {
+       "id": "o6"
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o5"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Cada edad se gana con un hito, y cada civilización tiene los suyos. Elegí: economía o guerra."
+      }
+     }
+    }
+   ]
+  }
+ ]
+}

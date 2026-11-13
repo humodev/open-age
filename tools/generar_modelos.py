@@ -18,6 +18,12 @@ ASSETS = {
     "palmares_centro": "a fortified quilombo village of the 17th century in Brazil: palm-thatched wattle-and-daub houses inside a ring of sharpened wooden palisade stakes with a gate, square footprint",
     "ayutthaya_centro": "a Siamese royal palace hall of the 17th century: whitewashed walls on a raised platform, steep multi-tiered red roofs with golden finials and curved gable ornaments, square footprint",
     "ayutthaya_elefante": "a war elephant of 17th-century Siam with an ornate wooden howdah, red and gold cloth, ivory tusks, walking pose, side three-quarter view",
+    "tawantinsuyu_casa": "a small Andean stone house of the 15th century: fitted grey stone walls, one trapezoidal doorway, steep hip roof of golden thatch, compact square footprint",
+    "mapuches_casa": "a small Mapuche ruka house of the 16th century: an oval house with a thick thatched roof reaching the ground and one small door, compact footprint",
+    "guaranies_casa": "a small Guarani house of the 16th century: an A-frame thatched roof reaching the ground, wooden posts, one door, compact footprint",
+    "etiopia_casa": "a small Ethiopian highland tukul of the 16th century: round wattle-and-daub wall with a tall conical thatched roof and a small wooden finial, compact footprint",
+    "palmares_casa": "a small quilombo house of the 17th century in Brazil: wattle-and-daub walls with a low palm-thatched gable roof and wide eaves, compact footprint",
+    "ayutthaya_casa": "a small Siamese wooden house of the 17th century on short stilts: teak walls and a steep red tiled gable roof with curved finials, compact footprint",
     "mapuches_jinete": "a Mapuche lancer on a brown horse in the late 16th century, rider in a woven poncho with a silver headband holding a long cane lance, horse in walking pose",
 }
 
@@ -37,7 +43,7 @@ def make(name, desc):
     if not os.path.exists(raw) and not os.path.exists(glb):
         out.append(sh(["modelo", raw, img, "--poli=9000"]))
     if os.path.exists(raw) and not os.path.exists(glb):
-        tris = "30000" if name.endswith("centro") or name.endswith("lof") else "15000"
+        tris = "30000" if name.endswith("centro") or name.endswith("lof") else ("12000" if name.endswith("casa") else "15000")
         subprocess.run(["blender", "--background", "--python", os.path.join(ROOT, "tools", "optimizar_glb.py"), "--", raw, glb, tris, "1024"], capture_output=True)
         out.append("optimizado")
     return name + ": " + " | ".join(out)
