@@ -96,7 +96,7 @@ func on_step() -> void:
 	for ev in sim.events:
 		match ev["t"]:
 			"trained":
-				if ev.get("player", -1) == 0:
+				if ev.get("player", -1) == 0 and ev.has("type"):
 					trained[ev["type"]] = int(trained.get(ev["type"], 0)) + 1
 			"died":
 				if ev.get("by", -1) == 0 and ev.get("owner", -1) > 0:

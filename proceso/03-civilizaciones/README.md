@@ -67,3 +67,7 @@ Después del torneo 1 bajaron guaraníes y Palmares y subieron mapuches y Etiop�
 | Conceptos | Capitales en el juego |
 |---|---|
 | ![](13-conceptos-meshy.jpg) | ![](12-capitales-meshy.jpg) |
+21. **Casas generadas con Meshy** para cinco civilizaciones. La guaraní tenía 7,7 millones de polígonos en piezas sueltas de paja y el diezmado se trabó en 179.000 triángulos, así que esa casa sigue siendo procedural. El optimizador ahora diezma en varios pasos.
+22. **Tutorial "Primeros pasos"** como primera entrada de campañas.
+23. **Campañas con IA en el lugar del jugador** (`campanas-con-ia.txt`): la IA difícil ganó 2 misiones (Palmares 1 y 3). En el resto pierde lo que tiene que proteger o no persigue los objetivos, porque no los conoce. La prueba encontró un error real: la acogida de Palmares no informaba el tipo de unidad y el motor de escenarios fallaba en cada tick. Quedó corregido.
+24. **Torneo 4** (`torneo-4.txt`): Palmares 7, Tawantinsuyu 6, Ayutthaya 6, guaraníes 6, Etiopía 3, mapuches 2. Último ajuste: lof más barato, más relevo y lanza larga desde la edad I para los mapuches; más renta del gult para Etiopía.

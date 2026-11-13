@@ -99,7 +99,7 @@ func _welcome(pid: int, p: Dictionary) -> void:
 		return
 	p["res"][key] -= cost
 	var u := sim.spawn_near(home, "aldeano")
-	sim.events.append({"t": "trained", "id": u.id, "player": pid})
+	sim.events.append({"t": "trained", "id": u.id, "player": pid, "type": "aldeano"})
 
 
 ## Relevo: las unidades fuera de combate se curan.

@@ -112,8 +112,8 @@
    "vision": 3000,
    "transitable": true,
    "renta": {
-    "riqueza": 15,
-    "alimento": 12
+    "riqueza": 18,
+    "alimento": 14
    },
    "ranura": 7,
    "desc": "Tierra asignada a un señor o un monasterio: rinde tributo sin aldeanos."

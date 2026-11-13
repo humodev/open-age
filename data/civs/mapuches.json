@@ -44,7 +44,12 @@
    "alcance": 5500
   },
   "lancero": {
-   "nombre": "Lanza larga"
+   "nombre": "Lanza larga",
+   "costo": {
+    "alimento": 50,
+    "madera": 25
+   },
+   "edad_min": 1
   },
   "jinete": {
    "nombre": "Kona montado",
@@ -92,7 +97,7 @@
    "pv": 1600,
    "armadura": 1,
    "costo": {
-    "madera": 130
+    "madera": 110
    },
    "tiempo_ms": 40000,
    "vision": 9000,
@@ -373,7 +378,7 @@
   },
   "relevo": {
    "espera_ms": 6000,
-   "pct_por_seg": 4
+   "pct_por_seg": 5
   }
  },
  "ia_unidades": [
