@@ -1,233 +1,1272 @@
 {
-  "civ": "ayutthaya",
-  "titulo": "El tiempo del agua",
-  "resumen": "Un escribano del almacén real, en la Thonburi recién fundada, cuenta cómo Ayutthaya vivió del río y del puerto, peleó en la estación seca, perdió la isla en 1767 y volvió a empezar desde el mar.",
-  "misiones": [
-    {
-      "id": "ayutthaya-1",
-      "titulo": "Nong Sarai",
-      "anio": "1593",
-      "lugar": "Nong Sarai, en las tierras de Suphanburi",
-      "intro": [
-        "Escribo en Thonburi, en la otra orilla, porque la isla ya no es lo que era. Antes de contar cómo se perdió, quiero contar cómo se defendía.",
-        "En 1569 la ciudad cayó ante Pegu, y durante quince años el tributo bajó por el río hacia allá. En 1584 el príncipe Naresuan dijo que no se mandaba más. Pegu vino dos años después, en la estación seca, y sitió la isla cuatro meses. Cuando el agua empezó a subir, se fue. Así se defendía Ayutthaya: con murallas y con el calendario.",
-        "A fines de 1592 bajó el uparat de Pegu, el príncipe heredero Mingyi Swa, con su ejército y sus elefantes. Naresuan, ya rey, salió a buscarlo antes de que llegara a la isla. Si se lo espera adentro, quema los campos de afuera."
-      ],
-      "epilogo": [
-        "En las crónicas que copio, el rey desafía al príncipe a pelear elefante contra elefante y lo vence de un golpe. Es una historia hermosa. Los que estuvieron ahí, birmanos, extranjeros y algunos de los nuestros, contaron otra cosa: que el elefante del rey estaba en celo, que nadie lo pudo contener, que quedó adelante casi solo y que el príncipe murió de un tiro.",
-        "Yo copio las dos. Un elefante que no obedece puede ganar una batalla o perderla, y a veces es la misma batalla. Cuando ese elefante murió, dos años después, el rey le hizo funerales de señor. Hay que saber a quién se le debe cada cosa."
-      ],
-      "fuentes": [
-        "Barend Jan Terwiel, What Happened at Nong Sarai? Comparing Indigenous and European Sources for Late 16th Century Siam (Journal of the Siam Society 101, 2013)",
-        "Richard D. Cushman (trad.), The Royal Chronicles of Ayutthaya (Siam Society, 2000)",
-        "Chris Baker, Dhiravat na Pombejra, Alfons van der Kraan y David K. Wyatt (eds.), Van Vliet's Siam (Silkworm, 2005)",
-        "Hmannan Yazawin (Crónica del Palacio de Cristal, 1832), para la versión birmana"
-      ],
-      "mapa": { "semilla": 1593, "terreno": "llano" },
-      "jugador": {
-        "edad": 2,
-        "recursos": { "alimento": 600, "madera": 400, "piedra": 100, "riqueza": 300 },
-        "aldeanos": 12,
-        "tropas": [ { "tipo": "lancero", "n": 8 }, { "tipo": "guerrero", "n": 6 }, { "tipo": "hondero", "n": 6 }, { "tipo": "jinete", "n": 2 } ]
-      },
-      "rivales": [
-        { "nombre": "Ejército del uparat Mingyi Swa (Toungoo)", "faccion": "invasores", "ia": "agresiva", "edad": 3 }
-      ],
-      "objetivos": [
-        { "id": "o1", "texto": "Llamá a la leva de la estación seca: cada munnai trae a los phrai de su registro (12 lanceros).", "tipo": "entrenar", "params": { "tipo": "lancero", "n": 12 }, "secundario": false },
-        { "id": "o2", "texto": "Arreá elefantes salvajes al phaniat, el corral real, y alimentá a los capturados y a sus cornacas (500 de alimento).", "tipo": "recolectar", "params": { "recurso": "alimento", "n": 500 }, "secundario": false },
-        { "id": "o3", "texto": "Ekkarat: el junco del tributo va a la corte Ming y ya no a Pegu (avanzá a la edad III).", "tipo": "edad", "params": { "n": 3 }, "secundario": false },
-        { "id": "o4", "texto": "Salí al encuentro antes de que lleguen a la isla: frená al ejército de Pegu en Nong Sarai (matá a 30).", "tipo": "matar", "params": { "n": 30 }, "secundario": false },
-        { "id": "o5", "texto": "El uparat cayó y su ejército se desarma. Tomá su campamento antes de que se reagrupe.", "tipo": "destruir_hitos", "params": { "jugador": 1 }, "secundario": false, "oculto": true },
-        { "id": "o6", "texto": "Que siempre quede en pie un elefante de guerra: cada uno es una captura, un cornaca y un nombre.", "tipo": "proteger", "params": { "tipo": "jinete", "jugador": 0 }, "secundario": true }
-      ],
-      "eventos": [
-        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Naresuan", "texto": "En la seca camina todo el mundo, ellos y nosotros. Que nos encuentren en el camino y no en los campos." } } },
-        { "cuando": { "tipo": "tiempo", "valor": 200 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 4 } } },
-        { "cuando": { "tipo": "tiempo", "valor": 205 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 6 } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o2" }, "accion": { "tipo": "refuerzos", "params": { "jugador": 0, "tipo": "jinete", "n": 4 } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o2" }, "accion": { "tipo": "dialogo", "params": { "quien": "Escribano del Phra Khlang", "texto": "Cada elefante de guerra fue antes un elefante salvaje, una hembra que lo llevó al corral y un cornaca que pasó meses con él." } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "dialogo", "params": { "quien": "Escribano del Phra Khlang", "texto": "Ese año el junco salió hacia la corte Ming. A Pegu no fue nada." } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 8 } } },
-        { "cuando": { "tipo": "tiempo", "valor": 480 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 6 } } },
-        { "cuando": { "tipo": "tiempo", "valor": 485 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "lancero", "n": 8 } } },
-        { "cuando": { "tipo": "tiempo", "valor": 490 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "hondero", "n": 6 } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "dialogo", "params": { "quien": "Ekathotsarot", "texto": "¡El elefante del rey no responde! Quedó adelante, casi solo. ¡Seguilo, que no lo alcancen ellos primero!" } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "objetivo_nuevo", "params": { "id": "o5" } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "revelar", "params": {} } }
-      ]
+ "civ": "ayutthaya",
+ "titulo": "El tiempo del agua",
+ "resumen": "Un escribano del almacén real, en la Thonburi recién fundada, cuenta cómo Ayutthaya vivió del río y del puerto, peleó en la estación seca, perdió la isla en 1767 y volvió a empezar desde el mar.",
+ "misiones": [
+  {
+   "id": "ayutthaya-1",
+   "titulo": "Nong Sarai",
+   "anio": "1593",
+   "lugar": "Nong Sarai, en las tierras de Suphanburi",
+   "intro": [
+    "Escribo en Thonburi, en la otra orilla, porque la isla ya no es lo que era. Antes de contar cómo se perdió, quiero contar cómo se defendía.",
+    "En 1569 la ciudad cayó ante Pegu, y durante quince años el tributo bajó por el río hacia allá. En 1584 el príncipe Naresuan dijo que no se mandaba más. Pegu vino dos años después, en la estación seca, y sitió la isla cuatro meses. Cuando el agua empezó a subir, se fue. Así se defendía Ayutthaya: con murallas y con el calendario.",
+    "A fines de 1592 bajó el uparat de Pegu, el príncipe heredero Mingyi Swa, con su ejército y sus elefantes. Naresuan, ya rey, salió a buscarlo antes de que llegara a la isla. Si se lo espera adentro, quema los campos de afuera."
+   ],
+   "epilogo": [
+    "En las crónicas que copio, el rey desafía al príncipe a pelear elefante contra elefante y lo vence de un golpe. Es una historia hermosa. Los que estuvieron ahí, birmanos, extranjeros y algunos de los nuestros, contaron otra cosa: que el elefante del rey estaba en celo, que nadie lo pudo contener, que quedó adelante casi solo y que el príncipe murió de un tiro.",
+    "Yo copio las dos. Un elefante que no obedece puede ganar una batalla o perderla, y a veces es la misma batalla. Cuando ese elefante murió, dos años después, el rey le hizo funerales de señor. Hay que saber a quién se le debe cada cosa."
+   ],
+   "fuentes": [
+    "Barend Jan Terwiel, What Happened at Nong Sarai? Comparing Indigenous and European Sources for Late 16th Century Siam (Journal of the Siam Society 101, 2013)",
+    "Richard D. Cushman (trad.), The Royal Chronicles of Ayutthaya (Siam Society, 2000)",
+    "Chris Baker, Dhiravat na Pombejra, Alfons van der Kraan y David K. Wyatt (eds.), Van Vliet's Siam (Silkworm, 2005)",
+    "Hmannan Yazawin (Crónica del Palacio de Cristal, 1832), para la versión birmana"
+   ],
+   "mapa": {
+    "semilla": 1593,
+    "terreno": "llano"
+   },
+   "jugador": {
+    "edad": 2,
+    "recursos": {
+     "alimento": 600,
+     "madera": 400,
+     "piedra": 100,
+     "riqueza": 300
     },
+    "aldeanos": 12,
+    "tropas": [
+     {
+      "tipo": "lancero",
+      "n": 8
+     },
+     {
+      "tipo": "guerrero",
+      "n": 6
+     },
+     {
+      "tipo": "hondero",
+      "n": 6
+     },
+     {
+      "tipo": "jinete",
+      "n": 2
+     }
+    ]
+   },
+   "rivales": [
     {
-      "id": "ayutthaya-2",
-      "titulo": "La boca del río",
-      "anio": "1688",
-      "lugar": "La isla de Ayutthaya y la fortaleza de Bangkok",
-      "intro": [
-        "Mi oficio es el almacén real. Todo lo que entraba y salía por el río pasaba por el Phra Khlang: el palo de sapán, los cueros, el estaño, el arroz. El rey compraba primero y vendía cuando el monzón traía los barcos.",
-        "Alrededor de la isla vivían barrios enteros de otros pueblos, cada uno con su jefe, su templo y un título que le daba la corona: chinos, japoneses, portugueses, persas, makasares. El puerto de la derecha lo había ordenado un persa, el jeque Ahmad Qomi, hacía casi ochenta años. Nadie lo llamaba extranjero cuando firmaba con sello siamés.",
-        "En 1663 tres barcos holandeses cerraron la boca del río, y el rey Narai tuvo que firmar lo que ellos querían. Aprendió la lección: buscó otros compradores y otros amigos, mandó embajadas a Francia y le dio el comercio a un griego, Phaulkon, con título siamés. En 1687 desembarcaron soldados franceses y se quedaron en la fortaleza de Bangkok, en la boca del río.",
-        "Una fortaleza ajena en la boca del río es como tres barcos holandeses, con una diferencia: no se va con el viento."
-      ],
-      "epilogo": [
-        "Narai murió en Lopburi en julio de 1688. Phra Phetracha, que mandaba los elefantes del rey, tomó el palacio. Ejecutaron a Phaulkon, y también murieron los que podían heredar. No todo lo que se hizo ese año fue limpio, y en el almacén lo sabíamos.",
-        "Los franceses aguantaron meses en Bangkok, y en noviembre se fueron en sus barcos, por acuerdo. Después escribieron que Siam había cerrado su puerto. Los juncos chinos siguieron llegando cada monzón, y los holandeses también. Lo que cerramos fue la boca del río a los soldados."
-      ],
-      "fuentes": [
-        "Chris Baker y Pasuk Phongpaichit, A History of Ayutthaya: Siam in the Early Modern World (Cambridge UP, 2017)",
-        "Muhammad Rabi' ibn Muhammad Ibrahim, Safine-ye Solaymani, trad. John O'Kane, The Ship of Sulaiman (Columbia UP, 1972)",
-        "Simon de La Loubère, Du Royaume de Siam (1691)",
-        "Christoph Marcinkowski, The Iranian-Siamese Connection: An Iranian Community in the Thai Kingdom of Ayutthaya (Iranian Studies)",
-        "Tratado holandés-siamés del 22 de agosto de 1664"
-      ],
-      "mapa": { "semilla": 1688, "terreno": "rio" },
-      "jugador": {
-        "edad": 3,
-        "recursos": { "alimento": 1000, "madera": 600, "piedra": 300, "riqueza": 500 },
-        "aldeanos": 18,
-        "tropas": [ { "tipo": "lancero", "n": 10 }, { "tipo": "hondero", "n": 8 }, { "tipo": "jinete", "n": 4 } ]
-      },
-      "rivales": [
-        { "nombre": "Guarnición francesa de Bangkok", "faccion": "invasores", "ia": "pasiva", "edad": 3 }
-      ],
-      "objetivos": [
-        { "id": "o1", "texto": "Concedé tierra a 4 barrios (casas): chino, japonés, portugués y persa. Cada uno trae un comprador, un jefe con título y una compañía.", "tipo": "construir", "params": { "tipo": "casa", "n": 4 }, "secundario": false },
-        { "id": "o2", "texto": "Llená el almacén real y vendé cuando llegue el monzón, no al primer barco (1200 de riqueza).", "tipo": "recolectar", "params": { "recurso": "riqueza", "n": 1200 }, "secundario": false },
-        { "id": "o3", "texto": "Que zarpe la embajada de Kosa Pan a Francia: comercio a cambio de ingenieros (avanzá a la edad IV).", "tipo": "edad", "params": { "n": 4 }, "secundario": false },
-        { "id": "o4", "texto": "Levantá 3 fuertes de esquina con baluartes nuevos (torres) y guarnecelos con las compañías de los barrios.", "tipo": "construir", "params": { "tipo": "torre", "n": 3 }, "secundario": false },
-        { "id": "o5", "texto": "Narai se muere en Lopburi. Cercá la fortaleza de Bangkok hasta que los franceses acepten irse.", "tipo": "destruir_hitos", "params": { "jugador": 1 }, "secundario": false, "oculto": true },
-        { "id": "o6", "texto": "Que el almacén real no caiga (depósito): sin almacén no hay puerto.", "tipo": "proteger", "params": { "tipo": "deposito", "jugador": 0 }, "secundario": true }
-      ],
-      "eventos": [
-        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Narai", "texto": "Con un solo comprador, el que compra es el amo. Con cinco, es un mercado." } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o1" }, "accion": { "tipo": "refuerzos", "params": { "jugador": 0, "tipo": "arcabucero", "n": 6 } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o1" }, "accion": { "tipo": "dialogo", "params": { "quien": "Escribano del Phra Khlang", "texto": "Cada barrio tenía su compañía, pagada por contrato. Si el barrio caía, la compañía se iba con él." } } },
-        { "cuando": { "tipo": "tiempo", "valor": 420 }, "accion": { "tipo": "dialogo", "params": { "quien": "Escribano del Phra Khlang", "texto": "En 1686 se alzaron los makasares de Daeng Mangalle dentro de la ciudad. Los vencimos, y caro. Un barrio con título también puede decir que no." } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o2" }, "accion": { "tipo": "dialogo", "params": { "quien": "Escribano del Phra Khlang", "texto": "El arroz se lo llevaron los chinos; los cueros, los holandeses y los japoneses. El rey esperó la segunda flota para vender el estaño." } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "dialogo", "params": { "quien": "Kosa Pan", "texto": "En Versalles nos miraban como a un espectáculo. Nosotros mirábamos sus fortificaciones." } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "objetivo_nuevo", "params": { "id": "o5" } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "dialogo", "params": { "quien": "Phra Phetracha", "texto": "La boca del río es del rey de Ayutthaya. Que se vayan en sus barcos o que se queden adentro." } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 8 } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 6 } } },
-        { "cuando": { "tipo": "tiempo", "valor": 1200 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 6 } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o5" }, "accion": { "tipo": "dialogo", "params": { "quien": "Escribano del Phra Khlang", "texto": "Ese monzón el almacén vendió como siempre. Los barcos que faltaban eran de guerra." } } }
-      ]
-    },
-    {
-      "id": "ayutthaya-3",
-      "titulo": "Veintisiete fuertes",
-      "anio": "1767",
-      "lugar": "La isla de Ayutthaya",
-      "intro": [
-        "En 1760 el rey de Ava, Alaungpaya, sitió la isla y se fue cuando llegaron las lluvias, como Pegu en tiempos de Naresuan. La isla había aprendido a esperar el agua.",
-        "En 1765 su hijo Hsinbyushin mandó dos ejércitos, uno por el norte y otro por el oeste, con Ne Myo Thihapate y Maha Nawrahta. Llegaron con la lluvia y no se fueron: levantaron veintisiete fuertes en lo alto, alrededor de la ciudad, y pasaron la crecida adentro.",
-        "La corte llamó a las provincias a encerrarse en la isla. Era lo que siempre había funcionado. En las murallas peleaban los nuestros, los chinos de sus barrios y los portugueses de los suyos. Entre los gobernadores llamados estaba Phraya Tak, señor de Tak, hijo de un teochew."
-      ],
-      "epilogo": [
-        "Phraya Tak no esperó a que se acabara la comida. En enero rompió el cerco hacia el este con unos pocos cientos de hombres, siameses y chinos. En la ciudad algunos dijeron que huía. Otros entendimos después que se llevaba la ciudad afuera.",
-        "Los birmanos cavaron túneles bajo la muralla y le prendieron fuego a los cimientos hasta que se derrumbó el tramo del noreste. El 7 de abril de 1767 entraron. Fue una obra de ingeniería tan grande como las nuestras. La ciudad ardió. Yo salí por el agua con lo que pude cargar: tres libros de cuentas."
-      ],
-      "fuentes": [
-        "Richard D. Cushman (trad.), The Royal Chronicles of Ayutthaya (Siam Society, 2000)",
-        "Hmannan Yazawin (Crónica del Palacio de Cristal, 1832), para la versión birmana del sitio",
-        "Victor Lieberman, Strange Parallels: Southeast Asia in Global Context, c. 800-1830, vol. 1 (Cambridge UP, 2003)",
-        "François Molle y Jesda Keawkulaya, Water Management and Agricultural Change in the Upper Chao Phraya Delta (Southeast Asian Studies 36:1, 1998)"
-      ],
-      "mapa": { "semilla": 1767, "terreno": "rio" },
-      "jugador": {
-        "edad": 4,
-        "recursos": { "alimento": 1500, "madera": 800, "piedra": 600, "riqueza": 800 },
-        "aldeanos": 20,
-        "tropas": [ { "tipo": "lancero", "n": 12 }, { "tipo": "hondero", "n": 10 }, { "tipo": "guerrero", "n": 8 }, { "tipo": "jinete", "n": 4 }, { "tipo": "arcabucero", "n": 6 } ]
-      },
-      "rivales": [
-        { "nombre": "Ejército de Maha Nawrahta (Konbaung)", "faccion": "invasores", "ia": "normal", "edad": 4 },
-        { "nombre": "Ejército de Ne Myo Thihapate (Konbaung)", "faccion": "invasores", "ia": "agresiva", "edad": 4 }
-      ],
-      "objetivos": [
-        { "id": "o1", "texto": "Abrí canales y fosos alrededor de la isla (25 tramos de empalizada). Con la crecida se ensanchan.", "tipo": "construir", "params": { "tipo": "empalizada", "n": 25 }, "secundario": false },
-        { "id": "o2", "texto": "Guarnecé 4 fuertes de la muralla (torres) con las compañías de los barrios chino y portugués.", "tipo": "construir", "params": { "tipo": "torre", "n": 4 }, "secundario": false },
-        { "id": "o3", "texto": "Aguantá hasta la crecida. Antes, eso alcanzaba.", "tipo": "sobrevivir", "params": { "segundos": 600 }, "secundario": false },
-        { "id": "o4", "texto": "No se van: pasan la crecida en fuertes en lo alto. Rompé 2 de sus fuertes del este para que Phraya Tak salga del cerco.", "tipo": "destruir", "params": { "tipo": "torre", "n": 2, "jugador": 1 }, "secundario": false, "oculto": true },
-        { "id": "o5", "texto": "Cubrí la salida de la columna: matá a 25 de los que la persiguen.", "tipo": "matar", "params": { "n": 25 }, "secundario": false, "oculto": true },
-        { "id": "o6", "texto": "Que los voluntarios chinos y portugueses sigan en la muralla: son la última línea.", "tipo": "proteger", "params": { "tipo": "arcabucero", "jugador": 0 }, "secundario": true }
-      ],
-      "eventos": [
-        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Phraya Tak", "texto": "Si todos los ejércitos están adentro de la isla, ¿quién queda afuera para socorrerla?" } } },
-        { "cuando": { "tipo": "tiempo", "valor": 150 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "lancero", "n": 8 } } },
-        { "cuando": { "tipo": "tiempo", "valor": 155 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "hondero", "n": 6 } } },
-        { "cuando": { "tipo": "tiempo", "valor": 400 }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "ariete", "n": 3 } } },
-        { "cuando": { "tipo": "tiempo", "valor": 405 }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "guerrero", "n": 8 } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o2" }, "accion": { "tipo": "dialogo", "params": { "quien": "Escribano del Phra Khlang", "texto": "En la muralla del sur hablaban teochew y portugués. Nadie preguntaba quién era extranjero." } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "dialogo", "params": { "quien": "Escribano del Phra Khlang", "texto": "Bajó el agua y ellos seguían ahí, secos, en sus fuertes. Ese día entendí que el calendario también se aprende." } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "objetivo_nuevo", "params": { "id": "o4" } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "revelar", "params": {} } },
-        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "objetivo_nuevo", "params": { "id": "o5" } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "dialogo", "params": { "quien": "Phraya Tak", "texto": "Por el este, de noche. El que venga, que venga ahora." } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 8 } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 10 } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "lancero", "n": 8 } } },
-        { "cuando": { "tipo": "tiempo", "valor": 1200 }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "ariete", "n": 2 } } },
-        { "cuando": { "tipo": "tiempo", "valor": 1205 }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "arcabucero", "n": 6 } } }
-      ]
-    },
-    {
-      "id": "ayutthaya-4",
-      "titulo": "La otra orilla",
-      "anio": "1767",
-      "lugar": "Chanthaburi, la boca del Chao Phraya y Thonburi",
-      "intro": [
-        "Phraya Tak bajó hacia la costa del este. En el camino se le sumaron campesinos, bandas y señores de la zona. No todos quisieron sumarse, y a algunos hubo que convencerlos con armas.",
-        "En junio tomó Chanthaburi, un puerto de comerciantes teochew como su padre. Ahí había lo que una isla sitiada no tiene: barcos, arroz, plata y gente que sabía hacer circular las tres cosas. Mandó construir una flota.",
-        "En octubre zarpó hacia el río con unos cinco mil hombres: siameses, milicias hokkien y teochew y marinos de origen makasar. En la boca del Chao Phraya, donde Narai había echado a los franceses, los birmanos habían dejado una guarnición. Río arriba, en Pho Sam Ton, tenían su campamento grande."
-      ],
-      "epilogo": [
-        "El 28 de diciembre de 1767 Phraya Tak se coronó en Thonburi, en la otra orilla y cerca del mar. No volvimos a la isla: estaba quemada, y además el mundo había cambiado de lugar. El reino ahora miraba hacia la boca del río.",
-        "El emperador Qing no lo reconoció al principio, porque decía que no era de la casa real. Ya lo reconocerá: los barcos de arroz no esperan a los emperadores. A mi hermano, que es phrai, le tatuaron en la muñeca la marca de su registro, para que nadie se pierda de las cuentas. Así se reconstruye un reino: con barcos, con arroz y con tinta en la piel de la gente.",
-        "Todavía hay otros señores que se dicen herederos de Ayutthaya, en Phitsanulok, en Phimai, en Fang. Cada uno tiene sus razones. Esto no terminó, y yo sigo anotando."
-      ],
-      "fuentes": [
-        "Chris Baker y Pasuk Phongpaichit, A History of Ayutthaya: Siam in the Early Modern World (Cambridge UP, 2017)",
-        "Sarasin Viraphol, Tribute and Profit: Sino-Siamese Trade, 1652-1853 (Harvard, 1977)",
-        "Akin Rabibhadana, The Organization of Thai Society in the Early Bangkok Period, 1782-1873 (Cornell, 1969)",
-        "Chris Baker y Pasuk Phongpaichit, artículos sobre la Ley de los Tres Sellos (Thai Legal Studies 3:1, 2023)"
-      ],
-      "mapa": { "semilla": 17671, "terreno": "rio" },
-      "jugador": {
-        "edad": 2,
-        "recursos": { "alimento": 400, "madera": 600, "piedra": 0, "riqueza": 600 },
-        "aldeanos": 10,
-        "tropas": [ { "tipo": "guerrero", "n": 10 }, { "tipo": "lancero", "n": 8 }, { "tipo": "hondero", "n": 6 }, { "tipo": "arcabucero", "n": 4 } ]
-      },
-      "rivales": [
-        { "nombre": "Guarniciones birmanas de Thonburi y Pho Sam Ton", "faccion": "invasores", "ia": "normal", "edad": 3 },
-        { "nombre": "Señores de Phitsanulok, Phimai y Fang", "faccion": "ayutthaya", "ia": "pasiva", "edad": 2 }
-      ],
-      "objetivos": [
-        { "id": "o1", "texto": "Los comerciantes teochew de Chanthaburi adelantan plata a cambio de arroz y permisos (800 de riqueza).", "tipo": "recolectar", "params": { "recurso": "riqueza", "n": 800 }, "secundario": false },
-        { "id": "o2", "texto": "Dales tierra en la orilla nueva: 3 barrios (casas) para chinos, makasares y la gente que va llegando.", "tipo": "construir", "params": { "tipo": "casa", "n": 3 }, "secundario": false },
-        { "id": "o3", "texto": "Remontá el río y tomá la guarnición de la boca, en Thonburi (matá a 30).", "tipo": "matar", "params": { "n": 30 }, "secundario": false },
-        { "id": "o4", "texto": "Tomá el campamento de Pho Sam Ton.", "tipo": "destruir_hitos", "params": { "jugador": 1 }, "secundario": false },
-        { "id": "o5", "texto": "Fundá la capital en la otra orilla y coronate en Thonburi (avanzá a la edad III, Ekkarat).", "tipo": "edad", "params": { "n": 3 }, "secundario": false },
-        { "id": "o6", "texto": "Los señores de Phitsanulok, Phimai y Fang también se dicen herederos. Sometelos: va a llevar años.", "tipo": "destruir_hitos", "params": { "jugador": 2 }, "secundario": true, "oculto": true }
-      ],
-      "eventos": [
-        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Phraya Tak", "texto": "La isla no se puede recuperar. La ciudad sí." } } },
-        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Comerciante teochew de Chanthaburi", "texto": "El arroz que traen mis barcos se paga cuando llega. La lealtad, cuando ganes." } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o1" }, "accion": { "tipo": "refuerzos", "params": { "jugador": 0, "tipo": "arcabucero", "n": 6 } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o1" }, "accion": { "tipo": "dialogo", "params": { "quien": "Escribano del Phra Khlang", "texto": "Milicias hokkien y teochew. Pelearon por un rey que hablaba la lengua de su padre y pagaba a tiempo." } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o2" }, "accion": { "tipo": "refuerzos", "params": { "jugador": 0, "tipo": "guerrero", "n": 8 } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o2" }, "accion": { "tipo": "dialogo", "params": { "quien": "Escribano del Phra Khlang", "texto": "Los marinos makasares conocían el río mejor que muchos de nosotros. Ochenta años antes, otros makasares se habían alzado contra Narai. Estos remaban para Phraya Tak." } } },
-        { "cuando": { "tipo": "tiempo", "valor": 300 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "lancero", "n": 6 } } },
-        { "cuando": { "tipo": "tiempo", "valor": 305 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "hondero", "n": 6 } } },
-        { "cuando": { "tipo": "tiempo", "valor": 600 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 8 } } },
-        { "cuando": { "tipo": "tiempo", "valor": 605 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 4 } } },
-        { "cuando": { "tipo": "tiempo", "valor": 900 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 6 } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "dialogo", "params": { "quien": "Phraya Tak", "texto": "Thonburi. Desde acá se ve el mar." } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "lancero", "n": 8 } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o5" }, "accion": { "tipo": "objetivo_nuevo", "params": { "id": "o6" } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o5" }, "accion": { "tipo": "revelar", "params": {} } },
-        { "cuando": { "tipo": "objetivo", "valor": "o5" }, "accion": { "tipo": "dialogo", "params": { "quien": "Escribano del Phra Khlang", "texto": "El primer libro que abrí en Thonburi fue uno de los tres que saqué de la isla. Seguí anotando donde había quedado." } } }
-      ]
+     "nombre": "Ejército del uparat Mingyi Swa (Toungoo)",
+     "faccion": "invasores",
+     "ia": "agresiva",
+     "edad": 3
     }
-  ]
+   ],
+   "objetivos": [
+    {
+     "id": "o1",
+     "texto": "Llamá a la leva de la estación seca: cada munnai trae a los phrai de su registro (12 lanceros).",
+     "tipo": "entrenar",
+     "params": {
+      "tipo": "lancero",
+      "n": 12
+     },
+     "secundario": false
+    },
+    {
+     "id": "o2",
+     "texto": "Arreá elefantes salvajes al phaniat, el corral real, y alimentá a los capturados y a sus cornacas (500 de alimento).",
+     "tipo": "recolectar",
+     "params": {
+      "recurso": "alimento",
+      "n": 500
+     },
+     "secundario": false
+    },
+    {
+     "id": "o3",
+     "texto": "Ekkarat: el junco del tributo va a la corte Ming y ya no a Pegu (avanzá a la edad III).",
+     "tipo": "edad",
+     "params": {
+      "n": 3
+     },
+     "secundario": false
+    },
+    {
+     "id": "o4",
+     "texto": "Salí al encuentro antes de que lleguen a la isla: frená al ejército de Pegu en Nong Sarai (matá a 30).",
+     "tipo": "matar",
+     "params": {
+      "n": 30
+     },
+     "secundario": false
+    },
+    {
+     "id": "o5",
+     "texto": "El uparat cayó y su ejército se desarma. Tomá su campamento antes de que se reagrupe.",
+     "tipo": "destruir_hitos",
+     "params": {
+      "jugador": 1
+     },
+     "secundario": false,
+     "oculto": true
+    },
+    {
+     "id": "o6",
+     "texto": "Que siempre quede en pie un elefante de guerra: cada uno es una captura, un cornaca y un nombre.",
+     "tipo": "proteger",
+     "params": {
+      "tipo": "jinete",
+      "jugador": 0
+     },
+     "secundario": true
+    }
+   ],
+   "eventos": [
+    {
+     "cuando": {
+      "tipo": "inicio",
+      "valor": 0
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Naresuan",
+       "texto": "En la seca camina todo el mundo, ellos y nosotros. Que nos encuentren en el camino y no en los campos."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 200
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "jinete",
+       "n": 4
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 205
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "guerrero",
+       "n": 6
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o2"
+     },
+     "accion": {
+      "tipo": "refuerzos",
+      "params": {
+       "jugador": 0,
+       "tipo": "jinete",
+       "n": 4
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o2"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Escribano del Phra Khlang",
+       "texto": "Cada elefante de guerra fue antes un elefante salvaje, una hembra que lo llevó al corral y un cornaca que pasó meses con él."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o3"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Escribano del Phra Khlang",
+       "texto": "Ese año el junco salió hacia la corte Ming. A Pegu no fue nada."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o3"
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "guerrero",
+       "n": 8
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 480
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "jinete",
+       "n": 6
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 485
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "lancero",
+       "n": 8
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 490
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "hondero",
+       "n": 6
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o4"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Ekathotsarot",
+       "texto": "¡El elefante del rey no responde! Quedó adelante, casi solo. ¡Seguilo, que no lo alcancen ellos primero!"
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o4"
+     },
+     "accion": {
+      "tipo": "objetivo_nuevo",
+      "params": {
+       "id": "o5"
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o4"
+     },
+     "accion": {
+      "tipo": "revelar",
+      "params": {}
+     }
+    }
+   ]
+  },
+  {
+   "id": "ayutthaya-2",
+   "titulo": "La boca del río",
+   "anio": "1688",
+   "lugar": "La isla de Ayutthaya y la fortaleza de Bangkok",
+   "intro": [
+    "Mi oficio es el almacén real. Todo lo que entraba y salía por el río pasaba por el Phra Khlang: el palo de sapán, los cueros, el estaño, el arroz. El rey compraba primero y vendía cuando el monzón traía los barcos.",
+    "Alrededor de la isla vivían barrios enteros de otros pueblos, cada uno con su jefe, su templo y un título que le daba la corona: chinos, japoneses, portugueses, persas, makasares. El puerto de la derecha lo había ordenado un persa, el jeque Ahmad Qomi, hacía casi ochenta años. Nadie lo llamaba extranjero cuando firmaba con sello siamés.",
+    "En 1663 tres barcos holandeses cerraron la boca del río, y el rey Narai tuvo que firmar lo que ellos querían. Aprendió la lección: buscó otros compradores y otros amigos, mandó embajadas a Francia y le dio el comercio a un griego, Phaulkon, con título siamés. En 1687 desembarcaron soldados franceses y se quedaron en la fortaleza de Bangkok, en la boca del río.",
+    "Una fortaleza ajena en la boca del río es como tres barcos holandeses, con una diferencia: no se va con el viento."
+   ],
+   "epilogo": [
+    "Narai murió en Lopburi en julio de 1688. Phra Phetracha, que mandaba los elefantes del rey, tomó el palacio. Ejecutaron a Phaulkon, y también murieron los que podían heredar. No todo lo que se hizo ese año fue limpio, y en el almacén lo sabíamos.",
+    "Los franceses aguantaron meses en Bangkok, y en noviembre se fueron en sus barcos, por acuerdo. Después escribieron que Siam había cerrado su puerto. Los juncos chinos siguieron llegando cada monzón, y los holandeses también. Lo que cerramos fue la boca del río a los soldados."
+   ],
+   "fuentes": [
+    "Chris Baker y Pasuk Phongpaichit, A History of Ayutthaya: Siam in the Early Modern World (Cambridge UP, 2017)",
+    "Muhammad Rabi' ibn Muhammad Ibrahim, Safine-ye Solaymani, trad. John O'Kane, The Ship of Sulaiman (Columbia UP, 1972)",
+    "Simon de La Loubère, Du Royaume de Siam (1691)",
+    "Christoph Marcinkowski, The Iranian-Siamese Connection: An Iranian Community in the Thai Kingdom of Ayutthaya (Iranian Studies)",
+    "Tratado holandés-siamés del 22 de agosto de 1664"
+   ],
+   "mapa": {
+    "semilla": 1688,
+    "terreno": "rio"
+   },
+   "jugador": {
+    "edad": 3,
+    "recursos": {
+     "alimento": 1000,
+     "madera": 600,
+     "piedra": 300,
+     "riqueza": 500
+    },
+    "aldeanos": 18,
+    "tropas": [
+     {
+      "tipo": "lancero",
+      "n": 10
+     },
+     {
+      "tipo": "hondero",
+      "n": 8
+     },
+     {
+      "tipo": "jinete",
+      "n": 4
+     }
+    ]
+   },
+   "rivales": [
+    {
+     "nombre": "Guarnición francesa de Bangkok",
+     "faccion": "invasores",
+     "ia": "pasiva",
+     "edad": 3
+    }
+   ],
+   "objetivos": [
+    {
+     "id": "o1",
+     "texto": "Concedé tierra a 4 barrios (casas): chino, japonés, portugués y persa. Cada uno trae un comprador, un jefe con título y una compañía.",
+     "tipo": "construir",
+     "params": {
+      "tipo": "casa",
+      "n": 4
+     },
+     "secundario": false
+    },
+    {
+     "id": "o2",
+     "texto": "Llená el almacén real y vendé cuando llegue el monzón, no al primer barco (1200 de riqueza).",
+     "tipo": "recolectar",
+     "params": {
+      "recurso": "riqueza",
+      "n": 1200
+     },
+     "secundario": false
+    },
+    {
+     "id": "o3",
+     "texto": "Que zarpe la embajada de Kosa Pan a Francia: comercio a cambio de ingenieros (avanzá a la edad IV).",
+     "tipo": "edad",
+     "params": {
+      "n": 4
+     },
+     "secundario": false
+    },
+    {
+     "id": "o4",
+     "texto": "Levantá 3 fuertes de esquina con baluartes nuevos (torres) y guarnecelos con las compañías de los barrios.",
+     "tipo": "construir",
+     "params": {
+      "tipo": "torre",
+      "n": 3
+     },
+     "secundario": false
+    },
+    {
+     "id": "o5",
+     "texto": "Narai se muere en Lopburi. Cercá la fortaleza de Bangkok hasta que los franceses acepten irse.",
+     "tipo": "destruir_hitos",
+     "params": {
+      "jugador": 1
+     },
+     "secundario": false,
+     "oculto": true
+    },
+    {
+     "id": "o6",
+     "texto": "Que el almacén real no caiga (depósito): sin almacén no hay puerto.",
+     "tipo": "proteger",
+     "params": {
+      "tipo": "deposito",
+      "jugador": 0
+     },
+     "secundario": true
+    }
+   ],
+   "eventos": [
+    {
+     "cuando": {
+      "tipo": "inicio",
+      "valor": 0
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Narai",
+       "texto": "Con un solo comprador, el que compra es el amo. Con cinco, es un mercado."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o1"
+     },
+     "accion": {
+      "tipo": "refuerzos",
+      "params": {
+       "jugador": 0,
+       "tipo": "arcabucero",
+       "n": 6
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o1"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Escribano del Phra Khlang",
+       "texto": "Cada barrio tenía su compañía, pagada por contrato. Si el barrio caía, la compañía se iba con él."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 420
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Escribano del Phra Khlang",
+       "texto": "En 1686 se alzaron los makasares de Daeng Mangalle dentro de la ciudad. Los vencimos, y caro. Un barrio con título también puede decir que no."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o2"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Escribano del Phra Khlang",
+       "texto": "El arroz se lo llevaron los chinos; los cueros, los holandeses y los japoneses. El rey esperó la segunda flota para vender el estaño."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o3"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Kosa Pan",
+       "texto": "En Versalles nos miraban como a un espectáculo. Nosotros mirábamos sus fortificaciones."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o4"
+     },
+     "accion": {
+      "tipo": "objetivo_nuevo",
+      "params": {
+       "id": "o5"
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o4"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Phra Phetracha",
+       "texto": "La boca del río es del rey de Ayutthaya. Que se vayan en sus barcos o que se queden adentro."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o4"
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "arcabucero",
+       "n": 8
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o4"
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "guerrero",
+       "n": 6
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 1200
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "arcabucero",
+       "n": 6
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o5"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Escribano del Phra Khlang",
+       "texto": "Ese monzón el almacén vendió como siempre. Los barcos que faltaban eran de guerra."
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "ayutthaya-3",
+   "titulo": "Veintisiete fuertes",
+   "anio": "1767",
+   "lugar": "La isla de Ayutthaya",
+   "intro": [
+    "En 1760 el rey de Ava, Alaungpaya, sitió la isla y se fue cuando llegaron las lluvias, como Pegu en tiempos de Naresuan. La isla había aprendido a esperar el agua.",
+    "En 1765 su hijo Hsinbyushin mandó dos ejércitos, uno por el norte y otro por el oeste, con Ne Myo Thihapate y Maha Nawrahta. Llegaron con la lluvia y no se fueron: levantaron veintisiete fuertes en lo alto, alrededor de la ciudad, y pasaron la crecida adentro.",
+    "La corte llamó a las provincias a encerrarse en la isla. Era lo que siempre había funcionado. En las murallas peleaban los nuestros, los chinos de sus barrios y los portugueses de los suyos. Entre los gobernadores llamados estaba Phraya Tak, señor de Tak, hijo de un teochew."
+   ],
+   "epilogo": [
+    "Phraya Tak no esperó a que se acabara la comida. En enero rompió el cerco hacia el este con unos pocos cientos de hombres, siameses y chinos. En la ciudad algunos dijeron que huía. Otros entendimos después que se llevaba la ciudad afuera.",
+    "Los birmanos cavaron túneles bajo la muralla y le prendieron fuego a los cimientos hasta que se derrumbó el tramo del noreste. El 7 de abril de 1767 entraron. Fue una obra de ingeniería tan grande como las nuestras. La ciudad ardió. Yo salí por el agua con lo que pude cargar: tres libros de cuentas."
+   ],
+   "fuentes": [
+    "Richard D. Cushman (trad.), The Royal Chronicles of Ayutthaya (Siam Society, 2000)",
+    "Hmannan Yazawin (Crónica del Palacio de Cristal, 1832), para la versión birmana del sitio",
+    "Victor Lieberman, Strange Parallels: Southeast Asia in Global Context, c. 800-1830, vol. 1 (Cambridge UP, 2003)",
+    "François Molle y Jesda Keawkulaya, Water Management and Agricultural Change in the Upper Chao Phraya Delta (Southeast Asian Studies 36:1, 1998)"
+   ],
+   "mapa": {
+    "semilla": 1767,
+    "terreno": "rio"
+   },
+   "jugador": {
+    "edad": 4,
+    "recursos": {
+     "alimento": 1500,
+     "madera": 800,
+     "piedra": 600,
+     "riqueza": 800
+    },
+    "aldeanos": 20,
+    "tropas": [
+     {
+      "tipo": "lancero",
+      "n": 12
+     },
+     {
+      "tipo": "hondero",
+      "n": 10
+     },
+     {
+      "tipo": "guerrero",
+      "n": 8
+     },
+     {
+      "tipo": "jinete",
+      "n": 4
+     },
+     {
+      "tipo": "arcabucero",
+      "n": 6
+     }
+    ]
+   },
+   "rivales": [
+    {
+     "nombre": "Ejército de Maha Nawrahta (Konbaung)",
+     "faccion": "invasores",
+     "ia": "normal",
+     "edad": 4
+    },
+    {
+     "nombre": "Ejército de Ne Myo Thihapate (Konbaung)",
+     "faccion": "invasores",
+     "ia": "agresiva",
+     "edad": 4
+    }
+   ],
+   "objetivos": [
+    {
+     "id": "o1",
+     "texto": "Defendé la isla: levantá 4 fortines de río sobre los canales.",
+     "tipo": "construir",
+     "params": {
+      "tipo": "torre",
+      "n": 4
+     },
+     "secundario": false
+    },
+    {
+     "id": "o2",
+     "texto": "Guarnecé 4 fuertes de la muralla (torres) con las compañías de los barrios chino y portugués.",
+     "tipo": "construir",
+     "params": {
+      "tipo": "torre",
+      "n": 4
+     },
+     "secundario": false
+    },
+    {
+     "id": "o3",
+     "texto": "Aguantá hasta la crecida. Antes, eso alcanzaba.",
+     "tipo": "sobrevivir",
+     "params": {
+      "segundos": 600
+     },
+     "secundario": false
+    },
+    {
+     "id": "o4",
+     "texto": "No se van: pasan la crecida en fuertes en lo alto. Rompé 2 de sus fuertes del este para que Phraya Tak salga del cerco.",
+     "tipo": "destruir",
+     "params": {
+      "tipo": "torre",
+      "n": 2,
+      "jugador": 1
+     },
+     "secundario": false,
+     "oculto": true
+    },
+    {
+     "id": "o5",
+     "texto": "Cubrí la salida de la columna: matá a 25 de los que la persiguen.",
+     "tipo": "matar",
+     "params": {
+      "n": 25
+     },
+     "secundario": false,
+     "oculto": true
+    },
+    {
+     "id": "o6",
+     "texto": "Que los voluntarios chinos y portugueses sigan en la muralla: son la última línea.",
+     "tipo": "proteger",
+     "params": {
+      "tipo": "arcabucero",
+      "jugador": 0
+     },
+     "secundario": true
+    }
+   ],
+   "eventos": [
+    {
+     "cuando": {
+      "tipo": "inicio",
+      "valor": 0
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Phraya Tak",
+       "texto": "Si todos los ejércitos están adentro de la isla, ¿quién queda afuera para socorrerla?"
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 150
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "lancero",
+       "n": 8
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 155
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "hondero",
+       "n": 6
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 400
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 2,
+       "tipo": "ariete",
+       "n": 3
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 405
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 2,
+       "tipo": "guerrero",
+       "n": 8
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o2"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Escribano del Phra Khlang",
+       "texto": "En la muralla del sur hablaban teochew y portugués. Nadie preguntaba quién era extranjero."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o3"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Escribano del Phra Khlang",
+       "texto": "Bajó el agua y ellos seguían ahí, secos, en sus fuertes. Ese día entendí que el calendario también se aprende."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o3"
+     },
+     "accion": {
+      "tipo": "objetivo_nuevo",
+      "params": {
+       "id": "o4"
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o3"
+     },
+     "accion": {
+      "tipo": "revelar",
+      "params": {}
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o4"
+     },
+     "accion": {
+      "tipo": "objetivo_nuevo",
+      "params": {
+       "id": "o5"
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o4"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Phraya Tak",
+       "texto": "Por el este, de noche. El que venga, que venga ahora."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o4"
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "jinete",
+       "n": 8
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o4"
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "guerrero",
+       "n": 10
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o4"
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 2,
+       "tipo": "lancero",
+       "n": 8
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 1200
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 2,
+       "tipo": "ariete",
+       "n": 2
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 1205
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 2,
+       "tipo": "arcabucero",
+       "n": 6
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "ayutthaya-4",
+   "titulo": "La otra orilla",
+   "anio": "1767",
+   "lugar": "Chanthaburi, la boca del Chao Phraya y Thonburi",
+   "intro": [
+    "Phraya Tak bajó hacia la costa del este. En el camino se le sumaron campesinos, bandas y señores de la zona. No todos quisieron sumarse, y a algunos hubo que convencerlos con armas.",
+    "En junio tomó Chanthaburi, un puerto de comerciantes teochew como su padre. Ahí había lo que una isla sitiada no tiene: barcos, arroz, plata y gente que sabía hacer circular las tres cosas. Mandó construir una flota.",
+    "En octubre zarpó hacia el río con unos cinco mil hombres: siameses, milicias hokkien y teochew y marinos de origen makasar. En la boca del Chao Phraya, donde Narai había echado a los franceses, los birmanos habían dejado una guarnición. Río arriba, en Pho Sam Ton, tenían su campamento grande."
+   ],
+   "epilogo": [
+    "El 28 de diciembre de 1767 Phraya Tak se coronó en Thonburi, en la otra orilla y cerca del mar. No volvimos a la isla: estaba quemada, y además el mundo había cambiado de lugar. El reino ahora miraba hacia la boca del río.",
+    "El emperador Qing no lo reconoció al principio, porque decía que no era de la casa real. Ya lo reconocerá: los barcos de arroz no esperan a los emperadores. A mi hermano, que es phrai, le tatuaron en la muñeca la marca de su registro, para que nadie se pierda de las cuentas. Así se reconstruye un reino: con barcos, con arroz y con tinta en la piel de la gente.",
+    "Todavía hay otros señores que se dicen herederos de Ayutthaya, en Phitsanulok, en Phimai, en Fang. Cada uno tiene sus razones. Esto no terminó, y yo sigo anotando."
+   ],
+   "fuentes": [
+    "Chris Baker y Pasuk Phongpaichit, A History of Ayutthaya: Siam in the Early Modern World (Cambridge UP, 2017)",
+    "Sarasin Viraphol, Tribute and Profit: Sino-Siamese Trade, 1652-1853 (Harvard, 1977)",
+    "Akin Rabibhadana, The Organization of Thai Society in the Early Bangkok Period, 1782-1873 (Cornell, 1969)",
+    "Chris Baker y Pasuk Phongpaichit, artículos sobre la Ley de los Tres Sellos (Thai Legal Studies 3:1, 2023)"
+   ],
+   "mapa": {
+    "semilla": 17671,
+    "terreno": "rio"
+   },
+   "jugador": {
+    "edad": 2,
+    "recursos": {
+     "alimento": 400,
+     "madera": 600,
+     "piedra": 0,
+     "riqueza": 600
+    },
+    "aldeanos": 10,
+    "tropas": [
+     {
+      "tipo": "guerrero",
+      "n": 10
+     },
+     {
+      "tipo": "lancero",
+      "n": 8
+     },
+     {
+      "tipo": "hondero",
+      "n": 6
+     },
+     {
+      "tipo": "arcabucero",
+      "n": 4
+     }
+    ]
+   },
+   "rivales": [
+    {
+     "nombre": "Guarniciones birmanas de Thonburi y Pho Sam Ton",
+     "faccion": "invasores",
+     "ia": "normal",
+     "edad": 3
+    },
+    {
+     "nombre": "Señores de Phitsanulok, Phimai y Fang",
+     "faccion": "ayutthaya",
+     "ia": "pasiva",
+     "edad": 2
+    }
+   ],
+   "objetivos": [
+    {
+     "id": "o1",
+     "texto": "Los comerciantes teochew de Chanthaburi adelantan plata a cambio de arroz y permisos (800 de riqueza).",
+     "tipo": "recolectar",
+     "params": {
+      "recurso": "riqueza",
+      "n": 800
+     },
+     "secundario": false
+    },
+    {
+     "id": "o2",
+     "texto": "Dales tierra en la orilla nueva: 3 barrios (casas) para chinos, makasares y la gente que va llegando.",
+     "tipo": "construir",
+     "params": {
+      "tipo": "casa",
+      "n": 3
+     },
+     "secundario": false
+    },
+    {
+     "id": "o3",
+     "texto": "Remontá el río y tomá la guarnición de la boca, en Thonburi (matá a 30).",
+     "tipo": "matar",
+     "params": {
+      "n": 30
+     },
+     "secundario": false
+    },
+    {
+     "id": "o4",
+     "texto": "Tomá el campamento de Pho Sam Ton.",
+     "tipo": "destruir_hitos",
+     "params": {
+      "jugador": 1
+     },
+     "secundario": false
+    },
+    {
+     "id": "o5",
+     "texto": "Fundá la capital en la otra orilla y coronate en Thonburi (avanzá a la edad III, Ekkarat).",
+     "tipo": "edad",
+     "params": {
+      "n": 3
+     },
+     "secundario": false
+    },
+    {
+     "id": "o6",
+     "texto": "Los señores de Phitsanulok, Phimai y Fang también se dicen herederos. Sometelos: va a llevar años.",
+     "tipo": "destruir_hitos",
+     "params": {
+      "jugador": 2
+     },
+     "secundario": true,
+     "oculto": true
+    }
+   ],
+   "eventos": [
+    {
+     "cuando": {
+      "tipo": "inicio",
+      "valor": 0
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Phraya Tak",
+       "texto": "La isla no se puede recuperar. La ciudad sí."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "inicio",
+      "valor": 0
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Comerciante teochew de Chanthaburi",
+       "texto": "El arroz que traen mis barcos se paga cuando llega. La lealtad, cuando ganes."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o1"
+     },
+     "accion": {
+      "tipo": "refuerzos",
+      "params": {
+       "jugador": 0,
+       "tipo": "arcabucero",
+       "n": 6
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o1"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Escribano del Phra Khlang",
+       "texto": "Milicias hokkien y teochew. Pelearon por un rey que hablaba la lengua de su padre y pagaba a tiempo."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o2"
+     },
+     "accion": {
+      "tipo": "refuerzos",
+      "params": {
+       "jugador": 0,
+       "tipo": "guerrero",
+       "n": 8
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o2"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Escribano del Phra Khlang",
+       "texto": "Los marinos makasares conocían el río mejor que muchos de nosotros. Ochenta años antes, otros makasares se habían alzado contra Narai. Estos remaban para Phraya Tak."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 300
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "lancero",
+       "n": 6
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 305
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "hondero",
+       "n": 6
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 600
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "guerrero",
+       "n": 8
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 605
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "jinete",
+       "n": 4
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 900
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "guerrero",
+       "n": 6
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o3"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Phraya Tak",
+       "texto": "Thonburi. Desde acá se ve el mar."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o3"
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "lancero",
+       "n": 8
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o5"
+     },
+     "accion": {
+      "tipo": "objetivo_nuevo",
+      "params": {
+       "id": "o6"
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o5"
+     },
+     "accion": {
+      "tipo": "revelar",
+      "params": {}
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o5"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Escribano del Phra Khlang",
+       "texto": "El primer libro que abrí en Thonburi fue uno de los tres que saqué de la isla. Seguí anotando donde había quedado."
+      }
+     }
+    }
+   ]
+  }
+ ]
 }
