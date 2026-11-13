@@ -60,3 +60,13 @@ Cinco agentes con perfiles distintos. Leen el repositorio sin tocarlo y escriben
      - la civ comerciante necesita un verbo, un producto o un socio propio;
      - los frenos contra la bola de nieve limitan al que gana, no le pagan al que pierde.
    - **Límites:** se agotó el cupo de búsquedas web y algunos datos quedaron marcados [no verificado de primera mano].
+9. **Ronda 2 del equipo.** Los cinco perfiles retoman su trabajo con la investigación y con la consigna común [`v2/00-consigna.md`](../../docs/diseno/revision-economia/v2/00-consigna.md). Criterios obligatorios:
+   - atención pareja, baja o media, sin rituales;
+   - lo que pueden hacer todos no es identidad;
+   - lo pasivo, con tope y con decisión de dónde;
+   - lo agresivo, con piso pacífico;
+   - el subproducto de algo que ya se hace;
+   - límites a la dependencia territorial;
+   - cada mecánica explicada primero en palabras llanas.
+
+   Se reemplazan las mecánicas de Ayutthaya y Palmares, que se apoyaban en el comercio, y el asesor histórico responde la pregunta del oro.
