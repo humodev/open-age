@@ -23,7 +23,7 @@ Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video,
 - **Seis campañas** (`data/campanas/`): 24 misiones narradas desde adentro, ejecutadas por el motor de escenarios.
 - **Escaramuza** contra la IA con cualquier par de civilizaciones y cuatro tipos de mapa.
 - **Sonido**: interfaz, mundo, ambiente y música CC0.
-- **Arte generado con IA** (Meshy, C-03): láminas de las seis civilizaciones y modelos 3D de capitales, casas, el elefante y el kona; el resto es la maqueta procedural.
+- **Arte generado con IA** (Meshy, C-03): láminas de las seis civilizaciones y modelos 3D de capitales, casas, el elefante y el kona, y del paisaje (cinco especies de árbol, arbustos, piedra, arcilla con vasijas, peñascos y yerbal, `proceso/16-paisaje`); el resto es la maqueta procedural.
 - **Tutorial**, **mercado**, **sitios sagrados**, **tres dificultades**, **repeticiones**, **opciones** y **ayuda en partida (F1)**.
 
 ## Pruebas
@@ -45,7 +45,7 @@ Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video,
 | IA y mecánicas propias | No traza caminos incas, no muda la corte etíope y no usa la campana de forma táctica |
 | Dificultades de la IA | Una sola; faltan tres niveles (H4) |
 | Animación | Procedural (paso, galope, trabajo, golpe, muerte); sin esqueletos |
-| Modelos generados | Solo capitales, casas, elefante y kona; el resto es la maqueta procedural (ver C-05) |
+| Modelos generados | Capitales, casas, elefante, kona y paisaje; el resto es la maqueta procedural (ver C-05) |
 | Escala y velocidad | Corregidas el 2026-11-13 (`escala_visual`, `velocidad_pct`); falta la opinión del autor a ×1 |
 | Multijugador | H5 |
 | Naval | Fuera de alcance (D-020) |

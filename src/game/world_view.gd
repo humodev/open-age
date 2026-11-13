@@ -24,7 +24,7 @@ var hovered := -1
 var ground_mat: ShaderMaterial
 
 var _trees: Array[MultiMeshInstance3D] = []
-var _bushes: MultiMeshInstance3D
+var _bushes: Array = [] # MultiMeshInstance3D por trozo
 var _res_slot := {} # id -> [multimesh, índice, transform]
 var _fx: Array[Dictionary] = [] # proyectiles, marcadores, muertes, polvo
 var _rally_flag: Node3D
@@ -477,6 +477,7 @@ func _build_crags() -> void:
 		mm.set_instance_transform(i, list[i])
 	var mmi := MultiMeshInstance3D.new()
 	mmi.multimesh = mm
+	mmi.lod_bias = 0.3 # el peñasco generado tiene más polígonos que la caja procedural
 	add_child(mmi)
 
 
@@ -502,29 +503,50 @@ func _build_resources() -> void:
 				add_child(mi)
 				visuals[e.id] = {"node": mi, "kind": "rock", "max": e.amount, "cur": mi.position, "prev": mi.position}
 	for k in kinds.size():
-		_trees.append(_make_mm(Meshes.tree_mesh(int(kinds[k])), trees[k]))
+		_trees.append_array(_make_mm(Meshes.tree_mesh(int(kinds[k])), trees[k]))
 	_bushes = _make_mm(Meshes.bush_mesh(), bushes)
 
 
-func _make_mm(mesh: Mesh, list: Array) -> MultiMeshInstance3D:
-	var mm := MultiMesh.new()
-	mm.transform_format = MultiMesh.TRANSFORM_3D
-	mm.use_colors = true
-	mm.mesh = mesh
-	mm.instance_count = list.size()
-	for i in list.size():
-		var e: SimEntity = list[i]
-		var hsh := _hash(e.id)
-		var s := 0.85 + float(hsh % 40) / 100.0
-		var jitter := Vector3(float(hsh % 7 - 3) * 0.04, 0, float((hsh / 7) % 7 - 3) * 0.04)
-		var t := Transform3D(Basis(Vector3.UP, float(hsh % 628) / 100.0).scaled(Vector3(s, s * (0.9 + float(hsh % 23) / 100.0), s)), to_world(e.x, e.y) + jitter)
-		mm.set_instance_transform(i, t)
-		mm.set_instance_color(i, Color.WHITE)
-		_res_slot[e.id] = [mm, i, t, e.tx, e.ty, -1]
-	var mmi := MultiMeshInstance3D.new()
-	mmi.multimesh = mm
-	add_child(mmi)
-	return mmi
+## Árboles y arbustos en MultiMesh partidos en trozos de CHUNK casillas: con los modelos
+## generados (más polígonos que los procedurales) así se descarta lo que queda fuera de
+## cámara y cada trozo elige su nivel de detalle.
+func _make_mm(mesh: Mesh, list: Array) -> Array:
+	var groups := {}
+	for e in list:
+		var key := Vector2i(e.tx / CHUNK, e.ty / CHUNK)
+		if not groups.has(key):
+			groups[key] = []
+		groups[key].append(e)
+	var out: Array = []
+	for key in groups:
+		var part: Array = groups[key]
+		var mm := MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.use_colors = true
+		mm.mesh = mesh
+		mm.instance_count = part.size()
+		for i in part.size():
+			var e: SimEntity = part[i]
+			var hsh := _hash(e.id)
+			var s := 0.82 + float(hsh % 45) / 100.0
+			var jitter := Vector3(float(hsh % 7 - 3) * 0.04, 0, float((hsh / 7) % 7 - 3) * 0.04)
+			var p := to_world(e.x, e.y) + jitter
+			p.y = height_at(p.x, p.z)
+			# Giro libre, alto un poco distinto del ancho y una leve inclinación.
+			var la := float((hsh / 11) % 628) / 100.0
+			var lean := Basis(Vector3(cos(la), 0, sin(la)), float((hsh / 13) % 5) * 0.015)
+			var b := lean * Basis(Vector3.UP, float(hsh % 628) / 100.0).scaled(Vector3(s, s * (0.9 + float(hsh % 23) / 100.0), s))
+			var t := Transform3D(b, p)
+			mm.set_instance_transform(i, t)
+			mm.set_instance_color(i, Color.WHITE)
+			_res_slot[e.id] = [mm, i, t, e.tx, e.ty, -1]
+		var mmi := MultiMeshInstance3D.new()
+		mmi.multimesh = mm
+		mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+		mmi.lod_bias = 0.2
+		add_child(mmi)
+		out.append(mmi)
+	return out
 
 
 static func _hash(v: int) -> int:

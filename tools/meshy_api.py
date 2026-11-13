@@ -5,6 +5,7 @@
     python3 tools/meshy_api.py imagen <salida.png> <modelo> <prompt> [--aspect=16:9] [--pose=t-pose] [--fondo] [--multivista]
     python3 tools/meshy_api.py editar <salida.png> <modelo> <imagen_base.png> <prompt>
     python3 tools/meshy_api.py modelo <salida.glb> <img1> [img2 img3 img4] [--poli=30000] [--pose=t-pose] [--pbr=1]
+    python3 tools/meshy_api.py remesh <salida.glb> <id_de_tarea> [--poli=1500]
 
 La clave sale de MESHY_ENV (por defecto ../apex-open/.secrets/meshy.env; nunca se versiona). Cada
 tarea se anota en assets/generados/registro.jsonl (prompt, modelo, créditos,
@@ -129,6 +130,19 @@ def main():
             raise SystemExit("falló: %s" % t.get("task_error"))
         download(t["model_urls"]["glb"], out)
         log({"tarea": kind, "id": tid, "imagenes": imgs, "salida": out, "creditos": t.get("consumed_credits")})
+        print("listo", out, "créditos", t.get("consumed_credits"))
+        return
+    if cmd == "remesh":  # rehace la malla de una tarea ya hecha con pocos polígonos y la textura rehorneada
+        out, src = pos[0], pos[1]
+        body = {"input_task_id": src, "target_formats": ["glb"], "topology": "triangle",
+                "target_polycount": int(o.get("poli", 1500))}
+        kind = "remesh"
+        tid = call("POST", "/v1/" + kind, body)["result"]
+        t = wait(kind, tid)
+        if t.get("status") != "SUCCEEDED":
+            raise SystemExit("falló: %s" % t.get("task_error"))
+        download(t["model_urls"]["glb"], out)
+        log({"tarea": kind, "id": tid, "base": src, "salida": out, "creditos": t.get("consumed_credits")})
         print("listo", out, "créditos", t.get("consumed_credits"))
         return
     raise SystemExit(__doc__)
