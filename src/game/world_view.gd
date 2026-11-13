@@ -554,9 +554,19 @@ func _render_unit(e: SimEntity, v: Dictionary, alpha: float, delta: float) -> vo
 	var phase: float = v["phase"]
 	var bob := 0.0
 	var tilt := 0.0
+	var heavy: bool = e.def.get("elefante", false)
+	var mounted: bool = e.def.get("montado", false)
 	if moving:
-		bob = absf(sin(_time * 11.0 + phase)) * 0.06
-		tilt = sin(_time * 11.0 + phase) * 0.06
+		var freq := 4.5 if heavy else (14.0 if mounted else 11.0)
+		var amp := 0.05 if heavy else (0.09 if mounted else 0.06)
+		bob = absf(sin(_time * freq + phase)) * amp
+		tilt = sin(_time * freq + phase) * (0.025 if heavy else 0.06)
+		if heavy:
+			body.rotation.z = sin(_time * freq * 0.5 + phase) * 0.04
+	elif e.order == O.ATTACK and e.anchored and int(e.def.get("alcance", 0)) > 1500:
+		# Tensar antes del disparo: se inclina hacia atrás a medida que se recarga.
+		var k := 1.0 - clampf(float(e.cooldown) / float(maxi(1, int(e.def.get("cadencia_ms", 1000)))), 0.0, 1.0)
+		tilt = -k * 0.18
 	elif e.anchored and (e.order == O.GATHER or e.order == O.BUILD):
 		tilt = maxf(0.0, sin(_time * 6.0 + phase)) * 0.35
 	v["lunge"] = maxf(0.0, float(v["lunge"]) - delta * 5.0)
