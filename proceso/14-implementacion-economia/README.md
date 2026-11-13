@@ -57,3 +57,17 @@ El autor no contestó todavía C-14 a C-20, así que se aplicó la opción recom
 
 ## Tropiezo de proceso
 El autor preguntó en qué punto estaba la economía: se había avanzado varias horas sin documentar ni subir nada. Desde ahora, cada compuerta se documenta y se sube antes de seguir, con un resumen corto para el autor.
+
+## Compuertas (actualización)
+7. **Por qué la IA avanzaba tarde.** Una traza minuto a minuto mostró que el alimento era el cuello de botella: la IA lo gastaba en tropas y aldeanos y solo ahorraba cuando cada recurso cubría la mitad del hito (Etiopía tenía 300 de riqueza en el minuto 5 y el alimento entre 0 y 100). Ahora, en la edad I, ahorra apenas tiene 13 aldeanos y manda a la gente a lo que falta para el hito.
+8. **Medición de la etapa 2** ([paz](pruebas/02-etapa2-paz.txt), [guerra](pruebas/02-etapa2-guerra.txt)), con la capa común y el taller inca:
+
+   | | Antes (etapa 1) | Ahora |
+   |---|---|---|
+   | Edad II | 8:00–10:35 en paz, 7:37–12:42 con guerra | 5:40–7:25 en paz, 5:40–7:42 con guerra |
+   | Edad III | 12:35–17:12 | 11:02–16:42 |
+
+   - **El taller inca ya rinde:** el motor propio da 35 % de la riqueza inca en paz y 24 % con guerra.
+   - **Fuera de la banda de la edad II (6:30–9:00):** guaraníes 5:40 y mapuches 6:05. El arreglo de la roza guaraní (tasa y costo) está en su etapa, la 3d.
+   - **Para vigilar:** la IA saca entre 22 % y 43 % de su riqueza vendiendo en el mercado, más que lo que piensa el diseño ("caro pero seguro"). Se revisa con los motores puestos.
+   - **Lo disputado da 0 %:** la IA no va a la arcilla del centro. Llega en la etapa 4, con los ingenios.
