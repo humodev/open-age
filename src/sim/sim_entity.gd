@@ -65,6 +65,8 @@ var rally_target: int = -1
 var farmer: int = -1
 var garrison: Array[int] = [] # unidades alojadas
 var capital := false # el centro inicial cuenta como hito (docs/05, "Victoria"); viaja con la base móvil
+var holder: int = -1 # sitio sagrado: jugador que lo controla
+var capture: int = 0 # sitio sagrado: progreso de captura (ms) y por quién (aux)
 var workers_prev: int = 0 # constructores del tick anterior
 var workers_now: int = 0
 

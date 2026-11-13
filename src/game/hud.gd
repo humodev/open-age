@@ -67,7 +67,7 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 
 	_clock = ClockBar.new()
 	_clock.hud = self
-	_anchor(_clock, Vector2(1, 0), Rect2(-342, 10, 330, 46))
+	_anchor(_clock, Vector2(1, 0), Rect2(-342, 10, 330, 76))
 	add_child(_clock)
 	_blockers.append(_clock)
 
@@ -224,6 +224,8 @@ func on_events(events: Array) -> void:
 				_dialog_queue.append(ev)
 				if not _dialog.visible:
 					_next_dialog()
+			"sitio":
+				notify("Sitio sagrado tomado por %s" % ("tu pueblo" if pid == local else "el rival"))
 			"objetivo":
 				match ev["estado"]:
 					"hecho":
@@ -467,6 +469,22 @@ class ClockBar:
 		var name: String = sim.dp(hud.local).edades[age - 1]["nombre"]
 		draw_string(Hud.font_b, Vector2(16, 30), "Edad %s" % Sim._roman(age), HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Palette.UI_ACCENT)
 		draw_string(Hud.font, Vector2(16 + 84, 30), name, HORIZONTAL_ALIGNMENT_LEFT, 150, 16, Palette.UI_TEXT)
+		var total := 0
+		var mine := 0
+		for e in sim.actives:
+			if e.def.get("sagrado", false):
+				total += 1
+				if e.holder == hud.local:
+					mine += 1
+		if total > 0:
+			var left: int = (int(sim.data.reglas["sitios"]["victoria_ms"]) - int(sim.players[hud.local].get("sitios_ms", 0))) / 1000
+			var txt := "Sitios %d/%d" % [mine, total]
+			if mine == total:
+				txt += " · victoria en %s" % Hud._fmt_time(left)
+			for p in sim.players:
+				if p["id"] != hud.local and int(p.get("sitios_ms", 0)) > 0:
+					txt = "¡El rival controla todos los sitios! %s" % Hud._fmt_time((int(sim.data.reglas["sitios"]["victoria_ms"]) - int(p["sitios_ms"])) / 1000)
+			draw_string(Hud.font, Vector2(16, 64), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Palette.UI_ACCENT if mine == total else Palette.UI_DIM)
 		var secs := sim.tick * sim.tick_ms / 1000
 		var t := Hud._fmt_time(secs)
 		var speed: float = hud.main.speed

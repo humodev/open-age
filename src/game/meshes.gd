@@ -253,6 +253,12 @@ static func building_mesh(type: String, team: Color) -> ArrayMesh:
 			p.append([box(1.0, 0.12, 0.16), xf(Vector3(0, 1.3, 0)), Palette.WOOD_BEAM])
 			p.append([box(0.7, 0.9, 0.08), xf(Vector3(0, 0.5, 0)), Palette.TRUNK])
 			p.append([box(0.3, 0.25, 0.04), xf(Vector3(0, 1.1, 0.1)), team])
+		"sitio_sagrado":
+			p.append([cyl(1.0, 1.05, 0.08, 20), xf(Vector3(0, 0.04, 0)), Palette.DIRT.darkened(0.1)])
+			for i in 9:
+				var a := TAU * i / 9.0
+				p.append([box(0.22, 0.55 + (i % 3) * 0.12, 0.16), xf(Vector3(cos(a) * 0.85, 0.3, sin(a) * 0.85), Vector3(0, -rad_to_deg(a), (i % 2) * 6.0)), Palette.STONE])
+			p.append([box(0.3, 1.5, 0.3), xf(Vector3(0, 0.75, 0)), Palette.STONE.lightened(0.1)])
 		"hito_economia":
 			# Plataforma escalonada con depósitos circulares: hito de la abundancia.
 			p.append([box(3.9, 0.5, 3.9), xf(Vector3(0, 0.25, 0)), dark])

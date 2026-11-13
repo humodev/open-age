@@ -12,6 +12,7 @@ var last_attack := -100000
 var rally := Vector2i(-1, -1)
 var calm_since := 0
 var personality := "normal" # pasiva, normal, agresiva (campañas)
+var level: Dictionary = {} # dificultad (reglas.json → dificultades)
 
 # Perfil equilibrado de H1. En H2 pasa a data/ia/ (docs/08).
 var ratio_early := {"alimento": 52, "madera": 33, "riqueza": 10, "piedra": 5}
@@ -19,9 +20,19 @@ var ratio_late := {"alimento": 42, "madera": 25, "riqueza": 23, "piedra": 10}
 var max_villagers := 42
 
 
-func _init(s: Sim, pid: int) -> void:
+func _init(s: Sim, pid: int, difficulty: String = "normal") -> void:
 	sim = s
 	player = pid
+	set_difficulty(difficulty)
+
+
+func set_difficulty(key: String) -> void:
+	level = sim.data.reglas["dificultades"].get(key, sim.data.reglas["dificultades"]["normal"])
+	max_villagers = level["max_aldeanos"]
+
+
+func thinks_now() -> bool:
+	return (sim.tick + player * 5) % int(level["piensa_cada_ticks"]) == 0
 
 
 func think() -> void:
@@ -71,7 +82,7 @@ func _hito_type(p: Dictionary) -> String:
 
 
 func _research(p: Dictionary, by_type: Dictionary, saving: bool) -> void:
-	if saving:
+	if saving or not level["investiga"]:
 		return
 	var reserve := 150
 	for tech: String in sim.dp(player).tecnologias:
@@ -399,8 +410,8 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 		if not ids.is_empty():
 			sim.push_command({"t": "move", "player": player, "ids": ids, "x": threat.x, "y": threat.y, "amove": true})
 		return
-	var need := 7 + 4 * wave
-	var gap := 500
+	var need: int = int(level["ataque_base"]) + int(level["ataque_paso"]) * wave
+	var gap: int = level["ataque_espera_ticks"]
 	if personality == "agresiva":
 		need = 4 + 3 * wave
 		gap = 320
@@ -409,10 +420,27 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 		last_attack = sim.tick
 		_attack(army)
 		return
+	# Sitios sagrados: un grupo chico va a tomar el más cercano que no controla.
+	if sim.tick % 300 == player * 50 and army.size() >= 6:
+		var site: SimEntity = null
+		var best := 1 << 60
+		for e in sim.actives:
+			if e.alive and e.def.get("sagrado", false) and e.holder != player:
+				var d := Sim.dist(e.x, e.y, rally.x, rally.y)
+				if d < best:
+					best = d
+					site = e
+		if site != null:
+			var ids := []
+			for u in army:
+				if u.order == O.IDLE and ids.size() < 4:
+					ids.append(u.id)
+			if not ids.is_empty():
+				sim.push_command({"t": "move", "player": player, "ids": ids, "x": site.x, "y": site.y, "amove": true})
 	# Reagrupar a las unidades inactivas en el punto de reunión.
 	var idle := []
 	for u in army:
-		if u.order == O.IDLE and Sim.dist(u.x, u.y, rally.x, rally.y) > 6000 and sim.tick - last_attack > 900:
+		if u.order == O.IDLE and Sim.dist(u.x, u.y, rally.x, rally.y) > 6000 and sim.tick - last_attack > 900 and not _near_site(u):
 			idle.append(u.id)
 	if not idle.is_empty():
 		sim.push_command({"t": "move", "player": player, "ids": idle, "x": rally.x, "y": rally.y})
@@ -467,3 +495,10 @@ func _trade(p: Dictionary, by_type: Dictionary) -> void:
 		if int(res[k]) < 100 and int(res["riqueza"]) > 700:
 			sim.push_command({"t": "trade", "player": player, "building": m.id, "recurso": k, "op": "comprar"})
 			return
+
+
+func _near_site(u: SimEntity) -> bool:
+	for e in sim.actives:
+		if e.def.get("sagrado", false) and absi(e.x - u.x) < 5000 and absi(e.y - u.y) < 5000:
+			return true
+	return false

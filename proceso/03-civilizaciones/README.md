@@ -36,3 +36,8 @@ Completar el juego como "un Age of Empires 4 indie del sur global": arte, animac
 | Misión en juego | Menú de campañas | Introducción |
 |---|---|---|
 | ![](04-campana-mision.jpg) | ![](05-menu-campanas.jpg) | ![](06-intro-mision.jpg) |
+14. **Sonido** (`src/game/audio.gd`) con los 54 archivos CC0 del agente: interfaz, mundo según la distancia a la cámara, trabajo de los aldeanos, ambiente y música de paz o de combate.
+15. **Mercado**, **sitios sagrados** (segunda condición de victoria) y **tres dificultades** de IA definidas en los datos y sin trampas.
+16. **Video** de una batalla entre Ayutthaya y Etiopía grabado con el *movie maker* de Godot: [`07-batalla-ayutthaya-vs-etiopia.mp4`](07-batalla-ayutthaya-vs-etiopia.mp4).
+
+![](08-sitio-sagrado.jpg)

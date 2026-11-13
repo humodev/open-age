@@ -261,6 +261,17 @@ func _make_visual(e: SimEntity) -> Dictionary:
 		var ring := _ring(1, Vector2(e.w + 0.3, e.h + 0.3))
 		root.add_child(ring)
 		v.merge({"kind": "building", "struct": struct, "found": found, "ring": ring, "pop": 0.0})
+		if e.def.get("sagrado", false):
+			var flag := MeshInstance3D.new()
+			flag.mesh = Meshes.box(0.05, 0.5, 0.6)
+			flag.position = Vector3(0.18, 1.75, 0.3)
+			var pole := MeshInstance3D.new()
+			pole.mesh = Meshes.cyl(0.03, 0.03, 0.6, 6)
+			pole.position = Vector3(0, 1.75, 0)
+			pole.material_override = Meshes.mat(Palette.WOOD_BEAM)
+			root.add_child(pole)
+			root.add_child(flag)
+			v["flag"] = flag
 	root.position = to_world(e.x, e.y)
 	add_child(root)
 	v["cur"] = root.position
@@ -564,6 +575,8 @@ func _render_unit(e: SimEntity, v: Dictionary, alpha: float, delta: float) -> vo
 func _render_building(e: SimEntity, v: Dictionary, delta: float) -> void:
 	var struct: MeshInstance3D = v["struct"]
 	var found: MeshInstance3D = v["found"]
+	if v.has("flag"):
+		(v["flag"] as MeshInstance3D).material_override = Meshes.mat(Palette.team(e.holder) if e.holder >= 0 else Color("e8e2d4"), 0.6, 0.25)
 	var fs := fog_state(e)
 	(v["node"] as Node3D).visible = fs > 0
 	struct.material_overlay = Meshes.fog_overlay() if fs == 1 else null

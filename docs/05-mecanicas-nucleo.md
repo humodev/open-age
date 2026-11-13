@@ -146,7 +146,7 @@ Condiciones comunes (`01`, capa común), configurables por partida:
 | **Hitos** | Pierde quien se queda sin su centro inicial (capital) ni hitos de edad terminados. Los centros extra no cuentan | H1 |
 | **Rendición** | El jugador abandona | H1 |
 | **Maravilla** | Construir y defender una maravilla durante un tiempo | H2 |
-| **Sitios sagrados** | Controlar todos los sitios sagrados durante un tiempo | H2 |
+| **Sitios sagrados** | Tres sitios neutrales; se capturan con presencia exclusiva (`sitios.captura_ms`), rinden riqueza y quien sostiene todos durante `sitios.victoria_ms` gana | Hecho |
 
 Las victorias preferidas de cada civilización (`03-matriz-de-roles.md`) tienen que ser posibles con estas condiciones; no se agregan victorias exclusivas.
 

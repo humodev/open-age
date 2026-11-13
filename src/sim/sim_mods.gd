@@ -39,6 +39,7 @@ func tick_second() -> void:
 		if has(pid, "caminos") and sim.tick % 50 == 0:
 			_update_connection(pid)
 	_regen()
+	_sacred()
 
 
 ## Recurso propio: generado por aldeanos y edificios, con tope por almacenamiento.
@@ -110,6 +111,50 @@ func _regen() -> void:
 		if sim.tick - e.last_combat < int(cfg["espera_ms"]) / sim.tick_ms:
 			continue
 		e.hp = mini(e.hp_max, e.hp + maxi(1, e.hp_max * int(cfg["pct_por_seg"]) / 100))
+
+
+## Sitios sagrados: captura por presencia exclusiva, renta de riqueza y victoria por control total.
+func _sacred() -> void:
+	var cfg: Dictionary = sim.data.reglas["sitios"]
+	var sites: Array[SimEntity] = []
+	for b in sim.actives:
+		if b.alive and b.def.get("sagrado", false):
+			sites.append(b)
+	if sites.is_empty():
+		return
+	var r: int = cfg["radio"]
+	for site in sites:
+		var present := {}
+		for u in sim.actives:
+			if u.alive and u.is_unit() and u.owner >= 0 and u.inside < 0 and absi(u.x - site.x) <= r and absi(u.y - site.y) <= r:
+				present[u.owner] = true
+		if present.size() != 1:
+			continue
+		var who: int = present.keys()[0]
+		if site.holder == who:
+			site.capture = 0
+			continue
+		if site.aux != who:
+			site.aux = who
+			site.capture = 0
+		site.capture += 1000
+		if site.capture >= int(cfg["captura_ms"]):
+			site.holder = who
+			site.capture = 0
+			sim.events.append({"t": "sitio", "id": site.id, "player": who})
+	var holds := {}
+	for site in sites:
+		if site.holder >= 0:
+			holds[site.holder] = int(holds.get(site.holder, 0)) + 1
+			_gain(site.holder, "riqueza", int(cfg["renta_riqueza"]) * P / 60)
+	for p in sim.players:
+		var pid: int = p["id"]
+		if int(holds.get(pid, 0)) == sites.size() and not p["defeated"]:
+			p["sitios_ms"] = int(p.get("sitios_ms", 0)) + 1000
+			if p["sitios_ms"] >= int(cfg["victoria_ms"]) and not sim.game_over:
+				sim.win(pid)
+		else:
+			p["sitios_ms"] = 0
 
 
 # ---------------------------------------------------------------- Caminos

@@ -27,6 +27,7 @@ var events: Array[Dictionary] = []
 var game_over := false
 var winner := -1
 var terrain := ""
+var _opts: Dictionary = {}
 
 var _pending := {} # tick -> Array[Dictionary]
 var _in_step := false
@@ -39,6 +40,7 @@ const RC := 8
 
 func _init(seed_value: int, num_players: int = 2, data_override: SimData = null, opts: Dictionary = {}) -> void:
 	data = data_override if data_override != null else SimData.load_default()
+	_opts = opts
 	tick_ms = data.reglas["tick_ms"]
 	rng = SimRng.new(seed_value)
 	map = SimMap.new(data.reglas["mapa_tam"], num_players)
@@ -584,7 +586,7 @@ func step() -> void:
 	for c in cmds:
 		_apply(c)
 	for ai in ais:
-		if (tick + ai.player * 5) % 10 == 0 and not players[ai.player]["defeated"]:
+		if ai.thinks_now() and not players[ai.player]["defeated"]:
 			ai.think()
 	_rebuild_hashes()
 	_update_players()
@@ -1525,6 +1527,13 @@ func _check_victory() -> void:
 			_defeat(p["id"])
 
 
+## Victoria directa (sitios sagrados): todos los demás pierden.
+func win(pid: int) -> void:
+	for p in players:
+		if p["id"] != pid:
+			_defeat(p["id"])
+
+
 func _defeat(pid: int) -> void:
 	if players[pid]["defeated"]:
 		return
@@ -1585,6 +1594,9 @@ func spawn_building(type: String, owner: int, tx: int, ty: int, built: bool) -> 
 	e.built = built
 	e.hp = e.hp_max if built else 1
 	e.build_time = dp(owner).build_time_of(type, players[owner]["age"]) if owner >= 0 else 0
+	if owner < 0:
+		e.hp = 1
+		e.hp_max = 1
 	map.mark(tx, ty, e.w, e.h, e.id, not def.get("transitable", false), owner if def.get("puerta", false) else -1)
 	if def.has("cantidad"):
 		e.amount = def["cantidad"]
@@ -1671,6 +1683,15 @@ func _generate_map() -> void:
 		_res_sym("roca", ce + Vector2i(0, dirx.y * 9))
 		_res_sym("riqueza", ce + Vector2i(dirx.x * 9, dirx.y * 5))
 		_blob_sym(ce + Vector2i(dirx.x * 4, dirx.y * 13), 3, 80)
+
+	# Sitios sagrados: uno al centro y pares simétricos (docs/05, "Victoria").
+	if players.size() == 2 and not _opts.get("sin_sitios", false):
+		var sites: int = data.reglas["sitios"]["cantidad"]
+		var spots: Array[Vector2i] = [Vector2i(n / 2 - 1, n / 2 - 1), Vector2i(n / 2 - 18, n / 2 + 14), Vector2i(n / 2 + 16, n / 2 - 16)]
+		for i in mini(sites, spots.size()):
+			var t := map.nearest_free(spots[i].x, spots[i].y, 8)
+			if t.x >= 0 and map.is_free_rect(t.x, t.y, 2, 2):
+				spawn_building("sitio_sagrado", -1, t.x, t.y, true)
 
 	# Recursos disputados en el centro.
 	var mid := n / 2

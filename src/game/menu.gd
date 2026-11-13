@@ -11,6 +11,7 @@ var _civ: OptionButton
 var _rival: OptionButton
 var _info: Label
 var _keys: Array = []
+var _diff: OptionButton
 
 
 func _ready() -> void:
@@ -67,6 +68,22 @@ func _ready() -> void:
 	box.add_child(_civ.get_parent())
 	_rival = _civ_picker(data, "Rival")
 	box.add_child(_rival.get_parent())
+	var drow := HBoxContainer.new()
+	drow.add_theme_constant_override("separation", 12)
+	var dl := Label.new()
+	dl.text = "Dificultad"
+	dl.custom_minimum_size = Vector2(110, 0)
+	dl.add_theme_font_override("font", Hud.font)
+	dl.add_theme_color_override("font_color", Palette.UI_DIM)
+	drow.add_child(dl)
+	_diff = OptionButton.new()
+	_diff.custom_minimum_size = Vector2(270, 38)
+	_diff.add_theme_font_override("font", Hud.font_b)
+	for k in ["facil", "normal", "dificil"]:
+		_diff.add_item(data.reglas["dificultades"][k]["nombre"])
+	_diff.selected = 1
+	drow.add_child(_diff)
+	box.add_child(drow)
 	_info = Label.new()
 	_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_info.custom_minimum_size = Vector2(520, 70)
@@ -172,3 +189,7 @@ func _describe(data: SimData) -> void:
 		return
 	var c: Dictionary = data.civs[_keys[_civ.selected - 1]].civ
 	_info.text = "«%s»  %s\n%s" % [c.get("frase", ""), c.get("region", ""), c.get("descripcion", "")]
+
+
+func difficulty() -> String:
+	return ["facil", "normal", "dificil"][maxi(0, _diff.selected)]

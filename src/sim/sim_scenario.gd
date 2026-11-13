@@ -23,7 +23,7 @@ static func create(m: Dictionary, civ_key: String) -> Sim:
 	for r: Dictionary in m.get("rivales", []):
 		civs.append(r.get("faccion", "invasores"))
 	var mapa: Dictionary = m.get("mapa", {})
-	var s := Sim.new(int(mapa.get("semilla", 1)), civs.size(), null, {"terreno": mapa.get("terreno", "llano"), "civs": civs})
+	var s := Sim.new(int(mapa.get("semilla", 1)), civs.size(), null, {"terreno": mapa.get("terreno", "llano"), "civs": civs, "sin_sitios": true})
 	var sc := SimScenario.new()
 	sc.sim = s
 	sc.mission = m

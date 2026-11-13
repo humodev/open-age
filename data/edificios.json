@@ -62,5 +62,10 @@
     "nombre": "Mercado", "edad_min": 2, "tam": [3, 3], "pv": 1500, "armadura": 1,
     "costo": { "madera": 175 }, "tiempo_ms": 35000, "vision": 6000, "mercado": true, "ranura": 5,
     "desc": "Compra y vende alimento, madera y piedra por riqueza. Los precios se mueven con cada operación."
+  },
+  "sitio_sagrado": {
+    "nombre": "Sitio sagrado", "edad_min": 1, "tam": [2, 2], "pv": 1, "armadura": 0,
+    "costo": {}, "tiempo_ms": 0, "vision": 0, "transitable": true, "sagrado": true,
+    "desc": "Se controla con presencia exclusiva. Rinde riqueza; quien sostiene todos los sitios el tiempo indicado, gana."
   }
 }

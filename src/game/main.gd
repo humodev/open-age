@@ -15,6 +15,7 @@ extends Node3D
 ##   --civ=clave        civilización propia (tawantinsuyu, mapuches, guaranies, etiopia, palmares, ayutthaya, azar)
 ##   --rival=clave      civilización de la IA rival
 ##   --campana=clave --mision=N  juega una misión de campaña (N desde 0)
+##   --dificultad=facil|normal|dificil
 ##   --nofog            sin niebla de guerra (automático en --aivai)
 ##   --autotest         prueba de punta a punta con eventos reales de mouse y teclado
 
@@ -124,7 +125,7 @@ func _new_game() -> void:
 	sim.ais = []
 	for pid in sim.players.size():
 		if pid != local or aivai:
-			sim.ais.append(SimAI.new(sim, pid))
+			sim.ais.append(SimAI.new(sim, pid, _args.get("dificultad", "normal")))
 	_build_scene(aivai)
 
 
@@ -177,7 +178,7 @@ func _build_scene(aivai: bool) -> void:
 		speed = 1.0
 		_menu = MainMenu.new()
 		layer.add_child(_menu)
-		_menu.play.connect(func(sd: int, civ: String, rival: String) -> void: _start({"seed": str(sd), "civ": civ, "rival": rival}))
+		_menu.play.connect(func(sd: int, civ: String, rival: String) -> void: _start({"seed": str(sd), "civ": civ, "rival": rival, "dificultad": _menu.difficulty()}))
 		_menu.watch.connect(func(sd: int, civ: String, rival: String) -> void: _start({"aivai": "1", "seed": str(sd), "civ": civ, "rival": rival}))
 		_menu.campaigns.connect(_open_campaigns.bind(layer))
 		if _args.get("abrir", "") == "campanas":

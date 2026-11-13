@@ -16,6 +16,12 @@
   "bono_altura_pct": 15,
   "vision_por_nivel": 1500,
   "terrenos": ["llano", "montana", "rio", "bosque"],
+  "dificultades": {
+    "facil":   { "nombre": "Fácil",   "piensa_cada_ticks": 30, "max_aldeanos": 22, "ataque_base": 12, "ataque_paso": 6, "ataque_espera_ticks": 1200, "investiga": false },
+    "normal":  { "nombre": "Normal",  "piensa_cada_ticks": 10, "max_aldeanos": 42, "ataque_base": 7,  "ataque_paso": 4, "ataque_espera_ticks": 500,  "investiga": true },
+    "dificil": { "nombre": "Difícil", "piensa_cada_ticks": 5,  "max_aldeanos": 60, "ataque_base": 6,  "ataque_paso": 3, "ataque_espera_ticks": 350,  "investiga": true }
+  },
+  "sitios": { "cantidad": 3, "radio": 4000, "captura_ms": 10000, "renta_riqueza": 18, "victoria_ms": 300000 },
   "mercado": { "lote": 100, "precio_inicial": 100, "paso": 4, "minimo": 25, "maximo": 300, "comision_pct": 30 },
   "contadores": {
     "choque":    { "distancia": 200, "linea": 60,  "edificio": 45, "asedio": 150 },
