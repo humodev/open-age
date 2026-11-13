@@ -368,6 +368,33 @@ static func tree_mesh(variant: int) -> ArrayMesh:
 	return mesh
 
 
+## Detalle del suelo (docs/10): mata de pasto, mata seca, piedritas y flores.
+static func clutter_mesh(kind: int) -> ArrayMesh:
+	var key := "clutter_%d" % kind
+	if _cache.has(key):
+		return _cache[key]
+	var p: Array = []
+	match kind:
+		0, 1:
+			var col := Color("5d7d3a") if kind == 0 else Color("a39556")
+			for i in 7:
+				var a := TAU * i / 7.0
+				var r := 0.04 + (i % 3) * 0.025
+				p.append([cyl(0.0, 0.022, 0.18 + (i % 4) * 0.05, 3), xf(Vector3(cos(a) * r, 0.09, sin(a) * r), Vector3(cos(a) * 18, 0, sin(a) * 18)), col])
+		2:
+			p.append([sphere(0.07, 5), xf(Vector3(0, 0.02, 0), Vector3.ZERO, Vector3(1.3, 0.6, 1)), Palette.STONE])
+			p.append([sphere(0.045, 5), xf(Vector3(0.11, 0.015, 0.05), Vector3.ZERO, Vector3(1, 0.6, 1.2)), Palette.STONE_DARK])
+			p.append([sphere(0.035, 4), xf(Vector3(-0.08, 0.01, 0.09)), Palette.STONE])
+		3:
+			for i in 5:
+				var a := TAU * i / 5.0
+				p.append([cyl(0.0, 0.012, 0.16, 3), xf(Vector3(cos(a) * 0.06, 0.08, sin(a) * 0.06)), Color("5d7d3a")])
+				p.append([sphere(0.025, 4), xf(Vector3(cos(a) * 0.06, 0.17, sin(a) * 0.06)), Color("e8d25a") if i % 2 == 0 else Color("e6e0d8")])
+	var mesh := merge(p)
+	_cache[key] = mesh
+	return mesh
+
+
 static func bush_mesh() -> ArrayMesh:
 	if _cache.has("bush"):
 		return _cache["bush"]

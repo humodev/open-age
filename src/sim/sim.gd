@@ -1830,6 +1830,9 @@ func terrain_def() -> Dictionary:
 ## Relieve y agua con simetría puntual; las bases quedan llanas (D-027, docs/10).
 func _generate_terrain() -> void:
 	var td := terrain_def()
+	if _opts.has("relieve"):
+		_relief_real(_opts["relieve"], td.get("relieve", {}).get("umbrales", [72, 90]))
+		return
 	if td.has("relieve"):
 		_relief_noise(td["relieve"])
 	else:
@@ -1920,6 +1923,36 @@ func _relief_noise(rd: Dictionary) -> void:
 					lvl += 1
 			map.height[idx] = lvl
 			map.height[m.y * n + m.x] = lvl
+
+
+## Relieve de un lugar real: percentiles 00..99 por casilla y agua (0, 1 o 2),
+## como filas de texto. Sin simetría: las misiones no la necesitan.
+func _relief_real(rd: Dictionary, cuts: Array) -> void:
+	var n := map.n
+	var rows: Array = rd["alturas"]
+	var wrows: Array = rd["agua"]
+	for ty in mini(n, rows.size()):
+		var row: String = rows[ty]
+		var wrow: String = wrows[ty]
+		for tx in mini(n, row.length() / 2):
+			var v := row.substr(tx * 2, 2).to_int()
+			var db := 1 << 20
+			for i in mini(maxi(players.size(), 2), bases.size()):
+				var c := bases[i] + Vector2i(2, 2)
+				db = mini(db, maxi(absi(tx - c.x), absi(ty - c.y)))
+			v -= maxi(0, (19 - db) * 9)
+			var lvl := 0
+			for cut in cuts:
+				if v >= int(cut):
+					lvl += 1
+			map.height[ty * n + tx] = lvl
+	for ty in mini(n, wrows.size()):
+		var wrow: String = wrows[ty]
+		for tx in mini(n, wrow.length()):
+			var k := wrow.unicode_at(tx) - 48
+			if k > 0 and not _near_base(Vector2i(tx, ty), 9):
+				map.set_water(tx, ty, k)
+				map.height[ty * n + tx] = 0
 
 
 ## Ruido de valor entero (0..1000) con interpolación suavizada; determinista.

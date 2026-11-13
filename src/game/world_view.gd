@@ -6,8 +6,11 @@ const P := 1000.0
 const LEVEL_H := 1.7 # metros por nivel de altura
 static var _vh := PackedFloat32Array() # alturas de vértices (n+1)²
 const SPLAT_RES := 2 # píxeles de mezcla por casilla
+const CHUNK := 16 # casillas por trozo de malla del terreno
 const RELIEF_AMP := 0.22 # ondulación visual sobre los niveles de la simulación
 var _splat_img: Image
+var _chunks := {} # Vector2i -> MeshInstance3D
+var _clutter_at := {} # casilla -> [multimesh, índice] del detalle del suelo
 var _splat_tex: ImageTexture
 static var _vn := 0
 const O := SimEntity.Order
@@ -38,6 +41,7 @@ func setup(s: Sim, local_player: int) -> void:
 	local = local_player
 	_build_ground()
 	_build_resources()
+	_build_clutter()
 	var n := sim.map.n
 	_fog_img = Image.create_from_data(n, n, false, Image.FORMAT_R8, sim.fog.grids[local])
 	_fog_tex = ImageTexture.create_from_image(_fog_img)
@@ -138,7 +142,7 @@ func _build_terrain() -> void:
 					var tx: int = clampi(i + dx, 0, n - 1)
 					var tz: int = clampi(j + dz, 0, n - 1)
 					var w := map.water[tz * n + tx]
-					sum += -0.9 if w == 1 else (-0.3 if w == 2 else float(map.h_at(tx, tz)) * LEVEL_H)
+					sum += -0.9 if w == 1 else (-0.55 if w == 2 else float(map.h_at(tx, tz)) * LEVEL_H)
 					cnt += 1
 			raw[j * vn + i] = sum / cnt
 	# Suavizado para lomas redondeadas; las mesetas guardan sus paredes.
@@ -169,26 +173,9 @@ func _build_terrain() -> void:
 				raw[j * vn + i] += noise.get_noise_2d(i, j) * RELIEF_AMP
 	_vh = raw
 	_vn = vn
-	var st := SurfaceTool.new()
-	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	for j in n:
-		for i in n:
-			var v00 := Vector3(i, raw[j * vn + i], j)
-			var v10 := Vector3(i + 1, raw[j * vn + i + 1], j)
-			var v01 := Vector3(i, raw[(j + 1) * vn + i], j + 1)
-			var v11 := Vector3(i + 1, raw[(j + 1) * vn + i + 1], j + 1)
-			st.add_vertex(v00)
-			st.add_vertex(v10)
-			st.add_vertex(v11)
-			st.add_vertex(v00)
-			st.add_vertex(v11)
-			st.add_vertex(v01)
-	st.generate_normals()
-	var mi := MeshInstance3D.new()
-	mi.mesh = st.commit()
-	mi.material_override = ground_mat
-	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
-	add_child(mi)
+	for cz in ceili(n / float(CHUNK)):
+		for cx in ceili(n / float(CHUNK)):
+			_rebuild_chunk(cx, cz)
 	var has_water := false
 	for w in map.water:
 		if w != 0:
@@ -206,6 +193,74 @@ func _build_terrain() -> void:
 		wmi.material_override = _water_mat
 		wmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		add_child(wmi)
+
+
+## Reconstruye un trozo de la malla del terreno desde `_vh`. Las normales salen
+## del campo de alturas, así no hay costuras entre trozos.
+func _rebuild_chunk(cx: int, cz: int) -> void:
+	var n := sim.map.n
+	var vn := _vn
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for j in range(cz * CHUNK, mini(n, (cz + 1) * CHUNK)):
+		for i in range(cx * CHUNK, mini(n, (cx + 1) * CHUNK)):
+			for c in [Vector2i(i, j), Vector2i(i + 1, j), Vector2i(i + 1, j + 1), Vector2i(i, j), Vector2i(i + 1, j + 1), Vector2i(i, j + 1)]:
+				var hl := _vh[c.y * vn + maxi(c.x - 1, 0)]
+				var hr := _vh[c.y * vn + mini(c.x + 1, vn - 1)]
+				var hu := _vh[maxi(c.y - 1, 0) * vn + c.x]
+				var hd := _vh[mini(c.y + 1, vn - 1) * vn + c.x]
+				st.set_normal(Vector3(hl - hr, 2.0, hu - hd).normalized())
+				st.add_vertex(Vector3(c.x, _vh[c.y * vn + c.x], c.y))
+	var key := Vector2i(cx, cz)
+	var mi: MeshInstance3D = _chunks.get(key)
+	if mi == null:
+		mi = MeshInstance3D.new()
+		mi.material_override = ground_mat
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+		add_child(mi)
+		_chunks[key] = mi
+	mi.mesh = st.commit()
+
+
+## Aplana el suelo bajo un edificio y lo funde con el entorno (docs/10, "Huella aplanada").
+func _flatten_footprint(e: SimEntity) -> void:
+	if _vn == 0:
+		return
+	var vn := _vn
+	var target := 0.0
+	var cnt := 0
+	for j in range(e.ty, e.ty + e.h + 1):
+		for i in range(e.tx, e.tx + e.w + 1):
+			target += _vh[clampi(j, 0, vn - 1) * vn + clampi(i, 0, vn - 1)]
+			cnt += 1
+	target /= maxf(1.0, cnt)
+	var m := 2 # casillas de transición
+	for j in range(e.ty - m, e.ty + e.h + m + 1):
+		for i in range(e.tx - m, e.tx + e.w + m + 1):
+			if i < 0 or j < 0 or i >= vn or j >= vn:
+				continue
+			if sim.map.is_water(i, j) or sim.map.is_water(i - 1, j) or sim.map.is_water(i, j - 1) or sim.map.is_water(i - 1, j - 1):
+				continue # las orillas no se levantan
+			var dx := maxi(maxi(e.tx - i, i - (e.tx + e.w)), 0)
+			var dz := maxi(maxi(e.ty - j, j - (e.ty + e.h)), 0)
+			var d := maxi(dx, dz)
+			var k := 1.0 if d == 0 else (1.0 - float(d) / (m + 1)) * 0.85
+			_vh[j * vn + i] = lerpf(_vh[j * vn + i], target, k)
+	# El detalle del suelo de alrededor sigue a la nueva altura.
+	for j in range(e.ty - m - 1, e.ty + e.h + m + 1):
+		for i in range(e.tx - m - 1, e.tx + e.w + m + 1):
+			var cl: Array = _clutter_at.get(Vector2i(i, j), [])
+			if cl.is_empty():
+				continue
+			var t: Transform3D = cl[2]
+			t.origin.y = height_at(t.origin.x, t.origin.z) - 0.02
+			cl[2] = t
+			(cl[0] as MultiMesh).set_instance_transform(cl[1], t)
+	var c0 := Vector2i(maxi(0, e.tx - m - 1) / CHUNK, maxi(0, e.ty - m - 1) / CHUNK)
+	var c1 := Vector2i(mini(vn - 2, e.tx + e.w + m + 1) / CHUNK, mini(vn - 2, e.ty + e.h + m + 1) / CHUNK)
+	for cz in range(c0.y, c1.y + 1):
+		for cx in range(c0.x, c1.x + 1):
+			_rebuild_chunk(cx, cz)
 
 
 ## Mezcla del suelo: R tierra pisada, G barro, B pasto seco (docs/10).
@@ -251,7 +306,13 @@ func _paint_dirt(c: Vector2, r: float, strength: float) -> void:
 func _settle_building(e: SimEntity, root: Node3D) -> void:
 	if e.def.get("sagrado", false) or e.def.get("linea", false):
 		return
+	for j in range(e.ty, e.ty + e.h):
+		for i in range(e.tx, e.tx + e.w):
+			var cl: Array = _clutter_at.get(Vector2i(i, j), [])
+			if not cl.is_empty():
+				(cl[0] as MultiMesh).set_instance_transform(cl[1], Transform3D(Basis().scaled(Vector3.ZERO), Vector3.ZERO))
 	if not e.def.get("transitable", false):
+		_flatten_footprint(e)
 		_paint_dirt(Vector2(e.tx + e.w / 2.0, e.ty + e.h / 2.0), maxf(e.w, e.h) * 0.85 + 0.8, 0.9 if e.capital else 0.75)
 		if _splat_tex != null:
 			_splat_tex.update(_splat_img)
@@ -281,6 +342,49 @@ static func _contact_tex() -> Texture2D:
 		t.height = 128
 		_contact = t
 	return _contact
+
+
+## Matas, piedritas y flores sueltas según el bioma; solo imagen (docs/10).
+func _build_clutter() -> void:
+	var map := sim.map
+	var n := map.n
+	var dry: float = sim.terrain_def().get("seco", 10) / 100.0
+	var lists: Array[Array] = [[], [], [], []]
+	for ty in n:
+		for tx in n:
+			if map.is_water(tx, ty) or map.occupant(tx, ty) != -1:
+				continue
+			var hsh := _hash(tx * 7919 + ty * 104729 + 17)
+			if hsh % 100 >= 38:
+				continue
+			var kind := 0
+			var roll := (hsh / 100) % 100
+			if map.is_slope(tx, ty) or roll < 14:
+				kind = 2
+			elif roll < 14 + int(dry * 70.0):
+				kind = 1
+			elif roll > 93 and dry < 0.5:
+				kind = 3
+			var ox := float((hsh / 10000) % 80) / 100.0 + 0.1
+			var oz := float((hsh / 800000) % 80) / 100.0 + 0.1
+			var p := Vector3(tx + ox, 0, ty + oz)
+			p.y = height_at(p.x, p.z) - 0.02
+			var sc := 1.15 + float((hsh / 7) % 50) / 100.0
+			lists[kind].append([Transform3D(Basis(Vector3.UP, float(hsh % 628) / 100.0).scaled(Vector3(sc, sc, sc)), p), tx, ty])
+	for kind in 4:
+		var mm := MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.mesh = Meshes.clutter_mesh(kind)
+		mm.instance_count = lists[kind].size()
+		for i in lists[kind].size():
+			var it: Array = lists[kind][i]
+			mm.set_instance_transform(i, it[0])
+			_clutter_at[Vector2i(it[1], it[2])] = [mm, i, it[0]]
+		var mmi := MultiMeshInstance3D.new()
+		mmi.multimesh = mm
+		mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		mmi.visibility_range_end = 70.0 # de lejos no se ven y no se pagan
+		add_child(mmi)
 
 
 func _build_resources() -> void:

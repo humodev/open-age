@@ -23,7 +23,13 @@ static func create(m: Dictionary, civ_key: String) -> Sim:
 	for r: Dictionary in m.get("rivales", []):
 		civs.append(r.get("faccion", "invasores"))
 	var mapa: Dictionary = m.get("mapa", {})
-	var s := Sim.new(int(mapa.get("semilla", 1)), civs.size(), null, {"terreno": mapa.get("terreno", "llano"), "civs": civs, "sin_sitios": true})
+	var opts := {"terreno": mapa.get("terreno", "llano"), "civs": civs, "sin_sitios": true}
+	# Relieve real del lugar (tools/relieve_real.py, docs/10), si la misión lo tiene.
+	var rpath := "res://data/relieve/%s.json" % m.get("id", "")
+	if mapa.get("relieve_real", true) and FileAccess.file_exists(rpath):
+		var rd: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(rpath))
+		opts["relieve"] = {"alturas": rd["alturas"], "agua": rd["agua"]}
+	var s := Sim.new(int(mapa.get("semilla", 1)), civs.size(), null, opts)
 	var sc := SimScenario.new()
 	sc.sim = s
 	sc.mission = m

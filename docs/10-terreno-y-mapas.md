@@ -38,6 +38,10 @@ Cada uno tiene su paleta, su vegetación y su distribución de recursos.
   - Se valida con una captura de lado a lado de cada civilización.
 - **Velocidad de las unidades**, la misma observación: los aldeanos parecen moverse demasiado rápido. Esa prueba corría a ×4, pero igual hay que medirla a ×1 contra el tamaño visual. Hoy el aldeano anda 1,25 casillas por segundo. Si la escala cambia, se revisan las velocidades en `data/unidades.json` y la cadencia de los pasos de la animación.
 
+## Estado (2026-11-13)
+- Hecho: materiales del suelo y edificios asentados; 11 tipos de mapa con relieve continuo; relieve real en las 24 misiones (`tools/relieve_real.py`, `data/relieve/`); huella aplanada; detalle del suelo por bioma.
+- Falta: escala y velocidad, y modelos de Meshy sin base (paso 5).
+
 ## 5. Orden propuesto
 1. Mezcla de materiales y edificios integrados al suelo (es lo que más cambia la imagen).
 2. Relieve continuo en la imagen y tipos de mapa nuevos.

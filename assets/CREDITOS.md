@@ -109,3 +109,12 @@ Generado con Meshy (`tools/meshy_api.py`, modelo de imagen `nano-banana-2`) a pa
 | `texturas/suelo/tierra_*` | https://ambientcg.com/view?id=Ground054 | CC0 |
 | `texturas/suelo/barro_*` | https://ambientcg.com/view?id=Ground049C | CC0 |
 | `texturas/suelo/roca_*` | https://ambientcg.com/view?id=Rock030 | CC0 |
+
+## Relieve y agua de lugares reales (`data/relieve/`)
+
+Los mapas de las misiones con nombre se arman con `tools/relieve_real.py` a partir de dos fuentes:
+
+- **Elevación**: Copernicus DEM GLO-30. © DLR e.V. 2010-2014 y © Airbus Defence and Space GmbH 2014-2018, provisto bajo COPERNICUS por la Unión Europea y la ESA. El uso es libre con esta atribución.
+- **Ríos, canales y lagos**: © colaboradores de OpenStreetMap, bajo licencia ODbL (https://www.openstreetmap.org/copyright). Las capas de agua de `data/relieve/*.json` derivan de OSM y se distribuyen bajo la misma licencia ODbL.
+
+Cada archivo guarda el centro del recorte, su lado en km y la fuente. En los lugares discutidos o estimados, la nota del lugar dice «aprox».

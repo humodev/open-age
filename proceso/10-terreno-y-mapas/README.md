@@ -85,8 +85,39 @@ Los edificios generados se apoyan sobre un pasto uniforme y parecen bloques suel
 
     Quedan registradas en `docs/10` (sección 4 y paso 5 del orden) y en `docs/09-estado.md`. Se ajustan cuando se regeneren los modelos: una tabla de alturas de referencia en `data/` y cada modelo escalado por altura, no solo por huella.
 
+11. **Relieve real para las 24 misiones** (`tools/relieve_real.py`, `data/relieve/`).
+    - **Elevación**: Copernicus GLO-30, 30 m, de cada lugar, recortado de 8 a 16 km de lado según la misión.
+    - **Suelo desnudo**: Copernicus es un modelo de superficie, con techos y árboles. Por eso de cada casilla se toma el percentil 25 de sus 16 muestras, y en las llanuras se suaviza más.
+    - **Forma y cantidad**: cada casilla guarda su percentil, de 00 a 99. El tipo de mapa de la misión decide cuánto terreno alto hay; la forma sale del lugar real.
+    - **Agua**: ríos, canales y lagos de OpenStreetMap (ODbL), por la API de Overpass con reintentos. Si OSM no tiene nada, se usa la acumulación de flujo sobre el relieve.
+    - **Vados**: en franjas cada 16 casillas. Si las bases no quedan conectadas, se achican las franjas y, como último recurso, se ponen también sobre los ríos anchísimos (el Paraguay, el Uruguay).
+    - **Orientación**: se prueban las 8 del recorte y gana la que deja las bases en terreno parejo y seco.
+    - **Simulación**: lee las filas de texto sin flotantes y sin simetría, y mantiene la rampa llana alrededor de cada base. La atribución está en `assets/CREDITOS.md`.
+    - **Tropiezos**:
+      - Muchos arroyos de una casilla partían el mapa en franjas: se subió el umbral de cuenca.
+      - La ciudad de Ayutthaya salía como "relieve" por los techos: se pasó al percentil 25 y a suavizar más.
+      - El servidor público de Overpass devolvía 502: se agregaron reintentos y tres espejos.
+      - Los vados de ríos angostos quedaban por encima del agua y cortaban el río en charcos: se bajaron en la imagen.
+      - Ayutthaya salía como un laberinto por los cientos de canales de riego de OSM. Ahora solo quedan los canales de más de 25 casillas, como agua baja que se vadea.
+    - **Prueba**: humo de campañas con la IA jugando por el jugador, 8 minutos por misión. Las 25 misiones corren y en todas se cumplen objetivos.
+12. **Huella aplanada.** La malla del terreno ahora va en trozos de 16×16 casillas, con normales calculadas del campo de alturas, así no hay costuras. Al levantarse un edificio:
+    - El suelo se aplana bajo su huella y se funde en dos casillas alrededor; las orillas no se tocan.
+    - Solo se reconstruyen los trozos afectados.
+    - Las unidades y el detalle del suelo siguen la nueva altura.
+13. **Detalle del suelo.** Matas verdes y secas, piedritas en las laderas y flores donde no es seco, según el bioma. Son instanciadas, se dibujan hasta 70 m y desaparecen bajo los edificios. El primer tamaño quedó tan grande como un aldeano y se bajó.
+
+| Relieve real de las 24 misiones (gris = percentil de altura, azul = agua, celeste = vado) |
+|---|
+| ![](12-relieve-real-24-misiones.jpg) |
+
+| Ollantaytambo con su relieve | Referencia para la escala (paso 10) |
+|---|---|
+| ![](13-mision-ollantaytambo-relieve-real.jpg) | ![](11-escala-aldeanos-vs-casas-palmares.jpg) |
+
+| La isla de Ayutthaya entre sus tres ríos |
+|---|
+| ![](14-mision-isla-de-ayutthaya.jpg) |
+
 Pendiente en esta etapa:
-- Relieve real (DEM) para las misiones con nombre.
 - Modelos de Meshy sin base.
-- Objetos sueltos en el suelo.
 - Escala y velocidad (paso 10).
