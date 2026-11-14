@@ -1550,8 +1550,14 @@ func _approach(e: SimEntity, t: SimEntity, reach: int) -> bool:
 
 
 func _separate() -> void:
+	# Cada par se separa cada `separacion_cada_ticks` ticks con el empujón multiplicado:
+	# la misma velocidad de separación por la mitad del trabajo (docs/11, paso 6).
+	var every := maxi(1, int(data.reglas.get("separacion_cada_ticks", 1)))
+	var cap := 160 * every
 	for e in actives:
 		if not e.alive or not e.is_unit() or e.inside >= 0:
+			continue
+		if (e.id + tick) % every != 0:
 			continue
 		var cx := e.x / P
 		var cy := e.y / P
@@ -1574,7 +1580,7 @@ func _separate() -> void:
 						dx = 1 if (e.id & 1) == 0 else -1
 						dy = 0
 						d = 1
-					var push := mini((rr - d), 160)
+					var push := mini((rr - d), cap)
 					var we := 50
 					if e.anchored and not o.anchored:
 						we = 15

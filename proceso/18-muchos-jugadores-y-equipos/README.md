@@ -124,4 +124,5 @@ Plan: [`docs/11-partidas-de-muchos-jugadores.md`](../../docs/11-partidas-de-much
        - no se vuelve a pintar el mismo círculo (misma casilla y radio) en un ejército apretado;
        - con visión compartida se calcula una vez por equipo y se copia a los aliados;
      - **consultas a celdas vacías** usan un arreglo constante en vez de crear uno nuevo.
-   - Determinismo OK. **Falta:** la separación (11 ms) y la medición limpia.
+   - **Separación cada 2 ticks** (`reglas.separacion_cada_ticks`): cada par de unidades encimadas se separa en ticks alternos, con el doble de empujón. Se separan igual de rápido con la mitad del trabajo: bajó de 11,0 a 5,9 ms en la batalla de 900. En el banco de 200 unidades, de 9,7 a 8,2 ms por tick.
+   - Determinismo OK. **Falta:** la medición limpia, sin otras pruebas corriendo a la vez.

@@ -158,6 +158,10 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 	# --- paneles ---
 	paneles = PANELES.new()
 	paneles.setup(self)
+	# Los diálogos (pausa, opciones, ayuda, fin) van por encima de los paneles F1–F6.
+	for d in [_menu, _options, _help, _end]:
+		if d != null and d.get_parent() == self:
+			move_child(d, -1)
 	# --- fin paneles ---
 
 

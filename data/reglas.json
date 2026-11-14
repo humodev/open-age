@@ -11,6 +11,7 @@
   "recursos_iniciales": { "alimento": 200, "madera": 200, "piedra": 100, "riqueza": 100 },
   "aldeanos_iniciales": 6,
   "exploradores_iniciales": 1,
+  "separacion_cada_ticks": 2,
   "niebla_cada_ticks": 5,
   "construccion_decreciente": true,
   "bono_altura_pct": 15,

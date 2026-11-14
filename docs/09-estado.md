@@ -48,8 +48,8 @@ Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video,
 | Dificultades y estilos de la IA | Tres dificultades (fácil, normal, difícil) y cuatro estilos (pacífica, equilibrada, acosadora, agresiva) |
 | Animación | Procedural (paso, galope, trabajo, golpe, muerte); sin esqueletos |
 | Modelos generados | Capitales, casas, elefante, kona, aldeanos (seis), hondero inca, arquero guaraní, jinete noble etíope y paisaje; el resto de los edificios y de las unidades militares son la maqueta procedural. Etiopía sigue sin música propia (C-24). Falta animación con esqueleto |
-| Interfaz, segunda tanda | Partes A y B integradas (`proceso/17`): escala de interfaz de 1366×768 a 4K, paleta apta para daltonismo con modos (`tests/test_paleta.gd`), estados de la grilla a 4,5:1, opciones guardadas en `user://opciones.cfg`, cursores contextuales, grilla estable con submenús, avisos con jerarquía y salto con Espacio, fila de grupos, HUD vacío que no tapa y errores puntuales. Pendientes: atajos del pie del menú a 1366×768, opción de texto grande, menú de pausa debajo de los paneles F1–F6 |
-| Partidas de muchos jugadores | Rendimiento con 6: batalla de 900 unidades a ~37 ms por tick (meta 25 a ×4); falta la separación y medir sin otras pruebas en paralelo. Minimapa sin borde de aliados |
+| Interfaz, segunda tanda | Partes A y B integradas (`proceso/17`): escala de interfaz de 1366×768 a 4K, paleta apta para daltonismo con modos (`tests/test_paleta.gd`), estados de la grilla a 4,5:1, opciones guardadas en `user://opciones.cfg`, cursores contextuales, grilla estable con submenús, avisos con jerarquía y salto con Espacio, fila de grupos, HUD vacío que no tapa y errores puntuales. Pendientes: atajos del pie del menú a 1366×768 y opción de texto grande |
+| Partidas de muchos jugadores | Rendimiento con 6: batalla de 900 unidades a ~31 ms por tick (meta 25 a ×4); falta medir sin otras pruebas en paralelo. Minimapa sin borde de aliados |
 | Escala y velocidad | Corregidas el 2026-11-13 (`escala_visual`, `velocidad_pct`); falta la opinión del autor a ×1 |
 | Multijugador | H5 |
 | Naval | Fuera de alcance (D-020) |
