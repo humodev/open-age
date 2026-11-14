@@ -21,8 +21,6 @@ var _sel: Control
 var _card: Control
 var _mini: Minimap
 var _tip: Control
-var _notice: Label
-var _notice_t := 0.0
 var _menu: PanelContainer
 var _end: PanelContainer
 var _end_title: Label
@@ -45,6 +43,17 @@ var paneles: Control
 const MundoCapa := preload("res://src/game/ui/mundo_capa.gd")
 var _mundo: Control # información sobre el mundo 3D (src/game/ui/mundo_capa.gd)
 # --- fin mundo ---
+# --- avisos --- (src/game/ui/avisos.gd y grupos.gd)
+const AVISOS := preload("res://src/game/ui/avisos.gd")
+const GRUPOS := preload("res://src/game/ui/grupos.gd")
+var avisos: Control
+var grupos: Control
+var _pob_estado := "" # "", "llena" o "excedida": para avisar una sola vez por cambio
+# --- fin avisos ---
+# --- cursores ---
+const CURSORES := preload("res://src/game/ui/cursores.gd")
+var cursores: Node
+# --- fin cursores ---
 
 
 static func load_fonts() -> void:
@@ -125,16 +134,20 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 	add_child(ficha)
 	# --- fin ficha ---
 
-	_notice = Label.new()
-	_anchor(_notice, Vector2(0.5, 0), Rect2(-400, 74, 800, 60))
-	_notice.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_notice.add_theme_font_override("font", font_b)
-	_notice.add_theme_font_size_override("font_size", 19)
-	_notice.add_theme_color_override("font_color", Palette.UI_TEXT)
-	_notice.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.7))
-	_notice.add_theme_constant_override("shadow_offset_y", 2)
-	_notice.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(_notice)
+	# --- avisos --- (pila de avisos con fondo y tipo, en lugar del renglón suelto)
+	avisos = AVISOS.new()
+	_anchor(avisos, Vector2(0.5, 0), Rect2(-300, 74, 600, 260))
+	add_child(avisos)
+	grupos = GRUPOS.new()
+	grupos.hud = self
+	add_child(grupos)
+	_place_groups()
+	# --- fin avisos ---
+	# --- cursores ---
+	cursores = CURSORES.new()
+	add_child(cursores)
+	ctrl.cursores = cursores
+	# --- fin cursores ---
 
 	_menu = _make_dialog("Pausa", "", [["Reanudar", func() -> void: toggle_menu()], ["Cómo se juega (F1)", func() -> void: _toggle_help()], ["Opciones", func() -> void: _options.visible = true], ["Nueva partida", func() -> void: main.restart()], ["Menú principal", func() -> void: main.to_menu()], ["Salir", func() -> void: get_tree().quit()]])
 	_build_options()
@@ -205,14 +218,54 @@ func blocks(m: Vector2) -> bool:
 	if _menu.visible or _end.visible or (_options != null and _options.visible) or (_help != null and _help.visible):
 		return true
 	for c in _blockers:
-		if c.get_global_rect().has_point(m):
+		if c.is_visible_in_tree() and c.get_global_rect().has_point(m): # --- avisos --- (lo oculto no tapa)
 			return true
+	# --- avisos ---
+	for c in [avisos, grupos]:
+		if c != null and c.is_visible_in_tree() and c._has_point(m - c.global_position):
+			return true
+	# --- fin avisos ---
 	return false
 
 
-func notify(msg: String, secs: float = 2.6) -> void:
-	_notice.text = msg
-	_notice_t = secs
+# --- avisos ---
+## Aviso del momento. `tipo`: "ataque", "decision", "hito" o "info"; `lugar` (Vector3) lo vuelve
+## saltable con Espacio. `secs` < 0 usa la duración del tipo (data/interfaz.json → avisos).
+func notify(msg: String, secs: float = -1.0, tipo: String = "info", lugar: Variant = null) -> void:
+	if avisos != null:
+		avisos.push(msg, tipo, secs, lugar)
+
+
+func _lugar_de(x: int, y: int) -> Vector3:
+	return WorldView.to_world(x, y)
+
+
+## Sin selección, el panel y la grilla se ocultan: no tapan el mapa (P5). Los grupos bajan.
+func _place_groups() -> void:
+	var vacio := ctrl.selection.is_empty()
+	_sel.visible = not vacio
+	_card.visible = not vacio
+	_anchor(grupos, Vector2(0.5, 1), Rect2(-300, (-58.0 if vacio else -232.0), 600, 46))
+
+
+## Población: aviso único cuando se llena y explicación cuando se arranca por encima del tope (P9).
+func _check_pop() -> void:
+	var p: Dictionary = sim.players[local]
+	var pop := int(p["pop"])
+	var cap := int(p["pop_cap"])
+	var estado := "excedida" if pop > cap else ("llena" if pop >= cap and pop > 0 else "")
+	if estado == _pob_estado:
+		return
+	var antes := _pob_estado
+	_pob_estado = estado
+	var casa: String = String(sim.dp(local).edificios.get("casa", {}).get("nombre", "Casa"))
+	var tope_juego := cap >= int(sim.data.reglas["pob_max"])
+	if estado == "excedida" and antes != "excedida":
+		var porque := "\nNo se entrena nada hasta que la gente quepa: construí casas (%s) para subir el tope." % casa if not tope_juego else "\nEs el máximo del juego: no se entrena nada hasta bajar."
+		notify("Población %d/%d: hay más gente que lugar" % [pop, cap] + porque, 9.0, "decision")
+	elif estado == "llena" and antes == "":
+		notify("Población llena (%d/%d)" % [pop, cap] + ("\nConstruí casas (%s) para seguir entrenando." % casa if not tope_juego else "\nEs el máximo del juego."), -1.0, "decision")
+# --- fin avisos ---
 
 
 func queue_icon(item: String) -> String:
@@ -230,25 +283,30 @@ func on_events(events: Array) -> void:
 	for ev in events:
 		var pid: int = ev.get("player", -2)
 		match ev["t"]:
+			# --- avisos --- (cada suceso con su tipo; los que tienen lugar se pueden saltar con Espacio)
 			"notify":
 				if pid == local:
-					notify(ev["msg"])
+					notify(ev["msg"], -1.0, "decision" if String(ev["msg"]).begins_with("No ") or String(ev["msg"]).contains("insuficientes") or String(ev["msg"]).begins_with("Requiere") else "info")
+			"notice":
+				if pid == local:
+					notify(ev["text"], -1.0, "info")
 			"age":
 				var name: String = sim.dp(pid).edades[ev["age"] - 1]["nombre"]
 				if pid == local:
 					var hdef: Dictionary = sim.dp(pid).edificios.get(ev.get("hito", ""), {})
-					notify("Edad %s alcanzada · %s\n%s" % [Sim._roman(ev["age"]), name, ctrl.effects_text(hdef.get("efectos", []))], 5.0)
+					var efx := ctrl.effects_text(hdef.get("efectos", []))
+					notify("Edad %s alcanzada · %s" % [Sim._roman(ev["age"]), name] + ("\n" + efx if efx != "" else ""), -1.0, "hito")
 				else:
-					notify("%s llegó a la edad %s" % [Palette.TEAM_NAMES[pid], Sim._roman(ev["age"])])
+					notify("%s llegó a la edad %s" % [Palette.TEAM_NAMES[pid], Sim._roman(ev["age"])], -1.0, "info")
 			"tech":
 				if pid == local:
-					notify("Investigación terminada: %s" % sim.dp(pid).tecnologias[ev["tech"]]["nombre"])
+					notify("Investigación terminada: %s" % sim.dp(pid).tecnologias[ev["tech"]]["nombre"], -1.0, "hito")
 			"alarm":
 				if pid == local:
-					notify("¡Campana! Los aldeanos se refugian")
+					notify("¡Campana! Los aldeanos se refugian", -1.0, "decision")
 			"alert":
 				if pid == local:
-					notify("¡Nos atacan!")
+					notify("¡Nos atacan!", -1.0, "ataque", _lugar_de(ev["x"], ev["y"]))
 					_mini.ping(ev["x"], ev["y"])
 			"victory":
 				if sim.scenario == null:
@@ -258,15 +316,21 @@ func on_events(events: Array) -> void:
 				if not _dialog.visible:
 					_next_dialog()
 			"sitio":
-				notify("Sitio sagrado tomado por %s" % ("tu pueblo" if pid == local else "el rival"))
+				var site: SimEntity = sim.by_id.get(ev.get("id", -1))
+				var at: Variant = _lugar_de(site.x, site.y) if site != null else null
+				if pid == local:
+					notify("Sitio sagrado tomado por tu pueblo", -1.0, "hito", at)
+				else:
+					notify("El rival tomó un sitio sagrado", -1.0, "ataque", at)
 			"objetivo":
 				match ev["estado"]:
 					"hecho":
-						notify("✓ " + String(ev["texto"]).substr(0, 90))
+						notify("✓ " + String(ev["texto"]).substr(0, 90), -1.0, "hito")
 					"nuevo":
-						notify("Nuevo objetivo: " + String(ev["texto"]).substr(0, 80), 4.0)
+						notify("Nuevo objetivo: " + String(ev["texto"]).substr(0, 80), 5.0, "decision")
 					"fallado":
-						notify("✗ " + String(ev["texto"]).substr(0, 90), 4.0)
+						notify("✗ " + String(ev["texto"]).substr(0, 90), 5.0, "ataque")
+			# --- fin avisos ---
 			"mision":
 				main.mission_over(ev["resultado"])
 
@@ -341,7 +405,7 @@ func _build_help() -> void:
 		if dd.has_mod("recurso_propio"):
 			civ_txt += "\nRecurso propio: %s." % dd.mod("recurso_propio")["nombre"]
 		civ_txt += "\nEdades: %s.\nDebilidad: %s" % [", ".join(c.get("edades", [])), c.get("debilidad", "")]
-	var controls := "Clic izquierdo: seleccionar (arrastrar para un grupo; doble clic: todos los del tipo)\nClic derecho: mover, atacar, recolectar, construir, reparar o alojar\nGrilla Q W E R / A S D F / Z X C V: construir, entrenar, investigar\nA y clic: atacar en movimiento · S: detener · Supr: eliminar\nCtrl + 1…9: grupos · H: centro · . : aldeano inactivo · Z en el centro: campana\nFlechas, bordes o botón del medio: cámara · F3: velocidad · Esc: pausa"
+	var controls := "Clic izquierdo: seleccionar (arrastrar para un grupo; doble clic: todos los del tipo)\nClic derecho: mover, atacar, recolectar, construir, reparar o alojar\nGrilla Q W E R / A S D F / Z X C V: construir, entrenar, investigar\nAldeanos: Q economía y W militar (submenús; Esc o V vuelve) · Z hito de economía · X hito militar\nA y clic: atacar en movimiento · S: detener · F: refugiarse · Supr: eliminar\nCtrl + 1…9: asignar grupo · Mayús + 1…9: sumar al grupo · H: centro · . : aldeano inactivo · Z en el centro: campana\nEspacio: ir al último ataque o suceso · Inicio: recorrer los avisos anteriores\nFlechas, bordes o botón del medio: cámara · F3: velocidad · Esc: pausa"
 	_help = _make_dialog("Cómo se juega", civ_txt + "\n\n" + controls, [["Cerrar", func() -> void: _help.visible = false]])
 	(_help.get_meta("body") as Label).horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	(_help.get_meta("body") as Label).custom_minimum_size = Vector2(760, 0)
@@ -389,8 +453,14 @@ func _process(delta: float) -> void:
 			_next_dialog()
 	if _objectives != null:
 		_objectives.queue_redraw()
-	_notice_t -= delta
-	_notice.modulate.a = clampf(_notice_t / 0.5, 0.0, 1.0)
+	# --- avisos ---
+	if _sel.visible == ctrl.selection.is_empty():
+		_place_groups()
+	_check_pop()
+	if _dialog != null and _dialog.visible:
+		_dialog.offset_top = maxf(140.0, 74.0 + avisos.alto_usado() + 10.0)
+		_dialog.offset_bottom = _dialog.offset_top + 10.0
+	# --- fin avisos ---
 	_top.queue_redraw()
 	_clock.queue_redraw()
 	_sel.queue_redraw()
@@ -678,10 +748,30 @@ class CommandCard:
 					if not c.is_empty():
 						hud.ctrl.run_command(c)
 			accept_event()
+		# --- grilla --- (clic derecho sobre la grilla: vuelve a la raíz del aldeano)
+		elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+			hud.ctrl.open_submenu(Grilla.RAIZ)
+			accept_event()
+		# --- fin grilla ---
 
 	func _draw() -> void:
 		draw_style_box(Hud.panel_box(), Rect2(Vector2.ZERO, size))
 		var cmds := hud.ctrl.commands()
+		# --- grilla --- (pestaña con el submenú abierto, encima de la grilla)
+		if hud.ctrl.submenu != Grilla.RAIZ and hud.ctrl._has_villager():
+			var title := "ECONOMÍA" if hud.ctrl.submenu == Grilla.ECONOMIA else "MILITAR Y DEFENSA"
+			var tw := Hud.font_b.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x + 92
+			var tab := StyleBoxFlat.new()
+			tab.bg_color = Color(Palette.UI_BG, 0.95)
+			tab.border_color = Color(Palette.UI_ACCENT, 0.6)
+			tab.set_border_width_all(1)
+			tab.border_width_bottom = 0
+			tab.corner_radius_top_left = 6
+			tab.corner_radius_top_right = 6
+			draw_style_box(tab, Rect2(0, -24, tw, 24))
+			draw_string(Hud.font_b, Vector2(10, -7), title, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Palette.UI_ACCENT)
+			draw_string(Hud.font, Vector2(0, -7), "Esc vuelve", HORIZONTAL_ALIGNMENT_RIGHT, tw - 10, 12, Palette.UI_DIM)
+		# --- fin grilla ---
 		var by_slot := {}
 		for c in cmds:
 			by_slot[c["slot"]] = c
@@ -878,10 +968,12 @@ class SelectionPanel:
 			var f: SimEntity = sim.by_id.get(e.farmer)
 			draw_string(Hud.font, Vector2(x, 96), "Trabajada por un aldeano" if f != null and f.alive and f.target == e.id else "Sin aldeano asignado", HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Palette.UI_TEXT)
 		var dd := sim.dp(e.owner)
+		# Renglones de ayuda bajo la cola, apilados para que no se pisen (P8, capital de Palmares).
+		var hints: Array = [] # [texto, fuente, tamaño, color]
 		if e.owner == hud.local and e.capital and dd.has_mod("acogida"):
 			var ac: Dictionary = dd.mod("acogida")
 			var have: int = sim.players[e.owner]["res"].get(ac["recurso"], 0)
-			draw_string(Hud.font, Vector2(x, 140), "La gente llega sola: %d/%d de fama para la próxima persona" % [mini(have, ac["costo"]), ac["costo"]], HORIZONTAL_ALIGNMENT_LEFT, size.x - x - 16, 13, Palette.UI_ACCENT)
+			hints.append(["La gente llega sola: %d/%d de fama para la próxima persona" % [mini(have, ac["costo"]), ac["costo"]], Hud.font, 13, Palette.UI_ACCENT])
 		if not e.queue.is_empty() or e.def.has("produce"):
 			var qx := x
 			for i in sim.data.reglas["cola_max"]:
@@ -902,9 +994,13 @@ class SelectionPanel:
 				qx += 58
 			var p: Dictionary = sim.players[e.owner]
 			if not e.queue.is_empty() and e.queue_progress == 0 and p["pop"] >= p["pop_cap"]:
-				draw_string(Hud.font_b, Vector2(x, 152), "Población llena: construí casas", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Palette.UI_BAD)
+				hints.append(["Población llena: construí casas", Hud.font_b, 14, Palette.UI_BAD])
 			elif e.queue.is_empty():
-				draw_string(Hud.font, Vector2(x, 152), "Clic derecho en el mapa: punto de reunión", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Palette.UI_DIM)
+				hints.append(["Clic derecho en el mapa: punto de reunión", Hud.font, 13, Palette.UI_DIM])
+		var hy := 148.0 if hints.size() < 2 else 146.0
+		for h in hints:
+			draw_string(h[1], Vector2(x, hy), h[0], HORIZONTAL_ALIGNMENT_LEFT, size.x - x - 16, h[2], h[3])
+			hy += 16.0
 
 	func _status(e: SimEntity) -> String:
 		match e.order:

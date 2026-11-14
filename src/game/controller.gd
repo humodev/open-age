@@ -8,7 +8,6 @@ const P := 1000
 const O := SimEntity.Order
 const SLOT_KEYS: Array[int] = [KEY_Q, KEY_W, KEY_E, KEY_R, KEY_A, KEY_S, KEY_D, KEY_F, KEY_Z, KEY_X, KEY_C, KEY_V]
 const SLOT_LABELS: Array[String] = ["Q", "W", "E", "R", "A", "S", "D", "F", "Z", "X", "C", "V"]
-const DEFAULT_SLOTS := {"casa": 0, "granja": 1, "deposito": 2, "cuartel": 3, "torre": 4, "centro": 6, "empalizada": 10, "puerta": 11}
 const RES_LABEL := {"alimento": "alimento", "granja": "granjas", "madera": "madera", "piedra": "piedra", "riqueza": "riqueza", "*": "todos los recursos"}
 
 const MundoColocacion := preload("res://src/game/ui/mundo_colocacion.gd") # --- mundo ---
@@ -34,6 +33,11 @@ const DESCS := {
 	"lancero": "Línea: lento y resistente, vence al choque; pierde contra la distancia.",
 	"detener": "Detiene la orden actual.",
 	"atacar": "Avanza y pelea con todo lo que encuentre (clic izquierdo en el destino).",
+	# --- grilla ---
+	"menu_economia": "Casas, granjas, depósitos, centro, mercado y los edificios económicos propios de tu pueblo.",
+	"menu_militar": "Cuarteles y edificios militares propios; torres, cercos, puertas y caminos.",
+	"volver": "Vuelve a la grilla del aldeano (también Esc o clic derecho sobre la grilla).",
+	# --- fin grilla ---
 }
 
 var sim: Sim
@@ -64,6 +68,12 @@ var _last_group_ms := 0
 # --- mundo ---
 var cola: RefCounted # órdenes en cola con mayúsculas (src/game/ui/mundo_cola.gd)
 # --- fin mundo ---
+# --- grilla ---
+var submenu := "" # submenú abierto del aldeano: "", "economia" o "militar" (src/game/ui/grilla.gd)
+# --- fin grilla ---
+# --- cursores ---
+var cursores: Node # cursores contextuales (src/game/ui/cursores.gd)
+# --- fin cursores ---
 
 
 func setup(s: Sim, v: WorldView, c: RtsCamera, local_player: int) -> void:
@@ -99,10 +109,14 @@ func _prune() -> void:
 		if e != null and e.alive and e.inside < 0 and (not e.is_unit() or view.fog_state(e) == 2):
 			keep.append(id)
 	if keep.size() != selection.size():
-		_set_selection(keep)
+		_set_selection(keep, true)
 
 
-func _set_selection(ids: Array[int]) -> void:
+func _set_selection(ids: Array[int], keep_menu: bool = false) -> void:
+	# --- grilla --- (una selección nueva vuelve a la raíz de la grilla)
+	if not keep_menu or ids.is_empty():
+		submenu = Grilla.RAIZ
+	# --- fin grilla ---
 	selection = ids
 	view.selected.clear()
 	for id in ids:
@@ -164,7 +178,16 @@ func commands() -> Array[Dictionary]:
 	var age: int = p["age"]
 	var first := sel[0]
 	if _has_villager():
+		# --- grilla --- (raíz: submenús, detener, refugio e hitos; dentro: edificios en casillas fijas)
 		var slots := villager_slots()
+		if submenu == Grilla.RAIZ:
+			out.append({"slot": Grilla.fija("economia", 0), "id": "economia", "icon": "menu_economia", "kind": "submenu", "menu": Grilla.ECONOMIA, "name": "Construir: economía", "cost": {}, "desc": DESCS["menu_economia"], "locked": ""})
+			out.append({"slot": Grilla.fija("militar", 1), "id": "militar", "icon": "menu_militar", "kind": "submenu", "menu": Grilla.MILITAR, "name": "Construir: militar y defensa", "cost": {}, "desc": DESCS["menu_militar"], "locked": ""})
+			out.append({"slot": Grilla.fija("detener", 5), "id": "detener", "icon": "detener", "kind": "stop", "name": "Detener", "cost": {}, "desc": DESCS["detener"], "locked": ""})
+			out.append({"slot": Grilla.fija("refugio", 7), "id": "refugio", "icon": "refugio", "kind": "garrison", "name": "Refugiarse", "cost": {}, "desc": DESCS["refugio"], "locked": ""})
+		else:
+			out.append({"slot": Grilla.fija("volver", 11), "id": "volver", "icon": "volver", "kind": "back", "name": "Volver", "cost": {}, "desc": DESCS["volver"], "locked": ""})
+		# --- fin grilla ---
 		for slot in slots:
 			var type: String = slots[slot]
 			var def: Dictionary = sim.dp(local).edificios[type]
@@ -183,9 +206,9 @@ func commands() -> Array[Dictionary]:
 	elif first.is_unit() and first.def.has("despliega_en"):
 		out.append({"slot": 0, "id": "armar", "icon": "centro", "kind": "unpack", "name": "Armar la corte aquí", "cost": {}, "desc": "La corte se asienta donde está: vuelve a ser la capital.", "locked": "", "unit": first.id})
 	elif first.is_unit():
-		out.append({"slot": 4, "id": "atacar", "icon": "atacar", "kind": "amove", "name": "Atacar en movimiento", "cost": {}, "desc": DESCS["atacar"], "locked": ""})
-		out.append({"slot": 5, "id": "detener", "icon": "detener", "kind": "stop", "name": "Detener", "cost": {}, "desc": DESCS["detener"], "locked": ""})
-		out.append({"slot": 7, "id": "refugio", "icon": "refugio", "kind": "garrison", "name": "Refugiarse", "cost": {}, "desc": DESCS["refugio"], "locked": ""})
+		out.append({"slot": Grilla.fija("atacar", 4), "id": "atacar", "icon": "atacar", "kind": "amove", "name": "Atacar en movimiento", "cost": {}, "desc": DESCS["atacar"], "locked": ""}) # --- grilla ---
+		out.append({"slot": Grilla.fija("detener", 5), "id": "detener", "icon": "detener", "kind": "stop", "name": "Detener", "cost": {}, "desc": DESCS["detener"], "locked": ""}) # --- grilla ---
+		out.append({"slot": Grilla.fija("refugio", 7), "id": "refugio", "icon": "refugio", "kind": "garrison", "name": "Refugiarse", "cost": {}, "desc": DESCS["refugio"], "locked": ""}) # --- grilla ---
 	elif first.is_building() and first.built:
 		var i := 0
 		for type: String in first.def.get("produce", []):
@@ -256,29 +279,23 @@ func commands() -> Array[Dictionary]:
 	return out
 
 
-## Ranura de cada edificio que construye el aldeano de la civilización local; los hitos de la edad siguiente van en Z y X.
-func villager_slots() -> Dictionary:
-	var dd := sim.dp(local)
-	var out := {}
-	var pending: Array[String] = []
-	for type: String in dd.unidades["aldeano"].get("construye", []):
-		if not dd.edificios.has(type) or dd.is_hito(type):
-			continue
-		var slot: int = dd.edificios[type].get("ranura", DEFAULT_SLOTS.get(type, -1))
-		if slot >= 0 and not out.has(slot):
-			out[slot] = type
-		else:
-			pending.append(type)
-	for type in pending:
-		for slot in [7, 5, 6, 4, 10, 11]:
-			if not out.has(slot) and slot != 5 and slot != 7:
-				out[slot] = type
-				break
-	var age: int = sim.players[local]["age"]
-	var opts: Array = dd.hitos[mini(age, dd.hitos.size()) - 1] if age <= dd.hitos.size() else dd.hitos[-1]
-	for i in mini(2, opts.size()):
-		out[8 + i] = opts[i]
-	return out
+# --- grilla ---
+## Edificios que muestra la grilla del aldeano: {casilla: tipo}. En la raíz, solo los hitos de la
+## edad siguiente (Z economía, X militar); en un submenú, sus edificios en casillas fijas (Grilla).
+## Con `menu` se pide un submenú sin abrirlo (pruebas).
+func villager_slots(menu: String = "?") -> Dictionary:
+	var which := submenu if menu == "?" else menu
+	if which == Grilla.RAIZ:
+		return Grilla.hitos(sim.dp(local), int(sim.players[local]["age"]))
+	return Grilla.edificios(sim.dp(local), which)
+
+
+## Abre un submenú del aldeano ("economia", "militar") o vuelve a la raíz ("").
+func open_submenu(menu: String) -> void:
+	submenu = menu
+	if hud != null and hud.has_method("hide_tip"):
+		hud.hide_tip()
+# --- fin grilla ---
 
 
 func run_command(cmd: Dictionary) -> void:
@@ -290,7 +307,7 @@ func run_command(cmd: Dictionary) -> void:
 	match cmd["kind"]:
 		"build":
 			if not sim.can_afford(local, cmd["cost"]):
-				hud_notify("Recursos insuficientes")
+				hud_notify(missing_text(cmd["cost"])) # --- grilla ---
 				return
 			mode = "place"
 			place_type = cmd["id"]
@@ -335,7 +352,12 @@ func run_command(cmd: Dictionary) -> void:
 					sim.push_command({"t": "ungarrison", "player": local, "building": e.id})
 		"amove":
 			mode = "amove"
-			Input.set_default_cursor_shape(Input.CURSOR_CROSS)
+		# --- grilla ---
+		"submenu":
+			open_submenu(cmd["menu"])
+		"back":
+			open_submenu(Grilla.RAIZ)
+		# --- fin grilla ---
 
 
 func cancel_mode() -> void:
@@ -348,9 +370,26 @@ func cancel_mode() -> void:
 	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 
 
-func hud_notify(msg: String) -> void:
+func hud_notify(msg: String, tipo: String = "decision") -> void:
 	if hud != null:
-		hud.notify(msg)
+		hud.notify(msg, -1.0, tipo) # --- avisos --- (tipo del aviso: decision o info)
+
+
+# --- grilla ---
+## "Faltan 40 de madera y 10 de piedra": qué falta para pagar un costo (P3).
+func missing_text(cost: Dictionary) -> String:
+	var res: Dictionary = sim.players[local]["res"]
+	var parts: Array[String] = []
+	for k in cost:
+		var falta := int(cost[k]) - int(res.get(k, 0))
+		if falta > 0:
+			var rp: Dictionary = sim.dp(local).mod("recurso_propio") if sim.dp(local).has_mod("recurso_propio") else {}
+			var nombre: String = Palette.RES_NAMES.get(k, rp.get("nombre", k) if rp.get("clave", "") == k else k)
+			parts.append("%d de %s" % [falta, nombre.to_lower()])
+	if parts.is_empty():
+		return "Recursos insuficientes"
+	return "Faltan " + (", ".join(parts.slice(0, -1)) + " y " + parts[-1] if parts.size() > 1 else parts[0])
+# --- fin grilla ---
 
 
 # ---------------------------------------------------------------- Entrada
@@ -361,6 +400,10 @@ func _process(_delta: float) -> void:
 	_prune()
 	var m := mouse_pos()
 	view.hovered = -1 if _over_hud(m) or dragging else pick(m)
+	# --- cursores ---
+	if cursores != null:
+		cursores.call("usar", cursor_action(m))
+	# --- fin cursores ---
 	if mode == "place":
 		var tam: Array = sim.dp(local).edificios[place_type]["tam"]
 		var g := cam.ground_at(m)
@@ -375,6 +418,58 @@ func _process(_delta: float) -> void:
 			_show_line(line_tiles(_line_start, Vector2i(tx, ty)))
 		else:
 			_ghost.visible = true
+
+
+# --- cursores ---
+## Qué haría un clic en este punto, como nombre de cursor (src/game/ui/cursores.gd):
+## "" (flecha), "mover", "atacar", "recolectar_<recurso>", "construir", "reparar", "refugio",
+## "depositar", "reunion" o "no". Repite las reglas de Sim._cmd_target sin tocar la simulación.
+func cursor_action(m: Vector2) -> String:
+	if _over_hud(m) or dragging:
+		return ""
+	if mode == "amove":
+		return "atacar"
+	if mode == "place":
+		var tile: Vector2i = _ghost.get_meta("tile", Vector2i(-1, -1))
+		return "construir" if sim.can_place(place_type, tile.x, tile.y, local) else "no"
+	var sel := selected_entities()
+	if sel.is_empty() or sel[0].owner != local:
+		return ""
+	var units: Array[SimEntity] = []
+	for e in sel:
+		if e.owner == local and e.is_unit():
+			units.append(e)
+	var t: SimEntity = sim.by_id.get(view.hovered)
+	if units.is_empty():
+		for e in sel:
+			if e.is_building() and e.def.has("produce"):
+				return "reunion"
+		return ""
+	if t == null or not t.alive or units.has(t):
+		return "mover"
+	var civil := false
+	var hits := false
+	for e in units:
+		civil = civil or e.fn == "civil"
+		hits = hits or not (t.is_unit() and e.def.get("solo_edificios", false))
+	if sim.hostile(local, t):
+		return "atacar" if hits else "no"
+	if t.is_resource():
+		return "recolectar_" + t.res_kind if civil else "mover"
+	if t.is_building() and t.owner == local:
+		if civil and not t.built:
+			return "construir"
+		if civil and t.hp < t.hp_max:
+			return "reparar"
+		if civil and t.def.get("fuente", "") != "":
+			return "recolectar_" + String(t.def["fuente"])
+		for e in units:
+			if e.fn == "civil" and e.carry > 0 and t.built and (t.def.get("deposito", []) as Array).has(e.carry_res):
+				return "depositar"
+		if sim.garrison_cap(t) > 0:
+			return "refugio" if t.garrison.size() < sim.garrison_cap(t) else "no"
+	return "mover"
+# --- fin cursores ---
 
 
 func mouse_pos() -> Vector2:
@@ -553,7 +648,7 @@ func _place() -> void:
 		hud_notify(MundoColocacion.motivo(sim, local, place_type, tile.x, tile.y)) # --- mundo ---
 		return
 	if not sim.can_afford(local, cost):
-		hud_notify("Recursos insuficientes")
+		hud_notify(missing_text(cost)) # --- grilla ---
 		cancel_mode()
 		return
 	var ids := []
@@ -564,6 +659,7 @@ func _place() -> void:
 	view.add_marker(_ghost.position, Palette.UI_ACCENT)
 	if not Input.is_key_pressed(KEY_SHIFT) or sim.dp(local).is_hito(place_type):
 		cancel_mode()
+		submenu = Grilla.RAIZ # --- grilla --- (colocado el edificio, la grilla vuelve a la raíz)
 
 
 func _key(k: InputEventKey) -> void:
@@ -571,6 +667,8 @@ func _key(k: InputEventKey) -> void:
 	if code == KEY_ESCAPE:
 		if mode != "":
 			cancel_mode()
+		elif submenu != Grilla.RAIZ and _has_villager(): # --- grilla ---
+			open_submenu(Grilla.RAIZ)
 		elif not selection.is_empty():
 			_set_selection([] as Array[int])
 		elif hud != null:
@@ -581,7 +679,16 @@ func _key(k: InputEventKey) -> void:
 		var n := code - KEY_0
 		if k.ctrl_pressed:
 			groups[n] = selection.duplicate()
-			hud_notify("Grupo %d asignado" % n)
+			hud_notify("Grupo %d asignado" % n, "info")
+		# --- avisos --- (Mayús + n suma la selección al grupo)
+		elif k.shift_pressed and not selection.is_empty():
+			var merged: Array = groups.get(n, []).duplicate()
+			for id in selection:
+				if not merged.has(id):
+					merged.append(id)
+			groups[n] = merged
+			hud_notify("Grupo %d: %d unidades" % [n, merged.size()], "info")
+		# --- fin avisos ---
 		elif groups.has(n):
 			var ids: Array[int] = []
 			for id in groups[n]:
@@ -597,6 +704,15 @@ func _key(k: InputEventKey) -> void:
 	if code == KEY_PERIOD:
 		_select_idle_villager()
 		return
+	# --- avisos --- (Espacio: último ataque o suceso con lugar; Inicio: recorre los anteriores)
+	if (code == KEY_SPACE or code == KEY_HOME) and hud != null and hud.get("avisos") != null:
+		var at: Variant = hud.avisos.saltar(code == KEY_HOME)
+		if at is Vector3:
+			cam.look_at_point(at)
+		else:
+			hud_notify("No hay avisos con lugar para ir", "info")
+		return
+	# --- fin avisos ---
 	if code == KEY_H:
 		for e in sim.actives:
 			if e.owner == local and e.is_building() and (e.capital or e.type == "centro"):
@@ -625,7 +741,7 @@ func _select_idle_villager() -> void:
 		if e.owner == local and e.fn == "civil" and e.order == O.IDLE:
 			idle.append(e)
 	if idle.is_empty():
-		hud_notify("No hay aldeanos inactivos")
+		hud_notify("No hay aldeanos inactivos", "info")
 		return
 	_idle_cycle = (_idle_cycle + 1) % idle.size()
 	_set_selection([idle[_idle_cycle].id] as Array[int])
@@ -750,3 +866,4 @@ func _finish_line() -> void:
 	_show_line([])
 	if not Input.is_key_pressed(KEY_SHIFT):
 		cancel_mode()
+		submenu = Grilla.RAIZ # --- grilla ---

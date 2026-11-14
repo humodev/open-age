@@ -19,6 +19,7 @@ extends Node3D
 ##   --dificultad=facil|normal|dificil
 ##   --nofog            sin niebla de guerra (automático en --aivai)
 ##   --autotest         prueba de punta a punta con eventos reales de mouse y teclado
+##   --grilla=menu      abre el submenú del aldeano (economia, militar) antes de la captura
 ##   --panel=a,b        abre paneles de información antes de la captura (economia, edad, pueblo, sucesos, puntaje, fin)
 
 const MAX_STEPS_PER_FRAME := 8
@@ -227,6 +228,13 @@ func _build_scene(aivai: bool) -> void:
 	add_child(cam)
 	var base := sim.bases[local]
 	cam.look_at_point(Vector3(base.x + 6, 0, base.y + 6))
+	# --- hud --- (cámara inicial sobre la capital, un poco por encima del centro: el panel no la tapa)
+	for e in sim.actives:
+		if e.owner == local and e.is_building() and (e.capital or e.type == "centro"):
+			var cc := WorldView.to_world(e.x, e.y)
+			cam.look_at_point(Vector3(cc.x, 0, cc.z) - cam.forward_xz() * 1.0)
+			break
+	# --- fin hud ---
 	if _args.has("cam") and not _args.has("shot"):
 		var cc: PackedStringArray = (_args["cam"] as String).split(",")
 		cam.look_at_point(Vector3(float(cc[0]), 0, float(cc[1])))
@@ -502,6 +510,8 @@ func _maybe_shot() -> void:
 			if e.owner == local and e.type == _args["select"]:
 				ids.append(e.id)
 		ctrl.select_ids(ids)
+	if _args.has("grilla"): # --- grilla --- (--grilla=economia|militar abre ese submenú para la captura)
+		ctrl.open_submenu(_args["grilla"])
 	# --- paneles --- (--panel=economia,edad,pueblo,sucesos,puntaje,fin para las capturas)
 	if _args.has("panel") and hud.paneles != null:
 		for w in (_args["panel"] as String).split(","):
@@ -556,6 +566,11 @@ func _screen(x_tiles: float, z_tiles: float) -> Vector2:
 	return cam.cam.unproject_position(Vector3(x_tiles, 0, z_tiles))
 
 
+## Hay hoja de cursores (no la hay sin ventana). --- cursores ---
+func cursores_sheet() -> bool:
+	return hud.cursores != null and hud.cursores.hoja() != null
+
+
 func _autotest() -> void:
 	var results: Array[String] = []
 	var ok := true
@@ -595,6 +610,17 @@ func _autotest() -> void:
 	# 2. Clic derecho en arbustos: recolectar.
 	var bush: SimEntity = sim.find_resource(local, "alimento", base.x * 1000, base.y * 1000, 30000)
 	var bush_sp := cam.cam.unproject_position(WorldView.to_world(bush.x, bush.y, 0.2))
+	# --- cursores --- (el cursor anticipa la orden: recolectar sobre el arbusto, mover sobre el suelo)
+	_mouse(bush_sp, 0, false)
+	await _frames(3)
+	check.call("cursor de recolectar alimento sobre el arbusto (%s)" % ctrl.cursor_action(bush_sp), ctrl.cursor_action(bush_sp) == "recolectar_alimento")
+	var empty_sp := _screen(base.x - 6.0, base.y + 10.0)
+	_mouse(empty_sp, 0, false)
+	await _frames(3)
+	check.call("cursor de mover sobre el suelo (%s)" % ctrl.cursor_action(empty_sp), ctrl.cursor_action(empty_sp) in ["mover", ""])
+	if cursores_sheet():
+		check.call("se dibujaron los cursores (%d)" % hud.cursores.texturas.size(), hud.cursores.texturas.size() >= 12)
+	# --- fin cursores ---
 	_mouse(bush_sp, MOUSE_BUTTON_RIGHT, true)
 	_mouse(bush_sp, MOUSE_BUTTON_RIGHT, false)
 	await _frames(40)
@@ -604,7 +630,7 @@ func _autotest() -> void:
 			gathering += 1
 	check.call("clic derecho en arbustos pone a recolectar (%d)" % gathering, gathering >= ctrl.selection.size() - 1 and gathering > 0)
 
-	# 3. Tecla Q y clic: casa.
+	# 3. Q (Economía), Q (casa) y clic. --- grilla ---
 	var spot := Vector2i(-1, -1)
 	for r in range(5, 12):
 		for d in range(-r, r + 1):
@@ -612,7 +638,15 @@ func _autotest() -> void:
 				spot = Vector2i(base.x + d, base.y + r)
 	_key_tap(KEY_Q)
 	await _frames(2)
-	check.call("Q entra en modo de construcción", ctrl.mode == "place" and ctrl.place_type == "casa")
+	check.call("Q abre el submenú de economía", ctrl.submenu == "economia")
+	_key_tap(KEY_ESCAPE)
+	await _frames(2)
+	check.call("Esc vuelve a la raíz sin deseleccionar", ctrl.submenu == "" and not ctrl.selection.is_empty())
+	_key_tap(KEY_Q)
+	await _frames(2)
+	_key_tap(KEY_Q)
+	await _frames(2)
+	check.call("Q, Q entra en modo de construcción de casa", ctrl.mode == "place" and ctrl.place_type == "casa")
 	var house_sp := _screen(spot.x + 1.0, spot.y + 1.0)
 	_mouse(house_sp, 0, false)
 	await _frames(3)
@@ -647,6 +681,8 @@ func _autotest() -> void:
 	Input.parse_input_event(k)
 	await _frames(2)
 	check.call("Ctrl+1 asigna el grupo", ctrl.groups.has(1))
+	await _frames(2)
+	check.call("la fila de grupos muestra el grupo 1", hud.grupos.grupos().size() == 1 and hud.grupos.visible) # --- avisos ---
 
 	speed = 4.0
 	# Espera hasta que entre el primer alimento (máximo 20 s reales).
@@ -667,8 +703,13 @@ func _autotest() -> void:
 			vill_ids.append(e.id)
 	ctrl.select_ids(vill_ids)
 	await _frames(2)
-	if ctrl.villager_slots().get(10, "") == "empalizada":
-		_key_tap(KEY_C)
+	# --- grilla --- (W militar y la casilla fija de la empalizada)
+	var wall_slot: Variant = ctrl.villager_slots("militar").find_key("empalizada")
+	if wall_slot != null:
+		_key_tap(KEY_W)
+		await _frames(2)
+		_key_tap(Controller.SLOT_KEYS[wall_slot])
+	# --- fin grilla ---
 	await _frames(2)
 	# Una fila libre delante de la base (lejos del panel inferior).
 	var row := base.y + 8
@@ -694,7 +735,7 @@ func _autotest() -> void:
 	for e in sim.actives:
 		if e.owner == local and e.type == "empalizada":
 			walls += 1
-	if ctrl.villager_slots().get(10, "") == "empalizada":
+	if wall_slot != null:
 		check.call("arrastrar coloca una línea de empalizada (%d)" % walls, walls >= 5)
 
 	# 7. Campana desde el centro (Z): los aldeanos se refugian y el centro dispara más.
@@ -746,6 +787,24 @@ func _autotest() -> void:
 	_key_tap(KEY_F5)
 	await _frames(2)
 	# --- fin paneles ---
+	# --- avisos --- (Espacio va al último ataque; sin selección el panel y la grilla no tapan)
+	var far := Vector3(base.x + 18, 0, base.y + 14)
+	hud.notify("¡Nos atacan! (prueba)", -1.0, "ataque", far)
+	hud.notify("Aviso de información (prueba)", -1.0, "info")
+	await _frames(2)
+	_key_tap(KEY_SPACE)
+	await _frames(3)
+	check.call("Espacio lleva la cámara al último ataque (%.0f, %.0f)" % [cam.focus.x, cam.focus.z], Vector2(cam.focus.x, cam.focus.z).distance_to(Vector2(far.x, far.z)) < 1.5)
+	check.call("los avisos se apilan sin pisarse (%d)" % hud.avisos.lista.size(), hud.avisos.lista.size() >= 2)
+	ctrl.select_ids([] as Array[int])
+	await _frames(3)
+	check.call("sin selección se ocultan el panel y la grilla", not hud._sel.visible and not hud._card.visible)
+	ctrl.select_ids(vill_ids)
+	await _frames(3)
+	check.call("con selección vuelven", hud._sel.visible and hud._card.visible)
+	if cursores_sheet():
+		hud.cursores.hoja().save_png("screenshots/cursores.png")
+	# --- fin avisos ---
 	var img := get_viewport().get_texture().get_image()
 	img.save_png("screenshots/autotest.png")
 	for r in results:
