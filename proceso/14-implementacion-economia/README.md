@@ -181,3 +181,11 @@ El autor preguntó en qué punto estaba la economía: se había avanzado varias 
 
     Los botones nuevos de motor (Vaciar oficios y Kawiñ) ya estaban en las etapas 3b y 3e.
 21. **Etiopía (segunda parte): señor o regimiento.** Desde la edad II, un gult se puede dar a un regimiento, sin vuelta atrás: deja de pagar tributo y, a cambio, los jinetes que se entrenan a 14 casillas o menos cuestan 15 % menos por cada gult, hasta 30 %. Lleva botón en el gult con su motivo si no se puede. El precio con descuento queda guardado en la cola, así cancelar devuelve lo pagado (la trampa del costo de la crítica 03b). Falta fundar la corte nueva con su fiesta y Gondar como capital fija.
+22. **Etiopía (tercera parte): la corte se funda en otro lugar** (C-17 por defecto: sin carpa en escaramuza).
+    - **Cimiento "Corte nueva":** cuesta 150 de madera, se levanta solo en 60 s y nace con 25 % de vida. Al terminar, la capital se muda ahí con el porcentaje de vida de la vieja, que desaparece.
+    - **Límites:** una cada 5 minutos; nunca a menos de 20 casillas de bases militares rivales (o de edificios que cuesten 150 o más), ni con combate a 15 casillas.
+    - **Fiesta de llegada:** si la corte nueva queda a 25 casillas o más de la anterior y junto a arcilla con 300 o más, los gult cercanos rinden el doble durante 60 s. Una vez por arcilla en toda la partida.
+    - **Gondar (edad IV):** capital fija que extrae 24 por minuto a 16 casillas. Ya no se funda otra corte.
+    - **IA:** funda la corte cuando a la arcilla junto a ella le quedan menos de 100, al lado de la arcilla propia con más riqueza (o la del centro desde la edad III).
+    - **Traza de 30 minutos:** dos mudanzas (11:34 y 18:39), la segunda con fiesta.
+    - **De paso:** el modo "paz" de las pruebas ya no asalta ingenios, para no contaminar la medición de lo disputado.

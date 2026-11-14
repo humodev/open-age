@@ -1133,11 +1133,54 @@ func _complete(b: SimEntity) -> void:
 	b.progress = b.build_time
 	events.append({"t": "built", "id": b.id, "player": b.owner})
 	_apply_stats(b)
+	if b.def.has("funda_corte"):
+		_move_court(b)
+		return
 	if b.def.get("avanza_edad", false):
 		var p := players[b.owner]
 		p["age"] = mini(dp(b.owner).edades.size(), p["age"] + 1)
 		_apply_effects(b.owner, b.def.get("efectos", []))
 		events.append({"t": "age", "player": b.owner, "age": p["age"], "hito": b.type})
+
+
+## La corte se muda (Etiopía, §3.5.4): en el lugar del cimiento aparece la capital
+## con el porcentaje de vida de la vieja, que desaparece. Si la nueva quedó lejos y
+## junto a arcilla con riqueza, hay fiesta: los gult cercanos rinden el doble 60 s.
+func _move_court(b: SimEntity) -> void:
+	var pid := b.owner
+	var fc: Dictionary = b.def["funda_corte"]
+	var old: SimEntity = null
+	for e in actives:
+		if e.alive and e.owner == pid and e.is_building() and e.capital:
+			old = e
+			break
+	var pct := 100
+	var far := true
+	if old != null:
+		pct = old.hp * 100 / maxi(1, old.hp_max)
+		far = Sim.dist(old.x, old.y, b.x, b.y) >= int(fc.get("fiesta_distancia", 25)) * P
+	var tx := b.tx
+	var ty := b.ty
+	remove_quietly(b)
+	map.clear(tx, ty, b.w, b.h)
+	if old != null:
+		_eject(old)
+		remove_quietly(old)
+		map.clear(old.tx, old.ty, old.w, old.h)
+	var court := spawn_building(str(fc["edificio"]), pid, tx, ty, true)
+	court.capital = true
+	court.hp = maxi(1, court.hp_max * pct / 100)
+	players[pid]["corte_tick"] = tick
+	events.append({"t": "notice", "player": pid, "text": "La corte se asentó en su nuevo lugar"})
+	if not far:
+		return
+	var fiestas: Array = players[pid].get_or_add("fiestas", [])
+	for t in resources_near(tx + 2, ty + 2, 6):
+		if t.type == "riqueza" and t.amount >= int(fc.get("fiesta_arcilla", 300)) and not fiestas.has(t.id):
+			fiestas.append(t.id)
+			players[pid]["fiesta_until"] = tick + int(fc.get("fiesta_ms", 60000)) / tick_ms
+			events.append({"t": "notice", "player": pid, "text": "¡Fiesta de llegada! Los gult cercanos rinden el doble por un minuto"})
+			break
 
 
 func _hit(a: SimEntity, t: SimEntity) -> void:
@@ -1237,6 +1280,12 @@ func _cleanup() -> void:
 
 func _update_building(b: SimEntity) -> void:
 	if not b.built:
+		# Cimientos que se levantan solos (la corte nueva etíope).
+		if b.def.get("autoconstruye", false) and b.build_time > 0:
+			b.progress = mini(b.build_time, b.progress + tick_ms)
+			b.hp = maxi(b.hp, b.hp_max * int(b.def.get("vida_inicial_pct", 25)) / 100)
+			if b.progress >= b.build_time:
+				_complete(b)
 		return
 	if not b.queue.is_empty():
 		var item: String = b.queue[0]
@@ -1665,6 +1714,8 @@ func can_place(type: String, tx: int, ty: int, pid: int = -1) -> bool:
 		return false
 	if pid >= 0 and (def.has("maximo_por_edad") or def.has("separacion")) and not _engine_slot_ok(type, def, tx, ty, pid):
 		return false
+	if pid >= 0 and def.has("funda_corte") and not _court_site_ok(def["funda_corte"], tx, ty, pid):
+		return false
 	if def.get("requiere_agua", false) and not _near_water(tx, ty, tam[0], tam[1], 2):
 		return false
 	if def.get("permite_ladera", false):
@@ -1693,6 +1744,36 @@ func _engine_slot_ok(type: String, def: Dictionary, tx: int, ty: int, pid: int) 
 		if count >= int(maxes[age]) + int(mods.engine_max_bonus(pid, type)):
 			return false
 	return true
+
+
+## ¿Se puede fundar la corte acá? Una cada 5 min, sin cimiento en obra, sin Gondar,
+## lejos de bases militares rivales y sin combate cerca.
+func _court_site_ok(fc: Dictionary, tx: int, ty: int, pid: int) -> bool:
+	if tick - int(players[pid].get("corte_tick", -100000)) < int(fc.get("cada_ms", 300000)) / tick_ms:
+		return false
+	var cx := tx * P + 2 * P
+	var cy := ty * P + 2 * P
+	var far := int(fc.get("lejos_de", 20)) * P
+	var fight := int(fc.get("sin_combate", 15)) * P
+	for e in actives:
+		if not e.alive:
+			continue
+		if e.owner == pid and e.is_building() and (e.def.has("funda_corte") or e.def.get("capital_fija", false)):
+			return false
+		if e.owner >= 0 and e.owner != pid:
+			var d := Sim.dist(e.x, e.y, cx, cy)
+			if e.is_building() and d < far and (e.capital or e.type in ["torre", "cuartel", "centro"] or _cost_total(e.def.get("costo", {})) >= 150):
+				return false
+			if e.is_unit() and e.is_military() and d < fight and tick - e.last_combat < 100:
+				return false
+	return true
+
+
+func _cost_total(c: Dictionary) -> int:
+	var t := 0
+	for k in c:
+		t += int(c[k])
+	return t
 
 
 ## Empalizada propia en la casilla (una puerta puede reemplazarla).

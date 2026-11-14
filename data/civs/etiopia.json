@@ -96,6 +96,9 @@
   "hito_guerra"
  ],
  "edificios_nuevos": {
+  "corte_nueva": { "nombre": "Corte nueva (cimiento)", "edad_min": 1, "tam": [4, 4], "pv": 2400, "armadura": 1, "costo": { "madera": 150 }, "tiempo_ms": 60000, "vision": 6000, "autoconstruye": true, "vida_inicial_pct": 25, "ranura": 6,
+   "funda_corte": { "edificio": "centro", "cada_ms": 300000, "lejos_de": 20, "sin_combate": 15, "fiesta_distancia": 25, "fiesta_arcilla": 300, "fiesta_ms": 60000 },
+   "desc": "La corte se funda en otro lugar: el cimiento se levanta solo en 60 s y, al terminar, la capital se muda ahí con su vida. Una cada 5 minutos, lejos de bases militares rivales. Si queda lejos de la anterior y junto a arcilla con riqueza, hay fiesta: los gult cercanos rinden el doble un minuto (una por arcilla)." },
   "gult": {
    "nombre": "Gult",
    "edad_min": 1,
@@ -240,7 +243,7 @@
     "guerrero"
    ]
   },
-  "gondar": { "eje": "economia",
+  "gondar": { "capital_fija": true, "extrae_min": 24, "extrae_radio": 16000, "eje": "economia",
    "nombre": "Recinto de Gondar",
    "edad_min": 1,
    "tam": [
@@ -314,7 +317,7 @@
    "alianza"
   ]
  ],
- "construye": [
+ "construye": [ "corte_nueva",
   "casa",
   "granja",
   "deposito",

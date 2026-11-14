@@ -148,14 +148,22 @@ func _rents(pid: int, _p: Dictionary) -> void:
 		if e.alive and e.owner == pid and e.is_building() and e.built and e.def.has("renta") and e.mode != "regimiento":
 			var r: Dictionary = e.def["renta"]
 			# Renta mejor cerca de la capital (gult etíope junto a la corte).
+			var mult := 1
 			if e.def.has("renta_cerca_capital") and capital != null and Sim.dist(e.x, e.y, capital.x, capital.y) <= int(e.def.get("radio_capital", 14000)):
 				r = e.def["renta_cerca_capital"]
+				if sim.tick < int(sim.players[pid].get("fiesta_until", 0)):
+					mult = 2 # fiesta de llegada de la corte
 			var origin := "propio" if e.def.get("motor", false) else "renta"
 			var boost := 100 + sim.mod(pid, "motor") if e.def.get("motor", false) else 100
 			for k in r:
-				_gain(pid, k, int(r[k]) * P / 60 * (boost if k == "riqueza" else 100) / 100, origin)
+				_gain(pid, k, int(r[k]) * mult * P / 60 * (boost if k == "riqueza" else 100) / 100, origin)
 	if has(pid, "corte_extrae") and capital != null:
-		_court_extract(pid, capital)
+		var src := capital
+		for e in sim.actives:
+			if e.alive and e.owner == pid and e.is_building() and e.built and e.def.get("capital_fija", false):
+				src = e # Gondar extrae desde su lugar, con su propio radio y ritmo
+				break
+		_court_extract(pid, src)
 
 
 ## La corte etíope extrae riqueza sin aldeanos de la arcilla propia o del centro
@@ -164,7 +172,11 @@ func _court_extract(pid: int, court: SimEntity) -> void:
 	var cfg := m(pid, "corte_extrae")
 	var by_age: Array = cfg["por_edad"]
 	var per_min := int(by_age[clampi(int(sim.players[pid]["age"]) - 1, 0, by_age.size() - 1)])
-	var r := int(cfg.get("radio", 12000)) + court.w * P / 2 + 1000 # borde a borde, aproximado
+	var radius := int(cfg.get("radio", 12000))
+	if court.def.get("capital_fija", false):
+		per_min = int(court.def.get("extrae_min", per_min))
+		radius = int(court.def.get("extrae_radio", radius))
+	var r := radius + court.w * P / 2 + 1000 # borde a borde, aproximado
 	var best: SimEntity = null
 	var best_d := 1 << 60
 	for t in sim.entities:

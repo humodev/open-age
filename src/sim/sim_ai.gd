@@ -256,6 +256,8 @@ func _engine(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_type: 
 				_try_build("granja", p, vill, centro, 1)
 		"ayutthaya":
 			_elephants(p, vill, centro)
+		"etiopia":
+			_found_court(p, vill, centro, by_type)
 		"mapuches":
 			# Kawiñ solo si se ahorra para el hito y falta alimento: el corral más lleno, una vez por edad.
 			if saving and p["age"] < dd.edades.size():
@@ -285,6 +287,40 @@ func _engine(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_type: 
 			var cost: Dictionary = dd.cost_of("taller_tejido", p["age"])
 			if income - 30 * shops.size() >= 30 and int(p["res"]["madera"]) >= int(cost.get("madera", 0)) + 60:
 				_try_build("taller_tejido", p, vill, centro, 1)
+
+
+## Corte etíope (§9.3): cuando a la arcilla junto a la corte le quedan menos de 100,
+## fundar la corte junto a la arcilla propia con más riqueza (o la del centro desde la III).
+func _found_court(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_type: Dictionary) -> void:
+	var dd := sim.dp(player)
+	if not dd.edificios.has("corte_nueva") or by_type.has("corte_nueva") or by_type.has("gondar") or vill.is_empty():
+		return
+	if not sim.can_afford(player, dd.cost_of("corte_nueva", p["age"])):
+		return
+	var near_left := 0
+	var best: SimEntity = null
+	for t in sim.entities:
+		if not (t.alive and t.is_resource() and t.type == "riqueza" and t.amount > 0):
+			continue
+		var d := Sim.dist(t.x, t.y, centro.x, centro.y)
+		if d <= 14000 and (t.res_owner == player or t.res_owner < 0):
+			near_left += t.amount
+		var ok_owner := t.res_owner == player or (t.res_owner < 0 and int(p["age"]) >= 3)
+		if ok_owner and d > 14000 and t.amount >= 300 and (best == null or t.amount > best.amount or (t.amount == best.amount and t.id < best.id)):
+			best = t
+	if near_left >= 100 or best == null:
+		return
+	for r in range(5, 9):
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				if absi(dx) != r and absi(dy) != r:
+					continue
+				var tx := best.tx + dx
+				var ty := best.ty + dy
+				if sim.can_place("corte_nueva", tx, ty, player):
+					var v := _nearest_villager(vill, tx * P, ty * P)
+					sim.push_command({"t": "build", "player": player, "ids": [v.id], "type": "corte_nueva", "tx": tx, "ty": ty})
+					return
 
 
 ## Elefantes del rey (§9.3): entrenar hasta el máximo de la edad y llevar cada uno
@@ -639,7 +675,7 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 			if not ids.is_empty():
 				sim.push_command({"t": "move", "player": player, "ids": ids, "x": spot.x, "y": spot.y, "amove": true})
 	# Ingenios neutrales: desde la edad II, un grupo los asalta por el botín (§3.2).
-	if sim.players[player]["age"] >= 2 and army.size() >= 8 and sim.tick - last_mill >= 900:
+	if personality != "paz" and sim.players[player]["age"] >= 2 and army.size() >= 8 and sim.tick - last_mill >= 900:
 		last_mill = sim.tick
 		var mill: SimEntity = null
 		var best_m := 1 << 60
