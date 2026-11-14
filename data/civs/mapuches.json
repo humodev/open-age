@@ -31,15 +31,7 @@
   "explorador": {
    "nombre": "Werken"
   },
-  "guerrero": {
-   "nombre": "Weichafe",
-   "velocidad": 1750,
-   "ataque": 13,
-   "costo": {
-    "alimento": 55,
-    "riqueza": 20
-   }
-  },
+  "guerrero": {"nombre": "Weichafe", "velocidad": 1750, "ataque": 12, "costo": {"alimento": 55, "riqueza": 20}},
   "hondero": {
    "nombre": "Arquero",
    "alcance": 5500
@@ -52,14 +44,7 @@
    },
    "edad_min": 1
   },
-  "jinete": {
-   "nombre": "Kona montado",
-   "edad_min": 2,
-   "costo": {
-    "alimento": 60,
-    "riqueza": 35
-   }
-  }
+  "jinete": {"nombre": "Kona montado", "edad_min": 2, "costo": {"alimento": 70, "riqueza": 45}}
  },
  "edificios": {
   "casa": {

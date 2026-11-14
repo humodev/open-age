@@ -28,12 +28,8 @@
   "explorador": {
    "nombre": "Batedor"
   },
-  "guerrero": {
-   "nombre": "Gente de guerra"
-  },
-  "hondero": {
-   "nombre": "Flecheiro"
-  },
+  "guerrero": {"nombre": "Gente de guerra", "pv": 130},
+  "hondero": {"nombre": "Flecheiro", "ataque": 8},
   "lancero": {
    "nombre": "Lanceiro"
   },

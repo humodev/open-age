@@ -48,28 +48,7 @@
  },
  "unidades_nuevas": {
   "elefante_rey": { "nombre": "Elefante del rey (chang luang)", "funcion": "carga", "edad_min": 1, "pob": 2, "costo": { "alimento": 80, "madera": 80 }, "tiempo_ms": 45000, "pv": 600, "armadura": 0, "ataque": 0, "alcance": 0, "cadencia_ms": 1000, "velocidad": 850, "vision": 6000, "radio": 620, "elefante": true, "maximo_por_edad": [1, 2, 3, 4], "deposito": ["alimento", "madera", "piedra"], "tributo": { "arbol": 35, "arbusto": 35, "roca": 35, "granja": 15, "tope_por_edad": [24, 34, 42, 48], "separacion": 8 }, "desc": "Almacén que camina: recibe madera, alimento y piedra. El monte paga al rey: el 35 % de la madera, los arbustos y la piedra (sapán, cueros y estaño) y el 15 % del arroz entra además como riqueza, hasta 24 por minuto por elefante (34 en la edad II, 42 en la III y 48 en la IV). Sin ataque." },
-  "chang_suek": {
-   "nombre": "Elefante de guerra (chang suek)",
-   "funcion": "choque",
-   "edad_min": 2,
-   "pob": 4,
-   "costo": {
-    "alimento": 180,
-    "riqueza": 130
-   },
-   "tiempo_ms": 34000,
-   "pv": 640,
-   "armadura": 3,
-   "ataque": 22,
-   "alcance": 700,
-   "cadencia_ms": 2200,
-   "velocidad": 1050,
-   "vision": 9000,
-   "radio": 620,
-   "area": 1600,
-   "area_pct": 45,
-   "elefante": true
-  },
+  "chang_suek": {"nombre": "Elefante de guerra (chang suek)", "funcion": "choque", "edad_min": 2, "pob": 3, "costo": {"alimento": 160, "riqueza": 120}, "tiempo_ms": 34000, "pv": 640, "armadura": 3, "ataque": 22, "alcance": 700, "cadencia_ms": 2200, "velocidad": 1050, "vision": 9000, "radio": 620, "area": 1600, "area_pct": 45, "elefante": true},
   "compania_japonesa": {
    "nombre": "Compañía japonesa",
    "funcion": "choque",

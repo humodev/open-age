@@ -134,7 +134,7 @@
  ],
  "edificios_nuevos": {
   "tambo": { "nombre": "Tambo", "edad_min": 3, "tam": [3, 3], "pv": 800, "armadura": 1, "costo": {}, "tiempo_ms": 0, "vision": 6000, "pob": 0, "desc": "Antiguo ingenio que el Inca ganó con un regalo de cumbi: ahora es un tambo del camino real. Si lo destruyen, el ingenio vuelve a los 6 minutos." },
-    "taller_tejido": { "nombre": "Taller de tejido", "edad_min": 1, "tam": [2, 2], "pv": 600, "armadura": 1, "costo": { "madera": 120, "mita": 20 }, "tiempo_ms": 20000, "vision": 3000, "maximo_por_edad": [2, 3, 4, 5], "conversion": { "de": "mita", "consume_min": 30, "da": { "riqueza": 24 }, "piso_pct": 33 }, "motor": true, "desc": "Los turnos de mit'a que sobran se vuelven tela (awasqa y cumbi), que es riqueza: consume 30 de mit'a por minuto y da 24 de riqueza. Si falta mit'a, rinde un tercio." },
+    "taller_tejido": { "nombre": "Taller de tejido", "edad_min": 1, "tam": [2, 2], "pv": 600, "armadura": 1, "costo": { "madera": 120, "mita": 20 }, "tiempo_ms": 20000, "vision": 3000, "maximo_por_edad": [2, 3, 4, 5], "conversion": { "de": "mita", "consume_min": 30, "da": { "riqueza": 22 }, "piso_pct": 33 }, "motor": true, "desc": "Los turnos de mit'a que sobran se vuelven tela (awasqa y cumbi), que es riqueza: consume 30 de mit'a por minuto y da 22 de riqueza. Si falta mit'a, rinde un tercio." },
   "camino": {
    "nombre": "Qhapaq Ñan (camino)",
    "edad_min": 1,

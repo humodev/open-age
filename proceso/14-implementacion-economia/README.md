@@ -260,3 +260,20 @@ El autor preguntó en qué punto estaba la economía: se había avanzado varias 
     - **Etiopía:** jinete noble de 10 de ataque (antes 11), que cuesta 80 a + 40 r (antes 70 + 35).
 
     Se verificaron los valores antes del commit, con un editor de bloques que reescribe solo la unidad a partir del JSON leído.
+33. **Torneo tras el tercer ajuste** ([resultado](pruebas/07-torneo-ajuste-3.txt)):
+
+    | Civ | Victorias | % |
+    |---|---|---|
+    | Mapuches | 12 / 15 | 80 % |
+    | Tawantinsuyu | 10 / 15 | 67 % |
+    | Etiopía | 8 / 15 | 53 % |
+    | Guaraníes | 7 / 15 | 47 % |
+    | Ayutthaya | 4 / 15 | 27 % |
+    | Palmares | 4 / 15 | 27 % |
+
+    Etiopía y los guaraníes ya entran en la banda de 35 a 65 %. Los mapuches quedan arriba: su kona montado costaba 60 a + 35 r, contra 100 + 70 de los jinetes de los demás, y su weichafe tenía 13 de ataque.
+34. **Cuarto ajuste:**
+    - **Mapuches:** weichafe de 12 de ataque; kona de 70 a + 45 r.
+    - **Tawantinsuyu:** el taller da 22 en lugar de 24.
+    - **Palmares:** gente de guerra de 130 de vida; flecheiro de 8 de ataque.
+    - **Ayutthaya:** elefante de guerra de 3 de población y 160 a + 120 r.
