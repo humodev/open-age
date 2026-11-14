@@ -1,0 +1,13 @@
+montana          mapuches     vs palmares     15:00  | edad 2 pob 62 edif 41  | edad 2 pob 38 edif 26  | edad 3 pob 73 edif 161  | edad 3 pob 50 edif 27
+rio              guaranies    vs ayutthaya    15:00  | edad 3 pob 57 edif 35  | edad 2 pob 56 edif 34  | edad 3 pob 50 edif 37  | edad 3 pob 70 edif 45
+bosque           etiopia      vs tawantinsuyu 15:00  | edad 3 pob 62 edif 44  | edad 3 pob 56 edif 121  | edad 3 pob 52 edif 34  | edad 2 pob 54 edif 31
+valle            palmares     vs mapuches     15:00  | edad 2 pob 47 edif 32  | edad 2 pob 32 edif 28  | edad 2 pob 75 edif 43  | edad 2 pob 66 edif 35
+altiplano        ayutthaya    vs guaranies    15:00  | edad 3 pob 64 edif 33  | edad 3 pob 61 edif 31  | edad 2 pob 55 edif 31  | edad 3 pob 73 edif 151
+bosque_templado  tawantinsuyu vs etiopia      15:00  | edad 3 pob 60 edif 160  | edad 2 pob 51 edif 27  | edad 3 pob 58 edif 30  | edad 3 pob 62 edif 41
+selva            mapuches     vs palmares     15:00  | edad 2 pob 53 edif 40  | edad 2 pob 43 edif 26  | edad 3 pob 74 edif 126  | edad 3 pob 53 edif 35
+mesetas          guaranies    vs ayutthaya    15:00  | edad 3 pob 53 edif 34  | edad 2 pob 71 edif 34  | edad 3 pob 63 edif 39  | edad 3 pob 66 edif 48
+delta            etiopia      vs tawantinsuyu 15:00  | edad 2 pob 56 edif 42  | edad 3 pob 60 edif 116  | edad 3 pob 46 edif 21  | edad 2 pob 54 edif 27
+sierra           palmares     vs mapuches     15:00  | edad 2 pob 60 edif 30  | edad 2 pob 16 edif 20  | edad 3 pob 69 edif 44  | edad 2 pob 66 edif 38
+islas            ayutthaya    vs guaranies    15:00  | edad 3 pob 65 edif 33  | edad 3 pob 51 edif 30  | edad 2 pob 52 edif 28  | edad 3 pob 53 edif 158
+fortines         tawantinsuyu vs etiopia      15:00  | edad 3 pob 64 edif 157  | edad 2 pob 76 edif 86  | edad 2 pob 93 edif 86  | edad 3 pob 95 edif 104
+MAPAS: OK

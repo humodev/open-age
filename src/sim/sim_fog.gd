@@ -43,6 +43,7 @@ func update(pid: int, sources: Array) -> void:
 	for idx in prev:
 		g[idx] = 1
 	var now := PackedInt32Array()
+	var done := {} # (casilla, radio) ya pintados: en un ejército apretado se repiten mucho
 	for e: SimEntity in sources:
 		var cx := e.x / P
 		var cy := e.y / P
@@ -51,6 +52,10 @@ func update(pid: int, sources: Array) -> void:
 			r += map.h_at(cx, cy) * vision_per_level / P
 		if e.is_building():
 			r += maxi(e.w, e.h) / 2
+		var key := (cy * n + cx) * 64 + r
+		if done.has(key):
+			continue
+		done[key] = true
 		var offs := _circle(r)
 		for k in range(0, offs.size(), 2):
 			var x := cx + offs[k]
@@ -61,6 +66,18 @@ func update(pid: int, sources: Array) -> void:
 			if g[idx] != 2:
 				g[idx] = 2
 				now.append(idx)
+	_visible[pid] = now
+
+
+## Mismo estado de visión que un aliado (visión compartida, ya calculada en el tick).
+## Lo explorado propio se conserva: solo se suma lo visible del aliado.
+func copy_from(pid: int, src: int) -> void:
+	var g := grids[pid]
+	for idx in _visible[pid]:
+		g[idx] = 1
+	var now := _visible[src]
+	for idx in now:
+		g[idx] = 2
 	_visible[pid] = now
 
 

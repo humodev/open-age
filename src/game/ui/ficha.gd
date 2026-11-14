@@ -837,7 +837,7 @@ func _people_line(c: Dictionary) -> String:
 	if owner < 0:
 		return "Naturaleza · de quien lo sostenga"
 	var civ: String = sim.dp(owner).civ.get("nombre", "")
-	var who := "Tu pueblo" if owner == hud.local else "Rival %s" % Palette.TEAM_NAMES[owner % Palette.TEAM_NAMES.size()].to_lower()
+	var who := "Tu pueblo" if owner == hud.local else ("Aliado %s" if not sim.enemies(hud.local, owner) else "Rival %s") % Palette.TEAM_NAMES[owner % Palette.TEAM_NAMES.size()].to_lower()
 	return "%s · %s" % [civ, who] if civ != "" else who
 
 

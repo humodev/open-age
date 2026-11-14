@@ -12,7 +12,7 @@ Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video,
 | H3 · Arte, sonido e interfaz | Arte procedural por civilización (D-015), audio CC0, interfaz completa, menú y campañas |
 | H4 · Cuatro civilizaciones e IA sólida | Seis civilizaciones. La IA juega todas, pero sin dificultades y con balance en ajuste |
 | Economía nueva (`diseno/revision-economia/v3/04`) | Implementada (etapas 0–5): seis motores propios, ingenios neutrales, techo de lo disputado, nombres de la riqueza por pueblo. Balance (etapa 6) cerrado: torneo de confirmación con 5 semillas, cinco de seis civs entre 35 y 65 % (mapuches 68 %, con cría a 50 s). Las 25 misiones corren con la IA jugando, sin errores; Etiopía 2, Mapuches 2 y Palmares 1 piden revisar la dificultad con alguien jugando. Hecho; detalle en `proceso/14` |
-| Partidas de muchos jugadores y equipos (`11`) | En curso (`proceso/18`). Pasos 1 y 2 hechos: equipos en la simulación (sin fuego amigo, visión compartida, victoria por equipo) y generador para 3 a 8 bases en círculo, con el mismo juego de recursos por base (`tests/equidad.gd`). Faltan formas de agua para N, IA en equipo y tributo, menú de lugares y rendimiento con 6 |
+| Partidas de muchos jugadores y equipos (`11`) | En curso (`proceso/18`). Pasos 1–5 hechos: equipos en la simulación, generador para 3 a 8 bases con simetría por giro (agua, islas, fortines), puertas aliadas, tributo, IA que elige rival, defiende aliados y da tributo, menú de lugares (1v1 a 4v4 y todos contra todos) y puntaje por equipo con botones de tributo. Falta el rendimiento con 6 jugadores |
 | H5 · Multijugador en red | No empezado. La simulación determinista y por comandos ya lo habilita |
 | H6 · Acceso anticipado | Pendiente |
 
@@ -49,7 +49,7 @@ Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video,
 | Animación | Procedural (paso, galope, trabajo, golpe, muerte); sin esqueletos |
 | Modelos generados | Capitales, casas, elefante, kona, aldeanos (seis), hondero inca, arquero guaraní, jinete noble etíope y paisaje; el resto de los edificios y de las unidades militares son la maqueta procedural. Etiopía sigue sin música propia (C-24). Falta animación con esqueleto |
 | Interfaz, segunda tanda | Partes A y B integradas (`proceso/17`): escala de interfaz de 1366×768 a 4K, paleta apta para daltonismo con modos (`tests/test_paleta.gd`), estados de la grilla a 4,5:1, opciones guardadas en `user://opciones.cfg`, cursores contextuales, grilla estable con submenús, avisos con jerarquía y salto con Espacio, fila de grupos, HUD vacío que no tapa y errores puntuales. Pendientes: atajos del pie del menú a 1366×768, opción de texto grande, menú de pausa debajo de los paneles F1–F6 |
-| Partidas de muchos jugadores | Pasos 1–2 de 6 hechos; siguen formas de agua para N (islas, brazos y fortines todavía caen en lago o sin anillos) |
+| Partidas de muchos jugadores | Rendimiento con 6: batalla de 900 unidades a ~37 ms por tick (meta 25 a ×4); falta la separación y medir sin otras pruebas en paralelo. Minimapa sin borde de aliados |
 | Escala y velocidad | Corregidas el 2026-11-13 (`escala_visual`, `velocidad_pct`); falta la opinión del autor a ×1 |
 | Multijugador | H5 |
 | Naval | Fuera de alcance (D-020) |

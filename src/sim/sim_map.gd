@@ -14,6 +14,7 @@ var water := PackedByteArray() # 0 tierra, 1 agua profunda (sólida), 2 vado (tr
 var rock := PackedByteArray() # 1 peñasco o barranco: no se pasa ni se edifica (docs/10)
 var astar: AStarGrid2D # puertas cerradas para todos
 var astars: Array[AStarGrid2D] = [] # una por jugador
+var teams := PackedInt32Array() # equipo de cada jugador: las puertas dejan pasar a los aliados
 
 
 func _init(size: int, num_players: int = 2) -> void:
@@ -29,6 +30,7 @@ func _init(size: int, num_players: int = 2) -> void:
 	astar = _new_astar()
 	for i in num_players:
 		astars.append(_new_astar())
+		teams.append(i)
 
 
 func _new_astar() -> AStarGrid2D:
@@ -58,7 +60,15 @@ func is_solid(tx: int, ty: int, pid: int = -1) -> bool:
 	if solid[idx] != 0:
 		return true
 	var g := gate_owner[idx]
-	return g >= 0 and g != pid
+	return g >= 0 and not _allied(g, pid)
+
+
+func _allied(a: int, b: int) -> bool:
+	if a == b:
+		return true
+	if a < 0 or b < 0 or a >= teams.size() or b >= teams.size():
+		return false
+	return teams[a] == teams[b]
 
 
 func occupant(tx: int, ty: int) -> int:
@@ -87,7 +97,7 @@ func mark(tx: int, ty: int, w: int, h: int, id: int, blocks: bool, gate_pid: int
 				gate_owner[idx] = gate_pid
 				astar.set_point_solid(cell, true)
 				for p in astars.size():
-					astars[p].set_point_solid(cell, p != gate_pid)
+					astars[p].set_point_solid(cell, not _allied(p, gate_pid))
 			elif blocks:
 				solid[idx] = 1
 				astar.set_point_solid(cell, true)

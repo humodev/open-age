@@ -1,0 +1,2 @@
+6 jugadores × 150 unidades, 900 ticks: promedio 45.96 ms, peor 214.98 ms (a ×4: 184 ms de 100 por cuadro)
+6 IA, 20 minutos: promedio 21.37 ms, último minuto 34.70 ms, peor 782.23 ms; unidades vivas al final 407

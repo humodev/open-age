@@ -19,7 +19,7 @@
   "disputado": { "tope_por_min": [15, 40, 80, 120], "baldes": 5, "_doc": "Techo de riqueza que sale de lo disputado (arcilla del centro, sitios, botín), por edad, en una ventana de 5 minutos (docs/diseno/revision-economia/v3/04, §3.2)" },
   "mapa_tam_por_jugadores": { "3": 160, "4": 176, "5": 192, "6": 208, "7": 224, "8": 240 },
   "bases_circulo": {"3": [[-707, -707], [966, -259], [-259, 966]], "4": [[-707, -707], [707, -707], [707, 707], [-707, 707]], "5": [[-707, -707], [454, -891], [988, 156], [156, 988], [-891, 454]], "6": [[-707, -707], [259, -966], [966, -259], [707, 707], [-259, 966], [-966, 259]], "7": [[-707, -707], [112, -994], [847, -532], [944, 330], [330, 944], [-532, 847], [-994, 112]], "8": [[-707, -707], [0, -1000], [707, -707], [1000, 0], [707, 707], [0, 1000], [-707, 707], [-1000, 0]]},
-  "equipos": { "vision_compartida": true, "tributo_comision_pct": 20, "_doc": "Partidas por equipos (docs/11)" },
+  "equipos": { "vision_compartida": true, "tributo_comision_pct": 20, "tributo_lote": 100, "ia_tributo": {"cada_ticks": 600, "sobra": 800, "falta": 150, "lote": 200, "_doc": "La IA da `lote` de lo que le sobra (más de `sobra`) al aliado que tiene menos de `falta`"}, "ia_ayuda_radio": 70000, "ia_ayuda_amenaza": 22000, "_doc": "Partidas por equipos (docs/11)" },
   "ingenios": { "por_jugador": 1, "distancia_base": 34 },
   "arcilla": { "base": 900, "flanco": 1500, "flanco_dist": 18, "centro_por_jugador": 1000 },
   "ia_campana_por_enemigo": 3,
@@ -27,9 +27,9 @@
   "escala_visual": { "unidad_pct": 82, "estirar_max_pct": 170, "altura_min_cm": { "casa": 220, "produccion": 270, "torre": 420, "capital": 360, "hito": 380 } },
   "estilos_ia": {
     "pacifica": { "nombre": "Pacífica", "descripcion": "No ataca tu base. Se expande, toma sitios sagrados y recursos del mapa y pelea si la buscás afuera de tu base.", "ataca_base": false, "incursiones": "no", "controla_mapa": true, "respeta_radio": 26000 },
-    "normal": { "nombre": "Equilibrada", "descripcion": "Ataca por oleadas cuando junta ejército, defiende y disputa el mapa.", "ataca_base": true, "incursiones": "civ", "controla_mapa": true },
+    "normal": { "nombre": "Equilibrada", "descripcion": "Ataca por oleadas cuando junta ejército, defiende y disputa el mapa.", "ataca_base": true, "incursiones": "civ", "controla_mapa": true, "objetivo": "cercano" },
     "acosadora": { "nombre": "Acosadora", "descripcion": "Golpes chicos y seguidos sobre tus aldeanos y recursos; se retira y casi nunca va con todo.", "ataca_base": false, "incursiones": "si", "incursion_cada_ticks": 450, "incursion_tam": 6, "controla_mapa": true, "respeta_radio": 26000 },
-    "agresiva": { "nombre": "Agresiva", "descripcion": "Ataca temprano y seguido, sin esperar a tener un gran ejército.", "ataca_base": true, "incursiones": "si", "ataque_base": 4, "ataque_paso": 3, "ataque_espera_ticks": 320, "controla_mapa": false }
+    "agresiva": { "nombre": "Agresiva", "descripcion": "Ataca temprano y seguido, sin esperar a tener un gran ejército.", "ataca_base": true, "incursiones": "si", "ataque_base": 4, "ataque_paso": 3, "ataque_espera_ticks": 320, "controla_mapa": false, "objetivo": "debil" }
   },
   "terrenos": {
     "llano": {"nombre": "Llanura", "colinas": 4, "nivel_max": 2, "lagunas": 3, "bosques": 13, "seco": 15, "tinte": [100, 100, 97], "arboles": [0, 1], "rio": {"ancho": 1, "vados": 12, "formas": ["ninguno", "ninguno", "anillo"]}, "penascos": 2},

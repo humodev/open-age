@@ -30,8 +30,8 @@ var winner_team := -1
 var terrain := ""
 var water_form := "" # forma del agua elegida (cruce, lago, costados, anillo, brazos)
 var rivers: Array = [] # trazos de río para la imagen; no son estado
-var _fort_gaps: Array = []
-var _base_dirs: Array[Vector2i] = [] # mapas para N: dirección de cada base hacia el centro (milésimas) # [jugador, casillas, puerta] de las salidas de cada fortín
+var _fort_gaps: Array = [] # [jugador, casillas, puerta] de las salidas de cada fortín
+var _base_dirs: Array[Vector2i] = [] # mapas para N: dirección de cada base hacia el centro (milésimas)
 var _opts: Dictionary = {}
 
 var _pending := {} # tick -> Array[Dictionary]
@@ -41,6 +41,10 @@ var _grid := {} # celda de 1 casilla -> unidades (separación)
 var _ehash := {} # celda de EC -> unidades y edificios (búsqueda)
 var _res_cells := {} # celda de RC casillas -> recursos
 var _dirty := false
+var _teams := PackedInt32Array() # equipo de cada jugador (copia de players[i].equipo)
+var _emask := {} # celda de `_ehash` -> bits de dueños presentes (bit 0: naturaleza)
+var _foe_bits := PackedInt32Array() # por jugador: bits de quienes le pueden ser blanco
+const _NONE: Array = [] # celda vacía de las grillas: sin crear un arreglo por consulta
 const RC := 8
 
 
@@ -88,6 +92,17 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null,
 	if terrain == "":
 		var kinds: Array = data.reglas["terrenos"].keys()
 		terrain = kinds[rng.range_i(0, kinds.size() - 1)]
+	# Equipos fijos durante la partida; las puertas dejan pasar a todo el equipo (docs/11, paso 4).
+	for pid in players.size():
+		_teams.append(int(players[pid].get("equipo", pid)))
+		map.teams[pid] = team_of(pid)
+	# Para saltear en `find_enemy` las celdas donde solo hay aliados.
+	for pid in players.size():
+		var bits := 1 # la naturaleza (ingenios hostiles)
+		for q in players.size():
+			if enemies(pid, q):
+				bits |= 1 << (q + 1)
+		_foe_bits.append(bits)
 	_generate_map()
 	_update_players()
 	for pid in players.size():
@@ -203,6 +218,8 @@ func _apply(c: Dictionary) -> void:
 			players[pid]["reserva_" + str(c["res"])] = clampi(int(c["n"]), 0, 1000)
 		"trade":
 			_cmd_trade(pid, c["building"], c["recurso"], c["op"])
+		"tributo":
+			_cmd_tribute(pid, int(c["a"]), str(c["recurso"]), int(c["n"]))
 		"pack":
 			_cmd_pack(pid, c["building"])
 		"unpack":
@@ -259,12 +276,13 @@ func _cmd_move(pid: int, units: Array[SimEntity], x: int, y: int, amove: bool) -
 
 ## Equipo de un jugador (docs/11): por defecto cada uno es su propio equipo.
 func team_of(pid: int) -> int:
-	return int(players[pid].get("equipo", pid)) if pid >= 0 and pid < players.size() else -1
+	return _teams[pid] if pid >= 0 and pid < _teams.size() else -1
 
 
 ## ¿Son enemigos dos jugadores? Nunca lo son consigo mismos ni con su equipo.
+## Se llama por cada candidato de `find_enemy`: lee el arreglo, no el diccionario.
 func enemies(a: int, b: int) -> bool:
-	return a >= 0 and b >= 0 and a != b and team_of(a) != team_of(b)
+	return a >= 0 and b >= 0 and a != b and a < _teams.size() and b < _teams.size() and _teams[a] != _teams[b]
 
 
 ## ¿`t` es enemigo de `pid`? Los de otro jugador y los neutrales hostiles (ingenios).
@@ -437,6 +455,24 @@ func _cmd_research(pid: int, bid: int, tech: String) -> void:
 
 
 ## Mercado: compra o vende un lote por riqueza; el precio sube al comprar y baja al vender.
+## Tributo a un aliado (docs/11): sale todo, llega menos la comisión de `reglas.equipos`.
+func _cmd_tribute(pid: int, to: int, kind: String, n: int) -> void:
+	if to < 0 or to >= players.size() or to == pid or enemies(pid, to) or team_of(pid) != team_of(to):
+		return
+	if players[to]["defeated"] or not kind in ["alimento", "madera", "piedra", "riqueza"]:
+		return
+	var res: Dictionary = players[pid]["res"]
+	n = mini(n, int(res.get(kind, 0)))
+	if n <= 0:
+		return
+	var got := n * (100 - int(data.reglas["equipos"]["tributo_comision_pct"])) / 100
+	res[kind] -= n
+	players[to]["res"][kind] = int(players[to]["res"].get(kind, 0)) + got
+	ledger(pid, "tributo_dado", kind, -n)
+	ledger(to, "tributo", kind, got)
+	events.append({"t": "tributo", "de": pid, "a": to, "recurso": kind, "n": got})
+
+
 func _cmd_trade(pid: int, bid: int, kind: String, op: String) -> void:
 	var b: SimEntity = by_id.get(bid)
 	if b == null or not b.alive or b.owner != pid or not b.built or not b.def.get("mercado", false):
@@ -769,7 +805,7 @@ func step() -> void:
 		mods.tick_second()
 	var every: int = data.reglas["niebla_cada_ticks"]
 	for pid in players.size():
-		if (tick + pid) % every == 0:
+		if (tick + team_of(pid)) % every == 0:
 			_update_fog(pid)
 	if _dirty:
 		_cleanup()
@@ -799,6 +835,7 @@ func _update_players() -> void:
 func _rebuild_hashes() -> void:
 	_grid.clear()
 	_ehash.clear()
+	_emask.clear()
 	for e in actives:
 		if not e.alive or e.inside >= 0:
 			continue
@@ -811,6 +848,7 @@ func _rebuild_hashes() -> void:
 			if not _ehash.has(ek):
 				_ehash[ek] = []
 			_ehash[ek].append(e)
+			_emask[ek] = int(_emask.get(ek, 0)) | (1 << (e.owner + 1))
 		elif e.is_building():
 			for cx in range(e.tx * P / EC, ((e.tx + e.w) * P - 1) / EC + 1):
 				for cy in range(e.ty * P / EC, ((e.ty + e.h) * P - 1) / EC + 1):
@@ -818,11 +856,18 @@ func _rebuild_hashes() -> void:
 					if not _ehash.has(ek):
 						_ehash[ek] = []
 					_ehash[ek].append(e)
+					_emask[ek] = int(_emask.get(ek, 0)) | (1 << (e.owner + 1))
 
 
 func _update_fog(pid: int) -> void:
 	# Visión compartida con el equipo (reglas.json → equipos.vision_compartida).
 	var shared: bool = data.reglas.get("equipos", {}).get("vision_compartida", true)
+	# Con visión compartida, el equipo ve lo mismo: se calcula para el primero y se copia.
+	if shared:
+		for q in pid:
+			if team_of(q) == team_of(pid):
+				fog.copy_from(pid, q)
+				return
 	var sources: Array = []
 	for e in actives:
 		if e.alive and e.inside < 0 and e.owner >= 0 and (e.owner == pid or (shared and not enemies(pid, e.owner) and team_of(e.owner) == team_of(pid))):
@@ -1512,7 +1557,7 @@ func _separate() -> void:
 		var cy := e.y / P
 		for ox in range(cx - 1, cx + 2):
 			for oy in range(cy - 1, cy + 2):
-				var cell: Array = _grid.get(ox * 4096 + oy, [])
+				var cell: Array = _grid.get(ox * 4096 + oy, _NONE)
 				for o: SimEntity in cell:
 					if o.id <= e.id or not o.alive:
 						continue
@@ -1551,9 +1596,12 @@ func find_enemy(e: SimEntity, radius: int, units_only: bool) -> SimEntity:
 	var x1 := (e.x + radius) / EC
 	var y0 := maxi(0, (e.y - radius) / EC)
 	var y1 := (e.y + radius) / EC
+	var foes := _foe_bits[e.owner] if e.owner >= 0 and e.owner < _foe_bits.size() else -1
 	for cx in range(x0, x1 + 1):
 		for cy in range(y0, y1 + 1):
-			var cell: Array = _ehash.get(cx * 1024 + cy, [])
+			if int(_emask.get(cx * 1024 + cy, 0)) & foes == 0:
+				continue
+			var cell: Array = _ehash.get(cx * 1024 + cy, _NONE)
 			for o: SimEntity in cell:
 				if not o.alive or o.owner == e.owner:
 					continue
@@ -2355,12 +2403,176 @@ func _local(pid: int, fwd: int, side: int) -> Vector2i:
 	return Vector2i((f.x * fwd + sd.x * side) / 1000, (f.y * fwd + sd.y * side) / 1000)
 
 
+## Copias de una casilla, una por base: se mide adelante y de costado desde la
+## base 0 y se repite desde cada base. La primera es la casilla misma.
+func _sym_points(t: Vector2i) -> Array[Vector2i]:
+	if not n_layout():
+		return [t, _mirror(t, 1, 1)]
+	var c0 := bases[0] + Vector2i(2, 2)
+	var f: Vector2i = _base_dirs[0]
+	var d := t - c0
+	var fwd := _div_near(d.x * f.x + d.y * f.y, 1000)
+	var side := _div_near(-d.x * f.y + d.y * f.x, 1000)
+	var out: Array[Vector2i] = [t]
+	for i in range(1, bases.size()):
+		out.append(bases[i] + Vector2i(2, 2) + _local_near(i, fwd, side))
+	return out
+
+
+## La inversa: a qué casilla del sector de la base 0 corresponde `t` (la base
+## de la que `t` está más cerca, girada).
+func _to_frame0(t: Vector2i) -> Vector2i:
+	var best := 0
+	var bd := 1 << 30
+	for i in bases.size():
+		var c := bases[i] + Vector2i(2, 2)
+		var dd := (t.x - c.x) * (t.x - c.x) + (t.y - c.y) * (t.y - c.y)
+		if dd < bd:
+			bd = dd
+			best = i
+	if best == 0:
+		return t
+	var c := bases[best] + Vector2i(2, 2)
+	var f: Vector2i = _base_dirs[best]
+	var d := t - c
+	var fwd := _div_near(d.x * f.x + d.y * f.y, 1000)
+	var side := _div_near(-d.x * f.y + d.y * f.x, 1000)
+	return bases[0] + Vector2i(2, 2) + _local_near(0, fwd, side)
+
+
+## Como `_local`, pero redondeando al más cercano (para copiar formas sin correrlas).
+func _local_near(pid: int, fwd: int, side: int) -> Vector2i:
+	var f: Vector2i = _base_dirs[pid]
+	return Vector2i(_div_near(f.x * fwd - f.y * side, 1000), _div_near(f.y * fwd + f.x * side, 1000))
+
+
+static func _div_near(a: int, b: int) -> int:
+	return (a + b / 2) / b if a >= 0 else -((-a + b / 2) / b)
+
+
+## Pincel de río sin espejo (mapas para N: el giro ya lo puso en cada sector).
+func _paint_brush(p: Vector2i, width: int, ford: bool) -> void:
+	var n := map.n
+	for dy in range(-width, width + 1):
+		for dx in range(-width, width + 1):
+			if absi(dx) + absi(dy) > width + 1:
+				continue
+			var t := p + Vector2i(dx, dy)
+			if not map.in_bounds(t.x, t.y) or _near_base(t, 12):
+				continue
+			var cur := map.water[t.y * n + t.x]
+			if cur == 2 or (cur == 1 and not ford):
+				continue
+			map.set_water(t.x, t.y, 2 if ford else 1)
+	for dy in range(-width - 4, width + 5):
+		for dx in range(-width - 4, width + 5):
+			var t := p + Vector2i(dx, dy)
+			if map.in_bounds(t.x, t.y):
+				var cap := 0 if maxi(absi(dx), absi(dy)) <= width + 2 else 1
+				map.height[t.y * n + t.x] = mini(map.height[t.y * n + t.x], cap)
+
+
+## Fortines para N: el mismo cerco en el marco de cada base (adelante hacia el
+## centro), con salida adelante, atrás y a los costados.
+func _fort_rings_n(fd: Dictionary) -> void:
+	var r := int(fd.get("radio", 18))
+	var thick := int(fd.get("grosor", 3))
+	var half := int(fd.get("hueco", 5)) / 2
+	var sd := rng.range_i(1, 1 << 20)
+	var mid := r + thick / 2
+	var e := r + thick + 4
+	for pid in bases.size():
+		var c := bases[pid] + Vector2i(2, 2)
+		var f: Vector2i = _base_dirs[pid]
+		var gaps := {}
+		for ty in range(c.y - e, c.y + e + 1):
+			for tx in range(c.x - e, c.x + e + 1):
+				if not map.in_bounds(tx, ty):
+					continue
+				var dx := tx - c.x
+				var dy := ty - c.y
+				var fwd := _div_near(dx * f.x + dy * f.y, 1000)
+				var side := _div_near(-dx * f.y + dy * f.x, 1000)
+				var along := maxi(absi(fwd), absi(side))
+				var across := absi(side) if absi(fwd) >= absi(side) else absi(fwd)
+				var key := Vector2i(signi(fwd), 0) if absi(fwd) >= absi(side) else Vector2i(0, signi(side))
+				if across <= half:
+					# Salida: la empalizada llena todo el grosor del cerco; con el giro, una
+					# franja más fina deja huecos en diagonal en algunas bases y en otras no.
+					if along >= r and along < r + thick:
+						if not gaps.has(key):
+							gaps[key] = []
+						gaps[key].append(Vector2i(tx, ty))
+					continue
+				var wob := 0 if across <= half + 2 else (_vnoise(fwd + 500, side + 500, 6, sd) - 500) / 250
+				var cheb := along + wob
+				if cheb >= r and cheb < r + thick:
+					map.set_rock(tx, ty)
+		for key in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			if not gaps.has(key):
+				continue
+			var tiles: Array[Vector2i] = []
+			tiles.assign(gaps[key])
+			var gate := c + _local_near(pid, key.x * mid, key.y * mid)
+			var best := tiles[0]
+			for t in tiles:
+				if (t - gate).length_squared() < (best - gate).length_squared():
+					best = t
+			_fort_gaps.append([pid, tiles, best])
+
+
+## Islas para N: cada base en su isla, una al centro y una entre cada par de
+## vecinas, unidas por bajíos. Se marca la tierra con todas las islas y se
+## inunda el resto; los bajíos de la base 0 se copian a las demás.
+func _islands_n() -> void:
+	var n := map.n
+	var mid := Vector2i(n / 2, n / 2)
+	var np := bases.size()
+	var c0 := bases[0] + Vector2i(2, 2)
+	var c1 := bases[1] + Vector2i(2, 2)
+	var chord := isqrt((c1 - c0).length_squared())
+	var rb := mini(27, chord * 3 / 10)
+	var rf := mini(13, chord / 6)
+	var isl: Array = [[mid, 14]]
+	var between: Array[Vector2i] = []
+	for i in np:
+		var a := bases[i] + Vector2i(2, 2)
+		var b := bases[(i + 1) % np] + Vector2i(2, 2)
+		var m := (a + b) / 2
+		# Hacia afuera, hasta el círculo de las bases.
+		var out := m - mid
+		var ol := maxi(1, isqrt(out.length_squared()))
+		var rad := isqrt((a - mid).length_squared())
+		var bt := mid + out * rad / ol
+		between.append(bt)
+		isl.append([a, rb])
+		isl.append([bt, rf])
+	var sd := rng.range_i(1, 1 << 20)
+	for ty in n:
+		for tx in n:
+			var t0 := _to_frame0(Vector2i(tx, ty))
+			var land := false
+			for it in isl:
+				var cc: Vector2i = it[0]
+				var r: int = it[1]
+				var rr := r * 10 + (_vnoise(t0.x, t0.y, 7, sd) - 500) * r * 7 / 1000
+				var d2 := (tx - cc.x) * (tx - cc.x) + (ty - cc.y) * (ty - cc.y)
+				if d2 * 100 <= rr * rr:
+					land = true
+					break
+			if not land and not _near_base(Vector2i(tx, ty), 12):
+				map.set_water(tx, ty, 1)
+	for pair in [[c0, mid], [c0, between[0]], [c0, between[np - 1]], [between[0], mid]]:
+		_causeway(pair[0], pair[1])
+
+
 func _res_at(type: String, t: Vector2i, amount: int, owner: int) -> void:
 	var tam: Array = data.recursos[type]["tam"]
 	var spot := t
-	# Espiral hasta 5 casillas: cada base tiene que recibir todo su juego de recursos.
+	# Espiral hasta 9 casillas: cada base tiene que recibir todo su juego de recursos,
+	# aunque en islas su lugar caiga en el agua.
 	var tries: Array[Vector2i] = [Vector2i.ZERO]
-	for rr in range(1, 6):
+	for rr in range(1, 10):
 		for dy in range(-rr, rr + 1):
 			for dx in range(-rr, rr + 1):
 				if maxi(absi(dx), absi(dy)) == rr:
@@ -2505,8 +2717,11 @@ func _generate_terrain() -> void:
 		var c := Vector2i(rng.range_i(10, map.n - 11), rng.range_i(10, map.n - 11))
 		if not _near_base(c, 18):
 			_lake_blob(c, rng.range_i(int(lr[0]), int(lr[1])))
-	if td.has("fortines") and not n_layout():
-		_fort_rings(td["fortines"])
+	if td.has("fortines"):
+		if n_layout():
+			_fort_rings_n(td["fortines"])
+		else:
+			_fort_rings(td["fortines"])
 	if int(td.get("penascos", 0)) > 0:
 		_crags(int(td["penascos"]))
 	_ensure_crossings()
@@ -2533,12 +2748,16 @@ func _relief_hills(hills: int, top: int) -> void:
 					if dx * dx + dy * dy > rr * rr + rng.range_i(0, rr):
 						continue
 					var t := c + Vector2i(dx, dy)
-					var m := _mirror(t, 1, 1)
-					if not map.in_bounds(t.x, t.y) or _near_base(t, 11) or _near_base(m, 11):
+					var pts := _sym_points(t)
+					var ok := map.in_bounds(t.x, t.y)
+					for q in pts:
+						if _near_base(q, 11):
+							ok = false
+					if not ok:
 						continue
-					if map.h_at(t.x, t.y) < l:
-						map.height[t.y * n + t.x] = l
-						map.height[m.y * n + m.x] = l
+					for q in pts:
+						if map.in_bounds(q.x, q.y) and map.h_at(q.x, q.y) < l:
+							map.height[q.y * n + q.x] = l
 		made += 1
 
 
@@ -2555,9 +2774,17 @@ func _relief_noise(rd: Dictionary) -> void:
 		for tx in n:
 			var idx := ty * n + tx
 			var m := _mirror(Vector2i(tx, ty), 1, 1)
-			if idx > m.y * n + m.x:
+			var sx := tx
+			var sy := ty
+			if n_layout():
+				# Con N bases, cada casilla toma el ruido de su lugar girado al sector de la base 0.
+				var c0 := _to_frame0(Vector2i(tx, ty))
+				sx = c0.x
+				sy = c0.y
+				m = Vector2i(tx, ty)
+			elif idx > m.y * n + m.x:
 				continue # la mitad espejada se copia
-			var v := (_vnoise(tx, ty, sc, s1) * 2 + _vnoise(tx, ty, maxi(3, sc / 2), s2)) / 30 # 0..100
+			var v := (_vnoise(sx, sy, sc, s1) * 2 + _vnoise(sx, sy, maxi(3, sc / 2), s2)) / 30 # 0..100
 			if bias == "esquinas":
 				# Cordillera en las dos esquinas sin base (la antidiagonal).
 				var dc := mini(tx + (n - 1 - ty), (n - 1 - tx) + ty)
@@ -2567,8 +2794,9 @@ func _relief_noise(rd: Dictionary) -> void:
 			for i in mini(maxi(players.size(), 2), bases.size()):
 				var c := bases[i] + Vector2i(2, 2)
 				db = mini(db, maxi(absi(tx - c.x), absi(ty - c.y)))
-				var cm := _mirror(c, 1, 1)
-				db = mini(db, maxi(absi(tx - cm.x), absi(ty - cm.y)))
+				if not n_layout():
+					var cm := _mirror(c, 1, 1)
+					db = mini(db, maxi(absi(tx - cm.x), absi(ty - cm.y)))
 			v -= maxi(0, (19 - db) * 9)
 			var lvl := 0
 			for cut in cuts:
@@ -2638,11 +2866,26 @@ static func _lattice(x: int, y: int, sd: int) -> int:
 func _water_layout(rd: Dictionary) -> void:
 	var forms: Array = rd.get("formas", ["cruce"])
 	water_form = str(forms[rng.range_i(0, forms.size() - 1)])
-	# Con 3 o más jugadores, las formas pensadas para dos lados enfrentados pasan a lago.
-	if n_layout() and water_form in ["costados", "islas", "brazos"]:
-		water_form = "lago"
 	var w := int(rd.get("ancho", 1))
 	var fe := int(rd.get("vados", 22))
+	# Con 3 o más jugadores se dibuja lo de la base 0 y el giro lo copia a las demás
+	# (`_sym_points`): los ríos salen del centro entre dos bases vecinas.
+	if n_layout():
+		match water_form:
+			"cruce":
+				_river_through_center(w, fe, false)
+			"lago":
+				_river_through_center(w, fe, true)
+			"costados":
+				_river_through_center(w, fe, false, map.n / 5)
+			"anillo":
+				_moat(w)
+			"islas":
+				_islands_n()
+			"brazos":
+				_moat(w)
+				_river_through_center(w, fe, false)
+		return
 	match water_form:
 		"cruce":
 			_river_through_center(w, fe, false)
@@ -2663,10 +2906,13 @@ func _water_layout(rd: Dictionary) -> void:
 
 ## Río que pasa por el centro con un ángulo al azar y meandros suaves. Se
 ## dibuja solo la mitad; el espejo completa la otra.
-func _river_through_center(w: int, fe: int, lake: bool) -> void:
+func _river_through_center(w: int, fe: int, lake: bool, from_k: int = 0) -> void:
 	var n := map.n
 	var dirs: Array[Vector2i] = [Vector2i(1, -1), Vector2i(2, -1), Vector2i(1, -2), Vector2i(1, 0), Vector2i(0, 1)]
 	var d := dirs[rng.range_i(0, dirs.size() - 1)]
+	if n_layout():
+		# Entre la base 0 y la 1, hacia afuera: el giro hace un río entre cada par de vecinas.
+		d = -(_base_dirs[0] + _base_dirs[1])
 	var m := maxi(absi(d.x), absi(d.y))
 	var perp := Vector2i(-d.y, d.x)
 	var c := Vector2i(n / 2, n / 2)
@@ -2682,8 +2928,9 @@ func _river_through_center(w: int, fe: int, lake: bool) -> void:
 		var p := c + Vector2i(d.x * k / m, d.y * k / m) + Vector2i(perp.x * off / (10 * m), perp.y * off / (10 * m))
 		if not map.in_bounds(p.x, p.y):
 			break
-		path.append(p)
-		_paint_river(p, w, k > lake_r and (k % fe) < 3)
+		if k >= from_k:
+			path.append(p)
+			_paint_river(p, w, k > lake_r and (k % fe) < 3)
 		if rng.range_i(0, 2) == 0:
 			vel = clampi(vel + rng.range_i(-2, 2), -6, 6)
 		off = clampi(off + vel, -90, 90)
@@ -2833,6 +3080,15 @@ func _crags(count: int) -> void:
 
 
 func _set_rock_sym(t: Vector2i) -> void:
+	if n_layout():
+		var pts := _sym_points(t)
+		for q in pts:
+			if _near_base(q, 10):
+				return
+		for q in pts:
+			if map.in_bounds(q.x, q.y):
+				map.set_rock(q.x, q.y)
+		return
 	var m := _mirror(t, 1, 1)
 	if not map.in_bounds(t.x, t.y) or _near_base(t, 10) or _near_base(m, 10):
 		return
@@ -2894,6 +3150,10 @@ func _causeway(a: Vector2i, b: Vector2i) -> void:
 ## vuelve a ser agua profunda, así el paso queda entero.
 func _paint_river(p: Vector2i, width: int, ford: bool) -> void:
 	var n := map.n
+	if n_layout():
+		for q in _sym_points(p):
+			_paint_brush(q, width, ford)
+		return
 	for dy in range(-width, width + 1):
 		for dx in range(-width, width + 1):
 			if absi(dx) + absi(dy) > width + 1:
@@ -2917,6 +3177,15 @@ func _paint_river(p: Vector2i, width: int, ford: bool) -> void:
 
 
 func _set_water_sym(t: Vector2i, kind: int) -> void:
+	if n_layout():
+		var pts := _sym_points(t)
+		for q in pts:
+			if _near_base(q, 12):
+				return
+		for q in pts:
+			if map.in_bounds(q.x, q.y):
+				map.set_water(q.x, q.y, kind)
+		return
 	var m := _mirror(t, 1, 1)
 	if not map.in_bounds(t.x, t.y) or _near_base(t, 12) or _near_base(m, 12):
 		return
@@ -2941,6 +3210,13 @@ func _lake_blob(c: Vector2i, r: int) -> void:
 func _record_river(path: Array[Vector2i]) -> void:
 	if path.size() < 2:
 		return
+	if n_layout():
+		for i in bases.size():
+			var cp: Array[Vector2i] = []
+			for t in path:
+				cp.append(_sym_points(t)[i])
+			rivers.append(cp)
+		return
 	# La mitad espejada va al revés, así la corriente sigue un solo sentido
 	# en los ríos que cruzan por el centro.
 	var mp: Array[Vector2i] = []
@@ -2964,6 +3240,11 @@ func _ensure_crossings() -> void:
 			for tx in n:
 				if map.water[ty * n + tx] == 1 and (tx % step == 0 or ty % step == 0):
 					var t := Vector2i(tx, ty)
+					if n_layout():
+						for q in _sym_points(t):
+							if map.in_bounds(q.x, q.y) and map.water[q.y * n + q.x] == 1:
+								map.set_water(q.x, q.y, 2)
+						continue
 					var m := _mirror(t, 1, 1)
 					map.set_water(t.x, t.y, 2)
 					map.set_water(m.x, m.y, 2)

@@ -15,6 +15,9 @@ extends Node3D
 ##   --terreno=<clave de reglas.json "terrenos"> tipo de mapa (llano, valle, delta…)
 ##   --civ=clave        civilización propia (tawantinsuyu, mapuches, guaranies, etiopia, palmares, ayutthaya, azar)
 ##   --rival=clave      civilización de la IA rival
+##   --civs=a,b,c,…     partida de 2 a 8 jugadores (el primero es el tuyo; "azar" vale)
+##   --equipos=0,1,0,…  equipo de cada lugar (sin esto, todos contra todos)
+##   --partida=N        en el menú, tipo de partida preelegido (0 = 1 contra 1, 2 = 3 contra 3…)
 ##   --campana=clave --mision=N  juega una misión de campaña (N desde 0)
 ##   --dificultad=facil|normal|dificil
 ##   --nofog            sin niebla de guerra (automático en --aivai)
@@ -243,30 +246,49 @@ func _new_game() -> void:
 	if _args.has("replay") and FileAccess.file_exists(REPLAY):
 		var r: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(REPLAY))
 		_seed = int(r["semilla"])
-		sim = Sim.new(_seed, 2, null, Sim.intify(r["opciones"]))
+		var ropts: Dictionary = Sim.intify(r["opciones"])
+		sim = Sim.new(_seed, (ropts.get("civs", [0, 0]) as Array).size(), null, ropts)
 		sim.ais = []
 		for pid in r["ias"]:
-			var rai := SimAI.new(sim, int(pid), r.get("dificultad", "normal"))
-			rai.personality = r.get("estilo", "normal")
+			var cfg: Dictionary = r.get("ia_cfg", {}).get(str(int(pid)), {})
+			var rai := SimAI.new(sim, int(pid), cfg.get("dificultad", r.get("dificultad", "normal")))
+			rai.personality = cfg.get("estilo", r.get("estilo", "normal"))
 			sim.ais.append(rai)
 		sim.schedule(Sim.intify(r["comandos"]))
 		_build_scene(true)
 		ctrl.enabled = false
 		hud.notify("Repetición de la última partida", 4.0)
 		return
-	var opts := {"terreno": _args.get("terreno", ""), "civs": [mine, rival]}
-	sim = Sim.new(_seed, 2, null, opts)
+	# Lugares (docs/11, paso 5): del menú, de --civs/--equipos o los dos de siempre.
+	var slots: Array = _args.get("lugares", [])
+	if slots.is_empty():
+		var civs: Array = [mine, rival]
+		if _args.has("civs"):
+			civs = Array((_args["civs"] as String).split(","))
+		var teams: Array = range(civs.size())
+		if _args.has("equipos"):
+			teams = Array((_args["equipos"] as String).split(",")).map(func(t: String) -> int: return int(t))
+		for i in civs.size():
+			slots.append({"civ": civs[i], "equipo": teams[i] if i < teams.size() else i, "ia": i != 0, "dificultad": _args.get("dificultad", "normal"), "estilo": _args.get("estilo", "normal")})
+	for sl in slots:
+		if sl["civ"] == "" or sl["civ"] == "azar":
+			sl["civ"] = civ_keys[rng.randi() % civ_keys.size()]
+	var opts := {"terreno": _args.get("terreno", ""), "civs": slots.map(func(sl: Dictionary) -> String: return sl["civ"]), "equipos": slots.map(func(sl: Dictionary) -> int: return int(sl["equipo"]))}
+	sim = Sim.new(_seed, slots.size(), null, opts)
 	var aivai := _args.has("aivai") or _menu_mode
 	sim.ais = []
 	var ai_ids := []
+	var ai_cfg := {}
 	for pid in sim.players.size():
 		if pid != local or aivai:
-			var ai := SimAI.new(sim, pid, _args.get("dificultad", "normal"))
-			ai.personality = _args.get("estilo", "normal")
+			var sl: Dictionary = slots[pid]
+			var ai := SimAI.new(sim, pid, sl.get("dificultad", "normal"))
+			ai.personality = sl.get("estilo", "normal")
 			sim.ais.append(ai)
 			ai_ids.append(pid)
+			ai_cfg[str(pid)] = {"dificultad": sl.get("dificultad", "normal"), "estilo": ai.personality}
 	opts["terreno"] = sim.terrain
-	_replay_meta = {"semilla": _seed, "opciones": opts, "ias": ai_ids, "dificultad": _args.get("dificultad", "normal"), "estilo": _args.get("estilo", "normal")}
+	_replay_meta = {"semilla": _seed, "opciones": opts, "ias": ai_ids, "ia_cfg": ai_cfg, "dificultad": _args.get("dificultad", "normal"), "estilo": _args.get("estilo", "normal")}
 	_build_scene(aivai)
 
 
@@ -287,6 +309,7 @@ func _build_scene(aivai: bool) -> void:
 	add_child(cam)
 	cam.edge_pan = Opciones.bordes # --- opciones ---
 	Palette.local = local # --- opciones --- (modo de colores "yo, aliados y rivales")
+	Palette.es_aliado = func(a: int, b: int) -> bool: return a != b and not sim.enemies(a, b)
 	var base := sim.bases[local]
 	cam.look_at_point(Vector3(base.x + 6, 0, base.y + 6))
 	# --- hud --- (cámara inicial sobre la capital, un poco por encima del centro: el panel no la tapa)
@@ -329,8 +352,8 @@ func _build_scene(aivai: bool) -> void:
 		speed = 1.0
 		_menu = MainMenu.new()
 		layer.add_child(_menu)
-		_menu.play.connect(func(sd: int, civ: String, rival: String) -> void: _start({"seed": str(sd), "civ": civ, "rival": rival, "dificultad": _menu.difficulty(), "estilo": _menu.style(), "terreno": _menu.terrain()}))
-		_menu.watch.connect(func(sd: int, civ: String, rival: String) -> void: _start({"aivai": "1", "seed": str(sd), "civ": civ, "rival": rival, "estilo": _menu.style(), "dificultad": _menu.difficulty(), "terreno": _menu.terrain()}))
+		_menu.play.connect(func(sd: int, civ: String, rival: String) -> void: _start({"seed": str(sd), "civ": civ, "rival": rival, "dificultad": _menu.difficulty(), "estilo": _menu.style(), "terreno": _menu.terrain(), "lugares": _menu.slots()}))
+		_menu.watch.connect(func(sd: int, civ: String, rival: String) -> void: _start({"aivai": "1", "seed": str(sd), "civ": civ, "rival": rival, "estilo": _menu.style(), "dificultad": _menu.difficulty(), "terreno": _menu.terrain(), "lugares": _menu.slots()}))
 		_menu.campaigns.connect(_open_campaigns.bind(layer))
 		_menu.replay.connect(func() -> void: _start({"replay": "1"}))
 		if _args.get("abrir", "") == "campanas":

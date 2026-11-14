@@ -18,6 +18,21 @@ var _style: OptionButton
 var _style_keys: Array = []
 var _map_keys: Array = []
 var _plate: TextureRect
+# --- lugares --- (docs/11, paso 5: de 2 a 8 jugadores y equipos)
+const MODOS := [
+	["1 contra 1", [0, 1]],
+	["2 contra 2", [0, 1, 0, 1]],
+	["3 contra 3", [0, 1, 0, 1, 0, 1]],
+	["4 contra 4", [0, 1, 0, 1, 0, 1, 0, 1]],
+	["Todos contra todos (4)", [0, 1, 2, 3]],
+	["Todos contra todos (6)", [0, 1, 2, 3, 4, 5]],
+	["Todos contra todos (8)", [0, 1, 2, 3, 4, 5, 6, 7]],
+]
+var _mode: OptionButton
+var _slots_box: VBoxContainer
+var _slot_rows: Array = [] # [civ, equipo, dificultad, estilo] por lugar (el 0 es el tuyo)
+var _data: SimData
+# --- fin lugares ---
 
 
 func _ready() -> void:
@@ -142,6 +157,8 @@ func _ready() -> void:
 	_info.add_theme_color_override("font_color", Palette.UI_DIM)
 	box.add_child(_info)
 	_civ.item_selected.connect(func(_i: int) -> void: _describe(data))
+	_data = data
+	_build_slots() # --- lugares ---
 	_describe(data)
 	box.add_child(_button("Campañas", func() -> void: campaigns.emit()))
 	box.add_child(_button("Escaramuza contra la IA", func() -> void: play.emit(_seed(), _pick(_civ), _pick(_rival))))
@@ -260,6 +277,138 @@ func _describe(data: SimData) -> void:
 	_plate.visible = _plate.texture != null
 	var c: Dictionary = data.civs[_keys[_civ.selected - 1]].civ
 	_info.text = "«%s»  %s\n%s" % [c.get("frase", ""), c.get("region", ""), c.get("descripcion", "")]
+
+
+# --- lugares ---
+## Columna de la derecha: tipo de partida y un renglón por lugar.
+func _build_slots() -> void:
+	var panel := PanelContainer.new()
+	panel.anchor_top = 0.5
+	panel.anchor_bottom = 0.5
+	panel.offset_left = 700
+	panel.offset_top = -270
+	panel.offset_right = 1360
+	var sb := Hud.panel_box(8)
+	sb.content_margin_left = 14
+	sb.content_margin_right = 14
+	sb.content_margin_top = 10
+	sb.content_margin_bottom = 10
+	panel.add_theme_stylebox_override("panel", sb)
+	add_child(panel)
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 8)
+	panel.add_child(col)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 12)
+	row.add_child(_label("Partida", 110))
+	_mode = OptionButton.new()
+	_mode.custom_minimum_size = Vector2(270, 38)
+	_mode.add_theme_font_override("font", Hud.font_b)
+	for m in MODOS:
+		_mode.add_item(m[0])
+	row.add_child(_mode)
+	col.add_child(row)
+	_slots_box = VBoxContainer.new()
+	_slots_box.add_theme_constant_override("separation", 6)
+	col.add_child(_slots_box)
+	_mode.item_selected.connect(func(_i: int) -> void: _fill_slots())
+	_civ.item_selected.connect(_mirror_civ)
+	# --partida=N preselecciona el tipo de partida (para las capturas).
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--partida="):
+			_mode.selected = clampi(int(a.split("=")[1]), 0, MODOS.size() - 1)
+	_fill_slots()
+
+
+func _label(t: String, w: float) -> Label:
+	var l := Label.new()
+	l.text = t
+	l.custom_minimum_size = Vector2(w, 0)
+	l.add_theme_font_override("font", Hud.font)
+	l.add_theme_color_override("font_color", Palette.UI_DIM)
+	return l
+
+
+func _small(items: Array, w: float, sel: int) -> OptionButton:
+	var ob := OptionButton.new()
+	ob.custom_minimum_size = Vector2(w, 32)
+	ob.add_theme_font_override("font", Hud.font)
+	ob.add_theme_font_size_override("font_size", 14)
+	for it in items:
+		ob.add_item(it)
+	ob.selected = sel
+	return ob
+
+
+func _fill_slots() -> void:
+	for c in _slots_box.get_children():
+		c.queue_free()
+	_slot_rows.clear()
+	var teams: Array = MODOS[maxi(0, _mode.selected)][1]
+	var solo := teams.size() == 2
+	_rival.disabled = not solo
+	_rival.tooltip_text = "" if solo else "Con más de dos jugadores, los rivales se eligen en la columna de lugares."
+	if solo:
+		return
+	var civ_names: Array = ["Al azar"]
+	for k in _keys:
+		civ_names.append(_data.civs[k].civ.get("nombre", k))
+	var team_names: Array = []
+	for i in 8:
+		team_names.append("Equipo %d" % (i + 1))
+	var dif_names: Array = []
+	for k in ["facil", "normal", "dificil"]:
+		dif_names.append(_data.reglas["dificultades"][k]["nombre"])
+	var sty_names: Array = []
+	for k in _style_keys:
+		sty_names.append(_data.reglas["estilos_ia"][k]["nombre"])
+	for i in teams.size():
+		var r := HBoxContainer.new()
+		r.add_theme_constant_override("separation", 8)
+		var dot := ColorRect.new()
+		dot.color = Palette.TEAM[i % Palette.TEAM.size()]
+		dot.custom_minimum_size = Vector2(6, 28)
+		r.add_child(dot)
+		r.add_child(_label("Vos" if i == 0 else "IA %d" % i, 44))
+		var civ := _small(civ_names, 170, 0)
+		var tm := _small(team_names, 110, int(teams[i]))
+		var dif := _small(dif_names, 100, maxi(0, _diff.selected))
+		var sty := _small(sty_names, 130, maxi(0, _style.selected))
+		if i == 0:
+			civ.disabled = true
+			civ.tooltip_text = "Tu pueblo se elige a la izquierda."
+			civ.selected = _civ.selected
+			dif.visible = false
+			sty.visible = false
+		r.add_child(civ)
+		r.add_child(tm)
+		r.add_child(dif)
+		r.add_child(sty)
+		_slots_box.add_child(r)
+		_slot_rows.append([civ, tm, dif, sty])
+
+
+func _mirror_civ(i: int) -> void:
+	if not _slot_rows.is_empty():
+		(_slot_rows[0][0] as OptionButton).selected = i
+
+
+## Lugares elegidos para main.gd; vacío en el 1 contra 1 (usa "Tu pueblo" y "Rival").
+func slots() -> Array:
+	if _slot_rows.is_empty():
+		return []
+	var out: Array = []
+	for i in _slot_rows.size():
+		var r: Array = _slot_rows[i]
+		out.append({
+			"civ": _pick(_civ) if i == 0 else _pick(r[0]),
+			"equipo": (r[1] as OptionButton).selected,
+			"ia": i != 0,
+			"dificultad": ["facil", "normal", "dificil"][maxi(0, (r[2] as OptionButton).selected)],
+			"estilo": str(_style_keys[maxi(0, (r[3] as OptionButton).selected)]),
+		})
+	return out
+# --- fin lugares ---
 
 
 func difficulty() -> String:

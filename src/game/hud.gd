@@ -308,9 +308,17 @@ func on_events(events: Array) -> void:
 				if pid == local:
 					notify("¡Nos atacan!", -1.0, "ataque", _lugar_de(ev["x"], ev["y"]))
 					_mini.ping(ev["x"], ev["y"])
+				elif pid >= 0 and not sim.enemies(local, pid):
+					notify("Atacan a tu aliado (%s)" % Palette.team_name(pid), -1.0, "ataque", _lugar_de(ev["x"], ev["y"]))
+					_mini.ping(ev["x"], ev["y"])
+			"tributo":
+				if int(ev["a"]) == local:
+					notify("Tributo de %s: %d de %s" % [Palette.team_name(int(ev["de"])), int(ev["n"]), ev["recurso"]], -1.0, "info")
 			"victory":
 				if sim.scenario == null:
-					_show_end(ev["player"])
+					# Con equipos gana todo el equipo: si ganó un aliado, ganaste vos.
+					var w: int = ev["player"]
+					_show_end(local if w >= 0 and not sim.enemies(local, w) else w)
 			"dialogo":
 				_dialog_queue.append(ev)
 				if not _dialog.visible:
@@ -320,6 +328,8 @@ func on_events(events: Array) -> void:
 				var at: Variant = _lugar_de(site.x, site.y) if site != null else null
 				if pid == local:
 					notify("Sitio sagrado tomado por tu pueblo", -1.0, "hito", at)
+				elif pid >= 0 and not sim.enemies(local, pid):
+					notify("Tu aliado tomó un sitio sagrado", -1.0, "hito", at)
 				else:
 					notify("El rival tomó un sitio sagrado", -1.0, "ataque", at)
 			"objetivo":

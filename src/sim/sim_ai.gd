@@ -20,6 +20,8 @@ var _eng_mark_val := 0
 var _eng_rate := 0
 var _no_route := {} # edificio -> tick desde el que se vuelve a intentar el camino
 var last_site := 0
+var last_tribute := 0
+var focus := -1 # jugador enemigo al que apunta el ataque; los aliados se suman (docs/11)
 var rally := Vector2i(-1, -1)
 var calm_since := 0
 var personality := "normal" # estilo: pacifica, normal, acosadora, agresiva (reglas.json → estilos_ia); pasiva en campañas
@@ -93,6 +95,7 @@ func think() -> void:
 	_trade(p, by_type)
 	_engine(p, vill, centro, by_type, saving)
 	_alarm(p, vill, army, centro)
+	_tribute(p, saving)
 	_military(army, centro)
 
 
@@ -627,6 +630,8 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 	if army.is_empty():
 		return
 	var threat := _threat(centro)
+	if threat == null:
+		threat = _ally_threat(centro)
 	if threat != null:
 		var ids := []
 		for u in army:
@@ -779,8 +784,11 @@ func _attack(army: Array[SimEntity]) -> void:
 	var target: SimEntity = null
 	var best_d := 1 << 60
 	var ref := army[0]
+	focus = _pick_rival(ref)
 	for e in sim.actives:
 		if e.alive and e.is_building() and e.owner >= 0 and sim.enemies(player, e.owner) and (e.def.get("hito", false) or e.capital):
+			if focus >= 0 and e.owner != focus:
+				continue
 			var d := sim.dist_to(ref, e)
 			if d < best_d:
 				target = e
@@ -790,7 +798,74 @@ func _attack(army: Array[SimEntity]) -> void:
 	var ids := []
 	for u in army:
 		ids.append(u.id)
-	sim.push_command({"t": "move", "player": player, "ids": ids, "x": target.x, "y": target.y + 3000 * (1 if player == 1 else -1), "amove": true})
+	# Se para del lado de quien llega, a 3 casillas del blanco.
+	var dx := ref.x - target.x
+	var dy := ref.y - target.y
+	var l := maxi(1, Sim.isqrt(dx * dx + dy * dy))
+	sim.push_command({"t": "move", "player": player, "ids": ids, "x": target.x + dx * 3000 / l, "y": target.y + dy * 3000 / l, "amove": true})
+
+
+## Rival del próximo ataque. Si un aliado ya va contra alguien, se suma; si no,
+## el estilo elige: el más cercano o el de menos ejército.
+func _pick_rival(ref: SimEntity) -> int:
+	for ai in sim.ais:
+		if ai != self and ai.focus >= 0 and not sim.enemies(player, ai.player) and ai.player != player:
+			if sim.enemies(player, ai.focus) and not sim.players[ai.focus]["defeated"]:
+				return ai.focus
+	var st: Dictionary = sim.data.reglas.get("estilos_ia", {}).get(personality, {})
+	var how: String = st.get("objetivo", "cercano")
+	var best := -1
+	var best_v := 1 << 60
+	for j in sim.players.size():
+		if not sim.enemies(player, j) or sim.players[j]["defeated"] or j >= sim.bases.size():
+			continue
+		var v := 0
+		if how == "debil":
+			for e in sim.actives:
+				if e.alive and e.owner == j and e.is_military():
+					v += 1
+		else:
+			var b := sim.bases[j]
+			v = Sim.dist(b.x * P, b.y * P, ref.x, ref.y)
+		if v < best_v:
+			best_v = v
+			best = j
+	return best
+
+
+## Amenaza en la base de un aliado cercano: el ejército va a ayudar.
+func _ally_threat(centro: SimEntity) -> SimEntity:
+	var eq: Dictionary = sim.data.reglas.get("equipos", {})
+	var radius := int(eq.get("ia_ayuda_radio", 0))
+	var near := int(eq.get("ia_ayuda_amenaza", 22000))
+	if radius <= 0:
+		return null
+	for e in sim.actives:
+		if not e.alive or not e.is_building() or not e.capital or e.owner == player or e.owner < 0 or sim.enemies(player, e.owner):
+			continue
+		if Sim.dist(e.x, e.y, centro.x, centro.y) > radius:
+			continue
+		for t in sim.actives:
+			if t.alive and t.owner >= 0 and sim.enemies(player, t.owner) and t.is_military() and sim.dist_to(t, e) < near:
+				return t
+	return null
+
+
+## Tributo: lo que sobra va al aliado al que le falta (reglas.equipos.ia_tributo).
+func _tribute(p: Dictionary, saving: bool) -> void:
+	var cfg: Dictionary = sim.data.reglas.get("equipos", {}).get("ia_tributo", {})
+	if cfg.is_empty() or saving or sim.tick - last_tribute < int(cfg["cada_ticks"]):
+		return
+	last_tribute = sim.tick
+	for kind in ["alimento", "madera", "piedra", "riqueza"]:
+		if int(p["res"].get(kind, 0)) <= int(cfg["sobra"]):
+			continue
+		for j in sim.players.size():
+			if j == player or sim.enemies(player, j) or sim.team_of(j) != sim.team_of(player) or sim.players[j]["defeated"]:
+				continue
+			if int(sim.players[j]["res"].get(kind, 0)) < int(cfg["falta"]):
+				sim.push_command({"t": "tributo", "player": player, "a": j, "recurso": kind, "n": int(cfg["lote"])})
+				return
 
 
 func _count(list: Array[SimEntity], type: String) -> int:
