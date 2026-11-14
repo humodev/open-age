@@ -13,3 +13,10 @@ El punto 3 es la segunda tanda de interfaz que propuso la auditoría ([`docs/dis
 - errores puntuales: texto pisado en la capital de Palmares, "Tutorial 0/4" y la población 33/8 de una misión mapuche.
 
 ## Paso a paso
+
+- **Parte A, escala, paleta y opciones** ([detalle](01-escala-paleta-opciones.md)):
+  - escala de la interfaz automática o elegida (80 a 150 %), legible de 1366×768 a 4K;
+  - paleta apta para daltonismo con modos y prueba propia;
+  - estados de la grilla a 4,5:1;
+  - menú de opciones guardado en `user://opciones.cfg`, desde el menú principal y la pausa;
+  - `--ventana=ANCHOxALTO` para las capturas.

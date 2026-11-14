@@ -1,0 +1,20 @@
+OK    selección por arrastre de los 6 aldeanos (6)
+OK    clic derecho en arbustos pone a recolectar (6)
+OK    Q entra en modo de construcción
+OK    clic coloca el cimiento de la casa
+OK    se descontó la madera (150)
+OK    H selecciona la capital
+OK    Q en el centro encola un aldeano
+OK    Ctrl+1 asigna el grupo
+OK    los aldeanos construyen la casa (18000 ms)
+OK    entra alimento al banco (170)
+OK    arrastrar coloca una línea de empalizada (6)
+OK    la campana refugia aldeanos (7)
+OK    el toque de calma los saca (0)
+OK    F2 abre el panel de economía
+OK    el ✕ cierra el panel de economía
+OK    F4 abre el avance de edad
+OK    F1 abre la ficha del pueblo
+OK    F1 la cierra
+OK    F5 despliega el registro y el clic lleva la cámara (42, 42)
+AUTOTEST: OK

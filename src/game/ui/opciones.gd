@@ -292,6 +292,8 @@ static func dialogo(host: Control, main: Node) -> PanelContainer:
 		if not pc.visible:
 			guardar()
 		else:
+			# Encima de todo lo que se haya agregado después (paneles F1–F6, fichas).
+			dim.move_to_front()
 			esc.set_item_text(0, "Automática (%d %%)" % auto_pct(Vector2(host.get_window().size)))
 			cb.grab_focus())
 	pc.visible = false

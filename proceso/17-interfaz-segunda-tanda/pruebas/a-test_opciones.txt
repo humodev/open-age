@@ -1,0 +1,13 @@
+OK    restablecer vuelve a los valores de fábrica
+OK    se recupera la escala (1.25)
+OK    se recupera la paleta (tritanopia)
+OK    se recuperan los volúmenes
+OK    se recupera la cámara
+OK    se recuperan las barras siempre visibles
+OK    en solo lectura no se escribe
+OK    automática a 1920×1080 = 1,0
+OK    automática a 3840×2160 = 2,0
+OK    automática a 1366×768 = 0,85 (120 %)
+OK    150 % a 1366×768 deja al menos 1280×720 lógicos
+OK    la automática deja al menos 1280×720 lógicos en 1024×600 (1280×750)
+OPCIONES: OK

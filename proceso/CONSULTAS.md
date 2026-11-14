@@ -121,3 +121,9 @@ Hoy controla el mapa y toma sitios, así que puede ganar por ellos sin atacarte.
 a) Sí, es parte de su juego: los sitios hay que disputarlos *(recomendado)* · b) No: toma sitios pero no cuenta para su victoria · c) No toma sitios
 
 **Respuesta:**
+
+### C-22 · Paleta apta para daltonismo: ¿rojo de equipo puro y alimento frambuesa?
+Para que equipos y recursos se distingan también con daltonismo (`proceso/17-interfaz-segunda-tanda/01-escala-paleta-opciones.md`, paso 2), el jugador 2 pasó de rojo terracota a rojo puro, el alimento de rojo a frambuesa y la riqueza de dorado a amarillo dorado. Los equipos 3 y 4 son violeta y ciruela (antes verde y ocre).
+a) Dejarlo así *(recomendado)* · b) Volver al terracota para el jugador 2 aunque se confunda con el alimento (ΔE 11) · c) Otra combinación (decir cuál)
+
+**Respuesta:**

@@ -145,7 +145,7 @@ Peor caso de cada regla con la paleta nueva (salida de `tests/test_paleta.gd`):
 
 | 1366×768 (automática, 120 %) | 3840×2160 (automática, 100 % = ×2) |
 |---|---|
-| ![1366](a-escala-1366x768.jpg) | ![4K](a-escala-3840x2160.jpg) |
+| ![1366](a-despues-1366x768.jpg) | ![4K](a-despues-3840x2160.jpg) |
 
 La misma esquina de la grilla a 4K, en tamaño real (compárese con el recorte de "antes"). El texto queda nítido: Godot rasteriza las fuentes al tamaño final, no estira una textura:
 
@@ -222,3 +222,67 @@ Los tres se distinguen por la forma (franja, candado), no solo por el color. La 
 Batalla de prueba con `--barras=1` (barras siempre visibles). Las tuyas van en verde agua, las del rival en el rojo de equipo:
 
 ![batalla](a-batalla-barras.jpg)
+
+### 6. Pruebas
+
+| Prueba | Resultado |
+|---|---|
+| `godot --headless --path . -s tests/test_paleta.gd` (nueva) | `PALETA: OK` ([salida](pruebas/a-test_paleta.txt)) |
+| `godot --headless --path . -s tests/test_opciones.gd` (nueva: ida y vuelta por `ConfigFile` en un archivo de prueba, escala automática) | `OPCIONES: OK` ([salida](pruebas/a-test_opciones.txt)) |
+| `godot --path . -- --autotest --civ=guaranies --terreno=llano --mute` | `AUTOTEST: OK` ([salida](pruebas/a-autotest-1080.txt)) |
+| La misma, con `--ventana=1366x768` | `AUTOTEST: OK` |
+| La misma, con `--ventana=1366x768 --escala=1.5` | `AUTOTEST: OK` |
+| La misma, a 3840×2160 dentro de `gamescope --backend headless` | `AUTOTEST: OK` |
+
+No se tocó `src/sim/`, así que no hacía falta correr ni la prueba de determinismo ni la de rendimiento.
+
+**Antes y después a las tres resoluciones** (aldeanos guaraníes seleccionados, semilla 7):
+
+| | Antes | Después |
+|---|---|---|
+| 1366×768 | ![](a-antes-1366x768.jpg) | ![](a-despues-1366x768.jpg) |
+| 1920×1080 | ![](a-antes-1920x1080.jpg) | ![](a-despues-1920x1080.jpg) |
+| 3840×2160 | ![](a-antes-3840x2160.jpg) | ![](a-despues-3840x2160.jpg) |
+
+Opciones desde la pausa, a 4K y con la escala al 125 %. El diálogo se pone delante de los paneles F1–F6; antes, los paneles que se agregan después quedaban encima del fondo oscuro:
+
+![opciones en la pausa](a-opciones-pausa-3840x2160-125.jpg)
+
+### Tropiezos
+
+1. **`--resolution` no sirve:** la ventana arranca maximizada. Por eso hizo falta `--ventana`.
+2. **KDE recorta la ventana al escritorio.** Las capturas de 1080p y 4K se sacan con `gamescope --backend headless`. Con 1366 de ancho, `gamescope` se cuelga, así que esa sale en una ventana común. El script de captura mata a `gamescope` por tiempo con `timeout -s KILL`, porque no responde a `TERM`.
+3. **Sin el caché de clases, Godot no conoce las clases nuevas.** Con `class_name Opciones`, la primera corrida dio `Identifier "Opciones" not declared`: hay que correr `godot --headless --path . --import` una vez para que entre la clase.
+4. **La prueba de punta a punta y la escala:** los eventos inyectados van en píxeles de la ventana. Se arregló en `_mouse` (paso 3).
+5. **Un interruptor apagado no se veía:** el `CheckButton` apagado era casi invisible. Se cambió por un botón "Sí/No".
+6. **Ocho colores no caben en las cuatro visiones:** no hay ocho colores de equipo que se separen 20 entre sí y 25 de los recursos en las cuatro visiones a la vez. Se garantiza para los equipos 1 a 4. Los 5 a 8 dependen del modo elegido.
+7. **El diálogo de opciones quedaba debajo de los paneles F1–F6:** se agregaban después en el árbol y tapaban el fondo oscuro. El diálogo se pasa adelante al abrirse. El menú de pausa de `Hud` tiene el mismo problema y no se tocó: es de la parte B (P24, cartel de pausa).
+
+### Pendiente
+
+- **Menú principal a 1366×768:** el pie de atajos queda por debajo del borde (P14, menú con jerarquía).
+- **Tamaño mínimo de texto:** varios textos de 12 y 13 px siguen dibujados a mano con `draw_string`, en los rótulos de estadísticas y la cantidad de aldeanos por recurso. La escala automática los deja en 10 px reales o más. La opción "Texto grande", independiente de la escala, queda para otra tanda.
+- **Colores en el mundo:** el modo de colores se aplica en vivo en la interfaz y el minimapa, pero los modelos 3D lo toman desde la próxima partida.
+- **Etapa 18:** cuando haya equipos, tiene que fijar `Palette.es_aliado` para que el modo "yo, aliados y rivales" pinte a los aliados.
+- **Contraste en el resto de la interfaz:** los paneles de A1, A2 y A3 (fichas, F1–F6, información en el mundo) usan `Palette.UI_DIM` y los colores nuevos sin cambios. No se revisó su contraste uno por uno.
+
+### Archivos
+
+- **Nuevos:**
+  - `src/game/ui/opciones.gd`;
+  - `src/game/ui/estado_casilla.gd`;
+  - `tests/test_paleta.gd`;
+  - `tests/test_opciones.gd`.
+- **Con bloques marcados** (`# --- opciones ---`, `# --- escala ---`, `# --- contraste ---`):
+  - `main.gd`, `hud.gd`, `menu.gd`;
+  - `overlay.gd`, `audio.gd`, `rts_camera.gd`.
+- **`palette.gd`:** bloque `# --- paleta ---`.
+- **`project.godot`:** modo de estiramiento.
+- **`docs/07-arte-y-ui.md`:** paleta.
+
+### Commits
+
+1. `Interfaz A, paso 1: --ventana=ANCHOxALTO y paleta apta para daltonismo`
+2. `Interfaz A, paso 2: escala de la interfaz y opciones guardadas`
+3. `Interfaz A, paso 3: estados de la grilla legibles y vida baja que titila`
+4. `Interfaz A, paso 4: pruebas, capturas finales y documentación`
