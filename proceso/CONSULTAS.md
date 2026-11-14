@@ -135,3 +135,39 @@ Se revisaron Wikimedia Commons, Internet Archive (también la colección de disc
 a) Seguir con las pistas genéricas hasta conseguir algo propio *(recomendado)* · b) Encargar o grabar krar y masenqo con licencia propia · c) Aceptar CC-BY-SA para la música (obliga a compartir esas pistas con la misma licencia)
 
 **Respuesta:**
+
+### C-25 · (jugabilidad) Ayutthaya y el almacén de arcilla
+La economía v3 dice que Ayutthaya no construye depósito: todo lo cobra el elefante. Tu ejemplo del almacén de arcilla junto a la arcilla le cabe justo. Propuesta: darle el *khlang din* (almacén solo de arcilla), sin tocar el cobro del elefante (`docs/diseno/jugabilidad/03-propuesta.md` §2.2).
+a) Darle el khlang din *(por defecto)* · b) Dejarla sin almacenes
+
+**Respuesta:**
+
+### C-26 · (jugabilidad) Mapuches: el lof como único almacén
+Los mapuches no levantarían almacenes baratos por recurso: llevan todo al lof (la comunidad familiar). Es parte de su identidad móvil, y además les baja el 68 % del torneo.
+a) El lof como único almacén *(por defecto)* · b) Darles almacenes como al resto
+
+**Respuesta:**
+
+### C-27 · (jugabilidad) Orden de la formación
+AoE4 pone la caballería adelante. La propuesta pone adelante la línea (lanceros), después el choque, la distancia y el asedio, y a los montados en las alas, siguiendo nuestro triángulo de contadores (D-007).
+a) Nuestro orden *(por defecto)* · b) Como AoE4
+
+**Respuesta:**
+
+### C-28 · (jugabilidad) ¿Desde qué distancia los aldeanos van en bloque?
+Hasta 16 casillas cada aldeano va por su cuenta, corriendo al trabajo. Más lejos van en bloque y se esperan, y se sueltan a 6 casillas del destino. El 16 sale de que los recursos de casa están entre 7 y 15 casillas del centro. Se cambia en el dato.
+a) 16 casillas *(por defecto)* · b) Menos, para ver el bloque también en viajes medianos (decir cuánto)
+
+**Respuesta:**
+
+### C-29 · (jugabilidad) El ariete frena al ejército
+Con velocidad común, un ejército con ariete marcha a la velocidad del ariete (un 47 % más lento que los lanceros), como en AoE4.
+a) Aceptarlo y medir *(por defecto)* · b) Que el asedio marche aparte
+
+**Respuesta:**
+
+### C-30 · (jugabilidad) Nombres en lenguas originarias sin fuente
+La propuesta nombra almacenes y edificios militares de cada pueblo, y algunos nombres están marcados `[verificar]` porque no se encontró fuente.
+a) Ponerlos y corregir cuando aparezca la fuente *(por defecto)* · b) Usar nombres en castellano hasta tener fuente
+
+**Respuesta:**

@@ -12,7 +12,7 @@
     "desc": "El motor propio de tu pueblo rinde 25 % más.",
     "efectos": [{ "tipo": "motor_pct", "pct": 25 }]
   },
-  "hachas": {
+  "hachas": { "en": {"deposito": "madera"},
     "nombre": "Herramientas de tala",
     "edificio": "deposito",
     "ranura": 0,
@@ -31,7 +31,7 @@
       }
     ]
   },
-  "hachas_2": {
+  "hachas_2": { "en": {"deposito": "madera"},
     "nombre": "Tala organizada",
     "edificio": "deposito",
     "ranura": 0,
@@ -51,7 +51,7 @@
       }
     ]
   },
-  "canteria": {
+  "canteria": { "en": {"deposito": "piedra"},
     "nombre": "Cantería",
     "edificio": "deposito",
     "ranura": 1,
@@ -70,7 +70,7 @@
       }
     ]
   },
-  "orfebreria": {
+  "orfebreria": { "en": {"deposito": "riqueza"},
     "nombre": "Trabajo de la riqueza",
     "edificio": "deposito",
     "ranura": 2,
@@ -89,7 +89,7 @@
       }
     ]
   },
-  "cestas": {
+  "cestas": { "en": {"deposito": "alimento"},
     "nombre": "Cestas de carga",
     "edificio": "centro",
     "ranura": 1,
@@ -107,7 +107,7 @@
       }
     ]
   },
-  "riego": {
+  "riego": { "en": {"deposito": "alimento"},
     "nombre": "Riego",
     "edificio": "centro",
     "ranura": 2,
@@ -126,7 +126,7 @@
       }
     ]
   },
-  "riego_2": {
+  "riego_2": { "en": {"deposito": "alimento"},
     "nombre": "Terrazas de cultivo",
     "edificio": "centro",
     "ranura": 2,
@@ -146,7 +146,7 @@
       }
     ]
   },
-  "mamposteria": {
+  "mamposteria": { "en": {"tipo": "centro"},
     "nombre": "Mampostería",
     "edificio": "centro",
     "ranura": 3,
@@ -164,7 +164,7 @@
       }
     ]
   },
-  "vigias": {
+  "vigias": { "en": {"tipo": "centro"},
     "nombre": "Vigías",
     "edificio": "centro",
     "ranura": 4,

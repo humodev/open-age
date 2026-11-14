@@ -1,16 +1,19 @@
 extends SceneTree
 ## Cada tipo de mapa con IA contra IA: que nadie se trabe por falta de llano o de paso (docs/10).
-## Uso: godot --headless --path . -s tests/mapas_smoke.gd -- --minutes=20 [--jugadores=6]
+## Uso: godot --headless --path . -s tests/mapas_smoke.gd -- --minutes=20 [--jugadores=6] [--telemetria=carpeta]
 
 func _init() -> void:
 	var minutes := 20
 	var np := 2
+	var tele_dir := ""
 	for a in OS.get_cmdline_user_args():
 		var kv := a.trim_prefix("--").split("=")
 		if kv[0] == "minutes":
 			minutes = int(kv[1])
 		elif kv[0] == "jugadores":
 			np = int(kv[1])
+		elif kv[0] == "telemetria":
+			tele_dir = kv[1]
 	var data := SimData.load_default()
 	var civs: Array = ["tawantinsuyu", "mapuches", "guaranies", "etiopia", "palmares", "ayutthaya"]
 	var k := 0
@@ -24,7 +27,13 @@ func _init() -> void:
 		for pid in np:
 			s.ais.append(SimAI.new(s, pid))
 		while s.tick < minutes * 600 and not s.game_over:
+			var t0 := Time.get_ticks_usec()
 			s.step()
+			var us := Time.get_ticks_usec() - t0
+			if us > 25000:
+				s.tele.add(s.tick, "tick_lento", -1, -1, -1, {"ms": us / 1000}, "tl", 50)
+		if tele_dir != "":
+			s.tele.save("%s/%s-%dj-%d.jsonl" % [tele_dir, t, np, 500 + k * 13], s.tele.header(s, 500 + k * 13, {"civs": pair}))
 		var line := "%-16s %-12s vs %-12s %5s" % [t, pair[0], pair[1], "%d:%02d" % [s.tick / 600, (s.tick / 10) % 60]]
 		for pid in np:
 			var p: Dictionary = s.players[pid]

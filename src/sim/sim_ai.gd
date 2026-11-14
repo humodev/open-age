@@ -27,15 +27,17 @@ var calm_since := 0
 var personality := "normal" # estilo: pacifica, normal, acosadora, agresiva (reglas.json → estilos_ia); pasiva en campañas
 var level: Dictionary = {} # dificultad (reglas.json → dificultades)
 
-# Perfil equilibrado de H1. En H2 pasa a data/ia/ (docs/08).
-var ratio_early := {"alimento": 52, "madera": 33, "riqueza": 10, "piedra": 5}
-var ratio_late := {"alimento": 42, "madera": 25, "riqueza": 23, "piedra": 10}
+# Reparto de aldeanos por recurso: reglas.json → ia_economia.
+var ratio_early := {}
+var ratio_late := {}
 var max_villagers := 42
 
 
 func _init(s: Sim, pid: int, difficulty: String = "normal") -> void:
 	sim = s
 	player = pid
+	ratio_early = s.data.reglas["ia_economia"]["proporcion_temprana"]
+	ratio_late = s.data.reglas["ia_economia"]["proporcion_tardia"]
 	set_difficulty(difficulty)
 
 
@@ -86,6 +88,17 @@ func think() -> void:
 					best_eb = d
 					enemy_base = eb
 		rally = Vector2i(centro.x + (enemy_base.x * P - centro.x) / 6, centro.y + (enemy_base.y * P - centro.y) / 6)
+		# El punto tiene que poderse alcanzar: un claro rodeado de árboles deja al
+		# ejército dando vueltas (telemetría, proceso/20). Si no llega, se acerca a la base.
+		var from := sim.map.nearest_free(centro.tx + centro.w / 2, centro.ty + centro.h + 1, 6, player)
+		for k in 6:
+			var rt := sim.map.nearest_free(rally.x / P, rally.y / P, 4, player)
+			if rt.x >= 0 and from.x >= 0:
+				var path := sim.map.find_path(from, rt, player)
+				if not path.is_empty() and path[path.size() - 1] == rt:
+					rally = Vector2i(rt.x * P + P / 2, rt.y * P + P / 2)
+					break
+			rally = Vector2i(rally.x + (centro.x - rally.x) / 4, rally.y + (centro.y - rally.y) / 4)
 
 	var saving := _wants_hito(p, vill.size(), by_type)
 	_economy(p, vill, centro, saving)
@@ -129,10 +142,11 @@ func _research(p: Dictionary, by_type: Dictionary, saving: bool) -> void:
 				surplus = false
 		if not surplus:
 			continue
-		for b: SimEntity in by_type.get(t["edificio"], []):
-			if b.built and b.queue.size() < 2:
-				sim.push_command({"t": "research", "player": player, "building": b.id, "tech": tech})
-				return
+		for k in by_type:
+			for b: SimEntity in by_type[k]:
+				if b.built and b.queue.size() < 2 and sim.tech_here(t, b):
+					sim.push_command({"t": "research", "player": player, "building": b.id, "tech": tech})
+					return
 
 
 ## Campana si el enemigo llega a la base con más tropas que las propias; calma pasado el peligro.
@@ -464,6 +478,7 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 						sim.push_command({"t": "build_line", "player": player, "ids": [v.id], "type": "camino", "tiles": tiles})
 						return
 					_no_route[bb.id] = sim.tick + 1200 # sin paso: se reintenta en 2 minutos
+					sim.tele.add(sim.tick, "ia_sin_ruta", player, bb.tx, bb.ty, {"tipo": bb.type}, "isr:%d" % bb.id, 1200)
 	# Mercado desde la edad II.
 	if p["age"] >= 2 and not by_type.has("mercado") and vill.size() >= 20:
 		_try_build("mercado", p, vill, centro, 2)
@@ -481,7 +496,7 @@ func _far_gather_point(vill: Array[SimEntity], kind: String) -> SimEntity:
 			if t == null or t.is_building():
 				continue
 			var d := sim.nearest_dropoff(player, kind, t.x, t.y)
-			if d == null or sim.dist_to(t, d) > 4500:
+			if d == null or sim.dist_to(t, d) > int(sim.data.reglas["ia_economia"]["almacen_lejos"]):
 				n += 1
 				sample = t
 	return sample if n >= 3 else null
@@ -549,14 +564,19 @@ func _site_near(type: String, c: Vector2i, margin: int, min_r: int = 1) -> Vecto
 					continue
 				if sim.map.is_free_rect(tx - margin, ty - margin, w + margin * 2, h + margin * 2) and sim.can_place(type, tx, ty, player):
 					return Vector2i(tx, ty)
+	sim.tele.add(sim.tick, "ia_sin_lugar", player, c.x, c.y, {"tipo": type}, "isl:%d:%s" % [player, type], 600)
 	return Vector2i(-1, -1)
 
 
 # ---------------------------------------------------------------- Producción
 
 func _production(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], centro: SimEntity, by_type: Dictionary, saving: bool) -> void:
+	# Las órdenes se aplican en el tick siguiente: cada una gasta de este presupuesto, así
+	# el segundo edificio no pide con la misma plata (telemetría: ~80 rechazos por partida).
+	var budget: Dictionary = (p["res"] as Dictionary).duplicate()
 	if centro.queue.is_empty() and vill.size() < max_villagers and (centro.def.get("produce", []) as Array).has("aldeano"):
-		sim.push_command({"t": "train", "player": player, "building": centro.id, "type": "aldeano"})
+		if _spend(budget, sim.dp(player).cost_of("aldeano", p["age"])):
+			sim.push_command({"t": "train", "player": player, "building": centro.id, "type": "aldeano"})
 	var threatened := _threat(centro) != null
 	if saving and not threatened:
 		return
@@ -576,7 +596,7 @@ func _production(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], 
 		# Arietes desde la edad II: sin asedio los ataques no derriban edificios.
 		var makes: Array = b.def.get("produce", [])
 		if p["age"] >= 2 and makes.has("ariete") and _count(army, "ariete") < 1 + wave / 2 and army.size() >= 6:
-			if sim.can_afford(player, sim.dp(player).cost_of("ariete", p["age"])):
+			if _spend(budget, sim.dp(player).cost_of("ariete", p["age"])):
 				sim.push_command({"t": "train", "player": player, "building": b.id, "type": "ariete"})
 				continue
 		# La preferida si alcanza; si no, la siguiente que se pueda pagar.
@@ -584,12 +604,22 @@ func _production(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], 
 			if not makes.has(type) or p["age"] < int(sim.dp(player).unidades.get(type, {}).get("edad_min", 1)):
 				continue # solo lo que este edificio produce y la edad permite (antes repetía órdenes rechazadas)
 			var c := sim.dp(player).cost_of(type, p["age"])
-			if sim.can_afford(player, c) and _keeps_reserve(p, c):
+			if _keeps_reserve(p, c) and _spend(budget, c):
 				sim.push_command({"t": "train", "player": player, "building": b.id, "type": type})
 				break
 
 
 ## Unidades en orden de preferencia: primero la que vence a la función enemiga más numerosa (triángulo, docs/05).
+## Descuenta `cost` del presupuesto si alcanza.
+func _spend(budget: Dictionary, cost: Dictionary) -> bool:
+	for k in cost:
+		if int(budget.get(k, 0)) < int(cost[k]):
+			return false
+	for k in cost:
+		budget[k] = int(budget.get(k, 0)) - int(cost[k])
+	return true
+
+
 func _counter_order(p: Dictionary) -> Array[String]:
 	var counts := {"choque": 0, "distancia": 0, "linea": 0}
 	for e in sim.actives:

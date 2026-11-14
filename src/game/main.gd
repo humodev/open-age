@@ -508,7 +508,19 @@ func mission_over(result: String) -> void:
 
 
 ## Guarda la partida como repetición (solo escaramuzas con jugador humano).
+## Telemetría de la partida en user://telemetria/ (proceso/20). Se guarda junto con la repetición.
+func save_telemetry() -> void:
+	if sim == null or _menu_mode or sim.tick < 600 or sim.get_meta("tele_tick", -1) == sim.tick:
+		return
+	sim.set_meta("tele_tick", sim.tick) # fin de partida y después "Nueva partida": una sola vez
+	var path := "user://telemetria/%s-%d.jsonl" % [Time.get_datetime_string_from_system().replace(":", "-"), _seed]
+	var opts: Dictionary = _replay_meta.get("opciones", {})
+	if sim.tele.save(path, sim.tele.header(sim, _seed, opts)):
+		print("Telemetría: ", ProjectSettings.globalize_path(path))
+
+
 func save_replay() -> void:
+	save_telemetry()
 	if _replay_meta.is_empty() or _menu_mode or _args.has("aivai") or _args.has("replay") or sim == null or sim.recording.is_empty():
 		return
 	var r := _replay_meta.duplicate()
@@ -562,7 +574,12 @@ func _process(delta: float) -> void:
 		var tick_s := sim.tick_ms / 1000.0
 		var steps := 0
 		while _acc >= tick_s and steps < MAX_STEPS_PER_FRAME:
+			var t0 := Time.get_ticks_usec()
 			sim.step()
+			# Telemetría: un tick que no entra en su parte del cuadro a la velocidad actual.
+			var us := Time.get_ticks_usec() - t0
+			if us > int(sim.tick_ms * 1000 / maxf(1.0, speed)):
+				sim.tele.add(sim.tick, "tick_lento", -1, -1, -1, {"ms": us / 1000, "x": speed}, "tl", 50)
 			view.on_tick(sim.events)
 			hud.on_events(sim.events)
 			audio.on_events(sim.events)

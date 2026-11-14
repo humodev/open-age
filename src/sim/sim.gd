@@ -14,6 +14,8 @@ var tick_ms: int
 var map: SimMap
 var fog: SimFog
 var mods: SimMods
+var tele := SimTelemetry.new() # proceso/20: solo mira, no es estado
+var _cur_cmd := "" # orden que se está aplicando (solo para la telemetría)
 var rng: SimRng
 var entities: Array[SimEntity] = [] # todas, en orden de id
 var actives: Array[SimEntity] = [] # unidades y edificios, en orden de id
@@ -161,6 +163,7 @@ func _apply(c: Dictionary) -> void:
 	var pid: int = c.get("player", -1)
 	if pid < 0 or pid >= players.size() or players[pid]["defeated"]:
 		return
+	_cur_cmd = "%s:%s" % [c.get("t", ""), c.get("type", c.get("tech", c.get("recurso", "")))] # para la telemetría
 	# Órdenes por tipo (stats): miden la atención que pide cada civ (docs/diseno/.../v3/04, §6).
 	var oc: Dictionary = players[pid]["stats"].get_or_add("ordenes", {})
 	var okey: String = c["t"] + (":" + str(c["type"]) if c.has("type") else "")
@@ -257,7 +260,7 @@ func _cmd_move(pid: int, units: Array[SimEntity], x: int, y: int, amove: bool) -
 	while cols * cols < n:
 		cols += 1
 	var rows := (n + cols - 1) / cols
-	var sp := 750
+	var sp := int(data.reglas["grupo"]["separacion"])
 	for i in n:
 		var e := units[i]
 		var gx := x + (i % cols) * sp - (cols - 1) * sp / 2
@@ -431,12 +434,25 @@ func research_block(pid: int, tech: String) -> String:
 	return ""
 
 
+## ¿Se puede investigar `t` en el edificio `b`? Por capacidad, no por tipo
+## (docs/diseno/jugabilidad/03-propuesta.md §2.4): `"en": {"deposito": "madera"}` vale en
+## cualquier edificio que reciba madera; `{"tipo": "centro"}`, en el centro o la capital
+## (el lof mapuche). Sin `en`, el tipo de `"edificio"`, como antes.
+func tech_here(t: Dictionary, b: SimEntity) -> bool:
+	var en: Dictionary = t.get("en", {})
+	if en.has("deposito"):
+		return (b.def.get("deposito", []) as Array).has(en["deposito"])
+	if en.has("tipo"):
+		return b.type == en["tipo"] or (en["tipo"] == "centro" and b.capital)
+	return t.get("edificio", "") == b.type
+
+
 func _cmd_research(pid: int, bid: int, tech: String) -> void:
 	var b: SimEntity = by_id.get(bid)
 	if b == null or not b.alive or b.owner != pid or not b.built:
 		return
 	var t: Dictionary = dp(pid).tecnologias.get(tech, {})
-	if t.is_empty() or t["edificio"] != b.type:
+	if t.is_empty() or not tech_here(t, b):
 		return
 	var why := research_block(pid, tech)
 	if why != "":
@@ -654,6 +670,7 @@ func _do_garrison(e: SimEntity) -> void:
 		e.path_target = -1
 	if not _approach(e, b, e.radius + INTERACT):
 		if e.stuck > 25:
+			_tele_stuck(e)
 			_set_idle(e)
 		return
 	e.inside = b.id
@@ -781,6 +798,7 @@ func step() -> void:
 	_pending.erase(tick)
 	for c in cmds:
 		_apply(c)
+	_cur_cmd = "en_marcha" # lo que se rechace después no viene de una orden de este tick
 	for ai in ais:
 		if ai.thinks_now() and not players[ai.player]["defeated"]:
 			ai.think()
@@ -809,6 +827,7 @@ func step() -> void:
 			_update_fog(pid)
 	if _dirty:
 		_cleanup()
+	tele.check_idle(self)
 	if tick % 10 == 5 and not game_over:
 		_check_victory()
 	if scenario != null:
@@ -967,6 +986,7 @@ func _do_attack(e: SimEntity) -> void:
 			_hit(e, t)
 			e.cooldown = e.def["cadencia_ms"]
 	elif e.stuck > 25:
+		_tele_stuck(e)
 		_set_idle(e)
 
 
@@ -1134,6 +1154,7 @@ func _do_return(e: SimEntity) -> void:
 		e.path_target = -1
 	if not _approach(e, d, e.radius + INTERACT):
 		if e.stuck > 25:
+			_tele_stuck(e)
 			_set_idle(e)
 		return
 	players[e.owner]["res"][e.carry_res] += e.carry
@@ -1157,7 +1178,20 @@ func _do_build(e: SimEntity) -> void:
 		if b != null and b.alive and b.built and b.def.get("fuente", "") != "" and _farm_free(b, e.id):
 			_order_gather(e, b)
 			return
-		var next := _nearest_unbuilt(e.owner, e.x, e.y, 10000)
+		# Almacén recién terminado (como en AoE4): quien lo levantó recolecta lo más
+		# cercano de lo que ese almacén recibe (docs/diseno/jugabilidad/02-auditoria.md, §2).
+		if b != null and b.alive and b.built and not b.capital and not (b.def.get("deposito", []) as Array).is_empty() and b.def.get("fuente", "") == "":
+			var best: SimEntity = null
+			var best_d := 1 << 60
+			for kind in b.def["deposito"]:
+				var r := find_resource(e.owner, kind, b.x, b.y, data.reglas["radio_retomar"], -1, e.id)
+				if r != null and dist_to(b, r) < best_d:
+					best = r
+					best_d = dist_to(b, r)
+			if best != null:
+				_order_gather(e, best)
+				return
+		var next := _nearest_unbuilt(e.owner, e.x, e.y, int(data.reglas["grupo"]["ayuda_obra_radio"]))
 		if next != null:
 			_order_build(e, next)
 			return
@@ -1172,6 +1206,7 @@ func _do_build(e: SimEntity) -> void:
 		return
 	if not _approach(e, b, e.radius + INTERACT):
 		if e.stuck > 25:
+			_tele_stuck(e)
 			_set_idle(e)
 		return
 	e.anchored = true
@@ -1455,11 +1490,15 @@ func _set_goal(e: SimEntity, gx: int, gy: int, target_id: int = -1) -> void:
 	else:
 		e.path = map.find_path(from, to, e.owner)
 		e.path_i = 1
+	# Telemetría: el camino no llega a la casilla pedida (y la casilla no es sólida: no es un edificio).
+	if tele.on and e.owner >= 0 and not map.is_solid(to.x, to.y, e.owner) and (e.path.is_empty() or e.path[e.path.size() - 1] != to):
+		tele.add(tick, "sin_camino", e.owner, to.x, to.y, {"desde": [from.x, from.y], "tipo": e.type}, "sc:%d" % e.id, 100)
 
 
 ## Avanza por el camino. Devuelve true al llegar (o al rendirse si está trabado).
 func _follow(e: SimEntity) -> bool:
 	if e.stuck > 15:
+		_tele_stuck(e)
 		return true
 	var goal_tile := Vector2i(e.goal_x / P, e.goal_y / P)
 	while e.path_i < e.path.size():
@@ -1925,6 +1964,20 @@ func hito_in_progress(pid: int) -> bool:
 
 func _notify(pid: int, msg: String) -> void:
 	events.append({"t": "notify", "player": pid, "msg": msg})
+	tele.add(tick, "rechazo", pid, -1, -1, {"msg": msg, "orden": _cur_cmd, "ia": _is_ai(pid)}, "rz:%d:%s:%s" % [pid, msg, _cur_cmd], 50)
+
+
+func _is_ai(pid: int) -> bool:
+	for ai in ais:
+		if ai.player == pid:
+			return true
+	return false
+
+
+## Telemetría: una unidad se rindió (no puede llegar o quedó trabada).
+func _tele_stuck(e: SimEntity) -> void:
+	if tele.on and e.owner >= 0:
+		tele.add(tick, "trabada", e.owner, e.x / P, e.y / P, {"tipo": e.type, "orden": int(e.order), "destino": [e.goal_x / P, e.goal_y / P]}, "tb:%d" % e.id, 100)
 
 
 static func _roman(n: int) -> String:

@@ -222,7 +222,7 @@ func commands() -> Array[Dictionary]:
 		var used := {}
 		for tech: String in sim.dp(local).tecnologias:
 			var t: Dictionary = sim.dp(local).tecnologias[tech]
-			if t["edificio"] != first.type or used.has(t["ranura"]) or sim.players[local]["techs"].has(tech):
+			if not sim.tech_here(t, first) or used.has(t["ranura"]) or sim.players[local]["techs"].has(tech):
 				continue
 			used[t["ranura"]] = true
 			var why := sim.research_block(local, tech)

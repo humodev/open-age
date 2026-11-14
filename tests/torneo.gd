@@ -1,16 +1,19 @@
 extends SceneTree
 ## Torneo de balance: todas contra todas, IA contra IA, con varias semillas (docs/08, "Pruebas").
-## Uso: godot --headless --path . -s tests/torneo.gd -- --minutes=30 --seeds=2
+## Uso: godot --headless --path . -s tests/torneo.gd -- --minutes=30 --seeds=2 [--telemetria=carpeta]
 
 func _init() -> void:
 	var minutes := 30
 	var seeds := 2
+	var tele_dir := ""
 	for a in OS.get_cmdline_user_args():
 		var kv := a.trim_prefix("--").split("=")
 		if kv[0] == "minutes":
 			minutes = int(kv[1])
 		elif kv[0] == "seeds":
 			seeds = int(kv[1])
+		elif kv[0] == "telemetria":
+			tele_dir = kv[1]
 	var civs: Array = []
 	var data := SimData.load_default()
 	for k in data.civs:
@@ -27,10 +30,17 @@ func _init() -> void:
 			for sd in seeds:
 				# Alterna posiciones para no favorecer un lado.
 				var pair: Array = [civs[i], civs[j]] if sd % 2 == 0 else [civs[j], civs[i]]
-				var s := Sim.new(1000 + i * 37 + j * 11 + sd, 2, null, {"civs": pair})
+				var sv := 1000 + i * 37 + j * 11 + sd
+				var s := Sim.new(sv, 2, null, {"civs": pair})
 				s.ais = [SimAI.new(s, 0), SimAI.new(s, 1)]
 				while s.tick < minutes * 600 and not s.game_over:
+					var t0 := Time.get_ticks_usec()
 					s.step()
+					var us := Time.get_ticks_usec() - t0
+					if us > 25000:
+						s.tele.add(s.tick, "tick_lento", -1, -1, -1, {"ms": us / 1000}, "tl", 50)
+				if tele_dir != "":
+					s.tele.save("%s/%s-%s-%d.jsonl" % [tele_dir, pair[0], pair[1], sv], s.tele.header(s, sv, {"civs": pair}))
 				var w := "empate"
 				if s.winner >= 0:
 					w = pair[s.winner]
