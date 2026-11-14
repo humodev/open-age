@@ -12,6 +12,7 @@
   "acento": "#7d6b4f",
   "modelos": {
    "aldeano": "palmares_aldeano",
+   "hondero": "palmares_flecheiro",
    "centro": "palmares_centro",
    "casa": "palmares_casa"
   }

@@ -31,3 +31,11 @@ El punto 5 incluye:
      ![](fusion-etiopia.jpg)
    - **Créditos de Meshy:** quedan 79 hasta la renovación mensual.
    - **Pendiente:** música etíope (C-24), el flecheiro de Palmares (36 créditos) y animación con esqueleto.
+3. **(18:10) El flecheiro de Palmares,** la unidad característica que faltaba. Quedaba afuera del presupuesto del agente.
+   - **Proceso:** el concepto con `tools/generar_unidades.py imagenes palmares_flecheiro` (6 créditos); lo revisé antes de pagar el 3D (sin base, silueta limpia, arco y carcaj legibles). Después el 3D con remesh incluido (30 créditos): 2665 triángulos.
+   - **En el juego:** se engancha en `data/civs/palmares.json → estilo.modelos.hondero`. Captura con `--demo=base --civ=palmares --cam=b12,b9,9`: el flecheiro con su faja azul de equipo, junto a las maquetas de las otras unidades.
+
+     | Concepto | En el juego |
+     |---|---|
+     | ![](flecheiro-concepto.jpg) | ![](flecheiro-en-juego.jpg) |
+   - **Créditos de Meshy:** quedan 43 hasta la renovación mensual. Con esto, los seis pueblos tienen aldeano y al menos una unidad propia con modelo (mapuches: kona y jinete; Ayutthaya: elefante).
