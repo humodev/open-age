@@ -435,6 +435,11 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 	if saving and sim.can_afford(player, sim.dp(player).cost_of(_hito_type(p), p["age"])):
 		_try_build(_hito_type(p), p, vill, centro, 4)
 		return
+	# Mercado desde la edad II, antes que los demás edificios: con almacenes y edificios de
+	# producción separados la madera no alcanza para todo, y sin mercado la IA no puede
+	# cambiar la riqueza que le sobra por lo que le falta (proceso/21, paso 13).
+	if p["age"] >= 2 and not by_type.has("mercado") and not unbuilt.has("mercado") and vill.size() >= 20:
+		_try_build("mercado", p, vill, centro, 2)
 	# Cuartel.
 	var n_cuartel: int = by_type.get("cuartel", []).size()
 	var rich: bool = p["res"]["alimento"] > 800 and p["res"]["madera"] > 300 and n_cuartel < 5
@@ -508,9 +513,6 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 						return
 					_no_route[bb.id] = sim.tick + 1200 # sin paso: se reintenta en 2 minutos
 					sim.tele.add(sim.tick, "ia_sin_ruta", player, bb.tx, bb.ty, {"tipo": bb.type}, "isr:%d" % bb.id, 1200)
-	# Mercado desde la edad II.
-	if p["age"] >= 2 and not by_type.has("mercado") and vill.size() >= 20:
-		_try_build("mercado", p, vill, centro, 2)
 	# Torre.
 	if p["age"] >= 2 and sim.dp(player).edificios.has("torre") and by_type.get("torre", []).size() < 1 and p["res"]["piedra"] >= 250:
 		_try_build("torre", p, vill, centro, 1)

@@ -229,3 +229,14 @@
     - **Etiopía sigue abajo,** con la peor economía (3557 de riqueza a los 30 min; los guaraníes, 5518) y la edad III a las 20:57, cuando antes era 13:37. Es la primera en la edad II (5:32) y la última en la III. La causa: la propuesta la dejaba sin barrero, porque "lo que se cava va a la corte", pero en la práctica sus aldeanos caminaban la piedra y la arcilla hasta la capital.
     - **Cambio, el único de esta vuelta:** Etiopía recibe un barrero, el *Dängay bet* (amhárico: casa de la piedra `[verificar]`). Me aparto de la propuesta en esto; la corte sigue extrayendo su arcilla igual.
     - Ayutthaya (20 %) y el exceso mapuche (80 %) esperan al torneo siguiente: un cambio por vez.
+13. **(06:30) Etiopía con barrero: mejora la economía, no el torneo** ([torneo](pruebas/12-torneo.txt), [economía en paz](pruebas/12-economia-paz.txt)).
+    - **Torneo:** Palmares 90 %, mapuches 80 %, guaraníes 60 %, Tawantinsuyu 50 %, Ayutthaya 20 %, Etiopía 0 %.
+    - **Economía etíope:** la riqueza a los 30 minutos subió de 3557 a 4782, pero la edad III sigue tarde (19:47).
+    - **Herramienta nueva `tools/ia_por_dentro.gd`:** cada 3 minutos de una partida Etiopía contra mapuches, muestra ejército, productores, aldeanos por recurso y edificios, y al final los rechazos que anotó la telemetría.
+      - El ejército etíope es comparable al mapuche y tiene tantos aldeanos como el resto (39 al minuto 12).
+      - Pero vive sin alimento (entre 21 y 71) con riqueza de sobra (742).
+      - **No levanta mercado nunca**, y antes sí: el 15 % de su riqueza pasaba por el mercado. El mercado cuesta 175 de madera, y la madera se va antes en granjas (18), gults y almacenes; además el mercado estaba último en el orden de la IA.
+    - **Arreglos de IA, por el mismo motivo: con edificios separados la madera pesa más, que es lo que pidió el autor, y la IA tiene que acompañar:**
+      1. el mercado va antes que los demás edificios desde la edad II;
+      2. el reparto de aldeanos de la edad II en adelante pasa de 42 % alimento y 25 % madera a 37 % y 30 % (`reglas.json → ia_economia.proporcion_tardia`).
+    - **Resultado en la misma partida:** a los 12 minutos Etiopía tiene mercado y 15 aldeanos en madera (antes 12). Determinismo OK. Torneo y economía de nuevo.
