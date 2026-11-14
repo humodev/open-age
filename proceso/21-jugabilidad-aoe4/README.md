@@ -214,3 +214,18 @@
       1. **Mapuches sin almacén.** La IA nunca levantaba un lof junto a un recurso lejano, porque `_dropsite_for` descartaba los edificios que dan población. Sus aldeanos caminaban hasta la base. Ahora, si una civ no tiene almacén para un recurso, usa su edificio barato que lo recibe (el lof a 110, el mocambo para la madera de Palmares), hasta `ia_economia.almacen_alternativo_max` = 150.
       2. **Etiopía sin su jinete noble a tiempo.** Su unidad preferida salía del cuartel; ahora sale del färäs bet, y la IA lo levantaba después del cuartel: el primer jinete a las 9:00. Ahora el edificio de la unidad preferida de cada civ (`ia_unidades`) va tan temprano como el primer cuartel.
     - Determinismo OK. Torneo y economía de nuevo, con estos dos arreglos, antes de tocar precios.
+12. **(05:00) Torneo con los dos arreglos de IA** ([torneo](pruebas/11-torneo.txt), [economía en paz](pruebas/11-economia-paz.txt)).
+
+    | Civ | Torneo anterior | Con los arreglos | Edad III en paz |
+    |---|---|---|---|
+    | Mapuches | 10 % | **80 %** | 17:57 |
+    | Palmares | 40 % | 80 % | 16:42 |
+    | Guaraníes | 100 % | 60 % | 14:15 |
+    | Tawantinsuyu | 70 % | 50 % | 15:50 |
+    | Ayutthaya | 70 % | 20 % | 15:20 |
+    | Etiopía | 10 % | **10 %** | **20:57** |
+
+    - **El lof como almacén** levantó a los mapuches de 10 a 80 %: era eso, y se pasó. Queda para el próximo ajuste.
+    - **Etiopía sigue abajo,** con la peor economía (3557 de riqueza a los 30 min; los guaraníes, 5518) y la edad III a las 20:57, cuando antes era 13:37. Es la primera en la edad II (5:32) y la última en la III. La causa: la propuesta la dejaba sin barrero, porque "lo que se cava va a la corte", pero en la práctica sus aldeanos caminaban la piedra y la arcilla hasta la capital.
+    - **Cambio, el único de esta vuelta:** Etiopía recibe un barrero, el *Dängay bet* (amhárico: casa de la piedra `[verificar]`). Me aparto de la propuesta en esto; la corte sigue extrayendo su arcilla igual.
+    - Ayutthaya (20 %) y el exceso mapuche (80 %) esperan al torneo siguiente: un cambio por vez.
