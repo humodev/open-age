@@ -11,7 +11,7 @@ Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video,
 | H2 · Civilizaciones asimétricas | Superado en alcance: seis civilizaciones jugables con módulos propios |
 | H3 · Arte, sonido e interfaz | Arte procedural por civilización (D-015), audio CC0, interfaz completa, menú y campañas |
 | H4 · Cuatro civilizaciones e IA sólida | Seis civilizaciones. La IA juega todas, pero sin dificultades y con balance en ajuste |
-| Economía nueva (`diseno/revision-economia/v3/04`) | Diseño cerrado en la ronda 3. Implementación en 7 etapas (0 a 6), en curso desde 2026-11-13 |
+| Economía nueva (`diseno/revision-economia/v3/04`) | Implementada (etapas 0–5): seis motores propios, ingenios neutrales, techo de lo disputado, nombres de la riqueza por pueblo. Balance (etapa 6): tras 5 ajustes, las seis civs entre 40 y 66 % de victorias; falta confirmar con 5 semillas y probar las campañas. Detalle en `proceso/14` |
 | Partidas de muchos jugadores y equipos (`11`) | Planificado para después de la economía: de 2 a 8 jugadores (foco en 6), equipos, mapas para N, IA en equipo |
 | H5 · Multijugador en red | No empezado. La simulación determinista y por comandos ya lo habilita |
 | H6 · Acceso anticipado | Pendiente |
