@@ -36,6 +36,8 @@ No encontré nada guaraní con licencia libre clara.
 
 Sin pistas. No encontré krar, masenqo, washint ni kebero con licencia CC0 o PD. Por ahora, usar las genéricas de la raíz.
 
+Segunda búsqueda (2026-11-14), en Commons, Internet Archive (con los discos de 78 rpm) y OpenGameArt: solo hay material CC-BY-SA, discos comerciales mal licenciados o registros etnográficos y litúrgicos (zema). El detalle está en `proceso/19-arte-y-sonido/01-modelos-y-musica.md` y la decisión, en la consulta C-22.
+
 ## Quilombo dos Palmares (`quilombo/`)
 
 | archivo | duración | momento | notas |

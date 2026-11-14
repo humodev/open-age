@@ -100,7 +100,30 @@ Doscientos aldeanos (`--demo=multitud`); a la izquierda la maqueta, a la derecha
 - No se tocó `src/sim/`.
 
 ## (b) Música para Etiopía
-(en curso)
+**No se encontró nada con licencia limpia, así que no se agregó ninguna pista.** Etiopía sigue con las genéricas de la raíz, y la decisión queda para el autor en la consulta C-22.
+
+Qué se revisó:
+- **Wikimedia Commons**, con la búsqueda multimedia (krar, masenqo/masinko, washint, kebero, begena, azmari, tizita, eskista, Amhara, Tigrinya) y las categorías *Music of Ethiopia*, *Musical instruments of Ethiopia*, *Krar*, *Debtera* y *Krar Collective*. Lo que hay:
+  - `BegenaScalePlucked.ogg` es una escala de begena de 25 s, CC-BY-SA 3.0. Queda excluida.
+  - Las grabaciones de qene del Goethe-Institut Addis son entrevistas, no música, y CC-BY-SA 4.0.
+  - Los himnos nacionales son modernos y políticos.
+  - El resto son pronunciaciones y discursos.
+- **Internet Archive**:
+  - Los ítems marcados CC0 o dominio público son discos comerciales (Ethio Muzika, Aleyas Ahmed y una colección árabe titulada «krar») subidos con una licencia que el que los subió no puede dar.
+  - Los cantos de sa'atat (zema) de estudiantes de Debre Libanos llevan la marca de dominio público, pero son liturgia viva, la puso quien los subió y no hay cesión de los intérpretes: es justo el caso de grabación sensible que el pedido pide evitar.
+  - En los discos de 78 rpm solo aparecen *Folk Music of Ethiopia* (Courlander, Folkways, 1951) y los rezos falashas grabados por Wolf Leslau, ambos etnográficos y sin licencia.
+- **OpenGameArt**: no hay nada etíope.
+- **Freesound**: no permite descargar sin una cuenta con OAuth, así que no se pudo revisar desde acá.
+
+Tropiezo: la API de Commons respondía «429 Too Many Requests» después de unas pocas consultas, aun espaciadas, quizá porque la IP es compartida. Se siguió por la búsqueda multimedia de la web.
+
+No se tocó `src/game/audio.gd` (`CIV_MUSIC`): sin pistas no hay nada que enganchar.
 
 ## (c) Animación
-No se hizo. Los modelos son mallas estáticas sin esqueleto, así que caminar con piernas exige riggearlos: con Meshy (tarea `rigging`, con créditos) o a mano en Blender. Queda pendiente.
+No se hizo. Los modelos son mallas estáticas sin esqueleto, así que caminar con piernas o mover la herramienta exige riggearlos: con Meshy (tarea `rigging`, que cobra créditos aparte y no entraba en el presupuesto) o a mano en Blender. Mientras tanto, los modelos usan la animación procedural de siempre: el paso con balanceo, la inclinación al trabajar, el tensado antes del disparo y la estocada. Queda pendiente.
+
+## Pendiente
+- Flecheiro de Palmares (36 créditos).
+- Unidades militares restantes y edificios de producción, que siguen siendo la maqueta.
+- Esqueleto y animaciones de caminar y trabajar.
+- Música para Etiopía (C-22).
