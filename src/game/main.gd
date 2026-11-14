@@ -20,6 +20,11 @@ extends Node3D
 ##   --nofog            sin niebla de guerra (automático en --aivai)
 ##   --autotest         prueba de punta a punta con eventos reales de mouse y teclado
 ##   --grilla=menu      abre el submenú del aldeano (economia, militar) antes de la captura
+##   --ventana=ANCHOxALTO  ventana de ese tamaño (capturas a otras resoluciones)
+##   --escala=auto|0.8|1|1.25|1.5  escala de la interfaz (si no, la de user://opciones.cfg)
+##   --paleta=normal|deuteranopia|protanopia|tritanopia|relativa  modo de colores
+##   --barras=1         barras de vida siempre visibles
+##   --abrir=opciones   abre el diálogo de opciones (también campanas e intro en el menú)
 ##   --panel=a,b        abre paneles de información antes de la captura (economia, edad, pueblo, sucesos, puntaje, fin)
 
 const MAX_STEPS_PER_FRAME := 8
@@ -52,13 +57,67 @@ func _ready() -> void:
 	_seed = int(_args.get("seed", str(randi() % 100000)))
 	speed = float(_args.get("speed", "1"))
 	_menu_mode = _args.is_empty() or _args.has("menu")
+	# --- escala --- (--ventana=ANCHOxALTO: ventana de ese tamaño, para capturas a otras resoluciones)
+	if _args.has("ventana"):
+		_ventana(str(_args["ventana"]))
+	# --- fin escala ---
 	_build_environment()
 	audio = GameAudio.new()
 	audio.name = "Audio"
 	add_child(audio)
+	_opciones_al_arrancar() # --- opciones ---
 	if _args.has("shot") or _args.has("autotest") or _args.has("mute"):
 		AudioServer.set_bus_mute(0, true)
 	_new_game()
+
+
+# --- opciones ---
+## Lee user://opciones.cfg y lo aplica: escala, colores, sonido y pantalla completa.
+## Las capturas y la prueba de punta a punta no leen ni escriben el archivo; para ellas
+## están --escala=auto|0.8|1|1.25|1.5, --paleta=<modo> y --barras=1.
+func _opciones_al_arrancar() -> void:
+	var prueba := _args.has("shot") or _args.has("autotest")
+	Opciones.solo_lectura = prueba
+	if not prueba:
+		Opciones.cargar()
+	if _args.has("escala"):
+		Opciones.escala = 0.0 if _args["escala"] == "auto" else float(_args["escala"])
+	if _args.has("paleta"):
+		Opciones.paleta = str(_args["paleta"])
+	if _args.has("barras"):
+		Opciones.barras_siempre = _args["barras"] == "1"
+	Palette.aplicar(Opciones.paleta)
+	Opciones.aplicar_escala(get_window())
+	get_window().size_changed.connect(func() -> void: Opciones.aplicar_escala(get_window()))
+	Opciones.aplicar_sonido(self)
+	if Opciones.pantalla_completa and not prueba and not _args.has("ventana"):
+		Opciones.aplicar_pantalla()
+
+
+## --abrir=opciones: abre el diálogo de opciones (para las capturas).
+func _abrir_opciones() -> void:
+	if _menu != null and is_instance_valid(_menu) and _menu.visible:
+		_menu.open_options()
+	elif hud != null:
+		hud._options.visible = true
+# --- fin opciones ---
+
+
+# --- escala ---
+## Pone la ventana en modo ventana con el tamaño pedido ("1366x768").
+func _ventana(spec: String) -> void:
+	var p := spec.to_lower().split("x")
+	if p.size() != 2 or not p[0].is_valid_int() or not p[1].is_valid_int():
+		push_warning("--ventana espera ANCHOxALTO, por ejemplo 1366x768")
+		return
+	var sz := Vector2i(int(p[0]), int(p[1]))
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+	# Sin tope: una ventana de 3840×2160 en una pantalla de 1080 se sale de la pantalla,
+	# pero se dibuja entera y la captura sale a esa resolución.
+	DisplayServer.window_set_max_size(Vector2i.ZERO)
+	DisplayServer.window_set_size(sz)
+	get_window().size = sz
+# --- fin escala ---
 
 
 func _build_environment() -> void:
@@ -226,6 +285,8 @@ func _build_scene(aivai: bool) -> void:
 	cam.name = "Camera"
 	cam.map_size = sim.map.n
 	add_child(cam)
+	cam.edge_pan = Opciones.bordes # --- opciones ---
+	Palette.local = local # --- opciones --- (modo de colores "yo, aliados y rivales")
 	var base := sim.bases[local]
 	cam.look_at_point(Vector3(base.x + 6, 0, base.y + 6))
 	# --- hud --- (cámara inicial sobre la capital, un poco por encima del centro: el panel no la tapa)
@@ -276,6 +337,8 @@ func _build_scene(aivai: bool) -> void:
 			_open_campaigns.call_deferred(layer)
 		elif _args.get("abrir", "") == "intro":
 			layer.add_child(CampaignUI.story(_mission_data("palmares", 0), false, [["Comenzar", func() -> void: pass], ["Volver", func() -> void: pass]], "palmares"))
+	if _args.get("abrir", "") == "opciones": # --- opciones ---
+		_abrir_opciones.call_deferred()
 	if _args.has("autotest"):
 		cam.edge_pan = false
 		_autotest.call_deferred()
@@ -539,15 +602,19 @@ func _frames(n: int) -> void:
 
 func _mouse(pos: Vector2, button: int, pressed: bool) -> void:
 	ctrl.mouse_override = pos
+	# --- escala --- los eventos inyectados llegan en píxeles de la ventana; `pos` está en
+	# unidades de la interfaz (estirada desde 1920×1080), así que se convierte.
+	var wp := get_viewport().get_final_transform() * pos
+	# --- fin escala ---
 	var mv := InputEventMouseMotion.new()
-	mv.position = pos
-	mv.global_position = pos
+	mv.position = wp
+	mv.global_position = wp
 	Input.parse_input_event(mv)
 	if button == 0:
 		return
 	var mb := InputEventMouseButton.new()
-	mb.position = pos
-	mb.global_position = pos
+	mb.position = wp
+	mb.global_position = wp
 	mb.button_index = button
 	mb.pressed = pressed
 	Input.parse_input_event(mb)

@@ -25,6 +25,7 @@ func _draw() -> void:
 	var view := ctrl.view
 	var zoom_k := clampf(40.0 / cam.zoom, 0.6, 1.6)
 	var all_bars := Input.is_key_pressed(KEY_ALT) and ctrl.enabled # --- mundo --- Alt: todas las barras
+	all_bars = all_bars or Opciones.barras_siempre # --- opciones --- barras de vida siempre visibles
 	for e in sim.actives:
 		var sel := view.selected.has(e.id)
 		var hov := view.hovered == e.id
@@ -46,6 +47,10 @@ func _draw() -> void:
 		var col := Palette.team(e.owner)
 		if e.owner == ctrl.local:
 			col = Palette.UI_GOOD.lerp(Palette.UI_BAD, clampf(1.0 - k * 1.6, 0.0, 1.0))
+		# --- contraste --- por debajo del 25 % la barra titila: la vida baja no depende solo del color
+		if k < 0.25:
+			col.a = 0.35 + 0.65 * absf(sin(Time.get_ticks_msec() / 160.0))
+		# --- fin contraste ---
 		draw_rect(Rect2(r.position, Vector2(r.size.x * k, r.size.y)), col)
 		if e.is_building() and not e.built:
 			var pk := float(e.progress) / float(maxi(1, e.build_time))

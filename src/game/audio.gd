@@ -108,6 +108,12 @@ func set_volume(music_bus: bool, db: float) -> void:
 		_fx_offset = db
 
 
+# --- opciones --- volumen del ambiente (Opciones → Sonido)
+func set_ambient_volume(db: float) -> void:
+	_ambient.volume_db = -20.0 + db
+# --- fin opciones ---
+
+
 func ui(kind: String, db: float = -6.0) -> void:
 	var list: Array = UI.get(kind, [])
 	if not list.is_empty():

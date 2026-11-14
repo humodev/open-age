@@ -354,38 +354,10 @@ var _help: PanelContainer
 
 
 func _build_options() -> void:
-	_options = _make_dialog("Opciones", "", [["Cerrar", func() -> void: _options.visible = false]])
-	var vb: VBoxContainer = _options.get_child(0)
-	var at := 2
-	for bus in [["General", 0], ["Música", -1], ["Efectos", -2]]:
-		var row := HBoxContainer.new()
-		var l := Label.new()
-		l.text = bus[0]
-		l.custom_minimum_size = Vector2(110, 0)
-		row.add_child(l)
-		var sl := HSlider.new()
-		sl.min_value = 0
-		sl.max_value = 100
-		sl.value = 80
-		sl.custom_minimum_size = Vector2(220, 24)
-		var which: int = bus[1]
-		sl.value_changed.connect(func(v: float) -> void: _set_volume(which, v))
-		row.add_child(sl)
-		vb.add_child(row)
-		vb.move_child(row, at)
-		at += 1
-	var fs := CheckButton.new()
-	fs.text = "Pantalla completa"
-	fs.button_pressed = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
-	fs.toggled.connect(func(on: bool) -> void: DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if on else DisplayServer.WINDOW_MODE_MAXIMIZED))
-	vb.add_child(fs)
-	vb.move_child(fs, at)
-	var edge := CheckButton.new()
-	edge.text = "Mover la cámara con los bordes"
-	edge.button_pressed = cam.edge_pan
-	edge.toggled.connect(func(on: bool) -> void: cam.edge_pan = on)
-	vb.add_child(edge)
-	vb.move_child(edge, at + 1)
+	# --- opciones --- el mismo diálogo que el menú principal, guardado en user://opciones.cfg
+	# (src/game/ui/opciones.gd): escala, colores, barras de vida, sonido, cámara y pantalla.
+	_options = Opciones.dialogo(self, main)
+	# --- fin opciones ---
 
 
 func _set_volume(which: int, v: float) -> void:
@@ -785,27 +757,11 @@ class CommandCard:
 				sb.bg_color = Color(1, 1, 1, 0.025)
 				draw_style_box(sb, r)
 				continue
-			var locked: bool = c["locked"] != ""
-			var afford := true
-			for k in c["cost"]:
-				if res.get(k, 0) < c["cost"][k]:
-					afford = false
 			var active: bool = hud.ctrl.mode == "place" and hud.ctrl.place_type == c["id"] or hud.ctrl.mode == "amove" and c["kind"] == "amove"
-			sb.bg_color = Color(1, 1, 1, 0.13 if i == _hover else 0.075)
-			if active:
-				sb.bg_color = Color(Palette.UI_ACCENT, 0.3)
-			sb.border_color = Color(1, 1, 1, 0.1)
-			sb.set_border_width_all(1)
-			draw_style_box(sb, r)
-			var col := Palette.UI_TEXT
-			if locked:
-				col = Color(Palette.UI_DIM, 0.45)
-			elif not afford:
-				col = Color(Palette.UI_DIM, 0.8)
-			Glyphs.draw(self, c["icon"], r.grow(-12), col)
-			draw_string(Hud.font_b, r.position + Vector2(5, 15), Controller.SLOT_LABELS[i], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(Palette.UI_DIM, 0.9))
-			if not afford and not locked:
-				draw_rect(Rect2(r.position + Vector2(4, r.size.y - 6), Vector2(r.size.x - 8, 2)), Color(Palette.UI_BAD, 0.8))
+			# --- contraste --- disponible, no alcanza (qué falta) y bloqueado (candado y edad),
+			# legibles a 4,5:1 y sin depender del color (src/game/ui/estado_casilla.gd)
+			EstadoCasilla.dibujar(self, r, c, res, i == _hover, active, Controller.SLOT_LABELS[i], hud.sim.dp(hud.local).mod("recurso_propio"))
+			# --- fin contraste ---
 		# Progreso de la cola en la ranura del producto actual.
 		var sel := hud.ctrl.selected_entities()
 		if sel.size() >= 1 and sel[0].is_building() and not sel[0].queue.is_empty():
@@ -899,7 +855,7 @@ class SelectionPanel:
 		draw_style_box(Hud.panel_box(), Rect2(Vector2.ZERO, size))
 		var sel := hud.ctrl.selected_entities()
 		if sel.is_empty():
-			draw_string(Hud.font, Vector2(0, size.y / 2 + 6), "Nada seleccionado", HORIZONTAL_ALIGNMENT_CENTER, size.x, 15, Color(Palette.UI_DIM, 0.6))
+			draw_string(Hud.font, Vector2(0, size.y / 2 + 6), "Nada seleccionado", HORIZONTAL_ALIGNMENT_CENTER, size.x, 15, Palette.UI_DIM) # --- contraste --- (antes al 60 %: 3:1)
 			return
 		if sel.size() == 1:
 			_single(sel[0])

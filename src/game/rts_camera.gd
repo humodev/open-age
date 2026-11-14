@@ -78,7 +78,7 @@ func _process(delta: float) -> void:
 				dir.y -= 1
 	if dir != Vector2.ZERO:
 		dir = dir.normalized()
-		focus += (right_xz() * dir.x + forward_xz() * dir.y) * zoom * PAN_SPEED * delta
+		focus += (right_xz() * dir.x + forward_xz() * dir.y) * zoom * PAN_SPEED * delta * Opciones.velocidad_camara / 100.0 # --- opciones --- velocidad elegida
 	zoom = lerpf(zoom, _zoom_target, clampf(delta * 12.0, 0.0, 1.0))
 	_apply()
 
