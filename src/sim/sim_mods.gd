@@ -67,6 +67,15 @@ func _own_resource(pid: int, p: Dictionary) -> void:
 		elif e.is_building() and e.built:
 			per_min += int(cfg.get("por_edificio", {}).get(e.type, 0))
 			cap += int(cfg.get("tope_por_edificio", {}).get(e.type, 0))
+			# Mocambo junto al monte (Palmares, §3.5.5): +N con suficientes árboles cerca.
+			var monte: Dictionary = cfg.get("monte", {})
+			if monte.has(e.type):
+				var trees := 0
+				for t in sim.resources_near(e.tx + e.w / 2, e.ty + e.h / 2, e.w / 2 + int(monte.get("radio", 4))):
+					if t.type == "arbol":
+						trees += 1
+				if trees >= int(monte.get("arboles", 6)):
+					per_min += int(monte[e.type])
 	var per_v := int(cfg.get("por_aldeano", 0))
 	var by_age: Array = cfg.get("por_aldeano_por_edad", [])
 	if not by_age.is_empty():

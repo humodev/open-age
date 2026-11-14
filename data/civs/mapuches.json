@@ -88,7 +88,7 @@
   "hito_guerra"
  ],
  "edificios_nuevos": {
-  "lof": {
+  "lof": { "lento_fuera_de_capital_pct": 50,
    "nombre": "Lof",
    "edad_min": 1,
    "tam": [

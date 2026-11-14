@@ -191,3 +191,6 @@ El autor preguntó en qué punto estaba la economía: se había avanzado varias 
     - **De paso:** el modo "paz" de las pruebas ya no asalta ingenios, para no contaminar la medición de lo disputado.
 23. **Tawantinsuyu, capa 1:** la arcilla que toca la red de caminos unida a la llaqta se saca un 20 % más rápido (`caminos.arcilla_pct`). La red se calcula con la misma búsqueda que la conexión de edificios. La IA todavía no traza caminos hacia la arcilla: el beneficio es para el jugador.
 24. **Humo de campañas** con todos los cambios de la economía: las 25 misiones arrancan, y ninguna menciona el kulliñ como recurso.
+25. **Detalles de motor que faltaban:**
+    - Mapuches: los lof que no son la capital entrenan un 50 % más lento (`lento_fuera_de_capital_pct`).
+    - Palmares: el mocambo con 6 árboles o más a 4 casillas da +5 de fama por minuto.

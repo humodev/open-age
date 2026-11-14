@@ -339,6 +339,7 @@
    },
    "inicial": 90,
    "tope": 300,
+   "monte": { "mocambo": 5, "arboles": 6, "radio": 4 },
    "por_aldeano": 0
   },
   "acogida": {

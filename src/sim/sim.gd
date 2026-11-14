@@ -1296,7 +1296,11 @@ func _update_building(b: SimEntity) -> void:
 			if (tick + b.id) % 100 == 0:
 				_notify(b.owner, "Población llena")
 		else:
-			b.queue_progress += tick_ms * mods.production_pct(b) / 100
+			var pct := mods.production_pct(b)
+			# Lof extra (mapuches, §3.5.2): fuera de la capital entrenan más lento.
+			if not b.capital and not is_tech and b.def.has("lento_fuera_de_capital_pct"):
+				pct = pct * 100 / (100 + int(b.def["lento_fuera_de_capital_pct"]))
+			b.queue_progress += tick_ms * pct / 100
 			if b.queue_progress >= dp(b.owner).queue_time(item):
 				b.queue.remove_at(0)
 				if not b.queue_paid.is_empty():
