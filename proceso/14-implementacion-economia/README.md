@@ -242,3 +242,4 @@ El autor preguntó en qué punto estaba la economía: se había avanzado varias 
     - **Ayutthaya:** elefante de guerra de 220 a + 160 r a 180 a + 130 r; infantería de dap de 11 a 12 de ataque.
 
     El torneo siguiente va con 3 partidas por cruce para bajar el ruido.
+    - **Tropiezo:** el script del ajuste falló en la parte de Ayutthaya y se subió un commit que la daba por hecha (2f37ff7). Se detectó al revisar los valores: se paró el torneo, se aplicó el cambio a mano y se relanzó.

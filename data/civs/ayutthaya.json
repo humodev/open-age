@@ -29,7 +29,7 @@
   "explorador": {
    "nombre": "Jinete explorador"
   },
-  "guerrero": {
+  "guerrero": { "ataque": 12,
    "nombre": "Infantería de dap"
   },
   "hondero": {
@@ -54,8 +54,8 @@
    "edad_min": 2,
    "pob": 4,
    "costo": {
-    "alimento": 220,
-    "riqueza": 160
+    "alimento": 180,
+    "riqueza": 130
    },
    "tiempo_ms": 34000,
    "pv": 640,
