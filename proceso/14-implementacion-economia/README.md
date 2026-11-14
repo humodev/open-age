@@ -316,3 +316,4 @@ El autor preguntó en qué punto estaba la economía: se había avanzado varias 
     | Ayutthaya | 10 | 40 |
 
     Se confirma con un torneo más largo, de 5 partidas por cruce.
+38. **Pedido del autor (2026-11-14):** cerrar la economía (punto 1), hacer la segunda tanda de interfaz (punto 3, etapa 17) y las partidas de muchos jugadores (punto 4, etapa 18), y empezar arte y sonido (punto 5, etapa 19), documentando en cada commit. Para cerrar la economía falta el torneo de confirmación con 5 semillas (en curso) y probar las campañas con la IA jugando por el jugador.
