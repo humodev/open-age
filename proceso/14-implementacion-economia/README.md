@@ -216,3 +216,23 @@ El autor preguntó en qué punto estaba la economía: se había avanzado varias 
   - Ayutthaya con el motor bajo;
   - el mercado todavía pesa entre 10 % y 19 % en paz;
   - lo disputado da 0 % en paz porque la IA de prueba no sale de su base. Con guerra se ven sitios e ingenios.
+
+## Etapa 6: balance
+27. **Primer torneo con la economía nueva** ([resultado](pruebas/04-torneo-economia-nueva.txt)), 30 partidas de 30 minutos. Victorias, contando las por puntos:
+
+    | Civ | Victorias de 10 |
+    |---|---|
+    | Etiopía | 9 |
+    | Mapuches | 7 |
+    | Tawantinsuyu | 6 |
+    | Guaraníes | 5 |
+    | Palmares | 2 |
+    | Ayutthaya | 1 |
+
+    Etiopía pasó de ser la más débil a la más fuerte. Palmares y Ayutthaya quedan atrás, igual que en la medición: edad III lenta y motor bajo. También influye que desde la etapa 13 el jugador 2 hace caminos y va a los sitios, y que ahora existen las incursiones.
+28. **Primer ajuste, solo datos:**
+    - **Etiopía:** la corte extrae 10 / 13 / 16 / 20 (antes 12 / 16 / 20 / 24) y el gult junto a la corte da 19 (antes 21).
+    - **Ayutthaya:** tributo del 35 % y topes de 24 / 34 / 42 / 48.
+    - **Palmares:** cada puesto de oficio da 18 (antes 15) y el tope de puestos pasa a 5 / 8 / 10 / 10.
+
+    Se vuelve a correr el torneo.

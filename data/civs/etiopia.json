@@ -116,14 +116,14 @@
    "vision": 3000,
    "transitable": true,
    "renta": { "alimento": 3, "riqueza": 17 },
-   "renta_cerca_capital": { "alimento": 3, "riqueza": 21 },
+   "renta_cerca_capital": { "alimento": 3, "riqueza": 19 },
    "radio_capital": 14000,
    "maximo_por_edad": [2, 3, 4, 6],
    "separacion": 6,
    "regimiento": { "edad": 2, "descuento_pct": 15, "tope_pct": 30, "radio": 14000 },
    "motor": true,
    "ranura": 7,
-   "desc": "Tierra repartida a un señor: el tributo campesino llega a la corte en amole (barras de sal) sin aldeanos. Rinde 17 de riqueza y 3 de alimento por minuto, y 21 de riqueza si está a 14 casillas o menos de la corte."
+   "desc": "Tierra repartida a un señor: el tributo campesino llega a la corte en amole (barras de sal) sin aldeanos. Rinde 17 de riqueza y 3 de alimento por minuto, y 19 de riqueza si está a 14 casillas o menos de la corte."
   },
   "iglesia": { "eje": "economia",
    "nombre": "Iglesia",
@@ -341,7 +341,7 @@
   "defensa_altura": {
    "pct": 25
   },
-  "corte_extrae": { "por_edad": [12, 16, 20, 24], "radio": 12000 }
+  "corte_extrae": { "por_edad": [10, 13, 16, 20], "radio": 12000 }
  },
  "ia_unidades": [
   "guerrero"

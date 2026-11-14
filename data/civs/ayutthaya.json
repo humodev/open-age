@@ -47,7 +47,7 @@
   }
  },
  "unidades_nuevas": {
-  "elefante_rey": { "nombre": "Elefante del rey (chang luang)", "funcion": "carga", "edad_min": 1, "pob": 2, "costo": { "alimento": 80, "madera": 80 }, "tiempo_ms": 45000, "pv": 600, "armadura": 0, "ataque": 0, "alcance": 0, "cadencia_ms": 1000, "velocidad": 850, "vision": 6000, "radio": 620, "elefante": true, "maximo_por_edad": [1, 2, 3, 4], "deposito": ["alimento", "madera", "piedra"], "tributo": { "arbol": 30, "arbusto": 30, "roca": 30, "granja": 15, "tope_por_edad": [20, 30, 40, 45], "separacion": 8 }, "desc": "Almacén que camina: recibe madera, alimento y piedra. El monte paga al rey: el 30 % de la madera, los arbustos y la piedra (sapán, cueros y estaño) y el 15 % del arroz entra además como riqueza, hasta 20 por minuto por elefante (30 en la edad II, 40 en la III y 45 en la IV). Sin ataque." },
+  "elefante_rey": { "nombre": "Elefante del rey (chang luang)", "funcion": "carga", "edad_min": 1, "pob": 2, "costo": { "alimento": 80, "madera": 80 }, "tiempo_ms": 45000, "pv": 600, "armadura": 0, "ataque": 0, "alcance": 0, "cadencia_ms": 1000, "velocidad": 850, "vision": 6000, "radio": 620, "elefante": true, "maximo_por_edad": [1, 2, 3, 4], "deposito": ["alimento", "madera", "piedra"], "tributo": { "arbol": 35, "arbusto": 35, "roca": 35, "granja": 15, "tope_por_edad": [24, 34, 42, 48], "separacion": 8 }, "desc": "Almacén que camina: recibe madera, alimento y piedra. El monte paga al rey: el 35 % de la madera, los arbustos y la piedra (sapán, cueros y estaño) y el 15 % del arroz entra además como riqueza, hasta 24 por minuto por elefante (34 en la edad II, 42 en la III y 48 en la IV). Sin ataque." },
   "chang_suek": {
    "nombre": "Elefante de guerra (chang suek)",
    "funcion": "choque",
