@@ -65,3 +65,4 @@ palmares     vs mapuches     terreno=islas   30:00  ganador: (mapuches por punto
 mapuches     vs palmares     terreno=islas   30:00  ganador: (mapuches por puntos)  edades 3-3
 mapuches     vs tawantinsuyu terreno=rio     16:28  ganador: mapuches  edades 3-3
 tawantinsuyu vs mapuches     terreno=rio     16:43  ganador: tawantinsuyu  edades 3-3
+mapuches     vs tawantinsuyu terreno=mesetas 30:00  ganador: (mapuches por puntos)  edades 3-3

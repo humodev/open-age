@@ -9,3 +9,9 @@ El punto 5 incluye:
 - música para Etiopía, que no tiene ninguna.
 
 ## Paso a paso
+1. **(09:05) Agente de arte y sonido**, en su copia del repositorio. Tiene tres tareas:
+   - modelos con Meshy, con un tope de 350 créditos sobre 403: primero el aldeano de cada pueblo y después la unidad militar más característica;
+   - música para Etiopía con licencia libre (CC0 o dominio público);
+   - animación, si alcanza el tiempo.
+
+   Escribe [01-modelos-y-musica.md](01-modelos-y-musica.md).
