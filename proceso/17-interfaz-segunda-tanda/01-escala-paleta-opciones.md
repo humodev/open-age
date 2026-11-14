@@ -188,3 +188,37 @@ El diálogo desde el menú principal, a 1366×768:
 ![opciones](a-opciones-menu-1366x768.jpg)
 
 **Pendiente, para la parte B o la mejora 17 de la auditoría:** a 1366×768, el renglón de atajos del pie del menú principal queda por debajo del borde. Pasaba antes de este cambio, y peor: sin estiramiento, la columna medía lo mismo en una pantalla de 768. Lo resuelve el menú con jerarquía (P14), que reordena esa columna.
+
+### 5. Contraste y estados de la grilla
+
+**El problema (P3 y P18).**
+- "No alcanza" era una raya roja de 2 px.
+- "Bloqueado" era el glifo al 45 %, con un contraste de 2,2:1.
+- No se distinguía uno de otro sin pasar el mouse.
+- Las letras de atajo eran de 12 px, en gris al 90 % y encima del glifo.
+
+**Qué se hizo.** Una pieza nueva, `src/game/ui/estado_casilla.gd` (`EstadoCasilla.dibujar`), dibuja la casilla. En `hud.gd`, `CommandCard._draw` la llama dentro de un bloque `# --- contraste ---`, y el resto del dibujo de la grilla, como el progreso de la cola, no cambia. Los tres estados:
+
+| Estado | Antes | Después |
+|---|---|---|
+| Atajo | Letra de 12 px en gris al 90 %, encima del glifo | Pastilla oscura propia arriba a la izquierda, con la letra de 13 px en `UI_TEXT` (14:1) |
+| No alcanza | Raya roja de 2 px y glifo al 80 % | Borde rojo de 2 px, glifo en `UI_DIM` (5:1) y una franja abajo con el glifo del recurso que falta y cuánto: "−300". Si falta más de uno, "−300+" |
+| Bloqueado | Glifo al 45 % (2,2:1) | Casilla oscurecida, glifo en `UI_DIM` (5,6:1 sobre la casilla oscura), candado arriba a la derecha y la edad que pide ("II") abajo |
+
+Los tres se distinguen por la forma (franja, candado), no solo por el color. La franja y el candado son el aviso en el lugar. El texto del aviso ("Faltan 40 de madera") es de la parte B.
+
+| Antes (aldeano, 1080p, ×2) | Después (aldeano) | Después (cuartel etíope en edad I) |
+|---|---|---|
+| ![antes](a-grilla-antes.jpg) | ![después](a-grilla-despues.jpg) | ![bloqueada](a-grilla-bloqueada.jpg) |
+
+**Otros arreglos de contraste:**
+- **"Nada seleccionado":** pasa de `UI_DIM` al 60 % (3,0:1) a `UI_DIM` lleno (5:1).
+- **Vida baja:** por debajo del 25 %, la barra de vida sobre el mundo titila (`overlay.gd`, bloque `# --- contraste ---`). Así la vida baja no depende solo del color, como pide la sección 5 de la auditoría.
+
+**Las cuatro visiones, antes y después.** Equipos 1 a 4, recursos y vida, con el daltonismo simulado. El par más cercano después es el azul con el violeta en deuteranopía (ΔE 21): se distinguen por la luminosidad, pero son lo más parecido de la paleta. Con 1 contra 1 (azul contra rojo) la diferencia es enorme en las cuatro visiones.
+
+![paleta en cuatro visiones](a-paleta-cuatro-visiones.jpg)
+
+Batalla de prueba con `--barras=1` (barras siempre visibles). Las tuyas van en verde agua, las del rival en el rojo de equipo:
+
+![batalla](a-batalla-barras.jpg)
