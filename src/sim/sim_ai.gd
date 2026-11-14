@@ -127,7 +127,7 @@ func _research(p: Dictionary, by_type: Dictionary, saving: bool) -> void:
 func _alarm(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], centro: SimEntity) -> void:
 	var enemies := 0
 	for e in sim.actives:
-		if e.alive and e.owner >= 0 and e.owner != player and e.is_military() and sim.dist_to(e, centro) < 16000:
+		if e.alive and e.owner >= 0 and sim.enemies(player, e.owner) and e.is_military() and sim.dist_to(e, centro) < 16000:
 			enemies += 1
 	var defenders := 0
 	for u in army:
@@ -579,7 +579,7 @@ func _production(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], 
 func _counter_order(p: Dictionary) -> Array[String]:
 	var counts := {"choque": 0, "distancia": 0, "linea": 0}
 	for e in sim.actives:
-		if e.alive and e.owner >= 0 and e.owner != player and e.is_military() and counts.has(e.fn):
+		if e.alive and e.owner >= 0 and sim.enemies(player, e.owner) and e.is_military() and counts.has(e.fn):
 			counts[e.fn] += 1
 	var top := "choque"
 	for k in counts:
@@ -606,7 +606,7 @@ func _threat(centro: SimEntity) -> SimEntity:
 	var best: SimEntity = null
 	var best_d := 22000
 	for e in sim.actives:
-		if e.alive and e.owner >= 0 and e.owner != player and (e.is_military() or e.fn == "explorador"):
+		if e.alive and e.owner >= 0 and sim.enemies(player, e.owner) and (e.is_military() or e.fn == "explorador"):
 			var d := sim.dist_to(e, centro)
 			if d < best_d:
 				best = e
@@ -650,7 +650,7 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 		var prey: SimEntity = null
 		var best_d := 1 << 60
 		for e in sim.actives:
-			if e.alive and e.owner >= 0 and e.owner != player and e.inside < 0 and (e.fn == "civil" or e.def.has("fuente") or e.def.has("deposito")):
+			if e.alive and e.owner >= 0 and sim.enemies(player, e.owner) and e.inside < 0 and (e.fn == "civil" or e.def.has("fuente") or e.def.has("deposito")):
 				var d := Sim.dist(e.x, e.y, rally.x, rally.y)
 				if d < best_d:
 					best_d = d
@@ -701,7 +701,7 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 		var site: SimEntity = null
 		var best := 1 << 60
 		for e in sim.actives:
-			if e.alive and e.def.get("sagrado", false) and e.holder != player:
+			if e.alive and e.def.get("sagrado", false) and (e.holder < 0 or sim.enemies(player, e.holder)):
 				var d := Sim.dist(e.x, e.y, rally.x, rally.y)
 				if d < best:
 					best = d
@@ -726,7 +726,7 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 func _enemy_cores() -> Array[SimEntity]:
 	var out: Array[SimEntity] = []
 	for e in sim.actives:
-		if e.alive and e.is_building() and e.owner >= 0 and e.owner != player and (e.capital or e.def.get("hito", false) or e.def.has("produce") and e.def.get("deposito", []).size() > 2):
+		if e.alive and e.is_building() and e.owner >= 0 and sim.enemies(player, e.owner) and (e.capital or e.def.get("hito", false) or e.def.has("produce") and e.def.get("deposito", []).size() > 2):
 			out.append(e)
 	return out
 
@@ -752,7 +752,7 @@ func _map_spot(radius: int) -> Vector2i:
 	var cores := _enemy_cores()
 	var options: Array[Vector2i] = []
 	for e in sim.actives:
-		if e.alive and e.def.get("sagrado", false) and e.holder != player:
+		if e.alive and e.def.get("sagrado", false) and (e.holder < 0 or sim.enemies(player, e.holder)):
 			options.append(Vector2i(e.x, e.y))
 	var c := sim.map.n * P / 2
 	options.append(Vector2i(c, c))
@@ -771,7 +771,7 @@ func _attack(army: Array[SimEntity]) -> void:
 	var best_d := 1 << 60
 	var ref := army[0]
 	for e in sim.actives:
-		if e.alive and e.is_building() and e.owner >= 0 and e.owner != player and (e.def.get("hito", false) or e.capital):
+		if e.alive and e.is_building() and e.owner >= 0 and sim.enemies(player, e.owner) and (e.def.get("hito", false) or e.capital):
 			var d := sim.dist_to(ref, e)
 			if d < best_d:
 				target = e

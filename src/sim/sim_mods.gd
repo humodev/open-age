@@ -414,7 +414,7 @@ func craft_stopped(e: SimEntity) -> bool:
 	var r := int(cfg.get("para_radio", 6000))
 	var n := 0
 	for o in sim.actives:
-		if o.alive and o.owner >= 0 and o.owner != e.owner and o.is_military() and o.inside < 0 and absi(o.x - e.x) <= r and absi(o.y - e.y) <= r:
+		if o.alive and o.owner >= 0 and sim.enemies(e.owner, o.owner) and o.is_military() and o.inside < 0 and absi(o.x - e.x) <= r and absi(o.y - e.y) <= r:
 			n += 1
 	return n >= int(cfg.get("para_enemigos", 3))
 
@@ -441,13 +441,18 @@ func _sacred() -> void:
 		return
 	var r: int = cfg["radio"]
 	for site in sites:
+		# Presencia por equipo: los aliados no se disputan un sitio. Lo toma el jugador
+		# de menor id del equipo presente.
 		var present := {}
 		for u in sim.actives:
 			if u.alive and u.is_unit() and u.owner >= 0 and u.inside < 0 and absi(u.x - site.x) <= r and absi(u.y - site.y) <= r:
-				present[u.owner] = true
+				var tm := sim.team_of(u.owner)
+				present[tm] = mini(int(present.get(tm, u.owner)), u.owner)
 		if present.size() != 1:
 			continue
-		var who: int = present.keys()[0]
+		var who: int = present.values()[0]
+		if site.holder >= 0 and sim.team_of(site.holder) == sim.team_of(who):
+			who = site.holder
 		if site.holder == who:
 			site.capture = 0
 			continue
@@ -467,9 +472,13 @@ func _sacred() -> void:
 			var rank := int(holds[site.holder]) - 1
 			var rents: Array = cfg.get("renta_por_cantidad", [cfg["renta_riqueza"]])
 			_gain(site.holder, "riqueza", int(rents[mini(rank, rents.size() - 1)]) * P / 60, "sitios")
+	# Victoria por sitios: cuenta el equipo, no el jugador.
+	var team_holds := {}
+	for pid2 in holds:
+		team_holds[sim.team_of(pid2)] = int(team_holds.get(sim.team_of(pid2), 0)) + int(holds[pid2])
 	for p in sim.players:
 		var pid: int = p["id"]
-		if int(holds.get(pid, 0)) == sites.size() and not p["defeated"]:
+		if int(team_holds.get(sim.team_of(pid), 0)) == sites.size() and not p["defeated"]:
 			p["sitios_ms"] = int(p.get("sitios_ms", 0)) + 1000
 			if p["sitios_ms"] >= int(cfg["victoria_ms"]) and not sim.game_over:
 				sim.win(pid)
@@ -603,7 +612,7 @@ func on_hit(a: SimEntity, t: SimEntity, dmg: int) -> void:
 		if q > t.dmg_q:
 			t.heads = maxi(mini(t.heads, 1), t.heads - (q - t.dmg_q))
 			t.dmg_q = q
-	if a.owner >= 0 and t.owner >= 0 and a.owner != t.owner and has(a.owner, "arreo") and t.is_building() and (t.def.get("fuente", "") == "alimento" or int(t.def.get("pob", 0)) > 0 or t.def.has("ganado")):
+	if a.owner >= 0 and t.owner >= 0 and sim.enemies(a.owner, t.owner) and has(a.owner, "arreo") and t.is_building() and (t.def.get("fuente", "") == "alimento" or int(t.def.get("pob", 0)) > 0 or t.def.has("ganado")):
 		_drive(a, t, dmg)
 	if t.is_building() and not t.crafts.is_empty():
 		var hits: Array = _craft_hits.get_or_add(t.id, [])
@@ -752,7 +761,7 @@ func on_kill(e: SimEntity, killer: SimEntity) -> void:
 	if killer != null and killer.owner >= 0 and e.owner < 0 and e.def.has("botin_por_edad"):
 		_neutral_loot(e, killer.owner)
 		return
-	if killer == null or killer.owner < 0 or e.owner < 0 or killer.owner == e.owner:
+	if killer == null or killer.owner < 0 or e.owner < 0 or not sim.enemies(killer.owner, e.owner):
 		return
 	if has(killer.owner, "saqueo") and e.fn == "civil":
 		var cfg := m(killer.owner, "saqueo")

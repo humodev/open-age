@@ -26,6 +26,7 @@ var scenario: SimScenario = null
 var events: Array[Dictionary] = []
 var game_over := false
 var winner := -1
+var winner_team := -1
 var terrain := ""
 var water_form := "" # forma del agua elegida (cruce, lago, costados, anillo, brazos)
 var rivers: Array = [] # trazos de río para la imagen; no son estado
@@ -69,6 +70,7 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null,
 			"disp": [0, 0, 0, 0, 0], # baldes de lo disputado (se crean siempre: leerlos no cambia el estado)
 			"disp_min": 0,
 			"civ": (opts.get("civs", []) as Array)[i] if i < (opts.get("civs", []) as Array).size() else "",
+			"equipo": int((opts.get("equipos", []) as Array)[i]) if i < (opts.get("equipos", []) as Array).size() else i,
 		})
 	for p in players:
 		var dd := data.for_civ(p["civ"])
@@ -250,9 +252,19 @@ func _cmd_move(pid: int, units: Array[SimEntity], x: int, y: int, amove: bool) -
 		_set_goal(e, gx, gy)
 
 
+## Equipo de un jugador (docs/11): por defecto cada uno es su propio equipo.
+func team_of(pid: int) -> int:
+	return int(players[pid].get("equipo", pid)) if pid >= 0 and pid < players.size() else -1
+
+
+## ¿Son enemigos dos jugadores? Nunca lo son consigo mismos ni con su equipo.
+func enemies(a: int, b: int) -> bool:
+	return a >= 0 and b >= 0 and a != b and team_of(a) != team_of(b)
+
+
 ## ¿`t` es enemigo de `pid`? Los de otro jugador y los neutrales hostiles (ingenios).
 func hostile(pid: int, t: SimEntity) -> bool:
-	return t.alive and ((t.owner >= 0 and t.owner != pid) or (t.owner < 0 and pid >= 0 and bool(t.def.get("hostil", false))))
+	return t.alive and ((t.owner >= 0 and enemies(pid, t.owner)) or (t.owner < 0 and pid >= 0 and bool(t.def.get("hostil", false))))
 
 
 func _cmd_target(pid: int, units: Array[SimEntity], target_id: int) -> void:
@@ -549,7 +561,7 @@ func _cmd_alarm(pid: int, on: bool, max_n: int = -1) -> void:
 		for e in cands:
 			var best := 1 << 60
 			for o in actives:
-				if o.alive and o.owner >= 0 and o.owner != pid and o.is_military():
+				if o.alive and o.owner >= 0 and enemies(pid, o.owner) and o.is_military():
 					best = mini(best, Sim.dist(e.x, e.y, o.x, o.y))
 			danger[e.id] = best
 		cands.sort_custom(func(a: SimEntity, b: SimEntity) -> bool: return danger[a.id] < danger[b.id] or (danger[a.id] == danger[b.id] and a.id < b.id))
@@ -804,9 +816,11 @@ func _rebuild_hashes() -> void:
 
 
 func _update_fog(pid: int) -> void:
+	# Visión compartida con el equipo (reglas.json → equipos.vision_compartida).
+	var shared: bool = data.reglas.get("equipos", {}).get("vision_compartida", true)
 	var sources: Array = []
 	for e in actives:
-		if e.alive and e.owner == pid and e.inside < 0:
+		if e.alive and e.inside < 0 and e.owner >= 0 and (e.owner == pid or (shared and not enemies(pid, e.owner) and team_of(e.owner) == team_of(pid))):
 			sources.append(e)
 	fog.update(pid, sources)
 
@@ -1216,7 +1230,7 @@ func _hit(a: SimEntity, t: SimEntity) -> void:
 	if a.def.has("area") and t.is_unit():
 		var r: int = a.def["area"]
 		for o in actives:
-			if o != t and o.alive and o.is_unit() and o.inside < 0 and o.owner >= 0 and o.owner != a.owner and absi(o.x - t.x) <= r and absi(o.y - t.y) <= r:
+			if o != t and o.alive and o.is_unit() and o.inside < 0 and o.owner >= 0 and enemies(a.owner, o.owner) and absi(o.x - t.x) <= r and absi(o.y - t.y) <= r:
 				o.hp -= maxi(1, dmg * int(a.def.get("area_pct", 50)) / 100)
 				if o.hp <= 0:
 					mods.on_kill(o, a)
@@ -1538,6 +1552,8 @@ func find_enemy(e: SimEntity, radius: int, units_only: bool) -> SimEntity:
 			for o: SimEntity in cell:
 				if not o.alive or o.owner == e.owner:
 					continue
+				if o.owner >= 0 and e.owner >= 0 and not enemies(e.owner, o.owner):
+					continue # aliado
 				# Neutrales: solo los hostiles, y nunca entre neutrales.
 				if o.owner < 0 and (e.owner < 0 or not bool(o.def.get("hostil", false))):
 					continue
@@ -1767,7 +1783,7 @@ func _court_site_ok(fc: Dictionary, tx: int, ty: int, pid: int) -> bool:
 			continue
 		if e.owner == pid and e.is_building() and (e.def.has("funda_corte") or e.def.get("capital_fija", false)):
 			return false
-		if e.owner >= 0 and e.owner != pid:
+		if e.owner >= 0 and enemies(pid, e.owner):
 			var d := Sim.dist(e.x, e.y, cx, cy)
 			if e.is_building() and d < far and (e.capital or e.type in ["torre", "cuartel", "centro"] or _cost_total(e.def.get("costo", {})) >= 150):
 				return false
@@ -2003,7 +2019,7 @@ func _gather_origin(e: SimEntity) -> String:
 ## Victoria directa (sitios sagrados): todos los demás pierden.
 func win(pid: int) -> void:
 	for p in players:
-		if p["id"] != pid:
+		if enemies(pid, p["id"]):
 			_defeat(p["id"])
 
 
@@ -2013,13 +2029,17 @@ func _defeat(pid: int) -> void:
 	players[pid]["defeated"] = true
 	events.append({"t": "defeat", "player": pid})
 	var left := []
+	var teams := {}
 	for p in players:
 		if not p["defeated"]:
 			left.append(p["id"])
-	if left.size() <= 1 and not game_over:
+			teams[team_of(p["id"])] = true
+	# Termina cuando queda un solo equipo en pie; gana el primer jugador de ese equipo.
+	if teams.size() <= 1 and not game_over:
 		game_over = true
-		winner = left[0] if left.size() == 1 else -1
-		events.append({"t": "victory", "player": winner})
+		winner = left[0] if left.size() >= 1 else -1
+		winner_team = team_of(winner) if winner >= 0 else -1
+		events.append({"t": "victory", "player": winner, "equipo": winner_team})
 
 
 # ---------------------------------------------------------------- Creación

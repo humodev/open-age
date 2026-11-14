@@ -317,3 +317,15 @@ El autor preguntó en qué punto estaba la economía: se había avanzado varias 
 
     Se confirma con un torneo más largo, de 5 partidas por cruce.
 38. **Pedido del autor (2026-11-14):** cerrar la economía (punto 1), hacer la segunda tanda de interfaz (punto 3, etapa 17) y las partidas de muchos jugadores (punto 4, etapa 18), y empezar arte y sonido (punto 5, etapa 19), documentando en cada commit. Para cerrar la economía falta el torneo de confirmación con 5 semillas (en curso) y probar las campañas con la IA jugando por el jugador.
+39. **Torneo de confirmación, 5 partidas por cruce** ([resultado](pruebas/10-torneo-confirmacion.txt)):
+
+    | Civ | % |
+    |---|---|
+    | Mapuches | 68 % |
+    | Etiopía | 60 % |
+    | Tawantinsuyu | 52 % |
+    | Ayutthaya | 40 % |
+    | Guaraníes | 40 % |
+    | Palmares | 40 % |
+
+    Cinco de seis quedan dentro de la banda de 35 a 65 %. Los mapuches salieron arriba en todos los torneos (70, 70, 80, 60 y 68), así que va un último ajuste chico: el ganado cría cada 50 s (antes 45). Con esto se da por cerrado el balance de la etapa 6; los torneos siguientes se correrán cuando cambie algo de juego.

@@ -108,8 +108,8 @@
    "desc": "Asentamiento familiar. No hay capital: cada lof es un centro chico."
   },
   "corral": { "nombre": "Corral", "edad_min": 1, "tam": [3, 3], "pv": 600, "armadura": 0, "costo": { "madera": 120 }, "tiempo_ms": 20000, "vision": 3000, "transitable": true, "ranura": 7, "maximo_por_edad": [2, 3, 4, 5], "separacion": 8, "motor": true,
-   "ganado": { "inicial": 1, "max": 5, "max_pradera": 6, "riqueza_por_cabeza": 4, "cria_ms": 45000, "fiesta_alimento": 30, "fiesta_pausa_ms": 120000 },
-   "desc": "El ganado (kulliñ) es la riqueza mapuche: cada cabeza da 4 de riqueza por minuto y nace una cada 45 s, hasta 5 (6 en pradera abierta). Cada 25 % de daño mata una cabeza. El kawiñ (la fiesta) da 30 de alimento por cabeza, una vez por corral y por edad." },
+   "ganado": { "inicial": 1, "max": 5, "max_pradera": 6, "riqueza_por_cabeza": 4, "cria_ms": 50000, "fiesta_alimento": 30, "fiesta_pausa_ms": 120000 },
+   "desc": "El ganado (kulliñ) es la riqueza mapuche: cada cabeza da 4 de riqueza por minuto y nace una cada 50 s, hasta 5 (6 en pradera abierta). Cada 25 % de daño mata una cabeza. El kawiñ (la fiesta) da 30 de alimento por cabeza, una vez por corral y por edad." },
   "rewe_malon": { "eje": "militar",
    "nombre": "Rewe del toqui de malón",
    "edad_min": 1,
