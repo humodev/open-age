@@ -11,6 +11,8 @@
   "techo": "#7d6a3c",
   "acento": "#5c7a3a",
   "modelos": {
+   "aldeano": "guaranies_aldeano",
+   "hondero": "guaranies_arquero",
    "centro": "guaranies_centro",
    "casa": "guaranies_casa"
   }

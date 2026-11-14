@@ -11,6 +11,8 @@
   "techo": "#9c7b52",
   "acento": "#b39a7a",
   "modelos": {
+   "aldeano": "tawantinsuyu_aldeano",
+   "hondero": "tawantinsuyu_hondero",
    "centro": "tawantinsuyu_centro",
    "casa": "tawantinsuyu_casa"
   }

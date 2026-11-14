@@ -130,4 +130,8 @@ a) Dejarlo explicado: es un malón, no hace falta entrenar *(recomendado)* · b)
 Para que equipos y recursos se distingan también con daltonismo (`proceso/17-interfaz-segunda-tanda/01-escala-paleta-opciones.md`, paso 2), el jugador 2 pasó de rojo terracota a rojo puro, el alimento de rojo a frambuesa y la riqueza de dorado a amarillo dorado. Los equipos 3 y 4 son violeta y ciruela (antes verde y ocre).
 a) Dejarlo así *(recomendado)* · b) Volver al terracota para el jugador 2 aunque se confunda con el alimento (ΔE 11) · c) Otra combinación (decir cuál)
 
+### C-24 · (arte) Música para Etiopía: no hay grabaciones CC0 ni de dominio público (etapa 19)
+Se revisaron Wikimedia Commons, Internet Archive (también la colección de discos de 78 rpm) y OpenGameArt; Freesound no permite descargar sin cuenta. Lo único etíope que apareció es CC-BY-SA (escala de begena, entrevistas de qene), está mal licenciado (discos comerciales subidos como CC0) o es un registro etnográfico o litúrgico (zema de estudiantes de Debre Libanos; Courlander, 1951; Leslau). Detalle en `proceso/19-arte-y-sonido/01-modelos-y-musica.md`.
+a) Seguir con las pistas genéricas hasta conseguir algo propio *(recomendado)* · b) Encargar o grabar krar y masenqo con licencia propia · c) Aceptar CC-BY-SA para la música (obliga a compartir esas pistas con la misma licencia)
+
 **Respuesta:**

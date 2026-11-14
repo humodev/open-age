@@ -752,7 +752,7 @@ func _make_visual(e: SimEntity) -> Dictionary:
 	var v := {"node": root, "type": e.type, "owner": e.owner}
 	if e.is_unit():
 		var msize := 2.6 if e.def.get("elefante", false) else (1.7 if e.def.get("montado", false) else 0.9)
-		var body: Node3D = _model_for(e.owner, e.type, msize, true)
+		var body: Node3D = _model_for(e.owner, e.type, msize, true, team)
 		if body == null:
 			body = MeshInstance3D.new()
 			(body as MeshInstance3D).mesh = unit_mesh_for(e)
@@ -804,11 +804,12 @@ func _make_visual(e: SimEntity) -> Dictionary:
 
 
 static var _models := {} # ruta -> PackedScene (o null si no existe)
+const FIGURE_H := 1.25 # alto de una persona generada, antes de escala_visual.unidad_pct
 
 
 ## Modelo GLB generado (assets/generados/modelos) declarado por la civilización en estilo.modelos.
 ## Se escala para que su mayor lado horizontal mida `size` y se apoya en el suelo.
-func _model_for(owner: int, type: String, size: float, unit: bool) -> Node3D:
+func _model_for(owner: int, type: String, size: float, unit: bool, team := Color.WHITE) -> Node3D:
 	var name: String = sim.dp(owner).civ.get("estilo", {}).get("modelos", {}).get(type, "")
 	if name == "":
 		return null
@@ -824,18 +825,94 @@ func _model_for(owner: int, type: String, size: float, unit: bool) -> Node3D:
 	if horiz <= 0.0001:
 		return null
 	var k := size / horiz
+	var center := Vector2(box.position.x + box.size.x / 2.0, box.position.z + box.size.z / 2.0)
+	var waist: Dictionary = {}
+	if unit and box.size.y > horiz * 1.3:
+		# Figura de pie (aldeanos, arqueros): se escala por la altura, no por la herramienta o
+		# el arco que sobresale, y se centra en la cintura; así mide lo mismo que la maqueta
+		# y la herramienta no la corre del disco (proceso/19-arte-y-sonido).
+		k = FIGURE_H / box.size.y
+		waist = _waist(path, inst, box)
+		center = waist["c"]
 	var holder := Node3D.new()
 	if not unit:
 		holder.position.y = -0.08 # asentado: apenas hundido en el suelo
 	inst.scale = Vector3.ONE * k
-	inst.position = Vector3(-(box.position.x + box.size.x / 2.0) * k, -box.position.y * k, -(box.position.z + box.size.z / 2.0) * k)
+	inst.position = Vector3(-center.x * k, -box.position.y * k, -center.y * k)
 	if unit:
 		inst.rotation.y = 0.0
 	holder.add_child(inst)
-	_each_geo(holder, func(g: GeometryInstance3D) -> void:
+	if not waist.is_empty():
+		# Faja del color del equipo, como el cinturón de la maqueta: se lee aunque el disco
+		# quede tapado por un campo o por otras unidades.
+		var band := MeshInstance3D.new()
+		var tm := TorusMesh.new()
+		tm.inner_radius = 0.86
+		tm.outer_radius = 1.0
+		tm.rings = 16
+		tm.ring_segments = 6
+		band.mesh = tm
+		var r: Vector2 = waist["r"]
+		band.scale = Vector3(r.x * k * 1.18, box.size.y * k * 1.0, r.y * k * 1.18)
+		band.position = Vector3(0, float(waist["y"]) * k, 0) + Vector3(0, holder.position.y, 0)
+		band.material_override = Meshes.mat(team, 0.7)
+		band.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		holder.add_child(band)
+		holder.set_meta("band", band)
+	_each_geo(inst, func(g: GeometryInstance3D) -> void:
 		g.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 		_matte(g))
 	return holder
+
+
+static var _waists := {} # ruta -> {c: centro xz, r: radios xz, y: alto de la cintura}, en coordenadas del modelo
+
+
+## Cintura de una figura generada: los vértices a media altura de la cadera, sin la herramienta
+## (se toma el percentil 70 de la distancia al centro, no el máximo).
+static func _waist(path: String, inst: Node3D, box: AABB) -> Dictionary:
+	if _waists.has(path):
+		return _waists[path]
+	var pts := PackedVector3Array()
+	_collect_verts(inst, Transform3D.IDENTITY, pts)
+	var y := box.position.y + box.size.y * 0.5
+	var band := box.size.y * 0.05
+	var xs: Array[float] = []
+	var zs: Array[float] = []
+	for p in pts:
+		if absf(p.y - y) < band:
+			xs.append(p.x)
+			zs.append(p.z)
+	var out := {"c": Vector2(box.position.x + box.size.x / 2.0, box.position.z + box.size.z / 2.0), "r": Vector2(0.1, 0.1) * box.size.y, "y": y - box.position.y}
+	if xs.size() >= 8:
+		xs.sort()
+		zs.sort()
+		var c := Vector2(xs[xs.size() / 2], zs[zs.size() / 2])
+		var dx: Array[float] = []
+		var dz: Array[float] = []
+		for i in xs.size():
+			dx.append(absf(xs[i] - c.x))
+			dz.append(absf(zs[i] - c.y))
+		dx.sort()
+		dz.sort()
+		var cap := box.size.y * 0.16
+		out["c"] = c
+		out["r"] = Vector2(minf(dx[int(dx.size() * 0.7)], cap), minf(dz[int(dz.size() * 0.7)], cap))
+	_waists[path] = out
+	return out
+
+
+static func _collect_verts(n: Node, xf: Transform3D, out: PackedVector3Array) -> void:
+	var t := xf
+	if n is Node3D:
+		t = xf * (n as Node3D).transform
+	if n is MeshInstance3D and (n as MeshInstance3D).mesh != null:
+		var m := (n as MeshInstance3D).mesh
+		for i in m.get_surface_count():
+			for v: Vector3 in m.surface_get_arrays(i)[Mesh.ARRAY_VERTEX]:
+				out.append(t * v)
+	for c in n.get_children():
+		_collect_verts(c, t, out)
 
 
 static var _matte_cache := {}

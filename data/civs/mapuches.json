@@ -11,6 +11,7 @@
   "techo": "#8a7a4e",
   "acento": "#6b5a3a",
   "modelos": {
+   "aldeano": "mapuches_aldeano",
    "lof": "mapuches_lof",
    "jinete": "mapuches_jinete",
    "casa": "mapuches_casa"

@@ -23,7 +23,7 @@ Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video,
 - **Seis campañas** (`data/campanas/`): 24 misiones narradas desde adentro, ejecutadas por el motor de escenarios.
 - **Escaramuza** contra la IA con cualquier par de civilizaciones y cuatro tipos de mapa.
 - **Sonido**: interfaz, mundo, ambiente y música CC0.
-- **Arte generado con IA** (Meshy, C-03): láminas de las seis civilizaciones y modelos 3D de capitales, casas, el elefante y el kona, y del paisaje (cinco especies de árbol, arbustos, piedra, arcilla con vasijas, peñascos y yerbal, `proceso/16-paisaje`); el resto es la maqueta procedural.
+- **Arte generado con IA** (Meshy, C-03): láminas de las seis civilizaciones y modelos 3D de capitales, casas, el elefante, el kona, los aldeanos de los seis pueblos, el hondero inca, el arquero guaraní y el jinete noble etíope (`proceso/19-arte-y-sonido`), y del paisaje (cinco especies de árbol, arbustos, piedra, arcilla con vasijas, peñascos y yerbal, `proceso/16-paisaje`); el resto es la maqueta procedural.
 - **Tutorial**, **mercado**, **sitios sagrados**, **tres dificultades**, **repeticiones**, **opciones** y **ayuda en partida (F1)**.
 
 ## Pruebas
@@ -47,7 +47,7 @@ Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video,
 | IA y mecánicas propias | Juega los seis motores (talleres, corrales y kawiñ, rozas, gult y corte que se funda, oficios, elefantes), traza caminos rodeando obstáculos, asalta ingenios y usa la campana parcial. Falta: caminos incas hacia la arcilla, menos dependencia del mercado |
 | Dificultades y estilos de la IA | Tres dificultades (fácil, normal, difícil) y cuatro estilos (pacífica, equilibrada, acosadora, agresiva) |
 | Animación | Procedural (paso, galope, trabajo, golpe, muerte); sin esqueletos |
-| Modelos generados | Capitales, casas, elefante, kona y paisaje (árboles, arbustos, rocas, arcilla, peñascos); el resto de los edificios y casi todas las unidades son la maqueta procedural |
+| Modelos generados | Capitales, casas, elefante, kona, aldeanos (seis), hondero inca, arquero guaraní, jinete noble etíope y paisaje; el resto de los edificios y de las unidades militares son la maqueta procedural. Etiopía sigue sin música propia (C-24). Falta animación con esqueleto |
 | Interfaz, segunda tanda | Partes A y B integradas (`proceso/17`): escala de interfaz de 1366×768 a 4K, paleta apta para daltonismo con modos (`tests/test_paleta.gd`), estados de la grilla a 4,5:1, opciones guardadas en `user://opciones.cfg`, cursores contextuales, grilla estable con submenús, avisos con jerarquía y salto con Espacio, fila de grupos, HUD vacío que no tapa y errores puntuales. Pendientes: atajos del pie del menú a 1366×768, opción de texto grande, menú de pausa debajo de los paneles F1–F6 |
 | Partidas de muchos jugadores | Pasos 1–2 de 6 hechos; siguen formas de agua para N (islas, brazos y fortines todavía caen en lago o sin anillos) |
 | Escala y velocidad | Corregidas el 2026-11-13 (`escala_visual`, `velocidad_pct`); falta la opinión del autor a ×1 |

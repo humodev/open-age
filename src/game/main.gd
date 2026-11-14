@@ -8,9 +8,9 @@ extends Node3D
 ##   --shot=ruta.png    guarda una captura y sale
 ##   --shot-at=S        segundos de juego antes de la captura
 ##   --estilo=pacifica|normal|acosadora|agresiva  estilo de juego de la IA
-##   --cam=x,z,zoom[,inclinación]  posición de cámara para la captura
+##   --cam=x,z,zoom[,inclinación]  posición de cámara para la captura (bX,bZ: relativa a la base propia)
 ##   --select=tipo      selecciona entidades de ese tipo del jugador local antes de la captura
-##   --demo=base|batalla  escena armada para revisar modelos y combate
+##   --demo=base|batalla|multitud  escena armada para revisar modelos, combate o el costo de 200 unidades
 ##   --menu             fuerza el menú de inicio (sin argumentos se abre solo)
 ##   --terreno=<clave de reglas.json "terrenos"> tipo de mapa (llano, valle, delta…)
 ##   --civ=clave        civilización propia (tawantinsuyu, mapuches, guaranies, etiopia, palmares, ayutthaya, azar)
@@ -395,6 +395,17 @@ func _demo(kind: String) -> void:
 			sim.spawn_unit(showcase[i], 0, (b.x + 10 + i % 4) * 1000 + 500, (b.y + 7 + i / 4) * 1000 + 500)
 		for i in 0:
 			sim.spawn_unit(["guerrero", "hondero", "lancero"][i % 3], 0, (b.x + 10 + i % 3) * 1000 + 500, (b.y + 7 + i / 3) * 1000 + 500)
+	elif kind == "multitud":
+		# 200 aldeanos que se cruzan en el centro: mide el costo de los modelos generados
+		# (proceso/19-arte-y-sonido). Con --perf imprime los cuadros por segundo.
+		var c := sim.map.n / 2
+		for pid in 2:
+			var ids := []
+			for i in 100:
+				var x := (c - 12 + pid * 24 + (i % 10) * (1 if pid == 0 else -1)) * 1000 + 500
+				var y := (c - 5 + i / 10) * 1000 + 500
+				ids.append(sim.spawn_unit("aldeano", pid, x, y).id)
+			sim.push_command({"t": "move", "player": pid, "ids": ids, "x": (c + 14 - pid * 28) * 1000, "y": c * 1000})
 	elif kind == "batalla":
 		var c := sim.map.n / 2
 		var ids := [[], []]
@@ -561,7 +572,10 @@ func _maybe_shot() -> void:
 	_shot_done = true
 	if _args.has("cam"):
 		var c: PackedStringArray = (_args["cam"] as String).split(",")
-		cam.look_at_point(Vector3(float(c[0]), 0, float(c[1])))
+		var at_base := Vector3.ZERO
+		if c[0].begins_with("b"): # --cam=b3,b-2,…: relativo a la base propia (cambia con la semilla)
+			at_base = Vector3(sim.bases[local].x, 0, sim.bases[local].y)
+		cam.look_at_point(at_base + Vector3(float(c[0].trim_prefix("b")), 0, float(c[1].trim_prefix("b"))))
 		if c.size() > 2:
 			cam.zoom = float(c[2])
 			cam.set("_zoom_target", float(c[2]))

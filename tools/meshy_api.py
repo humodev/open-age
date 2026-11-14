@@ -4,7 +4,7 @@
     python3 tools/meshy_api.py saldo
     python3 tools/meshy_api.py imagen <salida.png> <modelo> <prompt> [--aspect=16:9] [--pose=t-pose] [--fondo] [--multivista]
     python3 tools/meshy_api.py editar <salida.png> <modelo> <imagen_base.png> <prompt>
-    python3 tools/meshy_api.py modelo <salida.glb> <img1> [img2 img3 img4] [--poli=30000] [--pose=t-pose] [--pbr=1]
+    python3 tools/meshy_api.py modelo <salida.glb> <img1> [img2 img3 img4] [--poli=30000] [--pose=t-pose] [--pbr=1] [--remesh]
     python3 tools/meshy_api.py remesh <salida.glb> <id_de_tarea> [--poli=1500]
 
 La clave sale de MESHY_ENV (por defecto ../apex-open/.secrets/meshy.env; nunca se versiona). Cada
@@ -121,6 +121,8 @@ def main():
                 "target_polycount": int(o.get("poli", 30000)), "should_texture": True}
         if "pose" in o:
             body["pose_mode"] = o["pose"]
+        if "remesh" in o:  # sin esto, Meshy ignora target_polycount (proceso/16-paisaje)
+            body["should_remesh"] = True
         if o.get("pbr") == "1":  # mapas PBR (metal, rugosidad, normal) además del color
             body["enable_pbr"] = True
         kind = "multi-image-to-3d"
