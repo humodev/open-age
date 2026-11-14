@@ -73,6 +73,15 @@ func _own_resource(pid: int, p: Dictionary) -> void:
 	p["tope_" + key] = cap
 
 
+## Tope extra de tributo por elefante (barrio chino, junco): el mayor, no se suman.
+func tribute_cap_bonus(pid: int) -> int:
+	var best := 0
+	for e in sim.actives:
+		if e.alive and e.owner == pid and e.is_building() and e.built:
+			best = maxi(best, int(e.def.get("tributo_tope_extra", 0)))
+	return best
+
+
 ## Piezas extra de motor que dan los hitos ("maximo_extra": {"tipo": n} en el hito).
 func engine_max_bonus(pid: int, type: String) -> int:
 	var extra := 0

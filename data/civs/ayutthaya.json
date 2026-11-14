@@ -11,7 +11,7 @@
   "acento": "#c9a227",
   "modelos": {
    "centro": "ayutthaya_centro",
-   "chang_suek": "ayutthaya_elefante",
+   "chang_suek": "ayutthaya_elefante", "elefante_rey": "ayutthaya_elefante",
    "casa": "ayutthaya_casa"
   }
  },
@@ -46,6 +46,7 @@
   }
  },
  "unidades_nuevas": {
+  "elefante_rey": { "nombre": "Elefante del rey (chang luang)", "funcion": "carga", "edad_min": 1, "pob": 2, "costo": { "alimento": 80, "madera": 80 }, "tiempo_ms": 45000, "pv": 600, "armadura": 0, "ataque": 0, "alcance": 0, "cadencia_ms": 1000, "velocidad": 850, "vision": 6000, "radio": 620, "elefante": true, "maximo_por_edad": [1, 2, 3, 4], "deposito": ["alimento", "madera", "piedra"], "tributo": { "arbol": 30, "arbusto": 30, "roca": 30, "granja": 15, "tope_por_edad": [20, 30, 40, 45], "separacion": 8 }, "desc": "Almacén que camina: recibe madera, alimento y piedra. El monte paga al rey: el 30 % de la madera, los arbustos y la piedra (sapán, cueros y estaño) y el 15 % del arroz entra además como riqueza, hasta 20 por minuto por elefante (30 en la edad II, 40 en la III y 45 en la IV). Sin ataque." },
   "chang_suek": {
    "nombre": "Elefante de guerra (chang suek)",
    "funcion": "choque",
@@ -99,7 +100,7 @@
   },
   "granja": {
    "nombre": "Arrozal",
-   "bono_agua_pct": 45,
+   "bono_agua_pct": 25,
    "tasa_clave": "granja"
   },
   "cuartel": {
@@ -109,7 +110,7 @@
    "nombre": "Fortín de río"
   }
  },
- "sin_edificios": [
+ "sin_edificios": ["deposito", 
   "hito_economia",
   "hito_guerra"
  ],
@@ -149,9 +150,6 @@
    },
    "tiempo_ms": 30000,
    "vision": 5000,
-   "renta": {
-    "riqueza": 8
-   },
    "produce": [
     "compania_japonesa"
    ],
@@ -172,9 +170,6 @@
    },
    "tiempo_ms": 30000,
    "vision": 5000,
-   "renta": {
-    "riqueza": 8
-   },
    "produce": [
     "arcabucero"
    ],
@@ -234,7 +229,7 @@
     "chang_suek"
    ]
   },
-  "puerto_real": { "eje": "economia",
+  "puerto_real": { "maximo_extra": { "elefante_rey": 1 }, "eje": "economia",
    "nombre": "Puerto real",
    "edad_min": 1,
    "tam": [
@@ -280,7 +275,7 @@
    "alcance": 8000,
    "cadencia_ms": 2000
   },
-  "junco_tributo": { "eje": "economia",
+  "junco_tributo": { "tributo_tope_extra": 4, "eje": "economia",
    "nombre": "Junco de tributo",
    "edad_min": 1,
    "tam": [
@@ -352,19 +347,8 @@
    "guardia_extranjera"
   ]
  ],
- "construye": [
-  "casa",
-  "granja",
-  "deposito",
-  "cuartel",
-  "torre",
-  "centro",
-  "kraal",
-  "barrio_japones",
-  "barrio_portugues",
-  "mercado"
- ],
- "produce": {
+ "construye": ["casa", "granja", "cuartel", "torre", "centro", "kraal", "barrio_japones", "barrio_portugues", "mercado"],
+ "produce": { "centro": ["aldeano", "explorador", "elefante_rey"],
   "cuartel": [
    "guerrero",
    "hondero",

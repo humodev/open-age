@@ -317,6 +317,20 @@ func _cmd_train(pid: int, bid: int, type: String) -> void:
 	if not (b.def.get("produce", []) as Array).has(type):
 		return
 	var p := players[pid]
+	var udef: Dictionary = dp(pid).unidades.get(type, {})
+	if udef.has("maximo_por_edad"):
+		var maxes: Array = udef["maximo_por_edad"]
+		var have := 0
+		for e in actives:
+			if e.alive and e.owner == pid and e.type == type:
+				have += 1
+			if e.alive and e.owner == pid and e.is_building():
+				for q in e.queue:
+					if q == type:
+						have += 1
+		if have >= int(maxes[clampi(int(p["age"]) - 1, 0, maxes.size() - 1)]) + mods.engine_max_bonus(pid, type):
+			_notify(pid, "Máximo de %s en esta edad" % str(udef.get("nombre", type)))
+			return
 	if p["age"] < dp(pid).unidades[type].get("edad_min", 1):
 		_notify(pid, "Requiere edad %s" % _roman(dp(pid).unidades[type]["edad_min"]))
 		return
@@ -920,6 +934,7 @@ func _do_gather(e: SimEntity) -> void:
 	var rate_key: String = String(t.def.get("tasa_clave", "granja")) if t.is_building() else String(t.def.get("tasa_clave", kind))
 	var rate: int = int(e.def["tasa"].get(rate_key, e.def["tasa"].get("granja", 0))) * (100 + mod(e.owner, "tasa:" + rate_key) + _site_bonus(t)) / 100
 	e.carry_res = kind
+	e.carry_src = "granja" if t.is_building() else t.type
 	# Arcilla ajena o del centro: con el techo de lo disputado lleno, no se extrae.
 	if kind == "riqueza" and t.is_resource() and t.res_owner != e.owner and disputed_room(e.owner) - e.carry <= 0:
 		return
@@ -1031,7 +1046,8 @@ func spawn_near(b: SimEntity, type: String, owner: int = -2) -> SimEntity:
 
 func _do_return(e: SimEntity) -> void:
 	var d: SimEntity = by_id.get(e.aux)
-	if d == null or not d.alive or not d.built or not _accepts(d, e.carry_res):
+	var d_ok := d != null and d.alive and (_accepts(d, e.carry_res) if d.is_building() else (d.def.get("deposito", []) as Array).has(e.carry_res))
+	if not d_ok:
 		d = nearest_dropoff(e.owner, e.carry_res, e.x, e.y)
 		if d == null:
 			_set_idle(e)
@@ -1046,6 +1062,8 @@ func _do_return(e: SimEntity) -> void:
 	players[e.owner]["stats"]["recolectado"] += e.carry
 	var origin := _gather_origin(e)
 	ledger(e.owner, origin, e.carry_res, e.carry)
+	if d.is_unit() and d.def.has("tributo"):
+		_tribute(e, d)
 	if origin == "disputado" and e.carry_res == "riqueza":
 		disputed_add(e.owner, e.carry)
 	events.append({"t": "deposit", "id": e.id, "res": e.carry_res, "n": e.carry})
@@ -1518,12 +1536,16 @@ func nearest_dropoff(owner: int, kind: String, x: int, y: int) -> SimEntity:
 	probe.x = x
 	probe.y = y
 	for b in actives:
-		if not b.alive or not b.is_building() or b.owner != owner or not b.built:
+		if not b.alive or b.owner != owner:
 			continue
-		if not _accepts(b, kind):
+		# Depósitos que caminan (elefante del rey de Ayutthaya): unidades con "deposito".
+		if b.is_unit():
+			if not (b.def.get("deposito", []) as Array).has(kind) or b.inside >= 0:
+				continue
+		elif not b.is_building() or not b.built or not _accepts(b, kind):
 			continue
 		var d := dist_to(probe, b)
-		if d < best_d:
+		if d < best_d or (d == best_d and best != null and b.id < best.id):
 			best = b
 			best_d = d
 	return best
@@ -1729,6 +1751,33 @@ func _check_victory() -> void:
 	for p in players:
 		if not p["defeated"] and not has_hito[p["id"]]:
 			_defeat(p["id"])
+
+
+## El monte paga al rey (Ayutthaya, §3.5.6): parte de lo que se entrega a un elefante
+## del rey entra además como riqueza, según el origen de la carga, con tope por
+## minuto y por elefante. Si otro elefante propio está a menos de la separación,
+## cobra solo el de id menor.
+func _tribute(e: SimEntity, d: SimEntity) -> void:
+	var tb: Dictionary = d.def["tributo"]
+	var pct := int(tb.get(e.carry_src, 0))
+	if pct <= 0:
+		return
+	var sep := int(tb.get("separacion", 8)) * P
+	for o in actives:
+		if o != d and o.alive and o.owner == d.owner and o.type == d.type and o.id < d.id and Sim.dist(o.x, o.y, d.x, d.y) < sep:
+			return
+	var minute := tick / 600
+	if d.trib_min != minute:
+		d.trib_min = minute
+		d.trib_used = 0
+	var caps: Array = tb["tope_por_edad"]
+	var cap := int(caps[clampi(int(players[d.owner]["age"]) - 1, 0, caps.size() - 1)]) + mods.tribute_cap_bonus(d.owner)
+	var add := mini(e.carry * pct / 100, cap - d.trib_used)
+	if add <= 0:
+		return
+	d.trib_used += add
+	players[d.owner]["res"]["riqueza"] = int(players[d.owner]["res"]["riqueza"]) + add
+	ledger(d.owner, "propio", "riqueza", add)
 
 
 ## Saca una unidad del juego sin que cuente como muerte (la cabeza que entra al corral).

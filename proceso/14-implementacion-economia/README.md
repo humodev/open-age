@@ -133,3 +133,29 @@ El autor preguntó en qué punto estaba la economía: se había avanzado varias 
     - **Traza en paz, 2 semillas:** de 4 a 6 cabezas por corral (compuerta: 4 o más). Motor entre los minutos 15 y 25: **42–44 %** (dentro de la banda).
     - **Para el balance:** avanzan rápido (edad II 5:31–6:05, III 10:52–11:03).
     - **Falta:** que los lof extra entrenen aldeanos con +50 % de tiempo, y probar el arreo con guerra.
+16. **Etapa 3f, Ayutthaya: el monte paga al rey.**
+    - **Elefante del rey:** unidad no militar que se entrena en el palacio: 80 de alimento + 80 de madera, 45 s, 600 de vida, sin ataque, población 2. Es **depósito que camina** de madera, alimento y piedra (la simulación ahora acepta unidades como depósito, trampa 6).
+    - **El tributo:** al entregarle una carga, entra además como riqueza el 30 % de la madera, los arbustos y la piedra, y el 15 % de la granja. Se cuenta según el origen de la carga (`carry_src`). El tope es de 20 / 30 / 40 / 45 por minuto por elefante, y +4 con el junco de tributo.
+    - **Límites:** si dos elefantes propios están a menos de 8 casillas, cobra uno solo. El máximo es 1 / 2 / 3 / 4 elefantes, y uno más con el puerto real (límite de unidades por edad, nuevo en la simulación).
+    - **Sin depósito común.** Los barrios ya no dan renta y el arrozal junto al agua pasa de +45 % a +25 %.
+    - **IA:** entrena elefantes hasta el máximo de la edad y cada 30 s los lleva junto a su grupo: el primero a la madera, el segundo al alimento y el tercero a la piedra.
+    - **Primer ajuste:** con 25 % / 10 % y topes de 16 / 24 el motor daba 17–23 %. La depuración mostró que los elefantes **sí** llegaban al tope; el problema era que la IA cargaba la arcilla de más.
+17. **Aldeanos virtuales para las seis civs** (crítica 03, regla 3): la riqueza por minuto del motor propio cuenta como gente ya puesta en riqueza, así la IA manda menos aldeanos a la arcilla.
+18. **Vista de conjunto de los seis motores** (traza en paz, una semilla, 25 minutos):
+
+    | Civ | Edad II | Edad III | Motor min 15–25 | Riqueza total |
+    |---|---|---|---|---|
+    | Ayutthaya (antes del último ajuste) | 7:42 | 15:59 | 21 % | 4618 |
+    | Tawantinsuyu | 7:15 | 13:40 | 47 % | 4299 |
+    | Mapuches | 5:46 | 9:51 | 37 % | 4589 |
+    | Guaraníes | 5:58 | 13:50 | 70 % | 4012 |
+    | Etiopía | 5:45 | 13:41 | 42 % | 4340 |
+    | Palmares | 7:53 | 16:44 | 34 % | 4272 |
+
+    **La riqueza total a los 25 minutos queda pareja (±7 %) entre las seis**, aunque cada una la consigue distinto: es lo que buscaba el diseño. Fuera de banda para el balance de la etapa 6:
+    - Ayutthaya, con el motor bajo (después se subieron los topes de las edades III y IV y un elefante más en la IV);
+    - guaraníes, con el motor alto;
+    - mapuches, que llegan muy rápido a la edad III;
+    - Palmares, en el borde.
+
+    Sigue la medición completa (12 partidas en paz y 12 con guerra).

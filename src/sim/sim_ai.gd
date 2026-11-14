@@ -13,6 +13,10 @@ var last_raid := 0 # incursiones y control del mapa: por tiempo transcurrido, no
 var last_spot := 0
 var last_road := 0
 var last_engine := -1000
+var last_elephant := -1000
+var _eng_mark_tick := 0
+var _eng_mark_val := 0
+var _eng_rate := 0
 var _no_route := {} # edificio -> tick desde el que se vuelve a intentar el camino
 var last_site := 0
 var rally := Vector2i(-1, -1)
@@ -156,18 +160,23 @@ func _economy(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, saving: 
 			counts[v.gather_kind] += 1
 		elif v.order == O.IDLE:
 			idle.append(v)
+	# Aldeanos virtuales (crítica 03, regla 3): la riqueza que da el motor propio cuenta
+	# como gente ya puesta en riqueza, así la IA no carga la arcilla de más.
+	var virt := _engine_rate(p) / 30
+	counts["riqueza"] += virt
 	# Reasignar uno si la proporción está muy desbalanceada.
 	if idle.is_empty() and vill.size() >= 8:
-		var over := _most(counts, ratio, vill.size(), true)
-		var under := _most(counts, ratio, vill.size(), false)
-		if over != under and counts[over] - vill.size() * ratio[over] / 100 >= 2 and vill.size() * ratio[under] / 100 - counts[under] >= 2:
+		var tot := vill.size() + virt
+		var over := _most(counts, ratio, tot, true)
+		var under := _most(counts, ratio, tot, false)
+		if over != under and counts[over] - tot * ratio[over] / 100 >= 2 and tot * ratio[under] / 100 - counts[under] >= 2:
 			for v in vill:
 				if v.order == O.GATHER and v.gather_kind == over and v.carry == 0:
 					idle.append(v)
 					counts[over] -= 1
 					break
 	for v in idle:
-		var kind := _most(counts, ratio, vill.size() + 1, false)
+		var kind := _most(counts, ratio, vill.size() + virt + 1, false)
 		var t := sim.find_resource(player, kind, centro.x, centro.y, 40000, -1, v.id)
 		if t == null and kind == "alimento":
 			if sim.can_afford(player, sim.dp(player).cost_of("granja", p["age"])):
@@ -244,6 +253,8 @@ func _engine(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_type: 
 			var rozas: int = (by_type.get("granja", []) as Array).size()
 			if rozas < food_people and int(p["res"]["alimento"]) < 600 and int(p["res"]["madera"]) >= int(dd.cost_of("granja", p["age"]).get("madera", 0)) + 30:
 				_try_build("granja", p, vill, centro, 1)
+		"ayutthaya":
+			_elephants(p, vill, centro)
 		"mapuches":
 			# Kawiñ solo si se ahorra para el hito y falta alimento: el corral más lleno, una vez por edad.
 			if saving and p["age"] < dd.edades.size():
@@ -273,6 +284,59 @@ func _engine(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_type: 
 			var cost: Dictionary = dd.cost_of("taller_tejido", p["age"])
 			if income - 30 * shops.size() >= 30 and int(p["res"]["madera"]) >= int(cost.get("madera", 0)) + 60:
 				_try_build("taller_tejido", p, vill, centro, 1)
+
+
+## Elefantes del rey (§9.3): entrenar hasta el máximo de la edad y llevar cada uno
+## junto a su grupo de aldeanos: el 1.º a la madera, el 2.º al alimento, el 3.º a la piedra.
+func _elephants(p: Dictionary, vill: Array[SimEntity], centro: SimEntity) -> void:
+	var dd := sim.dp(player)
+	if not dd.unidades.has("elefante_rey"):
+		return
+	var eles: Array[SimEntity] = []
+	for e in sim.actives:
+		if e.alive and e.owner == player and e.type == "elefante_rey":
+			eles.append(e)
+	var maxes: Array = dd.unidades["elefante_rey"]["maximo_por_edad"]
+	var want := int(maxes[clampi(int(p["age"]) - 1, 0, maxes.size() - 1)]) + sim.mods.engine_max_bonus(player, "elefante_rey")
+	var queued := 0
+	for q in centro.queue:
+		if q == "elefante_rey":
+			queued += 1
+	if eles.size() + queued < want and centro.queue.size() < 2 and vill.size() >= 8 and sim.can_afford(player, dd.cost_of("elefante_rey", p["age"])):
+		sim.push_command({"t": "train", "player": player, "building": centro.id, "type": "elefante_rey"})
+	if sim.tick - last_elephant < 300:
+		return
+	last_elephant = sim.tick
+	var kinds := ["madera", "alimento", "piedra"]
+	for i in eles.size():
+		var kind: String = kinds[mini(i, kinds.size() - 1)]
+		var sx := 0
+		var sy := 0
+		var n := 0
+		for v in vill:
+			if v.gather_kind == kind and (v.order == O.GATHER or v.order == O.RETURN):
+				var t: SimEntity = sim.by_id.get(v.target)
+				if t != null:
+					sx += t.x
+					sy += t.y
+					n += 1
+		if n < 2:
+			continue
+		var tx := sx / n
+		var ty := sy / n
+		var el := eles[i]
+		if Sim.dist(el.x, el.y, tx, ty) > 6000 and el.order == O.IDLE:
+			sim.push_command({"t": "move", "player": player, "ids": [el.id], "x": tx, "y": ty})
+
+
+## Riqueza por minuto del motor propio (último minuto), según el libro de ingresos.
+func _engine_rate(p: Dictionary) -> int:
+	var now := int(p["stats"].get("origen", {}).get("propio", {}).get("riqueza", 0))
+	if sim.tick - _eng_mark_tick >= 600:
+		_eng_rate = maxi(0, now - _eng_mark_val) * 600 / maxi(1, sim.tick - _eng_mark_tick)
+		_eng_mark_tick = sim.tick
+		_eng_mark_val = now
+	return _eng_rate
 
 
 ## Reserva del próximo hito: no gastar un recurso propio (mit'a, fama, kulliñ)

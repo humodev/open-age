@@ -65,6 +65,9 @@ var rally_y: int
 var rally_target: int = -1
 var farmer: int = -1
 var garrison: Array[int] = [] # unidades alojadas
+var carry_src: String = "" # de dónde salió la carga: tipo de recurso, o "granja"
+var trib_min: int = -1 # elefante del rey: minuto del último cobro
+var trib_used: int = 0 # elefante del rey: riqueza cobrada en ese minuto
 var heads: int = 0 # corral mapuche: cabezas de ganado
 var breed_ms: int = 0 # corral: tiempo acumulado hacia la próxima cría
 var feast_age: int = 0 # corral: edad en la que se hizo el último kawiñ (0: nunca)
