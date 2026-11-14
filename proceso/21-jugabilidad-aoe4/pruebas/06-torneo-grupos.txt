@@ -27,3 +27,13 @@ mapuches     vs palmares     terreno=delta   13:44  ganador: palmares  edades 1-
 palmares     vs mapuches     terreno=bosque_templado 12:19  ganador: palmares  edades 2-1
 mapuches     vs tawantinsuyu terreno=rio     30:00  ganador: (tawantinsuyu por puntos)  edades 2-3
 tawantinsuyu vs mapuches     terreno=rio     28:22  ganador: tawantinsuyu  edades 3-3
+palmares     vs tawantinsuyu terreno=llano   24:03  ganador: palmares  edades 3-3
+tawantinsuyu vs palmares     terreno=bosque  27:34  ganador: tawantinsuyu  edades 3-3
+
+Victorias por destrucción de hitos:
+  ayutthaya    3 / 10
+  etiopia      2 / 10
+  guaranies    5 / 10
+  mapuches     3 / 10
+  palmares     5 / 10
+  tawantinsuyu 6 / 10

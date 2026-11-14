@@ -184,3 +184,17 @@
 
      Cuatro de seis tienen las tres funciones antes del minuto 12. Palmares llega a las 12:10. Ayutthaya no entrena lanceros en 15 minutos: su lancero pide la edad II, y la IA prioriza el elefante y la compañía japonesa. Va al torneo.
    - Determinismo, `tests/grilla.gd`, `tests/jugabilidad.gd` y autotest en las seis civs: OK.
+10. **(03:00) Torneo con solo las formaciones** (antes de almacenes y producción por función), 2 semillas, 10 partidas por civ ([resultado](pruebas/06-torneo-grupos.txt)):
+
+    | Civ | 5 semillas, sin formaciones (etapa 18) | Con formaciones |
+    |---|---|---|
+    | Palmares | 40 % | 70 % |
+    | Tawantinsuyu | 36 % | 70 % |
+    | Guaraníes | 68 % | 60 % |
+    | Mapuches | 48 % | 40 % |
+    | Ayutthaya | 56 % | 30 % |
+    | Etiopía | 52 % | 30 % |
+
+    - **Las partidas se definen más:** 24 de 30 terminan con los hitos destruidos (antes, 61 %). Los ejércitos que llegan juntos rompen bases.
+    - **El reparto se mueve,** a favor de las civs de infantería con mucha distancia (Palmares, Tawantinsuyu) y en contra de las de caballería y elefantes (Etiopía, Ayutthaya). Tiene sentido: los montados iban adelante solos y ahora marchan al paso de la infantería.
+    - **No ajusto con este torneo:** ya hay almacenes y producción por función encima, y el torneo con el código final está corriendo. Con 10 partidas por civ el ruido es de unos ±15 puntos.
