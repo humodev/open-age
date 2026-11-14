@@ -533,6 +533,8 @@ func _site(type: String, centro: SimEntity, margin: int) -> Vector2i:
 func _site_near(type: String, c: Vector2i, margin: int, min_r: int = 1) -> Vector2i:
 	if not sim.dp(player).edificios.has(type):
 		return Vector2i(-1, -1)
+	if not sim.engine_room(type, player):
+		return Vector2i(-1, -1) # sin cupo en la edad: ningún lugar va a servir
 	var tam: Array = sim.dp(player).edificios[type]["tam"]
 	var w: int = tam[0]
 	var h: int = tam[1]

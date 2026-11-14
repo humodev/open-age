@@ -1809,6 +1809,21 @@ func can_place(type: String, tx: int, ty: int, pid: int = -1) -> bool:
 	return map.is_flat(tx, ty, tam[0], tam[1])
 
 
+## ¿Queda cupo para otra pieza de motor de este tipo en la edad actual? Sin mirar el lugar:
+## la IA lo pregunta antes de recorrer cientos de lugares que fallarían todos.
+func engine_room(type: String, pid: int) -> bool:
+	var def: Dictionary = dp(pid).edificios.get(type, {})
+	var maxes: Array = def.get("maximo_por_edad", [])
+	if maxes.is_empty():
+		return true
+	var count := 0
+	for e in actives:
+		if e.alive and e.owner == pid and e.type == type:
+			count += 1
+	var age := clampi(int(players[pid]["age"]) - 1, 0, maxes.size() - 1)
+	return count < int(maxes[age]) + int(mods.engine_max_bonus(pid, type))
+
+
 ## Piezas de motor (docs/diseno/revision-economia/v3/04, §3.1): máximo por edad,
 ## contando las que están en obra, y separación mínima entre piezas del mismo tipo.
 func _engine_slot_ok(type: String, def: Dictionary, tx: int, ty: int, pid: int) -> bool:

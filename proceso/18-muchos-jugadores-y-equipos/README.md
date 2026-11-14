@@ -107,7 +107,7 @@ Plan: [`docs/11-partidas-de-muchos-jugadores.md`](../../docs/11-partidas-de-much
      ![](minimapa-aliado.jpg)
    - **Pruebas:** autotest OK en 1 contra 1, banco de 200 unidades sin cambios (9,7 ms por tick), y capturas de 2v2 y 3v3 en el segundo 40.
 
-6. **(17:20) Paso 6, rendimiento con 6 (en curso).**
+6. **(17:20) Paso 6, rendimiento con 6.**
    - **`tests/bench.gd -- --jugadores=6`:** 6 × 150 unidades que convergen al centro, y una partida de 6 IA de 20 minutos. A ×4 de velocidad entran 4 ticks en los 100 ms de presupuesto, así que cada tick tiene que quedar por debajo de 25 ms.
    - **Primera medición, con otras dos pruebas corriendo en la misma máquina** ([resultado](pruebas/06-bench-6.txt)):
      - batalla de 900 unidades: 46 ms por tick, peor 215 ms;
@@ -152,3 +152,20 @@ Plan: [`docs/11-partidas-de-muchos-jugadores.md`](../../docs/11-partidas-de-much
      | Tawantinsuyu | 52 % | 30 % |
 
      Con 10 partidas el ruido es de unos ±15 puntos. Lo que sí cambia es que hay menos victorias por destrucción de hitos (16 de 30, antes 2 de cada 3), y puede venir del nuevo lugar del ataque. Lo confirmo con 5 semillas antes de tocar nada.
+
+8. **(20:10) Paso 6, cierre: picos de la IA y medición limpia.**
+   - **Medición sin otras pruebas en paralelo:** la batalla de 900 bajó a 32 ms por tick. En la partida de 6 IA aparecían picos de hasta 688 ms, un tirón visible.
+   - **Búsqueda del pico:**
+     - midiendo cada parte de `think()`, el tiempo estaba en el motor del Tawantinsuyu: unos 600 ms cada vez que pensaba, desde el minuto 12;
+     - al llegar al máximo de talleres de la edad, buscaba lugar igual: `_site_near` probaba unos 3600 lugares y, en cada uno, `can_place` recorría todas las entidades para contar talleres, y todos fallaban;
+     - el arreglo es `Sim.engine_room()`, que pregunta una vez si queda cupo y, si no queda, la búsqueda ni empieza. La IA hace lo mismo que antes, solo que se entera antes.
+   - **Resultado** ([resultado](pruebas/06-bench-6-limpio.txt)):
+
+     | Medida | Primera | Ahora |
+     |---|---|---|
+     | Batalla 6 × 150, promedio por tick | 46 ms | 32 ms |
+     | 6 IA, 20 minutos, promedio | 21 ms | 18 ms |
+     | 6 IA, último minuto | 35 ms | 28 ms |
+     | 6 IA, peor tick | 782 ms | 140 ms |
+   - **Lectura:** 4 ticks por cuadro piden menos de 25 ms por tick. Una partida de 6 IA entra en promedio a ×4. En los momentos más cargados (fin de partida y batallas de 900 unidades) entra a ×3, no a ×4. Lo anoto como deuda; el próximo paso sería caminos con caché por región, como decía el plan.
+   - Determinismo OK.
