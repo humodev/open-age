@@ -189,3 +189,5 @@ El autor preguntó en qué punto estaba la economía: se había avanzado varias 
     - **IA:** funda la corte cuando a la arcilla junto a ella le quedan menos de 100, al lado de la arcilla propia con más riqueza (o la del centro desde la edad III).
     - **Traza de 30 minutos:** dos mudanzas (11:34 y 18:39), la segunda con fiesta.
     - **De paso:** el modo "paz" de las pruebas ya no asalta ingenios, para no contaminar la medición de lo disputado.
+23. **Tawantinsuyu, capa 1:** la arcilla que toca la red de caminos unida a la llaqta se saca un 20 % más rápido (`caminos.arcilla_pct`). La red se calcula con la misma búsqueda que la conexión de edificios. La IA todavía no traza caminos hacia la arcilla: el beneficio es para el jugador.
+24. **Humo de campañas** con todos los cambios de la economía: las 25 misiones arrancan, y ninguna menciona el kulliñ como recurso.

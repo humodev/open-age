@@ -8,6 +8,7 @@ const O := SimEntity.Order
 
 var sim: Sim
 var _acc := {} # acumuladores en milésimas: "pid:clave" -> int
+var _clay_linked := {} # jugador -> {id de arcilla: true} unidas por camino
 var _respawns: Array = [] # [tipo, tx, ty, tick] de ingenios por rehacer
 var _craft_hits := {} # edificio con oficios -> [[tick, daño], …] de los últimos 5 s
 var _roads := PackedByteArray() # casillas con camino
@@ -500,6 +501,8 @@ func _update_connection(pid: int) -> void:
 	for e in sim.actives:
 		if e.owner == pid and e.is_building():
 			_connected.erase(e.id)
+	var linked := {}
+	_clay_linked[pid] = linked
 	if start == null:
 		return
 	var seen := PackedByteArray()
@@ -524,10 +527,20 @@ func _update_connection(pid: int) -> void:
 					continue
 				var o := sim.map.occupant(nx, ny)
 				var ob: SimEntity = sim.by_id.get(o)
+				if ob != null and ob.is_resource() and ob.type == "riqueza":
+					linked[ob.id] = true # arcilla tocada por la red de caminos
 				if ob == null or ob.owner != pid or not ob.is_building():
 					continue
 				seen[ny * n + nx] = 1
 				queue.append(Vector2i(nx, ny))
+
+
+## Capa 1 inca (§3.5.1): la arcilla que toca la red de caminos unida a la llaqta
+## se saca más rápido.
+func clay_bonus(pid: int, t: SimEntity) -> int:
+	if not has(pid, "caminos") or not (_clay_linked.get(pid, {}) as Dictionary).has(t.id):
+		return 0
+	return int(m(pid, "caminos").get("arcilla_pct", 0))
 
 
 func connected(b: SimEntity) -> bool:

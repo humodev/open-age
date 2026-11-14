@@ -449,7 +449,7 @@
   "caminos": {
    "velocidad_pct": 35,
    "bono_conectado_pct": 20,
-   "penal_desconectado_pct": 0
+   "penal_desconectado_pct": 0, "arcilla_pct": 20
   }
  },
  "ia_unidades": [

@@ -943,7 +943,8 @@ func _do_gather(e: SimEntity) -> void:
 	if t.is_building():
 		t.farmer = e.id
 	var rate_key: String = String(t.def.get("tasa_clave", "granja")) if t.is_building() else String(t.def.get("tasa_clave", kind))
-	var rate: int = int(e.def["tasa"].get(rate_key, e.def["tasa"].get("granja", 0))) * (100 + mod(e.owner, "tasa:" + rate_key) + _site_bonus(t)) / 100
+	var clay := mods.clay_bonus(e.owner, t) if t.is_resource() and t.type == "riqueza" else 0
+	var rate: int = int(e.def["tasa"].get(rate_key, e.def["tasa"].get("granja", 0))) * (100 + mod(e.owner, "tasa:" + rate_key) + _site_bonus(t) + clay) / 100
 	e.carry_res = kind
 	e.carry_src = "granja" if t.is_building() else t.type
 	# Arcilla ajena o del centro: con el techo de lo disputado lleno, no se extrae.
