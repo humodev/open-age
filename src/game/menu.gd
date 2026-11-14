@@ -166,7 +166,19 @@ func _ready() -> void:
 	var gap2 := Control.new()
 	gap2.custom_minimum_size = Vector2(0, 10)
 	box.add_child(gap2)
-	box.add_child(_button("Salir", func() -> void: get_tree().quit()))
+	# --- opciones --- (src/game/ui/opciones.gd, el mismo diálogo de la pausa)
+	# "Opciones" y "Salir" comparten renglón: el menú no crece y entra a 1366×768.
+	var orow := HBoxContainer.new()
+	orow.add_theme_constant_override("separation", 10)
+	box.add_child(orow)
+	var ob := _button("Opciones", func() -> void: open_options())
+	ob.custom_minimum_size.x = 185
+	orow.add_child(ob)
+	var qb := _button("Salir", func() -> void: get_tree().quit())
+	qb.custom_minimum_size.x = 185
+	orow.add_child(qb)
+	_options = Opciones.dialogo(self, get_parent().get_parent() if get_parent() != null else null)
+	# --- fin opciones ---
 
 	var hint := Label.new()
 	hint.text = "Clic izquierdo: seleccionar · Clic derecho: ordenar · Q W E R / A S D F / Z X C V: grilla de comandos\nH: centro · . : aldeano inactivo · Ctrl+1…9: grupos · F3: velocidad · Esc: pausa"
@@ -175,6 +187,15 @@ func _ready() -> void:
 	hint.add_theme_font_size_override("font_size", 14)
 	hint.add_theme_color_override("font_color", Color(Palette.UI_DIM, 0.85))
 	box.add_child(hint)
+
+
+# --- opciones ---
+var _options: PanelContainer
+
+
+func open_options() -> void:
+	_options.visible = true
+# --- fin opciones ---
 
 
 func _seed() -> int:

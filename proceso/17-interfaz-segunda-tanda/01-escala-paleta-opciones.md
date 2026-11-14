@@ -118,3 +118,73 @@ Peor caso de cada regla con la paleta nueva (salida de `tests/test_paleta.gd`):
 - Implementa en GDScript la simulación de daltonismo y el ΔE.
 - Recorre los cinco modos, imprime el peor caso de cada regla y falla si alguna queda por debajo del umbral.
 - Resultado: `PALETA: OK` ([salida completa](pruebas/a-test_paleta.txt)).
+
+### 3. Escala de la interfaz
+
+**Cómo se estira:**
+- `project.godot` pasa a `window/stretch/mode="canvas_items"` con base 1920×1080 y aspecto `expand`.
+- El 2D (HUD, menú, diálogos, barras) se dibuja en unidades de una pantalla de 1080 y Godot lo estira a la ventana real.
+- El 3D no cambia: se dibuja siempre a la resolución nativa.
+
+**La opción "Escala de la interfaz"** (`src/game/ui/opciones.gd`, `Opciones.aplicar_escala`) multiplica ese estiramiento con `content_scale_factor`:
+- **Automática:** 100 % desde 1080p para arriba.
+  - Por debajo no deja que la interfaz baje de 0,85 píxeles reales por unidad, así que a 1366×768 queda en 120 %.
+  - Sin ese piso, el estiramiento puro daría 0,71, y las letras de 12 px quedarían en 8,5 px reales.
+  - Tampoco agranda tanto que la pantalla lógica quede por debajo de 1280×720: ahí todavía entran el panel de selección, la grilla y el minimapa en una fila.
+- **Manual:** 80 %, 100 %, 125 % y 150 %, relativos al tamaño que tendría a 1080p.
+- El cambio se ve en vivo, sin reiniciar. Si la ventana cambia de tamaño, la escala se recalcula.
+
+**Tropiezo: la prueba de punta a punta falló con la escala.**
+- Cinco pasos daban `FALLO`: la selección por arrastre, la recolección, el ✕ del panel y el registro.
+- **Causa:** `Input.parse_input_event` toma las posiciones en píxeles de la ventana, pero la prueba las calculaba con `unproject_position`, que devuelve unidades de la interfaz.
+- **Arreglo:** `_mouse` en `main.gd` (bloque `# --- escala ---`) las convierte con `get_viewport().get_final_transform()`.
+- Con eso da `AUTOTEST: OK` a la escala por defecto y también con `--ventana=1366x768 --escala=1.5`.
+- El juego en sí no tenía el problema: los eventos reales del mouse ya llegan convertidos, y la auditoría temía por el minimapa y el `Controller`, pero `project_ray_*` y `unproject_position` trabajan en las mismas unidades que el mouse.
+
+**Después**, con la escala automática:
+
+| 1366×768 (automática, 120 %) | 3840×2160 (automática, 100 % = ×2) |
+|---|---|
+| ![1366](a-escala-1366x768.jpg) | ![4K](a-escala-3840x2160.jpg) |
+
+La misma esquina de la grilla a 4K, en tamaño real (compárese con el recorte de "antes"). El texto queda nítido: Godot rasteriza las fuentes al tamaño final, no estira una textura:
+
+![4K, recorte](a-escala-3840x2160-recorte.jpg)
+
+### 4. Menú de opciones guardado
+
+**Dónde vive:** `src/game/ui/opciones.gd` (`class_name Opciones`), con dos partes:
+- los valores, como variables estáticas;
+- el diálogo, que se abre desde el menú principal (botón "Opciones", que comparte renglón con "Salir") y desde la pausa.
+- `Hud._build_options` ahora solo llama a `Opciones.dialogo(self, main)`.
+
+**Opciones:**
+
+| Sección | Opción | Qué hace |
+|---|---|---|
+| Interfaz | Escala | Automática, 80 %, 100 %, 125 % o 150 % |
+| Interfaz | Colores | Segura, deuteranopía, protanopía, tritanopía, o "yo, aliados y rivales", con una muestra de los equipos, los recursos y la vida |
+| Interfaz | Barras de vida siempre visibles | Lo mismo que mantener `Alt` |
+| Sonido | General, música, efectos y ambiente | De 0 a 100 %. El ambiente es nuevo: `GameAudio.set_ambient_volume` |
+| Cámara | Mover con los bordes | Desplazamiento por borde de pantalla |
+| Cámara | Velocidad | Del 50 al 200 %: multiplica el desplazamiento con teclado y bordes |
+| Pantalla | Pantalla completa | Pantalla completa o ventana maximizada |
+
+**Interruptores legibles.** Los `CheckButton` de Godot, apagados, eran un punto gris casi invisible sobre el panel oscuro. Se cambiaron por botones que dicen "Sí" o "No" y se pintan de dorado cuando están encendidos: se leen sin depender del color.
+
+**Cómo se guarda:**
+- En `user://opciones.cfg`, con `ConfigFile`, al cerrar el diálogo.
+- Se lee al arrancar, en `main._opciones_al_arrancar()` (bloque `# --- opciones ---`).
+- Las capturas (`--shot`) y la prueba de punta a punta (`--autotest`) no leen ni escriben el archivo, para que salgan siempre iguales y no pisen lo que el autor configuró.
+
+**Argumentos nuevos para las capturas:**
+- `--escala=auto|0.8|1|1.25|1.5`;
+- `--paleta=<modo>`;
+- `--barras=1`;
+- `--abrir=opciones`.
+
+El diálogo desde el menú principal, a 1366×768:
+
+![opciones](a-opciones-menu-1366x768.jpg)
+
+**Pendiente, para la parte B o la mejora 17 de la auditoría:** a 1366×768, el renglón de atajos del pie del menú principal queda por debajo del borde. Pasaba antes de este cambio, y peor: sin estiramiento, la columna medía lo mismo en una pantalla de 768. Lo resuelve el menú con jerarquía (P14), que reordena esa columna.

@@ -290,38 +290,10 @@ var _help: PanelContainer
 
 
 func _build_options() -> void:
-	_options = _make_dialog("Opciones", "", [["Cerrar", func() -> void: _options.visible = false]])
-	var vb: VBoxContainer = _options.get_child(0)
-	var at := 2
-	for bus in [["General", 0], ["Música", -1], ["Efectos", -2]]:
-		var row := HBoxContainer.new()
-		var l := Label.new()
-		l.text = bus[0]
-		l.custom_minimum_size = Vector2(110, 0)
-		row.add_child(l)
-		var sl := HSlider.new()
-		sl.min_value = 0
-		sl.max_value = 100
-		sl.value = 80
-		sl.custom_minimum_size = Vector2(220, 24)
-		var which: int = bus[1]
-		sl.value_changed.connect(func(v: float) -> void: _set_volume(which, v))
-		row.add_child(sl)
-		vb.add_child(row)
-		vb.move_child(row, at)
-		at += 1
-	var fs := CheckButton.new()
-	fs.text = "Pantalla completa"
-	fs.button_pressed = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
-	fs.toggled.connect(func(on: bool) -> void: DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if on else DisplayServer.WINDOW_MODE_MAXIMIZED))
-	vb.add_child(fs)
-	vb.move_child(fs, at)
-	var edge := CheckButton.new()
-	edge.text = "Mover la cámara con los bordes"
-	edge.button_pressed = cam.edge_pan
-	edge.toggled.connect(func(on: bool) -> void: cam.edge_pan = on)
-	vb.add_child(edge)
-	vb.move_child(edge, at + 1)
+	# --- opciones --- el mismo diálogo que el menú principal, guardado en user://opciones.cfg
+	# (src/game/ui/opciones.gd): escala, colores, barras de vida, sonido, cámara y pantalla.
+	_options = Opciones.dialogo(self, main)
+	# --- fin opciones ---
 
 
 func _set_volume(which: int, v: float) -> void:

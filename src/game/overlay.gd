@@ -25,6 +25,7 @@ func _draw() -> void:
 	var view := ctrl.view
 	var zoom_k := clampf(40.0 / cam.zoom, 0.6, 1.6)
 	var all_bars := Input.is_key_pressed(KEY_ALT) and ctrl.enabled # --- mundo --- Alt: todas las barras
+	all_bars = all_bars or Opciones.barras_siempre # --- opciones --- barras de vida siempre visibles
 	for e in sim.actives:
 		var sel := view.selected.has(e.id)
 		var hov := view.hovered == e.id
