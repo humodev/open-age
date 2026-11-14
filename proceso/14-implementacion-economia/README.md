@@ -236,3 +236,9 @@ El autor preguntó en qué punto estaba la economía: se había avanzado varias 
     - **Palmares:** cada puesto de oficio da 18 (antes 15) y el tope de puestos pasa a 5 / 8 / 10 / 10.
 
     Se vuelve a correr el torneo.
+29. **Torneo tras el primer ajuste** ([resultado](pruebas/05-torneo-ajuste-1.txt)): Etiopía 8, mapuches 7, Tawantinsuyu 7, Palmares 4, guaraníes 2 y Ayutthaya 2. El ajuste económico casi no movió los resultados; con 2 partidas por cruce hay mucho ruido (los guaraníes pasaron de 5 a 2 sin cambios). La señal estable es Etiopía arriba y Ayutthaya abajo, y la ventaja etíope es militar: el jinete noble de la edad I tiene 170 de vida contra 120 de los guerreros de las demás, y el jabalinero pega 10 contra 7.
+30. **Segundo ajuste (militar):**
+    - **Etiopía:** jinete noble de 170 a 150 de vida; jabalinero de 10 a 9 de ataque.
+    - **Ayutthaya:** elefante de guerra de 220 a + 160 r a 180 a + 130 r; infantería de dap de 11 a 12 de ataque.
+
+    El torneo siguiente va con 3 partidas por cruce para bajar el ruido.
