@@ -25,3 +25,5 @@ guaranies    vs tawantinsuyu terreno=rio     27:32  ganador: tawantinsuyu  edade
 tawantinsuyu vs guaranies    terreno=selva   30:00  ganador: (guaranies por puntos)  edades 3-4
 mapuches     vs palmares     terreno=delta   13:44  ganador: palmares  edades 1-2
 palmares     vs mapuches     terreno=bosque_templado 12:19  ganador: palmares  edades 2-1
+mapuches     vs tawantinsuyu terreno=rio     30:00  ganador: (tawantinsuyu por puntos)  edades 2-3
+tawantinsuyu vs mapuches     terreno=rio     28:22  ganador: tawantinsuyu  edades 3-3

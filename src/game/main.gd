@@ -46,6 +46,7 @@ var _seed := 0
 var _shot_done := false
 var _menu_mode := false
 var _menu: MainMenu
+var _errores := RegistroErrores.new() # SCRIPT ERROR → telemetría (proceso/20)
 var _drift := 0.0
 var audio: GameAudio
 var _replay_meta := {}
@@ -54,6 +55,7 @@ const REPLAY := "user://ultima_partida.json"
 
 
 func _ready() -> void:
+	OS.add_logger(_errores)
 	for a in OS.get_cmdline_user_args():
 		var kv := a.trim_prefix("--").split("=", true, 1)
 		_args[kv[0]] = kv[1] if kv.size() > 1 else "1"
@@ -599,6 +601,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 
 
 func _process(delta: float) -> void:
+	_errores.flush(sim)
 	if not paused:
 		_acc += delta * speed
 		var tick_s := sim.tick_ms / 1000.0

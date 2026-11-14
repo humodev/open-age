@@ -48,6 +48,7 @@ func _init() -> void:
 	var no_site := {} # civ:edificio -> n
 	var stuck := {} # tipo de unidad:orden -> n
 	var slow := [] # ms de los ticks lentos
+	var errors := {} # lugar · mensaje -> veces (SCRIPT ERROR del juego)
 	var rows: Array[String] = []
 	for path in files:
 		var lines := FileAccess.get_file_as_string(path).split("\n", false)
@@ -81,6 +82,9 @@ func _init() -> void:
 					stuck[k2] = int(stuck.get(k2, 0)) + 1
 				"tick_lento":
 					slow.append(int(det.get("ms", 0)))
+				"error_script":
+					var ke := "%s · %s" % [det.get("lugar", "?"), det.get("msg", "")]
+					errors[ke] = int(errors.get(ke, 0)) + 1
 			if int(ev[3]) >= 0 and tipo in ["trabada", "sin_camino", "ocioso"]:
 				var key := Vector2i(int(ev[3]) / CELL, int(ev[4]) / CELL)
 				cells[key] = int(cells.get(key, 0)) + 1
@@ -116,6 +120,7 @@ func _init() -> void:
 	_top(md, "Órdenes rechazadas más frecuentes", msgs)
 	_top(md, "Edificios que la IA no pudo ubicar", no_site)
 	_top(md, "Unidades que se rinden (tipo y orden)", stuck)
+	_top(md, "Errores de script del juego", errors)
 	if not slow.is_empty():
 		slow.sort()
 		md.append("## Ticks lentos")

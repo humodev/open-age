@@ -70,3 +70,7 @@ No hay telemetría. Lo más parecido son los libros de la simulación (`Sim.ledg
    - **Causa:** la ayuda de la barra de recursos (los nombres de la riqueza de cada pueblo) usa la misma ventana que la grilla de órdenes, y esa ventana pedía la casilla de la grilla. Pasar el mouse por los recursos repetía el error hasta tirar el juego.
    - **Arreglo:** `hud.gd` solo dibuja la casilla si la hay. El autotest ahora pasa el mouse por la barra de recursos (control 0) y da OK sin errores.
    - **Pendiente:** que el juego guarde los SCRIPT ERROR en la telemetría, así se ven en el informe aunque no se mire la consola.
+5. **(02:40) Los errores de script del juego entran en la telemetría** (`src/game/registro_errores.gd`).
+   - **Cómo:** Godot 4.7 permite registrar un `Logger` con `OS.add_logger`, y este recibe cada SCRIPT ERROR. Como Godot puede llamarlo desde otro hilo, los errores se encolan y `main.gd` los vuelca a la telemetría una vez por cuadro, con el tick de la partida: tipo `error_script`, lugar `archivo:línea` y mensaje, una vez por lugar cada minuto de juego.
+   - **Informe:** sección nueva "Errores de script del juego". Un error como el de la ayuda de la barra de recursos, que tiró el juego del autor, ahora aparece aunque nadie mire la consola.
+   - **Prueba:** un script mínimo provoca un acceso inválido y el registro lo captura con su archivo y línea. Autotest OK con el registro prendido.
