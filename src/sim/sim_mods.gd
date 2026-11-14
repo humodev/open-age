@@ -9,7 +9,8 @@ const O := SimEntity.Order
 var sim: Sim
 var _acc := {} # acumuladores en milésimas: "pid:clave" -> int
 var _clay_linked := {} # jugador -> {id de arcilla: true} unidas por camino
-var _respawns: Array = [] # [tipo, tx, ty, tick] de ingenios por rehacer
+var _respawns: Array = []
+var _tambo_of := {} # tambo inca -> tipo de ingenio que vuelve si cae # [tipo, tx, ty, tick] de ingenios por rehacer
 var _craft_hits := {} # edificio con oficios -> [[tick, daño], …] de los últimos 5 s
 var _roads := PackedByteArray() # casillas con camino
 var _connected := {} # id de edificio -> true si está conectado a la capital
@@ -486,6 +487,9 @@ func on_building_placed(b: SimEntity) -> void:
 
 
 func on_building_removed(b: SimEntity) -> void:
+	if _tambo_of.has(b.id):
+		_respawns.append([_tambo_of[b.id], b.tx, b.ty, sim.tick + 360000 / sim.tick_ms])
+		_tambo_of.erase(b.id)
 	if b.def.get("camino", false):
 		for yy in range(b.ty, b.ty + b.h):
 			for xx in range(b.tx, b.tx + b.w):
@@ -639,6 +643,61 @@ func _neutral_loot(e: SimEntity, pid: int) -> void:
 				sim.events.append({"t": "freed", "id": u.id, "player": pid})
 	sim.events.append({"t": "notice", "player": pid, "text": "Ingenio destruido: +%d de riqueza" % loot})
 	_respawns.append([e.type, e.tx, e.ty, sim.tick + int(e.def.get("rehace_ms", 360000)) / sim.tick_ms])
+
+
+## Regalo de cumbi (Tawantinsuyu, §3.5.1): en la edad III, mit'a por el ingenio de su
+## mitad del mapa. Cobra el botín sin pelear y queda un tambo inca sin flechas; si lo
+## destruyen, el ingenio vuelve a los 6 minutos.
+func cumbi_target(pid: int) -> SimEntity:
+	if not has(pid, "regalo_cumbi"):
+		return null
+	var cap: SimEntity = null
+	var rivals: Array[SimEntity] = []
+	for e in sim.actives:
+		if e.alive and e.is_building() and e.capital:
+			if e.owner == pid:
+				cap = e
+			elif e.owner >= 0:
+				rivals.append(e)
+	if cap == null:
+		return null
+	var best: SimEntity = null
+	var best_d := 1 << 60
+	for e in sim.actives:
+		if not (e.alive and e.owner < 0 and e.def.has("botin_por_edad")):
+			continue
+		var mine := Sim.dist(e.x, e.y, cap.x, cap.y)
+		var theirs := 1 << 60
+		for r in rivals:
+			theirs = mini(theirs, Sim.dist(e.x, e.y, r.x, r.y))
+		if mine < theirs and mine < best_d:
+			best = e
+			best_d = mine
+	return best
+
+
+func cumbi_gift(pid: int) -> void:
+	var cfg := m(pid, "regalo_cumbi")
+	var p: Dictionary = sim.players[pid]
+	var t := cumbi_target(pid)
+	if t == null or int(p["age"]) < int(cfg.get("edad", 3)) or int(p["res"].get(cfg["recurso"], 0)) < int(cfg["costo"]):
+		return
+	p["res"][cfg["recurso"]] = int(p["res"][cfg["recurso"]]) - int(cfg["costo"])
+	var age := int(p["age"])
+	var table: Array = t.def["botin_por_edad"]
+	var loot := mini(int(table[clampi(age - 1, 0, table.size() - 1)]), sim.disputed_room(pid))
+	if loot > 0:
+		p["res"]["riqueza"] = int(p["res"]["riqueza"]) + loot
+		sim.disputed_add(pid, loot)
+		sim.ledger(pid, "cumbi", "riqueza", loot)
+	var tx := t.tx
+	var ty := t.ty
+	var kind := t.type
+	sim.remove_quietly(t)
+	sim.map.clear(tx, ty, t.w, t.h)
+	var tambo := sim.spawn_building(str(cfg["edificio"]), pid, tx, ty, true)
+	_tambo_of[tambo.id] = kind
+	sim.events.append({"t": "notice", "player": pid, "text": "Regalo de cumbi: el ingenio pasa a ser un tambo (+%d de riqueza)" % loot})
 
 
 ## Los ingenios destruidos vuelven si no hay soldados a 12 casillas.

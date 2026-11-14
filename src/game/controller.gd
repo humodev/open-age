@@ -218,6 +218,16 @@ func commands() -> Array[Dictionary]:
 				out.append({"slot": 4 + ki, "id": "comprar_" + k, "icon": k, "kind": "trade", "op": "comprar", "recurso": k, "building": first.id, "name": "Comprar %d de %s" % [lot, Palette.RES_NAMES[k].to_lower()], "cost": {"riqueza": price}, "desc": "El precio sube con cada compra.", "locked": ""})
 		if first.def.has("empaca_en"):
 			out.append({"slot": 7, "id": "desarmar", "icon": "carga", "kind": "pack", "name": "Desarmar la corte", "cost": {}, "desc": "La corte se levanta y camina con su gente: viaja lenta y se vuelve a armar donde haga falta.", "locked": "" if first.queue.is_empty() else "Esperá que termine la cola", "building": first.id})
+		if first.capital and sim.dp(local).has_mod("regalo_cumbi"):
+			var rc: Dictionary = sim.dp(local).mod("regalo_cumbi")
+			var why_c := ""
+			if int(sim.players[local]["age"]) < int(rc.get("edad", 3)):
+				why_c = "Desde la edad III"
+			elif sim.mods.cumbi_target(local) == null:
+				why_c = "No hay ingenio en tu mitad del mapa"
+			elif int(sim.players[local]["res"].get(rc["recurso"], 0)) < int(rc["costo"]):
+				why_c = "Hace falta %d de mit'a" % int(rc["costo"])
+			out.append({"slot": 9, "id": "cumbi", "icon": "riqueza", "kind": "cumbi", "name": "Regalo de cumbi", "cost": {}, "desc": "Tela fina como regalo político: %d de mit'a por el ingenio de tu mitad del mapa. Cobrás su botín sin pelear y queda un tambo inca. Si lo destruyen, el ingenio vuelve a los 6 minutos." % int(rc["costo"]), "locked": why_c})
 		if first.def.has("regimiento") and first.built:
 			var rg: Dictionary = first.def["regimiento"]
 			var why_r := ""
@@ -317,6 +327,8 @@ func run_command(cmd: Dictionary) -> void:
 			sim.push_command({"t": "kawin", "player": local, "building": cmd["building"]})
 		"regimiento":
 			sim.push_command({"t": "regimiento", "player": local, "building": cmd["building"]})
+		"cumbi":
+			sim.push_command({"t": "cumbi", "player": local})
 		"ungarrison":
 			for e in selected_entities():
 				if e.is_building() and e.owner == local:

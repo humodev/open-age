@@ -194,3 +194,4 @@ El autor preguntó en qué punto estaba la economía: se había avanzado varias 
 25. **Detalles de motor que faltaban:**
     - Mapuches: los lof que no son la capital entrenan un 50 % más lento (`lento_fuera_de_capital_pct`).
     - Palmares: el mocambo con 6 árboles o más a 4 casillas da +5 de fama por minuto.
+26. **Tawantinsuyu: regalo de cumbi.** En la edad III, 120 de mit'a por el ingenio de su mitad del mapa (el más cercano a la llaqta propia que a las capitales rivales). Cobra el botín sin pelear, dentro del techo de lo disputado, y el ingenio pasa a ser un **tambo** inca sin flechas. Si lo destruyen, el ingenio vuelve a los 6 minutos. Hay botón en la capital con su motivo si no se puede, y la IA lo usa cuando sobra mit'a. Traza: regalo a las 13:40, +100 de riqueza.

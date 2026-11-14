@@ -162,6 +162,8 @@ func _apply(c: Dictionary) -> void:
 			_cmd_research(pid, c["building"], c["tech"])
 		"garrison":
 			_cmd_garrison(pid, _own_units(pid, c.get("ids", [])), c.get("building", -1))
+		"cumbi":
+			mods.cumbi_gift(pid)
 		"regimiento":
 			# Gult asignado a un regimiento (desde la edad II, sin vuelta atrás).
 			var gb: SimEntity = by_id.get(c["building"])

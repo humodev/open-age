@@ -277,6 +277,9 @@ func _engine(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_type: 
 			var want_res := 60 if saving else 0
 			if int(p.get("reserva_mita", 0)) != want_res:
 				sim.push_command({"t": "reserve", "player": player, "res": "mita", "n": want_res})
+			# Regalo de cumbi en la edad III, si sobra mit'a por encima de la reserva.
+			if dd.has_mod("regalo_cumbi") and int(p["age"]) >= int(dd.mod("regalo_cumbi").get("edad", 3)) and int(p["res"]["mita"]) >= int(dd.mod("regalo_cumbi")["costo"]) + 60 and sim.mods.cumbi_target(player) != null:
+				sim.push_command({"t": "cumbi", "player": player})
 			var shops: Array = by_type.get("taller_tejido", [])
 			# En la edad I, un solo taller antes del hito II (aunque se esté ahorrando: rinde riqueza para el hito).
 			if vill.size() < 10 or not dd.edificios.has("taller_tejido") or (p["age"] == 1 and shops.size() >= 1):
