@@ -1,6 +1,7 @@
 {
  "nombre": "Mapuches",
  "adjetivo": "mapuche",
+ "riqueza_nombre": "Kulliñ (ganado)", "riqueza_desc": "El ganado es la riqueza: cada cabeza de los corrales da 4 por minuto y nacen solas. El malón arrea cabezas del rival. Además, la arcilla de casa.",
  "frase": "No hay capital que tomar.",
  "region": "Wallmapu, 1546–1793",
  "descripcion": "Lof dispersos sin centro único, malón que trae ganado, relevo de escuadrones, sigilo en el monte y el caballo desde la edad III.",

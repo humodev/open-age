@@ -539,9 +539,33 @@ class ObjectivesPanel:
 class TopBar:
 	extends Control
 	var hud: Hud
+	var _tip_k := ""
 
 	func _ready() -> void:
 		mouse_filter = Control.MOUSE_FILTER_STOP
+		mouse_exited.connect(func() -> void:
+			_tip_k = ""
+			hud.hide_tip())
+
+	# Ayuda de cada recurso: qué es y, para la riqueza, cómo la consigue tu pueblo (§5).
+	func _gui_input(ev: InputEvent) -> void:
+		if not ev is InputEventMouseMotion:
+			return
+		var i := int((ev.position.x - 14.0) / 120.0)
+		var k: String = Sim.RES_KINDS[i] if i >= 0 and i < Sim.RES_KINDS.size() else ""
+		if k == _tip_k:
+			return
+		_tip_k = k
+		if k == "":
+			hud.hide_tip()
+			return
+		var civ: Dictionary = hud.sim.dp(hud.local).civ
+		var name: String = Palette.RES_NAMES[k]
+		var desc := {"alimento": "Arbustos, caza de la tierra y granjas. Alimenta aldeanos y tropas.", "madera": "Árboles. Edificios, rozas y talleres.", "piedra": "Afloramientos de piedra. Torres, murallas e hitos.", "riqueza": "La arcilla (barreal) junto a tu base, el centro del mapa y el motor propio de tu pueblo."}[k] as String
+		if k == "riqueza" and civ.has("riqueza_nombre"):
+			name = "%s · %s" % [civ["riqueza_nombre"], name]
+			desc = str(civ.get("riqueza_desc", desc))
+		hud.show_tip({"name": name, "desc": desc, "cost": {}, "locked": ""}, Rect2(global_position + Vector2(14 + i * 120, 0), Vector2(110, size.y)))
 
 	func _draw() -> void:
 		draw_style_box(Hud.panel_box(), Rect2(Vector2.ZERO, size))

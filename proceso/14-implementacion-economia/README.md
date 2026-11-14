@@ -168,3 +168,15 @@ El autor preguntó en qué punto estaba la economía: se había avanzado varias 
     - **Traza:** en 25 minutos, los mapuches destruyeron ingenios 3 veces (se rehicieron), con 300 de botín y ganado arreado que se volvió alimento porque los corrales estaban llenos.
 
     ![](ingenio-neutral.jpg)
+20. **Etapa 5 (primera parte), interfaz.** Cada recurso de la barra superior tiene una ayuda al pasar el mouse. La riqueza aparece con el nombre doble de cada pueblo y cómo la consigue en palabras llanas:
+
+    | Civ | Nombre |
+    |---|---|
+    | Tawantinsuyu | Cumbi (tela) |
+    | Mapuches | Kulliñ (ganado) |
+    | Guaraníes | Ka'a (yerba) |
+    | Etiopía | Amole (sal) |
+    | Palmares | Oficios |
+    | Ayutthaya | Tributo del rey |
+
+    Los botones nuevos de motor (Vaciar oficios y Kawiñ) ya estaban en las etapas 3b y 3e.
