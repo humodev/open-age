@@ -120,4 +120,5 @@ ayutthaya      eco[Q=casa W=granja R=centro A=mercado]  mil[Q=cuartel W=kraal E=
 
 ## Commits
 
-Ver `git log` de la rama; el primero es "Interfaz, parte B: cursores, grilla estable, avisos con jerarquía y errores puntuales".
+- `008527f` Interfaz, parte B: cursores, grilla estable, avisos con jerarquía y errores puntuales.
+- Este documento con el hash del commit anterior.
