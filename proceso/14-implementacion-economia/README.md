@@ -243,3 +243,20 @@ El autor preguntó en qué punto estaba la economía: se había avanzado varias 
 
     El torneo siguiente va con 3 partidas por cruce para bajar el ruido.
     - **Tropiezo:** el script del ajuste falló en la parte de Ayutthaya y se subió un commit que la daba por hecha (2f37ff7). Se detectó al revisar los valores: se paró el torneo, se aplicó el cambio a mano y se relanzó.
+31. **Torneo tras el segundo ajuste**, con 3 partidas por cruce ([resultado](pruebas/06-torneo-ajuste-2.txt)):
+
+    | Civ | Victorias |
+    |---|---|
+    | Etiopía | 12 / 15 |
+    | Tawantinsuyu | 11 / 15 |
+    | Mapuches | 10 / 15 |
+    | Ayutthaya | 5 / 15 |
+    | Palmares | 5 / 15 |
+    | Guaraníes | 2 / 15 |
+
+    Ayutthaya mejoró (venía de 1 o 2 de 10). Etiopía sigue fuerte, y los guaraníes quedaron últimos: pierden en todos los cruces y su núcleo, el arquero, era igual al común.
+32. **Tercer ajuste:**
+    - **Guaraníes:** arquero de 70 de vida y 8 de ataque (antes 65 y 7).
+    - **Etiopía:** jinete noble de 10 de ataque (antes 11), que cuesta 80 a + 40 r (antes 70 + 35).
+
+    Se verificaron los valores antes del commit, con un editor de bloques que reescribe solo la unidad a partir del JSON leído.

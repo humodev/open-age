@@ -39,11 +39,7 @@
   "guerrero": {
    "nombre": "Guerrero de macana"
   },
-  "hondero": {
-   "nombre": "Arquero",
-   "alcance": 6000,
-   "ataque": 7
-  },
+  "hondero": {"nombre": "Arquero", "alcance": 6000, "ataque": 8, "pv": 70},
   "lancero": {
    "nombre": "Lancero",
    "pv": 115
