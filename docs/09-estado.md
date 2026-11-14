@@ -49,7 +49,7 @@ Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video,
 | Animación | Procedural (paso, galope, trabajo, golpe, muerte); sin esqueletos |
 | Modelos generados | Capitales, casas, elefante, kona, aldeanos (seis), hondero inca, arquero guaraní, jinete noble etíope, flecheiro de Palmares y paisaje; el resto de los edificios y de las unidades militares son la maqueta procedural. Etiopía sigue sin música propia (C-24). Falta animación con esqueleto |
 | Interfaz, segunda tanda | Partes A y B integradas (`proceso/17`): escala de interfaz de 1366×768 a 4K, paleta apta para daltonismo con modos (`tests/test_paleta.gd`), estados de la grilla a 4,5:1, opciones guardadas en `user://opciones.cfg`, cursores contextuales, grilla estable con submenús, avisos con jerarquía y salto con Espacio, fila de grupos, HUD vacío que no tapa y errores puntuales. Pendiente: opción de texto grande |
-| Partidas de muchos jugadores | Rendimiento: 6 IA a 18 ms por tick (entra a ×4); fin de partida y batallas de 900 unidades a 28–32 ms (entran a ×3). Siguiente: caminos con caché por región. Balance 1v1 a confirmar con 5 semillas tras los cambios de IA |
+| Partidas de muchos jugadores | Rendimiento: 6 IA a 18 ms por tick (entra a ×4); fin de partida y batallas de 900 unidades a 28–32 ms (entran a ×3). Siguiente: caminos con caché por región. Torneo 1v1 con 5 semillas tras los cambios de IA: cinco de seis civs entre 35 y 65 %; guaraníes 68 % (por puntos) y Tawantinsuyu 36 %, a mirar en la próxima ronda de balance |
 | Escala y velocidad | Corregidas el 2026-11-13 (`escala_visual`, `velocidad_pct`); falta la opinión del autor a ×1 |
 | Multijugador | H5 |
 | Naval | Fuera de alcance (D-020) |

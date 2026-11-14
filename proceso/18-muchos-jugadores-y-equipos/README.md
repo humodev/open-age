@@ -169,3 +169,18 @@ Plan: [`docs/11-partidas-de-muchos-jugadores.md`](../../docs/11-partidas-de-much
      | 6 IA, peor tick | 782 ms | 140 ms |
    - **Lectura:** 4 ticks por cuadro piden menos de 25 ms por tick. Una partida de 6 IA entra en promedio a ×4. En los momentos más cargados (fin de partida y batallas de 900 unidades) entra a ×3, no a ×4. Lo anoto como deuda; el próximo paso sería caminos con caché por región, como decía el plan.
    - Determinismo OK.
+
+9. **(21:40) Torneo 1 contra 1 con 5 semillas** tras los cambios de IA: 75 partidas, 25 por civ ([resultado](pruebas/09-torneo-1v1-5semillas.txt)).
+
+   | Civ | Etapa 14 | 2 semillas | 5 semillas |
+   |---|---|---|---|
+   | Guaraníes | 40 % | 70 % | 68 % |
+   | Ayutthaya | 40 % | 70 % | 56 % |
+   | Etiopía | 60 % | 40 % | 52 % |
+   | Mapuches | 68 % | 50 % | 48 % |
+   | Palmares | 40 % | 40 % | 40 % |
+   | Tawantinsuyu | 52 % | 30 % | 36 % |
+
+   - **Destrucción de hitos:** 46 de 75 partidas (61 %), casi lo mismo que en la etapa 14. El nuevo lugar del ataque no ablanda a la IA; la baja de la corrida de 2 semillas era ruido.
+   - **Balance:** cinco de seis civs quedan dentro de la banda de 35 a 65 %. Los guaraníes quedan apenas arriba (68 %, con ±10 puntos de ruido en 25 partidas), y ganan sobre todo por puntos (solo 6 de 17 por destrucción): es su economía, no su ejército. Lo mismo le pasó a los mapuches en la etapa 14, también con 68 %.
+   - **Decisión:** no toco números por un punto sobre la banda. Queda anotado para la próxima ronda de balance, junto con Tawantinsuyu (36 %, al borde de abajo) y la lentitud de Palmares para llegar a la edad II.
