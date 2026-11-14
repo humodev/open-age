@@ -101,6 +101,8 @@ Generado con Meshy (`tools/meshy_api.py`, modelo de imagen `nano-banana-2`) a pa
 | `generados/modelos/*.glb` | Modelos 3D de edificios y unidades emblemáticas (texto → imagen de concepto → `multi-image-to-3d`) |
 | `generados/naturaleza/*.glb` | Modelos del paisaje: pino (ciprés), latifoliada, araucaria, palmera (pindó), copa plana (queñua), arbusto, roca, arcilla con vasijas, peñasco y yerbal (`tools/generar_naturaleza.py`: concepto → `multi-image-to-3d`, y `remesh` en los de hoja fina; optimizados con Blender) |
 | `generados/conceptos/naturaleza/*.png` | Imágenes de concepto de esos modelos |
+| `generados/modelos/<civ>_aldeano.glb`, `tawantinsuyu_hondero.glb`, `guaranies_arquero.glb`, `etiopia_jinete.glb` | Aldeanos de los seis pueblos y tres unidades características (`tools/generar_unidades.py`: concepto → `multi-image-to-3d` con remesh a ~2500 triángulos; textura a 512 px con Blender) |
+| `generados/conceptos/<civ>_aldeano.png`, etc. | Imágenes de concepto de esas unidades |
 
 ## Texturas del suelo (CC0, ambientCG)
 

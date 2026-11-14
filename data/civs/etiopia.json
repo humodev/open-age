@@ -11,6 +11,8 @@
   "techo": "#8f6b45",
   "acento": "#948670",
   "modelos": {
+   "aldeano": "etiopia_aldeano",
+   "guerrero": "etiopia_jinete",
    "centro": "etiopia_centro",
    "casa": "etiopia_casa"
   }
