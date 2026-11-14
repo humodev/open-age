@@ -18,3 +18,10 @@ El punto 3 es la segunda tanda de interfaz que propuso la auditoría ([`docs/dis
    - **B, cursores, grilla y avisos:** cursores contextuales, grilla estable con submenús, avisos con jerarquía y tecla de salto, grupos visibles, HUD vacío y los errores puntuales. Escribe [02-cursores-grilla-avisos.md](02-cursores-grilla-avisos.md).
 
    El líder integra las ramas, resuelve los conflictos y anota aquí cada fusión con sus pruebas.
+
+- **Parte B · cursores, grilla de comandos, avisos y errores puntuales** → [`02-cursores-grilla-avisos.md`](02-cursores-grilla-avisos.md): doce cursores contextuales dibujados con los glifos del juego; grilla del aldeano con submenús Economía (Q) y Militar (W), casillas fijas por función en las seis civs e hitos Z economía / X militar con íconos distintos; avisos con fondo, color por tipo y pila, Espacio e Inicio para saltar; fila de grupos de control; HUD vacío que no tapa y cámara inicial sobre la capital; arreglos de Palmares, "Tutorial 0/1", 33/8 explicado y subtítulo sin "· " suelto. Autotest OK en las seis civs y prueba nueva `tests/grilla.gd`.
+
+2. **(14:35) Fusión de la parte B** (rama del agente, commits `008527f` y `dd4e2e0`).
+   - **Conflictos:** solo en documentos (`docs/09-estado.md`, el índice de `proceso/` y este README); se quedaron las dos versiones. El código entró sin choques.
+   - **Pruebas sobre lo fusionado:** reimportación de clases, `tests/grilla.gd` OK y autotest OK en las seis civs, en terreno llano.
+   - **Consulta nueva:** C-22, misión 2 mapuche (33/8 de población). La ilumina un aviso al empezar. Arreglarla de verdad pide que el motor de escenarios dé casas al jugador.

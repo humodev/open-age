@@ -46,7 +46,7 @@ Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video,
 | Dificultades y estilos de la IA | Tres dificultades (fácil, normal, difícil) y cuatro estilos (pacífica, equilibrada, acosadora, agresiva) |
 | Animación | Procedural (paso, galope, trabajo, golpe, muerte); sin esqueletos |
 | Modelos generados | Capitales, casas, elefante, kona y paisaje (árboles, arbustos, rocas, arcilla, peñascos); el resto de los edificios y casi todas las unidades son la maqueta procedural |
-| Interfaz, segunda tanda | Pendiente según `diseno/interfaz/00-auditoria.md`: escala de interfaz, paleta para daltónicos, cursores, grilla estable, avisos con jerarquía y opciones guardadas |
+| Interfaz, segunda tanda | En curso según `diseno/interfaz/00-auditoria.md`. Hecho (parte B, `proceso/17-interfaz-segunda-tanda/02-cursores-grilla-avisos.md`): cursores contextuales, grilla estable con submenús, avisos con jerarquía y salto con Espacio, fila de grupos, HUD vacío que no tapa, cámara inicial y errores puntuales (Palmares, Tutorial 0/4, 33/8, «· »). Pendiente: escala de interfaz, paleta para daltónicos y opciones guardadas (parte A) |
 | Partidas de muchos jugadores | Pasos 1–2 de 6 hechos; siguen formas de agua para N (islas, brazos y fortines todavía caen en lago o sin anillos) |
 | Escala y velocidad | Corregidas el 2026-11-13 (`escala_visual`, `velocidad_pct`); falta la opinión del autor a ×1 |
 | Multijugador | H5 |

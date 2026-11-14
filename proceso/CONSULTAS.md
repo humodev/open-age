@@ -121,3 +121,9 @@ Hoy controla el mapa y toma sitios, así que puede ganar por ellos sin atacarte.
 a) Sí, es parte de su juego: los sitios hay que disputarlos *(recomendado)* · b) No: toma sitios pero no cuenta para su victoria · c) No toma sitios
 
 **Respuesta:**
+
+### C-22 · (interfaz, parte B) Misión mapuche 2: se arranca con población 33/8
+El malón trae 10 aldeanos y 22 guerreros con un lof que da 8 de tope. Hoy se explica con un aviso al empezar ("hay más gente que lugar: construí casas"). El motor de escenarios no puede dar casas al jugador.
+a) Dejarlo explicado: es un malón, no hace falta entrenar *(recomendado)* · b) Que el motor de escenarios pueda dar rukas al jugador desde los datos de la misión · c) Bajar las tropas iniciales hasta entrar en el tope
+
+**Respuesta:**

@@ -10,5 +10,22 @@
   },
   "muestreo_s": 30,
   "ventana_ingreso_s": 60,
-  "sucesos_max": 80
+  "sucesos_max": 80,
+  "grilla": {
+    "_doc": "Grilla de comandos estable (src/game/ui/grilla.gd). Casillas 0-11 = Q W E R / A S D F / Z X C V. El aldeano muestra Economía (Q) y Militar (W) como submenús y los hitos en Z (economía) y X (militar); dentro de cada submenú, cada edificio va siempre en la misma casilla por función, en las seis civilizaciones. Un edificio nuevo se agrega acá; si falta, va a la primera casilla libre con un aviso en la consola.",
+    "fijas": { "economia": 0, "militar": 1, "atacar": 4, "detener": 5, "refugio": 7, "hito_economia": 8, "hito_militar": 9, "volver": 11 },
+    "economia": { "casa": 0, "granja": 1, "deposito": 2, "centro": 3, "lof": 3, "mercado": 4, "anden": 5, "gult": 5, "taller_tejido": 6, "corral": 6, "corte_nueva": 7, "mocambo": 7 },
+    "militar": { "cuartel": 0, "qollqa": 1, "kraal": 1, "barrio_japones": 2, "barrio_portugues": 3, "torre": 4, "empalizada": 5, "puerta": 6, "camino": 7 },
+    "iconos": { "anden": "terraza", "gult": "gult", "taller_tejido": "telar", "corral": "corral", "corte_nueva": "carpa", "mocambo": "mocambo", "qollqa": "qollqa", "kraal": "kraal", "barrio_japones": "barrio_japones", "barrio_portugues": "barrio_portugues" }
+  },
+  "avisos": {
+    "_doc": "Avisos del momento (src/game/ui/avisos.gd): cuántos se apilan a la vez, cuánto dura cada tipo en segundos y cuántos lugares recuerdan Espacio e Inicio.",
+    "max_visibles": 4,
+    "duracion_s": { "ataque": 5.0, "decision": 4.0, "hito": 5.0, "info": 2.6 },
+    "historial": 12
+  },
+  "cursores": {
+    "_doc": "Cursores contextuales (src/game/ui/cursores.gd): lado en píxeles a escala 100 %.",
+    "px": 32
+  }
 }

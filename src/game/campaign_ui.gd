@@ -94,7 +94,7 @@ func _ready() -> void:
 		var won: int = int(prog.get(c["_clave"], 0))
 		var name: String = "Tutorial" if c["_clave"] == "tutorial" else data.civ.get("nombre", c["civ"])
 		var idx := i
-		_list.add_child(_button("%s · %s   %d/4" % [name, c["titulo"], won], func() -> void: _show(idx), 430))
+		_list.add_child(_button("%s · %s   %d/%d" % [name, c["titulo"], mini(won, (c["misiones"] as Array).size()), (c["misiones"] as Array).size()], func() -> void: _show(idx), 430)) # progreso real, no "/4" fijo
 	if not _campaigns.is_empty():
 		_show(0)
 
@@ -129,7 +129,7 @@ func _show(i: int) -> void:
 		var locked := mi > won
 		var head := "%d. %s" % [mi + 1, m["titulo"]]
 		vb.add_child(_label(head, 22, Palette.UI_DIM if locked else Palette.UI_TEXT, true))
-		vb.add_child(_label("%s · %s" % [m.get("anio", ""), m.get("lugar", "")], 15, Palette.UI_ACCENT))
+		vb.add_child(_label(subtitle(m), 15, Palette.UI_ACCENT))
 		if not locked:
 			var intro: Array = m.get("intro", [])
 			if not intro.is_empty():
@@ -145,6 +145,16 @@ func _show(i: int) -> void:
 		else:
 			vb.add_child(_label("Se desbloquea al ganar la misión anterior.", 14, Color(Palette.UI_DIM, 0.6)))
 		_detail.add_child(card)
+
+
+## "1554 · Cuesta de Marigüeñu": año y lugar, sin "· " suelto si falta uno de los dos.
+static func subtitle(m: Dictionary) -> String:
+	var parts: Array[String] = []
+	for k in ["anio", "lugar"]:
+		var v := str(m.get(k, "")).strip_edges()
+		if v != "":
+			parts.append(v)
+	return " · ".join(parts)
 
 
 func _label(t: String, size: int, col: Color, bold: bool = false) -> Label:
@@ -213,7 +223,7 @@ static func story(m: Dictionary, epilogue: bool, buttons: Array, civ: String = "
 	vb.add_theme_constant_override("separation", 16)
 	center.add_child(vb)
 	var tmp := CampaignUI.new()
-	vb.add_child(tmp._label("%s · %s" % [m.get("anio", ""), m.get("lugar", "")], 18, Palette.UI_ACCENT))
+	vb.add_child(tmp._label(subtitle(m), 18, Palette.UI_ACCENT))
 	vb.add_child(tmp._label(m.get("titulo", ""), 46, Palette.UI_TEXT, true))
 	var gap := Control.new()
 	gap.custom_minimum_size = Vector2(0, 8)

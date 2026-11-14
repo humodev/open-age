@@ -68,9 +68,12 @@ Distribución (convención del género, sin copiar piezas):
 └──────────────────────────────────────────────────────────┘
 ```
 
-- **Grilla de comandos** con atajos por posición (`Q W E R` / `A S D F` / `Z X C V`). La posición de un comando es estable entre unidades y edificios.
+- **Grilla de comandos** con atajos por posición (`Q W E R` / `A S D F` / `Z X C V`). La posición de un comando es estable entre unidades, edificios y civilizaciones. El aldeano muestra dos submenús, `Q` Economía y `W` Militar y defensa, y los hitos de la edad siguiente en `Z` (economía) y `X` (militar); dentro de cada submenú, cada edificio tiene casilla fija por función (tabla en `data/interfaz.json` → `grilla`). `S` detiene y `F` refugia en aldeanos y tropas; `V` o `Esc` vuelve de un submenú.
+- **Cursores contextuales**: el cursor dice qué hará el clic derecho antes de darlo (mover, atacar, recolectar cada recurso, construir, reparar, refugiarse, depositar, punto de reunión, no se puede).
 - **Información sobre costos** al pasar el mouse; lo que no se puede pagar se muestra apagado con el recurso faltante resaltado.
-- **Avisos** breves al centro: edad alcanzada, recursos insuficientes, población llena, ataque a la base.
+- **Avisos** breves al centro, con fondo, ícono y color por tipo (ataque, decisión, hito, información), apilados sin pisarse. Los que tienen lugar en el mapa se pueden saltar con `Espacio` (último ataque) e `Inicio` (recorre los anteriores) o con un clic.
+- **Grupos de control** visibles en una fila sobre el panel de selección, con número, tipo y cantidad.
+- **Sin selección**, el panel de selección y la grilla se ocultan para no tapar el mapa.
 - Paneles oscuros y semitransparentes, esquinas apenas redondeadas, texto claro. Sin texturas decorativas en la etapa de maqueta.
 
 ## Información en el mundo
@@ -94,7 +97,9 @@ Lo que pasa en la partida se lee sobre el mapa, sin abrir paneles (`src/game/ui/
 | Orden contextual | Clic derecho (mover, atacar, recolectar, construir, entregar) |
 | Ataque en movimiento | `A` y clic izquierdo |
 | Detener | `S` con unidades seleccionadas |
-| Grupos | `Ctrl + 1…9` para asignar, `1…9` para seleccionar |
+| Grupos | `Ctrl + 1…9` para asignar, `Mayús + 1…9` para sumar la selección, `1…9` para seleccionar (doble toque centra) |
+| Ir al último ataque o suceso | `Espacio`; `Inicio` recorre los anteriores |
+| Submenús del aldeano | `Q` Economía, `W` Militar; `Esc`, `V` o clic derecho sobre la grilla vuelve |
 | Aldeano inactivo | `.` |
 | Centro | `H` |
 | Encolar órdenes | Mayúsculas + clic derecho (o + `A` y clic): se cumplen una tras otra |

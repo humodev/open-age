@@ -145,7 +145,7 @@ func _draw() -> void:
 		draw_style_box(sb, r)
 		Glyphs.draw(self, Glyphs.resolve(def, key), Rect2(r.position.x + 10, r.position.y + 10, 30, 30), Palette.UI_TEXT)
 		C.text(self, r.position + Vector2(48, 24), def.get("nombre", key), 15, Palette.UI_TEXT, true, cw - 60)
-		C.text(self, r.position + Vector2(48, 42), C.EJE_NAMES.get(eje, eje).to_upper() + "  ·  " + Controller.SLOT_LABELS[8 + i], 11, C.eje_color(eje), true)
+		C.text(self, r.position + Vector2(48, 42), C.EJE_NAMES.get(eje, eje).to_upper() + "  ·  " + Controller.SLOT_LABELS[Grilla.fija("hito_militar", 9) if eje == "militar" else Grilla.fija("hito_economia", 8)], 11, C.eje_color(eje), true) # --- grilla --- (Z economía, X militar)
 		C.multiline(self, r.position + Vector2(12, 64), texts[i], cw - 24, 13, Palette.UI_DIM)
 		var cx := r.position.x + 12
 		var oc: Dictionary = dd.cost_of(key, age)

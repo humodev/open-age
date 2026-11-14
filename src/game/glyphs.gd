@@ -49,6 +49,9 @@ static func draw(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
 			ci.draw_rect(Rect2(c + Vector2(-s * 0.36, s * 0.0), Vector2(s * 0.72, s * 0.3)), col)
 			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.42, s * 0.02), c + Vector2(0, -s * 0.36), c + Vector2(s * 0.42, s * 0.02)]), col)
 			ci.draw_rect(Rect2(c + Vector2(-s * 0.08, s * 0.1), Vector2(s * 0.16, s * 0.2)), col.darkened(0.5))
+			# --- grilla --- (mástil con bandera: el centro no se confunde con la casa)
+			ci.draw_line(c + Vector2(0, -s * 0.34), c + Vector2(0, -s * 0.5), col, w * 0.8)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(0, -s * 0.5), c + Vector2(s * 0.22, -s * 0.45), c + Vector2(0, -s * 0.4)]), Palette.UI_ACCENT)
 		"casa":
 			ci.draw_rect(Rect2(c + Vector2(-s * 0.26, -s * 0.02), Vector2(s * 0.52, s * 0.32)), col)
 			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.34, 0), c + Vector2(0, -s * 0.32), c + Vector2(s * 0.34, 0)]), col)
@@ -155,6 +158,107 @@ static func draw(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
 			ci.draw_line(c + Vector2(-s * 0.3, s * 0.3), c + Vector2(s * 0.3, -s * 0.3), col, w * 1.2)
 			ci.draw_line(c + Vector2(-s * 0.3, -s * 0.3), c + Vector2(s * 0.3, s * 0.3), col, w * 1.2)
 			ci.draw_circle(c, s * 0.1, col)
+		# --- grilla --- (submenús del aldeano y edificios propios con ícono distinto del común)
+		"menu_economia":
+			# Gavilla atada: economía.
+			for i in 5:
+				var x := -0.22 + i * 0.11
+				ci.draw_line(c + Vector2(s * x * 0.5, s * 0.38), c + Vector2(s * x, -s * 0.3), col, w)
+				ci.draw_circle(c + Vector2(s * x, -s * 0.32), s * 0.06, col)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.18, s * 0.04), Vector2(s * 0.36, s * 0.1)), Palette.RES["riqueza"])
+		"menu_militar":
+			# Escudo con dos lanzas cruzadas: militar y defensa.
+			ci.draw_line(c + Vector2(-s * 0.4, s * 0.4), c + Vector2(s * 0.34, -s * 0.34), col, w)
+			ci.draw_line(c + Vector2(s * 0.4, s * 0.4), c + Vector2(-s * 0.34, -s * 0.34), col, w)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(s * 0.42, -s * 0.42), c + Vector2(s * 0.26, -s * 0.36), c + Vector2(s * 0.36, -s * 0.26)]), col)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.42, -s * 0.42), c + Vector2(-s * 0.26, -s * 0.36), c + Vector2(-s * 0.36, -s * 0.26)]), col)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.22, -s * 0.2), c + Vector2(s * 0.22, -s * 0.2), c + Vector2(s * 0.22, s * 0.06), c + Vector2(0, s * 0.3), c + Vector2(-s * 0.22, s * 0.06)]), Palette.UI_BAD)
+		"volver":
+			ci.draw_arc(c + Vector2(s * 0.04, s * 0.04), s * 0.24, -PI * 0.5, PI * 0.5, 12, col, w * 1.3)
+			ci.draw_line(c + Vector2(s * 0.04, -s * 0.2), c + Vector2(-s * 0.2, -s * 0.2), col, w * 1.3)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.38, -s * 0.2), c + Vector2(-s * 0.18, -s * 0.36), c + Vector2(-s * 0.18, -s * 0.04)]), col)
+			ci.draw_line(c + Vector2(s * 0.04, s * 0.28), c + Vector2(-s * 0.24, s * 0.28), col, w * 1.3)
+		"terraza":
+			# Andén: escalones de cultivo en la ladera.
+			for i in 3:
+				var y := c.y + s * 0.26 - i * s * 0.22
+				var x0 := c.x - s * 0.4 + i * s * 0.2
+				ci.draw_rect(Rect2(Vector2(x0, y - s * 0.06), Vector2(c.x + s * 0.4 - x0, s * 0.12)), col.darkened(0.35))
+				ci.draw_rect(Rect2(Vector2(x0, y - s * 0.12), Vector2(c.x + s * 0.4 - x0, s * 0.06)), Palette.RES["madera"])
+		"gult":
+			# Tierra concedida: parcela con mojón y estandarte.
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.42, s * 0.12), c + Vector2(0, -s * 0.06), c + Vector2(s * 0.42, s * 0.12), c + Vector2(0, s * 0.32)]), col.darkened(0.25))
+			for i in 3:
+				ci.draw_line(c + Vector2(-s * 0.28 + i * s * 0.14, s * 0.06 + i * s * 0.06), c + Vector2(s * 0.0 + i * s * 0.14, s * 0.2 + i * s * 0.06 - s * 0.14), col, w * 0.6)
+			ci.draw_line(c + Vector2(-s * 0.1, s * 0.0), c + Vector2(-s * 0.1, -s * 0.44), col, w)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.1, -s * 0.44), c + Vector2(s * 0.24, -s * 0.34), c + Vector2(-s * 0.1, -s * 0.24)]), Palette.UI_ACCENT)
+		"telar":
+			# Telar de cintura: marco y urdimbre.
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.34, -s * 0.38), Vector2(s * 0.68, s * 0.08)), col)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.34, s * 0.3), Vector2(s * 0.68, s * 0.08)), col)
+			for i in 5:
+				ci.draw_line(c + Vector2(-s * 0.26 + i * s * 0.13, -s * 0.3), c + Vector2(-s * 0.26 + i * s * 0.13, s * 0.3), col.darkened(0.2), w * 0.6)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.3, -s * 0.04), Vector2(s * 0.6, s * 0.2)), Palette.RES["riqueza"])
+		"corral":
+			# Cerco circular de palos con una cabeza adentro.
+			for i in 10:
+				var a := TAU * i / 10.0
+				var p := c + Vector2(cos(a), sin(a) * 0.62) * s * 0.36
+				ci.draw_line(p + Vector2(0, s * 0.06), p - Vector2(0, s * 0.16), col, w)
+			ci.draw_arc(c, s * 0.36, 0, TAU, 20, col.darkened(0.2), w * 0.6)
+			ci.draw_circle(c + Vector2(0, -s * 0.02), s * 0.1, col.lightened(0.15))
+		"carpa":
+			# Corte que se muda: tienda grande con estandarte.
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.42, s * 0.32), c + Vector2(0, -s * 0.3), c + Vector2(s * 0.42, s * 0.32)]), col)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.08, s * 0.32), c + Vector2(0, s * 0.06), c + Vector2(s * 0.08, s * 0.32)]), col.darkened(0.5))
+			ci.draw_line(c + Vector2(0, -s * 0.3), c + Vector2(0, -s * 0.46), col, w)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(0, -s * 0.46), c + Vector2(s * 0.2, -s * 0.41), c + Vector2(0, -s * 0.36)]), Palette.UI_ACCENT)
+		"mocambo":
+			# Aldea cercada: estacas y techo de paja.
+			for i in 7:
+				var x := c.x - s * 0.4 + i * s * 0.133
+				ci.draw_colored_polygon(PackedVector2Array([Vector2(x - s * 0.04, c.y + s * 0.38), Vector2(x - s * 0.04, c.y + s * 0.1), Vector2(x, c.y + s * 0.02), Vector2(x + s * 0.04, c.y + s * 0.1), Vector2(x + s * 0.04, c.y + s * 0.38)]), col.darkened(0.2))
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.26, s * 0.02), c + Vector2(0, -s * 0.4), c + Vector2(s * 0.26, s * 0.02)]), col)
+		"qollqa":
+			# Depósito redondo de piedra con techo cónico.
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.24, -s * 0.06), Vector2(s * 0.48, s * 0.4)), col)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.32, -s * 0.04), c + Vector2(0, -s * 0.42), c + Vector2(s * 0.32, -s * 0.04)]), col.darkened(0.25))
+			for i in 2:
+				ci.draw_line(c + Vector2(-s * 0.24, s * 0.08 + i * s * 0.12), c + Vector2(s * 0.24, s * 0.08 + i * s * 0.12), col.darkened(0.35), w * 0.5)
+		"kraal":
+			draw(ci, "elefante", Rect2(r.position + r.size * 0.12, r.size * 0.76), col)
+			for i in 5:
+				var x := c.x - s * 0.44 + i * s * 0.22
+				ci.draw_line(Vector2(x, c.y + s * 0.46), Vector2(x, c.y + s * 0.18), col.darkened(0.3), w)
+			ci.draw_line(Vector2(c.x - s * 0.46, c.y + s * 0.3), Vector2(c.x + s * 0.46, c.y + s * 0.3), col.darkened(0.3), w * 0.7)
+		"barrio_japones":
+			# Barrio de la compañía japonesa: portal de dos postes y dintel doble.
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.26, -s * 0.22), Vector2(s * 0.08, s * 0.6)), col)
+			ci.draw_rect(Rect2(c + Vector2(s * 0.18, -s * 0.22), Vector2(s * 0.08, s * 0.6)), col)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.44, -s * 0.38), c + Vector2(s * 0.44, -s * 0.38), c + Vector2(s * 0.36, -s * 0.28), c + Vector2(-s * 0.36, -s * 0.28)]), col)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.32, -s * 0.18), Vector2(s * 0.64, s * 0.06)), col)
+		"barrio_portugues":
+			# Barrio portugués: casa con una vela de nao detrás.
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(s * 0.04, -s * 0.44), c + Vector2(s * 0.4, -s * 0.06), c + Vector2(s * 0.04, -s * 0.06)]), col.darkened(0.15))
+			ci.draw_line(c + Vector2(s * 0.04, -s * 0.44), c + Vector2(s * 0.04, s * 0.0), col, w * 0.7)
+			draw(ci, "casa", Rect2(r.position + Vector2(0, r.size.y * 0.2), r.size * 0.8), col)
+		"decision":
+			# Aviso que pide algo: signo de exclamación en un rombo.
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(0, -s * 0.46), c + Vector2(s * 0.46, 0), c + Vector2(0, s * 0.46), c + Vector2(-s * 0.46, 0)]), col)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.05, -s * 0.26), Vector2(s * 0.1, s * 0.3)), Color(0.06, 0.065, 0.075))
+			ci.draw_circle(c + Vector2(0, s * 0.16), s * 0.06, Color(0.06, 0.065, 0.075))
+		"hito_logro":
+			# Logro: estrella de cinco puntas.
+			var pts := PackedVector2Array()
+			for i in 10:
+				var a := -PI / 2 + PI * i / 5.0
+				pts.append(c + Vector2(cos(a), sin(a)) * s * (0.46 if i % 2 == 0 else 0.2))
+			ci.draw_colored_polygon(pts, col)
+		"info":
+			ci.draw_arc(c, s * 0.4, 0, TAU, 24, col, w)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.05, -s * 0.06), Vector2(s * 0.1, s * 0.3)), col)
+			ci.draw_circle(c + Vector2(0, -s * 0.2), s * 0.06, col)
+		# --- fin grilla ---
 		"arbol", "arbusto", "roca":
 			draw(ci, {"arbol": "madera", "arbusto": "alimento", "roca": "piedra"}[kind], r, col)
 		_:
@@ -168,6 +272,13 @@ const KNOWN := ["mercado", "aldeano", "guerrero", "hondero", "lancero", "explora
 static func resolve(def: Dictionary, type: String) -> String:
 	if type in KNOWN:
 		return type
+	# --- grilla --- (ícono propio de la tabla de la interfaz; hitos por su eje: Z economía, X militar)
+	var own := Grilla.icono(type)
+	if own != "":
+		return own
+	if def.get("avanza_edad", false):
+		return "hito_guerra" if Grilla.eje(def, type) == "militar" else "hito_economia"
+	# --- fin grilla ---
 	if def.has("funcion"):
 		if def.get("elefante", false):
 			return "elefante"

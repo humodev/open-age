@@ -52,7 +52,7 @@
     },
     {
      "id": "o2",
-     "texto": "Construí una casa (aldeanos seleccionados, tecla Q y clic en el suelo).",
+     "texto": "Construí una casa (aldeanos seleccionados: Q abre Economía, Q otra vez elige la casa; después, clic en el suelo).",
      "tipo": "construir",
      "params": {
       "tipo": "casa",
@@ -73,7 +73,7 @@
     },
     {
      "id": "o4",
-     "texto": "Construí un cuartel (tecla R con aldeanos seleccionados).",
+     "texto": "Construí un cuartel (aldeanos seleccionados: W abre Militar y Q elige el cuartel).",
      "tipo": "construir",
      "params": {
       "tipo": "cuartel",
