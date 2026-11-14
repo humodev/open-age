@@ -195,3 +195,24 @@ El autor preguntó en qué punto estaba la economía: se había avanzado varias 
     - Mapuches: los lof que no son la capital entrenan un 50 % más lento (`lento_fuera_de_capital_pct`).
     - Palmares: el mocambo con 6 árboles o más a 4 casillas da +5 de fama por minuto.
 26. **Tawantinsuyu: regalo de cumbi.** En la edad III, 120 de mit'a por el ingenio de su mitad del mapa (el más cercano a la llaqta propia que a las capitales rivales). Cobra el botín sin pelear, dentro del techo de lo disputado, y el ingenio pasa a ser un **tambo** inca sin flechas. Si lo destruyen, el ingenio vuelve a los 6 minutos. Hay botón en la capital con su motivo si no se puede, y la IA lo usa cuando sobra mit'a. Traza: regalo a las 13:40, +100 de riqueza.
+
+## Medición completa con los seis motores (etapa 3 cerrada)
+12 partidas de 30 minutos en paz y 12 con guerra ([paz](pruebas/03-motores-paz.txt), [guerra](pruebas/03-motores-guerra.txt)). La medición corrió antes de los últimos agregados: corte que se funda, regimiento, cumbi y caminos a la arcilla.
+
+| Civ | Riqueza a los 30 min (paz) | Edad II | Edad III (paz) | Motor propio (paz) |
+|---|---|---|---|---|
+| Tawantinsuyu | 5316 | 7:20 | 12:52 | 36 % |
+| Mapuches | 5267 | 5:55 | 12:15 | 38 % |
+| Guaraníes | 5565 | 5:52 | 11:35 | 47 % |
+| Etiopía | 5893 | 5:40 | 13:37 | 38 % |
+| Palmares | 5854 | 8:10 | 19:57 | 34 % |
+| Ayutthaya | 5011 | 7:45 | 17:35 | 23 % |
+
+- **La riqueza total en paz queda pareja:** ±8 % alrededor de la media (5484). La línea de base era muy despareja: entre 3918 y 5898.
+- **El motor propio aporta entre el 23 % y el 47 % de toda la riqueza**, y en todas las civs pesa ahora tanto como la arcilla de casa (antes, 0 %).
+- **Para el balance (etapa 6):**
+  - edad II de mapuches, guaraníes y Etiopía apenas antes de las 6:30;
+  - edad III lenta en Palmares (19:57) y en Ayutthaya (17:35);
+  - Ayutthaya con el motor bajo;
+  - el mercado todavía pesa entre 10 % y 19 % en paz;
+  - lo disputado da 0 % en paz porque la IA de prueba no sale de su base. Con guerra se ven sitios e ingenios.
