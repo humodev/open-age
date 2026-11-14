@@ -626,13 +626,15 @@ func _right_click(pos: Vector2) -> void:
 			view.add_marker(g, Color(Palette.UI_GOOD, 0.6))
 			return
 		# --- fin mundo ---
+		# Alt + clic derecho: suelto, sin formación (cada uno a su velocidad: para retirarse).
+		var loose := Input.is_key_pressed(KEY_ALT)
 		if t != null and t.id not in ids and not (t.is_unit() and t.owner == local):
-			sim.push_command({"t": "target", "player": local, "ids": ids, "target": t.id})
+			sim.push_command({"t": "target", "player": local, "ids": ids, "target": t.id, "suelto": loose})
 			var col := Palette.UI_BAD if t.owner >= 0 and t.owner != local else Palette.UI_ACCENT
 			view.add_marker(WorldView.to_world(t.x, t.y), col)
 		else:
-			sim.push_command({"t": "move", "player": local, "ids": ids, "x": int(g.x * P), "y": int(g.z * P)})
-			view.add_marker(g, Palette.UI_GOOD)
+			sim.push_command({"t": "move", "player": local, "ids": ids, "x": int(g.x * P), "y": int(g.z * P), "suelto": loose})
+			view.add_marker(g, Palette.UI_BAD if loose else Palette.UI_GOOD)
 		return
 	# Edificios: punto de reunión.
 	for e in sel:

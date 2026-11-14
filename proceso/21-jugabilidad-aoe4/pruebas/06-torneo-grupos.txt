@@ -6,3 +6,5 @@ guaranies    vs ayutthaya    terreno=bosque_templado 29:02  ganador: guaranies  
 ayutthaya    vs mapuches     terreno=rio     30:00  ganador: (mapuches por puntos)  edades 3-3
 mapuches     vs ayutthaya    terreno=selva   22:57  ganador: mapuches  edades 3-2
 ayutthaya    vs palmares     terreno=sierra  30:00  ganador: (palmares por puntos)  edades 3-3
+palmares     vs ayutthaya    terreno=sierra  29:44  ganador: ayutthaya  edades 2-3
+ayutthaya    vs tawantinsuyu terreno=montana 22:10  ganador: tawantinsuyu  edades 2-3

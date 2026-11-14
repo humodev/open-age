@@ -789,7 +789,8 @@ func _leash(army: Array[SimEntity], radius: int, idle_only: bool = false) -> voi
 				back.append(u.id)
 				break
 	if not back.is_empty():
-		sim.push_command({"t": "move", "player": player, "ids": back, "x": rally.x, "y": rally.y})
+		# Retirada suelta: cada uno a su velocidad, sin esperar a la formación.
+		sim.push_command({"t": "move", "player": player, "ids": back, "x": rally.x, "y": rally.y, "suelto": true})
 
 
 ## Punto del mapa para ocupar: un sitio sagrado ajeno, o el centro del mapa,

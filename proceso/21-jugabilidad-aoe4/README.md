@@ -122,3 +122,9 @@
      ![](aldeanos-en-bloque.jpg)
    - **Tropiezo:** la primera captura mostraba a los aldeanos quietos junto a una arcilla, y parecía una falla del grupo. Era la demo: buscaba la arcilla entre las entidades activas, donde los recursos no están, y nunca dio la orden. Con la búsqueda corregida, el grupo avanza parejo; 47 casillas a paso de aldeano son unos 40 s.
    - Determinismo OK, banco de 200 unidades en 7,8 ms de promedio y 45 de peor tick, `tests/grupos.gd` OK y autotest OK.
+7. **(01:05) Parte del paso 8: ir suelto.**
+   - **Alt + clic derecho** manda sin formación: cada uno a su velocidad, para retirarse. Es lo más pedido en el foro de AoE4 (referencia, §6). El marcador sale en rojo para que se note que va suelto.
+   - **La IA** se retira suelta cuando saca unidades de la base rival (`_leash`).
+   - La ayuda (F1) lo explica.
+   - **Falta del paso 8:** elegir la formación (bloque, línea, abierta, columna) y el rumbo con el arrastre.
+   - Autotest OK y determinismo OK.
