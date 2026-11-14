@@ -28,7 +28,7 @@
   "explorador": {
    "nombre": "Mensajero"
   },
-  "guerrero": {"nombre": "Jinete noble", "montado": true, "velocidad": 2100, "pv": 150, "pob": 1, "costo": {"alimento": 80, "riqueza": 40}, "ataque": 10},
+  "guerrero": {"nombre": "Jinete noble", "montado": true, "velocidad": 2100, "pv": 140, "pob": 1, "costo": {"alimento": 80, "riqueza": 40}, "ataque": 10},
   "hondero": {
    "nombre": "Jabalinero",
    "alcance": 4000,

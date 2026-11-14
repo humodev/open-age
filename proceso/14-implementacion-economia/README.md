@@ -277,3 +277,19 @@ El autor preguntó en qué punto estaba la economía: se había avanzado varias 
     - **Tawantinsuyu:** el taller da 22 en lugar de 24.
     - **Palmares:** gente de guerra de 130 de vida; flecheiro de 8 de ataque.
     - **Ayutthaya:** elefante de guerra de 3 de población y 160 a + 120 r.
+35. **Torneo tras el cuarto ajuste** ([resultado](pruebas/08-torneo-ajuste-4.txt)):
+
+    | Civ | % |
+    |---|---|
+    | Etiopía | 73 % |
+    | Mapuches | 60 % |
+    | Guaraníes | 53 % |
+    | Tawantinsuyu | 53 % |
+    | Ayutthaya | 33 % |
+    | Palmares | 26 % |
+
+    Cuatro civs quedan dentro de la banda de 35 a 65 %. Con 15 partidas por civ el ruido es de unos ±12 %, pero las señales que se repiten son Etiopía alta (promedio de ~69 % en los últimos tres torneos) y Palmares baja (menos del 30 % en todos).
+36. **Quinto ajuste:**
+    - **Etiopía:** jinete noble de 140 de vida.
+    - **Palmares:** oficios de 20; espingardeiro de 60 a + 65 r.
+    - **Ayutthaya:** compañía japonesa de 85 r.

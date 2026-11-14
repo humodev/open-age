@@ -33,14 +33,7 @@
   "lancero": {
    "nombre": "Lanceiro"
   },
-  "arcabucero": {
-   "nombre": "Espingardeiro de resgate",
-   "edad_min": 2,
-   "costo": {
-    "alimento": 60,
-    "riqueza": 80
-   }
-  }
+  "arcabucero": {"nombre": "Espingardeiro de resgate", "edad_min": 2, "costo": {"alimento": 60, "riqueza": 65}}
  },
  "edificios": {
   "centro": {
@@ -100,7 +93,7 @@
    "alcance": 6000,
    "cadencia_ms": 2000,
    "ranura": 7,
-   "desc": "Aldea en el monte. La gente que llega trabaja en sus oficios (herrero, alfarero, cestero, tejedor de palma): 3 puestos de 18 de riqueza por minuto que paran bajo asedio."
+   "desc": "Aldea en el monte. La gente que llega trabaja en sus oficios (herrero, alfarero, cestero, tejedor de palma): 3 puestos de 20 de riqueza por minuto que paran bajo asedio."
   },
   "quilombo_central": { "costo_extra": { "fama": 90 }, "eje": "economia",
    "nombre": "Macaco",
@@ -322,7 +315,7 @@
   ]
  },
  "modulos": {
-    "oficios": { "puestos": { "mocambo": 3, "cerca_real": 2 }, "por_min": 18, "tope_por_edad": [5, 8, 10, 10], "para_pct": 2, "para_enemigos": 3, "para_radio": 6000 },
+    "oficios": { "puestos": { "mocambo": 3, "cerca_real": 2 }, "por_min": 20, "tope_por_edad": [5, 8, 10, 10], "para_pct": 2, "para_enemigos": 3, "para_radio": 6000 },
   "recurso_propio": {
    "clave": "fama",
    "nombre": "Fama",
