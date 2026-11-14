@@ -198,3 +198,19 @@
     - **Las partidas se definen más:** 24 de 30 terminan con los hitos destruidos (antes, 61 %). Los ejércitos que llegan juntos rompen bases.
     - **El reparto se mueve,** a favor de las civs de infantería con mucha distancia (Palmares, Tawantinsuyu) y en contra de las de caballería y elefantes (Etiopía, Ayutthaya). Tiene sentido: los montados iban adelante solos y ahora marchan al paso de la infantería.
     - **No ajusto con este torneo:** ya hay almacenes y producción por función encima, y el torneo con el código final está corriendo. Con 10 partidas por civ el ruido es de unos ±15 puntos.
+11. **(03:20) Torneo con el código final (almacenes y producción por función): desbalanceado** ([torneo](pruebas/10-torneo.txt), [economía en paz](pruebas/10-economia-paz.txt)).
+
+    | Civ | Victorias | Edad III en paz (antes → ahora) |
+    |---|---|---|
+    | Guaraníes | 100 % | 11:35 → 14:25 |
+    | Ayutthaya | 70 % | 17:35 → 15:07 |
+    | Tawantinsuyu | 70 % | 12:52 → 16:57 |
+    | Palmares | 40 % | 19:57 → 18:07 |
+    | Etiopía | 10 % | 13:37 → 19:27 |
+    | Mapuches | 10 % | 12:15 → 19:42 |
+
+    - **Edad II** sigue en su rango (5:37 a 8:12). La III se atrasa en casi todas: hay más edificios que pagar.
+    - **Dos causas encontradas en la IA, no en los datos:**
+      1. **Mapuches sin almacén.** La IA nunca levantaba un lof junto a un recurso lejano, porque `_dropsite_for` descartaba los edificios que dan población. Sus aldeanos caminaban hasta la base. Ahora, si una civ no tiene almacén para un recurso, usa su edificio barato que lo recibe (el lof a 110, el mocambo para la madera de Palmares), hasta `ia_economia.almacen_alternativo_max` = 150.
+      2. **Etiopía sin su jinete noble a tiempo.** Su unidad preferida salía del cuartel; ahora sale del färäs bet, y la IA lo levantaba después del cuartel: el primer jinete a las 9:00. Ahora el edificio de la unidad preferida de cada civ (`ia_unidades`) va tan temprano como el primer cuartel.
+    - Determinismo OK. Torneo y economía de nuevo, con estos dos arreglos, antes de tocar precios.

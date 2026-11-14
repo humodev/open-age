@@ -441,6 +441,21 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 	if (n_cuartel == 0 and vill.size() >= 11) or (n_cuartel == 1 and p["age"] >= 2 and vill.size() >= 24) or rich:
 		if not unbuilt.has("cuartel"):
 			_try_build("cuartel", p, vill, centro, 2)
+	# El edificio de la unidad preferida de la civ (`ia_unidades`: el jinete noble etíope sale
+	# del färäs bet) va tan temprano como el primer cuartel.
+	if vill.size() >= 11:
+		var pref: Array = sim.dp(player).civ.get("ia_unidades", [])
+		for t in _producer_types():
+			if by_type.get(t, []).size() > 0 or unbuilt.has(t) or p["age"] < int(sim.dp(player).edificios[t].get("edad_min", 1)):
+				continue
+			var makes: Array = sim.dp(player).edificios[t].get("produce", [])
+			var wanted_unit := false
+			for u in pref:
+				if makes.has(u):
+					wanted_unit = true
+			if wanted_unit:
+				_try_build(t, p, vill, centro, 2)
+				break
 	# Los demás edificios de producción (campo de tiro, corral de guerra, taller…): uno de cada
 	# uno después del primer cuartel; más si sobra (proceso/21, paso 10).
 	if n_cuartel >= 1 and vill.size() >= 14:
@@ -520,22 +535,32 @@ func _producer_types() -> Array[String]:
 	return out
 
 
-## El almacén más barato de la civ que recibe `kind` y no es un centro (sin población ni producción).
+## El almacén más barato de la civ que recibe `kind`. Primero los almacenes puros; si la civ
+## no tiene (mapuches, la madera de Palmares), su edificio barato que también recibe (lof,
+## mocambo), hasta `ia_economia.almacen_alternativo_max`. Nunca un centro ni un hito.
 func _dropsite_for(kind: String) -> String:
 	var dd := sim.dp(player)
-	var best := ""
-	var best_cost := 1 << 30
-	for t in dd.unidades.get("aldeano", {}).get("construye", []):
-		var def: Dictionary = dd.edificios.get(t, {})
-		if def.is_empty() or not (def.get("deposito", []) as Array).has(kind) or def.has("pob") or def.has("produce") or def.get("avanza_edad", false):
-			continue
-		var c := 0
-		for k in dd.cost_of(t, 1):
-			c += int(dd.cost_of(t, 1)[k])
-		if c < best_cost:
-			best_cost = c
-			best = t
-	return best
+	var alt_max := int(sim.data.reglas["ia_economia"]["almacen_alternativo_max"])
+	for pure in [true, false]:
+		var best := ""
+		var best_cost := 1 << 30
+		for t in dd.unidades.get("aldeano", {}).get("construye", []):
+			var def: Dictionary = dd.edificios.get(t, {})
+			if def.is_empty() or not (def.get("deposito", []) as Array).has(kind) or def.get("avanza_edad", false):
+				continue
+			if pure and (def.has("pob") or def.has("produce")):
+				continue
+			var c := 0
+			for k in dd.cost_of(t, 1):
+				c += int(dd.cost_of(t, 1)[k])
+			if not pure and c > alt_max:
+				continue
+			if c < best_cost:
+				best_cost = c
+				best = t
+		if best != "":
+			return best
+	return ""
 
 
 func _far_gather_point(vill: Array[SimEntity], kind: String) -> SimEntity:
