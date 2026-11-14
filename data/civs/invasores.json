@@ -69,5 +69,6 @@
   "jinete",
   "arcabucero"
  ],
- "ia_edificios": []
+ "ia_edificios": [],
+ "sin_edificios": ["campo_tiro", "establo", "taller"]
 }

@@ -57,9 +57,6 @@
   "granja": {
    "nombre": "Chacra"
   },
-  "deposito": {
-   "nombre": "Troje"
-  },
   "empalizada": {
    "nombre": "Empalizada con foso",
    "costo": {
@@ -67,12 +64,7 @@
    }
   }
  },
- "sin_edificios": [
-  "centro",
-  "torre",
-  "hito_economia",
-  "hito_guerra"
- ],
+ "sin_edificios": ["centro", "torre", "hito_economia", "hito_guerra", "deposito", "almacen_alimento", "almacen_madera", "almacen_mina", "campo_tiro", "establo", "taller"],
  "edificios_nuevos": {
   "lof": { "lento_fuera_de_capital_pct": 50,
    "nombre": "Lof",
@@ -297,25 +289,8 @@
    "weichan"
   ]
  ],
- "construye": [
-  "casa",
-  "granja",
-  "deposito",
-  "cuartel",
-  "lof",
-  "corral",
-  "empalizada",
-  "puerta",
-  "mercado"
- ],
- "produce": {
-  "cuartel": [
-   "guerrero",
-   "hondero",
-   "lancero",
-   "jinete"
-  ]
- },
+ "construye": ["casa", "granja", "cuartel", "lof", "corral", "empalizada", "puerta", "mercado"],
+ "produce": {"cuartel": ["lancero", "hondero"], "lof": ["aldeano", "explorador", "guerrero"], "corral": ["jinete"]},
  "unidades_nuevas": { "cabeza": { "nombre": "Cabeza de ganado", "funcion": "ganado", "edad_min": 1, "pob": 0, "costo": {}, "tiempo_ms": 0, "pv": 60, "armadura": 0, "ataque": 0, "alcance": 0, "cadencia_ms": 1000, "velocidad": 1100, "vision": 3000, "radio": 260, "no_seleccionable": true, "desc": "Ganado arreado en un malón: camina solo al corral propio más cercano. Se lo puede matar en el camino." } },
  "modulos": {
   "arreo": { "danio_por_cabeza": 150, "max_por_min": 3, "comida_si_lleno": 40, "cuenta_disputado": 16, "unidad": "cabeza" },
@@ -338,14 +313,6 @@
   "lof",
   "lof"
  ],
- "alias_campana": {
-  "deposito": [
-   "lof",
-   "deposito"
-  ],
-  "centro": [
-   "lof"
-  ]
- },
+ "alias_campana": {"deposito": ["lof", "deposito"], "centro": ["lof"]},
  "ia_incursiones": true
 }

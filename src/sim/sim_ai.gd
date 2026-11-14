@@ -441,15 +441,29 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 	if (n_cuartel == 0 and vill.size() >= 11) or (n_cuartel == 1 and p["age"] >= 2 and vill.size() >= 24) or rich:
 		if not unbuilt.has("cuartel"):
 			_try_build("cuartel", p, vill, centro, 2)
-	# Depósitos cerca de recursos lejanos.
-	if not unbuilt.has("deposito") and by_type.get("deposito", []).size() < 4:
-		for kind in ["alimento", "madera", "riqueza", "piedra"]:
-			var far := _far_gather_point(vill, kind)
-			if far != null:
-				var site := _site_near("deposito", Vector2i(far.x / P, far.y / P), 1)
-				if site.x >= 0 and sim.can_afford(player, sim.dp(player).cost_of("deposito", p["age"])):
-					sim.push_command({"t": "build", "player": player, "ids": [_nearest_villager(vill, far.x, far.y).id], "type": "deposito", "tx": site.x, "ty": site.y})
+	# Los demás edificios de producción (campo de tiro, corral de guerra, taller…): uno de cada
+	# uno después del primer cuartel; más si sobra (proceso/21, paso 10).
+	if n_cuartel >= 1 and vill.size() >= 14:
+		for t in _producer_types():
+			var have: int = by_type.get(t, []).size()
+			if unbuilt.has(t) or p["age"] < int(sim.dp(player).edificios[t].get("edad_min", 1)):
+				continue
+			if have == 0 or (rich and have < 2):
+				_try_build(t, p, vill, centro, 2)
 				break
+	# Almacenes junto a los recursos lejanos: el de ese recurso (leñera, granero, barrero…),
+	# según los que tenga la civ (proceso/21). Sin almacén para ese recurso, nada: lo cubren
+	# sus edificios propios (lof, mocambo, elefante).
+	for kind in ["alimento", "madera", "riqueza", "piedra"]:
+		var dtype := _dropsite_for(kind)
+		if dtype == "" or unbuilt.has(dtype) or by_type.get(dtype, []).size() >= 4:
+			continue
+		var far := _far_gather_point(vill, kind)
+		if far != null:
+			var site := _site_near(dtype, Vector2i(far.x / P, far.y / P), 1)
+			if site.x >= 0 and sim.can_afford(player, sim.dp(player).cost_of(dtype, p["age"])):
+				sim.push_command({"t": "build", "player": player, "ids": [_nearest_villager(vill, far.x, far.y).id], "type": dtype, "tx": site.x, "ty": site.y})
+			break
 	# Edificios propios de la civilización (corral, gult, mocambo, kraal...), uno por paso.
 	var wanted := {}
 	for t: String in sim.dp(player).civ.get("ia_edificios", []):
@@ -485,6 +499,43 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 	# Torre.
 	if p["age"] >= 2 and sim.dp(player).edificios.has("torre") and by_type.get("torre", []).size() < 1 and p["res"]["piedra"] >= 250:
 		_try_build("torre", p, vill, centro, 1)
+
+
+## Edificios de producción militar de la civ, además del cuartel y de los que ya levanta
+## por `ia_edificios` (lof, mocambo, corral…).
+func _producer_types() -> Array[String]:
+	var dd := sim.dp(player)
+	var own: Array = dd.civ.get("ia_edificios", [])
+	var out: Array[String] = []
+	for t in dd.unidades.get("aldeano", {}).get("construye", []):
+		if t == "cuartel" or own.has(t):
+			continue
+		var def: Dictionary = dd.edificios.get(t, {})
+		if def.is_empty() or def.get("avanza_edad", false) or def.has("pob"):
+			continue
+		for u in def.get("produce", []):
+			if dd.unidades.get(u, {}).get("funcion", "") in ["choque", "distancia", "linea", "asedio"]:
+				out.append(t)
+				break
+	return out
+
+
+## El almacén más barato de la civ que recibe `kind` y no es un centro (sin población ni producción).
+func _dropsite_for(kind: String) -> String:
+	var dd := sim.dp(player)
+	var best := ""
+	var best_cost := 1 << 30
+	for t in dd.unidades.get("aldeano", {}).get("construye", []):
+		var def: Dictionary = dd.edificios.get(t, {})
+		if def.is_empty() or not (def.get("deposito", []) as Array).has(kind) or def.has("pob") or def.has("produce") or def.get("avanza_edad", false):
+			continue
+		var c := 0
+		for k in dd.cost_of(t, 1):
+			c += int(dd.cost_of(t, 1)[k])
+		if c < best_cost:
+			best_cost = c
+			best = t
+	return best
 
 
 func _far_gather_point(vill: Array[SimEntity], kind: String) -> SimEntity:
@@ -912,7 +963,7 @@ func _count(list: Array[SimEntity], type: String) -> int:
 func _makes_military(b: SimEntity) -> bool:
 	for t: String in b.def.get("produce", []):
 		var u: Dictionary = sim.dp(player).unidades.get(t, {})
-		if not u.is_empty() and u["funcion"] in ["choque", "distancia", "linea"]:
+		if not u.is_empty() and u["funcion"] in ["choque", "distancia", "linea", "asedio"]:
 			return true
 	return false
 

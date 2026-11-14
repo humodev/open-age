@@ -1,0 +1,3 @@
+=== ["tawantinsuyu", "mapuches"] terreno=bosque ganador=-1
+=== ["etiopia", "palmares"] terreno=bosque ganador=-1
+=== ["guaranies", "ayutthaya"] terreno=bosque ganador=-1

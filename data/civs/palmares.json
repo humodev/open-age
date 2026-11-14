@@ -38,6 +38,8 @@
   "arcabucero": {"nombre": "Espingardeiro de resgate", "edad_min": 2, "costo": {"alimento": 60, "riqueza": 65}}
  },
  "edificios": {
+  "almacen_alimento": {"nombre": "Paiol"},
+  "almacen_mina": {"nombre": "Olaria"},
   "centro": {
    "nombre": "Cerca real"
   },
@@ -55,16 +57,9 @@
    "nombre": "Cerca con estrepes",
    "espinas": 3,
    "pv": 380
-  },
-  "deposito": {
-   "nombre": "Paiol"
   }
  },
- "sin_edificios": [
-  "torre",
-  "hito_economia",
-  "hito_guerra"
- ],
+ "sin_edificios": ["torre", "hito_economia", "hito_guerra", "deposito", "almacen_madera", "campo_tiro", "establo", "taller"],
  "edificios_nuevos": {
   "mocambo": {
    "nombre": "Mocambo",
@@ -294,28 +289,8 @@
    "guerra_zumbi"
   ]
  ],
- "construye": [
-  "casa",
-  "granja",
-  "deposito",
-  "cuartel",
-  "centro",
-  "mocambo",
-  "empalizada",
-  "puerta",
-  "mercado"
- ],
- "produce": {
-  "centro": [
-   "explorador"
-  ],
-  "cuartel": [
-   "guerrero",
-   "hondero",
-   "lancero",
-   "arcabucero"
-  ]
- },
+ "construye": ["casa", "granja", "almacen_alimento", "almacen_mina", "cuartel", "centro", "mocambo", "empalizada", "puerta", "mercado"],
+ "produce": {"centro": ["explorador"], "cuartel": ["guerrero", "lancero", "arcabucero"], "mocambo": ["hondero"]},
  "modulos": {
     "oficios": { "puestos": { "mocambo": 3, "cerca_real": 2 }, "por_min": 20, "tope_por_edad": [5, 8, 10, 10], "para_pct": 2, "para_enemigos": 3, "para_radio": 6000 },
   "recurso_propio": {
@@ -358,11 +333,6 @@
   "mocambo",
   "mocambo"
  ],
- "alias_campana": {
-  "deposito": [
-   "mocambo",
-   "deposito"
-  ]
- },
+ "alias_campana": {"deposito": ["mocambo", "deposito", "almacen_alimento", "almacen_mina"]},
  "ia_incursiones": true
 }

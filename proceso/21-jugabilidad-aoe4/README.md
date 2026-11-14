@@ -128,3 +128,59 @@
    - La ayuda (F1) lo explica.
    - **Falta del paso 8:** elegir la formación (bloque, línea, abierta, columna) y el rumbo con el arrastre.
    - Autotest OK y determinismo OK.
+8. **(01:40) Paso 9 del plan: almacenes por recurso.**
+   - **Capa común** (`data/edificios.json`): granero (alimento), leñera (madera) y barrero (piedra y arcilla, lo que se cava), a 50 de madera, 2×2 y 20 s. El depósito unificado (75) queda solo para los invasores y las campañas.
+   - **Por pueblo**, como en la propuesta (§2.2), con los nombres marcados `[verificar]` mientras no haya fuente (C-30):
+
+     | Pueblo | Almacenes | Qué recibe todo |
+     |---|---|---|
+     | Tawantinsuyu | Llant'a wasi (madera), Kamayuq wasi (piedra y arcilla); la qollqa sigue siendo su granero | centro |
+     | Mapuches | ninguno (C-26) | el lof |
+     | Guaraníes | Tapyi (alimento y madera, 60), Ñai'ũ renda (piedra y arcilla) | centro |
+     | Etiopía | Gotära (granero), Inchet bet (leñera); lo que se cava va a la corte | kätäma y la corte |
+     | Palmares | Paiol (granero), Olaria (barrero); el mocambo hace de leñera | centro y mocambos |
+     | Ayutthaya | Khlang din, solo arcilla (C-25) | palacio y elefante del rey |
+   - **Modelos de maqueta** propios (`meshes.gd`), para reconocerlos de lejos: la leñera con troncos apilados, el granero redondo con techo cónico y el barrero con bloques de piedra y vasijas.
+   - **Grilla:** leñera en E (donde estaba el depósito), granero en Z y barrero en X dentro del submenú de economía, con el ícono del recurso.
+   - **IA:** `_dropsite_for(recurso)` elige el almacén más barato de su civ que recibe ese recurso. Sin almacén para ese recurso no construye ninguno, porque lo cubren sus edificios propios. Antes construía siempre `deposito`.
+   - **Campañas:** los objetivos que piden depósitos cuentan los almacenes nuevos (`alias_campana`).
+   - **Edición de los datos sin reformatear:** el primer intento reescribió los seis JSON enteros (590 líneas de cambio solo de formato). Se volvió atrás y se editaron solo las claves tocadas; se comprobó que el resto de cada civ quedó igual.
+   - **Pruebas:**
+     - determinismo OK; `tests/jugabilidad.gd` OK, con el tapyi guaraní junto al bosque y los tres constructores talando al terminar;
+     - `tests/grilla.gd` OK y autotest OK en las seis civs;
+     - `civ_smoke` ([resultado](pruebas/09-civ-smoke.txt)) y las 25 misiones ([resultado](pruebas/09-campanas.txt)) sin errores.
+
+     ![](grilla-almacenes-etiopia.png)
+9. **(02:20) Paso 10 del plan: producción militar por función.**
+   - **Capa común:** cuartel (choque y línea), campo de tiro (distancia, edad I, 150 de madera), corral de guerra (montados, II, 175) y taller de asedio (II, 200). Los invasores, que son solo IA y de campaña, siguen con un cuartel para todo.
+   - **Por pueblo:**
+
+     | Pueblo | Choque y línea | Distancia | Montados | Asedio |
+     |---|---|---|---|---|
+     | Tawantinsuyu | Kallanka | **Warak'a kancha**: hondero, boleador y el hondero de piedra caliente (su asedio) | solo por Vilcabamba | sin taller |
+     | Mapuches | **Lof** (weichafe) y Ruka de guerra (lanza larga y arquero) | Ruka de guerra | **Corral** (kona) | — |
+     | Guaraníes | Aty de guerra | **Guyrapa róga** (2×2, 100 de madera) | — | Taller de tacuara (150) |
+     | Etiopía | Campamento de chewa (chewa y jabalinero) | Campamento de chewa | **Färäs bet**, el jinete noble desde la edad I | Taller |
+     | Palmares | Casa de guerra (también el espingardeiro) | **Mocambo** (flecheiro) | — | — |
+     | Ayutthaya | Cuartel de la guardia | Sanam ying thanu | Kraal (elefantes) | Taller |
+   - **Tecnologías militares por capacidad:** `armas_*`, `escudos_*`, `marcha` y `adiestramiento` se investigan en cualquier edificio que entrene tropa (`"en": {"militar": true}`).
+   - **IA:** `_producer_types()` encuentra los edificios de producción de su civ y levanta uno de cada uno después del primer cuartel, y otro si sobra. `_makes_military` ahora cuenta el asedio; antes un taller nunca habría entrenado.
+   - **Modelos de maqueta:** campo de tiro (galpón con dos blancos de paja), corral de guerra (cobertizo con pesebres y cerca) y taller (techo a un agua con un ariete a medio hacer). En la grilla militar van en Z, X y C, con el ícono de la unidad.
+
+     ![](grilla-militar-guaranies.png)
+   - **Dónde me aparto de la propuesta, por ahora:**
+     - el Guyrapa róga no exige árboles cerca: hace falta una regla de lugar nueva;
+     - Palmares sigue sacando el espingardeiro de la casa de guerra, porque su "tenda de ferreiro" de la propuesta no existe y la *ferraria* es un hito de la edad III: sacarlo de ahí le quitaba la pólvora de la edad II.
+   - **Medición, 15 minutos de IA contra IA:** cuándo sale la primera unidad de cada función.
+
+     | Civ | Edificios de producción a los 15 min | Choque | Distancia | Línea | Asedio |
+     |---|---|---|---|---|---|
+     | Tawantinsuyu | 3 kallanka, 2 warak'a kancha, kallanka real | 2:10 | 7:30 | 7:50 | 12:30 |
+     | Mapuches | 1 ruka, 3 corrales, lof | 5:40 | 6:00 | 7:30 | — |
+     | Guaraníes | 2 aty, 1 guyrapa róga, 1 taller | 9:20 | 9:20 | 11:50 | 13:50 |
+     | Etiopía | 2 campamentos, 1 färäs bet | 9:00 | 5:40 | 8:20 | — |
+     | Palmares | 2 casas de guerra, mocambo | 7:10 | 1:40 | 12:10 | — |
+     | Ayutthaya | 2 cuarteles, 1 sanam | 3:10 | 4:40 | — | — |
+
+     Cuatro de seis tienen las tres funciones antes del minuto 12. Palmares llega a las 12:10. Ayutthaya no entrena lanceros en 15 minutos: su lancero pide la edad II, y la IA prioriza el elefante y la compañía japonesa. Va al torneo.
+   - Determinismo, `tests/grilla.gd`, `tests/jugabilidad.gd` y autotest en las seis civs: OK.

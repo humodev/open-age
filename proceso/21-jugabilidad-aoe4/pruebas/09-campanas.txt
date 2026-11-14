@@ -1,0 +1,26 @@
+
+ayutthaya-1      Nong Sarai                    3:00 resultado=(abierta) o1:activo o2:hecho o3:activo o4:activo o5:oculto o6:activo
+ayutthaya-2      La boca del río               3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+ayutthaya-3      Veintisiete fuertes           3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:oculto o5:oculto o6:activo
+ayutthaya-4      La otra orilla                3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo o6:oculto
+etiopia-1        La luz de Debre Berhan        3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+etiopia-2        La montaña de los príncipes   3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+etiopia-3        Wayna Daga                    3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo
+etiopia-4        Gondar                        3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+guaranies-1      Lambaré                       3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+guaranies-2      Río abajo                     3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo
+guaranies-3      Mbororé                       3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo
+guaranies-4      Esta tierra tiene dueño       3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo o6:activo
+mapuches-1       El hacha negra                3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+mapuches-2       Lo que no llega a casa no cu  3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo
+mapuches-3       Curalaba                      3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:oculto o5:activo
+mapuches-4       Quilín                        3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+palmares-1       Cuatro fraguas                3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo o7:fallado
+palmares-2       La cerca real                 3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:oculto o5:activo o6:activo
+palmares-3       El papel de Cucaú             3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:oculto o5:oculto o6:activo
+palmares-4       Tres cercas                   3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:oculto
+tawantinsuyu-1   Los que se quedaron           3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+tawantinsuyu-2   La frontera de piedra         3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo o6:activo
+tawantinsuyu-3   El agua de Ollantaytambo      3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:oculto o5:activo o6:activo
+tawantinsuyu-4   Tinta                         3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo o6:oculto
+tutorial-1       Primeros pasos                3:00 resultado=(abierta) o1:activo o2:activo o3:oculto o4:oculto o5:oculto o6:oculto

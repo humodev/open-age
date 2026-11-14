@@ -53,14 +53,13 @@
   "compania_japonesa": {"nombre": "Compañía japonesa", "funcion": "choque", "edad_min": 2, "pob": 1, "costo": {"riqueza": 85}, "tiempo_ms": 12000, "pv": 140, "armadura": 2, "ataque": 13, "alcance": 450, "cadencia_ms": 1150, "velocidad": 1550, "vision": 8000, "radio": 260}
  },
  "edificios": {
+  "campo_tiro": {"nombre": "Sanam ying thanu"},
+  "almacen_mina": {"nombre": "Khlang din", "deposito": ["riqueza"], "desc": "Almacén de tierra: solo arcilla. El elefante del rey no la carga."},
   "centro": {
    "nombre": "Wang (palacio)"
   },
   "casa": {
    "nombre": "Ruean"
-  },
-  "deposito": {
-   "nombre": "Phra Khlang (almacén)"
   },
   "granja": {
    "nombre": "Arrozal",
@@ -74,10 +73,7 @@
    "nombre": "Fortín de río"
   }
  },
- "sin_edificios": ["deposito", 
-  "hito_economia",
-  "hito_guerra"
- ],
+ "sin_edificios": ["deposito", "hito_economia", "hito_guerra", "almacen_alimento", "almacen_madera", "establo"],
  "edificios_nuevos": {
   "kraal": {
    "nombre": "Kraal de elefantes",
@@ -311,15 +307,8 @@
    "guardia_extranjera"
   ]
  ],
- "construye": ["casa", "granja", "cuartel", "torre", "centro", "kraal", "barrio_japones", "barrio_portugues", "mercado"],
- "produce": { "centro": ["aldeano", "explorador", "elefante_rey"],
-  "cuartel": [
-   "guerrero",
-   "hondero",
-   "lancero",
-   "ariete"
-  ]
- },
+ "construye": ["casa", "granja", "cuartel", "campo_tiro", "taller", "torre", "centro", "kraal", "barrio_japones", "barrio_portugues", "mercado", "almacen_mina"],
+ "produce": {"centro": ["aldeano", "explorador", "elefante_rey"], "cuartel": ["guerrero", "lancero"], "campo_tiro": ["hondero"], "taller": ["ariete"]},
  "modulos": {},
  "ia_unidades": [
   "chang_suek"
@@ -330,19 +319,5 @@
   "barrio_japones",
   "barrio_portugues"
  ],
- "alias_campana": {
-  "casa": [
-   "barrio_japones",
-   "barrio_portugues",
-   "casa"
-  ],
-  "jinete": [
-   "chang_suek",
-   "jinete"
-  ],
-  "arcabucero": [
-   "arcabucero",
-   "compania_japonesa"
-  ]
- }
+ "alias_campana": {"casa": ["barrio_japones", "barrio_portugues", "casa"], "jinete": ["chang_suek", "jinete"], "arcabucero": ["arcabucero", "compania_japonesa"], "deposito": ["deposito", "almacen_mina"]}
 }

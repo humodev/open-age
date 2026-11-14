@@ -67,25 +67,22 @@
   }
  },
  "edificios": {
+  "campo_tiro": {"nombre": "Guyrapa róga", "tam": [2, 2], "costo": {"madera": 100}, "desc": "Casa del arco, junto al monte: más chica y barata, para tener varias."},
+  "taller": {"nombre": "Taller de tacuara", "costo": {"madera": 150}},
+  "almacen_madera": {"nombre": "Tapyi", "deposito": ["alimento", "madera"], "costo": {"madera": 60}, "desc": "Rancho al borde del monte: recibe lo de la roza y la madera del mismo monte."},
+  "almacen_mina": {"nombre": "Ñai'ũ renda"},
   "centro": {
    "nombre": "Oga guasu"
   },
   "casa": {
    "nombre": "Oga"
   },
-  "deposito": {
-   "nombre": "Tapyi"
-  },
   "cuartel": {
    "nombre": "Aty de guerra"
   },
   "granja": {"nombre": "Kokue (roza)", "tasa_clave": "roza", "cantidad": 500, "deja": "yerbal", "capuera": "capuera", "yerbales_por_edad": [3, 4, 4, 4], "quemar_pct": 60, "costo": {"madera": 90}, "desc": "Chacra abierta en el monte: da alimento y, al agotarse, deja un yerbal que da riqueza; el mismo aldeano sigue ahí. Con el modo \"quemar\" se reabre al 60 % sin yerbal."}
  },
- "sin_edificios": [
-  "torre",
-  "hito_economia",
-  "hito_guerra"
- ],
+ "sin_edificios": ["torre", "hito_economia", "hito_guerra", "deposito", "almacen_alimento", "establo"],
  "edificios_nuevos": {
   "karai_palabra": { "eje": "economia",
    "nombre": "Casa del karai",
@@ -287,24 +284,8 @@
    "yvy_marane"
   ]
  ],
- "construye": [
-  "casa",
-  "granja",
-  "deposito",
-  "cuartel",
-  "centro",
-  "empalizada",
-  "puerta",
-  "mercado"
- ],
- "produce": {
-  "cuartel": [
-   "guerrero",
-   "hondero",
-   "lancero",
-   "ariete"
-  ]
- },
+ "construye": ["casa", "granja", "almacen_madera", "almacen_mina", "cuartel", "campo_tiro", "taller", "centro", "empalizada", "puerta", "mercado"],
+ "produce": {"cuartel": ["guerrero", "lancero"], "campo_tiro": ["hondero"], "taller": ["ariete"]},
  "recursos_semilla": [{ "tipo": "yerbal", "cantidad": 100 }],
  "modulos": {
   "sigilo": {
@@ -321,9 +302,5 @@
  ],
  "debilidad": "Campo abierto: unidades frágiles y sin torres de piedra.",
  "ia_edificios": [],
- "alias_campana": {
-  "deposito": [
-   "deposito"
-  ]
- }
+ "alias_campana": {"deposito": ["deposito", "almacen_madera", "almacen_mina"]}
 }

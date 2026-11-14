@@ -69,6 +69,9 @@
   }
  },
  "edificios": {
+  "establo": {"nombre": "Färäs bet", "edad_min": 1, "costo": {"madera": 150}, "desc": "Casa del caballo: el jinete noble desde la edad I."},
+  "almacen_alimento": {"nombre": "Gotära"},
+  "almacen_madera": {"nombre": "Inchet bet"},
   "centro": {
    "nombre": "Kätäma (corte)",
    "empaca_en": "carpa_real"
@@ -83,10 +86,7 @@
    "nombre": "Torre de la amba"
   }
  },
- "sin_edificios": [
-  "hito_economia",
-  "hito_guerra"
- ],
+ "sin_edificios": ["hito_economia", "hito_guerra", "deposito", "almacen_mina", "campo_tiro"],
  "edificios_nuevos": {
   "corte_nueva": { "nombre": "Corte nueva (cimiento)", "edad_min": 1, "tam": [4, 4], "pv": 2400, "armadura": 1, "costo": { "madera": 150 }, "tiempo_ms": 60000, "vision": 6000, "autoconstruye": true, "vida_inicial_pct": 25, "ranura": 6,
    "funda_corte": { "edificio": "centro", "cada_ms": 300000, "lejos_de": 20, "sin_combate": 15, "fiesta_distancia": 25, "fiesta_arcilla": 300, "fiesta_ms": 60000 },
@@ -309,26 +309,8 @@
    "alianza"
   ]
  ],
- "construye": [ "corte_nueva",
-  "casa",
-  "granja",
-  "deposito",
-  "cuartel",
-  "torre",
-  "centro",
-  "gult",
-  "empalizada",
-  "puerta",
-  "mercado"
- ],
- "produce": {
-  "cuartel": [
-   "guerrero",
-   "hondero",
-   "lancero",
-   "ariete"
-  ]
- },
+ "construye": ["corte_nueva", "casa", "granja", "almacen_alimento", "almacen_madera", "cuartel", "establo", "taller", "torre", "centro", "gult", "empalizada", "puerta", "mercado"],
+ "produce": {"cuartel": ["lancero", "hondero"], "establo": ["guerrero", "jinete"], "taller": ["ariete"]},
  "modulos": {
   "defensa_altura": {
    "pct": 25
@@ -343,10 +325,5 @@
   "gult",
   "gult"
  ],
- "alias_campana": {
-  "granja": [
-   "granja",
-   "gult"
-  ]
- }
+ "alias_campana": {"granja": ["granja", "gult"], "deposito": ["deposito", "almacen_alimento", "almacen_madera"]}
 }

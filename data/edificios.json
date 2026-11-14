@@ -17,6 +17,42 @@
     "costo": { "madera": 75 }, "tiempo_ms": 20000, "vision": 5000,
     "deposito": ["alimento", "madera", "piedra", "riqueza"]
   },
+  "campo_tiro": {
+    "nombre": "Campo de tiro", "edad_min": 1, "tam": [3, 3], "pv": 1000, "armadura": 2,
+    "costo": { "madera": 150 }, "tiempo_ms": 30000, "vision": 6000,
+    "produce": ["hondero"],
+    "desc": "Entrena las tropas a distancia. Cada función pide su edificio: con un cuartel solo no alcanza para el triángulo."
+  },
+  "establo": {
+    "nombre": "Corral de guerra", "edad_min": 2, "tam": [3, 3], "pv": 1100, "armadura": 2,
+    "costo": { "madera": 175 }, "tiempo_ms": 35000, "vision": 6000,
+    "produce": ["jinete"],
+    "desc": "Entrena la tropa montada."
+  },
+  "taller": {
+    "nombre": "Taller de asedio", "edad_min": 2, "tam": [3, 3], "pv": 1000, "armadura": 2,
+    "costo": { "madera": 200 }, "tiempo_ms": 40000, "vision": 6000,
+    "produce": ["ariete"],
+    "desc": "Construye el asedio: lo único que derriba murallas y edificios grandes."
+  },
+  "almacen_alimento": {
+    "nombre": "Granero", "edad_min": 1, "tam": [2, 2], "pv": 600, "armadura": 1,
+    "costo": { "madera": 50 }, "tiempo_ms": 20000, "vision": 5000,
+    "deposito": ["alimento"],
+    "desc": "Almacén de alimento: junto a los arbustos o las granjas. Quien lo levanta se pone a juntar lo más cercano."
+  },
+  "almacen_madera": {
+    "nombre": "Leñera", "edad_min": 1, "tam": [2, 2], "pv": 600, "armadura": 1,
+    "costo": { "madera": 50 }, "tiempo_ms": 20000, "vision": 5000,
+    "deposito": ["madera"],
+    "desc": "Almacén de madera: al borde del bosque. Quien lo levanta se pone a talar."
+  },
+  "almacen_mina": {
+    "nombre": "Barrero", "edad_min": 1, "tam": [2, 2], "pv": 600, "armadura": 1,
+    "costo": { "madera": 50 }, "tiempo_ms": 20000, "vision": 5000,
+    "deposito": ["piedra", "riqueza"],
+    "desc": "Almacén de lo que se cava, piedra y arcilla: junto a la cantera o al barreal."
+  },
   "granja": {
     "nombre": "Granja", "edad_min": 1, "tam": [3, 3], "pv": 300, "armadura": 0,
     "costo": { "madera": 60 }, "tiempo_ms": 12000, "vision": 2000,

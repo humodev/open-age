@@ -186,7 +186,7 @@
       }
     ]
   },
-  "armas_1": {
+  "armas_1": { "en": {"militar": true},
     "nombre": "Armas templadas",
     "edificio": "cuartel",
     "ranura": 4,
@@ -209,7 +209,7 @@
       }
     ]
   },
-  "armas_2": {
+  "armas_2": { "en": {"militar": true},
     "nombre": "Armas reforzadas",
     "edificio": "cuartel",
     "ranura": 4,
@@ -233,7 +233,7 @@
       }
     ]
   },
-  "armas_3": {
+  "armas_3": { "en": {"militar": true},
     "nombre": "Armas de maestría",
     "edificio": "cuartel",
     "ranura": 4,
@@ -257,7 +257,7 @@
       }
     ]
   },
-  "escudos_1": {
+  "escudos_1": { "en": {"militar": true},
     "nombre": "Escudos de cuero",
     "edificio": "cuartel",
     "ranura": 5,
@@ -280,7 +280,7 @@
       }
     ]
   },
-  "escudos_2": {
+  "escudos_2": { "en": {"militar": true},
     "nombre": "Escudos acolchados",
     "edificio": "cuartel",
     "ranura": 5,
@@ -304,7 +304,7 @@
       }
     ]
   },
-  "escudos_3": {
+  "escudos_3": { "en": {"militar": true},
     "nombre": "Escudos de maestría",
     "edificio": "cuartel",
     "ranura": 5,
@@ -328,7 +328,7 @@
       }
     ]
   },
-  "marcha": {
+  "marcha": { "en": {"militar": true},
     "nombre": "Marcha forzada",
     "edificio": "cuartel",
     "ranura": 6,
@@ -351,7 +351,7 @@
       }
     ]
   },
-  "adiestramiento": {
+  "adiestramiento": { "en": {"militar": true},
     "nombre": "Adiestramiento",
     "edificio": "cuartel",
     "ranura": 7,

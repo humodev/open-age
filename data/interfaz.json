@@ -14,9 +14,9 @@
   "grilla": {
     "_doc": "Grilla de comandos estable (src/game/ui/grilla.gd). Casillas 0-11 = Q W E R / A S D F / Z X C V. El aldeano muestra Economía (Q) y Militar (W) como submenús y los hitos en Z (economía) y X (militar); dentro de cada submenú, cada edificio va siempre en la misma casilla por función, en las seis civilizaciones. Un edificio nuevo se agrega acá; si falta, va a la primera casilla libre con un aviso en la consola.",
     "fijas": { "economia": 0, "militar": 1, "atacar": 4, "detener": 5, "refugio": 7, "hito_economia": 8, "hito_militar": 9, "volver": 11 },
-    "economia": { "casa": 0, "granja": 1, "deposito": 2, "centro": 3, "lof": 3, "mercado": 4, "anden": 5, "gult": 5, "taller_tejido": 6, "corral": 6, "corte_nueva": 7, "mocambo": 7 },
-    "militar": { "cuartel": 0, "qollqa": 1, "kraal": 1, "barrio_japones": 2, "barrio_portugues": 3, "torre": 4, "empalizada": 5, "puerta": 6, "camino": 7 },
-    "iconos": { "anden": "terraza", "gult": "gult", "taller_tejido": "telar", "corral": "corral", "corte_nueva": "carpa", "mocambo": "mocambo", "qollqa": "qollqa", "kraal": "kraal", "barrio_japones": "barrio_japones", "barrio_portugues": "barrio_portugues" }
+    "economia": { "casa": 0, "granja": 1, "deposito": 2, "almacen_madera": 2, "almacen_alimento": 8, "almacen_mina": 9, "centro": 3, "lof": 3, "mercado": 4, "anden": 5, "gult": 5, "taller_tejido": 6, "corral": 6, "corte_nueva": 7, "mocambo": 7 },
+    "militar": { "cuartel": 0, "qollqa": 1, "kraal": 1, "barrio_japones": 2, "barrio_portugues": 3, "torre": 4, "empalizada": 5, "puerta": 6, "camino": 7, "campo_tiro": 8, "establo": 9, "taller": 10 },
+    "iconos": { "campo_tiro": "hondero", "establo": "jinete", "taller": "ariete", "almacen_madera": "madera", "almacen_alimento": "alimento", "almacen_mina": "piedra", "anden": "terraza", "gult": "gult", "taller_tejido": "telar", "corral": "corral", "corte_nueva": "carpa", "mocambo": "mocambo", "qollqa": "qollqa", "kraal": "kraal", "barrio_japones": "barrio_japones", "barrio_portugues": "barrio_portugues" }
   },
   "avisos": {
     "_doc": "Avisos del momento (src/game/ui/avisos.gd): cuántos se apilan a la vez, cuánto dura cada tipo en segundos y cuántos lugares recuerdan Espacio e Inicio.",

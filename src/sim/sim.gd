@@ -462,6 +462,13 @@ func tech_here(t: Dictionary, b: SimEntity) -> bool:
 		return (b.def.get("deposito", []) as Array).has(en["deposito"])
 	if en.has("tipo"):
 		return b.type == en["tipo"] or (en["tipo"] == "centro" and b.capital)
+	if en.get("militar", false):
+		# Mejoras militares: en cualquier edificio que entrene tropa (cuartel, campo de tiro, corral, taller…).
+		var units: Dictionary = dp(b.owner).unidades
+		for u in b.def.get("produce", []):
+			if units.get(u, {}).get("funcion", "") in ["choque", "distancia", "linea", "asedio"]:
+				return true
+		return false
 	return t.get("edificio", "") == b.type
 
 

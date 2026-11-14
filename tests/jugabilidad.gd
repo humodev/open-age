@@ -36,14 +36,14 @@ func _almacen_recolecta() -> void:
 	for r in range(2, 8):
 		for dy in range(-r, r + 1):
 			for dx in range(-r, r + 1):
-				if spot.x < 0 and s.can_place("deposito", tree.tx + dx, tree.ty + dy, 0):
+				if spot.x < 0 and s.can_place("almacen_madera", tree.tx + dx, tree.ty + dy, 0):
 					spot = Vector2i(tree.tx + dx, tree.ty + dy)
 	var ids := []
 	for e in s.entities:
 		if e.alive and e.owner == 0 and e.type == "aldeano" and ids.size() < 3:
 			ids.append(e.id)
 	s.players[0]["res"]["madera"] = 500
-	s.push_command({"t": "build", "player": 0, "ids": ids, "type": "deposito", "tx": spot.x, "ty": spot.y})
+	s.push_command({"t": "build", "player": 0, "ids": ids, "type": "almacen_madera", "tx": spot.x, "ty": spot.y})
 	for i in 900:
 		s.step()
 	var gathering := 0
@@ -51,7 +51,7 @@ func _almacen_recolecta() -> void:
 		var v: SimEntity = s.by_id[id]
 		if v.order in [SimEntity.Order.GATHER, SimEntity.Order.RETURN] and v.gather_kind == "madera":
 			gathering += 1
-	_check(gathering == ids.size(), "almacén junto al bosque: %d de %d aldeanos recolectan madera al terminar" % [gathering, ids.size()])
+	_check(gathering == ids.size(), "tapyi (leñera guaraní) junto al bosque: %d de %d aldeanos recolectan madera al terminar" % [gathering, ids.size()])
 
 
 ## Toda tecnología tiene algún edificio de la civ donde investigarse (antes Ayutthaya no

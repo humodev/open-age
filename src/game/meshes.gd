@@ -225,6 +225,70 @@ static func building_mesh(type: String, team: Color) -> ArrayMesh:
 			p.append([box(0.4, 0.32, 0.4), xf(Vector3(0.35, 0.28, 0.1), Vector3(0, -10, 0)), shade])
 			p.append([cyl(0.18, 0.2, 0.42), xf(Vector3(0.1, 0.33, -0.45)), dark])
 			_banner(p, Vector3(0.82, 0.12, 0.82), 1.6, team)
+		"campo_tiro":
+			# Campo de tiro: galpón bajo atrás, dos blancos de paja y una cerca.
+			p.append([box(2.9, 0.1, 2.9), xf(Vector3(0, 0.05, 0)), dark])
+			p.append([box(2.4, 0.8, 0.9), xf(Vector3(0, 0.5, -0.9)), clay])
+			p.append([prism(1.1, 0.4, 2.6), xf(Vector3(0, 1.1, -0.9), Vector3(0, 90, 0)), roof])
+			for x in [-0.7, 0.7]:
+				p.append([cyl(0.38, 0.38, 0.14, 12), xf(Vector3(x, 0.55, 1.0), Vector3(90, 0, 0)), Color("d9c27a")])
+				p.append([cyl(0.18, 0.18, 0.16, 10), xf(Vector3(x, 0.55, 1.0), Vector3(90, 0, 0)), Color("b04a3a")])
+				p.append([box(0.08, 0.5, 0.08), xf(Vector3(x, 0.25, 1.05)), Palette.WOOD_BEAM])
+			p.append([box(2.8, 0.08, 0.06), xf(Vector3(0, 0.3, 1.4)), Palette.WOOD_BEAM])
+			p.append([box(2.52, 0.1, 0.1), xf(Vector3(0, 0.92, -0.42)), team])
+		"establo":
+			# Corral de guerra: cobertizo largo con pesebres y cerca de palos.
+			p.append([box(2.9, 0.1, 2.9), xf(Vector3(0, 0.05, 0)), dark])
+			p.append([box(2.6, 0.9, 1.0), xf(Vector3(0, 0.55, -0.85)), clay])
+			p.append([prism(1.3, 0.5, 2.8), xf(Vector3(0, 1.25, -0.85), Vector3(0, 90, 0)), roof])
+			for i in 4:
+				p.append([box(0.08, 0.55, 0.08), xf(Vector3(-1.3 + i * 0.86, 0.3, 1.35)), Palette.WOOD_BEAM])
+			p.append([box(2.7, 0.07, 0.06), xf(Vector3(0, 0.42, 1.35)), Palette.WOOD_BEAM])
+			p.append([box(2.7, 0.07, 0.06), xf(Vector3(0, 0.24, 1.35)), Palette.WOOD_BEAM])
+			p.append([box(0.6, 0.2, 0.3), xf(Vector3(0.6, 0.18, 0.2)), Color("c9b06a")])
+			p.append([box(2.62, 0.1, 0.1), xf(Vector3(0, 1.02, -0.33)), team])
+		"taller":
+			# Taller de asedio: techo a un agua sobre postes, vigas y un ariete a medio hacer.
+			p.append([box(2.9, 0.1, 2.9), xf(Vector3(0, 0.05, 0)), dark])
+			for c in [Vector2(-1.2, -1.1), Vector2(1.2, -1.1), Vector2(-1.2, 0.5), Vector2(1.2, 0.5)]:
+				p.append([box(0.14, 1.3, 0.14), xf(Vector3(c.x, 0.7, c.y)), Palette.WOOD_BEAM])
+			p.append([box(2.8, 0.14, 2.0), xf(Vector3(0, 1.38, -0.3), Vector3(10, 0, 0)), roof])
+			p.append([cyl(0.18, 0.18, 1.8, 8), xf(Vector3(0, 0.45, 0.0), Vector3(0, 0, 90)), Palette.WOOD_BEAM.darkened(0.2)])
+			for x in [-0.6, 0.6]:
+				p.append([cyl(0.22, 0.22, 0.1, 10), xf(Vector3(x, 0.22, 0.3), Vector3(90, 0, 0)), Palette.WOOD_BEAM])
+			for i in 3:
+				p.append([box(1.6, 0.1, 0.12), xf(Vector3(-0.2, 0.12 + i * 0.12, 1.1)), Palette.WOOD_BEAM.lightened(0.1)])
+			p.append([box(2.8, 0.1, 0.1), xf(Vector3(0, 1.2, 0.62)), team])
+		"almacen_madera":
+			# Leñera: cobertizo abierto con troncos apilados (se reconoce de lejos por la pila).
+			p.append([box(1.8, 0.1, 1.8), xf(Vector3(0, 0.05, 0)), dark])
+			for c in [Vector2(-0.75, -0.7), Vector2(0.75, -0.7), Vector2(-0.75, 0.3), Vector2(0.75, 0.3)]:
+				p.append([box(0.1, 1.0, 0.1), xf(Vector3(c.x, 0.55, c.y)), Palette.WOOD_BEAM])
+			p.append([box(1.9, 0.12, 1.4), xf(Vector3(0, 1.1, -0.2), Vector3(12, 0, 0)), roof])
+			for i in 3:
+				for j in 4 - i:
+					p.append([cyl(0.11, 0.11, 1.3, 7), xf(Vector3(-0.36 + j * 0.24 + i * 0.12, 0.17 + i * 0.2, -0.25), Vector3(0, 0, 90)), Palette.WOOD_BEAM.lightened(0.1 * (j % 2))])
+			_banner(p, Vector3(0.85, 0.1, 0.85), 1.4, team)
+		"almacen_alimento":
+			# Granero: troja redonda sobre zócalo, techo cónico (qollqa, gotära, paiol).
+			p.append([cyl(0.9, 0.95, 0.25, 12), xf(Vector3(0, 0.12, 0)), dark])
+			p.append([cyl(0.72, 0.72, 0.9, 12), xf(Vector3(0, 0.7, 0)), clay])
+			p.append([cyl(0.0, 0.95, 0.75, 12), xf(Vector3(0, 1.52, 0)), roof])
+			p.append([box(0.3, 0.42, 0.05), xf(Vector3(0, 0.5, 0.72)), Palette.WOOD_BEAM])
+			for c in [Vector2(-0.75, 0.75), Vector2(0.8, 0.6)]:
+				p.append([cyl(0.18, 0.15, 0.35, 8), xf(Vector3(c.x, 0.18, c.y)), shade])
+			_banner(p, Vector3(-0.85, 0.1, -0.85), 1.6, team)
+		"almacen_mina":
+			# Barrero: tejado bajo sobre bloques de piedra y vasijas de arcilla.
+			p.append([box(1.8, 0.1, 1.8), xf(Vector3(0, 0.05, 0)), dark])
+			for c in [Vector2(-0.8, -0.8), Vector2(0.8, -0.8), Vector2(-0.8, 0.2), Vector2(0.8, 0.2)]:
+				p.append([box(0.12, 0.75, 0.12), xf(Vector3(c.x, 0.42, c.y)), Palette.WOOD_BEAM])
+			p.append([prism(1.9, 0.35, 1.4), xf(Vector3(0, 0.95, -0.3)), roof])
+			for i in 3:
+				p.append([box(0.38, 0.28, 0.3), xf(Vector3(-0.45 + i * 0.42, 0.24, -0.35), Vector3(0, i * 9, 0)), Color("9a948a")])
+			for c in [Vector2(-0.35, 0.65), Vector2(0.15, 0.75), Vector2(0.6, 0.55)]:
+				p.append([cyl(0.15, 0.11, 0.34, 8), xf(Vector3(c.x, 0.27, c.y)), Color("b5633f")])
+			_banner(p, Vector3(0.85, 0.1, 0.85), 1.4, team)
 		"granja":
 			p.append([box(2.9, 0.06, 2.9), xf(Vector3(0, 0.03, 0)), Palette.FIELD_B])
 			for i in 6:
