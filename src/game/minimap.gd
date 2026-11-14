@@ -131,6 +131,9 @@ func _draw() -> void:
 		var col := Palette.team(e.owner)
 		if e.is_building():
 			draw_rect(Rect2(e.tx, e.ty, e.w, e.h), col if e.built else Color(col, 0.55))
+			# Aliados (docs/11): sus edificios llevan borde claro, así se separan de los rivales.
+			if e.owner >= 0 and e.owner != local and not sim.enemies(local, e.owner):
+				draw_rect(Rect2(e.tx - 0.6, e.ty - 0.6, e.w + 1.2, e.h + 1.2), Color(1, 1, 1, 0.8), false, 0.8)
 	for e in sim.actives:
 		if e.is_unit() and e.inside < 0 and ctrl.view.fog_state(e) == 2:
 			draw_rect(Rect2(e.x / 1000.0 - 0.9, e.y / 1000.0 - 0.9, 1.8, 1.8), Palette.team(e.owner).lightened(0.15))

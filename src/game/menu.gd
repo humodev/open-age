@@ -199,11 +199,32 @@ func _ready() -> void:
 
 	var hint := Label.new()
 	hint.text = "Clic izquierdo: seleccionar · Clic derecho: ordenar · Q W E R / A S D F / Z X C V: grilla de comandos\nH: centro · . : aldeano inactivo · Ctrl+1…9: grupos · F3: velocidad · Esc: pausa"
-	# Va dentro de la columna, debajo de "Salir": así no se pisa cuando el menú crece.
+	# Abajo a la derecha, fuera de la columna: a 1366×768 (escala 120 %) debajo de "Salir" no entraba.
 	hint.add_theme_font_override("font", Hud.font)
 	hint.add_theme_font_size_override("font_size", 14)
 	hint.add_theme_color_override("font_color", Color(Palette.UI_DIM, 0.85))
-	box.add_child(hint)
+	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	hint.anchor_left = 1.0
+	hint.anchor_right = 1.0
+	hint.anchor_top = 1.0
+	hint.anchor_bottom = 1.0
+	hint.offset_left = -900
+	hint.offset_right = -24
+	hint.offset_top = -56
+	hint.offset_bottom = -12
+	var hb := StyleBoxFlat.new()
+	hb.bg_color = Color(Palette.UI_BG, 0.82)
+	hb.set_corner_radius_all(6)
+	hb.content_margin_left = 12
+	hb.content_margin_right = 12
+	hb.content_margin_top = 6
+	hb.content_margin_bottom = 6
+	hint.add_theme_stylebox_override("normal", hb)
+	hint.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	hint.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	hint.offset_left = -24
+	hint.offset_top = -12
+	add_child(hint)
 
 
 # --- opciones ---
@@ -287,7 +308,9 @@ func _build_slots() -> void:
 	panel.anchor_bottom = 0.5
 	panel.offset_left = 700
 	panel.offset_top = -270
+	panel.offset_bottom = -270 # crece hacia abajo con su contenido
 	panel.offset_right = 1360
+	panel.grow_vertical = Control.GROW_DIRECTION_END
 	var sb := Hud.panel_box(8)
 	sb.content_margin_left = 14
 	sb.content_margin_right = 14

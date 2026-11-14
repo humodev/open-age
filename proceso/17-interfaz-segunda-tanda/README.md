@@ -46,3 +46,9 @@ El punto 3 es la segunda tanda de interfaz que propuso la auditoría ([`docs/dis
    - **Pendientes que quedan de la etapa:** atajos del pie del menú principal fuera del borde a 1366×768, opción de texto grande, menú de pausa debajo de los paneles F1–F6, y que los modelos 3D tomen el color nuevo sin reiniciar la partida.
 
 4. **(17:45) Pendiente cerrado: la pausa quedaba debajo de los paneles F1–F6.** Los paneles se agregaban al HUD después que los diálogos. Ahora, al armar los paneles, los diálogos de pausa, opciones, ayuda y fin pasan al frente (`hud.gd`). Lo verifiqué con una captura con los paneles de economía y edad abiertos más las opciones encima. Autotest OK.
+
+5. **(18:40) Pendiente cerrado: el pie del menú a 1366×768.** Con la escala automática de 120 %, los atajos debajo de "Salir" quedaban fuera de la pantalla. Ahora van abajo a la derecha, con fondo oscuro para leerse sobre el paisaje. De paso, el panel de lugares (etapa 18) se achica a su contenido: en el 1 contra 1 era una caja vacía.
+
+   ![](menu-1366-pie.jpg)
+
+   Queda un solo pendiente de la etapa: la opción de texto grande.

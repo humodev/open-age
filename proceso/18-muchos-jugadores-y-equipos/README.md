@@ -102,6 +102,9 @@ Plan: [`docs/11-partidas-de-muchos-jugadores.md`](../../docs/11-partidas-de-much
      - el modo de colores "yo, aliados y rivales" ya sabe quién es aliado (`Palette.es_aliado`).
 
      ![](hud-3v3.jpg)
+   - **Minimapa:** los edificios de un aliado llevan borde claro (arriba, el violeta aliado; abajo, la base propia).
+
+     ![](minimapa-aliado.jpg)
    - **Pruebas:** autotest OK en 1 contra 1, banco de 200 unidades sin cambios (9,7 ms por tick), y capturas de 2v2 y 3v3 en el segundo 40.
 
 6. **(17:20) Paso 6, rendimiento con 6 (en curso).**
