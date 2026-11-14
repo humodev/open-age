@@ -35,12 +35,21 @@ Los valores exactos viven en `src/game/palette.gd`; aquí, la intención.
 | Terreno | Verde oliva apagado, con variación suave |
 | Arcilla (unidades y edificios) | Blanco cálido |
 | Techos y piedra de edificios | Arcilla un tono más oscura |
-| Jugador 1 | Azul |
-| Jugador 2 | Rojo terracota |
-| Riqueza | Dorado |
-| Madera | Verde profundo |
-| Piedra | Gris azulado |
-| Alimento | Rojo baya |
+| Jugadores 1 a 4 | Azul, rojo, violeta y ciruela; del 5 al 8, rosa, oliva, celeste y magenta |
+| Riqueza | Dorado amarillo |
+| Madera | Verde |
+| Piedra | Gris azulado claro |
+| Alimento | Rojo frambuesa |
+
+La paleta es apta para daltonismo. Los equipos 1 a 4, los recursos y la vida buena y mala se distinguen en visión normal, con deuteranopía, con protanopía y con tritanopía:
+- ΔE de 20 o más entre equipos y de 25 o más entre equipo y recurso;
+- lo mide `tests/test_paleta.gd`.
+
+Opciones ofrece, además, modos para cada tipo de daltonismo y el modo "yo, aliados y rivales" (`Palette.aplicar`). El color nunca va solo:
+- los recursos tienen glifo propio;
+- la vida baja también titila;
+- "no alcanza" escribe lo que falta;
+- "bloqueado" lleva candado.
 
 Luz: un sol cálido de tarde con sombras suaves, cielo frío y oclusión ambiental. La sombra es lo que da volumen a la maqueta.
 

@@ -51,6 +51,10 @@ func _ready() -> void:
 	_seed = int(_args.get("seed", str(randi() % 100000)))
 	speed = float(_args.get("speed", "1"))
 	_menu_mode = _args.is_empty() or _args.has("menu")
+	# --- escala --- (--ventana=ANCHOxALTO: ventana de ese tamaño, para capturas a otras resoluciones)
+	if _args.has("ventana"):
+		_ventana(str(_args["ventana"]))
+	# --- fin escala ---
 	_build_environment()
 	audio = GameAudio.new()
 	audio.name = "Audio"
@@ -58,6 +62,23 @@ func _ready() -> void:
 	if _args.has("shot") or _args.has("autotest") or _args.has("mute"):
 		AudioServer.set_bus_mute(0, true)
 	_new_game()
+
+
+# --- escala ---
+## Pone la ventana en modo ventana con el tamaño pedido ("1366x768").
+func _ventana(spec: String) -> void:
+	var p := spec.to_lower().split("x")
+	if p.size() != 2 or not p[0].is_valid_int() or not p[1].is_valid_int():
+		push_warning("--ventana espera ANCHOxALTO, por ejemplo 1366x768")
+		return
+	var sz := Vector2i(int(p[0]), int(p[1]))
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+	# Sin tope: una ventana de 3840×2160 en una pantalla de 1080 se sale de la pantalla,
+	# pero se dibuja entera y la captura sale a esa resolución.
+	DisplayServer.window_set_max_size(Vector2i.ZERO)
+	DisplayServer.window_set_size(sz)
+	get_window().size = sz
+# --- fin escala ---
 
 
 func _build_environment() -> void:
