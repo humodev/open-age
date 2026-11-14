@@ -1,0 +1,4 @@
+24 militares mixtos a 40 casillas    llegada   1.1 s · dispersión  4.0 casillas · estiramiento  4.0 casillas · llegaron 24/24
+12 aldeanos a 40 casillas            llegada   0.3 s · dispersión  1.5 casillas · estiramiento  2.5 casillas · llegaron 12/12
+12 aldeanos a 6 casillas             llegada   3.8 s · dispersión  1.4 casillas · estiramiento  2.7 casillas · llegaron 12/12
+GRUPOS: OK

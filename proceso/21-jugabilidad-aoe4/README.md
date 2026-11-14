@@ -77,3 +77,35 @@
      | 12 aldeanos a 6 casillas | 3,8 s | 1,4 | 2,7 |
 
      Los militares llegan desparramados en el tiempo y se estiran casi 13 casillas en el camino, porque cada uno va a su velocidad. Los aldeanos, todos iguales, casi no se estiran. Objetivo de la propuesta: llegada ≤ 3 s y dispersión ≤ 4 casillas (`--objetivo=1` lo exige).
+5. **(00:00) Pasos 4 y 5 del plan: formación y grupo en marcha** (`src/sim/sim_groups.gd`).
+   - **Cómo funciona:**
+     - un ancla virtual sigue un solo camino A* para todo el grupo, a la velocidad del más lento;
+     - cada miembro camina hacia su lugar en la formación, relativo al ancla y al rumbo (tabla de 16 rumbos en enteros);
+     - los rezagados a más de 0,8 casillas corren +40 % (+25 % los aldeanos);
+     - si alguien queda a más de 5 casillas, el ancla espera hasta 8 s y después lo suelta;
+     - mientras alguien pelea, el ancla se planta, y al terminar cada uno vuelve a su lugar, no a un punto suelto;
+     - si el lugar cae sobre algo sólido o la unidad se traba, sigue al ancla: pasa en fila por los vados;
+     - el grupo se disuelve al llegar.
+   - **Formación por bandas**, de adelante hacia atrás: línea, choque, distancia, asedio y apoyo; los montados en las alas. Dentro de cada banda los lugares se asignan sin cruces (adelante primero, después de izquierda a derecha).
+   - **Cuándo se forma:** con 2 o más unidades a 12 casillas o menos del centro de la selección; las de afuera van solas. Solo aldeanos: en bloque únicamente si el destino está a más de 16 casillas, y si no, cada uno corre a su trabajo, como pidió el autor. La orden `move` con `"suelto": true` no forma (para la retirada; falta el botón y Alt en la interfaz).
+   - **Números:** todos en `reglas.json → grupo`. El estado del grupo entra en el hash. Determinismo OK.
+   - **Resultado** (`tests/grupos.gd`, [resultado](pruebas/05-grupos.txt)):
+
+     | Caso | Llegada (antes → ahora) | Estiramiento en la marcha |
+     |---|---|---|
+     | 24 militares mixtos a 40 casillas | 23,4 s → **1,1 s** | 12,9 → **4,0 casillas** |
+     | 12 aldeanos a 40 casillas (en bloque) | 4,7 s → **0,3 s** | 2,8 → 2,5 |
+     | 12 aldeanos a 6 casillas (cada uno) | 3,8 s → 3,8 s | sin cambio, como se quería |
+
+     Cumple los objetivos de la propuesta (llegada ≤ 3 s, dispersión ≤ 4). El banco de 200 unidades mejoró: el peor tick bajó de 78 a 46 ms, porque un grupo pide un camino y no 200.
+   - **Captura** (`--demo=formacion --civ=mapuches`, nueva): 24 unidades mixtas desparramadas junto a la base, mandadas al centro. Segundo 1 y segundo 7: el bloque marcha junto, con los jinetes en las alas.
+
+     | Salida | En marcha |
+     |---|---|
+     | ![](formacion-salida.jpg) | ![](formacion-en-marcha.jpg) |
+   - `civ_smoke` sin errores, autotest OK y 2v2 de 10 minutos sin fuego amigo.
+   - **Falta, por orden del plan:**
+     - ataque a un blanco lejano en formación (paso 6);
+     - aldeanos en bloque al mandarlos a recolectar o construir lejos, con escolta (paso 7);
+     - formaciones elegibles, Alt para ir suelto y el rumbo con el arrastre (paso 8);
+     - un torneo para ver si el balance se movió.

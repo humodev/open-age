@@ -49,3 +49,24 @@ No hay telemetría. Lo más parecido son los libros de la simulación (`Sim.ledg
    - **Punto de reunión dentro de un bosque:** en montaña, 91 caminos imposibles en un mismo lugar, (36, 36). En el mapa de calor se ve que el punto de reunión de la IA mapuche cae en un claro cerrado por árboles, y el ejército nunca llega. Arreglo en `sim_ai.gd`: el punto se prueba con un camino desde la capital y, si no llega, se acerca a la base de a cuartos. Resultado en la segunda corrida: 103 → 13 en montaña.
    - **La IA pide lo que no puede pagar,** unas 80 órdenes rechazadas por partida. Para saber cuáles, el rechazo ahora guarda la orden que lo causó (`_cur_cmd`) y si vino de la IA. Son todas de entrenamiento: la IA revisaba el costo contra el mismo saldo para cada edificio, y las órdenes recién se aplican al tick siguiente. Ahora gasta de un presupuesto (`_spend`) a medida que da órdenes.
    - **Otro lugar marcado,** en bosque templado (44, 76): la IA persigue en una incursión a un aldeano que recolecta dentro de un bosquecito; las unidades llegan lo más cerca que pueden. Es menor y queda anotado.
+3. **(00:10) Tercera corrida, con los dos arreglos** ([informe](pruebas/03-mapas-1v1-arreglos/informe.md); primera corrida: [informe](pruebas/01-mapas-1v1/informe.md)).
+
+   | Tipo | Primera corrida | Con arreglos |
+   |---|---|---|
+   | Órdenes rechazadas | 829 (sin el detalle de la orden) | 154 |
+   | Caminos imposibles | 250 | 215 |
+   | IA sin ruta para caminos incas | 3 | 27 |
+   | Trabadas | 8 | 8 |
+   | Ociosos | 19 | 4 |
+
+   - **Rechazos:** bajaron a menos de una quinta parte con el presupuesto de la IA.
+   - **Caminos imposibles:** en montaña ya no está el punto de reunión encerrado (de 103 a menos de 15). El total casi no baja porque aparecen otros lugares, que son el próximo trabajo: incursiones a bosquecitos y vados.
+   - **Caminos incas sin ruta:** subieron. Hay que revisar `_road_tiles`, que busca solo dentro del rectángulo entre los dos edificios más un margen de 8.
+
+     | Montaña, primera corrida | Montaña, con arreglos |
+     |---|---|
+     | ![](pruebas/01-mapas-1v1/montana.jpg) | ![](pruebas/03-mapas-1v1-arreglos/montana.jpg) |
+4. **(00:20) Un error del juego encontrado por el registro del juego abierto,** no por la telemetría: el juego del menú se cayó con "Invalid access to property 'slot'" repetido.
+   - **Causa:** la ayuda de la barra de recursos (los nombres de la riqueza de cada pueblo) usa la misma ventana que la grilla de órdenes, y esa ventana pedía la casilla de la grilla. Pasar el mouse por los recursos repetía el error hasta tirar el juego.
+   - **Arreglo:** `hud.gd` solo dibuja la casilla si la hay. El autotest ahora pasa el mouse por la barra de recursos (control 0) y da OK sin errores.
+   - **Pendiente:** que el juego guarde los SCRIPT ERROR en la telemetría, así se ven en el informe aunque no se mire la consola.

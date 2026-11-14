@@ -38,6 +38,7 @@ var path_i: int = 0
 var path_target: int = -1
 var path_tick: int = -1000
 var resume_amove := false
+var group := -1 # grupo en marcha (SimGroups), -1 suelta
 var amove_x: int
 var amove_y: int
 var cooldown: int = 0

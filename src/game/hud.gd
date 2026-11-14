@@ -818,7 +818,9 @@ class Tooltip:
 		draw_style_box(sb, Rect2(Vector2.ZERO, size))
 		var y := 28.0
 		draw_string(Hud.font_b, Vector2(14, y), "%s  " % cmd["name"], HORIZONTAL_ALIGNMENT_LEFT, size.x - 60, 17, Palette.UI_TEXT)
-		draw_string(Hud.font_b, Vector2(0, y), "[%s]" % Controller.SLOT_LABELS[cmd["slot"]], HORIZONTAL_ALIGNMENT_RIGHT, size.x - 14, 13, Palette.UI_DIM)
+		# La barra de recursos también usa esta ayuda, sin casilla de grilla.
+		if int(cmd.get("slot", -1)) >= 0:
+			draw_string(Hud.font_b, Vector2(0, y), "[%s]" % Controller.SLOT_LABELS[cmd["slot"]], HORIZONTAL_ALIGNMENT_RIGHT, size.x - 14, 13, Palette.UI_DIM)
 		y += 12
 		var cost: Dictionary = cmd.get("cost", {})
 		if not cost.is_empty():

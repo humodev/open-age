@@ -10,7 +10,7 @@ extends Node3D
 ##   --estilo=pacifica|normal|acosadora|agresiva  estilo de juego de la IA
 ##   --cam=x,z,zoom[,inclinación]  posición de cámara para la captura (bX,bZ: relativa a la base propia)
 ##   --select=tipo      selecciona entidades de ese tipo del jugador local antes de la captura
-##   --demo=base|batalla|multitud  escena armada para revisar modelos, combate o el costo de 200 unidades
+##   --demo=base|batalla|multitud|formacion  escena armada para revisar modelos, combate, el costo de 200 unidades o un grupo en marcha
 ##   --menu             fuerza el menú de inicio (sin argumentos se abre solo)
 ##   --terreno=<clave de reglas.json "terrenos"> tipo de mapa (llano, valle, delta…)
 ##   --civ=clave        civilización propia (tawantinsuyu, mapuches, guaranies, etiopia, palmares, ayutthaya, azar)
@@ -429,6 +429,17 @@ func _demo(kind: String) -> void:
 				var y := (c - 5 + i / 10) * 1000 + 500
 				ids.append(sim.spawn_unit("aldeano", pid, x, y).id)
 			sim.push_command({"t": "move", "player": pid, "ids": ids, "x": (c + 14 - pid * 28) * 1000, "y": c * 1000})
+	elif kind == "formacion":
+		# Ejército mixto desparramado junto a la base, mandado lejos: muestra el grupo en
+		# marcha (proceso/21). Cámara: --cam=b14,b10,14 sigue la salida.
+		var fb := sim.bases[local]
+		var types: Array = ["lancero", "guerrero", "hondero", "jinete", "lancero", "hondero"]
+		var ids := []
+		for i in 24:
+			var t := sim.map.nearest_free(fb.x + 8 + (i * 7) % 9, fb.y + 6 + (i * 5) % 8, 6, local)
+			ids.append(sim.spawn_unit(types[i % types.size()], local, t.x * 1000 + 500, t.y * 1000 + 500).id)
+		var c := sim.map.n / 2
+		sim.push_command({"t": "move", "player": local, "ids": ids, "x": c * 1000, "y": c * 1000})
 	elif kind == "batalla":
 		var c := sim.map.n / 2
 		var ids := [[], []]
@@ -701,6 +712,14 @@ func _autotest() -> void:
 	var base := sim.bases[local]
 	cam.look_at_point(Vector3(base.x + 2, 0, base.y + 2))
 	await _frames(5)
+
+	# 0. Ayuda de la barra de recursos (tiraba el juego: la ayuda pedía una casilla de grilla).
+	for i in 4:
+		_mouse(Vector2(60 + i * 115, 30), 0, false)
+		await _frames(3)
+	check.call("ayuda de la barra de recursos visible", hud._tip.visible if hud.get("_tip") != null else true)
+	_mouse(Vector2(960, 540), 0, false)
+	await _frames(2)
 
 	# 1. Selección por arrastre.
 	var lo := Vector2(INF, INF)

@@ -14,6 +14,7 @@ var tick_ms: int
 var map: SimMap
 var fog: SimFog
 var mods: SimMods
+var groups: SimGroups # movimiento en grupo (proceso/21)
 var tele := SimTelemetry.new() # proceso/20: solo mira, no es estado
 var _cur_cmd := "" # orden que se está aplicando (solo para la telemetría)
 var rng: SimRng
@@ -64,6 +65,7 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null,
 	fog.map = map
 	fog.vision_per_level = data.reglas["vision_por_nivel"]
 	mods = SimMods.new(self)
+	groups = SimGroups.new(self)
 	for i in num_players:
 		players.append({
 			"id": i,
@@ -170,7 +172,11 @@ func _apply(c: Dictionary) -> void:
 	oc[okey] = int(oc.get(okey, 0)) + 1
 	match c["t"]:
 		"move":
-			_cmd_move(pid, _own_units(pid, c.get("ids", [])), c["x"], c["y"], c.get("amove", false))
+			var mv := _own_units(pid, c.get("ids", []))
+			# En grupo salvo "suelto" (Alt): los que no entran al grupo van como antes.
+			if not c.get("suelto", false):
+				mv = groups.form(pid, mv, c["x"], c["y"], c.get("amove", false))
+			_cmd_move(pid, mv, c["x"], c["y"], c.get("amove", false))
 		"target":
 			_cmd_target(pid, _own_units(pid, c.get("ids", [])), c["target"])
 		"build":
@@ -270,6 +276,7 @@ func _cmd_move(pid: int, units: Array[SimEntity], x: int, y: int, amove: bool) -
 			gx = t.x * P + P / 2
 			gy = t.y * P + P / 2
 		e.target = -1
+		e.group = -1
 		e.resume_amove = false
 		e.order = O.ATTACK_MOVE if amove else O.MOVE
 		e.amove_x = gx
@@ -802,6 +809,7 @@ func step() -> void:
 	for ai in ais:
 		if ai.thinks_now() and not players[ai.player]["defeated"]:
 			ai.think()
+	groups.tick()
 	_rebuild_hashes()
 	_update_players()
 	for b in actives:
@@ -904,7 +912,11 @@ func _update_unit(e: SimEntity) -> void:
 			_do_idle(e)
 		O.MOVE:
 			e.anchored = false
-			if _follow(e):
+			if e.group >= 0:
+				if groups.member_step(e):
+					e.group = -1
+					_set_idle(e)
+			elif _follow(e):
 				_set_idle(e)
 		O.ATTACK_MOVE:
 			e.anchored = false
@@ -916,7 +928,11 @@ func _update_unit(e: SimEntity) -> void:
 					e.resume_amove = true
 					e.path_target = -1
 					return
-			if _follow(e):
+			if e.group >= 0:
+				if groups.member_step(e):
+					e.group = -1
+					_set_idle(e)
+			elif _follow(e):
 				_set_idle(e)
 		O.ATTACK:
 			_do_attack(e)
@@ -974,7 +990,8 @@ func _do_attack(e: SimEntity) -> void:
 		if e.resume_amove:
 			e.order = O.ATTACK_MOVE
 			e.target = -1
-			_set_goal(e, e.amove_x, e.amove_y)
+			if e.group < 0:
+				_set_goal(e, e.amove_x, e.amove_y) # en grupo vuelve a su lugar en la formación
 		else:
 			_set_idle(e)
 			_do_idle(e)
@@ -1523,6 +1540,11 @@ func _follow(e: SimEntity) -> bool:
 
 ## Avanza en línea recta. Devuelve true si llegó al punto.
 func _step_toward(e: SimEntity, px: int, py: int) -> bool:
+	return step_toward_speed(e, px, py, mods.speed(e))
+
+
+## Como `_step_toward`, con una velocidad dada (los grupos: corrida de rezagados).
+func step_toward_speed(e: SimEntity, px: int, py: int, spd: int) -> bool:
 	var dx := px - e.x
 	var dy := py - e.y
 	var d := isqrt(dx * dx + dy * dy)
@@ -1530,7 +1552,6 @@ func _step_toward(e: SimEntity, px: int, py: int) -> bool:
 		return true
 	var nx := px
 	var ny := py
-	var spd := mods.speed(e)
 	if d > spd:
 		nx = e.x + dx * spd / d
 		ny = e.y + dy * spd / d
@@ -3390,8 +3411,9 @@ func _bases_connected() -> bool:
 func state_hash() -> int:
 	var h := 2166136261
 	for e in entities:
-		for v in [e.id, e.x, e.y, e.hp, e.order, e.target, e.carry, e.amount, e.progress, e.queue.size(), e.queue_progress, e.inside]:
+		for v in [e.id, e.x, e.y, e.hp, e.order, e.target, e.carry, e.amount, e.progress, e.queue.size(), e.queue_progress, e.inside, e.group]:
 			h = ((h ^ (v & 0xffffffff)) * 16777619) & 0xffffffff
+	h = groups.hash_into(h)
 	for p in players:
 		# Todos los recursos, también los propios (mit'a, fama, kulliñ), en orden fijo.
 		var keys: Array = (p["res"] as Dictionary).keys()
