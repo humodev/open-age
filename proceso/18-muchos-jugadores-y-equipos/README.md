@@ -70,7 +70,7 @@ Plan: [`docs/11-partidas-de-muchos-jugadores.md`](../../docs/11-partidas-de-much
        - camino entre 5 y 25 % de diferencia (25 % solo en islas con 8 jugadores);
        - arbustos, rocas y barreal 0 %;
        - árboles 0–16 %.
-     - **`mapas_smoke` con 4 jugadores** (nueva opción `--jugadores`): los 13 terrenos, nadie trabado ([resultado](pruebas/03-mapas-4j.txt)). Con 6 jugadores sigue corriendo.
+     - **`mapas_smoke` con 4 jugadores** (nueva opción `--jugadores`): los 13 terrenos, nadie trabado ([resultado](pruebas/03-mapas-4j.txt)). Con 6 jugadores ([resultado](pruebas/03-mapas-6j.txt)): un solo trabado, un segundo Palmares en selva, que sigue en edad I a los 15:00. Palmares es la civ que más tarda en la edad II aun en paz (8:10); queda anotado para el balance.
      - Determinismo OK.
 
 4. **(16:20) Paso 4, IA en equipo y tributo.**
@@ -81,7 +81,7 @@ Plan: [`docs/11-partidas-de-muchos-jugadores.md`](../../docs/11-partidas-de-much
      - **defensa de aliados:** si atacan la capital de un aliado a menos de 70 casillas, va a ayudar (`ia_ayuda_radio`, `ia_ayuda_amenaza`);
      - **tributo:** cada minuto da 200 de lo que le sobra (más de 800) al aliado que tiene menos de 150 (`ia_tributo`);
      - **ataque:** se para del lado de quien llega, no "arriba o abajo según el jugador", que solo servía con 2.
-   - **Prueba `tests/equipos.gd` ampliada:** puertas, 2v2 con los equipos cambiados de lado, 3v3 y todos contra todos con 6 ([resultado](pruebas/04-equipos.txt); los 2v2 ya terminaron, el 3v3 y el de 6 siguen corriendo y se suman en el próximo commit).
+   - **Prueba `tests/equipos.gd` ampliada:** puertas, 2v2 con los equipos cambiados de lado, 3v3 y todos contra todos con 6 ([resultado](pruebas/04-equipos.txt); completo).
      - En los dos 2v2, cambiar el número de equipo da exactamente la misma partida y ganan los mismos jugadores. Las victorias del "equipo 0" de antes venían de los lugares y las civs, no del número.
      - Cero fuego amigo.
 
@@ -129,3 +129,26 @@ Plan: [`docs/11-partidas-de-muchos-jugadores.md`](../../docs/11-partidas-de-much
      - **consultas a celdas vacías** usan un arreglo constante en vez de crear uno nuevo.
    - **Separación cada 2 ticks** (`reglas.separacion_cada_ticks`): cada par de unidades encimadas se separa en ticks alternos, con el doble de empujón. Se separan igual de rápido con la mitad del trabajo: bajó de 11,0 a 5,9 ms en la batalla de 900. En el banco de 200 unidades, de 9,7 a 8,2 ms por tick.
    - Determinismo OK. **Falta:** la medición limpia, sin otras pruebas corriendo a la vez.
+
+7. **(19:30) Resultados de los pasos 3 y 4, y equidad con 50 semillas.**
+   - **Equipos** ([resultado](pruebas/04-equipos.txt)):
+     - **3v3:** abierta a los 30:00, con 1119 bajas y 7 tributos de la IA;
+     - **todos contra todos con 6:** 1080 bajas y un derrotado;
+     - **en todas:** cero fuego amigo. Con los equipos cambiados de lado, la partida es idéntica.
+   - **Equidad con 50 semillas,** como pedía el plan, en los 13 terrenos y de 3 a 8 jugadores. La primera corrida falló en islas (camino hasta 72 % de diferencia y barreal de flanco faltante en algunas bases). Tres causas:
+     1. **Bajíos con agujeros:** se giraban casilla por casilla y quedaban huecos en diagonal. Ahora el mismo meandro se dibuja entero en el marco de cada base.
+     2. **Árboles en la punta de los bajíos:** un bosque suelto que cae donde el bajío toca la isla la deja sin salida, y la imagen de alcance lo mostró enseguida. Con N bases, ningún árbol a menos de 2 casillas de un vado. En los mapas de 2 queda como estaba.
+     3. **Barreal de flanco al borde:** estaba a 20 casillas y el redondeo del giro lo dejaba a 22 o 23 en algunas bases. Pasó a (11, −15). Además, los recursos de una base buscan lugar cerca y, si no hay, se acercan a la base, en vez de correrse afuera.
+   - **Resultado** ([resultado](pruebas/03-equidad-50.txt)): camino entre 4 y 11 % de diferencia, arbustos, rocas y barreal 0 %, árboles 5–20 %. Determinismo OK.
+   - **Torneo 1 contra 1 después de los cambios de IA,** 2 semillas, 10 partidas por civ ([resultado](pruebas/04-torneo-1v1.txt)):
+
+     | Civ | Etapa 14 (5 semillas) | Ahora (2 semillas) |
+     |---|---|---|
+     | Ayutthaya | 40 % | 70 % |
+     | Guaraníes | 40 % | 70 % |
+     | Mapuches | 68 % | 50 % |
+     | Etiopía | 60 % | 40 % |
+     | Palmares | 40 % | 40 % |
+     | Tawantinsuyu | 52 % | 30 % |
+
+     Con 10 partidas el ruido es de unos ±15 puntos. Lo que sí cambia es que hay menos victorias por destrucción de hitos (16 de 30, antes 2 de cada 3), y puede venir del nuevo lugar del ataque. Lo confirmo con 5 semillas antes de tocar nada.

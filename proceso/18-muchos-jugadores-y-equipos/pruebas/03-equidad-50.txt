@@ -1,0 +1,7 @@
+3 jugadores: camino promedio a las otras bases, peor diferencia 6 %;  recursos a 22 casillas, peor diferencia { "arbusto": 0, "arbol": 11, "roca": 0, "riqueza": 0 }
+4 jugadores: camino promedio a las otras bases, peor diferencia 6 %;  recursos a 22 casillas, peor diferencia { "arbusto": 0, "arbol": 5, "roca": 0, "riqueza": 0 }
+5 jugadores: camino promedio a las otras bases, peor diferencia 7 %;  recursos a 22 casillas, peor diferencia { "arbusto": 0, "arbol": 12, "roca": 0, "riqueza": 0 }
+6 jugadores: camino promedio a las otras bases, peor diferencia 11 %;  recursos a 22 casillas, peor diferencia { "arbusto": 0, "arbol": 14, "roca": 0, "riqueza": 0 }
+7 jugadores: camino promedio a las otras bases, peor diferencia 11 %;  recursos a 22 casillas, peor diferencia { "arbusto": 0, "arbol": 17, "roca": 0, "riqueza": 0 }
+8 jugadores: camino promedio a las otras bases, peor diferencia 4 %;  recursos a 22 casillas, peor diferencia { "arbusto": 0, "arbol": 20, "roca": 0, "riqueza": 0 }
+EQUIDAD: OK

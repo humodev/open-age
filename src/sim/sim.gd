@@ -2362,7 +2362,7 @@ func _generate_map_n() -> void:
 		_res_at("roca", c + _local(pid, 3, -11), -1, -1)
 		_res_at("riqueza", c + _local(pid, 2, 10), int(cl.get("base", 900)), pid)
 		_res_at("riqueza", c + _local(pid, 4, 11), int(cl.get("base", 900)), pid)
-		_res_at("riqueza", c + _local(pid, 12, -16), int(cl.get("flanco", 1500)), pid)
+		_res_at("riqueza", c + _local(pid, 11, -15), int(cl.get("flanco", 1500)), pid)
 		if data.edificios.has("ingenio"):
 			var ig := c + _local(pid, 30, 14)
 			var t := map.nearest_free(ig.x, ig.y, 8)
@@ -2568,17 +2568,46 @@ func _islands_n() -> void:
 					break
 			if not land and not _near_base(Vector2i(tx, ty), 12):
 				map.set_water(tx, ty, 1)
+	# Bajíos: el mismo meandro en el marco de cada base, dibujado entero en cada una
+	# (girar casilla por casilla deja agujeros en diagonal y corta el paso en algunas).
 	for pair in [[c0, mid], [c0, between[0]], [c0, between[np - 1]], [between[0], mid]]:
-		_causeway(pair[0], pair[1])
+		var a0: Vector2i = pair[0]
+		var b0: Vector2i = pair[1]
+		var L := maxi(1, isqrt((b0 - a0).length_squared()))
+		var steps := L * 2
+		var offs := PackedInt32Array()
+		var off := 0
+		var vel := 0
+		for k in steps + 1:
+			offs.append(off)
+			var lim := mini(60, mini(k, steps - k) * 5)
+			if rng.range_i(0, 1) == 0:
+				vel = clampi(vel + rng.range_i(-2, 2), -6, 6)
+			off = clampi(off + vel, -lim, lim)
+		var pa := _sym_points(a0)
+		var pb := _sym_points(b0)
+		for i in np:
+			var d: Vector2i = pb[i] - pa[i]
+			var perp := Vector2i(-d.y, d.x)
+			for k in steps + 1:
+				var p: Vector2i = pa[i] + Vector2i(d.x * k / steps, d.y * k / steps) + Vector2i(perp.x * offs[k] / (10 * L), perp.y * offs[k] / (10 * L))
+				for dy in range(-1, 2):
+					for dx in range(-1, 2):
+						var t := p + Vector2i(dx, dy)
+						if map.in_bounds(t.x, t.y) and map.water[t.y * n + t.x] == 1:
+							map.set_water(t.x, t.y, 2)
 
 
-func _res_at(type: String, t: Vector2i, amount: int, owner: int) -> void:
+func _res_at(type: String, t: Vector2i, amount: int, owner: int, hops: int = 0) -> void:
 	var tam: Array = data.recursos[type]["tam"]
 	var spot := t
 	# Espiral hasta 9 casillas: cada base tiene que recibir todo su juego de recursos,
 	# aunque en islas su lugar caiga en el agua.
 	var tries: Array[Vector2i] = [Vector2i.ZERO]
-	for rr in range(1, 10):
+	# Los de una base buscan cerca y, si no hay lugar, se acercan a la base: una
+	# espiral grande los podía correr afuera (islas).
+	var max_r := 3 if owner >= 0 and hops < 4 else 9
+	for rr in range(1, max_r + 1):
 		for dy in range(-rr, rr + 1):
 			for dx in range(-rr, rr + 1):
 				if maxi(absi(dx), absi(dy)) == rr:
@@ -2597,10 +2626,21 @@ func _res_at(type: String, t: Vector2i, amount: int, owner: int) -> void:
 					e.amount = amount
 				e.res_owner = owner
 				return
+	# Sin lugar en la espiral (en islas, todo agua): se acerca a su base de a pasos.
+	if owner >= 0 and owner < bases.size() and hops < 4:
+		var home := bases[owner] + Vector2i(2, 2)
+		_res_at(type, t + (home - t) / 4, amount, owner, hops + 1)
 
 
 func _tree_at(t: Vector2i) -> void:
 	if map.in_bounds(t.x, t.y) and not _near_base(t, 9) and map.occupant(t.x, t.y) == -1 and not map.is_water(t.x, t.y):
+		# Con N bases, ningún árbol a 2 casillas de un vado: un bosque en la punta de un
+		# bajío deja una isla sin salida (en los mapas de 2 queda como estaba).
+		if n_layout():
+			for dy in range(-2, 3):
+				for dx in range(-2, 3):
+					if map.in_bounds(t.x + dx, t.y + dy) and map.water[(t.y + dy) * map.n + t.x + dx] == 2:
+						return
 		spawn_resource("arbol", t.x, t.y)
 
 

@@ -1,0 +1,10 @@
+puertas: la del jugador 2 deja pasar al jugador 0
+puertas: la del jugador 1 no deja pasar al jugador 0
+2v2  ["tawantinsuyu", "mapuches", "guaranies", "etiopia"] equipos [0, 1, 0, 1]  25:20  bajas 538  fuego amigo 0  tributos 1  ganó el equipo 0  | j0 tawa edad 3 en pie  | j1 mapu edad 3 derrotado  | j2 guar edad 3 en pie  | j3 etio edad 3 derrotado
+2v2  ["tawantinsuyu", "mapuches", "guaranies", "etiopia"] equipos [1, 0, 1, 0]  25:20  bajas 538  fuego amigo 0  tributos 1  ganó el equipo 1  | j0 tawa edad 3 en pie  | j1 mapu edad 3 derrotado  | j2 guar edad 3 en pie  | j3 etio edad 3 derrotado
+2v2  ["palmares", "ayutthaya", "mapuches", "tawantinsuyu"] equipos [0, 1, 0, 1]  22:03  bajas 408  fuego amigo 0  tributos 1  ganó el equipo 1  | j0 palm edad 3 derrotado  | j1 ayut edad 3 en pie  | j2 mapu edad 2 derrotado  | j3 tawa edad 3 en pie
+2v2  ["palmares", "ayutthaya", "mapuches", "tawantinsuyu"] equipos [1, 0, 1, 0]  22:03  bajas 408  fuego amigo 0  tributos 1  ganó el equipo 0  | j0 palm edad 3 derrotado  | j1 ayut edad 3 en pie  | j2 mapu edad 2 derrotado  | j3 tawa edad 3 en pie
+3v3  ["tawantinsuyu", "mapuches", "guaranies", "etiopia", "palmares", "ayutthaya"] equipos [0, 1, 0, 1, 0, 1]  30:00  bajas 1119  fuego amigo 0  tributos 7  | j0 tawa edad 3 en pie  | j1 mapu edad 4 en pie  | j2 guar edad 3 derrotado  | j3 etio edad 3 derrotado  | j4 palm edad 4 en pie  | j5 ayut edad 4 en pie
+3v3  ["tawantinsuyu", "mapuches", "guaranies", "etiopia", "palmares", "ayutthaya"] equipos [1, 0, 1, 0, 1, 0]  30:00  bajas 1119  fuego amigo 0  tributos 7  | j0 tawa edad 3 en pie  | j1 mapu edad 4 en pie  | j2 guar edad 3 derrotado  | j3 etio edad 3 derrotado  | j4 palm edad 4 en pie  | j5 ayut edad 4 en pie
+ffa6 ["tawantinsuyu", "mapuches", "guaranies", "etiopia", "palmares", "ayutthaya"] equipos [0, 1, 2, 3, 4, 5]  30:00  bajas 1080  fuego amigo 0  tributos 0  | j0 tawa edad 3 en pie  | j1 mapu edad 3 en pie  | j2 guar edad 4 en pie  | j3 etio edad 3 en pie  | j4 palm edad 4 en pie  | j5 ayut edad 3 derrotado
+EQUIPOS: OK
