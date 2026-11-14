@@ -162,6 +162,11 @@ func _apply(c: Dictionary) -> void:
 			_cmd_research(pid, c["building"], c["tech"])
 		"garrison":
 			_cmd_garrison(pid, _own_units(pid, c.get("ids", [])), c.get("building", -1))
+		"kawin":
+			# Kawiñ (la fiesta mapuche): se come el rebaño del corral salvo una cabeza.
+			var kb: SimEntity = by_id.get(c["building"])
+			if kb != null and kb.alive and kb.owner == pid:
+				mods.feast(kb)
 		"desalojar":
 			# Saca a la gente de los oficios de un edificio (Palmares).
 			var cb: SimEntity = by_id.get(c["building"])
@@ -1724,6 +1729,30 @@ func _check_victory() -> void:
 	for p in players:
 		if not p["defeated"] and not has_hito[p["id"]]:
 			_defeat(p["id"])
+
+
+## Saca una unidad del juego sin que cuente como muerte (la cabeza que entra al corral).
+func remove_quietly(e: SimEntity) -> void:
+	if not e.alive:
+		return
+	e.alive = false
+	_dirty = true
+	events.append({"t": "absorbed", "id": e.id, "owner": e.owner})
+
+
+func order_move(e: SimEntity, x: int, y: int) -> void:
+	_cmd_move(e.owner, [e] as Array[SimEntity], x, y, false)
+
+
+## Recursos vivos a `r` casillas (Chebyshev) de la casilla dada, por celdas.
+func resources_near(tx: int, ty: int, r: int) -> Array[SimEntity]:
+	var out: Array[SimEntity] = []
+	for cy in range((ty - r) / RC - 1, (ty + r) / RC + 2):
+		for cx in range((tx - r) / RC - 1, (tx + r) / RC + 2):
+			for t: SimEntity in _res_cells.get(cx * 1024 + cy, []):
+				if t.alive and absi(t.tx - tx) <= r and absi(t.ty - ty) <= r:
+					out.append(t)
+	return out
 
 
 ## Lo que pide el próximo hito de un recurso propio (fama, mit'a) por encima del costo común.

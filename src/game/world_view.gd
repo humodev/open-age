@@ -989,6 +989,13 @@ func on_tick(events: Array) -> void:
 		match ev["t"]:
 			"died":
 				_on_died(ev["id"])
+			"absorbed":
+				# Cabeza de ganado que entró al corral: se va sin animación de muerte.
+				var av: Dictionary = visuals.get(ev["id"], {})
+				if not av.is_empty():
+					(av["node"] as Node3D).queue_free()
+					visuals.erase(ev["id"])
+					selected.erase(ev["id"])
 			"hit":
 				_on_hit(ev)
 			"built":

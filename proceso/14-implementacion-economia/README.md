@@ -121,3 +121,15 @@ El autor preguntó en qué punto estaba la economía: se había avanzado varias 
 
       La edad II queda apenas antes de la banda y el motor queda arriba del tope. Es el punto que el diseñador líder dejó declarado fuera de banda: cuando se agota la arcilla de casa, casi todo sale del motor. Probar con una tasa de yerba más baja **subió** la proporción (83 %), así que se volvió a la tasa de la arcilla (800) y queda separada para poder ajustarla en el balance de la etapa 6.
 14. **Etiopía, compuerta.** Edad II a las 6:49 y motor ~49 %: dentro de la banda.
+15. **Etapa 3e, mapuches: el ganado es la riqueza** (C-12 por defecto: el kulliñ se fusiona con la riqueza).
+    - **Datos:** sin recurso propio. Lo que costaba kulliñ (kona, costos extra de los rewe) ahora cuesta riqueza. Las rentas de kulliñ del lonko y del parlamento pasan a efectos sobre el motor: cría cada 35 s, y un corral más.
+    - **Corral:** 120 de madera, 600 de vida y separación de 8 casillas. Tiene de 1 a 5 cabezas, o 6 en pradera sin árboles a 3 casillas; nace una cada 45 s y cada cabeza da 4 de riqueza por minuto. Cada 25 % de vida perdida mata una cabeza, nunca por debajo de 1, y reparar no las devuelve. El máximo es 2 / 3 / 4 / 5.
+    - **Kawiñ (la fiesta):** 30 de alimento por cabeza, menos una que queda; después, 120 s sin cría. Una vez por corral y por edad, y nunca en combate. Botón en el corral con el conteo de cabezas y el motivo si no se puede. La IA lo usa solo si ahorra para el hito y le falta alimento.
+    - **Malón = arreo:**
+      - cada 150 de daño a granjas, casas o corrales suelta una **cabeza**: unidad de 60 de vida, sin ataque, que no ocupa población;
+      - la cabeza **camina sola** al corral propio y, al llegar, entra (o da 40 de alimento si no hay lugar);
+      - como máximo 3 por minuto, y cada una cuenta 16 para el techo de lo disputado;
+      - el rival la puede matar en el camino.
+    - **Traza en paz, 2 semillas:** de 4 a 6 cabezas por corral (compuerta: 4 o más). Motor entre los minutos 15 y 25: **42–44 %** (dentro de la banda).
+    - **Para el balance:** avanzan rápido (edad II 5:31–6:05, III 10:52–11:03).
+    - **Falta:** que los lof extra entrenen aldeanos con +50 % de tiempo, y probar el arreo con guerra.

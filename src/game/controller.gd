@@ -218,6 +218,17 @@ func commands() -> Array[Dictionary]:
 				out.append({"slot": 4 + ki, "id": "comprar_" + k, "icon": k, "kind": "trade", "op": "comprar", "recurso": k, "building": first.id, "name": "Comprar %d de %s" % [lot, Palette.RES_NAMES[k].to_lower()], "cost": {"riqueza": price}, "desc": "El precio sube con cada compra.", "locked": ""})
 		if first.def.has("empaca_en"):
 			out.append({"slot": 7, "id": "desarmar", "icon": "carga", "kind": "pack", "name": "Desarmar la corte", "cost": {}, "desc": "La corte se levanta y camina con su gente: viaja lenta y se vuelve a armar donde haga falta.", "locked": "" if first.queue.is_empty() else "Esperá que termine la cola", "building": first.id})
+		if first.def.has("ganado") and first.built:
+			var g: Dictionary = first.def["ganado"]
+			var cap := sim.mods.corral_cap(first)
+			var why := ""
+			if first.feast_age == int(sim.players[local]["age"]):
+				why = "Ya hubo kawiñ en este corral en esta edad"
+			elif first.heads <= 1:
+				why = "Hace falta más de una cabeza"
+			elif sim.tick - first.last_combat < 100:
+				why = "No se puede en combate"
+			out.append({"slot": 10, "id": "kawin", "icon": "alimento", "kind": "kawin", "name": "Kawiñ: la fiesta (%d/%d cabezas)" % [first.heads, cap], "cost": {}, "desc": "Se come el rebaño salvo una cabeza: %d de alimento por cabeza. Después, %d s sin cría. Una vez por corral y por edad. Cada cabeza da %d de riqueza por minuto mientras viva." % [int(g["fiesta_alimento"]), int(g["fiesta_pausa_ms"]) / 1000, int(g["riqueza_por_cabeza"])], "locked": why, "building": first.id})
 		var oficios: Dictionary = sim.dp(local).mod("oficios") if sim.dp(local).has_mod("oficios") else {}
 		if int(oficios.get("puestos", {}).get(first.type, 0)) > 0:
 			var stop := " (parados: bajo asedio)" if not first.crafts.is_empty() and sim.mods.craft_stopped(first) else ""
@@ -294,6 +305,8 @@ func run_command(cmd: Dictionary) -> void:
 			sim.push_command({"t": "unpack", "player": local, "unit": cmd["unit"]})
 		"desalojar":
 			sim.push_command({"t": "desalojar", "player": local, "building": cmd["building"]})
+		"kawin":
+			sim.push_command({"t": "kawin", "player": local, "building": cmd["building"]})
 		"ungarrison":
 			for e in selected_entities():
 				if e.is_building() and e.owner == local:

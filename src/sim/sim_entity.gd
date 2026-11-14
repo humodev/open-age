@@ -65,6 +65,11 @@ var rally_y: int
 var rally_target: int = -1
 var farmer: int = -1
 var garrison: Array[int] = [] # unidades alojadas
+var heads: int = 0 # corral mapuche: cabezas de ganado
+var breed_ms: int = 0 # corral: tiempo acumulado hacia la próxima cría
+var feast_age: int = 0 # corral: edad en la que se hizo el último kawiñ (0: nunca)
+var feast_until: int = 0 # corral: tick hasta el que no hay cría después del kawiñ
+var dmg_q: int = 0 # corral: cuartos de vida perdidos ya descontados en cabezas
 var crafts: Array[int] = [] # gente trabajando en un oficio adentro (Palmares); la campana no la saca
 var capital := false # el centro inicial cuenta como hito (docs/05, "Victoria"); viaja con la base móvil
 var holder: int = -1 # sitio sagrado: jugador que lo controla

@@ -244,6 +244,17 @@ func _engine(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_type: 
 			var rozas: int = (by_type.get("granja", []) as Array).size()
 			if rozas < food_people and int(p["res"]["alimento"]) < 600 and int(p["res"]["madera"]) >= int(dd.cost_of("granja", p["age"]).get("madera", 0)) + 30:
 				_try_build("granja", p, vill, centro, 1)
+		"mapuches":
+			# Kawiñ solo si se ahorra para el hito y falta alimento: el corral más lleno, una vez por edad.
+			if saving and p["age"] < dd.edades.size():
+				var need := int(dd.cost_of(_hito_type(p), p["age"]).get("alimento", 0))
+				if int(p["res"]["alimento"]) < need:
+					var best: SimEntity = null
+					for c: SimEntity in by_type.get("corral", []):
+						if c.built and c.heads >= 4 and c.feast_age != int(p["age"]) and (best == null or c.heads > best.heads):
+							best = c
+					if best != null and int(p["res"]["alimento"]) + (best.heads - 1) * 30 >= need - 100:
+						sim.push_command({"t": "kawin", "player": player, "building": best.id})
 		"palmares":
 			# Guarda fama para el hito solo mientras ahorra para él; si no, la gente sigue llegando.
 			if bool(p.get("guardar_fama", true)) != saving:

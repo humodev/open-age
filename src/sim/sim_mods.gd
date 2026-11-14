@@ -37,6 +37,7 @@ func tick_second() -> void:
 		_rents(pid, p)
 		_conversions(pid, p)
 		_crafts_yield(pid)
+		_herds(pid)
 		if has(pid, "acogida"):
 			_welcome(pid, p)
 		if has(pid, "caminos") and sim.tick % 50 == 0:
@@ -201,6 +202,108 @@ func _welcome(pid: int, p: Dictionary) -> void:
 	sim.events.append({"t": "trained", "id": u.id, "player": pid, "type": "aldeano"})
 	if has(pid, "oficios"):
 		craft_assign(u)
+
+
+# ---------------------------------------------------------------- Ganado (mapuches)
+
+## Corrales: cría, renta por cabeza y cabezas arreadas que llegan
+## (docs/diseno/revision-economia/v3/04, §3.5.2).
+func _herds(pid: int) -> void:
+	var boost := 100 + sim.mod(pid, "motor")
+	var heads_total := 0
+	var breed_bonus_ms := 0
+	for e in sim.actives:
+		if e.alive and e.owner == pid and e.is_building() and e.built and e.def.has("cria_ms"):
+			breed_bonus_ms = int(e.def["cria_ms"])
+	for e in sim.actives:
+		if not (e.alive and e.owner == pid and e.is_building() and e.def.has("ganado")):
+			continue
+		var g: Dictionary = e.def["ganado"]
+		if not e.built:
+			continue
+		if e.heads == 0 and e.breed_ms == 0 and e.feast_age == 0:
+			e.heads = int(g.get("inicial", 1)) # recién terminado
+		var cap := corral_cap(e)
+		var every := breed_bonus_ms if breed_bonus_ms > 0 else int(g["cria_ms"])
+		if e.heads < cap and sim.tick >= e.feast_until:
+			e.breed_ms += 1000
+			if e.breed_ms >= every:
+				e.breed_ms = 0
+				e.heads += 1
+		heads_total += e.heads
+	if heads_total > 0:
+		var per := 4
+		for e in sim.actives:
+			if e.alive and e.owner == pid and e.def.has("ganado"):
+				per = int(e.def["ganado"]["riqueza_por_cabeza"])
+				break
+		_gain(pid, "riqueza", heads_total * per * P / 60 * boost / 100, "propio")
+	# Cabezas arreadas: al llegar a un corral propio entran, o dan alimento si no hay lugar.
+	if has(pid, "arreo"):
+		var cfg := m(pid, "arreo")
+		for u in sim.actives:
+			if not (u.alive and u.owner == pid and u.type == cfg["unidad"]):
+				continue
+			var c := _nearest_corral(pid, u.x, u.y, false)
+			if c == null:
+				continue
+			if Sim.dist(u.x, u.y, c.x, c.y) <= 2500:
+				var room := _nearest_corral(pid, u.x, u.y, true)
+				if room != null and Sim.dist(u.x, u.y, room.x, room.y) <= 2500:
+					room.heads += 1
+				else:
+					sim.players[pid]["res"]["alimento"] = int(sim.players[pid]["res"]["alimento"]) + int(cfg["comida_si_lleno"])
+					sim.ledger(pid, "arreo", "alimento", int(cfg["comida_si_lleno"]))
+				sim.remove_quietly(u)
+			elif u.order == SimEntity.Order.IDLE:
+				var dest := _nearest_corral(pid, u.x, u.y, true)
+				if dest == null:
+					dest = c
+				sim.order_move(u, dest.x, dest.y)
+
+
+## Tope de cabezas: más en pradera abierta (sin árboles a 3 casillas).
+func corral_cap(e: SimEntity) -> int:
+	var g: Dictionary = e.def["ganado"]
+	var open_land := true
+	for t in sim.resources_near(e.tx + e.w / 2, e.ty + e.h / 2, e.w / 2 + 3):
+		if t.type == "arbol":
+			open_land = false
+			break
+	return mini(6, int(g["max_pradera"] if open_land else g["max"]))
+
+
+func _nearest_corral(pid: int, x: int, y: int, with_room: bool) -> SimEntity:
+	var best: SimEntity = null
+	var best_d := 1 << 60
+	for e in sim.actives:
+		if e.alive and e.owner == pid and e.is_building() and e.built and e.def.has("ganado"):
+			if with_room and e.heads >= corral_cap(e):
+				continue
+			var d := Sim.dist(x, y, e.x, e.y)
+			if d < best_d or (d == best_d and best != null and e.id < best.id):
+				best = e
+				best_d = d
+	return best
+
+
+## Kawiñ: alimento por cada cabeza menos una; 120 s sin cría; una vez por corral y por
+## edad; no en combate.
+func feast(e: SimEntity) -> void:
+	if not e.def.has("ganado") or not e.built:
+		return
+	var age := int(sim.players[e.owner]["age"])
+	if e.feast_age == age or e.heads <= 1 or sim.tick - e.last_combat < 100:
+		return
+	var g: Dictionary = e.def["ganado"]
+	var eaten := e.heads - 1
+	e.heads = 1
+	e.feast_age = age
+	e.feast_until = sim.tick + int(g["fiesta_pausa_ms"]) / sim.tick_ms
+	var food := eaten * int(g["fiesta_alimento"])
+	sim.players[e.owner]["res"]["alimento"] = int(sim.players[e.owner]["res"]["alimento"]) + food
+	sim.ledger(e.owner, "kawin", "alimento", food)
+	sim.events.append({"t": "kawin", "id": e.id, "player": e.owner, "n": eaten})
 
 
 # ---------------------------------------------------------------- Oficios (Palmares)
@@ -444,6 +547,14 @@ func damage(a: SimEntity, t: SimEntity, dmg: int) -> int:
 func on_hit(a: SimEntity, t: SimEntity, dmg: int) -> void:
 	a.last_combat = sim.tick
 	t.last_combat = sim.tick
+	if t.is_building() and t.def.has("ganado") and t.hp_max > 0:
+		# Cada 25 % de vida perdida mata una cabeza (nunca por debajo de 1; reparar no las devuelve).
+		var q := (t.hp_max - maxi(0, t.hp - dmg)) * 4 / t.hp_max
+		if q > t.dmg_q:
+			t.heads = maxi(mini(t.heads, 1), t.heads - (q - t.dmg_q))
+			t.dmg_q = q
+	if a.owner >= 0 and t.owner >= 0 and a.owner != t.owner and has(a.owner, "arreo") and t.is_building() and (t.def.get("fuente", "") == "alimento" or int(t.def.get("pob", 0)) > 0 or t.def.has("ganado")):
+		_drive(a, t, dmg)
 	if t.is_building() and not t.crafts.is_empty():
 		var hits: Array = _craft_hits.get_or_add(t.id, [])
 		hits.append([sim.tick, dmg])
@@ -454,6 +565,34 @@ func on_hit(a: SimEntity, t: SimEntity, dmg: int) -> void:
 	if a.owner >= 0 and t.owner >= 0 and has(a.owner, "saqueo") and t.is_building():
 		var cfg := m(a.owner, "saqueo")
 		_gain(a.owner, cfg["recurso"], dmg * int(cfg["pct_danio_edificio"]) * P / 100, "saqueo")
+
+
+## Malón = arreo: cada `danio_por_cabeza` de daño real a granjas, casas o corrales
+## suelta una cabeza que camina al corral propio (máximo por minuto y techo de lo
+## disputado: cada cabeza cuenta como riqueza disputada).
+func _drive(a: SimEntity, t: SimEntity, dmg: int) -> void:
+	var cfg := m(a.owner, "arreo")
+	var k := "%d:arreo" % a.owner
+	var acc: int = int(_acc.get(k, 0)) + dmg
+	var per := int(cfg["danio_por_cabeza"])
+	if acc < per:
+		_acc[k] = acc
+		return
+	_acc[k] = acc - per
+	var mk := "%d:arreo_min" % a.owner
+	var minute := sim.tick / 600
+	var used: Array = _acc.get(mk, [minute, 0])
+	if int(used[0]) != minute:
+		used = [minute, 0]
+	if int(used[1]) >= int(cfg["max_por_min"]) or sim.disputed_room(a.owner) < int(cfg["cuenta_disputado"]):
+		_acc[mk] = used
+		return
+	used[1] = int(used[1]) + 1
+	_acc[mk] = used
+	sim.disputed_add(a.owner, int(cfg["cuenta_disputado"]))
+	var u := sim.spawn_near(t, cfg["unidad"], a.owner)
+	sim.ledger(a.owner, "arreo", "cabezas", 1)
+	sim.events.append({"t": "arreo", "id": u.id, "player": a.owner})
 
 
 func on_kill(e: SimEntity, killer: SimEntity) -> void:

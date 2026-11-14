@@ -56,7 +56,7 @@
    "edad_min": 2,
    "costo": {
     "alimento": 60,
-    "kullin": 35
+    "riqueza": 35
    }
   }
  },
@@ -121,24 +121,9 @@
    "ranura": 6,
    "desc": "Asentamiento familiar. No hay capital: cada lof es un centro chico."
   },
-  "corral": {
-   "nombre": "Corral",
-   "edad_min": 1,
-   "tam": [
-    3,
-    3
-   ],
-   "pv": 400,
-   "armadura": 0,
-   "costo": {
-    "madera": 75
-   },
-   "tiempo_ms": 15000,
-   "vision": 3000,
-   "transitable": true,
-   "ranura": 7,
-   "desc": "El ganado crece en los corrales: genera kulliñ."
-  },
+  "corral": { "nombre": "Corral", "edad_min": 1, "tam": [3, 3], "pv": 600, "armadura": 0, "costo": { "madera": 120 }, "tiempo_ms": 20000, "vision": 3000, "transitable": true, "ranura": 7, "maximo_por_edad": [2, 3, 4, 5], "separacion": 8, "motor": true,
+   "ganado": { "inicial": 1, "max": 5, "max_pradera": 6, "riqueza_por_cabeza": 4, "cria_ms": 45000, "fiesta_alimento": 30, "fiesta_pausa_ms": 120000 },
+   "desc": "El ganado (kulliñ) es la riqueza mapuche: cada cabeza da 4 de riqueza por minuto y nace una cada 45 s, hasta 5 (6 en pradera abierta). Cada 25 % de daño mata una cabeza. El kawiñ (la fiesta) da 30 de alimento por cabeza, una vez por corral y por edad." },
   "rewe_malon": { "eje": "militar",
    "nombre": "Rewe del toqui de malón",
    "edad_min": 1,
@@ -165,10 +150,10 @@
     }
    ],
    "costo_extra": {
-    "kullin": 30
+    "riqueza": 30
    }
   },
-  "rewe_lonko": { "eje": "economia",
+  "rewe_lonko": { "cria_ms": 35000, "eje": "economia",
    "nombre": "Rewe del lonko",
    "edad_min": 1,
    "tam": [
@@ -191,11 +176,8 @@
      "pct": 10
     }
    ],
-   "renta": {
-    "kullin": 20
-   },
    "costo_extra": {
-    "kullin": 30
+    "riqueza": 30
    }
   },
   "rewe_caballeria": { "eje": "militar",
@@ -227,7 +209,7 @@
     "jinete"
    ],
    "costo_extra": {
-    "kullin": 60
+    "riqueza": 60
    }
   },
   "rewe_monte": { "eje": "economia",
@@ -258,10 +240,10 @@
     }
    ],
    "costo_extra": {
-    "kullin": 60
+    "riqueza": 60
    }
   },
-  "parlamento": { "eje": "economia",
+  "parlamento": { "maximo_extra": { "corral": 1 }, "eje": "economia",
    "nombre": "Parlamento",
    "edad_min": 1,
    "tam": [
@@ -278,9 +260,8 @@
    "pob": 5,
    "desc": "Frontera con agasajos y feria: comercio de ganado.",
    "efectos": [],
-   "renta": {"kullin": 20},
    "costo_extra": {
-    "kullin": 100
+    "riqueza": 100
    }
   },
   "weichan": { "eje": "militar",
@@ -311,7 +292,7 @@
     }
    ],
    "costo_extra": {
-    "kullin": 100
+    "riqueza": 100
    }
   }
  },
@@ -348,27 +329,9 @@
    "jinete"
   ]
  },
+ "unidades_nuevas": { "cabeza": { "nombre": "Cabeza de ganado", "funcion": "ganado", "edad_min": 1, "pob": 0, "costo": {}, "tiempo_ms": 0, "pv": 60, "armadura": 0, "ataque": 0, "alcance": 0, "cadencia_ms": 1000, "velocidad": 1100, "vision": 3000, "radio": 260, "no_seleccionable": true, "desc": "Ganado arreado en un malón: camina solo al corral propio más cercano. Se lo puede matar en el camino." } },
  "modulos": {
-  "recurso_propio": {
-   "clave": "kullin",
-   "nombre": "Kulliñ (ganado)",
-   "color": "#a0663a",
-   "icono": "alimento",
-   "por_aldeano": 0,
-   "por_edificio": {
-    "corral": 8
-   },
-   "inicial": 20,
-   "tope": 120,
-   "tope_por_edificio": {
-    "corral": 60
-   }
-  },
-  "saqueo": {
-   "recurso": "kullin",
-   "pct_danio_edificio": 16,
-   "por_aldeano": 6
-  },
+  "arreo": { "danio_por_cabeza": 150, "max_por_min": 3, "comida_si_lleno": 40, "cuenta_disputado": 16, "unidad": "cabeza" },
   "sigilo": {
    "radio_deteccion": 3500,
    "emboscada_pct": 40
