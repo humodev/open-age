@@ -39,3 +39,8 @@ El punto 5 incluye:
      |---|---|
      | ![](flecheiro-concepto.jpg) | ![](flecheiro-en-juego.jpg) |
    - **Créditos de Meshy:** quedan 43 hasta la renovación mensual. Con esto, los seis pueblos tienen aldeano y al menos una unidad propia con modelo (mapuches: kona y jinete; Ayutthaya: elefante).
+
+4. **(22:05) Observación del autor para todo el arte que viene:** "Cuando hagamos el arte y los modelos, debemos tener en cuenta que necesitamos modelos para procesos de construcción de cada edificio, así como edificios y unidades, y todo debería ser diferente en cuanto al arte de acuerdo a las edades."
+   - Queda como regla en `docs/07-arte-y-ui.md` ("Requisitos de los modelos"): obra por etapas, aspecto por edad y por pueblo.
+   - Hoy ningún edificio tiene etapas de obra ni cambia con la edad: la obra es el modelo terminado, más bajo y transparente.
+   - Antes de la próxima tanda de Meshy (créditos renovados) se arma el plan de modelos con estas variantes. Los edificios que salgan de la etapa 21 (almacenes por recurso, edificios de producción por tipo) entran en ese plan.

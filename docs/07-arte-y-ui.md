@@ -11,6 +11,14 @@ Guía de estilo y de legibilidad. Sirve al pilar 4 (`01`, "Legibilidad AoE4") y 
 
 La maqueta no es "cubos feos": es una maqueta de arquitecto bien iluminada. Todo lo que se aprende sobre siluetas, tamaños y contraste en esta etapa pasa directo al arte final.
 
+## Requisitos de los modelos (pedido del autor, 2026-11-14)
+Todo modelo nuevo se planifica con estas variantes desde el principio, no como agregado:
+- **Construcción por etapas:** cada edificio necesita su obra en marcha además del terminado. Como mínimo, cimientos y estructura a medio levantar; idealmente 3 etapas (25, 60 y 100 %) que el juego elige según el avance de la obra.
+- **Por edad:** edificios y unidades cambian de aspecto en cada edad, como en AoE4. Materiales más nobles, más altura y detalle, y equipo mejor en las unidades. Cada pueblo con su propio camino entre edades, sin un "medieval" genérico.
+- **Por pueblo:** nada compartido entre civs salvo la naturaleza.
+
+Costo en Meshy: un edificio con 3 etapas de obra y 4 edades son 7 modelos en lugar de 1. Por eso se prioriza lo que más se ve (centro, casa, almacenes, cuarteles y aldeano) y el resto queda en la maqueta procedural hasta que haya créditos. El orden y el presupuesto por mes van en `proceso/19-arte-y-sonido`.
+
 ## Reglas de legibilidad
 
 Valen para las dos etapas.
