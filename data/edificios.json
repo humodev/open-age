@@ -63,6 +63,13 @@
     "costo": { "madera": 175 }, "tiempo_ms": 35000, "vision": 6000, "mercado": true, "ranura": 5,
     "desc": "Compra y vende alimento, madera y piedra por riqueza. Los precios se mueven con cada operación."
   },
+  "ingenio": {
+    "nombre": "Ingenio (neutral)", "edad_min": 1, "tam": [3, 3], "pv": 1500, "armadura": 2,
+    "costo": {}, "tiempo_ms": 0, "vision": 6000, "hostil": true,
+    "ataque": 6, "alcance": 6000, "cadencia_ms": 2000, "flechas": 2,
+    "botin_por_edad": [0, 150, 100, 50], "cabezas": 2, "liberados_por_edad": [2, 2, 1, 0], "rehace_ms": 360000,
+    "desc": "Ingenio azucarero de la colonia, con guardia propia: dispara a quien se acerque pero no persigue. Destruirlo da botín de riqueza una sola vez (150 en la edad II, 100 en la III, 50 en la IV), que cuenta para el techo de lo disputado; los mapuches arrean ganado y Palmares libera gente. Vuelve a levantarse a los 6 minutos si no hay nadie cerca."
+  },
   "sitio_sagrado": {
     "nombre": "Sitio sagrado", "edad_min": 1, "tam": [2, 2], "pv": 1, "armadura": 0,
     "costo": {}, "tiempo_ms": 0, "vision": 0, "transitable": true, "sagrado": true,

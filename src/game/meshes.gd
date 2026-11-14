@@ -183,6 +183,20 @@ static func building_mesh(type: String, team: Color) -> ArrayMesh:
 	var dark := Palette.CLAY_DARK
 	var roof := Palette.ROOF
 	match type:
+		"ingenio":
+			# Ingenio de azúcar: casa de molienda con techo de teja, rueda, chimenea y fardos de caña.
+			var tile := Color("9c4a32")
+			var wood := Palette.WOOD_BEAM
+			p.append([box(2.4, 1.4, 1.8), xf(Vector3(-0.2, 0.7, 0)), Color("d8cdb6")])
+			p.append([box(2.7, 0.25, 2.1), xf(Vector3(-0.2, 1.5, 0)), tile])
+			p.append([box(2.2, 0.3, 1.6), xf(Vector3(-0.2, 1.75, 0)), tile.darkened(0.1)])
+			p.append([cyl(0.18, 0.24, 2.4, 8), xf(Vector3(0.8, 1.6, -0.6)), Color("8a7a66")])
+			p.append([cyl(0.9, 0.9, 0.18, 14), xf(Vector3(1.25, 0.95, 0.35), Vector3(0, 0, 90)), wood])
+			p.append([cyl(0.12, 0.12, 0.5, 8), xf(Vector3(1.25, 0.95, 0.35), Vector3(0, 0, 90)), wood.darkened(0.3)])
+			for i in 4:
+				p.append([cyl(0.08, 0.08, 1.1, 6), xf(Vector3(-1.2 + i * 0.22, 0.2, 1.15), Vector3(0, 0, 90)), Color("8fae4f")])
+			p.append([box(0.12, 1.1, 0.12), xf(Vector3(-1.4, 0.55, -0.9)), wood])
+			p.append([box(0.12, 1.1, 0.12), xf(Vector3(1.0, 0.55, -0.9)), wood])
 		"centro":
 			p.append([box(3.8, 0.3, 3.8), xf(Vector3(0, 0.15, 0)), dark])
 			p.append([box(3.4, 0.2, 3.4), xf(Vector3(0, 0.4, 0)), shade])

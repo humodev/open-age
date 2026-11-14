@@ -159,3 +159,12 @@ El autor preguntó en qué punto estaba la economía: se había avanzado varias 
     - Palmares, en el borde.
 
     Sigue la medición completa (12 partidas en paz y 12 con guerra).
+19. **Etapa 4, lo disputado: los ingenios neutrales.**
+    - **Hostilidad en una sola función** (`Sim.hostile`): enemigo es el de otro jugador o un neutral marcado `hostil`. Se usa al apuntar y al buscar enemigos; los neutrales nunca pelean entre sí. Así se resolvió la trampa 4: antes nada sin dueño se podía atacar.
+    - **Ingenio:** edificio neutral de 3×3 con 1500 de vida y 2 flechas (6 de daño a 6 casillas). Dispara a quien se acerque y no persigue. Hay uno por jugador, espejado, en la esquina sin base de su lado, y solo en escaramuza. Se le hizo un modelo procedural: casa de molienda, teja, rueda, chimenea y fardos de caña.
+    - **Al destruirlo**, botín único de riqueza según la edad de quien lo destruye (150 en la II, 100 en la III, 50 en la IV), que cuenta para el techo de lo disputado. Los mapuches arrean 2 cabezas y Palmares libera 2 / 2 / 1 / 0 personas.
+    - **Se rehace a los 6 minutos** si no hay unidades a 12 casillas.
+    - **IA:** desde la edad II, con 8 soldados o más y lugar en el techo, cada 90 s manda un grupo a asaltar el ingenio más cercano.
+    - **Traza:** en 25 minutos, los mapuches destruyeron ingenios 3 veces (se rehicieron), con 300 de botín y ganado arreado que se volvió alimento porque los corrales estaban llenos.
+
+    ![](ingenio-neutral.jpg)

@@ -8,6 +8,7 @@ const O := SimEntity.Order
 
 var sim: Sim
 var _acc := {} # acumuladores en milésimas: "pid:clave" -> int
+var _respawns: Array = [] # [tipo, tx, ty, tick] de ingenios por rehacer
 var _craft_hits := {} # edificio con oficios -> [[tick, daño], …] de los últimos 5 s
 var _roads := PackedByteArray() # casillas con camino
 var _connected := {} # id de edificio -> true si está conectado a la capital
@@ -44,6 +45,8 @@ func tick_second() -> void:
 			_update_connection(pid)
 	_regen()
 	_sacred()
+	if not _respawns.is_empty():
+		_respawn_neutrals()
 
 
 ## Recurso propio: generado por aldeanos y edificios, con tope por almacenamiento.
@@ -576,6 +579,54 @@ func on_hit(a: SimEntity, t: SimEntity, dmg: int) -> void:
 		_gain(a.owner, cfg["recurso"], dmg * int(cfg["pct_danio_edificio"]) * P / 100, "saqueo")
 
 
+# ---------------------------------------------------------------- Ingenios neutrales (§3.2)
+
+## Botín único del ingenio, según la edad de quien lo destruye; cuenta para el techo de
+## lo disputado. Los mapuches arrean cabezas y Palmares libera gente. Se rehace solo.
+func _neutral_loot(e: SimEntity, pid: int) -> void:
+	var age := int(sim.players[pid]["age"])
+	var table: Array = e.def["botin_por_edad"]
+	var loot := mini(int(table[clampi(age - 1, 0, table.size() - 1)]), sim.disputed_room(pid))
+	if loot > 0:
+		sim.players[pid]["res"]["riqueza"] = int(sim.players[pid]["res"]["riqueza"]) + loot
+		sim.disputed_add(pid, loot)
+		sim.ledger(pid, "ingenio", "riqueza", loot)
+	if has(pid, "arreo"):
+		for i in int(e.def.get("cabezas", 2)):
+			var u := sim.spawn_near(e, m(pid, "arreo")["unidad"], pid)
+			sim.events.append({"t": "arreo", "id": u.id, "player": pid})
+	if has(pid, "liberacion"):
+		var people: Array = e.def.get("liberados_por_edad", [])
+		var n := int(people[clampi(age - 1, 0, people.size() - 1)]) if not people.is_empty() else 0
+		var kp: Dictionary = sim.players[pid]
+		for i in n:
+			if int(kp["pop"]) + i < int(kp["pop_cap"]):
+				var u := sim.spawn_near(e, "aldeano", pid)
+				sim.events.append({"t": "freed", "id": u.id, "player": pid})
+	sim.events.append({"t": "notice", "player": pid, "text": "Ingenio destruido: +%d de riqueza" % loot})
+	_respawns.append([e.type, e.tx, e.ty, sim.tick + int(e.def.get("rehace_ms", 360000)) / sim.tick_ms])
+
+
+## Los ingenios destruidos vuelven si no hay soldados a 12 casillas.
+func _respawn_neutrals() -> void:
+	var keep: Array = []
+	for r in _respawns:
+		if sim.tick < int(r[3]):
+			keep.append(r)
+			continue
+		var c := Vector2i(int(r[1]) * P + P, int(r[2]) * P + P)
+		var busy := false
+		for u in sim.actives:
+			if u.alive and u.is_unit() and u.owner >= 0 and absi(u.x - c.x) <= 12 * P and absi(u.y - c.y) <= 12 * P:
+				busy = true
+				break
+		if busy or not sim.map.is_free_rect(int(r[1]), int(r[2]), 3, 3):
+			keep.append(r)
+			continue
+		sim.spawn_building(r[0], -1, int(r[1]), int(r[2]), true)
+	_respawns = keep
+
+
 ## Malón = arreo: cada `danio_por_cabeza` de daño real a granjas, casas o corrales
 ## suelta una cabeza que camina al corral propio (máximo por minuto y techo de lo
 ## disputado: cada cabeza cuenta como riqueza disputada).
@@ -605,6 +656,9 @@ func _drive(a: SimEntity, t: SimEntity, dmg: int) -> void:
 
 
 func on_kill(e: SimEntity, killer: SimEntity) -> void:
+	if killer != null and killer.owner >= 0 and e.owner < 0 and e.def.has("botin_por_edad"):
+		_neutral_loot(e, killer.owner)
+		return
 	if killer == null or killer.owner < 0 or e.owner < 0 or killer.owner == e.owner:
 		return
 	if has(killer.owner, "saqueo") and e.fn == "civil":

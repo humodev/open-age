@@ -242,13 +242,18 @@ func _cmd_move(pid: int, units: Array[SimEntity], x: int, y: int, amove: bool) -
 		_set_goal(e, gx, gy)
 
 
+## ¿`t` es enemigo de `pid`? Los de otro jugador y los neutrales hostiles (ingenios).
+func hostile(pid: int, t: SimEntity) -> bool:
+	return t.alive and ((t.owner >= 0 and t.owner != pid) or (t.owner < 0 and pid >= 0 and bool(t.def.get("hostil", false))))
+
+
 func _cmd_target(pid: int, units: Array[SimEntity], target_id: int) -> void:
 	var t: SimEntity = by_id.get(target_id)
 	if t == null or not t.alive:
 		return
 	var plain: Array[SimEntity] = []
 	for e in units:
-		if t.owner >= 0 and t.owner != pid:
+		if hostile(pid, t):
 			if t.is_unit() and e.def.get("solo_edificios", false):
 				plain.append(e)
 			else:
@@ -1469,7 +1474,10 @@ func find_enemy(e: SimEntity, radius: int, units_only: bool) -> SimEntity:
 		for cy in range(y0, y1 + 1):
 			var cell: Array = _ehash.get(cx * 1024 + cy, [])
 			for o: SimEntity in cell:
-				if not o.alive or o.owner < 0 or o.owner == e.owner:
+				if not o.alive or o.owner == e.owner:
+					continue
+				# Neutrales: solo los hostiles, y nunca entre neutrales.
+				if o.owner < 0 and (e.owner < 0 or not bool(o.def.get("hostil", false))):
 					continue
 				if units_only and not o.is_unit():
 					continue
@@ -1946,7 +1954,7 @@ func spawn_building(type: String, owner: int, tx: int, ty: int, built: bool) -> 
 	e.built = built
 	e.hp = e.hp_max if built else 1
 	e.build_time = dp(owner).build_time_of(type, players[owner]["age"]) if owner >= 0 else 0
-	if owner < 0:
+	if owner < 0 and not def.get("hostil", false):
 		e.hp = 1
 		e.hp_max = 1
 	map.mark(tx, ty, e.w, e.h, e.id, not def.get("transitable", false), owner if def.get("puerta", false) else -1)
@@ -2063,6 +2071,20 @@ func _generate_map() -> void:
 			var t := map.nearest_free(spots[i].x, spots[i].y, 8)
 			if t.x >= 0 and map.is_free_rect(t.x, t.y, 2, 2):
 				spawn_building("sitio_sagrado", -1, t.x, t.y, true)
+
+	# Ingenios neutrales hostiles (§3.2): uno por jugador, en la esquina sin base de su
+	# lado, espejados. Solo en escaramuza (las campañas no tienen sitios ni ingenios).
+	if players.size() == 2 and not _opts.get("sin_sitios", false) and data.edificios.has("ingenio"):
+		var ing: Dictionary = data.reglas.get("ingenios", {})
+		var dist := int(ing.get("distancia_base", 34))
+		var spot := map.nearest_free(c0.x + dist, c0.y - dist / 3, 10)
+		for r in 10:
+			var cand := Vector2i(spot.x + r, spot.y)
+			var mc := _mirror(cand, 3, 3)
+			if map.in_bounds(cand.x, cand.y) and map.is_free_rect(cand.x - 1, cand.y - 1, 5, 5) and map.is_free_rect(mc.x - 1, mc.y - 1, 5, 5) and map.is_flat(cand.x, cand.y, 3, 3) and map.is_flat(mc.x, mc.y, 3, 3):
+				spawn_building("ingenio", -1, cand.x, cand.y, true)
+				spawn_building("ingenio", -1, mc.x, mc.y, true)
+				break
 
 	# Recursos disputados en el centro.
 	var mid := n / 2

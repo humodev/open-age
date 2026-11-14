@@ -14,6 +14,7 @@ var last_spot := 0
 var last_road := 0
 var last_engine := -1000
 var last_elephant := -1000
+var last_mill := 0
 var _eng_mark_tick := 0
 var _eng_mark_val := 0
 var _eng_rate := 0
@@ -637,6 +638,24 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 					ids.append(u.id)
 			if not ids.is_empty():
 				sim.push_command({"t": "move", "player": player, "ids": ids, "x": spot.x, "y": spot.y, "amove": true})
+	# Ingenios neutrales: desde la edad II, un grupo los asalta por el botín (§3.2).
+	if sim.players[player]["age"] >= 2 and army.size() >= 8 and sim.tick - last_mill >= 900:
+		last_mill = sim.tick
+		var mill: SimEntity = null
+		var best_m := 1 << 60
+		for e in sim.actives:
+			if e.alive and e.owner < 0 and e.def.has("botin_por_edad"):
+				var d := Sim.dist(e.x, e.y, rally.x, rally.y)
+				if d < best_m:
+					best_m = d
+					mill = e
+		if mill != null and sim.disputed_room(player) >= 50:
+			var ids := []
+			for u in army:
+				if u.order == O.IDLE and ids.size() < maxi(6, army.size() * 2 / 3):
+					ids.append(u.id)
+			if ids.size() >= 6:
+				sim.push_command({"t": "move", "player": player, "ids": ids, "x": mill.x, "y": mill.y, "amove": true})
 	# Sitios sagrados: un grupo chico va a tomar el más cercano que no controla.
 	if sim.tick - last_site >= 300 and army.size() >= 6:
 		last_site = sim.tick
