@@ -180,3 +180,4 @@ El autor preguntó en qué punto estaba la economía: se había avanzado varias 
     | Ayutthaya | Tributo del rey |
 
     Los botones nuevos de motor (Vaciar oficios y Kawiñ) ya estaban en las etapas 3b y 3e.
+21. **Etiopía (segunda parte): señor o regimiento.** Desde la edad II, un gult se puede dar a un regimiento, sin vuelta atrás: deja de pagar tributo y, a cambio, los jinetes que se entrenan a 14 casillas o menos cuestan 15 % menos por cada gult, hasta 30 %. Lleva botón en el gult con su motivo si no se puede. El precio con descuento queda guardado en la cola, así cancelar devuelve lo pagado (la trampa del costo de la crítica 03b). Falta fundar la corte nueva con su fiesta y Gondar como capital fija.

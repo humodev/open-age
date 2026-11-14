@@ -162,6 +162,12 @@ func _apply(c: Dictionary) -> void:
 			_cmd_research(pid, c["building"], c["tech"])
 		"garrison":
 			_cmd_garrison(pid, _own_units(pid, c.get("ids", [])), c.get("building", -1))
+		"regimiento":
+			# Gult asignado a un regimiento (desde la edad II, sin vuelta atrás).
+			var gb: SimEntity = by_id.get(c["building"])
+			if gb != null and gb.alive and gb.owner == pid and gb.def.has("regimiento") and gb.mode == "" and int(players[pid]["age"]) >= int(gb.def["regimiento"].get("edad", 2)):
+				gb.mode = "regimiento"
+				events.append({"t": "notice", "player": pid, "text": "Gult asignado a un regimiento"})
 		"kawin":
 			# Kawiñ (la fiesta mapuche): se come el rebaño del corral salvo una cabeza.
 			var kb: SimEntity = by_id.get(c["building"])
@@ -342,7 +348,7 @@ func _cmd_train(pid: int, bid: int, type: String) -> void:
 	if b.queue.size() >= data.reglas["cola_max"]:
 		_notify(pid, "Cola llena")
 		return
-	var cost := dp(pid).cost_of(type, p["age"])
+	var cost := train_cost(pid, b, type)
 	if not can_afford(pid, cost):
 		_notify(pid, "Recursos insuficientes")
 		return
@@ -1786,6 +1792,25 @@ func _tribute(e: SimEntity, d: SimEntity) -> void:
 	d.trib_used += add
 	players[d.owner]["res"]["riqueza"] = int(players[d.owner]["res"]["riqueza"]) + add
 	ledger(d.owner, "propio", "riqueza", add)
+
+
+## Costo de entrenar en un edificio: el de la tabla, menos el descuento de los gult
+## en regimiento cercanos para los jinetes (Etiopía, §3.5.4).
+func train_cost(pid: int, b: SimEntity, type: String) -> Dictionary:
+	var cost := dp(pid).cost_of(type, players[pid]["age"]).duplicate()
+	var udef: Dictionary = dp(pid).unidades.get(type, {})
+	if not udef.get("montado", false):
+		return cost
+	var pct := 0
+	for g in actives:
+		if g.alive and g.owner == pid and g.mode == "regimiento" and g.built and g.def.has("regimiento"):
+			var rg: Dictionary = g.def["regimiento"]
+			if Sim.dist(g.x, g.y, b.x, b.y) <= int(rg["radio"]):
+				pct = mini(int(rg["tope_pct"]), pct + int(rg["descuento_pct"]))
+	if pct > 0:
+		for k in cost:
+			cost[k] = int(cost[k]) * (100 - pct) / 100
+	return cost
 
 
 ## Saca una unidad del juego sin que cuente como muerte (la cabeza que entra al corral).

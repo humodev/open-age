@@ -1,0 +1,17 @@
+
+ECONOMÍA con guerra, 30 min, terreno llano
+civ              riq@5      @10      @20      @30  edadII    III  riqueza por origen
+tawantinsuyu       286     1064     2306     1173    7:20  13:32  propio 31%, casa 57%, recoleccion 1%, granja 0%, sitios 7%, mercado 1%, disputado 0%
+mapuches           200     1064     1625     2565    5:55  14:26  casa 50%, propio 34%, recoleccion 1%, kawin 0%, granja 0%, sitios 8%, mercado 4%, disputado 0%, arreo 0%
+guaranies          193     1145     3547     2848    5:52  13:50  casa 39%, granja 0%, recoleccion 1%, propio 46%, sitios 6%, mercado 4%, disputado 0%
+etiopia            310     1084     1571        0    5:40  15:15  propio 36%, casa 47%, recoleccion 0%, granja 0%, sitios 9%, mercado 5%, disputado 0%
+palmares           242      728     2818        0    8:05  21:00  propio 34%, casa 45%, recoleccion 0%, granja 0%, sitios 8%, saqueo 0%, renta 0%, disputado 0%, mercado 11%
+ayutthaya          191      649     2000     1010    7:52  15:56  casa 56%, recoleccion 2%, propio 25%, granja 0%, sitios 7%, disputado 0%, mercado 8%
+
+Órdenes por minuto (sin mover ni recolectar):
+tawantinsuyu  alarm 0.07, build:casa 0.31, build:cuartel 0.11, build:deposito 0.18, build:granja 1.74, build:taller_tejido 0.15, build_line:camino 0.70, rally 0.17, research 0.29, reserve 0.61, trade 0.15, train:aldeano 2.68, train:ariete 0.82, train:boleador 0.59, train:guerrero 2.38, train:hondero 1.65, train:lancero 2.57
+mapuches      alarm 0.08, build:casa 0.30, build:corral 0.23, build:cuartel 0.13, build:deposito 0.16, build:granja 0.98, kawin 0.10, rally 0.14, research 0.25, trade 0.15, train:aldeano 4.05, train:guerrero 2.30, train:hondero 1.28, train:jinete 1.06, train:lancero 2.62
+guaranies     alarm 0.07, build:casa 0.27, build:cuartel 0.17, build:deposito 0.14, build:granja 0.87, modo_monte 0.49, rally 0.17, research 0.19, trade 0.30, train:aldeano 3.82, train:ariete 0.73, train:guerrero 3.52, train:hondero 5.88, train:lancero 1.06
+etiopia       alarm 0.05, build:casa 0.28, build:cuartel 0.12, build:deposito 0.14, build:granja 1.09, build:gult 0.14, rally 0.15, research 0.30, trade 0.15, train:aldeano 4.04, train:ariete 0.37, train:guerrero 1.80, train:hondero 1.63, train:lancero 0.88
+palmares      build:casa 0.29, build:cuartel 0.17, build:deposito 0.17, build:granja 0.76, build:mocambo 0.07, guardar 0.53, rally 0.15, research 0.30, trade 0.28, train:arcabucero 0.83, train:guerrero 2.26, train:hondero 2.42, train:lancero 1.90
+ayutthaya     alarm 0.09, build:casa 0.26, build:cuartel 0.12, build:granja 1.25, build:mercado 0.05, rally 0.20, research 0.19, trade 0.14, train:aldeano 2.29, train:ariete 0.17, train:chang_suek 0.11, train:elefante_rey 0.11, train:guerrero 2.27, train:hondero 1.68, train:lancero 1.77

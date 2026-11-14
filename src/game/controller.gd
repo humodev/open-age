@@ -218,6 +218,14 @@ func commands() -> Array[Dictionary]:
 				out.append({"slot": 4 + ki, "id": "comprar_" + k, "icon": k, "kind": "trade", "op": "comprar", "recurso": k, "building": first.id, "name": "Comprar %d de %s" % [lot, Palette.RES_NAMES[k].to_lower()], "cost": {"riqueza": price}, "desc": "El precio sube con cada compra.", "locked": ""})
 		if first.def.has("empaca_en"):
 			out.append({"slot": 7, "id": "desarmar", "icon": "carga", "kind": "pack", "name": "Desarmar la corte", "cost": {}, "desc": "La corte se levanta y camina con su gente: viaja lenta y se vuelve a armar donde haga falta.", "locked": "" if first.queue.is_empty() else "Esperá que termine la cola", "building": first.id})
+		if first.def.has("regimiento") and first.built:
+			var rg: Dictionary = first.def["regimiento"]
+			var why_r := ""
+			if first.mode == "regimiento":
+				why_r = "Ya está asignado a un regimiento"
+			elif int(sim.players[local]["age"]) < int(rg.get("edad", 2)):
+				why_r = "Desde la edad II"
+			out.append({"slot": 10, "id": "regimiento", "icon": "jinete", "kind": "regimiento", "name": "Dar el gult a un regimiento" if first.mode == "" else "Gult de regimiento", "cost": {}, "desc": "El gult deja de pagar tributo y, a cambio, los jinetes que se entrenan a %d casillas o menos cuestan %d %% menos (hasta %d %% con varios gult). No tiene vuelta atrás." % [int(rg["radio"]) / 1000, int(rg["descuento_pct"]), int(rg["tope_pct"])], "locked": why_r, "building": first.id})
 		if first.def.has("ganado") and first.built:
 			var g: Dictionary = first.def["ganado"]
 			var cap := sim.mods.corral_cap(first)
@@ -307,6 +315,8 @@ func run_command(cmd: Dictionary) -> void:
 			sim.push_command({"t": "desalojar", "player": local, "building": cmd["building"]})
 		"kawin":
 			sim.push_command({"t": "kawin", "player": local, "building": cmd["building"]})
+		"regimiento":
+			sim.push_command({"t": "regimiento", "player": local, "building": cmd["building"]})
 		"ungarrison":
 			for e in selected_entities():
 				if e.is_building() and e.owner == local:

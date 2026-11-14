@@ -145,7 +145,7 @@ func _rents(pid: int, _p: Dictionary) -> void:
 			capital = e
 			break
 	for e in sim.actives:
-		if e.alive and e.owner == pid and e.is_building() and e.built and e.def.has("renta"):
+		if e.alive and e.owner == pid and e.is_building() and e.built and e.def.has("renta") and e.mode != "regimiento":
 			var r: Dictionary = e.def["renta"]
 			# Renta mejor cerca de la capital (gult etíope junto a la corte).
 			if e.def.has("renta_cerca_capital") and capital != null and Sim.dist(e.x, e.y, capital.x, capital.y) <= int(e.def.get("radio_capital", 14000)):
