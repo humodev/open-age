@@ -1,0 +1,6 @@
+  ok   almacén junto al bosque: 3 de 3 aldeanos recolectan madera al terminar
+  ok   toda tecnología tiene dónde investigarse en cada civ 
+  ok   lejos (54 casillas): 6 de 6 marchan en grupo
+  ok   al llegar los 6 recolectan; del primero al último, 0.0 s
+  ok   cerca: van directo, sin grupo (0 en grupo)
+JUGABILIDAD: OK

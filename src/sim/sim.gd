@@ -178,9 +178,20 @@ func _apply(c: Dictionary) -> void:
 				mv = groups.form(pid, mv, c["x"], c["y"], c.get("amove", false))
 			_cmd_move(pid, mv, c["x"], c["y"], c.get("amove", false))
 		"target":
-			_cmd_target(pid, _own_units(pid, c.get("ids", [])), c["target"])
+			var tu := _own_units(pid, c.get("ids", []))
+			var tt: SimEntity = by_id.get(c["target"])
+			# Lejos y sin pelea: marchan en grupo y al llegar cada uno hace lo pedido (proceso/21).
+			if tt != null and tt.alive and not hostile(pid, tt) and not c.get("suelto", false):
+				tu = groups.form(pid, tu, tt.x, tt.y, false, {"target": tt.id})
+			_cmd_target(pid, tu, c["target"])
 		"build":
-			_cmd_build(pid, _own_units(pid, c.get("ids", [])), c["type"], c["tx"], c["ty"])
+			var bu := _own_units(pid, c.get("ids", []))
+			_cmd_build(pid, bu, c["type"], c["tx"], c["ty"])
+			# Cimiento lejos: los constructores van en bloque y se sueltan cerca de la obra.
+			if not bu.is_empty() and bu[0].order == O.BUILD:
+				var fb: SimEntity = by_id.get(bu[0].target)
+				if fb != null and not c.get("suelto", false):
+					groups.form(pid, bu, fb.x, fb.y, false, {"target": fb.id})
 		"build_line":
 			_cmd_build_line(pid, _own_units(pid, c.get("ids", [])), c["type"], c["tiles"])
 		"train":
@@ -2072,6 +2083,11 @@ func remove_quietly(e: SimEntity) -> void:
 	e.alive = false
 	_dirty = true
 	events.append({"t": "absorbed", "id": e.id, "owner": e.owner})
+
+
+## Orden "clic derecho sobre esto" para unidades sueltas (la usa el grupo al soltarse).
+func order_target(pid: int, units: Array[SimEntity], target_id: int) -> void:
+	_cmd_target(pid, units, target_id)
 
 
 func order_move(e: SimEntity, x: int, y: int) -> void:

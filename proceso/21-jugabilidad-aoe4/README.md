@@ -109,3 +109,16 @@
      - aldeanos en bloque al mandarlos a recolectar o construir lejos, con escolta (paso 7);
      - formaciones elegibles, Alt para ir suelto y el rumbo con el arrastre (paso 8);
      - un torneo para ver si el balance se movió.
+6. **(00:50) Paso 7 del plan: aldeanos en bloque cuando el trabajo está lejos.**
+   - **Grupo con tarea:** el grupo puede llevar una tarea pendiente (`then`). Al clic derecho sobre un recurso, un cimiento, un almacén o un edificio propio a más de 16 casillas, la selección marcha en bloque. A 6 casillas del destino (`aldeanos_suelta_dist`) se disuelve y cada uno hace lo pedido: recolectar, construir, entregar o refugiarse.
+   - **Cimientos lejanos:** al poner un cimiento lejos, los constructores también van en bloque.
+   - **Cerca, nada cambia:** cada uno corre a su trabajo, como pidió el autor.
+   - **La IA** da las mismas órdenes, así que sus aldeanos también marchan juntos a lo lejano.
+   - **Pruebas** (`tests/jugabilidad.gd`, [resultado](pruebas/07-jugabilidad.txt)):
+     - 6 aldeanos mandados a una arcilla a 54 casillas marchan en grupo y, al llegar, los seis recolectan. Reciben la orden de recolectar todos en el mismo tick, cuando el grupo se disuelve; la prueba no mide cuándo pisa cada uno la arcilla;
+     - 3 aldeanos mandados a algo cercano van directo, sin grupo.
+   - **Captura** (`--demo=bloque`, nueva, con la cámara puesta por la demo): 10 aldeanos guaraníes cruzan el campo en dos filas de cinco hacia la arcilla del centro, segundo 20.
+
+     ![](aldeanos-en-bloque.jpg)
+   - **Tropiezo:** la primera captura mostraba a los aldeanos quietos junto a una arcilla, y parecía una falla del grupo. Era la demo: buscaba la arcilla entre las entidades activas, donde los recursos no están, y nunca dio la orden. Con la búsqueda corregida, el grupo avanza parejo; 47 casillas a paso de aldeano son unos 40 s.
+   - Determinismo OK, banco de 200 unidades en 7,8 ms de promedio y 45 de peor tick, `tests/grupos.gd` OK y autotest OK.

@@ -18,7 +18,7 @@
     "holgura": 800, "corrida_pct": 40, "corrida_aldeano_pct": 25, "vel_cada_ticks": 5,
     "espera_dist": 5000, "reanuda_dist": 3000, "espera_max_ticks": 80, "giro_min_ticks": 10,
     "trabado_sigue_ancla": 3, "llegada_max_ticks": 100, "combate_calma_ticks": 10,
-    "aldeanos_bloque_dist": 16000 },
+    "aldeanos_bloque_dist": 16000, "aldeanos_suelta_dist": 6000 },
   "ia_economia": { "_doc": "Reparto de aldeanos de la IA por recurso, en % (antes en sim_ai.gd)", "proporcion_temprana": { "alimento": 52, "madera": 33, "riqueza": 10, "piedra": 5 }, "proporcion_tardia": { "alimento": 42, "madera": 25, "riqueza": 23, "piedra": 10 }, "almacen_lejos": 4500 },
   "niebla_cada_ticks": 5,
   "construccion_decreciente": true,

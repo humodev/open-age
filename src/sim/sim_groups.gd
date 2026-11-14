@@ -51,7 +51,10 @@ static func slot_pos(ax: int, ay: int, rumbo: int, lat: int, fwd: int) -> Vector
 
 ## Intenta mover `units` en grupo hacia (gx, gy). Devuelve las unidades que NO entraron
 ## (van solas, como antes); si no se forma grupo, devuelve todas.
-func form(pid: int, units: Array[SimEntity], gx: int, gy: int, amove: bool) -> Array[SimEntity]:
+## `then` ({"target": id}): al acercarse a `aldeanos_suelta_dist` del destino el grupo se
+## disuelve y cada uno recibe esa orden (recolectar, construir, entregar). Solo se forma si el
+## destino está lejos: cerca, cada uno va directo.
+func form(pid: int, units: Array[SimEntity], gx: int, gy: int, amove: bool, then: Dictionary = {}) -> Array[SimEntity]:
 	var c := cfg()
 	var eligible: Array[SimEntity] = []
 	var rest: Array[SimEntity] = []
@@ -83,7 +86,7 @@ func form(pid: int, units: Array[SimEntity], gx: int, gy: int, amove: bool) -> A
 	for e in core:
 		if e.fn != "civil":
 			all_civil = false
-	if all_civil and Sim.dist(cx, cy, gx, gy) <= int(c["aldeanos_bloque_dist"]):
+	if (all_civil or not then.is_empty()) and Sim.dist(cx, cy, gx, gy) <= int(c["aldeanos_bloque_dist"]):
 		return units
 	var from := Vector2i(cx / P, cy / P)
 	if sim.map.is_solid(from.x, from.y, pid):
@@ -100,7 +103,7 @@ func form(pid: int, units: Array[SimEntity], gx: int, gy: int, amove: bool) -> A
 	var g := {"id": _next_id, "owner": pid, "members": [], "ax": from.x * P + P / 2, "ay": from.y * P + P / 2,
 		"path": path, "path_i": 1, "spd": 0, "rumbo": rumbo, "final_rumbo": rumbo, "turn_tick": sim.tick,
 		"state": State.MARCHA, "wait": 0, "calm": 0, "arrive_t": 0, "slots": {},
-		"dest_x": path[path.size() - 1].x * P + P / 2, "dest_y": path[path.size() - 1].y * P + P / 2, "amove": amove}
+		"dest_x": path[path.size() - 1].x * P + P / 2, "dest_y": path[path.size() - 1].y * P + P / 2, "amove": amove, "then": then}
 	if path[path.size() - 1] == Vector2i(gx / P, gy / P):
 		g["dest_x"] = gx
 		g["dest_y"] = gy
@@ -235,6 +238,11 @@ func tick() -> void:
 			g["calm"] = int(g["calm"]) + 1
 			if g["state"] == State.COMBATE and int(g["calm"]) >= int(c["combate_calma_ticks"]):
 				g["state"] = State.MARCHA
+		# Grupo con tarea: se suelta cerca del destino y cada uno hace lo pedido.
+		if not (g["then"] as Dictionary).is_empty() and (g["state"] == State.LLEGADA or Sim.dist(g["ax"], g["ay"], g["dest_x"], g["dest_y"]) <= int(c["aldeanos_suelta_dist"])):
+			_release_then(g)
+			groups.erase(gid)
+			continue
 		if g["state"] == State.MARCHA or g["state"] == State.ESPERA:
 			_check_wait(g, c)
 		if g["state"] == State.MARCHA:
@@ -327,6 +335,21 @@ func _advance(g: Dictionary, c: Dictionary) -> void:
 			g["ax"] = int(g["ax"]) + dx * budget / d
 			g["ay"] = int(g["ay"]) + dy * budget / d
 			budget = 0
+
+
+func _release_then(g: Dictionary) -> void:
+	var units: Array[SimEntity] = []
+	for id in g["members"]:
+		var e: SimEntity = sim.by_id.get(id)
+		if e != null and e.alive:
+			e.group = -1
+			units.append(e)
+	var t: SimEntity = sim.by_id.get(int(g["then"].get("target", -1)))
+	if t != null and t.alive:
+		sim.order_target(g["owner"], units, t.id)
+	else:
+		for e in units:
+			sim.order_move(e, g["dest_x"], g["dest_y"])
 
 
 ## Los que no llegaron a tiempo quedan con su orden individual hacia su lugar final.

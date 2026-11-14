@@ -10,7 +10,7 @@ extends Node3D
 ##   --estilo=pacifica|normal|acosadora|agresiva  estilo de juego de la IA
 ##   --cam=x,z,zoom[,inclinación]  posición de cámara para la captura (bX,bZ: relativa a la base propia)
 ##   --select=tipo      selecciona entidades de ese tipo del jugador local antes de la captura
-##   --demo=base|batalla|multitud|formacion  escena armada para revisar modelos, combate, el costo de 200 unidades o un grupo en marcha
+##   --demo=base|batalla|multitud|formacion|bloque  escena armada para revisar modelos, combate, el costo de 200 unidades o un grupo en marcha
 ##   --menu             fuerza el menú de inicio (sin argumentos se abre solo)
 ##   --terreno=<clave de reglas.json "terrenos"> tipo de mapa (llano, valle, delta…)
 ##   --civ=clave        civilización propia (tawantinsuyu, mapuches, guaranies, etiopia, palmares, ayutthaya, azar)
@@ -319,6 +319,9 @@ func _build_scene(aivai: bool) -> void:
 			cam.look_at_point(Vector3(cc.x, 0, cc.z) - cam.forward_xz() * 1.0)
 			break
 	# --- fin hud ---
+	if sim.has_meta("demo_cam") and not _args.has("cam"):
+		var dc: Vector2 = sim.get_meta("demo_cam")
+		cam.look_at_point(Vector3(dc.x, 0, dc.y))
 	if _args.has("cam") and not _args.has("shot"):
 		var cc: PackedStringArray = (_args["cam"] as String).split(",")
 		cam.look_at_point(Vector3(float(cc[0]), 0, float(cc[1])))
@@ -440,6 +443,22 @@ func _demo(kind: String) -> void:
 			ids.append(sim.spawn_unit(types[i % types.size()], local, t.x * 1000 + 500, t.y * 1000 + 500).id)
 		var c := sim.map.n / 2
 		sim.push_command({"t": "move", "player": local, "ids": ids, "x": c * 1000, "y": c * 1000})
+	elif kind == "bloque":
+		# Diez aldeanos mandados a recolectar lejos: marchan en bloque y se sueltan cerca (proceso/21).
+		var bb := sim.bases[local]
+		var vids := []
+		for i in 10:
+			var t := sim.map.nearest_free(bb.x + 8 + i % 4, bb.y + 8 + i / 4, 6, local)
+			vids.append(sim.spawn_unit("aldeano", local, t.x * 1000 + 500, t.y * 1000 + 500).id)
+		var c := sim.map.n / 2
+		var far: SimEntity = null
+		for e in sim.entities:
+			if e.alive and e.is_resource() and e.type == "riqueza" and (far == null or Sim.dist(e.x, e.y, c * 1000, c * 1000) < Sim.dist(far.x, far.y, c * 1000, c * 1000)):
+				far = e
+		if far != null:
+			sim.push_command({"t": "target", "player": local, "ids": vids, "target": far.id})
+			# Cámara a un tercio del camino, donde va el bloque a los 8-10 s.
+			sim.set_meta("demo_cam", Vector2(bb.x + 10 + (far.x / 1000 - bb.x - 10) / 3, bb.y + 10 + (far.y / 1000 - bb.y - 10) / 3))
 	elif kind == "batalla":
 		var c := sim.map.n / 2
 		var ids := [[], []]
