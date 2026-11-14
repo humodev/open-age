@@ -7,6 +7,7 @@ func _init() -> void:
 	var tipos: PackedStringArray = ["rio"]
 	var semillas := 6
 	var salida := "user://mapas"
+	var jugadores := 2
 	for a in OS.get_cmdline_user_args():
 		var kv := a.trim_prefix("--").split("=")
 		match kv[0]:
@@ -16,18 +17,22 @@ func _init() -> void:
 				semillas = int(kv[1])
 			"salida":
 				salida = kv[1]
+			"jugadores":
+				jugadores = int(kv[1])
 	DirAccess.make_dir_recursive_absolute(salida)
 	for t in tipos:
-		var k := 3
-		var hoja := Image.create(semillas * (128 * k + 6), 128 * k, false, Image.FORMAT_RGB8)
+		var k := 2
+		var tam := 240
+		var hoja := Image.create(semillas * (tam * k + 6), tam * k, false, Image.FORMAT_RGB8)
 		hoja.fill(Color(0.1, 0.1, 0.1))
 		for i in semillas:
-			var s := Sim.new(100 + i * 7, 2, null, {"terreno": t, "civs": ["guaranies", "mapuches"]})
+			var civs := ["guaranies", "mapuches", "etiopia", "palmares", "ayutthaya", "tawantinsuyu", "guaranies", "mapuches"].slice(0, jugadores)
+			var s := Sim.new(100 + i * 7, jugadores, null, {"terreno": t, "civs": civs})
 			var img := _vista(s)
-			img.resize(128 * k, 128 * k, Image.INTERPOLATE_NEAREST)
-			hoja.blit_rect(img, Rect2i(0, 0, 128 * k, 128 * k), Vector2i(i * (128 * k + 6), 0))
+			img.resize(tam * k, tam * k, Image.INTERPOLATE_NEAREST)
+			hoja.blit_rect(img, Rect2i(0, 0, tam * k, tam * k), Vector2i(i * (tam * k + 6), 0))
 			print("%s semilla %d: forma %s" % [t, 100 + i * 7, s.water_form])
-		hoja.save_png("%s/%s.png" % [salida, t])
+		hoja.save_png("%s/%s-%dj.png" % [salida, t, jugadores])
 	quit()
 
 

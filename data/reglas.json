@@ -17,6 +17,8 @@
   "vision_por_nivel": 1500,
   "velocidad_pct": 90,
   "disputado": { "tope_por_min": [15, 40, 80, 120], "baldes": 5, "_doc": "Techo de riqueza que sale de lo disputado (arcilla del centro, sitios, botín), por edad, en una ventana de 5 minutos (docs/diseno/revision-economia/v3/04, §3.2)" },
+  "mapa_tam_por_jugadores": { "3": 160, "4": 176, "5": 192, "6": 208, "7": 224, "8": 240 },
+  "bases_circulo": {"3": [[-707, -707], [966, -259], [-259, 966]], "4": [[-707, -707], [707, -707], [707, 707], [-707, 707]], "5": [[-707, -707], [454, -891], [988, 156], [156, 988], [-891, 454]], "6": [[-707, -707], [259, -966], [966, -259], [707, 707], [-259, 966], [-966, 259]], "7": [[-707, -707], [112, -994], [847, -532], [944, 330], [330, 944], [-532, 847], [-994, 112]], "8": [[-707, -707], [0, -1000], [707, -707], [1000, 0], [707, 707], [0, 1000], [-707, 707], [-1000, 0]]},
   "equipos": { "vision_compartida": true, "tributo_comision_pct": 20, "_doc": "Partidas por equipos (docs/11)" },
   "ingenios": { "por_jugador": 1, "distancia_base": 34 },
   "arcilla": { "base": 900, "flanco": 1500, "flanco_dist": 18, "centro_por_jugador": 1000 },

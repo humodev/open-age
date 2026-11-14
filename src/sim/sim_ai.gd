@@ -73,7 +73,16 @@ func think() -> void:
 			_attack(army)
 		return
 	if rally.x < 0:
+		# La base enemiga más cercana (con equipos, nunca la de un aliado).
 		var enemy_base := sim.bases[(player + 1) % sim.bases.size()]
+		var best_eb := 1 << 60
+		for j in mini(sim.players.size(), sim.bases.size()):
+			if sim.enemies(player, j):
+				var eb := sim.bases[j]
+				var d := Sim.dist(eb.x * P, eb.y * P, centro.x, centro.y)
+				if d < best_eb:
+					best_eb = d
+					enemy_base = eb
 		rally = Vector2i(centro.x + (enemy_base.x * P - centro.x) / 6, centro.y + (enemy_base.y * P - centro.y) / 6)
 
 	var saving := _wants_hito(p, vill.size(), by_type)

@@ -23,5 +23,5 @@ Las preguntas para el autor están en [`CONSULTAS.md`](CONSULTAS.md) y se revisa
 | [15 · Interfaz](15-interfaz/README.md) | 2026-11-13 desde 17:30 | Primera tanda integrada: fichas con retrato, paneles F1–F6 y fin de partida, información en el mundo y minimapa; auditoría para la segunda tanda |
 | [16 · Paisaje](16-paisaje/README.md) | 2026-11-13 desde 18:20 | Hecho: modelos del paisaje con Meshy (cinco árboles, arbusto, roca, arcilla con vasijas, peñasco, yerbal; 385 créditos) y agua con reflejo, orillas con juncos, suelo por bioma, pasto con viento y atmósfera por bioma |
 | [17 · Interfaz, segunda tanda](17-interfaz-segunda-tanda/README.md) | 2026-11-14 desde 09:00 | En curso: escala, paleta para daltonismo, cursores, grilla estable, avisos, opciones y errores puntuales |
-| [18 · Muchos jugadores y equipos](18-muchos-jugadores-y-equipos/README.md) | 2026-11-14 desde 09:00 | En curso: de 2 a 8 jugadores, equipos, mapas para N, IA en equipo |
+| [18 · Muchos jugadores y equipos](18-muchos-jugadores-y-equipos/README.md) | 2026-11-14 desde 09:00 | En curso: paso 1 (equipos en la simulación) y paso 2 (generador para 3 a 8 bases, prueba de equidad) hechos; sigue agua para N |
 | [19 · Arte y sonido](19-arte-y-sonido/README.md) | 2026-11-14 desde 09:00 | En curso: modelos de unidades y edificios, música para Etiopía |

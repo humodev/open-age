@@ -12,7 +12,7 @@ Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video,
 | H3 · Arte, sonido e interfaz | Arte procedural por civilización (D-015), audio CC0, interfaz completa, menú y campañas |
 | H4 · Cuatro civilizaciones e IA sólida | Seis civilizaciones. La IA juega todas, pero sin dificultades y con balance en ajuste |
 | Economía nueva (`diseno/revision-economia/v3/04`) | Implementada (etapas 0–5): seis motores propios, ingenios neutrales, techo de lo disputado, nombres de la riqueza por pueblo. Balance (etapa 6): tras 5 ajustes, las seis civs entre 40 y 66 % de victorias; falta confirmar con 5 semillas y probar las campañas. Detalle en `proceso/14` |
-| Partidas de muchos jugadores y equipos (`11`) | Planificado para después de la economía: de 2 a 8 jugadores (foco en 6), equipos, mapas para N, IA en equipo |
+| Partidas de muchos jugadores y equipos (`11`) | En curso (`proceso/18`). Pasos 1 y 2 hechos: equipos en la simulación (sin fuego amigo, visión compartida, victoria por equipo) y generador para 3 a 8 bases en círculo, con el mismo juego de recursos por base (`tests/equidad.gd`). Faltan formas de agua para N, IA en equipo y tributo, menú de lugares y rendimiento con 6 |
 | H5 · Multijugador en red | No empezado. La simulación determinista y por comandos ya lo habilita |
 | H6 · Acceso anticipado | Pendiente |
 
@@ -47,7 +47,7 @@ Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video,
 | Animación | Procedural (paso, galope, trabajo, golpe, muerte); sin esqueletos |
 | Modelos generados | Capitales, casas, elefante, kona y paisaje (árboles, arbustos, rocas, arcilla, peñascos); el resto de los edificios y casi todas las unidades son la maqueta procedural |
 | Interfaz, segunda tanda | Pendiente según `diseno/interfaz/00-auditoria.md`: escala de interfaz, paleta para daltónicos, cursores, grilla estable, avisos con jerarquía y opciones guardadas |
-| Partidas de muchos jugadores | Planificado en `11`: de 2 a 8 jugadores y equipos, después de la economía |
+| Partidas de muchos jugadores | Pasos 1–2 de 6 hechos; siguen formas de agua para N (islas, brazos y fortines todavía caen en lago o sin anillos) |
 | Escala y velocidad | Corregidas el 2026-11-13 (`escala_visual`, `velocidad_pct`); falta la opinión del autor a ×1 |
 | Multijugador | H5 |
 | Naval | Fuera de alcance (D-020) |

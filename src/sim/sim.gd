@@ -30,7 +30,8 @@ var winner_team := -1
 var terrain := ""
 var water_form := "" # forma del agua elegida (cruce, lago, costados, anillo, brazos)
 var rivers: Array = [] # trazos de río para la imagen; no son estado
-var _fort_gaps: Array = [] # [jugador, casillas, puerta] de las salidas de cada fortín
+var _fort_gaps: Array = []
+var _base_dirs: Array[Vector2i] = [] # mapas para N: dirección de cada base hacia el centro (milésimas) # [jugador, casillas, puerta] de las salidas de cada fortín
 var _opts: Dictionary = {}
 
 var _pending := {} # tick -> Array[Dictionary]
@@ -48,8 +49,12 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null,
 	_opts = opts
 	tick_ms = data.reglas["tick_ms"]
 	rng = SimRng.new(seed_value)
-	map = SimMap.new(data.reglas["mapa_tam"], num_players)
-	fog = SimFog.new(data.reglas["mapa_tam"], num_players)
+	# Escaramuza de 3 o más jugadores: mapa más grande y bases en círculo (docs/11).
+	var size: int = data.reglas["mapa_tam"]
+	if num_players > 2 and not opts.get("sin_sitios", false):
+		size = int(data.reglas.get("mapa_tam_por_jugadores", {}).get(str(num_players), size))
+	map = SimMap.new(size, num_players)
+	fog = SimFog.new(size, num_players)
 	fog.map = map
 	fog.vision_per_level = data.reglas["vision_por_nivel"]
 	mods = SimMods.new(self)
@@ -2123,6 +2128,9 @@ func spawn_resource(type: String, tx: int, ty: int) -> SimEntity:
 ## Mapa con simetría puntual para dos jugadores (docs/05, justo para ambos).
 func _generate_map() -> void:
 	var n := map.n
+	if n_layout():
+		_generate_map_n()
+		return
 	var b0 := Vector2i(22, 22)
 	bases = [b0, Vector2i(n - 4 - b0.x, n - 4 - b0.y), Vector2i(b0.x, n - 4 - b0.y), Vector2i(n - 4 - b0.x, b0.y)]
 	_generate_terrain()
@@ -2254,6 +2262,155 @@ func _generate_map() -> void:
 				_tree_sym(Vector2i(depth, i))
 
 
+## ¿Mapa para muchos jugadores? Escaramuza de 3 o más (las campañas usan sus bases fijas).
+func n_layout() -> bool:
+	return players.size() > 2 and not _opts.get("sin_sitios", false)
+
+
+## Mapa para N jugadores (docs/11, paso 2): bases en círculo, todas a la misma
+## distancia del centro, y el mismo juego de recursos en coordenadas locales de cada
+## base (adelante = hacia el centro). No hay simetría exacta con 6 u 8 lados, pero
+## cada base recibe lo mismo; tests/equidad.gd lo mide.
+func _generate_map_n() -> void:
+	var n := map.n
+	var np := players.size()
+	var tbl: Array = data.reglas["bases_circulo"][str(np)]
+	var r := n / 2 - 24
+	bases = []
+	_base_dirs = []
+	for i in np:
+		var d: Array = tbl[i]
+		var c := Vector2i(n / 2 + int(d[0]) * r / 1000, n / 2 + int(d[1]) * r / 1000)
+		bases.append(c - Vector2i(2, 2))
+		_base_dirs.append(Vector2i(-int(d[0]), -int(d[1]))) # hacia el centro, en milésimas
+	_generate_terrain()
+	for pid in np:
+		var base := bases[pid]
+		var dd := dp(pid)
+		var sb := spawn_building(dd.civ.get("inicio_edificio", "centro"), pid, base.x, base.y, true)
+		sb.capital = true
+		var count: int = dd.civ.get("aldeanos_iniciales", data.reglas["aldeanos_iniciales"])
+		for i in count:
+			var off := _local(pid, 5 + i / 3, i % 3 - 1)
+			spawn_unit("aldeano", pid, (base.x + 2 + off.x) * P + P / 2, (base.y + 2 + off.y) * P + P / 2)
+		for i in int(data.reglas["exploradores_iniciales"]):
+			var off := _local(pid, 4, 3 + i)
+			spawn_unit(dd.civ.get("explorador", "explorador"), pid, (base.x + 2 + off.x) * P + P / 2, (base.y + 2 + off.y) * P + P / 2)
+	_spawn_fort_walls()
+	var cl: Dictionary = data.reglas.get("arcilla", {})
+	# El mismo juego de recursos para cada base: (adelante, costado) en casillas.
+	for pid in np:
+		var c := bases[pid] + Vector2i(2, 2)
+		_cluster_at("arbusto", c + _local(pid, 7, -2), 8)
+		_blob_fixed(c + _local(pid, -3, 13), 4)
+		_blob_fixed(c + _local(pid, -3, -13), 3)
+		_res_at("roca", c + _local(pid, 1, -10), -1, -1)
+		_res_at("roca", c + _local(pid, 3, -11), -1, -1)
+		_res_at("riqueza", c + _local(pid, 2, 10), int(cl.get("base", 900)), pid)
+		_res_at("riqueza", c + _local(pid, 4, 11), int(cl.get("base", 900)), pid)
+		_res_at("riqueza", c + _local(pid, 12, -16), int(cl.get("flanco", 1500)), pid)
+		if data.edificios.has("ingenio"):
+			var ig := c + _local(pid, 30, 14)
+			var t := map.nearest_free(ig.x, ig.y, 8)
+			if t.x >= 0 and map.is_free_rect(t.x - 1, t.y - 1, 5, 5) and map.is_flat(t.x, t.y, 3, 3):
+				spawn_building("ingenio", -1, t.x, t.y, true)
+	# Sitios sagrados: uno al centro y uno entre cada par de bases vecinas.
+	var spots: Array[Vector2i] = [Vector2i(n / 2 - 1, n / 2 - 1)]
+	for i in np:
+		var a := bases[i] + Vector2i(2, 2)
+		var b := bases[(i + 1) % np] + Vector2i(2, 2)
+		var mid := (a + b) / 2
+		spots.append(mid + (Vector2i(n / 2, n / 2) - mid) / 3)
+	for sp in spots:
+		var t := map.nearest_free(sp.x, sp.y, 8)
+		if t.x >= 0 and map.is_free_rect(t.x, t.y, 2, 2):
+			spawn_building("sitio_sagrado", -1, t.x, t.y, true)
+	# Arcilla del centro: 1000 por jugador, en anillo.
+	for i in np:
+		var d: Vector2i = _base_dirs[i]
+		_res_at("riqueza", Vector2i(n / 2, n / 2) - Vector2i(d.x * 9 / 1000, d.y * 9 / 1000), int(cl.get("centro_por_jugador", 1000)), -1)
+	# Bosques y bordes.
+	var made := 0
+	var tries := 0
+	var forests := int(terrain_def().get("bosques", 13)) * np / 2
+	while made < forests and tries < forests * 25:
+		tries += 1
+		var fc := Vector2i(rng.range_i(5, n - 6), rng.range_i(5, n - 6))
+		if _near_base(fc, 27) or absi(fc.x - n / 2) + absi(fc.y - n / 2) < 14:
+			continue
+		_blob_at(fc, rng.range_i(3, 6), 78)
+		made += 1
+	for i in n:
+		for depth in int(terrain_def().get("borde", 3)):
+			var chance := 70 - depth * 25
+			for t in [Vector2i(i, depth), Vector2i(depth, i), Vector2i(i, n - 1 - depth), Vector2i(n - 1 - depth, i)]:
+				if rng.range_i(0, 99) < chance:
+					_tree_at(t)
+
+
+## Desplazamiento local de una base: `fwd` casillas hacia el centro y `side` de costado.
+func _local(pid: int, fwd: int, side: int) -> Vector2i:
+	var f: Vector2i = _base_dirs[pid]
+	var sd := Vector2i(-f.y, f.x)
+	return Vector2i((f.x * fwd + sd.x * side) / 1000, (f.y * fwd + sd.y * side) / 1000)
+
+
+func _res_at(type: String, t: Vector2i, amount: int, owner: int) -> void:
+	var tam: Array = data.recursos[type]["tam"]
+	var spot := t
+	# Espiral hasta 5 casillas: cada base tiene que recibir todo su juego de recursos.
+	var tries: Array[Vector2i] = [Vector2i.ZERO]
+	for rr in range(1, 6):
+		for dy in range(-rr, rr + 1):
+			for dx in range(-rr, rr + 1):
+				if maxi(absi(dx), absi(dy)) == rr:
+					tries.append(Vector2i(dx, dy))
+	for off in tries:
+		spot = t + off
+		if spot.x >= 1 and spot.y >= 1 and spot.x + tam[0] < map.n - 1 and spot.y + tam[1] < map.n - 1 and map.is_free_rect(spot.x - 1, spot.y - 1, tam[0] + 2, tam[1] + 2):
+			var wet := false
+			for yy in range(spot.y, spot.y + tam[1]):
+				for xx in range(spot.x, spot.x + tam[0]):
+					if map.is_water(xx, yy):
+						wet = true
+			if not wet:
+				var e := spawn_resource(type, spot.x, spot.y)
+				if amount > 0:
+					e.amount = amount
+				e.res_owner = owner
+				return
+
+
+func _tree_at(t: Vector2i) -> void:
+	if map.in_bounds(t.x, t.y) and not _near_base(t, 9) and map.occupant(t.x, t.y) == -1 and not map.is_water(t.x, t.y):
+		spawn_resource("arbol", t.x, t.y)
+
+
+func _blob_at(c: Vector2i, r: int, density: int) -> void:
+	for dy in range(-r, r + 1):
+		for dx in range(-r, r + 1):
+			if dx * dx + dy * dy > r * r + rng.range_i(0, r):
+				continue
+			if rng.range_i(0, 99) < density:
+				_tree_at(c + Vector2i(dx, dy))
+
+
+## Bosque de forma fija, sin azar: el de cada base tiene que ser igual al de las otras.
+func _blob_fixed(c: Vector2i, r: int) -> void:
+	for dy in range(-r, r + 1):
+		for dx in range(-r, r + 1):
+			if dx * dx + dy * dy <= r * r + r / 2:
+				_tree_at(c + Vector2i(dx, dy))
+
+
+func _cluster_at(type: String, c: Vector2i, count: int) -> void:
+	var offs: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1), Vector2i(-1, 0), Vector2i(0, -1), Vector2i(2, 1), Vector2i(1, 2), Vector2i(-1, 1), Vector2i(2, 0)]
+	for i in mini(count, offs.size()):
+		var t := c + offs[i]
+		if map.in_bounds(t.x, t.y) and map.occupant(t.x, t.y) == -1 and not map.is_water(t.x, t.y):
+			spawn_resource(type, t.x, t.y)
+
+
 func _scale_dir(d: Vector2i, dist_tiles: int) -> Vector2i:
 	if d.x != 0 and d.y != 0:
 		return d * (dist_tiles * 7 / 10)
@@ -2348,7 +2505,7 @@ func _generate_terrain() -> void:
 		var c := Vector2i(rng.range_i(10, map.n - 11), rng.range_i(10, map.n - 11))
 		if not _near_base(c, 18):
 			_lake_blob(c, rng.range_i(int(lr[0]), int(lr[1])))
-	if td.has("fortines"):
+	if td.has("fortines") and not n_layout():
 		_fort_rings(td["fortines"])
 	if int(td.get("penascos", 0)) > 0:
 		_crags(int(td["penascos"]))
@@ -2481,6 +2638,9 @@ static func _lattice(x: int, y: int, sd: int) -> int:
 func _water_layout(rd: Dictionary) -> void:
 	var forms: Array = rd.get("formas", ["cruce"])
 	water_form = str(forms[rng.range_i(0, forms.size() - 1)])
+	# Con 3 o más jugadores, las formas pensadas para dos lados enfrentados pasan a lago.
+	if n_layout() and water_form in ["costados", "islas", "brazos"]:
+		water_form = "lago"
 	var w := int(rd.get("ancho", 1))
 	var fe := int(rd.get("vados", 22))
 	match water_form:

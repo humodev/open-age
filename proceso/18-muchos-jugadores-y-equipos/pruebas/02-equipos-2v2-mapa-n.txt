@@ -1,0 +1,3 @@
+["tawantinsuyu", "mapuches", "guaranies", "etiopia"] equipos [0, 1, 0, 1]  29:30  bajas 836  fuego amigo 0  ganó el equipo 0  | j0 edad 3 en pie  | j1 edad 3 derrotado  | j2 edad 4 en pie  | j3 edad 3 derrotado
+["palmares", "ayutthaya", "mapuches", "tawantinsuyu"] equipos [0, 1, 0, 1]  22:32  bajas 322  fuego amigo 0  ganó el equipo 0  | j0 edad 3 en pie  | j1 edad 2 derrotado  | j2 edad 4 en pie  | j3 edad 3 derrotado
+EQUIPOS: OK
