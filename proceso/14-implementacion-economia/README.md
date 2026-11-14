@@ -293,3 +293,26 @@ El autor preguntó en qué punto estaba la economía: se había avanzado varias 
     - **Etiopía:** jinete noble de 140 de vida.
     - **Palmares:** oficios de 20; espingardeiro de 60 a + 65 r.
     - **Ayutthaya:** compañía japonesa de 85 r.
+37. **Torneo tras el quinto ajuste** ([resultado](pruebas/09-torneo-ajuste-5.txt)):
+
+    | Civ | % |
+    |---|---|
+    | Etiopía | 66 % |
+    | Mapuches | 60 % |
+    | Guaraníes | 46 % |
+    | Tawantinsuyu | 46 % |
+    | Ayutthaya | 40 % |
+    | Palmares | 40 % |
+
+    Las seis quedan prácticamente dentro de la banda de 35 a 65 %: Etiopía apenas un punto arriba, dentro del ruido. Recorrido completo del balance, en porcentaje de victorias:
+
+    | Civ | Primer torneo | Tras 5 ajustes |
+    |---|---|---|
+    | Etiopía | 90 | 66 |
+    | Mapuches | 70 | 60 |
+    | Tawantinsuyu | 60 | 46 |
+    | Guaraníes | 50 | 46 |
+    | Palmares | 20 | 40 |
+    | Ayutthaya | 10 | 40 |
+
+    Se confirma con un torneo más largo, de 5 partidas por cruce.
