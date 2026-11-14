@@ -42,10 +42,12 @@ Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video,
 | Tema | Detalle |
 |---|---|
 | Balance | Lo mide el torneo; ver la última tabla en `proceso/` |
-| IA y mecánicas propias | No traza caminos incas, no muda la corte etíope y no usa la campana de forma táctica |
-| Dificultades de la IA | Una sola; faltan tres niveles (H4) |
+| IA y mecánicas propias | Juega los seis motores (talleres, corrales y kawiñ, rozas, gult y corte que se funda, oficios, elefantes), traza caminos rodeando obstáculos, asalta ingenios y usa la campana parcial. Falta: caminos incas hacia la arcilla, menos dependencia del mercado |
+| Dificultades y estilos de la IA | Tres dificultades (fácil, normal, difícil) y cuatro estilos (pacífica, equilibrada, acosadora, agresiva) |
 | Animación | Procedural (paso, galope, trabajo, golpe, muerte); sin esqueletos |
-| Modelos generados | Capitales, casas, elefante, kona y paisaje; el resto es la maqueta procedural (ver C-05) |
+| Modelos generados | Capitales, casas, elefante, kona y paisaje (árboles, arbustos, rocas, arcilla, peñascos); el resto de los edificios y casi todas las unidades son la maqueta procedural |
+| Interfaz, segunda tanda | Pendiente según `diseno/interfaz/00-auditoria.md`: escala de interfaz, paleta para daltónicos, cursores, grilla estable, avisos con jerarquía y opciones guardadas |
+| Partidas de muchos jugadores | Planificado en `11`: de 2 a 8 jugadores y equipos, después de la economía |
 | Escala y velocidad | Corregidas el 2026-11-13 (`escala_visual`, `velocidad_pct`); falta la opinión del autor a ×1 |
 | Multijugador | H5 |
 | Naval | Fuera de alcance (D-020) |
