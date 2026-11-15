@@ -285,3 +285,17 @@
       - Los guaraníes levantaban dos casas del arco y ningún cuartel. El segundo edificio principal ahora espera a que haya uno de cada uno de los otros.
     - **Salud de la IA ahora** ([resultado](pruebas/17-salud-ia.txt)): Tawantinsuyu, mapuches y Etiopía OK. Quedan los guaraníes y Palmares sin mercado al minuto 15, Palmares con 2 militares (pierde las peleas contra Ayutthaya en esa semilla) y Ayutthaya con la edad II a las 10:06.
     - Torneo de 5 semillas en paralelo, corriendo.
+18. **(16:30) Primer torneo de 5 semillas en paralelo** (75 partidas, 25 por civ, unos 30 minutos; [resultado](pruebas/17-torneo-5semillas.txt)).
+
+    | Civ | Torneo anterior (2 semillas) | 5 semillas |
+    |---|---|---|
+    | Mapuches | 100 % | **76 %** |
+    | Ayutthaya | 40 % | 56 % |
+    | Palmares | 70 % | 56 % |
+    | Etiopía | 0 % | **44 %** |
+    | Guaraníes | 50 % | 44 % |
+    | Tawantinsuyu | 40 % | **24 %** |
+
+    - **Cuatro de seis dentro de la banda.** Los arreglos de la IA (amenaza en cualquier edificio, producción secundaria desde la edad II, mercado con reserva) devolvieron a Etiopía de 0 a 44 %. 60 de 75 partidas terminan por destrucción de hitos.
+    - **Quedan dos afuera:** mapuches arriba y Tawantinsuyu abajo. Con 25 partidas por civ el ruido es de unos ±10 puntos.
+    - **Cambio, el único de esta vuelta:** el weichafe vuelve a 11 de ataque. En la etapa 14 se le había subido a 12 cuando los mapuches eran débiles; ahora el lof lo entrena y les sobra. Verificado en el dato antes de commitear.

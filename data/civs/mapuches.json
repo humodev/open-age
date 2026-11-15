@@ -32,7 +32,7 @@
   "explorador": {
    "nombre": "Werken"
   },
-  "guerrero": {"nombre": "Weichafe", "velocidad": 1750, "ataque": 12, "costo": {"alimento": 55, "riqueza": 20}},
+  "guerrero": {"nombre": "Weichafe", "velocidad": 1750, "ataque": 11, "costo": {"alimento": 55, "riqueza": 20}},
   "hondero": {
    "nombre": "Arquero",
    "alcance": 5500
