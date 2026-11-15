@@ -176,22 +176,22 @@ a) Ponerlos y corregir cuando aparezca la fuente *(por defecto)* · b) Usar nomb
 Hoy un contador multiplica el daño por 2 o por 2,25. El jugador veterano midió que 10 guerreros le ganan a 10 honderos perdiendo una sola unidad, y que kitear o concentrar el fuego no cambia nada (`proceso/22-testers/01-veterano-aoe4.md`). En AoE4 los bonos son más chicos y la micro decide más.
 a) Bajar a ×1,5–×1,75 y rebalancear con torneo *(por defecto, recién después de cerrar el balance actual)* · b) Dejar los contadores fuertes: la composición decide, no la micro
 
-**Respuesta:**
+**Respuesta:** a) Sí, como AoE4: bonos planos por clase y armadura separada contra cuerpo a cuerpo y contra distancia (2026-11-15: "Me gustó todo lo sugerido para hacerlo más como AoE4, vayamos por ahí, siempre manteniendo identidad del sur global y las peculiaridades de cada civ"). Etapa 23.
 
 ### C-32 · (jugadores de prueba) Comida temprana con decisiones
 La edad I tiene 8 arbustos y nada más: no hay caza ni ganado, las granjas llegan a los 4 minutos (en AoE4, entre los 7 y los 10) y el explorador no tiene trabajo. Propuesta: animales que el explorador arrea (llamas, guanacos, cabras, búfalos según el pueblo y el terreno) y caza mayor que se defiende.
 a) Sí, con animales propios de cada región *(por defecto)* · b) No: la edad I corta es una decisión del juego
 
-**Respuesta:**
+**Respuesta:** a) Sí: animales por región para arrear y caza que pelea, como las ovejas, ciervos y jabalíes de AoE4 (2026-11-15). Etapa 23.
 
 ### C-33 · (jugadores de prueba) Tiempo de obra de los hitos
 Un hito se levanta en 41–53 s con tres constructores; en AoE4 son unos 190 s. Así no hay ventana de riesgo y no importa dónde se pone.
 a) Subir a 120–150 s y medir las edades de nuevo *(por defecto)* · b) Dejarlo rápido
 
-**Respuesta:**
+**Respuesta:** a) Sí: obra de los hitos como AoE4 (190/220/250 s) y auras que dependen del lugar (2026-11-15). Etapa 23.
 
 ### C-34 · (jugadores de prueba) ¿Qué va primero?
 La síntesis (`proceso/22-testers/00-sintesis.md`) ordena: 1) errores que arruinan partidas (sitios faltantes, fortines sin peleas, aliado que no defiende, IA fácil, tutorial trabado); 2) sensación de juego (contadores, comida temprana, hitos); 3) aprender a jugar; 4) identidad (rivales propios, voces, aspecto por edad); 5) partidas de varios.
 a) Ese orden *(por defecto)* · b) Otro (decir cuál)
 
-**Respuesta:**
+**Respuesta:** a) Ese orden, en dirección AoE4 sin perder la identidad de cada pueblo (2026-11-15). Plan en `proceso/23-como-aoe4`.

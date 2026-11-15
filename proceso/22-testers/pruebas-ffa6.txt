@@ -1,0 +1,2 @@
+ffa6 ["tawantinsuyu", "mapuches", "guaranies", "etiopia", "palmares", "ayutthaya"] equipos [0, 1, 2, 3, 4, 5]  45:00  bajas 2000  fuego amigo 0  tributos 0  | j0 tawa edad 3 en pie  | j1 mapu edad 2 derrotado  | j2 guar edad 4 en pie  | j3 etio edad 2 en pie  
+EQUIPOS: OK
