@@ -739,15 +739,35 @@ func _counter_order(p: Dictionary) -> Array[String]:
 
 # ---------------------------------------------------------------- Ejército
 
+## Amenaza: un enemigo cerca de la capital o de cualquier edificio propio. La capital
+## etíope es una corte que se muda: mirar solo la capital dejaba la base atacada sin ver
+## (y la IA seguía ahorrando para el hito sin entrenar, proceso/21, paso 16).
 func _threat(centro: SimEntity) -> SimEntity:
+	var eco: Dictionary = sim.data.reglas["ia_economia"]
+	var near_cap := int(eco["amenaza_capital"])
+	var near_b := int(eco["amenaza_edificio"])
+	# Celdas de 4 casillas cerca de los edificios propios: así cada enemigo se mira una sola
+	# vez (comparar todos contra todos costaba 7 ms por tick con 6 jugadores).
+	var cell := 4 * P
+	var r := near_b / cell + 1
+	var near_cells := {}
+	for b in sim.actives:
+		if b.alive and b.owner == player and b.is_building() and b.built and b != centro and b.def.get("fuente", "") == "":
+			var bx := b.x / cell
+			var by := b.y / cell
+			for dy in range(-r, r + 1):
+				for dx in range(-r, r + 1):
+					near_cells[(bx + dx) * 4096 + by + dy] = true
 	var best: SimEntity = null
-	var best_d := 22000
+	var best_d := 1 << 60
 	for e in sim.actives:
-		if e.alive and e.owner >= 0 and sim.enemies(player, e.owner) and (e.is_military() or e.fn == "explorador"):
-			var d := sim.dist_to(e, centro)
-			if d < best_d:
-				best = e
-				best_d = d
+		if not (e.alive and e.owner >= 0 and e.is_unit() and sim.enemies(player, e.owner) and (e.is_military() or e.fn == "explorador")):
+			continue
+		var d := sim.dist_to(e, centro)
+		var hit := d < near_cap or near_cells.has((e.x / cell) * 4096 + e.y / cell)
+		if hit and d < best_d:
+			best = e
+			best_d = d
 	return best
 
 

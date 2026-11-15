@@ -262,3 +262,13 @@
     - **Causa encontrada:** la producción separada. Antes la IA etíope sacaba su jinete noble de hasta 5 cuarteles. Ahora sale de un solo färäs bet, y los cuarteles que suma cuando le sobra solo hacen chewa y jabalineros.
     - **Arreglo en la IA:** el "edificio principal" que se multiplica cuando sobra es el de la unidad preferida de la civ (`ia_unidades`): el färäs bet etíope y la warak'a kancha inca. En las demás sigue siendo el cuartel.
     - **Duelo después del arreglo:** Etiopía contra Tawantinsuyu, 2–4 (antes 1–5). Determinismo OK. Torneo completo a continuación.
+16. **(13:00) Etiopía dejaba de entrenar mientras ahorraba para el hito.**
+    - **Torneo con el edificio de la unidad preferida** ([resultado](pruebas/15-torneo.txt)): mapuches 100 %, Palmares 70 %, guaraníes 50 %, Ayutthaya 40 %, Tawantinsuyu 40 %, Etiopía 0 %.
+    - **Una partida entera de Etiopía contra Tawantinsuyu, minuto a minuto:**
+      - a los 12:00 los ejércitos están parejos (16 contra 20);
+      - a los 15:00 Etiopía tiene 5 unidades contra 48, con 942 de alimento sin gastar.
+    - **Causa:** mientras ahorra para el hito, la IA solo entrena si atacan su capital. La capital etíope es una corte que se muda, así que no veía los ataques a su base.
+    - **Arreglo:** la amenaza cuenta también a los enemigos cerca de cualquier edificio propio (`ia_economia.amenaza_capital` 22 000 y `amenaza_edificio` 12 000).
+      - La primera versión comparaba cada enemigo con cada edificio y subió el promedio de 6 IA de 18 a 25 ms por tick.
+      - La segunda marca primero las celdas cercanas a los edificios propios y mira una vez a cada enemigo: 21 ms.
+    - **Duelo Etiopía contra Tawantinsuyu:** 5–1 (antes 1–5). Determinismo OK.
