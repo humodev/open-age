@@ -109,6 +109,12 @@ func _setup() -> void:
 		ee["hecho"] = false
 		triggers.append(ee)
 	sim._update_players()
+	# La tropa que la misión da al empezar no tranca el entrenamiento: el exceso sobre el tope
+	# queda como población extra (todas las misiones arrancaban con "hay más gente que lugar").
+	for p in sim.players:
+		if int(p["pop"]) > int(p["pop_cap"]):
+			p["pob_extra"] = int(p["pop"]) - int(p["pop_cap"])
+	sim._update_players()
 	for pid in sim.players.size():
 		sim._update_fog(pid)
 

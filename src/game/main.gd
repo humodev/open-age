@@ -897,8 +897,13 @@ func _autotest_ordenes(check: Callable) -> void:
 		if e.owner == local and e.is_building() and e.capital:
 			centro = e
 	sim.players[local]["res"]["alimento"] = int(sim.players[local]["res"]["alimento"]) + 500
+	sim.players[local]["pob_extra"] = 10 # que no la frene el tope (el tope se recalcula cada tick)
 	sim.push_command({"t": "train", "player": local, "building": centro.id, "type": "aldeano"})
-	await _frames(6)
+	# La orden entra en el próximo tick: esperar hasta un segundo (con carga, los cuadros no son ticks).
+	for i in 60:
+		await _frames(1)
+		if not centro.queue.is_empty():
+			break
 	var items: Array = hud.cola_global.items()
 	check.call("la cola global muestra lo que se produce (%d)" % items.size(), items.size() >= 1)
 	ctrl.select_ids([] as Array[int])

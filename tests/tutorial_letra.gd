@@ -170,11 +170,12 @@ func _init() -> void:
 				if cu.built and cu.queue.is_empty():
 					s.push_command({"t": "train", "player": 0, "building": cu.id, "type": "guerrero"})
 		# "Elegí: economía (Z)": el hito de economía cuando alcanza.
-		if objs.get("o10") == "activo" and not step.has("hito") and v.size() >= 4:
+		# Con los que queden (en modo indefenso, con el combate de la etapa 23, sobreviven 2).
+		if objs.get("o10") == "activo" and not step.has("hito") and not v.is_empty():
 			var hito: String = s.dp(0).hitos[0][0]
 			if s.can_afford(0, s.dp(0).cost_of(hito, 1)):
 				var p := place(hito, c, 6)
-				s.push_command({"t": "build", "player": 0, "ids": ids(v.slice(0, 4)), "type": hito, "tx": p.x, "ty": p.y})
+				s.push_command({"t": "build", "player": 0, "ids": ids(v.slice(0, mini(4, v.size()))), "type": hito, "tx": p.x, "ty": p.y})
 				step["hito"] = true
 				print(t(), " construyo el hito ", hito, " con ", r)
 		if s.tick % 1800 == 0:

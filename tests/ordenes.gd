@@ -165,18 +165,25 @@ func _flare_and_ask() -> void:
 	s.push_command({"t": "pedir", "player": 0, "a": 2, "recurso": "madera"})
 	var wood := int(s.players[0]["res"]["madera"])
 	var got := 0
-	for t in 400:
+	var went := {}
+	var reached := {}
+	# 3 minutos: las tropas tienen que llegar, no quedarse a mitad de camino (ronda 2, equipos).
+	for t in 1800:
 		s.step()
 		for ev in s.events:
 			if ev["t"] == "ia_dice":
 				said["%d:%s" % [ev["player"], ev["clave"]]] = true
 			if ev["t"] == "tributo" and int(ev["a"]) == 0 and ev["recurso"] == "madera":
 				got += int(ev["n"])
-		if not sent:
-			for e in s.actives:
-				if e.owner == 2 and e.is_military() and e.order == SimEntity.Order.ATTACK_MOVE and e.amove_x > 0 and Sim.dist(e.amove_x, e.amove_y, fx, fy) < 4000:
+		for e in s.actives:
+			if e.alive and e.owner == 2 and e.is_military():
+				if e.order == SimEntity.Order.ATTACK_MOVE and e.amove_x > 0 and Sim.dist(e.amove_x, e.amove_y, fx, fy) < 4000:
 					sent = true
+					went[e.id] = true
+				if went.has(e.id) and Sim.dist(e.x, e.y, fx, fy) < 8000:
+					reached[e.id] = true
 	_check("bengala: el aliado manda tropa al punto", sent)
+	_check("bengala: llegan %d de %d" % [reached.size(), went.size()], went.size() > 0 and reached.size() * 4 >= went.size() * 3)
 	_check("bengala: el aliado lo dice en el chat (%s)" % str(said.keys()), said.has("2:voy_atacar") or said.has("2:voy_defender"))
 	_check("pedido: el aliado manda madera (%d, banco %d → %d)" % [got, wood, int(s.players[0]["res"]["madera"])], got > 0 and said.has("2:mando"))
 	_check("las bengalas vencen", s.flares.is_empty())

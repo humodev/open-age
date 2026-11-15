@@ -1,0 +1,76 @@
+# Viajes al depósito ANTES del arreglo (tools/viajes.gd, semilla 901, 30 min o hasta el fin)
+# por tramo de 5 min: media en casillas (viajes, máxima acumulada)
+== v-ayutthaya,guaranies-llano
+ 5 min  ayutthaya      alim 0 (152, máx 3)  made 6 (37, máx 8)  riqu 4 (17, máx 7)  pied -  depósitos { "centro": 1, "almacen_mina": 1 }
+ 5 min  guaranies      alim 2 (109, máx 7)  made 2 (78, máx 7)  riqu 6 (11, máx 13)  pied 6 (1, máx 6)  depósitos { "centro": 1, "almacen_madera": 3, "almacen_mina": 1 }
+10 min  ayutthaya      alim 1 (133, máx 9)  made 2 (142, máx 8)  riqu 1 (57, máx 7)  pied 5 (8, máx 6)  depósitos { "centro": 1, "almacen_mina": 1 }
+10 min  guaranies      alim 1 (203, máx 12)  made 1 (163, máx 7)  riqu 0 (89, máx 13)  pied 5 (16, máx 6)  depósitos { "centro": 1, "almacen_madera": 4, "almacen_mina": 2 }
+15 min  ayutthaya      alim 3 (174, máx 10)  made 1 (179, máx 8)  riqu 2 (60, máx 13)  pied 6 (27, máx 9)  depósitos { "centro": 1, "almacen_mina": 2 }
+15 min  guaranies      alim 1 (257, máx 12)  made 1 (229, máx 7)  riqu 1 (122, máx 13)  pied 2 (55, máx 6)  depósitos { "centro": 1, "almacen_madera": 4, "almacen_mina": 3 }
+20 min  ayutthaya      alim 4 (219, máx 15)  made 2 (204, máx 9)  riqu 1 (51, máx 13)  pied 6 (25, máx 9)  depósitos { "centro": 1, "almacen_mina": 2 }
+20 min  guaranies      alim 3 (300, máx 12)  made 2 (205, máx 7)  riqu 1 (92, máx 13)  pied 1 (7, máx 6)  depósitos { "centro": 1, "almacen_madera": 4, "almacen_mina": 3 }
+25 min  ayutthaya      alim 4 (319, máx 16)  made 3 (209, máx 9)  riqu -  pied -  depósitos { "centro": 1, "almacen_mina": 2 }
+25 min  guaranies      alim 3 (288, máx 12)  made 6 (160, máx 13)  riqu 1 (71, máx 13)  pied -  depósitos { "centro": 1, "almacen_madera": 4, "almacen_mina": 3 }
+30 min  ayutthaya      alim 5 (305, máx 33)  made 3 (204, máx 9)  riqu -  pied -  depósitos { "centro": 1, "almacen_mina": 2 }
+30 min  guaranies      alim 4 (286, máx 12)  made 11 (73, máx 14)  riqu 4 (61, máx 13)  pied -  depósitos { "centro": 1, "almacen_madera": 4, "almacen_mina": 4 }
+== v-ayutthaya,guaranies-selva
+ 5 min  ayutthaya      alim 0 (139, máx 3)  made 1 (57, máx 7)  riqu 6 (11, máx 7)  pied -  depósitos { "centro": 1, "almacen_mina": 1 }
+ 5 min  guaranies      alim 1 (106, máx 4)  made 1 (96, máx 6)  riqu 5 (9, máx 5)  pied -  depósitos { "centro": 1, "almacen_madera": 1 }
+10 min  ayutthaya      alim 1 (110, máx 4)  made 3 (105, máx 9)  riqu 1 (58, máx 7)  pied 6 (18, máx 7)  depósitos { "centro": 1, "almacen_mina": 1 }
+10 min  guaranies      alim 1 (212, máx 5)  made 1 (152, máx 8)  riqu 0 (54, máx 7)  pied 4 (12, máx 6)  depósitos { "centro": 1, "almacen_madera": 3, "almacen_mina": 2 }
+15 min  ayutthaya      alim 2 (185, máx 7)  made 6 (134, máx 10)  riqu 2 (17, máx 7)  pied 6 (23, máx 7)  depósitos { "centro": 1, "almacen_mina": 2 }
+15 min  guaranies      alim 1 (151, máx 5)  made 2 (196, máx 8)  riqu 0 (28, máx 7)  pied 1 (29, máx 6)  depósitos { "centro": 1, "almacen_madera": 4, "almacen_mina": 3 }
+20 min  ayutthaya      alim 2 (257, máx 9)  made 7 (127, máx 11)  riqu 2 (75, máx 7)  pied 6 (20, máx 8)  depósitos { "centro": 1, "almacen_mina": 2 }
+20 min  guaranies      alim 2 (190, máx 16)  made 2 (234, máx 10)  riqu 0 (48, máx 7)  pied 0 (19, máx 6)  depósitos { "centro": 1, "almacen_madera": 4, "almacen_mina": 3 }
+25 min  ayutthaya      alim 2 (194, máx 9)  made 1 (98, máx 11)  riqu 2 (20, máx 7)  pied -  depósitos { "centro": 1, "almacen_mina": 2 }
+25 min  guaranies      alim 4 (265, máx 16)  made 3 (185, máx 10)  riqu 2 (58, máx 7)  pied -  depósitos { "centro": 1, "almacen_madera": 4, "almacen_mina": 4 }
+30 min  ayutthaya      alim 2 (183, máx 9)  made 2 (85, máx 11)  riqu -  pied -  depósitos { "centro": 1, "almacen_mina": 1 }
+30 min  guaranies      alim 5 (253, máx 16)  made 3 (178, máx 10)  riqu 1 (70, máx 7)  pied -  depósitos { "centro": 1, "almacen_madera": 4, "almacen_mina": 4 }
+== v-etiopia,palmares-llano
+ 5 min  etiopia        alim 0 (179, máx 3)  made 0 (75, máx 6)  riqu 7 (13, máx 8)  pied -  depósitos { "centro": 1, "almacen_madera": 1 }
+ 5 min  palmares       alim 1 (101, máx 9)  made 1 (71, máx 6)  riqu 7 (10, máx 7)  pied -  depósitos { "centro": 1, "mocambo": 1 }
+10 min  etiopia        alim 2 (154, máx 17)  made 1 (145, máx 6)  riqu 0 (61, máx 8)  pied 2 (14, máx 5)  depósitos { "centro": 1, "almacen_madera": 2, "almacen_mina": 2, "almacen_alimento": 1 }
+10 min  palmares       alim 4 (71, máx 10)  made 3 (65, máx 6)  riqu 6 (9, máx 7)  pied 6 (2, máx 6)  depósitos { "centro": 1, "mocambo": 1 }
+terminó a los 10:18
+== v-etiopia,palmares-selva
+ 5 min  etiopia        alim 0 (154, máx 12)  made 1 (63, máx 7)  riqu 7 (9, máx 7)  pied -  depósitos { "centro": 1, "almacen_madera": 1 }
+ 5 min  palmares       alim 1 (106, máx 4)  made 0 (76, máx 6)  riqu 5 (11, máx 7)  pied -  depósitos { "centro": 1, "mocambo": 1 }
+10 min  etiopia        alim 2 (179, máx 12)  made 2 (139, máx 9)  riqu 1 (56, máx 8)  pied 1 (12, máx 2)  depósitos { "centro": 1, "almacen_madera": 3, "almacen_mina": 1, "almacen_alimento": 2 }
+10 min  palmares       alim 1 (97, máx 12)  made 3 (103, máx 9)  riqu 6 (13, máx 7)  pied 6 (11, máx 6)  depósitos { "centro": 1, "mocambo": 1, "almacen_alimento": 1 }
+15 min  etiopia        alim 6 (134, máx 26)  made 1 (153, máx 13)  riqu -  pied 1 (35, máx 4)  depósitos { "almacen_madera": 4, "almacen_mina": 2, "almacen_alimento": 2, "centro": 1 }
+15 min  palmares       alim 1 (155, máx 12)  made 3 (168, máx 9)  riqu 0 (63, máx 7)  pied 6 (21, máx 6)  depósitos { "centro": 1, "mocambo": 2, "almacen_alimento": 1, "almacen_mina": 1 }
+20 min  etiopia        alim 6 (131, máx 26)  made 3 (134, máx 13)  riqu 2 (13, máx 8)  pied 1 (13, máx 4)  depósitos { "almacen_madera": 4, "almacen_mina": 2, "centro": 1, "almacen_alimento": 2 }
+20 min  palmares       alim 1 (347, máx 12)  made 3 (263, máx 10)  riqu 0 (2, máx 7)  pied 1 (47, máx 6)  depósitos { "centro": 1, "mocambo": 3, "almacen_alimento": 1, "almacen_mina": 4 }
+terminó a los 22:23
+== v-guaranies,etiopia-llano
+ 5 min  guaranies      alim 2 (86, máx 35)  made 1 (82, máx 6)  riqu 3 (21, máx 7)  pied -  depósitos { "centro": 1, "almacen_madera": 3, "almacen_mina": 2 }
+ 5 min  etiopia        alim 2 (129, máx 10)  made 1 (69, máx 7)  riqu 7 (15, máx 7)  pied -  depósitos { "centro": 1, "almacen_madera": 1 }
+10 min  guaranies      alim 1 (280, máx 35)  made 2 (167, máx 6)  riqu 1 (65, máx 7)  pied -  depósitos { "centro": 1, "almacen_madera": 4, "almacen_mina": 2 }
+10 min  etiopia        alim 2 (230, máx 17)  made 2 (114, máx 11)  riqu 0 (63, máx 7)  pied -  depósitos { "centro": 1, "almacen_madera": 2, "almacen_alimento": 4, "almacen_mina": 1 }
+15 min  guaranies      alim 2 (372, máx 35)  made 3 (146, máx 7)  riqu 0 (117, máx 7)  pied -  depósitos { "centro": 1, "almacen_madera": 4, "almacen_mina": 3 }
+15 min  etiopia        alim 7 (132, máx 35)  made 1 (159, máx 12)  riqu 0 (84, máx 7)  pied -  depósitos { "almacen_madera": 3, "almacen_alimento": 4, "almacen_mina": 2, "centro": 1 }
+20 min  guaranies      alim 4 (268, máx 35)  made 4 (146, máx 8)  riqu 0 (192, máx 7)  pied -  depósitos { "centro": 1, "almacen_madera": 4, "almacen_mina": 4 }
+20 min  etiopia        alim 1 (37, máx 35)  made 2 (47, máx 12)  riqu 0 (2, máx 7)  pied -  depósitos { "almacen_madera": 4, "almacen_alimento": 4, "almacen_mina": 1, "centro": 1 }
+terminó a los 21:02
+== v-guaranies,etiopia-selva
+ 5 min  guaranies      alim 1 (112, máx 14)  made 1 (82, máx 6)  riqu 5 (13, máx 9)  pied -  depósitos { "centro": 1, "almacen_madera": 2 }
+ 5 min  etiopia        alim 1 (131, máx 4)  made 1 (71, máx 6)  riqu 7 (12, máx 7)  pied -  depósitos { "centro": 1, "almacen_madera": 1 }
+10 min  guaranies      alim 1 (224, máx 14)  made 2 (169, máx 8)  riqu 1 (83, máx 9)  pied 1 (30, máx 2)  depósitos { "centro": 1, "almacen_madera": 4, "almacen_mina": 2 }
+10 min  etiopia        alim 1 (141, máx 6)  made 2 (187, máx 8)  riqu 0 (67, máx 7)  pied 6 (17, máx 6)  depósitos { "centro": 1, "almacen_madera": 3, "almacen_mina": 1, "almacen_alimento": 1 }
+terminó a los 14:33
+== v-palmares,ayutthaya-llano
+ 5 min  palmares       alim 0 (108, máx 2)  made 0 (80, máx 6)  riqu 7 (10, máx 7)  pied -  depósitos { "centro": 1, "mocambo": 1 }
+ 5 min  ayutthaya      alim 1 (99, máx 9)  made 3 (31, máx 7)  riqu 7 (7, máx 7)  pied -  depósitos { "centro": 1 }
+10 min  palmares       alim 1 (149, máx 4)  made 1 (88, máx 6)  riqu 5 (14, máx 8)  pied 4 (6, máx 6)  depósitos { "centro": 1, "mocambo": 2 }
+10 min  ayutthaya      alim 4 (143, máx 12)  made 0 (118, máx 7)  riqu 1 (30, máx 7)  pied -  depósitos { "centro": 1, "almacen_mina": 1 }
+terminó a los 12:26
+== v-palmares,ayutthaya-selva
+ 5 min  palmares       alim 0 (108, máx 2)  made 0 (58, máx 2)  riqu 7 (11, máx 7)  pied -  depósitos { "centro": 1, "mocambo": 1 }
+ 5 min  ayutthaya      alim 1 (112, máx 4)  made 1 (50, máx 7)  riqu 7 (11, máx 7)  pied -  depósitos { "centro": 1 }
+10 min  palmares       alim 0 (129, máx 2)  made 2 (84, máx 7)  riqu 4 (17, máx 7)  pied 3 (4, máx 6)  depósitos { "centro": 1, "mocambo": 2, "almacen_mina": 1 }
+10 min  ayutthaya      alim 1 (154, máx 5)  made 3 (97, máx 9)  riqu 0 (42, máx 7)  pied 5 (7, máx 6)  depósitos { "centro": 1, "almacen_mina": 1 }
+15 min  palmares       alim 1 (84, máx 5)  made 5 (137, máx 10)  riqu 0 (29, máx 7)  pied 1 (14, máx 6)  depósitos { "centro": 1, "mocambo": 2, "almacen_mina": 1 }
+15 min  ayutthaya      alim 1 (214, máx 12)  made 6 (103, máx 10)  riqu 2 (16, máx 7)  pied 5 (26, máx 6)  depósitos { "centro": 1, "almacen_mina": 2 }
+20 min  palmares       alim 2 (227, máx 7)  made 4 (160, máx 11)  riqu 0 (14, máx 7)  pied 1 (38, máx 6)  depósitos { "centro": 1, "mocambo": 3, "almacen_mina": 1 }
+20 min  ayutthaya      alim 2 (220, máx 12)  made 7 (106, máx 12)  riqu 3 (64, máx 7)  pied 5 (28, máx 7)  depósitos { "centro": 1, "almacen_mina": 2 }
+terminó a los 21:03

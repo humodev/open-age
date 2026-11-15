@@ -49,6 +49,7 @@ func _init() -> void:
 	var stuck := {} # tipo de unidad:orden -> n
 	var slow := [] # ms de los ticks lentos
 	var errors := {} # lugar · mensaje -> veces (SCRIPT ERROR del juego)
+	var trips := {} # civ -> recurso -> [viajes, suma de casillas, máxima]
 	var rows: Array[String] = []
 	for path in files:
 		var lines := FileAccess.get_file_as_string(path).split("\n", false)
@@ -59,6 +60,15 @@ func _init() -> void:
 		for i in range(1, lines.size()):
 			evs.append(JSON.parse_string(lines[i]))
 		var civs: Array = head.get("civs", [])
+		var hv: Dictionary = head.get("viajes", {})
+		for k: String in hv:
+			var parts := k.split(":")
+			var tc: String = civs[int(parts[0])] if int(parts[0]) < civs.size() else "-"
+			var tv: Array = hv[k]
+			var acc: Array = (trips.get_or_add(tc, {}) as Dictionary).get_or_add(parts[1], [0, 0, 0])
+			acc[0] += int(tv[0])
+			acc[1] += int(tv[1])
+			acc[2] = maxi(acc[2], int(tv[2]))
 		var cells := {}
 		var local := {}
 		for ev in evs:
@@ -117,6 +127,20 @@ func _init() -> void:
 		var bc: Dictionary = by_civ[c]
 		md.append("| %s | %d | %d | %d | %d | %d | %d |" % [c, bc.get("trabada", 0), bc.get("sin_camino", 0), bc.get("ocioso", 0), bc.get("rechazo", 0), bc.get("ia_sin_lugar", 0), bc.get("ia_sin_ruta", 0)])
 	md.append("")
+	if not trips.is_empty():
+		md.append("## Viajes al depósito")
+		md.append("")
+		md.append("Casillas del recurso al depósito más cercano cuando el aldeano se llena (media y máxima). Viajes largos: faltan almacenes.")
+		md.append("")
+		md.append("| Civ | Alimento | Madera | Riqueza | Piedra |")
+		md.append("|---|---|---|---|---|")
+		for c in _sorted_keys(trips):
+			var cells_t := []
+			for kind in ["alimento", "madera", "riqueza", "piedra"]:
+				var tv: Array = trips[c].get(kind, [0, 0, 0])
+				cells_t.append("-" if tv[0] == 0 else "%d (máx %d)" % [tv[1] / tv[0], tv[2]])
+			md.append("| %s | %s |" % [c, " | ".join(cells_t)])
+		md.append("")
 	_top(md, "Órdenes rechazadas más frecuentes", msgs)
 	_top(md, "Edificios que la IA no pudo ubicar", no_site)
 	_top(md, "Unidades que se rinden (tipo y orden)", stuck)

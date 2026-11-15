@@ -10,6 +10,7 @@ func _init() -> void:
 	_tecnologias_con_lugar()
 	_aldeanos_en_bloque()
 	_animales()
+	_carnear_en_cadena()
 	print("JUGABILIDAD: ", "OK" if fails == 0 else "%d fallas" % fails)
 	quit()
 
@@ -180,3 +181,38 @@ func _animales() -> void:
 	for i in 600:
 		s.step()
 	_check(not beast.alive and int(s.players[0]["res"]["alimento"]) > food0, "el aldeano carnea y junta: alimento de %d a %d" % [food0, int(s.players[0]["res"]["alimento"])])
+
+
+## Ronda 2 de los jugadores: carnear en cadena (al terminarse la carne, el animal siguiente
+## y no los arbustos) y el aldeano mandado a un animal suelto lo carnea al llegar.
+func _carnear_en_cadena() -> void:
+	var s := Sim.new(5, 2, null, {"civs": ["tawantinsuyu", "guaranies"], "terreno": "llano"})
+	var llama: SimEntity = null
+	var ids := []
+	for e in s.entities:
+		if e.alive and e.owner == 0 and e.def.get("animal", false) and llama == null:
+			llama = e
+		if e.alive and e.owner == 0 and e.type == "aldeano" and ids.size() < 4:
+			ids.append(e.id)
+	s.push_command({"t": "target", "player": 0, "ids": ids, "target": llama.id})
+	for i in 1500:
+		s.step()
+	var left := 0
+	for e in s.entities:
+		if e.alive and e.owner == 0 and e.def.get("animal", false):
+			left += 1
+	_check(left == 0, "carnear en cadena: 4 aldeanos terminan las 5 llamas sin volver a mandarlos (quedan %d)" % left)
+	var s2 := Sim.new(5, 2, null, {"civs": ["tawantinsuyu", "guaranies"], "terreno": "llano"})
+	var wild: SimEntity = null
+	var v: SimEntity = null
+	for e in s2.entities:
+		if e.alive and e.owner == 0 and e.type == "aldeano" and v == null:
+			v = e
+	for e in s2.entities:
+		if e.alive and e.is_resource() and e.def.get("reclamable", false) and (wild == null or Sim.dist(e.x, e.y, v.x, v.y) < Sim.dist(wild.x, wild.y, v.x, v.y)):
+			wild = e
+	s2.push_command({"t": "target", "player": 0, "ids": [v.id], "target": wild.id})
+	for i in 300:
+		s2.step()
+	var tg: SimEntity = s2.by_id.get(v.target)
+	_check(v.order in [SimEntity.Order.GATHER, SimEntity.Order.RETURN] and v.carry_res == "alimento" or (tg != null and tg.type == "carne"), "aldeano a un animal suelto: lo reclama y lo carnea (orden %d)" % v.order)

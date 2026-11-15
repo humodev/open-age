@@ -1,0 +1,5 @@
+ticks=3000 hash=2389445080
+J0 edad=1 pob=24/40 res={ "alimento": 980, "madera": 160, "piedra": 100, "riqueza": 260 } stats={ "recolectado": 2620, "entrenadas": 17, "bajas": 0, "muertes": 0, "ordenes": { "target": 24, "build:casa": 3, "train:aldeano": 16, "move": 7, "build:deposito": 2, "build:cuartel": 3, "rally": 1, "train:guerrero": 2 }, "origen": { "casa": { "alimento": 1680, "madera": 710, "riqueza": 210 }, "recoleccion": { "alimento": 20 } } }
+J1 edad=2 pob=25/40 res={ "alimento": 50, "madera": 95, "piedra": 100, "riqueza": 60 } stats={ "recolectado": 2230, "entrenadas": 18, "bajas": 0, "muertes": 0, "ordenes": { "target": 29, "build:casa": 3, "train:aldeano": 15, "build:deposito": 3, "build:cuartel": 1, "rally": 1, "train:hondero": 6, "build:hito_economia": 1 }, "origen": { "casa": { "alimento": 1210, "madera": 680, "riqueza": 260 }, "recoleccion": { "madera": 10, "alimento": 70 } } }
+game_over=false winner=-1 entidades=2456
+DETERMINISMO: OK

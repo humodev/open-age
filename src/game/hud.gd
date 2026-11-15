@@ -308,8 +308,15 @@ func _ia_dice(ev: Dictionary) -> void:
 	if key in ["mando", "no_sobra", "sin_tropa", "voy_atacar", "voy_defender"] and a != local:
 		return
 	var plantilla: String = (ctrl.atajos.cfg().get("frases_ia", {}) as Dictionary).get(key, key)
-	var txt := plantilla.replace("{a}", Palette.team_name(a) if a >= 0 else "").replace("{n}", str(ev.get("n", ""))).replace("{recurso}", Palette.RES_NAMES.get(str(ev.get("recurso", "")), str(ev.get("recurso", ""))).to_lower())
-	notify("%s: «%s»" % [Palette.team_name(pid), txt], -1.0, "ataque" if key == "atacan" else "info")
+	# Lo que llega de un tributo, después de la comisión (reglas.equipos.tributo_comision_pct).
+	var n := int(ev.get("n", 0))
+	var llegan := n * (100 - int(sim.data.reglas["equipos"].get("tributo_comision_pct", 0))) / 100
+	var txt := plantilla.replace("{a}", Palette.team_name(a) if a >= 0 else "").replace("{n}", str(ev.get("n", ""))).replace("{llegan}", str(llegan)).replace("{recurso}", Palette.RES_NAMES.get(str(ev.get("recurso", "")), str(ev.get("recurso", ""))).to_lower())
+	var line := "%s: «%s»" % [Palette.team_name(pid), txt]
+	notify(line, -1.0, "ataque" if key == "atacan" else "info")
+	# También en el registro (F5): la frase se va con el aviso y conviene poder releerla.
+	if paneles != null and paneles.datos != null:
+		paneles.datos.add_log(line, Palette.team(pid), -1, -1, "ia")
 # --- fin órdenes ---
 
 

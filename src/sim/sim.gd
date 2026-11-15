@@ -1004,7 +1004,7 @@ func _update_players() -> void:
 		elif e.is_building() and e.built:
 			players[e.owner]["pop_cap"] += e.def.get("pob", 0)
 	for p in players:
-		p["pop_cap"] = mini(p["pop_cap"], data.reglas["pob_max"])
+		p["pop_cap"] = mini(p["pop_cap"] + int(p.get("pob_extra", 0)), data.reglas["pob_max"])
 
 
 func _rebuild_hashes() -> void:
@@ -1192,6 +1192,16 @@ func _do_gather(e: SimEntity) -> void:
 	var cap: int = int(e.def.get("carga", 10)) + mod(e.owner, "carga")
 	var t: SimEntity = by_id.get(e.target)
 	if not _valid_source(e, t):
+		# Como las ovejas de AoE4: si hay un animal propio cerca, se carnea antes que buscar
+		# otra cosa. Cubre la carne que se terminó (carnear en cadena) y el animal suelto que
+		# el mismo aldeano reclamó al llegar (jugadores de prueba, ronda 2).
+		if e.gather_kind == "alimento":
+			var beast := _own_animal_near(e, int(data.reglas["animales"]["cadena_radio"]))
+			if beast != null:
+				var meat := _slaughter(beast)
+				if meat != null and meat.alive:
+					_order_gather(e, meat)
+					return
 		t = find_resource(e.owner, e.gather_kind, e.x, e.y, data.reglas["radio_rebusca"], -1, e.id)
 		if t == null:
 			if e.carry > 0:
@@ -1205,6 +1215,10 @@ func _do_gather(e: SimEntity) -> void:
 		e.path_target = -1
 	var kind := resource_kind_of(t)
 	if e.carry >= cap or (e.carry > 0 and e.carry_res != kind):
+		if tele.on and e.carry >= cap:
+			var drop := nearest_dropoff(e.owner, e.carry_res, e.x, e.y)
+			if drop != null:
+				tele.trip(e.owner, e.carry_res, dist_to(e, drop) / P)
 		e.order = O.RETURN
 		e.aux = -1
 		e.path_target = -1
@@ -2220,6 +2234,18 @@ func _leave_meat(a: SimEntity) -> SimEntity:
 	return m
 
 
+func _own_animal_near(e: SimEntity, r: int) -> SimEntity:
+	var best: SimEntity = null
+	var bd := r + 1
+	for a in actives:
+		if a.alive and a.owner == e.owner and a.def.get("animal", false):
+			var d := dist(a.x, a.y, e.x, e.y)
+			if d < bd or (d == bd and best != null and a.id < best.id):
+				bd = d
+				best = a
+	return best
+
+
 ## Carnear: el aldeano convierte su animal en carne y se pone a juntarla.
 func _slaughter(a: SimEntity) -> SimEntity:
 	var m := _leave_meat(a)
@@ -2619,7 +2645,9 @@ func _generate_map() -> void:
 	# Animales (como AoE4, proceso/23, C-32): el kit de la base 0 y su espejo para la 1,
 	# cada uno con las cantidades de su civ.
 	if players.size() >= 2 and not _opts.get("sin_animales", false):
-		var spots := [c0 + _scale_dir(picks[5], 5), c0 + _scale_dir(picks[6], 11), c0 + _scale_dir(picks[7], 19), c0 + _scale_dir(picks[1], 22)]
+		# Sueltos a unas 15 casillas: más cerca los reclamaban los aldeanos al pasar y el explorador
+		# no tenía trabajo (jugadores de prueba, ronda 2).
+		var spots := [c0 + _scale_dir(picks[5], 5), c0 + _scale_dir(picks[6], 15), c0 + _scale_dir(picks[7], 19), c0 + _scale_dir(picks[1], 22)]
 		for pid in 2:
 			var sp: Array = spots if pid == 0 else spots.map(func(v: Vector2i) -> Vector2i: return _mirror(v, 1, 1))
 			_animal_kit(pid, sp)
@@ -2734,7 +2762,7 @@ func _generate_map_n() -> void:
 		var c := bases[pid] + Vector2i(2, 2)
 		_cluster_at("arbusto", c + _local(pid, 7, -2), int(data.reglas["animales"]["arbustos_base"]))
 		if not _opts.get("sin_animales", false):
-			_animal_kit(pid, [c + _local(pid, 4, 4), c + _local(pid, 10, 4), c + _local(pid, 18, -6), c + _local(pid, 20, 8)])
+			_animal_kit(pid, [c + _local(pid, 4, 4), c + _local(pid, 14, 6), c + _local(pid, 18, -6), c + _local(pid, 20, 8)])
 		_blob_fixed(c + _local(pid, -3, 13), 4)
 		_blob_fixed(c + _local(pid, -3, -13), 3)
 		_res_at("roca", c + _local(pid, 1, -10), -1, -1)

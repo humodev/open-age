@@ -411,7 +411,7 @@ func _elephants(p: Dictionary, vill: Array[SimEntity], centro: SimEntity) -> voi
 		var tx := sx / n
 		var ty := sy / n
 		var el := eles[i]
-		if Sim.dist(el.x, el.y, tx, ty) > 6000 and el.order == O.IDLE:
+		if Sim.dist(el.x, el.y, tx, ty) > int(sim.data.reglas["ia_economia"]["elefante_cerca"]) and el.order == O.IDLE:
 			sim.push_command({"t": "move", "player": player, "ids": [el.id], "x": tx, "y": ty})
 
 
@@ -502,18 +502,36 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 	# Almacenes junto a los recursos lejanos: el de ese recurso (leñera, granero, barrero…),
 	# según los que tenga la civ (proceso/21). Sin almacén para ese recurso, nada: lo cubren
 	# sus edificios propios (lof, mocambo, elefante).
+	# Primero el recurso con más aldeanos lejos (proceso/24, paso 1b: la madera quedaba sin
+	# almacén cuando el alimento lejano iba primero y no se podía construir). Cuentan solo
+	# los almacenes que todavía tienen ese recurso cerca: el bosque se agota y se corre.
+	var eco: Dictionary = sim.data.reglas["ia_economia"]
+	var order := []
 	for kind in ["alimento", "madera", "riqueza", "piedra"]:
+		var far_n := _far_gatherers(vill, kind)
+		if far_n.size() >= 3:
+			order.append([far_n.size(), kind, far_n])
+	order.sort_custom(func(a, b): return a[0] > b[0] or a[0] == b[0] and a[1] < b[1])
+	for o in order:
+		var kind: String = o[1]
 		var dtype := _dropsite_for(kind)
-		# Un lof o un mocambo como almacén también es un edificio que entrena tropa: tope más bajo.
-		var cap := 4 if not sim.dp(player).edificios.get(dtype, {}).has("produce") else int(sim.data.reglas["ia_economia"]["almacen_alternativo_cantidad"])
-		if dtype == "" or unbuilt.has(dtype) or by_type.get(dtype, []).size() >= cap:
+		if dtype == "" or unbuilt.has(dtype):
 			continue
-		var far := _far_gather_point(vill, kind)
-		if far != null:
-			var site := _site_near(dtype, Vector2i(far.x / P, far.y / P), 1)
-			if site.x >= 0 and sim.can_afford(player, sim.dp(player).cost_of(dtype, p["age"])):
-				sim.push_command({"t": "build", "player": player, "ids": [_nearest_villager(vill, far.x, far.y).id], "type": dtype, "tx": site.x, "ty": site.y})
-			break
+		# Un lof o un mocambo como almacén también es un edificio que entrena tropa: tope más bajo.
+		var alt: bool = sim.dp(player).edificios.get(dtype, {}).has("produce")
+		var all_n: int = (by_type.get(dtype, []) as Array).size()
+		if alt and all_n >= int(eco["almacen_alternativo_cantidad"]) or all_n >= int(eco["almacen_max"]):
+			continue
+		if not alt and _useful_stores(by_type.get(dtype, []), kind) >= int(eco["almacen_utiles"]):
+			continue
+		var far: SimEntity = o[2][o[2].size() / 2]
+		var site := _site_near(dtype, Vector2i(far.x / P, far.y / P), 1)
+		if site.x < 0:
+			continue
+		# Si no alcanza, se espera (no se gasta en otro almacén menos urgente).
+		if sim.can_afford(player, sim.dp(player).cost_of(dtype, p["age"])):
+			sim.push_command({"t": "build", "player": player, "ids": [_nearest_villager(vill, far.x, far.y).id], "type": dtype, "tx": site.x, "ty": site.y})
+		break
 	# Edificios propios de la civilización (corral, gult, mocambo, kraal...), uno por paso.
 	var wanted := {}
 	for t: String in sim.dp(player).civ.get("ia_edificios", []):
@@ -615,19 +633,29 @@ func _dropsite_for(kind: String) -> String:
 	return ""
 
 
-func _far_gather_point(vill: Array[SimEntity], kind: String) -> SimEntity:
-	var n := 0
-	var sample: SimEntity = null
+## Recursos que trabajan los aldeanos de `kind` lejos de todo depósito.
+func _far_gatherers(vill: Array[SimEntity], kind: String) -> Array:
+	var far := []
+	var lim := int(sim.data.reglas["ia_economia"]["almacen_lejos"])
 	for v in vill:
 		if v.order == O.GATHER and v.gather_kind == kind:
 			var t: SimEntity = sim.by_id.get(v.target)
 			if t == null or t.is_building():
 				continue
 			var d := sim.nearest_dropoff(player, kind, t.x, t.y)
-			if d == null or sim.dist_to(t, d) > int(sim.data.reglas["ia_economia"]["almacen_lejos"]):
-				n += 1
-				sample = t
-	return sample if n >= 3 else null
+			if d == null or sim.dist_to(t, d) > lim:
+				far.append(t)
+	return far
+
+
+## Almacenes con recursos de `kind` todavía cerca (los de un bosque agotado no cuentan).
+func _useful_stores(stores: Array, kind: String) -> int:
+	var n := 0
+	var lim := int(sim.data.reglas["ia_economia"]["almacen_lejos"])
+	for b: SimEntity in stores:
+		if b.built and sim.find_resource(player, kind, b.x, b.y, lim, -1, -1) != null:
+			n += 1
+	return n
 
 
 func _try_build(type: String, p: Dictionary, vill: Array[SimEntity], centro: SimEntity, workers: int) -> void:
@@ -813,17 +841,28 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 	if army.is_empty():
 		return
 	var threat := _threat(centro)
+	var ally := _ally_threat(centro)
 	if threat != null:
 		_say("atacan", {})
-	if threat == null:
-		threat = _ally_threat(centro)
-	if threat != null:
+	if threat != null or ally != null:
 		var ids := []
+		var help := []
+		# Si atacan a los dos, una parte va igual al aliado (jugadores de prueba, ronda 2).
+		var part := 100 if threat == null else int(sim.data.reglas["equipos"].get("ia_ayuda_parte_pct", 0))
+		var free: Array[SimEntity] = []
 		for u in army:
-			if u.order != O.ATTACK:
-				ids.append(u.id)
-		if not ids.is_empty():
+			if u.order != O.ATTACK and not _at_flare(u):
+				free.append(u)
+		for i in free.size():
+			if ally != null and help.size() < free.size() * part / 100:
+				help.append(free[i].id)
+			else:
+				ids.append(free[i].id)
+		if threat != null and not ids.is_empty():
 			sim.push_command({"t": "move", "player": player, "ids": ids, "x": threat.x, "y": threat.y, "amove": true})
+		if not help.is_empty():
+			sim.push_command({"t": "move", "player": player, "ids": help, "x": ally.x, "y": ally.y, "amove": true})
+			_say("voy_defender", {"a": _ally_under(ally), "n": help.size()})
 		return
 	var st: Dictionary = sim.data.reglas.get("estilos_ia", {}).get(personality, {})
 	if personality == "paz": # solo para las pruebas de economía: no pelea fuera de su base
@@ -861,7 +900,7 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 			for u in fast:
 				if ids.size() >= int(st.get("incursion_tam", 5)):
 					break
-				if u.order == O.IDLE or u.order == O.MOVE:
+				if (u.order == O.IDLE or u.order == O.MOVE) and not _at_flare(u):
 					ids.append(u.id)
 			if not ids.is_empty():
 				sim.push_command({"t": "move", "player": player, "ids": ids, "x": prey.x, "y": prey.y, "amove": true})
@@ -915,7 +954,7 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 	# Reagrupar a las unidades inactivas en el punto de reunión.
 	var idle := []
 	for u in army:
-		if u.order == O.IDLE and Sim.dist(u.x, u.y, rally.x, rally.y) > 6000 and sim.tick - last_attack > 900 and not _near_site(u) and int(_flare_units.get(u.id, -1)) < sim.tick:
+		if u.order == O.IDLE and Sim.dist(u.x, u.y, rally.x, rally.y) > 6000 and sim.tick - last_attack > 900 and not _near_site(u) and not _at_flare(u):
 			idle.append(u.id)
 	if not idle.is_empty():
 		sim.push_command({"t": "move", "player": player, "ids": idle, "x": rally.x, "y": rally.y})
@@ -935,7 +974,7 @@ func _leash(army: Array[SimEntity], radius: int, idle_only: bool = false) -> voi
 	var cores := _enemy_cores()
 	var back := []
 	for u in army:
-		if idle_only and u.order != O.IDLE:
+		if idle_only and u.order != O.IDLE or _at_flare(u):
 			continue
 		for c in cores:
 			if Sim.dist(u.x, u.y, c.x, c.y) < radius:
@@ -954,8 +993,11 @@ func _map_spot(radius: int) -> Vector2i:
 	for e in sim.actives:
 		if e.alive and e.def.get("sagrado", false) and (e.holder < 0 or sim.enemies(player, e.holder)) and level.get("toma_sitios", true):
 			options.append(Vector2i(e.x, e.y))
-	var c := sim.map.n * P / 2
-	options.append(Vector2i(c, c))
+	# El centro también tiene un sitio en 1 contra 1: la IA que no toma sitios (la fácil) no
+	# va ahí, se queda en su punto de reunión (jugadores de prueba, ronda 2).
+	if level.get("toma_sitios", true):
+		var c := sim.map.n * P / 2
+		options.append(Vector2i(c, c))
 	for o in options:
 		var ok := true
 		for core in cores:
@@ -1067,6 +1109,24 @@ func _pick_rival(ref: SimEntity) -> int:
 	return best
 
 
+## Unidad que fue a la bengala de un aliado y todavía está en eso: nadie la desvía.
+func _at_flare(u: SimEntity) -> bool:
+	return int(_flare_units.get(u.id, -1)) >= sim.tick
+
+
+## El aliado al que pertenece lo que ataca `t`: el dueño del edificio aliado más cercano.
+func _ally_under(t: SimEntity) -> int:
+	var best := -1
+	var best_d := 1 << 60
+	for e in sim.actives:
+		if e.alive and e.is_building() and e.owner >= 0 and e.owner != player and not sim.enemies(player, e.owner):
+			var d := sim.dist_to(t, e)
+			if d < best_d:
+				best_d = d
+				best = e.owner
+	return best
+
+
 ## Amenaza en la base de un aliado cercano: el ejército va a ayudar.
 func _ally_threat(centro: SimEntity) -> SimEntity:
 	var eq: Dictionary = sim.data.reglas.get("equipos", {})
@@ -1088,7 +1148,7 @@ func _ally_threat(centro: SimEntity) -> SimEntity:
 ## Tributo: lo que sobra va al aliado al que le falta (reglas.equipos.ia_tributo).
 func _tribute(p: Dictionary, saving: bool) -> void:
 	var cfg: Dictionary = sim.data.reglas.get("equipos", {}).get("ia_tributo", {})
-	if cfg.is_empty() or saving or sim.tick - last_tribute < int(cfg["cada_ticks"]):
+	if cfg.is_empty() or saving or sim.tick < int(cfg.get("desde_ticks", 0)) or sim.tick - last_tribute < int(cfg["cada_ticks"]):
 		return
 	last_tribute = sim.tick
 	for kind in ["alimento", "madera", "piedra", "riqueza"]:

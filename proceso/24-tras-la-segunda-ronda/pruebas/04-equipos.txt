@@ -1,0 +1,6 @@
+puertas: la del jugador 2 deja pasar al jugador 0
+puertas: la del jugador 1 no deja pasar al jugador 0
+fortines con 4: encerrados []
+fortines con 6: encerrados []
+2v2  ["tawantinsuyu", "mapuches", "guaranies", "etiopia"] equipos [0, 1, 0, 1]  30:00  bajas 640  fuego amigo 0  tributos 7  | j0 tawa edad 3 en pie  | j1 mapu edad 2 derrotado  | j2 guar edad 4 en pie  | j3 etio edad 3 en pie
+2v2  ["tawantinsuyu", "mapuches", "guaranies", "etiopia"] equipos [1, 0, 1, 0]  30:00  bajas 640  fuego amigo 0  tributos 7  | j0 tawa edad 3 en pie  | j1 mapu edad 2 derrotado  | j2 guar edad 4 en pie  | j3 etio edad 3 en pie

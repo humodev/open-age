@@ -1,0 +1,17 @@
+# Salud de la IA en el commit anterior
+tawantinsuyu  edad II 5:12 · ejército 19 · producción 6 · mercado sí · parados 0 · ociosa 11  OK
+mapuches      edad II 6:49 · ejército 29 · producción 7 · mercado sí · parados 0 · ociosa 11  OK
+guaranies     edad II 7:32 · ejército 4 · producción 2 · mercado no · parados 1 · ociosa 7  ⚠ solo ["distancia"] al minuto 12, ejército de 4, sin mercado al minuto 15
+etiopia       edad II 5:05 · ejército 15 · producción 4 · mercado sí · parados 0 · ociosa 9  OK
+palmares      edad II 6:51 · ejército 16 · producción 3 · mercado no · parados 1 · ociosa 6  ⚠ sin mercado al minuto 15
+ayutthaya     edad II 10:31 · ejército 12 · producción 4 · mercado sí · parados 0 · ociosa 3  ⚠ edad II tarde (10:31)
+SALUD IA: 3 civs con problemas
+
+# Salud de la IA con el paso 1 y 1b
+tawantinsuyu  edad II 5:10 · ejército 10 · producción 6 · mercado sí · parados 2 · ociosa 11 · viajes a/m/r/p 1/1/1/1  OK
+mapuches      edad II 6:56 · ejército 29 · producción 7 · mercado sí · parados 0 · ociosa 11 · viajes a/m/r/p 3/2/7/1  OK
+guaranies     edad II 7:32 · ejército 10 · producción 3 · mercado sí · parados 3 · ociosa 7 · viajes a/m/r/p 1/2/1/-  OK
+etiopia       edad II 5:05 · ejército 20 · producción 4 · mercado sí · parados 0 · ociosa 9 · viajes a/m/r/p 2/2/1/-  OK
+palmares      edad II 6:51 · ejército - · producción - · mercado no · parados 2 · ociosa 4 · viajes a/m/r/p 1/1/5/4  ⚠ la partida terminó antes del minuto 12
+ayutthaya     edad II 9:54 · ejército - · producción - · mercado no · parados 0 · ociosa 2 · viajes a/m/r/p 3/1/1/6  ⚠ edad II tarde (9:54), solo ["choque"] al minuto 12, la partida terminó antes del minuto 12
+SALUD IA: 2 civs con problemas

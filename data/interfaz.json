@@ -19,10 +19,10 @@
     "arrastre_rumbo_px": 24
   },
   "frases_ia": {
-    "_doc": "Lo que dice la IA aliada en el chat (suceso ia_dice de la simulación). {a}: el jugador nombrado; {n}: cantidad; {recurso}: recurso.",
+    "_doc": "Lo que dice la IA aliada en el chat (suceso ia_dice de la simulación). {a}: el jugador nombrado; {n}: cantidad; {llegan}: lo que llega tras la comisión del tributo; {recurso}: recurso.",
     "ataco": "Voy contra {a}",
     "atacan": "¡Me atacan!",
-    "mando": "Te mando {n} de {recurso}",
+    "mando": "Te mando {n} de {recurso}: llegan {llegan}, el resto se pierde en el camino",
     "no_sobra": "No me sobra {recurso}",
     "voy_atacar": "Voy a tu bengala con {n}",
     "voy_defender": "Voy a defenderte con {n}",

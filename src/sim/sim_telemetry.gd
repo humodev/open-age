@@ -26,6 +26,7 @@ var _last := {} # clave -> tick del último registro (para no repetir el mismo s
 var _idle_prev := {} # id de aldeano ocioso en la revisión anterior
 var _float_prev := {} # "jugador:recurso" que ya flotaba en la revisión anterior
 var _prod_prev := {} # id de edificio de producción ocioso en la revisión anterior
+var viajes := {} # "jugador:recurso" -> [viajes, suma de distancias, máxima] en casillas, del recurso al depósito
 
 
 ## Registra un suceso. `key` y `every` evitan repetir el mismo suceso en menos de `every` ticks.
@@ -39,6 +40,25 @@ func add(tick: int, tipo: String, pid: int, tx: int, ty: int, det: Dictionary = 
 	counts[tipo] = int(counts.get(tipo, 0)) + 1
 	if events.size() < MAX_EVENTS:
 		events.append([tick, tipo, pid, tx, ty, det])
+
+
+## Un aldeano lleno vuelve a depositar: distancia (en casillas) al depósito más cercano.
+## Mide la eficiencia de la economía (proceso/24, paso 1b): viajes largos = faltan almacenes.
+func trip(pid: int, kind: String, tiles: int) -> void:
+	if not on or pid < 0:
+		return
+	var key := "%d:%s" % [pid, kind]
+	var v: Array = viajes.get(key, [0, 0, 0])
+	v[0] += 1
+	v[1] += tiles
+	v[2] = maxi(v[2], tiles)
+	viajes[key] = v
+
+
+## Distancia media de viaje de un jugador a un recurso (-1 si no hubo viajes).
+func mean_trip(pid: int, kind: String) -> int:
+	var v: Array = viajes.get("%d:%s" % [pid, kind], [0, 0, 0])
+	return -1 if v[0] == 0 else v[1] / v[0]
 
 
 ## Revisión periódica de aldeanos ociosos: los que estaban ociosos en la anterior también.
@@ -94,7 +114,7 @@ func header(sim: Sim, seed_value: int, opts: Dictionary) -> Dictionary:
 	var civs := []
 	for p in sim.players:
 		civs.append(p["civ"])
-	return {"telemetria": 1, "semilla": seed_value, "jugadores": sim.players.size(), "civs": civs, "equipos": opts.get("equipos", []), "terreno": sim.terrain, "mapa": sim.map.n, "ticks": sim.tick, "tick_ms": sim.tick_ms, "totales": counts}
+	return {"telemetria": 1, "semilla": seed_value, "jugadores": sim.players.size(), "civs": civs, "equipos": opts.get("equipos", []), "terreno": sim.terrain, "mapa": sim.map.n, "ticks": sim.tick, "tick_ms": sim.tick_ms, "totales": counts, "viajes": viajes}
 
 
 ## Guarda la partida en `path` (JSONL). Devuelve false si no pudo escribir.

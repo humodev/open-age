@@ -1,0 +1,20 @@
+OK    mantener posición: no salen a buscar al enemigo a la vista (0, 0 milésimas)
+OK    mantener posición: pega al que entra en alcance (vida 115 → 82)
+OK    otra orden corta mantener posición
+OK    patrullar: llega a la otra punta (32500) y vuelve (true)
+OK    detener corta la patrulla
+  bloque   fondo  1969 · ancho  4024 (milésimas)
+  linea    fondo  1361 · ancho  5610 (milésimas)
+  abierta  fondo  2355 · ancho  5245 (milésimas)
+  columna  fondo  5168 · ancho  1793 (milésimas)
+OK    línea: más ancha y menos profunda que el bloque
+OK    columna: más profunda y angosta que el bloque
+OK    abierta: más separada que el bloque
+OK    el rumbo del arrastre gira la línea (ancho en x 4910 > fondo en y 1437)
+OK    formar: pasa a columna en el lugar, mirando igual (fondo en y 4777 > ancho en x 1952)
+OK    bengala: el aliado manda tropa al punto
+OK    bengala: llegan 4 de 4
+OK    bengala: el aliado lo dice en el chat (["2:mando", "2:ataco", "2:voy_atacar"])
+OK    pedido: el aliado manda madera (160, banco 200 → 360)
+OK    las bengalas vencen
+ORDENES: OK

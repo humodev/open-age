@@ -10,6 +10,7 @@ const AGE2_MAX_S := 570 # edad II antes de las 9:30
 const CHECK_AT_S := 720 # revisión al minuto 12
 const ARMY_MIN := 10
 const FLOAT_MAX := 4 # sucesos de recursos flotando (uno por minuto como mucho)
+const TRIP_MAX := 12 # viaje medio a depositar madera, en casillas (proceso/24, paso 1b)
 
 
 func _init() -> void:
@@ -78,11 +79,17 @@ func _init() -> void:
 					problems.append("%d edificios de producción" % sn["prod"])
 				if s.dp(pid).edificios.has("mercado") and not market_15[pid]:
 					problems.append("sin mercado al minuto 15")
+			var trips := []
+			for kind in ["alimento", "madera", "riqueza", "piedra"]:
+				var m := s.tele.mean_trip(pid, kind)
+				trips.append("-" if m < 0 else str(m))
+			if s.tele.mean_trip(pid, "madera") > TRIP_MAX:
+				problems.append("madera a %d casillas del depósito" % s.tele.mean_trip(pid, "madera"))
 			if floats > FLOAT_MAX:
 				problems.append("%d veces con recursos parados" % floats)
-			print("%-13s edad II %s · ejército %s · producción %s · mercado %s · parados %d · ociosa %d  %s" % [civ,
+			print("%-13s edad II %s · ejército %s · producción %s · mercado %s · parados %d · ociosa %d · viajes a/m/r/p %s  %s" % [civ,
 				"-" if age2[pid] < 0 else "%d:%02d" % [age2[pid] / 60, age2[pid] % 60],
-				str(sn.get("army", "-")), str(sn.get("prod", "-")), "sí" if market_15[pid] else "no", floats, idle,
+				str(sn.get("army", "-")), str(sn.get("prod", "-")), "sí" if market_15[pid] else "no", floats, idle, "/".join(trips),
 				"OK" if problems.is_empty() else "⚠ " + ", ".join(problems)])
 			if not problems.is_empty():
 				fails += 1
