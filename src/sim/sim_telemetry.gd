@@ -13,6 +13,8 @@ extends RefCounted
 ##   ia_sin_ruta    la IA no pudo trazar un camino de caminos (inca)
 ##   ocioso         un aldeano lleva más de 30 s sin hacer nada
 ##   tick_lento     un tick tardó más de lo que entra en el cuadro (lo mide quien corre la simulación)
+##   recursos_flotando  un jugador tiene más de `telemetria.flotando` de algo sin gastar dos revisiones seguidas
+##   produccion_ociosa  edificios que entrenan tropa con la cola vacía, dos revisiones seguidas (detalle: cuántos)
 
 const MAX_EVENTS := 30000
 const IDLE_CHECK_TICKS := 150 # 15 s: ocioso en dos revisiones seguidas = más de 15 s, menos de 30
@@ -22,6 +24,8 @@ var events: Array = [] # [tick, tipo, jugador, casilla x, casilla y, detalle]
 var counts := {} # tipo -> cantidad, también los que no entraron por el tope
 var _last := {} # clave -> tick del último registro (para no repetir el mismo suceso)
 var _idle_prev := {} # id de aldeano ocioso en la revisión anterior
+var _float_prev := {} # "jugador:recurso" que ya flotaba en la revisión anterior
+var _prod_prev := {} # id de edificio de producción ocioso en la revisión anterior
 
 
 ## Registra un suceso. `key` y `every` evitan repetir el mismo suceso en menos de `every` ticks.
@@ -48,6 +52,42 @@ func check_idle(sim: Sim) -> void:
 			if _idle_prev.has(e.id):
 				add(sim.tick, "ocioso", e.owner, e.x / Sim.P, e.y / Sim.P, {}, "ocioso:%d" % e.id, 600)
 	_idle_prev = now
+	_check_economy(sim)
+
+
+## Recursos sin gastar y producción militar parada: lo que hundía a la IA etíope (proceso/21, paso 16).
+func _check_economy(sim: Sim) -> void:
+	var cfg: Dictionary = sim.data.reglas.get("telemetria", {})
+	var limit := int(cfg.get("flotando", 800))
+	var fl := {}
+	for p in sim.players:
+		if p["defeated"]:
+			continue
+		for k in ["alimento", "madera", "piedra", "riqueza"]:
+			if int(p["res"].get(k, 0)) > limit:
+				var key := "%d:%s" % [p["id"], k]
+				fl[key] = true
+				if _float_prev.has(key):
+					add(sim.tick, "recursos_flotando", p["id"], -1, -1, {"recurso": k, "cantidad": int(p["res"][k])}, "rf:" + key, 600)
+	_float_prev = fl
+	var idle := {}
+	var count := {}
+	for b in sim.actives:
+		if not (b.alive and b.owner >= 0 and b.is_building() and b.built and b.queue.is_empty() and not b.capital):
+			continue
+		var military := false
+		for u in b.def.get("produce", []):
+			if sim.dp(b.owner).unidades.get(u, {}).get("funcion", "") in ["choque", "distancia", "linea", "asedio"]:
+				military = true
+		if not military:
+			continue
+		idle[b.id] = true
+		if _prod_prev.has(b.id):
+			count[b.owner] = int(count.get(b.owner, 0)) + 1
+	_prod_prev = idle
+	for pid in count:
+		if not sim.players[pid]["defeated"] and sim.players[pid]["pop"] < sim.players[pid]["pop_cap"]:
+			add(sim.tick, "produccion_ociosa", pid, -1, -1, {"edificios": count[pid]}, "po:%d" % pid, 600)
 
 
 func header(sim: Sim, seed_value: int, opts: Dictionary) -> Dictionary:

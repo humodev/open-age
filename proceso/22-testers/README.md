@@ -25,3 +25,24 @@ Al final, una síntesis con lo que repiten varios y un plan priorizado: [00-sint
 
 ## Paso a paso
 1. **(13:10) Etapa abierta;** los cuatro agentes trabajan en paralelo.
+2. **(14:30) Llegaron dos informes.**
+   - **Veterano de AoE4** ([informe](01-veterano-aoe4.md)):
+     - **el ritmo de la edad I se parece a AoE4:** edad II a las 4:48 con una apertura limpia;
+     - **la micro no paga:** los contadores multiplican el daño por 2 o más y kitear no sirve;
+     - **la edad I no tiene decisiones:** no hay caza ni ganado, y el explorador no tiene trabajo;
+     - **los hitos se levantan en menos de 1 minuto,** contra unos 3 en AoE4;
+     - **faltan órdenes:** seleccionar todos los militares o los ociosos, patrullar, mantener posición, cola global;
+     - **la IA se planta en 42 aldeanos en dificultad normal.**
+   - **Historia y estética** ([informe](03-historia-y-estetica.md)):
+     - **lo mejor son las campañas,** por sus narradores y sus fuentes;
+     - **lo más grave:** los rivales históricos (Adal, Birmania, chankas, tupíes) juegan como "Invasores" europeos o con la cultura del jugador;
+     - **no hay cambio por edad,** el ejército son maquetas blancas, no hay voces, y Etiopía no tiene música;
+     - **nombres dudosos:** "Espingardeiro de resgate", "Inkarri" como edad, el Qorikancha en la edad IV;
+     - **textos de prototipo** que rompen la inmersión.
+   - **Errores concretos que encontraron**, que arreglo enseguida (paso 3):
+     - el panel de la unidad muestra los valores de base, sin las mejoras;
+     - `--shot` termina sin guardar la telemetría y con un volcado de memoria;
+     - en IA contra IA salen los avisos de la IA del jugador 0;
+     - "✓ ganada" se dibuja en vertical en la pantalla de campañas;
+     - quedan textos "(… en el prototipo)" en los objetivos;
+     - las demos y algunas misiones arrancan por encima del tope de población.

@@ -1,0 +1,7 @@
+tawantinsuyu  edad II 6:26 · ejército 34 · producción 5 · mercado sí · parados 0 · ociosa 11  OK
+mapuches      edad II 6:46 · ejército 15 · producción 7 · mercado sí · parados 0 · ociosa 10  OK
+guaranies     edad II 6:03 · ejército 10 · producción 2 · mercado no · parados 3 · ociosa 4  ⚠ sin mercado al minuto 15
+etiopia       edad II 5:32 · ejército 13 · producción 3 · mercado sí · parados 0 · ociosa 9  OK
+palmares      edad II 6:58 · ejército 2 · producción 2 · mercado no · parados 1 · ociosa 5  ⚠ ejército de 2, sin mercado al minuto 15
+ayutthaya     edad II 10:06 · ejército 16 · producción 4 · mercado sí · parados 0 · ociosa 6  ⚠ edad II tarde (10:06)
+SALUD IA: 3 civs con problemas

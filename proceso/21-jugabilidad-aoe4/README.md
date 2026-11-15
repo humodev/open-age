@@ -272,3 +272,16 @@
       - La primera versión comparaba cada enemigo con cada edificio y subió el promedio de 6 IA de 18 a 25 ms por tick.
       - La segunda marca primero las celdas cercanas a los edificios propios y mira una vez a cada enemigo: 21 ms.
     - **Duelo Etiopía contra Tawantinsuyu:** 5–1 (antes 1–5). Determinismo OK.
+17. **(14:20) Métodos para que un cambio de estructura no rompa tanto el balance** (pregunta del autor: "¿Cada cambio va a tener este impacto en el balance? ¿Hay métodos para que no nos pase tanto?").
+    - **Diagnóstico:** de los ocho arreglos de esta tanda, siete fueron de la IA, que tenía supuestos escritos a mano ("hay un cuartel", "el mercado va al final", "la amenaza es la de la capital"). El octavo fue el barrero etíope. El torneo lo mostraba tarde, en 80 minutos, como si fuera desbalance.
+    - **Herramientas nuevas:**
+      1. **Prueba de salud de la IA** (`tests/salud_ia.gd`, unos 5 minutos): por civ, edad II antes de las 9:30, al menos dos funciones y 10 militares al minuto 12, dos edificios de producción, mercado al minuto 15 y pocos recursos parados. Se corre antes de cada torneo.
+      2. **Sucesos de IA trabada** en la telemetría (etapa 20, paso 6).
+      3. **Torneo en paralelo** (`tools/torneo_paralelo.sh`): reparte los cruces en N procesos con `--parte=i/n`. Con 8 procesos, 5 semillas (75 partidas, 25 por civ) pasan de unas 3 horas a unos 30 minutos.
+    - **Lo que encontró la salud de la IA, y los arreglos:**
+      - Ayutthaya llegaba a la edad II a las 10:52: levantaba campo de tiro y taller antes. Ahora los edificios de producción que no son el principal esperan a la edad II.
+      - Etiopía y Palmares no tenían mercado al minuto 15: la madera se iba antes en granjas y almacenes. Ahora, si no alcanza para el mercado, se guarda: lo que viene después (caminos, torre) espera.
+      - El primer orden de esa reserva dejó a los guaraníes con 3 militares. Orden final: hito, producción, almacenes, edificios propios de la civ, mercado, caminos.
+      - Los guaraníes levantaban dos casas del arco y ningún cuartel. El segundo edificio principal ahora espera a que haya uno de cada uno de los otros.
+    - **Salud de la IA ahora** ([resultado](pruebas/17-salud-ia.txt)): Tawantinsuyu, mapuches y Etiopía OK. Quedan los guaraníes y Palmares sin mercado al minuto 15, Palmares con 2 militares (pierde las peleas contra Ayutthaya en esa semilla) y Ayutthaya con la edad II a las 10:06.
+    - Torneo de 5 semillas en paralelo, corriendo.

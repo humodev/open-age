@@ -1,11 +1,13 @@
 extends SceneTree
 ## Torneo de balance: todas contra todas, IA contra IA, con varias semillas (docs/08, "Pruebas").
-## Uso: godot --headless --path . -s tests/torneo.gd -- --minutes=30 --seeds=2 [--telemetria=carpeta]
+## Uso: godot --headless --path . -s tests/torneo.gd -- --minutes=30 --seeds=2 [--telemetria=carpeta] [--parte=i/n]
 
 func _init() -> void:
 	var minutes := 30
 	var seeds := 2
 	var tele_dir := ""
+	var part := 0
+	var parts := 1
 	for a in OS.get_cmdline_user_args():
 		var kv := a.trim_prefix("--").split("=")
 		if kv[0] == "minutes":
@@ -14,6 +16,9 @@ func _init() -> void:
 			seeds = int(kv[1])
 		elif kv[0] == "telemetria":
 			tele_dir = kv[1]
+		elif kv[0] == "parte":
+			part = int(kv[1].split("/")[0])
+			parts = int(kv[1].split("/")[1])
 	var civs: Array = []
 	var data := SimData.load_default()
 	for k in data.civs:
@@ -28,6 +33,10 @@ func _init() -> void:
 	for i in civs.size():
 		for j in range(i + 1, civs.size()):
 			for sd in seeds:
+				# En paralelo (tools/torneo_paralelo.sh): cada proceso juega una parte de los cruces.
+				var game_i := (i * civs.size() + j) * seeds + sd
+				if game_i % parts != part:
+					continue
 				# Alterna posiciones para no favorecer un lado.
 				var pair: Array = [civs[i], civs[j]] if sd % 2 == 0 else [civs[j], civs[i]]
 				var sv := 1000 + i * 37 + j * 11 + sd

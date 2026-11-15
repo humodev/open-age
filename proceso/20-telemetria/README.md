@@ -74,3 +74,7 @@ No hay telemetría. Lo más parecido son los libros de la simulación (`Sim.ledg
    - **Cómo:** Godot 4.7 permite registrar un `Logger` con `OS.add_logger`, y este recibe cada SCRIPT ERROR. Como Godot puede llamarlo desde otro hilo, los errores se encolan y `main.gd` los vuelca a la telemetría una vez por cuadro, con el tick de la partida: tipo `error_script`, lugar `archivo:línea` y mensaje, una vez por lugar cada minuto de juego.
    - **Informe:** sección nueva "Errores de script del juego". Un error como el de la ayuda de la barra de recursos, que tiró el juego del autor, ahora aparece aunque nadie mire la consola.
    - **Prueba:** un script mínimo provoca un acceso inválido y el registro lo captura con su archivo y línea. Autotest OK con el registro prendido.
+6. **(14:00) Sucesos de IA trabada,** para ver en cualquier partida lo que hundió a Etiopía:
+   - `recursos_flotando`: un jugador tiene más de 800 de algo sin gastar en dos revisiones seguidas (cada 15 s);
+   - `produccion_ociosa`: edificios que entrenan tropa con la cola vacía en dos revisiones seguidas, sin estar al tope de población;
+   - los umbrales están en `reglas.json → telemetria`. Determinismo OK.

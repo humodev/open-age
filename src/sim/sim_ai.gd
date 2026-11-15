@@ -435,17 +435,19 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 	if saving and sim.can_afford(player, sim.dp(player).cost_of(_hito_type(p), p["age"])):
 		_try_build(_hito_type(p), p, vill, centro, 4)
 		return
-	# Mercado desde la edad II, antes que los demás edificios: con almacenes y edificios de
-	# producción separados la madera no alcanza para todo, y sin mercado la IA no puede
-	# cambiar la riqueza que le sobra por lo que le falta (proceso/21, paso 13).
-	if p["age"] >= 2 and not by_type.has("mercado") and not unbuilt.has("mercado") and vill.size() >= 20:
-		_try_build("mercado", p, vill, centro, 2)
 	# Edificio principal de producción: el de la unidad preferida de la civ (el färäs bet
 	# etíope, la warak'a kancha inca) o el cuartel. Es el que se multiplica cuando sobra.
 	var main := _main_producer()
 	var n_cuartel: int = by_type.get(main, []).size()
 	var rich: bool = p["res"]["alimento"] > 800 and p["res"]["madera"] > 300 and n_cuartel < 5
-	if (n_cuartel == 0 and vill.size() >= 11) or (n_cuartel == 1 and p["age"] >= 2 and vill.size() >= 24) or rich:
+	# El segundo principal, recién cuando hay uno de cada uno de los otros (si no, los
+	# guaraníes levantaban dos casas del arco y ningún cuartel).
+	var others_missing := false
+	if p["age"] >= 2:
+		for t in _producer_types() + (["cuartel"] if main != "cuartel" else []):
+			if t != main and by_type.get(t, []).is_empty() and p["age"] >= int(sim.dp(player).edificios[t].get("edad_min", 1)):
+				others_missing = true
+	if (n_cuartel == 0 and vill.size() >= 11) or (not others_missing and ((n_cuartel == 1 and p["age"] >= 2 and vill.size() >= 24) or rich)):
 		if not unbuilt.has(main) and p["age"] >= int(sim.dp(player).edificios[main].get("edad_min", 1)):
 			_try_build(main, p, vill, centro, 2)
 	# El edificio de la unidad preferida de la civ (`ia_unidades`: el jinete noble etíope sale
@@ -465,7 +467,9 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 				break
 	# Los demás edificios de producción (campo de tiro, corral de guerra, taller…): uno de cada
 	# uno después del primer cuartel; más si sobra (proceso/21, paso 10).
-	if n_cuartel >= 1 and vill.size() >= 14:
+	# Desde la edad II: antes, la madera y el alimento van al hito (salud de la IA: Ayutthaya
+	# llegaba a la II a las 10:52 por levantar campo de tiro y taller antes).
+	if n_cuartel >= 1 and vill.size() >= 14 and p["age"] >= 2:
 		for t in _producer_types() + (["cuartel"] if main != "cuartel" else []):
 			if t == main:
 				continue
@@ -504,6 +508,17 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 		if have < int(wanted[t]) and not unbuilt.has(t) and int(def.get("edad_min", 1)) <= p["age"] and vill.size() >= 10 + have * (3 if def.has("maximo_por_edad") else 6):
 			_try_build(t, p, vill, centro, 2)
 			break
+	# Mercado desde la edad II, después de producción, almacenes y edificios propios: con todo
+	# separado la madera no alcanza, y sin mercado la IA no cambia la riqueza que le sobra por lo
+	# que le falta (proceso/21, pasos 13 y 17). Si no le alcanza, guarda la madera: lo que sigue
+	# (caminos, torre) espera.
+	if p["age"] >= 2 and not by_type.has("mercado") and not unbuilt.has("mercado") and vill.size() >= 20:
+		_try_build("mercado", p, vill, centro, 2)
+		# Sin plata para el mercado, la madera se guarda: si no, granjas y almacenes se la llevan
+		# siempre antes (salud de la IA: Etiopía y Palmares sin mercado al minuto 15).
+		var mcost: Dictionary = sim.dp(player).cost_of("mercado", p["age"])
+		if not sim.can_afford(player, mcost):
+			return
 	# Caminos (módulo caminos): une a la capital el primer edificio desconectado.
 	if sim.dp(player).has_mod("caminos") and sim.tick - last_road >= 200 and not unbuilt.has("camino"):
 		last_road = sim.tick
