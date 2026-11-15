@@ -315,14 +315,24 @@ func _depositar_por_cualquier_lado() -> void:
 	_check(ok == 4, "depositar por cualquier lado: entrega de su lado en los cuatro (%s)" % ", ".join(where))
 
 
-## Paso entre edificios: una casa no se puede pegar a otra; con una casilla de paso, sí;
-## la empalizada sí se pega (cierra a propósito).
+## Pasillo entre edificios pegados (como AoE4): dos casas se pueden pegar y la más nueva deja
+## caminable su columna contra la otra; se cierra si la vieja desaparece. La empalizada no abre.
 func _paso_entre_edificios() -> void:
 	var s := Sim.new(5, 2, null, {"civs": ["guaranies", "mapuches"], "terreno": "llano"})
 	var c: Vector2i = s.bases[0] + Vector2i(2, 2)
 	var a := _spot(s, "casa", c, 8)
-	s.spawn_building("casa", 0, a.x, a.y, true)
+	var old := s.spawn_building("casa", 0, a.x, a.y, true)
 	var glued := s.can_place("casa", a.x + 2, a.y, 0)
-	var gap := s.can_place("casa", a.x + 3, a.y, 0)
-	var wall := s.can_place("empalizada", a.x + 2, a.y, 0)
-	_check(not glued and gap and wall, "paso entre edificios: casa pegada %s, con una casilla %s, empalizada pegada %s" % ["no" if not glued else "SÍ", "sí" if gap else "NO", "sí" if wall else "NO"])
+	var nw := s.spawn_building("casa", 0, a.x + 2, a.y, true)
+	var open := not s.map.is_solid(a.x + 2, a.y, 0) and not s.map.is_solid(a.x + 2, a.y + 1, 0)
+	var rest := s.map.is_solid(a.x + 3, a.y, 0) and s.map.is_solid(a.x + 1, a.y, 0)
+	var path := s.map.find_path(Vector2i(a.x + 2, a.y - 1), Vector2i(a.x + 2, a.y + 2), 0)
+	var through := path.size() == 4
+	s._kill(old) # destruida como en la partida
+	var closed := s.map.is_solid(a.x + 2, a.y, 0)
+	var w := _spot(s, "casa", c, 12)
+	s.spawn_building("casa", 0, w.x, w.y, true)
+	s.spawn_building("empalizada", 0, w.x + 2, w.y, true)
+	var wall := s.map.is_solid(w.x + 2, w.y, 0) and s.map.is_solid(w.x + 1, w.y, 0)
+	_check(glued and open and rest and through and closed and wall and nw.alive,
+		"pasillo entre casas pegadas: se pegan %s, la nueva abre su columna %s, el resto tapa %s, se cruza en línea recta %s, se cierra sin la vieja %s, la empalizada cierra %s" % [glued, open, rest, through, closed, wall])

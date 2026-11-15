@@ -120,6 +120,19 @@ func clear(tx: int, ty: int, w: int, h: int) -> void:
 				a.set_point_solid(cell, false)
 
 
+## Casilla de un edificio que se camina (pasillo entre edificios pegados): sigue ocupada,
+## no se construye encima, pero ya no tapa.
+func open_tile(tx: int, ty: int) -> void:
+	if not in_bounds(tx, ty):
+		return
+	var idx := ty * n + tx
+	var cell := Vector2i(tx, ty)
+	solid[idx] = 0
+	astar.set_point_solid(cell, false)
+	for a in astars:
+		a.set_point_solid(cell, false)
+
+
 ## ¿La huella tiene al menos una casilla vecina libre?
 func has_free_neighbor(tx: int, ty: int, w: int, h: int, pid: int = -1) -> bool:
 	for xx in range(tx - 1, tx + w + 1):

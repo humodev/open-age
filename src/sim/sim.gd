@@ -1520,10 +1520,12 @@ func _move_court(b: SimEntity) -> void:
 	var ty := b.ty
 	remove_quietly(b)
 	map.clear(tx, ty, b.w, b.h)
+	_close_corridors_of(tx, ty, b.w, b.h, b.id)
 	if old != null:
 		_eject(old)
 		remove_quietly(old)
 		map.clear(old.tx, old.ty, old.w, old.h)
+		_close_corridors_of(old.tx, old.ty, old.w, old.h, old.id)
 	var court := spawn_building(str(fc["edificio"]), pid, tx, ty, true)
 	court.capital = true
 	court.hp = maxi(1, court.hp_max * pct / 100)
@@ -1642,6 +1644,7 @@ func _kill(e: SimEntity, killer: SimEntity = null) -> void:
 	if e.is_building() or e.is_resource():
 		map.clear(e.tx, e.ty, e.w, e.h)
 	if e.is_building():
+		_close_corridors_of(e.tx, e.ty, e.w, e.h, e.id)
 		mods.on_building_removed(e)
 		_eject(e)
 		eject_crafts(e)
@@ -2150,8 +2153,6 @@ func can_place(type: String, tx: int, ty: int, pid: int = -1) -> bool:
 	var def: Dictionary = dp(pid).edificios.get(type, data.edificios.get(type, {}))
 	if not map.is_free_rect(tx, ty, tam[0], tam[1]):
 		return false
-	if pid >= 0 and not _leaves_passage(type, def, tx, ty, tam[0], tam[1]):
-		return false
 	if pid >= 0 and (def.has("maximo_por_edad") or def.has("separacion")) and not _engine_slot_ok(type, def, tx, ty, pid):
 		return false
 	if pid >= 0 and def.has("funda_corte") and not _court_site_ok(def["funda_corte"], tx, ty, pid):
@@ -2167,26 +2168,45 @@ func can_place(type: String, tx: int, ty: int, pid: int = -1) -> bool:
 	return map.is_flat(tx, ty, tam[0], tam[1])
 
 
-## Paso entre edificios (el autor, 2026-11-15: "donde está construido no se puede caminar,
-## entre los edificios en la ciudad"): un edificio que tapa no puede quedar pegado a otro que
-## tapa. Muros (`linea`), puertas y torres (reglas.paso_entre_edificios.pegados) sí, porque cierran.
-func _leaves_passage(type: String, def: Dictionary, tx: int, ty: int, w: int, h: int) -> bool:
-	var cfg: Dictionary = data.reglas.get("paso_entre_edificios", {})
-	var gap := int(cfg.get("casillas", 0))
-	var joined: Array = cfg.get("pegados", [])
-	if gap <= 0 or def.get("transitable", false) or def.get("linea", false) or def.get("puerta", false) or joined.has(type):
-		return true
-	for yy in range(ty - gap, ty + h + gap):
-		for xx in range(tx - gap, tx + w + gap):
-			if xx >= tx and xx < tx + w and yy >= ty and yy < ty + h:
+## Pasillo entre edificios pegados (el autor, 2026-11-15: "en AoE4, entre edificios pegados
+## igual queda un caminito"). El más nuevo de dos edificios que se tocan deja caminable su fila
+## de casillas contra el más viejo: queda un pasillo de una casilla y se pueden pegar. Los
+## muros (`linea`), las puertas y `reglas.pasillo_entre_edificios.cierran` no abren: cierran.
+func _corridor_ok(b: SimEntity) -> bool:
+	var cfg: Dictionary = data.reglas.get("pasillo_entre_edificios", {})
+	return b.is_building() and bool(cfg.get("activo", false)) and not b.def.get("transitable", false) \
+		and not b.def.get("linea", false) and not b.def.get("puerta", false) and not (cfg.get("cierran", []) as Array).has(b.type)
+
+
+## Vuelve a tapar la huella de `b` y abre las casillas del borde que tocan a un edificio más viejo.
+func _refresh_corridor(b: SimEntity) -> void:
+	if not _corridor_ok(b):
+		return
+	map.mark(b.tx, b.ty, b.w, b.h, b.id, true)
+	for yy in range(b.ty, b.ty + b.h):
+		for xx in range(b.tx, b.tx + b.w):
+			if xx > b.tx and xx < b.tx + b.w - 1 and yy > b.ty and yy < b.ty + b.h - 1:
 				continue
-			var id := map.occupant(xx, yy)
-			if id <= 0 or not map.is_solid(xx, yy, -1):
-				continue
-			var o: SimEntity = by_id.get(id)
-			if o != null and o.is_building() and not o.def.get("linea", false) and not o.def.get("puerta", false) and not joined.has(o.type):
-				return false
-	return true
+			for d in [Vector2i(-1, 0), Vector2i(1, 0), Vector2i(0, -1), Vector2i(0, 1)]:
+				var nx: int = xx + d.x
+				var ny: int = yy + d.y
+				if nx >= b.tx and nx < b.tx + b.w and ny >= b.ty and ny < b.ty + b.h:
+					continue
+				var o: SimEntity = by_id.get(map.occupant(nx, ny))
+				if o != null and o.alive and o.id < b.id and _corridor_ok(o):
+					map.open_tile(xx, yy)
+					break
+
+
+## Al sacar un edificio: los más nuevos que lo tocaban cierran el pasillo que le dejaban.
+func _close_corridors_of(tx: int, ty: int, w: int, h: int, gone_id: int) -> void:
+	var seen := {}
+	for yy in range(ty - 1, ty + h + 1):
+		for xx in range(tx - 1, tx + w + 1):
+			var o: SimEntity = by_id.get(map.occupant(xx, yy))
+			if o != null and o.alive and o.id > gone_id and not seen.has(o.id):
+				seen[o.id] = true
+				_refresh_corridor(o)
 
 
 ## ¿Queda cupo para otra pieza de motor de este tipo en la edad actual? Sin mirar el lugar:
@@ -2631,6 +2651,7 @@ func spawn_building(type: String, owner: int, tx: int, ty: int, built: bool) -> 
 		e.hp = 1
 		e.hp_max = 1
 	map.mark(tx, ty, e.w, e.h, e.id, not def.get("transitable", false), owner if def.get("puerta", false) else -1)
+	_refresh_corridor(e)
 	if def.has("cantidad"):
 		e.amount = def["cantidad"]
 	mods.on_building_placed(e)

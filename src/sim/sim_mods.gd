@@ -706,6 +706,7 @@ func cumbi_gift(pid: int) -> void:
 	var kind := t.type
 	sim.remove_quietly(t)
 	sim.map.clear(tx, ty, t.w, t.h)
+	sim._close_corridors_of(tx, ty, t.w, t.h, t.id)
 	var tambo := sim.spawn_building(str(cfg["edificio"]), pid, tx, ty, true)
 	_tambo_of[tambo.id] = kind
 	sim.events.append({"t": "notice", "player": pid, "text": "Regalo de cumbi: el ingenio pasa a ser un tambo (+%d de riqueza)" % loot})

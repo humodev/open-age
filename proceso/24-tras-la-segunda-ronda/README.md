@@ -130,13 +130,16 @@ La lista sale de la [síntesis de la segunda ronda](../22-testers/ronda-2/00-sin
 - **Medida** (`tests/jugabilidad.gd`, un aldeano cargado a 3 casillas de cada lado del centro): oeste y norte de 2,5 s a 1,8 s; este y sur, igual (5,9 y 2,7 s, ya iban a su lado). Los cuatro entregan parados de su lado.
 
 **No se puede caminar entre los edificios:**
-- **Causa:** el movimiento pasa por una casilla libre, pero el jugador podía pegar un edificio a otro, y dos casas pegadas son una pared. La IA ya dejaba una casilla de paso.
-- **Arreglo:** `reglas.paso_entre_edificios`. Un edificio que tapa no puede tocar a otro que tapa: queda 1 casilla de paso.
-  - Los muros (`linea`), las puertas y las torres sí se pegan, porque cierran a propósito.
-  - Los caminos y las granjas se pisan y no cuentan, así que los caminos incas siguen uniendo edificios.
-  - Al colocar, el cartel dice "Pegado a otro edificio: dejá una casilla de paso".
-- **Prueba:** casa pegada no; con una casilla, sí; empalizada pegada, sí. En el commit anterior, la casa pegada se podía poner.
+- **Causa:** el movimiento pasa por una casilla libre, pero dos edificios pegados eran una pared. La IA ya dejaba una casilla de paso.
+- **Primer arreglo (descartado):** obligar a dejar una casilla entre edificios. El autor: "no debería hacer falta una casilla de separación; en AoE4, entre edificios pegados igual queda un caminito". Después: "o probá hacer caminable la casilla de adentro de los edificios".
+- **Arreglo:** `reglas.pasillo_entre_edificios`.
+  - Los edificios se pegan como antes. El más nuevo de dos que se tocan deja caminable su fila de casillas contra el más viejo (`Sim._refresh_corridor`, `SimMap.open_tile`), y queda un pasillo de una casilla dentro de la huella.
+  - La casilla sigue ocupada (no se construye encima), y un edificio solo sigue tapando entero.
+  - Si el viejo desaparece, el pasillo se cierra (`_close_corridors_of`, también cuando se muda la corte etíope o un taller se vuelve tambo).
+  - Muros (`linea`), puertas y torres no abren: cierran a propósito.
+- **Prueba** (`tests/jugabilidad.gd`): dos casas pegadas; la nueva abre su columna y el resto tapa; se cruza en línea recta; destruida la vieja, se cierra; una empalizada pegada no abre.
+- **Pendiente para el arte:** la unidad que cruza pasa por el borde del modelo. Conviene que los modelos no llenen del todo la huella (`docs/07`).
 
 **Pruebas:**
-- Determinismo, órdenes, civs, las 25 misiones (sin errores) y autotest: OK. El tutorial se gana a las 10:42.
-- Rendimiento, sola en la máquina: 8,55 ms de promedio y 57,9 de peor caso (antes, 8,35 y 57,9). Con el torneo de 10 procesos en paralelo había dado 18 ms, que era la carga.
+- Determinismo, órdenes, civs, las 25 misiones (sin errores), las puertas y los cercos de fortines, y autotest: OK. El tutorial se gana a las 10:42 (con la regla de separación).
+- Rendimiento, sola en la máquina: 8,56 ms de promedio y 59 de peor caso (antes, 8,35 y 57,9). Con el torneo de 10 procesos en paralelo había dado 18 ms, que era la carga.

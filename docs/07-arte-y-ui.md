@@ -16,6 +16,7 @@ Todo modelo nuevo se planifica con estas variantes desde el principio, no como a
 - **Construcción por etapas:** cada edificio necesita su obra en marcha además del terminado. Como mínimo, cimientos y estructura a medio levantar; idealmente 3 etapas (25, 60 y 100 %) que el juego elige según el avance de la obra.
 - **Por edad:** edificios y unidades cambian de aspecto en cada edad, como en AoE4. Materiales más nobles, más altura y detalle, y equipo mejor en las unidades. Cada pueblo con su propio camino entre edades, sin un "medieval" genérico.
 - **Por pueblo:** nada compartido entre civs salvo la naturaleza.
+- **Margen en la huella** (2026-11-15): el modelo no llena hasta el borde de su huella. Entre edificios pegados queda un pasillo caminable dentro de la huella del más nuevo (`reglas.pasillo_entre_edificios`), y la unidad que lo cruza no debe atravesar paredes. El cuerpo principal va unos 0,3 casillas adentro de cada lado; aleros, cercos o toldos pueden llegar al borde.
 
 Costo en Meshy: un edificio con 3 etapas de obra y 4 edades son 7 modelos en lugar de 1. Por eso se prioriza lo que más se ve (centro, casa, almacenes, cuarteles y aldeano) y el resto queda en la maqueta procedural hasta que haya créditos. El orden y el presupuesto por mes van en `proceso/19-arte-y-sonido`.
 
