@@ -79,3 +79,20 @@ Al final, una síntesis con lo que repiten varios y un plan priorizado: [00-sint
    - **La IA aliada no defendía:** el radio de ayuda era de 70 casillas y los aliados quedan a 90–192. Ahora es de 200; igual solo va si su propia base no está amenazada.
    - **Tributo:** la IA da cuando al aliado le quedan menos de 400 (antes 150) y a ella le sobran más de 600 (antes 800).
    - Determinismo OK. Partidas 2v2 de 20 minutos para medir ayuda y tributo, corriendo.
+8. **(19:00) Más arreglos de la sección 1:**
+   - **El todos contra todos que no terminaba:** la derrota llega al perder todos los hitos, la capital y lo que cuenta para la victoria (el mocambo de Palmares, el lof mapuche), pero la IA solo atacaba hitos y capitales. Un pueblo sin ejército seguía vivo para siempre por un mocambo. Ahora la IA también va contra lo que cuenta para la victoria.
+   - **IA fácil de verdad:** cuatro parámetros nuevos solo para la fácil (`reglas.json → dificultades.facil`):
+     - no ataca la base antes del minuto 15;
+     - no hace incursiones;
+     - no va por los sitios sagrados;
+     - no pasa de la edad II;
+     - además, tope de 15 militares si no la atacan.
+   - **Medido con el mismo script del jugador nuevo** (`novato.gd`, guaraníes contra Tawantinsuyu fácil, semillas 7 y 21):
+
+     | | Antes | Con los cambios |
+     |---|---|---|
+     | Primer enemigo en la base | 8:14 | 15:45 y 16:10 |
+     | Resultado | derrota a los 13:52, por sitios | partidas abiertas a los 30:00 |
+     | Aldeanos perdidos | — | 1 y 0 |
+   - **IA aliada, 2v2 de 20 minutos** ([resultado](pruebas-equipos-2v2.txt)): entre 2 y 3 tributos por partida (antes 0 a 2), cero fuego amigo.
+   - Determinismo OK.

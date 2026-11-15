@@ -299,3 +299,5 @@
     - **Cuatro de seis dentro de la banda.** Los arreglos de la IA (amenaza en cualquier edificio, producción secundaria desde la edad II, mercado con reserva) devolvieron a Etiopía de 0 a 44 %. 60 de 75 partidas terminan por destrucción de hitos.
     - **Quedan dos afuera:** mapuches arriba y Tawantinsuyu abajo. Con 25 partidas por civ el ruido es de unos ±10 puntos.
     - **Cambio, el único de esta vuelta:** el weichafe vuelve a 11 de ataque. En la etapa 14 se le había subido a 12 cuando los mapuches eran débiles; ahora el lof lo entrena y les sobra. Verificado en el dato antes de commitear.
+19. **(18:50) Torneo con el weichafe a 11** ([resultado](pruebas/18-torneo-5semillas.txt)): mapuches 84 %, Ayutthaya 56 %, Palmares 56 %, Etiopía 44 %, guaraníes 36 %, Tawantinsuyu 24 %. El ataque del weichafe no era la palanca: los mapuches siguen arriba, dentro del ruido. Queda en 11 (su valor anterior a la etapa 14).
+    - **La salud de la IA** sigue marcando a Ayutthaya con la edad II a las 10:19. Con `ia_por_dentro`: 16 granjas al minuto 8, que son 960 de madera. Es lo próximo a mirar, junto con los mapuches y Tawantinsuyu.

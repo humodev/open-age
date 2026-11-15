@@ -239,7 +239,7 @@ func _most(counts: Dictionary, ratio: Dictionary, total: int, over: bool) -> Str
 # ---------------------------------------------------------------- Construcción
 
 func _wants_hito(p: Dictionary, n_vill: int, by_type: Dictionary) -> bool:
-	if p["age"] >= sim.dp(player).edades.size() or sim.hito_in_progress(player):
+	if p["age"] >= sim.dp(player).edades.size() or sim.hito_in_progress(player) or p["age"] >= int(level.get("edad_max", 99)):
 		return false
 	var need: int = 13 + 8 * (int(p["age"]) - 1)
 	if p["age"] >= 2 and not by_type.has("cuartel"):
@@ -686,6 +686,9 @@ func _production(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], 
 		if _spend(budget, sim.dp(player).cost_of("aldeano", p["age"])):
 			sim.push_command({"t": "train", "player": player, "building": centro.id, "type": "aldeano"})
 	var threatened := _threat(centro) != null
+	# Tope de ejército por dificultad (la fácil: 15), salvo si atacan la base.
+	if army.size() >= int(level.get("ejercito_max", 1 << 20)) and not threatened:
+		return
 	if saving and not threatened:
 		return
 	var order := _counter_order(p)
@@ -805,7 +808,7 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 		st = {"ataca_base": false, "incursiones": "no", "controla_mapa": false}
 	var need: int = int(st.get("ataque_base", level["ataque_base"])) + int(st.get("ataque_paso", level["ataque_paso"])) * wave
 	var gap: int = int(st.get("ataque_espera_ticks", level["ataque_espera_ticks"]))
-	var attacks: bool = st.get("ataca_base", personality != "pasiva")
+	var attacks: bool = st.get("ataca_base", personality != "pasiva") and sim.tick >= int(level.get("primer_ataque_ticks", 0))
 	if attacks and army.size() >= need and sim.tick - last_attack > gap:
 		wave += 1
 		last_attack = sim.tick
@@ -817,7 +820,7 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 		_leash(army, int(st["respeta_radio"]), st.get("incursiones", "no") == "si")
 	# Incursiones (malón, correría, acoso): las unidades más rápidas golpean la economía rival.
 	var raids: String = st.get("incursiones", "civ")
-	var raid_on: bool = raids == "si" or (raids == "civ" and bool(sim.dp(player).civ.get("ia_incursiones", false)))
+	var raid_on: bool = (raids == "si" or (raids == "civ" and bool(sim.dp(player).civ.get("ia_incursiones", false)))) and level.get("incursiones", true)
 	var every := int(st.get("incursion_cada_ticks", 900))
 	if raid_on and sim.tick - last_raid >= every and army.size() >= 5:
 		last_raid = sim.tick
@@ -870,7 +873,7 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 			if ids.size() >= 6:
 				sim.push_command({"t": "move", "player": player, "ids": ids, "x": mill.x, "y": mill.y, "amove": true})
 	# Sitios sagrados: un grupo chico va a tomar el más cercano que no controla.
-	if sim.tick - last_site >= 300 and army.size() >= 6:
+	if sim.tick - last_site >= 300 and army.size() >= 6 and level.get("toma_sitios", true):
 		last_site = sim.tick
 		var site: SimEntity = null
 		var best := 1 << 60
@@ -927,7 +930,7 @@ func _map_spot(radius: int) -> Vector2i:
 	var cores := _enemy_cores()
 	var options: Array[Vector2i] = []
 	for e in sim.actives:
-		if e.alive and e.def.get("sagrado", false) and (e.holder < 0 or sim.enemies(player, e.holder)):
+		if e.alive and e.def.get("sagrado", false) and (e.holder < 0 or sim.enemies(player, e.holder)) and level.get("toma_sitios", true):
 			options.append(Vector2i(e.x, e.y))
 	var c := sim.map.n * P / 2
 	options.append(Vector2i(c, c))
@@ -947,7 +950,9 @@ func _attack(army: Array[SimEntity]) -> void:
 	var ref := army[0]
 	focus = _pick_rival(ref)
 	for e in sim.actives:
-		if e.alive and e.is_building() and e.owner >= 0 and sim.enemies(player, e.owner) and (e.def.get("hito", false) or e.capital):
+		# También lo que cuenta para la victoria (mocambos, lofs): si no, un rival sin ejército
+		# seguía vivo para siempre (todos contra todos abierto a los 60 minutos, proceso/22).
+		if e.alive and e.is_building() and e.owner >= 0 and sim.enemies(player, e.owner) and (e.def.get("hito", false) or e.capital or e.def.get("cuenta_victoria", false)):
 			if focus >= 0 and e.owner != focus:
 				continue
 			var d := sim.dist_to(ref, e)

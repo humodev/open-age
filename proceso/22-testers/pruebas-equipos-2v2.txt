@@ -1,0 +1,7 @@
+puertas: la del jugador 2 deja pasar al jugador 0
+puertas: la del jugador 1 no deja pasar al jugador 0
+2v2  ["tawantinsuyu", "mapuches", "guaranies", "etiopia"] equipos [0, 1, 0, 1]  20:00  bajas 338  fuego amigo 0  tributos 2  | j0 tawa edad 3 en pie  | j1 mapu edad 2 derrotado  | j2 guar edad 3 en pi
+2v2  ["tawantinsuyu", "mapuches", "guaranies", "etiopia"] equipos [1, 0, 1, 0]  20:00  bajas 338  fuego amigo 0  tributos 2  | j0 tawa edad 3 en pie  | j1 mapu edad 2 derrotado  | j2 guar edad 3 en pi
+2v2  ["palmares", "ayutthaya", "mapuches", "tawantinsuyu"] equipos [0, 1, 0, 1]  14:38  bajas 61  fuego amigo 0  tributos 3  ganó el equipo 0  | j0 palm edad 2 en pie  | j1 ayut edad 2 derrotado  | j2
+2v2  ["palmares", "ayutthaya", "mapuches", "tawantinsuyu"] equipos [1, 0, 1, 0]  14:38  bajas 61  fuego amigo 0  tributos 3  ganó el equipo 1  | j0 palm edad 2 en pie  | j1 ayut edad 2 derrotado  | j2
+EQUIPOS: OK

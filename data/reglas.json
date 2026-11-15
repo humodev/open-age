@@ -57,7 +57,7 @@
     "fortines": {"nombre": "Fortines", "descripcion": "Cada base en un recinto natural de peñas con cuatro salidas, que empiezan cerradas con la empalizada y la puerta de cada pueblo.", "relieve": {"escala": 11, "umbrales": [56, 70, 84]}, "fortines": {"radio": 18, "grosor": 3, "hueco": 5}, "penascos": 6, "bosques": 12, "seco": 25, "tinte": [102, 100, 92], "arboles": [0, 1, 4]}
   },
   "dificultades": {
-    "facil":   { "nombre": "Fácil",   "piensa_cada_ticks": 30, "max_aldeanos": 22, "ataque_base": 12, "ataque_paso": 6, "ataque_espera_ticks": 1200, "investiga": false },
+    "facil":   { "nombre": "Fácil",   "piensa_cada_ticks": 30, "max_aldeanos": 22, "ataque_base": 12, "ataque_paso": 6, "ataque_espera_ticks": 1200, "primer_ataque_ticks": 9000, "incursiones": false, "toma_sitios": false, "edad_max": 2, "ejercito_max": 15, "investiga": false },
     "normal":  { "nombre": "Normal",  "piensa_cada_ticks": 10, "max_aldeanos": 42, "ataque_base": 7,  "ataque_paso": 4, "ataque_espera_ticks": 500,  "investiga": true },
     "dificil": { "nombre": "Difícil", "piensa_cada_ticks": 5,  "max_aldeanos": 60, "ataque_base": 6,  "ataque_paso": 3, "ataque_espera_ticks": 350,  "investiga": true }
   },
