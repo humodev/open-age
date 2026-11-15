@@ -31,6 +31,7 @@ Las fuentes y lo que falta verificar van en cada JSON, en los campos `_fuentes` 
 - Cada rival de `data/campanas/*.json` tiene ahora un nombre `corto` para el marcador (por ejemplo, "Imán Ahmad", "Maha Nawrahta", "Tupíes"). El nombre largo sigue en el relato.
 - `panel_comun.gd`: `mission_name()` y `people_name()`. En campaña, el marcador, la pantalla de fin, el aviso "llegó a la edad", la ficha y el panel de selección muestran el rival de la misión ("Rojo · Imán Ahmad") en vez de la civ ("Rojo · Invasores"). Fuera de campaña no cambia nada.
 - `civ_meshes.gd`: formas `redonda` y `azotea`, y la paleta entra en la clave del caché (antes, dos civs con la misma forma y el mismo color de equipo compartían malla).
+- `menu.gd`: el selector de pueblo y de rival ya no ofrece las civs solo de IA. Antes ofrecía "Invasores"; con seis más, la lista se llenaba de pueblos que no tienen economía propia (D-018).
 - `docs/campanas/README.md` actualizado (facciones y equivalencias).
 
 | Misión | Rival | Antes | Ahora |
@@ -68,7 +69,7 @@ Base del rival de cada misión, sin niebla, con el marcador arriba a la derecha.
 
 ## Pruebas
 - `tests/campaign_smoke.gd`: las 25 misiones cargan y avanzan 3 minutos sin errores de script.
-- `tests/campaign_smoke.gd -- --ia-jugador --minutes=20`, antes y después: RESULTADO_IA
+- `tests/campaign_smoke.gd -- --ia-jugador --minutes=20`, antes y después (una IA difícil y agresiva juega del lado del jugador): ningún resultado de misión cambia. Diferencias: en Tawantinsuyu 1 la IA del jugador pierde igual que antes, pero a los 14:11 en vez de 13:04 (los chankas sin las ventajas incas aprietan un poco menos); en Guaraníes 2 no llega a juntar los 600 de madera en 20 minutos (antes sí, es economía del lado del jugador); en Guaraníes 3 pierde los arcabuceros, un objetivo secundario. Es una sola semilla: hay que mirarlo en la prueba de dificultad de las misiones, si la hay.
 - `tests/civ_smoke.gd`: las seis civs jugables, sin errores (no cambian).
 - Humo propio de las seis civs nuevas, IA contra IA 8 minutos (Adal contra Birmania, chankas contra tupíes, caranquis contra cañaris, Etiopía contra Adal): todas llegan a la edad II con 30 aldeanos, cuartel, granjas y ejército, sin errores.
 - Autotest (`--autotest --civ=guaranies --terreno=llano`): OK.
