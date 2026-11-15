@@ -101,3 +101,12 @@ Al final, una síntesis con lo que repiten varios y un plan priorizado: [00-sint
    - Juegan la versión con todo lo de la etapa 23: combate con bonos y dos armaduras, animales y caza, órdenes y comodidades, aprender a jugar y rivales con civ propia.
    - El balance todavía no está cerrado (Palmares 88 % en el último torneo).
    - Informes en [ronda-2/](ronda-2/) y una síntesis comparada al final.
+10. **(16:00) Segunda ronda completa** ([síntesis comparada](ronda-2/00-sintesis.md)). Mejoraron casi todos los puntos de la primera ronda:
+    - ritmo y comida como AoE4;
+    - micro que paga;
+    - comodidades casi completas;
+    - el jugador nuevo con ganas de seguir;
+    - rivales con civ propia;
+    - mapas de varios que ya se juegan.
+
+    Aparecieron errores nuevos chicos, como la IA fácil en el centro, aldeanos que no carnean y misiones por encima del tope de población, que se arreglan ya. Lo más pedido ahora: hitos lentos, sitios a 10 minutos, opciones de partida e identidad visual y sonora.
