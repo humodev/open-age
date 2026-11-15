@@ -218,6 +218,13 @@ func _economy(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, saving: 
 				counts[kind] += 1
 				continue
 		var t := sim.find_resource(player, kind, centro.x, centro.y, 40000, -1, v.id)
+		# Alimento lejos de todo almacén (venados, animales sueltos del medio): como en AoE4,
+		# cuando se acaba lo cercano conviene pasar a las granjas antes que caminar (la edad III
+		# se atrasaba hasta 25 minutos; proceso/23, paso 10).
+		if t != null and kind == "alimento" and not t.is_building():
+			var drop := sim.nearest_dropoff(player, kind, t.x, t.y)
+			if drop == null or sim.dist_to(t, drop) > int(sim.data.reglas["ia_economia"]["alimento_lejos"]):
+				t = null
 		if t == null and kind == "alimento":
 			if sim.can_afford(player, sim.dp(player).cost_of("granja", p["age"])):
 				var site := _site("granja", centro, 0)

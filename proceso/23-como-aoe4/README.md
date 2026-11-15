@@ -172,3 +172,14 @@ Orden de los cambios de balance: A, después E, F y G, de a uno, con un torneo d
 
    - **La edad II llega antes,** más cerca de AoE4 (unos 4:30): los animales son comida rápida y cercana.
    - **La edad III se atrasa mucho en tres civs** (de 22 a 25 minutos). Cuando se terminan los animales y los cuatro arbustos, la IA tarda en pasar a las granjas. Es lo próximo a corregir en la IA, después del torneo.
+10. **(03:30) Torneo con animales, y la IA pasa a las granjas cuando la comida queda lejos.**
+    - **Torneo con animales** ([resultado](pruebas/02-torneo-animales.txt)): Palmares **88 %**, Etiopía 56 %, guaraníes 44 %, Tawantinsuyu 44 %, Ayutthaya 36 %, mapuches **32 %**. 62 de 75 partidas terminan por destrucción de hitos.
+    - **Arreglo en la IA:** las civs que caen son las que atrasaban la edad III en paz. Al terminarse los animales cercanos, la IA mandaba aldeanos a los venados a 20 casillas en lugar de hacer granjas. Como en AoE4, ahora la comida a más de 9 casillas de todo almacén (`ia_economia.alimento_lejos`) cuenta como si no estuviera, y se hacen granjas.
+    - **Economía en paz** ([resultado](pruebas/03-economia-paz-granjas.txt)), edad III con animales → con el arreglo:
+      - Tawantinsuyu 23:10 → **15:22**;
+      - Ayutthaya 22:33 → 19:02;
+      - mapuches 24:56 → 21:57 (sigue tarde);
+      - el resto, entre 15 y 17 minutos.
+
+      La edad II no cambia. Determinismo OK.
+    - **Balance en pausa:** el autor pidió volver a consultar a los jugadores de prueba antes de terminarlo (`proceso/22`, segunda ronda).
