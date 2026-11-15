@@ -247,3 +247,18 @@
       - Palmares tiene 2 mocambos: su ventaja viene de la economía, la más alta.
       - Los mapuches tienen **8 edificios que entrenan tropa**: 4 lof (cada uno saca weichafe), 3 corrales (kona) y 2 ruka. La IA levantaba lofs también como almacén.
     - **Cambio, el único de esta vuelta:** el edificio que la IA usa como almacén cuando no tiene otro (lof, mocambo) entrena tropa, así que tiene un tope más bajo: 3 en lugar de 4 (`ia_economia.almacen_alternativo_cantidad`). Determinismo OK.
+15. **(10:30) ¿Las formaciones hunden a Etiopía y Ayutthaya? No.**
+    - **Torneo con el tope de lofs** ([resultado](pruebas/14-torneo.txt)): mapuches 80 %, guaraníes 70 %, Palmares 70 %, Tawantinsuyu 50 %, Ayutthaya 20 %, Etiopía 10 %.
+    - **Sospecha:** las dos civs de caballería y elefantes ya habían caído a 30 % en el torneo con solo las formaciones, y marchar al paso de la infantería les quita su ventaja.
+    - **Prueba nueva `tools/duelo.gd`:** 6 partidas de 25 minutos entre dos civs, con el movimiento en grupo prendido y apagado.
+
+      | Duelo | Con grupos | Sin grupos |
+      |---|---|---|
+      | Etiopía contra mapuches | 1–5 | 0–6 |
+      | Etiopía contra Tawantinsuyu | 1–5 | 0–6 |
+      | Ayutthaya contra Tawantinsuyu | 2–4 | 1–5 |
+
+      Sin grupos les va igual o peor: **las formaciones no son la causa.**
+    - **Causa encontrada:** la producción separada. Antes la IA etíope sacaba su jinete noble de hasta 5 cuarteles. Ahora sale de un solo färäs bet, y los cuarteles que suma cuando le sobra solo hacen chewa y jabalineros.
+    - **Arreglo en la IA:** el "edificio principal" que se multiplica cuando sobra es el de la unidad preferida de la civ (`ia_unidades`): el färäs bet etíope y la warak'a kancha inca. En las demás sigue siendo el cuartel.
+    - **Duelo después del arreglo:** Etiopía contra Tawantinsuyu, 2–4 (antes 1–5). Determinismo OK. Torneo completo a continuación.

@@ -440,12 +440,14 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 	# cambiar la riqueza que le sobra por lo que le falta (proceso/21, paso 13).
 	if p["age"] >= 2 and not by_type.has("mercado") and not unbuilt.has("mercado") and vill.size() >= 20:
 		_try_build("mercado", p, vill, centro, 2)
-	# Cuartel.
-	var n_cuartel: int = by_type.get("cuartel", []).size()
+	# Edificio principal de producción: el de la unidad preferida de la civ (el färäs bet
+	# etíope, la warak'a kancha inca) o el cuartel. Es el que se multiplica cuando sobra.
+	var main := _main_producer()
+	var n_cuartel: int = by_type.get(main, []).size()
 	var rich: bool = p["res"]["alimento"] > 800 and p["res"]["madera"] > 300 and n_cuartel < 5
 	if (n_cuartel == 0 and vill.size() >= 11) or (n_cuartel == 1 and p["age"] >= 2 and vill.size() >= 24) or rich:
-		if not unbuilt.has("cuartel"):
-			_try_build("cuartel", p, vill, centro, 2)
+		if not unbuilt.has(main) and p["age"] >= int(sim.dp(player).edificios[main].get("edad_min", 1)):
+			_try_build(main, p, vill, centro, 2)
 	# El edificio de la unidad preferida de la civ (`ia_unidades`: el jinete noble etíope sale
 	# del färäs bet) va tan temprano como el primer cuartel.
 	if vill.size() >= 11:
@@ -464,7 +466,9 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 	# Los demás edificios de producción (campo de tiro, corral de guerra, taller…): uno de cada
 	# uno después del primer cuartel; más si sobra (proceso/21, paso 10).
 	if n_cuartel >= 1 and vill.size() >= 14:
-		for t in _producer_types():
+		for t in _producer_types() + (["cuartel"] if main != "cuartel" else []):
+			if t == main:
+				continue
 			var have: int = by_type.get(t, []).size()
 			if unbuilt.has(t) or p["age"] < int(sim.dp(player).edificios[t].get("edad_min", 1)):
 				continue
@@ -518,6 +522,15 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 	# Torre.
 	if p["age"] >= 2 and sim.dp(player).edificios.has("torre") and by_type.get("torre", []).size() < 1 and p["res"]["piedra"] >= 250:
 		_try_build("torre", p, vill, centro, 1)
+
+
+func _main_producer() -> String:
+	var pref: Array = sim.dp(player).civ.get("ia_unidades", [])
+	if not pref.is_empty():
+		for t in _producer_types():
+			if (sim.dp(player).edificios[t].get("produce", []) as Array).has(pref[0]):
+				return t
+	return "cuartel"
 
 
 ## Edificios de producción militar de la civ, además del cuartel y de los que ya levanta
