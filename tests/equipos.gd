@@ -14,7 +14,7 @@ func _init() -> void:
 			minutes = int(kv[1])
 		elif kv[0] == "solo":
 			only = kv[1]
-	var fails := _gates()
+	var fails := _gates() + _salir_del_cerco()
 	var setups := [
 		["2v2", ["tawantinsuyu", "mapuches", "guaranies", "etiopia"], [0, 1, 0, 1]],
 		["2v2", ["tawantinsuyu", "mapuches", "guaranies", "etiopia"], [1, 0, 1, 0]],
@@ -54,6 +54,27 @@ func _init() -> void:
 			fails += 1
 	print("EQUIPOS: ", "OK" if fails == 0 else "%d problemas" % fails)
 	quit()
+
+
+## Fortines con 4 y 6: cada jugador sale de su cerco por sus puertas hasta el centro del mapa
+## (con una sola casilla de puerta en un cerco de 3 de grosor quedaban encerrados).
+func _salir_del_cerco() -> int:
+	var bad := 0
+	for np in [4, 6]:
+		var s := Sim.new(31, np, null, {"civs": ["guaranies", "mapuches", "etiopia", "palmares", "ayutthaya", "tawantinsuyu"].slice(0, np), "terreno": "fortines"})
+		var c := Vector2i(s.map.n / 2, s.map.n / 2)
+		var stuck := []
+		for pid in np:
+			var b: Vector2i = s.bases[pid] + Vector2i(2, 2)
+			var from := s.map.nearest_free(b.x + 4, b.y + 4, 6, pid)
+			var to := s.map.nearest_free(c.x, c.y, 8, pid)
+			var path := s.map.find_path(from, to, pid)
+			if path.is_empty() or path[path.size() - 1] != to:
+				stuck.append(pid)
+		print("fortines con %d: encerrados %s" % [np, str(stuck)])
+		if not stuck.is_empty():
+			bad += 1
+	return bad
 
 
 ## Fortines 2v2: el jugador 0 entra por la puerta de su aliado (2) y no por la del rival (1).

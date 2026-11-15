@@ -69,3 +69,13 @@ Al final, una síntesis con lo que repiten varios y un plan priorizado: [00-sint
    - Determinismo y autotest con guaraníes y Etiopía: OK.
 5. **(17:00) Llegó el informe de equipos y todos contra todos** ([informe](04-equipos-y-ffa.md)): faltan sitios sagrados en mapas de varios, en fortines nadie pelea, la IA aliada no defiende y casi no da tributo, y el todos contra todos con 6 no termina.
 6. **(17:10) Síntesis de los cuatro** ([00-sintesis.md](00-sintesis.md)): lo que gustó, lo que repiten ordenado por cuánto le quita a la diversión, y el plan. Tres preguntas que cambian el balance van a `CONSULTAS.md`: contadores más blandos (C-31), comida temprana con animales (C-32) y tiempo de obra de los hitos (C-33). La C-34 pregunta el orden de prioridades. Empiezo por los errores de la sección 1, que no cambian el balance.
+7. **(17:40) Arreglos de los errores que arruinaban partidas de varios** (síntesis, sección 1):
+   - **Sitios sagrados que faltaban.** Cuando un sitio caía en el agua o en un lugar ocupado, el generador de mapas de varios lo descartaba sin avisar: islas quedaba con 1. Ahora se acerca al centro hasta que entra. El del centro no se corre, para no quedar más cerca de nadie: si el centro es un lago, ese sitio no va. Prueba nueva `tests/sitios.gd`: en islas, río, fortines, bosque, delta y llano, con 3, 4, 6 y 8 jugadores y 6 semillas, siempre hay al menos un sitio por jugador. OK.
+   - **En fortines nadie peleaba porque cada uno estaba encerrado en su cerco.** Era una falla mía de la etapa 18:
+     - para que el giro no dejara huecos en diagonal, la empalizada llenaba todo el grosor del cerco (3 casillas), pero la puerta era una sola casilla en el medio;
+     - el dueño pasaba la puerta, pero no las empalizadas de adelante y de atrás;
+     - ahora la puerta es una columna de 3 de ancho que atraviesa el cerco.
+     - **Prueba nueva en `tests/equipos.gd`:** cada jugador llega desde su base hasta el centro del mapa. Con el código anterior quedaban encerrados los 4 de 4 y 5 de 6; ahora, ninguno.
+   - **La IA aliada no defendía:** el radio de ayuda era de 70 casillas y los aliados quedan a 90–192. Ahora es de 200; igual solo va si su propia base no está amenazada.
+   - **Tributo:** la IA da cuando al aliado le quedan menos de 400 (antes 150) y a ella le sobran más de 600 (antes 800).
+   - Determinismo OK. Partidas 2v2 de 20 minutos para medir ayuda y tributo, corriendo.

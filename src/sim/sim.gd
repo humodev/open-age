@@ -2498,10 +2498,26 @@ func _generate_map_n() -> void:
 		var b := bases[(i + 1) % np] + Vector2i(2, 2)
 		var mid := (a + b) / 2
 		spots.append(mid + (Vector2i(n / 2, n / 2) - mid) / 3)
+	# Si el lugar cae en el agua o está ocupado, se acerca al centro hasta que entre: antes se
+	# perdía en silencio (islas quedaba con 1 sitio; jugadores de prueba, proceso/22).
+	var mid := Vector2i(n / 2, n / 2)
 	for sp in spots:
-		var t := map.nearest_free(sp.x, sp.y, 8)
-		if t.x >= 0 and map.is_free_rect(t.x, t.y, 2, 2):
-			spawn_building("sitio_sagrado", -1, t.x, t.y, true)
+		var placed := false
+		for k in 9:
+			var c: Vector2i = sp + (mid - sp) * k / 8
+			# El del centro no se corre: fuera del centro quedaría más cerca de alguien. Si el
+			# centro es un lago, ese sitio no va (y los demás siguen siendo simétricos).
+			for rr in range(0, 2 if sp == mid else 6):
+				for dy in range(-rr, rr + 1):
+					for dx in range(-rr, rr + 1):
+						if placed or maxi(absi(dx), absi(dy)) != rr:
+							continue
+						var t := c + Vector2i(dx, dy)
+						if map.in_bounds(t.x, t.y) and map.is_free_rect(t.x - 1, t.y - 1, 4, 4) and not map.is_water(t.x, t.y) and not map.is_water(t.x + 1, t.y + 1):
+							spawn_building("sitio_sagrado", -1, t.x, t.y, true)
+							placed = true
+			if placed:
+				break
 	# Arcilla del centro: 1000 por jugador, en anillo.
 	for i in np:
 		var d: Vector2i = _base_dirs[i]
@@ -2631,7 +2647,7 @@ func _fort_rings_n(fd: Dictionary) -> void:
 					if along >= r and along < r + thick:
 						if not gaps.has(key):
 							gaps[key] = []
-						gaps[key].append(Vector2i(tx, ty))
+						gaps[key].append(Vector3i(tx, ty, across))
 					continue
 				var wob := 0 if across <= half + 2 else (_vnoise(fwd + 500, side + 500, 6, sd) - 500) / 250
 				var cheb := along + wob
@@ -2640,14 +2656,16 @@ func _fort_rings_n(fd: Dictionary) -> void:
 		for key in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
 			if not gaps.has(key):
 				continue
+			# La salida llena todo el grosor del cerco: la puerta también, como una columna de
+			# 3 de ancho en el medio. Con una sola casilla de puerta, el dueño no podía cruzar las
+			# empalizadas de adelante y de atrás y quedaba encerrado (jugadores de prueba, proceso/22).
 			var tiles: Array[Vector2i] = []
-			tiles.assign(gaps[key])
-			var gate := c + _local_near(pid, key.x * mid, key.y * mid)
-			var best := tiles[0]
-			for t in tiles:
-				if (t - gate).length_squared() < (best - gate).length_squared():
-					best = t
-			_fort_gaps.append([pid, tiles, best])
+			var gates: Array[Vector2i] = []
+			for v: Vector3i in gaps[key]:
+				tiles.append(Vector2i(v.x, v.y))
+				if v.z <= 1:
+					gates.append(Vector2i(v.x, v.y))
+			_fort_gaps.append([pid, tiles, gates])
 
 
 ## Islas para N: cada base en su isla, una al centro y una entre cada par de
@@ -3221,7 +3239,8 @@ func _spawn_fort_walls() -> void:
 			continue
 		var dd := dp(pid)
 		for t: Vector2i in g[1]:
-			var type := "puerta" if t == g[2] else "empalizada"
+			var is_gate: bool = (g[2] as Array).has(t) if g[2] is Array else t == g[2]
+			var type := "puerta" if is_gate else "empalizada"
 			if not dd.edificios.has(type) or not map.in_bounds(t.x, t.y) or not map.is_free_rect(t.x, t.y, 1, 1):
 				continue
 			spawn_building(type, pid, t.x, t.y, true)
