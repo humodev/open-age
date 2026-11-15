@@ -107,6 +107,7 @@ func think() -> void:
 	_research(p, by_type, saving)
 	_trade(p, by_type)
 	_engine(p, vill, centro, by_type, saving)
+	_animals(centro)
 	_alarm(p, vill, army, centro)
 	_tribute(p, saving)
 	_military(army, centro)
@@ -204,6 +205,13 @@ func _economy(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, saving: 
 					break
 	for v in idle:
 		var kind := _most(counts, ratio, vill.size() + virt + 1, false)
+		# Alimento: primero los animales propios (como AoE4), carneados de a uno.
+		if kind == "alimento":
+			var beast := _own_animal(centro)
+			if beast != null:
+				sim.push_command({"t": "target", "player": player, "ids": [v.id], "target": beast.id})
+				counts[kind] += 1
+				continue
 		var t := sim.find_resource(player, kind, centro.x, centro.y, 40000, -1, v.id)
 		if t == null and kind == "alimento":
 			if sim.can_afford(player, sim.dp(player).cost_of("granja", p["age"])):
@@ -969,6 +977,51 @@ func _attack(army: Array[SimEntity]) -> void:
 	var dy := ref.y - target.y
 	var l := maxi(1, Sim.isqrt(dx * dx + dy * dy))
 	sim.push_command({"t": "move", "player": player, "ids": ids, "x": target.x + dx * 3000 / l, "y": target.y + dy * 3000 / l, "amove": true})
+
+
+## Animal propio más cercano a la capital que nadie esté carneando (el que ya tiene un
+## aldeano encima se deja). Un objetivo por pensada: si no, todos van al mismo.
+func _own_animal(centro: SimEntity) -> SimEntity:
+	var best: SimEntity = null
+	var bd := 1 << 60
+	for e in sim.actives:
+		if e.alive and e.owner == player and e.def.get("animal", false):
+			var d := sim.dist_to(e, centro)
+			if d < bd:
+				bd = d
+				best = e
+	return best
+
+
+## Explorador y rebaño (como AoE4, proceso/23): el explorador va a los animales sueltos más
+## cercanos para reclamarlos, y los animales propios lejos de la capital se arrean a casa.
+func _animals(centro: SimEntity) -> void:
+	var every := int(sim.data.reglas["animales"]["arreo_cada_ticks"])
+	if (sim.tick + player * 7) % every != 0:
+		return
+	var scouts: Array = []
+	var far := []
+	for e in sim.actives:
+		if not e.alive or e.owner != player or not e.is_unit():
+			continue
+		if e.fn == "explorador" and e.order == O.IDLE:
+			scouts.append(e)
+		elif e.def.get("animal", false) and e.order == O.IDLE and sim.dist_to(e, centro) > 6000:
+			far.append(e.id)
+	if not far.is_empty():
+		sim.push_command({"t": "move", "player": player, "ids": far, "x": centro.x + 3000, "y": centro.y + 3000, "suelto": true})
+	if scouts.is_empty():
+		return
+	var wild: SimEntity = null
+	var wd := 60000
+	for e in sim.entities:
+		if e.alive and e.is_resource() and e.def.get("reclamable", false):
+			var d := sim.dist_to(e, centro)
+			if d < wd:
+				wd = d
+				wild = e
+	if wild != null:
+		sim.push_command({"t": "move", "player": player, "ids": [scouts[0].id], "x": wild.x, "y": wild.y})
 
 
 ## Rival del próximo ataque. Si un aliado ya va contra alguien, se suma; si no,

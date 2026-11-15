@@ -24,6 +24,7 @@
   "Gondar"
  ],
  "unidades": {
+  "rebano": {"nombre": "Cabra", "color": "#3a3530"},
   "aldeano": {
    "nombre": "Gäbbar"
   },

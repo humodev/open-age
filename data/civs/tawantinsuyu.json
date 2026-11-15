@@ -24,6 +24,7 @@
   "Inkarri"
  ],
  "unidades": {
+  "rebano": {"nombre": "Llama", "color": "#e8dcc4", "desc": "Llama de los rebaños del ayllu: se arrea y se carnea."},
   "aldeano": {
    "nombre": "Runa"
   },

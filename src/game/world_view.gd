@@ -997,6 +997,8 @@ func _stretch_to_scale(e: SimEntity, struct: Node3D) -> Node3D:
 
 ## Malla de unidad según la civilización del dueño (CivMeshes) o la de la capa común.
 func unit_mesh_for(e: SimEntity) -> Mesh:
+	if e.def.get("animal", false):
+		return Meshes.animal_mesh(Color(e.def.get("color", "#c9b08a")))
 	var style: Dictionary = sim.dp(e.owner).civ.get("estilo", {})
 	if style.is_empty():
 		return Meshes.unit_mesh(e.type, Palette.team(e.owner))
@@ -1064,6 +1066,16 @@ func on_tick(events: Array) -> void:
 		v["cur"] = to_world(e.x, e.y)
 	for ev in events:
 		match ev["t"]:
+			"recurso_nuevo":
+				# Recurso que aparece en la partida (la carne de un animal): la vista solo crea los del principio.
+				var re: SimEntity = sim.by_id.get(ev["id"])
+				if re != null and re.alive and not visuals.has(re.id):
+					var mi := MeshInstance3D.new()
+					mi.mesh = Meshes.rock_mesh(re.type)
+					mi.position = to_world(re.x, re.y)
+					mi.rotation.y = float(_hash(re.id) % 360) * PI / 180.0
+					add_child(mi)
+					visuals[re.id] = {"node": mi, "kind": "rock", "max": re.amount, "cur": mi.position, "prev": mi.position}
 			"died":
 				_on_died(ev["id"])
 			"absorbed":

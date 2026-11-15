@@ -43,6 +43,7 @@ var _in_step := false
 var _grid := {} # celda de 1 casilla -> unidades (separación)
 var _ehash := {} # celda de EC -> unidades y edificios (búsqueda)
 var _res_cells := {} # celda de RC casillas -> recursos
+var _wild: Array[SimEntity] = [] # animales sueltos que se pueden reclamar (proceso/23)
 var _dirty := false
 var _teams := PackedInt32Array() # equipo de cada jugador (copia de players[i].equipo)
 var _emask := {} # celda de `_ehash` -> bits de dueños presentes (bit 0: naturaleza)
@@ -316,7 +317,18 @@ func _cmd_target(pid: int, units: Array[SimEntity], target_id: int) -> void:
 	if t == null or not t.alive:
 		return
 	var plain: Array[SimEntity] = []
+	var meat: SimEntity = null
 	for e in units:
+		if t.is_unit() and t.def.get("animal", false) and t.owner == pid:
+			# Aldeano sobre un animal propio: lo carnea; el resto lo junta (proceso/23, C-32).
+			if e.fn == "civil":
+				if meat == null and t.alive:
+					meat = _slaughter(t)
+				if meat != null and meat.alive:
+					_order_gather(e, meat)
+			else:
+				plain.append(e)
+			continue
 		if hostile(pid, t):
 			if t.is_unit() and e.def.get("solo_edificios", false):
 				plain.append(e)
@@ -853,6 +865,7 @@ func step() -> void:
 			_update_fog(pid)
 	if _dirty:
 		_cleanup()
+	_claim_animals()
 	tele.check_idle(self)
 	if tick % 10 == 5 and not game_over:
 		_check_victory()
@@ -1417,6 +1430,8 @@ func _kill(e: SimEntity, killer: SimEntity = null) -> void:
 	e.alive = false
 	e.hp = 0
 	_dirty = true
+	if e.is_unit() and e.def.has("carne"):
+		_leave_meat(e) # un animal muerto (también uno robado al rival) deja su carne
 	if e.is_building() or e.is_resource():
 		map.clear(e.tx, e.ty, e.w, e.h)
 	if e.is_building():
@@ -2045,6 +2060,61 @@ func _is_ai(pid: int) -> bool:
 	return false
 
 
+## Carne de un animal: un recurso en su casilla (o la libre más cercana).
+func _leave_meat(a: SimEntity) -> SimEntity:
+	var t := map.nearest_free(a.x / P, a.y / P, 4)
+	if t.x < 0 or not map.is_free_rect(t.x, t.y, 1, 1):
+		return null
+	var m := spawn_resource("carne", t.x, t.y)
+	m.amount = int(a.def.get("carne", m.amount))
+	return m
+
+
+## Carnear: el aldeano convierte su animal en carne y se pone a juntarla.
+func _slaughter(a: SimEntity) -> SimEntity:
+	var m := _leave_meat(a)
+	a.def = a.def.duplicate()
+	a.def.erase("carne") # remove_quietly no vuelve a dejar carne
+	remove_quietly(a)
+	return m
+
+
+## Animales sueltos: pasan a ser del jugador con la unidad más cercana a `reclamo_radio`
+## (como las ovejas de AoE4). Una vez por segundo.
+func _claim_animals() -> void:
+	if _wild.is_empty() or tick % 10 != 3:
+		return
+	var r := int(data.reglas["animales"]["reclamo_radio"])
+	var rt := r / P + 1
+	var keep: Array[SimEntity] = []
+	for w in _wild:
+		if not w.alive:
+			continue
+		var best: SimEntity = null
+		var bd := r + 1
+		for dy in range(-rt, rt + 1):
+			for dx in range(-rt, rt + 1):
+				for u: SimEntity in _grid.get((w.tx + dx) * 4096 + w.ty + dy, _NONE):
+					if not u.alive or u.owner < 0 or u.def.get("animal", false) or u.inside >= 0:
+						continue
+					var d := dist(u.x, u.y, w.x, w.y)
+					if d < bd or (d == bd and best != null and u.id < best.id):
+						bd = d
+						best = u
+		if best == null:
+			keep.append(w)
+			continue
+		var x := w.x
+		var y := w.y
+		w.alive = false
+		map.clear(w.tx, w.ty, w.w, w.h)
+		_dirty = true
+		events.append({"t": "absorbed", "id": w.id, "owner": -1})
+		spawn_unit("rebano", best.owner, x, y)
+		events.append({"t": "animal_reclamado", "player": best.owner, "x": x, "y": y})
+	_wild = keep
+
+
 ## Telemetría: una unidad se rindió (no puede llegar o quedó trabada).
 func _tele_stuck(e: SimEntity) -> void:
 	if tele.on and e.owner >= 0:
@@ -2313,6 +2383,10 @@ func spawn_resource(type: String, tx: int, ty: int) -> SimEntity:
 	e.amount = def["cantidad"]
 	e.hp = 1
 	e.hp_max = 1
+	if def.get("reclamable", false):
+		_wild.append(e)
+	if _in_step:
+		events.append({"t": "recurso_nuevo", "id": e.id}) # la vista crea los recursos al empezar; este aparece después
 	map.mark(tx, ty, e.w, e.h, e.id, true)
 	var k := (tx / RC) * 1024 + ty / RC
 	if not _res_cells.has(k):
@@ -2383,7 +2457,7 @@ func _generate_map() -> void:
 			outward.append(d)
 	var picks: Array[Vector2i] = inward + outward
 
-	_cluster_sym("arbusto", c0 + _scale_dir(picks[0], 7), 8)
+	_cluster_sym("arbusto", c0 + _scale_dir(picks[0], 7), int(data.reglas["animales"]["arbustos_base"]))
 	_blob_sym(c0 + _scale_dir(picks[1], 13), 4, 85)
 	_res_sym("roca", c0 + _scale_dir(picks[2], 10))
 	_res_sym("roca", c0 + _scale_dir(picks[2], 10) + Vector2i(2, -1))
@@ -2392,6 +2466,15 @@ func _generate_map() -> void:
 	_res_sym("riqueza", c0 + _scale_dir(picks[3], 10), int(cl.get("base", -1)), true)
 	_res_sym("riqueza", c0 + _scale_dir(picks[3], 10) + Vector2i(-1, 2), int(cl.get("base", -1)), true)
 	_blob_sym(c0 + _scale_dir(picks[4], 15), 3, 80)
+	# Animales (como AoE4, proceso/23, C-32): el kit de la base 0 y su espejo para la 1,
+	# cada uno con las cantidades de su civ.
+	if players.size() >= 2 and not _opts.get("sin_animales", false):
+		var spots := [c0 + _scale_dir(picks[5], 5), c0 + _scale_dir(picks[6], 11), c0 + _scale_dir(picks[7], 19), c0 + _scale_dir(picks[1], 22)]
+		for pid in 2:
+			var sp: Array = spots if pid == 0 else spots.map(func(v: Vector2i) -> Vector2i: return _mirror(v, 1, 1))
+			_animal_kit(pid, sp)
+		var an: Dictionary = data.reglas["animales"]
+		_cluster_sym("rebano_salvaje", Vector2i(n / 2 + n / 6, n / 2 - n / 6), int(an["sueltos_entre_bases"]))
 
 	# Bases extra (campañas con tres o cuatro jugadores): recursos propios sin simetría.
 	for extra in range(2, mini(players.size(), 4)):
@@ -2499,7 +2582,9 @@ func _generate_map_n() -> void:
 	# El mismo juego de recursos para cada base: (adelante, costado) en casillas.
 	for pid in np:
 		var c := bases[pid] + Vector2i(2, 2)
-		_cluster_at("arbusto", c + _local(pid, 7, -2), 8)
+		_cluster_at("arbusto", c + _local(pid, 7, -2), int(data.reglas["animales"]["arbustos_base"]))
+		if not _opts.get("sin_animales", false):
+			_animal_kit(pid, [c + _local(pid, 4, 4), c + _local(pid, 10, 4), c + _local(pid, 18, -6), c + _local(pid, 20, 8)])
 		_blob_fixed(c + _local(pid, -3, 13), 4)
 		_blob_fixed(c + _local(pid, -3, -13), 3)
 		_res_at("roca", c + _local(pid, 1, -10), -1, -1)
@@ -2758,6 +2843,25 @@ func _islands_n() -> void:
 						var t := p + Vector2i(dx, dy)
 						if map.in_bounds(t.x, t.y) and map.water[t.y * n + t.x] == 1:
 							map.set_water(t.x, t.y, 2)
+
+
+## Animales de un jugador (proceso/23, C-32). `spots`: [junto a la capital (propios),
+## cerca (sueltos), manada de venados 1, manada de venados 2]; las cantidades salen de
+## `reglas.animales` con lo que cambie la civ (`civ.animales`: los guaraníes, cazadores,
+## sin rebaño y con más venados).
+func _animal_kit(pid: int, spots: Array) -> void:
+	var an: Dictionary = (data.reglas["animales"] as Dictionary).duplicate()
+	an.merge(dp(pid).civ.get("animales", {}), true)
+	var home: Vector2i = spots[0]
+	for i in int(an["inicial"]):
+		var t := map.nearest_free(home.x + i % 3, home.y + i / 3, 6)
+		if t.x >= 0:
+			spawn_unit("rebano", pid, t.x * P + P / 2, t.y * P + P / 2)
+	_cluster_at("rebano_salvaje", spots[1], int(an["sueltos_cerca"]))
+	var herds := int(an["venados_manadas"])
+	for h in herds:
+		var c: Vector2i = spots[2 + h % 2] + Vector2i((h / 2) * 3, (h / 2) * -3)
+		_cluster_at("venado", c, int(an["venados_por_manada"]))
 
 
 func _res_at(type: String, t: Vector2i, amount: int, owner: int, hops: int = 0) -> void:

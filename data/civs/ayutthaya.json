@@ -24,6 +24,7 @@
   "Mueang Tha"
  ],
  "unidades": {
+  "rebano": {"nombre": "Búfalo de agua", "color": "#55585c", "desc": "Búfalo de los arrozales: se arrea y se carnea."},
   "aldeano": {
    "nombre": "Phrai"
   },

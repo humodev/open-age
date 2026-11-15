@@ -158,6 +158,27 @@ static func unit_mesh(type: String, team: Color) -> ArrayMesh:
 	return mesh
 
 
+## Cuadrúpedo de maqueta: llama, chilihueque, cabra, búfalo, cerdo o venado (proceso/23).
+## `deer`: patas más largas y cuernos chicos.
+static func animal_mesh(col: Color, deer: bool = false) -> ArrayMesh:
+	var key := "animal_%s_%s" % [col.to_html(), deer]
+	if _cache.has(key):
+		return _cache[key]
+	var p: Array = []
+	var leg := 0.34 if deer else 0.26
+	p.append([sphere(0.22, 10), xf(Vector3(0, leg + 0.12, 0), Vector3.ZERO, Vector3(1.0, 0.75, 1.55)), col])
+	p.append([cyl(0.07, 0.09, 0.32, 8), xf(Vector3(0, leg + 0.3, 0.3), Vector3(-35, 0, 0)), col])
+	p.append([sphere(0.1, 8), xf(Vector3(0, leg + 0.43, 0.42), Vector3.ZERO, Vector3(0.8, 0.8, 1.2)), col.darkened(0.1)])
+	for c in [Vector2(-0.11, 0.2), Vector2(0.11, 0.2), Vector2(-0.11, -0.2), Vector2(0.11, -0.2)]:
+		p.append([cyl(0.035, 0.03, leg, 6), xf(Vector3(c.x, leg / 2.0, c.y)), col.darkened(0.25)])
+	if deer:
+		for sx in [-0.05, 0.05]:
+			p.append([cyl(0.01, 0.015, 0.16, 5), xf(Vector3(sx, leg + 0.55, 0.4), Vector3(-20, 0, sx * 300)), Color("d9c9a8")])
+	var m := merge(p)
+	_cache[key] = m
+	return m
+
+
 static func team_disc(team: Color, r: float) -> MeshInstance3D:
 	var mi := MeshInstance3D.new()
 	mi.mesh = cyl(r, r, 0.02, 20)
@@ -612,6 +633,18 @@ static func rock_mesh(kind: String) -> ArrayMesh:
 		var clay_mesh := merge(p)
 		_cache[kind] = clay_mesh
 		return clay_mesh
+	if kind in ["venado", "rebano_salvaje"]:
+		# Animal suelto (caza o rebaño sin dueño): el mismo cuadrúpedo de los rebaños, en marrón.
+		var am := animal_mesh(Color("8a6a46") if kind == "venado" else Color("c2ad86"), kind == "venado")
+		_cache[kind] = am
+		return am
+	if kind == "carne":
+		# Animal carneado: bulto en el suelo y una mancha oscura.
+		p.append([cyl(0.38, 0.42, 0.03, 10), xf(Vector3(0, 0.015, 0)), Color("5a2a22")])
+		p.append([sphere(0.26, 8), xf(Vector3(0, 0.12, 0), Vector3.ZERO, Vector3(1.4, 0.55, 0.85)), Color("a36a52")])
+		var meat := merge(p)
+		_cache[kind] = meat
+		return meat
 	var base := Palette.STONE
 	var dark := Palette.STONE_DARK
 	if kind == "penasco":

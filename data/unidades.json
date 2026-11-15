@@ -6,7 +6,7 @@
     "pv": 50, "armadura": 0, "armadura_distancia": 0, "ataque": 3, "alcance": 400, "cadencia_ms": 1500,
     "velocidad": 1250, "vision": 7000, "radio": 220,
     "carga": 10,
-    "tasa": { "alimento": 1000, "granja": 750, "madera": 850, "piedra": 700, "yerba": 700, "riqueza": 700 },
+    "tasa": { "carne": 1200, "alimento": 1000, "granja": 750, "madera": 850, "piedra": 700, "yerba": 700, "riqueza": 700 },
     "construye": ["casa", "granja", "deposito", "cuartel", "torre", "centro", "empalizada", "puerta", "mercado"]
   },
   "guerrero": {
@@ -50,5 +50,11 @@
     "costo": { "alimento": 60, "riqueza": 70 }, "tiempo_ms": 20000,
     "pv": 80, "armadura": 0, "armadura_distancia": 0, "ataque": 16, "alcance": 5500, "cadencia_ms": 3200,
     "velocidad": 1150, "vision": 8000, "radio": 220, "polvora": true
+  },
+  "rebano": {
+    "nombre": "Animal del rebaño", "funcion": "ganado", "edad_min": 1, "pob": 0, "costo": {}, "tiempo_ms": 1000,
+    "pv": 30, "armadura": 0, "armadura_distancia": 0, "ataque": 0, "alcance": 0, "cadencia_ms": 1500,
+    "velocidad": 900, "vision": 3000, "radio": 280, "carne": 200, "animal": true, "color": "#c9b08a",
+    "desc": "Se arrea con el explorador o con cualquier unidad, y un aldeano lo carnea: 200 de alimento que se juntan rápido."
   }
 }

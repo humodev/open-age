@@ -12,6 +12,7 @@
   "aldeanos_iniciales": 6,
   "exploradores_iniciales": 1,
   "separacion_cada_ticks": 2,
+  "animales": { "_doc": "Comida temprana como AoE4 (proceso/23, C-32): animales propios junto a la capital, sueltos cerca y entre bases, manadas de venados; menos arbustos.", "inicial": 5, "sueltos_cerca": 4, "sueltos_entre_bases": 3, "venados_manadas": 2, "venados_por_manada": 4, "arbustos_base": 4, "reclamo_radio": 3000, "arreo_cada_ticks": 300 },
   "telemetria": { "_doc": "Sucesos de IA trabada (proceso/20): recursos sin gastar y producción parada, en revisiones cada 15 s", "flotando": 800, "revisiones_seguidas": 2 },
   "grupo": { "_doc": "Movimiento en grupo (docs/diseno/jugabilidad/03-propuesta.md, §1.10). Distancias en milésimas de casilla, tiempos en ticks.", "separacion": 750, "ayuda_obra_radio": 10000,
     "min_unidades": 2, "formar_radio": 12000, "hueco": 250, "ancho_max": 20, "ala_ancho": 2,

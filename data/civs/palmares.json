@@ -24,6 +24,7 @@
   "Cucaú o Quilombo"
  ],
  "unidades": {
+  "rebano": {"nombre": "Cerdo", "color": "#9a6a62", "desc": "Cerdos criados en los mocambos [verificar]."},
   "aldeano": {
    "nombre": "Palmarista"
   },

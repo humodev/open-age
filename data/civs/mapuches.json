@@ -26,6 +26,7 @@
  "inicio_edificio": "lof",
  "explorador": "explorador",
  "unidades": {
+  "rebano": {"nombre": "Chilihueque", "color": "#8a6a4a", "desc": "Chilihueque (hueque): el camélido que criaban los mapuches antes de la oveja [verificar]."},
   "aldeano": {
    "nombre": "Che"
   },

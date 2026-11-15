@@ -9,6 +9,7 @@ func _init() -> void:
 	_almacen_recolecta()
 	_tecnologias_con_lugar()
 	_aldeanos_en_bloque()
+	_animales()
 	print("JUGABILIDAD: ", "OK" if fails == 0 else "%d fallas" % fails)
 	quit()
 
@@ -139,3 +140,43 @@ func _aldeanos_en_bloque() -> void:
 		if s.by_id[id].group >= 0:
 			g2 += 1
 	_check(g2 == 0, "cerca: van directo, sin grupo (%d en grupo)" % g2)
+
+
+## Comida temprana como AoE4 (proceso/23, C-32): animales propios al arrancar (los guaraníes,
+## no: son cazadores), el explorador reclama un animal suelto y un aldeano carnea y junta.
+func _animales() -> void:
+	var s := Sim.new(5, 2, null, {"civs": ["tawantinsuyu", "guaranies"], "terreno": "llano"})
+	var own := [0, 0]
+	var wild: SimEntity = null
+	for e in s.entities:
+		if e.alive and e.def.get("animal", false):
+			own[e.owner] += 1
+		if e.alive and e.is_resource() and e.def.get("reclamable", false) and wild == null:
+			wild = e
+	_check(own[0] == 5 and own[1] == 0, "animales al arrancar: incas %d (llamas), guaraníes %d" % own)
+	var scout: SimEntity = null
+	var vill: SimEntity = null
+	for e in s.entities:
+		if e.alive and e.owner == 0 and e.fn == "explorador":
+			scout = e
+		if e.alive and e.owner == 0 and e.type == "aldeano" and vill == null:
+			vill = e
+	s.push_command({"t": "move", "player": 0, "ids": [scout.id], "x": wild.x, "y": wild.y})
+	for i in 600:
+		s.step()
+		if not wild.alive:
+			break
+	var now := 0
+	for e in s.entities:
+		if e.alive and e.owner == 0 and e.def.get("animal", false):
+			now += 1
+	_check(not wild.alive and now > 5, "el explorador reclama el rebaño suelto (ahora %d propios, eran 5)" % now)
+	var beast: SimEntity = null
+	for e in s.entities:
+		if e.alive and e.owner == 0 and e.def.get("animal", false):
+			beast = e
+	var food0 := int(s.players[0]["res"]["alimento"])
+	s.push_command({"t": "target", "player": 0, "ids": [vill.id], "target": beast.id})
+	for i in 600:
+		s.step()
+	_check(not beast.alive and int(s.players[0]["res"]["alimento"]) > food0, "el aldeano carnea y junta: alimento de %d a %d" % [food0, int(s.players[0]["res"]["alimento"])])

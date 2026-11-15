@@ -84,3 +84,35 @@ Orden de los cambios de balance: A, después E, F y G, de a uno, con un torneo d
    - Determinismo OK, banco 8,2 ms por tick y autotest OK.
    - **Salud de la IA:** marca ejércitos de 5 y 6, pero son peleas perdidas, no una IA trabada. Hay que ajustar la prueba para que distinga una cosa de la otra.
    - Torneo de 5 semillas corriendo.
+4. **(23:00) Comida temprana como AoE4 (F): animales por región, caza y menos arbustos.**
+   - **Animales propios:** 5 junto a la capital, que no ocupan población. Se arrean como cualquier unidad y un aldeano los carnea: el animal pasa a ser carne (200 de alimento), que se junta más rápido que los arbustos (`tasa.carne` 1200 contra 1000).
+   - **Animales sueltos:** cerca de cada base y entre las bases (3). Pasan a ser del jugador cuya unidad llega primero a 3 casillas, como las ovejas de AoE4; el explorador vuelve a tener trabajo. Un animal muerto por el rival también deja su carne, así que se puede robar matándolo.
+   - **Venados:** 2 manadas de 4 por base, con 300 cada uno, lejos de la casa: conviene un granero al lado.
+   - **Arbustos:** de 8 a 4 por base.
+   - **Por pueblo** (`unidades.rebano` y `civ.animales`):
+
+     | Pueblo | Animal | Nota |
+     |---|---|---|
+     | Tawantinsuyu | llama | |
+     | Mapuches | chilihueque, el camélido que criaban antes de la oveja | `[verificar]` |
+     | Etiopía | cabra | |
+     | Ayutthaya | búfalo de agua | |
+     | Palmares | cerdo | `[verificar]` |
+     | Guaraníes | sin rebaño | pueblo cazador: 4 manadas de venados en lugar de 2 |
+   - **Mapas:** en los de 2 jugadores, el kit de la base 0 y su espejo; en los de varios, el mismo kit girado. `reglas.json → animales` tiene todos los números.
+   - **IA:**
+     - sus aldeanos carnean primero los animales propios;
+     - su explorador va a los sueltos más cercanos;
+     - lo que quede lejos de la capital se arrea a casa.
+   - **Vista:**
+     - cuadrúpedo de maqueta con el color de cada animal;
+     - venados más altos y con cuernos;
+     - carne en el suelo;
+     - los recursos que aparecen durante la partida (la carne) ahora se dibujan (suceso `recurso_nuevo`); antes solo se creaban los del principio.
+
+     ![](llamas-junto-a-la-capital.jpg)
+   - **Pruebas** (`tests/jugabilidad.gd`, todas OK):
+     - los incas arrancan con 5 llamas y los guaraníes con ninguna;
+     - el explorador reclama el rebaño suelto (los 3 juntos, como las ovejas);
+     - un aldeano carnea y junta.
+   - Determinismo OK. La economía en paz (cuándo llegan las granjas) y el torneo se miden después del torneo del combate: un cambio por vez.
