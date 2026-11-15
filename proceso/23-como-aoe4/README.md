@@ -116,3 +116,18 @@ Orden de los cambios de balance: A, después E, F y G, de a uno, con un torneo d
      - el explorador reclama el rebaño suelto (los 3 juntos, como las ovejas);
      - un aldeano carnea y junta.
    - Determinismo OK. La economía en paz (cuándo llegan las granjas) y el torneo se miden después del torneo del combate: un cambio por vez.
+5. **(00:30) Torneo con el combate nuevo** (5 semillas, 75 partidas, sin los animales todavía; [resultado](pruebas/01-torneo-bonos.txt)):
+
+   | Civ | Con multiplicadores (etapa 21, paso 19) | Con bonos y dos armaduras |
+   |---|---|---|
+   | Palmares | 56 % | **72 %** |
+   | Guaraníes | 36 % | 56 % |
+   | Mapuches | 84 % | 56 % |
+   | Ayutthaya | 56 % | 44 % |
+   | Tawantinsuyu | 24 % | 44 % |
+   | Etiopía | 44 % | **28 %** |
+
+   - **El reparto se achica:** cuatro de seis dentro de la banda, y los mapuches bajan solos de 84 a 56 %. Con los contadores más blandos ya no ganaban tanto con su choque.
+   - **Quedan afuera:** Palmares, arriba, por su distancia (flecheiros); Etiopía, abajo, porque su jinete noble es choque y la línea ahora lo frena sin necesitar el ×2,25.
+   - Partidas por destrucción de hitos: 53 de 75.
+   - **No ajusto todavía:** primero se mide la comida temprana (los animales), que ya está en el código.
