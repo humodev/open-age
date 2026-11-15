@@ -11,6 +11,7 @@ func _init() -> void:
 	_aldeanos_en_bloque()
 	_animales()
 	_carnear_en_cadena()
+	_auras_de_hitos()
 	print("JUGABILIDAD: ", "OK" if fails == 0 else "%d fallas" % fails)
 	quit()
 
@@ -216,3 +217,56 @@ func _carnear_en_cadena() -> void:
 		s2.step()
 	var tg: SimEntity = s2.by_id.get(v.target)
 	_check(v.order in [SimEntity.Order.GATHER, SimEntity.Order.RETURN] and v.carry_res == "alimento" or (tg != null and tg.type == "carne"), "aldeano a un animal suelto: lo reclama y lo carnea (orden %d)" % v.order)
+
+
+
+## Primer lugar libre para `type` en anillos alrededor de `at`.
+func _spot(s: Sim, type: String, at: Vector2i, rmin: int) -> Vector2i:
+	for r in range(rmin, 16):
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				if s.can_place(type, at.x + dx, at.y + dy, 0):
+					return Vector2i(at.x + dx, at.y + dy)
+	return Vector2i(-1, -1)
+
+
+## Auras de los hitos según el lugar (C-33): tres leñadores junto a un hito de economía
+## juntan más que sin él; un guerrero herido junto al hito militar se cura.
+func _auras_de_hitos() -> void:
+	var got := []
+	for with_hito in [false, true]:
+		var s := Sim.new(5, 2, null, {"civs": ["guaranies", "mapuches"], "terreno": "llano"})
+		var c: Vector2i = s.bases[0] + Vector2i(2, 2)
+		var tree: SimEntity = null
+		var best := 1 << 60
+		for e in s.entities:
+			if e.alive and e.type == "arbol":
+				var d := (Vector2i(e.tx, e.ty) - c).length_squared()
+				if d > 64 and d < best:
+					best = d
+					tree = e
+		var at := Vector2i(tree.tx, tree.ty)
+		var st := _spot(s, "almacen_madera", at, 2)
+		s.spawn_building("almacen_madera", 0, st.x, st.y, true)
+		if with_hito:
+			var sh := _spot(s, "karai_palabra", at, 3)
+			s.spawn_building("karai_palabra", 0, sh.x, sh.y, true)
+		var ids := []
+		for e in s.entities:
+			if e.alive and e.owner == 0 and e.type == "aldeano" and ids.size() < 3:
+				ids.append(e.id)
+		s.push_command({"t": "target", "player": 0, "ids": ids, "target": tree.id})
+		var w0 := int(s.players[0]["res"]["madera"])
+		for i in 1200:
+			s.step()
+		got.append(int(s.players[0]["res"]["madera"]) - w0)
+		if with_hito:
+			var sm := _spot(s, "aty_guasu", c, 5)
+			var hito := s.spawn_building("aty_guasu", 0, sm.x, sm.y, true)
+			var g := s.spawn_unit("guerrero", 0, hito.x + 4000, hito.y)
+			g.hp = g.hp_max / 2
+			var hp0 := g.hp
+			for i in 50:
+				s.step()
+			_check(g.hp > hp0, "aura militar: el guerrero herido junto al hito se cura (%d → %d)" % [hp0, g.hp])
+	_check(got[1] > got[0], "aura de economía: tres leñadores junto al hito juntan %d contra %d sin él" % [got[1], got[0]])

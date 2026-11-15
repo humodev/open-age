@@ -66,7 +66,7 @@ La lista sale de la [síntesis de la segunda ronda](../22-testers/ronda-2/00-sin
 ### Pruebas del paso 1
 - **Determinismo:** OK. **Rendimiento:** 8,35 ms de promedio con 200 unidades (presupuesto 100). **Jugabilidad, órdenes, civs y autotest:** OK ([resultados](pruebas/)).
 - **Autotest:** la revisión de la cola global miraba 6 cuadros después de la orden. Con la máquina cargada, la orden todavía no había entrado. Ahora espera a que entre (hasta un segundo) y da población extra para que el tope no la frene.
-- **Equipos:** los dos 2v2 sin fuego amigo y con 7 tributos en 30 minutos; antes había tributo desde los 3 minutos. El 3v3 y el todos contra todos no llegaron a correr dentro del tiempo de la prueba en paralelo.
+- **Equipos:** los cuatro 2v2 sin fuego amigo, con 7 y 9 tributos en 30 minutos (antes había tributo desde los 3 minutos); dos terminan por conquista. El 3v3 y el todos contra todos no llegaron a correr dentro del tiempo límite de la prueba en paralelo: van con el paso 2.
 - **[Salud de la IA](pruebas/03-salud-ia.txt):**
   - En el commit anterior fallaban 3 civs: guaraníes (ejército de 4, sin mercado), Palmares (sin mercado) y Ayutthaya (edad II a las 10:31).
   - Ahora fallan 2, las del mismo par: Palmares termina con Ayutthaya antes del minuto 12. Es el desbalance del paso 3 (Palmares 88 %), no un error de este paso.
@@ -75,3 +75,47 @@ La lista sale de la [síntesis de la segunda ronda](../22-testers/ronda-2/00-sin
 ## Tropiezos
 - `var alt := dict.get(...).has(...)` no compila: Godot no infiere el tipo de lo que sale de un `get`. Hay que escribir el tipo, y una IA que no compila deja la prueba colgada hasta el tiempo límite.
 - El primer "después" de Ayutthaya parecía un arreglo y no lo era: las cifras eran iguales a las de antes. Seguir al elefante minuto a minuto mostró que ya estaba junto a los leñadores. Se corrigió el texto en lugar de declarar una mejora.
+
+### Paso 2: hitos como AoE4 y sitios a 10 minutos
+
+**Qué se hizo (C-33):**
+- **Obra de los hitos** (`edades.json`, `hito_tiempo_ms`): 190/220/250 s con un aldeano (antes, 60/90/120). Con el rendimiento decreciente (tiempo × 3/(n+2)), la IA los levanta con 4 aldeanos en 95, 110 y 125 s. Ahí está la ventana de riesgo que pidió el veterano.
+- **Sitios sagrados:** se gana teniéndolos todos durante 10 minutos (`sitios.victoria_ms`; antes, 5), como en AoE4. La cuenta grande, la ficha y la pantalla de fin leen el mismo dato.
+- **Auras según el lugar:** `reglas.aura_hito`, por eje. Un hito puede traer la suya en `aura`, que queda lista para darle identidad a cada pueblo.
+  - Hito de economía: +15 % de recolección a 9 casillas o menos.
+  - Hito militar: cura 2 de vida por segundo a la tropa propia y aliada a 9 casillas o menos.
+  - Importa dónde se levanta: el de economía junto a los campos o el bosque, el militar donde se pelea. La ficha del hito lo dice.
+
+**Pruebas:**
+- `tests/jugabilidad.gd`:
+  - aura de economía: tres leñadores juntan 300 contra 270 sin el hito (+11 %, con la caminata incluida);
+  - aura militar: un guerrero herido pasa de 60 a 70 de vida en 5 s.
+- Determinismo y autotest: OK.
+
+**[Edades en paz](pruebas/06-edades-en-paz.txt)** (25 min, llano):
+
+| Civ | Edad II antes | Después | Edad III antes | Después (con auras) |
+|---|---|---|---|---|
+| Tawantinsuyu | 5:05 | 5:50 | 14:55 | 15:50 |
+| Mapuches | 6:50 | 7:50 | 18:00 | 17:50 |
+| Guaraníes | 7:20 | 9:00 | 14:10 | 17:55 |
+| Etiopía | 4:55 | 5:55 | 18:00 | 16:10 |
+| Palmares | 7:15 | 8:15 | 16:05 | 16:40 |
+| Ayutthaya | 6:15 | 7:10 | 20:05 | 19:05 |
+
+- La edad II llega cerca de un minuto más tarde: es la obra más larga, como se buscaba.
+- Los guaraníes pierden 1:40 en la II y 3:45 en la III. Se mira en el paso 3.
+- Las auras devuelven parte en la III: mapuches, Etiopía y Ayutthaya llegan antes que con hitos de 60/90/120 s.
+
+**[Salud de la IA](pruebas/07-salud-ia-hitos.txt):**
+- El umbral de la edad II pasa de 9:30 a 10:30: son los 65 s más de obra con 4 constructores.
+- Siguen fallando 3 civs, las mismas que en el commit anterior al paso 1:
+  - guaraníes, con 3 de ejército al minuto 12 contra Etiopía;
+  - Palmares, sin mercado;
+  - Ayutthaya, con la edad II a las 10:59 y 4 de ejército contra Palmares.
+- Es el desbalance del paso 3, que va primero con Palmares.
+
+**[Equipos](pruebas/08-equipos-3v3-ffa.txt):**
+- 3v3: 947 bajas, 0 de fuego amigo y 26 tributos (el tributo de la IA ahora es desde los 8 minutos).
+- Todos contra todos con 6: 974 bajas y 2 derrotados a los 30 minutos. Sigue abierto, y Palmares llega a la edad 4 en el 3v3.
+- No hubo victorias por sitios a los 30 minutos: con 10 minutos de cuenta es más difícil.

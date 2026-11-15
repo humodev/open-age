@@ -1,0 +1,13 @@
+puertas: la del jugador 2 deja pasar al jugador 0
+puertas: la del jugador 1 no deja pasar al jugador 0
+fortines con 4: encerrados []
+fortines con 6: encerrados []
+3v3  ["tawantinsuyu", "mapuches", "guaranies", "etiopia", "palmares", "ayutthaya"] equipos [0, 1, 0, 1, 0, 1]  30:00  bajas 947  fuego amigo 0  tributos 26  | j0 tawa edad 3 en pie  | j1 mapu edad 2 derrotado  | j2 guar edad 3 en pie  | j3 etio edad 2 derrotado  | j4 palm edad 4 en pie  | j5 ayut edad 3 en pie
+3v3  ["tawantinsuyu", "mapuches", "guaranies", "etiopia", "palmares", "ayutthaya"] equipos [1, 0, 1, 0, 1, 0]  30:00  bajas 947  fuego amigo 0  tributos 26  | j0 tawa edad 3 en pie  | j1 mapu edad 2 derrotado  | j2 guar edad 3 en pie  | j3 etio edad 2 derrotado  | j4 palm edad 4 en pie  | j5 ayut edad 3 en pie
+EQUIPOS: OK
+puertas: la del jugador 2 deja pasar al jugador 0
+puertas: la del jugador 1 no deja pasar al jugador 0
+fortines con 4: encerrados []
+fortines con 6: encerrados []
+ffa6 ["tawantinsuyu", "mapuches", "guaranies", "etiopia", "palmares", "ayutthaya"] equipos [0, 1, 2, 3, 4, 5]  30:00  bajas 974  fuego amigo 0  tributos 0  | j0 tawa edad 3 en pie  | j1 mapu edad 2 derrotado  | j2 guar edad 3 derrotado  | j3 etio edad 2 en pie  | j4 palm edad 3 en pie  | j5 ayut edad 3 en pie
+EQUIPOS: OK

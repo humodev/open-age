@@ -4,3 +4,5 @@ fortines con 4: encerrados []
 fortines con 6: encerrados []
 2v2  ["tawantinsuyu", "mapuches", "guaranies", "etiopia"] equipos [0, 1, 0, 1]  30:00  bajas 640  fuego amigo 0  tributos 7  | j0 tawa edad 3 en pie  | j1 mapu edad 2 derrotado  | j2 guar edad 4 en pie  | j3 etio edad 3 en pie
 2v2  ["tawantinsuyu", "mapuches", "guaranies", "etiopia"] equipos [1, 0, 1, 0]  30:00  bajas 640  fuego amigo 0  tributos 7  | j0 tawa edad 3 en pie  | j1 mapu edad 2 derrotado  | j2 guar edad 4 en pie  | j3 etio edad 3 en pie
+2v2  ["palmares", "ayutthaya", "mapuches", "tawantinsuyu"] equipos [0, 1, 0, 1]  29:50  bajas 816  fuego amigo 0  tributos 9  ganó el equipo 0  | j0 palm edad 4 en pie  | j1 ayut edad 2 derrotado  | j2 mapu edad 3 en pie  | j3 tawa edad 3 derrotado
+2v2  ["palmares", "ayutthaya", "mapuches", "tawantinsuyu"] equipos [1, 0, 1, 0]  29:50  bajas 816  fuego amigo 0  tributos 9  ganó el equipo 1  | j0 palm edad 4 en pie  | j1 ayut edad 2 derrotado  | j2 mapu edad 3 en pie  | j3 tawa edad 3 derrotado

@@ -6,7 +6,7 @@ extends SceneTree
 ## Uso: godot --headless --path . -s tests/salud_ia.gd
 
 const PAIRS := [["tawantinsuyu", "mapuches"], ["guaranies", "etiopia"], ["palmares", "ayutthaya"]]
-const AGE2_MAX_S := 570 # edad II antes de las 9:30
+const AGE2_MAX_S := 630 # edad II antes de las 10:30 (hitos de 190 s: +65 s de obra con 4 constructores, proceso/24 paso 2)
 const CHECK_AT_S := 720 # revisión al minuto 12
 const ARMY_MIN := 10
 const FLOAT_MAX := 4 # sucesos de recursos flotando (uno por minuto como mucho)

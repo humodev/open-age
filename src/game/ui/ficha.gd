@@ -438,7 +438,28 @@ func _building_desc(dd: SimData, type: String, def: Dictionary) -> String:
 		for k: String in def["deposito"]:
 			names.append(Palette.RES_NAMES.get(k, k).to_lower())
 		d += ("\n" if d != "" else "") + "Recibe %s." % ", ".join(names)
+	var aura := _aura_text(dd, def)
+	if aura != "":
+		d += ("\n" if d != "" else "") + aura
 	return d
+
+
+## El aura del hito (reglas.aura_hito o la propia): importa dónde se levanta.
+static func _aura_text(dd: SimData, def: Dictionary) -> String:
+	if not def.get("hito", false):
+		return ""
+	return _aura_words(def.get("aura", dd.reglas.get("aura_hito", {}).get(String(def.get("eje", "")), {})))
+
+
+static func _aura_words(a: Dictionary) -> String:
+	if a.is_empty():
+		return ""
+	var tiles := int(a.get("radio", 0)) / Sim.P
+	if a.has("recoleccion_pct"):
+		return "Aura: +%d %% de recolección a %d casillas o menos. Conviene levantarlo junto a los campos o el bosque." % [int(a["recoleccion_pct"]), tiles]
+	if a.has("cura_por_s"):
+		return "Aura: cura %d de vida por segundo a la tropa a %d casillas o menos. Conviene levantarlo donde se pelea." % [int(a["cura_por_s"]), tiles]
+	return ""
 
 
 func _unit_stats(owner: int, def: Dictionary, hp: int, hp_max: int) -> Array:

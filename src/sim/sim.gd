@@ -47,6 +47,7 @@ var _grid := {} # celda de 1 casilla -> unidades (separación)
 var _ehash := {} # celda de EC -> unidades y edificios (búsqueda)
 var _res_cells := {} # celda de RC casillas -> recursos
 var _wild: Array[SimEntity] = [] # animales sueltos que se pueden reclamar (proceso/23)
+var _auras: Array = [] # por jugador: hitos terminados con aura (reglas.aura_hito), de este tick
 var _dirty := false
 var _teams := PackedInt32Array() # equipo de cada jugador (copia de players[i].equipo)
 var _emask := {} # celda de `_ehash` -> bits de dueños presentes (bit 0: naturaleza)
@@ -968,6 +969,7 @@ func step() -> void:
 	_separate()
 	if tick % 10 == 0:
 		mods.tick_second()
+		_aura_heal()
 	var every: int = data.reglas["niebla_cada_ticks"]
 	for pid in players.size():
 		if (tick + team_of(pid)) % every == 0:
@@ -1005,6 +1007,47 @@ func _update_players() -> void:
 			players[e.owner]["pop_cap"] += e.def.get("pob", 0)
 	for p in players:
 		p["pop_cap"] = mini(p["pop_cap"] + int(p.get("pob_extra", 0)), data.reglas["pob_max"])
+	_auras.resize(players.size())
+	for pid in players.size():
+		_auras[pid] = []
+	for e in actives:
+		if e.alive and e.owner >= 0 and e.built and e.def.get("hito", false) and not aura_of(e).is_empty():
+			_auras[e.owner].append(e)
+
+
+## Aura de un hito según el lugar (C-33, como AoE4): la propia del hito o la de su eje en
+## reglas.aura_hito. Economía: recolección más rápida cerca; militar: cura a la tropa cerca.
+func aura_of(b: SimEntity) -> Dictionary:
+	if b.def.has("aura"):
+		return b.def["aura"]
+	return data.reglas.get("aura_hito", {}).get(String(b.def.get("eje", "")), {})
+
+
+## Recolección extra (%) de un recurso junto a un hito propio con aura de recolección.
+func _aura_gather(owner: int, t: SimEntity, kind: String) -> int:
+	if owner >= _auras.size():
+		return 0
+	var best := 0
+	for h: SimEntity in _auras[owner]:
+		var a := aura_of(h)
+		if not a.has("recoleccion_pct") or not (a.get("recursos", [kind]) as Array).has(kind):
+			continue
+		if dist_to(t, h) <= int(a["radio"]):
+			best = maxi(best, int(a["recoleccion_pct"]))
+	return best
+
+
+## Cura de los hitos con aura militar: cada segundo, a la tropa propia y aliada que está cerca.
+func _aura_heal() -> void:
+	for pid in _auras.size():
+		for h: SimEntity in _auras[pid]:
+			var a := aura_of(h)
+			if not a.has("cura_por_s"):
+				continue
+			var r := int(a["radio"])
+			for u in actives:
+				if u.alive and u.is_unit() and u.inside < 0 and u.owner >= 0 and u.is_military() and u.hp < u.hp_max and not enemies(pid, u.owner) and dist_to(u, h) <= r:
+					u.hp = mini(u.hp_max, u.hp + int(a["cura_por_s"]))
 
 
 func _rebuild_hashes() -> void:
@@ -1242,7 +1285,7 @@ func _do_gather(e: SimEntity) -> void:
 		t.farmer = e.id
 	var rate_key: String = String(t.def.get("tasa_clave", "granja")) if t.is_building() else String(t.def.get("tasa_clave", kind))
 	var clay := mods.clay_bonus(e.owner, t) if t.is_resource() and t.type == "riqueza" else 0
-	var rate: int = int(e.def["tasa"].get(rate_key, e.def["tasa"].get("granja", 0))) * (100 + mod(e.owner, "tasa:" + rate_key) + _site_bonus(t) + clay) / 100
+	var rate: int = int(e.def["tasa"].get(rate_key, e.def["tasa"].get("granja", 0))) * (100 + mod(e.owner, "tasa:" + rate_key) + _site_bonus(t) + clay + _aura_gather(e.owner, t, kind)) / 100
 	e.carry_res = kind
 	e.carry_src = "granja" if t.is_building() else t.type
 	# Arcilla ajena o del centro: con el techo de lo disputado lleno, no se extrae.

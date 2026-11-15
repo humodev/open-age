@@ -68,7 +68,8 @@
     "normal":  { "nombre": "Normal",  "piensa_cada_ticks": 10, "max_aldeanos": 42, "ataque_base": 7,  "ataque_paso": 4, "ataque_espera_ticks": 500,  "investiga": true },
     "dificil": { "nombre": "Difícil", "piensa_cada_ticks": 5,  "max_aldeanos": 60, "ataque_base": 6,  "ataque_paso": 3, "ataque_espera_ticks": 350,  "investiga": true }
   },
-  "sitios": { "cantidad": 3, "radio": 4000, "captura_ms": 10000, "renta_riqueza": 18, "renta_por_cantidad": [18, 12, 8], "victoria_ms": 300000 },
+  "aura_hito": { "_doc": "Aura de los hitos según el lugar (C-33, como AoE4). Por eje; un hito puede traer la suya en `aura`. economia: recolección +recoleccion_pct de lo que está a `radio` o menos (milésimas); militar: cura `cura_por_s` por segundo a la tropa propia y aliada a `radio`", "economia": { "radio": 9000, "recoleccion_pct": 15 }, "militar": { "radio": 9000, "cura_por_s": 2 } },
+  "sitios": { "cantidad": 3, "radio": 4000, "captura_ms": 10000, "renta_riqueza": 18, "renta_por_cantidad": [18, 12, 8], "victoria_ms": 600000 },
   "mercado": { "lote": 100, "precio_inicial": 100, "paso": 3, "minimo": 40, "maximo": 300, "comision_pct": 30, "regreso_cada_ticks": 100, "regreso_paso": 1 },
   "bonos": { "_doc": "Combate como AoE4 (proceso/23, C-31): daño = ataque + bono contra la función del blanco − armadura (la de distancia si el que pega tiene más de `alcance_distancia`). Reemplaza a los multiplicadores entre unidades, que eran de ×2 a ×2,25. Una unidad puede sumar los suyos en `bono`.", "linea": { "choque": 5 }, "distancia": { "linea": 4 }, "choque": { "distancia": 6 } },
   "alcance_distancia": 1500,

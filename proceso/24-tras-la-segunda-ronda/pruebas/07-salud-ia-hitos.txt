@@ -1,0 +1,17 @@
+# Salud de la IA, hitos de 190 s sin auras
+tawantinsuyu  edad II 5:58 · ejército 20 · producción 6 · mercado sí · parados 3 · ociosa 11 · viajes a/m/r/p 1/1/1/1  OK
+mapuches      edad II 8:01 · ejército 28 · producción 7 · mercado sí · parados 0 · ociosa 11 · viajes a/m/r/p 4/2/6/1  OK
+guaranies     edad II 9:17 · ejército 6 · producción 3 · mercado no · parados 2 · ociosa 5 · viajes a/m/r/p 1/2/1/-  ⚠ ejército de 6, sin mercado al minuto 15
+etiopia       edad II 6:10 · ejército 19 · producción 4 · mercado sí · parados 0 · ociosa 8 · viajes a/m/r/p 3/2/1/-  OK
+palmares      edad II 7:56 · ejército 21 · producción 3 · mercado no · parados 2 · ociosa 4 · viajes a/m/r/p 1/2/4/3  ⚠ sin mercado al minuto 15
+ayutthaya     edad II 10:59 · ejército 5 · producción 7 · mercado sí · parados 1 · ociosa 3 · viajes a/m/r/p 3/1/1/5  ⚠ edad II tarde (10:59), ejército de 5
+SALUD IA: 3 civs con problemas
+
+# Con auras
+tawantinsuyu  edad II 5:58 · ejército 21 · producción 6 · mercado sí · parados 1 · ociosa 11 · viajes a/m/r/p 2/1/1/1  OK
+mapuches      edad II 8:01 · ejército 31 · producción 7 · mercado sí · parados 0 · ociosa 11 · viajes a/m/r/p 3/2/7/1  OK
+guaranies     edad II 9:17 · ejército 3 · producción 3 · mercado sí · parados 2 · ociosa 5 · viajes a/m/r/p 1/2/1/-  ⚠ ejército de 3
+etiopia       edad II 6:10 · ejército 14 · producción 4 · mercado sí · parados 0 · ociosa 8 · viajes a/m/r/p 2/1/2/-  OK
+palmares      edad II 7:56 · ejército 20 · producción 3 · mercado no · parados 2 · ociosa 4 · viajes a/m/r/p 1/2/4/3  ⚠ sin mercado al minuto 15
+ayutthaya     edad II 10:59 · ejército 4 · producción 7 · mercado sí · parados 1 · ociosa 3 · viajes a/m/r/p 3/1/1/5  ⚠ edad II tarde (10:59), ejército de 4
+SALUD IA: 3 civs con problemas
