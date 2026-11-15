@@ -1,0 +1,61 @@
+{
+ "nombre": "Caranquis y cayambes",
+ "adjetivo": "caranqui",
+ "solo_ia": true,
+ "region": "Señoríos de Caranqui, Cayambe y Otavalo, sierra norte del Ecuador, c. 1250–1525",
+ "frase": "Las tolas del norte, que el Inka tardó años en tomar.",
+ "descripcion": "Tres señoríos de la sierra norte (Caranqui, Cayambe y Otavalo), con caciques hereditarios y lengua propia, la cara, que no era quechua. Levantaban tolas, montículos de tierra con casas y templos encima, y fuertes en las crestas. Resistieron a Túpac Yupanqui y a Huayna Cápac hasta la matanza de Yahuarcocha. Solo IA y campaña.",
+ "_fuentes": [
+  "Frank Salomon, Native Lords of Quito in the Age of the Incas (Cambridge UP, 1986)",
+  "Samuel Connell y Chad Gifford, Proyecto Arqueológico Pambamarca (Antiquity, project gallery): fuertes de cresta frente a los cayambes",
+  "Wikipedia (es), 'Caranquis' (tolas, tres señoríos, lengua cara, Yahuarcocha), consultada 2026-11-15",
+  "docs/investigacion/tawantinsuyu.md (Pambamarca)"
+ ],
+ "_verificar": "Casas redondas caranquis; uso de la estólica (lanzadardos) en el siglo XV en la sierra norte.",
+ "estilo": {
+  "forma": "redonda",
+  "arcilla": "#c7b08a",
+  "techo": "#6e5b36",
+  "acento": "#4f6b7a"
+ },
+ "unidades": {
+  "guerrero": {
+   "nombre": "Guerrero de porra"
+  },
+  "hondero": {
+   "nombre": "Tirador de estólica",
+   "desc": "Estólica: lanzadardos, el propulsor que aumenta el alcance del dardo.",
+   "alcance": 6000
+  },
+  "lancero": {
+   "nombre": "Lancero",
+   "edad_min": 1
+  }
+ },
+ "sin_unidades": ["jinete", "arcabucero", "ariete"],
+ "edificios": {
+  "centro": {
+   "nombre": "Tola",
+   "desc": "Tola: montículo de tierra con la casa del señor o el templo encima, como en Cochasquí y Zuleta."
+  },
+  "casa": {
+   "nombre": "Casa redonda"
+  },
+  "torre": {
+   "nombre": "Fuerte de cresta",
+   "desc": "En Pambamarca, cayambes e incas se miraron durante años desde fuertes en las crestas."
+  }
+ },
+ "produce": {
+  "cuartel": [
+   "guerrero",
+   "hondero",
+   "lancero"
+  ]
+ },
+ "ia_unidades": [
+  "hondero"
+ ],
+ "ia_edificios": [],
+ "sin_edificios": ["campo_tiro", "establo", "taller"]
+}

@@ -154,3 +154,8 @@ Orden de los cambios de balance: A, después E, F y G, de a uno, con un torneo d
      - determinismo, `ordenes.gd`, `jugabilidad.gd`, `grilla.gd` y las 25 misiones de `campaign_smoke` sin errores;
      - autotest OK con guaraníes y Etiopía;
      - `tests/tutorial_letra.gd`: siguiendo el tutorial al pie de la letra se gana a las 9:46 (el agente midió 8:26 antes de sumar combate y animales).
+8. **(02:30) Fusión de la parte D, rivales con civ propia** (agente 3). Seis civs solo de IA (Adal, Birmania, chankas, caranquis y cayambes, cañaris, tupíes) en lugar de "Invasores" o de la cultura del jugador; el marcador y los avisos dicen el nombre del rival de la misión; *Espingardeiro de resgate* pasa a *Espingardeiro* y las palabras en portugués con equivalente pasan al castellano. Inkarri, el Qorikancha, las edades guaraníes y "Cucaú o Quilombo", a C-39 a C-44. Detalle en [`04-rivales-propios.md`](04-rivales-propios.md).
+   - **Integración:** choques solo en documentos. Las seis consultas de esta parte venían numeradas desde C-35, igual que las de B y C, y pasaron a **C-39 a C-44**.
+   - **Pruebas sobre lo fusionado** (todas las partes juntas): determinismo OK, `civ_smoke` y las 25 misiones sin errores, autotest OK con guaraníes y Tawantinsuyu. En Etiopía 1 el marcador dice "Rojo · Adal · Badlay" en lugar de "Rojo · Invasores".
+
+     ![](capturas/rivales/marcador-adal-fusion.jpg)

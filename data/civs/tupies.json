@@ -1,0 +1,60 @@
+{
+ "nombre": "Tupíes",
+ "adjetivo": "tupí",
+ "solo_ia": true,
+ "region": "Aldeas indígenas de São Paulo (tupiniquim y otros), siglos XVI y XVII",
+ "frase": "Los que la bandeira llevaba adelante.",
+ "descripcion": "La mayor parte de una bandeira no era paulista: eran indígenas de las aldeas de São Paulo, descendientes de los tupiniquim, y también cautivos de otros pueblos llevados por la fuerza. Hablaban la lengua general, pariente del guaraní. En Mbororé (1641) fueron unos 2.700 contra las reducciones. Solo IA y campaña.",
+ "_fuentes": [
+  "John M. Monteiro, Negros da terra: índios e bandeirantes nas origens de São Paulo (Companhia das Letras, 1994)",
+  "Avellaneda y Quarleri (2007), citado en docs/investigacion/guaranies.md: 450 paulistas y 2.700 auxiliares tupí en Mbororé",
+  "Wikipedia (pt), 'Tacape', consultada 2026-11-15"
+ ],
+ "_verificar": "Grafía de uirapara (arco en tupí); oca y taba en la lengua general paulista del siglo XVII.",
+ "estilo": {
+  "forma": "guarani",
+  "arcilla": "#bfa577",
+  "techo": "#8a6a3a",
+  "acento": "#a2452c"
+ },
+ "unidades": {
+  "guerrero": {
+   "nombre": "Guerrero de tacape",
+   "desc": "Tacape: maza larga de madera dura, en tupí."
+  },
+  "hondero": {
+   "nombre": "Arquero de uirapara",
+   "desc": "Uirapara: arco, en tupí.",
+   "alcance": 6000,
+   "ataque": 8,
+   "pv": 70
+  },
+  "lancero": {
+   "nombre": "Lancero",
+   "pv": 115
+  }
+ },
+ "sin_unidades": ["jinete", "arcabucero", "ariete"],
+ "edificios": {
+  "centro": {
+   "nombre": "Taba",
+   "desc": "Taba: aldea, en tupí. Las de São Paulo eran aldeias bajo control colonial."
+  },
+  "casa": {
+   "nombre": "Oca",
+   "desc": "Oca: la casa larga comunal; la misma palabra que la oga guaraní."
+  }
+ },
+ "produce": {
+  "cuartel": [
+   "guerrero",
+   "hondero",
+   "lancero"
+  ]
+ },
+ "ia_unidades": [
+  "hondero"
+ ],
+ "ia_edificios": [],
+ "sin_edificios": ["campo_tiro", "establo", "taller"]
+}

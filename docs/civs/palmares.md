@@ -17,7 +17,7 @@ Mocambo · Palmares · Angola Janga `[verificar]` · Cucaú o Quilombo.
 | Militar | Correrías que liberan gente y suman fama; cerca con estrepes que hiere al atacante | `liberacion`, `saqueo`, `espinas` |
 
 ## Unidades
-Palmarista (civil), Batedor, Gente de guerra, Flecheiro, Lanceiro, Espingardeiro de resgate (desde la edad II).
+Palmarista (civil), Batedor, Gente de guerra, Flecheiro, Lanceiro, Espingardeiro (desde la edad II; se llamaba "de resgate", pero en el portugués colonial *resgate* era ante todo la compra de personas esclavizadas, y se sacó en la etapa 23).
 
 ## Debilidad
 Sin caballo ni asedio; el hambre ante un cerco largo.

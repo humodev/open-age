@@ -3,6 +3,8 @@ extends RefCounted
 ## Arquitectura y vestimenta propias de cada civilización (docs/07). Se reconocen por silueta:
 ## inca (piedra y paja a cuatro aguas), mapuche (ruka ovalada), guaraní (casa larga hasta el suelo),
 ## etiópica (tukul redondo), palmarista (choza de palma y cercas), siamesa (techos escalonados rojos).
+## Rivales de campaña (solo IA): redonda (casa circular de piedra y paja de los Andes) y azotea
+## (piedra y techo plano, como Harar).
 
 static var _cache := {}
 
@@ -16,7 +18,8 @@ static func _pal(style: Dictionary) -> Array:
 
 static func building(type: String, def: Dictionary, team: Color, style: Dictionary, variant: int, tier: int) -> ArrayMesh:
 	var forma: String = style.get("forma", "")
-	var key := "%s_%s_%s_%d_%d" % [forma, type, team.to_html(), variant, tier]
+	# La paleta entra en la clave: dos civs con la misma forma (Ayutthaya y Birmania) se ven distintas.
+	var key := "%s_%s_%s_%s_%s_%d_%d" % [forma, style.get("arcilla", ""), style.get("techo", ""), type, team.to_html(), variant, tier]
 	if _cache.has(key):
 		return _cache[key]
 	var pal := _pal(style)
@@ -84,8 +87,8 @@ static func _hut(p: Array, forma: String, at: Vector3, w: float, d: float, h: fl
 			p.append([Meshes.prism(d * 1.05, h * 1.25, w), Meshes.xf(at + Vector3(0, h * 0.625, 0), Vector3(0, 90, 0)), roof])
 			p.append([Meshes.box(0.06, h * 0.9, d * 0.8), Meshes.xf(at + Vector3(w * 0.5, h * 0.42, 0)), walls])
 			p.append([Meshes.box(0.07, h * 0.5, 0.26), Meshes.xf(at + Vector3(w * 0.51, h * 0.25, 0)), roof.darkened(0.55)])
-		"etiopia":
-			# Tukul: muro redondo y techo cónico con remate.
+		"etiopia", "redonda":
+			# Tukul (y casa redonda andina): muro redondo y techo cónico con remate.
 			var r := minf(w, d) * 0.48
 			p.append([Meshes.cyl(r, r, h * 0.6, 16), Meshes.xf(at + Vector3(0, h * 0.3, 0)), walls])
 			p.append([Meshes.cyl(0.0, r * 1.3, h * 0.9, 16), Meshes.xf(at + Vector3(0, h * 0.6 + h * 0.45, 0)), roof])
@@ -108,6 +111,14 @@ static func _hut(p: Array, forma: String, at: Vector3, w: float, d: float, h: fl
 			p.append([Meshes.box(0.05, 0.05, d * 0.7), Meshes.xf(at + Vector3(0, h * 1.62, 0)), pal[2]])
 			for z in [-1, 1]:
 				p.append([Meshes.cyl(0.0, 0.04, 0.25, 5), Meshes.xf(at + Vector3(0, h * 1.7, z * d * 0.33), Vector3(z * 25, 0, 0)), pal[2]])
+		"azotea":
+			# Piedra revocada y techo plano con pretil, como las casas de patio de Harar.
+			p.append([Meshes.box(w, h * 0.85, d), Meshes.xf(at + Vector3(0, h * 0.425, 0)), walls])
+			p.append([Meshes.box(w + 0.06, 0.07, d + 0.06), Meshes.xf(at + Vector3(0, h * 0.88, 0)), roof])
+			for side in [Vector2(0, -1), Vector2(0, 1), Vector2(-1, 0), Vector2(1, 0)]:
+				var sz := Vector3(w + 0.06, 0.12, 0.06) if side.x == 0 else Vector3(0.06, 0.12, d + 0.06)
+				p.append([Meshes.box(sz.x, sz.y, sz.z), Meshes.xf(at + Vector3(side.x * (w * 0.5), h * 0.97, side.y * (d * 0.5))), walls.darkened(0.08)])
+			p.append([Meshes.box(0.24, h * 0.45, 0.05), Meshes.xf(at + Vector3(0, h * 0.22, d * 0.5 + 0.01)), pal[2]])
 		_:
 			p.append([Meshes.box(w, h * 0.75, d), Meshes.xf(at + Vector3(0, h * 0.375, 0)), walls])
 			p.append([Meshes.prism(w * 1.1, h * 0.6, d * 1.1), Meshes.xf(at + Vector3(0, h * 1.05, 0), Vector3(0, 90, 0)), roof])
@@ -141,7 +152,7 @@ static func _store(p: Array, forma: String, w: float, d: float, pal: Array, team
 	for c in [Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, 1)]:
 		p.append([Meshes.box(0.1, 0.9, 0.1), Meshes.xf(Vector3(c.x * w * 0.38, by + 0.45, c.y * d * 0.38)), pal[1].darkened(0.35)])
 	match forma:
-		"etiopia", "mapuche":
+		"etiopia", "mapuche", "redonda":
 			p.append([Meshes.cyl(0.0, w * 0.58, 0.55, 14), Meshes.xf(Vector3(0, by + 1.15, 0)), pal[1]])
 		"inca":
 			p.append([Meshes.cyl(w * 0.3, w * 0.32, 0.7, 12), Meshes.xf(Vector3(-w * 0.15, by + 0.35, 0)), pal[0]])
@@ -310,7 +321,7 @@ static func _walls(p: Array, w: float, d: float, col: Color, hgt: float) -> void
 
 static func unit(type: String, def: Dictionary, team: Color, style: Dictionary) -> ArrayMesh:
 	var forma: String = style.get("forma", "")
-	var key := "u_%s_%s_%s" % [forma, type, team.to_html()]
+	var key := "u_%s_%s_%s_%s" % [forma, style.get("arcilla", ""), type, team.to_html()]
 	if _cache.has(key):
 		return _cache[key]
 	var p: Array = []

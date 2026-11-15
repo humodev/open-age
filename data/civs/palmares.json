@@ -36,7 +36,7 @@
   "lancero": {
    "nombre": "Lanceiro"
   },
-  "arcabucero": {"nombre": "Espingardeiro de resgate", "edad_min": 2, "costo": {"alimento": 60, "riqueza": 65}}
+  "arcabucero": {"nombre": "Espingardeiro", "desc": "Espingarda: arma de fuego de chispa. Las de Palmares venían de las correrías y del trato a escondidas con los moradores.", "edad_min": 2, "costo": {"alimento": 60, "riqueza": 65}}
  },
  "edificios": {
   "almacen_alimento": {"nombre": "Paiol"},

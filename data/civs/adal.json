@@ -1,0 +1,91 @@
+{
+ "nombre": "Adal",
+ "adjetivo": "adalí",
+ "solo_ia": true,
+ "region": "Sultanato de Adal, Cuerno de África, 1415–1577",
+ "frase": "El sultán en Harar, el imán en el campo.",
+ "descripcion": "Sultanato musulmán del Cuerno de África, con capital en Dakar y desde 1520 en Harar. El imán Ahmad ibn Ibrahim juntó a hararíes, somalíes, afar, harla y argobba, y desde 1541 sumó mosqueteros y cañones otomanos. Su propia crónica, el Futūḥ al-Ḥabaša de Arab Faqih, lo cuenta desde adentro. Solo IA y campaña.",
+ "_fuentes": [
+  "Shihab al-Din Arab Faqih, Futūḥ al-Ḥabaša (c. 1559), trad. P. L. Stenhouse, The Conquest of Abyssinia (Tsehai, 2003)",
+  "Wikipedia, 'Adal Sultanate' (capitales, alas del ejército, malassay, Jugol), consultada 2026-11-15",
+  "docs/investigacion/etiopia.md, H22 a H28 y F16 (Shimbra Kure, Wofla, Wayna Daga)"
+ ],
+ "_verificar": "Arqueros a pie en el ejército del imán; que los malassay pelearan a pie.",
+ "estilo": {
+  "forma": "azotea",
+  "arcilla": "#d8c39a",
+  "techo": "#a88c5f",
+  "acento": "#2f6b5a"
+ },
+ "edades": [
+  "Garad",
+  "Sultanato",
+  "Imamato",
+  "Futūḥ"
+ ],
+ "_edades": "Garad: título de los señores locales de Adal. Futūḥ: 'conquistas', el título de la crónica del imán.",
+ "unidades": {
+  "aldeano": {
+   "nombre": "Aldeano"
+  },
+  "guerrero": {
+   "nombre": "Malassay",
+   "desc": "La tropa de élite del imán, sobre todo hararí: lanza, espada y escudo."
+  },
+  "hondero": {
+   "nombre": "Arquero",
+   "desc": "Arquero a pie de las alas somalí y afar."
+  },
+  "lancero": {
+   "nombre": "Lancero",
+   "edad_min": 1
+  },
+  "jinete": {
+   "nombre": "Fāris",
+   "desc": "Fāris: 'jinete' en árabe. La caballería adalí, más maniobrera que la cristiana en Shimbra Kure (1529).",
+   "edad_min": 1
+  },
+  "arcabucero": {
+   "nombre": "Tüfekçi",
+   "desc": "Tüfekçi: 'el del arma de fuego' en turco otomano. Mosqueteros turcos, albaneses y árabes que llegaron con el apoyo otomano desde 1541.",
+   "edad_min": 2
+  }
+ },
+ "edificios": {
+  "centro": {
+   "nombre": "Campamento del imán",
+   "desc": "El ejército de Adal hacía la guerra desde campamentos móviles en las tierras altas.",
+   "pv": 3000,
+   "armadura": 3,
+   "flechas": 3
+  },
+  "casa": {
+   "nombre": "Casa de patio",
+   "desc": "Casa de piedra y techo plano en torno a un patio, como en Harar y Zeila."
+  },
+  "cuartel": {
+   "nombre": "Cuartel"
+  },
+  "torre": {
+   "nombre": "Torre del Jugol",
+   "desc": "El Jugol es la muralla de Harar, levantada por el emir Nur ibn Mujahid (1550–1567), después de la guerra del imán.",
+   "edad_min": 1
+  }
+ },
+ "produce": {
+  "cuartel": [
+   "guerrero",
+   "hondero",
+   "lancero",
+   "jinete",
+   "arcabucero",
+   "ariete"
+  ]
+ },
+ "ia_unidades": [
+  "jinete",
+  "arcabucero"
+ ],
+ "ia_edificios": [],
+ "sin_edificios": ["campo_tiro", "establo", "taller"]
+}

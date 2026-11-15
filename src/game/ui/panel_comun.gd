@@ -77,8 +77,25 @@ static func res_keys(sim: Sim, pid: int) -> Array[String]:
 	return out
 
 
+## Nombre del rival de la misión (data/campanas: `rivales[i].corto`, o `nombre`); vacío fuera de campaña.
+static func mission_name(sim: Sim, pid: int) -> String:
+	if sim.scenario == null or pid <= 0:
+		return ""
+	var rv: Array = sim.scenario.mission.get("rivales", [])
+	if pid - 1 >= rv.size():
+		return ""
+	var r: Dictionary = rv[pid - 1]
+	return r.get("corto", r.get("nombre", ""))
+
+
+## Cómo se llama un pueblo en pantalla: el rival de la misión si hay campaña; si no, la civilización.
+static func people_name(sim: Sim, pid: int) -> String:
+	var m := mission_name(sim, pid)
+	return m if m != "" else String(sim.dp(pid).civ.get("nombre", ""))
+
+
 static func player_name(sim: Sim, pid: int, local: int) -> String:
-	var civ: String = sim.dp(pid).civ.get("nombre", "")
+	var civ := people_name(sim, pid)
 	var who := "Vos" if pid == local else Palette.TEAM_NAMES[pid % Palette.TEAM_NAMES.size()]
 	return "%s · %s" % [who, civ] if civ != "" else who
 

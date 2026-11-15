@@ -11,7 +11,7 @@
       "intro": [
         "Yo nací en Palmares. Lo digo primero porque un día eso valió un papel, y porque los que llegaron después tuvieron que ganarse lo que a mí me tocó al nacer.",
         "Mi madre llegó de un ingenio de Sirinhaém con la ropa puesta. Antes de ella habían llegado otros, y antes de ellos otros, desde que hay ingenios. En la mata de palmeras nadie los esperaba: se esperaban entre ellos. Así se hace un mocambo.",
-        "Cuando yo era chica, en la costa mandaban los holandeses. Peleaban con los portugueses por el azúcar, y los dos se acordaban de nosotros cuando les faltaban brazos. En nuestro mocambo había roças, una casa donde se juntaba el consejo y cuatro fraguas. El hierro no se saca de la tierra: se trae.",
+        "Cuando yo era chica, en la costa mandaban los holandeses. Peleaban con los portugueses por el azúcar, y los dos se acordaban de nosotros cuando les faltaban brazos. En nuestro mocambo había rozas, una casa donde se juntaba el consejo y cuatro fraguas. El hierro no se saca de la tierra: se trae.",
         "Un día los que vigilaban el camino avisaron que subía una columna de la Compañía, con guías que conocían el monte."
       ],
       "epilogo": [
@@ -32,10 +32,10 @@
         "tropas": [ { "tipo": "guerrero", "n": 4 }, { "tipo": "hondero", "n": 4 } ]
       },
       "rivales": [
-        { "nombre": "Columna de la Compañía de las Indias Occidentales", "faccion": "invasores", "ia": "normal", "edad": 2 }
+        { "nombre": "Columna de la Compañía de las Indias Occidentales", "corto": "Compañía holandesa", "faccion": "invasores", "ia": "normal", "edad": 2 }
       ],
       "objetivos": [
-        { "id": "o1", "texto": "Abrí 4 roças en la mata (granjas): milho para ahora, mandioca para cuando haga falta.", "tipo": "construir", "params": { "tipo": "granja", "n": 4 }, "secundario": false },
+        { "id": "o1", "texto": "Abrí 4 rozas en la mata (granjas): maíz para ahora, mandioca para cuando haga falta.", "tipo": "construir", "params": { "tipo": "granja", "n": 4 }, "secundario": false },
         { "id": "o2", "texto": "Juntá 400 de alimento. La mandioca que queda enterrada no la quema nadie.", "tipo": "recolectar", "params": { "recurso": "alimento", "n": 400 }, "secundario": false },
         { "id": "o3", "texto": "Levantá 2 casas de guerra, cada una con su fragua. Cada una hace humo, y el humo se ve: cuanto más se trabaja, más fácil es encontrarnos.", "tipo": "construir", "params": { "tipo": "cuartel", "n": 2 }, "secundario": false },
         { "id": "o4", "texto": "Reuní al consejo en su casa y cerrá un anillo nuevo de la cerca (avanzá a la edad II).", "tipo": "edad", "params": { "n": 2 }, "secundario": false },
@@ -85,7 +85,7 @@
         "tropas": [ { "tipo": "guerrero", "n": 10 }, { "tipo": "hondero", "n": 8 }, { "tipo": "lancero", "n": 6 }, { "tipo": "arcabucero", "n": 2 } ]
       },
       "rivales": [
-        { "nombre": "Tropa de Fernão Carrilho", "faccion": "invasores", "ia": "agresiva", "edad": 3 }
+        { "nombre": "Tropa de Fernão Carrilho", "corto": "Tropa de Carrilho", "faccion": "invasores", "ia": "agresiva", "edad": 3 }
       ],
       "objetivos": [
         { "id": "o1", "texto": "Cerrá el anillo nuevo de la cerca real y clavá la estrepería por fuera (30 tramos de empalizada).", "tipo": "construir", "params": { "tipo": "empalizada", "n": 30 }, "secundario": false },
@@ -100,7 +100,7 @@
         { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Aca Inene", "texto": "Mi mocambo está lejos de acá. Si esto cae, que vengan." } } },
         { "cuando": { "tipo": "tiempo", "valor": 240 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 6 } } },
         { "cuando": { "tipo": "tiempo", "valor": 245 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 4 } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o2" }, "accion": { "tipo": "dialogo", "params": { "quien": "Anciana de Camuanga", "texto": "Un potentado no trabaja la roça: cuida a su gente y responde por ella. Cada mocambo vinculado era una boca más y un brazo menos." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o2" }, "accion": { "tipo": "dialogo", "params": { "quien": "Anciana de Camuanga", "texto": "Un potentado no trabaja la roza: cuida a su gente y responde por ella. Cada mocambo vinculado era una boca más y un brazo menos." } } },
         { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "objetivo_nuevo", "params": { "id": "o4" } } },
         { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "dialogo", "params": { "quien": "Zambi, general de las armas", "texto": "Que la gente salga por el lado del monte. Nosotros cerramos la puerta detrás." } } },
         { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 10 } } },
@@ -140,11 +140,11 @@
         "tropas": [ { "tipo": "guerrero", "n": 6 }, { "tipo": "hondero", "n": 6 }, { "tipo": "lancero", "n": 4 } ]
       },
       "rivales": [
-        { "nombre": "Tropas de Pernambuco y moradores armados", "faccion": "invasores", "ia": "pasiva", "edad": 3 }
+        { "nombre": "Tropas de Pernambuco y moradores armados", "corto": "Pernambuco", "faccion": "invasores", "ia": "pasiva", "edad": 3 }
       ],
       "objetivos": [
-        { "id": "o1", "texto": "Abrí las roças de Cucaú (6 granjas). Acá se planta a la vista: el papel lo permite.", "tipo": "construir", "params": { "tipo": "granja", "n": 6 }, "secundario": false },
-        { "id": "o2", "texto": "Vendé farinha a los moradores sin esconderte: el comercio legal ya no delata a nadie (600 de riqueza).", "tipo": "recolectar", "params": { "recurso": "riqueza", "n": 600 }, "secundario": false },
+        { "id": "o1", "texto": "Abrí las rozas de Cucaú (6 granjas). Acá se planta a la vista: el papel lo permite.", "tipo": "construir", "params": { "tipo": "granja", "n": 6 }, "secundario": false },
+        { "id": "o2", "texto": "Vendé fariña a los moradores sin esconderte: el comercio legal ya no delata a nadie (600 de riqueza).", "tipo": "recolectar", "params": { "recurso": "riqueza", "n": 600 }, "secundario": false },
         { "id": "o3", "texto": "Asentá a la gente en Cucaú como vasallos con tierra (avanzá a la edad IV por la vía del pacto).", "tipo": "edad", "params": { "n": 4 }, "secundario": false },
         { "id": "o4", "texto": "Mataron a Gana Zumba y el pacto se rompió. Cucaú está cercada: aguantá con lo que haya en los paióis.", "tipo": "sobrevivir", "params": { "segundos": 480 }, "secundario": false, "oculto": true },
         { "id": "o5", "texto": "Que los que puedan salgan por el monte hacia la gente de Zumbi: protegé a los aldeanos.", "tipo": "proteger", "params": { "tipo": "aldeano", "jugador": 0 }, "secundario": true, "oculto": true },
@@ -157,12 +157,12 @@
         { "cuando": { "tipo": "objetivo", "valor": "o2" }, "accion": { "tipo": "dialogo", "params": { "quien": "Anciana de Camuanga", "texto": "Los moradores compraban sin preguntar de dónde éramos. El papel les ahorraba la pregunta, y a nosotros la respuesta." } } },
         { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "objetivo_nuevo", "params": { "id": "o4" } } },
         { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "objetivo_nuevo", "params": { "id": "o5" } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "dialogo", "params": { "quien": "Gana Zona", "texto": "El rey está muerto. Cerrá la cerca y contá la farinha." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "dialogo", "params": { "quien": "Gana Zona", "texto": "El rey está muerto. Cerrá la cerca y contá la fariña." } } },
         { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "guerrero", "n": 8 } } },
         { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 6 } } },
         { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "lancero", "n": 6 } } },
         { "cuando": { "tipo": "tiempo", "valor": 1200 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 6 } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "dialogo", "params": { "quien": "Anciana de Camuanga", "texto": "Salimos de noche, de a pocos, por donde no había roça ni camino. Mi hermano no salió." } } }
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "dialogo", "params": { "quien": "Anciana de Camuanga", "texto": "Salimos de noche, de a pocos, por donde no había roza ni camino. Mi hermano no salió." } } }
       ]
     },
     {
@@ -195,8 +195,8 @@
         "tropas": [ { "tipo": "guerrero", "n": 12 }, { "tipo": "hondero", "n": 10 }, { "tipo": "lancero", "n": 8 }, { "tipo": "arcabucero", "n": 6 } ]
       },
       "rivales": [
-        { "nombre": "Tropa de Domingos Jorge Velho (paulistas, mamelucos e indígenas)", "faccion": "invasores", "ia": "agresiva", "edad": 3 },
-        { "nombre": "Terços de Pernambuco (Bernardo Vieira de Melo)", "faccion": "invasores", "ia": "pasiva", "edad": 3 },
+        { "nombre": "Tropa de Domingos Jorge Velho (paulistas, mamelucos e indígenas)", "corto": "Jorge Velho", "faccion": "invasores", "ia": "agresiva", "edad": 3 },
+        { "nombre": "Terços de Pernambuco (Bernardo Vieira de Melo)", "corto": "Terços", "faccion": "invasores", "ia": "pasiva", "edad": 3 },
         { "nombre": "Ingenios de Porto Calvo", "faccion": "invasores", "ia": "pasiva", "edad": 2 }
       ],
       "objetivos": [

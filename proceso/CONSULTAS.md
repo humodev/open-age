@@ -216,3 +216,39 @@ a) Sí, cinco misiones cortas con medallas por tiempo, después de la etapa 23 *
 
 **Respuesta:**
 
+
+### C-39 · (historia) Nombre de la edad IV del Tawantinsuyu: "Inkarri"
+El mito de Inkarrí se documenta sobre todo en el siglo XX (Arguedas lo recogió en Puquio en 1956), aunque se lo vincula con el Taki Onqoy y con la muerte de Túpac Amaru I (1572). La edad IV cubre Vilcabamba (1537–1572) y Tinta (1780). Ya la investigación lo había dejado como "a consultar" (`docs/investigacion/tawantinsuyu.md`, punto 9). Sus dos hitos son Qorikancha y Vilcabamba.
+a) Dejar Inkarri y explicarlo en el panel del pueblo como un guiño al arco de la campaña, no como un nombre de época *(por defecto)* · b) *Vilcabamba* (choca con el nombre del hito militar) · c) *Neo Inka* · d) Otro (escribilo)
+
+**Respuesta:**
+
+### C-40 · (historia) El Qorikancha como hito de la edad IV inca
+El Qorikancha lo reconstruyó Pachakutiq hacia 1438: como obra de la última edad es anacrónico. Moverlo a la edad II o III cambia los hitos y, por lo tanto, el balance del Tawantinsuyu, que está en revisión (parte A).
+a) Cambiarle el nombre a la opción económica de la edad IV (por ejemplo, *Wak'a rehenes* o *Huacas del Cusco*), sin tocar sus números *(por defecto)* · b) Pasarlo a la edad III y llevar el aqllawasi o la kallanka real a la IV (rebalancea) · c) Dejarlo así
+
+**Respuesta:**
+
+### C-41 · (historia) Orden de las edades guaraníes y "Amundá"
+Los datos dicen *Tekoha → Amundá → Mbororé → Tava*. La investigación propone *Tekoha → cuñadazgo y conquista → Tava o monte → Mbororé y Guerra Guaranítica* (`docs/investigacion/guaranies.md`, "Periodización"). En los datos, la bifurcación misión o monte está en el avance a la III y los hitos de la IV (*Tava fortificada* y *Ñande retã*) son de la Guerra Guaranítica, así que el orden de los datos tiene lógica, pero termina en "Tava" y se lee como si la meta fuera reducirse. Además, **"Amundá" no tiene fuente ni explicación** en ningún documento.
+a) *Tekoha → Tovaja (cuñadazgo) → Mbororé → Ñande retã* (la III es la de Mbororé, 1641, y la IV, la de 1754–1756) *(por defecto)* · b) Seguir la investigación: III *Tava ha ka'aguy* (pueblo y monte), IV *Mbororé* · c) Dejarlo así y explicarlo en el panel. En cualquier caso, ¿de dónde sale "Amundá"? [verificar *tovaja* con un hablante]
+
+**Respuesta:**
+
+### C-42 · (historia) "Cucaú o Quilombo" como nombre de la edad IV de Palmares
+Se lee como una opción de menú, no como un nombre. La edad IV es la bifurcación entre el *Pacto de Cucaú* (Gana Zumba, 1678) y la *Guerra de Zumbi*, y esas ya son sus dos opciones de hito.
+a) Un solo nombre: *Macaco* (la cerca real de la Serra da Barriga, donde siguió Zumbi) *(por defecto)* · b) *1678* · c) *Angola Janga* para la IV y otro nombre para la III · d) Dejarlo y explicar la bifurcación en el panel
+
+**Respuesta:**
+
+### C-43 · (textos) Palabras en portugués en los textos en castellano
+Cambié "roças" por "rozas", "milho" por "maíz" y "farinha" por "fariña" (castellano del litoral) en las campañas de Palmares y guaraníes, porque tienen palabra propia en castellano. Dejé las que nombran instituciones o lugares sin equivalente (*mocambo*, *quilombo*, *terço*, *morador*, *bandeira*). Queda "la mata" en Palmares (en castellano rioplatense, "mata" es un arbusto; sería "el monte").
+a) Ese criterio, y "la mata" pasa a "el monte" *(por defecto)* · b) Volver al portugués de época, siempre en cursiva y con un glosario en el juego · c) Ese criterio, pero "la mata" se queda (es la *mata atlántica*)
+
+**Respuesta:**
+
+### C-44 · (historia) Rivales con civilización propia: ¿alcanza o separamos más?
+La parte D sumó seis civs solo de IA: Adal, Birmania (Toungoo y Konbaung juntos), chankas, caranquis y cayambes, cañaris y tupíes (`proceso/23-como-aoe4/04-rivales-propios.md`). Quedan con la civ del jugador las milicias de Pumakawa (incas), los señores de Lasta (etíopes) y los señores de Phitsanulok, Phimai y Fang (siameses), que sí son del mismo pueblo. Los holandeses, franceses, paulistas y la tropa de Jorge Velho siguen como `invasores`.
+a) Así *(por defecto)* · b) Separar también a los europeos por potencia (Castilla, Portugal, Países Bajos, Francia), con nombres de edad propios en vez de *Virreinato* para todos
+
+**Respuesta:**

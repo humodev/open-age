@@ -83,7 +83,8 @@ func _ready() -> void:
 	box.add_child(gap)
 
 	var data := SimData.load_default()
-	_keys = data.civs.keys()
+	# Las civs solo de IA (invasores y los rivales de campaña) no se eligen en el menú (D-018).
+	_keys = data.civs.keys().filter(func(k: String) -> bool: return not data.civs[k].civ.get("solo_ia", false))
 	_keys.sort()
 	_civ = _civ_picker(data, "Tu pueblo")
 	box.add_child(_civ.get_parent())
