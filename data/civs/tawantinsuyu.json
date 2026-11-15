@@ -93,6 +93,7 @@
    "tiempo_ms": 5000,
    "pv": 105,
    "armadura": 2,
+   "armadura_distancia": 0,
    "ataque": 7,
    "alcance": 650,
    "cadencia_ms": 1500,

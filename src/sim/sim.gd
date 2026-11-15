@@ -1334,14 +1334,35 @@ func effective_attack(a: SimEntity) -> int:
 	return atk
 
 
-func effective_armor(t: SimEntity) -> int:
-	return int(t.def.get("armadura", 0)) + (mod(t.owner, "armadura:" + t.fn) if t.is_unit() else 0)
+## Armadura contra cuerpo a cuerpo o contra distancia (como AoE4, C-31). Sin
+## `armadura_distancia` en el dato, vale la misma que contra cuerpo a cuerpo.
+func effective_armor(t: SimEntity, ranged: bool = false) -> int:
+	var base := int(t.def.get("armadura_distancia", t.def.get("armadura", 0))) if ranged else int(t.def.get("armadura", 0))
+	return base + (mod(t.owner, "armadura:" + t.fn) if t.is_unit() else 0)
+
+
+## ¿Pega a distancia? Decide qué armadura usa el blanco.
+func is_ranged(a: SimEntity) -> bool:
+	return int(a.def.get("alcance", 0)) > int(data.reglas.get("alcance_distancia", 1500))
+
+
+## Bono plano de `a` contra `t` (reglas.bonos por función, más el `bono` propio de la unidad,
+## que puede nombrar funciones o "montado"). Reemplaza a los multiplicadores entre unidades.
+func attack_bonus(a: SimEntity, t: SimEntity) -> int:
+	if not t.is_unit():
+		return 0
+	var b := int((data.reglas.get("bonos", {}) as Dictionary).get(a.fn, {}).get(t.fn, 0))
+	var own: Dictionary = a.def.get("bono", {})
+	b += int(own.get(t.fn, 0))
+	if t.def.get("montado", false) or t.def.get("elefante", false):
+		b += int(own.get("montado", 0))
+	return b
 
 
 func _hit(a: SimEntity, t: SimEntity) -> void:
-	var atk := effective_attack(a)
+	var atk := effective_attack(a) + attack_bonus(a, t)
 	var mult: int = data.reglas["contadores"].get(a.fn, {}).get(t.fn, 100)
-	var armor := effective_armor(t)
+	var armor := effective_armor(t, is_ranged(a))
 	# Altura (D-027): quien dispara desde más arriba pega más fuerte.
 	if int(a.def.get("alcance", 0)) > 1500:
 		var dh := map.h_at(a.x / P, a.y / P) - map.h_at(t.x / P, t.y / P)

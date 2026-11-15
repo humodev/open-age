@@ -61,3 +61,26 @@ Orden de los cambios de balance: A, después E, F y G, de a uno, con un torneo d
 
 ## Paso a paso
 1. **(20:00) Etapa abierta.** Respuestas anotadas en `CONSULTAS.md`. Se lanzan los agentes 1, 2 y 3, cada uno en su copia del repositorio.
+2. **(21:00) Cambio de orden: el combate (E) antes de cerrar el balance actual (A).** El combate nuevo vuelve a mezclar todo el balance; cerrarlo antes sería trabajo perdido. Se balancea una sola vez, con el sistema nuevo.
+3. **(21:30) Combate como AoE4 (E): bonos planos y dos armaduras.**
+   - **Antes:** un multiplicador por función, de ×2 a ×2,25 a favor y de ×0,6 a ×0,8 en contra. Quien elegía mal perdía todo y quien elegía bien no perdía nada (informe del veterano).
+   - **Ahora:**
+     - el daño es ataque + bono contra la función del blanco − armadura;
+     - el bono por función está en `reglas.json → bonos`: línea +5 contra choque, distancia +4 contra línea, choque +6 contra distancia; cada unidad puede sumar los suyos en `bono`, incluso contra montados;
+     - la armadura es doble: `armadura` contra cuerpo a cuerpo y `armadura_distancia` contra lo que pega de más de 1,5 casillas (`alcance_distancia`). El lancero tiene 3 contra cuerpo a cuerpo y 0 contra distancia; el jinete, 1 y 2; el ariete, 2 y 6; el elefante de guerra y la compañía japonesa, lo mismo en las dos;
+     - los multiplicadores quedan solo contra edificios y en el asedio, como el bono de asedio de AoE4.
+   - **Se ve:** el panel de la unidad muestra las dos armaduras ("3 / 0"), y la ficha dice "+5 contra choque" y "choque le pega +6".
+   - **Prueba fija nueva `tests/micro.gd`:** la escribió el veterano en la etapa 22 ([resultado](pruebas/01-micro-bonos.txt)).
+
+     | Pelea | Antes | Ahora |
+     |---|---|---|
+     | 10 honderos contra 10 guerreros | gana el guerrero; pierde 1 | gana el guerrero; pierde 2 |
+     | Lo mismo con fuego concentrado | pierde 1 | **pierde 4** |
+     | 10 honderos contra 10 lanceros | gana el hondero; pierde 2 | pierde 4 |
+     | 10 guerreros contra 10 lanceros | gana el lancero; pierde 0 | pierde 3 |
+     | 8 jinetes contra 10 honderos | gana el jinete; pierde 0 | pierde 1 |
+
+     El contador sigue ganando, pero paga, y el fuego concentrado cambia la pelea. Kitear al guerrero sigue sin servir, como en AoE4 (el arquero no escapa de la infantería rápida ni de la caballería); contra la línea, que es lenta, sí sirve. El veterano pedía que el ganador pierda la mitad: estamos en 20–40 %, y el torneo dirá si hay que ablandar más.
+   - Determinismo OK, banco 8,2 ms por tick y autotest OK.
+   - **Salud de la IA:** marca ejércitos de 5 y 6, pero son peleas perdidas, no una IA trabada. Hay que ajustar la prueba para que distinga una cosa de la otra.
+   - Torneo de 5 semillas corriendo.

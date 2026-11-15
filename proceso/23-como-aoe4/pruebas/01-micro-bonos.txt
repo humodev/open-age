@@ -1,0 +1,18 @@
+== A. 10 honderos contra 10 guerreros, los dos con ataque en movimiento
+   16.3 s · quedan hondero 0/10 (vida 0%) · guerrero 8/10 (vida 62%)
+== B. Lo mismo, pero los honderos retroceden cuando un guerrero se acerca (kiteo)
+   33.6 s · quedan hondero 0/10 (vida 0%) · guerrero 10/10 (vida 85%)
+== C. 10 honderos contra 10 lanceros (distancia contra línea)
+   29.2 s · quedan hondero 6/10 (vida 52%) · lancero 0/10 (vida 0%)
+== D. 10 guerreros contra 10 lanceros (choque contra línea)
+   26.5 s · quedan guerrero 0/10 (vida 0%) · lancero 7/10 (vida 51%)
+== E. 8 jinetes contra 10 honderos (choque contra distancia)
+   14.7 s · quedan jinete 7/8 (vida 81%) · hondero 0/10 (vida 0%)
+== F. 10 honderos con todo el fuego a un blanco por vez (foco) contra 10 guerreros
+   18.3 s · quedan hondero 0/10 (vida 0%) · guerrero 6/10 (vida 60%)
+== G. Retirada: 6 jinetes + 6 lanceros pasan junto a 8 honderos con orden de mover (sin ataque)
+   llegan 9/12 (jinetes 4, lanceros 5); primero a los 21.3 s, todos a los 22.7 s; vida de los jinetes 500
+== H. La misma retirada, suelta (Alt)
+   llegan 9/12 (jinetes 6, lanceros 3); primero a los 9.7 s, todos a los -0.1 s; vida de los jinetes 915
+   at: cleanup (core/object/object.cpp:2536)
+   at: clear (core/io/resource.cpp:822)

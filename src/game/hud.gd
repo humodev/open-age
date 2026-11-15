@@ -920,7 +920,7 @@ class SelectionPanel:
 		if e.is_unit():
 			# Valores de verdad: con mejoras, bono de edad y velocidad real (casillas por segundo).
 			var spd := float(hud.sim.mods.speed(e)) * 1000.0 / float(hud.sim.tick_ms) / 1000.0
-			var stats := [["Ataque", str(hud.sim.effective_attack(e))], ["Armadura", str(hud.sim.effective_armor(e))], ["Alcance", "%.1f" % (e.def.get("alcance", 0) / 1000.0)], ["Velocidad", "%.2f" % spd]]
+			var stats := [["Ataque", str(hud.sim.effective_attack(e))], ["Armadura", "%d / %d" % [hud.sim.effective_armor(e), hud.sim.effective_armor(e, true)]], ["Alcance", "%.1f" % (e.def.get("alcance", 0) / 1000.0)], ["Velocidad", "%.2f" % spd]]
 			var sx := x
 			for s in stats:
 				draw_string(Hud.font, Vector2(sx, 92), s[0], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Palette.UI_DIM)
