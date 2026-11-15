@@ -15,6 +15,9 @@ var trained := {} # tipo -> cantidad entrenada por el jugador
 var destroyed := {} # "jugador:tipo" -> edificios perdidos por ese jugador a manos del jugador 0
 var kills := 0 # unidades enemigas abatidas por el jugador 0
 var _seen := {} # tipos protegidos que llegaron a existir
+var motivo := "" # por qué terminó la misión (se muestra en la pantalla de fin)
+var cuenta := {} # cuenta regresiva a la vista: {"texto", "fin" (tick)}; vacía si no hay
+var sites_win := true # si tener todos los sitios gana la partida (mapa.sitios.victoria)
 
 
 ## Crea la simulación de una misión. El jugador es el 0; los rivales, 1..n.
@@ -24,6 +27,9 @@ static func create(m: Dictionary, civ_key: String) -> Sim:
 		civs.append(r.get("faccion", "invasores"))
 	var mapa: Dictionary = m.get("mapa", {})
 	var opts := {"terreno": mapa.get("terreno", "llano"), "civs": civs, "sin_sitios": true}
+	# Sitios sagrados propios de la misión (el tutorial los enseña): no ganan la partida si así se pide.
+	if mapa.has("sitios") and not bool(mapa["sitios"].get("victoria", true)):
+		opts["sitios_sin_victoria"] = true
 	# Relieve real del lugar (tools/relieve_real.py, docs/10), si la misión lo tiene.
 	var rpath := "res://data/relieve/%s.json" % m.get("id", "")
 	if mapa.get("relieve_real", true) and FileAccess.file_exists(rpath):
@@ -62,7 +68,7 @@ func _setup() -> void:
 		sim.players[pid]["age"] = age
 		for k in sim.players[pid]["res"]:
 			sim.players[pid]["res"][k] = int(sim.players[pid]["res"][k]) + 300 * age
-		var ai := SimAI.new(sim, pid)
+		var ai := SimAI.new(sim, pid, r.get("dificultad", "normal"))
 		ai.personality = r.get("ia", "normal")
 		sim.ais.append(ai)
 		var cap := _capital(pid)
@@ -76,10 +82,21 @@ func _setup() -> void:
 		var garrison := 3 + 3 * age if ai.personality != "pasiva" else 2 + age
 		for k in garrison:
 			_spawn_group(pid, ["lancero", "hondero", "guerrero"][k % 3] if age >= 2 else ["guerrero", "hondero"][k % 2], 1, cap)
+	# Sitios sagrados de la misión: desplazamientos desde la capital del jugador, hacia el centro.
+	var cap0 := _capital(0)
+	if cap0 != null:
+		for d: Array in m.get("mapa", {}).get("sitios", {}).get("lugares", []):
+			var sx := signi(sim.map.n / 2 - cap0.tx)
+			var sy := signi(sim.map.n / 2 - cap0.ty)
+			var t := sim.map.nearest_free(cap0.tx + sx * int(d[0]), cap0.ty + sy * int(d[1]), 8)
+			if t.x >= 0 and sim.map.is_free_rect(t.x, t.y, 2, 2):
+				sim.spawn_building("sitio_sagrado", -1, t.x, t.y, true)
 	for o: Dictionary in m.get("objetivos", []):
 		var oo := o.duplicate(true)
 		oo["estado"] = "oculto" if o.get("oculto", false) else "activo"
 		oo["desde"] = 0
+		if oo["estado"] == "activo":
+			oo["base"] = _gathered(0)
 		objectives.append(oo)
 		if o["tipo"] == "destruir":
 			var pr: Dictionary = o["params"]
@@ -114,6 +131,13 @@ func on_step() -> void:
 	if sim.tick % 10 != 0 or result != "":
 		return
 	_fire("tiempo", sim.tick * sim.tick_ms / 1000)
+	# Eventos con espera ("cuando": {..., "espera": segundos}): se disparan cuando vence.
+	for e in triggers:
+		if not e["hecho"] and e.has("listo") and sim.tick >= int(e["listo"]):
+			e["hecho"] = true
+			_act(e["accion"])
+	if not cuenta.is_empty() and sim.tick >= int(cuenta["fin"]):
+		cuenta = {}
 	if sim.tick == 0:
 		_fire("inicio", 0)
 	for o in objectives:
@@ -126,6 +150,8 @@ func on_step() -> void:
 			_fire("objetivo", o["id"])
 		elif st == "fallado":
 			o["estado"] = "fallado"
+			if motivo == "" and not o.get("secundario", false):
+				motivo = String(o.get("params", {}).get("texto_fallo", ""))
 			sim.events.append({"t": "objetivo", "id": o["id"], "estado": "fallado", "texto": o["texto"]})
 	_check_end()
 
@@ -143,6 +169,27 @@ func _eval(o: Dictionary) -> String:
 			return "hecho" if n >= int(pr.get("n", 1)) else ""
 		"recolectar":
 			return "hecho" if int(p0["res"].get(pr["recurso"], 0)) >= int(pr.get("n", 0)) else ""
+		"juntar":
+			# Lo juntado desde que apareció el objetivo, no lo que hay en el banco (gastar no lo deshace).
+			var now := _gathered(0)
+			var base: Dictionary = o.get("base", {})
+			for k in pr.get("recursos", {}):
+				if int(now.get(k, 0)) - int(base.get(k, 0)) < int(pr["recursos"][k]):
+					return ""
+			return "hecho"
+		"explorar":
+			# Un sitio sagrado (o cualquier edificio del tipo pedido) ya visto por el jugador.
+			var kind: String = pr.get("tipo", "sitio_sagrado")
+			for e in sim.actives:
+				if e.alive and e.type == kind and sim.fog.is_explored(0, e):
+					return "hecho"
+			return ""
+		"sitio":
+			var held := 0
+			for e in sim.actives:
+				if e.alive and e.def.get("sagrado", false) and e.holder == 0:
+					held += 1
+			return "hecho" if held >= int(pr.get("n", 1)) else ""
 		"edad":
 			return "hecho" if int(p0["age"]) >= int(pr.get("n", 2)) else ""
 		"sobrevivir":
@@ -171,6 +218,8 @@ func _eval(o: Dictionary) -> String:
 
 func _check_end() -> void:
 	if sim.players[0]["defeated"]:
+		if motivo == "":
+			motivo = "Tu pueblo fue derrotado."
 		_finish("derrota")
 		return
 	var all_done := true
@@ -178,6 +227,8 @@ func _check_end() -> void:
 		if o.get("secundario", false):
 			continue
 		if o["estado"] == "fallado":
+			if motivo == "":
+				motivo = "No se cumplió: %s" % o["texto"]
 			_finish("derrota")
 			return
 		if o["tipo"] == "proteger":
@@ -193,7 +244,7 @@ func _check_end() -> void:
 
 func _finish(r: String) -> void:
 	result = r
-	sim.events.append({"t": "mision", "resultado": r})
+	sim.events.append({"t": "mision", "resultado": r, "motivo": motivo})
 
 
 # ---------------------------------------------------------------- Eventos
@@ -208,6 +259,10 @@ func _fire(kind: String, value: Variant) -> void:
 		if kind == "tiempo" and int(value) < int(c.get("valor", 0)):
 			continue
 		if kind == "objetivo" and String(c.get("valor", "")) != String(value):
+			continue
+		if int(c.get("espera", 0)) > 0:
+			if not e.has("listo"):
+				e["listo"] = sim.tick + int(c["espera"]) * 1000 / sim.tick_ms
 			continue
 		e["hecho"] = true
 		_act(e["accion"])
@@ -227,7 +282,7 @@ func _act(a: Dictionary) -> void:
 					if who == 0:
 						sim.events.append({"t": "notify", "player": 0, "msg": "Llegan refuerzos"})
 		"ataque":
-			_attack(int(pr.get("jugador", 1)), pr["tipo"], int(pr.get("n", 1)))
+			_attack(int(pr.get("jugador", 1)), pr["tipo"], int(pr.get("n", 1)), int(pr.get("distancia", 0)))
 		"recursos":
 			for k in pr:
 				sim.players[0]["res"][k] = int(sim.players[0]["res"].get(k, 0)) + int(pr[k])
@@ -236,16 +291,22 @@ func _act(a: Dictionary) -> void:
 			for i in g.size():
 				if g[i] == 0:
 					g[i] = 1
+		"cuenta":
+			# Cuenta regresiva a la vista (la interfaz la muestra grande, arriba al centro).
+			cuenta = {"texto": pr.get("texto", ""), "fin": sim.tick + int(pr.get("segundos", 60)) * 1000 / sim.tick_ms}
 		"objetivo_nuevo":
 			for o in objectives:
 				if o["id"] == pr.get("id", "") and o["estado"] == "oculto":
 					o["estado"] = "activo"
 					o["desde"] = sim.tick
+					o["base"] = _gathered(0)
 					sim.events.append({"t": "objetivo", "id": o["id"], "estado": "nuevo", "texto": o["texto"]})
 
 
 ## Una columna aparece en el borde del mapa del lado del rival y avanza sobre la capital del jugador.
-func _attack(who: int, type: String, n: int) -> void:
+## Con `dist` (casillas), aparece a esa distancia de la capital, en dirección al rival: así
+## el aviso "llegan en 60 s" se cumple.
+func _attack(who: int, type: String, n: int, dist: int = 0) -> void:
 	if who <= 0 or who >= sim.players.size():
 		return
 	var target := _capital(0)
@@ -254,6 +315,11 @@ func _attack(who: int, type: String, n: int) -> void:
 	var base: Vector2i = sim.bases[who % 4] + Vector2i(2, 2)
 	var nn := sim.map.n
 	var edge := Vector2i(clampi(base.x + signi(base.x - nn / 2) * 20, 2, nn - 3), clampi(base.y + signi(base.y - nn / 2) * 20, 2, nn - 3))
+	if dist > 0:
+		var tt := Vector2i(target.tx, target.ty)
+		var d := base - tt
+		var len := maxi(1, Sim.isqrt(d.x * d.x + d.y * d.y))
+		edge = Vector2i(clampi(tt.x + d.x * dist / len, 2, nn - 3), clampi(tt.y + d.y * dist / len, 2, nn - 3))
 	var ids := []
 	var kind := _unit_for(who, type)
 	for i in n:
@@ -278,6 +344,23 @@ func _unit_for(pid: int, type: String) -> String:
 		if dd.unidades[k].get("funcion", "") == want:
 			return k
 	return "guerrero"
+
+
+## Total juntado por recurso (libro de orígenes de la simulación).
+func _gathered(pid: int) -> Dictionary:
+	var out := {}
+	var book: Dictionary = sim.players[pid]["stats"].get("origen", {})
+	for o in book:
+		for k in book[o]:
+			out[k] = int(out.get(k, 0)) + int(book[o][k])
+	return out
+
+
+## Segundos que le quedan a la cuenta regresiva de la misión (-1 si no hay).
+func cuenta_s() -> int:
+	if cuenta.is_empty():
+		return -1
+	return maxi(0, (int(cuenta["fin"]) - sim.tick) * sim.tick_ms / 1000)
 
 
 func _aliases(type: String, pid: int = 0) -> Array:

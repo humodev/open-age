@@ -203,3 +203,16 @@ a) Dejar F7–F9 *(por defecto)* · b) Pasar los paneles a otras teclas y usar F
 ### C-36 · (órdenes) ¿Cuánto da la IA aliada cuando le piden?
 Hoy da 200 si después le quedan 300 (`reglas.json → equipos.pedido`), y a una bengala manda la mitad de su ejército libre, con un mínimo de 3 (`equipos.bengala`). Un aliado muy generoso se queda sin ejército; uno muy tacaño parece que no escucha.
 a) Así *(por defecto)* · b) Más generosa (todo lo que le sobre, el ejército entero) · c) Más prudente (solo si no la están atacando)
+
+### C-37 · (aprender a jugar) ¿Con qué pueblo se aprende?
+El tutorial usa a los guaraníes, que no tienen torre, granero ni depósito, y cuyos edificios tienen nombre propio (Oga, Aty, Kokue). El jugador nuevo pidió aprender con un pueblo "más normal" (`proceso/22-testers/02-nuevo-en-rts.md`).
+a) Dejar a los guaraníes: los nombres propios con el común debajo ya se entienden *(por defecto)* · b) Pasar el tutorial a Tawantinsuyu, que tiene todos los edificios comunes
+
+**Respuesta:**
+
+### C-38 · (aprender a jugar) "Arte de la guerra"
+AoE4 tiene misiones cortas de una sola idea (economía temprana, defensa, contadores, sitios, asedio) con medalla de bronce, plata y oro. El motor de escenarios ya alcanza para hacerlas (objetivos `juntar`, `sitio`, cuentas y ataques con aviso).
+a) Sí, cinco misiones cortas con medallas por tiempo, después de la etapa 23 *(por defecto)* · b) No por ahora
+
+**Respuesta:**
+

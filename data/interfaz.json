@@ -44,5 +44,30 @@
   "cursores": {
     "_doc": "Cursores contextuales (src/game/ui/cursores.gd): lado en píxeles a escala 100 %.",
     "px": 32
+  },
+  "consejos": {
+    "_doc": "Avisos que enseñan (src/game/ui/consejos.gd), apagables en Opciones. Segundos: cada cuánto se revisa, cuánto tiene que durar una situación antes de avisar y cada cuánto puede repetirse el mismo aviso. Radios en casillas. flotando: banco por recurso a partir del cual se avisa que no se gasta.",
+    "revisar_s": 5,
+    "ociosos_s": 20,
+    "ociosos_min": 1,
+    "repetir_s": 90,
+    "frutos_radio": 16,
+    "flotando": { "riqueza": 500, "alimento": 900, "madera": 900, "piedra": 600 },
+    "flotando_s": 60,
+    "sitios_repetir_s": 60
+  },
+  "guia": {
+    "_doc": "Mensajes de la Guía en campañas (src/game/hud.gd y src/game/ui/registro_guia.gd): cuánto quedan en pantalla según el largo (letras por segundo, mínimo y máximo) y cuántos guarda el registro que se relee con F7.",
+    "letras_por_s": 11,
+    "min_s": 7.0,
+    "max_s": 22.0,
+    "registro_max": 60
+  },
+  "fin": {
+    "_doc": "Pantalla de fin (src/game/ui/panel_fin.gd): umbrales del consejo cuando perdiste. ociosos_prom: aldeanos sin trabajo en promedio; banco_prom: recursos sin gastar en promedio; aldeanos_pct: tuviste menos de este porcentaje de los aldeanos del rival; edad_tarde_s: llegaste a la edad II al menos tantos segundos después que el rival.",
+    "ociosos_prom": 3,
+    "banco_prom": 1200,
+    "aldeanos_pct": 70,
+    "edad_tarde_s": 120
   }
 }

@@ -147,3 +147,10 @@ Orden de los cambios de balance: A, después E, F y G, de a uno, con un torneo d
    - **Tropiezos del autotest:**
      - **Ahora hay venados y animales sueltos.** El paso del arbusto pedía "el alimento más cercano", que podía ser un venado fuera de la pantalla; ahora busca un arbusto de verdad.
      - **La espera del primer alimento fallaba de a ratos con la máquina cargada:** sin la ventana, las tres civs juntan 210 en 80 s. Se estiró la espera de 20 a 40 s reales.
+7. **(02:00) Fusión de la parte C, aprender a jugar** (agente 2). Tutorial que se gana haciéndole caso y que falla con motivo, avisos que enseñan (apagables), cuenta grande de los sitios, pantalla de fin que explica por qué y da consejos, nombres en la grilla, registro de la Guía (F7) y el menú en Fácil la primera vez. Detalle en [`03-aprender-a-jugar.md`](03-aprender-a-jugar.md); consultas C-37 y C-38.
+   - **Integración:** choques en `hud.gd` y `main.gd`, porque las dos partes agregaron bloques en los mismos lugares: se quedaron los dos. Las consultas de esta parte venían numeradas C-35 y C-36, igual que las de la parte B, y pasaron a **C-37 y C-38**.
+   - **Choque de teclas:** las dos partes usaban F7, la B para los marcadores de cámara y la C para releer la Guía. El registro de la Guía pasó a **G**; los marcadores, ya fusionados y en consulta, siguen en F7–F9.
+   - **Pruebas sobre lo fusionado** (combate, animales, B y C juntos):
+     - determinismo, `ordenes.gd`, `jugabilidad.gd`, `grilla.gd` y las 25 misiones de `campaign_smoke` sin errores;
+     - autotest OK con guaraníes y Etiopía;
+     - `tests/tutorial_letra.gd`: siguiendo el tutorial al pie de la letra se gana a las 9:46 (el agente midió 8:26 antes de sumar combate y animales).

@@ -5,7 +5,7 @@ extends Control
 
 const C := preload("res://src/game/ui/panel_comun.gd")
 const BOX := Vector2(1560, 900)
-const CHARTS := [["pop", "Población"], ["vill", "Aldeanos"], ["army", "Ejército"], ["juntado", "Recursos juntados"], ["riqueza", "Riqueza juntada"], ["score", "Puntaje"]]
+const CHARTS := [["pop", "Población"], ["vill", "Aldeanos"], ["army", "Ejército"], ["juntado", "Recursos juntados"], ["riqueza", "Riqueza juntada"], ["age", "Edad"], ["score", "Puntaje"]]
 const ORIGIN_COLORS := {
 	"casa": Color("c9a227"), "granja": Color("a9a066"), "recoleccion": Color("8c7258"), "disputado": Color("d4553a"),
 	"sitios": Color("b07cc6"), "saqueo": Color("9b3d3d"), "mercado": Color("5aa0a8"), "renta": Color("6c9c5a"), "propio": Color("e3b23c"),
@@ -17,6 +17,8 @@ var winner := -1
 var _chart := 0
 var _tabs: Array = [] # [Rect2, índice]
 var _box := Rect2()
+var _why := "" # --- aprender --- por qué terminó (una línea)
+var _tips: Array[String] = [] # consejos concretos si perdiste
 
 
 func _ready() -> void:
@@ -27,6 +29,7 @@ func _ready() -> void:
 func open(w: int) -> void:
 	winner = w
 	datos.close()
+	_explain() # --- aprender ---
 	visible = true
 	for c in get_children():
 		c.queue_free()
@@ -92,12 +95,22 @@ func _draw() -> void:
 	if winner >= 0 and winner != hud.local:
 		sub += " · ganó %s" % C.player_name(sim, winner, hud.local)
 	C.text(self, o + Vector2(36, 86), sub, 15, Palette.UI_DIM)
+	# --- aprender --- por qué terminó y qué probar la próxima vez
+	var dy := 0.0
+	if _why != "":
+		C.text(self, o + Vector2(36, 116), _why, 17, Palette.UI_TEXT, true, _box.size.x - 72)
+		dy += 28
+	for tip in _tips:
+		C.text(self, o + Vector2(36, 116 + dy), "Consejo: " + tip, 15, Palette.UI_ACCENT, false, _box.size.x - 72)
+		dy += 24
+	dy = dy + 8.0 if dy > 0.0 else 0.0
+	# --- fin aprender ---
 
 	var col_w := (_box.size.x - 96) / 2
-	_table(Rect2(o + Vector2(32, 116), Vector2(col_w, 430)))
-	_chart_box(Rect2(o + Vector2(64 + col_w, 116), Vector2(col_w, 430)))
-	_origins(Rect2(o + Vector2(32, 572), Vector2(col_w, 220)))
-	_timeline(Rect2(o + Vector2(64 + col_w, 572), Vector2(col_w, 220)))
+	_table(Rect2(o + Vector2(32, 116 + dy), Vector2(col_w, 430 - dy * 0.6)))
+	_chart_box(Rect2(o + Vector2(64 + col_w, 116 + dy), Vector2(col_w, 430 - dy)))
+	_origins(Rect2(o + Vector2(32, 572 + dy * 0.6), Vector2(col_w, 220)))
+	_timeline(Rect2(o + Vector2(64 + col_w, 572 + dy * 0.6), Vector2(col_w, 220)))
 
 
 # ---------------------------------------------------------------- Comparación
@@ -311,3 +324,77 @@ func _timeline(r: Rect2) -> void:
 		var x := ax0 + aw * (m * 60.0) / t_max
 		C.text(self, Vector2(x - 20, y + 4), "%d'" % m, 11, Palette.UI_DIM, false, 40, HORIZONTAL_ALIGNMENT_CENTER)
 		m += step_min
+
+
+# ---------------------------------------------------------------- Por qué terminó (--- aprender ---)
+
+## Una línea con el motivo del final y, si perdiste, uno o dos consejos que salen de las
+## muestras de la partida (proceso/23-como-aoe4/03-aprender-a-jugar.md).
+func _explain() -> void:
+	var sim := hud.sim
+	var me := hud.local
+	var cfg: Dictionary = datos.cfg.get("fin", {})
+	_why = ""
+	_tips.clear()
+	var win_ms := int(sim.data.reglas["sitios"]["victoria_ms"])
+	var real := sim.winner if sim.game_over else -1
+	if not sim.game_over:
+		_why = "La partida sigue: esto es un resumen de lo jugado hasta ahora."
+	elif real < 0:
+		_why = "La partida terminó sin ganador."
+	else:
+		var by_sites := false
+		for p in sim.players:
+			if not sim.enemies(real, p["id"]) and int(p.get("sitios_ms", 0)) >= win_ms:
+				by_sites = true
+		var mine := not sim.enemies(me, real)
+		var who := C.player_name(sim, real, me)
+		if by_sites:
+			_why = ("Ganaste por sitios sagrados: los tuviste todos durante %s." if mine else "Perdiste por sitios sagrados: %s los tuvo todos durante %s seguidos.") % ([C.fmt_time(win_ms / 1000)] if mine else [who, C.fmt_time(win_ms / 1000)])
+		else:
+			_why = "Ganaste por conquista: el rival se quedó sin los edificios que cuentan para la victoria." if mine else "Perdiste por conquista: %s destruyó los edificios que cuentan para la victoria." % who
+	var lost := sim.game_over and real >= 0 and sim.enemies(me, real)
+	if not lost:
+		return
+	# El rival de referencia: el ganador.
+	var rv := real
+	var samples: Array = datos.samples
+	var n := maxi(1, samples.size())
+	var idle_sum := 0
+	var bank_sum := 0
+	var site_s := 0
+	var vill_me := 0
+	var vill_rv := 0
+	var army_me := 0
+	var army_rv := 0
+	for smp in samples:
+		var row: Array = smp["p"]
+		if me < row.size():
+			idle_sum += int(row[me].get("ociosos", 0))
+			bank_sum += int(row[me].get("banco", 0))
+			vill_me = maxi(vill_me, int(row[me]["vill"]))
+			army_me = maxi(army_me, int(row[me]["army"]))
+		if rv < row.size():
+			vill_rv = maxi(vill_rv, int(row[rv]["vill"]))
+			army_rv = maxi(army_rv, int(row[rv]["army"]))
+		for q in row.size():
+			if sim.enemies(me, q) and int(row[q].get("sitios_ms", 0)) > 0:
+				site_s += datos.sample_s
+				break
+	if site_s >= 60:
+		_tips.append("el rival tuvo todos los sitios sagrados unos %d minutos. Cuando aparece la cuenta grande arriba al centro, llevá tropas a pararse en un sitio: con tener uno se corta." % maxi(1, site_s / 60))
+	if idle_sum / n >= int(cfg.get("ociosos_prom", 3)):
+		_tips.append("tuviste %d aldeanos ociosos en promedio. La tecla punto (.) elige uno sin trabajo; el aviso «aldeanos sin trabajo» te lo recuerda." % (idle_sum / n))
+	if vill_rv > 0 and vill_me * 100 < vill_rv * int(cfg.get("aldeanos_pct", 70)):
+		_tips.append("el rival llegó a %d aldeanos y vos a %d. Entrená aldeanos sin parar desde el centro: son los que juntan todo." % [vill_rv, vill_me])
+	var t_me: int = datos.age_time(me, 2)
+	var t_rv: int = datos.age_time(rv, 2)
+	if t_rv >= 0 and (t_me < 0 or t_me - t_rv >= int(cfg.get("edad_tarde_s", 120))):
+		_tips.append("el rival llegó a la edad II a los %s; vos, %s. El panel de Edad (F4) dice qué falta para el hito." % [C.fmt_time(t_rv), C.fmt_time(t_me) if t_me >= 0 else "nunca"])
+	if bank_sum / n >= int(cfg.get("banco_prom", 1200)):
+		_tips.append("tuviste %d recursos sin gastar en promedio. Lo que se guarda no pelea ni junta: gastalo en aldeanos, tropas o la próxima edad." % (bank_sum / n))
+	if army_rv >= 2 * maxi(1, army_me):
+		_tips.append("tu ejército más grande fue de %d; el del rival, de %d. Tené siempre un edificio militar entrenando." % [army_me, army_rv])
+	if _tips.is_empty():
+		_tips.append("mirá el gráfico de Aldeanos: casi siempre la diferencia empieza ahí.")
+	_tips = _tips.slice(0, 2)

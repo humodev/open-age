@@ -102,7 +102,12 @@ func _ready() -> void:
 	_diff.add_theme_font_override("font", Hud.font_b)
 	for k in ["facil", "normal", "dificil"]:
 		_diff.add_item(data.reglas["dificultades"][k]["nombre"])
-	_diff.selected = 1
+	# --- aprender --- la primera vez (sin user://opciones.cfg), Fácil; después, la última elegida.
+	_diff.selected = maxi(0, ["facil", "normal", "dificil"].find(Opciones.dificultad))
+	_diff.item_selected.connect(func(i: int) -> void:
+		Opciones.dificultad = ["facil", "normal", "dificil"][i]
+		Opciones.guardar())
+	# --- fin aprender ---
 	drow.add_child(_diff)
 	box.add_child(drow)
 	var srow := HBoxContainer.new()

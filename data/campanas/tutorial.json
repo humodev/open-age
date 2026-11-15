@@ -1,7 +1,7 @@
 {
  "civ": "guaranies",
  "titulo": "Primeros pasos",
- "resumen": "Aprendé a recolectar, construir, entrenar, defender y avanzar de edad.",
+ "resumen": "Aprendé a mirar el mapa, juntar los cuatro recursos, construir, explorar, tomar un sitio sagrado, defenderte y avanzar de edad.",
  "misiones": [
   {
    "id": "tutorial-1",
@@ -10,7 +10,8 @@
    "lugar": "Un claro junto al río",
    "intro": [
     "Antes de las grandes historias, lo básico: un pueblo vive de lo que junta, de lo que construye y de quienes lo defienden.",
-    "Seleccioná a tus aldeanos arrastrando el mouse sobre ellos. Con clic derecho sobre un recurso, se ponen a recolectar. La grilla de abajo a la derecha construye y entrena: cada botón tiene su tecla (Q, W, E, R…)."
+    "La cámara se mueve con las flechas o llevando el mouse al borde; la rueda acerca y aleja. Seleccioná con clic izquierdo (arrastrá para elegir varios) y da órdenes con clic derecho. La grilla de abajo a la derecha construye y entrena: cada botón tiene su tecla (Q, W, E, R…).",
+    "Los objetivos aparecen de a uno, arriba a la izquierda. Lo que dice la Guía se puede releer con F7."
    ],
    "epilogo": [
     "Ya sabés lo necesario. Cada pueblo juega distinto: elegí uno en las campañas o en una escaramuza y descubrí su forma."
@@ -18,7 +19,17 @@
    "fuentes": [],
    "mapa": {
     "semilla": 2024,
-    "terreno": "llano"
+    "terreno": "llano",
+    "sitios": {
+     "lugares": [
+      [
+       26,
+       14
+      ]
+     ],
+     "victoria": false,
+     "_doc": "Un sitio sagrado para enseñarlo: desplazamiento en casillas desde la capital, hacia el centro del mapa. No gana la partida."
+    }
    },
    "jugador": {
     "edad": 1,
@@ -36,17 +47,20 @@
      "nombre": "Saqueadores",
      "faccion": "invasores",
      "ia": "pasiva",
-     "edad": 1
+     "edad": 1,
+     "dificultad": "facil"
     }
    ],
    "objetivos": [
     {
      "id": "o1",
-     "texto": "Juntá 300 de madera: seleccioná aldeanos y hacé clic derecho en un árbol.",
-     "tipo": "recolectar",
+     "texto": "Juntá 100 de madera y 100 de alimento: mandá tres aldeanos a los árboles y tres a los arbustos con frutos (clic derecho).",
+     "tipo": "juntar",
      "params": {
-      "recurso": "madera",
-      "n": 300
+      "recursos": {
+       "madera": 100,
+       "alimento": 100
+      }
      },
      "secundario": false
     },
@@ -58,7 +72,8 @@
       "tipo": "casa",
       "n": 1
      },
-     "secundario": false
+     "secundario": false,
+     "oculto": true
     },
     {
      "id": "o3",
@@ -73,6 +88,38 @@
     },
     {
      "id": "o4",
+     "texto": "Juntá 100 de riqueza: mandá a los aldeanos nuevos a la veta dorada con clic derecho.",
+     "tipo": "juntar",
+     "params": {
+      "recursos": {
+       "riqueza": 100
+      }
+     },
+     "secundario": false,
+     "oculto": true
+    },
+    {
+     "id": "o5",
+     "texto": "Explorá: elegí al explorador y mandalo con clic derecho hacia el centro del mapa hasta encontrar el sitio sagrado.",
+     "tipo": "explorar",
+     "params": {
+      "tipo": "sitio_sagrado"
+     },
+     "secundario": false,
+     "oculto": true
+    },
+    {
+     "id": "o6",
+     "texto": "Tomá el sitio sagrado: dejá al explorador parado al lado hasta que la bandera tome tu color.",
+     "tipo": "sitio",
+     "params": {
+      "n": 1
+     },
+     "secundario": false,
+     "oculto": true
+    },
+    {
+     "id": "o7",
      "texto": "Construí un cuartel (aldeanos seleccionados: W abre Militar y Q elige el cuartel).",
      "tipo": "construir",
      "params": {
@@ -83,8 +130,19 @@
      "oculto": true
     },
     {
-     "id": "o5",
-     "texto": "Entrená 5 guerreros y defendé el pueblo de los saqueadores: abatí a 4.",
+     "id": "o8",
+     "texto": "Entrená 5 guerreros en el cuartel (cuestan alimento y riqueza: dejá aldeanos en los frutos y en la riqueza).",
+     "tipo": "entrenar",
+     "params": {
+      "tipo": "guerrero",
+      "n": 5
+     },
+     "secundario": false,
+     "oculto": true
+    },
+    {
+     "id": "o9",
+     "texto": "Defendé el pueblo: abatí a los 4 saqueadores.",
      "tipo": "matar",
      "params": {
       "n": 4
@@ -93,14 +151,25 @@
      "oculto": true
     },
     {
-     "id": "o6",
-     "texto": "Avanzá a la edad II: construí uno de los dos hitos (teclas Z o X).",
+     "id": "o10",
+     "texto": "Avanzá a la edad II: con aldeanos seleccionados, construí uno de los dos hitos (Z o X). El panel de Edad (F4) dice qué falta.",
      "tipo": "edad",
      "params": {
       "n": 2
      },
      "secundario": false,
      "oculto": true
+    },
+    {
+     "id": "pr",
+     "texto": "Cuidá a tus aldeanos: si caen todos, la misión se pierde.",
+     "tipo": "proteger",
+     "params": {
+      "tipo": "aldeano",
+      "jugador": 0,
+      "texto_fallo": "Perdiste a todos tus aldeanos, y sin ellos no hay hito. La próxima vez, cuando la Guía avise que llegan los saqueadores, elegí el centro (H) y tocá la campana (Z): los aldeanos se refugian y el centro dispara."
+     },
+     "secundario": false
     }
    ],
    "eventos": [
@@ -113,7 +182,32 @@
       "tipo": "dialogo",
       "params": {
        "quien": "Guía",
-       "texto": "Arrastrá el mouse sobre tus aldeanos y mandalos al bosque con clic derecho."
+       "texto": "Primero, mirá alrededor: las flechas o el mouse contra el borde mueven la cámara y la rueda acerca y aleja. Un clic en el minimapa (abajo a la izquierda) te lleva a ese lugar."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 10
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Ahora, a trabajar. Arrastrá el mouse sobre tus aldeanos para elegirlos. Con clic derecho en un árbol juntan madera; en un arbusto con frutos, alimento. Mandá tres a cada lado."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o1"
+     },
+     "accion": {
+      "tipo": "objetivo_nuevo",
+      "params": {
+       "id": "o2"
       }
      }
     },
@@ -126,7 +220,7 @@
       "tipo": "dialogo",
       "params": {
        "quien": "Guía",
-       "texto": "Bien. Más gente necesita más casas: la población máxima está arriba, junto a los recursos."
+       "texto": "Bien. Arriba a la izquierda están tus recursos y, al lado de cada uno, cuántos aldeanos lo juntan. Más a la derecha, la población: más gente necesita más casas."
       }
      }
     },
@@ -151,7 +245,7 @@
       "tipo": "dialogo",
       "params": {
        "quien": "Guía",
-       "texto": "Más manos, más recursos. Seleccioná el centro con H y entrená aldeanos con Q."
+       "texto": "Más manos, más recursos. Seleccioná el centro con H y entrená aldeanos con Q. Si un aldeano se queda sin trabajo, la tecla punto (.) lo encuentra."
       }
      }
     },
@@ -164,6 +258,19 @@
       "tipo": "objetivo_nuevo",
       "params": {
        "id": "o4"
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o3"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Hay cuatro recursos. La riqueza (la veta dorada cerca del centro) paga guerreros, investigaciones e hitos. Mandá a los aldeanos nuevos a juntarla y dejá a los demás donde están."
       }
      }
     },
@@ -188,21 +295,7 @@
       "tipo": "dialogo",
       "params": {
        "quien": "Guía",
-       "texto": "Choque vence a distancia, distancia vence a línea, línea vence a choque. Y si te atacan, la campana (Z en el centro) refugia a tus aldeanos."
-      }
-     }
-    },
-    {
-     "cuando": {
-      "tipo": "objetivo",
-      "valor": "o4"
-     },
-     "accion": {
-      "tipo": "ataque",
-      "params": {
-       "jugador": 1,
-       "tipo": "guerrero",
-       "n": 4
+       "texto": "Lo oscuro del mapa es lo que nadie vio todavía. El explorador es rápido y no junta nada: sirve para mirar. Un clic sobre él lo elige; mandalo hacia el centro del mapa."
       }
      }
     },
@@ -227,7 +320,153 @@
       "tipo": "dialogo",
       "params": {
        "quien": "Guía",
-       "texto": "Cada edad se gana con un hito, y cada civilización tiene los suyos. Elegí: economía o guerra."
+       "texto": "Eso es un sitio sagrado. Se toma dejando una unidad al lado, sin enemigos cerca, y da riqueza mientras sea tuyo. En una escaramuza, el que tiene todos los sitios gana si los mantiene un rato: aparece una cuenta regresiva grande arriba al centro. Para cortarla, llevá tropas a pararse en uno."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o6"
+     },
+     "accion": {
+      "tipo": "objetivo_nuevo",
+      "params": {
+       "id": "o7"
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o6"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Vas a necesitar soldados: construí un cuartel cerca del centro."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o7"
+     },
+     "accion": {
+      "tipo": "objetivo_nuevo",
+      "params": {
+       "id": "o8"
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o7"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Choque vence a distancia, distancia vence a línea, línea vence a choque. El guerrero es de choque: entrená cinco con el cuartel seleccionado."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o7",
+      "espera": 30
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "¡Se juntan saqueadores al otro lado del monte! Llegan en 60 segundos: entrená guerreros mientras tanto."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o7",
+      "espera": 30
+     },
+     "accion": {
+      "tipo": "cuenta",
+      "params": {
+       "texto": "Llegan los saqueadores",
+       "segundos": 60
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o7",
+      "espera": 30
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "guerrero",
+       "n": 4,
+       "distancia": 84
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o7",
+      "espera": 60
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Faltan 30 segundos. Si no te alcanzan los guerreros, elegí el centro (H) y tocá la campana (Z): los aldeanos se refugian y el centro dispara. Cuando pase el peligro, Z otra vez los devuelve al trabajo."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o7",
+      "espera": 30
+     },
+     "accion": {
+      "tipo": "objetivo_nuevo",
+      "params": {
+       "id": "o9"
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o9"
+     },
+     "accion": {
+      "tipo": "objetivo_nuevo",
+      "params": {
+       "id": "o10"
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o9"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Cada edad se gana con un hito, y cada pueblo tiene los suyos. El hito pide alimento y riqueza: el panel de Edad (F4) muestra cuánto falta. Elegí: economía (Z) o guerra (X)."
       }
      }
     }

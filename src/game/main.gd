@@ -27,10 +27,11 @@ extends Node3D
 ##   --escala=auto|0.8|1|1.25|1.5  escala de la interfaz (si no, la de user://opciones.cfg)
 ##   --paleta=normal|deuteranopia|protanopia|tritanopia|relativa  modo de colores
 ##   --barras=1         barras de vida siempre visibles
+##   --nombres=1        nombres en la grilla de órdenes
 ##   --abrir=opciones   abre el diálogo de opciones (también campanas e intro en el menú)
 ##   --bengala=1        tira una bengala propia cerca de la base antes de la captura (con aliados)
 ##   --formacion=linea  elige la formación de la grilla y la aplica a lo seleccionado antes de la captura
-##   --panel=a,b        abre paneles de información antes de la captura (economia, edad, pueblo, sucesos, puntaje, fin)
+##   --panel=a,b        abre paneles de información antes de la captura (economia, edad, pueblo, sucesos, puntaje, fin, fin-derrota)
 
 const MAX_STEPS_PER_FRAME := 8
 
@@ -93,6 +94,9 @@ func _opciones_al_arrancar() -> void:
 		Opciones.paleta = str(_args["paleta"])
 	if _args.has("barras"):
 		Opciones.barras_siempre = _args["barras"] == "1"
+	if _args.has("nombres"): # --- aprender ---
+		Opciones.nombres_grilla = _args["nombres"] == "1"
+		EstadoCasilla.nombres = Opciones.nombres_grilla
 	Palette.aplicar(Opciones.paleta)
 	Opciones.aplicar_escala(get_window())
 	get_window().size_changed.connect(func() -> void: Opciones.aplicar_escala(get_window()))
@@ -535,7 +539,10 @@ func mission_over(result: String) -> void:
 	else:
 		buttons.append(["Reintentar", func() -> void: _start({"campana": civ, "mision": str(idx)})])
 		m = m.duplicate()
-		m["epilogo"] = ["La historia no terminó así. Volvé a intentarlo."]
+		# --- aprender --- (por qué se perdió la misión, si el motor de escenarios lo sabe)
+		var why: String = sim.scenario.motivo if sim != null and sim.scenario != null else ""
+		m["epilogo"] = ([why] if why != "" else []) + ["La historia no terminó así. Volvé a intentarlo."]
+		# --- fin aprender ---
 	buttons.append(["Menú principal", func() -> void: to_menu()])
 	paused = true
 	hud.get_parent().add_child(CampaignUI.story(m, true, buttons, civ))
@@ -686,6 +693,10 @@ func _maybe_shot() -> void:
 		for w in (_args["panel"] as String).split(","):
 			if w == "fin":
 				hud.paneles.show_end(local)
+			elif w == "fin-derrota": # --- aprender --- (la partida termina ahí, ganada por el primer rival)
+				var foe := 1 if local == 0 else 0
+				sim.win(foe)
+				hud.paneles.show_end(foe)
 			else:
 				hud.paneles.toggle(w)
 	# --- fin paneles ---
@@ -1170,6 +1181,62 @@ func _autotest() -> void:
 		hud.cursores.hoja().save_png("screenshots/cursores.png")
 	# --- fin avisos ---
 	await _autotest_ordenes(check) # --- órdenes ---
+	# --- aprender --- (avisos que enseñan, cuenta de sitios, nombres en la grilla, registro de la Guía y fin)
+	var cs = hud.consejos
+	Opciones.consejos = true
+	hud.avisos.lista.clear()
+	sim.push_command({"t": "stop", "player": local, "ids": vill_ids})
+	await _frames(6)
+	cs._said.clear() # el aviso real pudo haber salido antes (los aldeanos estuvieron quietos)
+	cs._since.clear()
+	cs.check(0)
+	cs.check(int(cs.cfg.get("ociosos_s", 20)) + 1)
+	var said := func(part: String) -> bool:
+		for a in hud.avisos.lista:
+			if String(a["texto"]).contains(part):
+				return true
+		return false
+	check.call("aviso de aldeanos sin trabajo", said.call("sin trabajo"))
+	hud.avisos.lista.clear()
+	Opciones.consejos = false
+	cs._said.clear()
+	cs._last_check = -1
+	await _frames(3)
+	check.call("con los avisos apagados en Opciones no avisa", not said.call("sin trabajo"))
+	Opciones.consejos = true
+	var rival := 1 if local == 0 else 0
+	sim.players[rival]["sitios_ms"] = 60000 # solo para la prueba: la simulación lo recalcula cada segundo
+	cs.check(1)
+	await _frames(2)
+	check.call("cuenta grande de sitios del rival (jugador %d)" % CuentaGrande.sites_holder(sim), CuentaGrande.sites_holder(sim) == rival and hud.cuenta.visible)
+	check.call("aviso «perdés en M:SS»", said.call("perdés en"))
+	get_viewport().get_texture().get_image().save_png("screenshots/autotest_sitios.png")
+	sim.players[rival]["sitios_ms"] = 0
+	EstadoCasilla.nombres = true
+	ctrl.select_ids(vill_ids)
+	await _frames(3)
+	get_viewport().get_texture().get_image().save_png("screenshots/autotest_nombres.png")
+	check.call("nombres en la grilla sin errores", hud._card.visible)
+	EstadoCasilla.nombres = Opciones.nombres_grilla
+	var rg = hud.REGISTRO_GUIA.new()
+	hud.add_child(rg)
+	rg.setup(hud)
+	rg.add({"quien": "Guía", "texto": "Mensaje de prueba"})
+	# G (de Guía): F7 a F9 son los marcadores de cámara de la parte B.
+	_key_tap(KEY_G)
+	await _frames(3)
+	check.call("G abre el registro de la Guía", rg.is_open())
+	_key_tap(KEY_G)
+	await _frames(2)
+	check.call("G lo cierra", not rg.is_open())
+	rg.queue_free()
+	hud.paneles.show_end(rival)
+	await _frames(3)
+	var fin = hud.paneles.fin
+	check.call("la pantalla de fin explica por qué terminó (%s)" % fin._why, fin.visible and fin._why != "")
+	check.call("la pantalla de fin tiene el gráfico de edad", fin.CHARTS.any(func(c: Array) -> bool: return c[0] == "age"))
+	fin.visible = false
+	# --- fin aprender ---
 	var img := get_viewport().get_texture().get_image()
 	img.save_png("screenshots/autotest.png")
 	for r in results:

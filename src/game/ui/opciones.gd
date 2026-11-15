@@ -28,6 +28,14 @@ static var bordes := true
 static var velocidad_camara := 100.0
 static var pantalla_completa := false
 static var barras_siempre := false
+# --- aprender --- (proceso/23-como-aoe4/03-aprender-a-jugar.md)
+## Avisos que enseñan (src/game/ui/consejos.gd).
+static var consejos := true
+## Nombre debajo del glifo en la grilla de órdenes.
+static var nombres_grilla := false
+## Última dificultad elegida en el menú; la primera vez, Fácil.
+static var dificultad := "facil"
+# --- fin aprender ---
 ## Si es verdadero, guardar() no escribe (capturas y pruebas).
 static var solo_lectura := false
 
@@ -48,6 +56,10 @@ static func cargar(ruta: String = RUTA) -> void:
 	bordes = bool(cf.get_value("camara", "bordes", bordes))
 	velocidad_camara = float(cf.get_value("camara", "velocidad", velocidad_camara))
 	pantalla_completa = bool(cf.get_value("pantalla", "completa", pantalla_completa))
+	consejos = bool(cf.get_value("ayuda", "consejos", consejos)) # --- aprender ---
+	nombres_grilla = bool(cf.get_value("ayuda", "nombres_grilla", nombres_grilla))
+	dificultad = str(cf.get_value("partida", "dificultad", dificultad))
+	EstadoCasilla.nombres = nombres_grilla
 
 
 static func guardar(ruta: String = RUTA) -> void:
@@ -64,6 +76,9 @@ static func guardar(ruta: String = RUTA) -> void:
 	cf.set_value("camara", "bordes", bordes)
 	cf.set_value("camara", "velocidad", velocidad_camara)
 	cf.set_value("pantalla", "completa", pantalla_completa)
+	cf.set_value("ayuda", "consejos", consejos) # --- aprender ---
+	cf.set_value("ayuda", "nombres_grilla", nombres_grilla)
+	cf.set_value("partida", "dificultad", dificultad)
 	cf.save(ruta)
 
 
@@ -78,6 +93,9 @@ static func restablecer() -> void:
 	velocidad_camara = 100.0
 	pantalla_completa = false
 	barras_siempre = false
+	consejos = true # --- aprender --- (la dificultad elegida no se restablece: no es una opción de este diálogo)
+	nombres_grilla = false
+	EstadoCasilla.nombres = false
 
 
 # ---------------------------------------------------------------- Aplicar
@@ -224,6 +242,20 @@ static func dialogo(host: Control, main: Node) -> PanelContainer:
 	barras.toggled.connect(func(on: bool) -> void: barras_siempre = on)
 	_fila(izq, "Barras de vida siempre visibles", barras)
 
+	# --- aprender --- Ayuda para aprender a jugar
+	_seccion(izq, "Ayuda")
+	var cons := _interruptor()
+	cons.button_pressed = consejos
+	cons.toggled.connect(func(on: bool) -> void: consejos = on)
+	_fila(izq, "Avisos que enseñan", cons)
+	var nom := _interruptor()
+	nom.button_pressed = nombres_grilla
+	nom.toggled.connect(func(on: bool) -> void:
+		nombres_grilla = on
+		EstadoCasilla.nombres = on)
+	_fila(izq, "Mostrar nombres en la grilla", nom)
+	# --- fin aprender ---
+
 	# Sonido
 	_seccion(der, "Sonido")
 	var sliders := {}
@@ -276,6 +308,8 @@ static func dialogo(host: Control, main: Node) -> PanelContainer:
 		esc.selected = 0
 		pal.selected = 0
 		barras.button_pressed = false
+		cons.button_pressed = true # --- aprender ---
+		nom.button_pressed = false
 		borde.button_pressed = true
 		fs.button_pressed = false
 		for k in sliders:

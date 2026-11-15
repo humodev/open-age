@@ -200,3 +200,17 @@ Afirmaciones que están en los textos de las misiones y no tienen todavía fuent
 - Decidir si la intro y el epílogo se leen con voz (H3) y en qué lengua: se sugiere narración en castellano con nombres y frases cortas en la lengua propia, grabadas por hablantes.
 - Cuando existan los módulos reales (mit'a, lof, tekoha, kätäma), reemplazar las equivalencias de prototipo por tipos propios sin tocar los textos.
 - A-004 (misión o monte): la campaña guaraní no la resuelve. Muestra las dos ramas en la historia, sin convertir ninguna en la "correcta".
+
+## Motor de escenarios: lo que se sumó para el tutorial (proceso/23, parte C)
+
+Todo es opcional y las misiones que no lo usan se comportan igual que antes (`src/sim/sim_scenario.gd`).
+
+- **Objetivo `juntar`** (`params.recursos`: `{recurso: n}`): cuenta lo juntado desde que el objetivo aparece, no lo que hay en el banco. Gastar no lo deshace.
+- **Objetivo `explorar`** (`params.tipo`, por defecto `sitio_sagrado`): se cumple cuando el jugador ve un edificio de ese tipo.
+- **Objetivo `sitio`** (`params.n`): tener `n` sitios sagrados.
+- **`params.texto_fallo`** en un objetivo `proteger`: es el motivo que muestra la pantalla de derrota. Toda derrota lleva un motivo.
+- **`mapa.sitios`**: `lugares` (desplazamientos en casillas desde la capital del jugador, hacia el centro) y `victoria` (si es `false`, tenerlos todos no gana la partida).
+- **`rivales[i].dificultad`**: dificultad de la IA rival (`reglas.json` → `dificultades`); por defecto, normal.
+- **`cuando.espera`** (segundos): el evento se dispara esa cantidad de segundos después de cumplirse su condición.
+- **Acción `cuenta`** (`texto`, `segundos`): cuenta regresiva grande arriba al centro, la misma caja que la de los sitios sagrados.
+- **`distancia`** en la acción `ataque` (casillas): la columna aparece a esa distancia de la capital, del lado del rival, para que "llegan en 60 s" sea cierto.

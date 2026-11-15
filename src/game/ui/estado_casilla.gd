@@ -11,6 +11,9 @@ extends RefCounted
 
 const FONDO_BLOQUEO := Color(0, 0, 0, 0.32)
 const FONDO_PASTILLA := Color(0, 0, 0, 0.62)
+## --- aprender --- Opción "Mostrar nombres en la grilla" (src/game/ui/opciones.gd): el glifo
+## se achica y el nombre va debajo, en dos renglones (uno si abajo hay franja o edad).
+static var nombres := false
 
 
 ## Dibuja una casilla con comando. `res` es el banco del jugador; `rp` el recurso propio.
@@ -37,7 +40,16 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 	var col := Palette.UI_TEXT
 	if locked or not afford:
 		col = Palette.UI_DIM
-	Glyphs.draw(ci, c["icon"], r.grow(-14 if locked else -12), col)
+	# --- aprender ---
+	var nombre := str(c.get("name", "")).trim_prefix("Construir: ") if nombres else ""
+	nombre = nombre.left(1).to_upper() + nombre.substr(1)
+	if nombre != "":
+		Glyphs.draw(ci, c["icon"], Rect2(r.position.x + (r.size.x - 26) / 2.0 + 2, r.position.y + 3, 26, 26), col)
+		var lines := 1 if (locked and edad_pedida(str(c["locked"])) != "") or (not afford and not locked) else 2
+		ci.draw_multiline_string(Hud.font, Vector2(r.position.x + 2, r.position.y + 39), nombre, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, 10, lines, Palette.UI_TEXT if col == Palette.UI_TEXT else Palette.UI_DIM.lightened(0.2))
+	else:
+		Glyphs.draw(ci, c["icon"], r.grow(-14 if locked else -12), col)
+	# --- fin aprender ---
 	_pastilla(ci, Rect2(r.position + Vector2(3, 3), Vector2(17, 17)), letra, Palette.UI_TEXT)
 	if locked:
 		_candado(ci, Rect2(r.end.x - 19, r.position.y + 4, 15, 16), Palette.UI_TEXT)

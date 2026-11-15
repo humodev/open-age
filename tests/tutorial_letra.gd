@@ -1,0 +1,186 @@
+extends SceneTree
+## El tutorial jugado al pie de la letra (proceso/23-como-aoe4/03-aprender-a-jugar.md).
+##
+## Un principiante hace exactamente lo que dicen los objetivos y la Guía, y nada más.
+## Sale con código 1 si la misión no termina como se espera.
+##
+##   --modo=letra   sigue el texto: tres a la madera y tres a los frutos, aldeanos nuevos a la
+##                  riqueza, explorador al sitio, guerreros y campana si no alcanzan. Debe ganar.
+##   --modo=indefenso  hace todo menos defenderse: no entrena guerreros hasta que pasa el
+##                  ataque y no toca la campana. No puede quedar trabada: o gana o pierde con
+##                  un motivo (antes, sin aldeanos, la misión seguía abierta para siempre).
+
+var s: Sim
+var modo := "letra"
+
+
+func t() -> String:
+	return "%02d:%02d" % [s.tick / 600, (s.tick / 10) % 60]
+
+
+func mine(type: String) -> Array:
+	var out := []
+	for e in s.actives:
+		if e.alive and e.owner == 0 and e.type == type and e.inside < 0:
+			out.append(e)
+	return out
+
+
+func nearest(kind: String, x: int, y: int) -> SimEntity:
+	var best: SimEntity = null
+	var bd := 1 << 60
+	for e in s.entities:
+		if e.alive and e.is_resource() and e.type == kind and e.amount > 0:
+			var d := Sim.dist(e.x, e.y, x, y)
+			if d < bd:
+				bd = d
+				best = e
+	return best
+
+
+func place(type: String, c: Vector2i, rmin: int) -> Vector2i:
+	for r in range(rmin, 20):
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				if (abs(dx) == r or abs(dy) == r) and s.can_place(type, c.x + dx, c.y + dy, 0):
+					return Vector2i(c.x + dx, c.y + dy)
+	return Vector2i(-1, -1)
+
+
+func ids(arr: Array) -> Array:
+	return arr.map(func(e: SimEntity) -> int: return e.id)
+
+
+func _init() -> void:
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--modo="):
+			modo = a.split("=")[1]
+	var camp: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/campanas/tutorial.json"))
+	s = SimScenario.create(camp["misiones"][0], camp["civ"])
+	var cap: SimEntity = s.scenario._capital(0)
+	var ui: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/interfaz.json"))
+	var frutos_radio: int = int(ui["consejos"]["frutos_radio"]) * Sim.P
+	var c := Vector2i(cap.tx, cap.ty)
+	var v := mine("aldeano")
+	var first := {}
+	for e in v:
+		first[e.id] = true
+	var tree := nearest("arbol", cap.x, cap.y)
+	var bush := nearest("arbusto", cap.x, cap.y)
+	# Una sola fuente de alimento: "los arbustos con frutos". Los demás, a la madera.
+	var food_ids := {}
+	s.push_command({"t": "target", "player": 0, "ids": ids(v.slice(0, 3)), "target": tree.id})
+	s.push_command({"t": "target", "player": 0, "ids": ids(v.slice(3, 6)), "target": bush.id})
+	for e in v.slice(3, 6):
+		food_ids[e.id] = true
+	var step := {}
+	var att_seen := -1
+	var alarm := false
+	var last_dialog := ""
+	var wealth_ids := {}
+	for i in 30 * 600:
+		s.step()
+		for ev in s.events:
+			if ev["t"] == "objetivo":
+				print(t(), " objetivo ", ev["estado"], " ", ev["id"], " ", String(ev["texto"]).substr(0, 70))
+			elif ev["t"] == "dialogo":
+				last_dialog = ev["texto"]
+				print(t(), " guía: ", String(ev["texto"]).substr(0, 80))
+			elif ev["t"] == "mision":
+				print(t(), " MISIÓN ", ev["resultado"], " · ", ev.get("motivo", ""))
+		if s.scenario.result != "":
+			break
+		if s.tick % 30 != 0:
+			continue
+		var r: Dictionary = s.players[0]["res"]
+		v = mine("aldeano")
+		var objs := {}
+		for o in s.scenario.objectives:
+			objs[o["id"]] = o["estado"]
+		var enemies := []
+		for e in s.actives:
+			if e.alive and e.owner == 1 and e.is_unit() and Sim.dist(e.x, e.y, cap.x, cap.y) < 20000:
+				enemies.append(e)
+		if not enemies.is_empty() and att_seen < 0:
+			att_seen = s.tick
+			print(t(), " llegan %d saqueadores; tengo %d guerreros y %d aldeanos" % [enemies.size(), mine("guerrero").size(), v.size()])
+		# "Defendé el pueblo".
+		if not enemies.is_empty() and not mine("guerrero").is_empty():
+			s.push_command({"t": "target", "player": 0, "ids": ids(mine("guerrero")), "target": enemies[0].id})
+		# "Faltan 30 segundos. Si no te alcanzan los guerreros, … tocá la campana".
+		if modo == "letra" and not alarm and last_dialog.begins_with("Faltan 30") and mine("guerrero").size() < 4:
+			s.push_command({"t": "alarm", "player": 0, "on": true})
+			alarm = true
+			print(t(), " toco la campana con %d guerreros" % mine("guerrero").size())
+		# "Cuando pase el peligro, Z otra vez los devuelve al trabajo".
+		if alarm and att_seen > 0 and enemies.is_empty() and objs.get("o9") == "hecho":
+			s.push_command({"t": "alarm", "player": 0, "on": false})
+			alarm = false
+			print(t(), " calma")
+		if alarm:
+			continue
+		# Aldeanos sin trabajo: vuelven a lo suyo (madera; los de la riqueza, a la riqueza).
+		var idle := v.filter(func(e: SimEntity) -> bool: return e.order == SimEntity.Order.IDLE)
+		if not idle.is_empty() and s.tick % 100 == 0:
+			for e: SimEntity in idle:
+				var kind := "riqueza" if wealth_ids.has(e.id) else ("arbusto" if food_ids.has(e.id) else "arbol")
+				var src := nearest(kind, e.x, e.y)
+				# El aviso "Se acabaron los frutos cerca" (src/game/ui/consejos.gd) dice: hacé granjas.
+				if kind == "arbusto" and (src == null or Sim.dist(src.x, src.y, cap.x, cap.y) > frutos_radio):
+					if s.can_afford(0, s.dp(0).cost_of("granja", 1)):
+						var p := place("granja", c, 5)
+						s.push_command({"t": "build", "player": 0, "ids": [e.id], "type": "granja", "tx": p.x, "ty": p.y})
+						if not step.has("granjas"):
+							step["granjas"] = true
+							print(t(), " se acabaron los frutos cerca: hago granjas (%s)" % s.dp(0).edificios["granja"]["nombre"])
+					continue
+				if src == null:
+					src = nearest("arbol", e.x, e.y)
+				s.push_command({"t": "target", "player": 0, "ids": [e.id], "target": src.id})
+		if objs.get("o2") == "activo" and not step.has("casa") and int(r["madera"]) >= 50:
+			var p := place("casa", c, 4)
+			s.push_command({"t": "build", "player": 0, "ids": [v[0].id], "type": "casa", "tx": p.x, "ty": p.y})
+			step["casa"] = true
+		if objs.get("o3") == "activo" and cap.queue.size() < 1:
+			s.push_command({"t": "train", "player": 0, "building": cap.id, "type": "aldeano"})
+		# "Mandá a los aldeanos nuevos a la veta dorada".
+		if objs.get("o4") == "activo":
+			var nuevos := v.filter(func(e: SimEntity) -> bool: return not first.has(e.id) and not wealth_ids.has(e.id))
+			if not nuevos.is_empty():
+				for e: SimEntity in nuevos:
+					wealth_ids[e.id] = true
+				s.push_command({"t": "target", "player": 0, "ids": ids(nuevos), "target": nearest("riqueza", cap.x, cap.y).id})
+		# "Mandalo hacia el centro del mapa" y "dejá al explorador parado al lado".
+		var ex := mine("explorador")
+		if objs.get("o5") == "activo" and not step.has("explorar") and not ex.is_empty():
+			s.push_command({"t": "move", "player": 0, "ids": ids(ex), "x": s.map.n * 500, "y": s.map.n * 500})
+			step["explorar"] = true
+		if objs.get("o6") == "activo" and not step.has("sitio") and not ex.is_empty():
+			for e in s.actives:
+				if e.alive and e.def.get("sagrado", false):
+					s.push_command({"t": "move", "player": 0, "ids": ids(ex), "x": e.x + 1500, "y": e.y})
+			step["sitio"] = true
+		if objs.get("o7") == "activo" and not step.has("cuartel") and int(r["madera"]) >= 150:
+			var p := place("cuartel", c, 5)
+			var builders := v.filter(func(e: SimEntity) -> bool: return not food_ids.has(e.id) and not wealth_ids.has(e.id)).slice(0, 2)
+			s.push_command({"t": "build", "player": 0, "ids": ids(builders), "type": "cuartel", "tx": p.x, "ty": p.y})
+			step["cuartel"] = true
+		if objs.get("o8") == "activo" and (modo == "letra" or objs.get("o9") == "hecho"):
+			for cu in mine("cuartel"):
+				if cu.built and cu.queue.is_empty():
+					s.push_command({"t": "train", "player": 0, "building": cu.id, "type": "guerrero"})
+		# "Elegí: economía (Z)": el hito de economía cuando alcanza.
+		if objs.get("o10") == "activo" and not step.has("hito") and v.size() >= 4:
+			var hito: String = s.dp(0).hitos[0][0]
+			if s.can_afford(0, s.dp(0).cost_of(hito, 1)):
+				var p := place(hito, c, 6)
+				s.push_command({"t": "build", "player": 0, "ids": ids(v.slice(0, 4)), "type": hito, "tx": p.x, "ty": p.y})
+				step["hito"] = true
+				print(t(), " construyo el hito ", hito, " con ", r)
+		if s.tick % 1800 == 0:
+			print(t(), " recursos ", r, " · aldeanos ", v.size(), " · guerreros ", mine("guerrero").size())
+	var res: String = s.scenario.result
+	print("RESULTADO modo=%s %s a las %s · motivo: %s" % [modo, res if res != "" else "(abierta)", t(), s.scenario.motivo])
+	var ok := res == "victoria" if modo == "letra" else (res == "victoria" or res == "derrota" and s.scenario.motivo != "")
+	print("OK" if ok else "FALLA")
+	quit(0 if ok else 1)

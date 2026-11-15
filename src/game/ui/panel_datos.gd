@@ -308,7 +308,9 @@ func _sample() -> void:
 		var bank := 0
 		for k in Sim.RES_KINDS:
 			bank += int(p["res"].get(k, 0))
-		row.append({"pop": int(p["pop"]), "vill": villagers(pid)["total"], "army": army(pid), "juntado": sum, "riqueza": int(t.get("riqueza", 0)), "banco": bank, "score": score(pid), "age": int(p["age"])})
+		var vv := villagers(pid)
+		# "ociosos" y "sitios_ms" son para el consejo de la pantalla de fin (--- aprender ---).
+		row.append({"pop": int(p["pop"]), "vill": vv["total"], "army": army(pid), "juntado": sum, "riqueza": int(t.get("riqueza", 0)), "banco": bank, "score": score(pid), "age": int(p["age"]), "ociosos": int(vv["ociosos"]), "sitios_ms": int(p.get("sitios_ms", 0))})
 	if not samples.is_empty() and int(samples[-1]["t"]) == now_s():
 		samples[-1]["p"] = row
 		return
