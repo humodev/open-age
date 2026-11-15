@@ -67,3 +67,5 @@ Al final, una síntesis con lo que repiten varios y un plan priorizado: [00-sint
      - descarté el registro de errores (sin él también falla), el sonido (`--audio-driver Dummy` también falla) y liberar la escena antes de salir;
      - no afecta partidas ni pruebas, porque la captura ya se guardó; queda anotado en `docs/09`.
    - Determinismo y autotest con guaraníes y Etiopía: OK.
+5. **(17:00) Llegó el informe de equipos y todos contra todos** ([informe](04-equipos-y-ffa.md)): faltan sitios sagrados en mapas de varios, en fortines nadie pelea, la IA aliada no defiende y casi no da tributo, y el todos contra todos con 6 no termina.
+6. **(17:10) Síntesis de los cuatro** ([00-sintesis.md](00-sintesis.md)): lo que gustó, lo que repiten ordenado por cuánto le quita a la diversión, y el plan. Tres preguntas que cambian el balance van a `CONSULTAS.md`: contadores más blandos (C-31), comida temprana con animales (C-32) y tiempo de obra de los hitos (C-33). La C-34 pregunta el orden de prioridades. Empiezo por los errores de la sección 1, que no cambian el balance.
