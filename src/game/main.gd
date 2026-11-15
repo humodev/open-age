@@ -562,6 +562,12 @@ func save_replay() -> void:
 		f.store_string(JSON.stringify(r))
 
 
+func _exit_tree() -> void:
+	# Sin esto Godot y el script liberan el registro de errores dos veces al salir
+	# ("double free or corruption", código 134 al terminar cada --shot).
+	OS.remove_logger(_errores)
+
+
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		save_replay()
@@ -677,6 +683,7 @@ func _maybe_shot() -> void:
 	var path: String = _args["shot"]
 	img.save_png(path)
 	print("captura: ", path)
+	save_telemetry() # las partidas que terminan con --shot también dejan su telemetría
 	get_tree().quit()
 
 

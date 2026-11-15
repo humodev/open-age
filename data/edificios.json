@@ -61,7 +61,8 @@
   "cuartel": {
     "nombre": "Cuartel", "edad_min": 1, "tam": [3, 3], "pv": 1200, "armadura": 2,
     "costo": { "madera": 150 }, "tiempo_ms": 35000, "vision": 6000,
-    "produce": ["guerrero", "hondero", "lancero", "ariete"]
+    "produce": ["guerrero", "hondero", "lancero", "ariete"],
+    "desc": "Entrena la tropa de a pie. Cada pueblo reparte sus tropas entre sus edificios: abajo dice qué entrena este."
   },
   "torre": {
     "nombre": "Torre", "edad_min": 2, "tam": [2, 2], "pv": 1000, "armadura": 2,

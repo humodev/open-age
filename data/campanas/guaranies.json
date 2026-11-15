@@ -36,7 +36,7 @@
       "objetivos": [
         { "id": "o1", "texto": "Abrí 3 roças en el monte, nunca en el campo abierto. Cuando una se canse, abrí otra: la vieja vuelve a ser monte.", "tipo": "construir", "params": { "tipo": "granja", "n": 3 }, "secundario": false },
         { "id": "o2", "texto": "Levantá la doble empalizada de Lambaré (30 tramos) y cavá los fosos delante.", "tipo": "construir", "params": { "tipo": "empalizada", "n": 30 }, "secundario": false },
-        { "id": "o3", "texto": "Reuní los arcos de las casas grandes: 12 arqueros más (honderos en el prototipo).", "tipo": "entrenar", "params": { "tipo": "hondero", "n": 12 }, "secundario": false },
+        { "id": "o3", "texto": "Reuní los arcos de las casas grandes: 12 arqueros más.", "tipo": "entrenar", "params": { "tipo": "hondero", "n": 12 }, "secundario": false },
         { "id": "o4", "texto": "Resistí tres días el asalto.", "tipo": "sobrevivir", "params": { "segundos": 480 }, "secundario": false },
         { "id": "o5", "texto": "Los mburuvicha deciden pactar: juntá 500 de alimento para el convite que sella el parentesco.", "tipo": "recolectar", "params": { "recurso": "alimento", "n": 500 }, "secundario": false, "oculto": true },
         { "id": "o6", "texto": "Que caigan en los fosos: emboscá desde el monte y matá a 15.", "tipo": "matar", "params": { "n": 15 }, "secundario": true }
@@ -134,7 +134,7 @@
         { "nombre": "Auxiliares tupí de la bandeira", "faccion": "guaranies", "ia": "normal", "edad": 2 }
       ],
       "objetivos": [
-        { "id": "o1", "texto": "Fabricá 3 cañones de tacuara (ariete en el prototipo): baratos, rápidos y de pocos tiros.", "tipo": "entrenar", "params": { "tipo": "ariete", "n": 3 }, "secundario": false },
+        { "id": "o1", "texto": "Fabricá 3 cañones de tacuara: baratos, rápidos y de pocos tiros.", "tipo": "entrenar", "params": { "tipo": "ariete", "n": 3 }, "secundario": false },
         { "id": "o2", "texto": "Estacá la orilla y cerrá el paso del río (20 tramos de empalizada).", "tipo": "construir", "params": { "tipo": "empalizada", "n": 20 }, "secundario": false },
         { "id": "o3", "texto": "Batalla en el río: frená la vanguardia de la bandeira (matá a 40).", "tipo": "matar", "params": { "n": 40 }, "secundario": false },
         { "id": "o4", "texto": "Cercá el campamento paulista de la orilla hasta que se rinda.", "tipo": "destruir_hitos", "params": { "jugador": 1 }, "secundario": false },
@@ -186,7 +186,7 @@
       ],
       "objetivos": [
         { "id": "o1", "texto": "Fortificá los vados con estacadas (24 tramos de empalizada).", "tipo": "construir", "params": { "tipo": "empalizada", "n": 24 }, "secundario": false },
-        { "id": "o2", "texto": "Emplazá 4 cañones de tacuara en la orilla del monte (ariete en el prototipo).", "tipo": "entrenar", "params": { "tipo": "ariete", "n": 4 }, "secundario": false },
+        { "id": "o2", "texto": "Emplazá 4 cañones de tacuara en la orilla del monte.", "tipo": "entrenar", "params": { "tipo": "ariete", "n": 4 }, "secundario": false },
         { "id": "o3", "texto": "Que no crucen el río: aguantá a las columnas de los dos reyes.", "tipo": "sobrevivir", "params": { "segundos": 600 }, "secundario": false },
         { "id": "o4", "texto": "Peleá cerca de casa: si cae el pueblo, la gente se dispersa.", "tipo": "proteger", "params": { "tipo": "centro", "jugador": 0 }, "secundario": false },
         { "id": "o5", "texto": "Hostigá a las columnas desde el monte hasta que se vuelvan: matá a 40.", "tipo": "matar", "params": { "n": 40 }, "secundario": false },

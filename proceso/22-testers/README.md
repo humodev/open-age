@@ -46,3 +46,24 @@ Al final, una síntesis con lo que repiten varios y un plan priorizado: [00-sint
      - "✓ ganada" se dibuja en vertical en la pantalla de campañas;
      - quedan textos "(… en el prototipo)" en los objetivos;
      - las demos y algunas misiones arrancan por encima del tope de población.
+3. **(16:00) Llegó el informe del nuevo en los RTS** ([informe](02-nuevo-en-rts.md)):
+   - **pierde siempre contra la IA fácil:** 8 de 8, entre los minutos 10 y 28; la IA fácil está en su base a los 8–9 minutos, ya en la edad II;
+   - **dos derrotas fueron por sitios sagrados** con 25 soldados intactos en casa: ningún aviso grande los explica;
+   - **el tutorial, seguido al pie de la letra, deja la misión trabada:** "todos al bosque" no deja alimento para el ejército;
+   - **faltan avisos que enseñen** (ocioso, frutos agotados, riqueza sin gastar) y un botón de aldeanos ociosos con número;
+   - **lo que más le gustó:** el panel de edad con "qué falta", las fichas con nombre propio y común, y el arte de las campañas.
+4. **(16:10) Arreglos de los errores que encontraron los jugadores de prueba:**
+   - **Panel de la unidad con los valores reales:** ataque con mejoras y bono de edad, armadura con mejoras y velocidad real. Lo calcula la simulación (`Sim.effective_attack` y `effective_armor`, que también usa el daño), así no pueden volver a diferir.
+   - **IA contra IA:** ya no aparecen los rechazos de la IA del jugador 0 como si fueran tuyos.
+   - **Campañas:** "✓ ganada" se escribe en horizontal (la etiqueta cortaba por palabra sin ancho).
+
+     ![](campanas-ganada-arreglado.jpg)
+   - **Textos de prototipo** fuera de los objetivos de Guaraníes 1, 3 y 4 y de Palmares 1.
+   - **La ficha del cuartel** decía "choque, distancia y línea" para todos: era un texto fijo en `controller.gd`, de antes de la producción por función. Ahora la descripción está en `edificios.json` y la ficha lista lo que entrena cada pueblo.
+   - **`--shot` guarda la telemetría** antes de cerrar.
+   - **El volcado de memoria al cerrar** (`double free or corruption`, código 134) no está arreglado:
+     - pasa dentro del motor, después de guardar la captura, y no siempre: el mismo commit dio 0 una vez y 134 otra;
+     - la versión de ayer cierra bien; con la de hoy falla casi siempre;
+     - descarté el registro de errores (sin él también falla), el sonido (`--audio-driver Dummy` también falla) y liberar la escena antes de salir;
+     - no afecta partidas ni pruebas, porque la captura ya se guardó; queda anotado en `docs/09`.
+   - Determinismo y autotest con guaraníes y Etiopía: OK.

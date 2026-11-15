@@ -289,7 +289,8 @@ func on_events(events: Array) -> void:
 		match ev["t"]:
 			# --- avisos --- (cada suceso con su tipo; los que tienen lugar se pueden saltar con Espacio)
 			"notify":
-				if pid == local:
+				# En IA contra IA el jugador local también es una IA: sus rechazos no son para vos.
+				if pid == local and not _local_is_ai():
 					notify(ev["msg"], -1.0, "decision" if String(ev["msg"]).begins_with("No ") or String(ev["msg"]).contains("insuficientes") or String(ev["msg"]).begins_with("Requiere") else "info")
 			"notice":
 				if pid == local:
@@ -347,6 +348,13 @@ func on_events(events: Array) -> void:
 			# --- fin avisos ---
 			"mision":
 				main.mission_over(ev["resultado"])
+
+
+func _local_is_ai() -> bool:
+	for ai in sim.ais:
+		if ai.player == local:
+			return true
+	return false
 
 
 func _show_end(winner: int) -> void:
@@ -910,7 +918,9 @@ class SelectionPanel:
 		_bar(Rect2(14, 134, 112, 7), float(e.hp) / float(e.hp_max), hp_col)
 		draw_string(Hud.font, Vector2(14, 160), "%d / %d" % [e.hp, e.hp_max], HORIZONTAL_ALIGNMENT_CENTER, 112, 13, Palette.UI_DIM)
 		if e.is_unit():
-			var stats := [["Ataque", str(e.def.get("ataque", 0))], ["Armadura", str(e.def.get("armadura", 0))], ["Alcance", "%.1f" % (e.def.get("alcance", 0) / 1000.0)], ["Velocidad", "%.2f" % (e.def.get("velocidad", 0) / 1000.0)]]
+			# Valores de verdad: con mejoras, bono de edad y velocidad real (casillas por segundo).
+			var spd := float(hud.sim.mods.speed(e)) * 1000.0 / float(hud.sim.tick_ms) / 1000.0
+			var stats := [["Ataque", str(hud.sim.effective_attack(e))], ["Armadura", str(hud.sim.effective_armor(e))], ["Alcance", "%.1f" % (e.def.get("alcance", 0) / 1000.0)], ["Velocidad", "%.2f" % spd]]
 			var sx := x
 			for s in stats:
 				draw_string(Hud.font, Vector2(sx, 92), s[0], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Palette.UI_DIM)

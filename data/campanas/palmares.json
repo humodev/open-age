@@ -37,7 +37,7 @@
       "objetivos": [
         { "id": "o1", "texto": "Abrí 4 roças en la mata (granjas): milho para ahora, mandioca para cuando haga falta.", "tipo": "construir", "params": { "tipo": "granja", "n": 4 }, "secundario": false },
         { "id": "o2", "texto": "Juntá 400 de alimento. La mandioca que queda enterrada no la quema nadie.", "tipo": "recolectar", "params": { "recurso": "alimento", "n": 400 }, "secundario": false },
-        { "id": "o3", "texto": "Levantá 2 fraguas (cuarteles en el prototipo). Cada una hace humo, y el humo se ve: cuanto más se trabaja, más fácil es encontrarnos.", "tipo": "construir", "params": { "tipo": "cuartel", "n": 2 }, "secundario": false },
+        { "id": "o3", "texto": "Levantá 2 casas de guerra, cada una con su fragua. Cada una hace humo, y el humo se ve: cuanto más se trabaja, más fácil es encontrarnos.", "tipo": "construir", "params": { "tipo": "cuartel", "n": 2 }, "secundario": false },
         { "id": "o4", "texto": "Reuní al consejo en su casa y cerrá un anillo nuevo de la cerca (avanzá a la edad II).", "tipo": "edad", "params": { "n": 2 }, "secundario": false },
         { "id": "o5", "texto": "La columna encontró el camino. No la esperes en la cerca: aguantá en la mata mientras la gente se va a otro mocambo. Que encuentren las casas, no a las personas.", "tipo": "sobrevivir", "params": { "segundos": 300 }, "secundario": false, "oculto": true },
         { "id": "o6", "texto": "Hostigá la columna desde la mata sin dar batalla: matá a 12.", "tipo": "matar", "params": { "n": 12 }, "secundario": true },

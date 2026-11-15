@@ -16,7 +16,6 @@ const DESCS := {
 	"casa": "Aumenta la población máxima.",
 	"granja": "Alimento infinito y lento. Un aldeano por granja.",
 	"deposito": "Depósito de los cuatro recursos. Ubicalo cerca de lo que recolectás.",
-	"cuartel": "Entrena unidades de choque, distancia y línea.",
 	"torre": "Defensa a distancia.",
 	"centro": "Nuevo centro: aldeanos, depósito, población y defensa. Cuenta como hito.",
 	"refugio": "Las unidades entran al edificio propio más cercano con lugar. Cada una suma una flecha.",

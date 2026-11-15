@@ -140,7 +140,10 @@ func _show(i: int) -> void:
 			var row := HBoxContainer.new()
 			row.add_child(_button("Jugar" if mi >= won else "Volver a jugar", func() -> void: start_mission.emit(civ, idx), 220))
 			if mi < won:
-				row.add_child(_label("  ✓ ganada", 15, Palette.UI_GOOD))
+				# Sin corte de línea: dentro de la fila no tiene ancho y se escribía una letra por renglón.
+				var won_l := _label("  ✓ ganada", 15, Palette.UI_GOOD)
+				won_l.autowrap_mode = TextServer.AUTOWRAP_OFF
+				row.add_child(won_l)
 			vb.add_child(row)
 		else:
 			vb.add_child(_label("Se desbloquea al ganar la misión anterior.", 14, Color(Palette.UI_DIM, 0.6)))

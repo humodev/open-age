@@ -1320,7 +1320,9 @@ func _move_court(b: SimEntity) -> void:
 			break
 
 
-func _hit(a: SimEntity, t: SimEntity) -> void:
+## Ataque con mejoras y bono de edad, antes del contador y la armadura. Lo usa también el
+## panel de la unidad, así muestra lo mismo que pega (jugadores de prueba, proceso/22).
+func effective_attack(a: SimEntity) -> int:
 	var atk: int = a.def.get("ataque", 0)
 	if a.is_building():
 		atk += mod(a.owner, "b_ataque")
@@ -1329,8 +1331,17 @@ func _hit(a: SimEntity, t: SimEntity) -> void:
 	if a.owner >= 0 and (a.is_military() or a.is_building()):
 		var bonus: int = dp(a.owner).edades[players[a.owner]["age"] - 1].get("bono_ataque", 0)
 		atk = atk * (100 + bonus) / 100
+	return atk
+
+
+func effective_armor(t: SimEntity) -> int:
+	return int(t.def.get("armadura", 0)) + (mod(t.owner, "armadura:" + t.fn) if t.is_unit() else 0)
+
+
+func _hit(a: SimEntity, t: SimEntity) -> void:
+	var atk := effective_attack(a)
 	var mult: int = data.reglas["contadores"].get(a.fn, {}).get(t.fn, 100)
-	var armor: int = int(t.def.get("armadura", 0)) + (mod(t.owner, "armadura:" + t.fn) if t.is_unit() else 0)
+	var armor := effective_armor(t)
 	# Altura (D-027): quien dispara desde más arriba pega más fuerte.
 	if int(a.def.get("alcance", 0)) > 1500:
 		var dh := map.h_at(a.x / P, a.y / P) - map.h_at(t.x / P, t.y / P)
