@@ -54,6 +54,12 @@ var _pob_estado := "" # "", "llena" o "excedida": para avisar una sola vez por c
 const CURSORES := preload("res://src/game/ui/cursores.gd")
 var cursores: Node
 # --- fin cursores ---
+# --- órdenes --- (proceso/23, parte B: cola global, bengalas y frases de la IA aliada)
+const COLA_GLOBAL := preload("res://src/game/ui/cola_global.gd")
+const ORDENES_CAPA := preload("res://src/game/ui/ordenes_capa.gd")
+var cola_global: Control
+var ordenes_capa: Control
+# --- fin órdenes ---
 
 
 static func load_fonts() -> void:
@@ -81,7 +87,7 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 	_top = TopBar.new()
 	_top.hud = self
 	_top.position = Vector2(12, 10)
-	_top.size = Vector2(760, 46)
+	_top.size = Vector2(760, 54) # --- órdenes --- (ancho según el contenido: _process)
 	add_child(_top)
 	_blockers.append(_top)
 
@@ -143,6 +149,17 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 	add_child(grupos)
 	_place_groups()
 	# --- fin avisos ---
+	# --- órdenes ---
+	ordenes_capa = ORDENES_CAPA.new()
+	ordenes_capa.hud = self
+	add_child(ordenes_capa)
+	move_child(ordenes_capa, _mundo.get_index() + 1)
+	_mini.set("ordenes", ordenes_capa)
+	cola_global = COLA_GLOBAL.new()
+	cola_global.hud = self
+	add_child(cola_global)
+	_place_top()
+	# --- fin órdenes ---
 	# --- cursores ---
 	cursores = CURSORES.new()
 	add_child(cursores)
@@ -225,7 +242,7 @@ func blocks(m: Vector2) -> bool:
 		if c.is_visible_in_tree() and c.get_global_rect().has_point(m): # --- avisos --- (lo oculto no tapa)
 			return true
 	# --- avisos ---
-	for c in [avisos, grupos]:
+	for c in [avisos, grupos, cola_global]: # --- órdenes --- (la cola global)
 		if c != null and c.is_visible_in_tree() and c._has_point(m - c.global_position):
 			return true
 	# --- fin avisos ---
@@ -242,6 +259,32 @@ func notify(msg: String, secs: float = -1.0, tipo: String = "info", lugar: Varia
 
 func _lugar_de(x: int, y: int) -> Vector3:
 	return WorldView.to_world(x, y)
+
+
+# --- órdenes ---
+## La barra de recursos crece con los botones de ociosos; la cola global va a su derecha.
+func _place_top() -> void:
+	var w: float = _top.needed_width()
+	if _top.size.x != w:
+		_top.size.x = w
+	cola_global.position = Vector2(_top.position.x + w + 8, _top.position.y)
+	cola_global.size = Vector2(maxf(60.0, size.x - 342.0 - 20.0 - cola_global.position.x), 54)
+
+
+## Frase de la IA aliada (suceso "ia_dice"), armada con data/interfaz.json → frases_ia.
+func _ia_dice(ev: Dictionary) -> void:
+	var pid := int(ev["player"])
+	if pid == local or sim.enemies(local, pid) or _local_is_ai():
+		return
+	var key: String = ev["clave"]
+	var a := int(ev.get("a", -1))
+	# Lo que es para un aliado en particular (te mando, no me sobra, voy a tu bengala) solo lo ve él.
+	if key in ["mando", "no_sobra", "sin_tropa", "voy_atacar", "voy_defender"] and a != local:
+		return
+	var plantilla: String = (ctrl.atajos.cfg().get("frases_ia", {}) as Dictionary).get(key, key)
+	var txt := plantilla.replace("{a}", Palette.team_name(a) if a >= 0 else "").replace("{n}", str(ev.get("n", ""))).replace("{recurso}", Palette.RES_NAMES.get(str(ev.get("recurso", "")), str(ev.get("recurso", ""))).to_lower())
+	notify("%s: «%s»" % [Palette.team_name(pid), txt], -1.0, "ataque" if key == "atacan" else "info")
+# --- fin órdenes ---
 
 
 ## Sin selección, el panel y la grilla se ocultan: no tapan el mapa (P5). Los grupos bajan.
@@ -284,6 +327,7 @@ func on_events(events: Array) -> void:
 		paneles.on_events(events)
 	# --- fin paneles ---
 	_mundo.on_events(events) # --- mundo ---
+	ordenes_capa.on_events(events) # --- órdenes ---
 	for ev in events:
 		var pid: int = ev.get("player", -2)
 		match ev["t"]:
@@ -316,6 +360,15 @@ func on_events(events: Array) -> void:
 				elif pid >= 0 and not sim.enemies(local, pid):
 					notify("Atacan a tu aliado (%s)" % Palette.team_name(pid), -1.0, "ataque", _lugar_de(ev["x"], ev["y"]))
 					_mini.ping(ev["x"], ev["y"])
+			# --- órdenes ---
+			"ia_dice":
+				_ia_dice(ev)
+			"pedido":
+				if int(ev["a"]) == local:
+					notify("%s te pide %d de %s (botones de tributo en el puntaje, F6)" % [Palette.team_name(int(ev["de"])), int(ev["n"]), Palette.RES_NAMES.get(ev["recurso"], ev["recurso"]).to_lower()], -1.0, "decision")
+				elif int(ev["de"]) == local:
+					notify("Le pediste %d de %s a %s" % [int(ev["n"]), Palette.RES_NAMES.get(ev["recurso"], ev["recurso"]).to_lower(), Palette.team_name(int(ev["a"]))], -1.0, "info")
+			# --- fin órdenes ---
 			"tributo":
 				if int(ev["a"]) == local:
 					notify("Tributo de %s: %d de %s" % [Palette.team_name(int(ev["de"])), int(ev["n"]), ev["recurso"]], -1.0, "info")
@@ -399,7 +452,7 @@ func _build_help() -> void:
 		if dd.has_mod("recurso_propio"):
 			civ_txt += "\nRecurso propio: %s." % dd.mod("recurso_propio")["nombre"]
 		civ_txt += "\nEdades: %s.\nDebilidad: %s" % [", ".join(c.get("edades", [])), c.get("debilidad", "")]
-	var controls := "Clic izquierdo: seleccionar (arrastrar para un grupo; doble clic: todos los del tipo)\nClic derecho: mover, atacar, recolectar, construir, reparar o alojar\nGrilla Q W E R / A S D F / Z X C V: construir, entrenar, investigar\nAldeanos: Q economía y W militar (submenús; Esc o V vuelve) · Z hito de economía · X hito militar\nLos grupos marchan en formación; Alt + clic derecho: suelto, para retirarse\nA y clic: atacar en movimiento · S: detener · F: refugiarse · Supr: eliminar\nCtrl + 1…9: asignar grupo · Mayús + 1…9: sumar al grupo · H: centro · . : aldeano inactivo · Z en el centro: campana\nEspacio: ir al último ataque o suceso · Inicio: recorrer los avisos anteriores\nFlechas, bordes o botón del medio: cámara · F3: velocidad · Esc: pausa"
+	var controls := "Clic izquierdo: seleccionar (arrastrar para un grupo; doble clic: todos los del tipo)\nClic derecho: mover, atacar, recolectar, construir, reparar o alojar\nGrilla Q W E R / A S D F / Z X C V: construir, entrenar, investigar\nAldeanos: Q economía y W militar (submenús; Esc o V vuelve) · Z hito de economía · X hito militar\nLos grupos marchan en formación; Alt + clic derecho: suelto, para retirarse\nA y clic: atacar en movimiento · S: detener · F: refugiarse · Supr: eliminar\nCtrl + 1…9: asignar grupo · Mayús + 1…9: sumar al grupo · H: centro · . : aldeano inactivo · Z en el centro: campana\nEspacio: ir al último ataque o suceso · Inicio: recorrer los avisos anteriores\n. y , : aldeano y militar ocioso (Mayús: todos) · M: militares · T: todos del tipo · Tab: producción · D: mantener · E: patrullar · Ctrl + F7…F9: cámara · Alt + clic: bengala\nFlechas, bordes o botón del medio: cámara · F3: velocidad · Esc: pausa"
 	_help = _make_dialog("Cómo se juega", civ_txt + "\n\n" + controls, [["Cerrar", func() -> void: _help.visible = false]])
 	(_help.get_meta("body") as Label).horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	(_help.get_meta("body") as Label).custom_minimum_size = Vector2(760, 0)
@@ -455,6 +508,7 @@ func _process(delta: float) -> void:
 		_dialog.offset_top = maxf(140.0, 74.0 + avisos.alto_usado() + 10.0)
 		_dialog.offset_bottom = _dialog.offset_top + 10.0
 	# --- fin avisos ---
+	_place_top() # --- órdenes ---
 	_top.queue_redraw()
 	_clock.queue_redraw()
 	_sel.queue_redraw()
@@ -604,6 +658,7 @@ class TopBar:
 	extends Control
 	var hud: Hud
 	var _tip_k := ""
+	var _hits: Array = [] # --- órdenes --- [Rect2, acción, ayuda]
 
 	func _ready() -> void:
 		mouse_filter = Control.MOUSE_FILTER_STOP
@@ -613,8 +668,23 @@ class TopBar:
 
 	# Ayuda de cada recurso: qué es y, para la riqueza, cómo la consigue tu pueblo (§5).
 	func _gui_input(ev: InputEvent) -> void:
+		# --- órdenes --- (botones de ociosos y aldeanos por recurso: clic selecciona)
+		if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
+			for h in _hits:
+				if (h[0] as Rect2).has_point(ev.position):
+					(h[1] as Callable).call(Input.is_key_pressed(KEY_SHIFT))
+					accept_event()
+					return
+			return
+		# --- fin órdenes ---
 		if not ev is InputEventMouseMotion:
 			return
+		for h in _hits:
+			if (h[0] as Rect2).has_point(ev.position):
+				if _tip_k != h[2]:
+					_tip_k = h[2]
+					hud.show_tip({"name": h[2], "desc": h[3], "cost": {}, "locked": ""}, Rect2(global_position + (h[0] as Rect2).position, (h[0] as Rect2).size))
+				return
 		var i := int((ev.position.x - 14.0) / 120.0)
 		var k: String = Sim.RES_KINDS[i] if i >= 0 and i < Sim.RES_KINDS.size() else ""
 		if k == _tip_k:
@@ -629,35 +699,70 @@ class TopBar:
 		if k == "riqueza" and civ.has("riqueza_nombre"):
 			name = "%s · %s" % [civ["riqueza_nombre"], name]
 			desc = str(civ.get("riqueza_desc", desc))
+		desc += "\nDebajo: aldeanos que lo recolectan (clic: seleccionarlos)." # --- órdenes ---
 		hud.show_tip({"name": name, "desc": desc, "cost": {}, "locked": ""}, Rect2(global_position + Vector2(14 + i * 120, 0), Vector2(110, size.y)))
+
+	## Ancho que necesita la barra (con recurso propio y botones de ociosos). --- órdenes ---
+	func needed_width() -> float:
+		var w := 14.0 + Sim.RES_KINDS.size() * 120.0
+		if hud.sim.dp(hud.local).has_mod("recurso_propio"):
+			w += 130.0
+		return w + 110.0 + 2 * 74.0 + 8.0
 
 	func _draw() -> void:
 		draw_style_box(Hud.panel_box(), Rect2(Vector2.ZERO, size))
+		_hits.clear()
 		var sim := hud.sim
 		var p: Dictionary = sim.players[hud.local]
 		var workers := {"alimento": 0, "madera": 0, "piedra": 0, "riqueza": 0}
 		for e in sim.actives:
-			if e.owner == hud.local and e.fn == "civil" and (e.order == O.GATHER or e.order == O.RETURN) and workers.has(e.gather_kind):
+			if e.owner == hud.local and e.fn == "civil" and e.inside < 0 and (e.order == O.GATHER or e.order == O.RETURN) and workers.has(e.gather_kind):
 				workers[e.gather_kind] += 1
 		var x := 14.0
+		# --- órdenes --- (aldeanos por recurso debajo de cada recurso, como AoE4)
 		for k in Sim.RES_KINDS:
-			Glyphs.draw(self, k, Rect2(x, 9, 28, 28), Palette.RES[k])
-			draw_string(Hud.font_b, Vector2(x + 34, 30), str(p["res"][k]), HORIZONTAL_ALIGNMENT_LEFT, -1, 19, Palette.UI_TEXT)
-			draw_string(Hud.font, Vector2(x + 34 + 58, 30), str(workers[k]), HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Palette.UI_DIM)
+			Glyphs.draw(self, k, Rect2(x, 6, 26, 26), Palette.RES[k])
+			draw_string(Hud.font_b, Vector2(x + 32, 26), str(p["res"][k]), HORIZONTAL_ALIGNMENT_LEFT, -1, 19, Palette.UI_TEXT)
+			var wr := Rect2(x + 30, 31, 70, 18)
+			Glyphs.draw(self, "aldeano", Rect2(x + 32, 32, 14, 16), Palette.UI_DIM)
+			draw_string(Hud.font, Vector2(x + 48, 46), str(workers[k]), HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Palette.UI_TEXT if workers[k] > 0 else Palette.UI_DIM)
+			var kind: String = k
+			_hits.append([wr, func(_all: bool) -> void: hud.ctrl.atajos.trabajando(kind), "Aldeanos en %s: %d" % [Palette.RES_NAMES[k].to_lower(), workers[k]], "Clic: seleccionarlos."])
 			x += 120
+		# --- fin órdenes ---
 		var dd := sim.dp(hud.local)
 		if dd.has_mod("recurso_propio"):
 			var rp: Dictionary = dd.mod("recurso_propio")
 			var col := Color(rp.get("color", "#cccccc"))
-			Glyphs.draw(self, rp.get("icono", "riqueza"), Rect2(x, 9, 28, 28), col)
+			Glyphs.draw(self, rp.get("icono", "riqueza"), Rect2(x, 13, 28, 28), col)
 			var cap: int = p.get("tope_" + rp["clave"], 0)
-			draw_string(Hud.font_b, Vector2(x + 34, 30), str(p["res"].get(rp["clave"], 0)), HORIZONTAL_ALIGNMENT_LEFT, -1, 19, col.lightened(0.3))
-			draw_string(Hud.font, Vector2(x + 34 + 44, 30), "/%d" % cap if cap > 0 else "", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Palette.UI_DIM)
+			draw_string(Hud.font_b, Vector2(x + 34, 34), str(p["res"].get(rp["clave"], 0)), HORIZONTAL_ALIGNMENT_LEFT, -1, 19, col.lightened(0.3))
+			draw_string(Hud.font, Vector2(x + 34 + 44, 34), "/%d" % cap if cap > 0 else "", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Palette.UI_DIM)
 			x += 130
 		draw_line(Vector2(x - 6, 10), Vector2(x - 6, size.y - 10), Palette.UI_LINE, 1)
 		var full: bool = p["pop"] >= p["pop_cap"]
-		Glyphs.draw(self, "pob", Rect2(x + 6, 9, 26, 28), Palette.UI_BAD if full else Palette.UI_TEXT)
-		draw_string(Hud.font_b, Vector2(x + 38, 30), "%d/%d" % [p["pop"], p["pop_cap"]], HORIZONTAL_ALIGNMENT_LEFT, -1, 19, Palette.UI_BAD if full else Palette.UI_TEXT)
+		Glyphs.draw(self, "pob", Rect2(x + 6, 13, 26, 28), Palette.UI_BAD if full else Palette.UI_TEXT)
+		draw_string(Hud.font_b, Vector2(x + 38, 34), "%d/%d" % [p["pop"], p["pop_cap"]], HORIZONTAL_ALIGNMENT_LEFT, -1, 19, Palette.UI_BAD if full else Palette.UI_TEXT)
+		x += 110
+		# --- órdenes --- (botones de ociosos con número: clic el siguiente, Mayús + clic todos)
+		var at: RefCounted = hud.ctrl.atajos
+		var idle_v: int = at.ociosos_aldeanos().size()
+		var idle_m: int = at.ociosos_militares().size()
+		for b in [["ocioso", idle_v, false, "Aldeanos ociosos: %d" % idle_v, "Clic o «.»: el siguiente, y la cámara va hacia él. Mayús + clic o Mayús + «.»: todos."], ["guerrero", idle_m, true, "Militares ociosos: %d" % idle_m, "Clic o «,»: el siguiente. Mayús + clic o Mayús + «,»: todos. M: todos los militares."]]:
+			var r := Rect2(x, 7, 68, size.y - 14)
+			var sb := StyleBoxFlat.new()
+			sb.set_corner_radius_all(6)
+			var hot: bool = int(b[1]) > 0 and not bool(b[2])
+			sb.bg_color = Color(Palette.UI_BAD, 0.28) if hot else Color(1, 1, 1, 0.05)
+			sb.border_color = Color(Palette.UI_BAD, 0.7) if hot else Color(1, 1, 1, 0.1)
+			sb.set_border_width_all(1)
+			draw_style_box(sb, r)
+			Glyphs.draw(self, b[0], Rect2(r.position + Vector2(4, 5), Vector2(28, 28)), Palette.UI_TEXT if int(b[1]) > 0 else Palette.UI_DIM)
+			draw_string(Hud.font_b, r.position + Vector2(0, 27), str(b[1]), HORIZONTAL_ALIGNMENT_RIGHT, r.size.x - 8, 18, Palette.UI_TEXT if int(b[1]) > 0 else Palette.UI_DIM)
+			var mil: bool = b[2]
+			_hits.append([r, func(all: bool) -> void: at.ocioso(mil, all), b[3], b[4]])
+			x += 74
+		# --- fin órdenes ---
 
 
 class ClockBar:
@@ -780,6 +885,7 @@ class CommandCard:
 				draw_style_box(sb, r)
 				continue
 			var active: bool = hud.ctrl.mode == "place" and hud.ctrl.place_type == c["id"] or hud.ctrl.mode == "amove" and c["kind"] == "amove"
+			active = active or (hud.ctrl.mode == "patrol" and c["kind"] == "patrol") or (c["kind"] == "form" and c["form"] == hud.ctrl.formacion) # --- órdenes ---
 			# --- contraste --- disponible, no alcanza (qué falta) y bloqueado (candado y edad),
 			# legibles a 4,5:1 y sin depender del color (src/game/ui/estado_casilla.gd)
 			EstadoCasilla.dibujar(self, r, c, res, i == _hover, active, Controller.SLOT_LABELS[i], hud.sim.dp(hud.local).mod("recurso_propio"))
@@ -991,7 +1097,9 @@ class SelectionPanel:
 			O.MOVE:
 				return "En marcha"
 			O.ATTACK_MOVE:
-				return "Avanzando en combate"
+				return "Patrullando" if e.patrol else "Avanzando en combate" # --- órdenes ---
+			O.HOLD:
+				return "Mantiene la posición" # --- órdenes ---
 			O.ATTACK:
 				return "Combatiendo"
 			O.GATHER:

@@ -61,3 +61,12 @@ Orden de los cambios de balance: A, después E, F y G, de a uno, con un torneo d
 
 ## Paso a paso
 1. **(20:00) Etapa abierta.** Respuestas anotadas en `CONSULTAS.md`. Se lanzan los agentes 1, 2 y 3, cada uno en su copia del repositorio.
+2. **(B) Órdenes y comodidades.** Están hechas:
+   - en la barra: aldeanos por recurso y botones de aldeanos y militares ociosos;
+   - atajos y marcadores de cámara (F7–F9);
+   - cola global de producción;
+   - mantener posición y patrullar;
+   - cuatro formaciones con rumbo por arrastre;
+   - bengalas a las que responde la IA aliada, pedidos de recursos y frases de la IA en los avisos.
+
+   Prueba nueva: `tests/ordenes.gd`. Detalle en [02-ordenes-y-comodidades.md](02-ordenes-y-comodidades.md). Consultas C-35 y C-36.

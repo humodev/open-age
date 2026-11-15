@@ -259,6 +259,34 @@ static func draw(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
 			ci.draw_rect(Rect2(c + Vector2(-s * 0.05, -s * 0.06), Vector2(s * 0.1, s * 0.3)), col)
 			ci.draw_circle(c + Vector2(0, -s * 0.2), s * 0.06, col)
 		# --- fin grilla ---
+		# --- órdenes --- (proceso/23, parte B)
+		"mantener":
+			# Escudo con una estaca: no se mueve.
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.3, -s * 0.34), c + Vector2(s * 0.3, -s * 0.34), c + Vector2(s * 0.3, s * 0.05), c + Vector2(0, s * 0.4), c + Vector2(-s * 0.3, s * 0.05)]), col)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.04, -s * 0.26), Vector2(s * 0.08, s * 0.5)), Palette.UI_BG)
+		"patrullar":
+			# Dos flechas que van y vuelven.
+			ci.draw_line(c + Vector2(-s * 0.36, -s * 0.12), c + Vector2(s * 0.3, -s * 0.12), col, w)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(s * 0.4, -s * 0.12), c + Vector2(s * 0.2, -s * 0.26), c + Vector2(s * 0.2, s * 0.02)]), col)
+			ci.draw_line(c + Vector2(s * 0.36, s * 0.16), c + Vector2(-s * 0.3, s * 0.16), col, w)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.4, s * 0.16), c + Vector2(-s * 0.2, s * 0.02), c + Vector2(-s * 0.2, s * 0.3)]), col)
+		"form_bloque", "form_linea", "form_abierta", "form_columna":
+			# Puntos en la forma de la formación, con la flecha de adelante arriba.
+			var dims := {"form_bloque": [4, 3, 0.17], "form_linea": [6, 2, 0.13], "form_abierta": [3, 3, 0.25], "form_columna": [2, 5, 0.13]}[kind] as Array
+			var cols: int = dims[0]
+			var rows: int = dims[1]
+			var gap: float = s * float(dims[2])
+			for iy in rows:
+				for ix in cols:
+					ci.draw_circle(c + Vector2((ix - (cols - 1) / 2.0) * gap, (iy - (rows - 1) / 2.0) * gap + s * 0.08), s * 0.045, col)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(0, -s * 0.46), c + Vector2(-s * 0.1, -s * 0.34), c + Vector2(s * 0.1, -s * 0.34)]), col)
+		"bengala":
+			ci.draw_line(c + Vector2(-s * 0.2, s * 0.4), c + Vector2(-s * 0.2, -s * 0.38), col, w)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.2, -s * 0.38), c + Vector2(s * 0.34, -s * 0.24), c + Vector2(-s * 0.2, -s * 0.08)]), col)
+		"ocioso":
+			_figure(ci, c + Vector2(-s * 0.08, 0), s * 0.9, col, 0.9)
+			ci.draw_string(ThemeDB.fallback_font, c + Vector2(s * 0.12, -s * 0.12), "z", HORIZONTAL_ALIGNMENT_LEFT, -1, int(s * 0.36), col)
+		# --- fin órdenes ---
 		"arbol", "arbusto", "roca":
 			draw(ci, {"arbol": "madera", "arbusto": "alimento", "roca": "piedra"}[kind], r, col)
 		_:

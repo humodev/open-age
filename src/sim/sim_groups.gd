@@ -54,7 +54,9 @@ static func slot_pos(ax: int, ay: int, rumbo: int, lat: int, fwd: int) -> Vector
 ## `then` ({"target": id}): al acercarse a `aldeanos_suelta_dist` del destino el grupo se
 ## disuelve y cada uno recibe esa orden (recolectar, construir, entregar). Solo se forma si el
 ## destino está lejos: cerca, cada uno va directo.
-func form(pid: int, units: Array[SimEntity], gx: int, gy: int, amove: bool, then: Dictionary = {}) -> Array[SimEntity]:
+## `form`: "bloque" (por defecto), "linea", "abierta" o "columna" (reglas.grupo.formas); `rumbo`
+## (0..15): hacia dónde mira al llegar, del arrastre del clic derecho; -1, el de la marcha.
+func form(pid: int, units: Array[SimEntity], gx: int, gy: int, amove: bool, then: Dictionary = {}, shape: String = "", rumbo_final: int = -1) -> Array[SimEntity]:
 	var c := cfg()
 	var eligible: Array[SimEntity] = []
 	var rest: Array[SimEntity] = []
@@ -99,9 +101,16 @@ func form(pid: int, units: Array[SimEntity], gx: int, gy: int, amove: bool, then
 	var path := sim.map.find_path(from, to, pid)
 	if path.is_empty():
 		return units
-	var rumbo := heading(gx - cx, gy - cy)
-	var g := {"id": _next_id, "owner": pid, "members": [], "ax": from.x * P + P / 2, "ay": from.y * P + P / 2,
-		"path": path, "path_i": 1, "spd": 0, "rumbo": rumbo, "final_rumbo": rumbo, "turn_tick": sim.tick,
+	if not (c["formas"] as Array).has(shape):
+		shape = c["formas"][0]
+	# Sin rumbo pedido, mira hacia donde marcha; si no marcha (cambio de formación en el lugar), al 0.
+	var rumbo := heading(gx - cx, gy - cy) if gx != cx or gy != cy else maxi(0, rumbo_final)
+	var final_rumbo := rumbo_final if rumbo_final >= 0 and rumbo_final < DIRS.size() else rumbo
+	# Lejos, la marcha mira al camino; en el lugar (o casi), ya mira al rumbo pedido.
+	if Sim.dist(cx, cy, gx, gy) <= int(c["holgura"]) * 2:
+		rumbo = final_rumbo
+	var g := {"id": _next_id, "owner": pid, "members": [], "ax": from.x * P + P / 2, "ay": from.y * P + P / 2, "form": shape,
+		"path": path, "path_i": 1, "spd": 0, "rumbo": rumbo, "final_rumbo": final_rumbo, "turn_tick": sim.tick,
 		"state": State.MARCHA, "wait": 0, "calm": 0, "arrive_t": 0, "slots": {},
 		"dest_x": path[path.size() - 1].x * P + P / 2, "dest_y": path[path.size() - 1].y * P + P / 2, "amove": amove, "then": then}
 	if path[path.size() - 1] == Vector2i(gx / P, gy / P):
@@ -120,22 +129,26 @@ func form(pid: int, units: Array[SimEntity], gx: int, gy: int, amove: bool, then
 		e.path.clear()
 		e.path_i = 0
 		e.stuck = 0
+		e.rumbo = final_rumbo
 	groups[g["id"]] = g
 	_update_speed(g)
 	# Los de afuera del núcleo van solos a su lugar en el destino.
 	return rest
 
 
-## Formación en bloque por bandas (§1.3): línea, choque, distancia, asedio, apoyo de
-## adelante hacia atrás; los montados en las alas. Dentro de cada banda, sin cruces.
+## Formación por bandas (§1.3): línea, choque, distancia, asedio, apoyo de adelante hacia
+## atrás; los montados en las alas. Dentro de cada banda, sin cruces. Formas (§1.9):
+## bloque (ancho ~2:1), línea (`linea_filas` de fondo, hasta `ancho_max_linea`), abierta (el
+## bloque con `abierta_hueco_pct` del hueco) y columna (`columna_ancho` de ancho, sin alas).
 func _assign_slots(g: Dictionary, units: Array[SimEntity], cx: int, cy: int) -> void:
 	var c := cfg()
 	var u: Vector2i = DIRS[g["rumbo"]]
 	var order: Array = c["orden_funciones"]
+	var shape: String = g.get("form", "bloque")
 	var bands := {}
 	var wings: Array[SimEntity] = []
 	for e in units:
-		if e.fn == "choque" and (e.def.get("montado", false) or e.def.get("elefante", false)):
+		if shape != "columna" and e.fn == "choque" and (e.def.get("montado", false) or e.def.get("elefante", false)):
 			wings.append(e)
 			continue
 		var k: String = e.fn if order.has(e.fn) else "apoyo"
@@ -145,6 +158,14 @@ func _assign_slots(g: Dictionary, units: Array[SimEntity], cx: int, cy: int) -> 
 	var n := units.size() - wings.size()
 	var w := mini(Sim.isqrt(maxi(1, 2 * n - 1)) + 1, int(c["ancho_max"]))
 	var hueco := int(c["hueco"])
+	match shape:
+		"linea":
+			var filas := maxi(1, int(c["linea_filas"]))
+			w = clampi((n + filas - 1) / filas, 1, int(c["ancho_max_linea"]))
+		"abierta":
+			hueco = hueco * int(c["abierta_hueco_pct"]) / 100
+		"columna":
+			w = maxi(1, int(c["columna_ancho"]))
 	var slots := {}
 	var fwd := 0
 	var half_w := 0
@@ -394,6 +415,6 @@ func hash_into(h: int) -> int:
 	ids.sort()
 	for gid in ids:
 		var g: Dictionary = groups[gid]
-		for v in [gid, g["ax"], g["ay"], g["path_i"], g["state"], g["wait"], g["rumbo"], (g["members"] as Array).size()]:
+		for v in [gid, g["ax"], g["ay"], g["path_i"], g["state"], g["wait"], g["rumbo"], g["final_rumbo"], (g["members"] as Array).size()]:
 			h = ((h ^ (int(v) & 0xffffffff)) * 16777619) & 0xffffffff
 	return h

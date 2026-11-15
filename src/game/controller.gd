@@ -11,6 +11,8 @@ const SLOT_LABELS: Array[String] = ["Q", "W", "E", "R", "A", "S", "D", "F", "Z",
 const RES_LABEL := {"alimento": "alimento", "granja": "granjas", "madera": "madera", "piedra": "piedra", "riqueza": "riqueza", "*": "todos los recursos"}
 
 const MundoColocacion := preload("res://src/game/ui/mundo_colocacion.gd") # --- mundo ---
+const Atajos := preload("res://src/game/ui/atajos.gd") # --- órdenes ---
+const FORMAS := {"form_bloque": ["bloque", "Bloque"], "form_linea": ["linea", "Línea"], "form_abierta": ["abierta", "Abierta"], "form_columna": ["columna", "Columna"]}
 
 const DESCS := {
 	"casa": "Aumenta la población máxima.",
@@ -32,6 +34,14 @@ const DESCS := {
 	"lancero": "Línea: lento y resistente, vence al choque; pierde contra la distancia.",
 	"detener": "Detiene la orden actual.",
 	"atacar": "Avanza y pelea con todo lo que encuentre (clic izquierdo en el destino).",
+	# --- órdenes --- (proceso/23, parte B)
+	"mantener": "No se mueven: atacan solo lo que tengan a su alcance. Cualquier otra orden lo corta.",
+	"patrullar": "Van y vuelven entre donde están y el punto que marques (clic izquierdo), atacando lo que vean.",
+	"form_bloque": "Rectángulo de dos de ancho por uno de fondo: la línea adelante, la distancia atrás y los montados en las alas.",
+	"form_linea": "Dos filas, muy ancha: la distancia reparte el daño y nadie queda atrás sin disparar.",
+	"form_abierta": "Como el bloque, con el doble de espacio: sufre menos el daño en área (elefantes, andanadas).",
+	"form_columna": "Dos de ancho: para caminos (Qhapaq Ñan), vados y pasos angostos.",
+	# --- fin órdenes ---
 	# --- grilla ---
 	"menu_economia": "Casas, granjas, depósitos, centro, mercado y los edificios económicos propios de tu pueblo.",
 	"menu_militar": "Cuarteles y edificios militares propios; torres, cercos, puertas y caminos.",
@@ -73,6 +83,12 @@ var submenu := "" # submenú abierto del aldeano: "", "economia" o "militar" (sr
 # --- cursores ---
 var cursores: Node # cursores contextuales (src/game/ui/cursores.gd)
 # --- fin cursores ---
+# --- órdenes --- (proceso/23, parte B)
+var atajos: RefCounted # src/game/ui/atajos.gd
+var formacion := "bloque" # formación elegida en la grilla: va en cada orden de mover
+var rpressing := false # clic derecho apretado: al soltar se ordena; arrastrar elige el rumbo
+var rpress_pos := Vector2.ZERO
+# --- fin órdenes ---
 
 
 func setup(s: Sim, v: WorldView, c: RtsCamera, local_player: int) -> void:
@@ -88,6 +104,7 @@ func setup(s: Sim, v: WorldView, c: RtsCamera, local_player: int) -> void:
 	_ghost.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_ghost.visible = false
 	view.add_child(_ghost)
+	atajos = Atajos.new(self) # --- órdenes ---
 
 
 # ---------------------------------------------------------------- Consultas
@@ -208,6 +225,16 @@ func commands() -> Array[Dictionary]:
 		out.append({"slot": Grilla.fija("atacar", 4), "id": "atacar", "icon": "atacar", "kind": "amove", "name": "Atacar en movimiento", "cost": {}, "desc": DESCS["atacar"], "locked": ""}) # --- grilla ---
 		out.append({"slot": Grilla.fija("detener", 5), "id": "detener", "icon": "detener", "kind": "stop", "name": "Detener", "cost": {}, "desc": DESCS["detener"], "locked": ""}) # --- grilla ---
 		out.append({"slot": Grilla.fija("refugio", 7), "id": "refugio", "icon": "refugio", "kind": "garrison", "name": "Refugiarse", "cost": {}, "desc": DESCS["refugio"], "locked": ""}) # --- grilla ---
+		# --- órdenes --- (mantener, patrullar y formaciones: solo si hay militares)
+		var mil := false
+		for e in sel:
+			mil = mil or (e.owner == local and e.is_military())
+		if mil:
+			out.append({"slot": Grilla.fija("mantener", 6), "id": "mantener", "icon": "mantener", "kind": "hold", "name": "Mantener posición", "cost": {}, "desc": DESCS["mantener"], "locked": ""})
+			out.append({"slot": Grilla.fija("patrullar", 2), "id": "patrullar", "icon": "patrullar", "kind": "patrol", "name": "Patrullar", "cost": {}, "desc": DESCS["patrullar"], "locked": ""})
+			for k in FORMAS:
+				out.append({"slot": Grilla.fija(k, 8), "id": k, "icon": k, "kind": "form", "form": FORMAS[k][0], "name": "Formación: %s%s" % [FORMAS[k][1], " (elegida)" if formacion == FORMAS[k][0] else ""], "cost": {}, "desc": DESCS[k] + " Arrastrá el clic derecho para elegir hacia dónde mira.", "locked": ""})
+		# --- fin órdenes ---
 	elif first.is_building() and first.built:
 		var i := 0
 		for type: String in first.def.get("produce", []):
@@ -351,6 +378,15 @@ func run_command(cmd: Dictionary) -> void:
 					sim.push_command({"t": "ungarrison", "player": local, "building": e.id})
 		"amove":
 			mode = "amove"
+		# --- órdenes ---
+		"patrol":
+			mode = "patrol"
+		"hold":
+			sim.push_command({"t": "mantener", "player": local, "ids": _own_unit_ids()})
+		"form":
+			formacion = cmd["form"]
+			sim.push_command({"t": "formar", "player": local, "ids": _own_unit_ids(), "form": formacion})
+		# --- fin órdenes ---
 		# --- grilla ---
 		"submenu":
 			open_submenu(cmd["menu"])
@@ -426,7 +462,7 @@ func _process(_delta: float) -> void:
 func cursor_action(m: Vector2) -> String:
 	if _over_hud(m) or dragging:
 		return ""
-	if mode == "amove":
+	if mode == "amove" or mode == "patrol":
 		return "atacar"
 	if mode == "place":
 		var tile: Vector2i = _ghost.get_meta("tile", Vector2i(-1, -1))
@@ -492,6 +528,13 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _input(event: InputEvent) -> void:
+	# --- órdenes --- (suelta del clic derecho: orden, con rumbo si se arrastró)
+	if event is InputEventMouseButton and not event.pressed and event.button_index == MOUSE_BUTTON_RIGHT and rpressing:
+		rpressing = false
+		_right_click(rpress_pos, drag_rumbo(event.position))
+		get_viewport().set_input_as_handled()
+		return
+	# --- fin órdenes ---
 	if event is InputEventMouseButton and not event.pressed and event.button_index == MOUSE_BUTTON_LEFT and _line_drag:
 		_finish_line()
 		get_viewport().set_input_as_handled()
@@ -528,6 +571,17 @@ func _mouse_button(mb: InputEventMouseButton) -> void:
 			if not Input.is_key_pressed(KEY_SHIFT):
 				cancel_mode()
 			return
+		# --- órdenes ---
+		if mode == "patrol":
+			var gp := cam.ground_at(mb.position)
+			sim.push_command({"t": "patrullar", "player": local, "ids": _own_unit_ids(), "x": int(gp.x * P), "y": int(gp.z * P)})
+			view.add_marker(gp, Palette.UI_BAD)
+			cancel_mode()
+			return
+		if Input.is_key_pressed(KEY_ALT):
+			flare(cam.ground_at(mb.position))
+			return
+		# --- fin órdenes ---
 		_pressing = true
 		dragging = false
 		press_pos = mb.position
@@ -535,6 +589,12 @@ func _mouse_button(mb: InputEventMouseButton) -> void:
 		if mode != "":
 			cancel_mode()
 			return
+		# --- órdenes --- (con unidades, la orden sale al soltar: arrastrar elige el rumbo)
+		if not _own_unit_ids().is_empty():
+			rpressing = true
+			rpress_pos = mb.position
+			return
+		# --- fin órdenes ---
 		_right_click(mb.position)
 
 
@@ -546,6 +606,13 @@ func _left_release(pos: Vector2) -> void:
 	var id := pick(pos)
 	var now := Time.get_ticks_msec()
 	if id >= 0 and id == _last_click_id and now - _last_click_ms < 350:
+		# --- órdenes --- (doble clic en un edificio propio: todos los de su tipo en el mapa)
+		var de: SimEntity = sim.by_id.get(id)
+		if de != null and de.is_building() and de.owner == local:
+			atajos.todos_del_tipo(de.type)
+			_last_click_ms = 0
+			return
+		# --- fin órdenes ---
 		_select_same_type_on_screen(id)
 		_last_click_ms = 0
 		return
@@ -611,7 +678,34 @@ func _select_same_type_on_screen(id: int) -> void:
 	_set_selection(ids)
 
 
-func _right_click(pos: Vector2) -> void:
+# --- órdenes ---
+## Rumbo (0..15) del arrastre del clic derecho, o -1 si fue un clic corto. Se calcula con la
+## misma tabla de enteros que la simulación (SimGroups.heading), así la orden llega cerrada.
+func drag_rumbo(pos: Vector2) -> int:
+	if pos.distance_to(rpress_pos) < float(Atajos.cfg().get("arrastre_rumbo_px", 24)):
+		return -1
+	var a := cam.ground_at(rpress_pos)
+	var b := cam.ground_at(pos)
+	var dx := int((b.x - a.x) * P)
+	var dy := int((b.z - a.z) * P)
+	if dx == 0 and dy == 0:
+		return -1
+	return SimGroups.heading(dx, dy)
+
+
+## Bengala (Alt + clic en el mapa o el minimapa): atacá o defendé acá. Solo con aliados.
+func flare(g: Vector3) -> void:
+	var ally := false
+	for p in sim.players:
+		ally = ally or (p["id"] != local and not sim.enemies(local, p["id"]) and not p["defeated"])
+	if not ally:
+		hud_notify("Las bengalas son para avisarle a un aliado", "info")
+		return
+	sim.push_command({"t": "bengala", "player": local, "x": int(g.x * P), "y": int(g.z * P)})
+# --- fin órdenes ---
+
+
+func _right_click(pos: Vector2, rumbo: int = -1) -> void:
 	var sel := selected_entities()
 	if sel.is_empty() or sel[0].owner != local:
 		return
@@ -632,7 +726,7 @@ func _right_click(pos: Vector2) -> void:
 			var col := Palette.UI_BAD if t.owner >= 0 and t.owner != local else Palette.UI_ACCENT
 			view.add_marker(WorldView.to_world(t.x, t.y), col)
 		else:
-			sim.push_command({"t": "move", "player": local, "ids": ids, "x": int(g.x * P), "y": int(g.z * P), "suelto": loose})
+			sim.push_command({"t": "move", "player": local, "ids": ids, "x": int(g.x * P), "y": int(g.z * P), "suelto": loose, "form": formacion, "rumbo": rumbo}) # --- órdenes ---
 			view.add_marker(g, Palette.UI_BAD if loose else Palette.UI_GOOD)
 		return
 	# Edificios: punto de reunión.
@@ -702,9 +796,28 @@ func _key(k: InputEventKey) -> void:
 			_last_group_key = n
 			_last_group_ms = now
 		return
+	# --- órdenes --- (atajos de selección y marcadores de cámara: src/game/ui/atajos.gd)
 	if code == KEY_PERIOD:
-		_select_idle_villager()
+		atajos.ocioso(false, k.shift_pressed or k.ctrl_pressed)
 		return
+	if code == KEY_COMMA:
+		atajos.ocioso(true, k.shift_pressed or k.ctrl_pressed)
+		return
+	if code == KEY_M:
+		atajos.todos_militares()
+		return
+	if code == KEY_T:
+		atajos.todos_del_tipo()
+		return
+	if code == KEY_TAB:
+		atajos.recorrer_produccion()
+		get_viewport().set_input_as_handled()
+		return
+	var mk := OS.get_keycode_string(code)
+	if (Atajos.cfg().get("marcadores", []) as Array).has(mk):
+		atajos.marca(mk, k.ctrl_pressed)
+		return
+	# --- fin órdenes ---
 	# --- avisos --- (Espacio: último ataque o suceso con lugar; Inicio: recorre los anteriores)
 	if (code == KEY_SPACE or code == KEY_HOME) and hud != null and hud.get("avisos") != null:
 		var at: Variant = hud.avisos.saltar(code == KEY_HOME)

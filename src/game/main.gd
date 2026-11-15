@@ -28,6 +28,8 @@ extends Node3D
 ##   --paleta=normal|deuteranopia|protanopia|tritanopia|relativa  modo de colores
 ##   --barras=1         barras de vida siempre visibles
 ##   --abrir=opciones   abre el diálogo de opciones (también campanas e intro en el menú)
+##   --bengala=1        tira una bengala propia cerca de la base antes de la captura (con aliados)
+##   --formacion=linea  elige la formación de la grilla y la aplica a lo seleccionado antes de la captura
 ##   --panel=a,b        abre paneles de información antes de la captura (economia, edad, pueblo, sucesos, puntaje, fin)
 
 const MAX_STEPS_PER_FRAME := 8
@@ -666,6 +668,17 @@ func _maybe_shot() -> void:
 			if e.owner == local and e.type == _args["select"]:
 				ids.append(e.id)
 		ctrl.select_ids(ids)
+	# --- órdenes ---
+	if _args.has("formacion"):
+		ctrl.formacion = _args["formacion"]
+		sim.push_command({"t": "formar", "player": local, "ids": ctrl.selection.duplicate(), "form": ctrl.formacion})
+	if _args.has("bengala"):
+		var bb := sim.bases[local]
+		ctrl.flare(Vector3(bb.x + 6, 0, bb.y + 6))
+		for i in 2:
+			sim.step()
+			hud.on_events(sim.events)
+	# --- fin órdenes ---
 	if _args.has("grilla"): # --- grilla --- (--grilla=economia|militar abre ese submenú para la captura)
 		ctrl.open_submenu(_args["grilla"])
 	# --- paneles --- (--panel=economia,edad,pueblo,sucesos,puntaje,fin para las capturas)
@@ -725,6 +738,183 @@ func _key_tap(code: int) -> void:
 
 func _screen(x_tiles: float, z_tiles: float) -> Vector2:
 	return cam.cam.unproject_position(Vector3(x_tiles, 0, z_tiles))
+
+
+# --- órdenes ---
+func _key_mod(code: int, ctrl_on: bool, shift_on: bool = false) -> void:
+	for pressed in [true, false]:
+		var k := InputEventKey.new()
+		k.physical_keycode = code
+		k.keycode = code
+		k.ctrl_pressed = ctrl_on
+		k.shift_pressed = shift_on
+		k.pressed = pressed
+		Input.parse_input_event(k)
+
+
+func _click(pos: Vector2, button: int = MOUSE_BUTTON_LEFT) -> void:
+	_mouse(pos, 0, false)
+	await _frames(2)
+	_mouse(pos, button, true)
+	_mouse(pos, button, false)
+	await _frames(3)
+
+
+## Órdenes y comodidades como AoE4 (proceso/23, parte B): ociosos, atajos, marcadores,
+## cola global, mantener posición, patrullar, formaciones y rumbo con arrastre.
+func _autotest_ordenes(check: Callable) -> void:
+	speed = 1.0
+	var base := sim.bases[local]
+	var at = ctrl.atajos
+	cam.look_at_point(Vector3(base.x + 2, 0, base.y + 2))
+	await _frames(3)
+	# Barra de recursos: aldeanos por recurso y botón de ociosos.
+	var vill: Array[int] = []
+	for e in sim.actives:
+		if e.owner == local and e.fn == "civil" and e.inside < 0:
+			vill.append(e.id)
+	sim.push_command({"t": "stop", "player": local, "ids": vill.slice(0, 2)})
+	await get_tree().create_timer(0.3).timeout
+	var idle_n: int = at.ociosos_aldeanos().size()
+	check.call("hay aldeanos ociosos para el botón (%d)" % idle_n, idle_n >= 2)
+	var boton := Rect2()
+	for h in hud._top._hits:
+		if String(h[2]).begins_with("Aldeanos ociosos"):
+			boton = h[0]
+	check.call("la barra de recursos tiene el botón de aldeanos ociosos", boton.size.x > 0)
+	await _click(hud._top.global_position + boton.get_center())
+	var s1 := ctrl.selected_entities()
+	check.call("clic en el botón: selecciona un aldeano ocioso (%d)" % s1.size(), s1.size() == 1 and s1[0].fn == "civil" and s1[0].order == SimEntity.Order.IDLE)
+	_key_mod(KEY_PERIOD, false, true)
+	await _frames(3)
+	check.call("Mayús + «.»: todos los aldeanos ociosos (%d de %d)" % [ctrl.selection.size(), idle_n], ctrl.selection.size() == idle_n)
+	var con_trabajo := 0
+	for h in hud._top._hits:
+		if String(h[2]).begins_with("Aldeanos en"):
+			con_trabajo += 1
+	check.call("aldeanos por recurso debajo de cada recurso (%d)" % con_trabajo, con_trabajo == 4)
+	# Militares: M todos, «,» el siguiente ocioso.
+	var mil: Array[int] = []
+	for i in 6:
+		mil.append(sim.spawn_unit("guerrero" if i % 2 == 0 else "hondero", local, (base.x + 6) * 1000 + (i % 3) * 800, (base.y + 9) * 1000 + (i / 3) * 800).id)
+	await _frames(4)
+	_key_tap(KEY_M)
+	await _frames(3)
+	check.call("M selecciona todos los militares (%d)" % ctrl.selection.size(), ctrl.selection.size() == 6)
+	_key_tap(KEY_COMMA)
+	await _frames(3)
+	check.call("«,» selecciona el siguiente militar ocioso", ctrl.selection.size() == 1 and mil.has(ctrl.selection[0]))
+	_key_mod(KEY_COMMA, true)
+	await _frames(3)
+	check.call("Ctrl + «,»: todos los militares ociosos (%d)" % ctrl.selection.size(), ctrl.selection.size() == 6)
+	# Grilla militar: formación en línea (X), mantener posición (D) y patrullar (E + clic).
+	var slots := {}
+	for c in ctrl.commands():
+		slots[c["id"]] = c["slot"]
+	check.call("la grilla militar tiene mantener, patrullar y las cuatro formaciones", slots.has("mantener") and slots.has("patrullar") and slots.has("form_linea") and slots.has("form_columna"))
+	_key_tap(Controller.SLOT_KEYS[slots.get("form_linea", 9)])
+	await get_tree().create_timer(0.3).timeout
+	check.call("X elige la formación en línea y la arma en el lugar", ctrl.formacion == "linea" and not sim.groups.groups.is_empty())
+	await get_tree().create_timer(1.5).timeout
+	_key_tap(Controller.SLOT_KEYS[slots.get("mantener", 6)])
+	await get_tree().create_timer(0.3).timeout
+	var hold := 0
+	for id in mil:
+		if sim.by_id[id].order == SimEntity.Order.HOLD:
+			hold += 1
+	check.call("D: mantener posición (%d de 6)" % hold, hold == 6)
+	_key_tap(Controller.SLOT_KEYS[slots.get("patrullar", 2)])
+	await _frames(2)
+	check.call("E entra en modo patrullar", ctrl.mode == "patrol")
+	await _click(_screen(base.x + 14.0, base.y + 9.0))
+	await get_tree().create_timer(0.3).timeout
+	var pat := 0
+	for id in mil:
+		if sim.by_id[id].patrol:
+			pat += 1
+	check.call("clic: patrullan (%d de 6)" % pat, pat == 6 and ctrl.mode == "")
+	# Rumbo arrastrando el clic derecho: la orden lleva el rumbo de la tabla de enteros.
+	# Un lugar libre (sin recurso ni unidad debajo): si no, el clic derecho sería recolectar o atacar.
+	var a := _screen(base.x + 8.0, base.y + 12.0)
+	var b := _screen(base.x + 8.0, base.y + 16.0)
+	for dx in range(-10, 11, 2):
+		var ca := _screen(base.x + 8.0 + dx, base.y + 12.0)
+		if ctrl.pick(ca) < 0:
+			a = ca
+			b = _screen(base.x + 8.0 + dx, base.y + 16.0)
+			break
+	_mouse(a, 0, false)
+	await _frames(2)
+	_mouse(a, MOUSE_BUTTON_RIGHT, true)
+	await _frames(2)
+	_mouse(b, 0, false)
+	await _frames(3)
+	check.call("se dibuja la flecha del rumbo mientras se arrastra", ctrl.rpressing)
+	_mouse(b, MOUSE_BUTTON_RIGHT, false)
+	await _frames(3)
+	var last: Dictionary = sim.recording[-1] if not sim.recording.is_empty() else {}
+	var want := SimGroups.heading(0, 4000)
+	check.call("arrastrar el clic derecho manda mover en línea con rumbo %d (%s)" % [want, str(last.get("rumbo", "?"))], last.get("t", "") == "move" and last.get("form", "") == "linea" and absi(int(last.get("rumbo", -9)) - want) <= 1)
+	await get_tree().create_timer(0.3).timeout
+	var patrol_left := 0
+	for id in mil:
+		if sim.by_id[id].patrol:
+			patrol_left += 1
+	check.call("la orden nueva corta la patrulla", patrol_left == 0)
+	# Marcadores de cámara: Ctrl + F7 guarda, F7 vuelve.
+	cam.look_at_point(Vector3(base.x + 3, 0, base.y + 3))
+	await _frames(2)
+	_key_mod(KEY_F7, true)
+	await _frames(2)
+	cam.look_at_point(Vector3(base.x + 30, 0, base.y + 30))
+	await _frames(2)
+	_key_tap(KEY_F7)
+	await _frames(2)
+	check.call("Ctrl + F7 guarda la cámara y F7 vuelve (%.0f, %.0f)" % [cam.focus.x, cam.focus.z], Vector2(cam.focus.x, cam.focus.z).distance_to(Vector2(base.x + 3, base.y + 3)) < 1.5)
+	# Tab recorre los edificios de producción; T todos los del tipo.
+	_key_tap(KEY_TAB)
+	await _frames(3)
+	var sb := ctrl.selected_entities()
+	check.call("Tab selecciona un edificio de producción", sb.size() == 1 and sb[0].is_building() and not (sb[0].def.get("produce", []) as Array).is_empty())
+	ctrl.select_ids([mil[0]] as Array[int])
+	_key_tap(KEY_T)
+	await _frames(3)
+	check.call("T: todos los del tipo de lo seleccionado (%d)" % ctrl.selection.size(), ctrl.selection.size() == 3)
+	# Cola global: un ícono por edificio que produce; clic lleva al edificio.
+	var centro: SimEntity = null
+	for e in sim.actives:
+		if e.owner == local and e.is_building() and e.capital:
+			centro = e
+	sim.players[local]["res"]["alimento"] = int(sim.players[local]["res"]["alimento"]) + 500
+	sim.push_command({"t": "train", "player": local, "building": centro.id, "type": "aldeano"})
+	await _frames(6)
+	var items: Array = hud.cola_global.items()
+	check.call("la cola global muestra lo que se produce (%d)" % items.size(), items.size() >= 1)
+	ctrl.select_ids([] as Array[int])
+	cam.look_at_point(Vector3(base.x + 30, 0, base.y + 30))
+	await _frames(3)
+	if not hud.cola_global._hits.is_empty():
+		await _click(hud.cola_global.global_position + (hud.cola_global._hits[0][0] as Rect2).get_center())
+	check.call("clic en la cola global selecciona el edificio", ctrl.selection.size() == 1 and sim.by_id[ctrl.selection[0]].is_building())
+	# Bengala sin aliados: no se manda nada.
+	var n_cmd := sim.recording.size()
+	var fl := _screen(base.x + 6.0, base.y + 6.0)
+	Input.parse_input_event(_alt(true))
+	await _click(fl)
+	Input.parse_input_event(_alt(false))
+	await _frames(2)
+	check.call("Alt + clic sin aliados no tira bengala", sim.recording.size() == n_cmd)
+	ctrl.select_ids(vill)
+	await _frames(2)
+
+
+func _alt(pressed: bool) -> InputEventKey:
+	var k := InputEventKey.new()
+	k.physical_keycode = KEY_ALT
+	k.keycode = KEY_ALT
+	k.pressed = pressed
+	return k
+# --- fin órdenes ---
 
 
 ## Hay hoja de cursores (no la hay sin ventana). --- cursores ---
@@ -974,6 +1164,7 @@ func _autotest() -> void:
 	if cursores_sheet():
 		hud.cursores.hoja().save_png("screenshots/cursores.png")
 	# --- fin avisos ---
+	await _autotest_ordenes(check) # --- órdenes ---
 	var img := get_viewport().get_texture().get_image()
 	img.save_png("screenshots/autotest.png")
 	for r in results:
