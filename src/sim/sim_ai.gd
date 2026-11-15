@@ -476,7 +476,9 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 	# sus edificios propios (lof, mocambo, elefante).
 	for kind in ["alimento", "madera", "riqueza", "piedra"]:
 		var dtype := _dropsite_for(kind)
-		if dtype == "" or unbuilt.has(dtype) or by_type.get(dtype, []).size() >= 4:
+		# Un lof o un mocambo como almacén también es un edificio que entrena tropa: tope más bajo.
+		var cap := 4 if not sim.dp(player).edificios.get(dtype, {}).has("produce") else int(sim.data.reglas["ia_economia"]["almacen_alternativo_cantidad"])
+		if dtype == "" or unbuilt.has(dtype) or by_type.get(dtype, []).size() >= cap:
 			continue
 		var far := _far_gather_point(vill, kind)
 		if far != null:

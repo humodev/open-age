@@ -240,3 +240,10 @@
       1. el mercado va antes que los demás edificios desde la edad II;
       2. el reparto de aldeanos de la edad II en adelante pasa de 42 % alimento y 25 % madera a 37 % y 30 % (`reglas.json → ia_economia.proporcion_tardia`).
     - **Resultado en la misma partida:** a los 12 minutos Etiopía tiene mercado y 15 aldeanos en madera (antes 12). Determinismo OK. Torneo y economía de nuevo.
+14. **(08:00) Mercado primero y más madera: las economías se acercan, el torneo no** ([torneo](pruebas/13-torneo.txt), [economía en paz](pruebas/13-economia-paz.txt)).
+    - **Economía en paz:** riqueza a los 30 minutos entre 4863 (Etiopía) y 7037 (Palmares); edad II entre 5:35 y 8:10; edad III entre 15:30 y 20:05.
+    - **Torneo:** mapuches 90 %, Palmares 80 %, guaraníes 60 %, Tawantinsuyu 40 %, Ayutthaya 20 %, Etiopía 10 %.
+    - **Con `tools/ia_por_dentro.gd`, minuto 15:**
+      - Palmares tiene 2 mocambos: su ventaja viene de la economía, la más alta.
+      - Los mapuches tienen **8 edificios que entrenan tropa**: 4 lof (cada uno saca weichafe), 3 corrales (kona) y 2 ruka. La IA levantaba lofs también como almacén.
+    - **Cambio, el único de esta vuelta:** el edificio que la IA usa como almacén cuando no tiene otro (lof, mocambo) entrena tropa, así que tiene un tope más bajo: 3 en lugar de 4 (`ia_economia.almacen_alternativo_cantidad`). Determinismo OK.
