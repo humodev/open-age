@@ -1,0 +1,60 @@
+{
+ "nombre": "Chankas",
+ "adjetivo": "chanka",
+ "solo_ia": true,
+ "region": "Confederación chanka, Andahuaylas y Apurímac, c. 1200–1438",
+ "frase": "Los que bajaron de Andahuaylas sobre el Cusco.",
+ "descripcion": "Confederación de pueblos de Andahuaylas, con dos jefes (Uscovilca y Ancovilca) y tres parcialidades. Vivían en aldeas de altura, sin capital única. Según Betanzos, en la guerra de c. 1438 llevaban la imagen de Uscovilca al frente. Sin caballos ni pólvora. Solo IA y campaña.",
+ "_fuentes": [
+  "Juan de Betanzos, Suma y narración de los Incas (1551), primera parte, caps. VI a X: la guerra chanka, Uscovilca y Ancovilca",
+  "Brian S. Bauer, Lucas C. Kellett y Miriam Aráoz Silva, The Chanka: Archaeological Research in Andahuaylas (Cotsen Institute, 2010): aldeas en cumbres",
+  "Wikipedia, 'Chanka' (dos jefes, tres parcialidades, aldeas de unas cien casas), consultada 2026-11-15"
+ ],
+ "_verificar": "Lengua chanka (puquina, aimara o quechua: las fuentes discrepan; por eso no se usan nombres en lengua propia); capítulos exactos de Betanzos; casas circulares en las aldeas chankas.",
+ "estilo": {
+  "forma": "redonda",
+  "arcilla": "#b7a58a",
+  "techo": "#7b6a44",
+  "acento": "#8c4a3a"
+ },
+ "unidades": {
+  "guerrero": {
+   "nombre": "Guerrero de porra estrellada",
+   "desc": "Porra con cabeza de piedra o bronce en forma de estrella, el arma de choque de los Andes."
+  },
+  "hondero": {
+   "nombre": "Hondero de Andahuaylas",
+   "alcance": 6000
+  },
+  "lancero": {
+   "nombre": "Lancero chanka",
+   "edad_min": 1
+  }
+ },
+ "sin_unidades": ["jinete", "arcabucero", "ariete"],
+ "edificios": {
+  "centro": {
+   "nombre": "Aldea de la cumbre",
+   "desc": "Los chankas vivían en aldeas de altura, defendidas por la pendiente, sin una capital única."
+  },
+  "casa": {
+   "nombre": "Casa redonda"
+  },
+  "hito_guerra": {
+   "nombre": "Imagen de Uscovilca",
+   "desc": "La imagen del fundador que los chankas llevaban a la guerra; los incas la tomaron en la batalla."
+  }
+ },
+ "produce": {
+  "cuartel": [
+   "guerrero",
+   "hondero",
+   "lancero"
+  ]
+ },
+ "ia_unidades": [
+  "hondero"
+ ],
+ "ia_edificios": [],
+ "sin_edificios": ["campo_tiro", "establo", "taller"]
+}

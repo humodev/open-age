@@ -1,0 +1,93 @@
+{
+ "nombre": "Birmania",
+ "adjetivo": "birmano",
+ "solo_ia": true,
+ "region": "Reinos birmanos de las dinastías Toungoo (1510–1752) y Konbaung (1752–1885)",
+ "frase": "Los que vinieron en la crecida.",
+ "descripcion": "Las dinastías Toungoo y Konbaung gobernaron el mismo reino del Irrawaddy, con el mismo sistema de leva (ahmudan), elefantes, caballería y tiradores hereditarios. Disputaron a Ayutthaya la gente y el comercio durante dos siglos; en 1767 la tomaron con veintisiete fuertes y túneles bajo la muralla. Solo IA y campaña.",
+ "_agrupa": "Toungoo y Konbaung son dos dinastías sucesivas del mismo Estado birmano, con la misma organización militar; una sola civ cubre 1563–1593 y 1765–1767, y las edades marcan el paso de una a otra.",
+ "_fuentes": [
+  "Victor Lieberman, Strange Parallels, vol. 1 (Cambridge UP, 2003): ciclo Toungoo/Konbaung y guerra de mano de obra",
+  "Michael W. Charney, Southeast Asian Warfare, 1300–1900 (Brill, 2004): tiradores hereditarios, elefantes y fuertes de troncos",
+  "Wikipedia, 'Bayingyi people' (Siriam 1613, valle del Mu) y 'Royal Burmese Armed Forces' (ahmudan, caballería kathe, cuerpo de mosqueteros), consultadas 2026-11-15",
+  "docs/investigacion/ayutthaya.md, H6 a H10 y F3 (Terwiel sobre Nong Sarai)"
+ ],
+ "_verificar": "Athi como nombre de la gente común fuera del servicio real; uso de ywa y myo como nombres de edad.",
+ "estilo": {
+  "forma": "ayutthaya",
+  "arcilla": "#c8a678",
+  "techo": "#4e3322",
+  "acento": "#d9a92b"
+ },
+ "edades": [
+  "Ywa",
+  "Myo",
+  "Hanthawaddy",
+  "Konbaung"
+ ],
+ "_edades": "Ywa: aldea. Myo: ciudad amurallada y cabecera. Hanthawaddy: Pegu, la capital de Bayinnaung desde 1539. Konbaung: la dinastía de Alaungpaya y Hsinbyushin.",
+ "unidades": {
+  "aldeano": {
+   "nombre": "Athi",
+   "desc": "Athi: la gente común que no debía servicio directo al rey y pagaba en impuestos."
+  },
+  "guerrero": {
+   "nombre": "Espadero de dha",
+   "desc": "Dha: el sable birmano de un filo."
+  },
+  "hondero": {
+   "nombre": "Arquero"
+  },
+  "lancero": {
+   "nombre": "Lancero",
+   "edad_min": 1
+  },
+  "jinete": {
+   "nombre": "Jinete kathe",
+   "desc": "Kathe: así llamaban los birmanos a los manipuríes. La caballería kathe es de la época Konbaung; en la Toungoo, la caballería era birmana y shan.",
+   "edad_min": 1
+  },
+  "arcabucero": {
+   "nombre": "Bayingyi",
+   "desc": "Bayingyi: descendientes de los portugueses tomados en Siriam (1613) y asentados en el valle del Mu; sirvieron como mosqueteros y artilleros hereditarios del rey.",
+   "edad_min": 2
+  }
+ },
+ "edificios": {
+  "centro": {
+   "nombre": "Myo",
+   "desc": "Myo: ciudad o plaza amurallada, cabecera de la leva.",
+   "pv": 3000,
+   "armadura": 3,
+   "flechas": 3
+  },
+  "casa": {
+   "nombre": "Ein",
+   "desc": "Ein: casa, de madera y sobre pilotes."
+  },
+  "cuartel": {
+   "nombre": "Cuartel"
+  },
+  "torre": {
+   "nombre": "Fuerte de troncos",
+   "desc": "En 1765–1767 el ejército de Hsinbyushin pasó la crecida en veintisiete fuertes alrededor de Ayutthaya.",
+   "edad_min": 1
+  }
+ },
+ "produce": {
+  "cuartel": [
+   "guerrero",
+   "hondero",
+   "lancero",
+   "jinete",
+   "arcabucero",
+   "ariete"
+  ]
+ },
+ "ia_unidades": [
+  "jinete",
+  "arcabucero"
+ ],
+ "ia_edificios": [],
+ "sin_edificios": ["campo_tiro", "establo", "taller"]
+}

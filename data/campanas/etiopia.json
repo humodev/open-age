@@ -31,7 +31,7 @@
         "tropas": [ { "tipo": "jinete", "n": 6 }, { "tipo": "guerrero", "n": 4 }, { "tipo": "hondero", "n": 6 } ]
       },
       "rivales": [
-        { "nombre": "Sultanato de Adal (ejército de Badlay)", "faccion": "invasores", "ia": "normal", "edad": 1 }
+        { "nombre": "Sultanato de Adal (ejército de Badlay)", "corto": "Adal · Badlay", "faccion": "adal", "ia": "normal", "edad": 1 }
       ],
       "objetivos": [
         { "id": "o1", "texto": "Armá el kätäma: plantá el estandarte y levantá 5 tiendas de señores (casas) alrededor de la tienda real.", "tipo": "construir", "params": { "tipo": "casa", "n": 5 }, "secundario": false },
@@ -84,7 +84,7 @@
         "tropas": [ { "tipo": "hondero", "n": 12 }, { "tipo": "lancero", "n": 8 }, { "tipo": "guerrero", "n": 4 } ]
       },
       "rivales": [
-        { "nombre": "Ejército del imán Ahmad (Adal)", "faccion": "invasores", "ia": "agresiva", "edad": 3 }
+        { "nombre": "Ejército del imán Ahmad (Adal)", "corto": "Imán Ahmad", "faccion": "adal", "ia": "agresiva", "edad": 3 }
       ],
       "objetivos": [
         { "id": "o1", "texto": "Fortificá el único acceso de la amba con 3 torres.", "tipo": "construir", "params": { "tipo": "torre", "n": 3 }, "secundario": false },
@@ -137,7 +137,7 @@
         "tropas": [ { "tipo": "jinete", "n": 10 }, { "tipo": "lancero", "n": 6 }, { "tipo": "hondero", "n": 10 }, { "tipo": "arcabucero", "n": 6 } ]
       },
       "rivales": [
-        { "nombre": "Ejército del imán Ahmad (Adal)", "faccion": "invasores", "ia": "agresiva", "edad": 3 }
+        { "nombre": "Ejército del imán Ahmad (Adal)", "corto": "Imán Ahmad", "faccion": "adal", "ia": "agresiva", "edad": 3 }
       ],
       "objetivos": [
         { "id": "o1", "texto": "Pagá la remonta: sin tributo de las tierras de pasto no hay caballos. Juntá 500 de riqueza.", "tipo": "recolectar", "params": { "recurso": "riqueza", "n": 500 }, "secundario": false },
@@ -191,7 +191,7 @@
         "tropas": [ { "tipo": "jinete", "n": 10 }, { "tipo": "lancero", "n": 8 }, { "tipo": "hondero", "n": 10 } ]
       },
       "rivales": [
-        { "nombre": "Señores rebeldes de Lasta", "faccion": "etiopia", "ia": "agresiva", "edad": 3 }
+        { "nombre": "Señores rebeldes de Lasta", "corto": "Señores de Lasta", "faccion": "etiopia", "ia": "agresiva", "edad": 3 }
       ],
       "objetivos": [
         { "id": "o1", "texto": "Juntá 800 de piedra para el castillo.", "tipo": "recolectar", "params": { "recurso": "piedra", "n": 800 }, "secundario": false },

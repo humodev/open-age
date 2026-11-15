@@ -51,7 +51,8 @@
    "rivales": [
     {
      "nombre": "Confederación chanka",
-     "faccion": "tawantinsuyu",
+     "corto": "Chankas",
+     "faccion": "chankas",
      "ia": "agresiva",
      "edad": 1
     }
@@ -319,7 +320,8 @@
    "rivales": [
     {
      "nombre": "Cayambes y caranquis",
-     "faccion": "tawantinsuyu",
+     "corto": "Cayambes",
+     "faccion": "caranquis",
      "ia": "normal",
      "edad": 2
     }
@@ -558,13 +560,15 @@
    "rivales": [
     {
      "nombre": "Hueste de Hernando Pizarro",
+     "corto": "Hueste de H. Pizarro",
      "faccion": "invasores",
      "ia": "agresiva",
      "edad": 2
     },
     {
      "nombre": "Auxiliares cañaris",
-     "faccion": "tawantinsuyu",
+     "corto": "Cañaris",
+     "faccion": "canaris",
      "ia": "normal",
      "edad": 2
     }
@@ -831,12 +835,14 @@
    "rivales": [
     {
      "nombre": "Corregimiento y milicias del Cusco",
+     "corto": "Corregimiento",
      "faccion": "invasores",
      "ia": "normal",
      "edad": 3
     },
     {
      "nombre": "Milicias de Mateo Pumakawa",
+     "corto": "Pumakawa",
      "faccion": "tawantinsuyu",
      "ia": "normal",
      "edad": 3

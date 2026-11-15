@@ -302,7 +302,7 @@ func on_events(events: Array) -> void:
 					var efx := ctrl.effects_text(hdef.get("efectos", []))
 					notify("Edad %s alcanzada · %s" % [Sim._roman(ev["age"]), name] + ("\n" + efx if efx != "" else ""), -1.0, "hito")
 				else:
-					notify("%s llegó a la edad %s" % [Palette.TEAM_NAMES[pid], Sim._roman(ev["age"])], -1.0, "info")
+					notify("%s llegó a la edad %s" % [preload("res://src/game/ui/panel_comun.gd").player_name(sim, pid, local), Sim._roman(ev["age"])], -1.0, "info")
 			"tech":
 				if pid == local:
 					notify("Investigación terminada: %s" % sim.dp(pid).tecnologias[ev["tech"]]["nombre"], -1.0, "hito")
@@ -909,7 +909,7 @@ class SelectionPanel:
 		var x := 142.0
 		var name: String = e.def.get("nombre", e.type)
 		draw_string(Hud.font_b, Vector2(x, 36), name, HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Palette.UI_TEXT)
-		var who := "Naturaleza" if e.owner < 0 else ("Tu pueblo" if e.owner == hud.local else "Rival · %s" % Palette.TEAM_NAMES[e.owner])
+		var who := "Naturaleza" if e.owner < 0 else ("Tu pueblo" if e.owner == hud.local else "Rival · %s" % preload("res://src/game/ui/panel_comun.gd").player_name(sim, e.owner, hud.local))
 		draw_string(Hud.font, Vector2(x, 58), who, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Palette.UI_DIM)
 		if e.is_resource():
 			draw_string(Hud.font_b, Vector2(x, 96), "%d %s restantes" % [e.amount, Palette.RES_NAMES[e.res_kind].to_lower()], HORIZONTAL_ALIGNMENT_LEFT, -1, 17, Palette.RES[e.res_kind])

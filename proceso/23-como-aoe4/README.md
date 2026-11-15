@@ -61,3 +61,4 @@ Orden de los cambios de balance: A, después E, F y G, de a uno, con un torneo d
 
 ## Paso a paso
 1. **(20:00) Etapa abierta.** Respuestas anotadas en `CONSULTAS.md`. Se lanzan los agentes 1, 2 y 3, cada uno en su copia del repositorio.
+2. **(D) Rivales con civ propia.** Seis civs solo de IA (Adal, Birmania, chankas, caranquis y cayambes, cañaris, tupíes) en lugar de "Invasores" o de la cultura del jugador; el marcador y los avisos dicen el nombre del rival de la misión; *Espingardeiro de resgate* pasa a *Espingardeiro* y las palabras en portugués con equivalente pasan al castellano. Inkarri, el Qorikancha, las edades guaraníes y "Cucaú o Quilombo", a C-35 a C-40. Detalle en [`04-rivales-propios.md`](04-rivales-propios.md).

@@ -58,7 +58,8 @@
    "rivales": [
     {
      "nombre": "Ejército del uparat Mingyi Swa (Toungoo)",
-     "faccion": "invasores",
+     "corto": "Mingyi Swa",
+     "faccion": "birmanos",
      "ia": "agresiva",
      "edad": 3
     }
@@ -351,6 +352,7 @@
    "rivales": [
     {
      "nombre": "Guarnición francesa de Bangkok",
+     "corto": "Franceses",
      "faccion": "invasores",
      "ia": "pasiva",
      "edad": 3
@@ -638,13 +640,15 @@
    "rivales": [
     {
      "nombre": "Ejército de Maha Nawrahta (Konbaung)",
-     "faccion": "invasores",
+     "corto": "Maha Nawrahta",
+     "faccion": "birmanos",
      "ia": "normal",
      "edad": 4
     },
     {
      "nombre": "Ejército de Ne Myo Thihapate (Konbaung)",
-     "faccion": "invasores",
+     "corto": "Ne Myo Thihapate",
+     "faccion": "birmanos",
      "ia": "agresiva",
      "edad": 4
     }
@@ -983,12 +987,14 @@
    "rivales": [
     {
      "nombre": "Guarniciones birmanas de Thonburi y Pho Sam Ton",
-     "faccion": "invasores",
+     "corto": "Pho Sam Ton",
+     "faccion": "birmanos",
      "ia": "normal",
      "edad": 3
     },
     {
      "nombre": "Señores de Phitsanulok, Phimai y Fang",
+     "corto": "Señores del norte",
      "faccion": "ayutthaya",
      "ia": "pasiva",
      "edad": 2

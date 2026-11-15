@@ -526,7 +526,7 @@ func _who(pid: int) -> String:
 		return "nadie"
 	if pid == hud.local:
 		return "tu pueblo"
-	var civ: String = sim.dp(pid).civ.get("nombre", "")
+	var civ: String = preload("res://src/game/ui/panel_comun.gd").people_name(sim, pid)
 	return "%s (%s)" % [civ, Palette.TEAM_NAMES[pid % Palette.TEAM_NAMES.size()]] if civ != "" else Palette.TEAM_NAMES[pid % Palette.TEAM_NAMES.size()]
 
 
@@ -836,7 +836,7 @@ func _people_line(c: Dictionary) -> String:
 		return "Naturaleza"
 	if owner < 0:
 		return "Naturaleza · de quien lo sostenga"
-	var civ: String = sim.dp(owner).civ.get("nombre", "")
+	var civ: String = preload("res://src/game/ui/panel_comun.gd").people_name(sim, owner)
 	var who := "Tu pueblo" if owner == hud.local else ("Aliado %s" if not sim.enemies(hud.local, owner) else "Rival %s") % Palette.TEAM_NAMES[owner % Palette.TEAM_NAMES.size()].to_lower()
 	return "%s · %s" % [civ, who] if civ != "" else who
 

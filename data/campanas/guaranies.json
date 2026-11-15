@@ -10,7 +10,7 @@
       "lugar": "Lambaré, sobre el río Paraguay",
       "intro": [
         "Escribo en nuestra lengua, con las letras que trajeron los padres, en el cabildo de San Miguel. Lo que cuento lo aprendí de los viejos, que lo aprendieron de la palabra de los karai. La palabra no se pierde mientras alguien la diga.",
-        "Antes de que llegaran, el tekoha estaba en el monte, cerca del agua. Nunca en el campo abierto: el campo es para cazar, no para vivir. Cada pocos años se abría una roça nueva, y la vieja se volvía huerto, y el huerto volvía a ser monte.",
+        "Antes de que llegaran, el tekoha estaba en el monte, cerca del agua. Nunca en el campo abierto: el campo es para cazar, no para vivir. Cada pocos años se abría una roza nueva, y la vieja se volvía huerto, y el huerto volvía a ser monte.",
         "En 1537 subieron por el río unos hombres de hierro con arcabuces. En Lambaré los viejos cavaron fosos tapados con paja y tierra, con estacas de madera dura en el fondo, y levantaron dos empalizadas. Detrás esperaban cuatro mil arcos."
       ],
       "epilogo": [
@@ -31,10 +31,10 @@
         "tropas": [ { "tipo": "hondero", "n": 10 }, { "tipo": "guerrero", "n": 6 } ]
       },
       "rivales": [
-        { "nombre": "Hueste de Juan de Ayolas", "faccion": "invasores", "ia": "agresiva", "edad": 2 }
+        { "nombre": "Hueste de Juan de Ayolas", "corto": "Hueste de Ayolas", "faccion": "invasores", "ia": "agresiva", "edad": 2 }
       ],
       "objetivos": [
-        { "id": "o1", "texto": "Abrí 3 roças en el monte, nunca en el campo abierto. Cuando una se canse, abrí otra: la vieja vuelve a ser monte.", "tipo": "construir", "params": { "tipo": "granja", "n": 3 }, "secundario": false },
+        { "id": "o1", "texto": "Abrí 3 rozas en el monte, nunca en el campo abierto. Cuando una se canse, abrí otra: la vieja vuelve a ser monte.", "tipo": "construir", "params": { "tipo": "granja", "n": 3 }, "secundario": false },
         { "id": "o2", "texto": "Levantá la doble empalizada de Lambaré (30 tramos) y cavá los fosos delante.", "tipo": "construir", "params": { "tipo": "empalizada", "n": 30 }, "secundario": false },
         { "id": "o3", "texto": "Reuní los arcos de las casas grandes: 12 arqueros más.", "tipo": "entrenar", "params": { "tipo": "hondero", "n": 12 }, "secundario": false },
         { "id": "o4", "texto": "Resistí tres días el asalto.", "tipo": "sobrevivir", "params": { "segundos": 480 }, "secundario": false },
@@ -80,8 +80,8 @@
         "tropas": [ { "tipo": "hondero", "n": 12 }, { "tipo": "guerrero", "n": 6 } ]
       },
       "rivales": [
-        { "nombre": "Bandeira paulista", "faccion": "invasores", "ia": "agresiva", "edad": 2 },
-        { "nombre": "Auxiliares tupí de la bandeira", "faccion": "guaranies", "ia": "normal", "edad": 2 }
+        { "nombre": "Bandeira paulista", "corto": "Bandeira paulista", "faccion": "invasores", "ia": "agresiva", "edad": 2 },
+        { "nombre": "Auxiliares tupí de la bandeira", "corto": "Tupíes", "faccion": "tupies", "ia": "normal", "edad": 2 }
       ],
       "objetivos": [
         { "id": "o1", "texto": "Cortá 600 de madera para canoas y balsas.", "tipo": "recolectar", "params": { "recurso": "madera", "n": 600 }, "secundario": false },
@@ -96,7 +96,7 @@
         { "cuando": { "tipo": "tiempo", "valor": 125 }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "guerrero", "n": 6 } } },
         { "cuando": { "tipo": "tiempo", "valor": 300 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 6 } } },
         { "cuando": { "tipo": "tiempo", "valor": 420 }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "hondero", "n": 8 } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o2" }, "accion": { "tipo": "dialogo", "params": { "quien": "Escribano de San Miguel", "texto": "Las balsas salieron de noche. Detrás quedaron las roças viejas, que algún día volverán a ser monte." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o2" }, "accion": { "tipo": "dialogo", "params": { "quien": "Escribano de San Miguel", "texto": "Las balsas salieron de noche. Detrás quedaron las rozas viejas, que algún día volverán a ser monte." } } },
         { "cuando": { "tipo": "objetivo", "valor": "o2" }, "accion": { "tipo": "recursos", "params": { "alimento": 300, "madera": 0, "piedra": 0, "riqueza": 0 } } },
         { "cuando": { "tipo": "tiempo", "valor": 660 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 6 } } },
         { "cuando": { "tipo": "objetivo", "valor": "o3" }, "accion": { "tipo": "dialogo", "params": { "quien": "Una anciana de Loreto", "texto": "Este lugar se va a llamar Loreto, como el otro. Así los muertos saben dónde buscarnos." } } }
@@ -130,8 +130,8 @@
         "tropas": [ { "tipo": "hondero", "n": 16 }, { "tipo": "guerrero", "n": 10 }, { "tipo": "lancero", "n": 6 }, { "tipo": "arcabucero", "n": 6 } ]
       },
       "rivales": [
-        { "nombre": "Bandeira paulista", "faccion": "invasores", "ia": "agresiva", "edad": 2 },
-        { "nombre": "Auxiliares tupí de la bandeira", "faccion": "guaranies", "ia": "normal", "edad": 2 }
+        { "nombre": "Bandeira paulista", "corto": "Bandeira paulista", "faccion": "invasores", "ia": "agresiva", "edad": 2 },
+        { "nombre": "Auxiliares tupí de la bandeira", "corto": "Tupíes", "faccion": "tupies", "ia": "normal", "edad": 2 }
       ],
       "objetivos": [
         { "id": "o1", "texto": "Fabricá 3 cañones de tacuara: baratos, rápidos y de pocos tiros.", "tipo": "entrenar", "params": { "tipo": "ariete", "n": 3 }, "secundario": false },
@@ -181,8 +181,8 @@
         "tropas": [ { "tipo": "hondero", "n": 14 }, { "tipo": "guerrero", "n": 10 }, { "tipo": "lancero", "n": 10 }, { "tipo": "jinete", "n": 6 }, { "tipo": "arcabucero", "n": 4 } ]
       },
       "rivales": [
-        { "nombre": "Ejército portugués de Gomes Freire", "faccion": "invasores", "ia": "agresiva", "edad": 4 },
-        { "nombre": "Ejército español de Andonaegui", "faccion": "invasores", "ia": "normal", "edad": 4 }
+        { "nombre": "Ejército portugués de Gomes Freire", "corto": "Gomes Freire", "faccion": "invasores", "ia": "agresiva", "edad": 4 },
+        { "nombre": "Ejército español de Andonaegui", "corto": "Andonaegui", "faccion": "invasores", "ia": "normal", "edad": 4 }
       ],
       "objetivos": [
         { "id": "o1", "texto": "Fortificá los vados con estacadas (24 tramos de empalizada).", "tipo": "construir", "params": { "tipo": "empalizada", "n": 24 }, "secundario": false },
