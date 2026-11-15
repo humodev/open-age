@@ -61,3 +61,4 @@ Orden de los cambios de balance: A, después E, F y G, de a uno, con un torneo d
 
 ## Paso a paso
 1. **(20:00) Etapa abierta.** Respuestas anotadas en `CONSULTAS.md`. Se lanzan los agentes 1, 2 y 3, cada uno en su copia del repositorio.
+2. **Parte C, aprender a jugar (agente 2).** Tutorial que se gana haciéndole caso y que falla con motivo, avisos que enseñan (apagables), cuenta grande de los sitios, pantalla de fin que explica por qué y da consejos, nombres en la grilla, registro de la Guía (F7) y el menú en Fácil la primera vez. Detalle en [`03-aprender-a-jugar.md`](03-aprender-a-jugar.md); consultas C-35 y C-36.

@@ -195,3 +195,16 @@ La síntesis (`proceso/22-testers/00-sintesis.md`) ordena: 1) errores que arruin
 a) Ese orden *(por defecto)* · b) Otro (decir cuál)
 
 **Respuesta:** a) Ese orden, en dirección AoE4 sin perder la identidad de cada pueblo (2026-11-15). Plan en `proceso/23-como-aoe4`.
+
+### C-35 · (aprender a jugar) ¿Con qué pueblo se aprende?
+El tutorial usa a los guaraníes, que no tienen torre, granero ni depósito, y cuyos edificios tienen nombre propio (Oga, Aty, Kokue). El jugador nuevo pidió aprender con un pueblo "más normal" (`proceso/22-testers/02-nuevo-en-rts.md`).
+a) Dejar a los guaraníes: los nombres propios con el común debajo ya se entienden *(por defecto)* · b) Pasar el tutorial a Tawantinsuyu, que tiene todos los edificios comunes
+
+**Respuesta:**
+
+### C-36 · (aprender a jugar) "Arte de la guerra"
+AoE4 tiene misiones cortas de una sola idea (economía temprana, defensa, contadores, sitios, asedio) con medalla de bronce, plata y oro. El motor de escenarios ya alcanza para hacerlas (objetivos `juntar`, `sitio`, cuentas y ataques con aviso).
+a) Sí, cinco misiones cortas con medallas por tiempo, después de la etapa 23 *(por defecto)* · b) No por ahora
+
+**Respuesta:**
+

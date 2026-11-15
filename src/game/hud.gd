@@ -49,6 +49,14 @@ const GRUPOS := preload("res://src/game/ui/grupos.gd")
 var avisos: Control
 var grupos: Control
 var _pob_estado := "" # "", "llena" o "excedida": para avisar una sola vez por cambio
+# --- aprender --- (proceso/23-como-aoe4/03-aprender-a-jugar.md)
+const CONSEJOS := preload("res://src/game/ui/consejos.gd")
+const REGISTRO_GUIA := preload("res://src/game/ui/registro_guia.gd")
+var consejos: Node # avisos que enseñan
+var cuenta: Control # cuenta regresiva grande (sitios sagrados y misiones)
+var guia: Control # registro de la Guía (F7), solo en campañas
+var _guia_cfg := {}
+# --- fin aprender ---
 # --- fin avisos ---
 # --- cursores ---
 const CURSORES := preload("res://src/game/ui/cursores.gd")
@@ -143,6 +151,22 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 	add_child(grupos)
 	_place_groups()
 	# --- fin avisos ---
+	# --- aprender ---
+	cuenta = CuentaGrande.new()
+	cuenta.sim = sim
+	cuenta.local = local
+	_anchor(cuenta, Vector2(0.5, 0), Rect2(-190, 8, 380, 66))
+	add_child(cuenta)
+	consejos = CONSEJOS.new()
+	consejos.setup(self)
+	add_child(consejos)
+	if sim.scenario != null:
+		guia = REGISTRO_GUIA.new()
+		add_child(guia)
+		guia.setup(self)
+		_blockers.append_array(guia.blockers())
+		_guia_cfg = (JSON.parse_string(FileAccess.get_file_as_string("res://data/interfaz.json")) as Dictionary).get("guia", {})
+	# --- fin aprender ---
 	# --- cursores ---
 	cursores = CURSORES.new()
 	add_child(cursores)
@@ -215,7 +239,9 @@ func _next_dialog() -> void:
 	_dialog_text.text = d.get("texto", "")
 	_dialog.visible = true
 	_dialog.reset_size()
-	_dialog_t = clampf(String(d.get("texto", "")).length() / 16.0, 5.0, 14.0)
+	# --- aprender --- (más tiempo para leer; data/interfaz.json → guia, y F7 los relee)
+	_dialog_t = clampf(String(d.get("texto", "")).length() / float(_guia_cfg.get("letras_por_s", 11)), float(_guia_cfg.get("min_s", 7.0)), float(_guia_cfg.get("max_s", 22.0)))
+	# --- fin aprender ---
 
 
 func blocks(m: Vector2) -> bool:
@@ -325,6 +351,8 @@ func on_events(events: Array) -> void:
 					var w: int = ev["player"]
 					_show_end(local if w >= 0 and not sim.enemies(local, w) else w)
 			"dialogo":
+				if guia != null: # --- aprender ---
+					guia.add(ev)
 				_dialog_queue.append(ev)
 				if not _dialog.visible:
 					_next_dialog()
@@ -447,6 +475,8 @@ func _process(delta: float) -> void:
 			_next_dialog()
 	if _objectives != null:
 		_objectives.queue_redraw()
+		if guia != null: # --- aprender ---
+			guia.place_button(_objectives.position.y + float(_objectives.get("alto")))
 	# --- avisos ---
 	if _sel.visible == ctrl.selection.is_empty():
 		_place_groups()
@@ -561,6 +591,7 @@ func _make_dialog(title: String, body: String, buttons: Array) -> PanelContainer
 class ObjectivesPanel:
 	extends Control
 	var hud: Hud
+	var alto := 0.0 # --- aprender --- alto dibujado (el botón de la Guía va debajo)
 
 	func _ready() -> void:
 		mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -570,14 +601,22 @@ class ObjectivesPanel:
 		if sc == null:
 			return
 		var list := sc.active_objectives()
+		# --- aprender --- (los cumplidos, en un renglón y solo los últimos tres: el tutorial tiene once)
+		var done := list.filter(func(o: Dictionary) -> bool: return o["estado"] == "hecho")
+		if done.size() > 3:
+			list = list.filter(func(o: Dictionary) -> bool: return o["estado"] != "hecho" or done.find(o) >= done.size() - 3)
+		# --- fin aprender ---
 		var y := 34.0
 		var lines: Array = []
 		for o in list:
 			var txt: String = o["texto"]
 			var h := Hud.font.get_multiline_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, size.x - 50, 14).y
+			if o["estado"] == "hecho": # --- aprender ---
+				h = 18.0
 			lines.append([o, h])
 			y += h + 8
 		draw_style_box(Hud.panel_box(8), Rect2(Vector2.ZERO, Vector2(size.x, y + 6)))
+		alto = y + 6 # --- aprender ---
 		draw_string(Hud.font_b, Vector2(14, 24), "Objetivos", HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Palette.UI_ACCENT)
 		y = 34.0
 		for l in lines:
@@ -594,7 +633,13 @@ class ObjectivesPanel:
 			if o.get("secundario", false) and st == "activo":
 				col = Palette.UI_DIM
 			draw_string(Hud.font_b, Vector2(14, y + 14), mark, HORIZONTAL_ALIGNMENT_LEFT, -1, 15, col)
-			draw_multiline_string(Hud.font, Vector2(36, y + 14), o["texto"], HORIZONTAL_ALIGNMENT_LEFT, size.x - 50, 14, -1, col)
+			if st == "hecho": # --- aprender ---
+				var one: String = o["texto"]
+				var cut := one.find(":")
+				one = one.substr(0, cut) if cut > 0 else one
+				draw_string(Hud.font, Vector2(36, y + 14), one.substr(0, 52) + ("…" if one.length() > 52 else ""), HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(col, 0.8))
+			else:
+				draw_multiline_string(Hud.font, Vector2(36, y + 14), o["texto"], HORIZONTAL_ALIGNMENT_LEFT, size.x - 50, 14, -1, col)
 			y += float(l[1]) + 8
 
 
@@ -684,7 +729,7 @@ class ClockBar:
 		if total > 0:
 			var left: int = (int(sim.data.reglas["sitios"]["victoria_ms"]) - int(sim.players[hud.local].get("sitios_ms", 0))) / 1000
 			var txt := "Sitios %d/%d" % [mine, total]
-			if mine == total:
+			if mine == total and int(sim.players[hud.local].get("sitios_ms", 0)) > 0: # --- aprender --- (el tutorial no gana por sitios)
 				txt += " · victoria en %s" % Hud._fmt_time(left)
 			for p in sim.players:
 				if p["id"] != hud.local and int(p.get("sitios_ms", 0)) > 0:

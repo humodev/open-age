@@ -16,7 +16,7 @@ Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video,
 | Telemetría (`proceso/20`) | Funciona: `Sim.tele` registra trabadas, caminos imposibles, rechazos con su orden, IA sin lugar o sin ruta, ociosos y ticks lentos. Cada partida queda en `user://telemetria/`, y `tools/telemetria.gd` hace el informe y el mapa de calor. Ya encontró dos fallas de la IA, arregladas. Falta: guardar los SCRIPT ERROR del juego |
 | Jugabilidad al estilo AoE4 (`proceso/21`) | Estudio hecho (`docs/diseno/jugabilidad/01–03`) y plan de 11 pasos. Hecho: grupos que marchan en formación (llegada de 23 s a 1 s), aldeanos en bloque solo si van lejos, recolección al terminar un almacén y tecnologías por capacidad. Falta: ataque en formación, escolta, formaciones elegibles, almacenes por recurso y edificios militares por función |
 | Jugadores de prueba (`proceso/22`) | Cuatro perfiles de jugador (agentes) dan su opinión sobre qué falta para ser tan divertido como AoE4. Errores encontrados y arreglados: panel con valores de base, textos de prototipo, "✓ ganada" vertical, avisos de la IA en IA contra IA. Conocido: el juego a veces termina con un volcado de memoria al cerrar tras `--shot` (dentro del motor, después de guardar la captura) |
-| Hacia AoE4 (`proceso/23`) | Decidido por el autor (C-31 a C-34): combate con bonos planos y dos armaduras, animales por región y caza, hitos de 190/220/250 s con aura, comodidades y aprendizaje como AoE4, rivales con civ propia. En curso |
+| Hacia AoE4 (`proceso/23`) | Decidido por el autor (C-31 a C-34): combate con bonos planos y dos armaduras, animales por región y caza, hitos de 190/220/250 s con aura, comodidades y aprendizaje como AoE4, rivales con civ propia. En curso. Parte C hecha (`proceso/23-como-aoe4/03-aprender-a-jugar.md`): tutorial que se gana siguiéndolo y falla con motivo, avisos que enseñan, cuenta grande de los sitios, fin que explica, nombres en la grilla, registro de la Guía (F7), menú en Fácil |
 | H5 · Multijugador en red | No empezado. La simulación determinista y por comandos ya lo habilita |
 | H6 · Acceso anticipado | Pendiente |
 
@@ -38,6 +38,7 @@ Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video,
 | `tests/bench.gd` | 200 unidades peleando dentro del presupuesto del tick |
 | `tests/civ_smoke.gd` | Las seis civilizaciones juegan entre sí sin errores |
 | `tests/campaign_smoke.gd` | Las 24 misiones se arman y corren |
+| `tests/tutorial_letra.gd` | El tutorial seguido al pie de la letra se gana; sin defenderse, se pierde con motivo (`-- --modo=indefenso`) |
 | `tests/torneo.gd` | Balance: todas contra todas |
 | `--autotest` | Controles de punta a punta con eventos reales |
 | `tests/test_paleta.gd` | Colores de equipo, recursos y vida distinguibles con daltonismo simulado; contraste de la interfaz |

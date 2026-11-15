@@ -476,9 +476,11 @@ func _sacred() -> void:
 	var team_holds := {}
 	for pid2 in holds:
 		team_holds[sim.team_of(pid2)] = int(team_holds.get(sim.team_of(pid2), 0)) + int(holds[pid2])
+	# Misiones que enseñan los sitios sin que ganen la partida (el tutorial): sin cuenta.
+	var no_win: bool = sim._opts.get("sitios_sin_victoria", false)
 	for p in sim.players:
 		var pid: int = p["id"]
-		if int(team_holds.get(sim.team_of(pid), 0)) == sites.size() and not p["defeated"]:
+		if int(team_holds.get(sim.team_of(pid), 0)) == sites.size() and not p["defeated"] and not no_win:
 			p["sitios_ms"] = int(p.get("sitios_ms", 0)) + 1000
 			if p["sitios_ms"] >= int(cfg["victoria_ms"]) and not sim.game_over:
 				sim.win(pid)
