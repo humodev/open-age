@@ -39,7 +39,7 @@ Los scripts están en la carpeta de trabajo de la sesión (`scratchpad/testers/v
 | 3 | Mantener posición, patrullar, elegir la formación | **Hecho** | La grilla militar tiene todo, con nombres ([captura 3](capturas/veterano/03-grilla-militar.jpg)). En un espejo de honderos, la formación abierta le gana al bloque y le quedan 5 de 10 |
 | 4 | Atajos de selección y marcadores de cámara | **Hecho** | `M`, `,`, `T`, `Tab`. Los marcadores son solo tres (F7–F9); AoE4 tiene ocho |
 | 5 | Botón de ociosos y cola global | **Hecho** | Es lo que más me cambió la partida ([captura 2](capturas/veterano/02-barra-y-cola.jpg)). Los aldeanos por recurso debajo de cada recurso se leen de un vistazo |
-| 6 | Hito con ventana de riesgo | **Falta** | Siguen 60, 90 y 120 s. Con tres constructores, el hito de la edad II tardó 33–56 s |
+| 6 | Hito con ventana de riesgo | **Falta** | Siguen 60, 90 y 120 s. Con tres constructores, el hito de la edad II tardó 31–56 s |
 | 7 | Panel de unidad con los valores reales | **Hecho** | `hud.gd` usa `effective_attack` y `effective_armor` y muestra las dos armaduras ("3 / 0") |
 | 8 | Mejoras por unidad y dos armaduras | **A medias** | Las dos armaduras están. Las mejoras siguen siendo para todos los militares, más el bono automático por edad |
 | 9 | IA experta | **Falta** | Siguen los topes de 42 y 60 aldeanos. La IA normal dejó el centro sin producir entre 72 y 372 s por partida |
@@ -119,7 +119,7 @@ No encontré errores en la telemetría de mis partidas: cero trabadas, cero cami
 - **Las partidas duraron** 13:40, 16:41, 19:46 y 20:15. La última se perdió por los sitios sagrados.
 
 **Animales:**
-- 4 aldeanos con una llama: 200 de comida en unos 50 s;
+- 4 aldeanos con una llama: la carne (200) se acaba antes de los 60 s;
 - el explorador guaraní reclamó 0 animales en 30 s, 3 en 60 s, 6 en 90 s y 10 en 120 s.
 
 **Micro, `tests/micro.gd` (10 contra 10):**
