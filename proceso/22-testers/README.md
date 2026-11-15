@@ -96,3 +96,8 @@ Al final, una síntesis con lo que repiten varios y un plan priorizado: [00-sint
      | Aldeanos perdidos | — | 1 y 0 |
    - **IA aliada, 2v2 de 20 minutos** ([resultado](pruebas-equipos-2v2.txt)): entre 2 y 3 tributos por partida (antes 0 a 2), cero fuego amigo.
    - Determinismo OK.
+9. **(2026-11-15 13:00) Segunda ronda, a pedido del autor:** "Antes de terminar de balancear, ¿podemos volver a consultar con los players y ver qué nos dicen ahora?"
+   - Los mismos cuatro jugadores, con la memoria de la primera ronda. Así comparan con su propio informe.
+   - Juegan la versión con todo lo de la etapa 23: combate con bonos y dos armaduras, animales y caza, órdenes y comodidades, aprender a jugar y rivales con civ propia.
+   - El balance todavía no está cerrado (Palmares 88 % en el último torneo).
+   - Informes en [ronda-2/](ronda-2/) y una síntesis comparada al final.

@@ -1,0 +1,84 @@
+ayutthaya    vs etiopia      terreno=fortines 19:09  ganador: etiopia  edades 2-3
+ayutthaya    vs etiopia      terreno=montana 22:28  ganador: etiopia  edades 2-2
+ayutthaya    vs etiopia      terreno=selva   21:20  ganador: etiopia  edades 2-2
+ayutthaya    vs guaranies    terreno=bosque  30:00  ganador: (guaranies por puntos)  edades 2-3
+ayutthaya    vs guaranies    terreno=bosque_templado 21:36  ganador: guaranies  edades 2-3
+ayutthaya    vs guaranies    terreno=mesetas 26:31  ganador: guaranies  edades 2-3
+ayutthaya    vs mapuches     terreno=altiplano 29:39  ganador: ayutthaya  edades 3-2
+ayutthaya    vs mapuches     terreno=rio     19:45  ganador: mapuches  edades 2-2
+ayutthaya    vs mapuches     terreno=selva   18:24  ganador: mapuches  edades 2-2
+ayutthaya    vs palmares     terreno=bosque_templado 18:54  ganador: palmares  edades 2-2
+ayutthaya    vs palmares     terreno=rio     14:44  ganador: palmares  edades 2-2
+ayutthaya    vs palmares     terreno=sierra  19:15  ganador: palmares  edades 2-3
+ayutthaya    vs tawantinsuyu terreno=delta   16:43  ganador: tawantinsuyu  edades 2-2
+ayutthaya    vs tawantinsuyu terreno=montana 30:00  ganador: (ayutthaya por puntos)  edades 3-2
+ayutthaya    vs tawantinsuyu terreno=sierra  22:44  ganador: ayutthaya  edades 3-2
+etiopia      vs ayutthaya    terreno=fortines 15:57  ganador: etiopia  edades 2-2
+etiopia      vs ayutthaya    terreno=selva   30:00  ganador: (ayutthaya por puntos)  edades 2-2
+etiopia      vs guaranies    terreno=delta   21:26  ganador: etiopia  edades 2-3
+etiopia      vs guaranies    terreno=fortines 17:37  ganador: guaranies  edades 2-3
+etiopia      vs guaranies    terreno=llano   15:55  ganador: etiopia  edades 2-3
+etiopia      vs mapuches     terreno=fortines 23:13  ganador: mapuches  edades 2-2
+etiopia      vs mapuches     terreno=islas   14:50  ganador: etiopia  edades 2-2
+etiopia      vs mapuches     terreno=llano   23:32  ganador: etiopia  edades 3-2
+etiopia      vs palmares     terreno=fortines 18:42  ganador: palmares  edades 2-2
+etiopia      vs palmares     terreno=islas    7:58  ganador: palmares  edades 2-2
+etiopia      vs palmares     terreno=rio     13:09  ganador: palmares  edades 2-2
+etiopia      vs tawantinsuyu terreno=sierra  18:04  ganador: etiopia  edades 2-2
+etiopia      vs tawantinsuyu terreno=sierra  25:21  ganador: etiopia  edades 2-2
+etiopia      vs tawantinsuyu terreno=valle   21:36  ganador: tawantinsuyu  edades 2-2
+guaranies    vs ayutthaya    terreno=bosque  20:29  ganador: ayutthaya  edades 2-2
+guaranies    vs ayutthaya    terreno=bosque_templado 25:13  ganador: ayutthaya  edades 4-2
+guaranies    vs etiopia      terreno=fortines 20:48  ganador: guaranies  edades 3-2
+guaranies    vs etiopia      terreno=llano   16:29  ganador: etiopia  edades 2-3
+guaranies    vs mapuches     terreno=delta   24:53  ganador: guaranies  edades 3-2
+guaranies    vs mapuches     terreno=mesetas 28:28  ganador: guaranies  edades 4-2
+guaranies    vs mapuches     terreno=montana 21:14  ganador: guaranies  edades 4-2
+guaranies    vs palmares     terreno=bosque  10:24  ganador: palmares  edades 1-2
+guaranies    vs palmares     terreno=mesetas 30:00  ganador: (palmares por puntos)  edades 3-4
+guaranies    vs palmares     terreno=selva    9:56  ganador: palmares  edades 2-2
+guaranies    vs tawantinsuyu terreno=montana 15:21  ganador: tawantinsuyu  edades 2-2
+guaranies    vs tawantinsuyu terreno=rio     10:32  ganador: tawantinsuyu  edades 2-2
+guaranies    vs tawantinsuyu terreno=selva   30:00  ganador: (guaranies por puntos)  edades 2-2
+mapuches     vs ayutthaya    terreno=altiplano 30:00  ganador: (ayutthaya por puntos)  edades 2-3
+mapuches     vs ayutthaya    terreno=selva   13:53  ganador: mapuches  edades 2-2
+mapuches     vs etiopia      terreno=islas   25:50  ganador: etiopia  edades 2-2
+mapuches     vs etiopia      terreno=llano   28:07  ganador: mapuches  edades 2-3
+mapuches     vs guaranies    terreno=mesetas 18:00  ganador: mapuches  edades 2-3
+mapuches     vs guaranies    terreno=montana 21:59  ganador: guaranies  edades 2-3
+mapuches     vs palmares     terreno=bosque_templado 13:39  ganador: mapuches  edades 2-2
+mapuches     vs palmares     terreno=delta   10:35  ganador: palmares  edades 2-2
+mapuches     vs palmares     terreno=islas   30:00  ganador: (palmares por puntos)  edades 3-4
+mapuches     vs tawantinsuyu terreno=llano   19:55  ganador: mapuches  edades 2-2
+mapuches     vs tawantinsuyu terreno=mesetas 18:48  ganador: tawantinsuyu  edades 2-2
+mapuches     vs tawantinsuyu terreno=rio     30:00  ganador: (tawantinsuyu por puntos)  edades 2-2
+palmares     vs ayutthaya    terreno=rio     16:00  ganador: palmares  edades 3-2
+palmares     vs ayutthaya    terreno=sierra  17:19  ganador: palmares  edades 2-2
+palmares     vs etiopia      terreno=islas    7:44  ganador: palmares  edades 2-1
+palmares     vs etiopia      terreno=rio     29:50  ganador: palmares  edades 4-2
+palmares     vs guaranies    terreno=bosque  18:03  ganador: palmares  edades 2-2
+palmares     vs guaranies    terreno=selva    9:29  ganador: palmares  edades 2-2
+palmares     vs mapuches     terreno=bosque_templado 20:21  ganador: palmares  edades 3-2
+palmares     vs mapuches     terreno=islas   30:00  ganador: (palmares por puntos)  edades 4-3
+palmares     vs tawantinsuyu terreno=bosque  30:00  ganador: (palmares por puntos)  edades 3-2
+palmares     vs tawantinsuyu terreno=llano   19:51  ganador: tawantinsuyu  edades 2-2
+palmares     vs tawantinsuyu terreno=rio     12:51  ganador: palmares  edades 2-2
+tawantinsuyu vs ayutthaya    terreno=delta   30:00  ganador: (ayutthaya por puntos)  edades 2-3
+tawantinsuyu vs ayutthaya    terreno=sierra  30:00  ganador: (ayutthaya por puntos)  edades 2-2
+tawantinsuyu vs etiopia      terreno=sierra  14:55  ganador: etiopia  edades 2-2
+tawantinsuyu vs etiopia      terreno=valle   23:11  ganador: etiopia  edades 2-3
+tawantinsuyu vs guaranies    terreno=montana 10:31  ganador: tawantinsuyu  edades 2-2
+tawantinsuyu vs guaranies    terreno=selva   30:00  ganador: (guaranies por puntos)  edades 2-3
+tawantinsuyu vs mapuches     terreno=mesetas 18:51  ganador: tawantinsuyu  edades 3-2
+tawantinsuyu vs mapuches     terreno=rio     17:15  ganador: tawantinsuyu  edades 3-2
+tawantinsuyu vs palmares     terreno=bosque  12:51  ganador: palmares  edades 2-2
+tawantinsuyu vs palmares     terreno=rio     19:32  ganador: tawantinsuyu  edades 2-3
+
+Partidas: 75 · por destrucción de hitos: 62
+Victorias (con puntos):
+  ayutthaya      36 %  (9 de 25)
+  etiopia        56 %  (14 de 25)
+  guaranies      44 %  (11 de 25)
+  mapuches       32 %  (8 de 25)
+  palmares       88 %  (22 de 25)
+  tawantinsuyu   44 %  (11 de 25)
