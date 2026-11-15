@@ -159,3 +159,16 @@ Orden de los cambios de balance: A, después E, F y G, de a uno, con un torneo d
    - **Pruebas sobre lo fusionado** (todas las partes juntas): determinismo OK, `civ_smoke` y las 25 misiones sin errores, autotest OK con guaraníes y Tawantinsuyu. En Etiopía 1 el marcador dice "Rojo · Adal · Badlay" en lugar de "Rojo · Invasores".
 
      ![](capturas/rivales/marcador-adal-fusion.jpg)
+9. **(03:00) Economía en paz con los animales** ([resultado](pruebas/02-economia-paz-animales.txt), comparada con [la de antes](../21-jugabilidad-aoe4/pruebas/13-economia-paz.txt)).
+
+   | Civ | Edad II: antes → con animales | Edad III: antes → con animales |
+   |---|---|---|
+   | Tawantinsuyu | 7:57 → **5:22** | 16:32 → **23:10** |
+   | Mapuches | 7:22 → 6:17 | 20:05 → **24:56** |
+   | Guaraníes | 6:07 → 6:42 | 15:30 → 13:45 |
+   | Etiopía | 5:35 → **4:47** | 18:10 → 16:22 |
+   | Palmares | 7:10 → 7:00 | 17:55 → 17:52 |
+   | Ayutthaya | 8:10 → **6:07** | 17:32 → **22:33** |
+
+   - **La edad II llega antes,** más cerca de AoE4 (unos 4:30): los animales son comida rápida y cercana.
+   - **La edad III se atrasa mucho en tres civs** (de 22 a 25 minutos). Cuando se terminan los animales y los cuatro arbustos, la IA tarda en pasar a las granjas. Es lo próximo a corregir en la IA, después del torneo.
