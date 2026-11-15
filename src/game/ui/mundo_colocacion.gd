@@ -19,6 +19,8 @@ static func motivo(sim: Sim, pid: int, type: String, tx: int, ty: int) -> String
 		var why := _tile_problem(sim, tx, ty, tam[0], tam[1], def)
 		if why != "":
 			return why
+		if not sim._leaves_passage(type, def, tx, ty, tam[0], tam[1]):
+			return "Pegado a otro edificio: dejá una casilla de paso"
 		var slot := cupo(sim, pid, type)
 		if not slot.is_empty() and int(slot["n"]) >= int(slot["max"]):
 			return "Máximo de la edad alcanzado: %d/%d" % [slot["n"], slot["max"]]

@@ -119,3 +119,24 @@ La lista sale de la [síntesis de la segunda ronda](../22-testers/ronda-2/00-sin
 - 3v3: 947 bajas, 0 de fuego amigo y 26 tributos (el tributo de la IA ahora es desde los 8 minutos).
 - Todos contra todos con 6: 974 bajas y 2 derrotados a los 30 minutos. Sigue abierto, y Palmares llega a la edad 4 en el 3v3.
 - No hubo victorias por sitios a los 30 minutos: con 10 minutos de cuenta es más difícil.
+
+### Paso 2b: caminar por la ciudad y depositar por cualquier lado (pedido del autor)
+
+> "Algo muy molesto es que donde está construido no se pueda caminar por encima, es decir, entre los edificios en la ciudad, y que para depositar recursos hay que ir solo por un lugar específico y no se puede dejar desde cualquier lado."
+
+**Depositar por un solo lugar:**
+- **Causa:** para llegar a un edificio, el camino apuntaba a su centro, que es sólido. A* devolvía la casilla alcanzable más cercana a ese centro, que es siempre la misma (en un centro de 4×4, la del sur o la del este). El aldeano que venía del oeste o del norte caminaba hacia ese borde y entregaba solo si en el camino rozaba el edificio. Además, buscar un destino sólido recorre toda la región alcanzable.
+- **Arreglo:** el destino es la casilla libre junto al edificio más cercana a quien llega (`Sim._side_tile`). Vale para depositar, construir, reparar y golpear edificios cuerpo a cuerpo. Los edificios que se pisan (granjas) siguen igual.
+- **Medida** (`tests/jugabilidad.gd`, un aldeano cargado a 3 casillas de cada lado del centro): oeste y norte de 2,5 s a 1,8 s; este y sur, igual (5,9 y 2,7 s, ya iban a su lado). Los cuatro entregan parados de su lado.
+
+**No se puede caminar entre los edificios:**
+- **Causa:** el movimiento pasa por una casilla libre, pero el jugador podía pegar un edificio a otro, y dos casas pegadas son una pared. La IA ya dejaba una casilla de paso.
+- **Arreglo:** `reglas.paso_entre_edificios`. Un edificio que tapa no puede tocar a otro que tapa: queda 1 casilla de paso.
+  - Los muros (`linea`), las puertas y las torres sí se pegan, porque cierran a propósito.
+  - Los caminos y las granjas se pisan y no cuentan, así que los caminos incas siguen uniendo edificios.
+  - Al colocar, el cartel dice "Pegado a otro edificio: dejá una casilla de paso".
+- **Prueba:** casa pegada no; con una casilla, sí; empalizada pegada, sí. En el commit anterior, la casa pegada se podía poner.
+
+**Pruebas:**
+- Determinismo, órdenes, civs, las 25 misiones (sin errores) y autotest: OK. El tutorial se gana a las 10:42.
+- Rendimiento, sola en la máquina: 8,55 ms de promedio y 57,9 de peor caso (antes, 8,35 y 57,9). Con el torneo de 10 procesos en paralelo había dado 18 ms, que era la carga.

@@ -12,6 +12,8 @@ func _init() -> void:
 	_animales()
 	_carnear_en_cadena()
 	_auras_de_hitos()
+	_depositar_por_cualquier_lado()
+	_paso_entre_edificios()
 	print("JUGABILIDAD: ", "OK" if fails == 0 else "%d fallas" % fails)
 	quit()
 
@@ -270,3 +272,57 @@ func _auras_de_hitos() -> void:
 				s.step()
 			_check(g.hp > hp0, "aura militar: el guerrero herido junto al hito se cura (%d → %d)" % [hp0, g.hp])
 	_check(got[1] > got[0], "aura de economía: tres leñadores junto al hito juntan %d contra %d sin él" % [got[1], got[0]])
+
+
+## Depositar por cualquier lado (el autor, 2026-11-15): un aldeano cargado a 3 casillas de
+## cada lado del centro entrega parado de su lado, sin dar la vuelta al edificio.
+func _depositar_por_cualquier_lado() -> void:
+	var s := Sim.new(5, 2, null, {"civs": ["guaranies", "mapuches"], "terreno": "llano"})
+	var c: SimEntity = null
+	for e in s.actives:
+		if e.owner == 0 and e.is_building() and e.capital:
+			c = e
+	var cx := c.tx * Sim.P + c.w * Sim.P / 2
+	var cy := c.ty * Sim.P + c.h * Sim.P / 2
+	var half := c.w * Sim.P / 2 + 3000
+	var ok := 0
+	var where := []
+	for off in [Vector2i(-1, 0), Vector2i(1, 0), Vector2i(0, -1), Vector2i(0, 1)]:
+		var pos := s.map.nearest_free((cx + off.x * half) / Sim.P, (cy + off.y * half) / Sim.P, 3, 0)
+		var v := s.spawn_unit("aldeano", 0, pos.x * Sim.P + Sim.P / 2, pos.y * Sim.P + Sim.P / 2)
+		v.carry = 10
+		v.carry_res = "madera"
+		v.gather_kind = "madera"
+		v.order = SimEntity.Order.RETURN
+		v.aux = -1
+		var t := 0
+		while v.carry > 0 and t < 300:
+			s.step()
+			t += 1
+		# De su lado: la coordenada que importa quedó afuera del edificio, del mismo lado.
+		var side_ok := false
+		if off.x < 0:
+			side_ok = v.x <= c.tx * Sim.P
+		elif off.x > 0:
+			side_ok = v.x >= (c.tx + c.w) * Sim.P
+		elif off.y < 0:
+			side_ok = v.y <= c.ty * Sim.P
+		else:
+			side_ok = v.y >= (c.ty + c.h) * Sim.P
+		if side_ok and v.carry == 0:
+			ok += 1
+		where.append("%s %.1f s" % ["sí" if side_ok else "NO", t / 10.0])
+	_check(ok == 4, "depositar por cualquier lado: entrega de su lado en los cuatro (%s)" % ", ".join(where))
+
+
+## Paso entre edificios: una casa no se puede pegar a otra; con una casilla de paso, sí;
+## la empalizada sí se pega (cierra a propósito).
+func _paso_entre_edificios() -> void:
+	var s := Sim.new(5, 2, null, {"civs": ["guaranies", "mapuches"], "terreno": "llano"})
+	var c: Vector2i = s.bases[0] + Vector2i(2, 2)
+	var a := _spot(s, "casa", c, 8)
+	s.spawn_building("casa", 0, a.x, a.y, true)
+	var glued := s.can_place("casa", a.x + 2, a.y, 0)
+	var gap := s.can_place("casa", a.x + 3, a.y, 0)
+	var wall := s.can_place("empalizada", a.x + 2, a.y, 0)
+	_check(not glued and gap and wall, "paso entre edificios: casa pegada %s, con una casilla %s, empalizada pegada %s" % ["no" if not glued else "SÍ", "sí" if gap else "NO", "sí" if wall else "NO"])

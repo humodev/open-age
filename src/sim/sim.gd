@@ -1873,12 +1873,36 @@ func _approach(e: SimEntity, t: SimEntity, reach: int) -> bool:
 		_follow(e)
 		return false
 	if e.path_target != t.id:
-		_set_goal(e, t.x, t.y, t.id)
+		if t.def.get("transitable", false):
+			_set_goal(e, t.x, t.y, t.id)
+		else:
+			# Al costado libre más cercano a quien llega, no al centro: hacia el centro, el
+			# camino terminaba siempre en la misma casilla del borde (el autor, 2026-11-15:
+			# "para depositar recursos hay que ir solo por un lugar específico").
+			var side := _side_tile(e, t)
+			_set_goal(e, side.x * P + P / 2, side.y * P + P / 2, t.id)
 	if _follow(e):
 		var cx := clampi(e.x, t.tx * P, (t.tx + t.w) * P)
 		var cy := clampi(e.y, t.ty * P, (t.ty + t.h) * P)
 		_step_toward(e, cx, cy)
 	return false
+
+
+## Casilla libre junto al edificio `t` más cercana a `e` (la del centro si no hay ninguna).
+func _side_tile(e: SimEntity, t: SimEntity) -> Vector2i:
+	var best := Vector2i(t.x / P, t.y / P)
+	var best_d := 1 << 60
+	for yy in range(t.ty - 1, t.ty + t.h + 1):
+		for xx in range(t.tx - 1, t.tx + t.w + 1):
+			if xx >= t.tx and xx < t.tx + t.w and yy >= t.ty and yy < t.ty + t.h:
+				continue
+			if not map.in_bounds(xx, yy) or map.is_solid(xx, yy, e.owner):
+				continue
+			var d := dist(e.x, e.y, xx * P + P / 2, yy * P + P / 2)
+			if d < best_d:
+				best_d = d
+				best = Vector2i(xx, yy)
+	return best
 
 
 func _separate() -> void:
@@ -2126,6 +2150,8 @@ func can_place(type: String, tx: int, ty: int, pid: int = -1) -> bool:
 	var def: Dictionary = dp(pid).edificios.get(type, data.edificios.get(type, {}))
 	if not map.is_free_rect(tx, ty, tam[0], tam[1]):
 		return false
+	if pid >= 0 and not _leaves_passage(type, def, tx, ty, tam[0], tam[1]):
+		return false
 	if pid >= 0 and (def.has("maximo_por_edad") or def.has("separacion")) and not _engine_slot_ok(type, def, tx, ty, pid):
 		return false
 	if pid >= 0 and def.has("funda_corte") and not _court_site_ok(def["funda_corte"], tx, ty, pid):
@@ -2139,6 +2165,28 @@ func can_place(type: String, tx: int, ty: int, pid: int = -1) -> bool:
 					return false
 		return true
 	return map.is_flat(tx, ty, tam[0], tam[1])
+
+
+## Paso entre edificios (el autor, 2026-11-15: "donde está construido no se puede caminar,
+## entre los edificios en la ciudad"): un edificio que tapa no puede quedar pegado a otro que
+## tapa. Muros (`linea`), puertas y torres (reglas.paso_entre_edificios.pegados) sí, porque cierran.
+func _leaves_passage(type: String, def: Dictionary, tx: int, ty: int, w: int, h: int) -> bool:
+	var cfg: Dictionary = data.reglas.get("paso_entre_edificios", {})
+	var gap := int(cfg.get("casillas", 0))
+	var joined: Array = cfg.get("pegados", [])
+	if gap <= 0 or def.get("transitable", false) or def.get("linea", false) or def.get("puerta", false) or joined.has(type):
+		return true
+	for yy in range(ty - gap, ty + h + gap):
+		for xx in range(tx - gap, tx + w + gap):
+			if xx >= tx and xx < tx + w and yy >= ty and yy < ty + h:
+				continue
+			var id := map.occupant(xx, yy)
+			if id <= 0 or not map.is_solid(xx, yy, -1):
+				continue
+			var o: SimEntity = by_id.get(id)
+			if o != null and o.is_building() and not o.def.get("linea", false) and not o.def.get("puerta", false) and not joined.has(o.type):
+				return false
+	return true
 
 
 ## ¿Queda cupo para otra pieza de motor de este tipo en la edad actual? Sin mirar el lugar:
