@@ -563,7 +563,9 @@ func _unit_state(c: Dictionary, e: SimEntity) -> void:
 		O.MOVE:
 			txt = "En marcha"
 		O.ATTACK_MOVE:
-			txt = "Avanza peleando con lo que encuentre"
+			txt = "Patrulla y pelea con lo que vea" if e.patrol else "Avanza peleando con lo que encuentre"
+		O.HOLD:
+			txt = "Mantiene la posición: ataca solo a su alcance"
 		O.ATTACK:
 			txt = "Combate contra %s de %s" % [_name_of(t), _who(t.owner)] if t != null else "Combatiendo"
 		O.GATHER:

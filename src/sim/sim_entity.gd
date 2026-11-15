@@ -3,7 +3,7 @@ extends RefCounted
 ## Una entidad de la simulación. Las capacidades salen de `def` (datos), no de subclases.
 
 enum Cat { UNIT, BUILDING, RESOURCE }
-enum Order { IDLE, MOVE, ATTACK_MOVE, ATTACK, GATHER, RETURN, BUILD, GARRISON }
+enum Order { IDLE, MOVE, ATTACK_MOVE, ATTACK, GATHER, RETURN, BUILD, GARRISON, HOLD }
 
 var id: int
 var owner: int = -1 # -1 = naturaleza
@@ -41,6 +41,12 @@ var resume_amove := false
 var group := -1 # grupo en marcha (SimGroups), -1 suelta
 var amove_x: int
 var amove_y: int
+# Patrulla (proceso/23, parte B): va y vuelve entre (amove_x, amove_y) y (pat_x, pat_y) atacando
+# lo que ve. Es un ataque en movimiento que, al llegar, da la vuelta. Cualquier otra orden la corta.
+var patrol := false
+var pat_x: int
+var pat_y: int
+var rumbo := -1 # último rumbo de su formación (0..15); "formar" lo usa para cambiar de forma en el lugar
 var cooldown: int = 0
 var gather_kind: String = ""
 var gather_acc: int = 0

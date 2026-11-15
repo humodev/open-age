@@ -38,6 +38,9 @@ var _base_dirs: Array[Vector2i] = [] # mapas para N: dirección de cada base hac
 var _opts: Dictionary = {}
 
 var _pending := {} # tick -> Array[Dictionary]
+var flares: Array[Dictionary] = [] # bengalas vivas: {id, player, x, y, tipo, tick} (proceso/23, parte B)
+var _next_flare := 1
+var requests: Array[Dictionary] = [] # pedidos de recursos entre aliados: {de, a, recurso, n, tick}
 var recording: Array = [] # comandos externos (humanos) para repeticiones
 var _in_step := false
 var _grid := {} # celda de 1 casilla -> unidades (separación)
@@ -175,9 +178,26 @@ func _apply(c: Dictionary) -> void:
 		"move":
 			var mv := _own_units(pid, c.get("ids", []))
 			# En grupo salvo "suelto" (Alt): los que no entran al grupo van como antes.
+			# "form" (bloque, linea, abierta, columna) y "rumbo" (0..15, del arrastre del clic derecho).
 			if not c.get("suelto", false):
-				mv = groups.form(pid, mv, c["x"], c["y"], c.get("amove", false))
+				mv = groups.form(pid, mv, c["x"], c["y"], c.get("amove", false), {}, str(c.get("form", "")), int(c.get("rumbo", -1)))
 			_cmd_move(pid, mv, c["x"], c["y"], c.get("amove", false))
+		"formar":
+			# Cambia la formación en el lugar (proceso/23, parte B): un grupo con destino en su centro.
+			_cmd_formar(pid, _own_units(pid, c.get("ids", [])), str(c.get("form", "")), int(c.get("rumbo", -1)))
+		"mantener":
+			# Mantener posición: no se mueve, ataca lo que tenga a su alcance. Otra orden la corta.
+			for e in _own_units(pid, c.get("ids", [])):
+				if e.fn != "civil":
+					_set_idle(e)
+					e.group = -1
+					e.order = O.HOLD
+		"patrullar":
+			_cmd_patrol(pid, _own_units(pid, c.get("ids", [])), int(c["x"]), int(c["y"]))
+		"bengala":
+			_cmd_flare(pid, int(c["x"]), int(c["y"]))
+		"pedir":
+			_cmd_ask(pid, int(c["a"]), str(c["recurso"]))
 		"target":
 			var tu := _own_units(pid, c.get("ids", []))
 			var tt: SimEntity = by_id.get(c["target"])
@@ -266,8 +286,95 @@ func _own_units(pid: int, ids: Array) -> Array[SimEntity]:
 	for id in sorted:
 		var e: SimEntity = by_id.get(id)
 		if e != null and e.alive and e.owner == pid and e.is_unit() and e.inside < 0:
+			e.patrol = false # cualquier orden nueva corta la patrulla
 			out.append(e)
 	return out
+
+
+## Cambiar de formación sin moverse: el grupo se arma de nuevo con destino en su centro.
+## Sin rumbo pedido, el que la mayoría guardó de su última formación (o el de la tabla, 0).
+func _cmd_formar(pid: int, units: Array[SimEntity], form: String, rumbo: int) -> void:
+	var mil: Array[SimEntity] = []
+	var cx := 0
+	var cy := 0
+	var votes := {}
+	for e in units:
+		if e.is_military():
+			mil.append(e)
+			cx += e.x
+			cy += e.y
+			if e.rumbo >= 0:
+				votes[e.rumbo] = int(votes.get(e.rumbo, 0)) + 1
+	if mil.is_empty():
+		return
+	cx /= mil.size()
+	cy /= mil.size()
+	if rumbo < 0:
+		var best := -1
+		var keys := votes.keys()
+		keys.sort()
+		for k in keys:
+			if best < 0 or int(votes[k]) > int(votes[best]):
+				best = k
+		rumbo = maxi(0, best)
+	var rest := groups.form(pid, mil, cx, cy, false, {}, form, rumbo)
+	_cmd_move(pid, rest, cx, cy, false)
+
+
+## Patrulla: cada unidad va del lugar donde está a su punto del destino (repartido como al
+## mover) y vuelve, atacando lo que ve. Los aldeanos no patrullan.
+func _cmd_patrol(pid: int, units: Array[SimEntity], x: int, y: int) -> void:
+	var pu: Array[SimEntity] = []
+	for e in units:
+		if e.fn != "civil":
+			pu.append(e)
+	var starts := []
+	for e in pu:
+		starts.append(Vector2i(e.x, e.y))
+	_cmd_move(pid, pu, x, y, true)
+	for i in pu.size():
+		pu[i].patrol = true
+		pu[i].pat_x = starts[i].x
+		pu[i].pat_y = starts[i].y
+
+
+## Bengala (Alt + clic): "atacá acá", o "defendé acá" si cae cerca de lo propio o de un aliado.
+## Es estado de la partida: la IA aliada la lee y responde (SimAI._flares).
+func _cmd_flare(pid: int, x: int, y: int) -> void:
+	var cfg: Dictionary = data.reglas["equipos"]["bengala"]
+	x = clampi(x, 0, map.n * P - 1)
+	y = clampi(y, 0, map.n * P - 1)
+	var kind := "atacar"
+	for e in actives:
+		if e.alive and e.is_building() and e.owner >= 0 and not enemies(pid, e.owner) and dist(e.x, e.y, x, y) <= int(cfg["defender_radio"]):
+			kind = "defender"
+			break
+	flares.append({"id": _next_flare, "player": pid, "x": x, "y": y, "tipo": kind, "tick": tick})
+	_next_flare += 1
+	while flares.size() > int(cfg["max_por_partida"]):
+		flares.pop_front()
+	events.append({"t": "bengala", "player": pid, "x": x, "y": y, "tipo": kind})
+
+
+## Pedido de recursos a un aliado: queda anotado; la IA lo atiende si le sobra (SimAI._requests).
+func _cmd_ask(pid: int, to: int, kind: String) -> void:
+	if to < 0 or to >= players.size() or to == pid or team_of(pid) != team_of(to) or players[to]["defeated"]:
+		return
+	if not kind in RES_KINDS:
+		return
+	var cfg: Dictionary = data.reglas["equipos"]["pedido"]
+	for r in requests:
+		if int(r["de"]) == pid and int(r["a"]) == to and r["recurso"] == kind:
+			return # ya está pedido
+	requests.append({"de": pid, "a": to, "recurso": kind, "n": int(cfg["lote"]), "tick": tick})
+	events.append({"t": "pedido", "de": pid, "a": to, "recurso": kind, "n": int(cfg["lote"])})
+
+
+## La IA (u otra regla) dice algo en el chat del equipo: el HUD arma la frase (data/interfaz.json → frases_ia).
+func say(pid: int, key: String, extra: Dictionary = {}) -> void:
+	var ev := {"t": "ia_dice", "player": pid, "clave": key}
+	ev.merge(extra)
+	events.append(ev)
 
 
 func _cmd_move(pid: int, units: Array[SimEntity], x: int, y: int, amove: bool) -> void:
@@ -836,6 +943,8 @@ func step() -> void:
 	for c in cmds:
 		_apply(c)
 	_cur_cmd = "en_marcha" # lo que se rechace después no viene de una orden de este tick
+	if not flares.is_empty() or not requests.is_empty():
+		_expire_calls()
 	for ai in ais:
 		if ai.thinks_now() and not players[ai.player]["defeated"]:
 			ai.think()
@@ -873,6 +982,14 @@ func step() -> void:
 		scenario.on_step()
 	tick += 1
 	_in_step = false
+
+
+## Bengalas y pedidos vencidos se borran (reglas.equipos.bengala.dura_ticks, pedido.dura_ticks).
+func _expire_calls() -> void:
+	var fd := int(data.reglas["equipos"]["bengala"]["dura_ticks"])
+	var rd := int(data.reglas["equipos"]["pedido"]["dura_ticks"])
+	flares = flares.filter(func(f: Dictionary) -> bool: return tick - int(f["tick"]) <= fd)
+	requests = requests.filter(func(r: Dictionary) -> bool: return tick - int(r["tick"]) <= rd)
 
 
 func _update_players() -> void:
@@ -964,9 +1081,14 @@ func _update_unit(e: SimEntity) -> void:
 					e.group = -1
 					_set_idle(e)
 			elif _follow(e):
-				_set_idle(e)
+				if e.patrol:
+					_patrol_turn(e)
+				else:
+					_set_idle(e)
 		O.ATTACK:
 			_do_attack(e)
+		O.HOLD:
+			_do_hold(e)
 		O.GATHER:
 			_do_gather(e)
 		O.RETURN:
@@ -975,6 +1097,34 @@ func _update_unit(e: SimEntity) -> void:
 			_do_build(e)
 		O.GARRISON:
 			_do_garrison(e)
+
+
+## Patrulla: llegó a una punta, da la vuelta hacia la otra.
+func _patrol_turn(e: SimEntity) -> void:
+	var nx := e.pat_x
+	var ny := e.pat_y
+	e.pat_x = e.amove_x
+	e.pat_y = e.amove_y
+	e.amove_x = nx
+	e.amove_y = ny
+	_set_goal(e, nx, ny)
+
+
+## Mantener posición: no se mueve; ataca lo que tenga a su alcance y suelta lo que se aleja.
+func _do_hold(e: SimEntity) -> void:
+	e.anchored = true
+	var reach: int = e.def.get("alcance", 0)
+	var t: SimEntity = by_id.get(e.target)
+	if t == null or not t.alive or dist_to(e, t) > reach:
+		e.target = -1
+		t = null
+		if (tick + e.id) % int(data.reglas["ordenes"]["mantener_busca_cada_ticks"]) == 0:
+			t = find_enemy(e, reach, false)
+			if t != null:
+				e.target = t.id
+	if t != null and e.cooldown <= 0:
+		_hit(e, t)
+		e.cooldown = e.def["cadencia_ms"]
 
 
 func _set_idle(e: SimEntity) -> void:
@@ -3591,6 +3741,15 @@ func state_hash() -> int:
 	for e in entities:
 		for v in [e.id, e.x, e.y, e.hp, e.order, e.target, e.carry, e.amount, e.progress, e.queue.size(), e.queue_progress, e.inside, e.group]:
 			h = ((h ^ (v & 0xffffffff)) * 16777619) & 0xffffffff
+		if e.patrol or e.rumbo >= 0:
+			for v in [int(e.patrol), e.pat_x, e.pat_y, e.rumbo]:
+				h = ((h ^ (v & 0xffffffff)) * 16777619) & 0xffffffff
+	for f in flares:
+		for v in [f["id"], f["player"], f["x"], f["y"], f["tick"]]:
+			h = ((h ^ (int(v) & 0xffffffff)) * 16777619) & 0xffffffff
+	for r in requests:
+		for v in [r["de"], r["a"], r["n"], r["tick"]]:
+			h = ((h ^ (int(v) & 0xffffffff)) * 16777619) & 0xffffffff
 	h = groups.hash_into(h)
 	for p in players:
 		# Todos los recursos, también los propios (mit'a, fama, kulliñ), en orden fijo.

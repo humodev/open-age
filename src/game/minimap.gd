@@ -18,6 +18,7 @@ var _fog_t := 0.0
 const MundoMinimapa := preload("res://src/game/ui/mundo_minimapa.gd")
 var _extra: RefCounted
 # --- fin mundo ---
+var ordenes: Control # --- órdenes --- capa con las bengalas (src/game/ui/ordenes_capa.gd)
 
 
 func setup(s: Sim, c: RtsCamera, controller: Controller, local_player: int) -> void:
@@ -153,6 +154,14 @@ func _draw() -> void:
 	for p in _pings:
 		var k: float = fmod(p["t"], 1.0)
 		draw_arc(xf * (p["p"] as Vector2), 4.0 + k * 16.0, 0, TAU, 24, Color(Palette.UI_BAD, 1.0 - k), 2.0, true)
+	# --- órdenes --- (bengalas del equipo)
+	if ordenes != null:
+		for f in ordenes.flares:
+			var fk: float = fmod(f["t"] * 1.5, 1.0)
+			var fp: Vector2 = xf * Vector2(f["x"], f["y"])
+			draw_arc(fp, 5.0 + fk * 18.0, 0, TAU, 24, Color(Palette.team(f["player"]), 1.0 - fk), 2.5, true)
+			draw_circle(fp, 3.5, Color.WHITE)
+	# --- fin órdenes ---
 
 
 func _to_tile(local_pos: Vector2) -> Vector2:
@@ -163,6 +172,13 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
 		if mb.button_index == MOUSE_BUTTON_LEFT:
+			# --- órdenes --- (Alt + clic en el minimapa: bengala)
+			if mb.pressed and Input.is_key_pressed(KEY_ALT):
+				var ft := _to_tile(mb.position)
+				ctrl.flare(Vector3(clampf(ft.x, 0.5, sim.map.n - 0.5), 0, clampf(ft.y, 0.5, sim.map.n - 0.5)))
+				accept_event()
+				return
+			# --- fin órdenes ---
 			_drag = mb.pressed
 			if mb.pressed:
 				var t := _to_tile(mb.position)
@@ -188,7 +204,7 @@ func _gui_input(event: InputEvent) -> void:
 				else:
 					if ctrl.cola != null:
 						ctrl.cola.limpiar(ids)
-					sim.push_command({"t": "move", "player": local, "ids": ids, "x": int(g.x * 1000), "y": int(g.z * 1000), "amove": amove})
+					sim.push_command({"t": "move", "player": local, "ids": ids, "x": int(g.x * 1000), "y": int(g.z * 1000), "amove": amove, "form": ctrl.formacion}) # --- órdenes ---
 				ctrl.view.add_marker(g, Palette.UI_BAD if amove else Palette.UI_GOOD)
 				if amove and not shift:
 					ctrl.cancel_mode()

@@ -131,3 +131,19 @@ Orden de los cambios de balance: A, después E, F y G, de a uno, con un torneo d
    - **Quedan afuera:** Palmares, arriba, por su distancia (flecheiros); Etiopía, abajo, porque su jinete noble es choque y la línea ahora lo frena sin necesitar el ×2,25.
    - Partidas por destrucción de hitos: 53 de 75.
    - **No ajusto todavía:** primero se mide la comida temprana (los animales), que ya está en el código.
+6. **(01:00) Fusión de la parte B, órdenes y comodidades** (agente 1). Están hechas:
+   - en la barra: aldeanos por recurso y botones de aldeanos y militares ociosos;
+   - atajos y marcadores de cámara (F7–F9);
+   - cola global de producción;
+   - mantener posición y patrullar;
+   - cuatro formaciones con rumbo por arrastre;
+   - bengalas a las que responde la IA aliada, pedidos de recursos y frases de la IA en los avisos.
+
+   Prueba nueva: `tests/ordenes.gd`. Detalle en [02-ordenes-y-comodidades.md](02-ordenes-y-comodidades.md). Consultas C-35 y C-36.
+   - **Integración:** el único choque fue este README; el código entró sin conflictos.
+   - **Pruebas sobre lo fusionado** (combate, animales y parte B juntos):
+     - determinismo, `tests/ordenes.gd`, `jugabilidad.gd`, `grilla.gd` y `grupos.gd`: OK. Con las formaciones nuevas, 24 mixtos llegan con 0,7 s de diferencia;
+     - autotest OK con guaraníes, mapuches, Etiopía y Ayutthaya.
+   - **Tropiezos del autotest:**
+     - **Ahora hay venados y animales sueltos.** El paso del arbusto pedía "el alimento más cercano", que podía ser un venado fuera de la pantalla; ahora busca un arbusto de verdad.
+     - **La espera del primer alimento fallaba de a ratos con la máquina cargada:** sin la ventana, las tres civs juntan 210 en 80 s. Se estiró la espera de 20 a 40 s reales.

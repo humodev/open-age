@@ -195,3 +195,11 @@ La síntesis (`proceso/22-testers/00-sintesis.md`) ordena: 1) errores que arruin
 a) Ese orden *(por defecto)* · b) Otro (decir cuál)
 
 **Respuesta:** a) Ese orden, en dirección AoE4 sin perder la identidad de cada pueblo (2026-11-15). Plan en `proceso/23-como-aoe4`.
+
+### C-35 · (órdenes) Teclas de los marcadores de cámara
+AoE4 guarda la cámara con Ctrl + F1…F8. Acá F1–F6 abren los paneles y F10 es la pausa, así que los marcadores quedaron en Ctrl + F7…F9 (tres). Detalle en `proceso/23-como-aoe4/02-ordenes-y-comodidades.md`.
+a) Dejar F7–F9 *(por defecto)* · b) Pasar los paneles a otras teclas y usar F1–F4 para la cámara, como AoE4
+
+### C-36 · (órdenes) ¿Cuánto da la IA aliada cuando le piden?
+Hoy da 200 si después le quedan 300 (`reglas.json → equipos.pedido`), y a una bengala manda la mitad de su ejército libre, con un mínimo de 3 (`equipos.bengala`). Un aliado muy generoso se queda sin ejército; uno muy tacaño parece que no escucha.
+a) Así *(por defecto)* · b) Más generosa (todo lo que le sobre, el ejército entero) · c) Más prudente (solo si no la están atacando)

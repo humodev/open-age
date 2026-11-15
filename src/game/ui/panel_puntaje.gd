@@ -3,6 +3,8 @@ extends Control
 ## La fórmula está en data/interfaz.json → "puntaje"; es solo informativa.
 ## Con equipos (docs/11, paso 5) agrupa por equipo con su total, y en la fila de
 ## cada aliado hay cuatro botones de tributo: un clic manda `tributo_lote` del recurso.
+## Debajo, otra fila para pedirle cada recurso (proceso/23, parte B): la IA aliada lo da si
+## le sobra (reglas.equipos.pedido) y lo dice en el chat.
 
 const C := preload("res://src/game/ui/panel_comun.gd")
 const ROW := 20.0
@@ -13,7 +15,7 @@ var hud: Hud
 var datos # PanelDatos
 var _t := 0.0
 var _scores: Array = []
-var _hits: Array = [] # [Rect2, aliado, recurso]
+var _hits: Array = [] # [Rect2, aliado, recurso, "dar" o "pedir"]
 
 
 func _ready() -> void:
@@ -61,7 +63,7 @@ func _process(delta: float) -> void:
 			if hud.sim.team_of(pid) != last:
 				heads += 1
 				last = hud.sim.team_of(pid)
-	var h := 8.0 + hud.sim.players.size() * ROW + heads * HEAD
+	var h := 8.0 + hud.sim.players.size() * ROW + heads * HEAD + _ally_rows() * ROW # --- órdenes --- (fila de pedir)
 	if size.y != h:
 		size.y = h
 	# Con aliados el panel tiene botones: entonces sí toma los clics.
@@ -72,6 +74,15 @@ func _process(delta: float) -> void:
 	elif (not allies or not visible) and hud._blockers.has(self):
 		hud._blockers.erase(self)
 	queue_redraw()
+
+
+## Aliados vivos (cada uno lleva una fila más, la de pedir).
+func _ally_rows() -> int:
+	var n := 0
+	for p in hud.sim.players:
+		if p["id"] != hud.local and not hud.sim.enemies(hud.local, p["id"]) and not p["defeated"]:
+			n += 1
+	return n
 
 
 func _has_ally() -> bool:
@@ -87,8 +98,11 @@ func _gui_input(event: InputEvent) -> void:
 		return
 	for h in _hits:
 		if (h[0] as Rect2).has_point(mb.position):
-			var n := int(hud.sim.data.reglas["equipos"].get("tributo_lote", 100))
-			hud.sim.push_command({"t": "tributo", "player": hud.local, "a": h[1], "recurso": h[2], "n": n})
+			if h[3] == "pedir":
+				hud.sim.push_command({"t": "pedir", "player": hud.local, "a": h[1], "recurso": h[2]})
+			else:
+				var n := int(hud.sim.data.reglas["equipos"].get("tributo_lote", 100))
+				hud.sim.push_command({"t": "tributo", "player": hud.local, "a": h[1], "recurso": h[2], "n": n})
 			accept_event()
 			return
 
@@ -133,17 +147,30 @@ func _draw() -> void:
 				var r := Rect2(size.x - 222 + i * 22, y + 2, 18, ROW - 4)
 				draw_rect(r, Color(0, 0, 0, 0.35))
 				Glyphs.draw(self, C.res_icon(sim, hud.local, TRIB[i]), r.grow(-2), C.res_color(sim, hud.local, TRIB[i]))
-				_hits.append([r, pid, TRIB[i]])
+				_hits.append([r, pid, TRIB[i], "dar"])
 		C.text(self, Vector2(size.x - 128, y + 15), Sim._roman(p["age"]), 12, Palette.UI_DIM, true)
 		var sc: int = _scores[pid] if pid < _scores.size() else 0
 		C.bar(self, Rect2(size.x - 104, y + 9, 40, 4), float(sc) / best, col)
 		C.text(self, Vector2(0, y + 15), "✗" if p["defeated"] else str(sc), 13, Palette.UI_TEXT, true, size.x - 10, HORIZONTAL_ALIGNMENT_RIGHT)
 		y += ROW
+		# --- órdenes --- (pedirle recursos al aliado: misma columna que el tributo, con borde)
+		if ally:
+			C.text(self, Vector2(0, y + 14), "pedirle →", 11, Palette.UI_DIM, false, size.x - 228, HORIZONTAL_ALIGNMENT_RIGHT)
+			for i in TRIB.size():
+				var r := Rect2(size.x - 222 + i * 22, y + 2, 18, ROW - 4)
+				draw_rect(r, Color(1, 1, 1, 0.08))
+				draw_rect(r, Color(Palette.UI_ACCENT, 0.6), false, 1.0)
+				Glyphs.draw(self, C.res_icon(sim, hud.local, TRIB[i]), r.grow(-3), C.res_color(sim, hud.local, TRIB[i]))
+				_hits.append([r, pid, TRIB[i], "pedir"])
+			y += ROW
+		# --- fin órdenes ---
 
 
 func _get_tooltip(at: Vector2) -> String:
 	for h in _hits:
 		if (h[0] as Rect2).has_point(at):
+			if h[3] == "pedir":
+				return "Pedirle %d de %s a %s (si le sobra, te lo manda)" % [int(hud.sim.data.reglas["equipos"]["pedido"]["lote"]), C.res_name(hud.sim, hud.local, h[2]), Palette.team_name(h[1])]
 			var n := int(hud.sim.data.reglas["equipos"].get("tributo_lote", 100))
 			var com := int(hud.sim.data.reglas["equipos"]["tributo_comision_pct"])
 			return "Mandar %d de %s a %s (llega %d: %d %% de comisión)" % [n, C.res_name(hud.sim, hud.local, h[2]), Palette.team_name(h[1]), n * (100 - com) / 100, com]

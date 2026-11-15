@@ -21,6 +21,9 @@ var _eng_rate := 0
 var _no_route := {} # edificio -> tick desde el que se vuelve a intentar el camino
 var last_site := 0
 var last_tribute := 0
+var _flares_done := {} # bengalas aliadas ya atendidas (id -> true)
+var _flare_units := {} # unidades que fueron a una bengala -> tick hasta el que se quedan allá
+var _said := {} # frase -> tick en que se dijo (para no repetir: reglas.equipos.ia_frases_calma_ticks)
 var focus := -1 # jugador enemigo al que apunta el ataque; los aliados se suman (docs/11)
 var rally := Vector2i(-1, -1)
 var calm_since := 0
@@ -110,7 +113,9 @@ func think() -> void:
 	_animals(centro)
 	_alarm(p, vill, army, centro)
 	_tribute(p, saving)
+	_requests(p)
 	_military(army, centro)
+	_flares(army, centro)
 
 
 ## Eje del hito según la edad: económico para la II, militar para la III y
@@ -801,6 +806,8 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 	if army.is_empty():
 		return
 	var threat := _threat(centro)
+	if threat != null:
+		_say("atacan", {})
 	if threat == null:
 		threat = _ally_threat(centro)
 	if threat != null:
@@ -901,7 +908,7 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 	# Reagrupar a las unidades inactivas en el punto de reunión.
 	var idle := []
 	for u in army:
-		if u.order == O.IDLE and Sim.dist(u.x, u.y, rally.x, rally.y) > 6000 and sim.tick - last_attack > 900 and not _near_site(u):
+		if u.order == O.IDLE and Sim.dist(u.x, u.y, rally.x, rally.y) > 6000 and sim.tick - last_attack > 900 and not _near_site(u) and int(_flare_units.get(u.id, -1)) < sim.tick:
 			idle.append(u.id)
 	if not idle.is_empty():
 		sim.push_command({"t": "move", "player": player, "ids": idle, "x": rally.x, "y": rally.y})
@@ -969,6 +976,7 @@ func _attack(army: Array[SimEntity]) -> void:
 				best_d = d
 	if target == null:
 		return
+	_say("ataco", {"a": target.owner})
 	var ids := []
 	for u in army:
 		ids.append(u.id)
@@ -1084,7 +1092,79 @@ func _tribute(p: Dictionary, saving: bool) -> void:
 				continue
 			if int(sim.players[j]["res"].get(kind, 0)) < int(cfg["falta"]):
 				sim.push_command({"t": "tributo", "player": player, "a": j, "recurso": kind, "n": int(cfg["lote"])})
+				_say("mando", {"a": j, "recurso": kind, "n": int(cfg["lote"])}, true)
 				return
+
+
+## Frase en el chat del equipo (suceso "ia_dice"). Solo si tiene aliados; no repite la
+## misma antes de `ia_frases_calma_ticks` salvo `always` (respuestas a un pedido o bengala).
+func _say(key: String, extra: Dictionary, always: bool = false) -> void:
+	var has_ally := false
+	for j in sim.players.size():
+		if j != player and not sim.enemies(player, j) and not sim.players[j]["defeated"]:
+			has_ally = true
+	if not has_ally:
+		return
+	var calm := int(sim.data.reglas["equipos"]["ia_frases_calma_ticks"])
+	if not always and sim.tick - int(_said.get(key, -calm - 1)) <= calm:
+		return
+	_said[key] = sim.tick
+	sim.say(player, key, extra)
+
+
+## Pedidos de recursos de un aliado: da el lote si le sobra; si no, avisa.
+func _requests(p: Dictionary) -> void:
+	if sim.requests.is_empty():
+		return
+	var cfg: Dictionary = sim.data.reglas["equipos"]["pedido"]
+	var keep: Array[Dictionary] = []
+	for r in sim.requests:
+		if int(r["a"]) != player:
+			keep.append(r)
+			continue
+		var kind: String = r["recurso"]
+		var n := int(r["n"])
+		if int(p["res"].get(kind, 0)) >= n + int(cfg["sobra"]):
+			sim.push_command({"t": "tributo", "player": player, "a": int(r["de"]), "recurso": kind, "n": n})
+			_say("mando", {"a": int(r["de"]), "recurso": kind, "n": n}, true)
+		else:
+			_say("no_sobra", {"a": int(r["de"]), "recurso": kind}, true)
+	sim.requests = keep
+
+
+## Bengalas de un aliado: manda una parte del ejército libre (reglas.equipos.bengala).
+func _flares(army: Array[SimEntity], centro: SimEntity) -> void:
+	if sim.flares.is_empty():
+		return
+	var cfg: Dictionary = sim.data.reglas["equipos"]["bengala"]
+	for f in sim.flares:
+		var fid := int(f["id"])
+		var from := int(f["player"])
+		if _flares_done.has(fid) or from == player or sim.enemies(player, from) or sim.team_of(from) != sim.team_of(player):
+			continue
+		_flares_done[fid] = true
+		if Sim.dist(centro.x, centro.y, int(f["x"]), int(f["y"])) > int(cfg["ia_radio"]):
+			continue
+		var free: Array[SimEntity] = []
+		for u in army:
+			if u.order != O.ATTACK:
+				free.append(u)
+		if free.size() < int(cfg["ia_min"]):
+			_say("sin_tropa", {"a": from}, true)
+			continue
+		var fx := int(f["x"])
+		var fy := int(f["y"])
+		free.sort_custom(func(a: SimEntity, b: SimEntity) -> bool:
+			var da := Sim.dist(a.x, a.y, fx, fy)
+			var db := Sim.dist(b.x, b.y, fx, fy)
+			return da < db if da != db else a.id < b.id)
+		var n := maxi(int(cfg["ia_min"]), free.size() * int(cfg["ia_parte_pct"]) / 100)
+		var ids := []
+		for i in mini(n, free.size()):
+			ids.append(free[i].id)
+			_flare_units[free[i].id] = sim.tick + int(cfg["dura_ticks"]) * 4
+		sim.push_command({"t": "move", "player": player, "ids": ids, "x": fx, "y": fy, "amove": true})
+		_say("voy_" + str(f["tipo"]), {"a": from, "n": ids.size()}, true)
 
 
 func _count(list: Array[SimEntity], type: String) -> int:
