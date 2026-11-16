@@ -26,6 +26,7 @@ Los yacimientos neutrales de riqueza existen para cumplir la regla de "varias v�
 1. El aldeano camina hasta la fuente y recolecta a una tasa por segundo que depende del tipo de fuente (`unidades.json` → `aldeano.tasa`).
 2. Al llenar su carga (`carga`) camina al **depósito** más cercano que acepte ese recurso, entrega y vuelve a la misma fuente.
 3. Si la fuente se agota, busca otra del mismo tipo dentro de un radio (`reglas.json` → `radio_rebusca`); si no hay, queda inactivo.
+   Lo mismo si no puede llegar a la fuente (`reglas.json` → `recurso_inalcanzable`): el camino no termina junto a ella (una carne en un hueco cerrado por árboles; nadie del jugador la vuelve a elegir por `olvido_ticks`) o pasa `sin_avance_ticks` a más de una casilla sin acercarse.
 4. Las granjas son edificios transitables: el aldeano trabaja parado sobre ellas.
 5. Al terminar una obra, el aldeano retoma el recurso que recolectaba antes, dentro de `radio_retomar`.
 

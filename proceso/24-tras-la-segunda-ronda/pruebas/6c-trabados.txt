@@ -1,0 +1,31 @@
+tools/aldeanos_trabados.gd -- --civ=tawantinsuyu --seed=41 --dificultad=X --minutes=12
+(trabados = aldeanos del alimento con orden de juntar, sin carga ni trabajando, a 3 casillas o menos de su recurso)
+(la partida difícil de antes termina antes de los 12 minutos)
+
+--- ANTES (main 34d785a) ---
+tawantinsuyu normal s41 P0 · edad 1 · alimento 10 · recolectado 3300 · trabados/del alimento por minuto: 1'0/4 2'0/5 3'2/7 4'7/11 5'14/14 6'16/18 7'21/21 8'21/21 9'21/21 10'21/21 11'21/21 12'21/21 · peor 21, suma 315
+tawantinsuyu normal s41 P1 · edad 2 · alimento 27 · recolectado 6243 · trabados/del alimento por minuto: 1'0/4 2'1/7 3'3/9 4'4/9 5'0/9 6'0/6 7'5/9 8'4/8 9'5/10 10'7/11 11'9/13 12'9/14 · peor 9, suma 95
+tawantinsuyu dificil s41 P0 · edad 1 · alimento 20 · recolectado 3220 · trabados/del alimento por minuto: 1'0/4 2'1/4 3'1/9 4'2/10 5'12/12 6'14/15 7'15/17 8'17/17 9'17/17 10'17/17 11'17/17 · peor 17, suma 235
+tawantinsuyu dificil s41 P1 · edad 2 · alimento 12 · recolectado 6587 · trabados/del alimento por minuto: 1'0/4 2'0/8 3'0/7 4'2/12 5'5/8 6'1/7 7'5/9 8'3/7 9'5/11 10'7/12 11'7/10 · peor 10, suma 73
+
+--- AHORA (paso 6c) ---
+tawantinsuyu normal s41 P0 · edad 2 · alimento 65 · recolectado 9015 · trabados/del alimento por minuto: 1'0/4 2'0/5 3'0/7 4'2/11 5'0/0 6'1/7 7'0/6 8'1/9 9'0/12 10'2/13 11'1/14 12'0/12 · peor 3, suma 20
+tawantinsuyu normal s41 P1 · edad 2 · alimento 10 · recolectado 7031 · trabados/del alimento por minuto: 1'0/4 2'0/7 3'2/8 4'1/9 5'2/8 6'0/0 7'1/5 8'1/7 9'1/6 10'0/7 11'0/6 12'0/5 · peor 4, suma 17
+tawantinsuyu dificil s41 P0 · edad 2 · alimento 64 · recolectado 9390 · trabados/del alimento por minuto: 1'0/4 2'1/4 3'1/9 4'2/13 5'0/1 6'0/8 7'0/7 8'0/10 9'0/11 10'1/12 11'0/13 12'1/15 · peor 3, suma 13
+tawantinsuyu dificil s41 P1 · edad 2 · alimento 40 · recolectado 9406 · trabados/del alimento por minuto: 1'0/4 2'0/8 3'0/7 4'2/12 5'5/8 6'0/1 7'2/9 8'0/8 9'0/10 10'1/11 11'0/13 12'2/11 · peor 5, suma 18
+
+--- Experta, espejo de Tawantinsuyu s41, 12 minutos (tools/experta_edades.gd) ---
+Simulación nueva + comida_inalcanzable de la experta (6b) todavía puesto:
+tawantinsuyu  tawantinsuyu  s41  P0 experta hito→edad II/III/IV: 4:46→5:50 --:--→--:-- --:--→--:-- |  5' 25a0m1c0tE1 10' 38a19m1c0tE2
+tawantinsuyu  tawantinsuyu  s41  P1 experta hito→edad II/III/IV: 4:30→5:27 --:--→--:-- --:--→--:-- |  5' 25a2m1c0tE1 10' 36a8m1c0tE2
+Simulación nueva, comida_inalcanzable sacado (final):
+tawantinsuyu  tawantinsuyu  s41  P0 experta hito→edad II/III/IV: 4:46→5:50 --:--→--:-- --:--→--:-- |  5' 25a0m1c0tE1 10' 38a17m1c0tE2
+tawantinsuyu  tawantinsuyu  s41  P1 experta hito→edad II/III/IV: 4:30→5:27 --:--→--:-- --:--→--:-- |  5' 25a2m1c0tE1 10' 36a8m1c0tE2
+
+Disparos del arreglo en la experta (con una impresión temporal, ya sacada): 26 en 12 minutos;
+la carne de (25,10), en el hueco entre árboles, se detecta por el camino apenas un aldeano la
+elige (a 16 casillas), y otra vez a los 5:28, cuando vence olvido_ticks (1800) y se vuelve a elegir.
+
+Determinismo con la versión intermedia (sin el límite de una casilla en "sin avance"): hash
+1998165433 — 3 aldeanos en la cola alrededor de una carne, a menos de una casilla, contaban como
+sin avance. Con el límite: 2203695307, el mismo de main.

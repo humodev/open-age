@@ -15,6 +15,7 @@ func _init() -> void:
 	_auras_de_hitos()
 	_depositar_por_cualquier_lado()
 	_paso_entre_edificios()
+	_carne_encerrada()
 	print("JUGABILIDAD: ", "OK" if fails == 0 else "%d fallas" % fails)
 	quit()
 
@@ -382,3 +383,50 @@ func _arbusto_al_arbusto() -> void:
 		if tg != null and tg.type == "arbusto" or v.carry_src == "arbusto" and v.order == SimEntity.Order.RETURN:
 			on_bush += 1
 	_check(left == llamas and on_bush == ids.size(), "del arbusto al arbusto: %d de %d siguen con arbustos y quedan %d de %d llamas" % [on_bush, ids.size(), left, llamas])
+
+
+## Carne encerrada entre árboles (proceso/24, paso 6c): una llama carneada en un hueco cerrado
+## por árboles dejaba a los aldeanos del alimento deslizándose contra los árboles para siempre
+## (21 aldeanos parados 4 minutos en el espejo de Tawantinsuyu, semilla 41). Quien no puede
+## llegar a su recurso lo deja y sigue con otro: acá, alimento de las llamas o los arbustos.
+func _carne_encerrada() -> void:
+	var s := Sim.new(5, 2, null, {"civs": ["tawantinsuyu", "mapuches"], "terreno": "llano"})
+	var base: Vector2i = s.bases[0]
+	# Un hueco libre de 5x5 a unas casillas de la base: la carne al medio y árboles en el borde.
+	var c := Vector2i(-1, -1)
+	for r in range(6, 20):
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				if c.x >= 0 or (absi(dx) != r and absi(dy) != r):
+					continue
+				var ok := true
+				for yy in range(-3, 4):
+					for xx in range(-3, 4):
+						if s.map.is_solid(base.x + dx + xx, base.y + dy + yy, 0):
+							ok = false
+				if ok:
+					c = base + Vector2i(dx, dy)
+	var meat := s.spawn_resource("carne", c.x, c.y)
+	for yy in range(-2, 3):
+		for xx in range(-2, 3):
+			if absi(xx) == 2 or absi(yy) == 2:
+				s.spawn_resource("arbol", c.x + xx, c.y + yy)
+	var ids := []
+	for e in s.entities:
+		if e.alive and e.owner == 0 and e.type == "aldeano" and ids.size() < 3:
+			ids.append(e.id)
+	s.push_command({"t": "target", "player": 0, "ids": ids, "target": meat.id})
+	var food0 := int(s.players[0]["res"]["alimento"])
+	for i in 1200: # 2 minutos
+		s.step()
+	var on_meat := 0
+	var gathering := 0
+	for id in ids:
+		var v: SimEntity = s.by_id[id]
+		if v.target == meat.id:
+			on_meat += 1
+		if v.order in [SimEntity.Order.GATHER, SimEntity.Order.RETURN] and (v.carry > 0 or v.anchored):
+			gathering += 1
+	var food := int(s.players[0]["res"]["alimento"])
+	_check(on_meat == 0 and gathering == ids.size() and food > food0 and meat.amount == int(s.data.recursos["carne"]["cantidad"]), \
+		"carne encerrada entre árboles: %d de %d siguen con ella, %d juntan otra cosa, alimento de %d a %d" % [on_meat, ids.size(), gathering, food0, food])
