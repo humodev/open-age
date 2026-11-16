@@ -1,0 +1,56 @@
+{
+  "_doc": "Sonidos propios de cada pueblo (src/game/audio.gd), solo para el jugador local. Archivos relativos a res://assets/audio/. Todos sintetizados con tools/audio/generar_sonidos.py (obra propia, assets/CREDITOS.md). Diseño y fuentes: proceso/24-tras-la-segunda-ronda/4g-sonido.md. Un pueblo sin entrada (los rivales de campaña) usa los genéricos de la interfaz.",
+  "momentos": {
+    "_doc": "Qué suceso dispara cada sonido, a qué volumen (dB, igual que audio.ui) y el mínimo de segundos entre dos del mismo tipo (no suenan en ráfaga). generico: sonido de la interfaz que reemplaza; vacío si es nuevo.",
+    "fanfarria": { "db": -4.0, "min_s": 4.0, "generico": "edad" },
+    "alarma": { "db": -6.0, "min_s": 10.0, "generico": "alerta" },
+    "entrenado": { "db": -12.0, "min_s": 1.5, "generico": "" },
+    "orden": { "db": -14.0, "min_s": 0.35, "generico": "" }
+  },
+  "limite_por_segundo": 4,
+  "civs": {
+    "tawantinsuyu": {
+      "_nota": "Quena y tropa de sikus (ira y arka), con wankara.",
+      "fanfarria": "civ/tawantinsuyu/tawantinsuyu_fanfarria.ogg",
+      "alarma": "civ/tawantinsuyu/tawantinsuyu_alarma.ogg",
+      "entrenado": "civ/tawantinsuyu/tawantinsuyu_entrenado.ogg",
+      "orden": "civ/tawantinsuyu/tawantinsuyu_orden.ogg"
+    },
+    "mapuches": {
+      "_nota": "Kultrun y trutruka (armónicos naturales).",
+      "fanfarria": "civ/mapuches/mapuches_fanfarria.ogg",
+      "alarma": "civ/mapuches/mapuches_alarma.ogg",
+      "entrenado": "civ/mapuches/mapuches_entrenado.ogg",
+      "orden": "civ/mapuches/mapuches_orden.ogg"
+    },
+    "guaranies": {
+      "_nota": "Mbaraka (sonaja de porongo) y takuapu (bastón de takuara contra el suelo).",
+      "fanfarria": "civ/guaranies/guaranies_fanfarria.ogg",
+      "alarma": "civ/guaranies/guaranies_alarma.ogg",
+      "entrenado": "civ/guaranies/guaranies_entrenado.ogg",
+      "orden": "civ/guaranies/guaranies_orden.ogg"
+    },
+    "etiopia": {
+      "_nota": "Kebero y masenqo; la música de paz, begena con kebero en ambassel.",
+      "fanfarria": "civ/etiopia/etiopia_fanfarria.ogg",
+      "alarma": "civ/etiopia/etiopia_alarma.ogg",
+      "entrenado": "civ/etiopia/etiopia_entrenado.ogg",
+      "orden": "civ/etiopia/etiopia_orden.ogg",
+      "musica": { "paz": ["musica/etiopia/musica_etiopia_begena_kebero_1.ogg"] }
+    },
+    "palmares": {
+      "_nota": "Berimbau con caxixi y atabaque.",
+      "fanfarria": "civ/palmares/palmares_fanfarria.ogg",
+      "alarma": "civ/palmares/palmares_alarma.ogg",
+      "entrenado": "civ/palmares/palmares_entrenado.ogg",
+      "orden": "civ/palmares/palmares_orden.ogg"
+    },
+    "ayutthaya": {
+      "_nota": "Khong wong, ranat ek y ching, en la afinación de siete pasos iguales.",
+      "fanfarria": "civ/ayutthaya/ayutthaya_fanfarria.ogg",
+      "alarma": "civ/ayutthaya/ayutthaya_alarma.ogg",
+      "entrenado": "civ/ayutthaya/ayutthaya_entrenado.ogg",
+      "orden": "civ/ayutthaya/ayutthaya_orden.ogg"
+    }
+  }
+}

@@ -714,6 +714,7 @@ func _right_click(pos: Vector2, rumbo: int = -1) -> void:
 	var ids := _own_unit_ids()
 	if not ids.is_empty():
 		var t: SimEntity = sim.by_id.get(target)
+		_orden_ack()
 		# --- mundo ---
 		if cola != null and cola.orden_derecha(ids, t, g, Input.is_key_pressed(KEY_SHIFT)):
 			view.add_marker(g, Color(Palette.UI_GOOD, 0.6))
@@ -734,6 +735,12 @@ func _right_click(pos: Vector2, rumbo: int = -1) -> void:
 		if e.is_building() and e.def.has("produce"):
 			sim.push_command({"t": "rally", "player": local, "building": e.id, "x": int(g.x * P), "y": int(g.z * P), "target": target})
 	view.add_marker(g, Palette.UI_ACCENT)
+
+
+## Sonido corto del pueblo al dar una orden a las tropas (data/audio.json; con su propio límite).
+func _orden_ack() -> void:
+	if hud != null and hud.main.get("audio") != null:
+		hud.main.audio.civ_sfx("orden")
 
 
 func _place() -> void:

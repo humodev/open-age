@@ -1,7 +1,8 @@
 class_name GameAudio
 extends Node
 ## Sonido del juego con audio CC0 (assets/CREDITOS.md). Escucha los eventos de la simulación;
-## el volumen del mundo baja con la distancia a la cámara.
+## el volumen del mundo baja con la distancia a la cámara. Cada pueblo tiene además su fanfarria de edad,
+## su alarma, su sonido de entrenado y de orden, sintetizados (data/audio.json, tools/audio/).
 
 const BASE := "res://assets/audio/"
 const UI := {
@@ -62,6 +63,51 @@ var _combat_until := 0.0
 var _clock := 0.0
 var _work_t := 0.0
 var _rng := RandomNumberGenerator.new()
+# --- sonido por pueblo ---
+static var _cfg: Dictionary = {}
+var _civ_next := {}   # tipo -> reloj desde el que puede volver a sonar
+var _civ_recent: Array[float] = []  # momentos de los últimos sonidos del pueblo (límite por segundo)
+
+
+## data/audio.json, leído una vez.
+static func cfg() -> Dictionary:
+	if _cfg.is_empty():
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/audio.json"))
+		_cfg = raw if raw is Dictionary else {"momentos": {}, "civs": {}}
+	return _cfg
+
+
+func _local_civ() -> String:
+	if sim == null or local < 0 or local >= sim.players.size():
+		return ""
+	return String(sim.players[local].get("civ", ""))
+
+
+## Sonido propio del pueblo local para `kind` (fanfarria, alarma, entrenado, orden).
+## Devuelve false si el pueblo no lo tiene, para que suene el genérico. Si lo tiene pero está en espera
+## (mínimo entre dos del mismo tipo, o el tope por segundo), no suena nada y devuelve true.
+func civ_sfx(kind: String) -> bool:
+	var path: String = String((cfg().get("civs", {}) as Dictionary).get(_local_civ(), {}).get(kind, ""))
+	if path == "" or _stream(path) == null:
+		return false
+	var m: Dictionary = (cfg().get("momentos", {}) as Dictionary).get(kind, {})
+	if _clock < float(_civ_next.get(kind, -1.0)):
+		return true
+	_civ_recent = _civ_recent.filter(func(t: float) -> bool: return _clock - t < 1.0)
+	if _civ_recent.size() >= int(cfg().get("limite_por_segundo", 4)):
+		return true
+	_civ_recent.append(_clock)
+	_civ_next[kind] = _clock + float(m.get("min_s", 1.0))
+	_play(path, float(m.get("db", -8.0)))
+	return true
+
+
+## Música propia del pueblo en los datos (Etiopía), sumada a la de CIV_MUSIC.
+func _civ_music(civ: String, mood: String) -> Array:
+	var own: Array = CIV_MUSIC.get(civ, {}).get(mood, []).duplicate()
+	own.append_array((cfg().get("civs", {}) as Dictionary).get(civ, {}).get("musica", {}).get(mood, []))
+	return own
+# --- fin sonido por pueblo ---
 
 
 func _ready() -> void:
@@ -144,7 +190,7 @@ func _play_music(mood: String, _again: bool) -> void:
 	var entry: Variant = MUSIC.get(mood, "")
 	var pool: Array = [entry] if entry is String else (entry as Array).duplicate()
 	if sim != null and mood != "menu" and local < sim.players.size():
-		var own: Array = CIV_MUSIC.get(sim.players[local]["civ"], {}).get(mood, [])
+		var own: Array = _civ_music(sim.players[local]["civ"], mood)
 		if not own.is_empty():
 			# La del pueblo suena el doble que la general.
 			pool = own + own + pool
@@ -199,14 +245,21 @@ func on_events(events: Array) -> void:
 				if e != null and e.owner == local:
 					world("terminado", e.x, e.y, -6.0)
 			"age":
-				ui("edad", -4.0 if pid == local else -14.0)
+				if pid != local:
+					ui("edad", -14.0)
+				elif not civ_sfx("fanfarria"):
+					ui("edad", -4.0)
 			"tech":
 				if pid == local:
 					ui("tech")
 			"alert":
 				if pid == local:
-					ui("alerta", -8.0)
+					if not civ_sfx("alarma"):
+						ui("alerta", -8.0)
 					_combat_until = _clock + 20.0
+			"trained":
+				if pid == local:
+					civ_sfx("entrenado")
 			"alarm":
 				if pid == local:
 					ui("campana", -4.0)

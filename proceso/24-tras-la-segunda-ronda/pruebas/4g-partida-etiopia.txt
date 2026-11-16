@@ -1,0 +1,7 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 2060 SUPER
+
+captura: screenshots/4g-etiopia-edad.png
+Telemetría: /home/humodev/.local/share/godot/app_userdata/Raíces/telemetria/2026-11-16T04-30-40-77.jsonl
+double free or corruption (!prev)
+timeout: la orden monitorizada ha volcado un 'core'

@@ -1,0 +1,152 @@
+[
+ {
+  "archivo": "assets/audio/civ/ayutthaya/ayutthaya_alarma.ogg",
+  "lufs": -16.0,
+  "pico_dbfs": -3.0,
+  "duracion_s": 3.87
+ },
+ {
+  "archivo": "assets/audio/civ/ayutthaya/ayutthaya_entrenado.ogg",
+  "lufs": -17.9,
+  "pico_dbfs": -4.2,
+  "duracion_s": 2.12
+ },
+ {
+  "archivo": "assets/audio/civ/ayutthaya/ayutthaya_fanfarria.ogg",
+  "lufs": -16.0,
+  "pico_dbfs": -1.8,
+  "duracion_s": 5.84
+ },
+ {
+  "archivo": "assets/audio/civ/ayutthaya/ayutthaya_orden.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.2,
+  "duracion_s": 0.3
+ },
+ {
+  "archivo": "assets/audio/civ/etiopia/etiopia_alarma.ogg",
+  "lufs": -16.0,
+  "pico_dbfs": -5.1,
+  "duracion_s": 3.86
+ },
+ {
+  "archivo": "assets/audio/civ/etiopia/etiopia_entrenado.ogg",
+  "lufs": -18.0,
+  "pico_dbfs": -2.4,
+  "duracion_s": 1.55
+ },
+ {
+  "archivo": "assets/audio/civ/etiopia/etiopia_fanfarria.ogg",
+  "lufs": -16.0,
+  "pico_dbfs": -4.1,
+  "duracion_s": 6.04
+ },
+ {
+  "archivo": "assets/audio/civ/etiopia/etiopia_orden.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.6,
+  "duracion_s": 0.3
+ },
+ {
+  "archivo": "assets/audio/civ/guaranies/guaranies_alarma.ogg",
+  "lufs": -16.4,
+  "pico_dbfs": -1.3,
+  "duracion_s": 3.24
+ },
+ {
+  "archivo": "assets/audio/civ/guaranies/guaranies_entrenado.ogg",
+  "lufs": -20.0,
+  "pico_dbfs": -1.4,
+  "duracion_s": 0.97
+ },
+ {
+  "archivo": "assets/audio/civ/guaranies/guaranies_fanfarria.ogg",
+  "lufs": -17.6,
+  "pico_dbfs": -1.4,
+  "duracion_s": 4.79
+ },
+ {
+  "archivo": "assets/audio/civ/guaranies/guaranies_orden.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -5.4,
+  "duracion_s": 0.14
+ },
+ {
+  "archivo": "assets/audio/civ/mapuches/mapuches_alarma.ogg",
+  "lufs": -16.0,
+  "pico_dbfs": -4.6,
+  "duracion_s": 3.81
+ },
+ {
+  "archivo": "assets/audio/civ/mapuches/mapuches_entrenado.ogg",
+  "lufs": -18.0,
+  "pico_dbfs": -5.2,
+  "duracion_s": 1.8
+ },
+ {
+  "archivo": "assets/audio/civ/mapuches/mapuches_fanfarria.ogg",
+  "lufs": -16.0,
+  "pico_dbfs": -4.4,
+  "duracion_s": 6.26
+ },
+ {
+  "archivo": "assets/audio/civ/mapuches/mapuches_orden.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.5,
+  "duracion_s": 0.35
+ },
+ {
+  "archivo": "assets/audio/civ/palmares/palmares_alarma.ogg",
+  "lufs": -16.1,
+  "pico_dbfs": -2.1,
+  "duracion_s": 4.03
+ },
+ {
+  "archivo": "assets/audio/civ/palmares/palmares_entrenado.ogg",
+  "lufs": -18.1,
+  "pico_dbfs": -2.3,
+  "duracion_s": 1.85
+ },
+ {
+  "archivo": "assets/audio/civ/palmares/palmares_fanfarria.ogg",
+  "lufs": -16.3,
+  "pico_dbfs": -1.6,
+  "duracion_s": 6.03
+ },
+ {
+  "archivo": "assets/audio/civ/palmares/palmares_orden.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -5.1,
+  "duracion_s": 0.3
+ },
+ {
+  "archivo": "assets/audio/civ/tawantinsuyu/tawantinsuyu_alarma.ogg",
+  "lufs": -16.0,
+  "pico_dbfs": -2.0,
+  "duracion_s": 3.83
+ },
+ {
+  "archivo": "assets/audio/civ/tawantinsuyu/tawantinsuyu_entrenado.ogg",
+  "lufs": -18.0,
+  "pico_dbfs": -5.5,
+  "duracion_s": 1.71
+ },
+ {
+  "archivo": "assets/audio/civ/tawantinsuyu/tawantinsuyu_fanfarria.ogg",
+  "lufs": -16.0,
+  "pico_dbfs": -2.1,
+  "duracion_s": 5.2
+ },
+ {
+  "archivo": "assets/audio/civ/tawantinsuyu/tawantinsuyu_orden.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.6,
+  "duracion_s": 0.21
+ },
+ {
+  "archivo": "assets/audio/musica/etiopia/musica_etiopia_begena_kebero_1.ogg",
+  "lufs": -16.1,
+  "pico_dbfs": -4.1,
+  "duracion_s": 34.56
+ }
+]
