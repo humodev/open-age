@@ -506,6 +506,7 @@ func _demo(kind: String) -> void:
 		place.call("granja", b.x + 5, b.y + 3, true)
 		place.call("torre", b.x + 1, b.y + 8, true)
 		place.call("deposito", b.x - 4, b.y - 2, true)
+		place.call("mercado", b.x + 1, b.y + 13, true) # --- veterano ronda 5 --- (escala del mercado)
 		var extra_i := 0
 		for k in sim.dp(0).civ.get("edificios_nuevos", {}):
 			var kd: Dictionary = sim.dp(0).edificios[k]
@@ -1308,7 +1309,18 @@ func _autotest_veterano(check: Callable) -> void:
 		var was := u.last_combat
 		check.call("sin pelear, no hay barra por combate", not Overlay.en_combate(sim, u) or was > sim.tick - Overlay.combat_ticks(sim))
 		u.last_combat = sim.tick
-		check.call("al pelear se ve la barra aunque esté sana y sin la opción", Overlay.en_combate(sim, u) and not Opciones.barras_siempre)
+		# --- veterano ronda 5 --- sana y peleando: sin barra por defecto (tapaban a las figuras);
+		# con la opción «Barras de las tropas sanas al pelear», sí.
+		var antes := Opciones.barras_pelea
+		Opciones.barras_pelea = false
+		check.call("al pelear sana y sin opciones, sin barra (como AoE4)", Overlay.en_combate(sim, u) and not Overlay.barra_visible(sim, u, false, false, false))
+		Opciones.barras_pelea = true
+		check.call("con «barras de las tropas sanas al pelear», se ve", Overlay.barra_visible(sim, u, false, false, false))
+		Opciones.barras_pelea = antes
+		u.hp -= 1
+		check.call("dañada se ve sin opciones", Overlay.barra_visible(sim, u, false, false, false))
+		u.hp += 1
+		# --- fin veterano ronda 5 ---
 		u.last_combat = was
 
 
@@ -1536,6 +1548,72 @@ func _autotest_veterano4(check: Callable) -> void:
 	ctrl.select_ids(_vill_ids())
 	await _frames(2)
 # --- fin veterano ronda 4 ---
+
+
+# --- veterano ronda 5 ---
+## Atajos globales (campana, todos los aldeanos, toda la producción militar) y los ocho
+## marcadores en Opciones → Teclas, con teclas de verdad (proceso/24, 4r).
+func _autotest_veterano5(check: Callable) -> void:
+	speed = 1.0
+	var base := sim.bases[local]
+	var dd := sim.dp(local)
+	Teclas.de_fabrica()
+	# 1. Todos los aldeanos, con algo elegido antes (un edificio).
+	var capital: SimEntity = null
+	for e in sim.actives:
+		if e.owner == local and e.capital:
+			capital = e
+	if capital != null:
+		ctrl.select_ids([capital.id] as Array[int])
+	await _frames(2)
+	_key_tap(Teclas.tecla("todos_aldeanos"))
+	await _frames(3)
+	var vs := _vill_ids()
+	var sel := ctrl.selected_entities()
+	check.call("%s elige todos los aldeanos (%d de %d)" % [Teclas.texto("todos_aldeanos"), sel.size(), vs.size()], not vs.is_empty() and sel.size() == vs.size() and sel.all(func(e: SimEntity) -> bool: return e.fn == "civil"))
+	# 2. Todos los edificios de producción militar: dos cuarteles nuevos y los que hubiera.
+	var nuevos: Array[SimEntity] = []
+	for t in ["cuartel", "campo_tiro"]:
+		if dd.edificios.has(t):
+			var at := _lugar_libre(t, Vector2i(base.x - 12 + nuevos.size() * 5, base.y - 12))
+			if at.x >= 0:
+				nuevos.append(sim.spawn_building(t, local, at.x, at.y, true))
+	await _frames(2)
+	ctrl.select_ids(vs)
+	_key_tap(Teclas.tecla("produccion_todos"))
+	await _frames(3)
+	var sp := ctrl.selected_entities()
+	var esperados: int = ctrl.atajos.produccion_militar().size()
+	check.call("%s elige toda la producción militar y no el centro (%d)" % [Teclas.texto("produccion_todos"), sp.size()], nuevos.size() >= 1 and sp.size() == esperados and sp.size() >= nuevos.size() and sp.all(func(e: SimEntity) -> bool: return e.is_building() and not e.capital and not (e.def.get("produce", []) as Array).has("aldeano")))
+	# 3. La campana sin elegir el centro: suena y, otra vez, toque de calma.
+	ctrl.select_ids([] as Array[int])
+	await _frames(2)
+	_key_tap(Teclas.tecla("campana"))
+	await get_tree().create_timer(0.5).timeout
+	var sono: bool = bool(sim.players[local].get("alarm", false))
+	_key_tap(Teclas.tecla("campana"))
+	await get_tree().create_timer(0.5).timeout
+	check.call("%s toca la campana sin elegir el centro, y otra vez la calma" % Teclas.texto("campana"), sono and not bool(sim.players[local].get("alarm", false)))
+	# 4. Opciones → Teclas: los ocho marcadores y los atajos globales, en el diálogo de verdad.
+	hud._options.visible = true
+	await _frames(2)
+	(hud._options.find_child("BotonTeclas", true, false) as Button).pressed.emit()
+	await _frames(3)
+	var hay := 0
+	for n in range(1, 9):
+		if hud._options.find_child("marcador_%d" % n, true, false) != null:
+			hay += 1
+	var bcam := hud._options.find_child("campana", true, false) as Button
+	check.call("Opciones → Teclas muestra los 8 marcadores (%d) y la campana en %s" % [hay, bcam.text if bcam != null else "?"], hay == 8 and bcam != null and bcam.text == "B")
+	get_viewport().get_texture().get_image().save_png("screenshots/autotest_teclas_ronda5.png")
+	(hud._options.find_child("BotonTeclas", true, false) as Button).pressed.emit()
+	hud._options.visible = false
+	await _frames(2)
+	for b in nuevos:
+		sim.remove_quietly(b)
+	ctrl.select_ids(_vill_ids())
+	await _frames(2)
+# --- fin veterano ronda 5 ---
 
 
 func _vill_ids() -> Array[int]:
@@ -1858,6 +1936,7 @@ func _autotest() -> void:
 	await _autotest_ordenes(check) # --- órdenes ---
 	await _autotest_veterano(check) # --- veterano ---
 	await _autotest_veterano4(check) # --- veterano ronda 4 ---
+	await _autotest_veterano5(check) # --- veterano ronda 5 ---
 	# --- aprender --- (avisos que enseñan, cuenta de sitios, nombres en la grilla, registro de la Guía y fin)
 	var cs = hud.consejos
 	Opciones.consejos = true

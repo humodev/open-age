@@ -11,6 +11,9 @@ extends RefCounted
 ##   Alt + 1…8    vuelve a un marcador de cámara; Ctrl + Alt + 1…8 lo guarda (Ctrl + número
 ##                es de los grupos de control, como en AoE4). F7…F9 son atajos de los
 ##                marcadores 1 a 3 (Ctrl + F guarda); F1–F6 son los paneles y F10 la pausa.
+##   B            la campana del centro, desde cualquier lado (otra vez: toque de calma)
+##   N            todos los aldeanos
+##   P            todos los edificios de producción militar (como AoE4)
 ##   Todas estas son las de fábrica: se reasignan en Opciones → Teclas (src/game/ui/teclas.gd).
 
 const O := SimEntity.Order
@@ -172,6 +175,52 @@ func recorrer_centros(centrar: bool) -> void:
 	if centrar:
 		ctrl.center_on_selection()
 # --- fin veterano ronda 4 ---
+
+
+# --- veterano ronda 5 --- atajos globales (proceso/22-testers/ronda-5, veterano, punto 2)
+## Todos los aldeanos propios (afuera de los edificios), trabajen o no.
+func todos_aldeanos() -> void:
+	var ids: Array[int] = []
+	for e in ctrl.sim.actives:
+		if e.alive and e.owner == ctrl.local and e.fn == "civil" and e.inside < 0:
+			ids.append(e.id)
+	if ids.is_empty():
+		ctrl.hud_notify("No tenés aldeanos", "info")
+		return
+	ctrl.select_ids(ids)
+
+
+## Edificios terminados que entrenan tropa (sin los centros, que entrenan aldeanos): con todos
+## elegidos, la grilla encola en el de cola más corta, y Mayús reparte cinco.
+func produccion_militar() -> Array[SimEntity]:
+	var out: Array[SimEntity] = []
+	for e in produccion():
+		if not (e.def.get("produce", []) as Array).has("aldeano") and not e.capital:
+			out.append(e)
+	return out
+
+
+func todos_produccion() -> void:
+	var list := produccion_militar()
+	if list.is_empty():
+		ctrl.hud_notify("No tenés edificios de producción militar", "info")
+		return
+	var ids: Array[int] = []
+	for e in list:
+		ids.append(e.id)
+	ctrl.select_ids(ids)
+
+
+## La campana sin elegir el centro: los aldeanos cercanos se refugian; otra vez, toque de calma.
+func campana() -> void:
+	if centros().is_empty():
+		ctrl.hud_notify("Sin centro no hay campana", "info")
+		return
+	var on: bool = not bool(ctrl.sim.players[ctrl.local].get("alarm", false))
+	ctrl.sim.push_command({"t": "alarm", "player": ctrl.local, "on": on})
+	if not on: # al sonar, avisa el HUD con el suceso de la simulación («¡Campana!…»)
+		ctrl.hud_notify("Toque de calma: vuelven al trabajo", "info")
+# --- fin veterano ronda 5 ---
 
 
 ## Marcador de cámara `n` (1…8): guardar (Ctrl) o ir.

@@ -113,14 +113,7 @@ static func building(type: String, def: Dictionary, team: Color, style: Dictiona
 	elif type == "torre":
 		_tower(p, str(cfg.get("torre", "almenada")), pal, team, cfg)
 	elif def.get("mercado", false):
-		var sw := iw / 3.0
-		for i in 3:
-			var o := Vector3(-sw + i * sw, base_y, d * 0.1 - (i % 2) * d * 0.2)
-			for c in [Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, 1)]:
-				p.append([Meshes.box(0.06, 0.8, 0.06), Meshes.xf(o + Vector3(c.x * sw * 0.42, 0.4, c.y * 0.32)), pal[1].darkened(0.35)])
-			p.append([Meshes.prism(sw * 1.02, 0.3, 0.8), Meshes.xf(o + Vector3(0, 0.95, 0)), [pal[1], Palette.WEALTH.darkened(0.2), team][i]])
-			p.append([Meshes.box(sw * 0.75, 0.3, 0.4), Meshes.xf(o + Vector3(0, 0.15, 0)), pal[0].darkened(0.1)])
-		Meshes._banner(p, Vector3(w * 0.42, base_y, -d * 0.42), 1.8, team)
+		_market(p, forma, w, d, pal, team, base_y, cfg) # --- veterano ronda 5 ---
 	elif def.has("produce"):
 		_barracks(p, forma, w, d, pal, team, base_y, type, cfg)
 	elif def.has("deposito"):
@@ -484,6 +477,29 @@ static func _barracks(p: Array, forma: String, w: float, d: float, pal: Array, t
 		p.append([Meshes.cyl(0.22, 0.22, 0.6, 10), Meshes.xf(Vector3(w * 0.25, by + 0.3, d * 0.15)), Color("8c8478")])
 	Meshes._banner(p, Vector3(-w * 0.4, by, d * 0.2), 2.0, team)
 	Meshes._banner(p, Vector3(w * 0.4, by, d * 0.2), 2.0, team)
+
+
+# --- veterano ronda 5 ---
+## Mercado (proceso/24-tras-la-segunda-ronda/4r-veterano-ronda-5.md): un galpón de feria con la
+## casa del pueblo al fondo, que se levanta al alto de su categoría (reglas.escala_visual →
+## altura_min_cm.mercado), y adelante tres puestos con toldo a la escala de la gente: van
+## marcados como fijos (Meshes.FIJO) para que no se estiren con el galpón.
+static func _market(p: Array, forma: String, w: float, d: float, pal: Array, team: Color, by: float, cfg: Dictionary = {}) -> void:
+	var iw := w - 2.0 * margin()
+	var esc := minf(_f(cfg, "escala_pct"), 1.0)
+	_hut(p, forma, Vector3(0, by, -d * 0.16), minf(w * 0.82, iw) * esc, d * 0.42 * esc, 1.15, pal, cfg)
+	var sw := iw / 3.0
+	for i in 3:
+		var o := Vector3(-sw + i * sw, by, d * 0.27 - (i % 2) * d * 0.05)
+		for c in [Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, 1)]:
+			p.append([Meshes.box(0.05, 0.62, 0.05), Meshes.xf(o + Vector3(c.x * sw * 0.4, 0.31, c.y * 0.24)), pal[1].darkened(0.35), 0.0, Meshes.FIJO])
+		p.append([Meshes.prism(sw * 0.98, 0.2, 0.6), Meshes.xf(o + Vector3(0, 0.72, 0)), [pal[1], Palette.WEALTH.darkened(0.2), team][i], 0.0, Meshes.FIJO])
+		p.append([Meshes.box(sw * 0.7, 0.24, 0.3), Meshes.xf(o + Vector3(0, 0.12, 0)), pal[0].darkened(0.1), 0.0, Meshes.FIJO])
+		# Mercadería sobre la mesa: un canasto y un fardo, del color de lo que se vende.
+		p.append([Meshes.cyl(0.07, 0.06, 0.08, 8), Meshes.xf(o + Vector3(-sw * 0.15, 0.28, 0)), [Color("b0603c"), Color("8a6a3e"), Color("8c8478")][i], 0.0, Meshes.FIJO])
+		p.append([Meshes.box(0.12, 0.08, 0.1), Meshes.xf(o + Vector3(sw * 0.15, 0.28, 0)), pal[2], 0.0, Meshes.FIJO])
+	Meshes._banner(p, Vector3(w * 0.42, by, -d * 0.42), 1.8, team)
+# --- fin veterano ronda 5 ---
 
 
 static func _store(p: Array, forma: String, w: float, d: float, pal: Array, team: Color, by: float, cfg: Dictionary = {}) -> void:
