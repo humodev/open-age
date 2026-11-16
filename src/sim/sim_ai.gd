@@ -40,7 +40,10 @@ var centers: Array[SimEntity] = [] # edificios propios terminados que entrenan a
 var last_expand := 0
 var last_hunt := 0
 var last_hito_hit := -100000 # último envío contra un hito rival en obra
-var last_retake := -100000 # último envío a recuperar un sitio (experta: `sitios_disputa`)
+var last_contest := -100000 # última decisión de la disputa de sitios (`disputa_sitios`)
+var _squad := {} # grupo que va a un sitio: {site, ids, kind (recupera/defiende), hasta}
+var _site_cool := {} # sitio -> tick hasta el que no se vuelve a ir (tras una retirada)
+var _contest_held := false # con la cuenta rival corriendo y sin fuerza para ir: el ejército se junta
 var _holding: Dictionary = {} # lo que se junta para el centro siguiente (experta); vacío si nada
 var _ctype := "-" # edificio con el que se expande (calculado una vez: `_center_type`)
 var _stores := {} # almacenes propios (id -> casilla), para ver cuáles se perdieron
@@ -1171,11 +1174,25 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 	var ally := _ally_threat(centro)
 	if threat != null:
 		_say("atacan", {})
+	# El grupo que va a un sitio sigue a lo suyo: se cuida, se retira o se disuelve.
+	var left := _site_clock()
+	if not _squad.is_empty():
+		var ccfg := _contest_cfg()
+		if ccfg.is_empty():
+			_squad = {}
+		else:
+			_squad_step(ccfg, left >= 0 and left <= int(ccfg["desesperado_ms"]))
+	if not _squad.is_empty():
+		army = _without(army, _squad["ids"])
 	# Experta (`defensa_proporcional`): a la amenaza va lo que hace falta y el resto sigue con lo
 	# suyo. Antes un explorador o un grupito rival cerca de un almacén retenía a todo el ejército
 	# en la base, y la difícil ganaba por sitios con la experta mirando (proceso/24, paso 4f).
-	if threat != null and ally == null and not (level.get("defensa_proporcional", {}) as Dictionary).is_empty():
-		army = _defend_some(army, threat)
+	# Con la cuenta de sitios rival corriendo, todas las que disputan sitios defienden así.
+	var prop: Dictionary = level.get("defensa_proporcional", {})
+	if prop.is_empty() and left >= 0 and not _contest_cfg().is_empty():
+		prop = _contest_cfg()["defensa_proporcional"]
+	if threat != null and ally == null and not prop.is_empty():
+		army = _defend_some(army, threat, prop)
 		if army.is_empty():
 			return
 		threat = null
@@ -1205,7 +1222,11 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 	var need: int = int(st.get("ataque_base", level["ataque_base"])) + int(st.get("ataque_paso", level["ataque_paso"])) * wave
 	var gap: int = int(st.get("ataque_espera_ticks", level["ataque_espera_ticks"]))
 	var attacks: bool = st.get("ataca_base", personality != "pasiva") and sim.tick >= int(level.get("primer_ataque_ticks", 0))
-	if _retake_site(army):
+	var home := army
+	army = _contest_sites(army, left)
+	if army.is_empty():
+		if _contest_held:
+			_regroup(home)
 		return
 	if attacks and _hit_hito(army):
 		return
@@ -1279,8 +1300,11 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 		last_site = sim.tick
 		var site: SimEntity = null
 		var best := 1 << 60
+		# Quien disputa sitios no manda el grupo chico a un sitio con enemigos (era goteo): eso lo
+		# decide `_contest_sites`, con fuerza proporcional.
+		var guard := _contest_cfg()
 		for e in sim.actives:
-			if e.alive and e.def.get("sagrado", false) and (e.holder < 0 or sim.enemies(player, e.holder)):
+			if e.alive and e.def.get("sagrado", false) and (e.holder < 0 or sim.enemies(player, e.holder)) and (guard.is_empty() or _foes_hp(e, int(guard["radio"])) == 0):
 				var d := Sim.dist(e.x, e.y, rally.x, rally.y)
 				if d < best:
 					best = d
@@ -1292,7 +1316,11 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 					ids.append(u.id)
 			if not ids.is_empty():
 				sim.push_command({"t": "move", "player": player, "ids": ids, "x": site.x, "y": site.y, "amove": true})
-	# Reagrupar a las unidades inactivas en el punto de reunión.
+	_regroup(army)
+
+
+## Reagrupar a las unidades inactivas en el punto de reunión.
+func _regroup(army: Array[SimEntity]) -> void:
 	var idle := []
 	for u in army:
 		if u.order == O.IDLE and Sim.dist(u.x, u.y, rally.x, rally.y) > 6000 and sim.tick - last_attack > 900 and not _near_site(u) and not _at_flare(u):
@@ -1303,8 +1331,7 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 
 ## Manda a la amenaza `factor_pct` de los enemigos que hay a `radio` de ella (al menos `minimo`),
 ## contando a los propios que ya están ahí; los más cercanos primero. Devuelve el resto del ejército.
-func _defend_some(army: Array[SimEntity], threat: SimEntity) -> Array[SimEntity]:
-	var cfg: Dictionary = level["defensa_proporcional"]
+func _defend_some(army: Array[SimEntity], threat: SimEntity, cfg: Dictionary) -> Array[SimEntity]:
 	var r := int(cfg["radio"])
 	var enemies := 0
 	for e in sim.actives:
@@ -1335,37 +1362,232 @@ func _defend_some(army: Array[SimEntity], threat: SimEntity) -> Array[SimEntity]
 	return rest
 
 
-## Sitios (experta, `sitios_disputa`): si un rival tiene todos los sitios y corre su cuenta, todo
-## el ejército libre va al sitio suyo más cercano, cada `cada_ticks`. Antes iban 4 por vez y la
-## difícil ganaba por sitios con la experta mirando (proceso/24, paso 4f).
-func _retake_site(army: Array[SimEntity]) -> bool:
-	var cfg: Dictionary = level.get("sitios_disputa", {})
-	if cfg.is_empty() or sim.tick - last_retake < int(cfg["cada_ticks"]) or army.size() < int(cfg["ejercito_min"]):
-		return false
-	var running := false
-	for q in sim.players:
-		if sim.enemies(player, q["id"]) and int(q.get("sitios_ms", 0)) > 0:
-			running = true
-	if not running:
-		return false
-	var site: SimEntity = null
-	var best := 1 << 60
-	for e in sim.actives:
-		if e.alive and e.def.get("sagrado", false) and e.holder >= 0 and sim.enemies(player, e.holder):
-			var d := Sim.dist(e.x, e.y, rally.x, rally.y)
-			if d < best:
-				best = d
-				site = e
-	if site == null:
-		return false
-	last_retake = sim.tick
-	var ids := []
+## Disputa de sitios (`disputa_sitios`: normal, difícil y experta; reglas.ia_disputa_sitios).
+## Como en AoE4: si el rival tiene `sitios_rival_min` sitios o más, o corre su cuenta de victoria,
+## un grupo proporcional a lo que defiende el sitio va a recuperar el más barato (cerca y poco
+## defendido), y si se acercan enemigos a un sitio propio, un grupo proporcional lo defiende. Sin
+## fuerza suficiente no va (nada de goteo) y el grupo se retira si pierde la pelea. Devuelve el
+## ejército que queda libre; con la cuenta corriendo y sin fuerza para ir, ninguno (se junta).
+## Antes la experta mandaba todo con la cuenta corriendo y las demás solo grupos de 4 (el veterano
+## perdió por sitios con 94 militares vivos, ronda 3; proceso/24, paso 5b).
+func _contest_sites(army: Array[SimEntity], left: int) -> Array[SimEntity]:
+	var cfg := _contest_cfg()
+	if cfg.is_empty():
+		return army
+	var r := int(cfg["radio"])
+	var desperate := left >= 0 and left <= int(cfg["desesperado_ms"])
+	var free: Array[SimEntity] = []
+	var rest: Array[SimEntity] = army
 	for u in army:
 		if u.order != O.ATTACK and not _at_flare(u):
-			ids.append(u.id)
-	if not ids.is_empty():
-		sim.push_command({"t": "move", "player": player, "ids": ids, "x": site.x, "y": site.y, "amove": true})
-	return true
+			free.append(u)
+	var none: Array[SimEntity] = []
+	if sim.tick - last_contest < int(cfg["cada_ticks"]):
+		return none if _contest_held and left >= 0 else rest
+	last_contest = sim.tick
+	_contest_held = false
+	var sites: Array[SimEntity] = []
+	var theirs := 0
+	for e in sim.actives:
+		if e.alive and e.def.get("sagrado", false):
+			sites.append(e)
+	if sites.is_empty():
+		return rest
+	var holds := {}
+	for st in sites:
+		if st.holder >= 0 and sim.enemies(player, st.holder):
+			var tm := sim.team_of(st.holder)
+			holds[tm] = int(holds.get(tm, 0)) + 1
+			theirs = maxi(theirs, int(holds[tm]))
+	var pressed := left >= 0 or theirs >= mini(int(cfg["sitios_rival_min"]), sites.size())
+	# Refuerzo del grupo que ya va, en bloque de `refuerzo_min` o más.
+	if not _squad.is_empty():
+		var site: SimEntity = sim.by_id.get(int(_squad["site"]), null)
+		if site != null and (left >= 0 or _squad["kind"] == "defiende"):
+			var need := _site_need(cfg, site, left >= 0) - _hp_of(_squad["ids"])
+			var sent := _pick_for(free, site, need, int(cfg["refuerzo_min"]), desperate)
+			if not sent.is_empty():
+				_squad["ids"].append_array(sent)
+				sim.push_command({"t": "move", "player": player, "ids": sent, "x": site.x, "y": site.y, "amove": true})
+				return _without(rest, sent)
+		return rest
+	# Defender los sitios propios cuando se acercan enemigos.
+	for st in sites:
+		if st.holder < 0 or sim.enemies(player, st.holder):
+			continue
+		var foes := _foes_hp(st, int(cfg["defensa_radio"]))
+		if foes <= 0:
+			continue
+		var need := foes * int(cfg["fuerza_pct"]) / 100 - _own_hp_near(st, r)
+		if need <= 0:
+			continue
+		var sent := _pick_for(free, st, need, mini(int(cfg["grupo_min"]), free.size()), false)
+		if not sent.is_empty():
+			_squad_go(st, sent, "defiende", cfg)
+			return _without(rest, sent)
+	if not pressed:
+		return rest
+	# Recuperar: el sitio rival más barato (distancia más defensa) que se pueda con lo que hay.
+	var best: SimEntity = null
+	var best_cost := 1 << 60
+	var best_need := 0
+	var free_hp := _hp_of_units(free)
+	for st in sites:
+		if st.holder < 0 or not sim.enemies(player, st.holder):
+			continue
+		if not desperate and int(_site_cool.get(st.id, -1)) > sim.tick:
+			continue
+		var need := _site_need(cfg, st, left >= 0)
+		if not desperate and (need > free_hp or free.size() < int(cfg["grupo_min"])):
+			continue
+		var cost := Sim.dist(st.x, st.y, rally.x, rally.y) / P + _foes_hp(st, r) / int(cfg["hp_por_casilla"])
+		if cost < best_cost:
+			best_cost = cost
+			best = st
+			best_need = need
+	if best == null:
+		# Con la cuenta corriendo y sin fuerza: nada de incursiones ni oleadas, se junta.
+		_contest_held = left >= 0
+		return none if _contest_held else rest
+	var sent := _pick_for(free, best, free_hp + 1 if desperate else best_need, int(cfg["grupo_min"]), desperate)
+	if sent.is_empty():
+		return rest
+	_squad_go(best, sent, "recupera", cfg)
+	_say("ataco", {"a": best.holder})
+	return _without(rest, sent)
+
+
+## La configuración de la disputa para esta dificultad (vacía si no disputa). `disputa_sitios`
+## puede ser `true` o un diccionario que cambia claves de reglas.ia_disputa_sitios.
+func _contest_cfg() -> Dictionary:
+	var own: Variant = level.get("disputa_sitios", false)
+	if own is bool and not own or not level.get("toma_sitios", true):
+		return {}
+	var cfg: Dictionary = (sim.data.reglas["ia_disputa_sitios"] as Dictionary).duplicate()
+	if own is Dictionary:
+		cfg.merge(own, true)
+	return cfg
+
+
+## Lo que falta para ir a un sitio: `fuerza_pct` de la vida de los enemigos que lo cuidan
+## (`fuerza_pct_cuenta` con la cuenta corriendo), y al menos `grupo_min` unidades de vida media.
+func _site_need(cfg: Dictionary, st: SimEntity, counting: bool) -> int:
+	var pct := int(cfg["fuerza_pct_cuenta"] if counting else cfg["fuerza_pct"])
+	return _foes_hp(st, int(cfg["radio"])) * pct / 100
+
+
+## Vida de los militares enemigos a `r` del sitio.
+func _foes_hp(st: SimEntity, r: int) -> int:
+	return _foes_hp_at(st.x, st.y, r)
+
+
+## Vida de los militares enemigos a `r` de un punto (cuadro, como la captura de los sitios).
+func _foes_hp_at(x: int, y: int, r: int) -> int:
+	var hp := 0
+	for e in sim.actives:
+		if e.alive and e.owner >= 0 and e.is_unit() and e.inside < 0 and e.is_military() and sim.enemies(player, e.owner) and absi(e.x - x) <= r and absi(e.y - y) <= r:
+			hp += e.hp
+	return hp
+
+
+## Vida de los militares propios a `r` del sitio.
+func _own_hp_near(st: SimEntity, r: int) -> int:
+	var hp := 0
+	for e in sim.actives:
+		if e.alive and e.owner == player and e.is_unit() and e.inside < 0 and e.is_military() and absi(e.x - st.x) <= r and absi(e.y - st.y) <= r:
+			hp += e.hp
+	return hp
+
+
+func _hp_of(ids: Array) -> int:
+	var hp := 0
+	for id in ids:
+		var u: SimEntity = sim.by_id.get(id, null)
+		if u != null and u.alive:
+			hp += u.hp
+	return hp
+
+
+func _hp_of_units(list: Array[SimEntity]) -> int:
+	var hp := 0
+	for u in list:
+		hp += u.hp
+	return hp
+
+
+## Los más cercanos al sitio hasta juntar `need` de vida y `min_n` unidades; vacío si no se llega
+## (salvo `all_in`: entonces van los que haya).
+func _pick_for(free: Array[SimEntity], st: SimEntity, need: int, min_n: int, all_in: bool) -> Array:
+	var cand := []
+	for u in free:
+		cand.append([Sim.dist(u.x, u.y, st.x, st.y), u.id, u])
+	cand.sort_custom(func(a, b): return a[0] < b[0] or a[0] == b[0] and a[1] < b[1])
+	var ids := []
+	var hp := 0
+	for c in cand:
+		if hp >= need and ids.size() >= min_n:
+			break
+		ids.append(c[1])
+		hp += (c[2] as SimEntity).hp
+	if (hp < need or ids.size() < min_n) and not all_in:
+		return []
+	return ids
+
+
+func _without(list: Array[SimEntity], ids: Array) -> Array[SimEntity]:
+	var out: Array[SimEntity] = []
+	for u in list:
+		if not ids.has(u.id):
+			out.append(u)
+	return out
+
+
+func _squad_go(st: SimEntity, ids: Array, kind: String, cfg: Dictionary) -> void:
+	_squad = {"site": st.id, "ids": ids, "kind": kind, "hasta": sim.tick + int(cfg["grupo_max_ticks"])}
+	sim.push_command({"t": "move", "player": player, "ids": ids, "x": st.x, "y": st.y, "amove": true})
+
+
+## El grupo en marcha: se disuelve si el sitio quedó en manos propias sin enemigos cerca o se
+## venció el plazo; se retira (y el sitio espera `espera_tras_retirada_ticks`) si su vida queda por
+## debajo de `retirada_pct` de la de los enemigos del sitio, salvo que la cuenta esté por terminar.
+func _squad_step(cfg: Dictionary, desperate: bool) -> void:
+	var alive := []
+	var cx := 0
+	var cy := 0
+	for id in _squad["ids"]:
+		var u: SimEntity = sim.by_id.get(id, null)
+		if u != null and u.alive:
+			alive.append(id)
+			cx += u.x
+			cy += u.y
+	_squad["ids"] = alive
+	var st: SimEntity = sim.by_id.get(int(_squad["site"]), null)
+	if alive.is_empty() or st == null or not st.alive or sim.tick > int(_squad["hasta"]):
+		_squad = {}
+		return
+	# La pelea puede ser en el camino: cuentan los enemigos del sitio o los de alrededor del grupo.
+	var foes := _foes_hp(st, int(cfg["radio"]))
+	var ours_now := st.holder >= 0 and not sim.enemies(player, st.holder)
+	if ours_now and foes == 0:
+		_squad = {}
+		return
+	foes = maxi(foes, _foes_hp_at(cx / alive.size(), cy / alive.size(), int(cfg["radio"])))
+	if not desperate and foes > 0 and _hp_of(alive) * 100 < foes * int(cfg["retirada_pct"]):
+		_site_cool[st.id] = sim.tick + int(cfg["espera_tras_retirada_ticks"])
+		sim.push_command({"t": "move", "player": player, "ids": alive, "x": rally.x, "y": rally.y, "suelto": true})
+		_squad = {}
+
+
+## Milisegundos que le faltan a la cuenta de sitios rival más avanzada; -1 si no corre ninguna.
+func _site_clock() -> int:
+	var left := -1
+	var total := int(sim.data.reglas["sitios"]["victoria_ms"])
+	for q in sim.players:
+		if sim.enemies(player, q["id"]) and int(q.get("sitios_ms", 0)) > 0:
+			var l := total - int(q["sitios_ms"])
+			if left < 0 or l < left:
+				left = l
+	return left
 
 
 ## Hito rival en obra (`ataca_hito_en_obra`, reglas.ia_hito_en_obra): es el blanco más rico

@@ -1,0 +1,3 @@
+ticks=3000 hash=1328656416
+DETERMINISMO: OK
+Antes (HEAD 4e7677d): hash=1328656416, el mismo. En los 5 minutos de la prueba nadie tiene 2 sitios ni enemigos cerca de uno propio.

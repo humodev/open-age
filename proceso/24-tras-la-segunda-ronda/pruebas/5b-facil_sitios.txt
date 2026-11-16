@@ -1,0 +1,8 @@
+semilla  7  29:02  sitios tomados por la fácil: 0  ociosa en un sitio (unidad·s): 0  ganó 1 (conquista)
+semilla 21  18:56  sitios tomados por la fácil: 0  ociosa en un sitio (unidad·s): 0  ganó 1 (conquista)
+semilla  3  18:03  sitios tomados por la fácil: 0  ociosa en un sitio (unidad·s): 0  ganó 1 (conquista)
+FACIL_SITIOS: OK (0 sitios tomados)
+WARNING: 7741 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 10 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
