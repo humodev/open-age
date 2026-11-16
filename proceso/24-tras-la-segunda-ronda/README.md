@@ -311,3 +311,6 @@ Con los pasos 1 a 4 integrados, los mismos cuatro jugadores de las rondas 1 y 2,
   - Una orden directa sobre una llama la sigue carneando, y con varios aldeanos en una sola orden se carnea un solo animal y todos juntan su carne.
 - **Prueba:** "una llama por vez" en `tests/jugabilidad.gd`: nunca más de una carne abierta. Los 4 aldeanos terminan las 5 llamas en unos 330 s, una tras otra, y siguen con los arbustos.
 - **Determinismo:** cambia el hash (2203695307), porque la IA también carnea de a una. Se mide con torneo junto con la IA que disputa sitios (5b).
+- **[Síntesis de la cuarta ronda](../22-testers/ronda-4/00-sintesis.md):**
+  - Lo más grave: el botón de Aldeano que no se ve en el centro (todos los pueblos), la producción en varios edificios a la vez y las teclas sin configurar.
+  - En curso: 4n (jugador nuevo) y 4o (veterano).
