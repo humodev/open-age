@@ -10,7 +10,7 @@ extends Node3D
 ##   --estilo=pacifica|normal|acosadora|agresiva  estilo de juego de la IA
 ##   --cam=x,z,zoom[,inclinación]  posición de cámara para la captura (bX,bZ: relativa a la base propia)
 ##   --select=tipo      selecciona entidades de ese tipo del jugador local antes de la captura
-##   --demo=base|obras|hitos|animales|batalla|multitud|formacion|bloque  escena armada para revisar modelos, hitos, animales, combate, el costo de 200 unidades o un grupo en marcha
+##   --demo=base|obras|hitos|animales|batalla|multitud|formacion|bloque|bosque  escena armada para revisar modelos, hitos, animales, combate, el costo de 200 unidades, un grupo en marcha o la gente entre los árboles
 ##   --menu             fuerza el menú de inicio (sin argumentos se abre solo)
 ##   --terreno=<clave de reglas.json "terrenos"> tipo de mapa (llano, valle, delta…)
 ##   --civ=clave        civilización propia (tawantinsuyu, mapuches, guaranies, etiopia, palmares, ayutthaya, azar)
@@ -556,6 +556,32 @@ func _demo(kind: String) -> void:
 			sim.push_command({"t": "target", "player": local, "ids": vids, "target": far.id})
 			# Cámara a un tercio del camino, donde va el bloque a los 8-10 s.
 			sim.set_meta("demo_cam", Vector2(bb.x + 10 + (far.x / 1000 - bb.x - 10) / 3, bb.y + 10 + (far.y / 1000 - bb.y - 10) / 3))
+	elif kind == "bosque":
+		# Lectura de la gente entre los árboles (proceso/24, 4p): aldeanos talando del lado lejano
+		# de un bosque (la cámara mira hacia +x+z) y una tropa que pasa por detrás.
+		var fb := sim.bases[local]
+		var tree: SimEntity = null
+		for e in sim.entities:
+			if e.alive and e.is_resource() and e.type == "arbol" and Sim.dist(e.x, e.y, fb.x * 1000, fb.y * 1000) > 9000 and (tree == null or Sim.dist(e.x, e.y, fb.x * 1000, fb.y * 1000) < Sim.dist(tree.x, tree.y, fb.x * 1000, fb.y * 1000)):
+				tree = e
+		if tree != null:
+			# El árbol del borde lejano del mismo bosque.
+			var far := tree
+			for e in sim.entities:
+				if e.alive and e.is_resource() and e.type == "arbol" and absi(e.tx - tree.tx) + absi(e.ty - tree.ty) < 10 and e.tx + e.ty > far.tx + far.ty and sim.map.occupant(e.tx + 1, e.ty + 1) == -1:
+					far = e
+			var vids := []
+			for i in 8:
+				var t := sim.map.nearest_free(far.tx + 1 + i % 3, far.ty + 1 + i / 3, 6, local)
+				vids.append(sim.spawn_unit("aldeano", local, t.x * 1000 + 500, t.y * 1000 + 500).id)
+			sim.push_command({"t": "target", "player": local, "ids": vids, "target": far.id})
+			var tids := []
+			var types: Array = ["lancero", "guerrero", "hondero"]
+			for i in 9:
+				var t := sim.map.nearest_free(far.tx - 4 + i % 3, far.ty + 3 + i / 3, 6, local)
+				tids.append(sim.spawn_unit(types[i % 3], local, t.x * 1000 + 500, t.y * 1000 + 500).id)
+			sim.push_command({"t": "move", "player": local, "ids": tids, "x": (far.tx + 4) * 1000, "y": (far.ty - 3) * 1000})
+			sim.set_meta("demo_cam", Vector2(far.tx, far.ty))
 	elif kind == "batalla":
 		var c := sim.map.n / 2
 		var ids := [[], []]

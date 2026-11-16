@@ -40,6 +40,7 @@ var _water_mat: ShaderMaterial
 func setup(s: Sim, local_player: int) -> void:
 	sim = s
 	local = local_player
+	_unit_k = float(sim.data.reglas.get("escala_visual", {}).get("unidad_pct", 100)) / 100.0
 	_build_ground()
 	_build_resources()
 	_build_clutter()
@@ -540,6 +541,7 @@ func _build_clutter() -> void:
 	var reed_pct := int(det["juncos_pct"])
 	var lush := DetalleSuelo.lush_noise(sim.terrain)
 	var lush_k := Ambiente.pct(det["pasto_alto"])
+	var grass_k := float(sim.data.reglas.get("escala_visual", {}).get("pasto_pct", 100)) / 100.0 # matas por debajo de la rodilla (proceso/24, 4p)
 	const BLOCK := 32
 	var nb := ceili(n / float(BLOCK))
 	var kinds := 6
@@ -603,7 +605,7 @@ func _build_clutter() -> void:
 				continue
 			var p := Vector3(tx + ox, 0, ty + oz)
 			p.y = height_at(p.x, p.z) - 0.02
-			var sc := 1.15 + float((hsh / 7) % 50) / 100.0
+			var sc := (1.15 + float((hsh / 7) % 50) / 100.0) * grass_k
 			var b := 0.85 + float((hsh / 13) % 25) / 100.0
 			var blk := (ty / BLOCK) * nb + tx / BLOCK
 			lists[blk * kinds + kind].append([Transform3D(Basis(Vector3.UP, float(hsh % 628) / 100.0).scaled(Vector3(sc, sc, sc)), p), tx, ty, b])
@@ -691,17 +693,22 @@ func _build_resources() -> void:
 				mi.mesh = _resource_mesh(e)
 				mi.position = to_world(e.x, e.y)
 				mi.rotation.y = float(_hash(e.id) % 360) * PI / 180.0
+				mi.scale = Vector3.ONE * _res_k(e)
 				add_child(mi)
-				visuals[e.id] = {"node": mi, "kind": "rock", "max": e.amount, "cur": mi.position, "prev": mi.position}
+				visuals[e.id] = {"node": mi, "kind": "rock", "max": e.amount, "cur": mi.position, "prev": mi.position, "k0": _res_k(e)}
+	# Árboles más altos que la gente, como en AoE4 (proceso/24, 4p; reglas.escala_visual).
+	var ev: Dictionary = sim.data.reglas.get("escala_visual", {})
+	var tk := Vector2(float(ev.get("arbol_ancho_pct", 100)), float(ev.get("arbol_alto_pct", 100))) / 100.0
 	for k in kinds.size():
-		_trees.append_array(_make_mm(Meshes.tree_mesh(int(kinds[k])), trees[k]))
+		_trees.append_array(_make_mm(Meshes.tree_mesh(int(kinds[k])), trees[k], tk))
 	_bushes = _make_mm(Meshes.bush_mesh(), bushes)
 
 
 ## Árboles y arbustos en MultiMesh partidos en trozos de CHUNK casillas: con los modelos
 ## generados (más polígonos que los procedurales) así se descarta lo que queda fuera de
 ## cámara y cada trozo elige su nivel de detalle.
-func _make_mm(mesh: Mesh, list: Array) -> Array:
+## `tk`: escala del ancho (x) y del alto (y).
+func _make_mm(mesh: Mesh, list: Array, tk := Vector2.ONE) -> Array:
 	var groups := {}
 	for e in list:
 		var key := Vector2i(e.tx / CHUNK, e.ty / CHUNK)
@@ -726,7 +733,7 @@ func _make_mm(mesh: Mesh, list: Array) -> Array:
 			# Giro libre, alto un poco distinto del ancho y una leve inclinación.
 			var la := float((hsh / 11) % 628) / 100.0
 			var lean := Basis(Vector3(cos(la), 0, sin(la)), float((hsh / 13) % 5) * 0.015)
-			var b := lean * Basis(Vector3.UP, float(hsh % 628) / 100.0).scaled(Vector3(s, s * (0.9 + float(hsh % 23) / 100.0), s))
+			var b := lean * Basis(Vector3.UP, float(hsh % 628) / 100.0).scaled(Vector3(s * tk.x, s * tk.y * (0.9 + float(hsh % 23) / 100.0), s * tk.x))
 			var t := Transform3D(b, p)
 			mm.set_instance_transform(i, t)
 			mm.set_instance_color(i, Color.WHITE)
@@ -753,12 +760,18 @@ func _make_visual(e: SimEntity) -> Dictionary:
 	if e.is_unit():
 		var msize := 2.6 if e.def.get("elefante", false) else (1.7 if e.def.get("montado", false) else 0.9)
 		var body: Node3D = _model_for(e.owner, e.type, msize, true, team)
+		var bk := _unit_k
 		if body == null:
 			body = MeshInstance3D.new()
 			(body as MeshInstance3D).mesh = unit_mesh_for(e)
 			v["age"] = _age_of(e.owner) # la maqueta cambia de equipo con la edad
-		_unit_k = float(sim.data.reglas.get("escala_visual", {}).get("unidad_pct", 100)) / 100.0
-		body.scale = Vector3.ONE * _unit_k
+			# La gente de maqueta, al alto de la persona generada (proceso/24, 4p): el cuerpo mide
+			# lo mismo que el aldeano y la lanza sobresale. El elefante, la corte móvil y los
+			# animales ya tienen su tamaño.
+			if not (e.def.get("animal", false) or e.def.get("elefante", false) or e.def.has("despliega_en")):
+				bk *= FIGURE_H / MAQUETA_H
+		v["k"] = bk
+		body.scale = Vector3.ONE * bk
 		root.add_child(body)
 		root.add_child(Meshes.team_disc(team, maxf(0.25, e.radius / 1000.0 + 0.05)))
 		var carry := MeshInstance3D.new()
@@ -766,6 +779,9 @@ func _make_visual(e: SimEntity) -> Dictionary:
 		carry.position = Vector3(0, 0.5, -0.2)
 		carry.visible = false
 		body.add_child(carry)
+		# Silueta del color del equipo cuando la tapa un árbol o un edificio (proceso/24, 4p).
+		var sil := _silueta(team)
+		_each_geo(body, func(g: GeometryInstance3D) -> void: g.material_overlay = sil)
 		var rr := maxf(0.85, e.radius / 500.0 + 0.3)
 		var ring := _ring(0, Vector2(rr, rr))
 		root.add_child(ring)
@@ -797,8 +813,23 @@ func _make_visual(e: SimEntity) -> Dictionary:
 	return v
 
 
+static var _siluetas := {} # color del equipo -> ShaderMaterial
+
+
+## Material de la silueta de una unidad tapada (shaders/silueta.gdshader), uno por equipo.
+static func _silueta(team: Color) -> ShaderMaterial:
+	var key := team.to_html()
+	if not _siluetas.has(key):
+		var m := ShaderMaterial.new()
+		m.shader = preload("res://src/game/shaders/silueta.gdshader")
+		m.set_shader_parameter("color", Color(team.r, team.g, team.b, 0.6))
+		_siluetas[key] = m
+	return _siluetas[key]
+
+
 static var _models := {} # ruta -> PackedScene (o null si no existe)
 const FIGURE_H := 1.25 # alto de una persona generada, antes de escala_visual.unidad_pct
+const MAQUETA_H := 0.92 # alto de la persona de maqueta (CivMeshes._person: cabeza arriba a 0,92)
 ## Giro de los edificios generados (GLB): vienen con la puerta en +z, el lado que la cámara no
 ## ve (mira hacia +x+z, RtsCamera.YAW_DEG). Media vuelta, como las mallas procedurales
 ## (Meshes.face_camera); conserva la huella (proceso/24, 4e).
@@ -962,30 +993,61 @@ static func _each_geo(n: Node, f: Callable) -> void:
 		_each_geo(c, f)
 
 
-## Escala coherente (docs/10, paso 5): cada edificio llega al menos a la altura
-## de su categoría, para que una casa mida unas tres veces un aldeano. `h`: alto del
-## edificio en la edad I, así lo que crece con la edad no se pierde al estirar.
-func _stretch_k(e: SimEntity, h: float) -> float:
+## Escala coherente (docs/10, paso 5; proceso/24-tras-la-segunda-ronda/4p-escala.md): cada
+## edificio llega al menos al alto de su categoría (reglas.escala_visual.altura_min_cm), medido en
+## el cuerpo, sin estandartes. 0 si el tipo no tiene categoría.
+func _want_h(e: SimEntity) -> float:
+	return _want_h_of(e.owner, e.type, e.def, e.capital)
+
+
+func _want_h_of(owner: int, type: String, def: Dictionary, capital: bool) -> float:
 	var ev: Dictionary = sim.data.reglas.get("escala_visual", {})
 	var mins: Dictionary = ev.get("altura_min_cm", {})
 	var cat := ""
-	var dd := sim.dp(e.owner)
-	if e.capital or e.type == dd.civ.get("inicio_edificio", "centro") or e.type == "centro":
+	var dd := sim.dp(owner)
+	if capital or type == dd.civ.get("inicio_edificio", "centro") or type == "centro":
 		cat = "capital"
-	elif e.type == "casa" or e.type == dd.civ.get("casa", ""):
+	elif type == "casa" or type == dd.civ.get("casa", ""):
 		cat = "casa"
-	elif e.type.begins_with("torre") or e.def.get("torre", false):
+	elif type.begins_with("torre") or def.get("torre", false):
 		cat = "torre"
 	else:
 		for row in dd.hitos:
-			if (row as Array).has(e.type):
+			if (row as Array).has(type):
 				cat = "hito"
-		if cat == "" and e.def.has("entrena"):
+		if cat == "" and def.has("produce"):
 			cat = "produccion"
-	if cat == "" or not mins.has(cat) or e.def.get("transitable", false) or h < 0.3:
+	if cat == "" or not mins.has(cat) or def.get("transitable", false):
+		return 0.0
+	return float(mins[cat]) / 100.0
+
+
+## Modelo generado: se estira parejo hasta el alto de la categoría. `h`: alto del modelo en la
+## edad I, así lo que crece con la edad no se pierde al estirar.
+func _stretch_k(e: SimEntity, h: float) -> float:
+	var want := _want_h(e)
+	if want <= 0.0 or h < 0.3:
 		return 1.0
-	var want := float(mins[cat]) / 100.0
-	return clampf(want / h, 1.0, float(ev.get("estirar_max_pct", 150)) / 100.0)
+	var ev: Dictionary = sim.data.reglas.get("escala_visual", {})
+	return clampf(want / h, 1.0, float(ev.get("estirar_modelo_max_pct", 150)) / 100.0)
+
+
+## Maqueta: cómo subir muros y techos hasta el alto de la categoría (Meshes.levante), calculado
+## con el cuerpo de la edad I. Los hitos pueden poner su propio tope (data/arte_hitos.json →
+## levantar_max_pct: los chatos, como el ushnu, no se vuelven pirámides).
+## `age`: la edad que se dibuja (el baluarte bajo de algunos pueblos no se levanta a torre).
+func _lev_for(owner: int, type: String, def: Dictionary, capital: bool, age: int) -> Dictionary:
+	var want := _want_h_of(owner, type, def, capital)
+	if want <= 0.0:
+		return {}
+	if type == "torre" and str(_age_cfg(owner, age).get("torre", "")) in CivMeshes.arte().get("torres_bajas", []):
+		return {}
+	var ev: Dictionary = sim.data.reglas.get("escala_visual", {})
+	var kmax := float(ev.get("estirar_max_pct", 150)) / 100.0
+	if HitosMeshes.has(type):
+		kmax = minf(kmax, float(HitosMeshes.data()[type].get("levantar_max_pct", kmax * 100.0)) / 100.0)
+	var h1 := CivMeshes.alto_cuerpo(building_mesh_for(owner, type, def, 1, {}))
+	return Meshes.levante(h1, want, float(ev.get("zocalo_cm", 40)) / 100.0, float(ev.get("techo_pct", 50)) / 100.0, kmax)
 
 
 # ---------------------------------------------------------------- Aspecto por edad y obra
@@ -1046,27 +1108,28 @@ func _build_struct(e: SimEntity, v: Dictionary, look: String) -> void:
 			if cfg.has("modelo_tinte"):
 				_tint(model, Color(cfg["modelo_tinte"]))
 			var top := _aabb(model, Transform3D.IDENTITY).end.y # el techo, sin el estandarte
-			Meshes.team_banner(model, Vector3(e.w * 0.42, 0, -e.h * 0.42), team)
 			model.rotation.y = GLB_FRENTE_YAW
 			var h := _aabb(model, Transform3D.IDENTITY).size.y
 			var k := _stretch_k(e, h * esc1 / maxf(esc, 0.01))
 			var alto := float(cfg.get("alto_pct", 100)) / 100.0
 			model.scale.y *= k * alto
 			outer.add_child(model)
+			# El estandarte va aparte: no se estira con el modelo (media vuelta, como el modelo).
+			var flag_at := Node3D.new()
+			flag_at.rotation.y = GLB_FRENTE_YAW
+			Meshes.team_banner(flag_at, Vector3(e.w * 0.42, 0, -e.h * 0.42), team)
+			outer.add_child(flag_at)
 			var dm := CivMeshes.decor(e.type, e.def, team, cfg, e.w, e.h, top * k * alto, body * esc)
 			if dm != null:
 				var di := MeshInstance3D.new()
 				di.mesh = dm
 				outer.add_child(di)
 	if model == null:
-		var fin := building_mesh_for(e.owner, e.type, e.def, age)
-		var k := _stretch_k(e, building_mesh_for(e.owner, e.type, e.def, 1).get_aabb().size.y)
-		if e.type == "torre" and str(cfg.get("torre", "")) in CivMeshes.arte().get("torres_bajas", []):
-			k = 1.0 # baluarte bajo: no se estira a la altura de una torre
-		if HitosMeshes.has(e.type):
-			k = 1.0 # hito con forma propia: ya tiene su alto (data/arte_hitos.json)
+		# Se suben muros y techos, no se estira todo: puertas, cercos y estandartes quedan a la
+		# escala de la gente (Meshes.levantar).
+		var fin := building_mesh_for(e.owner, e.type, e.def, age, _lev_for(e.owner, e.type, e.def, e.capital, age))
+		var k := 1.0
 		var mi := MeshInstance3D.new()
-		mi.scale.y = k
 		outer.add_child(mi)
 		if e.built:
 			mi.mesh = fin
@@ -1106,6 +1169,12 @@ static func _tint(n: Node, tint: Color) -> void:
 			mi.set_surface_override_material(i, _tint_cache[key]))
 
 
+## Escala de un recurso del mapa: la caza y los animales sueltos van a la escala de la gente
+## (escala_visual.unidad_pct), como el rebaño; rocas y minas, no.
+func _res_k(e: SimEntity) -> float:
+	return _unit_k if e.type == "venado" or e.type == "rebano_salvaje" else 1.0
+
+
 ## Malla de un recurso del mapa. La caza y los animales sueltos toman la especie de la región:
 ## la del terreno, si tiene fauna propia, o la del pueblo de la base más cercana
 ## (data/arte_animales.json). Solo imagen: la simulación no sabe de especies.
@@ -1138,8 +1207,9 @@ func unit_mesh_for(e: SimEntity) -> Mesh:
 
 
 ## Malla de edificio según la civilización y la edad (por defecto, la del dueño); los hitos
-## eligen forma por opción y edad de destino.
-func building_mesh_for(owner: int, type: String, def: Dictionary, age: int = -1) -> Mesh:
+## eligen forma por opción y edad de destino. `lev`: cómo levantarla (Meshes.levante); sin
+## darlo, el de su categoría, así la vista previa al colocar mide lo mismo que el edificio.
+func building_mesh_for(owner: int, type: String, def: Dictionary, age: int = -1, lev: Variant = null) -> Mesh:
 	var dd := sim.dp(owner)
 	var style: Dictionary = dd.civ.get("estilo", {})
 	if style.is_empty():
@@ -1153,7 +1223,9 @@ func building_mesh_for(owner: int, type: String, def: Dictionary, age: int = -1)
 			tier = row
 	if age < 0:
 		age = _age_of(owner)
-	return CivMeshes.building(type, def, Palette.team(owner), style, variant, tier, _age_cfg(owner, age))
+	if lev == null:
+		lev = _lev_for(owner, type, def, false, age)
+	return CivMeshes.building(type, def, Palette.team(owner), style, variant, tier, _age_cfg(owner, age), lev)
 
 
 func _ring(shape: int, size: Vector2) -> MeshInstance3D:
@@ -1209,8 +1281,9 @@ func on_tick(events: Array) -> void:
 					mi.mesh = _resource_mesh(re)
 					mi.position = to_world(re.x, re.y)
 					mi.rotation.y = float(_hash(re.id) % 360) * PI / 180.0
+					mi.scale = Vector3.ONE * _res_k(re)
 					add_child(mi)
-					visuals[re.id] = {"node": mi, "kind": "rock", "max": re.amount, "cur": mi.position, "prev": mi.position}
+					visuals[re.id] = {"node": mi, "kind": "rock", "max": re.amount, "cur": mi.position, "prev": mi.position, "k0": _res_k(re)}
 			"died":
 				_on_died(ev["id"])
 			"absorbed":
@@ -1332,7 +1405,8 @@ func render(alpha: float, delta: float) -> void:
 			"rock":
 				var k := 0.45 + 0.55 * float(e.amount) / float(v["max"])
 				var rock: MeshInstance3D = v["node"]
-				rock.scale = Vector3(1, k, 1)
+				var k0: float = v.get("k0", 1.0)
+				rock.scale = Vector3(k0, k * k0, k0)
 				var fs := fog_state(e)
 				rock.visible = fs > 0
 				rock.material_overlay = Meshes.fog_overlay() if fs == 1 else null
@@ -1453,7 +1527,7 @@ func _render_unit(e: SimEntity, v: Dictionary, alpha: float, delta: float) -> vo
 	body.position = Vector3(0, bob, lunge * 0.22)
 	body.rotation.x = tilt + lunge * 0.3
 	v["spawn"] = maxf(0.0, float(v["spawn"]) - delta * 3.0)
-	body.scale = Vector3.ONE * _unit_k * (1.0 - float(v["spawn"]) * 0.7)
+	body.scale = Vector3.ONE * float(v.get("k", _unit_k)) * (1.0 - float(v["spawn"]) * 0.7)
 	var carry: MeshInstance3D = v["carry"]
 	carry.visible = e.carry > 0
 	if carry.visible:

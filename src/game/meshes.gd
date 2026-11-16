@@ -411,8 +411,63 @@ static func building_mesh(type: String, team: Color) -> ArrayMesh:
 
 
 static func _banner(p: Array, base: Vector3, hgt: float, team: Color) -> void:
-	p.append([cyl(0.03, 0.035, hgt, 6), xf(base + Vector3(0, hgt / 2.0, 0)), Palette.WOOD_BEAM])
-	p.append([box(0.04, 0.45, 0.4), xf(base + Vector3(0, hgt - 0.3, 0.22)), team])
+	p.append([cyl(0.03, 0.035, hgt, 6), xf(base + Vector3(0, hgt / 2.0, 0)), Palette.WOOD_BEAM, 0.0, FIJO])
+	p.append([box(0.04, 0.45, 0.4), xf(base + Vector3(0, hgt - 0.3, 0.22)), team, 0.0, FIJO])
+
+
+## Marca (quinto elemento de una parte) de lo que no se estira al levantar un edificio:
+## estandartes, gente y animales. Solo suben con lo que tienen debajo.
+const FIJO := "fijo"
+
+
+## Alto del cuerpo de un edificio armado en partes: lo más alto, sin las partes fijas.
+static func alto_partes(p: Array) -> float:
+	var top := 0.0
+	for part: Array in p:
+		if part.size() > 4 and part[4] == FIJO:
+			continue
+		top = maxf(top, ((part[1] as Transform3D) * (part[0] as Mesh).get_aabb()).end.y)
+	return top
+
+
+## Cómo levantar un cuerpo de alto `h` hasta `want` (proceso/24-tras-la-segunda-ronda/4p-escala.md):
+## hasta `z0` (puertas, cercos, pilas, la gente) queda igual; de `z0` a la mitad del cuerpo
+## (los muros) se estira por `kw`, y de ahí arriba (los techos) por `kr`, que se lleva solo
+## `techo` (0 a 1) del estiramiento extra, para que los techos no queden de aguja. `kw` no pasa
+## de `kmax`. Vacío si no hace falta.
+static func levante(h: float, want: float, z0: float, techo: float, kmax: float) -> Dictionary:
+	if h <= z0 + 0.05 or want <= h:
+		return {}
+	var a := (h - z0) / 2.0
+	var kw := clampf((want - z0 - a * (1.0 - techo)) / (a * (1.0 + techo)), 1.0, kmax)
+	return {"z0": z0, "mid": z0 + a, "kw": kw, "kr": 1.0 + (kw - 1.0) * techo}
+
+
+## Aplica un `levante` a las partes: cada parte se estira entera según su tramo (sin quiebres)
+## y las fijas solo se trasladan a donde quedó su base.
+static func levantar(p: Array, lev: Dictionary) -> void:
+	if lev.is_empty():
+		return
+	var z0: float = lev["z0"]
+	var mid: float = lev["mid"]
+	var kw: float = lev["kw"]
+	var kr: float = lev["kr"]
+	var f := func(y: float) -> float:
+		if y <= z0:
+			return y
+		if y <= mid:
+			return z0 + (y - z0) * kw
+		return z0 + (mid - z0) * kw + (y - mid) * kr
+	for part: Array in p:
+		var b: AABB = (part[1] as Transform3D) * (part[0] as Mesh).get_aabb()
+		var y0 := b.position.y
+		var y1 := b.end.y
+		var n0: float = f.call(y0)
+		if (part.size() > 4 and part[4] == FIJO) or y1 - y0 < 0.0001:
+			part[1] = Transform3D(Basis.IDENTITY, Vector3(0, n0 - y0, 0)) * (part[1] as Transform3D)
+		else:
+			var s: float = (f.call(y1) - n0) / (y1 - y0)
+			part[1] = Transform3D(Basis.IDENTITY.scaled(Vector3(1, s, 1)), Vector3(0, n0 - s * y0, 0)) * (part[1] as Transform3D)
 
 
 static func foundation_mesh(w: int, h: int) -> ArrayMesh:
