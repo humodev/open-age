@@ -1,0 +1,28 @@
+== A. 10 honderos contra 10 guerreros, los dos con ataque en movimiento
+   16.2 s · quedan hondero 0/10 (vida 0%) · guerrero 8/10 (vida 62%)
+== B. Lo mismo, pero los honderos retroceden cuando un guerrero se acerca (kiteo)
+   30.0 s · quedan hondero 0/10 (vida 0%) · guerrero 10/10 (vida 86%)
+== C. 10 honderos contra 10 lanceros (distancia contra línea)
+   28.4 s · quedan hondero 6/10 (vida 47%) · lancero 0/10 (vida 0%)
+== D. 10 guerreros contra 10 lanceros (choque contra línea)
+   26.5 s · quedan guerrero 0/10 (vida 0%) · lancero 7/10 (vida 48%)
+== E. 8 jinetes contra 10 honderos (choque contra distancia)
+   15.2 s · quedan jinete 7/8 (vida 82%) · hondero 0/10 (vida 0%)
+== F. 10 honderos con todo el fuego a un blanco por vez (foco) contra 10 guerreros
+   20.1 s · quedan hondero 0/10 (vida 0%) · guerrero 6/10 (vida 57%)
+== G. Retirada: 6 jinetes + 6 lanceros pasan junto a 8 honderos con orden de mover (sin ataque)
+   llegan 8/12 (jinetes 3, lanceros 5); primero a los 21.2 s, todos a los 22.6 s; vida de los jinetes 505
+== H. La misma retirada, suelta (Alt)
+   llegan 9/12 (jinetes 6, lanceros 3); primero a los 9.7 s, todos a los -0.1 s; vida de los jinetes 920
+== I. 5 lanceros + 5 honderos (mezcla, bloque) contra 10 guerreros, ataque en movimiento
+   27.1 s · quedan A 0/10 · B 4/10
+== J. Lo mismo, pero la mezcla espera con mantener posición
+   56.0 s · quedan A 0/10 · B 3/10
+== K. 10 honderos en línea contra 10 lanceros (antes, en bloque: ver micro.gd C)
+   28.4 s · quedan A 6/10 · B 0/10
+== L. 10 honderos kitean a 10 lanceros (lentos)
+   47.4 s · quedan A 10/10 · B 0/10
+== M. 10 honderos contra 10 honderos: uno en bloque, otro en abierta
+   26.4 s · quedan A 5/10 · B 0/10
+== N. 10 guerreros contra 10 guerreros, mismo costo: control
+   32.8 s · quedan A 0/10 · B 1/10

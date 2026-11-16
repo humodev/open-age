@@ -1,0 +1,115 @@
+# python3 tools/modelo_micro.py (datos de main)
+# modelo_micro · edad 2 · parche ninguno · contacto 0.6 · reparto 40 %
+# bonos {"_doc": "Combate como AoE4 (proceso/23, C-31): daño = ataque + bono contra la función del blanco − armadura (la de distancia si el que pega tiene más de `alcance_distancia`). Reemplaza a los multiplicadores entre unidades, que eran de ×2 a ×2,25. Una unidad puede sumar los suyos en `bono`.", "linea": {"choque": 5}, "distancia": {"linea": 4}, "choque": {"distancia": 6}}
+
+## Daño por golpe, dps y tiempo para matar (uno contra uno)
+atacante → blanco | golpe | dps | golpes para matar | segundos para matar
+guerrero → guerrero | 11 | 8.8 | 11 | 13.8
+guerrero → hondero | 18 | 14.4 | 4 | 5.0
+guerrero → lancero | 9 | 7.2 | 16 | 20.0
+guerrero → jinete | 11 | 8.8 | 16 | 20.0
+hondero → guerrero | 7 | 4.0 | 18 | 31.5
+hondero → hondero | 7 | 4.0 | 10 | 17.5
+hondero → lancero | 11 | 6.3 | 13 | 22.8
+hondero → jinete | 5 | 2.9 | 34 | 59.5
+lancero → guerrero | 12 | 8.0 | 10 | 15.0
+lancero → hondero | 8 | 5.3 | 9 | 13.5
+lancero → lancero | 5 | 3.3 | 28 | 42.0
+lancero → jinete | 12 | 8.0 | 15 | 22.5
+jinete → guerrero | 13 | 10.4 | 10 | 12.5
+jinete → hondero | 20 | 16.0 | 4 | 5.0
+jinete → lancero | 11 | 8.8 | 13 | 16.2
+jinete → jinete | 13 | 10.4 | 14 | 17.5
+
+## Fuerza de Lanchester por población (dps × vida ÷ pob²) y ley cuadrada, misma población
+A contra B | fuerza A | fuerza B | gana | quedan (de 10 pob)
+guerrero contra hondero | 1728 | 260 | guerrero | 9.9
+guerrero contra lancero | 864 | 1120 | lancero | 6.4
+guerrero contra jinete | 1056 | 442 | guerrero | 9.1
+hondero contra lancero | 409 | 747 | lancero | 8.4
+hondero contra jinete | 186 | 680 | jinete | 4.8
+lancero contra jinete | 1120 | 374 | lancero | 9.4
+
+## Kiteo: ¿el de distancia mantiene la distancia al escalonar?
+(latencia de la orden: 0.3 s; el disparo es instantáneo en la simulación)
+tirador contra perseguidor | vel. tirador | vel. perseguidor | se acerca por ciclo (casillas) | tiros gratis al acercarse | tiros escalonando antes del contacto
+hondero contra guerrero | 1.12 | 1.44 | +0.89 | 2.8 | 6.1
+hondero contra lancero | 1.12 | 0.99 | +0.10 | 3.5 | 44.0
+hondero contra jinete | 1.12 | 1.98 | +1.83 | 2.3 | 3.4
+
+## Peleas de grupo (1D, sin micro salvo donde se dice)
+pelea | tiempo | A vivos | B vivos
+guerrero:10 contra guerrero:10 | 93.2 s | 0/10 | 1/10
+hondero:10 contra guerrero:10 | 16.7 s | 0/10 | 8/10
+hondero:10 contra lancero:10 | 41.7 s | 5/10 | 0/10
+guerrero:10 contra lancero:10 | 51.6 s | 0/10 | 5/10
+jinete:5 contra hondero:10 | 27.0 s | 4/5 | 0/10
+lancero:10 contra jinete:5 | 28.2 s | 9/10 | 0/5
+lancero:5+hondero:5 contra guerrero:10 | 63.7 s | 0/10 | 2/10
+lancero:5+hondero:5 contra guerrero:10, mantener | 80.3 s | 0/10 | 1/10
+lancero:5+hondero:5 contra jinete:5 | 37.3 s | 8/10 | 0/5
+lancero:5+hondero:5 contra lancero:10 | 48.9 s | 8/10 | 0/10
+
+# python3 tools/modelo_micro.py --parche=C2.json
+# modelo_micro · edad 2 · parche /tmp/claude-1000/-mnt-games-01-Projects-open-age/481c6f08-db17-4268-bf0b-14788944cecc/scratchpad/5a/C2.json · contacto 0.6 · reparto 40 %
+# bonos {"_doc": "Combate como AoE4 (proceso/23, C-31): daño = ataque + bono contra la función del blanco − armadura (la de distancia si el que pega tiene más de `alcance_distancia`). Reemplaza a los multiplicadores entre unidades, que eran de ×2 a ×2,25. Una unidad puede sumar los suyos en `bono`.", "linea": {"choque": 6}, "distancia": {"linea": 4}, "choque": {"distancia": 6}}
+
+## Daño por golpe, dps y tiempo para matar (uno contra uno)
+atacante → blanco | golpe | dps | golpes para matar | segundos para matar
+guerrero → guerrero | 11 | 8.8 | 11 | 13.8
+guerrero → hondero | 18 | 14.4 | 4 | 5.0
+guerrero → lancero | 9 | 7.2 | 16 | 20.0
+guerrero → jinete | 11 | 8.8 | 16 | 20.0
+hondero → guerrero | 7 | 4.0 | 18 | 31.5
+hondero → hondero | 7 | 4.0 | 10 | 17.5
+hondero → lancero | 11 | 6.3 | 13 | 22.8
+hondero → jinete | 5 | 2.9 | 34 | 59.5
+lancero → guerrero | 13 | 8.7 | 10 | 15.0
+lancero → hondero | 8 | 5.3 | 9 | 13.5
+lancero → lancero | 5 | 3.3 | 28 | 42.0
+lancero → jinete | 13 | 8.7 | 14 | 21.0
+jinete → guerrero | 13 | 10.4 | 10 | 12.5
+jinete → hondero | 20 | 16.0 | 4 | 5.0
+jinete → lancero | 11 | 8.8 | 13 | 16.2
+jinete → jinete | 13 | 10.4 | 14 | 17.5
+
+## Fuerza de Lanchester por población (dps × vida ÷ pob²) y ley cuadrada, misma población
+A contra B | fuerza A | fuerza B | gana | quedan (de 10 pob)
+guerrero contra hondero | 1728 | 260 | guerrero | 9.9
+guerrero contra lancero | 864 | 1213 | lancero | 7.0
+guerrero contra jinete | 1056 | 442 | guerrero | 9.1
+hondero contra lancero | 409 | 747 | lancero | 8.4
+hondero contra jinete | 186 | 680 | jinete | 4.8
+lancero contra jinete | 1213 | 374 | lancero | 9.5
+
+## Kiteo: ¿el de distancia mantiene la distancia al escalonar?
+(latencia de la orden: 0.3 s; el disparo es instantáneo en la simulación)
+tirador contra perseguidor | vel. tirador | vel. perseguidor | se acerca por ciclo (casillas) | tiros gratis al acercarse | tiros escalonando antes del contacto
+hondero contra guerrero | 1.12 | 1.22 | +0.50 | 3.1 | 10.2
+hondero contra lancero | 1.12 | 0.99 | +0.10 | 3.5 | 44.0
+hondero contra jinete | 1.12 | 1.98 | +1.83 | 2.3 | 3.4
+
+## Peleas de grupo (1D, sin micro salvo donde se dice)
+pelea | tiempo | A vivos | B vivos
+guerrero:10 contra guerrero:10 | 150.1 s | 1/10 | 1/10
+hondero:10 contra guerrero:10 | 17.8 s | 0/10 | 8/10
+hondero:10 contra lancero:10 | 41.7 s | 5/10 | 0/10
+guerrero:10 contra lancero:10 | 45.9 s | 0/10 | 6/10
+jinete:5 contra hondero:10 | 27.0 s | 4/5 | 0/10
+lancero:10 contra jinete:5 | 26.0 s | 9/10 | 0/5
+lancero:5+hondero:5 contra guerrero:10 | 68.8 s | 3/10 | 0/10
+lancero:5+hondero:5 contra guerrero:10, mantener | 64.5 s | 4/10 | 0/10
+lancero:5+hondero:5 contra jinete:5 | 35.4 s | 8/10 | 0/5
+lancero:5+hondero:5 contra lancero:10 | 48.9 s | 8/10 | 0/10
+
+# python3 tools/modelo_micro.py --parche=D1.json (solo kiteo)
+## Kiteo: ¿el de distancia mantiene la distancia al escalonar?
+(latencia de la orden: 0.3 s; el disparo es instantáneo en la simulación)
+tirador contra perseguidor | vel. tirador | vel. perseguidor | se acerca por ciclo (casillas) | tiros gratis al acercarse | tiros escalonando antes del contacto
+hondero contra guerrero | 1.12 | 1.44 | +0.89 | 2.8 | 6.1
+hondero contra lancero | 1.12 | 0.99 | +0.10 | 3.5 | 44.0
+hondero contra jinete | 1.12 | 1.98 | +1.83 | 2.3 | 3.4
+jinete_arquero contra guerrero | 1.71 | 1.44 | +0.04 | 2.2 | 72.9
+jinete_arquero contra lancero | 1.71 | 0.99 | -0.75 | 2.6 | sin límite (lo mantiene a raya)
+jinete_arquero contra jinete | 1.71 | 1.98 | +0.99 | 1.8 | 3.8
+

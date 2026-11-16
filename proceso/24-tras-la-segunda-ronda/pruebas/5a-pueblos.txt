@@ -1,0 +1,173 @@
+# Con pueblos (tools/micro_matriz.gd -- --civs=A,B --variantes=5): identidad de cada uno
+
+## guaraníes (A) contra mapuches (B)
+### base
+# micro_matriz · civs guaranies / mapuches · edad 2 · parche /tmp/claude-1000/-mnt-games-01-Projects-open-age/481c6f08-db17-4268-bf0b-14788944cecc/scratchpad/5a/base.json
+# bonos {"choque":{"distancia":6},"distancia":{"linea":4},"linea":{"choque":5}}
+# guerrero: pv 120, ataque 11, armadura 1/0, alcance 450, cadencia 1250, velocidad 1600, costo {"alimento":60,"riqueza":25}
+# hondero: pv 70, ataque 8, armadura 0/0, alcance 6000, cadencia 1750, velocidad 1250, costo {"alimento":30,"madera":45}
+# lancero: pv 115, ataque 8, armadura 3/0, alcance 650, cadencia 1500, velocidad 1100, costo {"alimento":60,"madera":25,"riqueza":10}
+# jinete: pv 170, ataque 13, armadura 1/2, alcance 500, cadencia 1250, velocidad 2200, costo {"alimento":100,"riqueza":70}
+# 5 variantes por pelea (semilla 3..7, B corrido 0, -1, 1, -2, 2 casillas)
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+custom | lancero:5+hondero:5 | guerrero:10 | nada | - | 30.4 s | 1/5 | 1.0/10 | 3.8/10 | 850 / 750
+custom | lancero:5+hondero:5 | guerrero:10 | mantener | - | 78.2 s | 2/5 | 2.2/10 | 1.4/10 | 850 / 750
+custom | lancero:5+hondero:5 | guerrero:10 | mantener+escalonar | - | 67.3 s | 5/5 | 4.6/10 | 0.0/10 | 850 / 750
+custom | hondero:10 | guerrero:10 | nada | - | 16.2 s | 0/5 | 0.0/10 | 7.6/10 | 750 / 750
+custom | hondero:10 | guerrero:10 | escalonar | - | 66.8 s | 1/5 | 2.2/10 | 4.0/10 | 750 / 750
+custom | guerrero:10 | lancero:10 | nada | - | 29.2 s | 0/5 | 0.0/10 | 5.6/10 | 850 / 750
+custom | hondero:10 | lancero:10 | nada | - | 28.2 s | 5/5 | 7.2/10 | 0.0/10 | 750 / 750
+custom | guerrero:10 | guerrero:10 | nada | - | 53.2 s | 1/5 | 0.8/10 | 2.2/10 | 850 / 750
+### C2
+# micro_matriz · civs guaranies / mapuches · edad 2 · parche /tmp/claude-1000/-mnt-games-01-Projects-open-age/481c6f08-db17-4268-bf0b-14788944cecc/scratchpad/5a/C2.json
+# bonos {"choque":{"distancia":6},"distancia":{"linea":4},"linea":{"choque":6}}
+# guerrero: pv 120, ataque 11, armadura 1/0, alcance 450, cadencia 1250, velocidad 1350, costo {"alimento":60,"riqueza":25}
+# hondero: pv 70, ataque 8, armadura 0/0, alcance 6000, cadencia 1750, velocidad 1250, costo {"alimento":30,"madera":45}
+# lancero: pv 115, ataque 8, armadura 3/0, alcance 650, cadencia 1500, velocidad 1100, costo {"alimento":60,"madera":25,"riqueza":10}
+# jinete: pv 170, ataque 13, armadura 1/2, alcance 500, cadencia 1250, velocidad 2200, costo {"alimento":100,"riqueza":70}
+# 5 variantes por pelea (semilla 3..7, B corrido 0, -1, 1, -2, 2 casillas)
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+custom | lancero:5+hondero:5 | guerrero:10 | nada | - | 29.6 s | 1/5 | 1.4/10 | 3.8/10 | 850 / 750
+custom | lancero:5+hondero:5 | guerrero:10 | mantener | - | 78.8 s | 2/5 | 2.2/10 | 1.2/10 | 850 / 750
+custom | lancero:5+hondero:5 | guerrero:10 | mantener+escalonar | - | 65.9 s | 5/5 | 4.6/10 | 0.0/10 | 850 / 750
+custom | hondero:10 | guerrero:10 | nada | - | 16.2 s | 0/5 | 0.0/10 | 7.6/10 | 750 / 750
+custom | hondero:10 | guerrero:10 | escalonar | - | 66.8 s | 1/5 | 2.2/10 | 4.0/10 | 750 / 750
+custom | guerrero:10 | lancero:10 | nada | - | 28.8 s | 0/5 | 0.0/10 | 6.0/10 | 850 / 750
+custom | hondero:10 | lancero:10 | nada | - | 28.2 s | 5/5 | 7.2/10 | 0.0/10 | 750 / 750
+custom | guerrero:10 | guerrero:10 | nada | - | 38.1 s | 2/5 | 1.4/10 | 2.2/10 | 850 / 750
+### C3
+# micro_matriz · civs guaranies / mapuches · edad 2 · parche /tmp/claude-1000/-mnt-games-01-Projects-open-age/481c6f08-db17-4268-bf0b-14788944cecc/scratchpad/5a/C3.json
+# bonos {"choque":{"distancia":6},"distancia":{"linea":4},"linea":{"choque":8}}
+# guerrero: pv 120, ataque 11, armadura 1/0, alcance 450, cadencia 1250, velocidad 1350, costo {"alimento":60,"riqueza":25}
+# hondero: pv 70, ataque 8, armadura 0/0, alcance 6000, cadencia 1750, velocidad 1250, costo {"alimento":30,"madera":45}
+# lancero: pv 115, ataque 8, armadura 3/0, alcance 650, cadencia 1500, velocidad 1100, costo {"alimento":60,"madera":25,"riqueza":10}
+# jinete: pv 170, ataque 13, armadura 1/2, alcance 500, cadencia 1250, velocidad 2200, costo {"alimento":100,"riqueza":70}
+# 5 variantes por pelea (semilla 3..7, B corrido 0, -1, 1, -2, 2 casillas)
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+custom | lancero:5+hondero:5 | guerrero:10 | nada | - | 31.8 s | 1/5 | 1.2/10 | 2.6/10 | 850 / 750
+custom | lancero:5+hondero:5 | guerrero:10 | mantener | - | 77.3 s | 2/5 | 2.0/10 | 1.4/10 | 850 / 750
+custom | lancero:5+hondero:5 | guerrero:10 | mantener+escalonar | - | 62.9 s | 5/5 | 5.2/10 | 0.0/10 | 850 / 750
+custom | hondero:10 | guerrero:10 | nada | - | 16.2 s | 0/5 | 0.0/10 | 7.6/10 | 750 / 750
+custom | hondero:10 | guerrero:10 | escalonar | - | 66.8 s | 1/5 | 2.2/10 | 4.0/10 | 750 / 750
+custom | guerrero:10 | lancero:10 | nada | - | 23.9 s | 0/5 | 0.0/10 | 7.2/10 | 850 / 750
+custom | hondero:10 | lancero:10 | nada | - | 28.2 s | 5/5 | 7.2/10 | 0.0/10 | 750 / 750
+custom | guerrero:10 | guerrero:10 | nada | - | 38.1 s | 2/5 | 1.4/10 | 2.2/10 | 850 / 750
+### A2
+# micro_matriz · civs guaranies / mapuches · edad 2 · parche /tmp/claude-1000/-mnt-games-01-Projects-open-age/481c6f08-db17-4268-bf0b-14788944cecc/scratchpad/5a/A2.json
+# bonos {"choque":{"distancia":6},"distancia":{"linea":4},"linea":{"choque":10}}
+# guerrero: pv 120, ataque 11, armadura 1/0, alcance 450, cadencia 1250, velocidad 1600, costo {"alimento":60,"riqueza":25}
+# hondero: pv 70, ataque 8, armadura 0/0, alcance 6000, cadencia 1750, velocidad 1250, costo {"alimento":30,"madera":45}
+# lancero: pv 115, ataque 8, armadura 3/0, alcance 650, cadencia 1500, velocidad 1100, costo {"alimento":60,"madera":25,"riqueza":10}
+# jinete: pv 170, ataque 13, armadura 1/2, alcance 500, cadencia 1250, velocidad 2200, costo {"alimento":100,"riqueza":70}
+# 5 variantes por pelea (semilla 3..7, B corrido 0, -1, 1, -2, 2 casillas)
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+custom | lancero:5+hondero:5 | guerrero:10 | nada | - | 33.9 s | 2/5 | 2.4/10 | 1.4/10 | 850 / 750
+custom | lancero:5+hondero:5 | guerrero:10 | mantener | - | 78.3 s | 3/5 | 3.2/10 | 0.4/10 | 850 / 750
+custom | lancero:5+hondero:5 | guerrero:10 | mantener+escalonar | - | 70.1 s | 4/5 | 4.8/10 | 0.2/10 | 850 / 750
+custom | hondero:10 | guerrero:10 | nada | - | 16.2 s | 0/5 | 0.0/10 | 7.6/10 | 750 / 750
+custom | hondero:10 | guerrero:10 | escalonar | - | 66.8 s | 1/5 | 2.2/10 | 4.0/10 | 750 / 750
+custom | guerrero:10 | lancero:10 | nada | - | 21.9 s | 0/5 | 0.0/10 | 7.6/10 | 850 / 750
+custom | hondero:10 | lancero:10 | nada | - | 28.2 s | 5/5 | 7.2/10 | 0.0/10 | 750 / 750
+custom | guerrero:10 | guerrero:10 | nada | - | 53.2 s | 1/5 | 0.8/10 | 2.2/10 | 850 / 750
+
+## mapuches (A) contra guaraníes (B)
+### base
+# micro_matriz · civs mapuches / guaranies · edad 2 · parche /tmp/claude-1000/-mnt-games-01-Projects-open-age/481c6f08-db17-4268-bf0b-14788944cecc/scratchpad/5a/base.json
+# bonos {"choque":{"distancia":6},"distancia":{"linea":4},"linea":{"choque":5}}
+# guerrero: pv 120, ataque 11, armadura 1/0, alcance 450, cadencia 1250, velocidad 1750, costo {"alimento":55,"riqueza":20}
+# hondero: pv 65, ataque 7, armadura 0/0, alcance 5500, cadencia 1750, velocidad 1250, costo {"alimento":30,"madera":45}
+# lancero: pv 140, ataque 8, armadura 3/0, alcance 650, cadencia 1500, velocidad 1100, costo {"alimento":50,"madera":25}
+# jinete: pv 170, ataque 13, armadura 1/2, alcance 500, cadencia 1250, velocidad 2200, costo {"alimento":80,"riqueza":55}
+# 5 variantes por pelea (semilla 3..7, B corrido 0, -1, 1, -2, 2 casillas)
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+custom | lancero:5+hondero:5 | guerrero:10 | nada | - | 34.6 s | 1/5 | 0.8/10 | 3.8/10 | 750 / 850
+custom | lancero:5+hondero:5 | guerrero:10 | mantener | - | 84.3 s | 2/5 | 2.4/10 | 1.0/10 | 750 / 850
+custom | lancero:5+hondero:5 | guerrero:10 | mantener+escalonar | - | 76.8 s | 4/5 | 4.8/10 | 0.2/10 | 750 / 850
+custom | hondero:10 | guerrero:10 | nada | - | 16.2 s | 0/5 | 0.0/10 | 8.4/10 | 750 / 850
+custom | hondero:10 | guerrero:10 | escalonar | - | 60.1 s | 2/5 | 2.0/10 | 3.2/10 | 750 / 850
+custom | guerrero:10 | lancero:10 | nada | - | 33.2 s | 1/5 | 0.6/10 | 2.2/10 | 750 / 950
+custom | hondero:10 | lancero:10 | nada | - | 26.2 s | 5/5 | 7.6/10 | 0.0/10 | 750 / 950
+custom | guerrero:10 | guerrero:10 | nada | - | 32.6 s | 5/5 | 3.2/10 | 0.0/10 | 750 / 850
+### C2
+# micro_matriz · civs mapuches / guaranies · edad 2 · parche /tmp/claude-1000/-mnt-games-01-Projects-open-age/481c6f08-db17-4268-bf0b-14788944cecc/scratchpad/5a/C2.json
+# bonos {"choque":{"distancia":6},"distancia":{"linea":4},"linea":{"choque":6}}
+# guerrero: pv 120, ataque 11, armadura 1/0, alcance 450, cadencia 1250, velocidad 1750, costo {"alimento":55,"riqueza":20}
+# hondero: pv 65, ataque 7, armadura 0/0, alcance 5500, cadencia 1750, velocidad 1250, costo {"alimento":30,"madera":45}
+# lancero: pv 140, ataque 8, armadura 3/0, alcance 650, cadencia 1500, velocidad 1100, costo {"alimento":50,"madera":25}
+# jinete: pv 170, ataque 13, armadura 1/2, alcance 500, cadencia 1250, velocidad 2200, costo {"alimento":80,"riqueza":55}
+# 5 variantes por pelea (semilla 3..7, B corrido 0, -1, 1, -2, 2 casillas)
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+custom | lancero:5+hondero:5 | guerrero:10 | nada | - | 33.0 s | 3/5 | 3.4/10 | 1.2/10 | 750 / 850
+custom | lancero:5+hondero:5 | guerrero:10 | mantener | - | 70.6 s | 4/5 | 4.8/10 | 0.4/10 | 750 / 850
+custom | lancero:5+hondero:5 | guerrero:10 | mantener+escalonar | - | 66.7 s | 5/5 | 6.0/10 | 0.0/10 | 750 / 850
+custom | hondero:10 | guerrero:10 | nada | - | 18.4 s | 0/5 | 0.0/10 | 7.8/10 | 750 / 850
+custom | hondero:10 | guerrero:10 | escalonar | - | 85.6 s | 4/5 | 5.8/10 | 0.2/10 | 750 / 850
+custom | guerrero:10 | lancero:10 | nada | - | 32.7 s | 1/5 | 0.4/10 | 2.8/10 | 750 / 950
+custom | hondero:10 | lancero:10 | nada | - | 26.2 s | 5/5 | 7.6/10 | 0.0/10 | 750 / 950
+custom | guerrero:10 | guerrero:10 | nada | - | 30.7 s | 4/5 | 2.8/10 | 0.2/10 | 750 / 850
+
+## Tawantinsuyu (A, con boleador) contra guaraníes (B)
+### base
+# micro_matriz · civs tawantinsuyu / guaranies · edad 2 · parche /tmp/claude-1000/-mnt-games-01-Projects-open-age/481c6f08-db17-4268-bf0b-14788944cecc/scratchpad/5a/base.json
+# bonos {"choque":{"distancia":6},"distancia":{"linea":4},"linea":{"choque":5}}
+# guerrero: pv 120, ataque 11, armadura 1/0, alcance 450, cadencia 1250, velocidad 1600, costo {"alimento":60,"riqueza":25}
+# hondero: pv 65, ataque 7, armadura 0/0, alcance 6000, cadencia 1750, velocidad 1250, costo {"alimento":30,"madera":45}
+# lancero: pv 140, ataque 8, armadura 3/0, alcance 650, cadencia 1500, velocidad 1100, costo {"alimento":60,"madera":25,"riqueza":10}
+# jinete: pv 170, ataque 13, armadura 1/2, alcance 500, cadencia 1250, velocidad 2200, costo {"alimento":100,"riqueza":70}
+# 5 variantes por pelea (semilla 3..7, B corrido 0, -1, 1, -2, 2 casillas)
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+custom | hondero:10 | guerrero:10 | nada | - | 17.3 s | 0/5 | 0.0/10 | 8.2/10 | 750 / 850
+custom | hondero:10 | guerrero:10 | escalonar | - | 66.2 s | 1/5 | 1.6/10 | 3.4/10 | 750 / 850
+custom | hondero:7+boleador:3 | guerrero:10 | nada | - | 17.0 s | 0/5 | 0.0/10 | 9.0/10 | 765 / 850
+custom | hondero:7+boleador:3 | guerrero:10 | escalonar | - | 128.9 s | 1/5 | 2.8/10 | 3.6/10 | 765 / 850
+custom | boleador:10 | guerrero:10 | escalonar | - | 134.1 s | 1/5 | 2.4/10 | 4.4/10 | 800 / 850
+custom | lancero:5+hondero:3+boleador:2 | guerrero:10 | mantener+escalonar | - | 97.9 s | 5/5 | 4.2/10 | 0.0/10 | 860 / 850
+### C2
+# micro_matriz · civs tawantinsuyu / guaranies · edad 2 · parche /tmp/claude-1000/-mnt-games-01-Projects-open-age/481c6f08-db17-4268-bf0b-14788944cecc/scratchpad/5a/C2.json
+# bonos {"choque":{"distancia":6},"distancia":{"linea":4},"linea":{"choque":6}}
+# guerrero: pv 120, ataque 11, armadura 1/0, alcance 450, cadencia 1250, velocidad 1350, costo {"alimento":60,"riqueza":25}
+# hondero: pv 65, ataque 7, armadura 0/0, alcance 6000, cadencia 1750, velocidad 1250, costo {"alimento":30,"madera":45}
+# lancero: pv 140, ataque 8, armadura 3/0, alcance 650, cadencia 1500, velocidad 1100, costo {"alimento":60,"madera":25,"riqueza":10}
+# jinete: pv 170, ataque 13, armadura 1/2, alcance 500, cadencia 1250, velocidad 2200, costo {"alimento":100,"riqueza":70}
+# 5 variantes por pelea (semilla 3..7, B corrido 0, -1, 1, -2, 2 casillas)
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+custom | hondero:10 | guerrero:10 | nada | - | 18.7 s | 0/5 | 0.0/10 | 7.8/10 | 750 / 850
+custom | hondero:10 | guerrero:10 | escalonar | - | 79.9 s | 4/5 | 6.0/10 | 0.8/10 | 750 / 850
+custom | hondero:7+boleador:3 | guerrero:10 | nada | - | 19.2 s | 0/5 | 0.0/10 | 8.6/10 | 765 / 850
+custom | hondero:7+boleador:3 | guerrero:10 | escalonar | - | 113.7 s | 2/5 | 7.4/10 | 1.0/10 | 765 / 850
+custom | boleador:10 | guerrero:10 | escalonar | - | 150.0 s | 1/5 | 7.8/10 | 3.6/10 | 800 / 850
+custom | lancero:5+hondero:3+boleador:2 | guerrero:10 | mantener+escalonar | - | 78.9 s | 5/5 | 7.8/10 | 0.0/10 | 860 / 850
+
+## Jinete hostigador (opción D, unidad nueva por parche): {"unidades":{"jinete_arquero":{"nombre":"Jinete hostigador","funcion":"distancia","edad_min":2,"pob":2,"costo":{"alimento":80,"madera":40,"riqueza":50},"tiempo_ms":22000,"pv":120,"armadura":0,"armadura_distancia":1,"ataque":9,"alcance":4000,"cadencia_ms":1750,"velocidad":1900,"vision":9000,"radio":380,"montado":true}}}
+### capa común contra capa común
+# micro_matriz · civs capa común / capa común · edad 2 · parche /tmp/claude-1000/-mnt-games-01-Projects-open-age/481c6f08-db17-4268-bf0b-14788944cecc/scratchpad/5a/D1.json
+# bonos {"choque":{"distancia":6},"distancia":{"linea":4},"linea":{"choque":5}}
+# guerrero: pv 120, ataque 11, armadura 1/0, alcance 450, cadencia 1250, velocidad 1600, costo {"alimento":60,"riqueza":25}
+# hondero: pv 65, ataque 7, armadura 0/0, alcance 5500, cadencia 1750, velocidad 1250, costo {"alimento":30,"madera":45}
+# lancero: pv 140, ataque 8, armadura 3/0, alcance 650, cadencia 1500, velocidad 1100, costo {"alimento":60,"madera":25,"riqueza":10}
+# jinete: pv 170, ataque 13, armadura 1/2, alcance 500, cadencia 1250, velocidad 2200, costo {"alimento":100,"riqueza":70}
+# 5 variantes por pelea (semilla 3..7, B corrido 0, -1, 1, -2, 2 casillas)
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+custom | jinete_arquero:5 | guerrero:10 | nada | - | 13.9 s | 0/5 | 0.0/5 | 9.2/10 | 850 / 850
+custom | jinete_arquero:5 | guerrero:10 | escalonar | - | 118.6 s | 3/5 | 3.8/5 | 1.6/10 | 850 / 850
+custom | jinete_arquero:5 | jinete:5 | nada | - | 14.3 s | 0/5 | 0.0/5 | 4.8/5 | 850 / 850
+custom | jinete_arquero:5 | jinete:5 | escalonar | - | 62.8 s | 0/5 | 0.2/5 | 3.8/5 | 850 / 850
+custom | jinete_arquero:5 | lancero:10 | escalonar | - | 55.8 s | 5/5 | 5.0/5 | 0.0/10 | 850 / 950
+custom | jinete_arquero:5 | hondero:10 | nada | - | 24.0 s | 0/5 | 0.0/5 | 6.6/10 | 850 / 750
+custom | lancero:5+jinete_arquero:3 | guerrero:10 | mantener+escalonar | - | 98.2 s | 2/5 | 2.8/8 | 2.6/10 | 985 / 850
+### capa común contra mapuches (weichafe a 1750)
+# micro_matriz · civs capa común / mapuches · edad 2 · parche /tmp/claude-1000/-mnt-games-01-Projects-open-age/481c6f08-db17-4268-bf0b-14788944cecc/scratchpad/5a/D1.json
+# bonos {"choque":{"distancia":6},"distancia":{"linea":4},"linea":{"choque":5}}
+# guerrero: pv 120, ataque 11, armadura 1/0, alcance 450, cadencia 1250, velocidad 1600, costo {"alimento":60,"riqueza":25}
+# hondero: pv 65, ataque 7, armadura 0/0, alcance 5500, cadencia 1750, velocidad 1250, costo {"alimento":30,"madera":45}
+# lancero: pv 140, ataque 8, armadura 3/0, alcance 650, cadencia 1500, velocidad 1100, costo {"alimento":60,"madera":25,"riqueza":10}
+# jinete: pv 170, ataque 13, armadura 1/2, alcance 500, cadencia 1250, velocidad 2200, costo {"alimento":100,"riqueza":70}
+# 5 variantes por pelea (semilla 3..7, B corrido 0, -1, 1, -2, 2 casillas)
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+custom | jinete_arquero:5 | guerrero:10 | nada | - | 13.1 s | 0/5 | 0.0/5 | 9.6/10 | 850 / 750
+custom | jinete_arquero:5 | guerrero:10 | escalonar | - | 115.5 s | 3/5 | 2.6/5 | 1.0/10 | 850 / 750
+custom | jinete_arquero:5 | jinete:5 | nada | - | 14.2 s | 0/5 | 0.0/5 | 5.0/5 | 850 / 675
+custom | jinete_arquero:5 | jinete:5 | escalonar | - | 39.8 s | 0/5 | 0.0/5 | 4.2/5 | 850 / 675
+custom | jinete_arquero:5 | lancero:10 | escalonar | - | 57.6 s | 5/5 | 5.0/5 | 0.0/10 | 850 / 750
+custom | jinete_arquero:5 | hondero:10 | nada | - | 23.9 s | 0/5 | 0.0/5 | 6.6/10 | 850 / 750
+custom | lancero:5+jinete_arquero:3 | guerrero:10 | mantener+escalonar | - | 103.2 s | 0/5 | 0.4/8 | 5.4/10 | 985 / 750

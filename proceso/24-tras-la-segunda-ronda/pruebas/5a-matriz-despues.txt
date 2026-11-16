@@ -1,0 +1,59 @@
+# Propuesta recomendada (C2): bonos.linea.choque 5 -> 6, guerrero.velocidad 1600 -> 1350
+# Aplicada en data/ (no por parche) y corrida sin parche; da lo mismo que out-C2 con parche.
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+base | guerrero:10 | guerrero:10 | nada | - | 31.9 s | 3/5 | 1.8/10 | 1.4/10 | 850 / 850
+base | hondero:10 | hondero:10 | nada | - | 38.5 s | 1/5 | 0.8/10 | 1.8/10 | 750 / 750
+base | lancero:10 | lancero:10 | nada | - | 84.0 s | 4/5 | 2.0/10 | 0.8/10 | 950 / 950
+base | hondero:10 | guerrero:10 | nada | - | 18.5 s | 0/5 | 0.0/10 | 8.0/10 | 750 / 850
+base | hondero:10 | guerrero:10 | foco | - | 19.1 s | 0/5 | 0.0/10 | 7.0/10 | 750 / 850
+base | hondero:10 | lancero:10 | nada | - | 37.7 s | 5/5 | 4.2/10 | 0.0/10 | 750 / 950
+base | guerrero:10 | lancero:10 | nada | - | 27.8 s | 0/5 | 0.0/10 | 6.2/10 | 850 / 950
+base | jinete:5 | hondero:10 | nada | - | 45.1 s | 4/5 | 3.6/5 | 0.2/10 | 850 / 750
+base | lancero:10 | jinete:5 | nada | - | 24.6 s | 5/5 | 8.0/10 | 0.0/5 | 950 / 850
+base | guerrero:10 | jinete:5 | nada | - | 25.3 s | 5/5 | 7.4/10 | 0.0/5 | 850 / 850
+kiteo | hondero:10 | guerrero:10 | kitear | - | 102.4 s | 0/5 | 0.0/10 | 8.4/10 | 750 / 850
+kiteo | hondero:10 | guerrero:10 | escalonar | - | 113.9 s | 2/5 | 5.2/10 | 0.8/10 | 750 / 850
+kiteo | hondero:10 | lancero:10 | kitear | - | 100.1 s | 4/5 | 9.4/10 | 0.4/10 | 750 / 950
+kiteo | hondero:10 | lancero:10 | escalonar | - | 31.0 s | 5/5 | 10.0/10 | 0.0/10 | 750 / 950
+kiteo | hondero:10 | jinete:5 | escalonar | - | 36.8 s | 0/5 | 0.0/10 | 4.2/5 | 750 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | nada | - | 37.1 s | 5/5 | 4.0/10 | 0.0/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | mantener | - | 73.8 s | 4/5 | 4.2/10 | 0.2/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | foco | - | 31.5 s | 5/5 | 6.4/10 | 0.0/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | mantener+escalonar | - | 66.0 s | 5/5 | 6.2/10 | 0.0/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | nada | linea | 37.1 s | 5/5 | 4.0/10 | 0.0/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | jinete:5 | nada | - | 26.3 s | 5/5 | 8.0/10 | 0.0/5 | 850 / 850
+mezcla | lancero:5+hondero:5 | hondero:10 | nada | - | 41.8 s | 3/5 | 1.4/10 | 1.4/10 | 850 / 750
+mezcla | lancero:5+hondero:5 | lancero:10 | nada | - | 39.1 s | 5/5 | 7.8/10 | 0.0/10 | 850 / 950
+mezcla | guerrero:5+hondero:5 | lancero:5+hondero:5 | nada | - | 43.7 s | 3/5 | 2.2/10 | 1.0/10 | 800 / 850
+
+# tests/micro.gd con C2 en data/ (guaraníes contra mapuches: el weichafe conserva su 1750)
+== A. 10 honderos contra 10 guerreros, los dos con ataque en movimiento
+   16.2 s · quedan hondero 0/10 (vida 0%) · guerrero 8/10 (vida 62%)
+== B. Lo mismo, pero los honderos retroceden cuando un guerrero se acerca (kiteo)
+   30.0 s · quedan hondero 0/10 (vida 0%) · guerrero 10/10 (vida 86%)
+== C. 10 honderos contra 10 lanceros (distancia contra línea)
+   28.4 s · quedan hondero 6/10 (vida 47%) · lancero 0/10 (vida 0%)
+== D. 10 guerreros contra 10 lanceros (choque contra línea)
+   26.7 s · quedan guerrero 0/10 (vida 0%) · lancero 7/10 (vida 49%)
+== E. 8 jinetes contra 10 honderos (choque contra distancia)
+   15.2 s · quedan jinete 7/8 (vida 82%) · hondero 0/10 (vida 0%)
+== F. 10 honderos con todo el fuego a un blanco por vez (foco) contra 10 guerreros
+   20.1 s · quedan hondero 0/10 (vida 0%) · guerrero 6/10 (vida 57%)
+== G. Retirada: 6 jinetes + 6 lanceros pasan junto a 8 honderos con orden de mover (sin ataque)
+   llegan 8/12 (jinetes 3, lanceros 5); primero a los 21.2 s, todos a los 22.6 s; vida de los jinetes 505
+== H. La misma retirada, suelta (Alt)
+   llegan 9/12 (jinetes 6, lanceros 3); primero a los 9.7 s, todos a los -0.1 s; vida de los jinetes 920
+
+# micro2.gd del veterano con C2 en data/
+== I. 5 lanceros + 5 honderos (mezcla, bloque) contra 10 guerreros, ataque en movimiento
+   25.4 s · quedan A 0/10 · B 5/10
+== J. Lo mismo, pero la mezcla espera con mantener posición
+   61.7 s · quedan A 0/10 · B 2/10
+== K. 10 honderos en línea contra 10 lanceros (antes, en bloque: ver micro.gd C)
+   28.4 s · quedan A 6/10 · B 0/10
+== L. 10 honderos kitean a 10 lanceros (lentos)
+   47.4 s · quedan A 10/10 · B 0/10
+== M. 10 honderos contra 10 honderos: uno en bloque, otro en abierta
+   26.4 s · quedan A 5/10 · B 0/10
+== N. 10 guerreros contra 10 guerreros, mismo costo: control
+   29.3 s · quedan A 0/10 · B 3/10
