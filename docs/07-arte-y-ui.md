@@ -32,7 +32,7 @@ Valen para las dos etapas.
 2. **El color es del equipo, no del tipo.** Las unidades son de material neutro y llevan el color de equipo en banda, escudo o estandarte. Ningún tipo de unidad usa un color de equipo como color propio.
 3. **Edificios por proporción.** Cada edificio se distingue por su planta y su altura antes que por el detalle.
 4. **Recursos por color natural.** Madera verde, piedra gris, riqueza dorada, alimento rojo sobre verde. Ninguno se confunde con un color de equipo.
-5. **Escala de juego, no realista.** Las unidades son más grandes de lo real respecto de los edificios, para leerse con la cámara de juego.
+5. **Escala cercana a AoE4** (2026-11-16, `proceso/24-tras-la-segunda-ronda/4p-escala.md`). La persona mide 0,75 casillas (`reglas.escala_visual.unidad_pct`); los soldados miden lo mismo que el aldeano y solo sobresalen la lanza o el tocado. En alturas de persona, medidas en el cuerpo y sin estandartes: casa unas 2, cuartel 2,5–3, centro 3–4, hito 5–6, torre 6 y árbol 4 (`altura_min_cm`, `arbol_alto_pct`). Las maquetas suben muros y techos por encima del zócalo, sin estirar puertas, cercos, gente ni estandartes; los modelos generados se estiran parejo hasta `estirar_modelo_max_pct`. Los animales van en proporción con la gente (`arte_animales.json → escala_pct`). La unidad tapada por un árbol o un edificio se ve como silueta del color del equipo (`shaders/silueta.gdshader`). Se mide con `tools/escala.gd`.
 6. **Quién gana una pelea** se ve en las barras de vida y en las bajas, nunca solo en números.
 
 ## Paleta de maqueta

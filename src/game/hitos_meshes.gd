@@ -284,11 +284,8 @@ static func _cannon(at: Vector3, yaw: float, col := IRON) -> void:
 static func _put(parts: Array, at: Vector3, yaw: float, k: float, tint: Variant = null) -> void:
 	var t := Transform3D(Basis(Vector3.UP, deg_to_rad(yaw)).scaled(Vector3.ONE * k), at)
 	for part: Array in parts:
-		var q: Array = [part[0], t * (part[1] as Transform3D), tint if tint != null else part[2]]
-		if tint != null:
-			q.append(0.3)
-		elif part.size() > 3:
-			q.append(part[3])
+		# Fija: al levantar el hito (Meshes.levantar) la figura sube con su base, sin estirarse.
+		var q: Array = [part[0], t * (part[1] as Transform3D), tint if tint != null else part[2], 0.3 if tint != null else (part[3] if part.size() > 3 else 0.0), Meshes.FIJO]
 		_p.append(q)
 
 
