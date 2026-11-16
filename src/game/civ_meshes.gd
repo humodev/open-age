@@ -327,11 +327,16 @@ static func _center(p: Array, forma: String, w: float, d: float, pal: Array, tea
 	var half_w := w / 2.0 - m - inner
 	var half_d := d / 2.0 - m - inner
 	var side := minf(w * 0.28, half_w * 0.6) * esc
-	_hut(p, forma, Vector3(0, by + tola, -d * 0.08), minf(w * 0.55, 2.0 * half_w - 0.1) * esc, d * 0.5 * esc, 1.5, pal, cfg)
-	var sx := half_w - side * 0.5
-	var sz := half_d - side * 0.5
-	_hut(p, forma, Vector3(-sx, by, sz), side, side * 0.93, 0.9, pal, cfg)
-	_hut(p, forma, Vector3(sx, by, sz), side, side * 0.93, 0.9, pal, cfg)
+	if str(cfg.get("centro_forma", "")) == "castillo":
+		# La corte se asienta (Gondar): castillo de piedra en lugar de la casa principal, solo
+		# dentro del cerco (las casas de los lados le tapaban el frente).
+		HitosMeshes.castillo(p, Vector3(0, by, -d * 0.1), minf(w * 0.6, 2.0 * half_w - 0.7), d * 0.34, pal, cfg)
+	else:
+		_hut(p, forma, Vector3(0, by + tola, -d * 0.08), minf(w * 0.55, 2.0 * half_w - 0.1) * esc, d * 0.5 * esc, 1.5, pal, cfg)
+		var sx := half_w - side * 0.5
+		var sz := half_d - side * 0.5
+		_hut(p, forma, Vector3(-sx, by, sz), side, side * 0.93, 0.9, pal, cfg)
+		_hut(p, forma, Vector3(sx, by, sz), side, side * 0.93, 0.9, pal, cfg)
 	Meshes._banner(p, Vector3(w * 0.38, by, -d * 0.38), 2.6, team)
 	Meshes._banner(p, Vector3(-w * 0.38, by, -d * 0.38), 2.6, team)
 	decor_parts(p, w, d, team, cfg, true)
@@ -343,7 +348,7 @@ static func decor_parts(p: Array, w: float, d: float, team: Color, cfg: Dictiona
 	var m := margin()
 	var cerco: Dictionary = cfg.get("cerco", {})
 	if whole and not cerco.is_empty():
-		_cerco(p, str(cerco.get("tipo", "pirca")), float(cerco.get("alto_cm", 60)) / 100.0, w / 2.0 - m, d / 2.0 - m)
+		_cerco(p, str(cerco.get("tipo", "pirca")), float(cerco.get("alto_cm", 60)) / 100.0, w / 2.0 - m, d / 2.0 - m, str(cerco.get("color", "")))
 	var rewe := float(cfg.get("rewe_cm", 0)) / 100.0
 	if whole and rewe > 0.0:
 		# Rewe: poste escalonado tallado con canelo al lado (mapuches, desde la edad II).
@@ -362,7 +367,8 @@ static func decor_parts(p: Array, w: float, d: float, team: Color, cfg: Dictiona
 
 ## Cerco alrededor del centro, en el borde del margen (el pasillo de la huella queda libre).
 ## Deja una entrada al frente (+z, antes de la media vuelta de Meshes.face_camera).
-static func _cerco(p: Array, tipo: String, hgt: float, hx: float, hz: float) -> void:
+## `color`: tono propio de la piedra (data/arte_edades.json → cerco.color); vacío, el del tipo.
+static func _cerco(p: Array, tipo: String, hgt: float, hx: float, hz: float, color := "") -> void:
 	var gap := 0.55
 	var segs: Array = [] # [desde, hasta] en coordenadas: lados como [a, b]
 	segs.append([Vector3(-hx, 0, -hz), Vector3(hx, 0, -hz)])
@@ -406,6 +412,8 @@ static func _cerco(p: Array, tipo: String, hgt: float, hx: float, hz: float) -> 
 				col = Color("eee8dc")
 			elif tipo == "pirca":
 				col = Color("9a8c78")
+			if color != "":
+				col = Color(color)
 			for s: Array in segs:
 				var a: Vector3 = s[0]
 				var b: Vector3 = s[1]

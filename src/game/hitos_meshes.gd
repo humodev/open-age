@@ -230,15 +230,28 @@ static func _palm(at: Vector3, h: float, lean := Vector2(0.15, 0.05)) -> void:
 	_sph(0.07, top, Color("6a5a3a"))
 
 
-## Araucaria (pewen): tronco recto y la copa en paraguas solo arriba.
+## Araucaria (pewen) adulta: tronco recto y desnudo, y arriba la copa en paraguas, más ancha
+## que alta y plana encima; las ramas salen en rayos y suben en la punta, con los mechones de
+## hojas al final. No es un pino de pisos (ronda 3 de jugadores; proceso/24, 4i).
 static func _araucaria(at: Vector3, h: float) -> void:
 	var leaf := Color("2f4a2c")
-	_cyl(0.05, 0.07, h, at + Vector3(0, h / 2.0, 0), Color("6e5a48"), 6)
-	for i in 3:
-		var y := h * (0.72 + i * 0.1)
-		var r := 0.55 - i * 0.14
-		_cyl(r * 0.85, r, 0.1, at + Vector3(0, y, 0), leaf.lightened(i * 0.05), 9)
-	_sph(0.2, at + Vector3(0, h * 1.02, 0), leaf.lightened(0.1), Vector3(1, 0.6, 1), 8)
+	var bark := Color("6e5a48")
+	var r := h * 0.24
+	var cy := h * 0.84
+	_cyl(0.045 * h / 3.0 + 0.02, 0.07 * h / 3.0 + 0.025, cy, at + Vector3(0, cy / 2.0, 0), bark, 7)
+	# Copa: cono invertido y achatado, plano arriba.
+	_cyl(r, r * 0.35, h * 0.12, at + Vector3(0, cy + h * 0.04, 0), leaf, 12)
+	_sph(r * 0.95, at + Vector3(0, cy + h * 0.1, 0), leaf.lightened(0.06), Vector3(1, 0.22, 1), 12)
+	for i in 9:
+		var a := TAU * i / 9.0 + 0.2
+		var dir := Vector3(cos(a), 0, sin(a))
+		var tip := at + dir * r * 1.05 + Vector3(0, cy + h * 0.1, 0)
+		CivMeshes._pole(_p, at + Vector3(0, cy - h * 0.02, 0), tip, 0.025, bark.darkened(0.1))
+		_sph(0.11 + 0.02 * (i % 2), tip + Vector3(0, 0.03, 0), leaf.lightened(0.04 * (i % 3)), Vector3(1.3, 0.6, 1.3), 6)
+	# Unas pocas ramas bajas secas, como en los pewen viejos.
+	for i in 2:
+		var a := TAU * i / 2.0 + 0.9
+		CivMeshes._pole(_p, at + Vector3(0, cy * (0.6 + i * 0.1), 0), at + Vector3(cos(a) * r * 0.5, cy * (0.6 + i * 0.1) + 0.12, sin(a) * r * 0.5), 0.015, bark)
 
 
 static func _fire(at: Vector3) -> void:
@@ -301,31 +314,48 @@ static func _stone_block(sz: Vector3, at: Vector3, col: Color) -> void:
 
 # ---------------------------------------------------------------- Tawantinsuyu
 
-## Ushnu: plataforma escalonada frente a la plaza, escalinata al frente y la tiana arriba.
+## Ushnu: plataforma baja y ancha de cuerpos de piedra gris frente a la plaza, la escalinata al
+## frente, arriba la portada trapezoidal de doble jamba y, detrás, la tiana (Vilcashuamán).
+## No es una pirámide: es ancha y baja, sin remate de oro (ronda 3 de jugadores; proceso/24, 4i).
 static func _ushnu() -> void:
-	var stone: Color = _pal[0]
+	var stone := Color(str(_e.get("piedra", "#8d8880")))
 	var n := int(_e.get("pisos", 5))
-	var th := 0.36
-	var cz := -0.4
+	var th := float(_e.get("alto_piso_cm", 15)) / 100.0
+	var cz := -0.45
+	var bx := _hw * 2.0 - 0.15
+	var bz := _hd * 2.0 - 1.0
+	var dx := 0.24
+	var dz := 0.14
 	_box(Vector3(_hw * 2.0, 0.04, _hd * 2.0), Vector3(0, 0.02, 0), Palette.DIRT.lightened(0.18))
 	for i in n:
-		var sx := 2.7 - i * 0.34
-		var sz := 2.1 - i * 0.24
-		var col := stone if i % 2 == 0 else stone.darkened(0.07)
-		_stone_block(Vector3(sx, th, sz), Vector3(0, i * th, cz), col)
+		var col := stone if i % 2 == 0 else stone.darkened(0.06)
+		_stone_block(Vector3(bx - i * dx, th, bz - i * dz), Vector3(0, i * th, cz), col)
+		_box(Vector3(bx - i * dx + 0.02, 0.025, bz - i * dz + 0.02), Vector3(0, (i + 1) * th - 0.012, cz), stone.lightened(0.06))
 	var top := n * th
-	var z0 := cz + (2.1 - (n - 1) * 0.24) / 2.0
-	for j in n * 2:
+	# Escalinata al frente: una sola rampa de peldaños, angosta y baja.
+	var z0 := cz + bz / 2.0
+	var steps := n * 2
+	for j in steps:
 		var hj := top - j * th / 2.0
-		_box(Vector3(0.62, hj, 0.13), Vector3(0, hj / 2.0, z0 + j * 0.13 + 0.065), stone.lightened(0.08))
-	var seat: Color = _gold() if _dorado() else stone.lightened(0.15)
-	_box(Vector3(0.6, 0.22, 0.32), Vector3(0, top + 0.11, cz - 0.08), seat)
-	_box(Vector3(0.6, 0.34, 0.08), Vector3(0, top + 0.28, cz - 0.27), seat)
-	_cyl(0.13, 0.1, 0.1, Vector3(0.45, top + 0.05, cz + 0.12), stone.darkened(0.25), 10)
-	if _dorado():
-		_box(Vector3(2.7 - (n - 1) * 0.34 + 0.03, 0.06, 2.1 - (n - 1) * 0.24 + 0.03), Vector3(0, top - 0.04, cz), _gold())
+		_box(Vector3(0.5, hj, 0.1), Vector3(0, hj / 2.0, z0 - (n - 1) * dz / 2.0 + j * 0.1 - 0.12), stone.lightened(0.04))
+	# Portada trapezoidal de doble jamba arriba de la escalinata.
+	var pz := cz + (bz - (n - 1) * dz) / 2.0 - 0.18
+	# Vano abierto: se ve el cielo y la sombra a través. Jambas inclinadas hacia adentro (más
+	# angosto arriba), la exterior adelante y la interior un paso más atrás.
+	var ph := 0.82
+	var lean := 5.0
+	for s: float in [-1.0, 1.0]:
+		_box(Vector3(0.22, ph, 0.24), Vector3(s * 0.36, top + ph / 2.0, pz + 0.04), stone.darkened(0.04), Vector3(0, 0, s * lean))
+		_box(Vector3(0.12, ph - 0.1, 0.2), Vector3(s * 0.22, top + (ph - 0.1) / 2.0, pz - 0.14), stone.darkened(0.12), Vector3(0, 0, s * lean))
+	_box(Vector3(0.98, 0.14, 0.26), Vector3(0, top + ph + 0.05, pz + 0.04), stone.lightened(0.04))
+	_box(Vector3(0.6, 0.12, 0.22), Vector3(0, top + ph - 0.08, pz - 0.14), stone.darkened(0.08))
+	_box(Vector3(0.5, 0.02, 0.4), Vector3(0, top + 0.01, pz - 0.05), stone.darkened(0.3))
+	# La tiana: asiento doble de piedra detrás de la portada.
+	_box(Vector3(0.62, 0.16, 0.3), Vector3(0, top + 0.08, cz - 0.3), stone.lightened(0.1))
+	_box(Vector3(0.62, 0.26, 0.08), Vector3(0, top + 0.21, cz - 0.42), stone.lightened(0.1))
+	_cyl(0.13, 0.1, 0.08, Vector3(0.7, top + 0.04, cz - 0.1), stone.darkened(0.25), 10)
 	# Canal de las libaciones, de la plataforma a la plaza.
-	_box(Vector3(0.08, 0.03, 1.2), Vector3(0.9, 0.05, 0.9), stone.darkened(0.3))
+	_box(Vector3(0.08, 0.03, 1.0), Vector3(1.0, 0.05, 1.0), stone.darkened(0.3))
 
 
 ## Pukara de frontera: cerro con muros concéntricos en terrazas, parapeto corrido y vigía.
@@ -498,84 +528,123 @@ static func _nguillatuwe() -> void:
 		var fwd := -o.normalized()
 		for s: float in [-1.0, 1.0]:
 			var side := Vector3(fwd.z, 0, -fwd.x) * s * 0.2
-			_cyl(0.025, 0.03, 0.85, o + side + fwd * 0.12 + Vector3(0, 0.42, 0), Palette.WOOD_BEAM, 5)
-		_box(Vector3(0.5, 0.06, 0.42), o + Vector3(0, 0.78, 0), Color("7d7a45"), Vector3(-18, yaw, 0))
+			_cyl(0.025, 0.03, 1.0, o + side + fwd * 0.12 + Vector3(0, 0.5, 0), Palette.WOOD_BEAM, 5)
+		_box(Vector3(0.6, 0.07, 0.5), o + Vector3(0, 0.92, 0), Color("7d7a45"), Vector3(-18, yaw, 0))
 	_animal("chilihueque", Vector3(-0.45, 0, 0.75), 20.0, 0.85)
 	_animal("chilihueque", Vector3(0.5, 0, 0.7), -40.0, 0.8)
 
 
-## Rewe del toqui de malón: rewe, la toki kura y las lanzas de colihue apoyadas en haz.
+## Ruka grande (la del toqui o la del lonko): el domo de paja de la casa común del pueblo, con
+## el aspecto de la edad.
+static func _ruka(at: Vector3, w: float, d: float, h: float) -> void:
+	CivMeshes._hut(_p, "mapuche", at, w, d, h, _pal, _cfg)
+
+
+## Canelo (foye): árbol sagrado y de la paz, de copa alta y clara.
+static func _canelo(at: Vector3, h: float) -> void:
+	_tree(at, h, Palette.FOLIAGE_2.lightened(0.05))
+
+
+## Toqui de malón: la ruka grande del toqui, la toki kura (el hacha de piedra, insignia del
+## toqui) en su poste junto a un canelo, el haz de lanzas de colihue y el botín. Sin rewe: el
+## rewe es el altar de la machi y queda solo en el nguillatuwe (ronda 3; proceso/24, 4i).
 static func _rewe_malon() -> void:
-	_rewe(Vector3(0.35, 0, -0.3))
-	_toki(Vector3(-0.55, 0, -0.5), 1.9)
-	var apex := Vector3(-0.45, 2.0, 0.5)
+	_box(Vector3(_hw * 2.0, 0.03, _hd * 2.0), Vector3(0, 0.015, 0), Palette.DIRT.lightened(0.1))
+	_ruka(Vector3(-0.1, 0, -0.4), 1.95, 1.35, 1.15)
+	_canelo(Vector3(0.75, 0, 0.55), 1.7)
+	_toki(Vector3(0.4, 0, 0.75), 2.0)
+	var apex := Vector3(-0.6, 2.0, 0.6)
 	for i in 9:
 		var a := TAU * i / 9.0
-		var base := Vector3(-0.45 + cos(a) * 0.38, 0, 0.5 + sin(a) * 0.38)
+		var base := Vector3(-0.6 + cos(a) * 0.36, 0, 0.6 + sin(a) * 0.36)
 		CivMeshes._pole(_p, base, apex + (apex - base) * 0.12, 0.016, Color("b8a660"))
-	_box(Vector3(0.5, 0.25, 0.35), Vector3(0.55, 0.12, 0.7), Color("6b5a3a"))
-	_box(Vector3(0.45, 0.2, 0.3), Vector3(0.55, 0.35, 0.7), Color("3b3a44"))
+	# Botín del malón: fardos y una montura.
+	_box(Vector3(0.36, 0.22, 0.26), Vector3(0.05, 0.11, 0.85), Color("6b5a3a"))
+	_box(Vector3(0.3, 0.18, 0.22), Vector3(0.05, 0.31, 0.85), Color("3b3a44"))
 
 
-## Rewe del toqui de caballería: el rewe junto al corral con los caballos.
+## Toqui de caballería: el corral grande de los caballos, la ruka y el palenque con las monturas.
 static func _rewe_caballos() -> void:
-	_rewe(Vector3(-0.75, 0, -0.75), 2.2)
-	var c := Vector3(0.2, 0, 0.15)
-	var r := 0.92
-	_stakes_arc(c, r, 0.0, TAU - 0.5, 0.2, 0.6, 0.035, Palette.WOOD_BEAM, Palette.WOOD_BEAM)
-	for y: float in [0.3, 0.52]:
+	_ruka(Vector3(-0.65, 0, -0.7), 1.0, 0.8, 0.85)
+	var c := Vector3(0.22, 0, 0.25)
+	var r := 0.9
+	_cyl(r, r, 0.02, c + Vector3(0, 0.01, 0), Palette.DIRT.darkened(0.05), 16)
+	_stakes_arc(c, r, 0.0, TAU - 0.5, 0.18, 0.75, 0.04, Palette.WOOD_BEAM, Palette.WOOD_BEAM)
+	for y: float in [0.32, 0.6]:
 		for i in 12:
 			var a0 := (TAU - 0.5) * i / 12.0
 			var a1 := (TAU - 0.5) * (i + 1) / 12.0
-			_seg(_arc_pt(c, r, a0) + Vector3(0, y, 0), _arc_pt(c, r, a1) + Vector3(0, y, 0), 0.035, 0.035, Palette.TRUNK, 0.02)
-	_horse(c + Vector3(-0.25, 0, 0.1), 30.0, 0.7)
+			_seg(_arc_pt(c, r, a0) + Vector3(0, y, 0), _arc_pt(c, r, a1) + Vector3(0, y, 0), 0.04, 0.04, Palette.TRUNK, 0.02)
+	_horse(c + Vector3(-0.3, 0, 0.15), 30.0, 0.7)
 	_horse(c + Vector3(0.35, 0, -0.2), -110.0, 0.7)
+	_horse(c + Vector3(0.1, 0, 0.5), 160.0, 0.65)
+	# Palenque: travesaño con las monturas de cuero.
+	var pq := Vector3(0.75, 0, -0.85)
+	for s: float in [-1.0, 1.0]:
+		_cyl(0.03, 0.035, 0.6, pq + Vector3(s * 0.32, 0.3, 0), Palette.WOOD_BEAM, 5)
+	_box(Vector3(0.75, 0.05, 0.05), pq + Vector3(0, 0.58, 0), Palette.WOOD_BEAM)
+	for s: float in [-0.18, 0.18]:
+		_box(Vector3(0.18, 0.12, 0.26), pq + Vector3(s, 0.62, 0), Color("5a3a24"))
 
 
-## Rewe del toqui del monte: el rewe en un claro entre araucarias, con trampas.
+## Toqui del monte: un pewenal (tres araucarias grandes), la ruka entre los troncos, los
+## piñones (ngülliw) juntados y la trampa de foso.
 static func _rewe_monte() -> void:
 	_cyl(_hw, _hw, 0.03, Vector3(0, 0.015, 0), Color("6a6a3e"), 16)
-	_rewe(Vector3(0.1, 0, 0.25))
-	_araucaria(Vector3(-0.75, 0, -0.65), 2.9)
-	_araucaria(Vector3(0.75, 0, -0.8), 3.3)
-	_araucaria(Vector3(-0.1, 0, -1.0), 2.5)
-	_cyl(0.22, 0.22, 0.02, Vector3(-0.7, 0.02, 0.7), DARK, 10)
+	_araucaria(Vector3(-0.7, 0, -0.65), 3.3)
+	_araucaria(Vector3(0.7, 0, -0.75), 3.9)
+	_araucaria(Vector3(0.55, 0, 0.6), 2.9)
+	_ruka(Vector3(-0.35, 0, 0.1), 0.95, 0.75, 0.8)
+	# Piñones en canastos y en la pila.
+	for i in 3:
+		_cyl(0.11, 0.08, 0.16, Vector3(0.05 + i * 0.2, 0.08, -0.05), Color("9a7a48"), 8)
+		_sph(0.09, Vector3(0.05 + i * 0.2, 0.17, -0.05), Color("7a4a2a"), Vector3(1, 0.5, 1), 6)
+	_sph(0.2, Vector3(-0.85, 0.05, 0.75), Color("7a4a2a"), Vector3(1, 0.4, 1), 8)
+	_cyl(0.2, 0.2, 0.02, Vector3(0.0, 0.02, 0.85), DARK, 10)
 	for i in 5:
-		CivMeshes._pole(_p, Vector3(-0.85 + i * 0.07, 0.02, 0.62 + (i % 2) * 0.12), Vector3(-0.55 + i * 0.02, 0.05, 0.78 - (i % 2) * 0.1), 0.012, Palette.TRUNK)
+		CivMeshes._pole(_p, Vector3(-0.15 + i * 0.07, 0.02, 0.77 + (i % 2) * 0.12), Vector3(0.15 + i * 0.02, 0.05, 0.93 - (i % 2) * 0.1), 0.012, Palette.TRUNK)
 
 
-## Parlamento: la ramada grande con los bancos enfrentados, el canelo de la paz, los agasajos
-## y el ganado de la feria.
+## Parlamento: la gran ramada sobre muchos postes, con los bancos enfrentados, el canelo de la
+## paz, los agasajos y el ganado de la feria.
 static func _parlamento() -> void:
-	var cz := -0.35
-	for x: float in [-0.95, 0.0, 0.95]:
-		for z in [cz - 0.5, cz + 0.5]:
-			_cyl(0.04, 0.05, 1.25, Vector3(x, 0.62, z), Palette.WOOD_BEAM, 6)
-	_box(Vector3(2.15, 0.08, 1.2), Vector3(0, 1.27, cz), Color("6e6a3e"))
-	for i in 6:
-		_sph(0.22, Vector3(-0.85 + i * 0.34, 1.34, cz + (i % 2) * 0.2 - 0.1), Color("5e6a36"), Vector3(1.2, 0.35, 1.0), 6)
-	for z in [cz - 0.25, cz + 0.25]:
-		_cyl(0.07, 0.07, 1.6, Vector3(0, 0.08, z), Palette.TRUNK, 6, Vector3(0, 0, 90))
-	_tree(Vector3(0.95, 0, 0.75), 1.4, Palette.FOLIAGE_2) # canelo
-	_box(Vector3(0.36, 0.22, 0.26), Vector3(-0.85, 0.11, 0.7), Color("2e3a6a"))
-	_box(Vector3(0.32, 0.2, 0.24), Vector3(-0.85, 0.32, 0.7), Color("7a2a22"))
-	_cyl(0.12, 0.1, 0.24, Vector3(-0.45, 0.12, 0.85), Color("8a5a3a"), 8)
-	_animal("vaca", Vector3(0.1, 0, 0.75), 80.0, 0.7)
+	var cz := -0.3
+	var lx := _hw * 2.0 - 0.15
+	var lz := 1.55
+	for i in 4:
+		var x := -lx / 2.0 + 0.08 + i * (lx - 0.16) / 3.0
+		for j in 3:
+			var z := cz - lz / 2.0 + 0.08 + j * (lz - 0.16) / 2.0
+			_cyl(0.04, 0.05, 1.35, Vector3(x, 0.675, z), Palette.WOOD_BEAM, 6)
+	_box(Vector3(lx + 0.1, 0.06, lz + 0.1), Vector3(0, 1.36, cz), Color("6e6a3e"))
+	for i in 10:
+		_sph(0.24, Vector3(-lx / 2.0 + 0.2 + (i % 5) * (lx - 0.4) / 4.0, 1.42, cz + (i / 5) * 0.7 - 0.35), Color("5e6a36") if i % 2 == 0 else Color("6a7440"), Vector3(1.3, 0.4, 1.1), 6)
+	for z in [cz - 0.35, cz + 0.35]:
+		_cyl(0.07, 0.07, lx - 0.3, Vector3(0, 0.08, z), Palette.TRUNK, 6, Vector3(0, 0, 90))
+	_canelo(Vector3(0.9, 0, 0.8), 1.5)
+	_box(Vector3(0.34, 0.2, 0.24), Vector3(-0.85, 0.1, 0.8), Color("2e3a6a"))
+	_box(Vector3(0.3, 0.18, 0.22), Vector3(-0.85, 0.29, 0.8), Color("7a2a22"))
+	_cyl(0.11, 0.09, 0.22, Vector3(-0.5, 0.11, 0.9), Color("8a5a3a"), 8)
+	_animal("vaca", Vector3(0.15, 0, 0.85), 80.0, 0.6)
 
 
-## Gran weichan: anillo de lanzas alrededor del fuego del consejo, la toki kura y caballos.
+## Gran weichan: el campo de guerra, con el anillo de lanzas alrededor del fuego del consejo,
+## la toki kura y los caballos listos.
 static func _weichan() -> void:
 	_cyl(_hw, _hw, 0.03, Vector3(0, 0.015, 0), Palette.DIRT, 16)
-	_fire(Vector3(0, 0, 0.05))
-	_toki(Vector3(0, 0, -0.5), 2.1)
-	var r := _hw - 0.12
-	for i in 14:
-		var a := TAU * i / 14.0
+	_fire(Vector3(0, 0, 0.1))
+	_toki(Vector3(0, 0, -0.55), 2.3)
+	var r := _hw - 0.1
+	for i in 18:
+		var a := TAU * i / 18.0
 		var o := _arc_pt(Vector3.ZERO, r, a)
-		CivMeshes._pole(_p, o, o * 1.06 + Vector3(0, 2.3, 0), 0.016, Color("b8a660"))
-		_cyl(0.0, 0.035, 0.18, o * 1.06 + Vector3(0, 2.38, 0), IRON, 5)
-	_horse(Vector3(-0.5, 0, 0.5), 60.0, 0.55)
-	_horse(Vector3(0.5, 0, 0.45), -70.0, 0.55)
+		var lh := 2.6 if i % 2 == 0 else 2.2
+		CivMeshes._pole(_p, o, o * 1.05 + Vector3(0, lh, 0), 0.018, Color("b8a660"))
+		_cyl(0.0, 0.04, 0.2, o * 1.05 + Vector3(0, lh + 0.09, 0), IRON, 5)
+	for k in 4:
+		var a := PI * 0.25 + k * PI * 0.5
+		var o := _arc_pt(Vector3.ZERO, 0.62, a)
+		_horse(o, rad_to_deg(-a), 0.55)
 
 
 # ---------------------------------------------------------------- Guaraníes
@@ -849,37 +918,68 @@ static func _remonta() -> void:
 ## torre cuadrada más alta; muro bajo alrededor.
 static func _gondar() -> void:
 	var stone: Color = _pal[0].lightened(0.05)
-	var dome := Color("8a5a3a")
 	for side in [[Vector3(-_hw, 0, -_hd), Vector3(_hw, 0, -_hd)], [Vector3(-_hw, 0, -_hd), Vector3(-_hw, 0, _hd)], [Vector3(_hw, 0, -_hd), Vector3(_hw, 0, _hd)], [Vector3(-_hw, 0, _hd), Vector3(-0.35, 0, _hd)], [Vector3(0.35, 0, _hd), Vector3(_hw, 0, _hd)]]:
 		_seg(side[0], side[1], 0.5, 0.14, stone.darkened(0.08), 0.14)
-	var cx := -0.1
-	var cz := -0.3
-	var kw := 1.9
-	var kd := 1.3
-	var kh := 1.85
-	_box(Vector3(kw, kh, kd), Vector3(cx, kh / 2.0, cz), stone)
-	CivMeshes._aparejo(_p, str(_cfg.get("aparejo", "piedra")), Vector3(cx, 0, cz), kw, kd, kh, stone, false, "etiopia")
-	_box(Vector3(kw + 0.04, 0.06, kd + 0.04), Vector3(cx, 0.95, cz), stone.darkened(0.1))
-	for i in 7:
-		var x := cx - kw / 2.0 + 0.1 + i * (kw - 0.2) / 6.0
-		_box(Vector3(0.14, 0.14, 0.08), Vector3(x, kh + 0.07, cz + kd / 2.0 - 0.04), stone)
-		_box(Vector3(0.14, 0.14, 0.08), Vector3(x, kh + 0.07, cz - kd / 2.0 + 0.04), stone)
+	_keep(Vector3(-0.1, 0, -0.3), 1.9, 1.3, 1.85, stone, [Vector2(-1, 1), Vector2(1, 1), Vector2(-1, -1)], true)
+
+
+## Castillo de Gondar (cuerpo almenado de dos pisos, ventanas en arco, torres redondas con
+## cúpula en las esquinas `towers` y, si `tall`, la torre cuadrada más alta), apoyado en `c`.
+static func _keep(c: Vector3, kw: float, kd: float, kh: float, stone: Color, towers: Array, tall: bool) -> void:
+	var dome := Color("8a5a3a")
+	var k := kh / 1.85
+	_box(Vector3(kw, kh, kd), c + Vector3(0, kh / 2.0, 0), stone)
+	CivMeshes._aparejo(_p, str(_cfg.get("aparejo", "piedra")), c, kw, kd, kh, stone, false, "etiopia")
+	_box(Vector3(kw + 0.04, 0.06, kd + 0.04), c + Vector3(0, kh * 0.51, 0), stone.darkened(0.1))
+	var nm := maxi(4, int(kw / 0.27))
+	for i in nm:
+		var x := c.x - kw / 2.0 + 0.1 + i * (kw - 0.2) / float(nm - 1)
+		_box(Vector3(0.14, 0.14, 0.08) * Vector3(1, k, 1), Vector3(x, kh + 0.07 * k, c.z + kd / 2.0 - 0.04), stone)
+		_box(Vector3(0.14, 0.14, 0.08) * Vector3(1, k, 1), Vector3(x, kh + 0.07 * k, c.z - kd / 2.0 + 0.04), stone)
+	var nw := maxi(2, int(kw / 0.45))
 	for row in 2:
-		for i in 4:
-			var x := cx - 0.6 + i * 0.4
-			var y := 0.45 + row * 0.85
-			_box(Vector3(0.14, 0.24, 0.03), Vector3(x, y, cz + kd / 2.0 + 0.01), DARK)
-			_cyl(0.07, 0.07, 0.03, Vector3(x, y + 0.12, cz + kd / 2.0 + 0.01), DARK, 8, Vector3(90, 0, 0))
-	for c: Vector2 in [Vector2(-1, 1), Vector2(1, 1), Vector2(-1, -1)]:
-		var o := Vector3(cx + c.x * kw / 2.0, 0, cz + c.y * kd / 2.0)
-		_cyl(0.3, 0.32, 2.2, o + Vector3(0, 1.1, 0), stone.lightened(0.04), 12)
-		_sph(0.31, o + Vector3(0, 2.2, 0), dome, Vector3(1, 0.9, 1), 12)
-	var st := Vector3(cx + kw / 2.0 - 0.1, 0, cz - kd / 2.0 + 0.1)
-	_box(Vector3(0.62, 2.8, 0.62), st + Vector3(0, 1.4, 0), stone.lightened(0.02))
-	_sph(0.3, st + Vector3(0, 2.8, 0), dome, Vector3(1, 1.0, 1), 12)
-	if str(_cfg.get("remate", "")) == "cruz":
-		CivMeshes._remate(_p, "cruz", st + Vector3(0, 3.1, 0))
-	_box(Vector3(0.36, 0.6, 0.03), Vector3(cx, 0.3, cz + kd / 2.0 + 0.012), DARK)
+		for i in nw:
+			var x := c.x - kw * 0.32 + i * kw * 0.64 / float(nw - 1)
+			var y := (0.45 + row * 0.85) * k
+			_box(Vector3(0.14, 0.24 * k, 0.03), Vector3(x, y, c.z + kd / 2.0 + 0.01), DARK)
+			_cyl(0.07, 0.07, 0.03, Vector3(x, y + 0.12 * k, c.z + kd / 2.0 + 0.01), DARK, 8, Vector3(90, 0, 0))
+	var tr := 0.3 * minf(1.0, kw / 1.9) * 1.05
+	for t: Vector2 in towers:
+		var o := Vector3(c.x + t.x * kw / 2.0, 0, c.z + t.y * kd / 2.0)
+		var th := kh * 1.19
+		_cyl(tr, tr * 1.06, th, o + Vector3(0, th / 2.0, 0), stone.lightened(0.04), 12)
+		_sph(tr * 1.03, o + Vector3(0, th, 0), dome, Vector3(1, 0.9, 1), 12)
+	if tall:
+		var st := Vector3(c.x + kw / 2.0 - 0.1, 0, c.z - kd / 2.0 + 0.1)
+		_box(Vector3(0.62, 2.8, 0.62), st + Vector3(0, 1.4, 0), stone.lightened(0.02))
+		_sph(0.3, st + Vector3(0, 2.8, 0), dome, Vector3(1, 1.0, 1), 12)
+		if str(_cfg.get("remate", "")) == "cruz":
+			CivMeshes._remate(_p, "cruz", st + Vector3(0, 3.1, 0))
+	_box(Vector3(0.36, 0.6 * k, 0.03), Vector3(c.x, 0.3 * k, c.z + kd / 2.0 + 0.012), DARK)
+
+
+## El centro etíope en Gondar (data/arte_edades.json → centro_forma: castillo): la corte deja
+## de caminar y se asienta en un castillo de piedra. Más chico que el hito y sin la torre
+## cuadrada alta, para no confundirse con el Recinto de Gondar; cruz en la torre del frente.
+static func castillo(p: Array, at: Vector3, kw: float, kd: float, pal: Array, cfg: Dictionary) -> void:
+	var prev := _p
+	_p = p
+	_cfg = cfg
+	_pal = pal
+	var stone: Color = pal[0].lightened(0.05)
+	var kh := 1.45
+	_keep(at, kw, kd, kh, stone, [Vector2(-1, 1), Vector2(1, 1)], false)
+	# Cuerpo trasero más alto, con balcón de madera, como el castillo de Fasiladas [verificar].
+	var b := at + Vector3(kw * 0.18, 0, -kd * 0.5)
+	_box(Vector3(kw * 0.5, kh + 0.55, 0.5), b + Vector3(0, (kh + 0.55) / 2.0, 0), stone.darkened(0.03))
+	_box(Vector3(kw * 0.5 + 0.06, 0.08, 0.16), b + Vector3(0, kh + 0.2, 0.3), Palette.WOOD_BEAM)
+	for i in 4:
+		var x := b.x - kw * 0.22 + i * kw * 0.147
+		_box(Vector3(0.12, 0.12, 0.07), Vector3(x, kh + 0.61, b.z + 0.22), stone.darkened(0.03))
+	_sph(0.26, b + Vector3(-kw * 0.12, kh + 0.55, 0), Color("8a5a3a"), Vector3(1, 0.9, 1), 12)
+	if str(cfg.get("remate", "")) == "cruz":
+		CivMeshes._remate(p, "cruz", b + Vector3(-kw * 0.12, kh + 0.85, 0))
+	_p = prev
 
 
 ## Alianza con armas de fuego: campamento de la corte con la tienda real, cajones del comercio,
@@ -992,7 +1092,9 @@ static func _ferraria() -> void:
 	_glow(0.05, fg + Vector3(0.1, 0.55, 0.05), Color("ffb040"), 2.5)
 
 
-## Cucaú: aldea en hileras con roças de maíz y la bandera blanca del pacto.
+## Cucaú: aldea en hileras con roças de maíz, el paiol (granero sobre pilotes) y palmeras. Sin
+## bandera blanca: no hay fuente, y el pacto se juró al modo de un soba angoleño, no como una
+## rendición (ronda 3 de jugadores; proceso/24, 4i).
 static func _cucau() -> void:
 	for i in 5:
 		_box(Vector3(_hw * 2.0 - 0.2, 0.12, 0.1), Vector3(0, 0.06, 0.65 + i * 0.2), Color("6a8a3a"))
@@ -1002,9 +1104,13 @@ static func _cucau() -> void:
 		CivMeshes._hut(_p, "palmares", Vector3(x, 0, -1.1), 0.72, 0.6, 0.85, _pal, {})
 	for x: float in [-0.55, 0.55]:
 		CivMeshes._hut(_p, "palmares", Vector3(x, 0, -0.15), 0.65, 0.55, 0.8, _pal, {})
-	var fp := Vector3(1.35, 0, 0.15)
-	_cyl(0.025, 0.03, 2.6, fp + Vector3(0, 1.3, 0), Palette.WOOD_BEAM, 5)
-	_box(Vector3(0.6, 0.38, 0.02), fp + Vector3(-0.31, 2.38, 0), Color("f2efe6"))
+	var pa := Vector3(1.25, 0, 0.0)
+	for c: Vector2 in [Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, 1)]:
+		_cyl(0.035, 0.04, 0.45, pa + Vector3(c.x * 0.17, 0.225, c.y * 0.17), Palette.WOOD_BEAM, 5)
+	_box(Vector3(0.44, 0.4, 0.44), pa + Vector3(0, 0.65, 0), _pal[0].darkened(0.08))
+	_hip(pa + Vector3(0, 0.84, 0), 0.3, 0.3, 0.4, _pal[1])
+	_palm(Vector3(-1.4, 0, 0.2), 2.6, Vector2(-0.15, 0.05))
+	_palm(Vector3(1.45, 0, -0.75), 2.9, Vector2(0.12, -0.08))
 
 
 ## Serra da Barriga: el cerro con la cerca en lo alto, el tambor y el estandarte de Zumbi.
