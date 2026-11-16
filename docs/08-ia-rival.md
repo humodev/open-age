@@ -25,7 +25,9 @@ En H1 hay un solo perfil equilibrado, con los parámetros en el código de `sim_
 
 ## Dificultad (H4)
 
-Tres niveles por parámetros, no por trampas: frecuencia de decisión, eficiencia económica (proporción de aldeanos inactivos tolerada), uso del triángulo y microgestión (retirar unidades heridas, enfocar fuego).
+Cuatro niveles por parámetros, no por trampas (`reglas.json` → `dificultades`): frecuencia de decisión, eficiencia económica (proporción de aldeanos inactivos tolerada), uso del triángulo y microgestión (retirar unidades heridas, enfocar fuego).
+
+La **experta** juega como un veterano de AoE4: entrena aldeanos sin parar desde todos sus centros hasta su tope, levanta un segundo centro (y un tercero si hay lugar) junto a la riqueza, la piedra o el bosque de su lado del mapa, mantiene un ejército mínimo más alto mientras ahorra para el hito y ataca en oleadas más grandes. Los mapuches se expanden con lofs, que son su centro. Palmares no entrena aldeanos (los suma con la fama), así que solo gana lo demás. Normal es la del torneo de balance.
 
 ## Pruebas
 

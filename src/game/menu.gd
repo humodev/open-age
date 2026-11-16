@@ -32,6 +32,7 @@ var _mode: OptionButton
 var _slots_box: VBoxContainer
 var _slot_rows: Array = [] # [civ, equipo, dificultad, estilo] por lugar (el 0 es el tuyo)
 var _data: SimData
+var _dif_keys: Array = [] # claves de reglas.json → dificultades, en su orden (fácil … experta)
 # --- fin lugares ---
 
 
@@ -101,12 +102,13 @@ func _ready() -> void:
 	_diff = OptionButton.new()
 	_diff.custom_minimum_size = Vector2(270, 38)
 	_diff.add_theme_font_override("font", Hud.font_b)
-	for k in ["facil", "normal", "dificil"]:
+	_dif_keys = data.reglas["dificultades"].keys()
+	for k in _dif_keys:
 		_diff.add_item(data.reglas["dificultades"][k]["nombre"])
 	# --- aprender --- la primera vez (sin user://opciones.cfg), Fácil; después, la última elegida.
-	_diff.selected = maxi(0, ["facil", "normal", "dificil"].find(Opciones.dificultad))
+	_diff.selected = maxi(0, _dif_keys.find(Opciones.dificultad))
 	_diff.item_selected.connect(func(i: int) -> void:
-		Opciones.dificultad = ["facil", "normal", "dificil"][i]
+		Opciones.dificultad = _dif_keys[i]
 		Opciones.guardar())
 	# --- fin aprender ---
 	drow.add_child(_diff)
@@ -386,7 +388,7 @@ func _fill_slots() -> void:
 	for i in 8:
 		team_names.append("Equipo %d" % (i + 1))
 	var dif_names: Array = []
-	for k in ["facil", "normal", "dificil"]:
+	for k in _dif_keys:
 		dif_names.append(_data.reglas["dificultades"][k]["nombre"])
 	var sty_names: Array = []
 	for k in _style_keys:
@@ -433,7 +435,7 @@ func slots() -> Array:
 			"civ": _pick(_civ) if i == 0 else _pick(r[0]),
 			"equipo": (r[1] as OptionButton).selected,
 			"ia": i != 0,
-			"dificultad": ["facil", "normal", "dificil"][maxi(0, (r[2] as OptionButton).selected)],
+			"dificultad": str(_dif_keys[maxi(0, (r[2] as OptionButton).selected)]),
 			"estilo": str(_style_keys[maxi(0, (r[3] as OptionButton).selected)]),
 		})
 	return out
@@ -441,7 +443,7 @@ func slots() -> Array:
 
 
 func difficulty() -> String:
-	return ["facil", "normal", "dificil"][maxi(0, _diff.selected)]
+	return str(_dif_keys[maxi(0, _diff.selected)])
 
 
 ## Tipo de mapa elegido ("" = al azar).

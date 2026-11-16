@@ -29,6 +29,10 @@ var rally := Vector2i(-1, -1)
 var calm_since := 0
 var personality := "normal" # estilo: pacifica, normal, acosadora, agresiva (reglas.json → estilos_ia); pasiva en campañas
 var level: Dictionary = {} # dificultad (reglas.json → dificultades)
+var centers: Array[SimEntity] = [] # edificios propios terminados que entrenan aldeanos (capital incluida)
+var last_expand := 0
+var _holding: Dictionary = {} # lo que se junta para el centro siguiente (experta); vacío si nada
+var _ctype := "-" # edificio con el que se expande (calculado una vez: `_center_type`)
 
 # Reparto de aldeanos por recurso: reglas.json → ia_economia.
 var ratio_early := {}
@@ -39,14 +43,15 @@ var max_villagers := 42
 func _init(s: Sim, pid: int, difficulty: String = "normal") -> void:
 	sim = s
 	player = pid
-	ratio_early = s.data.reglas["ia_economia"]["proporcion_temprana"]
-	ratio_late = s.data.reglas["ia_economia"]["proporcion_tardia"]
 	set_difficulty(difficulty)
 
 
+## La dificultad puede traer su propio reparto de aldeanos (la experta, más alimento).
 func set_difficulty(key: String) -> void:
 	level = sim.data.reglas["dificultades"].get(key, sim.data.reglas["dificultades"]["normal"])
 	max_villagers = level["max_aldeanos"]
+	ratio_early = level.get("proporcion_temprana", sim.data.reglas["ia_economia"]["proporcion_temprana"])
+	ratio_late = level.get("proporcion_tardia", sim.data.reglas["ia_economia"]["proporcion_tardia"])
 
 
 func thinks_now() -> bool:
@@ -59,6 +64,7 @@ func think() -> void:
 	var army: Array[SimEntity] = []
 	var by_type := {}
 	var centro: SimEntity = null
+	centers.clear()
 	for e in sim.actives:
 		if not e.alive or e.owner != player:
 			continue
@@ -75,6 +81,8 @@ func think() -> void:
 			by_type[e.type].append(e)
 			if e.built and (e.capital or centro == null and (e.def.get("produce", []) as Array).has("aldeano")):
 				centro = e
+			if e.built and (e.def.get("produce", []) as Array).has("aldeano"):
+				centers.append(e)
 	if centro == null:
 		if not army.is_empty():
 			_attack(army)
@@ -186,6 +194,11 @@ func _economy(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, saving: 
 			ratio[k] += 12
 		elif saving and k != "madera" and (not hito_cost.has(k) or p["res"][k] >= hito_cost[k]):
 			ratio[k] = ratio[k] / 3 # lo que ya alcanza para el hito libera gente para lo que falta
+	# Centro siguiente (experta): más gente en lo que falta para pagarlo (la piedra, sobre todo).
+	var ec := _expansion_need(p, vill.size(), false)
+	for k in ec:
+		if ratio.has(k) and int(p["res"][k]) < int(ec[k]):
+			ratio[k] += int(level["expansion"]["refuerzo_pct"])
 	var counts := {"alimento": 0, "madera": 0, "piedra": 0, "riqueza": 0}
 	var idle: Array[SimEntity] = []
 	for v in vill:
@@ -210,6 +223,8 @@ func _economy(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, saving: 
 					break
 	for v in idle:
 		var kind := _most(counts, ratio, vill.size() + virt + 1, false)
+		# Con varios centros (experta), cada aldeano trabaja alrededor del más cercano.
+		var home := _home(v, centro)
 		# Alimento: primero los animales propios (como AoE4), carneados de a uno.
 		if kind == "alimento":
 			var beast := _own_animal(centro)
@@ -217,7 +232,7 @@ func _economy(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, saving: 
 				sim.push_command({"t": "target", "player": player, "ids": [v.id], "target": beast.id})
 				counts[kind] += 1
 				continue
-		var t := sim.find_resource(player, kind, centro.x, centro.y, 40000, -1, v.id)
+		var t := sim.find_resource(player, kind, home.x, home.y, 40000, -1, v.id)
 		# Alimento lejos de todo almacén (venados, animales sueltos del medio): como en AoE4,
 		# cuando se acaba lo cercano conviene pasar a las granjas antes que caminar (la edad III
 		# se atrasaba hasta 25 minutos; proceso/23, paso 10).
@@ -227,13 +242,13 @@ func _economy(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, saving: 
 				t = null
 		if t == null and kind == "alimento":
 			if sim.can_afford(player, sim.dp(player).cost_of("granja", p["age"])):
-				var site := _farm_site(centro)
+				var site := _farm_site(home)
 				if site.x >= 0:
 					sim.push_command({"t": "build", "player": player, "ids": [v.id], "type": "granja", "tx": site.x, "ty": site.y})
 					counts[kind] += 1
 					continue
 			kind = "madera"
-			t = sim.find_resource(player, kind, centro.x, centro.y, 60000, -1, v.id)
+			t = sim.find_resource(player, kind, home.x, home.y, 60000, -1, v.id)
 		if t == null:
 			for k in Sim.RES_KINDS:
 				t = sim.find_resource(player, k, v.x, v.y, 60000, -1, v.id)
@@ -243,6 +258,21 @@ func _economy(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, saving: 
 		if t != null:
 			sim.push_command({"t": "target", "player": player, "ids": [v.id], "target": t.id})
 			counts[kind] += 1
+
+
+## El centro desde el que trabaja `v`: la capital, salvo que la dificultad se expanda
+## (`expansion`) y haya otro centro más cerca.
+func _home(v: SimEntity, centro: SimEntity) -> SimEntity:
+	if centers.size() < 2 or not level.has("expansion"):
+		return centro
+	var best := centro
+	var best_d := Sim.dist(v.x, v.y, centro.x, centro.y)
+	for c in centers:
+		var d := Sim.dist(v.x, v.y, c.x, c.y)
+		if d < best_d:
+			best = c
+			best_d = d
+	return best
 
 
 func _most(counts: Dictionary, ratio: Dictionary, total: int, over: bool) -> String:
@@ -443,23 +473,35 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 	if vill.is_empty():
 		return
 	var unbuilt := {}
+	var houses_unbuilt := 0
 	for k in by_type:
 		for b: SimEntity in by_type[k]:
 			if not b.built:
 				unbuilt[k] = true
-	# Casas.
-	var margin: int = 3 + (by_type.get("cuartel", []) as Array).size() * 2
-	if p["pop_cap"] < sim.data.reglas["pob_max"] and p["pop_cap"] - p["pop"] <= margin and not unbuilt.has("casa"):
+				if k == "casa":
+					houses_unbuilt += 1
+	# Casas. Con más de un centro (experta) se produce más rápido: más margen por cada centro
+	# extra y más de una casa a la vez. Con uno solo, como siempre (la madera va al cuartel).
+	var extra := maxi(0, centers.size() - 1)
+	var margin: int = 3 + (by_type.get("cuartel", []) as Array).size() * 2 + int(level.get("casas_margen_por_centro", 0)) * extra
+	var at_once: int = int(level.get("casas_a_la_vez", 1)) if extra > 0 else 1
+	if p["pop_cap"] < sim.data.reglas["pob_max"] and p["pop_cap"] - p["pop"] <= margin and houses_unbuilt < at_once:
 		_try_build("casa", p, vill, centro, 1)
+	# Expansión (experta): segundo y tercer centro, aunque se esté ahorrando para el hito.
+	_expand(p, vill, centro, by_type, saving, unbuilt)
 	# Hito.
 	if saving and sim.can_afford(player, sim.dp(player).cost_of(_hito_type(p), p["age"])):
 		_try_build(_hito_type(p), p, vill, centro, 4)
+		return
+	# Juntando para el centro, lo demás espera (como con el mercado): si no, la madera se va
+	# siempre antes en granjas, cuarteles y almacenes (Ayutthaya con 1 centro a los 25 minutos).
+	if not _holding.is_empty():
 		return
 	# Edificio principal de producción: el de la unidad preferida de la civ (el färäs bet
 	# etíope, la warak'a kancha inca) o el cuartel. Es el que se multiplica cuando sobra.
 	var main := _main_producer()
 	var n_cuartel: int = by_type.get(main, []).size()
-	var rich: bool = p["res"]["alimento"] > 800 and p["res"]["madera"] > 300 and n_cuartel < 5
+	var rich: bool = p["res"]["alimento"] > 800 and p["res"]["madera"] > 300 and n_cuartel < int(level.get("productores_max", 5))
 	# El segundo principal, recién cuando hay uno de cada uno de los otros (si no, los
 	# guaraníes levantaban dos casas del arco y ningún cuartel).
 	var others_missing := false
@@ -664,6 +706,11 @@ func _try_build(type: String, p: Dictionary, vill: Array[SimEntity], centro: Sim
 	var site := _site(type, centro, 1)
 	if site.x < 0:
 		return
+	_build_at(type, site, vill, workers)
+
+
+## Manda a construir `type` en `site` a los `workers` aldeanos libres más cercanos.
+func _build_at(type: String, site: Vector2i, vill: Array[SimEntity], workers: int) -> void:
 	var ids := []
 	var used := {}
 	for i in workers:
@@ -683,6 +730,139 @@ func _try_build(type: String, p: Dictionary, vill: Array[SimEntity], centro: Sim
 	if ids.is_empty():
 		return
 	sim.push_command({"t": "build", "player": player, "ids": ids, "type": type, "tx": site.x, "ty": site.y})
+
+
+## Expansión como en AoE4 (dificultad experta, `dificultades.<nivel>.expansion`): un segundo
+## centro, y un tercero si hay lugar, junto a la riqueza, la piedra o el bosque, de este lado
+## del mapa. Los mapuches se expanden con lofs (su centro). Los centros nuevos entrenan aldeanos
+## y reciben todos los recursos; los aldeanos trabajan alrededor del más cercano (`_home`).
+func _expand(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_type: Dictionary, saving: bool, unbuilt: Dictionary) -> void:
+	var cfg: Dictionary = level.get("expansion", {})
+	if cfg.is_empty():
+		return
+	var ctype := _center_type()
+	if ctype == "" or unbuilt.has(ctype):
+		_holding = {}
+		return
+	# Ahorrando, el centro no toca lo que pide el hito (la piedra de la edad III).
+	var need := _expansion_need(p, vill.size(), saving)
+	_holding = {}
+	if need.is_empty():
+		return
+	var short := false
+	var start := true
+	for k in need:
+		if int(p["res"].get(k, 0)) < int(need[k]):
+			short = true
+		if int(p["res"].get(k, 0)) * 100 < int(need[k]) * int(cfg["junta_desde_pct"]):
+			start = false
+	if short:
+		# Con `junta_desde_pct` de cada cosa, se junta lo que falta y se deja de gastar en lo demás.
+		if start:
+			_holding = sim.dp(player).cost_of(ctype, p["age"])
+		return
+	if sim.tick - last_expand < int(cfg["cada_ticks"]):
+		return
+	last_expand = sim.tick
+	var site := _expansion_site(ctype, centro, cfg)
+	if site.x >= 0:
+		_build_at(ctype, site, vill, int(cfg["constructores"]))
+
+
+## Lo que hace falta en el banco para el centro siguiente (más lo del hito si se ahorra), o
+## vacío si no toca expandirse: sin `expansion`, con todos los centros, sin la edad o sin los
+## aldeanos de `expansion.aldeanos`.
+func _expansion_need(p: Dictionary, n_vill: int, saving: bool) -> Dictionary:
+	var cfg: Dictionary = level.get("expansion", {})
+	if cfg.is_empty() or centers.size() >= int(cfg["centros_max"]):
+		return {}
+	var ctype := _center_type()
+	var dd := sim.dp(player)
+	if ctype == "" or p["age"] < int(dd.edificios[ctype].get("edad_min", 1)):
+		return {}
+	var needs: Array = cfg["aldeanos"]
+	if n_vill < int(needs[clampi(centers.size() - 1, 0, needs.size() - 1)]):
+		return {}
+	var out: Dictionary = dd.cost_of(ctype, p["age"]).duplicate()
+	if saving:
+		var hc: Dictionary = dd.cost_of(_hito_type(p), p["age"])
+		for k in out:
+			out[k] = int(out[k]) + int(hc.get(k, 0))
+	return out
+
+
+## El edificio con el que la civ se expande: el centro si lo construye; si no, el más barato
+## de los que entrenan aldeanos (el lof mapuche).
+func _center_type() -> String:
+	if _ctype != "-":
+		return _ctype
+	_ctype = ""
+	var dd := sim.dp(player)
+	var best_c := 1 << 30
+	for t in dd.unidades.get("aldeano", {}).get("construye", []):
+		var def: Dictionary = dd.edificios.get(t, {})
+		if def.is_empty() or not (def.get("produce", []) as Array).has("aldeano"):
+			continue
+		if t == "centro":
+			_ctype = t
+			return t
+		var c := 0
+		for k in dd.cost_of(t, 1):
+			c += int(dd.cost_of(t, 1)[k])
+		if c < best_c:
+			best_c = c
+			_ctype = t
+	return _ctype
+
+
+## Lugar para un centro nuevo: junto al recurso más cercano de `expansion.recursos` (en ese
+## orden de preferencia) entre `distancia_min` y `distancia_max` de la capital, a
+## `separacion` o más de los otros centros y más cerca de la base propia que de las rivales
+## (`lado_pct`). Se prueban los `candidatos` más cercanos.
+func _expansion_site(ctype: String, centro: SimEntity, cfg: Dictionary) -> Vector2i:
+	var kinds: Array = cfg["recursos"]
+	var dmin := int(cfg["distancia_min"])
+	var dmax := int(cfg["distancia_max"])
+	var sep := int(cfg["separacion"])
+	var side := int(cfg["lado_pct"])
+	var cands := []
+	for t in sim.entities:
+		if not (t.alive and t.is_resource() and t.amount > 0) or not kinds.has(t.res_kind):
+			continue
+		if t.res_owner >= 0 and t.res_owner != player:
+			continue
+		var d := Sim.dist(t.x, t.y, centro.x, centro.y)
+		if d < dmin or d > dmax:
+			continue
+		var ok := true
+		for c in centers:
+			if Sim.dist(t.x, t.y, c.x, c.y) < sep:
+				ok = false
+				break
+		if ok:
+			for j in mini(sim.players.size(), sim.bases.size()):
+				if sim.enemies(player, j) and Sim.dist(t.x, t.y, sim.bases[j].x * P, sim.bases[j].y * P) * 100 < d * side:
+					ok = false
+					break
+		if ok:
+			cands.append([kinds.find(t.res_kind), d, t.id, t])
+	cands.sort_custom(func(a, b): return a[0] < b[0] or a[0] == b[0] and (a[1] < b[1] or a[1] == b[1] and a[2] < b[2]))
+	var tam: Array = sim.dp(player).edificios[ctype]["tam"]
+	var radius := int(cfg["radio_lugar"])
+	for i in mini(cands.size(), int(cfg["candidatos"])):
+		var t: SimEntity = cands[i][3]
+		for r in range(1, radius + 1):
+			for dy in range(-r, r + 1):
+				for dx in range(-r, r + 1):
+					if absi(dx) != r and absi(dy) != r:
+						continue
+					var tx: int = t.tx + dx - int(tam[0]) / 2
+					var ty: int = t.ty + dy - int(tam[1]) / 2
+					if tx < 2 or ty < 2 or tx + int(tam[0]) > sim.map.n - 2 or ty + int(tam[1]) > sim.map.n - 2:
+						continue
+					if sim.map.is_free_rect(tx - 1, ty - 1, int(tam[0]) + 2, int(tam[1]) + 2) and sim.can_place(ctype, tx, ty, player):
+						return Vector2i(tx, ty)
+	return Vector2i(-1, -1)
 
 
 func _nearest_villager(vill: Array[SimEntity], x: int, y: int) -> SimEntity:
@@ -750,7 +930,16 @@ func _production(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], 
 	# Las órdenes se aplican en el tick siguiente: cada una gasta de este presupuesto, así
 	# el segundo edificio no pide con la misma plata (telemetría: ~80 rechazos por partida).
 	var budget: Dictionary = (p["res"] as Dictionary).duplicate()
-	if centro.queue.is_empty() and vill.size() < max_villagers and (centro.def.get("produce", []) as Array).has("aldeano"):
+	if level.get("aldeanos_en_todos_los_centros", false):
+		# Experta: aldeanos sin parar desde todos los centros (también ahorrando).
+		var queued := 0
+		for c in centers:
+			queued += c.queue.count("aldeano")
+		for c in centers:
+			if c.queue.is_empty() and vill.size() + queued < max_villagers and _spend(budget, sim.dp(player).cost_of("aldeano", p["age"])):
+				sim.push_command({"t": "train", "player": player, "building": c.id, "type": "aldeano"})
+				queued += 1
+	elif centro.queue.is_empty() and vill.size() < max_villagers and (centro.def.get("produce", []) as Array).has("aldeano"):
 		if _spend(budget, sim.dp(player).cost_of("aldeano", p["age"])):
 			sim.push_command({"t": "train", "player": player, "building": centro.id, "type": "aldeano"})
 	var threatened := _threat(centro) != null
@@ -761,12 +950,18 @@ func _production(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], 
 	# encima de su costo. Cortar del todo dejaba a Etiopía con 9 de ejército y 979 de alimento
 	# en el banco; gastar todo lo que sobra demoraba la edad III 3–4 minutos (proceso/24).
 	if saving and not threatened:
-		var mins: Array = sim.data.reglas["ia_economia"]["ejercito_minimo_ahorrando"]
+		var mins: Array = level.get("ejercito_minimo_ahorrando", sim.data.reglas["ia_economia"]["ejercito_minimo_ahorrando"])
 		if army.size() >= int(mins[clampi(int(p["age"]) - 1, 0, mins.size() - 1)]):
 			return
 		var hc: Dictionary = sim.dp(player).cost_of(_hito_type(p), p["age"])
 		for k in hc:
 			budget[k] = maxi(0, int(budget.get(k, 0)) - int(hc[k]))
+	# Juntando para el centro (experta), la tropa sale de lo que sobra por encima, salvo que
+	# esté por debajo del mínimo de la edad (`ejercito_minimo_ahorrando`): no se corta.
+	var mins_now: Array = level.get("ejercito_minimo_ahorrando", sim.data.reglas["ia_economia"]["ejercito_minimo_ahorrando"])
+	if not threatened and army.size() >= int(mins_now[clampi(int(p["age"]) - 1, 0, mins_now.size() - 1)]):
+		for k in _holding:
+			budget[k] = maxi(0, int(budget.get(k, 0)) - int(_holding[k]))
 	var order := _counter_order(p)
 	var producers: Array = []
 	for k in by_type:

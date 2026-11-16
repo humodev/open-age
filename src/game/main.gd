@@ -19,7 +19,7 @@ extends Node3D
 ##   --equipos=0,1,0,…  equipo de cada lugar (sin esto, todos contra todos)
 ##   --partida=N        en el menú, tipo de partida preelegido (0 = 1 contra 1, 2 = 3 contra 3…)
 ##   --campana=clave --mision=N  juega una misión de campaña (N desde 0)
-##   --dificultad=facil|normal|dificil
+##   --dificultad=facil|normal|dificil|experta  (en el menú, la preelige)
 ##   --nofog            sin niebla de guerra (automático en --aivai)
 ##   --autotest         prueba de punta a punta con eventos reales de mouse y teclado
 ##   --grilla=menu      abre el submenú del aldeano (economia, militar) antes de la captura
@@ -74,6 +74,9 @@ func _ready() -> void:
 	audio.name = "Audio"
 	add_child(audio)
 	_opciones_al_arrancar() # --- opciones ---
+	# En el menú, --dificultad preelige la dificultad (capturas); no se guarda en las opciones.
+	if _menu_mode and _args.has("dificultad"):
+		Opciones.dificultad = str(_args["dificultad"])
 	if _args.has("shot") or _args.has("autotest") or _args.has("mute"):
 		AudioServer.set_bus_mute(0, true)
 	_new_game()
