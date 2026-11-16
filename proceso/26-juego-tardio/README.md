@@ -27,3 +27,13 @@ Contexto: hoy la edad IV no trae unidades nuevas, hay 18 mejoras compartidas y n
 - Las mejoras y unidades propias de cada pueblo parten de sus **saberes**: medicina, ingeniería, agricultura, administración, metalurgia, navegación, astronomía. Se toman de la arqueología y de las fuentes propias, no de la mirada del conquistador. Ejemplo: la trepanación andina, con miles de cráneos con cirugía exitosa y tasas de supervivencia muy altas [verificar cifras].
 - Cada saber lleva su **nivel de evidencia**: documentado, arqueológico o debatido. Así se cuenta lo que se borró sin caer en el mito al revés.
 - Lo sagrado sigue con el mismo cuidado de la etapa 25: no se usa como bono de combate sin consulta.
+
+## Cómo se mide desde ahora (2026-11-16)
+
+> El autor: "Prefiero que avancemos de esa manera, porque si no vamos a gastar muchos tokens solo en torneos y frenar el avance. Tenemos que acelerar la implementación."
+
+- Cada cambio se ajusta con herramientas dirigidas: el diagnóstico que repite las mismas semillas, la matriz de micro y el modelo de progreso.
+- Los cambios independientes se agrupan.
+- Se confirma con **un torneo de 10 semillas por hito**: al final de cada paso del juego tardío o antes de una ronda de jugadores.
+- Un torneo por cambio solo para cambios amplios de IA o simulación.
+- Los pasos se implementan en paralelo, cada uno en su worktree.
