@@ -166,6 +166,7 @@ Un cambio por torneo: 75 partidas, 5 semillas, 30 minutos, en 10 procesos.
 | [23](pruebas/23-torneo-todo-junto.txt) (10) | Todo junto: C2, hito en obra, equipos (movimiento nuevo), depósitos | 56 | 58 | **76** | 38 | 44 | **28** |
 | [24](pruebas/24-torneo-roza-850.txt) (10) | Guaraníes: roza 850. **Descartado** | 58 | 60 | 72 | 36 | 46 | 28 |
 | [25](pruebas/25-torneo-arquero-guarani.txt) (10) | Guaraníes: arquero 7 de ataque (antes 8); roza de vuelta a 900 | 58 | 60 | **66** | 38 | 44 | 34 |
+| [26](pruebas/26-torneo-sitios-y-llamas.txt) (10) | IA que disputa sitios (5b) + una llama por vez | 62 | 58 | **80** | 34 | 32 | 34 |
 
 **Etiopía, de 56 % a 8 %.**
 - Con la misma partida seguida en el commit anterior a la etapa (`tools/ia_por_dentro.gd`, sierra contra Tawantinsuyu), el ejército etíope ya era chico (unas 20 unidades). Lo que cambió fue el rival: los arreglos de economía del paso 1 destrabaron el alimento de Tawantinsuyu, que pasó de 15 a 60 unidades.
@@ -315,3 +316,5 @@ Con los pasos 1 a 4 integrados, los mismos cuatro jugadores de las rondas 1 y 2,
 - **[Síntesis de la cuarta ronda](../22-testers/ronda-4/00-sintesis.md):**
   - Lo más grave: el botón de Aldeano que no se ve en el centro (todos los pueblos), la producción en varios edificios a la vez y las teclas sin configurar.
   - En curso: 4n (jugador nuevo) y 4o (veterano).
+- **Torneo 26:** con la IA que disputa sitios terminan menos partidas por hitos (57 contra 77) y más por puntos. Los guaraníes suben a 80 % (27 de 40 por puntos, que salen de las bajas).
+- **Torneo 27:** emboscada guaraní a 35 % (antes 50; la de Palmares, 30). Sigue siendo la mayor: es su identidad.
