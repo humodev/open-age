@@ -156,6 +156,7 @@ Un cambio por torneo: 75 partidas, 5 semillas, 30 minutos, en 10 procesos.
 | [13](pruebas/13-torneo-jinete-noble.txt) | Etiopía: jinete noble 160 de vida y 13 de ataque (antes 140 y 10), mismo costo | 52 | 52 | 64 | **40** | 68 | 24 |
 | [14](pruebas/14-torneo-khlong.txt) | Ayutthaya: khlong junto a la base y arrozales junto al agua | 52 | 52 | 60 | 36 | 68 | **32** |
 | [15](pruebas/15-torneo-flecheiro.txt) | Palmares: flecheiro 7 de ataque (antes 8). **Descartado** | 52 | 48 | 56 | 32 | **84** | 28 |
+| [16](pruebas/16-torneo-acogida.txt) (10 semillas) | Palmares: acogida a 34 de fama (antes 28) | 54 | 62 | **74** | 38 | **34** | 38 |
 
 **Etiopía, de 56 % a 8 %.**
 - Con la misma partida seguida en el commit anterior a la etapa (`tools/ia_por_dentro.gd`, sierra contra Tawantinsuyu), el ejército etíope ya era chico (unas 20 unidades). Lo que cambió fue el rival: los arreglos de economía del paso 1 destrabaron el alimento de Tawantinsuyu, que pasó de 15 a 60 unidades.
@@ -195,4 +196,4 @@ Cada frente tiene su agente en un worktree propio, con su rama y su documento. E
 - Con el flecheiro más débil (torneo 15), Palmares *subió* de 68 a 84 %. La simulación es determinista, pero cualquier cambio altera todas las partidas que siguen.
 - Con 25 partidas por civ, el ruido de un porcentaje es de unos ±10 puntos: el 68 → 84 dice que ese no era el resorte, no que el flecheiro la fortalezca. Se vuelve a 8.
 - **Desde acá, las decisiones van con 10 semillas** (150 partidas, 50 por civ, ±7 puntos).
-- **El resorte de Palmares es la acogida.** Llega gente sin costo de alimento a cambio de fama (24 por minuto del centro, 15 por mocambo), y eso explica sus victorias rápidas y las por puntos. Torneo 16: acogida a 34 de fama (antes, 28), unas 18 % menos de personas regaladas.
+- **El resorte de Palmares es la acogida.** Llega gente sin costo de alimento a cambio de fama (24 por minuto del centro, 15 por mocambo), y eso explica sus victorias rápidas y las por puntos. Torneo 16: acogida a 34 de fama (antes, 28), unas 18 % menos de personas regaladas. **Palmares de 68 a 34 %** con 10 semillas: era el resorte. Queda en el borde de abajo; se vuelve a mirar cuando cambien las demás. Ahora el que sobra es guaraníes (74 %).
