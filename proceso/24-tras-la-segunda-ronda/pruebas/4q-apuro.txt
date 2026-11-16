@@ -1,0 +1,21 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+semilla 7: sin terminar a las 15:00 () · ataques 1 (08:20:11+0 contra 4) · tropa perdida 9
+  bajas propias por último golpe: hondero 20, lancero 3, boleador 1, guerrero 1
+  daño recibido por atacante: hondero 1589, lancero 456, guerrero 209, boleador 120
+  arietes: más cerca de la capital rival 1152921504606846 casillas · perdidos 0 () · daño a edificios 0 · a unidades 0
+  daño mío a edificios: almacen_mina 19 · tirados:  (primero al minuto -1) · capital rival mín 2400
+  IA: ejército máx 22 · edificios al final granja 6, casa 4, almacen_madera 3, qollqa 2, taller_tejido 2, campo_tiro 2, almacen_mina 2, centro 1, ushnu 1, cuartel 1, mercado 1
+semilla 21: sin terminar a las 15:00 () · ataques 1 (08:00:11+0 contra 8) · tropa perdida 12
+  bajas propias por último golpe: hondero 20, boleador 4, lancero 1
+  daño recibido por atacante: hondero 1932, lancero 328, boleador 156, guerrero 51
+  arietes: más cerca de la capital rival 35 casillas · perdidos 0 () · daño a edificios 0 · a unidades 0
+  daño mío a edificios: almacen_mina 41, campo_tiro 29 · tirados:  (primero al minuto -1) · capital rival mín 2400
+  IA: ejército máx 20 · edificios al final granja 5, casa 4, almacen_madera 3, almacen_mina 3, qollqa 2, taller_tejido 2, campo_tiro 2, centro 1, ushnu 1, cuartel 1, mercado 1
+semilla 3: sin terminar a las 15:00 () · ataques 1 (08:00:11+0 contra 10) · tropa perdida 13
+  bajas propias por último golpe: hondero 19, guerrero 7, lancero 4, boleador 1, centro+guarnición 1, ariete 1
+  daño recibido por atacante: hondero 1724, lancero 619, guerrero 531, centro+guarnición 165, boleador 64, ariete 5
+  arietes: más cerca de la capital rival 1152921504606846 casillas · perdidos 0 () · daño a edificios 0 · a unidades 0
+  daño mío a edificios: qollqa 165 · tirados:  (primero al minuto -1) · capital rival mín 2400
+  IA: ejército máx 21 · edificios al final granja 8, casa 4, almacen_madera 3, qollqa 3, taller_tejido 3, campo_tiro 2, almacen_mina 2, centro 1, ushnu 1, cuartel 1, mercado 1
+RESUMEN dif=facil semillas=7,21,3: ganó 0 de 3

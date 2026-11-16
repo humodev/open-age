@@ -1205,6 +1205,14 @@ func _autotest_pelea(check: Callable, cs, said: Callable) -> void:
 	get_viewport().get_texture().get_image().save_png("screenshots/autotest_pelea.png")
 	sim._kill(shooter)
 	hud.avisos.lista.clear()
+	# --- atajos --- (4q) la hoja de atajos de una pantalla, con la tecla de Opciones → Teclas.
+	_key_tap(Teclas.tecla("atajos"))
+	await _frames(3)
+	check.call("%s abre la hoja de atajos" % Teclas.texto("atajos"), hud.atajos_hoja.is_open())
+	get_viewport().get_texture().get_image().save_png("screenshots/autotest_atajos.png")
+	_key_tap(KEY_ESCAPE)
+	await _frames(2)
+	check.call("Esc cierra la hoja de atajos", not hud.atajos_hoja.is_open() and not hud._menu.visible)
 
 
 func _autotest_lejos(check: Callable, cs, said: Callable, capital: SimEntity, vill_ids: Array[int]) -> void:

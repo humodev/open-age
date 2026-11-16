@@ -92,6 +92,9 @@ static func secciones() -> Array:
 			[_k("del_tipo"), "todos los del tipo de lo elegido"],
 			[_k("centro"), "el centro (dos veces: la cámara va ahí)"],
 			[_k("produccion"), "recorrer los edificios que entrenan"],
+			[_k("todos_aldeanos"), "todos los aldeanos"],
+			[_k("produccion_todos"), "todos los edificios de producción militar"],
+			[_k("campana"), "campana: los aldeanos se refugian (otra vez: calma)"],
 			[_k("borrar"), "borrar lo elegido"],
 		]],
 		["Grupos y cámara", [

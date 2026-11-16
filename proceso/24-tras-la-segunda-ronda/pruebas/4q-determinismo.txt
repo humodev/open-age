@@ -1,0 +1,6 @@
+antes (b9ea7df):
+ticks=3000 hash=2203695307
+DETERMINISMO: OK
+después (con main integrado):
+ticks=3000 hash=2203695307
+DETERMINISMO: OK

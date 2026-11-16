@@ -1,0 +1,37 @@
+# Antes de integrar main (7740cff): semillas 7, 21, 3 y 11, 42 en dos procesos
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+semilla 7: GANA a las 26:29 (rendicion) · ataques 2 (13:00:22+2 contra 4, 21:40:24+2 contra 10) · tropa perdida 30
+  bajas propias por último golpe: hondero 21, boleador 8, guerrero 7, lancero 7, centro+guarnición 5, centro 1, ? 1
+  daño recibido por atacante: hondero 1995, centro+guarnición 730, guerrero 721, boleador 667, lancero 564, centro 60, ariete 3
+  arietes: más cerca de la capital rival 8 casillas · perdidos 5 (guerrero 2, hondero 2, ? 1) · daño a edificios 2358 · a unidades 0
+  daño mío a edificios: almacen_madera 1611, cuartel 1053, taller_tejido 326, granja 164 · tirados: almacen_madera 3, cuartel 1, taller_tejido 1, granja 1 (primero al minuto 16) · capital rival mín 2400
+  IA: ejército máx 22 · edificios al final granja 5, casa 4, qollqa 3, taller_tejido 2, campo_tiro 2, almacen_mina 2, almacen_madera 2, centro 1, ushnu 1, mercado 1
+semilla 21: GANA a las 20:11 (rendicion) · ataques 1 (13:00:22+2 contra 0) · tropa perdida 10
+  bajas propias por último golpe: centro+guarnición 12, hondero 5
+  daño recibido por atacante: centro+guarnición 1230, hondero 350, lancero 72, boleador 21
+  arietes: más cerca de la capital rival 13 casillas · perdidos 1 (hondero 1) · daño a edificios 978 · a unidades 0
+  daño mío a edificios: campo_tiro 994, almacen_mina 985, taller_tejido 618, casa 570, granja 514, qollqa 72, almacen_madera 62 · tirados: taller_tejido 3, almacen_mina 2, campo_tiro 1, granja 1, casa 1 (primero al minuto 16) · capital rival mín 2400
+  IA: ejército máx 20 · edificios al final casa 4, almacen_madera 4, granja 4, qollqa 3, campo_tiro 2, centro 1, taller_tejido 1, ushnu 1, cuartel 1, mercado 1, almacen_mina 1
+semilla 3: GANA a las 25:11 (rendicion) · ataques 1 (14:20:26+2 contra 3) · tropa perdida 15
+  bajas propias por último golpe: hondero 16, lancero 4, ? 2, boleador 1
+  daño recibido por atacante: hondero 1546, lancero 401, guerrero 205, centro+guarnición 150, boleador 52, ariete 1
+  arietes: más cerca de la capital rival 8 casillas · perdidos 3 (? 2, hondero 1) · daño a edificios 1792 · a unidades 0
+  daño mío a edificios: almacen_madera 1082, taller_tejido 493, qollqa 425, casa 326, granja 164 · tirados: almacen_madera 2, qollqa 1, taller_tejido 1, casa 1, granja 1 (primero al minuto 24) · capital rival mín 2400
+  IA: ejército máx 21 · edificios al final granja 7, casa 3, almacen_madera 3, qollqa 2, campo_tiro 2, almacen_mina 2, centro 1, taller_tejido 1, ushnu 1, cuartel 1, mercado 1
+RESUMEN dif=facil semillas=7,21,3: ganó 3 de 3
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+semilla 11: GANA a las 20:44 (rendicion) · ataques 1 (13:00:22+2 contra 1) · tropa perdida 18
+  bajas propias por último golpe: hondero 30, lancero 4, guerrero 4
+  daño recibido por atacante: hondero 2778, guerrero 604, lancero 410
+  arietes: más cerca de la capital rival 7 casillas · perdidos 3 (hondero 3) · daño a edificios 1958 · a unidades 0
+  daño mío a edificios: almacen_madera 1020, granja 328, almacen_mina 326, casa 326 · tirados: almacen_madera 3, granja 2, almacen_mina 1, casa 1 (primero al minuto 15) · capital rival mín 2400
+  IA: ejército máx 21 · edificios al final granja 6, casa 3, almacen_madera 2, qollqa 2, taller_tejido 2, campo_tiro 2, centro 1, ushnu 1, cuartel 1, mercado 1, almacen_mina 1
+semilla 42: GANA a las 27:20 (rendicion) · ataques 1 (13:00:24+2 contra 0) · tropa perdida 24
+  bajas propias por último golpe: hondero 27, guerrero 7, boleador 6, ? 2, centro+guarnición 1, lancero 1
+  daño recibido por atacante: hondero 2326, centro+guarnición 560, guerrero 420, lancero 247, boleador 244
+  arietes: más cerca de la capital rival 8 casillas · perdidos 4 (boleador 2, ? 2) · daño a edificios 1303 · a unidades 0
+  daño mío a edificios: almacen_mina 1044, granja 755, taller_tejido 609, campo_tiro 404, almacen_madera 45 · tirados: granja 3, almacen_mina 2, taller_tejido 2 (primero al minuto 17) · capital rival mín 2400
+  IA: ejército máx 22 · edificios al final almacen_madera 5, granja 5, casa 4, campo_tiro 2, taller_tejido 2, centro 1, qollqa 1, ushnu 1, cuartel 1, mercado 1, almacen_mina 1
+RESUMEN dif=facil semillas=11,42: ganó 2 de 2
