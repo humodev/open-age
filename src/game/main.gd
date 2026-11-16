@@ -1347,6 +1347,24 @@ func _autotest() -> void:
 		if e.owner == local and e.fn == "civil" and e.order == SimEntity.Order.GATHER:
 			gathering += 1
 	check.call("clic derecho en arbustos pone a recolectar (%d)" % gathering, gathering >= ctrl.selection.size() - 1 and gathering > 0)
+	# --- animal propio --- (el autor: "mis aldeanos no matan las llamas porque son aliados")
+	var beast := sim.spawn_unit("rebano", local, (base.x - 4) * 1000, (base.y + 6) * 1000)
+	var butcher: SimEntity = null
+	for e in sim.actives:
+		if e.owner == local and e.fn == "civil" and e.is_unit():
+			butcher = e
+			break
+	ctrl.select_ids([butcher.id] as Array[int])
+	await _frames(4)
+	var beast_sp := cam.cam.unproject_position(WorldView.to_world(beast.x, beast.y, 0.4))
+	_mouse(beast_sp, 0, false)
+	await _frames(3)
+	check.call("cursor de juntar alimento sobre un animal propio (%s)" % ctrl.cursor_action(beast_sp), ctrl.cursor_action(beast_sp) == "recolectar_alimento")
+	_mouse(beast_sp, MOUSE_BUTTON_RIGHT, true)
+	_mouse(beast_sp, MOUSE_BUTTON_RIGHT, false)
+	await _frames(90)
+	check.call("clic derecho en un animal propio: el aldeano lo carnea (vivo %s, orden %d, junta %s)" % [beast.alive, butcher.order, butcher.gather_kind], not beast.alive and butcher.gather_kind == "alimento")
+	# --- fin animal propio ---
 
 	# 3. Q (Economía), Q (casa) y clic. --- grilla ---
 	var spot := Vector2i(-1, -1)

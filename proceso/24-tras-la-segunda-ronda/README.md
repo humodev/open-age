@@ -267,3 +267,11 @@ Con los pasos 1 a 4 integrados, los mismos cuatro jugadores de las rondas 1 y 2,
   - Su arquero (8 de ataque, 70 de vida, 6000 de alcance) y la emboscada al 50 % kitean mejor desde que el guerrero es más lento (C2).
 - **Torneo 25:** arquero guaraní a 7 de ataque. El alcance y la emboscada quedan: son su identidad.
 - **Torneo 25:** guaraníes de 72 a 66 %; era el arquero. Todas quedan entre 34 y 66 %, y el rebalance de después de la tercera ronda se cierra ahí. Ayutthaya en 34 % está dentro del ruido.
+
+### Pedido del autor: las llamas propias no se carnean
+
+> "Algo gracioso que pasa es que, a lo que los animales pasan a ser nuestros, las llamas por ejemplo cuando empiezo la partida, mis aldeanos no las matan porque son aliados."
+
+- **Causa:** el clic derecho sobre una unidad propia se tomaba como "mover ahí" (`Controller._right_click`) y nunca llegaba la orden de carnear. La simulación ya carneaba el animal propio si la orden llegaba (C-32); por eso las pruebas de la simulación pasaban: mandan la orden directo.
+- **Arreglo:** un animal propio (`animal: true`) recibe la orden como un recurso, y el cursor muestra "juntar alimento".
+- **Prueba:** el autotest suma un clic derecho con el mouse sobre una llama propia. Verifica el cursor y que el aldeano la carnee y junte alimento.

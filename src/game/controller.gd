@@ -492,6 +492,9 @@ func cursor_action(m: Vector2) -> String:
 		return "atacar" if hits else "no"
 	if t.is_resource():
 		return "recolectar_" + t.res_kind if civil else "mover"
+	# Animal propio: el aldeano lo carnea (cursor de juntar alimento).
+	if t.is_unit() and t.owner == local and t.def.get("animal", false):
+		return "recolectar_alimento" if civil else "mover"
 	if t.is_building() and t.owner == local:
 		if civil and not t.built:
 			return "construir"
@@ -723,7 +726,9 @@ func _right_click(pos: Vector2, rumbo: int = -1) -> void:
 		# --- fin mundo ---
 		# Alt + clic derecho: suelto, sin formación (cada uno a su velocidad: para retirarse).
 		var loose := Input.is_key_pressed(KEY_ALT)
-		if t != null and t.id not in ids and not (t.is_unit() and t.owner == local):
+		# Un animal propio (llama, cabra…) no es un aliado más: el aldeano lo carnea (la simulación ya lo hace).
+		var own_animal: bool = t != null and t.is_unit() and t.owner == local and t.def.get("animal", false)
+		if t != null and t.id not in ids and (not (t.is_unit() and t.owner == local) or own_animal):
 			sim.push_command({"t": "target", "player": local, "ids": ids, "target": t.id, "suelto": loose})
 			var col := Palette.UI_BAD if t.owner >= 0 and t.owner != local else Palette.UI_ACCENT
 			view.add_marker(WorldView.to_world(t.x, t.y), col)
