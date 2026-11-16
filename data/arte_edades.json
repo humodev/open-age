@@ -1,5 +1,5 @@
 {
- "_doc": "Aspecto de los edificios y las tropas por pueblo y por edad, y la obra en etapas (proceso/24-tras-la-segunda-ronda/4c-arte-por-edad.md). Solo imagen: la simulación no lo lee. Las edades se acumulan: cada una hereda lo de la anterior y cambia lo que dice. Lo de 'civs' pisa lo de 'formas'. Colores en hex; *_pct en por ciento; *_cm en centímetros de maqueta (1 casilla = 100). Claves: muro, techo, acento (colores del pueblo en esa edad); alto_pct (alto de muros), techo_alto_pct, escala_pct (planta, sin pasar el margen); aparejo (pirca, piedra, canteria o adobe); zocalo_cm y zocalo (base de piedra); pisos_techo (techos escalonados); dorado (remates y bandas de oro); remate (punta, cruz, dorado); horcones (postes tallados y pintados en las esquinas); cerco {tipo, alto_cm} alrededor del centro (pirca, canteria, piedra, muro_blanco, empalizada, empalizada_doble, tacuara); rewe_cm (rewe junto al lof); tola_cm (montículo bajo el centro); modelo_tinte (tono de los modelos generados); torre (forma de la torre), torre_alto_pct, torre_cupula (torres_bajas: las que no se estiran a la altura mínima de torre); tropa {tela, casco, escudo_borde, oro} para las tropas de la maqueta. Afirmaciones históricas con [verificar] hasta tener cita en la ficha (docs/00-indice.md, regla 5).",
+ "_doc": "Aspecto de los edificios y las tropas por pueblo y por edad, y la obra en etapas (proceso/24-tras-la-segunda-ronda/4c-arte-por-edad.md). Solo imagen: la simulación no lo lee. Las edades se acumulan: cada una hereda lo de la anterior y cambia lo que dice. Lo de 'civs' pisa lo de 'formas'. Colores en hex; *_pct en por ciento; *_cm en centímetros de maqueta (1 casilla = 100). Claves: muro, techo, acento (colores del pueblo en esa edad); alto_pct (alto de muros), techo_alto_pct, escala_pct (planta, sin pasar el margen); aparejo (pirca, piedra, canteria o adobe); zocalo_cm y zocalo (base de piedra); pisos_techo (techos escalonados); dorado (remates y bandas de oro); remate (punta, cruz, dorado); horcones (postes tallados y pintados en las esquinas); cerco {tipo, alto_cm, color} alrededor del centro (pirca, canteria, piedra, muro_blanco, empalizada, empalizada_doble, tacuara); rewe_cm (rewe junto al lof); tola_cm (montículo bajo el centro); modelo_tinte (tono de los modelos generados); sin_modelo (tipos que en esa edad dejan el modelo generado y usan la maqueta); centro_forma (castillo: el centro como castillo de piedra); torre (forma de la torre), torre_alto_pct, torre_cupula (torres_bajas: las que no se estiran a la altura mínima de torre); tropa {tela, casco, escudo_borde, oro} para las tropas de la maqueta. Afirmaciones históricas con [verificar] hasta tener cita en la ficha (docs/00-indice.md, regla 5).",
  "margen_cm": 30,
  "obra": {
   "_doc": "Etapas de la obra según el avance: cimientos hasta el primer umbral, estructura a medio levantar hasta el segundo, casi terminado después. corte_pct: hasta qué parte del alto del edificio terminado llega cada etapa.",
@@ -60,12 +60,12 @@
  },
  "civs": {
   "tawantinsuyu": {
-   "_nota": "De la pirca (piedra de campo con barro) a la cantería fina ensamblada y, en la última edad, las bandas de oro del Qorikancha. La kancha es un recinto cercado con casas adentro. La torre es una pukara escalonada, sin almenas. Fuentes: Gasparini y Margolies, Arquitectura inka (1977); Hyslop, Inka Settlement Planning (1990) [verificar].",
+   "_nota": "De la pirca (piedra de campo con barro) a la cantería fina ensamblada, gris como la andesita del Cusco (no blanca: ronda 3 de jugadores, proceso/24, 4i) y, en la última edad, las bandas de oro del Qorikancha. La kancha es un recinto cercado con casas adentro. La torre es una pukara escalonada, sin almenas. Fuentes: Gasparini y Margolies, Arquitectura inka (1977); Hyslop, Inka Settlement Planning (1990) [verificar].",
    "obra_material": ["piedra", "paja"],
    "edades": [
     {"muro": "#a99a84", "techo": "#a58c5c", "aparejo": "pirca", "alto_pct": 90, "escala_pct": 90, "modelo_tinte": "#d8d0c2", "tropa": {"tela": "#c9b48e"}},
     {"muro": "#b9a98f", "alto_pct": 100, "escala_pct": 95, "cerco": {"tipo": "pirca", "alto_cm": 50}, "modelo_tinte": "#e6dfd2", "tropa": {"tela": "#9c4a32", "casco": "#6b5a44"}},
-    {"muro": "#ddd3bd", "aparejo": "canteria", "alto_pct": 115, "techo_alto_pct": 112, "escala_pct": 100, "cerco": {"tipo": "canteria", "alto_cm": 70}, "torre_alto_pct": 115, "modelo_tinte": "#ffffff", "tropa": {"tela": "#8e2f25", "casco": "#a8823a", "escudo_borde": "#e2b13c"}},
+    {"muro": "#8f8a81", "aparejo": "canteria", "alto_pct": 115, "techo_alto_pct": 112, "escala_pct": 100, "cerco": {"tipo": "canteria", "alto_cm": 70, "color": "#87827a"}, "torre_alto_pct": 115, "modelo_tinte": "#ffffff", "tropa": {"tela": "#8e2f25", "casco": "#a8823a", "escudo_borde": "#e2b13c"}},
     {"alto_pct": 125, "dorado": true, "remate": "dorado", "torre_alto_pct": 125, "tropa": {"oro": true}}
    ]
   },
@@ -90,13 +90,13 @@
    ]
   },
   "etiopia": {
-   "_nota": "Del tukul de barro y paja a la piedra: primero un zócalo, después muros de piedra con techos cónicos de paja más altos y, en Gondar, piedra con cal y cruz en el remate. La torre de la amba es de piedra, cuadrada, con vigas a la vista, sin almenas; en Gondar suma cúpula. Fuentes: Phillipson, Ancient Churches of Ethiopia (2009); Pankhurst, History of Ethiopian Towns (1982) [verificar].",
+   "_nota": "Del tukul de barro y paja a la piedra: primero un zócalo, después muros de piedra con techos cónicos de paja más altos y, en Gondar, piedra con cal y cruz en el remate. En Gondar la corte deja de caminar: el centro deja la tienda real (el modelo generado) y pasa a ser un castillo de piedra con torres redondas y cúpulas, al modo de Fasil Ghebbi (sin_modelo, centro_forma: castillo). La torre de la amba es de piedra, cuadrada, con vigas a la vista, sin almenas; en Gondar suma cúpula. Fuentes: Phillipson, Ancient Churches of Ethiopia (2009); Pankhurst, History of Ethiopian Towns (1982) [verificar].",
    "obra_material": ["adobe", "paja"],
    "edades": [
     {"muro": "#b89a72", "techo": "#9a7a4e", "alto_pct": 90, "modelo_tinte": "#ddd3c0", "tropa": {"tela": "#f2eee4"}},
     {"zocalo_cm": 28, "zocalo": "#8c8478", "techo_alto_pct": 112, "alto_pct": 100, "obra_material": ["piedra", "paja"], "modelo_tinte": "#ebe4d6"},
     {"muro": "#a49c8c", "aparejo": "piedra", "techo_alto_pct": 135, "alto_pct": 110, "cerco": {"tipo": "piedra", "alto_cm": 70}, "torre_alto_pct": 112, "modelo_tinte": "#ffffff", "tropa": {"escudo_borde": "#c9a227", "casco": "#a8743a"}},
-    {"muro": "#c4bba8", "aparejo": "canteria", "techo_alto_pct": 150, "alto_pct": 120, "remate": "cruz", "cerco": {"tipo": "piedra", "alto_cm": 95}, "torre_cupula": true, "torre_alto_pct": 125, "tropa": {"oro": true}}
+    {"muro": "#c4bba8", "aparejo": "canteria", "techo_alto_pct": 150, "alto_pct": 120, "remate": "cruz", "cerco": {"tipo": "piedra", "alto_cm": 95}, "sin_modelo": ["centro"], "centro_forma": "castillo", "torre_cupula": true, "torre_alto_pct": 125, "tropa": {"oro": true}}
    ]
   },
   "palmares": {
