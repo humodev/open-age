@@ -288,3 +288,15 @@ Faltan maravilla (no existe todavía), edad inicial, población máxima y "revel
 a) Población máxima y revelar mapa ahora; edad inicial y maravilla después *(por defecto)* · b) Ninguna por ahora · c) Todas
 
 **Respuesta:**
+
+### C-51 · (IA experta) ¿Tiene que ganarle a la difícil?
+La experta llega a 100 aldeanos a los 25 minutos en tres civs y levanta un segundo o tercer centro, pero contra la difícil pierde 2 de 6 partidas, gana 1 y 3 quedan abiertas a los 25 minutos. Su economía grande llega tarde: a los 10–15 minutos tiene igual o menos ejército (`proceso/24-tras-la-segunda-ronda/4a-ia-experta.md`).
+a) Otro paso de ajuste con torneo de la experta contra la difícil *(por defecto)* · b) Dejarla así por ahora
+
+**Respuesta:**
+
+### C-52 · (IA experta) ¿Cuenta para el balance?
+El torneo de balance se juega con la normal. Palmares no crece con centros sino con la fama, así que con la experta queda abajo por diseño.
+a) El balance se mide con la normal, y la experta solo se revisa para que ninguna civ quede inútil *(por defecto)* · b) Sumar un torneo con la experta y balancear también ahí
+
+**Respuesta:**
