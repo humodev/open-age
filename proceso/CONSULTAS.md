@@ -381,3 +381,15 @@ El veterano lo pide por tercera ronda. El estudio (`proceso/24-tras-la-segunda-r
 a) Guerrero común a 1350 y la línea +6 contra el choque (antes +5), como el hombre de armas de AoE4, medido con torneo *(por defecto)* · b) Solo la línea +10 contra el choque · c) Un hostigador montado por pueblo (pide modelo, edificio e IA) · d) Dejarlo así y enseñar en el juego la micro que ya paga
 
 **Respuesta:**
+
+### C-65 · (escala) Velocidad de las unidades
+Del análisis de escala del veterano (`proceso/22-testers/ronda-4/03-escala-veterano.md`): el aldeano anda a 1,86 m/s, un trote, cerca de 35 % más rápido que en AoE4 en relación con su cuerpo. Con la persona más chica (paso 1, solo vista) va a parecer más rápido todavía. Bajar `velocidad_pct` de 90 a 72 cambia toda la simulación: viajes, economía, llegada de ataques y micro.
+a) Bajarla a 72 con un torneo de 10 semillas solo para eso, y mirarlo vos a ×1 *(por defecto)* · b) Probar 80 · c) Dejarla
+
+**Respuesta:**
+
+### C-66 · (escala) Huellas del centro y los hitos
+En AoE4 el centro y los hitos dominan la ciudad. Acá ocupan 4×4 casillas (el lof mapuche, 3×3). Pasarlos a 5×5 (el lof a 4×4) toca la colocación, la IA, el generador de mapas (quizás un mapa de 136 en vez de 128), los caminos, las 25 misiones y el balance. Las casas, granjas y almacenes no cambian.
+a) Esperar a ver el paso 1 (solo vista) y decidir después *(por defecto)* · b) Hacerlo ya, con su torneo · c) No
+
+**Respuesta:**

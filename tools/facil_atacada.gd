@@ -1,13 +1,15 @@
 extends SceneTree
 ## La fácil atacada no se multiplica (jugador nuevo, ronda 4). El jugador 0 no tiene IA: desde el
-## minuto `--desde` deja `--tropa` guerreros rondando la base de la fácil (se reponen cuando caen),
-## como el principiante que sigue el aviso «A y clic en la base rival». Se anota el ejército y la
-## población de la fácil por minuto. Antes: de 39 a 147 de población (novato4.gd, semilla 7).
-##   godot --headless --path . -s tools/facil_atacada.gd -- --minutes=24 --seeds=7,21 --desde=12 --tropa=18
+## minuto `--desde` deja `--tropa` guerreros quietos en el borde de la base de la fácil, hacia el
+## centro del mapa (se reponen cuando caen): un acoso que la deja «amenazada» todo el tiempo sin
+## tirarle nada, como el principiante sin asedio que sigue el aviso «A y clic en la base rival».
+## Se anota el ejército y la población de la fácil por minuto. En el informe: de 39 a 147 de
+## población (novato4.gd, semilla 7).
+##   godot --headless --path . -s tools/facil_atacada.gd -- --minutes=30 --seeds=7,21 --desde=12 --tropa=4
 
 
 func _init() -> void:
-	var args := {"minutes": "24", "seeds": "7,21", "desde": "12", "tropa": "18", "civ": "tawantinsuyu"}
+	var args := {"minutes": "30", "seeds": "7,21", "desde": "12", "tropa": "4", "civ": "tawantinsuyu", "casillas": "18"}
 	for a in OS.get_cmdline_user_args():
 		var kv := a.trim_prefix("--").split("=", true, 1)
 		args[kv[0]] = kv[1] if kv.size() > 1 else "1"
@@ -24,9 +26,14 @@ func _init() -> void:
 				var mine := 0
 				for e in s.actives:
 					mine += 1 if e.owner == 0 and e.is_unit() and e.fn == "choque" else 0
+				var mid := s.map.n / 2
+				var dx := mid - base.x
+				var dy := mid - base.y
+				var dl := maxi(1, absi(dx) + absi(dy))
+				var k := int(args["casillas"])
 				for i in int(args["tropa"]) - mine:
-					var u := s.spawn_unit("guerrero", 0, (base.x + 9) * 1000, (base.y + 9) * 1000)
-					s.push_command({"t": "move", "player": 0, "ids": [u.id], "x": base.x * 1000, "y": base.y * 1000, "amove": true})
+					var u := s.spawn_unit("guerrero", 0, (base.x + dx * k / dl) * 1000 + i * 600, (base.y + dy * k / dl) * 1000)
+					s.push_command({"t": "mantener", "player": 0, "ids": [u.id]})
 			if s.tick % 600 == 0:
 				var army := 0
 				for e in s.actives:

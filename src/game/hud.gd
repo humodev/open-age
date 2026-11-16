@@ -377,7 +377,8 @@ func on_events(events: Array) -> void:
 				if pid == local and not _local_is_ai():
 					notify(ev["msg"], -1.0, "decision" if String(ev["msg"]).begins_with("No ") or String(ev["msg"]).contains("insuficientes") or String(ev["msg"]).begins_with("Requiere") else "info")
 			"notice":
-				if pid == local:
+				# --- veterano ronda 4 --- en IA contra IA el local es una IA: «Rozas en espera…» no es para vos
+				if pid == local and not _local_is_ai():
 					notify(ev["text"], -1.0, "info")
 			"age":
 				var name: String = sim.dp(pid).edades[ev["age"] - 1]["nombre"]
@@ -391,7 +392,7 @@ func on_events(events: Array) -> void:
 				if pid == local:
 					notify("Investigación terminada: %s" % sim.dp(pid).tecnologias[ev["tech"]]["nombre"], -1.0, "hito")
 			"alarm":
-				if pid == local:
+				if pid == local and not _local_is_ai(): # --- veterano ronda 4 ---
 					notify("¡Campana! Los aldeanos se refugian", -1.0, "decision")
 			"alert":
 				if pid == local:
@@ -494,7 +495,7 @@ func _build_help() -> void:
 		if dd.has_mod("recurso_propio"):
 			civ_txt += "\nRecurso propio: %s." % dd.mod("recurso_propio")["nombre"]
 		civ_txt += "\nEdades: %s.\nDebilidad: %s" % [", ".join(c.get("edades", [])), c.get("debilidad", "")]
-	var controls := "Clic izquierdo: seleccionar (arrastrar para un grupo; doble clic: todos los del tipo)\nClic derecho: mover, atacar, recolectar, construir, reparar o alojar\nGrilla Q W E R / A S D F / Z X C V: construir, entrenar, investigar\nAldeanos: Q economía y W militar (submenús; Esc o V vuelve) · Z hito de economía · X hito militar\nLos grupos marchan en formación; Alt + clic derecho: suelto, para retirarse\nA y clic: atacar en movimiento · S: detener · F: refugiarse · Supr: eliminar\nCtrl + 1…9: asignar grupo · Mayús + 1…9: sumar al grupo · H: centro · . : aldeano inactivo · Z en el centro: campana\nEspacio: ir al último ataque o suceso · Inicio: recorrer los avisos anteriores\n. y , : aldeano y militar ocioso (Mayús: todos) · M: militares · T: todos del tipo · Tab: producción · D: mantener · E: patrullar · Alt + 1…8: ir a la cámara guardada (Ctrl + Alt + 1…8 la guarda) · Alt + clic: bengala\nFlechas, bordes o botón del medio: cámara · F3: velocidad · Esc: pausa"
+	var controls := "Clic izquierdo: seleccionar (arrastrar para un grupo; doble clic: todos los del tipo)\nClic derecho: mover, atacar, recolectar, construir, reparar o alojar\nGrilla Q W E R / A S D F / Z X C V: construir, entrenar, investigar\nAldeanos: Q economía y W militar (submenús; Esc o V vuelve) · Z hito de economía · X hito militar\nLos grupos marchan en formación; Alt + clic derecho: suelto, para retirarse\nA y clic: atacar en movimiento · S: detener · F: refugiarse · Supr: eliminar\nCtrl + 0…9: asignar grupo · Mayús + 0…9: sumar al grupo · H: recorre los centros (dos veces: centra) · . : aldeano inactivo · Z en el centro: campana\nEspacio: ir al último ataque o suceso · Inicio: recorrer los avisos anteriores\n. y , : aldeano y militar ocioso (Mayús: todos) · M: militares · T: todos del tipo · Tab: producción · D: mantener · E: patrullar · Alt + 1…8: ir a la cámara guardada (Ctrl + Alt + 1…8 la guarda) · Alt + clic: bengala\nFlechas, bordes o botón del medio: cámara · F3: velocidad · Esc: pausa\nTeclas de fábrica: se cambian en Opciones → Teclas (perfil AoE4: marcadores en F1–F4)"
 	_help = _make_dialog("Cómo se juega", civ_txt + "\n\n" + controls, [["Cerrar", func() -> void: _help.visible = false]])
 	(_help.get_meta("body") as Label).horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	(_help.get_meta("body") as Label).custom_minimum_size = Vector2(760, 0)
@@ -974,7 +975,7 @@ class CommandCard:
 			active = active or (hud.ctrl.mode == "patrol" and c["kind"] == "patrol") or (c["kind"] == "form" and c["form"] == hud.ctrl.formacion) # --- órdenes ---
 			# --- contraste --- disponible, no alcanza (qué falta) y bloqueado (candado y edad),
 			# legibles a 4,5:1 y sin depender del color (src/game/ui/estado_casilla.gd)
-			EstadoCasilla.dibujar(self, r, c, res, i == _hover, active, Controller.SLOT_LABELS[i], hud.sim.dp(hud.local).mod("recurso_propio"))
+			EstadoCasilla.dibujar(self, r, c, res, i == _hover, active, Controller.etiqueta(i), hud.sim.dp(hud.local).mod("recurso_propio"))
 			# --- fin contraste ---
 		# Progreso de la cola en la ranura del producto actual.
 		var sel := hud.ctrl.selected_entities()
@@ -1031,7 +1032,7 @@ class Tooltip:
 		draw_string(Hud.font_b, Vector2(14, y), "%s  " % cmd["name"], HORIZONTAL_ALIGNMENT_LEFT, size.x - 60, 17, Palette.UI_TEXT)
 		# La barra de recursos también usa esta ayuda, sin casilla de grilla.
 		if int(cmd.get("slot", -1)) >= 0:
-			draw_string(Hud.font_b, Vector2(0, y), "[%s]" % Controller.SLOT_LABELS[cmd["slot"]], HORIZONTAL_ALIGNMENT_RIGHT, size.x - 14, 13, Palette.UI_DIM)
+			draw_string(Hud.font_b, Vector2(0, y), "[%s]" % Controller.etiqueta(cmd["slot"]), HORIZONTAL_ALIGNMENT_RIGHT, size.x - 14, 13, Palette.UI_DIM)
 		y += 12
 		var cost: Dictionary = cmd.get("cost", {})
 		if not cost.is_empty():
@@ -1077,7 +1078,12 @@ class SelectionPanel:
 		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			for h in _hits:
 				if (h[0] as Rect2).has_point(event.position):
-					(h[1] as Callable).call()
+					# --- veterano ronda 4 --- los retratos de varias unidades leen Mayús y Ctrl
+					var cb: Callable = h[1]
+					if cb.get_argument_count() == 2:
+						cb.call(event.shift_pressed, event.ctrl_pressed)
+					else:
+						cb.call()
 					break
 			accept_event()
 
@@ -1169,6 +1175,15 @@ class SelectionPanel:
 		if cap > 0:
 			var shots: int = int(e.def.get("flechas", 1)) + e.garrison.size()
 			draw_string(Hud.font_b, Vector2(0, 58), "Guarnición %d/%d · %d flechas" % [e.garrison.size(), cap, shots], HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, 13, Palette.UI_ACCENT if not e.garrison.is_empty() else Palette.UI_DIM)
+		# --- veterano ronda 4 --- el círculo que se dibuja al elegir un centro o una torre
+		# (mundo_capa._draw_ranges) es el alcance de sus flechas: que el panel lo diga.
+		if e.def.has("ataque"):
+			var alc := (float(e.def.get("alcance", 0)) + float(sim.mod(e.owner, "b_alcance"))) / 1000.0
+			draw_string(Hud.font, Vector2(0, 82), "Círculo en el mapa:", HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, 12, Palette.UI_DIM)
+			draw_string(Hud.font_b, Vector2(0, 98), "alcance de las flechas", HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, 12, Palette.UI_TEXT)
+			var alc_t := str(int(alc)) if is_equal_approx(alc, roundf(alc)) else String.num(alc, 1).replace(".", ",")
+			draw_string(Hud.font, Vector2(0, 114), "%s casillas desde el borde" % alc_t, HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, 12, Palette.UI_DIM)
+		# --- fin veterano ronda 4 ---
 		if e.def.get("fuente", "") != "":
 			var f: SimEntity = sim.by_id.get(e.farmer)
 			draw_string(Hud.font, Vector2(x, 96), "Trabajada por un aldeano" if f != null and f.alive and f.target == e.id else "Sin aldeano asignado", HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Palette.UI_TEXT)
@@ -1227,6 +1242,14 @@ class SelectionPanel:
 				return "Construyendo"
 		return ""
 
+	# --- veterano ronda 4 --- (panel de varias unidades, como AoE4)
+	## Hasta MULTI_COLS × 3 unidades: un retrato por unidad con su barra de vida. Más: uno por
+	## tipo con la cantidad y la vida sumada. Clic: deja esa unidad (o ese tipo); Mayús + clic:
+	## la saca (o saca el tipo); Ctrl + clic: deja ese tipo; Ctrl + Mayús + clic: saca ese tipo.
+	const MULTI_COLS := 11
+	const MULTI_LADO := 40.0
+	const MULTI_PASO := 44.0
+
 	func _multi(sel: Array[SimEntity]) -> void:
 		var groups := {}
 		var order: Array[String] = []
@@ -1235,45 +1258,80 @@ class SelectionPanel:
 				groups[e.type] = []
 				order.append(e.type)
 			groups[e.type].append(e)
+		var por_unidad := sel.size() <= MULTI_COLS * 3
+		# Pocas: retratos más grandes (dos filas de 64 en vez de tres de 44).
+		var lado := MULTI_LADO if sel.size() > 16 else 56.0
+		var paso := MULTI_PASO if sel.size() > 16 else 61.0
 		var x := 14.0
-		var y := 14.0
-		for type in order:
-			var list: Array = groups[type]
-			var r := Rect2(x, y, 66, 66)
-			var sb := StyleBoxFlat.new()
-			sb.set_corner_radius_all(7)
-			sb.bg_color = Color(Palette.team(hud.local), 0.18)
-			sb.border_color = Color(1, 1, 1, 0.08)
-			sb.set_border_width_all(1)
-			draw_style_box(sb, r)
-			hud.ficha.zone(self, r, {"id": (list[0] as SimEntity).id, "n": list.size()}) # --- ficha ---
-			Glyphs.draw(self, Glyphs.resolve((list[0] as SimEntity).def, type), r.grow(-12), Palette.UI_TEXT)
-			draw_string(Hud.font_b, r.position + Vector2(0, r.size.y - 6), str(list.size()), HORIZONTAL_ALIGNMENT_RIGHT, r.size.x - 6, 16, Palette.UI_ACCENT)
-			var hp := 0
-			var hpm := 0
-			for e: SimEntity in list:
-				hp += e.hp
-				hpm += e.hp_max
-			_bar(Rect2(r.position.x + 4, r.end.y + 4, r.size.x - 8, 4), float(hp) / float(maxi(1, hpm)), Palette.UI_GOOD)
-			var ids: Array[int] = []
-			for e: SimEntity in list:
-				ids.append(e.id)
-			_hits.append([r, func() -> void: hud.ctrl.select_ids(ids)])
-			x += 74
-			if x + 66 > size.x:
-				x = 14
-				y += 80
-		draw_string(Hud.font, Vector2(0, size.y - 14), "%d seleccionadas" % sel.size(), HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, 13, Palette.UI_DIM)
-		# --- casillas --- (jugador nuevo, ronda 4: «un ícono, un 6 y "6 seleccionadas"») qué se
-		# puede hacer con lo elegido, como el «punto de reunión» del centro. Solo con una fila.
+		var y := 12.0
+		if por_unidad:
+			for type in order:
+				for e: SimEntity in groups[type]:
+					var r := Rect2(x, y, lado, lado)
+					var sb := StyleBoxFlat.new()
+					sb.set_corner_radius_all(5)
+					sb.bg_color = Color(Palette.team(e.owner), 0.18) if e.owner >= 0 else Color(1, 1, 1, 0.05)
+					sb.border_color = Color(1, 1, 1, 0.08)
+					sb.set_border_width_all(1)
+					draw_style_box(sb, r)
+					hud.ficha.zone(self, r, {"id": e.id}) # --- ficha ---
+					Glyphs.draw(self, Glyphs.resolve(e.def, type), r.grow(-lado * 0.18), Palette.UI_TEXT)
+					var k := float(e.hp) / float(maxi(1, e.hp_max))
+					_bar(Rect2(r.position.x + 2, r.end.y + 3, r.size.x - 4, 5), k, Palette.UI_GOOD if k * 3.0 > 1.0 else Palette.UI_BAD)
+					var id := e.id
+					var t: String = type
+					_hits.append([r, func(shift: bool, ctrl: bool) -> void: _clic_multi(t, id, shift, ctrl)])
+					x += paso
+					if x + lado > 14.0 + MULTI_COLS * MULTI_PASO:
+						x = 14.0
+						y += lado + 12.0
+		else:
+			for type in order:
+				var list: Array = groups[type]
+				var r := Rect2(x, y, 66, 66)
+				var sb := StyleBoxFlat.new()
+				sb.set_corner_radius_all(7)
+				sb.bg_color = Color(Palette.team(hud.local), 0.18)
+				sb.border_color = Color(1, 1, 1, 0.08)
+				sb.set_border_width_all(1)
+				draw_style_box(sb, r)
+				hud.ficha.zone(self, r, {"id": (list[0] as SimEntity).id, "n": list.size()}) # --- ficha ---
+				Glyphs.draw(self, Glyphs.resolve((list[0] as SimEntity).def, type), r.grow(-12), Palette.UI_TEXT)
+				draw_string(Hud.font_b, r.position + Vector2(0, r.size.y - 6), str(list.size()), HORIZONTAL_ALIGNMENT_RIGHT, r.size.x - 6, 16, Palette.UI_ACCENT)
+				var hp := 0
+				var hpm := 0
+				for e: SimEntity in list:
+					hp += e.hp
+					hpm += e.hp_max
+				_bar(Rect2(r.position.x + 4, r.end.y + 4, r.size.x - 8, 4), float(hp) / float(maxi(1, hpm)), Palette.UI_GOOD)
+				var t: String = type
+				_hits.append([r, func(shift: bool, ctrl: bool) -> void: _clic_multi(t, -1, shift, ctrl)])
+				x += 74
+				if x + 66 > 14.0 + MULTI_COLS * MULTI_PASO:
+					x = 14
+					y += 80
+		# Resumen a la derecha: cuántas y qué hacen los modificadores.
+		var rx := 14.0 + MULTI_COLS * MULTI_PASO + 4.0
+		var rw := size.x - rx - 12.0
+		draw_string(Hud.font_b, Vector2(rx, 40), str(sel.size()), HORIZONTAL_ALIGNMENT_RIGHT, rw, 24, Palette.UI_TEXT)
+		draw_string(Hud.font, Vector2(rx, 58), "elegidas", HORIZONTAL_ALIGNMENT_RIGHT, rw, 13, Palette.UI_DIM)
+		draw_string(Hud.font, Vector2(rx, 104), "Mayús+clic", HORIZONTAL_ALIGNMENT_RIGHT, rw, 11, Palette.UI_DIM)
+		draw_string(Hud.font, Vector2(rx, 118), "saca", HORIZONTAL_ALIGNMENT_RIGHT, rw, 11, Palette.UI_DIM)
+		draw_string(Hud.font, Vector2(rx, 138), "Ctrl+clic", HORIZONTAL_ALIGNMENT_RIGHT, rw, 11, Palette.UI_DIM)
+		draw_string(Hud.font, Vector2(rx, 152), "ese tipo", HORIZONTAL_ALIGNMENT_RIGHT, rw, 11, Palette.UI_DIM)
+		# --- casillas --- (jugador nuevo, ronda 4: con aldeanos elegidos el panel no decía qué
+		# hacer, como sí dice el centro «punto de reunión»). Abajo, si los retratos dejan lugar.
+		var fondo := y + (lado + 12.0 if por_unidad else 80.0)
+		if x <= 14.0:
+			fondo = y # la última fila quedó vacía
 		var lines := ayuda_multi(sel, hud.local)
-		if y <= 14.0:
-			var ly := size.y - 14.0 - 18.0 * (lines.size() - 1)
+		var ly := size.y - 12.0 - 17.0 * (lines.size() - 1)
+		if not lines.is_empty() and ly - 12.0 >= fondo:
 			for ln in lines:
-				draw_string(Hud.font, Vector2(14, ly), ln, HORIZONTAL_ALIGNMENT_LEFT, size.x - 140, 13, Palette.UI_DIM)
-				ly += 18.0
+				draw_string(Hud.font, Vector2(14, ly), ln, HORIZONTAL_ALIGNMENT_LEFT, rx - 22.0, EstadoCasilla._fit(Hud.font, ln, 13, rx - 22.0), Palette.UI_DIM)
+				ly += 17.0
 
-	## Renglones de ayuda para una selección de varias unidades propias.
+	## Renglones de ayuda para una selección de varias unidades propias (teclas según Teclas).
 	static func ayuda_multi(sel: Array[SimEntity], local: int) -> Array[String]:
 		var civil := false
 		var mil := false
@@ -1282,11 +1340,31 @@ class SelectionPanel:
 				return []
 			civil = civil or e.fn == "civil"
 			mil = mil or e.is_military()
+		var k := func(name: String, fb: int) -> String: return Controller.etiqueta(Grilla.fija(name, fb))
 		var out: Array[String] = []
 		if civil:
 			out.append("Clic derecho en un árbol, arbusto, veta o animal: juntan. En una obra: construyen.")
-			out.append("Q Economía · W Militar · S Detener · F Refugio")
+			out.append("%s Economía · %s Militar · %s Detener · %s Refugio" % [k.call("economia", 0), k.call("militar", 1), k.call("detener", 5), k.call("refugio", 7)])
 		elif mil:
-			out.append("Clic derecho: mover o atacar. A y clic: avanzan peleando con lo que encuentren.")
-			out.append("Ctrl + número: grupo · S Detener · F Refugio")
+			out.append("Clic derecho: mover o atacar. %s y clic: avanzan peleando con lo que encuentren." % k.call("atacar", 4))
+			out.append("Ctrl + número: grupo · %s Detener · %s Refugio" % [k.call("detener", 5), k.call("refugio", 7)])
 		return out
+
+	## Clic en un retrato del panel de varias: `id` -1 es el retrato de un tipo.
+	func _clic_multi(type: String, id: int, shift: bool, ctrl: bool) -> void:
+		var keep: Array[int] = []
+		for e in hud.ctrl.selected_entities():
+			var mismo_tipo := e.type == type
+			var quedar: bool
+			if ctrl and shift:
+				quedar = not mismo_tipo
+			elif ctrl or id < 0:
+				quedar = mismo_tipo != (shift and not ctrl)
+			elif shift:
+				quedar = e.id != id
+			else:
+				quedar = e.id == id
+			if quedar:
+				keep.append(e.id)
+		hud.ctrl.select_ids(keep)
+	# --- fin veterano ronda 4 ---

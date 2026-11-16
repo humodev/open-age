@@ -121,8 +121,12 @@ func _opciones_al_arrancar() -> void:
 func _abrir_opciones() -> void:
 	if _menu != null and is_instance_valid(_menu) and _menu.visible:
 		_menu.open_options()
+		if _args.get("abrir", "") == "teclas": # --- veterano ronda 4 ---
+			(_menu._options.find_child("BotonTeclas", true, false) as Button).pressed.emit()
 	elif hud != null:
 		hud._options.visible = true
+		if _args.get("abrir", "") == "teclas": # --- veterano ronda 4 ---
+			(hud._options.find_child("BotonTeclas", true, false) as Button).pressed.emit()
 # --- fin opciones ---
 
 
@@ -293,7 +297,13 @@ func _new_game() -> void:
 	for sl in slots:
 		if sl["civ"] == "" or sl["civ"] == "azar":
 			sl["civ"] = civ_keys[rng.randi() % civ_keys.size()]
-	var opts := {"terreno": _args.get("terreno", ""), "civs": slots.map(func(sl: Dictionary) -> String: return sl["civ"]), "equipos": slots.map(func(sl: Dictionary) -> int: return int(sl["equipo"]))}
+	# --- veterano ronda 4 --- la demo de batalla sin --terreno caía a veces en un lago: llano.
+	var terreno: String = _args.get("terreno", "")
+	if terreno == "" and _args.has("demo"):
+		var di: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string("res://data/interfaz.json")) as Dictionary).get("demos", {})
+		terreno = str((di.get("terreno", {}) as Dictionary).get(str(_args["demo"]), ""))
+	# --- fin veterano ronda 4 ---
+	var opts := {"terreno": terreno, "civs": slots.map(func(sl: Dictionary) -> String: return sl["civ"]), "equipos": slots.map(func(sl: Dictionary) -> int: return int(sl["equipo"]))}
 	opts.merge(match_opts(_args))
 	sim = Sim.new(_seed, slots.size(), null, opts)
 	var aivai := _args.has("aivai") or _menu_mode
@@ -403,7 +413,7 @@ func _build_scene(aivai: bool) -> void:
 			_open_campaigns.call_deferred(layer)
 		elif _args.get("abrir", "") == "intro":
 			layer.add_child(CampaignUI.story(_mission_data("palmares", 0), false, [["Comenzar", func() -> void: pass], ["Volver", func() -> void: pass]], "palmares"))
-	if _args.get("abrir", "") == "opciones": # --- opciones ---
+	if _args.get("abrir", "") in ["opciones", "teclas"]: # --- opciones --- (teclas: veterano ronda 4)
 		_abrir_opciones.call_deferred()
 	if _args.has("autotest"):
 		cam.edge_pan = false
@@ -558,6 +568,26 @@ func _demo(kind: String) -> void:
 			sim.set_meta("demo_cam", Vector2(bb.x + 10 + (far.x / 1000 - bb.x - 10) / 3, bb.y + 10 + (far.y / 1000 - bb.y - 10) / 3))
 	elif kind == "batalla":
 		var c := sim.map.n / 2
+		var cy := c # --- veterano ronda 4 --- campo seco y abierto más cercano al centro del mapa
+		var seco := func(x0: int, y0: int) -> bool:
+			var tapadas := 0
+			for ty in range(y0 - 6, y0 + 7):
+				for tx in range(x0 - 10, x0 + 11):
+					if tx < 0 or ty < 0 or tx >= sim.map.n or ty >= sim.map.n or sim.map.is_water(tx, ty):
+						return false
+					if sim.map.occupied[ty * sim.map.n + tx] != -1:
+						tapadas += 1
+			return tapadas <= 6
+		var hallado := false
+		for r in range(0, sim.map.n / 2 - 12, 2):
+			for d in [Vector2i(0, 0), Vector2i(r, 0), Vector2i(-r, 0), Vector2i(0, r), Vector2i(0, -r), Vector2i(r, r), Vector2i(-r, -r), Vector2i(r, -r), Vector2i(-r, r)]:
+				if not hallado and seco.call(c + d.x, c + d.y):
+					hallado = true
+					cy = c + d.y
+					c += d.x
+			if hallado:
+				break
+		# --- fin veterano ronda 4 ---
 		var ids := [[], []]
 		for pid in 2:
 			var types: Array = ["guerrero", "hondero", "lancero"]
@@ -567,11 +597,12 @@ func _demo(kind: String) -> void:
 					types.append(k)
 			for i in 30:
 				var x := (c - 7 + pid * 14 + (i % 5) * (1 if pid == 0 else -1)) * 1000 + 500
-				var y := (c - 4 + i / 5) * 1000 + 500
+				var y := (cy - 4 + i / 5) * 1000 + 500
 				var u := sim.spawn_unit(types[i % 3], pid, x, y)
 				ids[pid].append(u.id)
-		sim.push_command({"t": "move", "player": 0, "ids": ids[0], "x": (c + 6) * 1000, "y": c * 1000, "amove": true})
-		sim.push_command({"t": "move", "player": 1, "ids": ids[1], "x": (c - 6) * 1000, "y": c * 1000, "amove": true})
+		sim.push_command({"t": "move", "player": 0, "ids": ids[0], "x": (c + 6) * 1000, "y": cy * 1000, "amove": true})
+		sim.push_command({"t": "move", "player": 1, "ids": ids[1], "x": (c - 6) * 1000, "y": cy * 1000, "amove": true})
+		sim.set_meta("demo_cam", Vector2(c, cy)) # --- veterano ronda 4 ---
 	# --- demos --- (proceso/24, 4k) la escena de muestra no arranca por encima del tope
 	# ("33/10"): el exceso queda como población extra, como en las misiones (sim_scenario),
 	# más un margen para seguir entrenando (data/interfaz.json → demos.pob_margen).
@@ -735,11 +766,12 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	var k := event as InputEventKey
 	if not k.pressed or k.echo or _menu_mode:
 		return
-	if k.physical_keycode == KEY_F1:
+	# --- veterano ronda 4 --- teclas de Opciones → Teclas (Pausa del teclado, siempre)
+	if Teclas.es(k.physical_keycode, "ayuda"):
 		hud._toggle_help()
-	elif k.physical_keycode == KEY_F3:
+	elif Teclas.es(k.physical_keycode, "velocidad"):
 		speed = 2.0 if speed == 1.0 else (4.0 if speed == 2.0 else 1.0)
-	elif k.physical_keycode == KEY_PAUSE or k.physical_keycode == KEY_F10:
+	elif k.physical_keycode == KEY_PAUSE or Teclas.es(k.physical_keycode, "pausa"):
 		hud.toggle_menu()
 
 
@@ -1254,6 +1286,232 @@ func _autotest_veterano(check: Callable) -> void:
 		u.last_combat = was
 
 
+# --- veterano ronda 4 ---
+func _key_shift(code: int) -> void:
+	# Mayús de verdad (Input.is_key_pressed), no solo la marca del evento: así lo lee la grilla.
+	var sh := InputEventKey.new()
+	sh.physical_keycode = KEY_SHIFT
+	sh.keycode = KEY_SHIFT
+	sh.pressed = true
+	Input.parse_input_event(sh)
+	_key_mod(code, false, true)
+	sh = sh.duplicate()
+	sh.pressed = false
+	Input.parse_input_event(sh)
+
+
+func _click_mod(pos: Vector2, shift_on: bool, ctrl_on: bool) -> void:
+	_mouse(pos, 0, false)
+	await _frames(2)
+	var wp := get_viewport().get_final_transform() * pos
+	for pressed in [true, false]:
+		var mb := InputEventMouseButton.new()
+		mb.position = wp
+		mb.global_position = wp
+		mb.button_index = MOUSE_BUTTON_LEFT
+		mb.pressed = pressed
+		mb.shift_pressed = shift_on
+		mb.ctrl_pressed = ctrl_on
+		Input.parse_input_event(mb)
+	await _frames(3)
+
+
+func _lugar_libre(type: String, cerca: Vector2i) -> Vector2i:
+	for r in 12:
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				if sim.can_place(type, cerca.x + dx, cerca.y + dy, local):
+					return Vector2i(cerca.x + dx, cerca.y + dy)
+	return Vector2i(-1, -1)
+
+
+## Cuarta ronda del veterano: producir con varios edificios, H por los centros, M y «,» que
+## centran, grupos exclusivos y grupo 0, una tecla reasignada y el panel de varias unidades.
+func _autotest_veterano4(check: Callable) -> void:
+	speed = 1.0
+	var base := sim.bases[local]
+	var dd := sim.dp(local)
+	var saved: Dictionary = (sim.players[local]["res"] as Dictionary).duplicate()
+	for k in sim.players[local]["res"]:
+		sim.players[local]["res"][k] = 5000
+	sim.players[local]["pob_extra"] = 40
+	# 1. Producción con dos cuarteles: Q encola UNA unidad; Mayús + Q, cinco en total, repartidas.
+	var tipo := "cuartel" if dd.edificios.has("cuartel") else ""
+	var nuevos: Array[SimEntity] = []
+	if tipo != "":
+		for i in 2:
+			var at := _lugar_libre(tipo, Vector2i(base.x - 10 + i * 5, base.y + 10))
+			if at.x >= 0:
+				nuevos.append(sim.spawn_building(tipo, local, at.x, at.y, true))
+	await _frames(2)
+	if nuevos.size() == 2:
+		var ids: Array[int] = [nuevos[0].id, nuevos[1].id]
+		ctrl.select_ids(ids)
+		await _frames(2)
+		var slot := -1
+		for c in ctrl.commands():
+			if c["kind"] == "train" and c["locked"] == "":
+				slot = c["slot"]
+				break
+		var cola := func() -> Array:
+			return [nuevos[0].queue.size(), nuevos[1].queue.size()]
+		_key_tap(Teclas.tecla("grilla_%d" % slot))
+		for i in 60:
+			await _frames(1)
+			if nuevos[0].queue.size() + nuevos[1].queue.size() > 0:
+				break
+		await _frames(2)
+		var c1: Array = cola.call()
+		check.call("dos cuarteles elegidos: una pulsación entrena UNA unidad (%s)" % str(c1), c1[0] + c1[1] == 1)
+		_key_shift(Teclas.tecla("grilla_%d" % slot))
+		for i in 60:
+			await _frames(1)
+			if nuevos[0].queue.size() + nuevos[1].queue.size() > 1:
+				break
+		await _frames(3)
+		var c2: Array = cola.call()
+		check.call("Mayús: cinco en total, en el de cola más corta (%s)" % str(c2), c2[0] + c2[1] == 6 and absi(c2[0] - c2[1]) <= 1)
+		# 4. Panel de varias unidades: un retrato por unidad; Mayús + clic saca, Ctrl + clic deja el tipo.
+	else:
+		check.call("hay lugar para dos cuarteles de prueba", false)
+	var mil: Array[int] = []
+	for e in sim.actives:
+		if e.owner == local and e.is_military() and e.inside < 0:
+			mil.append(e.id)
+	cam.look_at_point(Vector3(base.x + 2, 0, base.y + 2))
+	ctrl.select_ids(mil)
+	await _frames(3)
+	var hits: Array = hud._sel._hits
+	check.call("panel de varias: un retrato con su vida por unidad (%d de %d)" % [hits.size(), mil.size()], mil.size() >= 2 and hits.size() == mil.size())
+	if not mil.is_empty():
+		var u0: SimEntity = sim.by_id[mil[0]]
+		u0.hp = maxi(1, u0.hp_max / 4)
+		ctrl.center_on_selection()
+		_mouse(Vector2(960, 300), 0, false)
+		await _frames(4)
+		get_viewport().get_texture().get_image().save_png("screenshots/autotest_varias.png")
+		u0.hp = u0.hp_max
+	if hits.size() >= 2:
+		var antes := ctrl.selection.size()
+		await _click_mod(hud._sel.global_position + (hits[0][0] as Rect2).get_center(), true, false)
+		check.call("Mayús + clic en un retrato saca esa unidad (%d → %d)" % [antes, ctrl.selection.size()], ctrl.selection.size() == antes - 1)
+		var r1: Rect2 = hud._sel._hits[0][0]
+		var t1: String = sim.by_id[ctrl.selection[0]].type
+		await _click_mod(hud._sel.global_position + r1.get_center(), false, true)
+		var solo := ctrl.selected_entities().all(func(e: SimEntity) -> bool: return e.type == t1)
+		check.call("Ctrl + clic deja solo ese tipo (%s, %d)" % [t1, ctrl.selection.size()], solo and ctrl.selection.size() >= 1)
+	# 5. M y «,» llevan la cámara a lo elegido.
+	cam.look_at_point(Vector3(base.x + 40, 0, base.y + 40))
+	await _frames(2)
+	_key_tap(Teclas.tecla("ejercito"))
+	await _frames(3)
+	var cerca := func() -> bool:
+		for e in ctrl.selected_entities():
+			if Vector2(cam.focus.x, cam.focus.z).distance_to(Vector2(e.x / 1000.0, e.y / 1000.0)) < 2.0:
+				return true
+		return false
+	check.call("M elige el ejército y centra la cámara en él", ctrl.selection.size() == mil.size() and cerca.call())
+	cam.look_at_point(Vector3(base.x + 40, 0, base.y + 40))
+	await _frames(2)
+	sim.push_command({"t": "stop", "player": local, "ids": mil})
+	await get_tree().create_timer(0.3).timeout
+	_key_tap(Teclas.tecla("ocioso_militar"))
+	await _frames(3)
+	check.call("«,» elige un militar ocioso y centra la cámara", ctrl.selection.size() == 1 and cerca.call())
+	# 6. Grupos exclusivos y grupo 0.
+	if mil.size() >= 3:
+		Teclas.grupos_exclusivos = true
+		ctrl.select_ids(mil.slice(0, 3))
+		_key_mod(Teclas.tecla("grupo_2"), true)
+		await _frames(2)
+		ctrl.select_ids([mil[0]] as Array[int])
+		_key_mod(Teclas.tecla("grupo_3"), true)
+		await _frames(2)
+		check.call("grupos exclusivos: asignar al 3 saca del 2 (%d en el 2)" % (ctrl.groups[2] as Array).size(), not (ctrl.groups[2] as Array).has(mil[0]) and (ctrl.groups[2] as Array).size() == 2)
+		Teclas.grupos_exclusivos = false
+		ctrl.select_ids([mil[1]] as Array[int])
+		_key_mod(Teclas.tecla("grupo_3"), false, true)
+		await _frames(2)
+		check.call("sin la opción, una unidad queda en dos grupos", (ctrl.groups[2] as Array).has(mil[1]) and (ctrl.groups[3] as Array).has(mil[1]))
+		ctrl.select_ids(mil.slice(0, 2))
+		_key_mod(KEY_0, true)
+		await _frames(2)
+		ctrl.select_ids([] as Array[int])
+		_key_tap(KEY_0)
+		await _frames(2)
+		check.call("grupo 0: Ctrl + 0 asigna y 0 lo elige (%d)" % ctrl.selection.size(), ctrl.groups.has(0) and ctrl.selection.size() == 2)
+		check.call("la fila de grupos muestra el 0", hud.grupos.grupos().any(func(g: Array) -> bool: return g[0] == 0) if hud.get("grupos") != null else true)
+	# 3. H recorre los centros; dos toques o Mayús + H centran la cámara.
+	var c2_at := _lugar_libre("centro", Vector2i(base.x + 22, base.y - 14)) if dd.edificios.has("centro") else Vector2i(-1, -1)
+	var otro: SimEntity = sim.spawn_building("centro", local, c2_at.x, c2_at.y, true) if c2_at.x >= 0 else null
+	await _frames(2)
+	ctrl.select_ids([] as Array[int])
+	cam.look_at_point(Vector3(base.x + 40, 0, base.y + 40))
+	await _frames(2)
+	var foco := cam.focus
+	_key_tap(Teclas.tecla("centro"))
+	await _frames(3)
+	var s1 := ctrl.selected_entities()
+	check.call("H elige la capital sin mover la cámara", s1.size() == 1 and s1[0].capital and cam.focus.distance_to(foco) < 0.5)
+	await get_tree().create_timer(0.5).timeout
+	_key_tap(Teclas.tecla("centro"))
+	await _frames(3)
+	var s2 := ctrl.selected_entities()
+	check.call("otra H lleva al centro siguiente", otro != null and s2.size() == 1 and s2[0].id == otro.id)
+	_key_tap(Teclas.tecla("centro"))
+	await _frames(3)
+	var s3 := ctrl.selected_entities()
+	check.call("H dos veces seguidas centra la cámara en ese centro", otro != null and s3.size() == 1 and s3[0].id == otro.id and Vector2(cam.focus.x, cam.focus.z).distance_to(Vector2(otro.x / 1000.0, otro.y / 1000.0)) < 2.5)
+	await get_tree().create_timer(0.5).timeout
+	cam.look_at_point(Vector3(base.x + 40, 0, base.y + 40))
+	await _frames(2)
+	_key_shift(Teclas.tecla("centro"))
+	await _frames(3)
+	var s4 := ctrl.selected_entities()
+	check.call("Mayús + H: vuelve a la capital y centra", s4.size() == 1 and s4[0].capital and Vector2(cam.focus.x, cam.focus.z).distance_to(Vector2(s4[0].x / 1000.0, s4[0].y / 1000.0)) < 2.5)
+	# 8. El panel explica el círculo del centro.
+	_mouse(Vector2(960, 300), 0, false)
+	await _frames(3)
+	get_viewport().get_texture().get_image().save_png("screenshots/autotest_circulo_centro.png")
+	if otro != null:
+		sim.remove_quietly(otro)
+	# 1b. Reasignar una tecla: J pasa a recorrer los centros y H queda libre.
+	await get_tree().create_timer(0.5).timeout
+	# Por el diálogo de verdad: Opciones → Teclas, clic en la tecla del centro y J.
+	hud._options.visible = true
+	await _frames(2)
+	(hud._options.find_child("BotonTeclas", true, false) as Button).pressed.emit()
+	await _frames(2)
+	var bc := hud._options.find_child("centro", true, false) as Button
+	bc.grab_focus()
+	bc.pressed.emit()
+	await _frames(2)
+	var espera := bc.text
+	_key_tap(KEY_J)
+	await _frames(3)
+	check.call("Opciones → Teclas: clic en H, apretar J (%s → %s)" % [espera, bc.text], espera.begins_with("Apretá") and bc.text == "J" and Teclas.tecla("centro") == KEY_J)
+	get_viewport().get_texture().get_image().save_png("screenshots/autotest_teclas.png")
+	hud._options.visible = false
+	await _frames(2)
+	ctrl.select_ids([] as Array[int])
+	_key_tap(KEY_H)
+	await _frames(3)
+	var libre := ctrl.selection.is_empty()
+	_key_tap(KEY_J)
+	await _frames(3)
+	var sj := ctrl.selected_entities()
+	check.call("tecla reasignada: J elige el centro y H ya no", libre and sj.size() == 1 and sj[0].capital)
+	check.call("la ayuda de la grilla muestra la tecla asignada", Controller.etiqueta(0) == "Q")
+	Teclas.de_fabrica()
+	for b in nuevos:
+		sim.remove_quietly(b)
+	for k in saved:
+		sim.players[local]["res"][k] = saved[k]
+	ctrl.select_ids(_vill_ids())
+	await _frames(2)
+# --- fin veterano ronda 4 ---
+
+
 func _vill_ids() -> Array[int]:
 	var ids: Array[int] = []
 	for e in sim.actives:
@@ -1573,6 +1831,7 @@ func _autotest() -> void:
 	# --- fin avisos ---
 	await _autotest_ordenes(check) # --- órdenes ---
 	await _autotest_veterano(check) # --- veterano ---
+	await _autotest_veterano4(check) # --- veterano ronda 4 ---
 	# --- aprender --- (avisos que enseñan, cuenta de sitios, nombres en la grilla, registro de la Guía y fin)
 	var cs = hud.consejos
 	Opciones.consejos = true

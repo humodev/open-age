@@ -1,0 +1,122 @@
+tawantinsuyu e1 centro           Q=aldeano W=explorador Z=campana V=expulsar A=hachas S=canteria D=orfebreria E=cestas C=riego R=mamposteria F=vigias
+tawantinsuyu e1 casa            
+tawantinsuyu e1 campo_tiro       Q=hondero W=boleador E=ariete A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+tawantinsuyu e1 almacen_madera   Q=hachas
+tawantinsuyu e1 almacen_mina     W=canteria E=orfebreria
+tawantinsuyu e1 granja          
+tawantinsuyu e1 cuartel          Q=guerrero W=lancero A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+tawantinsuyu e1 torre            V=expulsar
+tawantinsuyu e1 mercado          Q=vender_alimento A=comprar_alimento W=vender_madera S=comprar_madera E=vender_piedra D=comprar_piedra F=oficio_motor
+tawantinsuyu e1 ingenio         
+tawantinsuyu e1 sitio_sagrado   
+tawantinsuyu e1 tambo           
+tawantinsuyu e1 taller_tejido   
+tawantinsuyu e1 camino          
+tawantinsuyu e1 anden           
+tawantinsuyu e1 qollqa           Q=awqa A=armas_1 S=escudos_1 D=marcha F=adiestramiento E=cestas C=riego
+tawantinsuyu e1 ushnu           
+tawantinsuyu e1 pukara_mayor     Q=awqa W=hondero V=expulsar A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+tawantinsuyu e1 aqllawasi       
+tawantinsuyu e1 kallanka_real    Q=guerrero W=hondero E=lancero R=boleador A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+tawantinsuyu e1 qorikancha      
+tawantinsuyu e1 vilcabamba       Q=jinete W=arcabucero V=expulsar A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+mapuches e1 casa            
+mapuches e1 granja          
+mapuches e1 cuartel          Q=lancero W=hondero A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+mapuches e1 empalizada      
+mapuches e1 puerta          
+mapuches e1 mercado          Q=vender_alimento A=comprar_alimento W=vender_madera S=comprar_madera E=vender_piedra D=comprar_piedra F=oficio_motor
+mapuches e1 ingenio         
+mapuches e1 sitio_sagrado   
+mapuches e1 lof/investigaciones V=volver A=armas_1 S=escudos_1 D=marcha F=adiestramiento Z=hachas X=canteria Q=orfebreria E=cestas C=riego
+mapuches e1 lof              Q=aldeano W=explorador E=guerrero V=expulsar C=investigar
+mapuches e1 corral           Q=jinete C=kawin A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+mapuches e1 rewe_malon      
+mapuches e1 rewe_lonko      
+mapuches e1 rewe_caballeria  Q=jinete A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+mapuches e1 rewe_monte      
+mapuches e1 parlamento      
+mapuches e1 weichan         
+guaranies e1 centro           Q=aldeano W=explorador Z=campana V=expulsar A=hachas S=canteria D=orfebreria E=cestas C=riego R=mamposteria F=vigias
+guaranies e1 casa            
+guaranies e1 campo_tiro       Q=hondero A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+guaranies e1 taller           Q=ariete A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+guaranies e1 almacen_madera   Q=hachas W=cestas E=riego
+guaranies e1 almacen_mina     W=canteria E=orfebreria
+guaranies e1 granja          
+guaranies e1 cuartel          Q=guerrero W=lancero A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+guaranies e1 empalizada      
+guaranies e1 puerta          
+guaranies e1 mercado          Q=vender_alimento A=comprar_alimento W=vender_madera S=comprar_madera E=vender_piedra D=comprar_piedra F=oficio_motor
+guaranies e1 ingenio         
+guaranies e1 sitio_sagrado   
+guaranies e1 karai_palabra   
+guaranies e1 aty_guasu        Q=hondero W=guerrero A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+guaranies e1 mision           Q=arcabucero W=lancero V=expulsar A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+guaranies e1 monte           
+guaranies e1 tava             V=expulsar
+guaranies e1 yvy_marane      
+etiopia e1 centro           Q=aldeano W=explorador Z=campana X=desarmar V=expulsar A=hachas S=canteria D=orfebreria E=cestas C=riego R=mamposteria F=vigias
+etiopia e1 casa            
+etiopia e1 establo          Q=guerrero W=jinete A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+etiopia e1 taller           Q=ariete A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+etiopia e1 almacen_alimento W=cestas E=riego
+etiopia e1 almacen_madera   Q=hachas
+etiopia e1 almacen_mina     W=canteria E=orfebreria
+etiopia e1 granja          
+etiopia e1 cuartel          Q=lancero W=hondero A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+etiopia e1 torre            V=expulsar
+etiopia e1 empalizada      
+etiopia e1 puerta          
+etiopia e1 mercado          Q=vender_alimento A=comprar_alimento W=vender_madera S=comprar_madera E=vender_piedra D=comprar_piedra F=oficio_motor
+etiopia e1 ingenio         
+etiopia e1 sitio_sagrado   
+etiopia e1 corte_nueva     
+etiopia e1 gult             C=regimiento
+etiopia e1 iglesia         
+etiopia e1 monasterio      
+etiopia e1 amba             V=expulsar
+etiopia e1 remonta          Q=guerrero A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+etiopia e1 gondar           V=expulsar
+etiopia e1 alianza          Q=arcabucero A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+palmares e1 centro           W=explorador Z=campana V=expulsar A=hachas S=canteria D=orfebreria E=cestas C=riego R=mamposteria F=vigias
+palmares e1 casa            
+palmares e1 almacen_alimento W=cestas E=riego
+palmares e1 almacen_mina     W=canteria E=orfebreria
+palmares e1 granja          
+palmares e1 cuartel          Q=guerrero W=lancero E=arcabucero A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+palmares e1 empalizada      
+palmares e1 puerta          
+palmares e1 mercado          Q=vender_alimento A=comprar_alimento W=vender_madera S=comprar_madera E=vender_piedra D=comprar_piedra F=oficio_motor
+palmares e1 ingenio         
+palmares e1 sitio_sagrado   
+palmares e1 mocambo          Q=hondero C=desalojar V=expulsar A=armas_1 S=escudos_1 D=marcha F=adiestramiento Z=hachas X=canteria W=orfebreria E=cestas R=riego
+palmares e1 quilombo_central
+palmares e1 mocambo_guerra   Q=guerrero W=hondero E=arcabucero A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+palmares e1 cerca_real       C=desalojar V=expulsar
+palmares e1 ferraria         Q=arcabucero A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+palmares e1 pacto_cucau     
+palmares e1 guerra_zumbi    
+ayutthaya e1 centro           Q=aldeano W=explorador E=elefante_rey Z=campana V=expulsar A=hachas S=canteria D=orfebreria X=cestas C=riego R=mamposteria F=vigias
+ayutthaya e1 casa            
+ayutthaya e1 campo_tiro       Q=hondero A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+ayutthaya e1 taller           Q=ariete A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+ayutthaya e1 almacen_mina     E=orfebreria
+ayutthaya e1 granja          
+ayutthaya e1 cuartel          Q=guerrero W=lancero A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+ayutthaya e1 torre            V=expulsar
+ayutthaya e1 empalizada      
+ayutthaya e1 puerta          
+ayutthaya e1 mercado          Q=vender_alimento A=comprar_alimento W=vender_madera S=comprar_madera E=vender_piedra D=comprar_piedra F=oficio_motor
+ayutthaya e1 ingenio         
+ayutthaya e1 sitio_sagrado   
+ayutthaya e1 kraal            Q=chang_suek A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+ayutthaya e1 barrio_japones   Q=compania_japonesa A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+ayutthaya e1 barrio_portugues Q=arcabucero A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+ayutthaya e1 wat             
+ayutthaya e1 kraal_real       Q=chang_suek A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+ayutthaya e1 puerto_real     
+ayutthaya e1 fortaleza_rio    V=expulsar
+ayutthaya e1 junco_tributo   
+ayutthaya e1 guardia_extranjera Q=compania_japonesa W=arcabucero E=chang_suek A=armas_1 S=escudos_1 D=marcha F=adiestramiento
+CASILLAS: 480 grillas revisadas, OK

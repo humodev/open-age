@@ -1,0 +1,101 @@
+OK    ayuda de la barra de recursos visible
+OK    selección por arrastre de los 6 aldeanos (6)
+OK    cursor de recolectar alimento sobre el arbusto (recolectar_alimento)
+OK    cursor de mover sobre el suelo (mover)
+OK    se dibujaron los cursores (12)
+OK    clic derecho en arbustos pone a recolectar (6)
+OK    cursor de juntar alimento sobre un animal propio (recolectar_alimento)
+OK    con el aldeano pegado al animal (a 32 px), el cursor sigue en juntar (recolectar_alimento; bajo el cursor: rebano)
+OK    clic derecho en un animal propio: el aldeano lo carnea (vivo false, orden 4, junta alimento)
+OK    Q abre el submenú de economía
+OK    Esc vuelve a la raíz sin deseleccionar
+OK    Q, Q entra en modo de construcción de casa
+OK    clic coloca el cimiento de la casa
+OK    se descontó la madera (150)
+OK    H selecciona la capital
+OK    la grilla del centro dibuja «Runa» en Q y «Chaski» en W
+OK    ninguna casilla del centro tiene dos comandos (0 repetidas)
+OK    Q en el centro encola un aldeano
+OK    Ctrl+1 asigna el grupo
+OK    la fila de grupos muestra el grupo 1
+OK    los aldeanos construyen la casa (18000 ms)
+OK    entra alimento al banco (160)
+OK    la campana refugia aldeanos (7)
+OK    el toque de calma los saca (0)
+OK    F2 abre el panel de economía
+OK    el ✕ cierra el panel de economía
+OK    F4 abre el avance de edad
+OK    F1 abre la ficha del pueblo
+OK    F1 la cierra
+OK    F5 despliega el registro y el clic lleva la cámara (42, 42)
+OK    Espacio lleva la cámara al último ataque (40, 36)
+OK    los avisos se apilan sin pisarse (3)
+OK    sin selección se ocultan el panel y la grilla
+OK    con selección vuelven
+OK    hay aldeanos ociosos para el botón (3)
+OK    la barra de recursos tiene el botón de aldeanos ociosos
+OK    clic en el botón: selecciona un aldeano ocioso (1)
+OK    Mayús + «.»: todos los aldeanos ociosos (3 de 3)
+OK    aldeanos por recurso debajo de cada recurso (4)
+OK    M selecciona todos los militares (6)
+OK    «,» selecciona el siguiente militar ocioso
+OK    Ctrl + «,»: todos los militares ociosos (6)
+OK    la grilla militar tiene mantener, patrullar y las cuatro formaciones
+OK    X elige la formación en línea y la arma en el lugar
+OK    D: mantener posición (6 de 6)
+OK    E entra en modo patrullar
+OK    clic: patrullan (6 de 6)
+OK    se dibuja la flecha del rumbo mientras se arrastra
+OK    arrastrar el clic derecho manda mover en línea con rumbo 4 (4)
+OK    la orden nueva corta la patrulla
+OK    Ctrl + F7 guarda la cámara y F7 vuelve (25, 25)
+OK    Tab selecciona un edificio de producción
+OK    T: todos los del tipo de lo seleccionado (3)
+OK    la cola global muestra lo que se produce (1)
+OK    clic en la cola global selecciona el edificio
+OK    Alt + clic sin aliados no tira bengala
+OK    la casilla del hito muestra cada recurso que falta (3 de 3, [["alimento", "−500"], ["riqueza", "−300"], ["mita", "−60"]])
+OK    si falta uno solo, «−40»
+OK    la ayuda dice cuánto falta de cada uno (Faltan 500 de alimento, 300 de riqueza y 60 de mit'a)
+OK    al colocar el hito se ve el aura (Aura: +15 % de recolección a 9 casillas / En el aura: 5 fuentes de alimento, 79 árboles, 1 veta de piedra, 1 veta de riqueza / )
+OK    la ficha del hito en obra dice cuánto falta con 4 (Faltan 1:11 con 4 constructores; esperado 1:11)
+OK    sin constructores, «Parada» (Parada: sin constructores (con uno, 2:22))
+OK    Ctrl + Alt + 8 guarda y Alt + 8 vuelve (30, 24)
+OK    Ctrl + Alt + número no pisa los grupos de control
+OK    F7 es atajo del marcador 1 (23, 24)
+OK    sin pelear, no hay barra por combate
+OK    al pelear se ve la barra aunque esté sana y sin la opción
+OK    dos cuarteles elegidos: una pulsación entrena UNA unidad ([1, 0])
+OK    Mayús: cinco en total, en el de cola más corta ([3, 3])
+OK    panel de varias: un retrato con su vida por unidad (6 de 6)
+OK    Mayús + clic en un retrato saca esa unidad (6 → 5)
+OK    Ctrl + clic deja solo ese tipo (hondero, 3)
+OK    M elige el ejército y centra la cámara en él
+OK    «,» elige un militar ocioso y centra la cámara
+OK    grupos exclusivos: asignar al 3 saca del 2 (2 en el 2)
+OK    sin la opción, una unidad queda en dos grupos
+OK    grupo 0: Ctrl + 0 asigna y 0 lo elige (2)
+OK    la fila de grupos muestra el 0
+OK    H elige la capital sin mover la cámara
+OK    otra H lleva al centro siguiente
+OK    H dos veces seguidas centra la cámara en ese centro
+OK    Mayús + H: vuelve a la capital y centra
+OK    Opciones → Teclas: clic en H, apretar J (Apretá una tecla… → J)
+OK    tecla reasignada: J elige el centro y H ya no
+OK    la ayuda de la grilla muestra la tecla asignada
+OK    aviso de aldeanos sin trabajo
+OK    con los avisos apagados en Opciones no avisa
+OK    cuenta grande de sitios del rival (jugador 1)
+OK    aviso «perdés en M:SS»
+OK    aviso «atacá o subí de edad» con ejército en casa y recursos de sobra
+OK    el aviso dice hacia dónde está la base rival y la marca en el minimapa
+OK    el aviso dice que los edificios caen con asedio
+OK    aviso de viaje largo con la caza a 22 casillas: nombra «Qollqa»
+OK    con Qollqa en obra junto a la caza, el aviso se calla
+OK    nombres en la grilla sin errores
+OK    en la grilla, qollqa dice que recibe alimento (común «Granero», ícono qollqa+alimento)
+OK    G abre el registro de la Guía
+OK    G lo cierra
+OK    la pantalla de fin explica por qué terminó (La partida sigue: esto es un resumen de lo jugado hasta ahora.)
+OK    la pantalla de fin tiene el gráfico de edad
+AUTOTEST: OK

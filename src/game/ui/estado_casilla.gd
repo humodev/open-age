@@ -60,13 +60,24 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 		else:
 			Glyphs.draw(ci, c["icon"], _rect_glifo(r, locked, falta), col)
 	elif nombre != "":
-		Glyphs.draw(ci, c["icon"], Rect2(r.position.x + (r.size.x - 26) / 2.0 + 2, r.position.y + 3, 26, 26), col)
 		var lines := 1 if (locked and edad_pedida(str(c["locked"])) != "") or (not afford and not locked) else 2
+		# Compacto (jugador nuevo, ronda 4): sin común, un renglón no alcanza («Trabajo de la
+		# riqueza» con la edad abajo) → glifo chico y dos renglones arriba de la pastilla.
+		var compacto := comun == "" and lines == 1 and _fit_lineas(Hud.font, nombre, 10, r.size.x - 4, 1) < 9
+		if compacto:
+			Glyphs.draw(ci, c["icon"], Rect2(r.position.x + (r.size.x - 18) / 2.0 + 2, r.position.y + 3, 18, 18), col)
+			var fsc := _fit_lineas(Hud.font, nombre, 9, r.size.x - 4, 2)
+			ci.draw_multiline_string(Hud.font, Vector2(r.position.x + 2, r.position.y + 31), nombre, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, fsc, 2, col if col == Palette.UI_TEXT else Palette.UI_DIM.lightened(0.2))
+		else:
+			Glyphs.draw(ci, c["icon"], Rect2(r.position.x + (r.size.x - 26) / 2.0 + 2, r.position.y + 3, 26, 26), col)
 		var tcol := Palette.UI_TEXT if col == Palette.UI_TEXT else Palette.UI_DIM.lightened(0.2)
-		if comun != "" and lines == 2 and _fit(Hud.font_b, comun, 11, r.size.x - 4) < 9:
+		if compacto:
+			pass
+		elif comun != "" and lines == 2 and _fit(Hud.font_b, comun, 11, r.size.x - 4) < 9:
 			# --- depósitos de comida --- (4m) común largo ("Granero y leñera"): en dos renglones
 			# y sin el propio, que queda en la ayuda; achicado hasta lo ilegible no sirve.
-			ci.draw_multiline_string(Hud.font_b, Vector2(r.position.x + 2, r.position.y + 39), comun, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, 10, 2, tcol)
+			var fsb := _fit_lineas(Hud.font_b, comun, 10, r.size.x - 4, 2) # «Depósito de piedra y riqueza»
+			ci.draw_multiline_string(Hud.font_b, Vector2(r.position.x + 2, r.position.y + 39 - (10 - fsb) * 0.5), comun, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, fsb, 2, tcol)
 		elif comun != "":
 			ci.draw_string(Hud.font_b, Vector2(r.position.x + 2, r.position.y + 39), comun, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, _fit(Hud.font_b, comun, 11, r.size.x - 4), tcol)
 			if lines == 2:

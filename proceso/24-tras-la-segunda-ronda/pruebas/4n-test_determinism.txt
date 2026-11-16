@@ -1,0 +1,3 @@
+godot --headless --path . -s tests/test_determinism.gd
+ticks=3000 hash=2203695307 (igual que antes del cambio y que main)
+DETERMINISMO: OK

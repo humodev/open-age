@@ -4,12 +4,14 @@ extends RefCounted
 ##
 ##   .            siguiente aldeano ocioso (Mayús o Ctrl: todos)
 ##   ,            siguiente militar ocioso (Mayús o Ctrl: todos)
-##   M            todos los militares
+##   M            todos los militares (centra la cámara en el grueso)
+##   H            el centro siguiente (dos toques o Mayús + H: centra la cámara)
 ##   T            todos los del tipo de lo seleccionado, en todo el mapa (también doble clic en un edificio)
 ##   Tab          recorre los edificios de producción
 ##   Alt + 1…8    vuelve a un marcador de cámara; Ctrl + Alt + 1…8 lo guarda (Ctrl + número
 ##                es de los grupos de control, como en AoE4). F7…F9 son atajos de los
 ##                marcadores 1 a 3 (Ctrl + F guarda); F1–F6 son los paneles y F10 la pausa.
+##   Todas estas son las de fábrica: se reasignan en Opciones → Teclas (src/game/ui/teclas.gd).
 
 const O := SimEntity.Order
 
@@ -17,7 +19,8 @@ static var _cfg: Dictionary = {}
 
 var ctrl: Controller
 var marcas := {} # marcador (1…8) -> Vector3 (punto que mira la cámara)
-var _cycle := {"aldeano": -1, "militar": -1, "produccion": -1}
+var _cycle := {"aldeano": -1, "militar": -1, "produccion": -1, "centro": -1}
+var _centro_ms := -100000 # --- veterano ronda 4 --- último toque de H (doble toque: centra)
 
 
 func _init(c: Controller) -> void:
@@ -79,6 +82,7 @@ func todos_militares() -> void:
 		ctrl.hud_notify("No tenés militares", "info")
 		return
 	ctrl.select_ids(ids)
+	centrar_en_grueso() # --- veterano ronda 4 --- (M lleva la cámara, como «,» y el doble toque del grupo)
 
 
 ## Todos los del tipo de lo seleccionado, en todo el mapa (edificios terminados o unidades).
@@ -111,6 +115,63 @@ func recorrer_produccion() -> void:
 	_cycle["produccion"] = (int(_cycle["produccion"]) + 1) % list.size()
 	ctrl.select_ids([list[_cycle["produccion"]].id] as Array[int])
 	ctrl.center_on_selection()
+
+
+# --- veterano ronda 4 ---
+## Centra la cámara en la unidad elegida más cercana al promedio: con el ejército partido en
+## dos, el promedio puede caer en el medio de la nada; así se mira a tropa de verdad.
+func centrar_en_grueso() -> void:
+	var sel := ctrl.selected_entities()
+	if sel.is_empty():
+		return
+	var c := Vector2.ZERO
+	for e in sel:
+		c += Vector2(e.x, e.y)
+	c /= sel.size()
+	var mejor: SimEntity = sel[0]
+	for e in sel:
+		if Vector2(e.x, e.y).distance_squared_to(c) < Vector2(mejor.x, mejor.y).distance_squared_to(c):
+			mejor = e
+	ctrl.cam.look_at_point(WorldView.to_world(mejor.x, mejor.y))
+
+
+## Centros propios (la capital primero, después por id): lo que recorre H.
+func centros() -> Array[SimEntity]:
+	var out: Array[SimEntity] = []
+	for e in ctrl.sim.actives:
+		if e.alive and e.owner == ctrl.local and e.is_building() and (e.capital or e.type == "centro"):
+			if e.capital:
+				out.push_front(e)
+			else:
+				out.append(e)
+	return out
+
+
+## H: el centro siguiente (como en AoE4). Dos toques seguidos o Mayús + H centran la cámara;
+## un toque solo cambia la selección, para encolar aldeanos sin perder de vista la pelea.
+func recorrer_centros(centrar: bool) -> void:
+	var list := centros()
+	if list.is_empty():
+		ctrl.hud_notify("No tenés centros", "info")
+		return
+	var now := Time.get_ticks_msec()
+	var doble := now - _centro_ms < int(Teclas.cfg().get("doble_toque_ms", 350))
+	_centro_ms = now
+	if doble:
+		_centro_ms = -100000
+		var ya := ctrl.selected_entities()
+		if ya.size() == 1 and list.has(ya[0]):
+			ctrl.center_on_selection()
+			return
+	var actual := -1
+	var sel := ctrl.selected_entities()
+	if sel.size() == 1:
+		actual = list.find(sel[0])
+	_cycle["centro"] = (actual + 1) % list.size() if actual >= 0 else 0
+	ctrl.select_ids([list[_cycle["centro"]].id] as Array[int])
+	if centrar:
+		ctrl.center_on_selection()
+# --- fin veterano ronda 4 ---
 
 
 ## Marcador de cámara `n` (1…8): guardar (Ctrl) o ir.

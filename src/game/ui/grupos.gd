@@ -23,7 +23,7 @@ func _ready() -> void:
 func grupos() -> Array:
 	var out := []
 	var ctrl: Controller = hud.ctrl
-	for n in range(1, 10):
+	for n in [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]: # --- veterano ronda 4 --- (grupo 0, como en AoE4)
 		if not ctrl.groups.has(n):
 			continue
 		var vivos: Array[int] = []

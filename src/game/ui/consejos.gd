@@ -388,7 +388,9 @@ static func walking_store(dd: SimData, kind: String) -> Array:
 static func grid_path(dd: SimData, type: String) -> String:
 	var menu := Grilla.menu_de(dd, type)
 	var slots := Grilla.edificios(dd, menu)
-	var labels := Controller.SLOT_LABELS
+	var labels: Array[String] = [] # --- veterano ronda 4 --- las teclas asignadas
+	for i in 12:
+		labels.append(Controller.etiqueta(i))
 	var m := "%s %s" % [labels[Grilla.fija(menu, 0 if menu == Grilla.ECONOMIA else 1)], "Economía" if menu == Grilla.ECONOMIA else "Militar"]
 	for s in slots:
 		if slots[s] == type:

@@ -7,7 +7,7 @@ signal selection_changed
 const P := 1000
 const O := SimEntity.Order
 const SLOT_KEYS: Array[int] = [KEY_Q, KEY_W, KEY_E, KEY_R, KEY_A, KEY_S, KEY_D, KEY_F, KEY_Z, KEY_X, KEY_C, KEY_V]
-const SLOT_LABELS: Array[String] = ["Q", "W", "E", "R", "A", "S", "D", "F", "Z", "X", "C", "V"]
+const SLOT_LABELS: Array[String] = ["Q", "W", "E", "R", "A", "S", "D", "F", "Z", "X", "C", "V"] # de fábrica: las de verdad, etiqueta()
 const RES_LABEL := {"alimento": "alimento", "granja": "granjas", "madera": "madera", "piedra": "piedra", "riqueza": "riqueza", "*": "todos los recursos"}
 
 const MundoColocacion := preload("res://src/game/ui/mundo_colocacion.gd") # --- mundo ---
@@ -351,7 +351,7 @@ func _ubicar_investigaciones(out: Array[Dictionary], research: Array[Dictionary]
 			# Dos comandos fijos en la misma casilla (no pasa con los datos de hoy): al primero libre.
 			for alt in _ORDEN_LIBRE:
 				if not taken.has(alt):
-					push_warning("Grilla: '%s' choca con '%s' en %s; va a %s" % [c["id"], taken[sl], SLOT_LABELS[sl], SLOT_LABELS[alt]])
+					push_warning("Grilla: '%s' choca con '%s' en %s; va a %s" % [c["id"], taken[sl], etiqueta(sl), etiqueta(alt)])
 					c["slot"] = alt
 					sl = alt
 					break
@@ -449,11 +449,16 @@ func run_command(cmd: Dictionary) -> void:
 			_ghost.visible = true
 			view.set_grid(true)
 		"train":
+			# --- veterano ronda 4 --- como AoE4: cada pulsación entrena UNA unidad en el edificio
+			# de cola más corta (Mayús: 5 en total, no 5 por edificio).
 			var shift := Input.is_key_pressed(KEY_SHIFT)
-			for e in selected_entities():
-				if e.is_building() and e.type == sim.by_id[cmd["building"]].type and e.owner == local:
-					for k in (5 if shift else 1):
-						sim.push_command({"t": "train", "player": local, "building": e.id, "type": cmd["id"]})
+			for k in (5 if shift else 1):
+				var e := cola_mas_corta(cmd)
+				if e == null:
+					break
+				_pendientes[e.id] = int(_pendientes.get(e.id, 0)) + 1
+				sim.push_command({"t": "train", "player": local, "building": e.id, "type": cmd["id"]})
+			# --- fin veterano ronda 4 ---
 		"stop":
 			# --- mundo ---
 			if cola != null:
@@ -501,6 +506,37 @@ func run_command(cmd: Dictionary) -> void:
 		"back":
 			open_submenu(Grilla.RAIZ)
 		# --- fin grilla ---
+
+
+# --- veterano ronda 4 ---
+## Pedidos de entrenar que todavía no entraron a la simulación (entran en el próximo tick):
+## {id del edificio: cantidad}. Se vacía en _process cuando avanzó el tick.
+var _pendientes := {}
+var _pendientes_tick := -1
+
+
+## Entre los edificios elegidos del tipo del comando, el de cola más corta (contando lo pedido
+## en este cuadro); a igual cola, el que está más cerca de terminar lo que entrena, y después
+## el de menor id. null si todos tienen la cola llena.
+func cola_mas_corta(cmd: Dictionary) -> SimEntity:
+	if sim.tick != _pendientes_tick:
+		_pendientes.clear()
+		_pendientes_tick = sim.tick
+	var tipo: String = sim.by_id[cmd["building"]].type if sim.by_id.has(cmd["building"]) else ""
+	var tope := int(sim.data.reglas.get("cola_max", 5))
+	var mejor: SimEntity = null
+	var mejor_n := 0
+	for e in selected_entities():
+		if not (e.is_building() and e.built and e.type == tipo and e.owner == local):
+			continue
+		var n: int = e.queue.size() + int(_pendientes.get(e.id, 0))
+		if n >= tope:
+			continue
+		if mejor == null or n < mejor_n or (n == mejor_n and n > 0 and e.queue_progress > mejor.queue_progress):
+			mejor = e
+			mejor_n = n
+	return mejor
+# --- fin veterano ronda 4 ---
 
 
 func cancel_mode() -> void:
@@ -892,92 +928,110 @@ func _key(k: InputEventKey) -> void:
 			hud.toggle_menu()
 		get_viewport().set_input_as_handled()
 		return
-	# --- marcadores --- (proceso/24, 4k) Alt + 1…8 vuelve y Ctrl + Alt + 1…8 guarda: Ctrl +
-	# número sigue siendo de los grupos de control.
-	if code >= KEY_1 and code <= KEY_9 and k.alt_pressed:
-		var nm := code - KEY_0
-		if nm <= int(Atajos.cfg().get("marcadores", 8)):
-			atajos.marca(nm, k.ctrl_pressed)
-			get_viewport().set_input_as_handled()
+	# --- veterano ronda 4 --- las teclas salen de Teclas (Opciones → Teclas): grupos 0…9,
+	# marcadores, ociosos, ejército, centros y la grilla se pueden reasignar.
+	var acc := Teclas.accion(code)
+	if acc.begins_with("grupo_"):
+		var n := int(acc.trim_prefix("grupo_"))
+		# Alt + número vuelve a un marcador y Ctrl + Alt + número lo guarda (proceso/24, 4k):
+		# Ctrl + número sigue siendo de los grupos de control.
+		if k.alt_pressed:
+			if n >= 1 and n <= int(Atajos.cfg().get("marcadores", 8)):
+				atajos.marca(n, k.ctrl_pressed)
+				get_viewport().set_input_as_handled()
+			return
+		_grupo(n, k.ctrl_pressed, k.shift_pressed)
 		return
-	# --- fin marcadores ---
-	if code >= KEY_1 and code <= KEY_9:
-		var n := code - KEY_0
-		if k.ctrl_pressed:
-			groups[n] = selection.duplicate()
-			hud_notify("Grupo %d asignado" % n, "info")
-		# --- avisos --- (Mayús + n suma la selección al grupo)
-		elif k.shift_pressed and not selection.is_empty():
-			var merged: Array = groups.get(n, []).duplicate()
-			for id in selection:
-				if not merged.has(id):
-					merged.append(id)
-			groups[n] = merged
-			hud_notify("Grupo %d: %d unidades" % [n, merged.size()], "info")
-		# --- fin avisos ---
-		elif groups.has(n):
-			var ids: Array[int] = []
-			for id in groups[n]:
-				if sim.by_id.has(id):
-					ids.append(id)
-			_set_selection(ids)
-			var now := Time.get_ticks_msec()
-			if _last_group_key == n and now - _last_group_ms < 350:
-				center_on_selection()
-			_last_group_key = n
-			_last_group_ms = now
-		return
-	# --- órdenes --- (atajos de selección y marcadores de cámara: src/game/ui/atajos.gd)
-	if code == KEY_PERIOD:
-		atajos.ocioso(false, k.shift_pressed or k.ctrl_pressed)
-		return
-	if code == KEY_COMMA:
-		atajos.ocioso(true, k.shift_pressed or k.ctrl_pressed)
-		return
-	if code == KEY_M:
-		atajos.todos_militares()
-		return
-	if code == KEY_T:
-		atajos.todos_del_tipo()
-		return
-	if code == KEY_TAB:
-		atajos.recorrer_produccion()
+	if acc.begins_with("marcador_"):
+		atajos.marca(int(acc.trim_prefix("marcador_")), k.ctrl_pressed)
 		get_viewport().set_input_as_handled()
 		return
-	var mk := (Atajos.cfg().get("marcadores_f", []) as Array).find(OS.get_keycode_string(code))
-	if mk >= 0:
-		atajos.marca(mk + 1, k.ctrl_pressed) # F7…F9: atajos de los marcadores 1 a 3
+	match acc:
+		"ocioso_aldeano":
+			atajos.ocioso(false, k.shift_pressed or k.ctrl_pressed)
+			return
+		"ocioso_militar":
+			atajos.ocioso(true, k.shift_pressed or k.ctrl_pressed)
+			return
+		"ejercito":
+			atajos.todos_militares()
+			return
+		"del_tipo":
+			atajos.todos_del_tipo()
+			return
+		"produccion":
+			atajos.recorrer_produccion()
+			get_viewport().set_input_as_handled()
+			return
+		"ir_aviso", "avisos_atras":
+			# --- avisos --- (Espacio: último ataque o suceso con lugar; Inicio: recorre los anteriores)
+			if hud != null and hud.get("avisos") != null:
+				var at: Variant = hud.avisos.saltar(acc == "avisos_atras")
+				if at is Vector3:
+					cam.look_at_point(at)
+				else:
+					hud_notify("No hay avisos con lugar para ir", "info")
+			return
+		"centro":
+			atajos.recorrer_centros(k.shift_pressed)
+			return
+		"borrar":
+			var ids := []
+			for e in selected_entities():
+				if e.owner == local:
+					ids.append(e.id)
+			sim.push_command({"t": "delete", "player": local, "ids": ids})
+			return
+	if acc.begins_with("grilla_"):
+		var slot := int(acc.trim_prefix("grilla_"))
+		var cmd := cmd_at(commands(), slot) # lo mismo que dibuja la grilla (hud.gd)
+		if not cmd.is_empty():
+			run_command(cmd)
 		return
-	# --- fin órdenes ---
-	# --- avisos --- (Espacio: último ataque o suceso con lugar; Inicio: recorre los anteriores)
-	if (code == KEY_SPACE or code == KEY_HOME) and hud != null and hud.get("avisos") != null:
-		var at: Variant = hud.avisos.saltar(code == KEY_HOME)
-		if at is Vector3:
-			cam.look_at_point(at)
-		else:
-			hud_notify("No hay avisos con lugar para ir", "info")
+	# --- fin veterano ronda 4 ---
+
+
+# --- veterano ronda 4 ---
+## Grupo de control `n` (0…9): Ctrl asigna, Mayús suma, solo elige (dos toques: centra).
+## Con grupos exclusivos (Opciones → Teclas, como AoE4) asignar o sumar saca a esas unidades
+## de los otros grupos.
+func _grupo(n: int, asignar: bool, sumar: bool) -> void:
+	if asignar or (sumar and not selection.is_empty()):
+		var merged: Array = [] if asignar else groups.get(n, []).duplicate()
+		for id in selection:
+			if not merged.has(id):
+				merged.append(id)
+		groups[n] = merged
+		var sacadas := 0
+		if Teclas.grupos_exclusivos:
+			for g in groups.keys():
+				if g == n:
+					continue
+				var resto: Array = (groups[g] as Array).filter(func(id: int) -> bool: return not merged.has(id))
+				sacadas += (groups[g] as Array).size() - resto.size()
+				groups[g] = resto
+		var extra := " (salen de otro grupo)" if sacadas > 0 else ""
+		hud_notify(("Grupo %d asignado" % n if asignar else "Grupo %d: %d unidades" % [n, merged.size()]) + extra, "info")
 		return
-	# --- fin avisos ---
-	if code == KEY_H:
-		for e in sim.actives:
-			if e.owner == local and e.is_building() and (e.capital or e.type == "centro"):
-				_set_selection([e.id] as Array[int])
-				center_on_selection()
-				return
-		return
-	if code == KEY_DELETE:
-		var ids := []
-		for e in selected_entities():
-			if e.owner == local:
-				ids.append(e.id)
-		sim.push_command({"t": "delete", "player": local, "ids": ids})
-		return
-	var slot := SLOT_KEYS.find(code)
-	if slot >= 0:
-		for cmd in commands():
-			if cmd["slot"] == slot:
-				run_command(cmd)
-				return
+	if groups.has(n):
+		var ids: Array[int] = []
+		for id in groups[n]:
+			if sim.by_id.has(id):
+				ids.append(id)
+		_set_selection(ids)
+		var now := Time.get_ticks_msec()
+		if _last_group_key == n and now - _last_group_ms < 350:
+			center_on_selection()
+		_last_group_key = n
+		_last_group_ms = now
+# --- fin veterano ronda 4 ---
+
+
+# --- veterano ronda 4 ---
+## Tecla de la casilla `slot` de la grilla tal como está asignada (Opciones → Teclas).
+static func etiqueta(slot: int) -> String:
+	return Teclas.texto("grilla_%d" % slot)
+# --- fin veterano ronda 4 ---
 
 
 func _select_idle_villager() -> void:
