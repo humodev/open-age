@@ -45,3 +45,21 @@ A pedido del autor jugaron solo el veterano de AoE4 y el jugador nuevo, con su m
 1. Integrar 4n (jugador nuevo) y 4o (veterano). Todo es interfaz y no mueve el balance, salvo el tope de la fácil.
 2. El torneo 26 mide la IA que disputa sitios y la llama por vez.
 3. Quinta ronda cuando estén 4n y 4o.
+
+## Escala (pedido del autor al veterano)
+
+> "Que el experto analice cómo ve los tamaños de las cosas, edificios y unidades, comparado con AoE4, que tiene una sensación de realidad muy buena basada en el tamaño de las cosas; creo que estamos muy lejos."
+
+[Análisis](03-escala-veterano.md):
+- **La cámara está bien** (54°, campo de 30°, zoom 32; el aldeano mide unos 40 px). Lo que falla son las proporciones entre objetos.
+- **La persona ocupa una casilla entera** (1,03).
+- **Lo que más se aleja de AoE4**, en alturas de persona:
+  - árboles bajos: 2 contra 4–6;
+  - hitos que no dominan: 2,6 contra 6–12;
+  - centro angosto: 3,2 de ancho contra 7–9;
+  - casas y cuarteles chatos.
+- **La velocidad** es un 35 % más rápida que en AoE4 en relación con el cuerpo.
+
+**Plan:**
+1. Solo vista, en curso (4p): personas más chicas, edificios más altos, árboles ×1,5, pasto más bajo y maquetas militares parejas.
+2. Velocidad (C-65) y huellas del centro y los hitos (C-66): cambian la simulación y van a consulta.
