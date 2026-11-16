@@ -56,7 +56,8 @@ class Unidad:
         self.clave = clave
         self.fn = d["funcion"]
         self.pv = d["pv"]
-        bono_edad = edades[edad - 1].get("bono_ataque", 0)
+        # Paso 1 del juego tardío: la edad ya no sube el ataque de la tropa (sí el del asedio).
+        bono_edad = edades[edad - 1].get("bono_ataque_asedio", 0) if d["funcion"] == "asedio" else 0
         self.ataque = d["ataque"] * (100 + bono_edad) // 100  # como effective_attack, en enteros
         self.arm = d.get("armadura", 0)
         self.arm_d = d.get("armadura_distancia", self.arm)

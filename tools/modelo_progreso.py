@@ -4,11 +4,12 @@
 Compara, por pueblo y por edad, el poder de un ejército de referencia de 30 unidades con el
 gasto típico de cada edad, en tres diseños:
 
-  * HOY: el bono automático de ataque por edad (`edades.json → bono_ataque`, +10/20/35 %),
-    las mejoras de hoy (`tecnologias.json`) y el hito militar de cada edad (`eje: militar`).
-  * PASO 1: sin bono por edad para las unidades; el +10 % de la II pasa a la herrería I y
-    entran los niveles veterano (III) y élite (IV) por línea, comprados (efecto nuevo
-    `ataque_pct` por línea). Tabla 1: tiene que dar lo mismo que HOY.
+  * HOY (antes del paso 1): el bono automático de ataque por edad para las unidades (+10/20/35 %,
+    el mismo que hoy conservan los edificios: `edades.json → bono_ataque_edificio`), las mejoras
+    sin los efectos `ataque_pct` (`tecnologias.json`) y el hito militar de cada edad (`eje: militar`).
+  * PASO 1 (en el juego desde proceso/26, paso 5): sin bono por edad para las unidades; el +10 % de
+    la II está en la herrería I (`armas_1`) y los niveles veterano (III) y élite (IV) por línea
+    (`veterano_*`, `elite_*`), comprados; se leen de data/. Tabla 1: tiene que dar lo mismo que HOY.
   * COMPLETO: lo anterior, más la herrería III de ataque a +1, la escuela de la IV (el
     equivalente de la universidad), los saberes militares propios (PROPIAS) y los hitos
     militares de la III y la IV con efecto en aura (no los suma). Tabla 2: el poder crece
@@ -82,12 +83,7 @@ GASTO_HOY = [[], ["armas_1", "escudos_1"],
 #     montados, polvora) o `funciones` (como en tecnologias.json).
 TODAS = ["choque", "distancia", "linea", "montados", "polvora"]
 PROPUESTA = {
-    # Paso 1: el +10 % de la II pasa a la herrería I (sin bono automático para las unidades).
-    "armas_1": [{"tipo": "ataque", "funciones": MILITARES, "n": 1},
-                {"tipo": "ataque_pct", "lineas": TODAS, "pct": 10}],
-    # Nivel veterano (III) y élite (IV), uno por línea, en el edificio que la entrena.
-    "veterano": [{"tipo": "ataque_pct", "pct": 5}, {"tipo": "vida_pct_l", "pct": 5}],
-    "elite": [{"tipo": "ataque_pct", "pct": 10}, {"tipo": "vida_pct_l", "pct": 5}],
+    # Paso 1 (armas_1 con +10 %, veterano y élite por línea): ya está en data/tecnologias.json.
     # Escuela de la edad IV (§1.6): las dos de combate; las otras cuatro son de asedio y economía.
     "escuela_vida": [{"tipo": "vida_pct", "funciones": ["choque"], "pct": 10}],
     "escuela_polvora": [{"tipo": "ataque_pct", "lineas": ["polvora"], "pct": 10}],
@@ -173,7 +169,10 @@ def mods_de(efectos):
     m = {}
     for ef in efectos:
         t = ef["tipo"]
-        if t in ("ataque", "armadura", "vida_pct"):
+        if t == "vida_pct" and "lineas" in ef:
+            for ln in ef["lineas"]:
+                m[("vida_pct_l", ln)] = m.get(("vida_pct_l", ln), 0) + ef["pct"]
+        elif t in ("ataque", "armadura", "vida_pct"):
             for fn in ef.get("funciones", []):
                 m[(t, fn)] = m.get((t, fn), 0) + ef.get("n", ef.get("pct", 0))
         elif t in ("ataque_pct", "vida_pct_l"):
@@ -230,19 +229,25 @@ def valor_vs_base(reglas, d, efectos, bono_edad, mezcla):
 
 
 def efectos_de(tecs, lista):
+    """Efectos de una lista de compras: "veterano" y "elite" son los niveles de todas las líneas."""
     efs = []
     for k in lista:
         if k in PROPUESTA:
             efs += PROPUESTA[k]
+        elif k in ("veterano", "elite"):
+            for kk, t in tecs.items():
+                if kk.startswith(k + "_") and isinstance(t, dict):
+                    efs += t["efectos"]
         else:
             efs += tecs[k]["efectos"]
     return efs
 
 
 def efectos_hoy(tecs, lista):
+    """Antes del paso 1: las mejoras sin el porcentaje que hoy reemplaza al bono por edad."""
     efs = []
     for k in lista:
-        efs += tecs[k]["efectos"]
+        efs += [ef for ef in tecs[k]["efectos"] if ef["tipo"] != "ataque_pct"]
     return efs
 
 
@@ -257,7 +262,8 @@ def main():
                     help="tabla 1 contra el mismo rival en todas las edades (el genérico de la II sin mejoras)")
     args = ap.parse_args()
     reglas, base, edades, tecs = cargar()
-    bonos = [e.get("bono_ataque", 0) for e in edades["edades"]]
+    # El bono que tenían las unidades antes del paso 1 es el que hoy conservan los edificios.
+    bonos = [e.get("bono_ataque_edificio", e.get("bono_ataque", 0)) for e in edades["edades"]]
     gen = unidades_civ(base, {})
     vara = ejercito(reglas, gen, REFERENCIA[1], [], 0)
     mezcla = ejercito(reglas, gen, {"guerrero": 10, "hondero": 10, "lancero": 10}, [], 0)

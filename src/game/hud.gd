@@ -1173,7 +1173,7 @@ class SelectionPanel:
 		_bar(Rect2(14, 134, 112, 7), float(e.hp) / float(e.hp_max), hp_col)
 		draw_string(Hud.font, Vector2(14, 160), "%d / %d" % [e.hp, e.hp_max], HORIZONTAL_ALIGNMENT_CENTER, 112, 13, Palette.UI_DIM)
 		if e.is_unit():
-			# Valores de verdad: con mejoras, bono de edad y velocidad real (casillas por segundo).
+			# Valores de verdad: con mejoras, niveles y velocidad real (casillas por segundo).
 			var spd := float(hud.sim.mods.speed(e)) * 1000.0 / float(hud.sim.tick_ms) / 1000.0
 			var stats := [["Ataque", str(hud.sim.effective_attack(e))], ["Armadura", "%d / %d" % [hud.sim.effective_armor(e), hud.sim.effective_armor(e, true)]], ["Alcance", "%.1f" % (e.def.get("alcance", 0) / 1000.0)], ["Velocidad", "%.2f" % spd]]
 			var sx := x
@@ -1182,7 +1182,11 @@ class SelectionPanel:
 				draw_string(Hud.font_b, Vector2(sx, 112), s[1], HORIZONTAL_ALIGNMENT_LEFT, -1, 17, Palette.UI_TEXT)
 				sx += 92
 			var fn_names := {"civil": "Civil", "choque": "Choque", "distancia": "Distancia", "linea": "Línea", "explorador": "Exploración", "asedio": "Asedio"}
-			draw_string(Hud.font_b, Vector2(0, 36), fn_names.get(e.fn, ""), HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, 14, Palette.UI_ACCENT)
+			var fn_label: String = fn_names.get(e.fn, "")
+			var lvl := hud.sim.line_level(e.owner, e.def)
+			if lvl > 0:
+				fn_label += " · " + Controller.LEVEL_NAMES[lvl].capitalize()
+			draw_string(Hud.font_b, Vector2(0, 36), fn_label, HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, 14, Palette.UI_ACCENT)
 			var status := _status(e)
 			draw_string(Hud.font, Vector2(x, 146), status, HORIZONTAL_ALIGNMENT_LEFT, size.x - x - 16, 14, Palette.UI_TEXT)
 			if e.carry > 0:

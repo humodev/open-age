@@ -484,7 +484,7 @@ func _unit_stats(owner: int, def: Dictionary, hp: int, hp_max: int) -> Array:
 	var reach: int = def.get("alcance", 0)
 	var out := [
 		["Vida", "%d/%d" % [hp, hp_max] if hp >= 0 else str(def.get("pv", 0)), _hp_col(hp, hp_max)],
-		["Ataque", _plus(atk, atk_bonus), Palette.UI_TEXT],
+		["Ataque", _plus(atk, atk_bonus) + _pct(sim.attack_pct(owner, def, false)), Palette.UI_TEXT],
 		["Armadura", "%s cuerpo · %s distancia" % [_plus(arm, arm_bonus), _plus(arm_d, arm_bonus)], Palette.UI_TEXT],
 		["Alcance", "contacto" if reach <= 1000 else "%.1f casillas" % (reach / 1000.0), Palette.UI_TEXT],
 		["Velocidad", "%.2f" % (def.get("velocidad", 0) / 1000.0), Palette.UI_TEXT],
@@ -492,6 +492,11 @@ func _unit_stats(owner: int, def: Dictionary, hp: int, hp_max: int) -> Array:
 		["Visión", "%d" % (def.get("vision", 0) / 1000), Palette.UI_TEXT],
 		["Población", str(def.get("pob", 1)), Palette.UI_TEXT],
 	]
+	# Nivel de la línea (paso 1 del juego tardío): se compra en el edificio que la entrena.
+	var line := SimData.line_of(def)
+	if line != "" and owner >= 0:
+		var lvl := sim.line_level(owner, def)
+		out.append(["Nivel", "%s · %s" % [Controller.LEVEL_NAMES[lvl].capitalize(), Controller.LINE_NAMES.get(line, line)], Palette.UI_ACCENT if lvl > 0 else Palette.UI_DIM])
 	if def.has("carga"):
 		out.append(["Carga", str(int(def["carga"]) + (sim.mod(owner, "carga") if owner >= 0 else 0)), Palette.UI_TEXT])
 	if def.has("municion"):
@@ -502,7 +507,7 @@ func _unit_stats(owner: int, def: Dictionary, hp: int, hp_max: int) -> Array:
 func _building_stats(owner: int, def: Dictionary, hp: int, hp_max: int) -> Array:
 	var out := [["Vida", "%d/%d" % [hp, hp_max] if hp >= 0 else str(def.get("pv", 0)), _hp_col(hp, hp_max)], ["Armadura", str(def.get("armadura", 0)), Palette.UI_TEXT]]
 	if def.has("ataque"):
-		out.append(["Ataque", _plus(int(def["ataque"]), sim.mod(owner, "b_ataque") if owner >= 0 else 0), Palette.UI_TEXT])
+		out.append(["Ataque", _plus(int(def["ataque"]), sim.mod(owner, "b_ataque") if owner >= 0 else 0) + _pct(sim.attack_pct(owner, def, true)), Palette.UI_TEXT])
 		out.append(["Alcance", "%.1f casillas" % (def.get("alcance", 0) / 1000.0), Palette.UI_TEXT])
 	if def.get("guarnicion", 0) > 0:
 		out.append(["Guarnición", str(def["guarnicion"]), Palette.UI_TEXT])
@@ -558,6 +563,11 @@ func _counters(c: Dictionary, fn: String, def: Dictionary) -> void:
 static func _mult(k: int) -> String:
 	var s := "%.2f" % (k / 100.0)
 	return s.rstrip("0").rstrip(".")
+
+
+## « +10 %»: el porcentaje de ataque (edad para edificios y asedio; compras por línea).
+static func _pct(pct: int) -> String:
+	return "" if pct == 0 else " +%d %%" % pct
 
 
 static func _plus(base: int, bonus: int) -> String:

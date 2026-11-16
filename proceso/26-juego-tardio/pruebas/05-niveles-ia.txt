@@ -1,0 +1,124 @@
+# tools/niveles_ia.gd: minuto de cada edad, de armas_1 y de cada nivel, por jugador (IA contra IA)
+# niv_v1: primera versión de la IA (compra solo cuando ya alcanza; normal y fácil a 30 min, difícil y experta a 40)
+# niv_j*: versión final (junta para el nivel: la tropa no gasta ese costo), normal, difícil y experta a 40 min
+
+## v1
+dificultad | armas_1 tras la II (mediana, rango) | 1.er veterano tras la III | III sin veterano al final | 1.er élite tras la IV | IV sin élite | III alcanzada (mediana)
+normal | 1:12 (0:30–4:33, n=12) | 2:33 (0:59–3:09, n=6) | 1 de 7 | - | 0 de 0 | 19:02 (15:12–22:27, n=7)
+facil | 0:42 (0:36–5:44, n=12) | - | 0 de 0 | - | 0 de 0 | -
+dificil | 1:27 (0:30–3:35, n=12) | 1:44 (0:49–6:38, n=7) | 2 de 9 | 1:08 (1:08–1:08, n=1) | 1 de 2 | 20:35 (14:36–29:19, n=9)
+experta | 1:12 (0:29–3:08, n=11) | 2:24 (0:38–4:04, n=5) | 0 de 5 | - | 0 de 0 | 16:14 (14:32–23:17, n=5)
+## final
+dificultad | armas_1 tras la II (mediana, rango) | 1.er veterano tras la III | III sin veterano al final | 1.er élite tras la IV | IV sin élite | III alcanzada (mediana)
+normal | 0:54 (0:30–1:40, n=12) | 0:55 (0:46–3:01, n=7) | 1 de 8 | 1:01 (1:01–1:01, n=1) | 0 de 1 | 16:53 (15:04–21:04, n=8)
+dificil | 0:51 (0:30–1:53, n=12) | 1:37 (0:48–9:45, n=8) | 0 de 8 | 1:49 (1:10–1:49, n=2) | 0 de 2 | 20:40 (13:46–28:59, n=8)
+experta | 0:53 (0:29–1:12, n=12) | 1:01 (0:45–1:53, n=6) | 1 de 7 | - | 0 de 0 | 17:33 (14:32–20:21, n=7)
+facil | 0:42 (0:36–1:17, n=12) | - | 0 de 0 | - | 0 de 0 | -
+
+dificultad | semilla | pueblo | rival | II | armas_1 | III | veteranos (min) | IV | élites (min) | niveles al final | ganador
+
+# niv_v1.txt
+normal | 0 | ayutthaya | etiopia | 6:45 | 7:55 | 19:02 | distancia 21:19, choque 21:25, polvora 23:25, montados 25:25, linea 27:41 | - | - | 5 | -1
+normal | 0 | etiopia | ayutthaya | 5:44 | 6:53 | 20:36 | - | - | - | 0 | -1
+normal | 0 | guaranies | mapuches | 7:57 | 9:05 | - | - | - | - | 0 | -1
+normal | 0 | mapuches | guaranies | 7:01 | 8:58 | 18:51 | distancia 21:24, linea 27:02, choque 27:09 | - | - | 3 | -1
+normal | 0 | palmares | tawantinsuyu | 12:22 | 16:55 | - | - | - | - | 0 | 1
+normal | 0 | tawantinsuyu | palmares | 6:10 | 8:50 | 19:04 | distancia 20:03, choque 20:45, linea 21:18 | - | - | 3 | 1
+facil | 0 | ayutthaya | etiopia | 6:16 | 7:55 | - | - | - | - | 0 | -1
+facil | 0 | etiopia | ayutthaya | 5:50 | 7:04 | - | - | - | - | 0 | -1
+facil | 0 | guaranies | mapuches | 8:15 | 9:08 | - | - | - | - | 0 | -1
+facil | 0 | mapuches | guaranies | 7:31 | 8:13 | - | - | - | - | 0 | -1
+facil | 0 | palmares | tawantinsuyu | 9:15 | 9:53 | - | - | - | - | 0 | -1
+facil | 0 | tawantinsuyu | palmares | 6:09 | 6:46 | - | - | - | - | 0 | -1
+normal | 0 | etiopia | guaranies | 4:54 | 7:07 | 18:07 | distancia 21:16 | - | - | 1 | 0
+normal | 0 | guaranies | etiopia | 12:31 | 13:23 | - | - | - | - | 0 | 0
+normal | 0 | mapuches | palmares | 9:33 | 10:45 | - | - | - | - | 0 | -1
+normal | 0 | palmares | mapuches | 9:22 | 9:57 | 22:27 | distancia 25:00, choque 25:06, polvora 27:41, linea 27:57 | - | - | 4 | -1
+normal | 0 | tawantinsuyu | ayutthaya | 6:05 | 6:35 | 15:12 | distancia 16:53, linea 17:04, choque 19:31 | - | - | 3 | 0
+normal | 0 | ayutthaya | tawantinsuyu | 7:16 | 11:18 | - | - | - | - | 0 | 0
+facil | 0 | etiopia | guaranies | 5:07 | 6:29 | - | - | - | - | 0 | 0
+facil | 0 | guaranies | etiopia | 9:09 | 9:46 | - | - | - | - | 0 | 0
+facil | 0 | mapuches | palmares | 8:07 | 8:44 | - | - | - | - | 0 | -1
+facil | 0 | palmares | mapuches | 9:31 | 10:07 | - | - | - | - | 0 | -1
+facil | 0 | tawantinsuyu | ayutthaya | 6:17 | 6:53 | - | - | - | - | 0 | -1
+facil | 0 | ayutthaya | tawantinsuyu | 6:59 | 12:43 | - | - | - | - | 0 | -1
+dificil | 0 | ayutthaya | etiopia | 6:43 | 9:04 | 20:56 | distancia 25:06, choque 25:25, linea 27:01, polvora 27:25, montados 29:25 | - | - | 5 | 0
+dificil | 0 | etiopia | ayutthaya | 5:37 | 7:04 | 24:36 | - | - | - | 0 | 0
+dificil | 0 | mapuches | palmares | 10:19 | 11:14 | 20:35 | linea 27:13 | - | - | 1 | 0
+dificil | 0 | palmares | mapuches | 9:27 | 10:03 | 21:38 | - | - | - | 0 | 0
+experta | 0 | ayutthaya | etiopia | 7:41 | 10:49 | - | - | - | - | 0 | 1
+experta | 0 | etiopia | ayutthaya | 6:32 | 7:53 | - | - | - | - | 0 | 1
+experta | 0 | mapuches | palmares | 7:42 | 9:03 | - | - | - | - | 0 | -1
+experta | 0 | palmares | mapuches | 9:26 | 10:07 | - | - | - | - | 0 | -1
+dificil | 0 | etiopia | guaranies | 5:14 | 6:55 | - | - | - | - | 0 | 1
+dificil | 0 | guaranies | etiopia | 12:15 | 12:52 | 14:36 | distancia 15:42, linea 17:04, choque 18:53 | 23:58 | distancia 25:06, choque 25:35 | 5 | 1
+dificil | 0 | palmares | tawantinsuyu | 12:32 | 13:08 | - | - | - | - | 0 | 1
+dificil | 0 | tawantinsuyu | palmares | 5:58 | 7:58 | 15:03 | distancia 18:48, choque 19:03 | - | - | 2 | 1
+experta | 0 | etiopia | guaranies | 5:16 | 6:53 | - | - | - | - | 0 | 0
+experta | 0 | guaranies | etiopia | - | - | - | - | - | - | 0 | 0
+experta | 0 | palmares | tawantinsuyu | 11:33 | 12:29 | 23:17 | distancia 27:21, polvora 27:25 | - | - | 2 | 1
+experta | 0 | tawantinsuyu | palmares | 6:16 | 7:28 | 22:34 | distancia 23:12, linea 23:17, choque 23:29 | - | - | 3 | 1
+dificil | 0 | guaranies | mapuches | 8:09 | 8:49 | 17:37 | distancia 19:06, choque 20:16, linea 21:41 | 33:08 | - | 3 | -1
+dificil | 0 | mapuches | guaranies | 7:30 | 8:59 | 29:19 | distancia 31:03, choque 32:56 | - | - | 2 | -1
+dificil | 0 | tawantinsuyu | ayutthaya | 5:58 | 6:28 | 16:18 | distancia 17:07, choque 18:47, linea 19:30 | - | - | 3 | 0
+dificil | 0 | ayutthaya | tawantinsuyu | 6:57 | 10:32 | - | - | - | - | 0 | 0
+experta | 0 | guaranies | mapuches | 8:52 | 9:42 | - | - | - | - | 0 | 1
+experta | 0 | mapuches | guaranies | 10:37 | 11:14 | 14:32 | distancia 17:03, choque 17:11, linea 19:14, montados 21:25 | - | - | 4 | 1
+experta | 0 | tawantinsuyu | ayutthaya | 6:31 | 7:00 | 16:14 | distancia 17:04, linea 18:09, choque 20:59 | - | - | 3 | 0
+experta | 0 | ayutthaya | tawantinsuyu | 7:46 | 10:34 | 14:41 | choque 17:05, distancia 17:11, linea 19:57 | - | - | 3 | 0
+
+# niv_j0.txt
+normal | 0 | ayutthaya | etiopia | 6:45 | 7:39 | 18:27 | distancia 19:36, choque 19:37, linea 20:40, polvora 29:25, montados 33:25 | - | - | 5 | 0
+normal | 0 | etiopia | ayutthaya | 5:44 | 6:35 | - | - | - | - | 0 | 0
+normal | 0 | mapuches | palmares | 9:33 | 10:27 | - | - | - | - | 0 | 1
+normal | 0 | palmares | mapuches | 9:22 | 9:57 | 21:04 | distancia 21:59, choque 22:19, polvora 23:04, linea 24:05 | - | - | 4 | 1
+dificil | 0 | ayutthaya | etiopia | 6:43 | 7:37 | 28:59 | distancia 31:02, linea 31:12 | - | - | 2 | -1
+dificil | 0 | etiopia | ayutthaya | 5:37 | 6:21 | 26:07 | distancia 35:52, montados 36:08 | - | - | 2 | -1
+dificil | 0 | mapuches | palmares | 10:19 | 11:03 | - | - | - | - | 0 | 1
+dificil | 0 | palmares | mapuches | 9:27 | 10:03 | 24:57 | distancia 26:34, choque 27:21, polvora 28:59, linea 30:00 | - | - | 4 | 1
+experta | 0 | ayutthaya | etiopia | 7:41 | 8:34 | - | - | - | - | 0 | 1
+experta | 0 | etiopia | ayutthaya | 6:32 | 7:41 | - | - | - | - | 0 | 1
+experta | 0 | mapuches | palmares | 7:42 | 8:31 | 20:21 | - | - | - | 0 | 1
+experta | 0 | palmares | mapuches | 9:26 | 10:07 | 19:09 | distancia 20:10, polvora 20:23, choque 21:24 | - | - | 3 | 1
+
+# niv_j1.txt
+normal | 0 | etiopia | guaranies | 4:54 | 5:58 | 18:43 | - | - | - | 0 | 1
+normal | 0 | guaranies | etiopia | 12:40 | 13:45 | 16:45 | distancia 17:50, choque 17:56, linea 19:41 | 27:18 | distancia 28:19, choque 28:39 | 5 | 1
+normal | 0 | palmares | tawantinsuyu | 11:32 | 12:28 | - | - | - | - | 0 | 1
+normal | 0 | tawantinsuyu | palmares | 6:10 | 7:17 | 15:21 | distancia 16:16, choque 16:26, linea 19:18 | - | - | 3 | 1
+dificil | 0 | etiopia | guaranies | 5:14 | 6:15 | 16:15 | distancia 17:21 | - | - | 1 | 1
+dificil | 0 | guaranies | etiopia | 8:42 | 9:38 | 13:46 | distancia 15:29, choque 16:02, linea 17:41 | 23:52 | distancia 25:02, choque 25:43 | 5 | 1
+dificil | 0 | palmares | tawantinsuyu | 12:54 | 13:45 | - | - | - | - | 0 | 1
+dificil | 0 | tawantinsuyu | palmares | 5:58 | 7:51 | 20:40 | distancia 21:33, choque 22:06, linea 23:47 | - | - | 3 | 1
+experta | 0 | etiopia | guaranies | 5:16 | 6:07 | - | - | - | - | 0 | 1
+experta | 0 | guaranies | etiopia | 12:05 | 12:59 | 17:33 | distancia 18:28, choque 18:47, linea 20:04 | - | - | 3 | 1
+experta | 0 | palmares | tawantinsuyu | 11:19 | 12:14 | - | - | - | - | 0 | 1
+experta | 0 | tawantinsuyu | palmares | 6:16 | 7:28 | 17:37 | distancia 18:22, choque 18:44, linea 21:43 | - | - | 3 | 1
+
+# niv_j2.txt
+normal | 0 | guaranies | mapuches | 7:57 | 8:50 | 15:24 | distancia 16:10, choque 16:38, linea 17:55 | - | - | 3 | 1
+normal | 0 | mapuches | guaranies | 7:01 | 7:48 | 16:53 | distancia 19:54, choque 20:16, montados 27:25, linea 29:40 | - | - | 4 | 1
+normal | 0 | tawantinsuyu | ayutthaya | 6:05 | 6:35 | 15:04 | distancia 15:57, choque 16:12, linea 16:53 | - | - | 3 | 0
+normal | 0 | ayutthaya | tawantinsuyu | 7:16 | 8:56 | - | - | - | - | 0 | 0
+dificil | 0 | guaranies | mapuches | 8:09 | 8:49 | 17:56 | distancia 18:58, choque 19:04, linea 20:53 | 32:58 | distancia 34:47, choque 37:04 | 5 | -1
+dificil | 0 | mapuches | guaranies | 7:30 | 8:16 | - | - | - | - | 0 | -1
+dificil | 0 | tawantinsuyu | ayutthaya | 5:58 | 6:28 | 14:38 | distancia 15:26, linea 15:43, choque 16:54 | - | - | 3 | 0
+dificil | 0 | ayutthaya | tawantinsuyu | 6:57 | 8:31 | - | - | - | - | 0 | 0
+experta | 0 | guaranies | mapuches | 8:52 | 9:42 | - | - | - | - | 0 | 1
+experta | 0 | mapuches | guaranies | 10:37 | 11:14 | 14:32 | distancia 16:18, choque 16:53, montados 17:25, linea 17:57 | - | - | 4 | 1
+experta | 0 | tawantinsuyu | ayutthaya | 6:31 | 7:00 | 15:52 | linea 16:44, distancia 16:51, choque 17:41 | - | - | 3 | -1
+experta | 0 | ayutthaya | tawantinsuyu | 7:46 | 8:41 | 15:29 | distancia 17:22, choque 17:30, linea 21:57, polvora 35:25, montados 35:26 | - | - | 5 | -1
+
+# niv_jf.txt
+facil | 0 | ayutthaya | etiopia | 6:16 | 7:07 | - | - | - | - | 0 | -1
+facil | 0 | etiopia | ayutthaya | 5:50 | 6:43 | - | - | - | - | 0 | -1
+facil | 0 | etiopia | guaranies | 5:07 | 5:56 | - | - | - | - | 0 | 0
+facil | 0 | guaranies | etiopia | 9:09 | 9:46 | - | - | - | - | 0 | 0
+facil | 0 | guaranies | mapuches | 8:15 | 9:08 | - | - | - | - | 0 | -1
+facil | 0 | mapuches | guaranies | 7:31 | 8:13 | - | - | - | - | 0 | -1
+facil | 0 | mapuches | palmares | 8:07 | 8:44 | - | - | - | - | 0 | -1
+facil | 0 | palmares | mapuches | 9:31 | 10:07 | - | - | - | - | 0 | -1
+facil | 0 | palmares | tawantinsuyu | 9:15 | 9:53 | - | - | - | - | 0 | -1
+facil | 0 | tawantinsuyu | palmares | 6:09 | 6:46 | - | - | - | - | 0 | -1
+facil | 0 | tawantinsuyu | ayutthaya | 6:17 | 6:53 | - | - | - | - | 0 | -1
+facil | 0 | ayutthaya | tawantinsuyu | 6:59 | 8:16 | - | - | - | - | 0 | -1

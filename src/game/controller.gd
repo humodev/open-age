@@ -1162,7 +1162,12 @@ func effects_text(efectos: Array) -> String:
 			"armadura":
 				parts.append("+%d de armadura militar" % ef["n"])
 			"vida_pct":
-				parts.append("+%d%% de vida militar" % ef["pct"])
+				if ef.has("lineas"):
+					parts.append("+%d%% de vida de %s" % [ef["pct"], lines_text(ef["lineas"])])
+				else:
+					parts.append("+%d%% de vida militar" % ef["pct"])
+			"ataque_pct":
+				parts.append("+%d%% de ataque de %s" % [ef["pct"], lines_text(ef["lineas"])])
 			"velocidad_pct":
 				parts.append("+%d%% de velocidad militar" % ef["pct"])
 			"edificio_vida_pct":
@@ -1172,6 +1177,22 @@ func effects_text(efectos: Array) -> String:
 			"edificio_alcance":
 				parts.append("+%.1f casillas de alcance de los edificios" % (ef["n"] / 1000.0))
 	return " · ".join(parts)
+
+
+## Nombre de las líneas de un efecto: «toda la tropa» si son todas (docs/diseno/27, §1.1).
+const LEVEL_NAMES := ["común", "veterano", "élite"]
+const LINE_NAMES := {"choque": "choque a pie", "distancia": "la distancia", "linea": "la línea", "montados": "los montados", "polvora": "la pólvora"}
+
+
+static func lines_text(lineas: Array) -> String:
+	if lineas.size() >= LINE_NAMES.size():
+		return "toda la tropa"
+	var names: Array[String] = []
+	for l in lineas:
+		names.append(LINE_NAMES.get(l, l))
+	if names.size() == 1 and lineas[0] == "choque":
+		return "la tropa de choque a pie"
+	return ", ".join(names)
 
 
 ## Qué se habilita al llegar a una edad, leído de los datos.
@@ -1187,12 +1208,20 @@ func unlocks_text(age: int) -> String:
 	for k in sim.dp(local).tecnologias:
 		if sim.dp(local).tecnologias[k].get("edad_min", 1) == age:
 			techs += 1
-	var bonus: int = sim.dp(local).edades[age - 1].get("bono_ataque", 0)
+	var bonus: int = sim.dp(local).edades[age - 1].get("bono_ataque_edificio", 0)
 	var txt := "Edad %s habilita: %s" % [Sim._roman(age), ", ".join(names)] if not names.is_empty() else "Edad %s habilita:" % Sim._roman(age)
 	if techs > 0:
 		txt += "%s%d investigaciones" % [", " if not names.is_empty() else " ", techs]
+	# La tropa ya no sube sola con la edad (paso 1 del juego tardío): lo dicen los niveles.
+	var level := 0
+	for k in sim.dp(local).tecnologias:
+		var t: Dictionary = sim.dp(local).tecnologias[k]
+		if t.has("nivel") and int(t.get("edad_min", 1)) == age:
+			level = int(t["nivel"])
+	if level > 0:
+		txt += ". Nivel %s para cada línea, en el edificio que la entrena" % LEVEL_NAMES[level]
 	if bonus > 0:
-		txt += ". Ataque militar +%d%%." % bonus
+		txt += ". Ataque de edificios y asedio +%d%%." % bonus
 	return txt
 
 
