@@ -99,6 +99,24 @@ func _init() -> void:
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(PRUEBA))
 	# --- fin veterano ronda 5 ---
 
+	# --- ronda 6 --- la primera victoria contra la IA queda guardada (y «Restablecer» no la borra)
+	Opciones.victorias = {}
+	var r1: Array = Opciones.registrar_victoria("facil", PRUEBA)
+	check.call("la primera victoria contra la IA es la primera (y la primera en Fácil)", r1 == [true, true])
+	Opciones.victorias = {}
+	Opciones.restablecer()
+	Opciones.cargar(PRUEBA)
+	check.call("se recupera la victoria contra la Fácil (%s)" % str(Opciones.victorias), int(Opciones.victorias.get("facil", 0)) == 1)
+	var r2: Array = Opciones.registrar_victoria("facil", PRUEBA)
+	check.call("la segunda en Fácil ya no es la primera", r2 == [false, false] and int(Opciones.victorias.get("facil", 0)) == 2)
+	var r3: Array = Opciones.registrar_victoria("normal", PRUEBA)
+	check.call("la primera en Normal es primera en esa dificultad, no contra la IA", r3 == [false, true])
+	Opciones.restablecer()
+	check.call("restablecer no borra las victorias", int(Opciones.victorias.get("normal", 0)) == 1)
+	Opciones.victorias = {}
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(PRUEBA))
+	# --- fin ronda 6 ---
+
 	# Escala automática: 1,0 a 1080p, ×2 a 4K, 0,85 como piso a 1366×768.
 	Opciones.escala = 0.0
 	check.call("automática a 1920×1080 = 1,0", is_equal_approx(Opciones.factor(Vector2(1920, 1080)), 1.0))

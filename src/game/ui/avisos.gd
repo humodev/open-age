@@ -17,6 +17,11 @@ const TIPOS := {
 	"info": {"icono": "info"},
 }
 
+## --- ronda 6 --- Un cuerpo en renglones («• Te frenaron…», el resumen de la pelea) va en letra
+## más grande y con una viñeta por renglón (jugador nuevo, ronda 6: «seis renglones de letra chica»).
+const RENGLON_PX := 16
+const RENGLON_SEP := 3.0
+
 var cfg: Dictionary = {}
 var lista: Array[Dictionary] = [] # {texto, tipo, t, dur, n, lugar}
 var historial: Array[Dictionary] = [] # {lugar: Vector3, tipo, texto}, el más nuevo al final
@@ -137,6 +142,9 @@ func _draw() -> void:
 		var titulo := texto if cut < 0 else texto.substr(0, cut)
 		var resto := "" if cut < 0 else texto.substr(cut + 1)
 		var rh := 0.0 if resto == "" else Hud.font.get_multiline_string_size(resto, HORIZONTAL_ALIGNMENT_LEFT, ANCHO - 60, 14).y + 2
+		var renglones := renglones_de(resto) # --- ronda 6 ---
+		if not renglones.is_empty():
+			rh = alto_renglones(renglones)
 		var h := ALTO + rh
 		var r := Rect2(x0, y, ANCHO, h)
 		var sb := StyleBoxFlat.new()
@@ -152,7 +160,15 @@ func _draw() -> void:
 		# Un título largo achica la letra (hasta 14) antes que cortarse ("…atacá o subí de edad", 4j).
 		var ts := maxi(14, EstadoCasilla._fit(Hud.font_b, titulo, 17, ANCHO - 140))
 		draw_string(Hud.font_b, Vector2(r.position.x + 46, r.position.y + 25), titulo, HORIZONTAL_ALIGNMENT_LEFT, ANCHO - 140, ts, Color(Palette.UI_TEXT, alpha))
-		if resto != "":
+		if not renglones.is_empty(): # --- ronda 6 ---
+			var ry := r.position.y + ALTO + 2.0
+			for line: String in renglones:
+				var lh := Hud.font.get_multiline_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, ANCHO - 70, RENGLON_PX).y
+				var base := ry + RENGLON_PX * 0.85
+				draw_circle(Vector2(r.position.x + 52, base - RENGLON_PX * 0.3), 3.0, Color(col, alpha))
+				draw_multiline_string(Hud.font, Vector2(r.position.x + 62, base), line, HORIZONTAL_ALIGNMENT_LEFT, ANCHO - 70, RENGLON_PX, -1, Color(Palette.UI_TEXT.darkened(0.08), alpha))
+				ry += lh + RENGLON_SEP
+		elif resto != "":
 			draw_multiline_string(Hud.font, Vector2(r.position.x + 46, r.position.y + 45), resto, HORIZONTAL_ALIGNMENT_LEFT, ANCHO - 60, 14, -1, Color(Palette.UI_DIM.lightened(0.15), alpha))
 		var right := ""
 		if int(a["n"]) > 1:
@@ -164,3 +180,23 @@ func _draw() -> void:
 			draw_string(Hud.font_b, Vector2(r.position.x, r.position.y + 24), right, HORIZONTAL_ALIGNMENT_RIGHT, ANCHO - 14, 13, Color(col if a.get("lugar") is Vector3 else Palette.UI_DIM, alpha))
 		_hits.append([r, a])
 		y += h + SEP
+
+
+# --- ronda 6 ---
+## Los renglones con viñeta de un cuerpo («• uno\n• dos»), sin la viñeta; vacío si el cuerpo no
+## está escrito así.
+static func renglones_de(resto: String) -> Array[String]:
+	var out: Array[String] = []
+	if not resto.begins_with("• "):
+		return out
+	for line in resto.split("\n", false):
+		out.append(line.trim_prefix("• "))
+	return out
+
+
+func alto_renglones(renglones: Array[String]) -> float:
+	var h := 6.0
+	for line in renglones:
+		h += Hud.font.get_multiline_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, ANCHO - 70, RENGLON_PX).y + RENGLON_SEP
+	return h
+# --- fin ronda 6 ---

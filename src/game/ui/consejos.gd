@@ -480,12 +480,16 @@ func _fight() -> void:
 		_say("pelea", txt, "ataque", int(c.get("repetir_s", 60)), at)
 
 
-## «Perdiste 20 soldados y mataste 6. Los frenaron: Hondero (12), Pukara (torre) (5)…» y un
-## consejo por lo que más mató: asedio contra los edificios que disparan, la tropa que gana a la
-## que más mató (reglas.bonos) y, si muchos le pegaban a edificios mientras caían, que con A y clic
-## atacan lo primero que ven.
+## --- ronda 6 --- Título y tres renglones cortos (jugador nuevo, ronda 6: «seis renglones de letra
+## chica en un aviso que se va solo»):
+##   «Perdiste 20 soldados y mataste 6»
+##   • Te frenaron: Hondero (12) y Pukara (torre) (5)
+##   • Llevá: Ariete (Taller) y Lancero (Cuartel)
+##   • cómo mandarlos: con A y clic van primero a los soldados (la elección de blancos, proceso/24,
+##     5d); si no se distrajeron, contra lo que tira flechas, el asedio con clic derecho.
+## El veterano (ronda 6): decir que A y clic «ataca lo primero que ve» enseñaba a no usar la orden
+## que ahora anda bien. Cada renglón lleva «• » al principio: avisos.gd los dibuja más grandes.
 func fight_text(deaths: Array, kills: int) -> String:
-	var sim: Sim = hud.sim
 	var c: Dictionary = cfg.get("pelea", {})
 	var by := {}
 	var busy := 0
@@ -514,24 +518,29 @@ func fight_text(deaths: Array, kills: int) -> String:
 	var n := deaths.size()
 	var head := "Perdiste %d soldados lejos de casa" % n
 	head += " y mataste %d" % kills if kills > 0 else " sin matar a nadie"
-	# Primer renglón corto (es el título del aviso); lo que mató, en el cuerpo.
-	var txt := "%s\nLos frenaron: %s." % [head, Ficha.y_lista(parts)]
-	var tips: Array[String] = []
-	if shooters * 100 >= n * int(c.get("edificios_pct", 25)):
+	var lines: Array[String] = ["Te frenaron: %s" % Ficha.y_lista(parts)]
+	# Qué llevar: el asedio contra lo que tira flechas y la tropa que le gana a la que más mató.
+	var bring: Array[String] = []
+	var vs_shooters := shooters * 100 >= n * int(c.get("edificios_pct", 25))
+	if vs_shooters:
 		var siege := _siege_name()
-		var t := "Contra los edificios que tiran flechas%s, llevá %s con clic derecho sobre el edificio" % [" (con aldeanos adentro tiran más)" if garrisoned else "", siege if siege != "" else "asedio"]
-		tips.append(t)
+		bring.append(siege if siege != "" else "asedio")
 	if top_unit != "":
 		var counter := _counter_name(top_owner, top_unit)
 		if counter != "":
-			tips.append("contra %s, %s" % [_plural(_name_of(top_owner, top_unit, false)), counter])
+			bring.append(counter)
+	if not bring.is_empty():
+		lines.append("Llevá: %s" % Ficha.y_lista(bring))
+	# Cómo mandarlos.
+	var am := "%s y clic" % Teclas.texto("grilla_4")
 	if busy * 100 >= n * int(c.get("ocupados_pct", 30)):
-		tips.append("%d le pegaban a edificios mientras los mataban: con A y clic atacan lo primero que ven; mandalos con clic derecho contra los soldados" % busy)
-	if not tips.is_empty():
-		for i in tips.size():
-			tips[i] = tips[i].left(1).to_upper() + tips[i].substr(1)
-		txt += " " + ". ".join(tips) + "."
-	return txt
+		lines.append("%d le pegaban a edificios: con %s van primero a los soldados" % [busy, am])
+	elif vs_shooters:
+		lines.append("Contra lo que tira flechas%s, el asedio con clic derecho sobre el edificio" % (" (con gente adentro tira más)" if garrisoned else ""))
+	else:
+		lines.append("Con %s van primero a los soldados y después a los aldeanos" % am)
+	return head + "\n• " + "\n• ".join(lines)
+# --- fin ronda 6 ---
 
 
 ## Nombre de un tipo enemigo, con el común entre paréntesis si es distinto («Pukara (torre)»).
@@ -555,7 +564,7 @@ static func _plural(n: String) -> String:
 
 
 ## La tropa propia que le gana a `type` (reglas.bonos: la función con bono contra la suya),
-## con dónde se entrena: «llevá Guerrero de macana (Aty de guerra), que les gana». Vacío si no hay.
+## con dónde se entrena: «Guerrero de macana (Aty de guerra)». Vacío si no hay.
 func _counter_name(owner: int, type: String) -> String:
 	var sim: Sim = hud.sim
 	var fn := String(sim.dp(owner).unidades.get(type, {}).get("funcion", ""))
@@ -574,7 +583,7 @@ func _counter_name(owner: int, type: String) -> String:
 		for u: String in dd.edificios[b].get("produce", []):
 			var ud: Dictionary = dd.unidades.get(u, {})
 			if ud.get("funcion", "") == want and int(ud.get("edad_min", 1)) <= age and int(dd.edificios[b].get("edad_min", 1)) <= age:
-				return "llevá %s (%s), que les gana" % [ud.get("nombre", u), dd.edificios[b].get("nombre", b)]
+				return "%s (%s)" % [ud.get("nombre", u), dd.edificios[b].get("nombre", b)] # --- ronda 6 --- va en «Llevá:»
 	return ""
 
 

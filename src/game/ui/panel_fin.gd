@@ -20,6 +20,12 @@ var _tabs: Array = [] # [Rect2, índice]
 var _box := Rect2()
 var _why := "" # --- aprender --- por qué terminó (una línea)
 var _tips: Array[String] = [] # consejos concretos si perdiste
+# --- ronda 6 --- la primera victoria contra la IA (jugador nuevo, ronda 6)
+var festejo := "" # «¡Ganaste tu primera partida contra la IA!» (vacío si no toca)
+var siguiente := "" # dificultad a la que invita el botón «Jugar contra …» (vacío: ninguna)
+var _dif_ganada := ""
+var _anotada := false # la victoria ya se anotó (open puede llamarse más de una vez)
+# --- fin ronda 6 ---
 
 
 func _ready() -> void:
@@ -31,6 +37,7 @@ func open(w: int) -> void:
 	winner = w
 	datos.close()
 	_explain() # --- aprender ---
+	_victoria_ia() # --- ronda 6 ---
 	visible = true
 	for c in get_children():
 		c.queue_free()
@@ -40,11 +47,20 @@ func open(w: int) -> void:
 		["Menú principal", func() -> void: hud.main.to_menu()],
 		["Salir", func() -> void: get_tree().quit()],
 	]
+	# --- ronda 6 --- la misma partida contra la dificultad siguiente, primero y resaltado
+	if siguiente != "":
+		var dif := siguiente
+		buttons.push_front(["Jugar contra %s" % _dif_nombre(dif), func() -> void: hud.main.jugar_revancha(dif), "Revancha"])
+	# --- fin ronda 6 ---
 	var hb := HBoxContainer.new()
 	hb.add_theme_constant_override("separation", 12)
 	for b in buttons:
 		var btn := Button.new()
 		btn.text = b[0]
+		if b.size() > 2: # --- ronda 6 ---
+			btn.name = b[2]
+			btn.add_theme_color_override("font_color", Palette.UI_ACCENT)
+			btn.add_theme_font_override("font", Hud.font_b)
 		btn.custom_minimum_size = Vector2(220, 0)
 		btn.pressed.connect(b[1])
 		hb.add_child(btn)
@@ -91,6 +107,10 @@ func _draw() -> void:
 	var won := winner == hud.local
 	var head := "Victoria" if won else ("Empate" if winner < 0 and sim.end_reason == "tiempo" else ("Fin de la partida" if winner < 0 else "Derrota"))
 	C.text(self, o + Vector2(32, 56), head, 40, Palette.UI_ACCENT if won else (Palette.UI_NEUTRAL if winner < 0 else Palette.UI_BAD), true)
+	if festejo != "": # --- ronda 6 --- al lado de «Victoria», con un destello que late
+		var hw := Hud.font_b.get_string_size(head, HORIZONTAL_ALIGNMENT_LEFT, -1, 40).x
+		var glow := 0.75 + 0.25 * sin(Time.get_ticks_msec() / 260.0)
+		C.text(self, o + Vector2(32 + hw + 28, 52), festejo, 28, Palette.UI_ACCENT.lightened(0.25 * glow), true)
 	var secs: int = datos.now_s()
 	var sub := "Duración %s · mapa %s" % [C.fmt_time(secs), sim.terrain]
 	if winner >= 0 and winner != hud.local:
@@ -103,6 +123,9 @@ func _draw() -> void:
 		dy += 28
 	for tip in _tips:
 		C.text(self, o + Vector2(36, 116 + dy), "Consejo: " + tip, 15, Palette.UI_ACCENT, false, _box.size.x - 72)
+		dy += 24
+	if siguiente != "": # --- ronda 6 --- invitación a la dificultad siguiente
+		C.text(self, o + Vector2(36, 116 + dy), _invitacion(), 15, Palette.UI_ACCENT, false, _box.size.x - 72)
 		dy += 24
 	dy = dy + 8.0 if dy > 0.0 else 0.0
 	# --- fin aprender ---
@@ -465,6 +488,65 @@ func _explain() -> void:
 	if _tips.is_empty():
 		_tips.append("mirá el gráfico de Aldeanos: casi siempre la diferencia empieza ahí.")
 	_tips = _tips.slice(0, 2)
+
+
+# ---------------------------------------------------------------- Primera victoria (--- ronda 6 ---)
+
+## Si ganaste una escaramuza contra la IA, la anota en user://opciones.cfg (Opciones.victorias),
+## festeja la primera (contra la IA o en esa dificultad) e invita a la dificultad siguiente con
+## la misma civilización y el mismo mapa (jugador nuevo, ronda 6: «un "¡Ganaste tu primera
+## partida!" con un consejo para la próxima me daría ganas de seguir»).
+func _victoria_ia() -> void:
+	var sim := hud.sim
+	var main = hud.main
+	if _anotada:
+		return # ya anotada: el festejo y la invitación quedan como estaban
+	festejo = ""
+	siguiente = ""
+	if not sim.game_over or sim.winner < 0 or sim.enemies(hud.local, sim.winner) or hud._local_is_ai():
+		return
+	if main == null or not main.has_method("partida_normal") or not main.partida_normal():
+		return
+	var keys: Array = (sim.data.reglas["dificultades"] as Dictionary).keys()
+	var low := -1 # la dificultad más baja entre los rivales: lo que de verdad se le ganó
+	for p in sim.players:
+		if p["id"] == hud.local or not sim.enemies(hud.local, p["id"]):
+			continue
+		var i := keys.find(main.dificultad_ia(p["id"]))
+		if i < 0:
+			return # un rival sin IA: no es una victoria contra la IA
+		low = i if low < 0 else mini(low, i)
+	if low < 0:
+		return
+	_anotada = true
+	_dif_ganada = keys[low]
+	var r: Array = Opciones.registrar_victoria(_dif_ganada)
+	if r[0]:
+		festejo = "¡Ganaste tu primera partida contra la IA!"
+	elif r[1]:
+		festejo = "¡Primera victoria contra la %s!" % _dif_nombre(_dif_ganada)
+	siguiente = keys[low + 1] if low + 1 < keys.size() else ""
+
+
+func _dif_nombre(dif: String) -> String:
+	return str(hud.sim.data.reglas["dificultades"].get(dif, {}).get("nombre", dif))
+
+
+## «Próximo paso: la Normal junta hasta 42 aldeanos (la Fácil, 22), investiga y no se rinde…».
+## Sale de reglas.json → dificultades: no hay números escritos acá.
+func _invitacion() -> String:
+	var difs: Dictionary = hud.sim.data.reglas["dificultades"]
+	var a: Dictionary = difs.get(_dif_ganada, {})
+	var b: Dictionary = difs.get(siguiente, {})
+	var bits: Array[String] = []
+	if int(b.get("max_aldeanos", 0)) > int(a.get("max_aldeanos", 0)):
+		bits.append("junta hasta %d aldeanos (la %s, %d)" % [int(b["max_aldeanos"]), _dif_nombre(_dif_ganada), int(a["max_aldeanos"])])
+	if b.get("investiga", false) and not a.get("investiga", false):
+		bits.append("investiga")
+	if a.has("rendicion") and not b.has("rendicion"):
+		bits.append("no se rinde")
+	var que := "" if bits.is_empty() else ", que " + Ficha.y_lista(bits)
+	return "Próximo paso: probá contra la %s%s. El mismo plan sirve (hito, taller y asedio): el botón de abajo arma la misma partida." % [_dif_nombre(siguiente), que]
 
 
 # ---------------------------------------------------------------- Equipos (--- equipos ronda 3 ---)

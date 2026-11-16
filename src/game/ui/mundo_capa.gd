@@ -34,6 +34,7 @@ var _sites_tick := -1
 var _font: Font
 var _tip: Control
 var _tip_lines: Array = []
+var funciones_dibujadas := 0 # --- ronda 6 --- íconos de función dibujados con Alt en el último cuadro
 
 
 func setup(s: Sim, c: Controller, camera: RtsCamera, minimap: Control) -> void:
@@ -218,7 +219,11 @@ func _draw() -> void:
 	if ctrl.mode == "place" and ctrl.place_type != "":
 		_draw_placement()
 	_draw_orders()
-	_draw_icons()
+	funciones_dibujadas = 0
+	if info: # --- ronda 6 --- con Alt, la función de cada tropa reemplaza al «Zz» y al recurso
+		funciones_dibujadas = _draw_unit_icons()
+	else:
+		_draw_icons()
 	if info:
 		_draw_building_icons()
 	_draw_floats()
@@ -551,6 +556,49 @@ func _draw_building_icons() -> void:
 		draw_circle(sp, s * 0.68, Color(0, 0, 0, 0.72))
 		draw_arc(sp, s * 0.68, 0.0, TAU, 24, col, 1.5)
 		Glyphs.draw(self, Glyphs.resolve(e.def, e.type), Rect2(sp - Vector2(s, s) * 0.42, Vector2(s, s) * 0.84), col)
+
+
+# --- ronda 6 ---
+## Glifo de la función de una unidad: choque, distancia, línea, asedio, explorador o aldeano.
+const ICONO_FUNCION := {"civil": "aldeano", "choque": "guerrero", "distancia": "hondero", "linea": "lancero", "explorador": "explorador", "asedio": "ariete"}
+
+
+static func icono_funcion(e: SimEntity) -> String:
+	return str(ICONO_FUNCION.get(e.fn, "aldeano"))
+
+
+## Con Alt, la función de cada unidad a la vista flota sobre su cabeza, como el ícono de los
+## edificios sobre el techo (veterano, ronda 6: «en la batalla siguen siendo dos manchas; no se ve
+## quién es lancero y quién guerrero»). Las propias en dorado, las ajenas en su color.
+## Tamaño y altura en data/interfaz.json → mundo.funcion_alt. Devuelve cuántas dibujó (autotest).
+func _draw_unit_icons() -> int:
+	var fa: Dictionary = Overlay.mundo().get("funcion_alt", {})
+	var zoom_k := clampf(40.0 / cam.zoom, 0.6, float(fa.get("tope_zoom", 1.4)))
+	var vr := get_viewport_rect().grow(20)
+	var s := float(fa.get("px", 14)) * zoom_k
+	var alto := WorldView.FIGURE_H * view._unit_k + float(fa.get("sobre_cabeza", 0.45))
+	var n := 0
+	for e in sim.actives:
+		if not e.alive or not e.is_unit() or e.inside >= 0 or e.owner < 0:
+			continue
+		if e.owner != local and view.fog_state(e) < 2:
+			continue
+		var v: Dictionary = view.visuals.get(e.id, {})
+		if v.is_empty() or not (v["node"] as Node3D).is_visible_in_tree():
+			continue
+		var wp: Vector3 = (v["node"] as Node3D).position + Vector3(0, alto, 0)
+		if cam.cam.is_position_behind(wp):
+			continue
+		var sp := cam.cam.unproject_position(wp)
+		if not vr.has_point(sp):
+			continue
+		var col: Color = Palette.UI_ACCENT if e.owner == local else Palette.team(e.owner)
+		draw_circle(sp, s * 0.62, Color(0, 0, 0, 0.7))
+		draw_arc(sp, s * 0.62, 0.0, TAU, 16, col, 1.2)
+		Glyphs.draw(self, icono_funcion(e), Rect2(sp - Vector2(s, s) * 0.42, Vector2(s, s) * 0.84), col)
+		n += 1
+	return n
+# --- fin ronda 6 ---
 
 
 func _hammer(c: Vector2, s: float, col: Color) -> void:

@@ -42,6 +42,11 @@ static var dificultad := "facil"
 ## ubicacion_equipos); vacío = las de reglas.json → opciones_partida.menu.
 static var partida := {}
 # --- fin aprender ---
+# --- ronda 6 ---
+## Partidas ganadas contra la IA por dificultad ({"facil": 2}): la pantalla de fin festeja la
+## primera y ofrece la dificultad siguiente (jugador nuevo, ronda 6). «Restablecer» no lo borra.
+static var victorias := {}
+# --- fin ronda 6 ---
 ## Si es verdadero, guardar() no escribe (capturas y pruebas).
 static var solo_lectura := false
 
@@ -69,6 +74,9 @@ static func cargar(ruta: String = RUTA) -> void:
 	var po: Variant = cf.get_value("partida", "opciones", partida)
 	if po is Dictionary:
 		partida = po
+	var vi: Variant = cf.get_value("logros", "victorias", victorias) # --- ronda 6 ---
+	if vi is Dictionary:
+		victorias = vi
 	EstadoCasilla.nombres = nombres_grilla
 	Teclas.cargar(cf) # --- veterano ronda 4 ---
 
@@ -92,6 +100,7 @@ static func guardar(ruta: String = RUTA) -> void:
 	cf.set_value("ayuda", "nombres_grilla", nombres_grilla)
 	cf.set_value("partida", "dificultad", dificultad)
 	cf.set_value("partida", "opciones", partida)
+	cf.set_value("logros", "victorias", victorias) # --- ronda 6 ---
 	Teclas.guardar(cf) # --- veterano ronda 4 ---
 	cf.save(ruta)
 
@@ -717,3 +726,16 @@ class Muestra:
 		draw_rect(Rect2(bx, 34, bw, 8), Color(0, 0, 0, 0.5))
 		draw_rect(Rect2(bx, 34, bw * 0.2, 8), Palette.UI_BAD)
 		draw_string(Hud.font, Vector2(bx, 66), "Vida", HORIZONTAL_ALIGNMENT_LEFT, bw, 15, Palette.UI_DIM)
+
+
+# --- ronda 6 ---
+## Anota una victoria contra la IA en `dif`. Devuelve [primera contra la IA, primera en `dif`].
+static func registrar_victoria(dif: String, ruta: String = RUTA) -> Array:
+	var primera := true
+	for k in victorias:
+		primera = primera and int(victorias[k]) <= 0
+	var aqui := int(victorias.get(dif, 0)) <= 0
+	victorias[dif] = int(victorias.get(dif, 0)) + 1
+	guardar(ruta)
+	return [primera, aqui]
+# --- fin ronda 6 ---

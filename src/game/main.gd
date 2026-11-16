@@ -785,6 +785,46 @@ func restart(seed_value: int = -1) -> void:
 	_new_game()
 
 
+# --- ronda 6 ---
+## Dificultad de la IA del jugador `pid` en esta partida ("" si no la maneja una IA).
+func dificultad_ia(pid: int) -> String:
+	return str((_replay_meta.get("ia_cfg", {}) as Dictionary).get(str(pid), {}).get("dificultad", ""))
+
+
+## Una escaramuza de verdad contra la IA: ni campaña, ni demo, ni repetición, ni IA contra IA.
+func partida_normal() -> bool:
+	return not _menu_mode and sim.scenario == null and not (_args.has("demo") or _args.has("replay") or _args.has("aivai") or _args.has("campana"))
+
+
+## Argumentos para jugar otra vez la misma partida (civilizaciones, semilla, terreno y opciones)
+## con las IA rivales en `dif`: el botón «Jugar contra Normal» de la pantalla de fin.
+func args_revancha(dif: String) -> Dictionary:
+	var a: Dictionary = _args.duplicate(true)
+	for k in ["autotest", "shot", "shot-at", "panel", "select", "cam", "abrir", "ayuda", "grilla", "edad"]:
+		a.erase(k)
+	a["seed"] = str(_seed)
+	a["terreno"] = sim.terrain
+	a["dificultad"] = dif
+	var civs: Array = []
+	for p in sim.players:
+		civs.append(str(p["civ"]))
+	a["civ"] = civs[local]
+	if a.has("lugares"):
+		var sl: Array = a["lugares"]
+		for i in sl.size():
+			sl[i]["civ"] = civs[i]
+			if sl[i].get("ia", false) and sim.enemies(local, i):
+				sl[i]["dificultad"] = dif
+	else:
+		a["civs"] = ",".join(civs)
+	return a
+
+
+func jugar_revancha(dif: String) -> void:
+	_start(args_revancha(dif))
+# --- fin ronda 6 ---
+
+
 func set_paused(p: bool) -> void:
 	paused = p
 
@@ -915,6 +955,9 @@ func _maybe_shot() -> void:
 				var foe := 1 if local == 0 else 0
 				sim.win(foe, "conquista")
 				hud.paneles.show_end(foe)
+			elif w == "fin-victoria": # --- ronda 6 --- ganada por rendición: el festejo y «Jugar contra …»
+				sim.win(local, "rendicion")
+				hud.paneles.show_end(local)
 			elif w == "fin-tiempo": # --- opciones de partida --- (termina ya por tiempo límite y puntos)
 				if int(sim._opts.get("tiempo_limite_min", 0)) == 0:
 					sim._opts["tiempo_limite_min"] = 30
@@ -1200,7 +1243,16 @@ func _autotest_pelea(check: Callable, cs, said: Callable) -> void:
 	print("aviso de la pelea: ", txt.replace("\n", " | "))
 	check.call("aviso de la pelea perdida: «Perdiste 11 soldados…»", said.call("Perdiste 11 soldados"))
 	check.call("el aviso de la pelea nombra a los honderos y al centro con guarnición", txt.contains("(6)") and txt.contains("con guarnición (5)"))
-	check.call("el aviso de la pelea dice qué llevar: asedio, la tropa que les gana y que A y clic ataca lo primero", txt.contains("clic derecho sobre el edificio") and txt.contains("ontra los ") and txt.contains("A y clic"))
+	# --- ronda 6 --- título y tres renglones cortos; A y clic va primero a los soldados (5d)
+	var rr: Array[String] = hud.avisos.renglones_de(txt.substr(txt.find("\n") + 1))
+	check.call("el resumen de la pelea va en un título y tres renglones (%d)" % rr.size(), rr.size() == 3 and rr[0].begins_with("Te frenaron") and rr[1].begins_with("Llevá:"))
+	check.call("el aviso de la pelea dice qué llevar: asedio y la tropa que les gana", rr.size() == 3 and rr[1].contains(hud.consejos._siege_name()) and rr[1].contains(" y "))
+	var am := "%s y clic" % Teclas.texto("grilla_4")
+	check.call("el aviso enseña que %s va primero a los soldados (no «lo primero que ven»)" % am, txt.contains(am + " van primero a los soldados") and not txt.contains("primero que ve"))
+	var largo := 0
+	for line in rr:
+		largo = maxi(largo, line.length())
+	check.call("renglones cortos (el más largo, %d letras)" % largo, largo <= 90)
 	await _frames(2)
 	get_viewport().get_texture().get_image().save_png("screenshots/autotest_pelea.png")
 	sim._kill(shooter)
@@ -1209,6 +1261,9 @@ func _autotest_pelea(check: Callable, cs, said: Callable) -> void:
 	_key_tap(Teclas.tecla("atajos"))
 	await _frames(3)
 	check.call("%s abre la hoja de atajos" % Teclas.texto("atajos"), hud.atajos_hoja.is_open())
+	# --- ronda 6 --- la hoja enseña la elección de blancos y Alt
+	var hoja := str(hud.atajos_hoja.secciones())
+	check.call("la hoja dice que el ataque en movimiento va primero a los soldados y que Alt muestra qué es cada cosa", hoja.contains("primero a los soldados") and not hoja.contains("primero que ven") and hoja.contains("Mantener Alt") and hoja.contains("cada tropa"))
 	get_viewport().get_texture().get_image().save_png("screenshots/autotest_atajos.png")
 	_key_tap(KEY_ESCAPE)
 	await _frames(2)
@@ -1685,6 +1740,121 @@ func _vill_ids() -> Array[int]:
 # --- fin veterano ---
 
 
+# --- ronda 6 ---
+## Espera a que `cond` se cumpla, hasta `max_frames` cuadros: con la máquina cargada, contar
+## cuadros fijos no alcanza (el chequeo de la cuenta de sitios fallaba de a ratos).
+func _esperar(cond: Callable, max_frames: int = 120) -> bool:
+	for i in max_frames:
+		if cond.call():
+			return true
+		await get_tree().process_frame
+	return cond.call()
+
+
+## Interfaz de la sexta ronda (proceso/24-tras-la-segunda-ronda/6a-interfaz-ronda-6.md):
+##   - Z X C V con aldeanos y tropas elegidos: manda la grilla del tipo más numeroso (empate: la
+##     militar) y Tab cambia; lo dibujado es lo que hacen la tecla y el clic (Controller.cmd_at);
+##   - Alt muestra la función de cada unidad sobre su cabeza;
+##   - la casilla del hito dice «Hito» y «Edad II».
+func _autotest_ronda6(check: Callable) -> void:
+	speed = 1.0
+	Teclas.de_fabrica()
+	var base := sim.bases[local]
+	cam.look_at_point(Vector3(base.x + 2, 0, base.y + 2))
+	var vs := _vill_ids()
+	var tropa: Array[SimEntity] = []
+	var tipos := ["guerrero", "hondero", "lancero"]
+	for i in vs.size() + 2:
+		tropa.append(sim.spawn_unit(tipos[i % tipos.size()], local, (base.x + 4) * 1000 + (i % 6) * 700, (base.y + 6) * 1000 + (i / 6) * 700))
+	await _frames(3)
+	var t_ids: Array[int] = []
+	for e in tropa:
+		t_ids.append(e.id)
+	var mixta: Array[int] = vs.duplicate()
+	mixta.append_array(t_ids)
+	ctrl.select_ids(mixta)
+	await _frames(4)
+	var z := Controller.cmd_at(ctrl.commands(), 8)
+	check.call("con %d aldeanos y %d tropas, manda la grilla militar: Z es una formación (%s)" % [vs.size(), tropa.size(), z.get("id", "?")], not ctrl.grilla_aldeano() and z.get("kind", "") == "form")
+	check.call("la grilla dibuja en Z lo mismo que ejecuta la tecla", (hud._card.dibujadas.get(8, {}) as Dictionary).get("id", "") == z.get("id", "-"))
+	ctrl.formacion = "columna" if z.get("form", "") != "columna" else "linea"
+	_key_tap(Teclas.tecla("grilla_8"))
+	await _frames(3)
+	check.call("Z con selección mixta pone la formación dibujada (%s)" % ctrl.formacion, ctrl.formacion == z.get("form", "?") and ctrl.mode == "")
+	_key_tap(Teclas.tecla("produccion"))
+	await _frames(4)
+	var z2 := Controller.cmd_at(ctrl.commands(), 8)
+	check.call("%s cambia a la grilla del aldeano: Z es el hito (%s)" % [Teclas.texto("produccion"), z2.get("id", "?")], ctrl.grilla_aldeano() and z2.get("kind", "") == "build" and sim.dp(local).is_hito(str(z2.get("id", ""))))
+	check.call("…y la grilla dibuja ese hito en Z", (hud._card.dibujadas.get(8, {}) as Dictionary).get("id", "") == z2.get("id", "-"))
+	check.call("la casilla del hito lleva «Hito» y la edad en dos renglones", z2.get("common_dos", []) == ["Hito", "Edad %s" % Sim._roman(int(sim.players[local]["age"]) + 1)])
+	get_viewport().get_texture().get_image().save_png("screenshots/autotest_mixta_tab.png")
+	var form_antes := ctrl.formacion
+	var res_antes: Dictionary = (sim.players[local]["res"] as Dictionary).duplicate()
+	for k in z2.get("cost", {}):
+		sim.players[local]["res"][k] = int(sim.players[local]["res"].get(k, 0)) + int(z2["cost"][k])
+	_key_tap(Teclas.tecla("grilla_8"))
+	await _frames(3)
+	check.call("Z en la grilla del aldeano coloca el hito y no toca la formación", ctrl.formacion == form_antes and (ctrl.mode == "place" and ctrl.place_type == z2.get("id", "") or z2.get("locked", "") != ""))
+	ctrl.cancel_mode()
+	sim.players[local]["res"] = res_antes
+	_key_tap(Teclas.tecla("produccion"))
+	await _frames(3)
+	check.call("%s otra vez vuelve a la grilla militar" % Teclas.texto("produccion"), not ctrl.grilla_aldeano())
+	# Mayoría de aldeanos: manda la del aldeano; una selección nueva vuelve al principal.
+	var pocos: Array[int] = vs.duplicate()
+	pocos.append(t_ids[0])
+	ctrl.select_ids(pocos)
+	await _frames(3)
+	check.call("con más aldeanos que tropas, manda la grilla del aldeano", vs.size() < 2 or ctrl.grilla_aldeano())
+	# Alt: la función de cada unidad sobre su cabeza (y el ícono de los edificios).
+	ctrl.select_ids(t_ids)
+	cam.look_at_point(Vector3(base.x + 5, 0, base.y + 6))
+	await _frames(3)
+	Input.parse_input_event(_alt(true))
+	var alt_ok: bool = await _esperar(func() -> bool: return hud._mundo.funciones_dibujadas >= tropa.size(), 30)
+	check.call("Alt muestra la función sobre cada unidad (%d íconos, %d tropas)" % [hud._mundo.funciones_dibujadas, tropa.size()], alt_ok)
+	await _frames(2)
+	get_viewport().get_texture().get_image().save_png("screenshots/autotest_alt_unidades.png")
+	Input.parse_input_event(_alt(false))
+	await _frames(3)
+	check.call("sin Alt, no hay íconos de función", hud._mundo.funciones_dibujadas == 0)
+	for e in tropa:
+		sim.remove_quietly(e)
+	ctrl.select_ids(_vill_ids())
+	cam.look_at_point(Vector3(base.x + 2, 0, base.y + 2))
+	await _frames(3)
+
+
+## La primera victoria contra la IA (jugador nuevo, ronda 6): festejo, «Jugar contra Normal» con
+## la misma civ y el mismo mapa, y la victoria anotada en las opciones (en memoria: el autotest no
+## escribe user://opciones.cfg). Termina la partida: va al final.
+func _autotest_primera_victoria(check: Callable, fin) -> void:
+	var meta_antes: Dictionary = _replay_meta.duplicate(true)
+	for k in _replay_meta.get("ia_cfg", {}):
+		_replay_meta["ia_cfg"][k]["dificultad"] = "facil"
+	var vic_antes: Dictionary = Opciones.victorias.duplicate()
+	Opciones.victorias = {}
+	sim.win(local, "rendicion")
+	hud.paneles.show_end(local)
+	await _frames(4)
+	check.call("la primera victoria contra la IA se festeja (%s)" % fin.festejo, fin.visible and fin.festejo.begins_with("¡Ganaste tu primera partida"))
+	check.call("la victoria contra la Fácil queda anotada (%s)" % str(Opciones.victorias), int(Opciones.victorias.get("facil", 0)) == 1)
+	var btn := fin.find_child("Revancha", true, false) as Button
+	check.call("botón «Jugar contra Normal» (%s)" % (btn.text if btn != null else "no está"), btn != null and btn.text == "Jugar contra Normal")
+	var ra: Dictionary = args_revancha(fin.siguiente)
+	check.call("«Jugar contra Normal» arma la misma partida: civ, semilla y terreno", ra.get("dificultad", "") == "normal" and ra.get("civ", "") == sim.players[local]["civ"] and ra.get("seed", "") == str(_seed) and ra.get("terreno", "") == sim.terrain and not ra.has("autotest"))
+	await _frames(6)
+	get_viewport().get_texture().get_image().save_png("screenshots/autotest_primera_victoria.png")
+	fin._anotada = false
+	fin.open(local)
+	await _frames(2)
+	check.call("la segunda victoria contra la Fácil no repite el festejo y sigue invitando", fin.festejo == "" and fin.siguiente == "normal" and int(Opciones.victorias.get("facil", 0)) == 2)
+	fin.visible = false
+	Opciones.victorias = vic_antes
+	_replay_meta = meta_antes
+# --- fin ronda 6 ---
+
+
 func _alt(pressed: bool) -> InputEventKey:
 	var k := InputEventKey.new()
 	k.physical_keycode = KEY_ALT
@@ -2003,6 +2173,7 @@ func _autotest() -> void:
 	await _autotest_veterano(check) # --- veterano ---
 	await _autotest_veterano4(check) # --- veterano ronda 4 ---
 	await _autotest_veterano5(check) # --- veterano ronda 5 ---
+	await _autotest_ronda6(check) # --- ronda 6 ---
 	# --- aprender --- (avisos que enseñan, cuenta de sitios, nombres en la grilla, registro de la Guía y fin)
 	var cs = hud.consejos
 	Opciones.consejos = true
@@ -2027,13 +2198,20 @@ func _autotest() -> void:
 	check.call("con los avisos apagados en Opciones no avisa", not said.call("sin trabajo"))
 	Opciones.consejos = true
 	var rival := 1 if local == 0 else 0
-	sim.players[rival]["sitios_ms"] = 60000 # solo para la prueba: la simulación lo recalcula cada segundo
+	# --- ronda 6 --- la simulación recalcula sitios_ms cada segundo: con la máquina cargada, en
+	# los dos cuadros de antes podían entrar varios pasos y borrarlo (veterano, ronda 6). En pausa
+	# el estado de la prueba queda quieto, y se espera a la cuenta en vez de contar cuadros.
+	paused = true
+	sim.players[rival]["sitios_ms"] = 60000 # solo para la prueba
 	cs.check(1)
-	await _frames(2)
-	check.call("cuenta grande de sitios del rival (jugador %d)" % CuentaGrande.sites_holder(sim), CuentaGrande.sites_holder(sim) == rival and hud.cuenta.visible)
+	var cuenta_ok: bool = await _esperar(func() -> bool: return CuentaGrande.sites_holder(sim) == rival and hud.cuenta.visible)
+	check.call("cuenta grande de sitios del rival (jugador %d)" % CuentaGrande.sites_holder(sim), cuenta_ok)
 	check.call("aviso «perdés en M:SS»", said.call("perdés en"))
+	await _frames(2)
 	get_viewport().get_texture().get_image().save_png("screenshots/autotest_sitios.png")
 	sim.players[rival]["sitios_ms"] = 0
+	paused = false
+	# --- fin ronda 6 ---
 	# Empujón (4j): ejército grande en casa y recursos de sobra → «atacá o subí de edad».
 	var emp: Dictionary = cs.cfg.get("empujon", {})
 	var capital: SimEntity = null
@@ -2105,6 +2283,7 @@ func _autotest() -> void:
 	check.call("la pantalla de fin explica por qué terminó (%s)" % fin._why, fin.visible and fin._why != "")
 	check.call("la pantalla de fin tiene el gráfico de edad", fin.CHARTS.any(func(c: Array) -> bool: return c[0] == "age"))
 	fin.visible = false
+	await _autotest_primera_victoria(check, fin) # --- ronda 6 ---
 	# --- fin aprender ---
 	var img := get_viewport().get_texture().get_image()
 	img.save_png("screenshots/autotest.png")
