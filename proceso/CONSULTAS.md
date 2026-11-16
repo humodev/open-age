@@ -504,6 +504,8 @@ a) Así *(por defecto)* · b) Otros números
 Krung, la ciudad isla con el fuerte Phom Phet (no es sagrada), o el Wat Phra Si Sanphet (con consulta).
 a) Krung *(por defecto)* · b) El wat, si la consulta lo acepta
 
+*Revisión histórica (etapa 26): el historiador de Asia recomienda cerrarla en a). Hacer del Wat Phra Si Sanphet una maravilla repite el saqueo de 1767.*
+
 **Respuesta:**
 
 ### C-80 · (juego tardío) Unidades nuevas sin modelo
@@ -516,16 +518,107 @@ a) Esperan *(por defecto)* · b) Maqueta con silueta propia
 El saber destacado inca: el 20 % de los caídos cerca del sanador o de la kallanka vuelve con media vida, en lugar de un sanador más fuerte. Evidencia arqueológica fuerte (Verano, 2016).
 a) Así *(por defecto)* · b) Solo un sanador más fuerte
 
+*Revisión histórica (etapa 26): la cifra queda corregida (en la época inca sobrevivía el 75–83 %; en la Guerra Civil de Estados Unidos moría el 46–56 %), como un saber de dos mil años que el Inka heredó. La mecánica pasa a "el 20 % de los que caen por golpe no muere y vuelve herido", para que no se lea como resurrección.*
+
 **Respuesta:**
 
 ### C-82 · (saberes) Etiopía y el *Bahrä Hasab*
 Un saber eclesiástico (el cómputo del calendario) usado en una mecánica económica.
 a) Consultar a la Iglesia Tewahedo y, si no, "Cartógrafos de la corte" *(por defecto)* · b) Sacarlo ya
 
+*Revisión histórica (etapa 26): el Bahrä Hasab es el cómputo de la Pascua, y ninguna fuente dice que ordenara las mudanzas de la corte. La opción nueva por defecto es el orden del kätäma (el campamento real armado siempre con el mismo plano), que está documentado.*
+
 **Respuesta:**
 
 ### C-83 · (saberes) Saberes con evidencia "debatida"
 El kilombo, el shotel, los armeros de Gondar y el yachaywasi tienen evidencia debatida.
 a) Entran con la marca "debatido" en la ficha *(por defecto)* · b) Solo saberes documentados y arqueológicos
+
+**Respuesta:**
+
+
+> **C-84 a C-97 vienen de la revisión histórica del diseño de saberes** (`proceso/26-juego-tardio/02` a `04`; el diseño revisado está en `docs/diseno/27-juego-tardio-y-saberes.md`, §0).
+
+### C-84 · (saberes, guaraníes) Élite de la vía monte
+Sepé y la Guerra Guaranítica eran de los pueblos de misión. La élite de la vía monte pasa a los *ka'aguygua* ("monteses") [verificar grafía].
+a) Sí *(por defecto)* · b) Otra
+
+**Respuesta:**
+
+### C-85 · (saberes, guaraníes) Maravilla
+*Tekoha guasu* es una categoría del siglo XX, hoy usada en litigios por tierras. Pasa a llamarse "Aldea grande del monte" hasta la consulta.
+a) Sí *(por defecto)* · b) Otra
+
+**Respuesta:**
+
+### C-86 · (saberes, mapuches) Ampive y poncho
+*Lawentuchefe* es un término de fines del siglo XX y la platería, de fines del XVIII. Pasan a *ampive* [verificar] y al poncho (*makuñ*).
+a) Los dos *(por defecto)* · b) Solo uno
+
+**Respuesta:**
+
+### C-87 · (saberes, incas) Pieza pesada de la IV
+Las armas capturadas en Vilcabamba, en lugar de repetir las galgas.
+a) Sí *(por defecto)* · b) Otra
+
+**Respuesta:**
+
+### C-88 · (saberes, incas) Huayrachina
+El horno de viento que fundió la plata de Potosí: documentado y arqueológico. Entra en la IV, y los *mitmaqkuna* quedan para retomar.
+a) Sí *(por defecto)* · b) No
+
+**Respuesta:**
+
+### C-89 · (saberes, Palmares) Escuela de la IV
+*Oficinas do Macaco*: herreros, alfareros y tejedores de palma.
+a) Sí *(por defecto)* · b) Otra
+
+**Respuesta:**
+
+### C-90 · (saberes, Etiopía) Guerrero de gaša
+El "shotel que pasa por encima del escudo" es folclore moderno. Pasa a ser el guerrero de *gaša* (escudo) con jabalinas, sin ese bono.
+a) Sí *(por defecto)* · b) Otra
+
+**Respuesta:**
+
+### C-91 · (saberes, Etiopía) Jinetes oromo aliados
+El *gadaa* es un sistema de grados de edad, no un cuerpo montado. La élite de la IV pasa a ser jinetes oromo aliados por un tratado que se puede romper.
+a) Sí *(por defecto)* · b) Otra
+
+**Respuesta:**
+
+### C-92 · (saberes, Palmares) Hierro de Angola Janga
+El hierro iba a armas y herramientas: la mejora da +1 de ataque en lugar de armadura.
+a) Sí *(por defecto)* · b) Otra
+
+**Respuesta:**
+
+### C-93 · (saberes, Palmares) Erveira y sanguar
+El sanador es la *erveira* (Sweet, 2003, nivel "debatido"; nunca *nganga*). La mejora de curadores pasa al *sanguar*, la técnica de esquivar proyectiles, aclarando que no es capoeira.
+a) Las dos *(por defecto)* · b) Solo una
+
+**Respuesta:**
+
+### C-94 · (saberes) Saberes nuevos de Etiopía y Palmares
+*Ṭef* y *gotära*, *kosso*, los mercaderes *jabarti*, los *ṣäḥafe tə'əzaz*; tejido de palma y cerámica de los mocambos.
+a) Como quedan en el diseño *(por defecto)* · b) Elegir
+
+**Respuesta:**
+
+### C-95 · (saberes, Ayutthaya) Sin astrología de corte
+La astrología de corte (los *hon*) se usaba como bono. Pasa a astilleros de juncos y al Phra Khlang con sus intérpretes.
+a) Sí *(por defecto)* · b) Otra
+
+**Respuesta:**
+
+### C-96 · (saberes, Ayutthaya) Saberes nuevos
+La cerámica de Si Satchanalai, los *khlong lat* y el *nuat*.
+a) Sí *(por defecto)* · b) Elegir
+
+**Respuesta:**
+
+### C-97 · (saberes, Palmares) La maravilla
+La Cerca do Outeiro da Barriga queda "sitiada" hasta consultar si se puede mostrar su caída.
+a) Así *(por defecto)* · b) Otra
 
 **Respuesta:**

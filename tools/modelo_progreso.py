@@ -108,15 +108,16 @@ GASTO_COMPLETO = GASTO_PASO1[:3] + [[k if k != "armas_3" else "armas_3_completo"
 # Saberes militares propios por edad (§3 del documento), solo los que el modelo sabe sumar
 # (ataque, armadura, vida). Las de curación, velocidad, trampas o economía no entran.
 PROPIAS = {
-    "tawantinsuyu": {3: [{"tipo": "ataque", "funciones": ["choque"], "n": 1}],            # Champi: bronce estañífero
+    "tawantinsuyu": {3: [{"tipo": "ataque", "funciones": ["choque"], "n": 1}],            # Champi: la porra de bronce [verificar]
                      4: []},                                                              # Warak'a: +1 casilla de alcance (no entra)
     "mapuches": {2: [{"tipo": "armadura", "funciones": ["choque"], "n": 1}],              # Coseletes de cuero
                  4: [{"tipo": "vida_pct_l", "lineas": ["montados"], "pct": 10}]},         # Kawellu (remonta propia)
     "guaranies": {4: [{"tipo": "ataque", "funciones": ["distancia"], "n": 1}]},           # U'y hatã (flecha dura)
     "etiopia": {3: [{"tipo": "armadura", "funciones": ["choque"], "n": 1}],               # Jinetes con cota de malla
-                4: [{"tipo": "ataque_pct", "lineas": ["polvora"], "pct": 10}]},           # Armeros de Gondar
-    "palmares": {4: [{"tipo": "armadura", "funciones": ["choque"], "n": 1}]},             # Hierro de Angola Janga
-    "ayutthaya": {2: [{"tipo": "vida_pct_l", "lineas": ["montados"], "pct": 10}],         # Kotchasat (saber de elefantes)
+                4: [{"tipo": "ataque_pct", "lineas": ["polvora"], "pct": 10}]},           # Pólvora de Massawa (con ruta abierta; antes "Armeros de Gondar")
+    "palmares": {4: [{"tipo": "ataque", "funciones": ["choque"], "n": 1}]},               # Hierro de Angola Janga: hojas y puntas
+                                                                                          # (revisión 26/03, P7: ataque, no armadura)
+    "ayutthaya": {2: [{"tipo": "vida_pct_l", "lineas": ["montados"], "pct": 10}],         # Khotchasat (saber de elefantes)
                   4: [{"tipo": "ataque_pct", "lineas": ["polvora"], "pct": 10}]},         # Fundición real de cañones y mosquetes
 }
 
