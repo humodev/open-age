@@ -31,6 +31,7 @@ var personality := "normal" # estilo: pacifica, normal, acosadora, agresiva (reg
 var level: Dictionary = {} # dificultad (reglas.json → dificultades)
 var centers: Array[SimEntity] = [] # edificios propios terminados que entrenan aldeanos (capital incluida)
 var last_expand := 0
+var last_hunt := 0
 var _holding: Dictionary = {} # lo que se junta para el centro siguiente (experta); vacío si nada
 var _ctype := "-" # edificio con el que se expande (calculado una vez: `_center_type`)
 
@@ -185,6 +186,11 @@ func _alarm(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], centr
 
 func _economy(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, saving: bool) -> void:
 	var ratio: Dictionary = (ratio_early if p["age"] < 2 else ratio_late).duplicate()
+	# El reparto propio de la dificultad es para alimentar centros: sin centros que entrenen
+	# aldeanos (Palmares los suma con la fama), el de siempre.
+	if level.has("proporcion_temprana") and _center_type() == "":
+		var eco: Dictionary = sim.data.reglas["ia_economia"]
+		ratio = (eco["proporcion_temprana"] if p["age"] < 2 else eco["proporcion_tardia"]).duplicate()
 	# Ajuste por banco: menos gente en lo que sobra, más en lo que falta para el hito.
 	var hito_cost: Dictionary = sim.dp(player).cost_of(_hito_type(p), p["age"]) if saving else {}
 	for k in Sim.RES_KINDS:
@@ -1098,6 +1104,8 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 		last_attack = sim.tick
 		_attack(army)
 		return
+	if attacks and _hunt(army):
+		return
 	# Los estilos que no atacan la base no entran en ella: quien quede adentro vuelve.
 	if not attacks and st.has("respeta_radio"):
 		# Las incursiones entran y salen: solo vuelve quien ya terminó (está ocioso).
@@ -1258,6 +1266,61 @@ func _attack(army: Array[SimEntity]) -> void:
 	var dy := ref.y - target.y
 	var l := maxi(1, Sim.isqrt(dx * dx + dy * dy))
 	sim.push_command({"t": "move", "player": player, "ids": ids, "x": target.x + dx * 3000 / l, "y": target.y + dy * 3000 / l, "amove": true})
+
+
+## Cacería (sin victoria por hitos, opciones de partida): cuando el rival elegido ya casi no
+## tiene ejército (`ia_caza.ejercito_rival_max`) o se le saca `ia_caza.ventaja_pct`, el ejército se reparte en grupos de
+## `ia_caza.grupo` y cada grupo va al siguiente edificio que cuenta para la victoria, del más
+## cercano al más lejano, cada `ia_caza.cada_ticks`. Antes la IA esperaba la oleada siguiente
+## (cada vez más grande) y volvía a reunirse: al mapuche le quedaban 41 edificios a los 45
+## minutos (proceso/24, paso 4b). Con hitos no cambia nada.
+func _hunt(army: Array[SimEntity]) -> bool:
+	if not sim._opts.get("hitos_sin_victoria", false):
+		return false
+	var cfg: Dictionary = sim.data.reglas["ia_caza"]
+	if sim.tick - last_hunt < int(cfg["cada_ticks"]):
+		return false
+	last_hunt = sim.tick
+	var ref := army[0]
+	var rival := _pick_rival(ref)
+	if rival < 0:
+		return false
+	var rival_army := 0
+	for e in sim.actives:
+		if e.alive and e.owner == rival and e.is_unit() and e.is_military():
+			rival_army += 1
+	# También cuando se le saca `ventaja_pct` de ventaja: si no, una guerra pareja de 40 minutos
+	# terminaba recién cuando el rival se quedaba sin nadie.
+	if rival_army > int(cfg["ejercito_rival_max"]) and army.size() * 100 < rival_army * int(cfg["ventaja_pct"]):
+		return false
+	var targets := []
+	for e in sim.actives:
+		if e.alive and e.owner == rival and e.is_building() and sim.counts_for_victory(e):
+			targets.append([sim.dist_to(ref, e), e.id, e])
+	if targets.is_empty():
+		return false
+	targets.sort_custom(func(a, b): return a[0] < b[0] or a[0] == b[0] and a[1] < b[1])
+	# Solo los que no van ya a un blanco (los de ATTACK_MOVE siguen a lo suyo).
+	var free: Array[SimEntity] = []
+	for u in army:
+		if (u.order == O.IDLE or u.order == O.MOVE) and not _at_flare(u):
+			free.append(u)
+	if free.is_empty():
+		return true
+	var size := maxi(1, int(cfg["grupo"]))
+	var i := 0
+	var k := 0
+	while i < free.size():
+		var ids := []
+		for j in range(i, mini(i + size, free.size())):
+			ids.append(free[j].id)
+		var t: SimEntity = targets[k % targets.size()][2]
+		sim.push_command({"t": "move", "player": player, "ids": ids, "x": t.x, "y": t.y, "amove": true})
+		i += size
+		k += 1
+	focus = rival
+	last_attack = sim.tick # que nadie vuelva al punto de reunión mientras caza
+	return true
 
 
 ## Animal propio más cercano a la capital que nadie esté carneando (el que ya tiene un
