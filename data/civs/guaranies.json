@@ -303,5 +303,5 @@
  "debilidad": "Campo abierto: unidades frágiles y sin torres de piedra.",
  "ia_edificios": [],
  "alias_campana": {"deposito": ["deposito", "almacen_madera", "almacen_mina"]},
- "animales": {"inicial": 0, "sueltos_cerca": 0, "venados_manadas": 4, "_doc": "Pueblo cazador: sin rebaño propio, el doble de manadas de venados."}
+ "animales": {"inicial": 0, "sueltos_cerca": 0, "venados_manadas": 4, "_doc": "Pueblo de roza (maíz, mandioca, porotos, zapallo) que completaba la dieta con caza y pesca: sin rebaño propio, el doble de manadas de venados."}
 }

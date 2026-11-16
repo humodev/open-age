@@ -6,7 +6,7 @@
       "pukara_mayor": {"forma": "pukara_anillos", "anillos": 3, "_nota": "Fortaleza de cerro con muros concéntricos en terrazas y vigía arriba, sin almenas (pukaras del Collasuyu y de la frontera chiriguana) [verificar]."},
       "aqllawasi": {"forma": "aqllawasi", "alto_cm": 115, "_nota": "Recinto cerrado de muro alto, una sola portada de doble jamba y galpones adentro; tejido de tocapu en el muro. Aqllawasi del Cusco [verificar]."},
       "kallanka_real": {"forma": "kallanka", "puertas": 5, "_nota": "Galpón largo a dos aguas con muchas portadas trapezoidales hacia la plaza y hastiales de piedra (kallankas de Huánuco Pampa) [verificar]."},
-      "qorikancha": {"forma": "qorikancha", "alto_cm": 130, "_nota": "El muro curvo de cantería fina, con banda de oro, el templo detrás con el disco del sol y el jardín de figuras de oro que describe Garcilaso [verificar]."},
+      "qorikancha": {"forma": "qorikancha", "alto_cm": 130, "_nota": "El muro curvo de cantería fina, con banda de oro, el templo detrás con el disco del sol y el jardín de figuras de oro que describe Garcilaso [verificar]. Lo reconstruyó Pachakutiq hacia 1438 (Betanzos): como hito de la edad IV es un anacronismo, en consulta (C-40). Es el único lugar inca con oro en el juego."},
       "vilcabamba": {"forma": "vilcabamba", "_nota": "Refugio en la ceja de selva: cerro con andenes, casas de techo empinado (una con teja, como en Espíritu Pampa) y monte alrededor [verificar]."}
     },
     "mapuches": {
@@ -27,7 +27,7 @@
     },
     "etiopia": {
       "iglesia": {"forma": "iglesia_redonda", "_nota": "Iglesia redonda (bete kristiyan) de tres anillos: zócalo, galería de postes bajo el alero, tambor y techo cónico empinado con la cruz y los huevos de avestruz; muro del atrio con portería y el bosque de la iglesia [verificar]."},
-      "monasterio": {"forma": "lalibela", "_nota": "Iglesia tallada en la roca, en cruz y dentro de un foso, como Bete Giyorgis de Lalibela (siglo XIII); celdas de monjes en la pared del foso [verificar]."},
+      "monasterio": {"forma": "lalibela", "_nota": "Iglesia tallada en la roca, en cruz y dentro de un foso, como Bete Giyorgis de Lalibela (siglo XIII); celdas de monjes en la pared del foso [verificar]. Pendiente: Lalibela es zagwe, anterior al juego, y un lugar de peregrinación vivo; la investigación pedía que las iglesias excavadas fueran sitios del mapa y no algo que se construye. Propuesta: que el monasterio se vea como Debre Damo (amba con cuerda de cuero) y Lalibela pase a sitio sagrado neutral (revisión 25, informe 02)."},
       "amba": {"forma": "amba", "_nota": "Amba: meseta de laderas a pique con muro en el borde, casas arriba y un solo camino de subida (Amba Geshen) [verificar]."},
       "remonta": {"forma": "remonta", "levantar_max_pct": 150, "_nota": "Corral de piedra con caballos y establo largo: los caballos que llegan como tributo [verificar]."},
       "gondar": {"forma": "gondar", "_nota": "Fasil Ghebbi: castillo de dos pisos con torres redondas en las esquinas, cúpulas y una torre cuadrada más alta (siglo XVII). En la edad IV el centro etíope también pasa a ser un castillo, más chico y sin la torre cuadrada (data/arte_edades.json, centro_forma) [verificar]."},
@@ -36,10 +36,10 @@
     "palmares": {
       "quilombo_central": {"forma": "macaco", "_nota": "Macaco, el mocambo del rey: casa grande de palma con alpendre, capilla y palmeras alrededor de la plaza (relatos de 1677) [verificar]."},
       "mocambo_guerra": {"forma": "mocambo_guerra", "_nota": "Mocambo de guerra en la sierra: chozas en el cerro, estacas inclinadas al frente y jirau de vigía [verificar]."},
-      "cerca_real": {"forma": "cerca_anillos", "levantar_max_pct": 150, "anillos": 3, "_nota": "Tres anillos de cerca con las entradas desfasadas y fojos (pozos con púas) entre anillos, como la cerca real del Macaco [verificar]."},
+      "cerca_real": {"forma": "cerca_anillos", "levantar_max_pct": 150, "anillos": 3, "_nota": "Tres anillos de cerca con las entradas desfasadas y fojos (pozos con púas) entre anillos, [verificar]. Las tres cercas son las que Jorge Velho describe en la Barriga (carta del 27-XI-1692); para el Macaco de 1677 las fuentes hablan de una cerca de pau a pique con estrepes (Lara, O território dos Palmares, 2021)."},
       "ferraria": {"forma": "ferraria", "_nota": "Herrería: galpón de palma con fragua encendida, fuelles, yunque y carbón (las forjas de Palmares) [verificar]."},
       "pacto_cucau": {"forma": "cucau", "_nota": "Cucaú (1678): aldea en hileras con roças de maíz, el paiol (granero sobre pilotes) y palmeras. Se sacó la bandera blanca: no tiene fuente, es una imagen europea de rendición, y la campaña cuenta el pacto como un juramento al modo de un soba angoleño (Lara, Palmares & Cucaú, 2021) [verificar]."},
-      "guerra_zumbi": {"forma": "serra_barriga", "_nota": "La Serra da Barriga: el cerro con la cerca en lo alto, el tambor y el estandarte de Zumbi (1694) [verificar]."}
+      "guerra_zumbi": {"forma": "serra_barriga", "_nota": "La Serra da Barriga: el cerro con la cerca en lo alto, el tambor y el estandarte del jugador. No hay fuente de época de un estandarte de Zumbi: el estandarte es solo el color del equipo, no un dato."}
     },
     "ayutthaya": {
       "wat": {"forma": "wat_prang", "_nota": "Wat Mahathat: prang central (torre de mazorca, de tradición jemer) con prangs chicos en las esquinas, sobre basamento, y el viharn de techos escalonados al frente [verificar]."},

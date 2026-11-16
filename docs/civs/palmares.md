@@ -3,7 +3,7 @@
 > Estado: implementada en datos (`data/civs/palmares.json`). Investigación en `investigacion/palmares.md`.
 
 ## Frase
-"La libertad que llega sola y se esconde en la sierra."
+"La libertad que se toma y se defiende en la sierra."
 
 ## Edades
 Mocambo · Palmares · Angola Janga `[verificar]` · Cucaú o Quilombo.

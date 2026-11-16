@@ -46,6 +46,8 @@ Segunda búsqueda (2026-11-14), en Commons, Internet Archive (con los discos de 
 
 ## Quilombo dos Palmares (`quilombo/`)
 
+**Fuera de uso desde la revisión histórica (etapa 25):** ninguna de estas pistas está en `CIV_MUSIC`. Los toques de iúna y de angola son de capoeira (siglos XIX y XX), el ijexá es yorubá-bahiano y del candomblé, y el loop de combate es exotismo genérico; Palmares era sobre todo centroafricano (kimbundu y kikongo). Los archivos quedan por si se contesta C-57 a) y hasta tener música propia de ngoma, marimba y kisanji (`proceso/25-revision-historica/04-correcciones-aplicadas.md`).
+
 | archivo | duración | momento | notas |
 |---|---|---|---|
 | musica_quilombo_berimbau_iuna_1.ogg | 2:28 | paz | Toque de iúna con tres berimbaus; los primeros 14 s son un solo berimbau |
@@ -57,6 +59,6 @@ Segunda búsqueda (2026-11-14), en Commons, Internet Archive (con los discos de 
 
 | archivo | duración | momento | notas |
 |---|---|---|---|
-| musica_ayutthaya_maha_nimit_1.ogg | 1:20 | ceremonia | *Phleng Maha Nimit*, pieza tailandesa de corte, grabada en 1934 por la Banda de la Armada Real (banda de vientos, no piphat; sonido de época) |
-| musica_ayutthaya_xilofono_1.ogg | 1:33 | paz | **Genérica** de aire sudasiático; el xilofón evoca el ranat |
-| musica_ayutthaya_combate_xilofono_1.ogg | 1:17 | combate | **Genérica**: tambores tribales con xilofón |
+| musica_ayutthaya_maha_nimit_1.ogg | 1:20 | paz (única pista propia, en consulta C-59) | *Phleng Maha Nimit*, pieza tailandesa de corte, grabada en 1934 por la Banda de la Armada Real (banda de vientos, no piphat; sonido de época) |
+| musica_ayutthaya_xilofono_1.ogg | 1:33 | fuera de uso | **Genérica**. Su título original («Kingdom of a million elephants under a white parasol») es el nombre de Lan Xang, el reino lao vecino: salió de `CIV_MUSIC` en la etapa 25 |
+| musica_ayutthaya_combate_xilofono_1.ogg | 1:17 | fuera de uso | **Genérica** («Bamboo Blitz»): tambores genéricos con xilofón; salió de `CIV_MUSIC` en la etapa 25 |

@@ -16,7 +16,7 @@
       ],
       "epilogo": [
         "Encontraron el mocambo vacío. Contaron unas doscientas veinte casas, una iglesia, cuatro fraguas y la casa del consejo, y lo anotaron todo en su diario. Nosotros ya estábamos en otro lado. La mandioca que dejamos enterrada nos esperó hasta que volvimos.",
-        "El que escribió ese diario nos describió mejor que nadie de los suyos, y nunca nos vio la cara. Así se conoce a la gente que sabe esconderse: por lo que deja."
+        "El que escribió ese diario nos describió mejor que nadie de los suyos, y nunca nos vio la cara. Así se conoce a la gente que no se deja encontrar: por lo que deja."
       ],
       "fuentes": [
         "Johan Blaer y Jürgens Reijmbach, Diário da viagem do capitão João Blaer aos Palmares em 1645 (Revista do Instituto Arqueológico Pernambucano 56, 1902)",
@@ -75,7 +75,7 @@
         "Relação das guerras feitas aos Palmares de Pernambuco no tempo do governador D. Pedro de Almeida, de 1675 a 1678 (atribuida al padre Antônio da Silva)",
         "Silvia Hunold Lara y Phablo Roberto Marchis Fachin (orgs.), Guerra contra Palmares: o manuscrito de 1678 (Chão, 2021)",
         "Silvia Hunold Lara, O território dos Palmares: cartografia, história e política (Afro-Ásia 64, 2021)",
-        "Revista Pesquisa FAPESP, Documentos originais revelam novos aspectos da história de Palmares (2022)"
+        "Flávio dos Santos Gomes, Palmares: escravidão e liberdade no Atlântico Sul (Contexto, 2005)"
       ],
       "mapa": { "semilla": 1677, "terreno": "sierra" },
       "jugador": {
@@ -123,14 +123,14 @@
         "Ninguno de los dos estaba del todo equivocado. Por eso dolió tanto."
       ],
       "epilogo": [
-        "Al año siguiente mataron a Gana Zumba en Cucaú. Dicen que con veneno, y dicen que fue gente de Zumbi. Yo no lo vi y no lo digo. Lo que sí vi fue el cerco: tres meses, hasta que no quedó qué comer.",
+        "Poco después mataron a Gana Zumba en Cucaú. Dicen que con veneno, y dicen que fue gente de Zumbi. Yo no lo vi y no lo digo. Lo que sí vi fue el cerco: tres meses, hasta que no quedó qué comer.",
         "Se llevaron a unos doscientos, nacidos y no nacidos, con papel o sin papel. Los que pudimos salimos por el monte a buscar a Zumbi. En 1682 el rey de Portugal firmó que el acuerdo valía y mandó averiguar qué había pasado. En Cucaú ya no quedaba nadie para contárselo."
       ],
       "fuentes": [
         "Papel que levaram os negros dos Palmares (22 de junio de 1678), en Lara y Fachin (orgs.), Guerra contra Palmares (2021)",
         "Silvia Hunold Lara, Palmares & Cucaú: o aprendizado da dominação (Edusp, 2021)",
         "John K. Thornton, Palmares revisitado (Afro-Ásia 65, 2022)",
-        "Revista Pesquisa FAPESP, Documentos originais revelam novos aspectos da história de Palmares (2022)"
+        "Robert Nelson Anderson, The Quilombo of Palmares: A New Overview of a Maroon State in Seventeenth-Century Brazil (Journal of Latin American Studies 28:3, 1996)"
       ],
       "mapa": { "semilla": 1678, "terreno": "llano" },
       "jugador": {
@@ -185,7 +185,7 @@
         "Maria Lêda Oliveira, A primeira rellação do último assalto a Palmares (Afro-Ásia 33, 2005)",
         "Silvia Hunold Lara, O território dos Palmares: cartografia, história e política (Afro-Ásia 64, 2021)",
         "Flávio dos Santos Gomes (org.), Mocambos de Palmares: histórias e fontes (séculos XVI-XIX) (2010)",
-        "Brasil de Fato, entrevista a Silvia Hunold Lara (22 de noviembre de 2023)"
+        "Silvia Hunold Lara, Palmares & Cucaú: o aprendizado da dominação (Edusp, 2021)"
       ],
       "mapa": { "semilla": 1694, "terreno": "sierra" },
       "jugador": {
