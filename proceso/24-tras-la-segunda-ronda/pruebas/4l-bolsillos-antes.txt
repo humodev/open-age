@@ -1,0 +1,74 @@
+20:21 entra j3 guerrero choque a (92,116) de (91,115) bolsillo de 1 · orden 2 grupo 0 esquina true
+20:22 entra j3 guerrero choque a (92,116) de (91,115) bolsillo de 1 · orden 2 grupo 0 esquina true
+20:34 entra j3 ariete asedio a (92,116) de (93,115) bolsillo de 1 · orden 2 grupo 2 esquina true
+20:35 entra j3 hondero distancia a (92,116) de (93,115) bolsillo de 1 · orden 2 grupo 2 esquina true
+20:36 entra j3 hondero distancia a (92,116) de (93,115) bolsillo de 1 · orden 2 grupo 2 esquina true
+25:36 entra j3 hondero distancia a (64,96) de (65,95) bolsillo de 1 · orden 0 grupo - esquina true
+25:36 entra j3 hondero distancia a (64,96) de (65,95) bolsillo de 1 · orden 2 grupo 3 esquina true
+25:37 entra j3 hondero distancia a (64,96) de (65,95) bolsillo de 1 · orden 0 grupo - esquina true
+25:41 entra j3 guerrero choque a (64,96) de (65,95) bolsillo de 1 · orden 2 grupo 3 esquina true
+25:43 entra j3 hondero distancia a (64,96) de (65,95) bolsillo de 1 · orden 2 grupo 3 esquina true
+25:43 entra j3 guerrero choque a (64,96) de (65,95) bolsillo de 1 · orden 2 grupo 3 esquina true
+25:58 entra j3 guerrero choque a (64,103) de (65,104) bolsillo de 1 · orden 2 grupo 1 esquina true
+26:10 entra j3 hondero distancia a (62,104) de (63,105) bolsillo de 1 · orden 2 grupo 1 esquina true
+26:27 entra j3 hondero distancia a (62,104) de (63,105) bolsillo de 1 · orden 2 grupo 1 esquina true
+27:06 entra j2 hondero distancia a (108,95) de (109,96) bolsillo de 1 · orden 2 grupo 1 esquina true
+27:18 entra j2 hondero distancia a (108,95) de (109,96) bolsillo de 1 · orden 2 grupo 1 esquina true
+27:18 entra j2 guerrero choque a (105,95) de (104,96) bolsillo de 3 · orden 2 grupo 1 esquina true
+27:18 entra j2 guerrero choque a (105,95) de (104,96) bolsillo de 3 · orden 2 grupo 1 esquina true
+28:36 entra j3 hondero distancia a (62,104) de (63,105) bolsillo de 1 · orden 2 grupo 0 esquina true
+30:30 entra j3 guerrero choque a (62,104) de (63,105) bolsillo de 1 · orden 2 grupo 1 esquina true
+31:12 entra j3 hondero distancia a (62,104) de (63,105) bolsillo de 1 · orden 2 grupo 0 esquina true
+31:49 entra j3 guerrero choque a (64,96) de (65,95) bolsillo de 1 · orden 2 grupo 2 esquina true
+31:50 entra j2 guerrero choque a (64,96) de (65,95) bolsillo de 1 · orden 3 grupo - esquina true
+31:50 entra j2 guerrero choque a (64,96) de (65,95) bolsillo de 1 · orden 3 grupo - esquina true
+31:54 entra j2 lancero linea a (64,96) de (65,95) bolsillo de 1 · orden 2 grupo - esquina true
+32:12 entra j2 guerrero choque a (64,103) de (65,104) bolsillo de 1 · orden 3 grupo 2 esquina true
+32:13 entra j2 guerrero choque a (64,103) de (65,104) bolsillo de 1 · orden 3 grupo 2 esquina true
+32:55 entra j2 hondero distancia a (103,109) de (104,108) bolsillo de 1 · orden 2 grupo 0 esquina true
+32:58 entra j2 hondero distancia a (103,109) de (104,108) bolsillo de 1 · orden 2 grupo 0 esquina true
+36:53 entra j0 guerrero choque a (103,92) de (102,93) bolsillo de 1 · orden 2 grupo 0 esquina true
+36:54 entra j0 guerrero choque a (103,92) de (102,93) bolsillo de 1 · orden 2 grupo 0 esquina true
+36:56 entra j0 guerrero choque a (103,92) de (102,93) bolsillo de 1 · orden 2 grupo 1 esquina true
+36:59 entra j0 hondero distancia a (103,92) de (102,93) bolsillo de 1 · orden 2 grupo 1 esquina true
+37:00 entra j0 guerrero choque a (103,92) de (102,93) bolsillo de 1 · orden 2 grupo 3 esquina true
+37:00 entra j0 guerrero choque a (103,92) de (102,93) bolsillo de 1 · orden 2 grupo 3 esquina true
+37:00 entra j0 hondero distancia a (103,92) de (102,93) bolsillo de 1 · orden 2 grupo 3 esquina true
+37:00 entra j0 hondero distancia a (103,92) de (102,93) bolsillo de 1 · orden 2 grupo 3 esquina true
+37:01 entra j0 hondero distancia a (103,92) de (102,93) bolsillo de 1 · orden 0 grupo - esquina true
+37:01 entra j0 boleador distancia a (103,92) de (102,93) bolsillo de 1 · orden 0 grupo - esquina true
+37:02 entra j0 guerrero choque a (105,95) de (104,96) bolsillo de 3 · orden 0 grupo - esquina true
+37:04 entra j0 guerrero choque a (105,95) de (104,96) bolsillo de 3 · orden 0 grupo - esquina true
+37:05 entra j0 hondero distancia a (103,92) de (102,93) bolsillo de 1 · orden 1 grupo 1 esquina true
+37:19 entra j0 guerrero choque a (103,92) de (102,93) bolsillo de 1 · orden 1 grupo 3 esquina true
+37:46 entra j0 guerrero choque a (105,95) de (104,96) bolsillo de 3 · orden 1 grupo 1 esquina true
+37:50 entra j0 hondero distancia a (111,93) de (112,94) bolsillo de 1 · orden 1 grupo 3 esquina true
+entradas a bolsillos por tipo:
+      8  j3 choque orden 2 grupo 0 esquina true
+      1  j3 asedio orden 2 grupo 2 esquina true
+      6  j3 distancia orden 2 grupo 2 esquina true
+      4  j3 distancia orden 0 grupo - esquina true
+     10  j3 distancia orden 2 grupo 3 esquina true
+      2  j3 choque orden 2 grupo 3 esquina true
+      3  j3 choque orden 2 grupo 1 esquina true
+      2  j3 distancia orden 2 grupo 1 esquina true
+     54  j2 distancia orden 2 grupo 1 esquina true
+     11  j2 choque orden 2 grupo 1 esquina true
+      2  j3 distancia orden 2 grupo 0 esquina true
+      1  j3 choque orden 2 grupo 2 esquina true
+     17  j2 choque orden 3 grupo - esquina true
+      1  j2 linea orden 2 grupo - esquina true
+      4  j2 choque orden 3 grupo 2 esquina true
+      8  j2 distancia orden 2 grupo 0 esquina true
+      2  j0 choque orden 2 grupo 0 esquina true
+      1  j0 choque orden 2 grupo 1 esquina true
+      1  j0 distancia orden 2 grupo 1 esquina true
+     17  j0 choque orden 2 grupo 3 esquina true
+     11  j0 distancia orden 2 grupo 3 esquina true
+      8  j0 distancia orden 0 grupo - esquina true
+      2  j0 choque orden 0 grupo - esquina true
+      1  j0 distancia orden 1 grupo 1 esquina true
+      1  j0 choque orden 1 grupo 3 esquina true
+      1  j0 choque orden 1 grupo 1 esquina true
+      1  j0 distancia orden 1 grupo 3 esquina true
+totales de telemetría { "rechazo": 219, "produccion_ociosa": 130, "sin_camino": 1032, "recursos_flotando": 134, "trabada": 325, "ia_sin_ruta": 4, "ocioso": 6 }

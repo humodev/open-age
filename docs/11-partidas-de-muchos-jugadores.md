@@ -46,10 +46,11 @@ Pedido del autor: "Que se pueda jugar de a más de 2 civs en un mismo mapa, pens
 ### 3. IA en equipo
 - Elegir un rival: el enemigo más cercano o el más débil, según el estilo. La `Pacífica` sigue sin atacar ninguna base.
 - Defender a un aliado cuando atacan su base, y unirse a su ataque si está cerca.
-- Pedir y dar tributo cuando le sobra y al aliado le falta.
+- Pedir y dar tributo cuando le sobra y al aliado le falta. Un pedido pesa más que el regalo: se atiende primero, con margen más chico, y la IA aparta lo pedido hasta poder darlo (o da otro recurso).
+- Responder a las bengalas: a la de ataque va con un grupo (o con su próxima oleada) que marcha junto hasta cerca del punto y ataca desde ahí (reglas en `reglas.json → equipos.bengala` y `equipos.pedido`; proceso/24, paso 4l).
 
 ### 4. Interfaz
-- **Menú.** Lista de lugares (2 a 8), y en cada uno: humano o IA, civ, equipo, dificultad, estilo y color. Hay atajos: "1v1", "2v2", "3v3", "Todos contra todos (6)".
+- **Menú.** Lista de lugares (2 a 8), y en cada uno: humano o IA, civ, equipo, dificultad, estilo y color. Hay atajos: "1v1", "2v2", "3v3", "Todos contra todos (6)". En todos contra todos, el menú propone un tiempo límite (`opciones_partida.todos_contra_todos_tiempo_min`): sin él, la partida puede no terminar.
 - **Colores.** 8 colores de equipo bien distinguibles; el estandarte y el disco toman el color del jugador.
 - **HUD y minimapa.** Puntaje por equipo, aliados con el borde de su color en el minimapa, panel de tributo y aviso cuando atacan a un aliado.
 

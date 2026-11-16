@@ -1,0 +1,64 @@
+semilla 11 juntos    fin 24:00
+  bengala 12:00 → voy_atacar 19 · enviados 19, llegaron a 25 casillas 18 · aliados a 12/25 casillas a los 45/90/150/240 s y máximo: { "max": "0/17", 45: "0/0", 90: "0/0", 150: "0/11", 240: "0/0" }
+  bengala 18:00 → voy_oleada  · enviados 0, llegaron a 25 casillas 0 · aliados a 12/25 casillas a los 45/90/150/240 s y máximo: { "max": "0/0", 45: "0/0", 90: "0/0", 150: "0/0", 240: "0/0" }
+  pedido 8:00 madera   concedido
+  pedido 8:00 alimento concedido
+  pedido 14:00 madera   concedido
+  pedido 14:00 alimento concedido
+  pedido 20:00 madera   no
+  pedido 20:00 alimento no
+  tributos no pedidos: 7 (del aliado al jugador 0: 2) · frases del aliado: ["12:00 voy_atacar 19", "18:00 voy_oleada "]
+semilla 11 mezclados fin 24:00
+  bengala 12:00 → voy_oleada  · enviados 10, llegaron a 25 casillas 10 · aliados a 12/25 casillas a los 45/90/150/240 s y máximo: { "max": "18/22", 45: "0/4", 90: "0/4", 150: "4/10", 240: "18/22" }
+  bengala 18:00 → voy_oleada  · enviados 27, llegaron a 25 casillas 11 · aliados a 12/25 casillas a los 45/90/150/240 s y máximo: { "max": "0/11", 45: "0/0", 90: "0/0", 150: "0/0", 240: "0/11" }
+  pedido 8:00 madera   concedido
+  pedido 8:00 alimento concedido
+  pedido 14:00 madera   concedido
+  pedido 14:00 alimento concedido
+  pedido 20:00 madera   concedido
+  pedido 20:00 alimento concedido
+  tributos no pedidos: 12 (del aliado al jugador 0: 6) · frases del aliado: ["12:00 voy_oleada ", "12:44 voy_atacar 10", "18:00 voy_oleada ", "21:06 voy_atacar 28"]
+semilla 23 juntos    fin 24:00
+  bengala 12:00 → voy_oleada  · enviados 10, llegaron a 25 casillas 9 · aliados a 12/25 casillas a los 45/90/150/240 s y máximo: { "max": "0/7", 45: "0/0", 90: "0/6", 150: "0/1", 240: "0/1" }
+  bengala 18:00 → voy_atacar 14 · enviados 14, llegaron a 25 casillas 13 · aliados a 12/25 casillas a los 45/90/150/240 s y máximo: { "max": "0/7", 45: "0/1", 90: "0/1", 150: "0/0", 240: "0/0" }
+  pedido 8:00 madera   concedido
+  pedido 8:00 alimento concedido
+  pedido 14:00 madera   concedido
+  pedido 14:00 alimento concedido
+  pedido 20:00 madera   concedido
+  pedido 20:00 alimento concedido
+  tributos no pedidos: 7 (del aliado al jugador 0: 3) · frases del aliado: ["12:00 voy_oleada ", "12:09 voy_atacar 10", "18:00 voy_atacar 14"]
+semilla 23 mezclados fin 24:00
+  bengala 12:00 → voy_oleada  · enviados 14, llegaron a 25 casillas 14 · aliados a 12/25 casillas a los 45/90/150/240 s y máximo: { "max": "0/14", 45: "0/0", 90: "0/2", 150: "0/1", 240: "0/0" }
+  bengala 18:00 → voy_atacar 11 · enviados 11, llegaron a 25 casillas 6 · aliados a 12/25 casillas a los 45/90/150/240 s y máximo: { "max": "2/4", 45: "0/1", 90: "0/0", 150: "0/0", 240: "0/0" }
+  pedido 8:00 madera   concedido
+  pedido 8:00 alimento concedido
+  pedido 14:00 madera   concedido
+  pedido 14:00 alimento concedido
+  pedido 20:00 madera   concedido
+  pedido 20:00 alimento concedido
+  tributos no pedidos: 10 (del aliado al jugador 0: 3) · frases del aliado: ["12:00 voy_oleada ", "12:01 voy_atacar 14", "18:00 voy_atacar 11"]
+semilla 41 juntos    fin 24:00
+  bengala 12:00 → voy_oleada  · enviados 10, llegaron a 25 casillas 2 · aliados a 12/25 casillas a los 45/90/150/240 s y máximo: { "max": "0/1", 45: "0/0", 90: "0/0", 150: "0/0", 240: "0/0" }
+  bengala 18:00 → voy_oleada  · enviados 0, llegaron a 25 casillas 0 · aliados a 12/25 casillas a los 45/90/150/240 s y máximo: { "max": "0/0", 45: "0/0", 90: "0/0", 150: "0/0", 240: "0/0" }
+  pedido 8:00 madera   concedido
+  pedido 8:00 alimento concedido
+  pedido 14:00 madera   concedido
+  pedido 14:00 alimento concedido
+  pedido 20:00 madera   concedido
+  pedido 20:00 alimento concedido
+  tributos no pedidos: 9 (del aliado al jugador 0: 4) · frases del aliado: ["12:00 voy_oleada ", "12:13 voy_atacar 10", "18:00 voy_oleada "]
+semilla 41 mezclados fin 24:00
+  bengala 12:00 → voy_oleada  · enviados 10, llegaron a 25 casillas 10 · aliados a 12/25 casillas a los 45/90/150/240 s y máximo: { "max": "1/10", 45: "0/0", 90: "0/0", 150: "0/0", 240: "0/0" }
+  bengala 18:00 → voy_oleada  · enviados 0, llegaron a 25 casillas 0 · aliados a 12/25 casillas a los 45/90/150/240 s y máximo: { "max": "0/0", 45: "0/0", 90: "0/0", 150: "0/0", 240: "0/0" }
+  pedido 8:00 madera   concedido
+  pedido 8:00 alimento concedido
+  pedido 14:00 madera   concedido
+  pedido 14:00 alimento concedido
+  pedido 20:00 madera   concedido
+  pedido 20:00 alimento concedido
+  tributos no pedidos: 16 (del aliado al jugador 0: 8) · frases del aliado: ["12:00 voy_oleada ", "12:55 voy_atacar 10", "18:00 voy_oleada "]
+TOTAL bengalas de ataque con aliados a 12 casillas: 3 de 12; a 25 casillas: 9 de 12
+TOTAL pedidos concedidos: 34 de 36 (madera 17); con otro recurso: 0
+TOTAL tributos no pedidos: 61 (del aliado al jugador 0: 26)
+TOTAL bengalas con al menos un enviado en la base rival (25 casillas): 9 de 12 · enviados 125, llegaron 93

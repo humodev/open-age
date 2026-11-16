@@ -1,0 +1,35 @@
+
+fortines 2v2 semilla 31, 45:00 · totales { "rechazo": 337, "produccion_ociosa": 135, "sin_camino": 1297, "recursos_flotando": 187, "trabada": 483, "ia_sin_ruta": 4, "ocioso": 8 }
+  j0 tawantinsuyu en pie=true bases (41, 41)
+  j1 mapuches en pie=true bases (131, 41)
+  j2 guaranies en pie=true bases (131, 131)
+  j3 etiopia en pie=true bases (41, 131)
+    322  j2 sin_camino guerrero
+    216  j2 sin_camino hondero
+    213  j2 trabada guerrero
+    200  j0 sin_camino guerrero
+    165  j3 sin_camino hondero
+    158  j0 sin_camino hondero
+    118  j0 trabada guerrero
+     97  j0 trabada hondero
+     68  j1 sin_camino guerrero
+     40  j1 sin_camino jinete
+     39  j3 sin_camino guerrero
+     37  j2 sin_camino lancero
+     17  j3 sin_camino lancero
+     17  j1 trabada guerrero
+  destinos más pedidos:
+    215  j2 trabada → (64,96)
+    148  j2 sin_camino → (32,136)
+    118  j1 sin_camino → (128,112)
+    110  j0 trabada → (96,88)
+    108  j2 sin_camino → (40,112)
+    107  j0 trabada → (104,88)
+     96  j3 sin_camino → (64,96)
+     95  j2 sin_camino → (40,136)
+     76  j0 sin_camino → (56,40)
+     76  j0 sin_camino → (96,88)
+     73  j0 sin_camino → (104,88)
+     47  j3 sin_camino → (56,96)
+     46  j2 sin_camino → (24,104)
+     33  j2 sin_camino → (40,128)

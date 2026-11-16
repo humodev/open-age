@@ -5,6 +5,7 @@ extends Control
 
 const C := preload("res://src/game/ui/panel_comun.gd")
 const BOX := Vector2(1560, 900)
+const BUTTONS_H := 70.0 # --- equipos ronda 3 --- alto reservado a los botones de abajo
 const CHARTS := [["pop", "Población"], ["vill", "Aldeanos"], ["army", "Ejército"], ["juntado", "Recursos juntados"], ["riqueza", "Riqueza juntada"], ["age", "Edad"], ["score", "Puntaje"]]
 const ORIGIN_COLORS := {
 	"casa": Color("c9a227"), "granja": Color("a9a066"), "recoleccion": Color("8c7258"), "disputado": Color("d4553a"),
@@ -93,7 +94,7 @@ func _draw() -> void:
 	var secs: int = datos.now_s()
 	var sub := "Duración %s · mapa %s" % [C.fmt_time(secs), sim.terrain]
 	if winner >= 0 and winner != hud.local:
-		sub += " · ganó %s" % C.player_name(sim, winner, hud.local)
+		sub += " · ganó %s" % _winner_name(winner) # --- equipos ronda 3 ---
 	C.text(self, o + Vector2(36, 86), sub, 15, Palette.UI_DIM)
 	# --- aprender --- por qué terminó y qué probar la próxima vez
 	var dy := 0.0
@@ -109,8 +110,11 @@ func _draw() -> void:
 	var col_w := (_box.size.x - 96) / 2
 	_table(Rect2(o + Vector2(32, 116 + dy), Vector2(col_w, 430 - dy * 0.6)))
 	_chart_box(Rect2(o + Vector2(64 + col_w, 116 + dy), Vector2(col_w, 430 - dy)))
-	_origins(Rect2(o + Vector2(32, 572 + dy * 0.6), Vector2(col_w, 220)))
-	_timeline(Rect2(o + Vector2(64 + col_w, 572 + dy * 0.6), Vector2(col_w, 220)))
+	# --- equipos ronda 3 --- lo de abajo termina sobre los botones (con 6 a 8 jugadores los tapaba)
+	var low_y := 572 + dy * 0.6
+	var low_h := maxf(120.0, _box.size.y - low_y - BUTTONS_H)
+	_origins(Rect2(o + Vector2(32, low_y), Vector2(col_w, low_h)))
+	_timeline(Rect2(o + Vector2(64 + col_w, low_y), Vector2(col_w, low_h)))
 
 
 # ---------------------------------------------------------------- Comparación
@@ -119,15 +123,38 @@ func _table(r: Rect2) -> void:
 	var sim := hud.sim
 	C.title(self, r.position + Vector2(0, 0), "COMPARACIÓN")
 	var n := sim.players.size()
-	var label_w := 230.0
+	var label_w := 230.0 if n <= 4 else 170.0
 	var cw := (r.size.x - label_w) / n
 	var y := r.position.y + 28
-	for p in sim.players:
-		var pid: int = p["id"]
-		var x: float = r.position.x + label_w + pid * cw
+	# --- equipos ronda 3 --- columnas agrupadas por equipo (el tuyo primero), con el nombre y el
+	# puntaje del equipo arriba de sus columnas.
+	var order := _order()
+	var col_of := {}
+	for i in order.size():
+		col_of[order[i]] = i
+	if _teams():
+		var i0 := 0
+		while i0 < order.size():
+			var t := sim.team_of(order[i0])
+			var i1 := i0
+			while i1 + 1 < order.size() and sim.team_of(order[i1 + 1]) == t:
+				i1 += 1
+			var gx: float = r.position.x + label_w + i0 * cw
+			var gw: float = (i1 - i0 + 1) * cw
+			draw_rect(Rect2(gx + 4, y - 8, gw - 8, 1), Palette.UI_LINE)
+			var gl := "%s · %d" % [_team_name(t), sim.team_score(t)]
+			if Hud.font_b.get_string_size(gl, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x > gw - 8:
+				gl = "Equipo %d · %d" % [t + 1, sim.team_score(t)]
+			C.text(self, Vector2(gx, y + 6), gl, 12, Palette.UI_ACCENT if t == sim.team_of(hud.local) else Palette.UI_DIM, true, gw - 6, HORIZONTAL_ALIGNMENT_RIGHT)
+			i0 = i1 + 1
+		y += 28
+	for pid in order:
+		var x: float = r.position.x + label_w + int(col_of[pid]) * cw
 		draw_rect(Rect2(x + 6, y - 12, cw - 12, 3), Palette.team(pid))
-		C.text(self, Vector2(x, y + 8), C.player_name(sim, pid, hud.local), 13, Palette.UI_TEXT, true, cw - 6, HORIZONTAL_ALIGNMENT_RIGHT)
+		C.text(self, Vector2(x, y + 8), C.player_name(sim, pid, hud.local) if n <= 4 else _short_name(pid), 13, Palette.UI_TEXT, true, cw - 6, HORIZONTAL_ALIGNMENT_RIGHT)
 	y += 18
+	var row_h := 25.0 if n <= 4 else 23.0
+	# --- fin equipos ronda 3 ---
 	var secs := maxi(1, datos.now_s())
 	var rows: Array = []
 	rows.append(["Edad final", func(pid: int) -> int: return int(sim.players[pid]["age"]), "roman"])
@@ -145,7 +172,7 @@ func _table(r: Rect2) -> void:
 	rows.append(["Investigaciones", func(pid: int) -> int: return (sim.players[pid]["techs"] as Dictionary).size(), ""])
 	rows.append(["Órdenes por minuto", func(pid: int) -> int: return datos.orders(pid) * 60 / secs, "none"])
 	for row in rows:
-		y += 25
+		y += row_h
 		draw_line(Vector2(r.position.x, y + 7), Vector2(r.end.x, y + 7), Palette.UI_LINE, 1)
 		C.text(self, Vector2(r.position.x, y), row[0], 14, Palette.UI_DIM)
 		var vals: Array[int] = []
@@ -156,7 +183,7 @@ func _table(r: Rect2) -> void:
 			var v: int = vals[pid]
 			var txt := Sim._roman(v) if row[2] == "roman" else str(v)
 			var hi: bool = row[2] != "none" and v == best and n > 1 and vals.count(best) < n
-			C.text(self, Vector2(r.position.x + label_w + pid * cw, y), txt, 15, Palette.UI_ACCENT if hi else Palette.UI_TEXT, hi, cw - 6, HORIZONTAL_ALIGNMENT_RIGHT)
+			C.text(self, Vector2(r.position.x + label_w + int(col_of[pid]) * cw, y), txt, 15, Palette.UI_ACCENT if hi else Palette.UI_TEXT, hi, cw - 6, HORIZONTAL_ALIGNMENT_RIGHT)
 
 
 func _sum(d: Dictionary) -> int:
@@ -254,8 +281,9 @@ func _origins(r: Rect2) -> void:
 	for p in sim.players:
 		best = maxi(best, int(datos.totals(p["id"]).get("riqueza", 0)))
 	var used := {}
-	for p in sim.players:
-		var pid: int = p["id"]
+	# --- equipos ronda 3 --- por equipo, y más apretado con muchos jugadores (deja lugar a la leyenda)
+	var step := clampf((r.size.y - 18 - 48) / maxf(1.0, sim.players.size()), 20.0, 30.0)
+	for pid: int in _order():
 		var book: Dictionary = datos.origin_book(pid)
 		C.text(self, Vector2(r.position.x, y + 16), C.player_name(sim, pid, hud.local), 13, Palette.UI_TEXT, pid == hud.local, 200)
 		var bx := r.position.x + 210
@@ -272,7 +300,7 @@ func _origins(r: Rect2) -> void:
 			draw_rect(Rect2(bx, y + 4, seg, 16), ORIGIN_COLORS.get(o, Palette.UI_DIM))
 			bx += seg
 		C.text(self, Vector2(r.position.x, y + 17), str(total), 13, Palette.UI_TEXT, true, r.size.x, HORIZONTAL_ALIGNMENT_RIGHT)
-		y += 30
+		y += step
 	# Leyenda.
 	var lx := r.position.x
 	y += 8
@@ -300,8 +328,12 @@ func _timeline(r: Rect2) -> void:
 	var ax0 := r.position.x + 210
 	var aw := r.size.x - 220
 	var y := r.position.y + 34
-	for p in sim.players:
-		var pid: int = p["id"]
+	# --- equipos ronda 3 --- filas por equipo, del alto que entra en el recuadro: con 6 a 8
+	# jugadores tapaban los botones. Si no entra el nombre del hito, queda solo la edad.
+	var row_h := clampf((r.size.y - 34 - 22) / maxf(1.0, sim.players.size()), 22.0, 50.0)
+	var roomy := row_h >= 44.0
+	for pid: int in _order():
+		var p: Dictionary = sim.players[pid]
 		C.text(self, Vector2(r.position.x, y + 14), C.player_name(sim, pid, hud.local), 13, Palette.UI_TEXT, pid == hud.local, 200)
 		draw_line(Vector2(ax0, y + 9), Vector2(ax0 + aw, y + 9), Color(1, 1, 1, 0.12), 2)
 		for a in datos.ages:
@@ -309,14 +341,17 @@ func _timeline(r: Rect2) -> void:
 				continue
 			var x := ax0 + aw * float(a["t"]) / t_max
 			draw_circle(Vector2(x, y + 9), 5, Palette.team(pid))
-			C.text(self, Vector2(x - 20, y - 1), Sim._roman(a["age"]), 12, Palette.UI_TEXT, true, 40, HORIZONTAL_ALIGNMENT_CENTER)
+			if roomy:
+				C.text(self, Vector2(x - 20, y - 1), Sim._roman(a["age"]), 12, Palette.UI_TEXT, true, 40, HORIZONTAL_ALIGNMENT_CENTER)
+			else:
+				C.text(self, Vector2(x + 7, y + 14), Sim._roman(a["age"]), 11, Palette.UI_TEXT, true, 30)
 			var hdef: Dictionary = sim.dp(pid).edificios.get(a["hito"], {})
-			if not hdef.is_empty():
+			if not hdef.is_empty() and roomy:
 				var eje := C.eje_of(hdef, a["hito"])
 				C.text(self, Vector2(x - 70, y + 30), "%s %s" % [C.fmt_time(a["t"]), hdef.get("nombre", "")], 11, C.eje_color(eje), false, 140, HORIZONTAL_ALIGNMENT_CENTER)
 		if p["defeated"]:
 			C.text(self, Vector2(ax0 + aw - 10, y + 14), "✗", 14, Palette.UI_BAD, true)
-		y += 50
+		y += row_h
 	# Eje de tiempo.
 	var step_min := maxi(1, int(ceil(t_max / 60.0 / 6.0)))
 	var m := 0
@@ -342,7 +377,7 @@ func _why_time(real: int, me: int) -> String:
 		return "%s con empate: %d puntos para cada lado." % [head, mine_s]
 	if not sim.enemies(me, real):
 		return "%s y ganaste por puntos: %d contra %d." % [head, mine_s, best_foe]
-	return "%s y ganó %s por puntos: %d contra tus %d." % [head, C.player_name(sim, real, me), sim.team_score(sim.team_of(real)), mine_s]
+	return "%s y ganó %s por puntos: %d contra tus %d." % [head, _winner_name(real), sim.team_score(sim.team_of(real)), mine_s] # --- equipos ronda 3 ---
 
 
 ## Una línea con el motivo del final y, si perdiste, uno o dos consejos que salen de las
@@ -367,7 +402,7 @@ func _explain() -> void:
 			if not sim.enemies(real, p["id"]) and int(p.get("sitios_ms", 0)) >= win_ms:
 				by_sites = true
 		var mine := not sim.enemies(me, real)
-		var who := C.player_name(sim, real, me)
+		var who := _winner_name(real) # --- equipos ronda 3 ---
 		if by_sites:
 			_why = ("Ganaste por sitios sagrados: los tuviste todos durante %s." if mine else "Perdiste por sitios sagrados: %s los tuvo todos durante %s seguidos.") % ([C.fmt_time(win_ms / 1000)] if mine else [who, C.fmt_time(win_ms / 1000)])
 		elif sim._opts.get("hitos_sin_victoria", false):
@@ -419,3 +454,60 @@ func _explain() -> void:
 	if _tips.is_empty():
 		_tips.append("mirá el gráfico de Aldeanos: casi siempre la diferencia empieza ahí.")
 	_tips = _tips.slice(0, 2)
+
+
+# ---------------------------------------------------------------- Equipos (--- equipos ronda 3 ---)
+
+## Hay equipos de más de uno (si no, es 1 contra 1 o todos contra todos y nada cambia).
+func _teams() -> bool:
+	var sim := hud.sim
+	var seen := {}
+	for p in sim.players:
+		var t := sim.team_of(p["id"])
+		if seen.has(t):
+			return true
+		seen[t] = true
+	return false
+
+
+## Jugadores por equipo (el tuyo primero) y, dentro, por número: así se agrupan la tabla, la
+## riqueza y la línea de tiempo.
+func _order() -> Array:
+	var sim := hud.sim
+	var ids: Array = range(sim.players.size())
+	var mine := sim.team_of(hud.local)
+	ids.sort_custom(func(a: int, b: int) -> bool:
+		var ta := -1 if sim.team_of(a) == mine else sim.team_of(a)
+		var tb := -1 if sim.team_of(b) == mine else sim.team_of(b)
+		return ta < tb if ta != tb else a < b)
+	return ids
+
+
+## "Equipo 1: Vos y Verde" (por color; "Vos" para el que mira).
+func _team_name(t: int) -> String:
+	var sim := hud.sim
+	var who: Array[String] = []
+	for p in sim.players:
+		if sim.team_of(p["id"]) == t:
+			who.append("Vos" if p["id"] == hud.local else Palette.team_name(p["id"]))
+	var names := who[0] if who.size() == 1 else ", ".join(who.slice(0, who.size() - 1)) + " y " + who[-1]
+	return "Equipo %d: %s" % [t + 1, names]
+
+
+## Quién ganó: el equipo entero si es de más de uno; si no, el jugador ("Rojo · Mapuches").
+func _winner_name(pid: int) -> String:
+	var sim := hud.sim
+	if _teams():
+		var t := sim.team_of(pid)
+		var size := 0
+		for p in sim.players:
+			if sim.team_of(p["id"]) == t:
+				size += 1
+		if size > 1:
+			return "el " + _team_name(t)
+	return C.player_name(sim, pid, hud.local)
+
+
+## Nombre corto para las columnas cuando son muchas: el color (o "Vos") y la civ en la línea de abajo no entra.
+func _short_name(pid: int) -> String:
+	return "Vos" if pid == hud.local else Palette.team_name(pid)
