@@ -688,7 +688,7 @@ func _build_resources() -> void:
 				bushes.append(e)
 			_:
 				var mi := MeshInstance3D.new()
-				mi.mesh = Meshes.rock_mesh(e.type)
+				mi.mesh = _resource_mesh(e)
 				mi.position = to_world(e.x, e.y)
 				mi.rotation.y = float(_hash(e.id) % 360) * PI / 180.0
 				add_child(mi)
@@ -1055,6 +1055,8 @@ func _build_struct(e: SimEntity, v: Dictionary, look: String) -> void:
 		var k := _stretch_k(e, building_mesh_for(e.owner, e.type, e.def, 1).get_aabb().size.y)
 		if e.type == "torre" and str(cfg.get("torre", "")) in CivMeshes.arte().get("torres_bajas", []):
 			k = 1.0 # baluarte bajo: no se estira a la altura de una torre
+		if HitosMeshes.has(e.type):
+			k = 1.0 # hito con forma propia: ya tiene su alto (data/arte_hitos.json)
 		var mi := MeshInstance3D.new()
 		mi.scale.y = k
 		outer.add_child(mi)
@@ -1096,11 +1098,31 @@ static func _tint(n: Node, tint: Color) -> void:
 			mi.set_surface_override_material(i, _tint_cache[key]))
 
 
+## Malla de un recurso del mapa. La caza y los animales sueltos toman la especie de la región:
+## la del terreno, si tiene fauna propia, o la del pueblo de la base más cercana
+## (data/arte_animales.json). Solo imagen: la simulación no sabe de especies.
+func _resource_mesh(e: SimEntity) -> Mesh:
+	if e.type != "venado" and e.type != "rebano_salvaje":
+		return Meshes.rock_mesh(e.type)
+	var civ := ""
+	var best := -1
+	for i in mini(sim.players.size(), sim.bases.size()):
+		var b: Vector2i = sim.bases[i]
+		var dx := e.tx - b.x
+		var dy := e.ty - b.y
+		if best < 0 or dx * dx + dy * dy < best:
+			best = dx * dx + dy * dy
+			civ = str(sim.players[i].get("civ", ""))
+	return Animales.mesh(Animales.salvaje(e.type, civ, str(sim.terrain), _hash(e.id)))
+
+
 ## Malla de unidad según la civilización del dueño (CivMeshes) o la de la capa común; las
 ## tropas cambian de equipo con la edad.
 func unit_mesh_for(e: SimEntity) -> Mesh:
 	if e.def.get("animal", false):
-		return Meshes.animal_mesh(Color(e.def.get("color", "#c9b08a")))
+		# Rebaño con la silueta de la especie del pueblo (data/arte_animales.json).
+		var civ := str(sim.players[e.owner].get("civ", "")) if e.owner >= 0 and e.owner < sim.players.size() else ""
+		return Animales.mesh(Animales.rebano(civ))
 	var style: Dictionary = sim.dp(e.owner).civ.get("estilo", {})
 	if style.is_empty():
 		return Meshes.unit_mesh(e.type, Palette.team(e.owner))
@@ -1176,7 +1198,7 @@ func on_tick(events: Array) -> void:
 				var re: SimEntity = sim.by_id.get(ev["id"])
 				if re != null and re.alive and not visuals.has(re.id):
 					var mi := MeshInstance3D.new()
-					mi.mesh = Meshes.rock_mesh(re.type)
+					mi.mesh = _resource_mesh(re)
 					mi.position = to_world(re.x, re.y)
 					mi.rotation.y = float(_hash(re.id) % 360) * PI / 180.0
 					add_child(mi)

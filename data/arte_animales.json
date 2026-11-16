@@ -1,0 +1,56 @@
+{
+  "_doc": "Silueta de cada animal (proceso/24-tras-la-segunda-ronda/4d-hitos-y-animales.md). Solo imagen: la simulación no lo lee. 'especies': forma (camelido, cabra, bovino, cerdo, ciervo, tapir) y lo que la distingue: color, vientre (color de abajo), lana, cuello_cm y patas_cm, grueso_pct (ancho del cuerpo), escala_pct, cuernos (forma de cuernos o astas: bufalo, corto, cabra, ramificadas, horquilla, rectos, espiral, no) y crin. 'rebano_por_civ': el animal propio de cada pueblo; sin entrada, el del '_defecto'. Los animales sueltos (rebano_salvaje) toman la especie de 'sueltos_por_civ' del pueblo de la base más cercana, y la caza (venado) una de 'caza_por_civ'; 'caza_por_terreno' pisa a las dos en los terrenos con fauna propia. Afirmaciones históricas con [verificar].",
+  "especies": {
+    "llama": {"nombre": "Llama", "forma": "camelido", "color": "#e8dcc4", "cara": "#8a7a64", "lana": true, "cuello_cm": 52, "patas_cm": 34, "grueso_pct": 105, "_nota": "Cuello largo y vertical, orejas en banana, cola alzada."},
+    "chilihueque": {"nombre": "Chilihueque", "forma": "camelido", "color": "#8a6a4a", "cara": "#5a4632", "lana": true, "cuello_cm": 44, "patas_cm": 31, "grueso_pct": 115, "_nota": "Camélido de los mapuches, más bajo y lanudo que la llama [verificar]."},
+    "guanaco": {"nombre": "Guanaco", "forma": "camelido", "color": "#b07a48", "vientre": "#efe6d6", "cara": "#5a5450", "cuello_cm": 54, "patas_cm": 40, "grueso_pct": 92, "_nota": "Esbelto, bicolor (lomo canela, vientre blanco), cara gris."},
+    "cabra": {"nombre": "Cabra", "forma": "cabra", "color": "#3a3530", "cuernos": "cabra", "_nota": "Patas cortas, cuernos hacia atrás, barba y cola parada."},
+    "oveja": {"nombre": "Oveja", "forma": "cabra", "color": "#d9d0bc", "cara": "#3a3530", "lana": true, "cuernos": "no", "_nota": "La que traen los europeos."},
+    "bufalo": {"nombre": "Búfalo de agua", "forma": "bovino", "color": "#55585c", "cuernos": "bufalo", "escala_pct": 118, "_nota": "Cuerpo ancho, cabeza baja y cuernos grandes en media luna hacia atrás."},
+    "vaca": {"nombre": "Vaca", "forma": "bovino", "color": "#7a4a30", "cuernos": "corto", "escala_pct": 100, "_nota": "Ganado de la feria de frontera (parlamentos)."},
+    "cerdo": {"nombre": "Cerdo", "forma": "cerdo", "color": "#9a6a62", "_nota": "Barril sobre patas cortas, hocico de disco y orejas caídas."},
+    "pecari": {"nombre": "Pecarí", "forma": "cerdo", "color": "#4a443e", "collar": "#d8d0c0", "crin": true, "escala_pct": 88, "_nota": "Pecarí de collar: más chico, crin en el lomo y collar claro."},
+    "venado": {"nombre": "Venado", "forma": "ciervo", "color": "#8a6a46", "cuernos": "ramificadas", "_nota": "Patas largas, cuello alzado, astas ramificadas y cola blanca."},
+    "taruka": {"nombre": "Taruka", "forma": "ciervo", "color": "#8f8068", "cuernos": "horquilla", "escala_pct": 92, "_nota": "Ciervo andino de astas en horquilla [verificar]."},
+    "huemul": {"nombre": "Huemul", "forma": "ciervo", "color": "#6e604c", "cuernos": "horquilla", "grueso_pct": 112, "escala_pct": 95, "_nota": "Ciervo del sur, robusto, astas en horquilla [verificar]."},
+    "tapir": {"nombre": "Tapir", "forma": "tapir", "color": "#3e3a38", "crin": true, "escala_pct": 110, "_nota": "Mborevi: cuerpo redondo, trompa corta, patas cortas."},
+    "orix": {"nombre": "Órix", "forma": "ciervo", "color": "#c8b89a", "cara": "#3a3530", "cuernos": "rectos", "_nota": "Órix beisa de las tierras bajas: cuernos largos y rectos hacia atrás [verificar]."},
+    "nyala": {"nombre": "Nyala de montaña", "forma": "ciervo", "color": "#6a5242", "cuernos": "espiral", "escala_pct": 105, "_nota": "Antílope de las tierras altas etíopes, cuernos en espiral [verificar]."},
+    "sambar": {"nombre": "Sambar", "forma": "ciervo", "color": "#5a4632", "cuernos": "ramificadas", "crin": true, "escala_pct": 120, "grueso_pct": 112, "_nota": "Ciervo grande y oscuro del sudeste asiático, con melena en el cuello."}
+  },
+  "rebano_por_civ": {
+    "_defecto": "oveja",
+    "tawantinsuyu": "llama", "chankas": "llama", "caranquis": "llama", "canaris": "llama",
+    "mapuches": "chilihueque",
+    "guaranies": "pecari", "tupies": "pecari",
+    "etiopia": "cabra", "adal": "cabra",
+    "palmares": "cerdo",
+    "ayutthaya": "bufalo", "birmanos": "bufalo",
+    "invasores": "oveja",
+    "_nota": "Guaraníes y tupíes no crían rebaño; lo que reclaman se ve como pecarí, que se amansaba en las aldeas [verificar]."
+  },
+  "sueltos_por_civ": {
+    "_defecto": "oveja",
+    "tawantinsuyu": "llama", "chankas": "llama", "caranquis": "llama", "canaris": "llama",
+    "mapuches": "chilihueque",
+    "guaranies": "pecari", "tupies": "pecari",
+    "etiopia": "cabra", "adal": "cabra",
+    "palmares": "cerdo",
+    "ayutthaya": "bufalo", "birmanos": "bufalo",
+    "invasores": "oveja"
+  },
+  "caza_por_civ": {
+    "_defecto": ["venado"],
+    "tawantinsuyu": ["guanaco", "taruka"], "chankas": ["guanaco", "taruka"], "caranquis": ["taruka", "venado"], "canaris": ["taruka", "venado"],
+    "mapuches": ["guanaco", "huemul"],
+    "guaranies": ["venado", "pecari", "tapir"], "tupies": ["venado", "pecari", "tapir"],
+    "etiopia": ["orix", "nyala"], "adal": ["orix"],
+    "palmares": ["venado", "pecari"],
+    "ayutthaya": ["sambar"], "birmanos": ["sambar"],
+    "invasores": ["venado"]
+  },
+  "caza_por_terreno": {
+    "altiplano": ["guanaco", "taruka"],
+    "selva": ["tapir", "pecari", "venado"]
+  }
+}
