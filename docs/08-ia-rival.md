@@ -31,6 +31,10 @@ La **experta** juega como un veterano de AoE4: entrena aldeanos sin parar desde 
 
 La **fácil** no va a buscar sitios sagrados (`toma_sitios: false`) y tampoco los toma al pasar: en su grilla de caminos el cuadro de cada sitio cuesta más y lo rodea, y quien queda adentro sin rivales sale al borde y sigue (`reglas.json` → `ia_sin_sitios`; prueba: `tests/facil_sitios.gd`). Con los sitios sin victoria no hace falta y no lo hace.
 
+Además, la experta defiende en proporción (`defensa_proporcional`: a la amenaza va 1,5 veces lo que hay, y el resto sigue con lo suyo) y, si el rival tiene todos los sitios sagrados, va con todo el ejército libre a recuperar uno (`sitios_disputa`). Se mide contra la difícil con `tools/experta_vs_dificil.gd`.
+
+Normal, difícil y experta atacan el hito rival en obra (`ataca_hito_en_obra`, `reglas.json` → `ia_hito_en_obra`) y defienden el propio como cualquier edificio. Ninguna dificultad vuelve a levantar un almacén donde perdió uno hace poco (`ia_economia.almacen_perdido_*`).
+
 Sin victoria por hitos (opciones de partida), toda IA caza los edificios que cuentan para la victoria cuando el rival casi no tiene ejército o le saca el doble (`reglas.json` → `ia_caza`). Con hitos no cambia nada.
 
 ## Pruebas

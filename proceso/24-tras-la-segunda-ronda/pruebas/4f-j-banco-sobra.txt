@@ -1,0 +1,31 @@
+ayutthaya     llano     s41  19:58  gana EXPERTA (sitios)       pts 3104-1825 | 10' 29a14mE2 / 29a7mE2 15' 54a18mE2 / 35a1mE2
+ayutthaya     llano     s42  30:00  gana dificil por puntos     pts 4837-6888 | 10' 26a17mE2 / 31a14mE2 15' 38a21mE2 / 44a24mE3 20' 59a2mE2 / 57a46mE3
+ayutthaya     rio       s41  30:00  gana EXPERTA por puntos     pts 5580-5059 | 10' 29a21mE2 / 27a10mE2 15' 44a15mE3 / 29a7mE2 20' 63a32mE3 / 39a30mE2
+ayutthaya     rio       s42  30:00  gana dificil por puntos     pts 5253-6197 | 10' 27a13mE2 / 28a22mE2 15' 37a27mE2 / 43a24mE2 20' 58a35mE2 / 58a52mE2
+etiopia       llano     s41  30:00  gana EXPERTA por puntos     pts 6431-5431 | 10' 30a8mE2 / 33a7mE2 15' 48a8mE2 / 39a19mE2 20' 83a30mE2 / 54a13mE2
+etiopia       llano     s42  26:19  gana EXPERTA (conquista)    pts 7337-3728 | 10' 33a11mE2 / 27a9mE2 15' 48a11mE2 / 37a27mE2 20' 80a41mE2 / 51a18mE2
+etiopia       rio       s41  27:55  gana EXPERTA (sitios)       pts 6733-4999 | 10' 33a5mE2 / 33a8mE2 15' 54a31mE2 / 44a13mE2 20' 94a32mE2 / 35a56mE3
+etiopia       rio       s42  30:00  gana EXPERTA por puntos     pts 7287-4573 | 10' 32a16mE2 / 30a9mE2 15' 42a9mE2 / 29a18mE2 20' 70a47mE3 / 44a13mE2
+guaranies     llano     s41  20:22  gana EXPERTA (sitios)       pts 3374-2950 | 10' 36a12mE2 / 36a5mE2 15' 50a14mE2 / 51a22mE2 20' 79a24mE3 / 60a55mE3
+guaranies     llano     s42  30:00  gana dificil por puntos     pts 5161-6001 | 10' 38a10mE2 / 38a5mE2 15' 46a8mE2 / 50a43mE3 20' 45a21mE3 / 60a30mE3
+guaranies     rio       s41  30:00  gana dificil por puntos     pts 4148-4904 | 10' 36a5mE2 / 36a5mE2 15' 38a2mE2 / 53a31mE2 20' 18a8mE2 / 60a32mE3
+guaranies     rio       s42  30:00  gana EXPERTA por puntos     pts 6659-5586 | 10' 35a5mE2 / 38a8mE2 15' 45a13mE2 / 52a14mE3 20' 80a54mE2 / 60a14mE3
+mapuches      llano     s41  17:55  gana EXPERTA (conquista)    pts 3806-1440 | 10' 54a17mE1 / 32a11mE2 15' 66a48mE2 / 32a0mE2
+mapuches      llano     s42  25:28  gana EXPERTA (conquista)    pts 7320-3328 | 10' 50a17mE2 / 34a15mE2 15' 69a22mE2 / 46a34mE2 20' 77a68mE3 / 53a1mE2
+mapuches      rio       s41  23:04  gana EXPERTA (sitios)       pts 5986-3361 | 10' 47a18mE1 / 32a12mE2 15' 59a23mE2 / 39a15mE2 20' 79a73mE3 / 51a8mE2
+mapuches      rio       s42  24:31  gana EXPERTA (sitios)       pts 6232-3263 | 10' 46a13mE2 / 32a21mE2 15' 65a31mE3 / 42a13mE2 20' 79a55mE3 / 47a27mE2
+palmares      llano     s41  23:42  gana EXPERTA (sitios)       pts 3206-2533 | 10' 19a8mE1 / 19a14mE2 15' 32a18mE2 / 30a2mE2 20' 48a35mE2 / 43a12mE2
+palmares      llano     s42  30:00  gana dificil por puntos     pts 3584-5273 | 10' 17a8mE1 / 20a20mE2 15' 24a35mE2 / 34a21mE2 20' 35a12mE2 / 47a31mE2
+palmares      rio       s41  15:46  gana EXPERTA (sitios)       pts 1328-1499 | 10' 20a18mE2 / 19a10mE1 15' 29a0mE2 / 30a20mE2
+palmares      rio       s42  27:58  gana EXPERTA (conquista)    pts 4818-2398 | 10' 18a6mE1 / 19a16mE2 15' 25a38mE2 / 29a5mE2 20' 42a31mE2 / 33a0mE2
+tawantinsuyu  llano     s41  19:54  gana EXPERTA (conquista)    pts 6649-2091 | 10' 31a14mE2 / 34a6mE2 15' 59a21mE2 / 36a2mE2
+tawantinsuyu  llano     s42  17:49  gana dificil (conquista)    pts 2254-4895 | 10' 36a6mE2 / 39a24mE2 15' 30a2mE2 / 55a26mE2
+tawantinsuyu  rio       s41  14:20  gana dificil (conquista)    pts 1608-4132 | 10' 36a10mE2 / 40a24mE2
+tawantinsuyu  rio       s42  22:40  gana dificil (conquista)    pts 4268-7666 | 10' 36a15mE2 / 35a9mE2 15' 57a15mE2 / 46a43mE2 20' 42a12mE2 / 60a45mE3
+ayutthaya     2/4  50%
+etiopia       4/4 100%
+guaranies     2/4  50%
+mapuches      4/4 100%
+palmares      3/4  75%
+tawantinsuyu  1/4  25%
+TOTAL 16/24 66%

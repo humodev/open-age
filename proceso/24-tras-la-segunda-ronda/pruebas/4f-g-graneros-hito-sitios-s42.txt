@@ -1,0 +1,25 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+ayutthaya     llano     s42  30:00  gana dificil por puntos     pts 5645-5914 | 10' 28a13mE2 / 31a13mE2 15' 36a23mE2 / 43a21mE2 20' 63a18mE2 / 55a59mE2
+ayutthaya     rio       s42  24:25  gana dificil (sitios)       pts 3495-4212 | 10' 28a12mE2 / 30a25mE2 15' 36a18mE2 / 43a24mE2 20' 50a24mE2 / 54a27mE2
+etiopia       llano     s42  30:00  gana EXPERTA por puntos     pts 9081-3668 | 10' 31a17mE2 / 26a9mE2 15' 50a18mE2 / 28a11mE2 20' 89a53mE2 / 42a19mE2
+etiopia       rio       s42  30:00  gana EXPERTA por puntos     pts 6069-4559 | 10' 32a15mE2 / 33a10mE2 15' 49a13mE2 / 45a34mE2 20' 86a14mE2 / 59a58mE3
+guaranies     llano     s42  30:00  gana dificil por puntos     pts 6191-7830 | 10' 37a7mE2 / 38a5mE2 15' 46a20mE2 / 52a30mE2 20' 76a24mE3 / 60a84mE3
+guaranies     rio       s42  30:00  gana EXPERTA por puntos     pts 5867-5824 | 10' 37a6mE2 / 38a14mE2 15' 37a21mE2 / 52a23mE3 20' 51a77mE3 / 60a19mE3
+mapuches      llano     s42  26:01  gana EXPERTA (conquista)    pts 7000-3421 | 10' 50a14mE2 / 34a19mE2 15' 68a60mE3 / 48a22mE2 20' 77a79mE3 / 42a4mE2
+mapuches      rio       s42  27:59  gana EXPERTA (conquista)    pts 7022-3987 | 10' 48a11mE2 / 32a23mE2 15' 48a48mE2 / 44a29mE2 20' 66a47mE3 / 51a28mE2
+palmares      llano     s42  30:00  gana dificil por puntos     pts 4416-4686 | 10' 17a8mE1 / 20a17mE1 15' 23a12mE2 / 33a16mE2 20' 34a10mE2 / 48a11mE2
+palmares      rio       s42  27:57  gana EXPERTA (sitios)       pts 4265-3036 | 10' 18a1mE1 / 19a14mE2 15' 26a40mE2 / 29a11mE2 20' 42a38mE2 / 42a0mE2
+tawantinsuyu  llano     s42  17:58  gana dificil (sitios)       pts 3014-4090 | 10' 40a19mE2 / 40a20mE2 15' 51a45mE2 / 57a25mE2
+tawantinsuyu  rio       s42  20:09  gana EXPERTA (sitios)       pts 6305-1912 | 10' 35a20mE2 / 31a10mE2 15' 49a22mE2 / 32a9mE2 20' 73a59mE3 / 11a0mE2
+% de victorias de la experta:
+  tawantinsuyu  1 / 2   50 %
+  mapuches      2 / 2  100 %
+  guaranies     1 / 2   50 %
+  etiopia       2 / 2  100 %
+  palmares      1 / 2   50 %
+  ayutthaya     0 / 2    0 %
+  total         7 / 12   58 %
+WARNING: 33153 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 10 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

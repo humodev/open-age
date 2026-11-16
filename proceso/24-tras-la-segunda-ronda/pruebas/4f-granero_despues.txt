@@ -1,0 +1,42 @@
+
+== tawantinsuyu (yo, script, plan boom, 4 constructores, recursos normal, tiempo 0) contra etiopia (IA experta), semilla 7
+  0:00 | P0 ed1 ald 6 (A0 M0 P0 R0 obra0 ocio6) ej 0 pob 7/10 res A200 M200 P100 R100 | P1 ed1 ald 6 (A0 M0 P0 R0 obra0 ocio6) ej 0 pob 7/10 res A200 M200 P100 R100
+  1:00 | P0 ed1 ald 9 (A4 M1 P0 R2 obra2 ocio0) ej 0 pob 10/30 res A160 M60 P100 R120 | P1 ed1 ald 9 (A5 M4 P0 R0 obra0 ocio0) ej 0 pob 10/20 res A190 M130 P100 R109
+  2:00 | P0 ed1 ald 13 (A6 M3 P0 R4 obra0 ocio0) ej 0 pob 14/30 res A340 M120 P100 R170 | P1 ed1 ald 12 (A6 M4 P0 R0 obra2 ocio0) ej 0 pob 13/20 res A291 M30 P100 R127
+  3:00 | P0 ed1 ald 17 (A5 M4 P0 R4 obra4 ocio0) ej 0 pob 18/30 res A100 M240 P100 R20 | P1 ed1 ald 16 (A9 M4 P0 R2 obra0 ocio1) ej 0 pob 16/20 res A465 M60 P100 R171
+  4:00 | P0 ed1 ald 21 (A9 M4 P0 R4 obra4 ocio0) ej 0 pob 22/30 res A310 M410 P100 R180 | P1 ed1 ald 19 (A11 M6 P0 R2 obra0 ocio0) ej 0 pob 20/30 res A601 M120 P100 R259
+  5:00 | P0 ed2 ald 25 (A12 M5 P1 R4 obra3 ocio0) ej 0 pob 26/35 res A420 M280 P100 R335 | P1 ed1 ald 22 (A11 M6 P0 R1 obra4 ocio0) ej 0 pob 23/30 res A142 M250 P100 R7
+  6:00 | P0 ed2 ald 29 (A15 M6 P2 R5 obra1 ocio0) ej 5 pob 35/35 res A400 M285 P130 R450 | P1 ed1 ald 23 (A5 M11 P0 R1 obra6 ocio0) ej 2 pob 26/30 res A8 M46 P100 R24
+  7:00 | P0 ed2 ald 33 (A13 M9 P4 R5 obra2 ocio0) ej 14 pob 48/55 res A215 M230 P170 R500 | P1 ed2 ald 26 (A11 M9 P2 R3 obra1 ocio0) ej 3 pob 30/45 res A44 M146 P100 R38
+  8:00 | P0 ed2 ald 36 (A15 M9 P4 R7 obra1 ocio0) ej 27 pob 64/65 res A190 M265 P300 R625 | P1 ed2 ald 29 (A12 M10 P4 R3 obra0 ocio0) ej 7 pob 37/45 res A9 M536 P165 R20
+  9:00 | P0 ed2 ald 39 (A16 M10 P5 R8 obra0 ocio0) ej 40 pob 80/85 res A0 M370 P380 R760 | P1 ed2 ald 32 (A12 M9 P7 R3 obra1 ocio0) ej 10 pob 43/45 res A63 M841 P247 R42
+  10:00 | P0 ed2 ald 43 (A18 M10 P5 R9 obra1 ocio0) ej 53 pob 97/95 res A30 M420 P540 R1025 | P1 ed2 ald 34 (A9 M7 P7 R3 obra8 ocio0) ej 14 pob 49/55 res A13 M44 P142 R163
+  11:00 | P0 ed2 ald 45 (A18 M12 P5 R9 obra1 ocio0) ej 64 pob 109/115 res A110 M525 P660 R1255 | P1 ed2 ald 38 (A15 M11 P2 R9 obra1 ocio0) ej 15 pob 54/75 res A33 M117 P298 R503
+  12:00 | P0 ed2 ald 29 (A4 M16 P0 R9 obra0 ocio0) ej 64 pob 94/115 res A30 M600 P780 R1510 | P1 ed2 ald 44 (A19 M14 P3 R5 obra3 ocio0) ej 16 pob 61/75 res A44 M58 P226 R565
+  13:00 | P0 ed2 ald 25 (A4 M17 P0 R0 obra4 ocio0) ej 69 pob 95/115 res A30 M660 P780 R1750 | P1 ed2 ald 49 (A24 M17 P1 R5 obra1 ocio1) ej 15 pob 67/95 res A49 M189 P346 R341
+  14:00 | P0 ed2 ald 25 (A6 M19 P0 R0 obra0 ocio0) ej 78 pob 104/115 res A10 M925 P780 R1750 | P1 ed2 ald 54 (A26 M19 P0 R4 obra5 ocio0) ej 22 pob 79/95 res A42 M57 P50 R466
+  14:00 ataque en movimiento con 78 unidades
+  15:00 | P0 ed2 ald 10 (A3 M7 P0 R0 obra0 ocio0) ej 82 pob 108/115 res A20 M1345 P780 R1750 | P1 ed2 ald 62 (A39 M17 P0 R4 obra1 ocio1) ej 18 pob 86/105 res A47 M758 P50 R619
+     ejército: centro (27,31), capital rival centro en (116,109) vida 3000/3000, a 120 casillas · órdenes { 2: 77, 3: 5, "hondero/1": 1, "lancero/1": 4 }
+  16:00 | P0 ed2 ald 25 (A6 M18 P0 R0 obra1 ocio0) ej 88 pob 114/115 res A15 M1635 P780 R1750 | P1 ed2 ald 70 (A48 M17 P0 R4 obra1 ocio0) ej 15 pob 90/105 res A33 M1433 P50 R579
+     ejército: centro (27,31), capital rival centro en (116,109) vida 3000/3000, a 120 casillas · órdenes { 2: 80, 0: 8 }
+  17:00 | P0 ed2 ald 25 (A6 M19 P0 R0 obra0 ocio0) ej 95 pob 120/125 res A15 M2175 P780 R1750 | P1 ed2 ald 77 (A55 M16 P0 R5 obra1 ocio0) ej 21 pob 103/125 res A34 M1943 P50 R592
+     ejército: centro (37,33), capital rival centro en (116,109) vida 3000/3000, a 111 casillas · órdenes { 2: 82, 1: 5, 0: 8 }
+  18:00 | P0 ed2 ald 25 (A6 M19 P0 R0 obra0 ocio0) ej 97 pob 123/135 res A30 M2645 P780 R1750 | P1 ed2 ald 85 (A59 M16 P0 R6 obra3 ocio1) ej 28 pob 118/125 res A48 M2418 P50 R630
+     ejército: centro (44,37), capital rival centro en (116,109) vida 3000/3000, a 104 casillas · órdenes { 2: 83, 1: 6, 3: 1, "guerrero/1": 1, 0: 7 }
+  19:00 | P0 ed2 ald 25 (A6 M19 P0 R0 obra0 ocio0) ej 103 pob 129/135 res A10 M3115 P780 R1750 | P1 ed2 ald 73 (A47 M24 P0 R0 obra2 ocio0) ej 36 pob 114/145 res A31 M2854 P50 R639
+     ejército: centro (50,40), capital rival centro en (116,109) vida 3000/3000, a 97 casillas · órdenes { 2: 72, 3: 17, "aldeano/1": 17, 0: 9, 1: 5 }
+FIN en 19:41, gana 1, motivo sitios
+   puntaje: 2502 contra 2920
+   sitios en manos de: [1, 1, 1] · capital e hitos propios en pie: 2
+-- campanas tocadas: 3 · primera granja 10:56
+-- edades (segundo en que se llega): { "0-1": 0, "1-1": 0, "0-2": 274, "1-2": 393 }
+-- hito colocado: { "0-1": 174, "1-1": 266 }
+-- segundos con enemigos a 12 casillas del hito en obra: {  } · vida mínima del hito en obra (%): { "0-1": 0, "1-1": 0 }
+-- aldeano-segundos ociosos: yo 123, IA 187
+-- segundos con el centro sin cola: yo 506, IA 120; trabado por población 8
+-- primer militar encolado: 4:59; ataque: 14:00; pico de ejército yo 108, IA 39
+-- obras: ["0:01 casa", "0:28 casa", "0:47 almacen_madera", "1:32 almacen_mina", "2:53 ushnu", "4:34 campo_tiro", "4:35 cuartel", "5:32 casa", "6:07 almacen_mina", "6:09 qollqa", "6:31 almacen_mina", "6:33 casa", "7:15 casa", "7:43 casa", "8:22 casa", "8:27 qollqa", "9:01 casa", "9:37 casa", "10:22 casa", "10:56 granja", "10:59 qollqa", "11:07 granja", "11:23 granja", "11:34 granja", "12:55 granja", "12:56 almacen_madera", "12:56 granja", "13:12 almacen_madera", "13:28 almacen_madera", "15:35 casa", "17:01 casa", "19:07 casa"]
+-- avisos y rechazos: {  }
+-- stats P0: { "recolectado": 16580, "entrenadas": 166, "bajas": 81, "muertes": 41, "edificios_destruidos": 0, "ordenes": { "move": 30, "train:aldeano": 596, "target": 117, "build:casa": 13, "build:almacen_madera": 4, "build:almacen_mina": 3, "build:ushnu": 1, "build:campo_tiro": 1, "build:cuartel": 1, "train:guerrero": 18, "train:hondero": 49, "build:qollqa": 3, "train:awqa": 93, "build:granja": 6, "alarm": 6 }, "origen": { "propio": { "mita": 2081 }, "casa": { "alimento": 3260, "riqueza": 2340, "madera": 6870, "piedra": 780 }, "recoleccion": { "alimento": 530, "riqueza": 60, "madera": 130, "piedra": 20 }, "disputado": { "alimento": 1010 }, "granja": { "alimento": 1580 } } }
+-- stats P1: { "recolectado": 21452, "entrenadas": 171, "bajas": 41, "muertes": 86, "edificios_destruidos": 2, "ordenes": { "target": 1807, "build:casa": 11, "train:aldeano": 96, "build:almacen_madera": 8, "build:gult": 4, "build:establo": 3, "build:almacen_mina": 1, "build:iglesia": 1, "rally": 4, "research": 8, "train:guerrero": 42, "build:granja": 12, "move": 704, "build:centro": 2, "build:taller": 1, "build:mercado": 4, "build:torre": 3, "build:cuartel": 1, "train:hondero": 35, "build:almacen_alimento": 2, "train:ariete": 3, "train:lancero": 1, "trade": 7, "build:corte_nueva": 1 }, "origen": { "propio": { "riqueza": 1040, "alimento": 134 }, "casa": { "alimento": 3250, "madera": 8506, "riqueza": 2128, "piedra": 793 }, "recoleccion": { "alimento": 1159, "madera": 384, "piedra": 7, "riqueza": 47 }, "granja": { "alimento": 4341, "riqueza": 4 }, "sitios": { "riqueza": 415 }, "mercado": { "alimento": 600, "madera": 100 }, "disputado": { "alimento": 585, "madera": 248 } } }
