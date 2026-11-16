@@ -32,7 +32,7 @@
       ["ocioso_militar", "Militar ocioso (Mayús: todos)", "Selección", "Comma"],
       ["ejercito", "Todo el ejército", "Selección", "M"],
       ["del_tipo", "Todos los del tipo", "Selección", "T"],
-      ["produccion", "Recorrer edificios de producción", "Selección", "Tab"],
+      ["produccion", "Recorrer edificios de producción (con aldeanos y tropas elegidos: cambia de grilla)", "Selección", "Tab"],
       ["centro", "Recorrer centros (doble: centra)", "Selección", "H"],
       ["borrar", "Borrar lo seleccionado", "Selección", "Delete"],
       ["ir_aviso", "Ir al último aviso", "Selección", "Space"],
@@ -83,7 +83,9 @@
     "_doc": "Información sobre el mapa (src/game/overlay.gd y src/game/ui/mundo_capa.gd). barras_combate_s: segundos que la barra de vida de una unidad que pegó o recibió un golpe queda visible aunque tenga la vida llena (solo con la opción «Barras de las tropas sanas al pelear»). barra_unidad (veterano, ronda 5: las barras tapaban a las figuras chicas en batalla): ancho_px y alto_px de la barra de una unidad a zoom 40 (crece al acercar la cámara, hasta tope_zoom), sobre_cabeza en casillas por encima de la cabeza. ocioso: el «Zz» del aldeano ocioso, del tamaño de la cabeza y sin el disco de antes (letra_px a zoom 40, contorno_px; sobre_cabeza en casillas).",
     "barras_combate_s": 4,
     "barra_unidad": { "ancho_px": 18, "alto_px": 2, "sobre_cabeza": 0.12, "tope_zoom": 1.4 },
-    "ocioso": { "letra_px": 7, "contorno_px": 3, "sobre_cabeza": 0.14 }
+    "ocioso": { "letra_px": 7, "contorno_px": 3, "sobre_cabeza": 0.14 },
+    "_doc_funcion_alt": "Ronda 6 (veterano): con Alt, el glifo de la función (choque, distancia, línea, asedio, explorador, aldeano) sobre cada unidad a la vista, como el de los edificios sobre el techo. px: lado del glifo a zoom 40 (crece al acercar, hasta tope_zoom); sobre_cabeza: casillas por encima de la cabeza (encima de la barra de vida).",
+    "funcion_alt": { "px": 14, "sobre_cabeza": 0.45, "tope_zoom": 1.4 }
   },
   "frases_ia": {
     "_doc": "Lo que dice la IA aliada en el chat (suceso ia_dice de la simulación). {a}: el jugador nombrado; {n}: cantidad; {llegan}: lo que llega tras la comisión del tributo; {recurso}: recurso; {pedido}: el recurso pedido cuando manda otro.",
@@ -133,7 +135,7 @@
     "sitios_repetir_s": 60,
     "lejos": { "_doc": "Aviso de viajes largos (proceso/24, 4m): con `aldeanos_min` aldeanos o más juntando un recurso (no de granja) a más de `casillas` del depósito más cercano que lo recibe, durante `durante_s` segundos seguidos, avisa con el almacén del pueblo («levantá un Tapyi junto a la caza»). Se calla si ya hay uno en obra a menos de `casillas` de donde juntan. `lugares`: cómo se nombra el lugar según el recurso del mapa.", "casillas": 12, "aldeanos_min": 3, "durante_s": 30, "repetir_s": 150, "recursos": ["alimento", "madera", "piedra"], "lugares": { "carne": "la caza", "venado": "la caza", "rebano_salvaje": "los animales", "arbusto": "los frutos", "arbol": "el monte", "roca": "la cantera" }, "femeninos": ["qollqa"] },
     "empujon": { "_doc": "Aviso que empuja a ganar (jugador nuevo, ronda 3): con `ejercito_min` tropas o más, `en_casa_pct` % de ellas a `casa_radio` casillas o menos de la capital y `recursos_min` o más sumando alimento, madera, piedra y riqueza, durante `durante_s` segundos seguidos, avisa «atacá o subí de edad». No en campañas", "ejercito_min": 15, "en_casa_pct": 75, "casa_radio": 22, "recursos_min": 2000, "durante_s": 90, "repetir_s": 240 },
-    "pelea": { "_doc": "Resumen de una pelea perdida (proceso/24, 4q): cuenta las bajas propias a más de `lejos_casillas` de la capital; cuando pasan `calma_s` segundos sin bajas, si fueron `bajas_min` o más, avisa cuántas, qué las mató (los `nombres_max` atacantes que más mataron) y qué llevar: asedio si los edificios que disparan hicieron `edificios_pct` % o más; la tropa con bono contra la unidad que más mató; y que con A y clic atacan lo primero que ven si `ocupados_pct` % o más le pegaban a un edificio cuando cayeron", "lejos_casillas": 25, "calma_s": 12, "bajas_min": 10, "nombres_max": 3, "edificios_pct": 25, "ocupados_pct": 30, "repetir_s": 60 }
+    "pelea": { "_doc": "Resumen de una pelea perdida (proceso/24, 4q): cuenta las bajas propias a más de `lejos_casillas` de la capital; cuando pasan `calma_s` segundos sin bajas, si fueron `bajas_min` o más, avisa en un título y tres renglones cortos (ronda 6): qué las mató (los `nombres_max` atacantes que más mataron), qué llevar (asedio si los edificios que disparan hicieron `edificios_pct` % o más; la tropa con bono contra la unidad que más mató) y cómo mandarlos: si `ocupados_pct` % o más le pegaban a un edificio cuando cayeron, que con A y clic van primero a los soldados (la elección de blancos, proceso/24, 5d)", "lejos_casillas": 25, "calma_s": 12, "bajas_min": 10, "nombres_max": 3, "edificios_pct": 25, "ocupados_pct": 30, "repetir_s": 60 }
   },
   "guia": {
     "_doc": "Mensajes de la Guía en campañas (src/game/hud.gd y src/game/ui/registro_guia.gd): cuánto quedan en pantalla según el largo (letras por segundo, mínimo y máximo) y cuántos guarda el registro que se relee con F7.",

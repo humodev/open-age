@@ -49,13 +49,17 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 	var comun := str(c.get("common", "")) if nombres else ""
 	# Un común largo que no entra ni achicado («Hito · edad I…» parecía de la edad I; jugador
 	# nuevo, ronda 5) usa su forma corta («Edad II»).
+	var dos: Array = [] # --- ronda 6 --- «Hito» arriba y «Edad II» abajo (jugador nuevo, ronda 6)
 	if comun != "" and c.has("common_corto") and _fit(Hud.font_b, comun, 11, r.size.x - 8) < 11:
 		comun = str(c["common_corto"])
+		dos = c.get("common_dos", [])
 	# Franja de lo que falta en varios renglones (costo real, 4k): el glifo se achica y queda un
 	# solo nombre (el común si hay) justo encima; si no entra, solo el glifo, como sin nombres.
 	var franja := _alto_franja(falta.size()) + 2.0 if not afford and not locked and falta.size() > 1 else 0.0
 	if nombre != "" and franja > 0.0:
 		var label := comun if comun != "" else nombre
+		if dos.size() == 2: # --- ronda 6 --- un solo renglón: «Hito edad II»
+			label = "%s %s" % [dos[0], str(dos[1]).to_lower()]
 		var top := r.end.y - franja
 		var gs := minf(26.0, top - r.position.y - 3.0 - 13.0)
 		if gs >= 10.0:
@@ -63,6 +67,12 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 			ci.draw_string(Hud.font_b, Vector2(r.position.x + 2, top - 2.0), label, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, _fit(Hud.font_b, label, 10, r.size.x - 4), Palette.UI_DIM.lightened(0.2))
 		else:
 			Glyphs.draw(ci, c["icon"], _rect_glifo(r, locked, falta), col)
+	elif nombre != "" and dos.size() == 2:
+		# --- ronda 6 --- glifo más chico y dos renglones: «Hito» (tenue) y «Edad II»
+		Glyphs.draw(ci, c["icon"], Rect2(r.position.x + (r.size.x - 18) / 2.0 + 2, r.position.y + 3, 18, 18), col)
+		var tcol2 := Palette.UI_TEXT if col == Palette.UI_TEXT else Palette.UI_DIM.lightened(0.2)
+		ci.draw_string(Hud.font_b, Vector2(r.position.x + 2, r.position.y + 30), str(dos[0]), HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, _fit(Hud.font_b, str(dos[0]), 10, r.size.x - 4), Palette.UI_DIM.lightened(0.2))
+		ci.draw_string(Hud.font_b, Vector2(r.position.x + 2, r.position.y + 40.5), str(dos[1]), HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, _fit(Hud.font_b, str(dos[1]), 11, r.size.x - 4), tcol2)
 	elif nombre != "":
 		var lines := 1 if (locked and edad_pedida(str(c["locked"])) != "") or (not afford and not locked) else 2
 		# Compacto (jugador nuevo, ronda 4): sin común, un renglón no alcanza («Trabajo de la

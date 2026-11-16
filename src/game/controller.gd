@@ -132,6 +132,7 @@ func _set_selection(ids: Array[int], keep_menu: bool = false) -> void:
 	# --- grilla --- (una selección nueva vuelve a la raíz de la grilla)
 	if not keep_menu or ids.is_empty():
 		submenu = Grilla.RAIZ
+		grilla_mixta = "" # --- ronda 6 ---
 	# --- fin grilla ---
 	selection = ids
 	view.selected.clear()
@@ -140,6 +141,59 @@ func _set_selection(ids: Array[int], keep_menu: bool = false) -> void:
 	if mode == "place" and not _has_villager():
 		cancel_mode()
 	selection_changed.emit()
+
+
+# --- ronda 6 ---
+## Z X C V son hitos en la grilla del aldeano y formaciones en la militar (veterano, ronda 6: «con
+## los dos elegidos, ¿cuál gana?»). Como AoE4: con aldeanos y tropas elegidos a la vez, la grilla
+## es la del tipo principal de la selección —el más numeroso; si empatan, la militar— y Tab
+## cambia a la otra. `commands()` decide con esto, así que la grilla, la tecla, el clic y la ficha
+## leen lo mismo (Controller.cmd_at). Una selección nueva vuelve al principal.
+var grilla_mixta := "" # "": el principal; "aldeanos" o "tropas": lo eligió Tab
+
+
+## Hay aldeanos propios y otras unidades propias elegidos a la vez.
+func seleccion_mixta() -> bool:
+	var v := false
+	var o := false
+	for e in selected_entities():
+		if e.owner == local and e.is_unit():
+			if e.fn == "civil":
+				v = true
+			else:
+				o = true
+	return v and o
+
+
+## La grilla que manda con la selección actual: la del aldeano o no.
+func grilla_aldeano() -> bool:
+	if not _has_villager():
+		return false
+	if not seleccion_mixta():
+		return true
+	if grilla_mixta != "":
+		return grilla_mixta == "aldeanos"
+	var nv := 0
+	var no := 0
+	for e in selected_entities():
+		if e.owner == local and e.is_unit():
+			if e.fn == "civil":
+				nv += 1
+			else:
+				no += 1
+	return nv > no
+
+
+## Tab con selección mixta: pasa a la otra grilla (vuelve a la raíz del aldeano).
+func cambiar_grilla_mixta() -> void:
+	grilla_mixta = "tropas" if grilla_aldeano() else "aldeanos"
+	submenu = Grilla.RAIZ
+	if mode == "place":
+		cancel_mode()
+	if hud != null and hud.has_method("hide_tip"):
+		hud.hide_tip()
+	selection_changed.emit()
+# --- fin ronda 6 ---
 
 
 func _has_villager() -> bool:
@@ -200,7 +254,14 @@ func commands() -> Array[Dictionary]:
 	var p: Dictionary = sim.players[local]
 	var age: int = p["age"]
 	var first := sel[0]
-	if _has_villager():
+	# --- ronda 6 --- con selección mixta y la grilla militar, manda la primera tropa
+	var de_aldeano := grilla_aldeano()
+	if not de_aldeano and first.is_unit() and first.fn == "civil":
+		for e in sel:
+			if e.owner == local and e.is_unit() and e.fn != "civil":
+				first = e
+				break
+	if de_aldeano:
 		# --- grilla --- (raíz: submenús, detener, refugio e hitos; dentro: edificios en casillas fijas)
 		var slots := villager_slots()
 		if submenu == Grilla.RAIZ:
@@ -224,6 +285,7 @@ func commands() -> Array[Dictionary]:
 					cmd["name"] = "%s · avanzar a edad %s" % [def["nombre"], Sim._roman(age + 1)]
 					cmd["common"] = "Hito · edad %s" % Sim._roman(age + 1)
 					cmd["common_corto"] = "Edad %s" % Sim._roman(age + 1) # si no entra (ronda 5: «Hito · edad I…»)
+					cmd["common_dos"] = ["Hito", "Edad %s" % Sim._roman(age + 1)] # --- ronda 6 --- sin perder «hito»
 					cmd["desc"] = "%s\n%s\n%s" % [def.get("desc", ""), effects_text(def.get("efectos", [])), unlocks_text(age + 1)]
 					if sim.hito_in_progress(local):
 						cmd["locked"] = "Ya hay un hito en obra"
@@ -921,7 +983,7 @@ func _key(k: InputEventKey) -> void:
 	if code == KEY_ESCAPE:
 		if mode != "":
 			cancel_mode()
-		elif submenu != Grilla.RAIZ and (_has_villager() or submenu == INVESTIGAR): # --- grilla ---
+		elif submenu != Grilla.RAIZ and (grilla_aldeano() or submenu == INVESTIGAR): # --- grilla --- (--- ronda 6 ---)
 			open_submenu(Grilla.RAIZ)
 		elif not selection.is_empty():
 			_set_selection([] as Array[int])
@@ -961,7 +1023,10 @@ func _key(k: InputEventKey) -> void:
 			atajos.todos_del_tipo()
 			return
 		"produccion":
-			atajos.recorrer_produccion()
+			if seleccion_mixta(): # --- ronda 6 --- Tab con aldeanos y tropas: la otra grilla
+				cambiar_grilla_mixta()
+			else:
+				atajos.recorrer_produccion()
 			get_viewport().set_input_as_handled()
 			return
 		"ir_aviso", "avisos_atras":

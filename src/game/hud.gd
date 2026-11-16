@@ -959,7 +959,7 @@ class CommandCard:
 		draw_style_box(Hud.panel_box(), Rect2(Vector2.ZERO, size))
 		var cmds := hud.ctrl.commands()
 		# --- grilla --- (pestaña con el submenú abierto, encima de la grilla)
-		if hud.ctrl.submenu != Grilla.RAIZ and (hud.ctrl._has_villager() or hud.ctrl.submenu == Controller.INVESTIGAR):
+		if hud.ctrl.submenu != Grilla.RAIZ and (hud.ctrl.grilla_aldeano() or hud.ctrl.submenu == Controller.INVESTIGAR): # --- ronda 6 ---
 			var title := "ECONOMÍA" if hud.ctrl.submenu == Grilla.ECONOMIA else "INVESTIGACIONES" if hud.ctrl.submenu == Controller.INVESTIGAR else "MILITAR Y DEFENSA"
 			var tw := Hud.font_b.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x + 92
 			var tab := StyleBoxFlat.new()
@@ -973,6 +973,23 @@ class CommandCard:
 			draw_string(Hud.font_b, Vector2(10, -7), title, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Palette.UI_ACCENT)
 			draw_string(Hud.font, Vector2(0, -7), "Esc vuelve", HORIZONTAL_ALIGNMENT_RIGHT, tw - 10, 12, Palette.UI_DIM)
 		# --- fin grilla ---
+		# --- ronda 6 --- con aldeanos y tropas elegidos, de quién es la grilla y que Tab cambia
+		elif hud.ctrl.seleccion_mixta():
+			var de_ald: bool = hud.ctrl.grilla_aldeano()
+			var title := "ALDEANOS" if de_ald else "TROPAS"
+			var otra := "%s: %s" % [Teclas.texto("produccion"), "tropas" if de_ald else "aldeanos"]
+			var tw := Hud.font_b.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x + Hud.font.get_string_size(otra, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x + 36
+			var tab := StyleBoxFlat.new()
+			tab.bg_color = Color(Palette.UI_BG, 0.95)
+			tab.border_color = Color(Palette.UI_ACCENT, 0.6)
+			tab.set_border_width_all(1)
+			tab.border_width_bottom = 0
+			tab.corner_radius_top_left = 6
+			tab.corner_radius_top_right = 6
+			draw_style_box(tab, Rect2(0, -24, tw, 24))
+			draw_string(Hud.font_b, Vector2(10, -7), title, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Palette.UI_ACCENT)
+			draw_string(Hud.font, Vector2(0, -7), otra, HORIZONTAL_ALIGNMENT_RIGHT, tw - 10, 12, Palette.UI_DIM)
+		# --- fin ronda 6 ---
 		# Lo que se dibuja en cada casilla es lo que ejecutan la tecla y el clic (Controller.cmd_at).
 		var by_slot := {}
 		for i in 12:

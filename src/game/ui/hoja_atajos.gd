@@ -79,7 +79,9 @@ static func secciones() -> Array:
 			["Clic izquierdo", "elegir (arrastrá para un grupo; doble clic: todos los del tipo)"],
 			["Clic derecho", "mover, atacar, juntar, construir, reparar o alojar"],
 			[grilla, "la grilla de órdenes: construir, entrenar, investigar"],
-			["%s y clic" % _k("grilla_4"), "atacar en movimiento: atacan lo primero que ven"],
+			# --- ronda 6 --- la elección de blancos (proceso/24, 5d): ya no «lo primero que ven»
+			["%s y clic" % _k("grilla_4"), "atacar en movimiento: primero a los soldados, después a los aldeanos y a lo que tira flechas. Para tirar edificios: asedio y clic derecho sobre el edificio"],
+			# --- fin ronda 6 ---
 			[_k("grilla_5"), "detener"],
 			[_k("ir_aviso"), "ir al último ataque o aviso"],
 			[_k("avisos_atras"), "recorrer los avisos anteriores"],
@@ -91,19 +93,20 @@ static func secciones() -> Array:
 			[_k("ejercito"), "todo el ejército"],
 			[_k("del_tipo"), "todos los del tipo de lo elegido"],
 			[_k("centro"), "el centro (dos veces: la cámara va ahí)"],
-			[_k("produccion"), "recorrer los edificios que entrenan"],
+			[_k("produccion"), "recorrer los edificios que entrenan (con aldeanos y tropas: cambia de grilla)"], # --- ronda 6 ---
 			[_k("todos_aldeanos"), "todos los aldeanos"],
 			[_k("produccion_todos"), "todos los edificios de producción militar"],
 			[_k("campana"), "campana: los aldeanos se refugian (otra vez: calma)"],
 			[_k("borrar"), "borrar lo elegido"],
 		]],
-		["Grupos y cámara", [
+		["Grupos, cámara y Alt", [
 			["Ctrl + %s…%s" % [_k("grupo_1"), _k("grupo_0")], "guardar lo elegido como grupo"],
 			["%s…%s" % [_k("grupo_1"), _k("grupo_0")], "elegir el grupo (dos veces: la cámara va ahí)"],
 			["Mayús + %s…%s" % [_k("grupo_1"), _k("grupo_0")], "sumar al grupo"],
 			["Ctrl + Alt + 1…8", "guardar la cámara"],
 			["Alt + 1…8 · %s %s %s" % [_k("marcador_1"), _k("marcador_2"), _k("marcador_3")], "volver a una cámara guardada"],
 			["Flechas, bordes", "mover la cámara (botón del medio: girar)"],
+			["Mantener Alt", "ver qué es cada edificio y cada tropa (choque, distancia, línea, asedio, aldeano), los alcances y las barras de vida"], # --- ronda 6 ---
 		]],
 		["Paneles", [
 			[_k("ayuda"), "cómo juega tu pueblo"],
