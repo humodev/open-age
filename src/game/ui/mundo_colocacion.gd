@@ -142,6 +142,68 @@ static func conectado(sim: Sim, pid: int, type: String, tx: int, ty: int) -> boo
 	return false
 
 
+# --- aura del hito --- (proceso/24, 4k)
+## Aura que va a tener un hito de este tipo: la propia (`aura`) o la de su eje en
+## reglas.aura_hito, como `Sim.aura_of` ({} si no tiene).
+static func aura_def(sim: Sim, def: Dictionary) -> Dictionary:
+	if not def.get("hito", false):
+		return {}
+	if def.has("aura"):
+		return def["aura"]
+	return sim.data.reglas.get("aura_hito", {}).get(String(def.get("eje", "")), {})
+
+
+## "+15 % de recolección a 9 casillas" o "cura 2 por segundo a la tropa a 9 casillas".
+static func aura_texto(aura: Dictionary) -> String:
+	if aura.is_empty():
+		return ""
+	var r := int(aura.get("radio", 0)) / P
+	if aura.has("recoleccion_pct"):
+		var que := "recolección"
+		if aura.has("recursos"):
+			var nombres := []
+			for k in aura["recursos"]:
+				nombres.append(_res_name(k))
+			que = "recolección de " + " y ".join(nombres)
+		return "+%d %% de %s a %d casillas" % [int(aura["recoleccion_pct"]), que, r]
+	if aura.has("cura_por_s"):
+		return "cura %d de vida por segundo a la tropa a %d casillas" % [int(aura["cura_por_s"]), r]
+	return "aura a %d casillas" % r
+
+
+## Qué rinde dentro del aura de recolección si el hito va en (tx, ty): granjas propias y
+## recursos de la naturaleza por tipo ({"granjas": n, "alimento": n, ...}), medidos desde el
+## borde del edificio como `Sim.dist_to`.
+static var _aura_cache := ["", {}]
+
+static func dentro_del_aura(sim: Sim, pid: int, def: Dictionary, tx: int, ty: int) -> Dictionary:
+	var aura := aura_def(sim, def)
+	var out := {}
+	if not aura.has("recoleccion_pct"):
+		return out
+	# Se recorre toda la naturaleza: una vez por casilla y por segundo de juego, no por cuadro.
+	var key := "%s/%d/%d/%d/%d" % [def.get("nombre", ""), pid, tx, ty, sim.tick * sim.tick_ms / 1000]
+	if _aura_cache[0] == key:
+		return _aura_cache[1]
+	var rad := int(aura["radio"])
+	var tam: Array = def["tam"]
+	var kinds: Array = aura.get("recursos", [])
+	for e in sim.entities: # los recursos no están en `actives`
+		if not e.alive or not (e.is_resource() or e.is_building()):
+			continue
+		var cx := clampi(e.x, tx * P, (tx + int(tam[0])) * P)
+		var cy := clampi(e.y, ty * P, (ty + int(tam[1])) * P)
+		if Sim.dist(e.x, e.y, cx, cy) > rad:
+			continue
+		if e.is_resource() and e.amount > 0 and (kinds.is_empty() or kinds.has(e.res_kind)):
+			out[e.res_kind] = int(out.get(e.res_kind, 0)) + 1
+		elif e.is_building() and e.owner == pid and String(e.def.get("fuente", "")) != "" and (kinds.is_empty() or kinds.has(e.def["fuente"])):
+			out["granjas"] = int(out.get("granjas", 0)) + 1
+	_aura_cache = [key, out]
+	return out
+# --- fin aura del hito ---
+
+
 ## Renglones de información para mostrar junto al cursor: [texto, color].
 static func detalles(sim: Sim, pid: int, type: String, tx: int, ty: int) -> Array:
 	var dd := sim.dp(pid)
@@ -176,6 +238,21 @@ static func detalles(sim: Sim, pid: int, type: String, tx: int, ty: int) -> Arra
 	if int(def.get("guarnicion", 0)) > 0:
 		var rc := int(sim.data.reglas.get("radio_campana", 0))
 		out.append(["Refugia %d · campana a %d casillas" % [int(def["guarnicion"]), rc / P], Palette.UI_DIM])
+	# --- aura del hito --- radio y qué queda adentro (la decisión de dónde levantarlo)
+	var aura := aura_def(sim, def)
+	if not aura.is_empty():
+		out.append(["Aura: " + aura_texto(aura), Palette.UI_GOOD])
+		if aura.has("recoleccion_pct"):
+			var inn := dentro_del_aura(sim, pid, def, tx, ty)
+			var parts := []
+			if inn.has("granjas"):
+				parts.append("%d %s" % [inn["granjas"], "granja" if int(inn["granjas"]) == 1 else "granjas"])
+			var nombres := {"alimento": ["fuente de alimento", "fuentes de alimento"], "madera": ["árbol", "árboles"], "piedra": ["veta de piedra", "vetas de piedra"], "riqueza": ["veta de riqueza", "vetas de riqueza"]}
+			for k in nombres:
+				if inn.has(k):
+					parts.append("%d %s" % [inn[k], nombres[k][0 if int(inn[k]) == 1 else 1]])
+			out.append(["En el aura: " + (", ".join(parts) if not parts.is_empty() else "nada que recolectar"), Palette.UI_TEXT if not parts.is_empty() else Palette.UI_BAD])
+	# --- fin aura del hito ---
 	if dd.has_mod("caminos") and not def.get("camino", false):
 		var cfg: Dictionary = dd.mod("caminos")
 		if conectado(sim, pid, type, tx, ty):

@@ -17,6 +17,23 @@ func setup(s: Sim, c: Controller, camera: RtsCamera) -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
+## Ticks que la barra de una unidad sigue a la vista después de su último golpe
+## (data/interfaz.json → mundo.barras_combate_s).
+static var _combat_s := -1.0
+
+static func combat_ticks(s: Sim) -> int:
+	if _combat_s < 0.0:
+		var all: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/interfaz.json"))
+		_combat_s = float(all.get("mundo", {}).get("barras_combate_s", 4))
+	return int(_combat_s * 1000.0) / maxi(1, s.tick_ms)
+
+
+## --- combate --- ¿Una unidad pegó o recibió un golpe hace poco? Su barra se ve sin Alt
+## ni la opción "barras siempre".
+static func en_combate(s: Sim, e: SimEntity, ticks: int = -1) -> bool:
+	return e.is_unit() and s.tick - e.last_combat <= (ticks if ticks >= 0 else combat_ticks(s))
+
+
 func _process(_delta: float) -> void:
 	queue_redraw()
 
@@ -26,11 +43,14 @@ func _draw() -> void:
 	var zoom_k := clampf(40.0 / cam.zoom, 0.6, 1.6)
 	var all_bars := Input.is_key_pressed(KEY_ALT) and ctrl.enabled # --- mundo --- Alt: todas las barras
 	all_bars = all_bars or Opciones.barras_siempre # --- opciones --- barras de vida siempre visibles
+	var combat_ticks := Overlay.combat_ticks(sim)
 	for e in sim.actives:
 		var sel := view.selected.has(e.id)
 		var hov := view.hovered == e.id
 		var damaged := e.hp < e.hp_max
-		if not (sel or hov or damaged or (e.is_building() and not e.built) or (all_bars and e.hp_max > 1)):
+		# --- combate --- (proceso/24, 4k) por defecto, la barra de toda unidad que pelea
+		var fighting := Overlay.en_combate(sim, e, combat_ticks)
+		if not (sel or hov or damaged or fighting or (e.is_building() and not e.built) or (all_bars and e.hp_max > 1)):
 			continue
 		var v: Dictionary = view.visuals.get(e.id, {})
 		if v.is_empty() or e.inside >= 0 or view.fog_state(e) < 2:

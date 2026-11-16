@@ -48,7 +48,7 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 		var lines := 1 if (locked and edad_pedida(str(c["locked"])) != "") or (not afford and not locked) else 2
 		ci.draw_multiline_string(Hud.font, Vector2(r.position.x + 2, r.position.y + 39), nombre, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, 10, lines, Palette.UI_TEXT if col == Palette.UI_TEXT else Palette.UI_DIM.lightened(0.2))
 	else:
-		Glyphs.draw(ci, c["icon"], r.grow(-14 if locked else -12), col)
+		Glyphs.draw(ci, c["icon"], _rect_glifo(r, locked, falta), col) # --- costo real ---
 	# --- fin aprender ---
 	_pastilla(ci, Rect2(r.position + Vector2(3, 3), Vector2(17, 17)), letra, Palette.UI_TEXT)
 	if locked:
@@ -58,18 +58,26 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 			var w := Hud.font_b.get_string_size(edad, HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x + 8
 			_pastilla(ci, Rect2(r.end.x - w - 3, r.end.y - 20, w, 17), edad, Palette.UI_TEXT)
 	elif not afford:
-		var k: String = falta.keys()[0]
-		var band := Rect2(r.position.x + 2, r.end.y - 19, r.size.x - 4, 17)
+		# --- costo real --- (proceso/24, 4k) cada recurso que falta con su número, uno por
+		# renglón: el hito ya no dice "−300+" sino todo lo que pide (también mit'a o fama).
+		var items := faltan_textos(falta)
+		var band := Rect2(r.position.x + 2, r.end.y - 2 - _alto_franja(items.size()), r.size.x - 4, _alto_franja(items.size()))
 		var bsb := StyleBoxFlat.new()
 		bsb.bg_color = FONDO_PASTILLA
 		bsb.corner_radius_bottom_left = 5
 		bsb.corner_radius_bottom_right = 5
 		ci.draw_style_box(bsb, band)
-		var icon_k := k if Palette.RES.has(k) else str(rp.get("icono", "riqueza"))
-		var icol: Color = Palette.RES.get(k, Color(rp.get("color", "#cccccc")))
-		Glyphs.draw(ci, icon_k, Rect2(band.position.x + 3, band.position.y + 2, 13, 13), icol)
-		var txt := "−%d%s" % [falta[k], "+" if falta.size() > 1 else ""]
-		ci.draw_string(Hud.font_b, Vector2(band.position.x + 18, band.end.y - 4), txt, HORIZONTAL_ALIGNMENT_LEFT, band.size.x - 20, 13, Palette.UI_BAD.lightened(0.15))
+		var solo := items.size() == 1
+		var rh := 17.0 if solo else FILA_FALTA
+		var gs := 13.0 if solo else 11.0
+		for i in items.size():
+			var k: String = items[i][0]
+			var p := band.position + Vector2(0, rh * i)
+			var icon_k := k if Palette.RES.has(k) else str(rp.get("icono", "riqueza"))
+			var icol: Color = Palette.RES.get(k, Color(rp.get("color", "#cccccc")))
+			Glyphs.draw(ci, icon_k, Rect2(p.x + 3, p.y + (rh - gs) / 2.0, gs, gs), icol)
+			ci.draw_string(Hud.font_b, Vector2(p.x + gs + 5, p.y + rh - (4.0 if solo else 2.5)), items[i][1], HORIZONTAL_ALIGNMENT_LEFT, band.size.x - gs - 6, 13 if solo else 12, Palette.UI_BAD.lightened(0.15))
+		# --- fin costo real ---
 
 
 ## Recursos que faltan para pagar `cost`, en el orden del banco: {recurso: cuánto falta}.
@@ -82,6 +90,30 @@ static func faltante(cost: Dictionary, res: Dictionary) -> Dictionary:
 	for k in keys:
 		if cost.has(k) and int(res.get(k, 0)) < int(cost[k]):
 			out[k] = int(cost[k]) - int(res.get(k, 0))
+	return out
+
+
+## --- costo real --- alto de la franja de lo que falta: un renglón por recurso.
+const FILA_FALTA := 13.0
+
+static func _alto_franja(n: int) -> float:
+	return 17.0 if n <= 1 else FILA_FALTA * n + 1.0
+
+
+## Glifo de la casilla: si la franja de lo que falta ocupa más de un renglón, se achica y
+## sube para que no lo tape.
+static func _rect_glifo(r: Rect2, locked: bool, falta: Dictionary) -> Rect2:
+	if locked or falta.size() <= 1:
+		return r.grow(-14 if locked else -12)
+	var s := clampf(r.size.y - _alto_franja(falta.size()) - 8.0, 14.0, r.size.x - 24.0)
+	return Rect2(r.position.x + (r.size.x - s) / 2.0 + 3.0, r.position.y + 3.0, s, s)
+
+
+## [[recurso, texto]] de lo que falta, en el orden del banco ("−40").
+static func faltan_textos(falta: Dictionary) -> Array:
+	var out := []
+	for k in falta:
+		out.append([k, "−%d" % int(falta[k])])
 	return out
 
 

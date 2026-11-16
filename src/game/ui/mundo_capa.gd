@@ -192,6 +192,13 @@ func _draw_reach(e: SimEntity, reach: float, col: Color, fill_a: float) -> void:
 		_draw_area(_shape(wp.x, wp.z, wp.x, wp.z, reach + e.radius / P), _gp(wp.x, wp.z), col, fill_a, 1.5)
 
 
+## --- aura del hito --- verde la de recolección, celeste la de cura; más tenue si es la de
+## un hito todavía en obra.
+static func _aura_color(aura: Dictionary, built: bool = true) -> Color:
+	var col := Palette.UI_GOOD if aura.has("recoleccion_pct") else Color(0.55, 0.85, 1.0)
+	return Color(col, 0.85 if built else 0.55)
+
+
 static func _reach_of(sim_: Sim, e: SimEntity) -> float:
 	var r := float(e.def.get("alcance", 0))
 	if e.is_building():
@@ -265,6 +272,11 @@ func _draw_ranges(info: bool) -> void:
 	for e in ctrl.selected_entities():
 		if drawn >= MAX_ALCANCES:
 			break
+		# --- aura del hito --- (seleccionado, terminado o en obra: dónde rinde)
+		var aura := Colocacion.aura_def(sim, e.def) if e.is_building() else {}
+		if not aura.is_empty() and view.fog_state(e) > 0:
+			_draw_area(_shape(e.tx, e.ty, e.tx + e.w, e.ty + e.h, float(aura.get("radio", 0)) / P), _gp(e.x / P, e.y / P), _aura_color(aura, e.built), 0.05)
+		# --- fin aura del hito ---
 		if e.is_building() and e.def.has("ataque") and e.built:
 			var col := Color(1, 1, 1, 0.6) if e.owner == local else Color(Palette.UI_BAD, 0.75)
 			_draw_reach(e, _reach_of(sim, e), col, 0.05)
@@ -316,6 +328,12 @@ func _draw_placement() -> void:
 	if int(def.get("guarnicion", 0)) > 0:
 		var rc := float(sim.data.reglas.get("radio_campana", 0)) / P
 		_draw_area(_shape(tile.x, tile.y, tile.x + tam[0], tile.y + tam[1], rc), center, Color(0.7, 0.85, 1.0, 0.55), 0.0, 1.5)
+	# --- aura del hito --- (proceso/24, 4k) el radio en el suelo, como el alcance de las torres
+	var aura := Colocacion.aura_def(sim, def)
+	if not aura.is_empty():
+		var ar := float(aura.get("radio", 0)) / P
+		_draw_area(_shape(tile.x, tile.y, tile.x + tam[0], tile.y + tam[1], ar), center, _aura_color(aura), 0.08)
+	# --- fin aura del hito ---
 	# Separación mínima: dónde no puede ir otra pieza del mismo tipo.
 	var sep := int(def.get("separacion", 0))
 	if sep > 0:

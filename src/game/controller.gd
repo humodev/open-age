@@ -777,6 +777,15 @@ func _key(k: InputEventKey) -> void:
 			hud.toggle_menu()
 		get_viewport().set_input_as_handled()
 		return
+	# --- marcadores --- (proceso/24, 4k) Alt + 1…8 vuelve y Ctrl + Alt + 1…8 guarda: Ctrl +
+	# número sigue siendo de los grupos de control.
+	if code >= KEY_1 and code <= KEY_9 and k.alt_pressed:
+		var nm := code - KEY_0
+		if nm <= int(Atajos.cfg().get("marcadores", 8)):
+			atajos.marca(nm, k.ctrl_pressed)
+			get_viewport().set_input_as_handled()
+		return
+	# --- fin marcadores ---
 	if code >= KEY_1 and code <= KEY_9:
 		var n := code - KEY_0
 		if k.ctrl_pressed:
@@ -820,9 +829,9 @@ func _key(k: InputEventKey) -> void:
 		atajos.recorrer_produccion()
 		get_viewport().set_input_as_handled()
 		return
-	var mk := OS.get_keycode_string(code)
-	if (Atajos.cfg().get("marcadores", []) as Array).has(mk):
-		atajos.marca(mk, k.ctrl_pressed)
+	var mk := (Atajos.cfg().get("marcadores_f", []) as Array).find(OS.get_keycode_string(code))
+	if mk >= 0:
+		atajos.marca(mk + 1, k.ctrl_pressed) # F7…F9: atajos de los marcadores 1 a 3
 		return
 	# --- fin órdenes ---
 	# --- avisos --- (Espacio: último ataque o suceso con lugar; Inicio: recorre los anteriores)
