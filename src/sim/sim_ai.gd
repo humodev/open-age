@@ -50,6 +50,11 @@ var _stores := {} # almacenes propios (id -> casilla), para ver cuáles se perdi
 var _stores_lost: Array = [] # [casilla, tick] de los almacenes perdidos hace poco
 var _built_ids := {} # edificios propios terminados en la pensada anterior (`rendicion`)
 var _lost_buildings := 0 # cuántos de esos se perdieron en la partida (`rendicion`)
+var _army_n := 0 # ejército propio en la pensada (para `_min_army`)
+var _seen := 0 # mayor ejército rival visto hace poco (`ejercito_segun_rival`)
+var _seen_tick := -100000
+var _unreach := {} # comida a la que no se llega (`comida_inalcanzable`): id -> true
+var _reach_ok := {} # id -> tick hasta el que se da por alcanzable
 
 # Reparto de aldeanos por recurso: reglas.json → ia_economia.
 var ratio_early := {}
@@ -131,6 +136,10 @@ func think() -> void:
 	# --- equipos ronda 3 --- lo pedido por un aliado se aparta antes de gastar (ver _reserve)
 	_requests(p)
 	var held := _reserve(p, 1)
+	_army_n = army.size()
+	_watch_rival_army()
+	if level.get("comida_inalcanzable", false):
+		_free_stuck_gatherers(vill)
 	var saving := _wants_hito(p, vill.size(), by_type)
 	_economy(p, vill, centro, saving)
 	_buildings(p, vill, centro, by_type, saving)
@@ -192,13 +201,26 @@ func _research(p: Dictionary, by_type: Dictionary, saving: bool) -> void:
 ## Campana si el enemigo llega a la base con más tropas que las propias; calma pasado el peligro.
 func _alarm(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], centro: SimEntity) -> void:
 	var enemies := 0
-	for e in sim.actives:
-		if e.alive and e.owner >= 0 and sim.enemies(player, e.owner) and e.is_military() and sim.dist_to(e, centro) < 16000:
-			enemies += 1
 	var defenders := 0
-	for u in army:
-		if sim.dist_to(u, centro) < 20000:
-			defenders += 1
+	# Experta (`campana_en_centros`): también en los centros nuevos; antes un ataque al segundo
+	# centro mataba a sus aldeanos sin campana (veterano, ronda 6: de 36 a 20 aldeanos).
+	var watch: Array[SimEntity] = [centro]
+	if level.get("campana_en_centros", false):
+		for c in centers:
+			if c != centro:
+				watch.append(c)
+	for c in watch:
+		var en := 0
+		for e in sim.actives:
+			if e.alive and e.owner >= 0 and sim.enemies(player, e.owner) and e.is_military() and sim.dist_to(e, c) < 16000:
+				en += 1
+		var de := 0
+		for u in army:
+			if sim.dist_to(u, c) < 20000:
+				de += 1
+		if c == centro or en - de > enemies - defenders:
+			enemies = en
+			defenders = de
 	if enemies > 0:
 		calm_since = sim.tick
 	if not p["alarm"] and enemies >= 2 and enemies > defenders:
@@ -256,7 +278,7 @@ func _economy(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, saving: 
 		if p["res"][k] > 600:
 			ratio[k] = ratio[k] / 3
 		if hito_cost.has(k) and p["res"][k] < hito_cost[k]:
-			ratio[k] += 12
+			ratio[k] += int(level.get("refuerzo_hito", sim.data.reglas["ia_economia"]["refuerzo_hito"]))
 		elif saving and k != "madera" and (not hito_cost.has(k) or p["res"][k] >= hito_cost[k]):
 			ratio[k] = ratio[k] / 3 # lo que ya alcanza para el hito libera gente para lo que falta
 	# Centro siguiente (experta): más gente en lo que falta para pagarlo (la piedra, sobre todo).
@@ -294,12 +316,18 @@ func _economy(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, saving: 
 		if kind == "alimento":
 			# Primero la carne abierta; un animal nuevo recién cuando no queda (una llama por vez).
 			var meat := sim.find_resource(player, "alimento", centro.x, centro.y, int(sim.data.reglas["animales"]["cadena_radio"]) * 2, -1, v.id, "carne")
+			if meat != null and _unreach.has(meat.id):
+				meat = null
 			var beast: SimEntity = meat if meat != null else _own_animal(centro)
 			if beast != null:
 				sim.push_command({"t": "target", "player": player, "ids": [v.id], "target": beast.id})
 				counts[kind] += 1
 				continue
 		var t := sim.find_resource(player, kind, home.x, home.y, 40000, -1, v.id)
+		if t != null and _unreach.has(t.id):
+			t = sim.find_resource(player, kind, home.x, home.y, 40000, t.id, v.id)
+			if t != null and _unreach.has(t.id):
+				t = null
 		# Alimento lejos de todo almacén (venados, animales sueltos del medio): como en AoE4,
 		# cuando se acaba lo cercano conviene pasar a las granjas antes que caminar (la edad III
 		# se atrasaba hasta 25 minutos; proceso/23, paso 10).
@@ -368,6 +396,10 @@ func _wants_hito(p: Dictionary, n_vill: int, by_type: Dictionary, extra: Diction
 	# En la edad I se ahorra apenas hay aldeanos suficientes, como en AoE: el avance
 	# a la II es la prioridad (compuerta de la etapa 1: edad II entre 6:30 y 9:00).
 	if p["age"] == 1:
+		return true
+	# Experta (`ahorro_con_minimo`): con el ejército mínimo de la edad hecho, el hito va primero,
+	# sin el ahorro intermitente (la edad III llegaba a los 15–20 minutos o nunca; veterano, ronda 6).
+	if not strict and (level.get("ahorro_continuo", false) or level.get("ahorro_con_minimo", false) and _army_n >= _min_army(p)):
 		return true
 	# Después, solo si el hito está al alcance: cada recurso cubre al menos la mitad.
 	var cost: Dictionary = sim.dp(player).cost_of(_hito_type(p), p["age"])
@@ -591,8 +623,9 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 	_expand(p, vill, centro, by_type, saving, unbuilt)
 	# Hito.
 	if saving and sim.can_afford(player, sim.dp(player).cost_of(_hito_type(p), p["age"])):
-		_try_build(_hito_type(p), p, vill, centro, 4)
+		_try_build(_hito_type(p), p, vill, centro, int(level.get("hito_constructores", 4)))
 		return
+	_center_towers(p, vill, by_type, unbuilt)
 	# Juntando para el centro, lo demás espera (como con el mercado): si no, la madera se va
 	# siempre antes en granjas, cuarteles y almacenes (Ayutthaya con 1 centro a los 25 minutos).
 	if not _holding.is_empty():
@@ -720,6 +753,121 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 	# Torre (la fácil, ninguna: `torres_max`; proceso/24, 4q).
 	if p["age"] >= 2 and sim.dp(player).edificios.has("torre") and by_type.get("torre", []).size() < int(level.get("torres_max", 1)) and p["res"]["piedra"] >= 250:
 		_try_build("torre", p, vill, centro, 1)
+
+
+## Experta (`torre_por_centro`): una torre junto a cada centro nuevo, del lado del rival, como
+## el jugador de AoE4 que hace boom (veterano, ronda 6). Solo con la piedra que sobra después
+## de lo que pide el hito siguiente.
+func _center_towers(p: Dictionary, vill: Array[SimEntity], by_type: Dictionary, unbuilt: Dictionary) -> void:
+	var cfg: Dictionary = level.get("torre_por_centro", {})
+	if cfg.is_empty() or p["age"] < 2 or unbuilt.has("torre") or not sim.dp(player).edificios.has("torre"):
+		return
+	if p["age"] < int(sim.dp(player).edificios["torre"].get("edad_min", 1)):
+		return
+	var cost: Dictionary = sim.dp(player).cost_of("torre", p["age"])
+	var keep: Dictionary = sim.dp(player).cost_of(_hito_type(p), p["age"]) if p["age"] < sim.dp(player).edades.size() and not sim.hito_in_progress(player) else {}
+	for k in cost:
+		if int(p["res"].get(k, 0)) < int(cost[k]) + int(keep.get(k, 0)):
+			return
+	var r := int(cfg["radio"])
+	for c in centers:
+		if c.capital:
+			continue
+		var has := false
+		for t: SimEntity in by_type.get("torre", []):
+			if Sim.dist(t.x, t.y, c.x, c.y) <= r:
+				has = true
+				break
+		if has:
+			continue
+		# Del lado de la base rival más cercana.
+		var eb := Vector2i(c.tx, c.ty)
+		var best := 1 << 60
+		for j in mini(sim.players.size(), sim.bases.size()):
+			if sim.enemies(player, j):
+				var d := Sim.dist(sim.bases[j].x * P, sim.bases[j].y * P, c.x, c.y)
+				if d < best:
+					best = d
+					eb = sim.bases[j]
+		var off := int(cfg["adelante"])
+		var at := Vector2i(c.tx + c.w / 2 + signi(eb.x - c.tx) * off, c.ty + c.h / 2 + signi(eb.y - c.ty) * off)
+		var site := _site_near("torre", at, 1)
+		if site.x >= 0:
+			_build_at("torre", site, vill, int(cfg["constructores"]))
+		return
+
+
+## El ejército mínimo de la edad (`ejercito_minimo_ahorrando`) y, en la experta
+## (`ejercito_segun_rival`), al menos `pct` % del mayor ejército rival visto en los últimos
+## `memoria_ticks` (hasta `tope`): si ve venir un ejército grande, no se queda con el mínimo.
+func _min_army(p: Dictionary) -> int:
+	var mins: Array = level.get("ejercito_minimo_ahorrando", sim.data.reglas["ia_economia"]["ejercito_minimo_ahorrando"])
+	var n := int(mins[clampi(int(p["age"]) - 1, 0, mins.size() - 1)])
+	var cfg: Dictionary = level.get("ejercito_segun_rival", {})
+	if not cfg.is_empty() and sim.tick - _seen_tick <= int(cfg["memoria_ticks"]):
+		n = maxi(n, mini(_seen * int(cfg["pct"]) / 100, int(cfg["tope"])))
+	return n
+
+
+## Cuenta el ejército rival a la vista (con la niebla de la IA: lo que ven sus unidades y
+## edificios) y recuerda el mayor (`ejercito_segun_rival`).
+func _watch_rival_army() -> void:
+	var cfg: Dictionary = level.get("ejercito_segun_rival", {})
+	if cfg.is_empty():
+		return
+	var n := 0
+	for e in sim.actives:
+		if e.alive and e.owner >= 0 and e.is_unit() and e.is_military() and sim.enemies(player, e.owner) and sim.fog.is_visible(player, e):
+			n += 1
+	if n >= _seen or sim.tick - _seen_tick > int(cfg["memoria_ticks"]):
+		_seen = n
+		_seen_tick = sim.tick
+
+
+## Experta (`comida_inalcanzable`): un animal carneado en un hueco cerrado por árboles atrapaba
+## a todos los aldeanos del alimento (21 aldeanos esperando 5 minutos junto a los árboles, con el
+## banco en 0; Tawantinsuyu, espejo de expertas, semilla 41). Quien junta y no llega a un recurso
+## al que no hay camino va a otro, y ese recurso no se vuelve a elegir.
+func _free_stuck_gatherers(vill: Array[SimEntity]) -> void:
+	var moved := {}
+	for v in vill:
+		if v.order != O.GATHER or v.carry > 0 or v.anchored:
+			continue
+		var t: SimEntity = sim.by_id.get(v.target)
+		if t == null or not t.alive or t.is_building() or not t.is_resource():
+			continue
+		if Sim.dist(v.x, v.y, t.x, t.y) > int(sim.data.reglas["ia_economia"]["inalcanzable_lejos"]):
+			continue # todavía en camino: se mira de cerca
+		if _reachable(v, t):
+			continue
+		var alt := sim.find_resource(player, v.gather_kind, v.x, v.y, 40000, t.id, v.id)
+		if alt == null or _unreach.has(alt.id):
+			alt = sim.find_resource(player, "madera", v.x, v.y, 40000, -1, v.id)
+		if alt == null:
+			continue
+		if not moved.has(alt.id):
+			moved[alt.id] = []
+		moved[alt.id].append(v.id)
+	for id in moved:
+		sim.push_command({"t": "target", "player": player, "ids": moved[id], "target": id})
+
+
+func _reachable(v: SimEntity, t: SimEntity) -> bool:
+	if _unreach.has(t.id):
+		return false
+	if sim.tick < int(_reach_ok.get(t.id, -1)):
+		return true
+	var to := Vector2i(t.x / P, t.y / P)
+	var from := sim.map.nearest_free(v.x / P, v.y / P, 3, player)
+	if from.x < 0:
+		return true
+	var path := sim.map.find_path(from, to, player)
+	var end: Vector2i = from if path.is_empty() else path[path.size() - 1]
+	if maxi(absi(end.x - to.x), absi(end.y - to.y)) <= 1:
+		_reach_ok[t.id] = sim.tick + int(sim.data.reglas["ia_economia"]["inalcanzable_recheck_ticks"])
+		return true
+	_unreach[t.id] = true
+	return false
 
 
 ## Almacenes perdidos: los que estaban en la pensada anterior y ya no están (rotos por el
@@ -936,13 +1084,14 @@ func _expansion_need(p: Dictionary, n_vill: int, saving: bool) -> Dictionary:
 		return {}
 	var ctype := _center_type()
 	var dd := sim.dp(player)
-	if ctype == "" or p["age"] < int(dd.edificios[ctype].get("edad_min", 1)):
+	if ctype == "" or p["age"] < maxi(int(dd.edificios[ctype].get("edad_min", 1)), int(cfg.get("edad_min", 1))):
 		return {}
 	var needs: Array = cfg["aldeanos"]
 	if n_vill < int(needs[clampi(centers.size() - 1, 0, needs.size() - 1)]):
 		return {}
 	var out: Dictionary = dd.cost_of(ctype, p["age"]).duplicate()
-	if saving:
+	# `reserva_hito`: el centro nunca se come lo del hito siguiente, aunque no se esté ahorrando.
+	if saving or cfg.get("reserva_hito", false) and p["age"] < dd.edades.size() and p["age"] < int(level.get("edad_max", 99)) and not sim.hito_in_progress(player):
 		var hc: Dictionary = dd.cost_of(_hito_type(p), p["age"])
 		for k in out:
 			out[k] = int(out[k]) + int(hc.get(k, 0))
@@ -1122,16 +1271,14 @@ func _production(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], 
 	# encima de su costo. Cortar del todo dejaba a Etiopía con 9 de ejército y 979 de alimento
 	# en el banco; gastar todo lo que sobra demoraba la edad III 3–4 minutos (proceso/24).
 	if saving and not threatened:
-		var mins: Array = level.get("ejercito_minimo_ahorrando", sim.data.reglas["ia_economia"]["ejercito_minimo_ahorrando"])
-		if army.size() >= int(mins[clampi(int(p["age"]) - 1, 0, mins.size() - 1)]):
+		if army.size() >= _min_army(p):
 			return
 		var hc: Dictionary = sim.dp(player).cost_of(_hito_type(p), p["age"])
 		for k in hc:
 			budget[k] = maxi(0, int(budget.get(k, 0)) - int(hc[k]))
 	# Juntando para el centro (experta), la tropa sale de lo que sobra por encima, salvo que
 	# esté por debajo del mínimo de la edad (`ejercito_minimo_ahorrando`): no se corta.
-	var mins_now: Array = level.get("ejercito_minimo_ahorrando", sim.data.reglas["ia_economia"]["ejercito_minimo_ahorrando"])
-	if not threatened and army.size() >= int(mins_now[clampi(int(p["age"]) - 1, 0, mins_now.size() - 1)]):
+	if not threatened and army.size() >= _min_army(p):
 		for k in _holding:
 			budget[k] = maxi(0, int(budget.get(k, 0)) - int(_holding[k]))
 	var order := _counter_order(p)
