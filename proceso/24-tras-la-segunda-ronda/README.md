@@ -343,3 +343,12 @@ Informes en [`proceso/22-testers/ronda-5/`](../22-testers/ronda-5/).
   - El jugador nuevo todavía no le gana a la fácil (en curso: 4q).
 - **Torneo 28:** guaraníes de 78 a 68 %; era el alcance. Todas quedan entre 32 y 68 %, con la IA que disputa sitios, la llama por vez, C2 y el movimiento nuevo. Se cierra ahí, dentro del ruido (±7).
 - **Chequeo intermitente del autotest:** "cursor sobre un animal propio" fallaba de a ratos con "mover". El juego estaba bien (cursor y clic usan el mismo `pick`); era el animal que pastaba y se corría entre que la prueba ponía el mouse y miraba el cursor. Ahora la prueba toma la posición de la figura justo antes: 3 de 3 OK.
+
+## Sexta ronda de jugadores (desde 2026-11-16)
+
+Con T a W integrados, juegan otra vez el veterano y el jugador nuevo.
+- **Veterano:** verifica sus arreglos de la ronda 5 y juzga las peleas con la elección de blancos nueva y la micro C2, y la experta.
+- **Jugador nuevo:** dice si ahora le gana a la fácil y si el resumen de la pelea le enseña algo útil.
+- **Los dos:** siguen con calidad de vida y usabilidad.
+
+Informes en [`proceso/22-testers/ronda-6/`](../22-testers/ronda-6/).
