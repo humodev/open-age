@@ -169,6 +169,7 @@ Un cambio por torneo: 75 partidas, 5 semillas, 30 minutos, en 10 procesos.
 | [26](pruebas/26-torneo-sitios-y-llamas.txt) (10) | IA que disputa sitios (5b) + una llama por vez | 62 | 58 | **80** | 34 | 32 | 34 |
 | [27](pruebas/27-torneo-emboscada.txt) (10) | Guaraníes: emboscada 35 %. **Descartado** | 60 | 60 | 78 | 34 | 34 | 34 |
 | [28](pruebas/28-torneo-alcance-guarani.txt) (10) | Guaraníes: alcance del arquero 5500 (antes 6000); emboscada de vuelta a 50 % | **68** | 60 | **68** | 38 | 32 | 34 |
+| [29](pruebas/29-torneo-blancos.txt) (10) | Elección de blancos como AoE4 (5d) | **42** | 68 | **76** | 34 | 48 | 32 |
 
 **Etiopía, de 56 % a 8 %.**
 - Con la misma partida seguida en el commit anterior a la etapa (`tools/ia_por_dentro.gd`, sierra contra Tawantinsuyu), el ejército etíope ya era chico (unas 20 unidades). Lo que cambió fue el rival: los arreglos de economía del paso 1 destrabaron el alimento de Tawantinsuyu, que pasó de 15 a 60 unidades.
@@ -360,3 +361,7 @@ Informes en [`proceso/22-testers/ronda-6/`](../22-testers/ronda-6/).
     - la experta lenta de edad;
     - Alt sobre las unidades;
     - el festejo de la primera victoria.
+- **Torneo 29:** con la elección de blancos, Tawantinsuyu baja de 68 a 42 % (perdió el escudo de los caminos, como se esperaba) y los guaraníes vuelven a 76 % (24 de 38 por puntos).
+  - Los guaraníes quedaron arriba en casi todos los torneos desde el paso 1, a pesar de cinco palancas: riqueza, roza, emboscada, ataque y alcance del arquero. Cada una los movió un poco, y el cambio siguiente los volvía a subir.
+  - Queda el sigilo: en el monte se los ve recién a 3 casillas.
+- **Torneo 30:** sigilo guaraní detectado a 4,5 casillas (antes 3; Palmares sigue en 3).
