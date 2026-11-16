@@ -12,7 +12,8 @@ extends RefCounted
 const FONDO_BLOQUEO := Color(0, 0, 0, 0.32)
 const FONDO_PASTILLA := Color(0, 0, 0, 0.62)
 ## --- aprender --- Opción "Mostrar nombres en la grilla" (src/game/ui/opciones.gd): el glifo
-## se achica y el nombre va debajo, en dos renglones (uno si abajo hay franja o edad).
+## se achica y el nombre va debajo, en dos renglones (uno si abajo hay franja o edad). Si el
+## propio no es el común ("Oga"), arriba va el común ("Casa") y abajo el propio, más tenue.
 static var nombres := false
 
 
@@ -43,10 +44,19 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 	# --- aprender ---
 	var nombre := str(c.get("name", "")).trim_prefix("Construir: ") if nombres else ""
 	nombre = nombre.left(1).to_upper() + nombre.substr(1)
+	# Con nombre común ("Casa" para "Oga"), el común arriba y el propio abajo, más tenue
+	# (jugador nuevo, ronda 3); si abajo hay franja o edad, solo el común.
+	var comun := str(c.get("common", "")) if nombres else ""
 	if nombre != "":
 		Glyphs.draw(ci, c["icon"], Rect2(r.position.x + (r.size.x - 26) / 2.0 + 2, r.position.y + 3, 26, 26), col)
 		var lines := 1 if (locked and edad_pedida(str(c["locked"])) != "") or (not afford and not locked) else 2
-		ci.draw_multiline_string(Hud.font, Vector2(r.position.x + 2, r.position.y + 39), nombre, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, 10, lines, Palette.UI_TEXT if col == Palette.UI_TEXT else Palette.UI_DIM.lightened(0.2))
+		var tcol := Palette.UI_TEXT if col == Palette.UI_TEXT else Palette.UI_DIM.lightened(0.2)
+		if comun != "":
+			ci.draw_string(Hud.font_b, Vector2(r.position.x + 2, r.position.y + 39), comun, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, _fit(Hud.font_b, comun, 11, r.size.x - 4), tcol)
+			if lines == 2:
+				ci.draw_string(Hud.font, Vector2(r.position.x + 2, r.position.y + 51), nombre, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, _fit(Hud.font, nombre, 10, r.size.x - 4), Palette.UI_DIM.lightened(0.2))
+		else:
+			ci.draw_multiline_string(Hud.font, Vector2(r.position.x + 2, r.position.y + 39), nombre, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, 10, lines, tcol)
 	else:
 		Glyphs.draw(ci, c["icon"], r.grow(-14 if locked else -12), col)
 	# --- fin aprender ---
@@ -70,6 +80,13 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 		Glyphs.draw(ci, icon_k, Rect2(band.position.x + 3, band.position.y + 2, 13, 13), icol)
 		var txt := "−%d%s" % [falta[k], "+" if falta.size() > 1 else ""]
 		ci.draw_string(Hud.font_b, Vector2(band.position.x + 18, band.end.y - 4), txt, HORIZONTAL_ALIGNMENT_LEFT, band.size.x - 20, 13, Palette.UI_BAD.lightened(0.15))
+
+
+## Tamaño de letra (de `size` para abajo, hasta 7) con el que `txt` entra en `w`.
+static func _fit(f: Font, txt: String, size: int, w: float) -> int:
+	while size > 7 and f.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x > w:
+		size -= 1
+	return size
 
 
 ## Recursos que faltan para pagar `cost`, en el orden del banco: {recurso: cuánto falta}.

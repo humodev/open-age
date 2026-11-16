@@ -20,6 +20,8 @@ var _eng_mark_val := 0
 var _eng_rate := 0
 var _no_route := {} # edificio -> tick desde el que se vuelve a intentar el camino
 var last_site := 0
+var _detour := {} # sin tomar sitios: unidad -> {"exit": Vector2i, "goal": Vector2i, "amove": bool} (sale de un sitio ajeno)
+var _weighted := false # sin tomar sitios: ya se cargó el peso de los sitios en la grilla de caminos
 var last_tribute := 0
 var _flares_done := {} # bengalas aliadas ya atendidas (id -> true)
 var _flare_units := {} # unidades que fueron a una bengala -> tick hasta el que se quedan allá
@@ -125,6 +127,9 @@ func think() -> void:
 	_requests(p)
 	_military(army, centro)
 	_flares(army, centro)
+	# Al final: mira también las órdenes que el resto de la IA acaba de dar en este turno.
+	if not level.get("toma_sitios", true):
+		_avoid_sites(army)
 
 
 ## Eje del hito según la edad: económico para la II, militar para la III y
@@ -1601,6 +1606,144 @@ func _trade(p: Dictionary, by_type: Dictionary) -> void:
 		if int(res[k]) < 100 and int(res["riqueza"]) > 700:
 			sim.push_command({"t": "trade", "player": player, "building": m.id, "recurso": k, "op": "comprar"})
 			return
+
+
+## La IA que no toma sitios (la fácil) no los captura al pasar (jugador nuevo, ronda 3;
+## reglas.json → ia_sin_sitios). La captura no se pierde cuando el que la hace se va, así
+## que varias pasadas cortas de un hondero rezagado sumaban los 10 segundos. Ahora:
+## - en su grilla de caminos, el cuadro de cada sitio pesa más: sus unidades lo rodean si hay por dónde;
+## - quien está adentro del cuadro de un sitio ajeno sin rivales sale al borde más cercano y sigue a su destino;
+## - un destino adentro del cuadro se cambia por el borde.
+## La grilla es de este jugador: las demás IA y dificultades no cambian.
+func _avoid_sites(army: Array[SimEntity]) -> void:
+	var cfg: Dictionary = sim.data.reglas["ia_sin_sitios"]
+	var r: int = sim.data.reglas["sitios"]["radio"]
+	var inner: int = r + int(cfg["margen_destino"])
+	var outer: int = r + int(cfg["margen_salida"])
+	var sites: Array[SimEntity] = []
+	for e in sim.actives:
+		if e.alive and e.def.get("sagrado", false):
+			if not _weighted:
+				var lo := Vector2i((e.x - inner) / P, (e.y - inner) / P)
+				var hi := Vector2i((e.x + inner) / P, (e.y + inner) / P)
+				for ty in range(lo.y, hi.y + 1):
+					for tx in range(lo.x, hi.x + 1):
+						sim.map.set_weight(player, tx, ty, int(cfg["peso_camino"]))
+			if e.holder < 0 or sim.team_of(e.holder) != sim.team_of(player):
+				sites.append(e)
+	_weighted = true
+	if sites.is_empty():
+		_detour.clear()
+		return
+	# Órdenes de este turno que todavía no se aplicaron: mandan sobre las de ahora.
+	var fresh := {}
+	for c in sim._pending.get(sim.tick + 1, []):
+		if int(c.get("player", -1)) == player:
+			for id in c.get("ids", []):
+				fresh[int(id)] = c
+	var alive := {}
+	for u in army:
+		alive[u.id] = true
+		var d: Dictionary = _detour.get(u.id, {})
+		var moving := u.order == O.MOVE or u.order == O.ATTACK_MOVE
+		# Su destino de verdad: el de la orden recién dada, el de la salida en curso o el de su orden.
+		var goal := Vector2i(-1, -1)
+		var amove := u.order == O.ATTACK_MOVE
+		if fresh.has(u.id):
+			var c: Dictionary = fresh[u.id]
+			_detour.erase(u.id)
+			d = {}
+			if c["t"] != "move":
+				continue
+			moving = true
+			goal = Vector2i(int(c["x"]), int(c["y"]))
+			amove = c.get("amove", false)
+		elif not d.is_empty():
+			var exit: Vector2i = d["exit"]
+			if moving and absi(u.amove_x - exit.x) + absi(u.amove_y - exit.y) > P:
+				d = {} # otra orden pisó la salida
+				_detour.erase(u.id)
+			else:
+				goal = d["goal"]
+				amove = d["amove"]
+		if goal.x < 0 and moving:
+			goal = Vector2i(u.amove_x, u.amove_y)
+		# Adentro de un sitio, sin rivales con quien pelear: sale al borde más cercano.
+		var site := _site_box(sites, u.x, u.y, r)
+		if site != null and not _rivals_in(site, r) and (d.is_empty() or u.order == O.IDLE):
+			var exit := _box_exit(site, outer, Vector2i(u.x, u.y))
+			if goal.x >= 0:
+				goal = _outside(sites, goal, inner, outer)
+			_detour[u.id] = {"exit": exit, "goal": goal, "amove": amove}
+			_go(u, exit, false)
+			continue
+		if not d.is_empty():
+			# Ya afuera: sigue a su destino.
+			if u.order == O.IDLE:
+				_detour.erase(u.id)
+				if goal.x >= 0 and Sim.dist(u.x, u.y, goal.x, goal.y) > P:
+					_go(u, goal, amove)
+			continue
+		# Un destino adentro de un sitio: se para en el borde.
+		if moving:
+			var safe := _outside(sites, goal, inner, outer)
+			if safe != goal:
+				_go(u, safe, amove)
+	for id in _detour.keys():
+		if not alive.has(id):
+			_detour.erase(id)
+
+
+func _go(u: SimEntity, at: Vector2i, amove: bool) -> void:
+	sim.push_command({"t": "move", "player": player, "ids": [u.id], "x": at.x, "y": at.y, "amove": amove, "suelto": true})
+
+
+## El sitio (de la lista) en cuyo cuadro de radio `r` está el punto; null si ninguno.
+func _site_box(sites: Array[SimEntity], x: int, y: int, r: int) -> SimEntity:
+	for st in sites:
+		if absi(x - st.x) <= r and absi(y - st.y) <= r:
+			return st
+	return null
+
+
+func _rivals_in(site: SimEntity, r: int) -> bool:
+	for e in sim.actives:
+		if e.alive and e.is_unit() and e.owner >= 0 and e.inside < 0 and sim.enemies(player, e.owner) and absi(e.x - site.x) <= r and absi(e.y - site.y) <= r:
+			return true
+	return false
+
+
+## Punto libre en el borde del cuadro agrandado de un sitio, del lado más cercano al punto.
+func _box_exit(site: SimEntity, outer: int, from: Vector2i) -> Vector2i:
+	var opts: Array[Vector2i] = [Vector2i(from.x, site.y - outer), Vector2i(from.x, site.y + outer), Vector2i(site.x - outer, from.y), Vector2i(site.x + outer, from.y)]
+	var best := Vector2i(-1, -1)
+	var best_d := 1 << 60
+	for o in opts:
+		var c := _free_point(o)
+		if c.x < 0:
+			continue
+		var dd := Sim.dist(from.x, from.y, c.x, c.y)
+		if dd < best_d:
+			best_d = dd
+			best = c
+	return best if best.x >= 0 else Vector2i(site.x - outer, site.y)
+
+
+## Centro de la casilla libre más cercana al punto, dentro del mapa; (-1, -1) si no hay.
+func _free_point(at: Vector2i) -> Vector2i:
+	var n := sim.map.n
+	var t := sim.map.nearest_free(clampi(at.x / P, 1, n - 2), clampi(at.y / P, 1, n - 2), 3, player)
+	if t.x < 0:
+		return t
+	return Vector2i(t.x * P + P / 2, t.y * P + P / 2)
+
+
+## Si el destino cae en el cuadro de un sitio, el punto del borde más cercano.
+func _outside(sites: Array[SimEntity], goal: Vector2i, inner: int, outer: int) -> Vector2i:
+	var st := _site_box(sites, goal.x, goal.y, inner)
+	if st == null:
+		return goal
+	return _box_exit(st, outer, goal)
 
 
 func _near_site(u: SimEntity) -> bool:

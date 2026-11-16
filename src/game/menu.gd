@@ -120,6 +120,7 @@ func _ready() -> void:
 	_diff.selected = maxi(0, _dif_keys.find(Opciones.dificultad))
 	_diff.item_selected.connect(func(i: int) -> void:
 		Opciones.dificultad = _dif_keys[i]
+		_dif_defaults() # --- opciones de partida ---
 		Opciones.guardar())
 	# --- fin aprender ---
 	drow.add_child(_diff)
@@ -462,7 +463,7 @@ func slots() -> Array:
 ## opciones_partida.menu. Abajo, una línea dice en palabras cómo se gana.
 func _build_match_options(col: VBoxContainer) -> void:
 	var op: Dictionary = _data.reglas["opciones_partida"]
-	var cur: Dictionary = (op["menu"] as Dictionary).duplicate()
+	var cur := _menu_defaults()
 	cur.merge(Opciones.partida, true)
 	var sep := HSeparator.new()
 	sep.add_theme_constant_override("separation", 6)
@@ -544,6 +545,25 @@ func _build_match_options(col: VBoxContainer) -> void:
 		_op_recursos.selected = maxi(0, RECURSOS.map(func(r: Array) -> String: return r[0]).find(ma["recursos"]))
 	if ma.has("ubicacion"):
 		_op_ubic.selected = maxi(0, UBICACION.map(func(u: Array) -> String: return u[0]).find(ma["ubicacion"]))
+
+
+## Lo que el menú elige sin opciones guardadas: reglas.json → opciones_partida.menu, con lo de
+## `menu_por_dificultad` de la dificultad elegida encima (Fácil: sin victoria por sitios).
+func _menu_defaults() -> Dictionary:
+	var op: Dictionary = _data.reglas["opciones_partida"]
+	var cur: Dictionary = (op["menu"] as Dictionary).duplicate()
+	cur.merge(op.get("menu_por_dificultad", {}).get(Opciones.dificultad, {}), true)
+	cur.erase("_doc")
+	return cur
+
+
+## Al cambiar la dificultad, mientras nunca se tocaron las opciones de partida, el interruptor
+## de sitios sigue a la dificultad (la primera vez, Fácil sin sitios; Normal con sitios).
+func _dif_defaults() -> void:
+	if _op_sitios == null or not Opciones.partida.is_empty():
+		return
+	_op_sitios.set_pressed_no_signal(bool(_menu_defaults().get("sitios", true)))
+	_refresh_match_options()
 
 
 ## Interruptor como los del diálogo de Opciones (la casilla de CheckBox vacía no se veía).

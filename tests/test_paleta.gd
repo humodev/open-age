@@ -82,7 +82,10 @@ func _medir_relativa() -> void:
 
 func _medir_vida_y_contraste() -> void:
 	_exigir("vida buena contra vida mala", Palette.UI_GOOD, Palette.UI_BAD, VISIONES.keys(), VIDA)
-	for par in [["texto", Palette.UI_TEXT], ["texto atenuado", Palette.UI_DIM], ["no alcanza / malo", Palette.UI_BAD], ["bueno", Palette.UI_GOOD], ["acento", Palette.UI_ACCENT]]:
+	# Empate (neutro) contra derrota y victoria en el título de la pantalla de fin.
+	_exigir("empate contra derrota", Palette.UI_NEUTRAL, Palette.UI_BAD, VISIONES.keys(), VIDA)
+	_exigir("empate contra victoria", Palette.UI_NEUTRAL, Palette.UI_ACCENT, VISIONES.keys(), VIDA)
+	for par in [["texto", Palette.UI_TEXT], ["texto atenuado", Palette.UI_DIM], ["no alcanza / malo", Palette.UI_BAD], ["bueno", Palette.UI_GOOD], ["acento", Palette.UI_ACCENT], ["neutro (empate)", Palette.UI_NEUTRAL]]:
 		var k := contraste(par[1], FONDO)
 		var nombre := "contraste WCAG de %s sobre la casilla" % par[0]
 		_peor[nombre] = [k, "%.2f:1" % k]

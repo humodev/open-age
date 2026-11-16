@@ -48,6 +48,13 @@ func _grid(pid: int) -> AStarGrid2D:
 	return astars[pid] if pid >= 0 and pid < astars.size() else astar
 
 
+## Costo de pasar por una casilla en la grilla de un jugador (1 = normal). Lo usa la IA que
+## no toma sitios para rodearlos (SimAI._avoid_sites); las demás grillas no cambian.
+func set_weight(pid: int, tx: int, ty: int, w: int) -> void:
+	if in_bounds(tx, ty) and pid >= 0 and pid < astars.size():
+		astars[pid].set_point_weight_scale(Vector2i(tx, ty), float(w))
+
+
 func in_bounds(tx: int, ty: int) -> bool:
 	return tx >= 0 and ty >= 0 and tx < n and ty < n
 
