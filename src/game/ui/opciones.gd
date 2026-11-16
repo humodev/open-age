@@ -35,6 +35,9 @@ static var consejos := true
 static var nombres_grilla := false
 ## Última dificultad elegida en el menú; la primera vez, Fácil.
 static var dificultad := "facil"
+## Últimas opciones de partida del menú (sitios, hitos, tiempo_limite_min, recursos,
+## ubicacion_equipos); vacío = las de reglas.json → opciones_partida.menu.
+static var partida := {}
 # --- fin aprender ---
 ## Si es verdadero, guardar() no escribe (capturas y pruebas).
 static var solo_lectura := false
@@ -59,6 +62,9 @@ static func cargar(ruta: String = RUTA) -> void:
 	consejos = bool(cf.get_value("ayuda", "consejos", consejos)) # --- aprender ---
 	nombres_grilla = bool(cf.get_value("ayuda", "nombres_grilla", nombres_grilla))
 	dificultad = str(cf.get_value("partida", "dificultad", dificultad))
+	var po: Variant = cf.get_value("partida", "opciones", partida)
+	if po is Dictionary:
+		partida = po
 	EstadoCasilla.nombres = nombres_grilla
 
 
@@ -79,6 +85,7 @@ static func guardar(ruta: String = RUTA) -> void:
 	cf.set_value("ayuda", "consejos", consejos) # --- aprender ---
 	cf.set_value("ayuda", "nombres_grilla", nombres_grilla)
 	cf.set_value("partida", "dificultad", dificultad)
+	cf.set_value("partida", "opciones", partida)
 	cf.save(ruta)
 
 

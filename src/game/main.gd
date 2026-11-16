@@ -18,6 +18,12 @@ extends Node3D
 ##   --civs=a,b,c,…     partida de 2 a 8 jugadores (el primero es el tuyo; "azar" vale)
 ##   --equipos=0,1,0,…  equipo de cada lugar (sin esto, todos contra todos)
 ##   --partida=N        en el menú, tipo de partida preelegido (0 = 1 contra 1, 2 = 3 contra 3…)
+##   Opciones de partida (proceso/24, paso 4b; en el menú, "Opciones de partida"). La conquista vale siempre:
+##   --sitios=si|no     victoria por sitios sagrados (con "no" los sitios siguen dando riqueza)
+##   --hitos=si|no      victoria por hitos: perder la capital y los hitos (con "no", hay que arrasar todo)
+##   --tiempo=0|30|45|60  tiempo límite en minutos (0 = sin límite); al cumplirse gana el equipo con más puntos
+##   --recursos=normal|medios|altos  recursos iniciales (reglas.json → opciones_partida.recursos)
+##   --ubicacion=juntos|mezclados  en partidas de 3 o más, aliados vecinos o alternados en el círculo
 ##   --campana=clave --mision=N  juega una misión de campaña (N desde 0)
 ##   --dificultad=facil|normal|dificil
 ##   --nofog            sin niebla de guerra (automático en --aivai)
@@ -31,7 +37,7 @@ extends Node3D
 ##   --abrir=opciones   abre el diálogo de opciones (también campanas e intro en el menú)
 ##   --bengala=1        tira una bengala propia cerca de la base antes de la captura (con aliados)
 ##   --formacion=linea  elige la formación de la grilla y la aplica a lo seleccionado antes de la captura
-##   --panel=a,b        abre paneles de información antes de la captura (economia, edad, pueblo, sucesos, puntaje, fin, fin-derrota)
+##   --panel=a,b        abre paneles de información antes de la captura (economia, edad, pueblo, sucesos, puntaje, fin, fin-derrota, fin-tiempo)
 
 const MAX_STEPS_PER_FRAME := 8
 
@@ -282,6 +288,7 @@ func _new_game() -> void:
 		if sl["civ"] == "" or sl["civ"] == "azar":
 			sl["civ"] = civ_keys[rng.randi() % civ_keys.size()]
 	var opts := {"terreno": _args.get("terreno", ""), "civs": slots.map(func(sl: Dictionary) -> String: return sl["civ"]), "equipos": slots.map(func(sl: Dictionary) -> int: return int(sl["equipo"]))}
+	opts.merge(match_opts(_args))
 	sim = Sim.new(_seed, slots.size(), null, opts)
 	var aivai := _args.has("aivai") or _menu_mode
 	sim.ais = []
@@ -298,6 +305,23 @@ func _new_game() -> void:
 	opts["terreno"] = sim.terrain
 	_replay_meta = {"semilla": _seed, "opciones": opts, "ias": ai_ids, "ia_cfg": ai_cfg, "dificultad": _args.get("dificultad", "normal"), "estilo": _args.get("estilo", "normal")}
 	_build_scene(aivai)
+
+
+## Opciones de partida (--sitios, --hitos, --tiempo, --recursos, --ubicacion; el menú pasa
+## las mismas claves) traducidas a los opts de Sim.new. Lo que no se pide queda como siempre.
+static func match_opts(args: Dictionary) -> Dictionary:
+	var out := {}
+	if str(args.get("sitios", "si")) == "no":
+		out["sitios_sin_victoria"] = true
+	if str(args.get("hitos", "si")) == "no":
+		out["hitos_sin_victoria"] = true
+	if int(args.get("tiempo", "0")) > 0:
+		out["tiempo_limite_min"] = int(args["tiempo"])
+	if str(args.get("recursos", "normal")) != "normal":
+		out["recursos"] = str(args["recursos"])
+	if args.has("ubicacion"):
+		out["ubicacion_equipos"] = str(args["ubicacion"])
+	return out
 
 
 func _build_scene(aivai: bool) -> void:
@@ -363,8 +387,8 @@ func _build_scene(aivai: bool) -> void:
 		speed = 1.0
 		_menu = MainMenu.new()
 		layer.add_child(_menu)
-		_menu.play.connect(func(sd: int, civ: String, rival: String) -> void: _start({"seed": str(sd), "civ": civ, "rival": rival, "dificultad": _menu.difficulty(), "estilo": _menu.style(), "terreno": _menu.terrain(), "lugares": _menu.slots()}))
-		_menu.watch.connect(func(sd: int, civ: String, rival: String) -> void: _start({"aivai": "1", "seed": str(sd), "civ": civ, "rival": rival, "estilo": _menu.style(), "dificultad": _menu.difficulty(), "terreno": _menu.terrain(), "lugares": _menu.slots()}))
+		_menu.play.connect(func(sd: int, civ: String, rival: String) -> void: _start(_menu.match_args().merged({"seed": str(sd), "civ": civ, "rival": rival, "dificultad": _menu.difficulty(), "estilo": _menu.style(), "terreno": _menu.terrain(), "lugares": _menu.slots()})))
+		_menu.watch.connect(func(sd: int, civ: String, rival: String) -> void: _start(_menu.match_args().merged({"aivai": "1", "seed": str(sd), "civ": civ, "rival": rival, "estilo": _menu.style(), "dificultad": _menu.difficulty(), "terreno": _menu.terrain(), "lugares": _menu.slots()})))
 		_menu.campaigns.connect(_open_campaigns.bind(layer))
 		_menu.replay.connect(func() -> void: _start({"replay": "1"}))
 		if _args.get("abrir", "") == "campanas":
@@ -721,8 +745,14 @@ func _maybe_shot() -> void:
 				hud.paneles.show_end(local)
 			elif w == "fin-derrota": # --- aprender --- (la partida termina ahí, ganada por el primer rival)
 				var foe := 1 if local == 0 else 0
-				sim.win(foe)
+				sim.win(foe, "conquista")
 				hud.paneles.show_end(foe)
+			elif w == "fin-tiempo": # --- opciones de partida --- (termina ya por tiempo límite y puntos)
+				if int(sim._opts.get("tiempo_limite_min", 0)) == 0:
+					sim._opts["tiempo_limite_min"] = 30
+				sim.end_by_time()
+				var tw := sim.winner
+				hud.paneles.show_end(local if tw >= 0 and not sim.enemies(local, tw) else tw)
 			else:
 				hud.paneles.toggle(w)
 	# --- fin paneles ---

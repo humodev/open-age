@@ -88,7 +88,7 @@ func _draw() -> void:
 	var o := _box.position
 	var sim := hud.sim
 	var won := winner == hud.local
-	var head := "Victoria" if won else ("Fin de la partida" if winner < 0 else "Derrota")
+	var head := "Victoria" if won else ("Empate" if winner < 0 and sim.end_reason == "tiempo" else ("Fin de la partida" if winner < 0 else "Derrota"))
 	C.text(self, o + Vector2(32, 56), head, 40, Palette.UI_ACCENT if won else Palette.UI_BAD, true)
 	var secs: int = datos.now_s()
 	var sub := "Duración %s · mapa %s" % [C.fmt_time(secs), sim.terrain]
@@ -140,7 +140,7 @@ func _table(r: Rect2) -> void:
 	rows.append(["Bajas causadas", func(pid: int) -> int: return int(sim.players[pid]["stats"]["bajas"]), ""])
 	rows.append(["Unidades perdidas", func(pid: int) -> int: return int(sim.players[pid]["stats"]["muertes"]), "low"])
 	rows.append(["Edificios construidos", func(pid: int) -> int: return int(datos.built[pid]), ""])
-	rows.append(["Edificios destruidos", func(pid: int) -> int: return int(datos.razed[pid]), ""])
+	rows.append(["Edificios destruidos", func(pid: int) -> int: return int(sim.players[pid]["stats"].get("edificios_destruidos", 0)), ""])
 	rows.append(["Edificios perdidos", func(pid: int) -> int: return int(datos.lost_b[pid]), "low"])
 	rows.append(["Investigaciones", func(pid: int) -> int: return (sim.players[pid]["techs"] as Dictionary).size(), ""])
 	rows.append(["Órdenes por minuto", func(pid: int) -> int: return datos.orders(pid) * 60 / secs, "none"])
@@ -328,6 +328,23 @@ func _timeline(r: Rect2) -> void:
 
 # ---------------------------------------------------------------- Por qué terminó (--- aprender ---)
 
+## Tiempo límite (opciones de partida): quién ganó y por cuántos puntos (Sim.team_score).
+func _why_time(real: int, me: int) -> String:
+	var sim := hud.sim
+	var mins := int(sim._opts.get("tiempo_limite_min", 0))
+	var mine_s := sim.team_score(sim.team_of(me))
+	var best_foe := -1
+	for p in sim.players:
+		if sim.enemies(me, p["id"]):
+			best_foe = maxi(best_foe, sim.team_score(sim.team_of(p["id"])))
+	var head := "Se cumplió el tiempo límite (%d minutos)" % mins
+	if real < 0:
+		return "%s con empate: %d puntos para cada lado." % [head, mine_s]
+	if not sim.enemies(me, real):
+		return "%s y ganaste por puntos: %d contra %d." % [head, mine_s, best_foe]
+	return "%s y ganó %s por puntos: %d contra tus %d." % [head, C.player_name(sim, real, me), sim.team_score(sim.team_of(real)), mine_s]
+
+
 ## Una línea con el motivo del final y, si perdiste, uno o dos consejos que salen de las
 ## muestras de la partida (proceso/23-como-aoe4/03-aprender-a-jugar.md).
 func _explain() -> void:
@@ -340,6 +357,8 @@ func _explain() -> void:
 	var real := sim.winner if sim.game_over else -1
 	if not sim.game_over:
 		_why = "La partida sigue: esto es un resumen de lo jugado hasta ahora."
+	elif sim.end_reason == "tiempo":
+		_why = _why_time(real, me)
 	elif real < 0:
 		_why = "La partida terminó sin ganador."
 	else:
@@ -351,8 +370,10 @@ func _explain() -> void:
 		var who := C.player_name(sim, real, me)
 		if by_sites:
 			_why = ("Ganaste por sitios sagrados: los tuviste todos durante %s." if mine else "Perdiste por sitios sagrados: %s los tuvo todos durante %s seguidos.") % ([C.fmt_time(win_ms / 1000)] if mine else [who, C.fmt_time(win_ms / 1000)])
+		elif sim._opts.get("hitos_sin_victoria", false):
+			_why = "Ganaste por conquista: arrasaste todos los edificios del rival." if mine else "Perdiste por conquista: %s arrasó todos tus edificios." % who
 		else:
-			_why = "Ganaste por conquista: el rival se quedó sin los edificios que cuentan para la victoria." if mine else "Perdiste por conquista: %s destruyó los edificios que cuentan para la victoria." % who
+			_why = "Ganaste por conquista: el rival se quedó sin capital ni hitos." if mine else "Perdiste por conquista: %s destruyó tu capital y tus hitos." % who
 	var lost := sim.game_over and real >= 0 and sim.enemies(me, real)
 	if not lost:
 		return

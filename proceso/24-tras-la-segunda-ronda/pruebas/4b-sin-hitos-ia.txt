@@ -1,0 +1,13 @@
+IA contra IA, llano, semilla 321, hasta 45 minutos. "edificios" = edificios en pie al final [j0, j1].
+
+Con victoria por sitios:
+["tawantinsuyu", "mapuches"] hitos=si fin=24:07 motivo=sitios ganador=0 edificios=[293, 29]
+["tawantinsuyu", "mapuches"] hitos=no fin=29:29 motivo=sitios ganador=1 edificios=[286, 41]
+["etiopia", "palmares"] hitos=si fin=45:00 motivo= ganador=-1 edificios=[76, 53]
+["etiopia", "palmares"] hitos=no fin=28:37 motivo=sitios ganador=1 edificios=[42, 55]
+
+Sin victoria por sitios (solo conquista):
+["tawantinsuyu", "mapuches"] hitos=si fin=26:38 motivo=conquista ganador=0 edificios=[301, 7]
+["tawantinsuyu", "mapuches"] hitos=no fin=45:00 motivo= ganador=-1 edificios=[312, 41]
+["etiopia", "palmares"] hitos=si fin=45:00 motivo= ganador=-1 edificios=[76, 53]
+["etiopia", "palmares"] hitos=no fin=45:00 motivo= ganador=-1 edificios=[15, 58]

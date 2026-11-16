@@ -1,0 +1,7 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+200 unidades, 600 ticks: promedio 18.55 ms, peor 167.75 ms, presupuesto 100 ms; vivas al final: 121
+
+Misma carga, mismo momento (load average ~26 por torneos ajenos):
+  commit anterior (3eb7995): promedio 19.15 ms, peor 135.11 ms
+  con las opciones:          promedio 18.13 ms, peor 153.47 ms

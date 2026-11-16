@@ -1,0 +1,42 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+Recursos iniciales
+  ok    normal: { "alimento": 200, "madera": 200, "piedra": 100, "riqueza": 100 }
+  ok    medios: { "alimento": 500, "madera": 500, "piedra": 300, "riqueza": 300 }
+  ok    altos: { "alimento": 1000, "madera": 1000, "piedra": 700, "riqueza": 700 }
+Ubicación de los equipos
+  ok    [0, 1, 0, 1] llano juntos: aliados al lado 4, sitios 5, cercos bien
+  ok    [0, 1, 0, 1] llano mezclados: aliados al lado 0, sitios 5, cercos bien
+  ok    [0, 1, 0, 1] islas juntos: aliados al lado 4, sitios 5, cercos bien
+  ok    [0, 1, 0, 1] islas mezclados: aliados al lado 0, sitios 5, cercos bien
+  ok    [0, 1, 0, 1] fortines juntos: aliados al lado 4, sitios 5, cercos bien
+  ok    [0, 1, 0, 1] fortines mezclados: aliados al lado 0, sitios 5, cercos bien
+  ok    [0, 1, 0, 1, 0, 1] llano juntos: aliados al lado 8, sitios 7, cercos bien
+  ok    [0, 1, 0, 1, 0, 1] llano mezclados: aliados al lado 0, sitios 7, cercos bien
+  ok    [0, 1, 0, 1, 0, 1] islas juntos: aliados al lado 8, sitios 7, cercos bien
+  ok    [0, 1, 0, 1, 0, 1] islas mezclados: aliados al lado 0, sitios 7, cercos bien
+  ok    [0, 1, 0, 1, 0, 1] fortines juntos: aliados al lado 8, sitios 7, cercos bien
+  ok    [0, 1, 0, 1, 0, 1] fortines mezclados: aliados al lado 0, sitios 7, cercos bien
+  ok    [0, 0, 1, 1, 2, 2] llano juntos: aliados al lado 6, sitios 7, cercos bien
+  ok    [0, 0, 1, 1, 2, 2] llano mezclados: aliados al lado 0, sitios 7, cercos bien
+  ok    [0, 0, 1, 1, 2, 2] islas juntos: aliados al lado 6, sitios 7, cercos bien
+  ok    [0, 0, 1, 1, 2, 2] islas mezclados: aliados al lado 0, sitios 7, cercos bien
+  ok    [0, 0, 1, 1, 2, 2] fortines juntos: aliados al lado 6, sitios 7, cercos bien
+  ok    [0, 0, 1, 1, 2, 2] fortines mezclados: aliados al lado 0, sitios 7, cercos bien
+  ok    sin opción = el orden dado (en [0,1,0,1], mezclados)
+Victoria por hitos
+  ok    con hitos: sin capital ni hitos, pierde aunque tenga una casa
+  ok    sin hitos: sin capital pero con una casa, sigue en pie
+  ok      queda una empalizada en pie
+  ok    sin hitos: arrasada la casa (la empalizada no cuenta), pierde por conquista
+Victoria por sitios
+  ok    con sitios: gana el 0 a los 9:59
+  ok    sin sitios: 3 sitios de 0 durante 10 min, sigue la partida (y rinden 154 de riqueza)
+Tiempo límite (30 min)
+  ok    2 jugadores: termina a los 30:00 (motivo: tiempo)
+  ok      gana el equipo 0 por puntos: 5845 contra 5762
+  ok    4 jugadores: termina a los 30:00 (motivo: tiempo)
+  ok      gana el equipo 0 por puntos: 11501 contra 7926
+  ok    empate en 0 puntos al minuto: sin ganador
+  ok    sin tiempo límite, sigue después del minuto
+OPCIONES DE PARTIDA: OK

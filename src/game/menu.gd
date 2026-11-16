@@ -33,6 +33,17 @@ var _slots_box: VBoxContainer
 var _slot_rows: Array = [] # [civ, equipo, dificultad, estilo] por lugar (el 0 es el tuyo)
 var _data: SimData
 # --- fin lugares ---
+# --- opciones de partida --- (proceso/24, paso 4b; como AoE4)
+var _op_sitios: CheckButton
+var _op_hitos: CheckButton
+var _op_tiempo: OptionButton
+var _op_recursos: OptionButton
+var _op_ubic: OptionButton
+var _op_resumen: Label
+var _tiempos: Array = [] # minutos que ofrece reglas.opciones_partida.tiempo_limite_min
+const RECURSOS := [["normal", "Normales"], ["medios", "Medios"], ["altos", "Altos"]]
+const UBICACION := [["juntos", "Aliados juntos"], ["mezclados", "Aliados mezclados"]]
+# --- fin opciones de partida ---
 
 
 func _ready() -> void:
@@ -340,6 +351,7 @@ func _build_slots() -> void:
 	_slots_box = VBoxContainer.new()
 	_slots_box.add_theme_constant_override("separation", 6)
 	col.add_child(_slots_box)
+	_build_match_options(col) # --- opciones de partida ---
 	_mode.item_selected.connect(func(_i: int) -> void: _fill_slots())
 	_civ.item_selected.connect(_mirror_civ)
 	# --partida=N preselecciona el tipo de partida (para las capturas).
@@ -377,6 +389,7 @@ func _fill_slots() -> void:
 	var solo := teams.size() == 2
 	_rival.disabled = not solo
 	_rival.tooltip_text = "" if solo else "Con más de dos jugadores, los rivales se eligen en la columna de lugares."
+	_refresh_match_options.call_deferred() # --- opciones de partida ---
 	if solo:
 		return
 	var civ_names: Array = ["Al azar"]
@@ -401,6 +414,7 @@ func _fill_slots() -> void:
 		r.add_child(_label("Vos" if i == 0 else "IA %d" % i, 44))
 		var civ := _small(civ_names, 170, 0)
 		var tm := _small(team_names, 110, int(teams[i]))
+		tm.item_selected.connect(func(_j: int) -> void: _refresh_match_options()) # --- opciones de partida ---
 		var dif := _small(dif_names, 100, maxi(0, _diff.selected))
 		var sty := _small(sty_names, 130, maxi(0, _style.selected))
 		if i == 0:
@@ -438,6 +452,148 @@ func slots() -> Array:
 		})
 	return out
 # --- fin lugares ---
+
+
+# --- opciones de partida ---
+## Debajo de los lugares: condiciones de victoria, tiempo límite, recursos y ubicación de los
+## equipos. Se recuerdan entre sesiones (Opciones.partida); la primera vez, reglas.json →
+## opciones_partida.menu. Abajo, una línea dice en palabras cómo se gana.
+func _build_match_options(col: VBoxContainer) -> void:
+	var op: Dictionary = _data.reglas["opciones_partida"]
+	var cur: Dictionary = (op["menu"] as Dictionary).duplicate()
+	cur.merge(Opciones.partida, true)
+	var sep := HSeparator.new()
+	sep.add_theme_constant_override("separation", 6)
+	col.add_child(sep)
+	var head := _label("Opciones de partida", 300)
+	head.add_theme_font_override("font", Hud.font_b)
+	head.add_theme_color_override("font_color", Palette.UI_TEXT)
+	col.add_child(head)
+	# Victoria: la conquista vale siempre; sitios e hitos se pueden sacar.
+	var vrow := HBoxContainer.new()
+	vrow.add_theme_constant_override("separation", 12)
+	vrow.add_child(_label("Victoria", 110))
+	var conq := _label("Conquista ✓", 100)
+	conq.tooltip_text = "Siempre: pierde quien se queda sin los edificios que cuentan."
+	conq.mouse_filter = Control.MOUSE_FILTER_PASS
+	vrow.add_child(conq)
+	var site_min := int(_data.reglas["sitios"]["victoria_ms"]) / 60000
+	_op_sitios = _check("Sitios sagrados", bool(cur.get("sitios", true)), "Gana quien tiene todos los sitios sagrados durante %d minutos seguidos. Sin esta victoria, los sitios siguen dando riqueza." % site_min)
+	vrow.add_child(_op_sitios)
+	_op_hitos = _check("Hitos", bool(cur.get("hitos", true)), "Pierde quien se queda sin su capital ni hitos. Sin esta victoria hay que arrasar todos los edificios del rival (salvo muros y puertas).")
+	vrow.add_child(_op_hitos)
+	col.add_child(vrow)
+	# Tiempo límite y recursos, en un renglón.
+	var trow := HBoxContainer.new()
+	trow.add_theme_constant_override("separation", 12)
+	trow.add_child(_label("Tiempo límite", 110))
+	_tiempos = op["tiempo_limite_min"]
+	var tnames: Array = []
+	for m in _tiempos:
+		tnames.append("Sin límite" if int(m) == 0 else "%d minutos" % int(m))
+	_op_tiempo = _small(tnames, 130, maxi(0, _tiempos.find(int(cur.get("tiempo_limite_min", 0)))))
+	_op_tiempo.tooltip_text = "Al cumplirse el tiempo gana el equipo con más puntos (F6 durante la partida)."
+	trow.add_child(_op_tiempo)
+	trow.add_child(_label("Recursos", 70))
+	var rnames: Array = []
+	for r in RECURSOS:
+		rnames.append(r[1])
+	_op_recursos = _small(rnames, 120, maxi(0, RECURSOS.map(func(r: Array) -> String: return r[0]).find(str(cur.get("recursos", "normal")))))
+	var rtip := ""
+	for r in RECURSOS:
+		var v: Dictionary = _data.reglas["recursos_iniciales"] if r[0] == "normal" else op["recursos"][r[0]]
+		rtip += "%s: %d alimento, %d madera, %d piedra, %d riqueza\n" % [r[1], int(v["alimento"]), int(v["madera"]), int(v["piedra"]), int(v["riqueza"])]
+	_op_recursos.tooltip_text = rtip.strip_edges()
+	trow.add_child(_op_recursos)
+	col.add_child(trow)
+	var urow := HBoxContainer.new()
+	urow.add_theme_constant_override("separation", 12)
+	urow.add_child(_label("Equipos", 110))
+	var unames: Array = []
+	for u in UBICACION:
+		unames.append(u[1])
+	_op_ubic = _small(unames, 170, maxi(0, UBICACION.map(func(u: Array) -> String: return u[0]).find(str(cur.get("ubicacion_equipos", "juntos")))))
+	urow.add_child(_op_ubic)
+	col.add_child(urow)
+	_op_resumen = Label.new()
+	_op_resumen.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_op_resumen.custom_minimum_size = Vector2(600, 0)
+	_op_resumen.add_theme_font_override("font", Hud.font)
+	_op_resumen.add_theme_font_size_override("font_size", 14)
+	_op_resumen.add_theme_color_override("font_color", Palette.UI_DIM)
+	col.add_child(_op_resumen)
+	for ob: OptionButton in [_op_tiempo, _op_recursos, _op_ubic]:
+		ob.item_selected.connect(func(_i: int) -> void: _refresh_match_options(true))
+	for cb: CheckButton in [_op_sitios, _op_hitos]:
+		cb.toggled.connect(func(_b: bool) -> void: _refresh_match_options(true))
+	# --sitios=no, --tiempo=30… también preeligen en el menú (para las capturas).
+	var ma := {}
+	for a in OS.get_cmdline_user_args():
+		var kv := a.trim_prefix("--").split("=", true, 1)
+		if kv.size() == 2:
+			ma[kv[0]] = kv[1]
+	if ma.has("sitios"):
+		_op_sitios.button_pressed = ma["sitios"] != "no"
+	if ma.has("hitos"):
+		_op_hitos.button_pressed = ma["hitos"] != "no"
+	if ma.has("tiempo"):
+		_op_tiempo.selected = maxi(0, _tiempos.find(int(ma["tiempo"])))
+	if ma.has("recursos"):
+		_op_recursos.selected = maxi(0, RECURSOS.map(func(r: Array) -> String: return r[0]).find(ma["recursos"]))
+	if ma.has("ubicacion"):
+		_op_ubic.selected = maxi(0, UBICACION.map(func(u: Array) -> String: return u[0]).find(ma["ubicacion"]))
+
+
+## Interruptor como los del diálogo de Opciones (la casilla de CheckBox vacía no se veía).
+func _check(text: String, on: bool, tip: String) -> CheckButton:
+	var cb := CheckButton.new()
+	cb.text = text
+	cb.button_pressed = on
+	cb.tooltip_text = tip
+	cb.add_theme_font_override("font", Hud.font)
+	cb.add_theme_font_size_override("font_size", 15)
+	return cb
+
+
+## Ubicación solo con equipos de más de uno; el resumen dice cómo se gana. `save`: lo recuerda.
+func _refresh_match_options(save := false) -> void:
+	if _op_ubic == null:
+		return
+	var teams := {}
+	for r in _slot_rows:
+		teams[(r[1] as OptionButton).selected] = true
+	var with_allies := _slot_rows.size() > 2 and teams.size() < _slot_rows.size()
+	_op_ubic.disabled = not with_allies
+	_op_ubic.tooltip_text = "Dónde arranca cada aliado en el círculo de bases: al lado o alternados con los rivales." if with_allies else "Solo en partidas por equipos de tres o más jugadores."
+	var ways: Array = ["por conquista"]
+	if _op_hitos.button_pressed:
+		ways[0] = "por conquista (capital e hitos)"
+	else:
+		ways[0] = "por conquista (arrasando todos los edificios)"
+	if _op_sitios.button_pressed:
+		ways.append("por sitios sagrados (%d minutos con todos)" % (int(_data.reglas["sitios"]["victoria_ms"]) / 60000))
+	var txt := "Se gana " + " o ".join(ways) + "."
+	var mins := int(_tiempos[maxi(0, _op_tiempo.selected)])
+	if mins > 0:
+		txt += " A los %d minutos gana el equipo con más puntos." % mins
+	_op_resumen.text = txt
+	if save:
+		Opciones.partida = {"sitios": _op_sitios.button_pressed, "hitos": _op_hitos.button_pressed, "tiempo_limite_min": mins, "recursos": RECURSOS[maxi(0, _op_recursos.selected)][0], "ubicacion_equipos": UBICACION[maxi(0, _op_ubic.selected)][0]}
+		Opciones.guardar()
+
+
+## Opciones de partida como argumentos de main.gd (--sitios, --hitos, --tiempo, --recursos, --ubicacion).
+func match_args() -> Dictionary:
+	var out := {
+		"sitios": "si" if _op_sitios.button_pressed else "no",
+		"hitos": "si" if _op_hitos.button_pressed else "no",
+		"tiempo": str(int(_tiempos[maxi(0, _op_tiempo.selected)])),
+		"recursos": RECURSOS[maxi(0, _op_recursos.selected)][0],
+	}
+	if not _op_ubic.disabled:
+		out["ubicacion"] = UBICACION[maxi(0, _op_ubic.selected)][0]
+	return out
+# --- fin opciones de partida ---
 
 
 func difficulty() -> String:

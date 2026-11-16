@@ -150,19 +150,9 @@ func army(pid: int) -> int:
 	return n
 
 
+## El de la simulación (reglas.json → puntaje): con tiempo límite decide la partida.
 func score(pid: int) -> int:
-	var pc: Dictionary = cfg.get("puntaje", {})
-	var p: Dictionary = sim.players[pid]
-	var tot := 0
-	var t := totals(pid)
-	for k in t:
-		tot += int(t[k])
-	var s := tot / maxi(1, int(pc.get("recursos_por_punto", 10)))
-	s += int(p["stats"]["bajas"]) * int(pc.get("por_baja", 0))
-	s += int(razed[pid]) * int(pc.get("por_edificio_destruido", 0))
-	s += (int(p["age"]) - 1) * int(pc.get("por_edad", 0))
-	s += (p["techs"] as Dictionary).size() * int(pc.get("por_investigacion", 0))
-	return s
+	return sim.score(pid)
 
 
 func orders(pid: int) -> int:
