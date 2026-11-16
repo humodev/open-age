@@ -10,7 +10,7 @@ extends Node3D
 ##   --estilo=pacifica|normal|acosadora|agresiva  estilo de juego de la IA
 ##   --cam=x,z,zoom[,inclinación]  posición de cámara para la captura (bX,bZ: relativa a la base propia)
 ##   --select=tipo      selecciona entidades de ese tipo del jugador local antes de la captura
-##   --demo=base|obras|batalla|multitud|formacion|bloque  escena armada para revisar modelos, combate, el costo de 200 unidades o un grupo en marcha
+##   --demo=base|obras|hitos|animales|batalla|multitud|formacion|bloque  escena armada para revisar modelos, hitos, animales, combate, el costo de 200 unidades o un grupo en marcha
 ##   --menu             fuerza el menú de inicio (sin argumentos se abre solo)
 ##   --terreno=<clave de reglas.json "terrenos"> tipo de mapa (llano, valle, delta…)
 ##   --civ=clave        civilización propia (tawantinsuyu, mapuches, guaranies, etiopia, palmares, ayutthaya, azar)
@@ -310,6 +310,8 @@ func _build_scene(aivai: bool) -> void:
 	add_child(view)
 	view.setup(sim, local)
 	_apply_ambiente(sim.terrain) # --- ambiente por bioma ---
+	if _args.get("demo", "") == "animales":
+		_vitrina_animales()
 
 	cam = RtsCamera.new()
 	cam.name = "Camera"
@@ -410,6 +412,37 @@ func _demo(kind: String) -> void:
 					if found:
 						break
 		sim.set_meta("demo_cam", Vector2(b.x + 1, b.y + 13))
+	elif kind == "hitos":
+		# Los seis hitos del pueblo terminados, en dos filas (una por eje, económico y militar)
+		# y una columna por edad de destino (proceso/24, 4d). Cámara: --cam=b9,b6,24.
+		for row in sim.dp(0).hitos.size():
+			for col in (sim.dp(0).hitos[row] as Array).size():
+				var type: String = sim.dp(0).hitos[row][col]
+				var tx0: int = b.x + 2 + row * 6
+				var ty0: int = b.y + 5 + col * 6
+				var done := false
+				for r in 6:
+					for dy in range(-r, r + 1):
+						for dx in range(-r, r + 1):
+							if not done and sim.can_place(type, tx0 + dx, ty0 + dy, 0):
+								sim.spawn_building(type, 0, tx0 + dx, ty0 + dy, true)
+								done = true
+		sim.set_meta("demo_cam", Vector2(b.x + 9, b.y + 9))
+	elif kind == "animales":
+		# El rebaño propio, animales sueltos y caza junto a la base; la vitrina con todas las
+		# especies la arma _vitrina_animales (proceso/24, 4d). Cámara: --cam=b6,b10,12 (vitrina: --cam=b9.6,b16.8,15,46).
+		for i in 3:
+			var t := sim.map.nearest_free(b.x + 4 + i, b.y + 7, 6, 0)
+			sim.spawn_unit("rebano", 0, t.x * 1000 + 500, t.y * 1000 + 500)
+		for i in 3:
+			var t := sim.map.nearest_free(b.x + 4 + i, b.y + 9, 6, 0)
+			if t.x >= 0:
+				sim.spawn_resource("rebano_salvaje", t.x, t.y)
+		for i in 4:
+			var t := sim.map.nearest_free(b.x + 4 + i, b.y + 11, 6, 0)
+			if t.x >= 0:
+				sim.spawn_resource("venado", t.x, t.y)
+		sim.set_meta("demo_cam", Vector2(b.x + 6, b.y + 10))
 	elif kind == "base":
 		var place := func(type: String, tx0: int, ty0: int, built: bool) -> void:
 			if not sim.dp(0).edificios.has(type):
@@ -509,6 +542,35 @@ func _demo(kind: String) -> void:
 				ids[pid].append(u.id)
 		sim.push_command({"t": "move", "player": 0, "ids": ids[0], "x": (c + 6) * 1000, "y": c * 1000, "amove": true})
 		sim.push_command({"t": "move", "player": 1, "ids": ids[1], "x": (c - 6) * 1000, "y": c * 1000, "amove": true})
+
+
+## Vitrina de --demo=animales: todas las especies de data/arte_animales.json en fila, con su
+## nombre, al lado de la base (solo imagen; no son entidades de la partida).
+func _vitrina_animales() -> void:
+	var b := sim.bases[local]
+	var esp: Dictionary = Animales.data().get("especies", {})
+	# Filas a lo ancho de la pantalla: la cámara mira hacia +x+z (RtsCamera.YAW_DEG).
+	var right := Vector3(1, 0, -1).normalized()
+	var fwd := Vector3(1, 0, 1).normalized()
+	var o := Vector3(b.x + 10.4, 0, b.y + 17.6)
+	var i := 0
+	for sp: String in esp:
+		var mi := MeshInstance3D.new()
+		mi.mesh = Animales.mesh(sp)
+		var at := o + right * ((i % 8) - 3.5) * 1.7 - fwd * (i / 8) * 2.4
+		mi.position = at + Vector3(0, WorldView.height_at(at.x, at.z), 0)
+		mi.rotation.y = deg_to_rad(150.0) # de perfil, mirando a la derecha de la pantalla
+		view.add_child(mi)
+		var lb := Label3D.new()
+		lb.text = str(esp[sp].get("nombre", sp))
+		lb.font_size = 56
+		lb.pixel_size = 0.0045
+		lb.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		lb.no_depth_test = true
+		lb.outline_size = 8
+		lb.position = mi.position - fwd * 0.75 + Vector3(0, 0.1, 0) # en el suelo, del lado de la cámara
+		view.add_child(lb)
+		i += 1
 
 
 func _start(args: Dictionary) -> void:

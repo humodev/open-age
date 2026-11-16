@@ -88,7 +88,12 @@ static func building(type: String, def: Dictionary, team: Color, style: Dictiona
 	var base_y := 0.0
 	# Sin plinto: el suelo pintado (tierra pisada) ya asienta el edificio (docs/10).
 	if def.get("avanza_edad", false):
-		_monument(p, forma, variant, tier, w, d, pal, team)
+		# Hitos con forma propia (data/arte_hitos.json); si no, el monumento genérico de la forma.
+		if HitosMeshes.build(p, type, w, d, pal, team, cfg):
+			for c: Vector2 in [Vector2(-1, -1), Vector2(1, 1)]:
+				Meshes._banner(p, Vector3(c.x * w * 0.44, 0.1, c.y * d * 0.44), 1.4, team)
+		else:
+			_monument(p, forma, variant, tier, w, d, pal, team)
 	elif def.get("camino", false):
 		p.append([Meshes.box(0.98, 0.05, 0.98), Meshes.xf(Vector3(0, 0.025, 0)), pal[2].lightened(0.1)])
 		for i in 4:
