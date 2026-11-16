@@ -1,0 +1,10 @@
+Tiempo del tick por tramo de 5 minutos (promedio/peor) y, entre paréntesis, la parte de la IA
+(SimAI.think de los dos jugadores: promedio por tick / peor pensada).
+Copia instrumentada (Time alrededor de ai.think en Sim.step; no se commitea). Mapuches en espejo,
+llano, semilla 41. Carga de la máquina: 10-12 (torneos ajenos).
+Dos normales:
+mapuches      | 10' 31a 3c E2 6m · 33a 3c E2 16m · 3.8/37 ms (IA 0.63/17) | 15' 42a 3c E2 17m · 42a 3c E2 20m · 8.4/89 ms (IA 1.38/38) | 20' 42a 3c E2 37m · 42a 3c E3 21m · 10.9/115 ms (IA 1.60/44) | 25' 42a 3c E3 24m · 42a 3c E3 18m · 11.8/47 ms (IA 1.71/21) | gana nadie
+Dos expertas, antes de juntar los depósitos una vez por pensada:
+mapuches      | 10' 59a 3c E2 13m · 57a 3c E2 17m · 5.6/67 ms (IA 1.66/27) | 15' 76a 3c E2 26m · 82a 3c E3 13m · 16.7/112 ms (IA 5.06/42) | 20' 89a 3c E3 49m · 88a 3c E3 105m · 25.3/102 ms (IA 7.71/30) | 25' 51a 3c E3 86m · 88a 3c E3 104m · 29.7/126 ms (IA 8.63/35) | gana nadie
+Dos expertas, después (misma partida, mismo estado en cada corte):
+mapuches      | 10' 59a 3c E2 13m · 57a 3c E2 17m · 4.7/28 ms (IA 0.92/9) | 15' 76a 3c E2 26m · 82a 3c E3 13m · 13.9/58 ms (IA 2.33/13) | 20' 89a 3c E3 49m · 88a 3c E3 105m · 21.1/76 ms (IA 3.28/18) | 25' 51a 3c E3 86m · 88a 3c E3 104m · 25.6/124 ms (IA 3.94/30) | gana nadie

@@ -1,10 +1,4 @@
-Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
-
 normal contra normal · llano · semilla 41 · 25 minutos
 tawantinsuyu  | 10' 32a 1c E2 5m · 32a 1c E2 8m · 5.0/44 ms | 15' 37a 1c E2 1m · 42a 1c E2 27m · 10.2/55 ms | gana normal (19:35)
 mapuches      | 10' 31a 3c E2 6m · 33a 3c E2 16m · 3.6/25 ms | 15' 42a 3c E2 23m · 42a 3c E2 18m · 7.4/30 ms | 20' 42a 3c E2 45m · 42a 3c E2 10m · 11.7/54 ms | 25' 42a 3c E2 17m · 42a 3c E2 23m · 9.8/50 ms | gana nadie
 etiopia       | 10' 32a 1c E2 0m · 33a 1c E2 9m · 3.8/22 ms | 15' 30a 1c E2 1m · 42a 1c E2 28m · 7.2/30 ms | 20' 42a 1c E2 17m · 42a 1c E3 22m · 9.6/42 ms | gana normal (20:55)
-WARNING: 7379 ObjectDB instances were leaked at exit (run with `--verbose` for details).
-   at: cleanup (core/object/object.cpp:2536)
-ERROR: 10 resources still in use at exit (run with --verbose for details).
-   at: clear (core/io/resource.cpp:822)

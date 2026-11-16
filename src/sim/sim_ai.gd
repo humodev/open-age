@@ -705,12 +705,33 @@ func _dropsite_for(kind: String) -> String:
 func _far_gatherers(vill: Array[SimEntity], kind: String) -> Array:
 	var far := []
 	var lim := int(sim.data.reglas["ia_economia"]["almacen_lejos"])
+	# Los depósitos de `kind` se juntan una vez (con 100 aldeanos, `Sim.nearest_dropoff` por
+	# aldeano recorría todas las entidades cien veces por pensada). Mismo filtro, mismo orden y
+	# mismo desempate que `Sim.nearest_dropoff`: el resultado no cambia.
+	var drops: Array[SimEntity] = []
+	for b in sim.actives:
+		if not b.alive or b.owner != player:
+			continue
+		if b.is_unit():
+			if (b.def.get("deposito", []) as Array).has(kind) and b.inside < 0:
+				drops.append(b)
+		elif b.is_building() and b.built and (b.def.get("deposito", []) as Array).has(kind):
+			drops.append(b)
+	var probe := SimEntity.new()
 	for v in vill:
 		if v.order == O.GATHER and v.gather_kind == kind:
 			var t: SimEntity = sim.by_id.get(v.target)
 			if t == null or t.is_building():
 				continue
-			var d := sim.nearest_dropoff(player, kind, t.x, t.y)
+			probe.x = t.x
+			probe.y = t.y
+			var d: SimEntity = null
+			var best_d := 1 << 60
+			for b in drops:
+				var dd := sim.dist_to(probe, b)
+				if dd < best_d or (dd == best_d and d != null and b.id < d.id):
+					d = b
+					best_d = dd
 			if d == null or sim.dist_to(t, d) > lim:
 				far.append(t)
 	return far

@@ -1,13 +1,14 @@
 IA contra IA, llano, semilla 321, hasta 45 minutos. edificios = en pie al final [j0, j1]; cuentan = los que cuentan para la victoria.
 Con victoria por sitios:
-["tawantinsuyu", "mapuches"] hitos=si fin=24:07 motivo=sitios ganador=0 edificios=[293, 29] cuentan=[3, 4]
-["tawantinsuyu", "mapuches"] hitos=no fin=36:54 motivo=sitios ganador=1 edificios=[121, 49] cuentan=[18, 49]
+["tawantinsuyu", "mapuches"] hitos=si fin=26:13 motivo=conquista ganador=0 edificios=[303, 1] cuentan=[3, 0]
+["tawantinsuyu", "mapuches"] hitos=no fin=24:31 motivo=sitios ganador=1 edificios=[234, 40] cuentan=[52, 40]
 ["etiopia", "palmares"] hitos=si fin=45:00 motivo= ganador=-1 edificios=[21, 59] cuentan=[1, 7]
 ["etiopia", "palmares"] hitos=no fin=22:31 motivo=sitios ganador=0 edificios=[63, 2] cuentan=[63, 2]
-
-
 Sin victoria por sitios (solo conquista):
-["tawantinsuyu", "mapuches"] hitos=si fin=26:38 motivo=conquista ganador=0 edificios=[301, 7] cuentan=[3, 0]
-["tawantinsuyu", "mapuches"] hitos=no fin=42:27 motivo=conquista ganador=1 edificios=[0, 51] cuentan=[0, 51]
+["tawantinsuyu", "mapuches"] hitos=si fin=26:13 motivo=conquista ganador=0 edificios=[303, 1] cuentan=[3, 0]
+["tawantinsuyu", "mapuches"] hitos=no fin=40:30 motivo=conquista ganador=0 edificios=[293, 0] cuentan=[59, 0]
 ["etiopia", "palmares"] hitos=si fin=45:00 motivo= ganador=-1 edificios=[21, 59] cuentan=[1, 7]
 ["etiopia", "palmares"] hitos=no fin=25:04 motivo=conquista ganador=0 edificios=[66, 0] cuentan=[66, 0]
+
+Antes (pruebas/4b-sin-hitos-ia.txt, sin cacería): solo conquista y sin hitos, Tawantinsuyu-Mapuches 45:00 sin ganador (41 edificios al mapuche) y Etiopía-Palmares 45:00 sin ganador (58 a Palmares).
+Paso intermedio (solo 'rival sin ejército', sin ventaja_pct): Tawantinsuyu-Mapuches 45:00 sin ganador, 25 edificios al mapuche; Etiopía-Palmares conquista a los 24:53.

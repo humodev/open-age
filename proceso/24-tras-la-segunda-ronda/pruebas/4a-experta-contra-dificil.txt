@@ -1,13 +1,8 @@
-Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
-
 experta contra dificil · llano · semilla 41 · 25 minutos
 tawantinsuyu  | 10' 43a 1c E2 15m · 33a 1c E2 14m · 6.2/61 ms | 15' 59a 2c E2 39m · 49a 1c E2 17m · 13.7/63 ms | gana dificil (19:47)
-mapuches      | 10' 55a 3c E1 19m · 35a 3c E2 16m · 5.1/38 ms | 15' 71a 3c E2 62m · 46a 3c E2 18m · 14.9/67 ms | 20' 84a 3c E2 42m · 47a 3c E2 8m · 16.2/99 ms | 25' 100a 3c E3 64m · 46a 2c E2 3m · 17.7/91 ms | gana nadie
+mapuches      | 10' 55a 3c E1 19m · 35a 3c E2 16m · 4.6/57 ms | 15' 71a 3c E2 62m · 46a 3c E2 18m · 13.8/80 ms | 20' 84a 3c E2 42m · 47a 3c E2 8m · 15.0/122 ms | 25' 100a 3c E3 64m · 46a 2c E2 3m · 11.7/43 ms | gana nadie
 guaranies     | 10' 37a 1c E2 7m · 37a 1c E2 5m · 4.1/32 ms | 15' 41a 2c E2 5m · 52a 1c E3 23m · 9.3/60 ms | 20' 69a 2c E2 23m · 60a 1c E3 23m · 13.0/51 ms | 25' 56a 2c E3 29m · 60a 1c E4 124m · 19.9/146 ms | gana nadie
 etiopia       | 10' 28a 1c E2 14m · 31a 1c E2 7m · 4.0/26 ms | 15' 42a 2c E2 19m · 44a 1c E2 8m · 9.3/52 ms | 20' 74a 2c E3 37m · 58a 1c E2 7m · 13.5/62 ms | 25' 83a 2c E3 105m · 55a 1c E3 42m · 21.6/96 ms | gana nadie
 palmares      | 10' 17a 0c E1 11m · 20a 0c E2 5m · 2.8/20 ms | 15' 30a 0c E2 11m · 33a 0c E2 5m · 5.0/30 ms | 20' 41a 0c E2 33m · 45a 0c E2 9m · 7.5/34 ms | gana experta (20:13)
 ayutthaya     | 10' 29a 1c E2 0m · 29a 1c E2 11m · 3.5/63 ms | 15' 34a 1c E2 5m · 44a 1c E2 15m · 7.5/41 ms | 20' 54a 2c E3 14m · 57a 1c E3 35m · 10.8/52 ms | gana dificil (21:46)
-WARNING: 15540 ObjectDB instances were leaked at exit (run with `--verbose` for details).
-   at: cleanup (core/object/object.cpp:2536)
-ERROR: 10 resources still in use at exit (run with --verbose for details).
-   at: clear (core/io/resource.cpp:822)
+(mapuches medidos de nuevo después de traer main: cambió su kawiñ, proceso/24 3b)

@@ -1,10 +1,4 @@
-Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
-
 experta contra experta · llano · semilla 41 · 25 minutos
 tawantinsuyu  | 10' 38a 1c E2 11m · 36a 1c E2 18m · 6.0/70 ms | 15' 49a 2c E2 32m · 63a 2c E2 29m · 14.4/66 ms | 20' 83a 2c E2 72m · 97a 2c E3 29m · 20.7/99 ms | gana experta (24:29)
 mapuches      | 10' 59a 3c E2 13m · 57a 3c E2 17m · 5.4/53 ms | 15' 74a 3c E2 57m · 68a 3c E2 17m · 16.1/59 ms | 20' 90a 3c E2 37m · 71a 3c E2 15m · 21.0/96 ms | 25' 100a 3c E3 79m · 84a 3c E2 15m · 18.8/76 ms | gana nadie
 etiopia       | 10' 27a 1c E2 6m · 32a 1c E2 10m · 4.0/32 ms | 15' 42a 2c E2 11m · 56a 2c E2 15m · 6.7/31 ms | gana experta (19:53)
-WARNING: 8009 ObjectDB instances were leaked at exit (run with `--verbose` for details).
-   at: cleanup (core/object/object.cpp:2536)
-ERROR: 10 resources still in use at exit (run with --verbose for details).
-   at: clear (core/io/resource.cpp:822)

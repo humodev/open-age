@@ -1,13 +1,8 @@
-Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
-
 experta contra normal · llano · semilla 41 · 25 minutos
 tawantinsuyu  | 10' 40a 1c E2 16m · 29a 1c E2 15m · 5.9/47 ms | 15' 53a 2c E2 41m · 42a 1c E2 24m · 12.1/57 ms | 20' 96a 3c E2 54m · 44a 1c E2 18m · 24.9/143 ms | 25' 100a 3c E3 80m · 29a 0c E2 0m · 30.6/151 ms | gana nadie
-mapuches      | 10' 51a 3c E2 18m · 33a 3c E2 12m · 4.4/27 ms | 15' 71a 3c E2 23m · 43a 3c E2 14m · 11.3/42 ms | 20' 88a 3c E3 51m · 45a 3c E2 19m · 14.4/65 ms | 25' 100a 3c E3 88m · 38a 3c E3 0m · 17.2/80 ms | gana nadie
+mapuches      | 10' 51a 3c E2 18m · 33a 3c E2 12m · 4.1/22 ms | 15' 71a 3c E2 23m · 43a 3c E2 14m · 10.2/33 ms | 20' 88a 3c E3 48m · 45a 3c E2 24m · 12.7/70 ms | 25' 100a 3c E3 68m · 43a 3c E3 17m · 16.3/53 ms | gana nadie
 guaranies     | 10' 37a 1c E2 5m · 37a 1c E2 6m · 3.7/29 ms | 15' 44a 2c E2 2m · 42a 1c E3 35m · 8.3/38 ms | 20' 68a 2c E3 33m · 42a 1c E3 14m · 12.3/63 ms | 25' 43a 2c E3 16m · 42a 1c E4 39m · 15.5/85 ms | gana nadie
 etiopia       | 10' 27a 1c E2 11m · 33a 1c E2 4m · 4.2/32 ms | 15' 39a 2c E2 33m · 42a 1c E2 14m · 8.9/43 ms | 20' 69a 2c E2 59m · 40a 0c E3 29m · 13.8/71 ms | 25' 100a 3c E3 70m · 24a 0c E3 0m · 15.1/78 ms | gana nadie
 palmares      | 10' 19a 0c E2 14m · 20a 0c E2 5m · 2.8/31 ms | 15' 31a 0c E2 23m · 33a 0c E2 4m · 4.9/42 ms | 20' 47a 0c E2 12m · 48a 0c E2 28m · 8.1/31 ms | 25' 57a 0c E2 12m · 65a 0c E3 35m · 10.9/41 ms | gana nadie
 ayutthaya     | 10' 29a 1c E2 8m · 29a 1c E2 12m · 3.4/59 ms | 15' 36a 1c E2 20m · 42a 1c E2 19m · 6.9/49 ms | 20' 50a 1c E2 42m · 42a 1c E3 17m · 11.3/55 ms | 25' 72a 2c E3 7m · 42a 1c E3 41m · 11.9/44 ms | gana nadie
-WARNING: 15287 ObjectDB instances were leaked at exit (run with `--verbose` for details).
-   at: cleanup (core/object/object.cpp:2536)
-ERROR: 10 resources still in use at exit (run with --verbose for details).
-   at: clear (core/io/resource.cpp:822)
+(mapuches medidos de nuevo después de traer main: cambió su kawiñ, proceso/24 3b)
