@@ -21,14 +21,17 @@
     "barras_combate_s": 4
   },
   "frases_ia": {
-    "_doc": "Lo que dice la IA aliada en el chat (suceso ia_dice de la simulación). {a}: el jugador nombrado; {n}: cantidad; {llegan}: lo que llega tras la comisión del tributo; {recurso}: recurso.",
+    "_doc": "Lo que dice la IA aliada en el chat (suceso ia_dice de la simulación). {a}: el jugador nombrado; {n}: cantidad; {llegan}: lo que llega tras la comisión del tributo; {recurso}: recurso; {pedido}: el recurso pedido cuando manda otro.",
     "ataco": "Voy contra {a}",
     "atacan": "¡Me atacan!",
     "mando": "Te mando {n} de {recurso}: llegan {llegan}, el resto se pierde en el camino",
     "no_sobra": "No me sobra {recurso}",
     "voy_atacar": "Voy a tu bengala con {n}",
     "voy_defender": "Voy a defenderte con {n}",
-    "sin_tropa": "Ahora no tengo tropa para mandar"
+    "sin_tropa": "Ahora no tengo tropa para mandar",
+		"mando_otro": "No me sobra {pedido}; te mando {n} de {recurso}: llegan {llegan}",
+		"junto": "Junto {recurso} y te lo mando",
+		"voy_oleada": "Voy a tu bengala con mi próxima oleada"
   },
   "grilla": {
     "_doc": "Grilla de comandos estable (src/game/ui/grilla.gd). Casillas 0-11 = Q W E R / A S D F / Z X C V. El aldeano muestra Economía (Q) y Militar (W) como submenús y los hitos en Z (economía) y X (militar); dentro de cada submenú, cada edificio va siempre en la misma casilla por función, en las seis civilizaciones. Un edificio nuevo se agrega acá; si falta, va a la primera casilla libre con un aviso en la consola.",

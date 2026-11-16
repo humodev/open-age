@@ -306,13 +306,13 @@ func _ia_dice(ev: Dictionary) -> void:
 	var key: String = ev["clave"]
 	var a := int(ev.get("a", -1))
 	# Lo que es para un aliado en particular (te mando, no me sobra, voy a tu bengala) solo lo ve él.
-	if key in ["mando", "no_sobra", "sin_tropa", "voy_atacar", "voy_defender"] and a != local:
+	if key in ["mando", "no_sobra", "sin_tropa", "voy_atacar", "voy_defender", "mando_otro", "junto", "voy_oleada"] and a != local: # --- equipos ronda 3 ---
 		return
 	var plantilla: String = (ctrl.atajos.cfg().get("frases_ia", {}) as Dictionary).get(key, key)
 	# Lo que llega de un tributo, después de la comisión (reglas.equipos.tributo_comision_pct).
 	var n := int(ev.get("n", 0))
 	var llegan := n * (100 - int(sim.data.reglas["equipos"].get("tributo_comision_pct", 0))) / 100
-	var txt := plantilla.replace("{a}", Palette.team_name(a) if a >= 0 else "").replace("{n}", str(ev.get("n", ""))).replace("{llegan}", str(llegan)).replace("{recurso}", Palette.RES_NAMES.get(str(ev.get("recurso", "")), str(ev.get("recurso", ""))).to_lower())
+	var txt := plantilla.replace("{a}", Palette.team_name(a) if a >= 0 else "").replace("{n}", str(ev.get("n", ""))).replace("{llegan}", str(llegan)).replace("{recurso}", Palette.RES_NAMES.get(str(ev.get("recurso", "")), str(ev.get("recurso", ""))).to_lower()).replace("{pedido}", Palette.RES_NAMES.get(str(ev.get("pedido", "")), str(ev.get("pedido", ""))).to_lower())
 	var line := "%s: «%s»" % [Palette.team_name(pid), txt]
 	notify(line, -1.0, "ataque" if key == "atacan" else "info")
 	# También en el registro (F5): la frase se va con el aviso y conviene poder releerla.

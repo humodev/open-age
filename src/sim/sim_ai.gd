@@ -25,6 +25,11 @@ var _weighted := false # sin tomar sitios: ya se cargó el peso de los sitios en
 var last_tribute := 0
 var _flares_done := {} # bengalas aliadas ya atendidas (id -> true)
 var _flare_units := {} # unidades que fueron a una bengala -> tick hasta el que se quedan allá
+# --- equipos ronda 3 ---
+var _asks: Array[Dictionary] = [] # pedidos de aliados que esperan: {de, recurso, n, hasta}
+var _flare_wave: Dictionary = {} # bengala de ataque que espera la próxima oleada: {x, y, de, hasta}
+var _flare_march: Dictionary = {} # tropa en marcha a una bengala de ataque: {x, y, sx, sy, ids, hasta}
+# --- fin equipos ronda 3 ---
 var _said := {} # frase -> tick en que se dijo (para no repetir: reglas.equipos.ia_frases_calma_ticks)
 var focus := -1 # jugador enemigo al que apunta el ataque; los aliados se suman (docs/11)
 var rally := Vector2i(-1, -1)
@@ -118,6 +123,9 @@ func think() -> void:
 					break
 			rally = Vector2i(rally.x + (centro.x - rally.x) / 4, rally.y + (centro.y - rally.y) / 4)
 
+	# --- equipos ronda 3 --- lo pedido por un aliado se aparta antes de gastar (ver _reserve)
+	_requests(p)
+	var held := _reserve(p, 1)
 	var saving := _wants_hito(p, vill.size(), by_type)
 	_economy(p, vill, centro, saving)
 	_buildings(p, vill, centro, by_type, saving)
@@ -125,10 +133,10 @@ func think() -> void:
 	_research(p, by_type, saving)
 	_trade(p, by_type)
 	_engine(p, vill, centro, by_type, saving)
+	_reserve(p, -1, held) # --- equipos ronda 3 ---
 	_animals(centro)
 	_alarm(p, vill, army, centro)
 	_tribute(p, saving)
-	_requests(p)
 	_military(army, centro)
 	_flares(army, centro)
 	# Al final: mira también las órdenes que el resto de la IA acaba de dar en este turno.
@@ -1242,7 +1250,7 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 		if spot.x >= 0:
 			var ids := []
 			for u in army:
-				if u.order == O.IDLE and ids.size() < army.size() / 2:
+				if u.order == O.IDLE and ids.size() < army.size() / 2 and not _at_flare(u): # --- equipos ronda 3 ---
 					ids.append(u.id)
 			if not ids.is_empty():
 				sim.push_command({"t": "move", "player": player, "ids": ids, "x": spot.x, "y": spot.y, "amove": true})
@@ -1260,7 +1268,7 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 		if mill != null and sim.disputed_room(player) >= 50:
 			var ids := []
 			for u in army:
-				if u.order == O.IDLE and ids.size() < maxi(6, army.size() * 2 / 3):
+				if u.order == O.IDLE and ids.size() < maxi(6, army.size() * 2 / 3) and not _at_flare(u): # --- equipos ronda 3 ---
 					ids.append(u.id)
 			if ids.size() >= 6:
 				sim.push_command({"t": "move", "player": player, "ids": ids, "x": mill.x, "y": mill.y, "amove": true})
@@ -1278,7 +1286,7 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 		if site != null:
 			var ids := []
 			for u in army:
-				if u.order == O.IDLE and ids.size() < int(level.get("sitio_grupo", 4)):
+				if u.order == O.IDLE and ids.size() < int(level.get("sitio_grupo", 4)) and not _at_flare(u): # --- equipos ronda 3 ---
 					ids.append(u.id)
 			if not ids.is_empty():
 				sim.push_command({"t": "move", "player": player, "ids": ids, "x": site.x, "y": site.y, "amove": true})
@@ -1461,7 +1469,8 @@ func _attack(army: Array[SimEntity]) -> void:
 	_say("ataco", {"a": target.owner})
 	var ids := []
 	for u in army:
-		ids.append(u.id)
+		if not _at_flare(u): # --- equipos ronda 3 --- los que van a la bengala siguen a lo suyo
+			ids.append(u.id)
 	# Se para del lado de quien llega, a 3 casillas del blanco.
 	var dx := ref.x - target.x
 	var dy := ref.y - target.y
@@ -1638,6 +1647,8 @@ func _tribute(p: Dictionary, saving: bool) -> void:
 	var cfg: Dictionary = sim.data.reglas.get("equipos", {}).get("ia_tributo", {})
 	if cfg.is_empty() or saving or sim.tick < int(cfg.get("desde_ticks", 0)) or sim.tick - last_tribute < int(cfg["cada_ticks"]):
 		return
+	if not _asks.is_empty(): # --- equipos ronda 3 --- con un pedido esperando, nada de regalos
+		return
 	last_tribute = sim.tick
 	for kind in ["alimento", "madera", "piedra", "riqueza"]:
 		if int(p["res"].get(kind, 0)) <= int(cfg["sobra"]):
@@ -1667,28 +1678,69 @@ func _say(key: String, extra: Dictionary, always: bool = false) -> void:
 	sim.say(player, key, extra)
 
 
-## Pedidos de recursos de un aliado: da el lote si le sobra; si no, avisa.
+## --- equipos ronda 3 --- Pedidos de recursos de un aliado. Pesan más que el tributo espontáneo:
+## se atienden primero en cada pensada, con un margen más chico (`pedido.sobra`), y mientras
+## esperan no hay regalos. Si no alcanza, el pedido espera hasta `pedido.espera_ticks`; al vencer,
+## manda otro recurso que le sobre (`pedido.sobra_otro`) o avisa que no puede. Antes se
+## contestaba una sola vez y la madera nunca alcanzaba (3 de 18, ronda 3).
 func _requests(p: Dictionary) -> void:
-	if sim.requests.is_empty():
-		return
 	var cfg: Dictionary = sim.data.reglas["equipos"]["pedido"]
-	var keep: Array[Dictionary] = []
-	for r in sim.requests:
-		if int(r["a"]) != player:
-			keep.append(r)
+	if not sim.requests.is_empty():
+		var keep: Array[Dictionary] = []
+		for r in sim.requests:
+			if int(r["a"]) != player:
+				keep.append(r)
+				continue
+			var dup := false # el mismo pedido otra vez mientras espera: sigue el primero
+			for q in _asks:
+				dup = dup or (int(q["de"]) == int(r["de"]) and q["recurso"] == r["recurso"])
+			if dup:
+				continue
+			_asks.append({"de": int(r["de"]), "recurso": r["recurso"], "n": int(r["n"]), "hasta": sim.tick + int(cfg.get("espera_ticks", 0))})
+		sim.requests = keep
+	if _asks.is_empty():
+		return
+	var left: Array[Dictionary] = []
+	var gave := false
+	for a in _asks:
+		var to := int(a["de"])
+		if sim.players[to]["defeated"] or gave:
+			if not sim.players[to]["defeated"]:
+				left.append(a)
 			continue
-		var kind: String = r["recurso"]
-		var n := int(r["n"])
+		var kind: String = a["recurso"]
+		var n := int(a["n"])
 		if int(p["res"].get(kind, 0)) >= n + int(cfg["sobra"]):
-			sim.push_command({"t": "tributo", "player": player, "a": int(r["de"]), "recurso": kind, "n": n})
-			_say("mando", {"a": int(r["de"]), "recurso": kind, "n": n}, true)
+			sim.push_command({"t": "tributo", "player": player, "a": to, "recurso": kind, "n": n})
+			_say("mando", {"a": to, "recurso": kind, "n": n}, true)
+			gave = true # uno por pensada: el banco se lee antes de que el tributo lo descuente
+		elif sim.tick >= int(a["hasta"]):
+			var other := ""
+			for k in ["alimento", "madera", "piedra", "riqueza"]:
+				if k != kind and int(p["res"].get(k, 0)) >= n + int(cfg.get("sobra_otro", 1 << 30)):
+					other = k
+					break
+			if other != "":
+				sim.push_command({"t": "tributo", "player": player, "a": to, "recurso": other, "n": n})
+				_say("mando_otro", {"a": to, "recurso": other, "pedido": kind, "n": n}, true)
+				gave = true
+			else:
+				_say("no_sobra", {"a": to, "recurso": kind}, true)
 		else:
-			_say("no_sobra", {"a": int(r["de"]), "recurso": kind}, true)
-	sim.requests = keep
+			if not a.get("avisado", false):
+				a["avisado"] = true
+				_say("junto", {"a": to, "recurso": kind}, true)
+			left.append(a)
+	_asks = left
 
 
 ## Bengalas de un aliado: manda una parte del ejército libre (reglas.equipos.bengala).
 func _flares(army: Array[SimEntity], centro: SimEntity) -> void:
+	# --- equipos ronda 3 --- la bengala que espera tropa sale apenas se junta el grupo, también
+	# si la IA está ayudando a un aliado; con la base propia atacada, no.
+	_flare_march_step()
+	if not _flare_wave.is_empty() and _threat(centro) == null:
+		_flare_wave_go(army)
 	if sim.flares.is_empty():
 		return
 	var cfg: Dictionary = sim.data.reglas["equipos"]["bengala"]
@@ -1704,11 +1756,20 @@ func _flares(army: Array[SimEntity], centro: SimEntity) -> void:
 		for u in army:
 			if u.order != O.ATTACK:
 				free.append(u)
+		var fx := int(f["x"])
+		var fy := int(f["y"])
+		# --- equipos ronda 3 --- Ataque: no un piquete de 3 a 7 que se queda a mitad de camino
+		# (1 de 4 llegó, ronda 3), sino un grupo de al menos `ia_grupo_min`: el ejército libre
+		# entero si alcanza; si no, la bengala espera a la próxima oleada (`_flare_wave_go`).
+		if f["tipo"] == "atacar" and int(cfg.get("ia_grupo_min", 0)) > 0:
+			if not _flare_send(army, fx, fy, from):
+				_flare_wave = {"x": fx, "y": fy, "de": from, "hasta": sim.tick + int(cfg["ia_espera_ticks"])}
+				_say("voy_oleada", {"a": from}, true)
+			continue
+		# --- fin equipos ronda 3 ---
 		if free.size() < int(cfg["ia_min"]):
 			_say("sin_tropa", {"a": from}, true)
 			continue
-		var fx := int(f["x"])
-		var fy := int(f["y"])
 		free.sort_custom(func(a: SimEntity, b: SimEntity) -> bool:
 			var da := Sim.dist(a.x, a.y, fx, fy)
 			var db := Sim.dist(b.x, b.y, fx, fy)
@@ -1720,6 +1781,117 @@ func _flares(army: Array[SimEntity], centro: SimEntity) -> void:
 			_flare_units[free[i].id] = sim.tick + int(cfg["dura_ticks"]) * 4
 		sim.push_command({"t": "move", "player": player, "ids": ids, "x": fx, "y": fy, "amove": true})
 		_say("voy_" + str(f["tipo"]), {"a": from, "n": ids.size()}, true)
+
+
+# --- equipos ronda 3 ---
+## Manda a la bengala de ataque todo el ejército libre si junta `ia_grupo_min`: se reúne en el
+## punto de reunión y sale en formación (la que se rinde a mitad de camino era la tropa suelta).
+## Quedan protegidos `ia_queda_ticks` de las otras órdenes de la IA (reunirse, incursiones,
+## oleadas, defensa): antes se liberaban a los 60 s, a mitad de camino.
+func _flare_send(army: Array[SimEntity], fx: int, fy: int, from: int) -> bool:
+	var cfg: Dictionary = sim.data.reglas["equipos"]["bengala"]
+	var ids := []
+	for u in army:
+		if u.order != O.ATTACK and not _at_flare(u):
+			ids.append(u.id)
+	if ids.size() < int(cfg["ia_grupo_min"]):
+		return false
+	for id in ids:
+		_flare_units[id] = sim.tick + int(cfg["ia_queda_ticks"])
+	# Marcha en grupo, sin pelear, hasta `ia_escala` antes de la bengala, y desde ahí ataca hasta
+	# ella. Con ataque en movimiento desde el principio, un hondero que le tiraba a un ingenio
+	# neutral (hostil, mucha vida) plantaba a todo el grupo en combate durante minutos, a mitad de
+	# camino (traza de la ronda 3), y las peleas del camino lo desarmaban: llegaban 39 de 86
+	# enviados; sin pelear, 69 de 105 (proceso/24, paso 4l).
+	var cx := 0
+	var cy := 0
+	for u in army:
+		if ids.has(u.id):
+			cx += u.x
+			cy += u.y
+	cx /= ids.size()
+	cy /= ids.size()
+	var l := maxi(1, Sim.dist(cx, cy, fx, fy))
+	var esc := mini(int(cfg["ia_escala"]), l)
+	var sx := fx + (cx - fx) * esc / l
+	var sy := fy + (cy - fy) * esc / l
+	_flare_march = {"x": fx, "y": fy, "sx": sx, "sy": sy, "ids": ids, "hasta": sim.tick + int(cfg["ia_queda_ticks"])}
+	sim.push_command({"t": "move", "player": player, "ids": ids, "x": sx, "y": sy})
+	_say("voy_atacar", {"a": from, "n": ids.size()}, true)
+	last_attack = sim.tick # cuenta como oleada: la próxima espera lo de siempre
+	wave += 1
+	_flare_wave = {}
+	return true
+
+
+## Lo que un aliado pidió se aparta mientras la IA decide en qué gastar: ve `lote + sobra`
+## menos del recurso pedido, así no se lo gasta y el pedido se cumple en una pensada siguiente.
+## Antes la madera nunca alcanzaba: la IA la gastaba apenas entraba (0 de 6 pedidos de madera).
+## Se aparta y se devuelve dentro de la misma pensada (`sign` 1 y -1): el banco real no cambia.
+func _reserve(p: Dictionary, sign: int, held: Dictionary = {}) -> Dictionary:
+	if sign < 0:
+		for k in held:
+			p["res"][k] = int(p["res"][k]) + int(held[k])
+		return {}
+	var out := {}
+	if _asks.is_empty():
+		return out
+	var cfg: Dictionary = sim.data.reglas["equipos"]["pedido"]
+	for a in _asks:
+		var k: String = a["recurso"]
+		var want := int(a["n"]) + int(cfg["sobra"]) - int(out.get(k, 0))
+		var take := clampi(want, 0, int(p["res"].get(k, 0)))
+		if take > 0:
+			out[k] = int(out.get(k, 0)) + take
+			p["res"][k] = int(p["res"][k]) - take
+	return out
+
+
+## Tropa en marcha a una bengala de ataque: cuando la mayoría llegó a la escala (o ya nadie
+## camina), todos los que siguen vivos atacan en movimiento hasta la bengala. Si alguno quedó
+## pegándole a algo neutral (un ingenio), lo deja y sigue a la escala.
+func _flare_march_step() -> void:
+	if _flare_march.is_empty():
+		return
+	var cfg: Dictionary = sim.data.reglas["equipos"]["bengala"]
+	var alive := []
+	var near := 0
+	var walking := 0
+	var neutral := []
+	for id in _flare_march["ids"]:
+		var u: SimEntity = sim.by_id.get(id)
+		if u == null or not u.alive:
+			continue
+		alive.append(id)
+		if Sim.dist(u.x, u.y, int(_flare_march["sx"]), int(_flare_march["sy"])) <= int(cfg["ia_escala_llegada"]):
+			near += 1
+		if u.order == O.MOVE or u.order == O.ATTACK_MOVE:
+			walking += 1
+		elif u.order == O.ATTACK:
+			var t: SimEntity = sim.by_id.get(u.target)
+			if t != null and t.owner < 0:
+				neutral.append(id)
+	if alive.is_empty() or sim.tick > int(_flare_march["hasta"]):
+		_flare_march = {}
+		return
+	if not neutral.is_empty():
+		sim.push_command({"t": "move", "player": player, "ids": neutral, "x": int(_flare_march["sx"]), "y": int(_flare_march["sy"]), "suelto": true})
+	if near * 2 >= alive.size() or walking == 0:
+		sim.push_command({"t": "move", "player": player, "ids": alive, "x": int(_flare_march["x"]), "y": int(_flare_march["y"]), "amove": true})
+		_flare_march = {}
+
+
+## Bengala de ataque que esperaba tropa: sale cuando junta el grupo, o se olvida al vencer.
+func _flare_wave_go(army: Array[SimEntity]) -> bool:
+	if _flare_wave.is_empty():
+		return false
+	var from := int(_flare_wave["de"])
+	if sim.tick > int(_flare_wave["hasta"]) or sim.players[from]["defeated"]:
+		_flare_wave = {}
+		_say("sin_tropa", {"a": from}, true)
+		return false
+	return _flare_send(army, int(_flare_wave["x"]), int(_flare_wave["y"]), from)
+# --- fin equipos ronda 3 ---
 
 
 func _count(list: Array[SimEntity], type: String) -> int:

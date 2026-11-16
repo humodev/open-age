@@ -42,6 +42,10 @@ var _op_recursos: OptionButton
 var _op_ubic: OptionButton
 var _op_resumen: Label
 var _tiempos: Array = [] # minutos que ofrece reglas.opciones_partida.tiempo_limite_min
+# --- equipos ronda 3 --- tiempo límite por defecto en todos contra todos (opciones_partida.todos_contra_todos_tiempo_min)
+var _ffa_was := false # la partida elegida era todos contra todos en el último refresco
+var _ffa_auto := false # el tiempo actual lo puso el menú por ser todos contra todos (no el jugador)
+var _ffa_prev := 0 # el tiempo que había antes de ponerlo solo (vuelve al salir del todos contra todos)
 const RECURSOS := [["normal", "Normales"], ["medios", "Medios"], ["altos", "Altos"]]
 const UBICACION := [["juntos", "Aliados juntos"], ["mezclados", "Aliados mezclados"]]
 # --- fin opciones de partida ---
@@ -525,6 +529,7 @@ func _build_match_options(col: VBoxContainer) -> void:
 	_op_resumen.add_theme_font_size_override("font_size", 14)
 	_op_resumen.add_theme_color_override("font_color", Palette.UI_DIM)
 	col.add_child(_op_resumen)
+	_op_tiempo.item_selected.connect(func(_i: int) -> void: _ffa_auto = false) # --- equipos ronda 3 --- lo eligió el jugador
 	for ob: OptionButton in [_op_tiempo, _op_recursos, _op_ubic]:
 		ob.item_selected.connect(func(_i: int) -> void: _refresh_match_options(true))
 	for cb: CheckButton in [_op_sitios, _op_hitos]:
@@ -541,6 +546,7 @@ func _build_match_options(col: VBoxContainer) -> void:
 		_op_hitos.button_pressed = ma["hitos"] != "no"
 	if ma.has("tiempo"):
 		_op_tiempo.selected = maxi(0, _tiempos.find(int(ma["tiempo"])))
+		_ffa_was = true # --- equipos ronda 3 --- el tiempo pedido por argumento no se toca
 	if ma.has("recursos"):
 		_op_recursos.selected = maxi(0, RECURSOS.map(func(r: Array) -> String: return r[0]).find(ma["recursos"]))
 	if ma.has("ubicacion"):
@@ -574,6 +580,7 @@ func _check(text: String, on: bool, tip: String) -> CheckButton:
 	cb.tooltip_text = tip
 	cb.add_theme_font_override("font", Hud.font)
 	cb.add_theme_font_size_override("font_size", 15)
+	Opciones.interruptor_en(cb) # --- equipos ronda 3 --- apagado se veía como un punto suelto
 	return cb
 
 
@@ -585,6 +592,8 @@ func _refresh_match_options(save := false) -> void:
 	for r in _slot_rows:
 		teams[(r[1] as OptionButton).selected] = true
 	var with_allies := _slot_rows.size() > 2 and teams.size() < _slot_rows.size()
+	var ffa := _slot_rows.size() > 2 and teams.size() == _slot_rows.size()
+	_ffa_default(ffa) # --- equipos ronda 3 ---
 	_op_ubic.disabled = not with_allies
 	_op_ubic.tooltip_text = "Dónde arranca cada aliado en el círculo de bases: al lado o alternados con los rivales." if with_allies else "Solo en partidas por equipos de tres o más jugadores."
 	var ways: Array = ["por conquista"]
@@ -598,12 +607,35 @@ func _refresh_match_options(save := false) -> void:
 	if not _op_sitios.button_pressed:
 		txt += " Los sitios sagrados dan riqueza, pero no ganan."
 	var mins := int(_tiempos[maxi(0, _op_tiempo.selected)])
+	# --- equipos ronda 3 --- en todos contra todos gana un jugador, no un equipo
 	if mins > 0:
-		txt += " A los %d minutos gana el equipo con más puntos." % mins
+		txt += (" A los %d minutos gana quien tenga más puntos" if ffa else " A los %d minutos gana el equipo con más puntos") % mins
+		txt += " (tiempo límite por defecto en todos contra todos)." if ffa and _ffa_auto else "."
+	elif ffa:
+		txt += " Sin tiempo límite, un todos contra todos puede no terminar."
 	_op_resumen.text = txt
 	if save:
-		Opciones.partida = {"sitios": _op_sitios.button_pressed, "hitos": _op_hitos.button_pressed, "tiempo_limite_min": mins, "recursos": RECURSOS[maxi(0, _op_recursos.selected)][0], "ubicacion_equipos": UBICACION[maxi(0, _op_ubic.selected)][0]}
+		# Lo que puso el menú por ser todos contra todos no se recuerda para la próxima partida.
+		var keep_mins := _ffa_prev if _ffa_auto else mins
+		Opciones.partida = {"sitios": _op_sitios.button_pressed, "hitos": _op_hitos.button_pressed, "tiempo_limite_min": keep_mins, "recursos": RECURSOS[maxi(0, _op_recursos.selected)][0], "ubicacion_equipos": UBICACION[maxi(0, _op_ubic.selected)][0]}
 		Opciones.guardar()
+
+
+## --- equipos ronda 3 --- Al pasar a un todos contra todos con "Sin límite", el menú elige
+## `opciones_partida.todos_contra_todos_tiempo_min` (sin él, las partidas de 4 y 6 no terminaban).
+## Al salir del todos contra todos vuelve lo de antes, salvo que el jugador lo haya cambiado.
+func _ffa_default(ffa: bool) -> void:
+	if ffa and not _ffa_was:
+		var dflt := int(_data.reglas["opciones_partida"].get("todos_contra_todos_tiempo_min", 0))
+		var cur := int(_tiempos[maxi(0, _op_tiempo.selected)])
+		if dflt > 0 and cur == 0 and _tiempos.has(dflt):
+			_ffa_prev = cur
+			_op_tiempo.selected = _tiempos.find(dflt)
+			_ffa_auto = true
+	elif not ffa and _ffa_was and _ffa_auto:
+		_op_tiempo.selected = maxi(0, _tiempos.find(_ffa_prev))
+		_ffa_auto = false
+	_ffa_was = ffa
 
 
 ## Opciones de partida como argumentos de main.gd (--sitios, --hitos, --tiempo, --recursos, --ubicacion).

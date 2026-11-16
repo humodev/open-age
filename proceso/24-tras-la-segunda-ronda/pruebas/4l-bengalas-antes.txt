@@ -1,0 +1,64 @@
+semilla 11 juntos    fin 24:00
+  bengala 12:00 → voy_atacar 6 · enviados 6, llegaron a 25 casillas 0 · aliados a 12/25 casillas a los 45/90/150/240 s y máximo: { "max": "0/0", 45: "0/0", 90: "0/0", 150: "0/0", 240: "0/0" }
+  bengala 18:00 → voy_atacar 7 · enviados 5, llegaron a 25 casillas 0 · aliados a 12/25 casillas a los 45/90/150/240 s y máximo: { "max": "0/0", 45: "0/0", 90: "0/0", 150: "0/0", 240: "0/0" }
+  pedido 8:00 madera   no
+  pedido 8:00 alimento no
+  pedido 14:00 madera   no
+  pedido 14:00 alimento no
+  pedido 20:00 madera   no
+  pedido 20:00 alimento concedido
+  tributos no pedidos: 4 (del aliado al jugador 0: 1) · frases del aliado: ["8:00 no_sobra madera", "8:00 no_sobra alimento", "12:00 voy_atacar 6", "14:00 no_sobra madera", "14:00 no_sobra alimento", "18:00 voy_atacar 7", "20:00 no_sobra madera"]
+semilla 11 mezclados fin 24:00
+  bengala 12:00 → voy_atacar 5 · enviados 5, llegaron a 25 casillas 5 · aliados a 12/25 casillas a los 45/90/150/240 s y máximo: { "max": "0/20", 45: "0/0", 90: "0/0", 150: "0/0", 240: "0/19" }
+  bengala 18:00 → voy_atacar 3 · enviados 3, llegaron a 25 casillas 2 · aliados a 12/25 casillas a los 45/90/150/240 s y máximo: { "max": "40/52", 45: "0/0", 90: "0/0", 150: "5/33", 240: "37/52" }
+  pedido 8:00 madera   no
+  pedido 8:00 alimento concedido
+  pedido 14:00 madera   no
+  pedido 14:00 alimento no
+  pedido 20:00 madera   no
+  pedido 20:00 alimento no
+  tributos no pedidos: 9 (del aliado al jugador 0: 3) · frases del aliado: ["8:00 no_sobra madera", "12:00 voy_atacar 5", "14:00 no_sobra madera", "14:00 no_sobra alimento", "18:00 voy_atacar 3", "20:00 no_sobra madera", "20:00 no_sobra alimento"]
+semilla 23 juntos    fin 24:00
+  bengala 12:00 → voy_atacar 11 · enviados 11, llegaron a 25 casillas 0 · aliados a 12/25 casillas a los 45/90/150/240 s y máximo: { "max": "0/0", 45: "0/0", 90: "0/0", 150: "0/0", 240: "0/0" }
+  bengala 18:00 → voy_atacar 11 · enviados 9, llegaron a 25 casillas 0 · aliados a 12/25 casillas a los 45/90/150/240 s y máximo: { "max": "0/0", 45: "0/0", 90: "0/0", 150: "0/0", 240: "0/0" }
+  pedido 8:00 madera   no
+  pedido 8:00 alimento no
+  pedido 14:00 madera   no
+  pedido 14:00 alimento no
+  pedido 20:00 madera   no
+  pedido 20:00 alimento no
+  tributos no pedidos: 3 (del aliado al jugador 0: 1) · frases del aliado: ["8:00 no_sobra madera", "8:00 no_sobra alimento", "12:00 voy_atacar 11", "14:00 no_sobra madera", "14:00 no_sobra alimento", "18:00 voy_atacar 11", "20:00 no_sobra madera", "20:00 no_sobra alimento"]
+semilla 23 mezclados fin 24:00
+  bengala 12:00 → sin_tropa  · enviados 0, llegaron a 25 casillas 0 · aliados a 12/25 casillas a los 45/90/150/240 s y máximo: { "max": "10/17", 45: "0/0", 90: "0/0", 150: "0/2", 240: "0/0" }
+  bengala 18:00 → voy_atacar 11 · enviados 11, llegaron a 25 casillas 11 · aliados a 12/25 casillas a los 45/90/150/240 s y máximo: { "max": "28/37", 45: "22/33", 90: "23/37", 150: "6/6", 240: "0/0" }
+  pedido 8:00 madera   no
+  pedido 8:00 alimento concedido
+  pedido 14:00 madera   no
+  pedido 14:00 alimento no
+  pedido 20:00 madera   no
+  pedido 20:00 alimento no
+  tributos no pedidos: 5 (del aliado al jugador 0: 1) · frases del aliado: ["8:00 no_sobra madera", "12:00 sin_tropa ", "14:00 no_sobra madera", "14:00 no_sobra alimento", "18:00 voy_atacar 11", "20:00 no_sobra madera", "20:00 no_sobra alimento"]
+semilla 41 juntos    fin 24:00
+  bengala 12:00 → voy_atacar 10 · enviados 10, llegaron a 25 casillas 0 · aliados a 12/25 casillas a los 45/90/150/240 s y máximo: { "max": "0/0", 45: "0/0", 90: "0/0", 150: "0/0", 240: "0/0" }
+  bengala 18:00 → voy_atacar 3 · enviados 3, llegaron a 25 casillas 0 · aliados a 12/25 casillas a los 45/90/150/240 s y máximo: { "max": "0/0", 45: "0/0", 90: "0/0", 150: "0/0", 240: "0/0" }
+  pedido 8:00 madera   no
+  pedido 8:00 alimento concedido
+  pedido 14:00 madera   no
+  pedido 14:00 alimento no
+  pedido 20:00 madera   no
+  pedido 20:00 alimento no
+  tributos no pedidos: 7 (del aliado al jugador 0: 3) · frases del aliado: ["8:00 no_sobra madera", "12:00 voy_atacar 10", "14:00 no_sobra madera", "14:00 no_sobra alimento", "18:00 voy_atacar 3", "20:00 no_sobra madera", "20:00 no_sobra alimento"]
+semilla 41 mezclados fin 24:00
+  bengala 12:00 → voy_atacar 5 · enviados 5, llegaron a 25 casillas 5 · aliados a 12/25 casillas a los 45/90/150/240 s y máximo: { "max": "5/15", 45: "0/0", 90: "0/0", 150: "0/0", 240: "5/15" }
+  bengala 18:00 → voy_atacar 5 · enviados 5, llegaron a 25 casillas 5 · aliados a 12/25 casillas a los 45/90/150/240 s y máximo: { "max": "27/38", 45: "18/24", 90: "18/24", 150: "23/23", 240: "25/25" }
+  pedido 8:00 madera   no
+  pedido 8:00 alimento concedido
+  pedido 14:00 madera   no
+  pedido 14:00 alimento concedido
+  pedido 20:00 madera   no
+  pedido 20:00 alimento concedido
+  tributos no pedidos: 12 (del aliado al jugador 0: 9) · frases del aliado: ["8:00 no_sobra madera", "12:00 voy_atacar 5", "14:00 no_sobra madera", "14:00 no_sobra alimento", "18:00 voy_atacar 5", "20:00 no_sobra madera"]
+TOTAL bengalas de ataque con aliados a 12 casillas: 5 de 12; a 25 casillas: 6 de 12
+TOTAL pedidos concedidos: 7 de 36 (madera 0); con otro recurso: 0
+TOTAL tributos no pedidos: 40 (del aliado al jugador 0: 18)
+TOTAL bengalas con al menos un enviado en la base rival (25 casillas): 5 de 12 · enviados 73, llegaron 28

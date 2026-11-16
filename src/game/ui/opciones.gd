@@ -408,10 +408,66 @@ static func _deslizador(vb: VBoxContainer, texto: String, lo: float, hi: float, 
 	return sl
 
 
+# --- equipos ronda 3 --- interruptores que se leen igual prendidos y apagados
+static var _toggle_cache := {}
+
+
+## Ícono de interruptor: una píldora con la perilla. Prendido, la píldora es del color de
+## acento y la perilla va a la derecha; apagado, la píldora es gris claro (antes no se veía
+## sobre el fondo oscuro y quedaba solo un punto suelto: "Sitios sagrados ●", ronda 3).
+static func interruptor(on: bool, disabled := false) -> Texture2D:
+	var key := "%s%s" % [on, disabled]
+	if _toggle_cache.has(key):
+		return _toggle_cache[key]
+	var w := 40
+	var h := 22
+	var img := Image.create(w, h, false, Image.FORMAT_RGBA8)
+	var track := Palette.UI_ACCENT if on else Color(1, 1, 1, 0.28)
+	var knob := Color(0.08, 0.08, 0.09) if on else Color(0.92, 0.92, 0.92)
+	if disabled:
+		track.a *= 0.4
+		knob.a *= 0.5
+	var r := h / 2.0
+	var kx := w - r if on else r
+	for y in h:
+		for x in w:
+			var px := x + 0.5
+			var py := y + 0.5
+			# Píldora: distancia al segmento central; borde suavizado de un píxel.
+			var cx := clampf(px, r, w - r)
+			var dt := Vector2(px - cx, py - r).length()
+			var a_t := clampf(r - dt, 0.0, 1.0)
+			var dk := Vector2(px - kx, py - r).length()
+			var a_k := clampf(r - 3.0 - dk, 0.0, 1.0)
+			var c := Color(track, track.a * a_t)
+			if a_k > 0.0:
+				c = c.lerp(Color(knob, maxf(c.a, knob.a)), a_k)
+			img.set_pixel(x, y, c)
+	var tex := ImageTexture.create_from_image(img)
+	_toggle_cache[key] = tex
+	return tex
+
+
+## Aplica los íconos de interruptor a un CheckButton suelto (el menú no usa `tema()`).
+static func interruptor_en(cb: CheckButton) -> void:
+	cb.add_theme_icon_override("checked", interruptor(true))
+	cb.add_theme_icon_override("unchecked", interruptor(false))
+	cb.add_theme_icon_override("checked_disabled", interruptor(true, true))
+	cb.add_theme_icon_override("unchecked_disabled", interruptor(false, true))
+	cb.add_theme_icon_override("checked_mirrored", interruptor(true))
+	cb.add_theme_icon_override("unchecked_mirrored", interruptor(false))
+# --- fin equipos ronda 3 ---
+
+
 ## Tema propio: el diálogo vive tanto en el HUD como en el menú principal.
 static func tema() -> Theme:
 	var t := Theme.new()
 	t.default_font = Hud.font
+	# --- equipos ronda 3 --- los mismos interruptores que el menú
+	t.set_icon("checked", "CheckButton", interruptor(true))
+	t.set_icon("unchecked", "CheckButton", interruptor(false))
+	t.set_icon("checked_disabled", "CheckButton", interruptor(true, true))
+	t.set_icon("unchecked_disabled", "CheckButton", interruptor(false, true))
 	t.default_font_size = 17
 	var btn := StyleBoxFlat.new()
 	btn.bg_color = Color(1, 1, 1, 0.08)

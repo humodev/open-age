@@ -1,0 +1,6 @@
+ticks=3000 hash=1015433775
+J0 edad=1 pob=24/40 res={ "alimento": 1073, "madera": 160, "piedra": 100, "riqueza": 239 } stats={ "recolectado": 2692, "entrenadas": 17, "bajas": 0, "muertes": 0, "edificios_destruidos": 0, "ordenes": { "target": 25, "build:casa": 3, "train:aldeano": 16, "move": 10, "build:deposito": 2, "build:cuartel": 3, "rally": 1, "train:guerrero": 2 }, "origen": { "casa": { "alimento": 1760, "madera": 700, "riqueza": 189 }, "recoleccion": { "madera": 10, "alimento": 33 } } }
+J1 edad=1 pob=26/30 res={ "alimento": 10, "madera": 135, "piedra": 100, "riqueza": 65 } stats={ "recolectado": 2220, "entrenadas": 19, "bajas": 0, "muertes": 0, "edificios_destruidos": 0, "ordenes": { "target": 28, "build:casa": 3, "train:aldeano": 16, "build:deposito": 3, "build:cuartel": 1, "rally": 1, "train:guerrero": 1, "train:hondero": 4, "build:hito_economia": 1 }, "origen": { "casa": { "alimento": 1230, "madera": 610, "riqueza": 290 }, "recoleccion": { "madera": 30, "alimento": 60 } } }
+game_over=false winner=-1 entidades=2456
+DETERMINISMO: OK
+Antes (HEAD 06d1442): hash=1249639671. Con el cambio de _try_move (sin cortar esquinas): hash nuevo. Con solo los cambios de IA e interfaz: 1249639671 (igual).

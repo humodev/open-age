@@ -5,6 +5,9 @@ extends SceneTree
 ##   - formaciones: línea (2 filas), columna (2 de ancho), abierta (más ancha que el bloque) y rumbo pedido;
 ##   - bengala: la IA aliada manda parte de su ejército y lo dice en el chat;
 ##   - pedido de recursos: la IA aliada da si le sobra.
+##   - equipos, ronda 3 (proceso/24, paso 4l): con poca tropa la bengala de ataque espera la
+##     próxima oleada ("Voy con mi próxima oleada") y sale al juntar el grupo; un pedido sin
+##     recurso espera ("Junto…") y se cumple cuando lo hay.
 ## Uso: godot --headless --path . -s tests/ordenes.gd
 
 var fails: Array[String] = []
@@ -15,6 +18,7 @@ func _init() -> void:
 	_patrol()
 	_formations()
 	_flare_and_ask()
+	_flare_wave_and_wait() # --- equipos ronda 3 ---
 	for f in fails:
 		print("FALLO ", f)
 	print("ORDENES: ", "OK" if fails.is_empty() else "FALLO (%d)" % fails.size())
@@ -156,8 +160,8 @@ func _flare_and_ask() -> void:
 		if e.owner == 2 and e.is_building() and e.capital:
 			ally_start = e.id
 	var c: SimEntity = s.by_id[ally_start]
-	for i in 8:
-		s.spawn_unit("guerrero", 2, c.x + 4000 + i * 600, c.y + 4000)
+	for i in 14: # --- equipos ronda 3 --- la bengala de ataque sale con un grupo de reglas.equipos.bengala.ia_grupo_min
+		s.spawn_unit("guerrero", 2, c.x + 4000 + (i % 7) * 600, c.y + 4000 + (i / 7) * 600)
 	s.players[2]["res"]["madera"] = 2000
 	var fx := s.map.n * 1000 / 2
 	var fy := s.map.n * 1000 / 2
@@ -185,5 +189,49 @@ func _flare_and_ask() -> void:
 	_check("bengala: el aliado manda tropa al punto", sent)
 	_check("bengala: llegan %d de %d" % [reached.size(), went.size()], went.size() > 0 and reached.size() * 4 >= went.size() * 3)
 	_check("bengala: el aliado lo dice en el chat (%s)" % str(said.keys()), said.has("2:voy_atacar") or said.has("2:voy_defender"))
+	_check("bengala: va el grupo entero, no un piquete (%d)" % went.size(), went.size() >= int(s.data.reglas["equipos"]["bengala"]["ia_grupo_min"]))
 	_check("pedido: el aliado manda madera (%d, banco %d → %d)" % [got, wood, int(s.players[0]["res"]["madera"])], got > 0 and said.has("2:mando"))
 	_check("las bengalas vencen", s.flares.is_empty())
+
+
+# --- equipos ronda 3 ---
+## Bengala de ataque sin tropa suficiente: el aliado avisa que va con la próxima oleada y sale
+## cuando junta `ia_grupo_min`. Pedido de madera sin madera: "Junto…", y la da cuando la tiene.
+func _flare_wave_and_wait() -> void:
+	var s := Sim.new(321, 4, null, {"civs": ["tawantinsuyu", "mapuches", "guaranies", "etiopia"], "equipos": [0, 1, 0, 1], "terreno": "llano"})
+	s.ais = []
+	for pid in [1, 2, 3]:
+		s.ais.append(SimAI.new(s, pid))
+	var c: SimEntity = null
+	for e in s.actives:
+		if e.owner == 2 and e.is_building() and e.capital:
+			c = e
+	var fx := s.map.n * 1000 / 2
+	var fy := s.map.n * 1000 / 2
+	s.push_command({"t": "bengala", "player": 0, "x": fx, "y": fy})
+	s.players[2]["res"]["madera"] = 0
+	s.push_command({"t": "pedir", "player": 0, "a": 2, "recurso": "madera"})
+	var said := {}
+	var sent := 0
+	var got := 0
+	var said_wave_at := -1
+	for t in 1500:
+		if t == 300:
+			for i in 14:
+				s.spawn_unit("guerrero", 2, c.x + 4000 + (i % 7) * 600, c.y + 4000 + (i / 7) * 600)
+			s.players[2]["res"]["madera"] = 1000
+		s.step()
+		for ev in s.events:
+			if ev["t"] == "ia_dice" and int(ev["player"]) == 2:
+				said[ev["clave"]] = true
+				if ev["clave"] == "voy_oleada" and said_wave_at < 0:
+					said_wave_at = s.tick
+			if ev["t"] == "tributo" and int(ev["de"]) == 2 and int(ev["a"]) == 0 and ev["recurso"] == "madera":
+				got += int(ev["n"])
+		if t == 1499:
+			for e in s.actives:
+				if e.alive and e.owner == 2 and e.is_military() and Sim.dist(e.x, e.y, fx, fy) < 20000:
+					sent += 1
+	_check("bengala sin tropa: \"voy con mi próxima oleada\" (%s)" % str(said.keys()), said_wave_at >= 0 and said_wave_at < 300)
+	_check("bengala sin tropa: al juntar el grupo sale y llega (%d a 20 casillas)" % sent, said.has("voy_atacar") and sent >= int(s.data.reglas["equipos"]["bengala"]["ia_grupo_min"]) * 3 / 4)
+	_check("pedido sin madera: avisa que junta y la da después (%d)" % got, said.has("junto") and got > 0 and not said.has("no_sobra"))

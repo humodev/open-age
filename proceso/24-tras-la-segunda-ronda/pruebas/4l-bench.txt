@@ -1,0 +1,2 @@
+200 unidades, 600 ticks: promedio 9.15 ms, peor 75.36 ms, presupuesto 100 ms; vivas al final: 119
+antes (HEAD): 200 unidades, 600 ticks: promedio 9.28 ms, peor 70.72 ms, presupuesto 100 ms; vivas al final: 121
