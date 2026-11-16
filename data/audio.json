@@ -1,5 +1,5 @@
 {
-  "_doc": "Sonidos propios de cada pueblo (src/game/audio.gd), solo para el jugador local. Archivos relativos a res://assets/audio/. Todos sintetizados con tools/audio/generar_sonidos.py (obra propia, assets/CREDITOS.md). Diseño y fuentes: proceso/24-tras-la-segunda-ronda/4g-sonido.md. Un pueblo sin entrada (los rivales de campaña) usa los genéricos de la interfaz.",
+  "_doc": "Sonidos propios de cada pueblo (src/game/audio.gd), solo para el jugador local. Archivos relativos a res://assets/audio/. Todos sintetizados con tools/audio/generar_sonidos.py (obra propia, assets/CREDITOS.md). Diseño y fuentes: proceso/24-tras-la-segunda-ronda/4g-sonido.md y, para lo que se cambió por respeto a usos sagrados, 4h-sonido-con-respeto.md. Un pueblo sin entrada (los rivales de campaña) usa los genéricos de la interfaz.",
   "momentos": {
     "_doc": "Qué suceso dispara cada sonido, a qué volumen (dB, igual que audio.ui) y el mínimo de segundos entre dos del mismo tipo (no suenan en ráfaga). generico: sonido de la interfaz que reemplaza; vacío si es nuevo.",
     "fanfarria": { "db": -4.0, "min_s": 4.0, "generico": "edad" },
@@ -17,29 +17,29 @@
       "orden": "civ/tawantinsuyu/tawantinsuyu_orden.ogg"
     },
     "mapuches": {
-      "_nota": "Kultrun y trutruka (armónicos naturales).",
+      "_nota": "Trutruka (armónicos naturales), kull-kull (cuerno) y kakelkultrun (tambor de dos parches). Sin kultrun, el tambor ceremonial de la machi (C-53 b, opción prudente; 4h).",
       "fanfarria": "civ/mapuches/mapuches_fanfarria.ogg",
       "alarma": "civ/mapuches/mapuches_alarma.ogg",
       "entrenado": "civ/mapuches/mapuches_entrenado.ogg",
       "orden": "civ/mapuches/mapuches_orden.ogg"
     },
     "guaranies": {
-      "_nota": "Mbaraka (sonaja de porongo) y takuapu (bastón de takuara contra el suelo).",
+      "_nota": "Mimby (flauta de caña o hueso) y angu'apu (tambor de tronco). Sin mbaraka ni takuapu, instrumentos rituales del opy mbyá (opción prudente; 4h).",
       "fanfarria": "civ/guaranies/guaranies_fanfarria.ogg",
       "alarma": "civ/guaranies/guaranies_alarma.ogg",
       "entrenado": "civ/guaranies/guaranies_entrenado.ogg",
       "orden": "civ/guaranies/guaranies_orden.ogg"
     },
     "etiopia": {
-      "_nota": "Kebero y masenqo; la música de paz, begena con kebero en ambassel.",
+      "_nota": "Kebero, masenqo y krar; la música de paz, krar, masenqo y kebero en ambassel. Sin begena, la lira de la oración de Cuaresma (C-54 b, opción prudente; 4h).",
       "fanfarria": "civ/etiopia/etiopia_fanfarria.ogg",
       "alarma": "civ/etiopia/etiopia_alarma.ogg",
       "entrenado": "civ/etiopia/etiopia_entrenado.ogg",
       "orden": "civ/etiopia/etiopia_orden.ogg",
-      "musica": { "paz": ["musica/etiopia/musica_etiopia_begena_kebero_1.ogg"] }
+      "musica": { "paz": ["musica/etiopia/musica_etiopia_krar_kebero_1.ogg"] }
     },
     "palmares": {
-      "_nota": "Berimbau con caxixi y atabaque.",
+      "_nota": "Ngoma (tambores de raíz angoleña), ngongi (campana doble de hierro), marimba y kisanji. Sin berimbau ni toques de capoeira (C-55 b, opción prudente; 4h).",
       "fanfarria": "civ/palmares/palmares_fanfarria.ogg",
       "alarma": "civ/palmares/palmares_alarma.ogg",
       "entrenado": "civ/palmares/palmares_entrenado.ogg",

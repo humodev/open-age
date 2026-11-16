@@ -84,17 +84,17 @@ Todas CC0 o dominio público. Convertidas a Ogg Vorbis estéreo 44,1 kHz (calida
 
 ## Audio sintetizado: obra propia (`audio/civ/`, `audio/musica/etiopia/`)
 
-Sin muestras grabadas ni material de terceros: osciladores, ruido y filtros escritos para el proyecto (`tools/audio/dsp.py`), un modelo por instrumento (`tools/audio/instrumentos.py`) y una partitura por sonido (`tools/audio/generar_sonidos.py`). Se regeneran con `python3 tools/audio/generar_sonidos.py [civ …]` (numpy y ffmpeg con libvorbis) y salen iguales, porque las semillas son fijas. Ogg Vorbis calidad 4, a 44,1 kHz: los efectos en mono a −16 LUFS (fanfarria y alarma), −18 (entrenado) o con pico a −4,5 dBFS (orden, demasiado corta para medir LUFS); la música en estéreo a −16 LUFS. La sonoridad de cada archivo queda en `tools/audio/medidas.json`. Son obra propia del proyecto y se distribuyen con la misma licencia que el resto del juego. Diseño y fuentes de cada instrumento: `proceso/24-tras-la-segunda-ronda/4g-sonido.md`.
+Sin muestras grabadas ni material de terceros: osciladores, ruido y filtros escritos para el proyecto (`tools/audio/dsp.py`), un modelo por instrumento (`tools/audio/instrumentos.py`) y una partitura por sonido (`tools/audio/generar_sonidos.py`). Se regeneran con `python3 tools/audio/generar_sonidos.py [civ …]` (numpy y ffmpeg con libvorbis) y salen iguales, porque las semillas son fijas. Ogg Vorbis calidad 4, a 44,1 kHz: los efectos en mono a −16 LUFS (fanfarria y alarma), −18 (entrenado) o con pico a −4,5 dBFS (orden, demasiado corta para medir LUFS); la música en estéreo a −16 LUFS. La sonoridad de cada archivo queda en `tools/audio/medidas.json`. Son obra propia del proyecto y se distribuyen con la misma licencia que el resto del juego. Diseño y fuentes de cada instrumento: `proceso/24-tras-la-segunda-ronda/4g-sonido.md`; los instrumentos que se cambiaron para no usar objetos sagrados en sonidos de tropa, en `proceso/24-tras-la-segunda-ronda/4h-sonido-con-respeto.md`.
 
 | archivo | instrumentos que imita | uso |
 |---|---|---|
 | civ/tawantinsuyu/tawantinsuyu_{fanfarria,alarma,entrenado,orden}.ogg | quena, tropa de sikus, wankara | edad, ataque, unidad lista, orden |
-| civ/mapuches/mapuches_{…}.ogg | kultrun, trutruka | ídem |
-| civ/guaranies/guaranies_{…}.ogg | mbaraka, takuapu | ídem |
-| civ/etiopia/etiopia_{…}.ogg | kebero, masenqo | ídem |
-| civ/palmares/palmares_{…}.ogg | berimbau con caxixi, atabaque | ídem |
+| civ/mapuches/mapuches_{…}.ogg | trutruka, kull-kull, kakelkultrun | ídem |
+| civ/guaranies/guaranies_{…}.ogg | mimby (flauta), angu'apu (tambor de tronco) | ídem |
+| civ/etiopia/etiopia_{…}.ogg | kebero, masenqo, krar | ídem |
+| civ/palmares/palmares_{…}.ogg | ngoma, ngongi (campana doble), marimba, kisanji | ídem |
 | civ/ayutthaya/ayutthaya_{…}.ogg | khong wong yai, ranat ek, ching | ídem |
-| musica/etiopia/musica_etiopia_begena_kebero_1.ogg | begena, masenqo, kebero (34,6 s, loop) | música de paz de Etiopía |
+| musica/etiopia/musica_etiopia_krar_kebero_1.ogg | krar, masenqo, kebero (34,6 s, loop) | música de paz de Etiopía |
 
 ## Texturas (`texturas/`)
 
