@@ -36,7 +36,7 @@ No encontré nada guaraní con licencia libre clara.
 
 | archivo | duración | momento | notas |
 |---|---|---|---|
-| musica_etiopia_begena_kebero_1.ogg | 0:35 | paz (loop corto) | **Sintetizada, obra propia** (`tools/audio/generar_sonidos.py`, C-24): begena, masenqo y kebero en el modo ambassel, 16 compases de 6/8. Empalma sin corte. Diseño en `proceso/24-tras-la-segunda-ronda/4g-sonido.md` |
+| musica_etiopia_krar_kebero_1.ogg | 0:35 | paz (loop corto) | **Sintetizada, obra propia** (`tools/audio/generar_sonidos.py`, C-24): krar, masenqo y kebero en el modo ambassel, 16 compases de 6/8. Empalma sin corte. Diseño en `proceso/24-tras-la-segunda-ronda/4g-sonido.md`; la begena se reemplazó por el krar, que es profano (C-54 b, `4h-sonido-con-respeto.md`) |
 
 Se engancha desde `data/audio.json` (`civs.etiopia.musica`), no desde `CIV_MUSIC`.
 

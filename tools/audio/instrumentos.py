@@ -53,19 +53,44 @@ def wankara(dur: float = 0.9, seed: int = 0, vel: float = 1.0) -> np.ndarray:
     return (body + thump) * vel
 
 
-# ============ Mapuches: kultrun, trutruka ============
+# ============ Mapuches: trutruka, kull-kull, kakelkultrun ============
+# El kultrun (tambor de la machi) no se usa: ver proceso/24-tras-la-segunda-ronda/4h-sonido-con-respeto.md.
 
-def kultrun(dur: float = 0.7, seed: int = 0, vel: float = 1.0, centro: bool = True) -> np.ndarray:
-    """Timbal de cuenco de madera con un solo parche, golpeado con una baqueta (trepuwe).
-    Modos de membrana circular (1, 1,59, 2,14, 2,30, 2,65) sobre ~118 Hz y el cuenco que resuena."""
-    f0 = 118 if centro else 128
-    ratios = [(1.0, 1.0, 0.24), (1.59, 0.55 if not centro else 0.25, 0.14), (2.14, 0.4, 0.1), (2.30, 0.28, 0.09),
-              (2.65, 0.22, 0.07), (2.92, 0.15, 0.06), (3.16, 0.1, 0.05)]
-    body = modal(dur, [(f0 * r, a, tau) for r, a, tau in ratios], seed, pitch_drop=0.06, drop_tau=0.03)
+def kakelkultrun(dur: float = 0.7, seed: int = 0, vel: float = 1.0, centro: bool = True) -> np.ndarray:
+    """Tambor de dos parches, de uso no ceremonial [verificar: Grebe], golpeado con un palo. Cuerpo cilíndrico
+    abierto, sin el cuenco del kultrun: dos parches casi iguales cuyos modos laten entre sí (98 y 101 Hz), un
+    golpe de aire grave y el chasquido del palo. `centro=False`: golpe cerca del borde, más seco y agudo."""
+    f0 = 98 if centro else 112
+    a2 = 0.3 if centro else 0.6
+    modes = []
+    for detune, amp in ((1.0, 1.0), (1.03, 0.7)):
+        modes += [(f0 * detune * r, amp * a, tau) for r, a, tau in
+                  [(1.0, 1.0, 0.2), (1.59, a2, 0.11), (2.14, 0.3, 0.07), (2.65, 0.15, 0.05)]]
+    body = modal(dur, modes, seed, pitch_drop=0.08, drop_tau=0.035)
     n = len(body)
-    stick = bandpass(noise(dur, seed + 6), 1500, 6000, 2) * expdecay(n, 0.006) * 0.5
-    bowl = modal(dur, [(310, 0.12, 0.08), (560, 0.06, 0.05)], seed + 7)
-    return (body + stick + bowl) * vel
+    air = lowpass(noise(dur, seed + 19), 220, 2) * expdecay(n, 0.03) * 0.5
+    stick = bandpass(noise(dur, seed + 6), 1200, 5000, 2) * expdecay(n, 0.005) * (0.35 if centro else 0.6)
+    return (body * 0.6 + air + stick) * vel
+
+
+def kull_kull(f: float, dur: float, seed: int = 0, vel: float = 1.0) -> np.ndarray:
+    """Cuerno de vaca soplado de costado o por la punta [verificar]: tubo corto y cónico, una nota ronca y nasal
+    que sube al atacar, a veces con un salto a la octava. Más agudo y más corto que la trutruka."""
+    n = int(dur * SR)
+    t = np.arange(n) / SR
+    fr = f * (1 - 0.07 * np.exp(-t / 0.05))
+    env = adsr(n, 0.04, 0.08, 0.8, min(0.12, dur * 0.3))
+    bright = 1.5 + 4.0 * env * vel
+
+    def amps(k: int) -> np.ndarray:
+        return env * np.exp(-(k - 1) / bright)
+    tone = additive(fr, amps, dur, seed)
+    # Ronquera: leve modulación irregular de amplitud, y la boca del cuerno que realza 1-2 kHz.
+    rough = 1 + 0.12 * lowpass(rng(seed + 20).standard_normal(n), 40, 2) / 0.05
+    tone = resonances(tone * np.clip(rough, 0.6, 1.4), [(1400, 700, 1.4)])
+    tone = lowpass(tone, 3200, 2)
+    breath = bandpass(noise(dur, seed + 21), 600, 3000, 1) * env * 0.03
+    return soft_clip((tone + breath) * 0.8, 1.6) * vel
 
 
 def trutruka(f0: float, harm: int, dur: float, seed: int = 0, vel: float = 1.0) -> np.ndarray:
@@ -87,40 +112,39 @@ def trutruka(f0: float, harm: int, dur: float, seed: int = 0, vel: float = 1.0) 
     return soft_clip((tone + buzz) * 0.8, 1.4) * vel
 
 
-# ============ Guaraníes: mbaraka, takuapu ============
+# ============ Guaraníes: mimby, angu'apu ============
+# La mbaraka y el takuapu (instrumentos del opy) no se usan: ver 4h-sonido-con-respeto.md.
 
-def mbaraka(dur: float, golpes: list[tuple[float, float]], seed: int = 0, vel: float = 1.0) -> np.ndarray:
-    """Sonaja de porongo con semillas. `golpes`: (momento, fuerza). Cada sacudida lanza una nube de semillas que
-    llegan juntas a la pared (ataque) y se dispersan; cada semilla es un chasquido de ruido de ~1 ms, y el porongo
-    hueco colorea el conjunto (resonancia ancha cerca de 1 kHz)."""
+def mimby(f: float, dur: float, seed: int = 0, vel: float = 1.0) -> np.ndarray:
+    """Flauta de caña o de hueso [verificar]: más aguda y más soplada que la quena, sin vibrato, con un leve
+    ascenso de altura al atacar y un tono de filo (ruido estrecho por encima de la nota)."""
     n = int(dur * SR)
     t = np.arange(n) / SR
-    rate = np.zeros(n)
-    for at, g in golpes:
-        dt = t - at
-        rate += np.where(dt >= 0, g * 1800 * np.exp(-dt / 0.04) * np.clip(dt / 0.005, 0, 1), 0.0)
-    r = rng(seed)
-    hits = (r.random(n) < np.clip(rate / SR, 0, 1)) * r.uniform(0.2, 1.0, n)
-    k = np.exp(-np.arange(int(0.004 * SR)) / SR / 0.0009)
-    env = convolve(hits, k)[:n]
-    x = r.standard_normal(n) * env
-    x = bandpass(x, 1800, 9000, 1.5)
-    x = resonances(x, [(1000, 500, 1.2), (3600, 2500, 0.6)])
-    return x * vel
+    fr = f * (1 - 0.015 * np.exp(-t / 0.02))
+    tone = additive(fr, [1.0, 0.12, 0.22, 0.04, 0.06], dur, seed)
+    env = adsr(n, 0.02, 0.05, 0.75, min(0.08, dur * 0.3))
+    breath = bandpass(noise(dur, seed + 22), f * 0.7, f * 4.0, 1.2) * 0.16
+    edge = bandpass(noise(dur, seed + 23), f * 2.8, f * 3.4, 3) * 0.12
+    chiff = bandpass(noise(dur, seed + 24), 2000, 8000, 2) * expdecay(n, 0.012) * 0.3
+    return ((tone + breath + edge) * env + chiff) * vel
 
 
-def takuapu(alto: bool, dur: float = 0.5, seed: int = 0, vel: float = 1.0) -> np.ndarray:
-    """Bastón de takuara grueso que se golpea contra el suelo: golpe sordo y el tubo (cerrado abajo) que resuena
-    en armónicos impares. Dos largos: uno más agudo."""
-    f = 172 if alto else 128
-    tube = modal(dur, [(f, 1.0, 0.09), (3 * f * 1.02, 0.35, 0.05), (5 * f * 1.03, 0.15, 0.03)], seed)
-    n = len(tube)
-    ground = lowpass(noise(dur, seed + 9), 300, 2) * expdecay(n, 0.02) * 1.1
-    wood = modal(dur, [(f * 4.6, 0.25, 0.012), (f * 7.3, 0.12, 0.008)], seed + 10)
-    return (tube + ground + wood) * vel
+def angu_apu(grave: bool = True, dur: float = 0.6, seed: int = 0, vel: float = 1.0) -> np.ndarray:
+    """Tambor de tronco ahuecado con parche [verificar], golpeado con la mano o un palo: membrana grave y el
+    tronco de madera gruesa que resuena (modos de madera cortos). `grave=False`: golpe al borde, seco."""
+    if grave:
+        body = modal(dur, [(84, 1.0, 0.24), (134, 0.4, 0.13), (180, 0.22, 0.08)], seed, 0.1, 0.03)
+        wood = modal(dur, [(410, 0.2, 0.03), (690, 0.1, 0.02)], seed + 25)
+        sk = lowpass(noise(dur, seed + 26), 700, 2) * expdecay(len(body), 0.012) * 0.35
+    else:
+        body = modal(dur, [(150, 0.4, 0.06), (260, 0.35, 0.04), (410, 0.4, 0.03), (690, 0.25, 0.02)], seed)
+        wood = modal(dur, [(1150, 0.15, 0.012)], seed + 25)
+        sk = bandpass(noise(dur, seed + 26), 1200, 6000, 2) * expdecay(len(body), 0.008) * 0.6
+    return (body + wood + sk) * vel
 
 
-# ============ Etiopía: kebero, begena, masenqo ============
+# ============ Etiopía: kebero, krar, masenqo ============
+# La begena (lira de la oración de Cuaresma) no se usa: ver 4h-sonido-con-respeto.md.
 
 def kebero(grande: bool, dur: float = 0.9, seed: int = 0, vel: float = 1.0) -> np.ndarray:
     """Tambor de dos parches tocado con las manos: el grande da el golpe grave (cae la altura),
@@ -136,18 +160,15 @@ def kebero(grande: bool, dur: float = 0.9, seed: int = 0, vel: float = 1.0) -> n
     return (body + skin) * vel
 
 
-def begena(f: float, dur: float, seed: int = 0, vel: float = 1.0) -> np.ndarray:
-    """Lira grande de diez cuerdas gruesas: grave, y cada cuerda zumba contra una tira de cuero (el
-    'zumbido' característico). Cuerda pulsada + un zumbido que roza cuando la cuerda va hacia un lado."""
-    s = karplus(f, dur, seed, decay=0.9985, bright=0.35, pluck_pos=0.18)
+def krar(f: float, dur: float, seed: int = 0, vel: float = 1.0) -> np.ndarray:
+    """Lira de cinco o seis cuerdas de los azmari, profana, punteada con plectro: más aguda y brillante que la
+    begena y sin su zumbido de cuero. Caja de cuenco cubierta de cuero (resonancias medias)."""
+    s = karplus(f, dur, seed, decay=0.9975, bright=0.7, pluck_pos=0.12)
     s /= np.max(np.abs(s)) + 1e-9
     n = len(s)
-    # El roce: solo la mitad positiva pasa por un recorte duro y se filtra a la zona media.
-    touch = np.clip(s - 0.15, 0, None)
-    buzz = bandpass(np.sign(touch) * touch ** 0.4, 600, 5000, 1.5)
-    buzz *= np.exp(-np.arange(n) / SR / 1.2)
-    body = resonances(s, [(110, 60, 1.5), (240, 120, 0.8)])
-    return lowpass(body + 0.28 * buzz, 4500, 1.5) * vel
+    pick = bandpass(noise(dur, seed + 27), 2500, 7000, 2) * expdecay(n, 0.003) * 0.15
+    body = resonances(s, [(260, 120, 1.2), (620, 300, 0.9), (1500, 700, 0.4)])
+    return lowpass(body + pick, 6000, 1.5) * vel
 
 
 def masenqo(freqs: list[tuple[float, float]], dur: float, seed: int = 0, vel: float = 1.0) -> np.ndarray:
@@ -177,46 +198,55 @@ def masenqo(freqs: list[tuple[float, float]], dur: float, seed: int = 0, vel: fl
     return lowpass(highpass(x, 180, 2), 3800, 2) * vel
 
 
-# ============ Palmares: atabaque, berimbau, caxixi ============
+# ============ Palmares: ngoma, marimba, kisanji, ngongi ============
+# Raíz centroafricana (Angola Janga). Sin berimbau ni toques de capoeira: ver 4h-sonido-con-respeto.md.
 
-def atabaque(golpe: str, dur: float = 0.6, seed: int = 0, vel: float = 1.0) -> np.ndarray:
-    """Tambor alto de un parche tocado con las manos: 'grave' (mano al centro), 'aberto' (borde, nota) y 'tapa' (seco)."""
+def ngoma(golpe: str, grande: bool = True, dur: float = 0.7, seed: int = 0, vel: float = 1.0) -> np.ndarray:
+    """Tambor alto de un parche, de tradición congo-angoleña, tocado con las manos [verificar]. 'abierto' (la
+    nota), 'grave' (mano al centro, cae la altura) y 'seco' (palmada en el borde). El grande suena una quinta
+    abajo del chico, aproximadamente."""
+    f = 78 if grande else 118
     if golpe == "grave":
-        body = modal(dur, [(92, 1.0, 0.22), (147, 0.4, 0.12), (196, 0.2, 0.08)], seed, 0.08, 0.03)
-        sk = lowpass(noise(dur, seed + 13), 600, 2) * expdecay(len(body), 0.01) * 0.3
-    elif golpe == "aberto":
-        body = modal(dur, [(188, 1.0, 0.18), (300, 0.45, 0.1), (402, 0.3, 0.07), (432, 0.2, 0.06), (500, 0.12, 0.05)], seed, 0.03, 0.02)
-        sk = bandpass(noise(dur, seed + 13), 900, 5000, 2) * expdecay(len(body), 0.006) * 0.35
+        body = modal(dur, [(f, 1.0, 0.26), (f * 1.59, 0.35, 0.13), (f * 2.14, 0.18, 0.08)], seed, 0.12, 0.035)
+        sk = lowpass(noise(dur, seed + 13), 500, 2) * expdecay(len(body), 0.012) * 0.3
+    elif golpe == "abierto":
+        body = modal(dur, [(f * 1.6, 1.0, 0.2), (f * 2.5, 0.45, 0.1), (f * 3.4, 0.25, 0.07), (f * 4.1, 0.15, 0.05)], seed, 0.03, 0.02)
+        sk = bandpass(noise(dur, seed + 13), 800, 4500, 2) * expdecay(len(body), 0.006) * 0.3
     else:
-        body = modal(dur, [(188, 0.4, 0.05), (360, 0.4, 0.035), (610, 0.35, 0.025)], seed)
-        sk = bandpass(noise(dur, seed + 13), 1500, 7000, 2) * expdecay(len(body), 0.012) * 0.9
+        body = modal(dur, [(f * 1.6, 0.35, 0.05), (f * 3.2, 0.35, 0.03), (f * 5.3, 0.3, 0.02)], seed)
+        sk = bandpass(noise(dur, seed + 13), 1500, 7000, 2) * expdecay(len(body), 0.012) * 0.85
     return (body + sk) * vel
 
 
-def caxixi(dur: float = 0.15, seed: int = 0, vel: float = 1.0) -> np.ndarray:
-    """Cestita con semillas que se toca con la misma mano de la baqueta del berimbau."""
-    n = int(dur * SR)
-    x = bandpass(noise(dur, seed + 14), 3000, 9000, 2) * expdecay(n, 0.03, 0.006)
-    return x * 0.6 * vel
+def marimba(f: float, dur: float = 0.8, seed: int = 0, vel: float = 1.0) -> np.ndarray:
+    """Marimba angoleña: tablas de madera sobre calabazas, cada calabaza con una membrana que zumba (mirlitón)
+    [verificar]. Parciales de barra afinada a mano (1; 3,9 aprox.), decaimiento corto, y el zumbido."""
+    x = modal(dur, [(f, 1.0, 0.35), (f * 3.9, 0.22, 0.05), (f * 2.0, 0.05, 0.15)], seed)
+    n = len(x)
+    knock = bandpass(noise(dur, seed + 28), 800, 3500, 2) * expdecay(n, 0.004) * 0.25
+    # Mirlitón: la membrana vibra con la calabaza y solo roza de un lado: recorte asimétrico filtrado.
+    m = np.clip(x / (np.max(np.abs(x)) + 1e-9) - 0.2, 0, None) ** 0.5
+    buzz = bandpass(m, 400, 4000, 1.5) * np.exp(-np.arange(n) / SR / 0.25) * 0.22
+    return (resonances(x, [(f, f * 0.3, 1.2)]) + knock + buzz) * vel
 
 
-def berimbau(f: float, dur: float, seed: int = 0, vel: float = 1.0, chiado: bool = False, wah_rate: float = 1.6) -> np.ndarray:
-    """Arco de alambre con la calabaza contra el vientre: golpe de baqueta sobre el alambre (cuerda metálica, poco
-    amortiguada) y la boca de la calabaza que se abre y se cierra ('uá'). `chiado`: la piedra apenas apoyada, zumbido."""
-    s = karplus(f, dur, seed, decay=0.9993 if not chiado else 0.985, bright=0.95, pluck_pos=0.07)
-    s /= np.max(np.abs(s)) + 1e-9
-    n = len(s)
-    t = np.arange(n) / SR
-    if chiado:
-        s = soft_clip(s * 3, 2) * expdecay(n, 0.08)
-        s = bandpass(s, 400, 5000, 1)
-    # Calabaza: resonancia que se mueve (abierta ~ 2,5 f, cerrada ~ 1,2 f): mezcla de dos filtrados.
-    open_ = resonances(s, [(f * 2.6, f * 0.8, 3.0)])
-    closed = resonances(s, [(f * 1.25, f * 0.5, 2.5)])
-    m = 0.5 + 0.5 * np.sin(2 * np.pi * wah_rate * t - np.pi / 2)
-    x = closed * (1 - m) + open_ * m
-    stick = bandpass(noise(dur, seed + 15), 2000, 8000, 2) * expdecay(n, 0.004) * 0.4
-    return lowpass(x + stick, 6000, 1.5) * vel
+def kisanji(f: float, dur: float = 1.0, seed: int = 0, vel: float = 1.0) -> np.ndarray:
+    """Lamelófono de lengüetas de hierro sobre una tabla o caja (kisanji, nsambi) [verificar]: parcial alto muy
+    inarmónico (~5,9) que se apaga enseguida, fundamental larga y un leve cascabeleo de anillos."""
+    x = modal(dur, [(f, 1.0, 0.6), (f * 5.9, 0.35, 0.03), (f * 13.0, 0.1, 0.01)], seed)
+    n = len(x)
+    click = bandpass(noise(dur, seed + 29), 2000, 7000, 2) * expdecay(n, 0.002) * 0.2
+    rattle = bandpass(noise(dur, seed + 30), 3000, 9000, 2) * expdecay(n, 0.06, 0.004) * 0.05
+    return (resonances(x, [(f * 1.0, f * 0.4, 0.8)]) + click + rattle) * vel
+
+
+def ngongi(alta: bool, dur: float = 0.6, seed: int = 0, vel: float = 1.0) -> np.ndarray:
+    """Campana doble de hierro forjado, golpeada con un palo (ngongi, de donde viene el gonguê/agogô) [verificar].
+    Hierro, no bronce: parciales inarmónicos que se apagan rápido."""
+    f = 920 if alta else 690
+    x = modal(dur, [(f, 1.0, 0.22), (f * 2.32, 0.5, 0.1), (f * 3.9, 0.3, 0.06), (f * 5.6, 0.15, 0.04)], seed)
+    hit = bandpass(noise(dur, seed + 31), 2500, 9000, 2) * expdecay(len(x), 0.003) * 0.3
+    return (x + hit) * vel
 
 
 # ============ Ayutthaya: khong wong, ranat, ching ============

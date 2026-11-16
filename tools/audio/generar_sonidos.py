@@ -3,7 +3,7 @@
 de Etiopía. Todo sintetizado (tools/audio/instrumentos.py): no usa ninguna grabación.
 
 Uso:  python3 tools/audio/generar_sonidos.py [civ ...]      (sin argumentos, todos)
-Sale: assets/audio/civ/<civ>/<civ>_<sonido>.ogg y assets/audio/musica/etiopia/musica_etiopia_begena_kebero_1.ogg
+Sale: assets/audio/civ/<civ>/<civ>_<sonido>.ogg y assets/audio/musica/etiopia/musica_etiopia_krar_kebero_1.ogg
       tools/audio/medidas.json (sonoridad y pico de cada archivo)
 
 Requiere numpy y ffmpeg con libvorbis. Es determinista: misma semilla, mismo archivo.
@@ -80,18 +80,23 @@ def tawantinsuyu_orden() -> np.ndarray:
     return trim_tail(fade(ins.quena(B5, 0.22, seed=150, vel=0.9), 0.0, 0.06))
 
 
-# =================== Mapuches: kultrun y trutruka ===================
+# =================== Mapuches: trutruka, kull-kull y kakelkultrun ===================
+# Sin kultrun (C-53 b, opción prudente): ver proceso/24-tras-la-segunda-ronda/4h-sonido-con-respeto.md.
 TRU_F0 = 58.0  # fundamental de una trutruka de ~3 m [verificar]: se tocan los armónicos 3 a 6.
+KULL = 247.0   # nota de un cuerno de ~40 cm [verificar]; salta a la octava al soplar fuerte.
 
 
 def mapuches_fanfarria() -> np.ndarray:
     b = silence(4.5)
     for i in range(10):
         at = 0.0 + i * 0.4
-        b = place(b, ins.kultrun(seed=200 + i, vel=0.9 if i % 2 == 0 else 0.7), _h(at, 80 + i))
-    llamado = [(0.3, 4, 0.9), (1.3, 5, 0.35), (1.7, 6, 1.1), (2.9, 5, 0.4), (3.3, 4, 1.0)]
+        b = place(b, ins.kakelkultrun(seed=200 + i, vel=0.9 if i % 2 == 0 else 0.65, centro=i % 2 == 0), _h(at, 80 + i))
+    llamado = [(0.3, 4, 0.9), (1.3, 5, 0.35), (1.7, 6, 1.1), (3.3, 4, 1.0)]
     for i, (at, h, d) in enumerate(llamado):
         b = place(b, ins.trutruka(TRU_F0, h, d, seed=210 + i, vel=0.85), at)
+    # El kull-kull contesta al llamado de la trutruka.
+    for i, (at, f, d) in enumerate([(2.85, KULL, 0.18), (3.05, KULL * 2, 0.35)]):
+        b = place(b, ins.kull_kull(f, d, seed=220 + i, vel=0.7), at)
     return trim_tail(reverb(b, 0.2, 0.5, seed=4))
 
 
@@ -100,71 +105,76 @@ def mapuches_alarma() -> np.ndarray:
     n = 18
     for i in range(n):
         at = i * 0.12
-        b = place(b, ins.kultrun(0.4, seed=230 + i, vel=0.45 + 0.5 * i / n, centro=i % 2 == 0), _h(at, 90 + i, 0.005))
-    for i, (at, h, d) in enumerate([(0.0, 6, 0.32), (0.4, 6, 0.32), (0.8, 5, 0.6), (1.5, 6, 0.32), (1.9, 6, 0.7)]):
-        b = place(b, ins.trutruka(TRU_F0, h, d, seed=250 + i, vel=0.9), at)
+        b = place(b, ins.kakelkultrun(0.4, seed=230 + i, vel=0.45 + 0.5 * i / n, centro=i % 2 == 0), _h(at, 90 + i, 0.005))
+    # Kull-kull: llamados cortos y repetidos; la trutruka sostiene abajo.
+    for i, at in enumerate([0.0, 0.3, 0.6, 1.4, 1.7, 2.0]):
+        b = place(b, ins.kull_kull(KULL * (2 if i % 3 == 2 else 1), 0.2 if i % 3 < 2 else 0.4, seed=250 + i, vel=0.85), at)
+    for i, (at, h, d) in enumerate([(0.8, 5, 0.6), (2.2, 6, 0.7)]):
+        b = place(b, ins.trutruka(TRU_F0, h, d, seed=258 + i, vel=0.8), at)
     return trim_tail(reverb(b, 0.16, 0.35, seed=5))
 
 
 def mapuches_entrenado() -> np.ndarray:
     b = silence(1.0)
-    b = place(b, ins.kultrun(0.5, seed=260, vel=0.7, centro=False), 0.0)
-    b = place(b, ins.kultrun(0.6, seed=261, vel=0.95), 0.15)
+    b = place(b, ins.kakelkultrun(0.5, seed=260, vel=0.7, centro=False), 0.0)
+    b = place(b, ins.kakelkultrun(0.6, seed=261, vel=0.95), 0.15)
     b = place(b, ins.trutruka(TRU_F0, 4, 0.42, seed=262, vel=0.7), 0.15)
     return trim_tail(reverb(b, 0.15, 0.3, seed=6))
 
 
 def mapuches_orden() -> np.ndarray:
-    return trim_tail(ins.kultrun(0.35, seed=270, vel=1.0))
+    return trim_tail(fade(ins.kull_kull(KULL, 0.16, seed=270, vel=0.8), 0.0, 0.05))
 
 
-# =================== Guaraníes: mbaraka y takuapu ===================
+# =================== Guaraníes: mimby y angu'apu ===================
+# Sin mbaraka ni takuapu, instrumentos del opy: ver 4h-sonido-con-respeto.md.
+# Escala de cuatro notas sobre la, sin semitonos [verificar: no hay una escala guaraní documentada para el siglo XVII].
+MIM = {"A5": 880.0, "C6": 1046.5, "D6": 1174.7, "E6": 1318.5, "G5": 784.0, "E5": 659.3}
+
 
 def guaranies_fanfarria() -> np.ndarray:
-    dur = 4.0
-    b = silence(dur)
-    golpes = []
+    b = silence(4.0)
     at, paso, i = 0.1, 0.42, 0
     while at < 2.8:
-        alto = i % 2 == 1
-        b = place(b, ins.takuapu(alto, seed=300 + i, vel=0.6 + 0.4 * at / 2.8), _h(at, 100 + i))
-        golpes += [(at, 0.6 + 0.4 * at / 2.8), (at + paso / 2, 0.45)]
+        b = place(b, ins.angu_apu(i % 2 == 0, seed=300 + i, vel=0.6 + 0.4 * at / 2.8), _h(at, 100 + i))
         at += paso
         paso = max(0.24, paso * 0.93)
         i += 1
-    # Cierre: los dos takuapu juntos y una sacudida larga.
-    b = place(b, ins.takuapu(False, 0.7, seed=330, vel=1.0), at + 0.05)
-    b = place(b, ins.takuapu(True, 0.7, seed=331, vel=0.8), at + 0.06)
-    golpes += [(at + 0.05, 1.0), (at + 0.16, 0.6), (at + 0.27, 0.4)]
-    b = place(b, ins.mbaraka(dur, golpes, seed=340), 0.0, 0.55)
+    # El mimby: un llamado que sube por la escala, con adornos cortos, y cierra arriba.
+    frase = [(0.5, "E5", 0.3), (0.85, "A5", 0.3), (1.2, "C6", 0.2), (1.4, "A5", 0.25), (1.8, "C6", 0.2),
+             (2.0, "D6", 0.2), (2.2, "E6", 0.5), (at - 0.1, "D6", 0.08), (at + 0.0, "E6", 1.0)]
+    for j, (t0, nota, d) in enumerate(frase):
+        b = place(b, ins.mimby(MIM[nota], d, seed=310 + j, vel=0.75), _h(t0, 120 + j, 0.006))
+    b = place(b, ins.angu_apu(True, 0.8, seed=330, vel=1.0), at + 0.05)
     return trim_tail(reverb(b, 0.2, 0.4, seed=7))
 
 
 def guaranies_alarma() -> np.ndarray:
-    dur = 2.8
-    b = silence(dur)
-    golpes = []
+    b = silence(2.8)
     for i in range(12):
         at = i * 0.19
-        b = place(b, ins.takuapu(i % 4 in (1, 3), 0.4, seed=350 + i, vel=0.95 if i % 4 == 0 else 0.7), _h(at, 110 + i, 0.005))
-    for i in range(30):
-        golpes.append((i * 0.075, 0.5 + 0.4 * (i % 2)))
-    b = place(b, ins.mbaraka(dur, golpes, seed=370), 0.0, 0.5)
+        b = place(b, ins.angu_apu(i % 4 in (0, 2), 0.4, seed=350 + i, vel=0.95 if i % 4 == 0 else 0.7), _h(at, 110 + i, 0.005))
+    # Llamado agudo e insistente, dos veces: mi mi do la.
+    for rep in range(2):
+        for j, (pos, nota, d) in enumerate([(0.0, "E6", 0.12), (0.16, "E6", 0.12), (0.32, "C6", 0.12), (0.48, "A5", 0.35)]):
+            b = place(b, ins.mimby(MIM[nota], d, seed=370 + rep * 10 + j, vel=0.85), 0.05 + rep * 1.15 + pos)
     return trim_tail(reverb(b, 0.15, 0.3, seed=8))
 
 
 def guaranies_entrenado() -> np.ndarray:
     b = silence(0.8)
-    b = place(b, ins.takuapu(False, 0.5, seed=380, vel=0.9), 0.02)
-    b = place(b, ins.mbaraka(0.8, [(0.0, 0.8), (0.14, 0.6)], seed=381), 0.0, 0.6)
+    b = place(b, ins.angu_apu(True, 0.5, seed=380, vel=0.9), 0.02)
+    b = place(b, ins.mimby(MIM["A5"], 0.12, seed=381, vel=0.6), 0.02)
+    b = place(b, ins.mimby(MIM["E6"], 0.3, seed=382, vel=0.6), 0.16)
     return trim_tail(reverb(b, 0.12, 0.25, seed=9))
 
 
 def guaranies_orden() -> np.ndarray:
-    return trim_tail(ins.mbaraka(0.3, [(0.0, 0.9)], seed=390))
+    return trim_tail(ins.angu_apu(False, 0.3, seed=390, vel=1.0))
 
 
-# =================== Etiopía: kebero, masenqo y begena ===================
+# =================== Etiopía: kebero, masenqo y krar ===================
+# Sin begena (C-54 b, opción prudente): ver 4h-sonido-con-respeto.md.
 # Modos (qenet) en re [verificar]: bati mayor (re fa# sol la do#) y ambassel (re mib sol la sib).
 D3, D4 = 146.83, 293.66
 BATI = {"D": D4, "F#": 369.99, "G": 392.0, "A": 440.0, "C#": 554.37, "D5": 587.33, "A3": 220.0}
@@ -188,6 +198,11 @@ def etiopia_fanfarria() -> np.ndarray:
     frase = [(0.0, BATI["D"]), (0.42, BATI["F#"]), (0.84, BATI["A"]), (1.26, BATI["D5"]), (1.9, BATI["C#"]),
              (2.15, BATI["A"]), (2.6, BATI["G"]), (2.85, BATI["F#"]), (3.15, BATI["D"])]
     b = place(b, ins.masenqo(frase, 4.1, seed=450, vel=0.9), 0.05)
+    # Krar: un punteo en el primer tiempo de cada compás (re, la, re) y el acorde final (la re re).
+    for k, nota in enumerate(["D", "A3", "D"]):
+        b = place(b, ins.krar(BATI[nota], 1.4, seed=455 + k, vel=0.55), _h(k * 6 * e, 300 + k))
+    for j, nota in enumerate(["A3", "D", "D5"]):
+        b = place(b, ins.krar(BATI[nota], 1.8, seed=460 + j, vel=0.6), 18 * e + 0.03 * j)
     return trim_tail(reverb(b, 0.22, 0.5, seed=10))
 
 
@@ -211,12 +226,13 @@ def etiopia_entrenado() -> np.ndarray:
 
 
 def etiopia_orden() -> np.ndarray:
-    return trim_tail(ins.kebero(False, 0.3, seed=495, vel=1.0))
+    # Un punteo de krar: el kebero también es tambor de la liturgia y no se repite en cada clic.
+    return trim_tail(fade(ins.krar(BATI["A"], 0.4, seed=495, vel=1.0), 0.0, 0.08))
 
 
 def etiopia_musica() -> np.ndarray:
     """Loop de paz, 16 compases de 6/8 (~35 s), en ambassel sobre re [verificar].
-    Compases 1-4: begena sola; 3-14: kebero suave; 5-12: masenqo; 13-16: vuelve a la begena sola para cerrar el loop."""
+    Compases 1-4: krar solo; 3-14: kebero suave; 5-12: masenqo; 13-16: vuelve el krar solo para cerrar el loop."""
     e = 0.36
     bar = 6 * e
     bars = 16
@@ -225,12 +241,12 @@ def etiopia_musica() -> np.ndarray:
     beg = np.zeros(n + 4 * SR)
     keb = np.zeros(n + 4 * SR)
     mas = np.zeros(n + 4 * SR)
-    # Begena: ostinato de dos compases, punteado lento, en el registro grave.
-    osti = [[(0, "D3"), (2, "A2"), (3, "Bb2"), (5, "A2")], [(0, "D3"), (2, "A2"), (3, "G2"), (5, "Eb2")]]
+    # Krar: el mismo ostinato de dos compases que tenía la begena, una octava arriba (el registro del krar).
+    osti = [[(0, "D4"), (2, "A3"), (3, "Bb3"), (5, "A3")], [(0, "D4"), (2, "A3"), (3, "G3"), (5, "Eb3")]]
     for k in range(bars):
         for j, (pos, nota) in enumerate(osti[k % 2]):
             v = 0.95 if pos == 0 else 0.7
-            beg = place(beg, ins.begena(AMB[nota], 2.6, seed=500 + k * 8 + j, vel=v), _h(k * bar + pos * e, 1000 + k * 8 + j, 0.012))
+            beg = place(beg, ins.krar(AMB[nota], 2.0, seed=500 + k * 8 + j, vel=v), _h(k * bar + pos * e, 1000 + k * 8 + j, 0.012))
     # Kebero: entra suave en el compás 3, se calla en el 15.
     for k in range(2, 14):
         v = 0.45 if k in (2, 13) else 0.65
@@ -270,65 +286,64 @@ SONIDOS = {
 }
 
 
-# =================== Palmares: berimbau, caxixi y atabaque ===================
-GUNGA, GUNGA_PEDRA = 118.0, 132.4  # nota abierta y con la piedra (~ un tono) [verificar]
+# =================== Palmares: ngoma, ngongi, marimba y kisanji ===================
+# Raíz angoleña, sin berimbau ni toques de capoeira (C-55 b, opción prudente): ver 4h-sonido-con-respeto.md.
+# Marimba y kisanji en una escala de cinco notas sobre sol [verificar: las afinaciones angoleñas no son temperadas].
+PAL = {"G3": 196.0, "A3": 220.0, "C4": 261.6, "D4": 293.7, "E4": 329.6, "G4": 392.0, "A4": 440.0, "C5": 523.3}
+# Línea de tiempo de la campana en 12/8 (x . x . x x . x . x . x) [verificar: común a África central y occidental].
+CAMPANA = [0, 2, 4, 5, 7, 9, 11]
 
 
-def _toque(b: np.ndarray, t0: float, pulso: float, seed: int, vel: float = 1.0) -> np.ndarray:
-    """Célula del toque de angola: chi-chi DON din (chiado, chiado, abierta, con piedra)."""
-    for j, (pos, kind) in enumerate([(0, "ch"), (0.5, "ch"), (1, "don"), (2, "din")]):
-        at = _h(t0 + pos * pulso, seed + j, 0.006)
-        if kind == "ch":
-            b = place(b, ins.berimbau(GUNGA, 0.25, seed=seed + j, vel=0.45 * vel, chiado=True), at)
-        else:
-            f = GUNGA if kind == "don" else GUNGA_PEDRA
-            b = place(b, ins.berimbau(f, 1.0, seed=seed + j, vel=vel), at)
-        b = place(b, ins.caxixi(seed=seed + 10 + j, vel=0.5 * vel), at)
+def _campana(b: np.ndarray, t0: float, e: float, seed: int, vel: float = 1.0) -> np.ndarray:
+    for j, pos in enumerate(CAMPANA):
+        b = place(b, ins.ngongi(pos in (0, 7), 0.4, seed=seed + j, vel=vel * (0.8 if pos == 0 else 0.55)), _h(t0 + pos * e, seed + j, 0.005))
     return b
 
 
 def palmares_fanfarria() -> np.ndarray:
-    b = silence(4.5)
-    p = 0.3
-    for k in range(3):
-        b = _toque(b, k * 4 * p, p, 800 + 20 * k)
-    patt = [(0, "grave"), (1, "aberto"), (1.5, "aberto"), (2, "tapa"), (3, "aberto")]
-    for k in range(3):
-        for j, (pos, g) in enumerate(patt):
-            b = place(b, ins.atabaque(g, seed=860 + 10 * k + j, vel=0.75), _h((k * 4 + pos) * p, 140 + 10 * k + j))
-    fin = 12 * p
-    b = place(b, ins.berimbau(GUNGA, 1.4, seed=890, vel=1.0), fin)
-    b = place(b, ins.atabaque("grave", 0.8, seed=891, vel=1.0), fin)
-    b = place(b, ins.atabaque("aberto", 0.8, seed=892, vel=0.8), fin + 0.01)
+    b = silence(4.6)
+    e = 0.13  # corchea de 12/8: un ciclo de 1,56 s
+    for k in range(2):
+        b = _campana(b, k * 12 * e, e, 800 + 20 * k, 0.6)
+        for j, (pos, g, grande) in enumerate([(0, "grave", True), (3, "abierto", False), (6, "abierto", True),
+                                              (8, "seco", False), (9, "abierto", False)]):
+            b = place(b, ins.ngoma(g, grande, seed=840 + 10 * k + j, vel=0.8), _h((k * 12 + pos) * e, 140 + 10 * k + j))
+    # Marimba: una frase que sube en el segundo ciclo y cierra en la tónica.
+    mel = [(12, "G3"), (14, "A3"), (16, "C4"), (17, "D4"), (19, "E4"), (21, "D4"), (23, "G4")]
+    for j, (pos, nota) in enumerate(mel):
+        b = place(b, ins.marimba(PAL[nota], 0.8, seed=870 + j, vel=0.7), _h(pos * e, 180 + j, 0.005))
+    fin = 24 * e
+    b = place(b, ins.ngoma("grave", True, 0.9, seed=890, vel=1.0), fin)
+    b = place(b, ins.ngoma("abierto", False, 0.8, seed=891, vel=0.8), fin + 0.01)
+    b = place(b, ins.marimba(PAL["G3"], 1.2, seed=892, vel=0.8), fin)
+    b = place(b, ins.marimba(PAL["G4"], 1.2, seed=893, vel=0.6), fin + 0.015)
+    b = place(b, ins.ngongi(False, 0.6, seed=894, vel=0.7), fin)
     return trim_tail(reverb(b, 0.2, 0.45, seed=13))
 
 
 def palmares_alarma() -> np.ndarray:
     b = silence(3.0)
-    p = 0.2
-    for k in range(3):
-        b = _toque(b, k * 4 * p, p, 900 + 20 * k, 1.0)
+    # La campana en dos notas que se alternan, rápida e insistente, sobre la ngoma.
     for i in range(16):
-        g = "aberto" if i % 2 == 0 else "tapa"
-        b = place(b, ins.atabaque(g, 0.4, seed=960 + i, vel=0.8 if i % 4 == 0 else 0.6), _h(i * p * 0.75, 160 + i, 0.004))
-    b = place(b, ins.berimbau(GUNGA_PEDRA, 0.9, seed=990, vel=1.0, wah_rate=4.0), 12 * p)
+        b = place(b, ins.ngongi(i % 2 == 0, 0.3, seed=900 + i, vel=0.85 if i % 4 == 0 else 0.6), _h(i * 0.15, 150 + i, 0.004))
+    for i in range(16):
+        g = "abierto" if i % 2 == 0 else "seco"
+        b = place(b, ins.ngoma(g, i % 4 != 2, 0.4, seed=930 + i, vel=0.8 if i % 4 == 0 else 0.6), _h(i * 0.15, 170 + i, 0.004))
+    b = place(b, ins.ngoma("grave", True, 0.9, seed=960, vel=1.0), 2.4)
+    b = place(b, ins.ngoma("grave", True, 0.9, seed=961, vel=0.9), 2.55)
     return trim_tail(reverb(b, 0.15, 0.3, seed=14))
 
 
 def palmares_entrenado() -> np.ndarray:
     b = silence(1.0)
-    b = place(b, ins.berimbau(GUNGA_PEDRA, 0.5, seed=995, vel=0.8), 0.0)
-    b = place(b, ins.caxixi(seed=996, vel=0.5), 0.0)
-    b = place(b, ins.berimbau(GUNGA, 0.8, seed=997, vel=1.0, wah_rate=2.4), 0.16)
-    b = place(b, ins.caxixi(seed=998, vel=0.5), 0.16)
+    b = place(b, ins.kisanji(PAL["D4"], 0.6, seed=995, vel=0.8), 0.0)
+    b = place(b, ins.kisanji(PAL["G4"], 0.9, seed=996, vel=0.9), 0.14)
+    b = place(b, ins.ngoma("abierto", False, 0.5, seed=997, vel=0.7), 0.14)
     return trim_tail(reverb(b, 0.12, 0.3, seed=15))
 
 
 def palmares_orden() -> np.ndarray:
-    b = silence(0.35)
-    b = place(b, ins.berimbau(GUNGA, 0.3, seed=999, vel=0.7, chiado=True), 0.0)
-    b = place(b, ins.caxixi(0.15, seed=1001, vel=0.9), 0.0)
-    return trim_tail(b)
+    return trim_tail(fade(ins.kisanji(PAL["A4"], 0.35, seed=999, vel=1.0), 0.0, 0.08))
 
 
 # =================== Ayutthaya: khong wong, ranat ek y ching ===================
@@ -407,7 +422,7 @@ def main(civs: list[str]) -> None:
             filas.append(fila)
             print(fila)
         if civ == "etiopia":
-            dest = os.path.join(RAIZ, "assets", "audio", "musica", "etiopia", "musica_etiopia_begena_kebero_1.ogg")
+            dest = os.path.join(RAIZ, "assets", "audio", "musica", "etiopia", "musica_etiopia_krar_kebero_1.ogg")
             fila = export(etiopia_musica(), dest, NIVEL["musica"])
             fila["archivo"] = os.path.relpath(dest, RAIZ)
             filas.append(fila)

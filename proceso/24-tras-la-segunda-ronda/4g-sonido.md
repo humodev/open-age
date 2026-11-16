@@ -1,5 +1,7 @@
 # 4g · Sonido propio de cada pueblo (paso 4, sonido)
 
+> **Cambiado en [4h](4h-sonido-con-respeto.md):** ya no suenan el kultrun, la mbaraka, el takuapu, la begena ni el berimbau. Sus lugares los ocupan trutruka, kull-kull y kakelkultrun; mimby y angu'apu; krar; y ngoma, ngongi, marimba y kisanji. Lo de abajo describe el paso tal como se hizo.
+
 ## Pedido
 La parte de sonido del paso 4, sin bajar audio de internet. Todo sonido nuevo se genera con código y queda como obra propia del proyecto:
 
