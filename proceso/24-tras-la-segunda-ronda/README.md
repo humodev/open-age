@@ -245,4 +245,4 @@ Con los pasos 1 a 4 integrados, los mismos cuatro jugadores de las rondas 1 y 2,
   - modelos de tropas.
 
 | L · Equipos, ronda 3 | En curso: bengala de ataque que se sume a la oleada, pedidos que pesen más que el tributo, tiempo límite por defecto en todos contra todos, fin por equipo, caminos en fortines | [4l-equipos-ronda-3.md](4l-equipos-ronda-3.md) |
-| M · Jugador nuevo, ronda 3 | En curso: la fácil sin ganar por sitios, primera partida sin sitios, tutorial en la espera del hito, nombres comunes, color del empate, aviso para salir a ganar | [4j-jugador-nuevo-ronda-3.md](4j-jugador-nuevo-ronda-3.md) |
+| M · Jugador nuevo, ronda 3 | **Integrado (ac450c4).** La fácil rodea los sitios y no gana por ellos (0 de 6 en 5 semillas; `tests/facil_sitios.gd`); la primera partida en Fácil sin sitios; el tutorial usa la espera del hito (5 mensajes y una tarea) y ordena los objetivos; grilla con nombre común y propio; "Empate" en color neutro; "Sitios 0/3 (no ganan, dan riqueza)"; aviso "Tenés ejército y recursos de sobra". Hash de la normal igual. Consultas C-61 a C-63 | [4j-jugador-nuevo-ronda-3.md](4j-jugador-nuevo-ronda-3.md) |

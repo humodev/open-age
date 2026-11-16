@@ -354,3 +354,21 @@ El hito "Casa del karai" muestra bastones con plumas y una mbaraka (`data/arte_h
 a) Dejarlo: es la casa del karai, donde corresponde *(por defecto)* · b) Sacar la mbaraka del modelo
 
 **Respuesta:**
+
+### C-61 · (IA fácil) Un solo ataque
+La fácil tiene tope de 15 soldados, pero la segunda oleada pide 18 (12 + 6). Si la primera se traba, no vuelve a atacar y a veces la partida no termina (`proceso/24-tras-la-segunda-ronda/4j-jugador-nuevo-ronda-3.md`).
+a) Bajar el paso de la oleada de la fácil para que ataque varias veces, con oleadas chicas: el principiante tiene un segundo ataque que rechazar *(por defecto)* · b) Subir su tope de ejército
+
+**Respuesta:**
+
+### C-62 · (sitios) Captura que se vacía sola
+Hoy un sitio guarda lo que lleva de captura aunque el que lo toma se vaya, y varias pasadas cortas suman los 10 s. En AoE4, la captura se vacía de a poco sin nadie. Cambiaría la regla para todos y el balance.
+a) Que se vacíe de a poco, como AoE4, medido con torneo *(por defecto)* · b) Dejarlo como está
+
+**Respuesta:**
+
+### C-63 · (menú) Sitios apagados para la IA contra IA
+La primera partida en Fácil arranca con los sitios apagados. En IA contra IA, desde el menú, la opción depende de la dificultad elegida para el jugador.
+a) Que IA contra IA siempre arranque con los sitios prendidos *(por defecto)* · b) Igual que la partida normal
+
+**Respuesta:**
