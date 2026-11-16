@@ -219,6 +219,8 @@ func _draw() -> void:
 		_draw_placement()
 	_draw_orders()
 	_draw_icons()
+	if info:
+		_draw_building_icons()
 	_draw_floats()
 
 
@@ -517,6 +519,31 @@ func _draw_icons() -> void:
 				_hammer(c, s, Palette.UI_ACCENT)
 			else:
 				Glyphs.draw(self, kind, Rect2(c - Vector2(s, s) * 0.5, Vector2(s, s)), Palette.RES.get(kind, Palette.UI_TEXT))
+
+
+## --- 4q --- Con Alt (la tecla de información), el ícono de la grilla de cada edificio a la
+## vista flota sobre el techo: el tapyi, el campo de tiro y el cuartel tienen techos parecidos
+## a la escala nueva (jugador nuevo, ronda 5). Los propios en dorado, los ajenos en su color.
+func _draw_building_icons() -> void:
+	var zoom_k := clampf(40.0 / cam.zoom, 0.6, 1.4)
+	var vr := get_viewport_rect().grow(20)
+	for e in sim.actives:
+		if not e.alive or not e.is_building() or e.owner < 0 or e.def.get("camino", false) or e.def.get("linea", false) or e.def.has("fuente"):
+			continue
+		var v: Dictionary = view.visuals.get(e.id, {})
+		if v.is_empty() or not (v["node"] as Node3D).is_visible_in_tree():
+			continue
+		var wp: Vector3 = (v["node"] as Node3D).position + Vector3(0, 2.4, 0)
+		if cam.cam.is_position_behind(wp):
+			continue
+		var sp := cam.cam.unproject_position(wp)
+		if not vr.has_point(sp):
+			continue
+		var s := 22.0 * zoom_k
+		var col: Color = Palette.UI_ACCENT if e.owner == local else Palette.team(e.owner)
+		draw_circle(sp, s * 0.68, Color(0, 0, 0, 0.72))
+		draw_arc(sp, s * 0.68, 0.0, TAU, 24, col, 1.5)
+		Glyphs.draw(self, Glyphs.resolve(e.def, e.type), Rect2(sp - Vector2(s, s) * 0.42, Vector2(s, s) * 0.84), col)
 
 
 func _hammer(c: Vector2, s: float, col: Color) -> void:

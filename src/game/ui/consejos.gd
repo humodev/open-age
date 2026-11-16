@@ -6,6 +6,7 @@ extends Node
 ##   - el rival tiene todos los sitios sagrados: perdés en M:SS (y su par, "los tenés vos").
 ##   - ejército grande en casa y recursos de sobra durante un rato: atacá o subí de edad.
 ##   - aldeanos que caminan lejos para dejar lo que juntan: levantá el almacén del pueblo ahí.
+##   - un ataque perdido lejos de casa: cuántos cayeron, qué los mató y qué llevar (4q).
 ##
 ## Solo mira la simulación y llama a `hud.notify`. Se apagan en Opciones ("Avisos que enseñan").
 ## Los tiempos son de juego, no de reloj: con la partida a ×4 se revisa cuatro veces más seguido.
@@ -18,6 +19,10 @@ var _since := {} # clave -> segundos de juego que lleva la situación
 var _said := {} # clave -> segundo de juego del último aviso
 var _bushes_near := -1 # arbustos con frutos cerca del centro en la revisión anterior (-1: sin revisar)
 var _sites_streak := -1 # jugador que tenía todos los sitios en la revisión anterior
+# --- pelea --- (proceso/24, 4q)
+var _hit_by := {} # id de una tropa propia -> [quién le pegó último (clave), si estaba pegándole a un edificio]
+var _deaths: Array = [] # bajas propias lejos de casa en la pelea en curso: [segundo, clave, ocupada, x, y]
+var _kills: Array[int] = [] # segundo de cada enemigo que mató la tropa propia (los últimos minutos)
 
 const HINTS := {
 	"riqueza": "Usala en tropas, investigaciones o el hito de la próxima edad (F4 dice qué falta).",
@@ -56,6 +61,7 @@ func check(dt: int) -> void:
 	_sites()
 	_push(dt)
 	_far(dt)
+	_fight()
 
 
 func _now() -> int:
@@ -396,3 +402,188 @@ static func grid_path(dd: SimData, type: String) -> String:
 		if slots[s] == type:
 			return "%s → %s" % [m, labels[s]]
 	return m
+
+
+# ---------------------------------------------------------------- Pelea perdida
+
+## --- pelea --- (proceso/24, 4q; jugador nuevo, ronda 5: «perdí 40–50 soldados sin saber qué
+## pasó»). Los sucesos de cada paso: quién le pega a la tropa propia y quién la mata. Lo llama
+## `hud.on_events`.
+func on_events(events: Array) -> void:
+	if hud == null or hud.sim == null:
+		return
+	var sim: Sim = hud.sim
+	var c: Dictionary = cfg.get("pelea", {})
+	if c.is_empty():
+		return
+	for ev in events:
+		match ev["t"]:
+			"hit":
+				var a: SimEntity = sim.by_id.get(ev["a"])
+				var b: SimEntity = sim.by_id.get(ev["b"])
+				if a == null or b == null or b.owner != hud.local or not b.is_military() or a.owner < 0 or not sim.enemies(hud.local, a.owner):
+					continue
+				var t: SimEntity = sim.by_id.get(b.target) if b.order == SimEntity.Order.ATTACK else null
+				_hit_by[b.id] = [_killer_key(a), t != null and t.is_building()]
+			"died":
+				if int(ev["cat"]) != SimEntity.Cat.UNIT:
+					continue
+				if int(ev["owner"]) == hud.local:
+					var info: Array = _hit_by.get(ev["id"], [])
+					_hit_by.erase(ev["id"])
+					if info.is_empty() or not _far_from_home(int(ev["x"]), int(ev["y"]), int(c.get("lejos_casillas", 25))):
+						continue
+					_deaths.append([_now(), info[0], info[1], int(ev["x"]), int(ev["y"])])
+				elif int(ev["by"]) == hud.local and int(ev["owner"]) >= 0:
+					_kills.append(_now())
+					if _kills.size() > 200:
+						_kills.pop_front()
+
+
+## Clave de quien pegó: "u:<tipo>:<dueño>" para una unidad, "b:<tipo>:<dueño>" para un edificio
+## que dispara, "g:<tipo>:<dueño>" si además tiene gente adentro (cada uno suma una flecha).
+func _killer_key(a: SimEntity) -> String:
+	if a.is_building():
+		return "%s:%s:%d" % ["g" if a.garrison.size() > 0 else "b", a.type, a.owner]
+	return "u:%s:%d" % [a.type, a.owner]
+
+
+func _far_from_home(x: int, y: int, tiles: int) -> bool:
+	var sim: Sim = hud.sim
+	for e in sim.actives:
+		if e.alive and e.owner == hud.local and e.is_building() and e.capital:
+			return Sim.dist(x, y, e.x, e.y) > tiles * Sim.P
+	return true
+
+
+## Cuando la pelea se calma (`calma_s` sin bajas), si cayeron `bajas_min` o más, avisa.
+func _fight() -> void:
+	var c: Dictionary = cfg.get("pelea", {})
+	if c.is_empty() or _deaths.is_empty():
+		return
+	var last: int = int(_deaths[_deaths.size() - 1][0])
+	if _now() - last < int(c.get("calma_s", 12)):
+		return
+	# Las bajas rivales desde un poco antes de la primera propia: la pelea empezó ahí.
+	var since: int = int(_deaths[0][0]) - int(c.get("calma_s", 12))
+	var killed := 0
+	for k in _kills:
+		killed += 1 if k >= since else 0
+	var txt := fight_text(_deaths, killed)
+	var at: Variant = null
+	if not _deaths.is_empty():
+		var mid: Array = _deaths[_deaths.size() / 2]
+		at = hud._lugar_de(mid[3], mid[4])
+	var n := _deaths.size()
+	_deaths.clear()
+	if n >= int(c.get("bajas_min", 10)) and txt != "":
+		_say("pelea", txt, "ataque", int(c.get("repetir_s", 60)), at)
+
+
+## «Perdiste 20 soldados y mataste 6. Los frenaron: Hondero (12), Pukara (torre) (5)…» y un
+## consejo por lo que más mató: asedio contra los edificios que disparan, la tropa que gana a la
+## que más mató (reglas.bonos) y, si muchos le pegaban a edificios mientras caían, que con A y clic
+## atacan lo primero que ven.
+func fight_text(deaths: Array, kills: int) -> String:
+	var sim: Sim = hud.sim
+	var c: Dictionary = cfg.get("pelea", {})
+	var by := {}
+	var busy := 0
+	for d in deaths:
+		by[d[1]] = int(by.get(d[1], 0)) + 1
+		busy += 1 if d[2] else 0
+	var keys := by.keys()
+	keys.sort_custom(func(x, y): return int(by[x]) > int(by[y]) or int(by[x]) == int(by[y]) and String(x) < String(y))
+	var parts: Array[String] = []
+	var shooters := 0 # bajas por edificios que disparan
+	var garrisoned := false
+	var top_unit := "" # la unidad enemiga que más mató
+	var top_owner := -1
+	for k: String in keys:
+		var bits := k.split(":")
+		var owner := int(bits[2])
+		if parts.size() < int(c.get("nombres_max", 3)):
+			parts.append("%s (%d)" % [_name_of(owner, bits[1], bits[0] == "g"), by[k]])
+		if bits[0] == "u":
+			if top_unit == "":
+				top_unit = bits[1]
+				top_owner = owner
+		else:
+			shooters += int(by[k])
+			garrisoned = garrisoned or bits[0] == "g"
+	var n := deaths.size()
+	var head := "Perdiste %d soldados lejos de casa" % n
+	head += " y mataste %d" % kills if kills > 0 else " sin matar a nadie"
+	# Primer renglón corto (es el título del aviso); lo que mató, en el cuerpo.
+	var txt := "%s\nLos frenaron: %s." % [head, Ficha.y_lista(parts)]
+	var tips: Array[String] = []
+	if shooters * 100 >= n * int(c.get("edificios_pct", 25)):
+		var siege := _siege_name()
+		var t := "Contra los edificios que tiran flechas%s, llevá %s con clic derecho sobre el edificio" % [" (con aldeanos adentro tiran más)" if garrisoned else "", siege if siege != "" else "asedio"]
+		tips.append(t)
+	if top_unit != "":
+		var counter := _counter_name(top_owner, top_unit)
+		if counter != "":
+			tips.append("contra %s, %s" % [_plural(_name_of(top_owner, top_unit, false)), counter])
+	if busy * 100 >= n * int(c.get("ocupados_pct", 30)):
+		tips.append("%d le pegaban a edificios mientras los mataban: con A y clic atacan lo primero que ven; mandalos con clic derecho contra los soldados" % busy)
+	if not tips.is_empty():
+		for i in tips.size():
+			tips[i] = tips[i].left(1).to_upper() + tips[i].substr(1)
+		txt += " " + ". ".join(tips) + "."
+	return txt
+
+
+## Nombre de un tipo enemigo, con el común entre paréntesis si es distinto («Pukara (torre)»).
+func _name_of(owner: int, type: String, garrisoned: bool) -> String:
+	var sim: Sim = hud.sim
+	var dd := sim.dp(owner)
+	var own := String(dd.def_of(type).get("nombre", type))
+	# Los edificios con su común («Pukara (torre)»), sin doble paréntesis; las tropas, con su nombre.
+	var com := Grilla.comun(sim.data, dd, type) if dd.edificios.has(type) else ""
+	var out := own if com == "" else "%s (%s)" % [own.get_slice(" (", 0), com.to_lower()]
+	return out + (" con guarnición" if garrisoned else "")
+
+
+## «Hondero» → «los honderos»; lo de entre paréntesis queda afuera.
+static func _plural(n: String) -> String:
+	var s := n.get_slice(" (", 0).to_lower()
+	var last := s.right(1)
+	if last in ["a", "e", "i", "o", "u"]:
+		return "los " + s + "s"
+	return "los " + s + "es"
+
+
+## La tropa propia que le gana a `type` (reglas.bonos: la función con bono contra la suya),
+## con dónde se entrena: «llevá Guerrero de macana (Aty de guerra), que les gana». Vacío si no hay.
+func _counter_name(owner: int, type: String) -> String:
+	var sim: Sim = hud.sim
+	var fn := String(sim.dp(owner).unidades.get(type, {}).get("funcion", ""))
+	var want := ""
+	var bonos: Dictionary = sim.data.reglas.get("bonos", {})
+	for f: String in bonos:
+		if int((bonos[f] as Dictionary).get(fn, 0)) > 0:
+			want = f
+	if want == "":
+		return ""
+	var dd := sim.dp(hud.local)
+	var age := int(sim.players[hud.local]["age"])
+	for b: String in dd.edificios:
+		if dd.is_hito(b):
+			continue
+		for u: String in dd.edificios[b].get("produce", []):
+			var ud: Dictionary = dd.unidades.get(u, {})
+			if ud.get("funcion", "") == want and int(ud.get("edad_min", 1)) <= age and int(dd.edificios[b].get("edad_min", 1)) <= age:
+				return "llevá %s (%s), que les gana" % [ud.get("nombre", u), dd.edificios[b].get("nombre", b)]
+	return ""
+
+
+## El asedio propio que se puede hacer ahora (o el primero): «Cañón de tacuara».
+func _siege_name() -> String:
+	var dd: SimData = hud.sim.dp(hud.local)
+	for u: String in dd.unidades:
+		if dd.unidades[u].get("funcion", "") == "asedio":
+			for b: String in dd.edificios:
+				if (dd.edificios[b].get("produce", []) as Array).has(u) and not dd.is_hito(b):
+					return "%s (%s)" % [dd.unidades[u].get("nombre", u), dd.edificios[b].get("nombre", b)]
+	return ""

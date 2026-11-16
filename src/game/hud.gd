@@ -53,7 +53,9 @@ var _pob_estado := "" # "", "llena" o "excedida": para avisar una sola vez por c
 # --- aprender --- (proceso/23-como-aoe4/03-aprender-a-jugar.md)
 const CONSEJOS := preload("res://src/game/ui/consejos.gd")
 const REGISTRO_GUIA := preload("res://src/game/ui/registro_guia.gd")
+const HOJA_ATAJOS := preload("res://src/game/ui/hoja_atajos.gd") # --- atajos --- (4q)
 var consejos: Node # avisos que enseñan
+var atajos_hoja: Control # --- atajos --- (4q) hoja de atajos de una pantalla
 var cuenta: Control # cuenta regresiva grande (sitios sagrados y misiones)
 var guia: Control # registro de la Guía (G), solo en campañas
 var _guia_cfg := {}
@@ -178,6 +180,10 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 	consejos = CONSEJOS.new()
 	consejos.setup(self)
 	add_child(consejos)
+	atajos_hoja = HOJA_ATAJOS.new() # --- atajos --- (4q)
+	add_child(atajos_hoja)
+	atajos_hoja.setup(self)
+	_blockers.append_array(atajos_hoja.blockers())
 	if sim.scenario != null:
 		guia = REGISTRO_GUIA.new()
 		add_child(guia)
@@ -191,7 +197,7 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 	ctrl.cursores = cursores
 	# --- fin cursores ---
 
-	_menu = _make_dialog("Pausa", "", [["Reanudar", func() -> void: toggle_menu()], ["Cómo se juega (F1)", func() -> void: _toggle_help()], ["Opciones", func() -> void: _options.visible = true], ["Nueva partida", func() -> void: main.restart()], ["Menú principal", func() -> void: main.to_menu()], ["Salir", func() -> void: get_tree().quit()]])
+	_menu = _make_dialog("Pausa", "", [["Reanudar", func() -> void: toggle_menu()], ["Cómo se juega (%s)" % Teclas.texto("ayuda"), func() -> void: _toggle_help()], ["Atajos de teclado (%s)" % Teclas.texto("atajos"), func() -> void: _abrir_atajos()], ["Opciones", func() -> void: _options.visible = true], ["Nueva partida", func() -> void: main.restart()], ["Menú principal", func() -> void: main.to_menu()], ["Salir", func() -> void: get_tree().quit()]])
 	_build_options()
 	_build_help()
 	_end = _make_dialog("", "", [["Seguir mirando", func() -> void: _end.visible = false], ["Nueva partida", func() -> void: main.restart()], ["Menú principal", func() -> void: main.to_menu()], ["Salir", func() -> void: get_tree().quit()]])
@@ -367,6 +373,8 @@ func on_events(events: Array) -> void:
 		paneles.on_events(events)
 	# --- fin paneles ---
 	_mundo.on_events(events) # --- mundo ---
+	if consejos != null: # --- pelea --- (4q) qué mató a la tropa propia
+		consejos.on_events(events)
 	ordenes_capa.on_events(events) # --- órdenes ---
 	for ev in events:
 		var pid: int = ev.get("player", -2)
@@ -413,6 +421,9 @@ func on_events(events: Array) -> void:
 			"tributo":
 				if int(ev["a"]) == local:
 					notify("Tributo de %s: %d de %s" % [Palette.team_name(int(ev["de"])), int(ev["n"]), ev["recurso"]], -1.0, "info")
+			"rendicion": # --- 4q --- la IA fácil abandona
+				if pid != local:
+					notify("%s se rinde" % Palette.team_name(pid), -1.0, "hito")
 			"victory":
 				if sim.scenario == null:
 					# Con equipos gana todo el equipo: si ganó un aliado, ganaste vos.
@@ -500,6 +511,12 @@ func _build_help() -> void:
 	(_help.get_meta("body") as Label).horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	(_help.get_meta("body") as Label).custom_minimum_size = Vector2(760, 0)
 	(_help.get_meta("body") as Label).autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+
+
+## --- atajos --- (4q) desde la pausa: cierra la pausa y abre la hoja.
+func _abrir_atajos() -> void:
+	toggle_menu()
+	atajos_hoja.toggle()
 
 
 func _toggle_help() -> void:

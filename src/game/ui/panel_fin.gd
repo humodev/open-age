@@ -380,6 +380,15 @@ func _why_time(real: int, me: int) -> String:
 	return "%s y ganó %s por puntos: %d contra tus %d." % [head, _winner_name(real), sim.team_score(sim.team_of(real)), mine_s] # --- equipos ronda 3 ---
 
 
+## Quién se rindió: el primer rival derrotado del ganador.
+func _rival_name_for(real: int, _me: int) -> String:
+	var sim := hud.sim
+	for p in sim.players:
+		if sim.enemies(real, p["id"]) and p["defeated"]:
+			return _winner_name(p["id"])
+	return "el rival"
+
+
 ## Una línea con el motivo del final y, si perdiste, uno o dos consejos que salen de las
 ## muestras de la partida (proceso/23-como-aoe4/03-aprender-a-jugar.md).
 func _explain() -> void:
@@ -403,7 +412,9 @@ func _explain() -> void:
 				by_sites = true
 		var mine := not sim.enemies(me, real)
 		var who := _winner_name(real) # --- equipos ronda 3 ---
-		if by_sites:
+		if sim.end_reason == "rendicion": # --- 4q --- la IA fácil abandona
+			_why = "Ganaste: %s se rindió después de perder sus edificios con tu tropa en su base." % _rival_name_for(real, me) if mine else "Te rendiste."
+		elif by_sites:
 			_why = ("Ganaste por sitios sagrados: los tuviste todos durante %s." if mine else "Perdiste por sitios sagrados: %s los tuvo todos durante %s seguidos.") % ([C.fmt_time(win_ms / 1000)] if mine else [who, C.fmt_time(win_ms / 1000)])
 		elif sim._opts.get("hitos_sin_victoria", false):
 			_why = "Ganaste por conquista: arrasaste todos los edificios del rival." if mine else "Perdiste por conquista: %s arrasó todos tus edificios." % who

@@ -223,6 +223,7 @@ func commands() -> Array[Dictionary]:
 				else:
 					cmd["name"] = "%s · avanzar a edad %s" % [def["nombre"], Sim._roman(age + 1)]
 					cmd["common"] = "Hito · edad %s" % Sim._roman(age + 1)
+					cmd["common_corto"] = "Edad %s" % Sim._roman(age + 1) # si no entra (ronda 5: «Hito · edad I…»)
 					cmd["desc"] = "%s\n%s\n%s" % [def.get("desc", ""), effects_text(def.get("efectos", [])), unlocks_text(age + 1)]
 					if sim.hito_in_progress(local):
 						cmd["locked"] = "Ya hay un hito en obra"

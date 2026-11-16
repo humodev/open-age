@@ -48,6 +48,8 @@ var _holding: Dictionary = {} # lo que se junta para el centro siguiente (expert
 var _ctype := "-" # edificio con el que se expande (calculado una vez: `_center_type`)
 var _stores := {} # almacenes propios (id -> casilla), para ver cuáles se perdieron
 var _stores_lost: Array = [] # [casilla, tick] de los almacenes perdidos hace poco
+var _built_ids := {} # edificios propios terminados en la pensada anterior (`rendicion`)
+var _lost_buildings := 0 # cuántos de esos se perdieron en la partida (`rendicion`)
 
 # Reparto de aldeanos por recurso: reglas.json → ia_economia.
 var ratio_early := {}
@@ -140,6 +142,8 @@ func think() -> void:
 	_animals(centro)
 	_alarm(p, vill, army, centro)
 	_tribute(p, saving)
+	if _surrenders(by_type, centro):
+		return
 	_military(army, centro)
 	_flares(army, centro)
 	# Al final: mira también las órdenes que el resto de la IA acaba de dar en este turno.
@@ -198,9 +202,43 @@ func _alarm(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], centr
 	if enemies > 0:
 		calm_since = sim.tick
 	if not p["alarm"] and enemies >= 2 and enemies > defenders:
-		sim.push_command({"t": "alarm", "player": player, "on": true, "max": enemies * int(sim.data.reglas.get("ia_campana_por_enemigo", 3))})
+		sim.push_command({"t": "alarm", "player": player, "on": true, "max": enemies * int(level.get("campana_por_enemigo", sim.data.reglas.get("ia_campana_por_enemigo", 3)))})
 	elif p["alarm"] and enemies == 0 and sim.tick - calm_since > int(sim.data.reglas.get("ia_campana_calma_ticks", 50)):
 		sim.push_command({"t": "alarm", "player": player, "on": false})
+
+
+## Rendición (la fácil, `rendicion`; proceso/24, 4q): como la IA de AoE4, abandona cuando
+## la partida está perdida y así el principiante gana su primera partida sin tener que
+## arrasar hasta el último edificio. Se rinde si perdió `edificios_perdidos` edificios
+## terminados (sin contar caminos) y todavía tiene tropa enemiga en la base, o si su capital
+## quedó en `capital_pct` % de la vida o menos. Las demás dificultades no la tienen.
+func _surrenders(by_type: Dictionary, centro: SimEntity) -> bool:
+	var cfg: Dictionary = level.get("rendicion", {})
+	if cfg.is_empty():
+		return false
+	var now := {}
+	for k in by_type:
+		for b: SimEntity in by_type[k]:
+			if b.built and not b.def.get("camino", false):
+				now[b.id] = true
+	for id in _built_ids:
+		if not now.has(id):
+			var b: SimEntity = sim.by_id.get(id)
+			if b == null or not b.alive:
+				_lost_buildings += 1
+	_built_ids = now
+	var beaten: bool = _lost_buildings >= int(cfg["edificios_perdidos"]) and _threat(centro) != null
+	var capital: SimEntity = null
+	for k in by_type:
+		for b: SimEntity in by_type[k]:
+			if b.capital:
+				capital = b
+	if capital != null and capital.hp * 100 <= capital.hp_max * int(cfg["capital_pct"]):
+		beaten = true
+	if not beaten:
+		return false
+	sim.push_command({"t": "resign", "player": player, "motivo": "rendicion"})
+	return true
 
 
 # ---------------------------------------------------------------- Economía
@@ -650,7 +688,9 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 		if not sim.can_afford(player, mcost):
 			return
 	# Caminos (módulo caminos): une a la capital el primer edificio desconectado.
-	if sim.dp(player).has_mod("caminos") and sim.tick - last_road >= 200 and not unbuilt.has("camino"):
+	# La fácil no tiende caminos (`caminos: false`): el tramo es un edificio y la tropa del
+	# principiante en ataque en movimiento se quedaba pegándole (proceso/24, 4q).
+	if sim.dp(player).has_mod("caminos") and level.get("caminos", true) and sim.tick - last_road >= 200 and not unbuilt.has("camino"):
 		last_road = sim.tick
 		for k in by_type:
 			if k == "camino":
@@ -664,8 +704,8 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 						return
 					_no_route[bb.id] = sim.tick + 1200 # sin paso: se reintenta en 2 minutos
 					sim.tele.add(sim.tick, "ia_sin_ruta", player, bb.tx, bb.ty, {"tipo": bb.type}, "isr:%d" % bb.id, 1200)
-	# Torre.
-	if p["age"] >= 2 and sim.dp(player).edificios.has("torre") and by_type.get("torre", []).size() < 1 and p["res"]["piedra"] >= 250:
+	# Torre (la fácil, ninguna: `torres_max`; proceso/24, 4q).
+	if p["age"] >= 2 and sim.dp(player).edificios.has("torre") and by_type.get("torre", []).size() < int(level.get("torres_max", 1)) and p["res"]["piedra"] >= 250:
 		_try_build("torre", p, vill, centro, 1)
 
 

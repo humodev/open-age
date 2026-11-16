@@ -124,7 +124,8 @@ Lo que pasa en la partida se lee sobre el mapa, sin abrir paneles (`src/game/ui/
 | Aldeano inactivo | `.` |
 | Centro | `H` |
 | Encolar órdenes | Mayúsculas + clic derecho (o + `A` y clic): se cumplen una tras otra |
-| Ver alcances y todas las barras de vida | Mantener `Alt` |
+| Ver alcances, todas las barras de vida y el ícono de función sobre cada edificio a la vista | Mantener `Alt` |
+| Hoja de atajos de una pantalla | `F12` (acción `atajos`, reasignable) o desde la pausa |
 | Mover la cámara | Flechas, bordes de pantalla, botón del medio |
 | Menú | `Esc` |
 

@@ -290,6 +290,17 @@ func _apply(c: Dictionary) -> void:
 						_refund(pid, dp(pid).cost_of(e.type, players[pid]["age"]))
 					_kill(e)
 		"resign":
+			# Con motivo (la IA fácil que se rinde, proceso/24 4q): si así termina la partida,
+			# el final lo dice.
+			var why := String(c.get("motivo", ""))
+			if why != "" and end_reason == "":
+				var teams := {}
+				for pl in players:
+					if not pl["defeated"] and pl["id"] != pid:
+						teams[team_of(pl["id"])] = true
+				if teams.size() <= 1:
+					end_reason = why
+				events.append({"t": "rendicion", "player": pid})
 			_defeat(pid)
 
 

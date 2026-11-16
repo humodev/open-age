@@ -58,7 +58,8 @@
       ["sucesos", "Registro de sucesos", "Paneles", "F5"],
       ["puntaje", "Puntaje y tributos", "Paneles", "F6"],
       ["pausa", "Pausa", "Paneles", "F10"],
-      ["guia", "Registro de la Guía (campañas)", "Paneles", "G"]
+      ["guia", "Registro de la Guía (campañas)", "Paneles", "G"],
+      ["atajos", "Hoja de atajos", "Paneles", "F12"]
     ],
     "perfiles": {
       "fabrica": { "nombre": "De fábrica", "teclas": {}, "grupos_exclusivos": false },
@@ -122,7 +123,8 @@
     "flotando_s": 60,
     "sitios_repetir_s": 60,
     "lejos": { "_doc": "Aviso de viajes largos (proceso/24, 4m): con `aldeanos_min` aldeanos o más juntando un recurso (no de granja) a más de `casillas` del depósito más cercano que lo recibe, durante `durante_s` segundos seguidos, avisa con el almacén del pueblo («levantá un Tapyi junto a la caza»). Se calla si ya hay uno en obra a menos de `casillas` de donde juntan. `lugares`: cómo se nombra el lugar según el recurso del mapa.", "casillas": 12, "aldeanos_min": 3, "durante_s": 30, "repetir_s": 150, "recursos": ["alimento", "madera", "piedra"], "lugares": { "carne": "la caza", "venado": "la caza", "rebano_salvaje": "los animales", "arbusto": "los frutos", "arbol": "el monte", "roca": "la cantera" }, "femeninos": ["qollqa"] },
-    "empujon": { "_doc": "Aviso que empuja a ganar (jugador nuevo, ronda 3): con `ejercito_min` tropas o más, `en_casa_pct` % de ellas a `casa_radio` casillas o menos de la capital y `recursos_min` o más sumando alimento, madera, piedra y riqueza, durante `durante_s` segundos seguidos, avisa «atacá o subí de edad». No en campañas", "ejercito_min": 15, "en_casa_pct": 75, "casa_radio": 22, "recursos_min": 2000, "durante_s": 90, "repetir_s": 240 }
+    "empujon": { "_doc": "Aviso que empuja a ganar (jugador nuevo, ronda 3): con `ejercito_min` tropas o más, `en_casa_pct` % de ellas a `casa_radio` casillas o menos de la capital y `recursos_min` o más sumando alimento, madera, piedra y riqueza, durante `durante_s` segundos seguidos, avisa «atacá o subí de edad». No en campañas", "ejercito_min": 15, "en_casa_pct": 75, "casa_radio": 22, "recursos_min": 2000, "durante_s": 90, "repetir_s": 240 },
+    "pelea": { "_doc": "Resumen de una pelea perdida (proceso/24, 4q): cuenta las bajas propias a más de `lejos_casillas` de la capital; cuando pasan `calma_s` segundos sin bajas, si fueron `bajas_min` o más, avisa cuántas, qué las mató (los `nombres_max` atacantes que más mataron) y qué llevar: asedio si los edificios que disparan hicieron `edificios_pct` % o más; la tropa con bono contra la unidad que más mató; y que con A y clic atacan lo primero que ven si `ocupados_pct` % o más le pegaban a un edificio cuando cayeron", "lejos_casillas": 25, "calma_s": 12, "bajas_min": 10, "nombres_max": 3, "edificios_pct": 25, "ocupados_pct": 30, "repetir_s": 60 }
   },
   "guia": {
     "_doc": "Mensajes de la Guía en campañas (src/game/hud.gd y src/game/ui/registro_guia.gd): cuánto quedan en pantalla según el largo (letras por segundo, mínimo y máximo) y cuántos guarda el registro que se relee con F7.",

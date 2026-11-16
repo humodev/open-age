@@ -1154,6 +1154,58 @@ func _autotest_ordenes(check: Callable) -> void:
 ## --- depósitos de comida --- (proceso/24, 4m) tres aldeanos cazan lejos del centro: el aviso
 ## nombra el almacén del pueblo («levantá un Tapyi junto a la caza»); con uno en obra junto a la
 ## caza, se calla.
+## --- pelea --- (4q) Un ataque perdido lejos de casa: 6 guerreros caen ante honderos mientras le
+## pegan a un edificio y 5 ante el centro rival con guarnición. Los sucesos se le pasan al aviso
+## como los da la simulación; después de la calma, el resumen dice cuántos, qué los mató y qué llevar.
+func _autotest_pelea(check: Callable, cs, said: Callable) -> void:
+	var rival := 1 if local == 0 else 0
+	var rb: Vector2i = sim.bases[rival]
+	var shooter := sim.spawn_unit("hondero", rival, rb.x * 1000 - 9000, rb.y * 1000)
+	var rcen: SimEntity = null
+	for e in sim.actives:
+		if e.alive and e.owner == rival and e.capital:
+			rcen = e
+	var rbuild: SimEntity = null
+	for e in sim.actives:
+		if e.alive and e.owner == rival and e.is_building() and not e.capital:
+			rbuild = e
+	hud.avisos.lista.clear()
+	cs._said.erase("pelea")
+	cs._deaths.clear()
+	var evs: Array = []
+	for i in 11:
+		var g := sim.spawn_unit("guerrero", local, rb.x * 1000 - 8000 + i * 300, rb.y * 1000 + 2000)
+		var by: SimEntity = shooter if i < 6 else rcen
+		if i >= 6 and rcen != null and rcen.garrison.is_empty():
+			rcen.garrison.append(-1) # solo para la prueba: cuenta como «con guarnición»
+		if i < 6 and rbuild != null:
+			g.order = SimEntity.Order.ATTACK
+			g.target = rbuild.id
+		evs.append({"t": "hit", "a": by.id, "b": g.id, "ranged": true, "dmg": 10})
+		cs.on_events(evs)
+		evs.clear()
+		cs.on_events([{"t": "died", "id": g.id, "owner": local, "type": "guerrero", "cat": SimEntity.Cat.UNIT, "by": rival, "x": g.x, "y": g.y}])
+		sim._kill(g)
+	if rcen != null:
+		rcen.garrison.erase(-1)
+	var calma := int(cs.cfg.get("pelea", {}).get("calma_s", 12))
+	for d in cs._deaths:
+		d[0] = int(d[0]) - calma - 1
+	cs._fight()
+	var txt := ""
+	for a in hud.avisos.lista:
+		if String(a["texto"]).begins_with("Perdiste"):
+			txt = a["texto"]
+	print("aviso de la pelea: ", txt.replace("\n", " | "))
+	check.call("aviso de la pelea perdida: «Perdiste 11 soldados…»", said.call("Perdiste 11 soldados"))
+	check.call("el aviso de la pelea nombra a los honderos y al centro con guarnición", txt.contains("(6)") and txt.contains("con guarnición (5)"))
+	check.call("el aviso de la pelea dice qué llevar: asedio, la tropa que les gana y que A y clic ataca lo primero", txt.contains("clic derecho sobre el edificio") and txt.contains("ontra los ") and txt.contains("A y clic"))
+	await _frames(2)
+	get_viewport().get_texture().get_image().save_png("screenshots/autotest_pelea.png")
+	sim._kill(shooter)
+	hud.avisos.lista.clear()
+
+
 func _autotest_lejos(check: Callable, cs, said: Callable, capital: SimEntity, vill_ids: Array[int]) -> void:
 	var c: Dictionary = cs.cfg.get("lejos", {})
 	var dist := int(c.get("casillas", 12)) + 10
@@ -1914,6 +1966,7 @@ func _autotest() -> void:
 		sim._kill(e)
 	sim.players[local]["res"] = bank_before
 	await _autotest_lejos(check, cs, said, capital, vill_ids) # --- depósitos de comida --- (4m)
+	await _autotest_pelea(check, cs, said) # --- pelea --- (4q)
 	EstadoCasilla.nombres = true
 	ctrl.select_ids(vill_ids)
 	await _frames(3)

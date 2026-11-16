@@ -47,6 +47,10 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 	# Con nombre común ("Casa" para "Oga"), el común arriba y el propio abajo, más tenue
 	# (jugador nuevo, ronda 3); si abajo hay franja o edad, solo el común.
 	var comun := str(c.get("common", "")) if nombres else ""
+	# Un común largo que no entra ni achicado («Hito · edad I…» parecía de la edad I; jugador
+	# nuevo, ronda 5) usa su forma corta («Edad II»).
+	if comun != "" and c.has("common_corto") and _fit(Hud.font_b, comun, 11, r.size.x - 8) < 11:
+		comun = str(c["common_corto"])
 	# Franja de lo que falta en varios renglones (costo real, 4k): el glifo se achica y queda un
 	# solo nombre (el común si hay) justo encima; si no entra, solo el glifo, como sin nombres.
 	var franja := _alto_franja(falta.size()) + 2.0 if not afford and not locked and falta.size() > 1 else 0.0
