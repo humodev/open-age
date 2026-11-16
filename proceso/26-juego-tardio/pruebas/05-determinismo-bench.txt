@@ -1,0 +1,19 @@
+# tests/test_determinism.gd: antes (8f2b1d9)
+
+ticks=3000 hash=2203695307
+J0 edad=1 pob=24/30 res={ "alimento": 820, "madera": 520, "piedra": 100, "riqueza": 260 } stats={ "recolectado": 2470, "entrenadas": 17, "bajas": 0, "muertes": 0, "edificios_destruidos": 0, "ordenes": { "target": 23, "build:casa": 2, "train:aldeano": 16, "move": 10, "build:deposito": 2, "build:cuartel": 1, "rally": 1, "train:guerrero": 2 }, "origen": { "casa": { "alimento": 1510, "madera": 710, "riqueza": 210 }, "recoleccion": { "madera": 10, "alimento": 30 } } }
+J1 edad=1 pob=24/30 res={ "alimento": 40, "madera": 230, "piedra": 100, "riqueza": 25 } stats={ "recolectado": 2130, "entrenadas": 17, "bajas": 0, "muertes": 0, "edificios_destruidos": 0, "ordenes": { "target": 26, "build:casa": 2, "train:aldeano": 16, "build:deposito": 3, "build:cuartel": 1, "rally": 1, "train:guerrero": 1, "train:hondero": 3, "build:hito_economia": 1 }, "origen": { "casa": { "alimento": 1100, "madera": 620, "riqueza": 250 }, "recoleccion": { "alimento": 140, "madera": 20 } } }
+game_over=false winner=-1 entidades=2452
+DETERMINISMO: OK
+
+# tests/test_determinism.gd: paso 1
+
+ticks=3000 hash=2203695307
+J0 edad=1 pob=24/30 res={ "alimento": 820, "madera": 520, "piedra": 100, "riqueza": 260 } stats={ "recolectado": 2470, "entrenadas": 17, "bajas": 0, "muertes": 0, "edificios_destruidos": 0, "ordenes": { "target": 23, "build:casa": 2, "train:aldeano": 16, "move": 10, "build:deposito": 2, "build:cuartel": 1, "rally": 1, "train:guerrero": 2 }, "origen": { "casa": { "alimento": 1510, "madera": 710, "riqueza": 210 }, "recoleccion": { "madera": 10, "alimento": 30 } } }
+J1 edad=1 pob=24/30 res={ "alimento": 40, "madera": 230, "piedra": 100, "riqueza": 25 } stats={ "recolectado": 2130, "entrenadas": 17, "bajas": 0, "muertes": 0, "edificios_destruidos": 0, "ordenes": { "target": 26, "build:casa": 2, "train:aldeano": 16, "build:deposito": 3, "build:cuartel": 1, "rally": 1, "train:guerrero": 1, "train:hondero": 3, "build:hito_economia": 1 }, "origen": { "casa": { "alimento": 1100, "madera": 620, "riqueza": 250 }, "recoleccion": { "alimento": 140, "madera": 20 } } }
+game_over=false winner=-1 entidades=2452
+DETERMINISMO: OK
+
+# tests/bench.gd: paso 1
+
+200 unidades, 600 ticks: promedio 11.69 ms, peor 111.13 ms, presupuesto 100 ms; vivas al final: 125

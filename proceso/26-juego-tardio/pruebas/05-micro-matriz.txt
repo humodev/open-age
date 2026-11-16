@@ -1,0 +1,135 @@
+# tools/micro_matriz.gd -- --variantes=5 (edad II, capa común). Celdas: gana A / vivos A / vivos B
+# antes: commit 8f2b1d9 (bono de edad +10 %) · sin compras: paso 1, nada comprado · con compras: paso 1 con armas_1 (--compras)
+
+A | B | modo | gana A / vivos A / vivos B (base_matriz.txt) | gana A / vivos A / vivos B (new_matriz.txt) | gana A / vivos A / vivos B (new_matriz_compras.txt)
+---|---|---|---|---|---
+guerrero:10 | guerrero:10 | nada | 4/5 / 2.2/10 / 0.6/10 | 3/5 / 2.8/10 / 1.4/10 | 2/5 / 1.4/10 / 1.8/10
+hondero:10 | hondero:10 | nada | 3/5 / 2.6/10 / 0.8/10 | 3/5 / 2.6/10 / 0.8/10 | 3/5 / 2.4/10 / 0.8/10
+lancero:10 | lancero:10 | nada | 3/5 / 3.4/10 / 1.4/10 | 3/5 / 3.4/10 / 1.4/10 | 3/5 / 2.8/10 / 0.8/10
+hondero:10 | guerrero:10 | nada | 0/5 / 0.0/10 / 7.8/10 | 0/5 / 0.0/10 / 7.8/10 | 0/5 / 0.0/10 / 7.2/10
+hondero:10 | guerrero:10 | foco | 0/5 / 0.0/10 / 7.0/10 | 0/5 / 0.0/10 / 7.0/10 | 0/5 / 0.0/10 / 6.0/10
+hondero:10 | lancero:10 | nada | 5/5 / 5.4/10 / 0.0/10 | 5/5 / 5.4/10 / 0.0/10 | 5/5 / 6.4/10 / 0.0/10
+guerrero:10 | lancero:10 | nada | 0/5 / 0.6/10 / 5.4/10 | 0/5 / 0.0/10 / 6.2/10 | 0/5 / 0.0/10 / 4.8/10
+jinete:5 | hondero:10 | nada | 4/5 / 3.6/5 / 0.2/10 | 4/5 / 3.6/5 / 0.2/10 | 4/5 / 3.2/5 / 0.4/10
+lancero:10 | jinete:5 | nada | 5/5 / 8.2/10 / 0.0/5 | 5/5 / 8.6/10 / 0.0/5 | 5/5 / 8.4/10 / 0.0/5
+guerrero:10 | jinete:5 | nada | 4/5 / 7.6/10 / 0.4/5 | 4/5 / 7.6/10 / 0.4/5 | 4/5 / 8.0/10 / 0.4/5
+hondero:10 | guerrero:10 | kitear | 0/5 / 0.6/10 / 6.6/10 | 0/5 / 0.6/10 / 6.6/10 | 0/5 / 1.6/10 / 5.8/10
+hondero:10 | guerrero:10 | escalonar | 4/5 / 5.8/10 / 0.4/10 | 4/5 / 5.8/10 / 0.4/10 | 4/5 / 7.6/10 / 0.8/10
+hondero:10 | lancero:10 | kitear | 5/5 / 9.6/10 / 0.0/10 | 5/5 / 9.6/10 / 0.0/10 | 5/5 / 10.0/10 / 0.0/10
+hondero:10 | lancero:10 | escalonar | 5/5 / 10.0/10 / 0.0/10 | 5/5 / 10.0/10 / 0.0/10 | 5/5 / 10.0/10 / 0.0/10
+hondero:10 | jinete:5 | escalonar | 2/5 / 2.4/10 / 2.6/5 | 2/5 / 2.4/10 / 2.6/5 | 2/5 / 3.0/10 / 2.4/5
+lancero:5+hondero:5 | guerrero:10 | nada | 4/5 / 5.6/10 / 0.2/10 | 5/5 / 8.0/10 / 0.0/10 | 4/5 / 6.6/10 / 0.4/10
+lancero:5+hondero:5 | guerrero:10 | mantener | 3/5 / 6.2/10 / 0.8/10 | 3/5 / 7.0/10 / 0.8/10 | 3/5 / 5.8/10 / 0.8/10
+lancero:5+hondero:5 | guerrero:10 | foco | 4/5 / 7.2/10 / 0.4/10 | 5/5 / 7.2/10 / 0.0/10 | 4/5 / 6.8/10 / 0.4/10
+lancero:5+hondero:5 | guerrero:10 | mantener+escalonar | 5/5 / 6.0/10 / 0.0/10 | 5/5 / 6.0/10 / 0.0/10 | 5/5 / 7.2/10 / 0.0/10
+lancero:5+hondero:5 | guerrero:10 | nada linea | 4/5 / 5.6/10 / 0.2/10 | 5/5 / 8.0/10 / 0.0/10 | 4/5 / 6.6/10 / 0.4/10
+lancero:5+hondero:5 | jinete:5 | nada | 5/5 / 8.6/10 / 0.0/5 | 5/5 / 8.6/10 / 0.0/5 | 5/5 / 8.6/10 / 0.0/5
+lancero:5+hondero:5 | hondero:10 | nada | 5/5 / 2.6/10 / 0.0/10 | 5/5 / 2.6/10 / 0.0/10 | 4/5 / 3.2/10 / 0.2/10
+lancero:5+hondero:5 | lancero:10 | nada | 4/5 / 8.4/10 / 0.4/10 | 4/5 / 8.4/10 / 0.4/10 | 4/5 / 8.0/10 / 0.4/10
+guerrero:5+hondero:5 | lancero:5+hondero:5 | nada | 5/5 / 3.2/10 / 0.0/10 | 3/5 / 2.2/10 / 1.0/10 | 5/5 / 3.2/10 / 0.0/10
+
+
+## Salida completa: antes
+
+# micro_matriz · civs capa común / capa común · edad 2 · parche ninguno
+# bonos {"choque":{"distancia":6},"distancia":{"linea":4},"linea":{"choque":6}}
+# guerrero: pv 120, ataque 11, armadura 1/0, alcance 450, cadencia 1250, velocidad 1350, costo {"alimento":60,"riqueza":25}
+# hondero: pv 65, ataque 7, armadura 0/0, alcance 5500, cadencia 1750, velocidad 1250, costo {"alimento":30,"madera":45}
+# lancero: pv 140, ataque 8, armadura 3/0, alcance 650, cadencia 1500, velocidad 1100, costo {"alimento":60,"madera":25,"riqueza":10}
+# jinete: pv 170, ataque 13, armadura 1/2, alcance 500, cadencia 1250, velocidad 2200, costo {"alimento":100,"riqueza":70}
+# 5 variantes por pelea (semilla 3..7, B corrido 0, -1, 1, -2, 2 casillas)
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+base | guerrero:10 | guerrero:10 | nada | - | 39.5 s | 4/5 | 2.2/10 | 0.6/10 | 850 / 850
+base | hondero:10 | hondero:10 | nada | - | 38.6 s | 3/5 | 2.6/10 | 0.8/10 | 750 / 750
+base | lancero:10 | lancero:10 | nada | - | 95.0 s | 3/5 | 3.4/10 | 1.4/10 | 950 / 950
+base | hondero:10 | guerrero:10 | nada | - | 18.8 s | 0/5 | 0.0/10 | 7.8/10 | 750 / 850
+base | hondero:10 | guerrero:10 | foco | - | 19.4 s | 0/5 | 0.0/10 | 7.0/10 | 750 / 850
+base | hondero:10 | lancero:10 | nada | - | 44.9 s | 5/5 | 5.4/10 | 0.0/10 | 750 / 950
+base | guerrero:10 | lancero:10 | nada | - | 53.3 s | 0/5 | 0.6/10 | 5.4/10 | 850 / 950
+base | jinete:5 | hondero:10 | nada | - | 45.6 s | 4/5 | 3.6/5 | 0.2/10 | 850 / 750
+base | lancero:10 | jinete:5 | nada | - | 30.9 s | 5/5 | 8.2/10 | 0.0/5 | 950 / 850
+base | guerrero:10 | jinete:5 | nada | - | 50.2 s | 4/5 | 7.6/10 | 0.4/5 | 850 / 850
+kiteo | hondero:10 | guerrero:10 | kitear | - | 117.1 s | 0/5 | 0.6/10 | 6.6/10 | 750 / 850
+kiteo | hondero:10 | guerrero:10 | escalonar | - | 83.4 s | 4/5 | 5.8/10 | 0.4/10 | 750 / 850
+kiteo | hondero:10 | lancero:10 | kitear | - | 84.6 s | 5/5 | 9.6/10 | 0.0/10 | 750 / 950
+kiteo | hondero:10 | lancero:10 | escalonar | - | 35.0 s | 5/5 | 10.0/10 | 0.0/10 | 750 / 950
+kiteo | hondero:10 | jinete:5 | escalonar | - | 44.1 s | 2/5 | 2.4/10 | 2.6/5 | 750 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | nada | - | 60.8 s | 4/5 | 5.6/10 | 0.2/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | mantener | - | 104.4 s | 3/5 | 6.2/10 | 0.8/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | foco | - | 61.7 s | 4/5 | 7.2/10 | 0.4/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | mantener+escalonar | - | 82.6 s | 5/5 | 6.0/10 | 0.0/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | nada | linea | 60.8 s | 4/5 | 5.6/10 | 0.2/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | jinete:5 | nada | - | 37.4 s | 5/5 | 8.6/10 | 0.0/5 | 850 / 850
+mezcla | lancero:5+hondero:5 | hondero:10 | nada | - | 48.7 s | 5/5 | 2.6/10 | 0.0/10 | 850 / 750
+mezcla | lancero:5+hondero:5 | lancero:10 | nada | - | 64.1 s | 4/5 | 8.4/10 | 0.4/10 | 850 / 950
+mezcla | guerrero:5+hondero:5 | lancero:5+hondero:5 | nada | - | 48.1 s | 5/5 | 3.2/10 | 0.0/10 | 800 / 850
+
+## Salida completa: paso 1, sin compras
+
+# micro_matriz · civs capa común / capa común · edad 2 · parche ninguno
+# bonos {"choque":{"distancia":6},"distancia":{"linea":4},"linea":{"choque":6}}
+# guerrero: pv 120, ataque 11, armadura 1/0, alcance 450, cadencia 1250, velocidad 1350, costo {"alimento":60,"riqueza":25}
+# hondero: pv 65, ataque 7, armadura 0/0, alcance 5500, cadencia 1750, velocidad 1250, costo {"alimento":30,"madera":45}
+# lancero: pv 140, ataque 8, armadura 3/0, alcance 650, cadencia 1500, velocidad 1100, costo {"alimento":60,"madera":25,"riqueza":10}
+# jinete: pv 170, ataque 13, armadura 1/2, alcance 500, cadencia 1250, velocidad 2200, costo {"alimento":100,"riqueza":70}
+# 5 variantes por pelea (semilla 3..7, B corrido 0, -1, 1, -2, 2 casillas)
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+base | guerrero:10 | guerrero:10 | nada | - | 60.2 s | 3/5 | 2.8/10 | 1.4/10 | 850 / 850
+base | hondero:10 | hondero:10 | nada | - | 38.6 s | 3/5 | 2.6/10 | 0.8/10 | 750 / 750
+base | lancero:10 | lancero:10 | nada | - | 95.0 s | 3/5 | 3.4/10 | 1.4/10 | 950 / 950
+base | hondero:10 | guerrero:10 | nada | - | 18.8 s | 0/5 | 0.0/10 | 7.8/10 | 750 / 850
+base | hondero:10 | guerrero:10 | foco | - | 19.4 s | 0/5 | 0.0/10 | 7.0/10 | 750 / 850
+base | hondero:10 | lancero:10 | nada | - | 44.9 s | 5/5 | 5.4/10 | 0.0/10 | 750 / 950
+base | guerrero:10 | lancero:10 | nada | - | 30.8 s | 0/5 | 0.0/10 | 6.2/10 | 850 / 950
+base | jinete:5 | hondero:10 | nada | - | 45.6 s | 4/5 | 3.6/5 | 0.2/10 | 850 / 750
+base | lancero:10 | jinete:5 | nada | - | 33.5 s | 5/5 | 8.6/10 | 0.0/5 | 950 / 850
+base | guerrero:10 | jinete:5 | nada | - | 56.0 s | 4/5 | 7.6/10 | 0.4/5 | 850 / 850
+kiteo | hondero:10 | guerrero:10 | kitear | - | 117.1 s | 0/5 | 0.6/10 | 6.6/10 | 750 / 850
+kiteo | hondero:10 | guerrero:10 | escalonar | - | 83.4 s | 4/5 | 5.8/10 | 0.4/10 | 750 / 850
+kiteo | hondero:10 | lancero:10 | kitear | - | 84.6 s | 5/5 | 9.6/10 | 0.0/10 | 750 / 950
+kiteo | hondero:10 | lancero:10 | escalonar | - | 35.0 s | 5/5 | 10.0/10 | 0.0/10 | 750 / 950
+kiteo | hondero:10 | jinete:5 | escalonar | - | 44.1 s | 2/5 | 2.4/10 | 2.6/5 | 750 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | nada | - | 37.5 s | 5/5 | 8.0/10 | 0.0/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | mantener | - | 103.0 s | 3/5 | 7.0/10 | 0.8/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | foco | - | 45.9 s | 5/5 | 7.2/10 | 0.0/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | mantener+escalonar | - | 90.3 s | 5/5 | 6.0/10 | 0.0/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | nada | linea | 37.5 s | 5/5 | 8.0/10 | 0.0/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | jinete:5 | nada | - | 37.4 s | 5/5 | 8.6/10 | 0.0/5 | 850 / 850
+mezcla | lancero:5+hondero:5 | hondero:10 | nada | - | 48.7 s | 5/5 | 2.6/10 | 0.0/10 | 850 / 750
+mezcla | lancero:5+hondero:5 | lancero:10 | nada | - | 64.1 s | 4/5 | 8.4/10 | 0.4/10 | 850 / 950
+mezcla | guerrero:5+hondero:5 | lancero:5+hondero:5 | nada | - | 48.1 s | 3/5 | 2.2/10 | 1.0/10 | 800 / 850
+
+## Salida completa: paso 1, con compras
+
+# micro_matriz · civs capa común / capa común · edad 2 con compras · parche ninguno
+# bonos {"choque":{"distancia":6},"distancia":{"linea":4},"linea":{"choque":6}}
+# guerrero: pv 120, ataque 11, armadura 1/0, alcance 450, cadencia 1250, velocidad 1350, costo {"alimento":60,"riqueza":25}
+# hondero: pv 65, ataque 7, armadura 0/0, alcance 5500, cadencia 1750, velocidad 1250, costo {"alimento":30,"madera":45}
+# lancero: pv 140, ataque 8, armadura 3/0, alcance 650, cadencia 1500, velocidad 1100, costo {"alimento":60,"madera":25,"riqueza":10}
+# jinete: pv 170, ataque 13, armadura 1/2, alcance 500, cadencia 1250, velocidad 2200, costo {"alimento":100,"riqueza":70}
+# 5 variantes por pelea (semilla 3..7, B corrido 0, -1, 1, -2, 2 casillas)
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+base | guerrero:10 | guerrero:10 | nada | - | 34.7 s | 2/5 | 1.4/10 | 1.8/10 | 850 / 850
+base | hondero:10 | hondero:10 | nada | - | 36.9 s | 3/5 | 2.4/10 | 0.8/10 | 750 / 750
+base | lancero:10 | lancero:10 | nada | - | 93.2 s | 3/5 | 2.8/10 | 0.8/10 | 950 / 950
+base | hondero:10 | guerrero:10 | nada | - | 19.6 s | 0/5 | 0.0/10 | 7.2/10 | 750 / 850
+base | hondero:10 | guerrero:10 | foco | - | 20.5 s | 0/5 | 0.0/10 | 6.0/10 | 750 / 850
+base | hondero:10 | lancero:10 | nada | - | 39.2 s | 5/5 | 6.4/10 | 0.0/10 | 750 / 950
+base | guerrero:10 | lancero:10 | nada | - | 31.3 s | 0/5 | 0.0/10 | 4.8/10 | 850 / 950
+base | jinete:5 | hondero:10 | nada | - | 34.4 s | 4/5 | 3.2/5 | 0.4/10 | 850 / 750
+base | lancero:10 | jinete:5 | nada | - | 31.1 s | 5/5 | 8.4/10 | 0.0/5 | 950 / 850
+base | guerrero:10 | jinete:5 | nada | - | 48.1 s | 4/5 | 8.0/10 | 0.4/5 | 850 / 850
+kiteo | hondero:10 | guerrero:10 | kitear | - | 130.2 s | 0/5 | 1.6/10 | 5.8/10 | 750 / 850
+kiteo | hondero:10 | guerrero:10 | escalonar | - | 79.3 s | 4/5 | 7.6/10 | 0.8/10 | 750 / 850
+kiteo | hondero:10 | lancero:10 | kitear | - | 69.5 s | 5/5 | 10.0/10 | 0.0/10 | 750 / 950
+kiteo | hondero:10 | lancero:10 | escalonar | - | 32.0 s | 5/5 | 10.0/10 | 0.0/10 | 750 / 950
+kiteo | hondero:10 | jinete:5 | escalonar | - | 38.9 s | 2/5 | 3.0/10 | 2.4/5 | 750 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | nada | - | 56.6 s | 4/5 | 6.6/10 | 0.4/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | mantener | - | 100.1 s | 3/5 | 5.8/10 | 0.8/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | foco | - | 57.3 s | 4/5 | 6.8/10 | 0.4/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | mantener+escalonar | - | 71.8 s | 5/5 | 7.2/10 | 0.0/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | nada | linea | 56.6 s | 4/5 | 6.6/10 | 0.4/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | jinete:5 | nada | - | 35.4 s | 5/5 | 8.6/10 | 0.0/5 | 850 / 850
+mezcla | lancero:5+hondero:5 | hondero:10 | nada | - | 39.5 s | 4/5 | 3.2/10 | 0.2/10 | 850 / 750
+mezcla | lancero:5+hondero:5 | lancero:10 | nada | - | 61.3 s | 4/5 | 8.0/10 | 0.4/10 | 850 / 950
+mezcla | guerrero:5+hondero:5 | lancero:5+hondero:5 | nada | - | 45.5 s | 5/5 | 3.2/10 | 0.0/10 | 800 / 850

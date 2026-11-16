@@ -10,6 +10,9 @@ static func draw(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
 	if kind.contains("+"):
 		_recibe(ci, kind, r, col)
 		return
+	if kind.contains("^"):
+		_nivel(ci, kind, r, col)
+		return
 	match kind:
 		"alimento":
 			ci.draw_circle(c + Vector2(-s * 0.12, s * 0.06), s * 0.2, col)
@@ -348,6 +351,22 @@ static func resolve(def: Dictionary, type: String) -> String:
 ## --- depósitos de comida --- Ícono de lo que recibe un almacén: "+alimento+madera" son los
 ## recursos encimados, en su color; "qollqa+alimento" es el edificio propio con el recurso abajo a
 ## la derecha. Con uno solo, el glifo del recurso como antes (granero, leñera).
+## Nivel de una línea (paso 1 del juego tardío): «guerrero^1» es el glifo de la línea con un
+## galón arriba a la derecha (veterano); «^2», con dos (élite). Sin arte nuevo.
+static func _nivel(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
+	var parts := kind.split("^")
+	var n := int(parts[1])
+	var s := minf(r.size.x, r.size.y)
+	var o := r.position + (r.size - Vector2(s, s)) / 2.0
+	draw(ci, parts[0], Rect2(o + Vector2(0, s * 0.12), Vector2(s, s) * 0.84), col)
+	var w := maxf(1.5, s * 0.08)
+	var gold := Palette.UI_ACCENT
+	for i in n:
+		var y := o.y + s * (0.08 + 0.13 * i)
+		var x := o.x + s * 0.78
+		ci.draw_polyline(PackedVector2Array([Vector2(x - s * 0.16, y), Vector2(x, y + s * 0.1), Vector2(x + s * 0.16, y)]), gold, w)
+
+
 static func _recibe(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
 	var parts := kind.split("+")
 	var base := parts[0]

@@ -11,7 +11,9 @@ extends SceneTree
 ##
 ## Opciones:
 ##   --civs=a,b    pueblos de los bandos A y B (vacío: capa común, sin reemplazos ni módulos)
-##   --edad=N      edad de los dos bandos (por defecto 2: está el lancero y el bono de edad)
+##   --edad=N      edad de los dos bandos (por defecto 2: está el lancero)
+##   --compras     los dos bandos con lo que reemplaza al bono por edad desde el paso 1 del juego
+##                 tardío (armas_1 en la II, más los niveles veterano y élite en la III y la IV)
 ##   --parche=F    JSON con {"reglas": {...}, "unidades": {tipo: {campo: valor}},
 ##                 "civs": {pueblo: {"unidades": {...}, "unidades_nuevas": {...}}}}; se fusiona
 ##                 en memoria antes de armar las tablas de cada pueblo
@@ -40,6 +42,7 @@ var data: SimData
 var civs: Array = ["", ""]
 var age := 2
 var variants := 1
+var purchases := false
 const SHIFTS := [0, -1, 1, -2, 2, 0, -1, 1, -2, 2]
 
 
@@ -54,6 +57,8 @@ func _init() -> void:
 				civs.append("")
 		elif a.begins_with("--edad="):
 			age = int(a.substr(7))
+		elif a == "--compras":
+			purchases = true
 		elif a.begins_with("--parche="):
 			patch_path = a.substr(9)
 		elif a.begins_with("--casos="):
@@ -65,7 +70,7 @@ func _init() -> void:
 	data = SimData.load_default()
 	if patch_path != "":
 		_apply_patch(patch_path)
-	print("# micro_matriz · civs %s / %s · edad %d · parche %s" % [civs[0] if civs[0] != "" else "capa común", civs[1] if civs[1] != "" else "capa común", age, patch_path if patch_path != "" else "ninguno"])
+	print("# micro_matriz · civs %s / %s · edad %d%s · parche %s" % [civs[0] if civs[0] != "" else "capa común", civs[1] if civs[1] != "" else "capa común", age, " con compras" if purchases else "", patch_path if patch_path != "" else "ninguno"])
 	print("# bonos %s" % JSON.stringify(data.reglas.get("bonos", {})))
 	for t in ["guerrero", "hondero", "lancero", "jinete"]:
 		var d: Dictionary = data.for_civ(civs[0]).unidades.get(t, {})
@@ -224,6 +229,9 @@ func _fight(c: Array, v: int) -> Dictionary:
 	var s := Sim.new(3 + v, 2, data, {"civs": civs, "terreno": "llano", "sin_sitios": true})
 	s.players[0]["age"] = age
 	s.players[1]["age"] = age
+	if purchases:
+		s.grant_age_purchases(0, age)
+		s.grant_age_purchases(1, age)
 	var cx := s.map.n / 2
 	var a := []
 	var melee_a := []

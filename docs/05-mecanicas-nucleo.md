@@ -71,11 +71,22 @@ Sirve para que una economía sin ejército pueda sobrevivir a la presión tempra
 | `tasa` | `recurso` (o `*`), `pct` | Recolección más rápida |
 | `carga` | `n` | Más carga por viaje |
 | `ataque` / `armadura` | `funciones`, `n` | Suma a unidades de esas funciones |
-| `vida_pct` / `velocidad_pct` | `funciones`, `pct` | Porcentaje sobre la base |
+| `vida_pct` / `velocidad_pct` | `funciones`, `pct` | Porcentaje sobre la base. `vida_pct` también acepta `lineas` (los niveles) |
+| `ataque_pct` | `lineas`, `pct` | Porcentaje de ataque de esas líneas, después de sumar el `ataque` plano |
 | `edificio_vida_pct` | `pct` | Vida de todos los edificios |
 | `edificio_ataque` / `edificio_alcance` | `n` | Andanadas de centros, torres e hitos |
 
 - Los efectos son por jugador y se acumulan. Vida y velocidad se recalculan al instante; la vida actual conserva su proporción.
+- Dónde se investiga: `en` dice por capacidad (`deposito`, `tipo`, `militar`, `linea`); sin `en`, el tipo de `edificio`.
+
+### Niveles por línea (paso 1 del juego tardío, docs/diseno/27 §1.1 y §1.2)
+- **Líneas:** `polvora` (marca `polvora`), `montados` (marca `montado` o `elefante`) y, si no, la función (`choque`, `distancia`, `linea`). El asedio y los civiles no tienen línea (`SimData.line_of`).
+- **Veterano** (edad III, `veterano_<línea>`) y **élite** (edad IV, `elite_<línea>`, requiere el veterano): +5 % de ataque y +5 % de vida, y +10 % de ataque y +5 % de vida más. Costo y tiempo en `tecnologias.json`.
+- Se investigan en **cualquier edificio que entrene esa línea** (`"en": {"linea": …}`): si un pueblo la entrena en dos (Etiopía, los montados en el establo y la remonta), está en los dos. Un pueblo sin la línea no tiene sus niveles (los guaraníes no tienen montados).
+- La **herrería I de ataque** (`armas_1`) suma, además de su +1, **+10 % de ataque a todas las líneas**: es el bono que antes daba gratis la edad II.
+- El panel de la unidad y la ficha dicen el nivel («Choque · Veterano»); el ícono es el glifo de la línea con uno o dos galones.
+- La IA los compra en todas las dificultades antes que la tropa (`reglas.ia_niveles`): `armas_1` al llegar a la II; en la III, el veterano de las dos líneas con más tropa; en la IV, el élite de esas dos; el resto, con lo que sobra.
+- Quien empieza una misión en una edad avanzada recibe lo que antes le daba la edad (`armas_1` y los niveles hasta su edad; `Sim.grant_age_purchases`).
 
 ## Producción
 
@@ -93,7 +104,7 @@ daño = max(minimo, ataque × multiplicador[función atacante][función objetivo
 
 - El triángulo (choque > distancia > línea > choque) vive en `reglas.json` → `contadores`. Una función que no figura usa 100.
 - Los aldeanos tienen función `civil`; los edificios, `edificio`.
-- Bonificaciones de edad y de civilización se aplican como porcentajes sobre `ataque` (fichas y `edades.json`).
+- El ataque es `(ataque + mejoras planas) × (100 + porcentaje) / 100`. El porcentaje de la tropa sale de lo comprado por línea (`ataque_pct`); el de los edificios que disparan y el del asedio, de la edad (`edades.json` → `bono_ataque_edificio` y `bono_ataque_asedio`).
 
 ### Comportamiento
 - **Cuerpo a cuerpo**: se acerca hasta tocar el borde del objetivo.
@@ -115,7 +126,7 @@ Fuera del triángulo (`02-alcance-y-epoca.md`). Reglas de la capa común:
 
 - Cuatro edades (`02-alcance-y-epoca.md`). En la capa común se avanza construyendo un **hito**: un edificio que, al terminarse, sube la edad del jugador. Cada civilización reemplaza el hito genérico por su mecánica de avance (obra estatal, asamblea, fundación de aldea, iglesia) usando el mismo módulo con otros parámetros.
 - Solo puede haber un hito en construcción a la vez. El costo y el tiempo dependen de la edad de destino (`edades.json`) y son iguales para todas las opciones.
-- Cada edad habilita unidades, edificios e investigaciones (`edad_min`) y una bonificación de ataque militar.
+- Cada edad habilita unidades, edificios e investigaciones (`edad_min`). La tropa **no** sube sola con la edad (paso 1 del juego tardío): la II habilita la herrería, la III el nivel veterano y la IV el élite. Los edificios que disparan y el asedio sí suben su ataque con la edad (+10, +20 y +35 %).
 - Regla de opciones (`01`, palancas): cada avance ofrece dos hitos. El hito queda en el mapa y su efecto es permanente (`efectos`, mismos tipos que las investigaciones):
 
 | Hito genérico | Qué da |

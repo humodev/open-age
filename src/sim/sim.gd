@@ -611,6 +611,9 @@ func tech_here(t: Dictionary, b: SimEntity) -> bool:
 		return (b.def.get("deposito", []) as Array).has(en["deposito"])
 	if en.has("tipo"):
 		return b.type == en["tipo"] or (en["tipo"] == "centro" and b.capital)
+	if en.has("linea"):
+		# Niveles por línea: en cualquier edificio que entrene esa línea (docs/diseno/27, §1.1).
+		return dp(b.owner).lines_made_by(b.def).has(en["linea"])
 	if en.get("militar", false):
 		# Mejoras militares: en cualquier edificio que entrene tropa (cuartel, campo de tiro, corral, taller…).
 		var units: Dictionary = dp(b.owner).unidades
@@ -919,12 +922,17 @@ func _apply_effects(pid: int, efectos: Array) -> void:
 			"ataque":
 				for f in ef["funciones"]:
 					_add_mod(pid, "ataque:" + f, ef["n"])
+			"ataque_pct":
+				for l in ef["lineas"]:
+					_add_mod(pid, "atk_pct:" + l, ef["pct"])
 			"armadura":
 				for f in ef["funciones"]:
 					_add_mod(pid, "armadura:" + f, ef["n"])
 			"vida_pct":
-				for f in ef["funciones"]:
+				for f in ef.get("funciones", []):
 					_add_mod(pid, "vida:" + f, ef["pct"])
+				for l in ef.get("lineas", []):
+					_add_mod(pid, "vida_l:" + l, ef["pct"])
 			"velocidad_pct":
 				for f in ef["funciones"]:
 					_add_mod(pid, "vel:" + f, ef["pct"])
@@ -945,6 +953,10 @@ func _apply_effects(pid: int, efectos: Array) -> void:
 func _apply_stats(e: SimEntity) -> void:
 	var base: int = e.def["pv"]
 	var pct := mod(e.owner, "b_vida") if e.is_building() else mod(e.owner, "vida:" + e.fn)
+	if e.is_unit():
+		var line := SimData.line_of(e.def)
+		if line != "":
+			pct += mod(e.owner, "vida_l:" + line)
 	var new_max := base * (100 + pct) / 100
 	if e.hp_max > 0 and new_max != e.hp_max:
 		e.hp = maxi(1, e.hp * new_max / e.hp_max)
@@ -1602,7 +1614,7 @@ func _move_court(b: SimEntity) -> void:
 			break
 
 
-## Ataque con mejoras y bono de edad, antes del contador y la armadura. Lo usa también el
+## Ataque con mejoras y porcentaje, antes del contador y la armadura. Lo usa también el
 ## panel de la unidad, así muestra lo mismo que pega (jugadores de prueba, proceso/22).
 func effective_attack(a: SimEntity) -> int:
 	var atk: int = a.def.get("ataque", 0)
@@ -1610,10 +1622,47 @@ func effective_attack(a: SimEntity) -> int:
 		atk += mod(a.owner, "b_ataque")
 	else:
 		atk += mod(a.owner, "ataque:" + a.fn)
-	if a.owner >= 0 and (a.is_military() or a.is_building()):
-		var bonus: int = dp(a.owner).edades[players[a.owner]["age"] - 1].get("bono_ataque", 0)
-		atk = atk * (100 + bonus) / 100
-	return atk
+	return atk * (100 + attack_pct(a.owner, a.def, a.is_building())) / 100
+
+
+## Porcentaje de ataque (docs/diseno/27, paso 1): los edificios que disparan y el asedio
+## siguen subiendo con la edad (`bono_ataque_edificio`, `bono_ataque_asedio`); la tropa, solo
+## con lo que se compra por línea (`ataque_pct`: armas_1, veterano y élite).
+func attack_pct(pid: int, def: Dictionary, building: bool) -> int:
+	if pid < 0:
+		return 0
+	var fn: String = def.get("funcion", "")
+	if building or fn == "asedio":
+		return int(dp(pid).edades[players[pid]["age"] - 1].get("bono_ataque_edificio" if building else "bono_ataque_asedio", 0))
+	var line := SimData.line_of(def)
+	return mod(pid, "atk_pct:" + line) if line != "" else 0
+
+
+## Nivel de la línea de una unidad para `pid`: 0 común, 1 veterano, 2 élite (la interfaz).
+func line_level(pid: int, def: Dictionary) -> int:
+	var line := SimData.line_of(def)
+	if pid < 0 or line == "":
+		return 0
+	var best := 0
+	var techs: Dictionary = dp(pid).tecnologias
+	for k in players[pid]["techs"]:
+		var t: Dictionary = techs.get(k, {})
+		if t.get("linea", "") == line:
+			best = maxi(best, int(t.get("nivel", 0)))
+	return best
+
+
+## Lo que antes daba gratis la edad, para quien empieza en una edad avanzada (misiones):
+## las investigaciones con `ia_prioridad` desde su edad y los niveles de cada línea hasta la
+## edad de inicio, como si las hubiera comprado.
+func grant_age_purchases(pid: int, age: int) -> void:
+	var techs: Dictionary = dp(pid).tecnologias
+	for k in techs:
+		var t: Dictionary = techs[k]
+		if int(t.get("edad_min", 1)) > age or players[pid]["techs"].has(k):
+			continue
+		if t.get("ia_prioridad", false) or t.has("nivel"):
+			_finish_tech(pid, k)
 
 
 ## Armadura contra cuerpo a cuerpo o contra distancia (como AoE4, C-31). Sin

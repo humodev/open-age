@@ -77,7 +77,9 @@ func _tecnologias_con_lugar() -> void:
 				probe.type = type
 				probe.def = dd.edificios[type]
 				probe.capital = type == cap
-				if s.tech_here(t, probe):
+				# Los niveles por línea miran las unidades del pueblo (la sonda no tiene dueño).
+				var lin: String = t.get("en", {}).get("linea", "")
+				if (lin != "" and dd.lines_made_by(probe.def).has(lin)) or (lin == "" and s.tech_here(t, probe)):
 					ok = true
 					break
 			if not ok:

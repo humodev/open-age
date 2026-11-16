@@ -1,9 +1,9 @@
 {
-  "_doc": "Nombres genericos (docs/02-alcance-y-epoca.md). Costo y tiempo del hito que lleva A esa edad. bono_ataque en porcentaje para unidades militares.",
+  "_doc": "Nombres genericos (docs/02-alcance-y-epoca.md). Costo y tiempo del hito que lleva A esa edad. bono_ataque_edificio: porcentaje de ataque por edad de los edificios que disparan; bono_ataque_asedio: el mismo para el asedio (ariete), que no tiene niveles. Las demas unidades ya no suben solas con la edad (docs/diseno/27, paso 1): el +10 % de la II esta en armas_1 y el resto en los niveles veterano y elite (tecnologias.json).",
   "edades": [
-    { "nombre": "Asentamiento", "bono_ataque": 0 },
-    { "nombre": "Consolidación", "bono_ataque": 10, "hito_costo": { "alimento": 500, "riqueza": 300 }, "hito_tiempo_ms": 190000 },
-    { "nombre": "Apogeo", "bono_ataque": 20, "hito_costo": { "alimento": 1000, "riqueza": 600, "piedra": 200 }, "hito_tiempo_ms": 220000 },
-    { "nombre": "Pólvora y rebelión", "bono_ataque": 35, "hito_costo": { "alimento": 1800, "riqueza": 1200, "piedra": 400 }, "hito_tiempo_ms": 250000 }
+    { "nombre": "Asentamiento", "bono_ataque_edificio": 0, "bono_ataque_asedio": 0 },
+    { "nombre": "Consolidación", "bono_ataque_edificio": 10, "bono_ataque_asedio": 10, "hito_costo": { "alimento": 500, "riqueza": 300 }, "hito_tiempo_ms": 190000 },
+    { "nombre": "Apogeo", "bono_ataque_edificio": 20, "bono_ataque_asedio": 20, "hito_costo": { "alimento": 1000, "riqueza": 600, "piedra": 200 }, "hito_tiempo_ms": 220000 },
+    { "nombre": "Pólvora y rebelión", "bono_ataque_edificio": 35, "bono_ataque_asedio": 35, "hito_costo": { "alimento": 1800, "riqueza": 1200, "piedra": 400 }, "hito_tiempo_ms": 250000 }
   ]
 }

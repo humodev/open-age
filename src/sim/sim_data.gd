@@ -47,6 +47,16 @@ func _merge(c: Dictionary) -> SimData:
 	for b in c.get("produce", {}):
 		if m.edificios.has(b):
 			m.edificios[b]["produce"] = c["produce"][b]
+	# Niveles por línea (veterano, élite): solo los de las líneas que el pueblo entrena en
+	# algún edificio (los guaraníes no tienen montados; los incas, solo desde Vilcabamba).
+	var made := {}
+	for b in m.edificios:
+		for l in m.lines_made_by(m.edificios[b]):
+			made[l] = true
+	for k in m.tecnologias.keys():
+		var lin: String = m.tecnologias[k].get("en", {}).get("linea", "")
+		if lin != "" and not made.has(lin):
+			m.tecnologias.erase(k)
 	if c.has("construye"):
 		m.unidades["aldeano"]["construye"] = c["construye"]
 	m.edades = edades.duplicate(true)
@@ -75,6 +85,29 @@ static func _overlay(base: Dictionary, over: Dictionary, extra: Dictionary, remo
 ## Tabla de una civilización, o la capa común si no existe.
 func for_civ(key: String) -> SimData:
 	return civs.get(key, self)
+
+
+## Línea de una unidad para los niveles veterano y élite (docs/diseno/27, §1.1): pólvora,
+## montados (montado o elefante) o su función (choque, distancia, linea). Vacío si no es tropa.
+static func line_of(def: Dictionary) -> String:
+	var fn: String = def.get("funcion", "")
+	if not fn in ["choque", "distancia", "linea"]:
+		return ""
+	if def.get("polvora", false):
+		return "polvora"
+	if def.get("montado", false) or def.get("elefante", false):
+		return "montados"
+	return fn
+
+
+## Líneas que entrena un edificio (por su `produce`, con las unidades de esta tabla).
+func lines_made_by(bdef: Dictionary) -> Array:
+	var out := []
+	for u in bdef.get("produce", []):
+		var l := line_of(unidades.get(u, {}))
+		if l != "" and not out.has(l):
+			out.append(l)
+	return out
 
 
 func mod(name: String) -> Dictionary:

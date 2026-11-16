@@ -134,10 +134,12 @@ func think() -> void:
 	var saving := _wants_hito(p, vill.size(), by_type)
 	_economy(p, vill, centro, saving)
 	_buildings(p, vill, centro, by_type, saving)
+	var held_levels := _levels(p, army, by_type, saving, _threat(centro) != null)
 	_production(p, vill, army, centro, by_type, saving)
 	_research(p, by_type, saving)
 	_trade(p, by_type)
 	_engine(p, vill, centro, by_type, saving)
+	_reserve(p, -1, held_levels)
 	_reserve(p, -1, held) # --- equipos ronda 3 ---
 	_animals(centro)
 	_alarm(p, vill, army, centro)
@@ -163,6 +165,85 @@ func _hito_type(p: Dictionary) -> String:
 		if dd.edificios.get(o, {}).get("eje", "") == want:
 			return o
 	return opts[0]
+
+
+## Lo que reemplaza al bono de ataque por edad (docs/diseno/27, paso 1; reglas.ia_niveles), en
+## todas las dificultades y antes que la tropa: lo que tiene `ia_prioridad` (armas_1) y los
+## niveles veterano y élite de las líneas con más tropa. Una compra por turno; su costo queda
+## apartado hasta el final del turno (la orden se paga en el tick siguiente), así la tropa no
+## gasta la misma plata. Devuelve lo apartado.
+func _levels(p: Dictionary, army: Array[SimEntity], by_type: Dictionary, saving: bool, threatened: bool) -> Dictionary:
+	var cfg: Dictionary = sim.data.reglas.get("ia_niveles", {})
+	if cfg.is_empty() or int(p["age"]) < 2 or (saving and not cfg.get("ahorrando", true)):
+		return {}
+	var techs: Dictionary = sim.dp(player).tecnologias
+	var count := {}
+	for u in army:
+		var l := SimData.line_of(u.def)
+		if l != "":
+			count[l] = int(count.get(l, 0)) + 1
+	var lines: Array = []
+	for l in count:
+		if int(count[l]) >= int(cfg.get("tropa_minima", 1)):
+			lines.append(l)
+	lines.sort_custom(func(a: String, b: String) -> bool: return count[a] > count[b] or (count[a] == count[b] and a < b))
+	var n_first := int(cfg.get("lineas_primero", 2))
+	# Sin tropa suficiente (recién perdió el ejército), las líneas que más edificios entrenan.
+	if lines.size() < n_first:
+		var made := {}
+		for k in by_type:
+			for b: SimEntity in by_type[k]:
+				if b.built:
+					for l in sim.dp(player).lines_made_by(b.def):
+						made[l] = int(made.get(l, 0)) + 1
+		var extra: Array = made.keys().filter(func(l: String) -> bool: return not lines.has(l))
+		extra.sort_custom(func(a: String, b: String) -> bool: return made[a] > made[b] or (made[a] == made[b] and a < b))
+		lines.append_array(extra)
+	lines = lines.slice(0, n_first)
+	var want: Array[String] = []
+	for k: String in techs:
+		if techs[k].get("ia_prioridad", false):
+			want.append(k)
+	for lvl in [1, 2]:
+		for l: String in lines:
+			for k: String in techs:
+				if techs[k].get("linea", "") == l and int(techs[k].get("nivel", 0)) == lvl:
+					want.append(k)
+	for tech in want:
+		if sim.research_block(player, tech) != "":
+			continue
+		var cost: Dictionary = techs[tech]["costo"]
+		var ok := true
+		for k in cost:
+			if int(p["res"].get(k, 0)) < int(cost[k]):
+				ok = false
+		var where: SimEntity = null
+		var anywhere := false
+		for k in by_type:
+			for b: SimEntity in by_type[k]:
+				if b.built and sim.tech_here(techs[tech], b):
+					anywhere = true
+					if b.queue.size() < 2 and where == null:
+						where = b
+		if not anywhere:
+			continue
+		var held := {}
+		if ok and where != null:
+			sim.push_command({"t": "research", "player": player, "building": where.id, "tech": tech})
+			for r in cost:
+				held[r] = int(cost[r])
+				p["res"][r] = int(p["res"][r]) - int(cost[r])
+			return held
+		# Todavía no alcanza: se junta (la tropa no gasta lo que ya hay de ese costo), salvo
+		# con la base atacada. Sin esto, la tropa que cuesta riqueza la gastaba antes de llegar
+		# a 150 y el veterano tardaba hasta 16 minutos (proceso/26, paso 5).
+		if cfg.get("junta", false) and not threatened:
+			for r in cost:
+				var take := mini(int(cost[r]), int(p["res"].get(r, 0)))
+				held[r] = take
+				p["res"][r] = int(p["res"][r]) - take
+			return held
+	return {}
 
 
 func _research(p: Dictionary, by_type: Dictionary, saving: bool) -> void:

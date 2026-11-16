@@ -50,6 +50,9 @@ func _setup() -> void:
 	var j: Dictionary = m.get("jugador", {})
 	var p0: Dictionary = sim.players[0]
 	p0["age"] = int(j.get("edad", 1))
+	# Quien empieza en una edad avanzada trae lo que antes daba gratis la edad (paso 1 del
+	# juego tardío): la herrería I y los niveles de cada línea hasta su edad.
+	sim.grant_age_purchases(0, int(p0["age"]))
 	for k in j.get("recursos", {}):
 		p0["res"][k] = int(j["recursos"][k])
 	var capital := _capital(0)
@@ -66,6 +69,7 @@ func _setup() -> void:
 		var r: Dictionary = rivals[i]
 		var age := int(r.get("edad", 1))
 		sim.players[pid]["age"] = age
+		sim.grant_age_purchases(pid, age)
 		for k in sim.players[pid]["res"]:
 			sim.players[pid]["res"][k] = int(sim.players[pid]["res"][k]) + 300 * age
 		var ai := SimAI.new(sim, pid, r.get("dificultad", "normal"))
