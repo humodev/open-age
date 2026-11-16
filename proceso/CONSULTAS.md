@@ -300,3 +300,21 @@ El torneo de balance se juega con la normal. Palmares no crece con centros sino 
 a) El balance se mide con la normal, y la experta solo se revisa para que ninguna civ quede inútil *(por defecto)* · b) Sumar un torneo con la experta y balancear también ahí
 
 **Respuesta:**
+
+### C-53 · (sonido) El kultrun en el juego
+El sonido mapuche (fanfarria, alarma y órdenes) usa kultrun y trutruka sintetizados (`proceso/24-tras-la-segunda-ronda/4g-sonido.md`). El kultrun es un instrumento ceremonial de la machi. Ya estaba pendiente consultar la pifilka.
+a) Dejarlo, y consultarlo con una organización mapuche junto con la pifilka antes de publicar *(por defecto)* · b) Usar solo la trutruka hasta tener esa consulta
+
+**Respuesta:**
+
+### C-54 · (sonido) La begena en la música de paz etíope
+La música nueva de Etiopía (C-24) abre y cierra con begena, el arpa de la oración ortodoxa. Solo suena en la paz, nunca en combate ni en alarmas, y no hay voces ni nada que imite el zema.
+a) Así, y consultarlo con alguien de la tradición ortodoxa etíope antes de publicar *(por defecto)* · b) Reemplazar la begena por krar, que es profano
+
+**Respuesta:**
+
+### C-55 · (sonido) El berimbau en Palmares
+El sonido de Palmares usa berimbau y atabaque. El berimbau de arco con calabaza está documentado en Brasil sobre todo desde el siglo XIX [verificar]; en el Palmares del siglo XVII podría ser un anacronismo.
+a) Dejarlo: es el instrumento afrobrasileño que más se reconoce *(por defecto)* · b) Solo atabaque y agogô
+
+**Respuesta:**
