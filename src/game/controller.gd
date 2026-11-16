@@ -157,7 +157,12 @@ func _own_unit_ids() -> Array:
 	return ids
 
 
-func pick(screen: Vector2) -> int:
+## Entidad bajo el punto de la pantalla. `para_orden` (cursor y clic derecho): una unidad de la
+## propia selección cuenta como si estuviera media distancia de captura más lejos, porque nadie se
+## da una orden a sí mismo; así el animal propio que el aldeano está por carnear gana aunque el
+## aldeano esté pegado o le pase por delante (jugador nuevo, ronda 4: el cursor decía «mover»
+## según dónde caminaba el aldeano).
+func pick(screen: Vector2, para_orden: bool = false) -> int:
 	var best := -1
 	var best_d := 26.0 * 40.0 / cam.zoom
 	for e in sim.actives:
@@ -170,6 +175,8 @@ func pick(screen: Vector2) -> int:
 		if cam.cam.is_position_behind(wp):
 			continue
 		var d := cam.cam.unproject_position(wp).distance_to(screen)
+		if para_orden and view.selected.has(e.id):
+			d += 13.0 * 40.0 / cam.zoom
 		if d < best_d:
 			best = e.id
 			best_d = d
@@ -237,23 +244,43 @@ func commands() -> Array[Dictionary]:
 				out.append({"slot": Grilla.fija(k, 8), "id": k, "icon": k, "kind": "form", "form": FORMAS[k][0], "name": "Formación: %s%s" % [FORMAS[k][1], " (elegida)" if formacion == FORMAS[k][0] else ""], "cost": {}, "desc": DESCS[k] + " Arrastrá el clic derecho para elegir hacia dónde mira.", "locked": ""})
 		# --- fin órdenes ---
 	elif first.is_building() and first.built:
+		# --- casillas --- aldeano en Q y explorador en W (interfaz.json → grilla.unidades_fijas);
+		# las demás unidades, en orden, a las libres de la primera fila.
+		var fijas: Dictionary = Grilla.cfg().get("unidades_fijas", {})
+		var produce: Array = first.def.get("produce", [])
+		var reservadas := {}
+		for type: String in produce:
+			if fijas.has(type):
+				reservadas[int(fijas[type])] = true
 		var i := 0
-		for type: String in first.def.get("produce", []):
+		for type: String in produce:
 			var udef: Dictionary = sim.dp(local).unidades[type]
-			var cmd := {"slot": i, "id": type, "icon": Glyphs.resolve(udef, type), "kind": "train", "name": udef["nombre"], "common": common_name(type), "cost": sim.dp(local).cost_of(type, age), "desc": DESCS.get(type, ""), "locked": "", "building": first.id}
+			var slot := int(fijas.get(type, -1))
+			if slot < 0:
+				while reservadas.has(i):
+					i += 1
+				slot = i
+				i += 1
+			var cmd := {"slot": slot, "id": type, "icon": Glyphs.resolve(udef, type), "kind": "train", "name": udef["nombre"], "common": common_name(type), "cost": sim.dp(local).cost_of(type, age), "desc": DESCS.get(type, ""), "locked": "", "building": first.id}
 			if age < udef.get("edad_min", 1):
 				cmd["locked"] = "Requiere edad %s" % Sim._roman(udef["edad_min"])
 			out.append(cmd)
-			i += 1
-		# Investigaciones: en cada ranura, la primera de la cadena que falta.
+		# Investigaciones: de cada cadena (hachas → hachas_2), la primera que falta. Su casilla se
+		# reparte al final (_ubicar_investigaciones): no pisan lo que entrena el edificio.
+		var research: Array[Dictionary] = []
 		var used := {}
-		for tech: String in sim.dp(local).tecnologias:
-			var t: Dictionary = sim.dp(local).tecnologias[tech]
-			if not sim.tech_here(t, first) or used.has(t["ranura"]) or sim.players[local]["techs"].has(tech):
+		var techs: Dictionary = sim.dp(local).tecnologias
+		for tech: String in techs:
+			var t: Dictionary = techs[tech]
+			var root := tech
+			while techs.get(root, {}).has("requiere") and techs.has(techs[root]["requiere"]):
+				root = techs[root]["requiere"]
+			if not sim.tech_here(t, first) or used.has(root) or sim.players[local]["techs"].has(tech):
 				continue
-			used[t["ranura"]] = true
+			used[root] = true
 			var why := sim.research_block(local, tech)
-			out.append({"slot": t["ranura"], "id": tech, "icon": t["icono"], "kind": "research", "name": t["nombre"], "cost": t["costo"], "desc": effects_text(t["efectos"]), "locked": why, "tech": true, "building": first.id})
+			var pref := int(t["ranura"]) if produce.is_empty() else int((Grilla.cfg().get("investigaciones_con_tropa", {}) as Dictionary).get(tech if not t.has("requiere") else root, t["ranura"]))
+			research.append({"slot": pref, "id": tech, "icon": t["icono"], "kind": "research", "name": t["nombre"], "cost": t["costo"], "desc": effects_text(t["efectos"]), "locked": why, "tech": true, "building": first.id})
 		if first.capital or first.type == "centro":
 			var on: bool = sim.players[local]["alarm"]
 			out.append({"slot": 8, "id": "calma" if on else "campana", "icon": "calma" if on else "campana", "kind": "alarm", "name": "Toque de calma" if on else "Campana", "cost": {}, "desc": DESCS["calma" if on else "campana"], "locked": "", "on": not on})
@@ -267,7 +294,7 @@ func commands() -> Array[Dictionary]:
 				out.append({"slot": ki, "id": "vender_" + k, "icon": k, "kind": "trade", "op": "vender", "recurso": k, "building": first.id, "name": "Vender %d de %s → %d de riqueza" % [lot, Palette.RES_NAMES[k].to_lower(), price * (100 - fee) / 100], "cost": {k: lot}, "desc": "El precio baja con cada venta.", "locked": ""})
 				out.append({"slot": 4 + ki, "id": "comprar_" + k, "icon": k, "kind": "trade", "op": "comprar", "recurso": k, "building": first.id, "name": "Comprar %d de %s" % [lot, Palette.RES_NAMES[k].to_lower()], "cost": {"riqueza": price}, "desc": "El precio sube con cada compra.", "locked": ""})
 		if first.def.has("empaca_en"):
-			out.append({"slot": 7, "id": "desarmar", "icon": "carga", "kind": "pack", "name": "Desarmar la corte", "cost": {}, "desc": "La corte se levanta y camina con su gente: viaja lenta y se vuelve a armar donde haga falta.", "locked": "" if first.queue.is_empty() else "Esperá que termine la cola", "building": first.id})
+			out.append({"slot": 9, "id": "desarmar", "icon": "carga", "kind": "pack", "name": "Desarmar la corte", "cost": {}, "desc": "La corte se levanta y camina con su gente: viaja lenta y se vuelve a armar donde haga falta.", "locked": "" if first.queue.is_empty() else "Esperá que termine la cola", "building": first.id})
 		if first.capital and sim.dp(local).has_mod("regalo_cumbi"):
 			var rc: Dictionary = sim.dp(local).mod("regalo_cumbi")
 			var why_c := ""
@@ -303,7 +330,87 @@ func commands() -> Array[Dictionary]:
 			out.append({"slot": 10, "id": "desalojar", "icon": "expulsar", "kind": "desalojar", "name": "Vaciar oficios (%d/%d)%s" % [first.crafts.size(), int(oficios["puestos"][first.type]), stop], "cost": {}, "desc": "La gente que trabaja en los oficios de este edificio (herrero, alfarero, cestero, tejedor de palma) sale a recolectar. Cada puesto da %d de riqueza por minuto mientras no haya asedio; los puestos se vuelven a llenar con la gente que llega." % int(oficios["por_min"]), "locked": "" if not first.crafts.is_empty() else "No hay nadie en los oficios", "building": first.id})
 		if first.def.get("guarnicion", 0) > 0:
 			out.append({"slot": 11, "id": "expulsar", "icon": "expulsar", "kind": "ungarrison", "name": "Expulsar guarnición", "cost": {}, "desc": DESCS["expulsar"], "locked": "" if not first.garrison.is_empty() else "No hay unidades alojadas"})
+		# Las mejoras militares primero: quedan en A S D F como en el cuartel (también en el mocambo).
+		var mil_first: Array[Dictionary] = research.filter(func(c: Dictionary) -> bool: return techs[c["id"]].get("en", {}).get("militar", false))
+		mil_first.append_array(research.filter(func(c: Dictionary) -> bool: return not techs[c["id"]].get("en", {}).get("militar", false)))
+		out = _ubicar_investigaciones(out, mil_first)
 	return out
+
+
+## --- casillas --- (jugador nuevo, ronda 4) Reparte las investigaciones de un edificio sin pisar lo
+## que ya tiene casilla: lo que entrena (Q W E R, el aldeano siempre en Q y el explorador en W),
+## la campana, el mercado, la guarnición… Cada una va a su `ranura` de los datos si está libre (las
+## del depósito quedan en Q W E del almacén); si no, a la primera libre desde A, y después de Q.
+## Si no entran todas, van juntas a un submenú «Investigaciones» (casilla libre; V vuelve).
+## tests/casillas.gd recorre todos los edificios de las seis civilizaciones.
+func _ubicar_investigaciones(out: Array[Dictionary], research: Array[Dictionary]) -> Array[Dictionary]:
+	var taken := {}
+	for c in out:
+		var sl := int(c["slot"])
+		if taken.has(sl):
+			# Dos comandos fijos en la misma casilla (no pasa con los datos de hoy): al primero libre.
+			for alt in _ORDEN_LIBRE:
+				if not taken.has(alt):
+					push_warning("Grilla: '%s' choca con '%s' en %s; va a %s" % [c["id"], taken[sl], SLOT_LABELS[sl], SLOT_LABELS[alt]])
+					c["slot"] = alt
+					sl = alt
+					break
+		taken[sl] = c["id"]
+	if research.is_empty():
+		return out
+	var free := 0
+	for sl in 12:
+		free += 0 if taken.has(sl) else 1
+	if research.size() <= free:
+		_repartir(research, taken)
+		out.append_array(research)
+		return out
+	# No entran: un submenú con todas (la casilla libre más a la derecha de abajo).
+	if submenu == INVESTIGAR:
+		var inner: Array[Dictionary] = [{"slot": Grilla.fija("volver", 11), "id": "volver", "icon": "volver", "kind": "back", "name": "Volver", "cost": {}, "desc": "Vuelve a la grilla del edificio (también Esc o clic derecho sobre la grilla).", "locked": ""}]
+		_repartir(research, {Grilla.fija("volver", 11): "volver"})
+		for c in research:
+			if int(c["slot"]) >= 0:
+				inner.append(c)
+		return inner
+	for alt in [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]:
+		if not taken.has(alt):
+			out.append({"slot": alt, "id": INVESTIGAR, "icon": "carga", "kind": "submenu", "menu": INVESTIGAR, "name": "Investigaciones (%d)" % research.size(), "cost": {}, "desc": "Mejoras que se investigan en este edificio: " + ", ".join(research.map(func(c: Dictionary) -> String: return c["name"])) + ".", "locked": ""})
+			break
+	return out
+
+
+const INVESTIGAR := "investigar"
+const _ORDEN_LIBRE: Array[int] = [4, 5, 6, 7, 8, 9, 10, 0, 1, 2, 3, 11]
+
+
+## Primero, cada una a su ranura si está libre; después, las que quedan a la primera libre.
+func _repartir(research: Array[Dictionary], taken: Dictionary) -> void:
+	var rest: Array[Dictionary] = []
+	for c in research:
+		var sl := int(c["slot"])
+		if sl >= 0 and sl < 12 and not taken.has(sl):
+			taken[sl] = c["id"]
+		else:
+			rest.append(c)
+	for c in rest:
+		c["slot"] = -1
+		for alt in _ORDEN_LIBRE:
+			if not taken.has(alt):
+				taken[alt] = c["id"]
+				c["slot"] = alt
+				break
+# --- fin casillas ---
+
+
+## Comando de una casilla: el único lugar donde se resuelve qué hay en cada casilla. Lo usan el
+## dibujo de la grilla (hud.gd), la tecla, el clic y la ficha, para que lo que se ve sea lo que se
+## ejecuta (jugador nuevo, ronda 4). tests/casillas.gd verifica que no haya dos en una casilla.
+static func cmd_at(cmds: Array, slot: int) -> Dictionary:
+	for c: Dictionary in cmds:
+		if int(c.get("slot", -1)) == slot:
+			return c
+	return {}
 
 
 # --- grilla ---
@@ -475,12 +582,14 @@ func cursor_action(m: Vector2) -> String:
 	for e in sel:
 		if e.owner == local and e.is_unit():
 			units.append(e)
-	var t: SimEntity = sim.by_id.get(view.hovered)
 	if units.is_empty():
 		for e in sel:
 			if e.is_building() and e.def.has("produce"):
 				return "reunion"
 		return ""
+	# El mismo blanco que tomaría el clic derecho (_right_click), calculado en este punto: no el
+	# `hovered` del cuadro anterior, que podía ser otro (el autotest lo veía de a ratos).
+	var t: SimEntity = sim.by_id.get(pick(m, true))
 	if t == null or not t.alive or units.has(t):
 		return "mover"
 	var civil := false
@@ -714,7 +823,7 @@ func _right_click(pos: Vector2, rumbo: int = -1) -> void:
 	if sel.is_empty() or sel[0].owner != local:
 		return
 	var g := cam.ground_at(pos)
-	var target := pick(pos)
+	var target := pick(pos, true)
 	var ids := _own_unit_ids()
 	if not ids.is_empty():
 		var t: SimEntity = sim.by_id.get(target)
@@ -775,7 +884,7 @@ func _key(k: InputEventKey) -> void:
 	if code == KEY_ESCAPE:
 		if mode != "":
 			cancel_mode()
-		elif submenu != Grilla.RAIZ and _has_villager(): # --- grilla ---
+		elif submenu != Grilla.RAIZ and (_has_villager() or submenu == INVESTIGAR): # --- grilla ---
 			open_submenu(Grilla.RAIZ)
 		elif not selection.is_empty():
 			_set_selection([] as Array[int])

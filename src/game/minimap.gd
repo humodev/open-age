@@ -80,6 +80,14 @@ func _rebuild() -> void:
 	_tex.update(_img)
 
 
+## Lugar señalado por un aviso (la base rival): mira que late unos segundos.
+var senalado := {}
+
+
+func senalar(x: int, y: int, secs: float) -> void:
+	senalado = {"p": Vector2(x / 1000.0, y / 1000.0), "t": secs}
+
+
 func ping(x: int, y: int) -> void:
 	_pings.append({"p": Vector2(x / 1000.0, y / 1000.0), "t": 0.0})
 
@@ -114,6 +122,10 @@ func _process(delta: float) -> void:
 	for p in _pings:
 		p["t"] += delta
 	_pings = _pings.filter(func(p: Dictionary) -> bool: return p["t"] < 3.0)
+	if not senalado.is_empty():
+		senalado["t"] = float(senalado["t"]) - delta
+		if float(senalado["t"]) <= 0.0:
+			senalado = {}
 	_extra.process(delta) # --- mundo ---
 	queue_redraw()
 
@@ -154,6 +166,13 @@ func _draw() -> void:
 	for p in _pings:
 		var k: float = fmod(p["t"], 1.0)
 		draw_arc(xf * (p["p"] as Vector2), 4.0 + k * 16.0, 0, TAU, 24, Color(Palette.UI_BAD, 1.0 - k), 2.0, true)
+	if not senalado.is_empty():
+		var sp: Vector2 = xf * (senalado["p"] as Vector2)
+		var sk := fmod(float(senalado["t"]), 1.0)
+		draw_arc(sp, 6.0 + sk * 10.0, 0, TAU, 24, Color(Palette.UI_ACCENT, 0.4 + 0.6 * sk), 2.5, true)
+		for dv in [Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1)]:
+			draw_line(sp + dv * 4.0, sp + dv * 10.0, Color(0, 0, 0, 0.7), 3.5)
+			draw_line(sp + dv * 4.0, sp + dv * 10.0, Palette.UI_ACCENT, 1.8)
 	# --- órdenes --- (bengalas del equipo)
 	if ordenes != null:
 		for f in ordenes.flares:

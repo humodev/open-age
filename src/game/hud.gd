@@ -284,6 +284,12 @@ func notify(msg: String, secs: float = -1.0, tipo: String = "info", lugar: Varia
 		avisos.push(msg, tipo, secs, lugar)
 
 
+## Marca un lugar en el minimapa unos segundos (el aviso «atacá» señala la base rival).
+func senalar_minimapa(x: int, y: int, secs: float = 12.0) -> void:
+	if _mini != null:
+		_mini.senalar(x, y, secs)
+
+
 func _lugar_de(x: int, y: int) -> Vector3:
 	return WorldView.to_world(x, y)
 
@@ -518,7 +524,16 @@ static func obra_restante(s: Sim, b: SimEntity) -> String:
 	return "Faltan %s con %d %s" % [t, nb, "constructor" if nb == 1 else "constructores"]
 
 
+## Rect de la grilla para anclar la ficha y la ayuda: con un submenú abierto incluye la pestaña
+## del título, así la ficha queda arriba de «ECONOMÍA · Esc vuelve» y no la tapa (jugador nuevo).
+func grid_anchor(anchor: Rect2) -> Rect2:
+	if ctrl != null and ctrl.submenu != Grilla.RAIZ:
+		return Rect2(anchor.position - Vector2(0, 26), anchor.size + Vector2(0, 26))
+	return anchor
+
+
 func show_tip(cmd: Dictionary, anchor: Rect2) -> void:
+	anchor = grid_anchor(anchor)
 	# --- ficha ---
 	if ficha != null and Ficha.handles(cmd):
 		_tip.visible = false
@@ -880,6 +895,7 @@ class CommandCard:
 	extends Control
 	var hud: Hud
 	var _hover := -1
+	var dibujadas := {} # casilla -> comando dibujado en el último cuadro (el autotest lo revisa)
 
 	func _ready() -> void:
 		mouse_filter = Control.MOUSE_FILTER_STOP
@@ -893,10 +909,7 @@ class CommandCard:
 		return Rect2(Hud.GAP + cx * (Hud.SLOT + Hud.GAP), Hud.GAP + cy * (Hud.SLOT + Hud.GAP), Hud.SLOT, Hud.SLOT)
 
 	func _cmd_at(i: int) -> Dictionary:
-		for c in hud.ctrl.commands():
-			if c["slot"] == i:
-				return c
-		return {}
+		return Controller.cmd_at(hud.ctrl.commands(), i)
 
 	func _gui_input(event: InputEvent) -> void:
 		if event is InputEventMouseMotion:
@@ -928,8 +941,8 @@ class CommandCard:
 		draw_style_box(Hud.panel_box(), Rect2(Vector2.ZERO, size))
 		var cmds := hud.ctrl.commands()
 		# --- grilla --- (pestaña con el submenú abierto, encima de la grilla)
-		if hud.ctrl.submenu != Grilla.RAIZ and hud.ctrl._has_villager():
-			var title := "ECONOMÍA" if hud.ctrl.submenu == Grilla.ECONOMIA else "MILITAR Y DEFENSA"
+		if hud.ctrl.submenu != Grilla.RAIZ and (hud.ctrl._has_villager() or hud.ctrl.submenu == Controller.INVESTIGAR):
+			var title := "ECONOMÍA" if hud.ctrl.submenu == Grilla.ECONOMIA else "INVESTIGACIONES" if hud.ctrl.submenu == Controller.INVESTIGAR else "MILITAR Y DEFENSA"
 			var tw := Hud.font_b.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x + 92
 			var tab := StyleBoxFlat.new()
 			tab.bg_color = Color(Palette.UI_BG, 0.95)
@@ -942,9 +955,11 @@ class CommandCard:
 			draw_string(Hud.font_b, Vector2(10, -7), title, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Palette.UI_ACCENT)
 			draw_string(Hud.font, Vector2(0, -7), "Esc vuelve", HORIZONTAL_ALIGNMENT_RIGHT, tw - 10, 12, Palette.UI_DIM)
 		# --- fin grilla ---
+		# Lo que se dibuja en cada casilla es lo que ejecutan la tecla y el clic (Controller.cmd_at).
 		var by_slot := {}
-		for c in cmds:
-			by_slot[c["slot"]] = c
+		for i in 12:
+			by_slot[i] = Controller.cmd_at(cmds, i)
+		dibujadas = by_slot
 		var res: Dictionary = hud.sim.players[hud.local]["res"]
 		for i in 12:
 			var r := _slot_rect(i)
@@ -1101,7 +1116,14 @@ class SelectionPanel:
 		_portrait(Rect2(14, 14, 112, 112), e)
 		var x := 142.0
 		var name: String = e.def.get("nombre", e.type)
-		draw_string(Hud.font_b, Vector2(x, 36), name, HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Palette.UI_TEXT)
+		# --- casillas --- (jugador nuevo, ronda 4) el común delante del propio, como en la ficha y la
+		# grilla: «Centro · Oga guasu», «Aldeano · Ava». Más chico si no entra.
+		if not e.is_resource() and e.owner >= 0:
+			var comun := Grilla.comun(sim.data, sim.dp(e.owner), e.type)
+			if comun != "":
+				name = "%s · %s" % [comun, name]
+		var name_w := size.x - x - 16 - (110 if e.is_unit() else 150)
+		draw_string(Hud.font_b, Vector2(x, 36), name, HORIZONTAL_ALIGNMENT_LEFT, name_w, EstadoCasilla._fit(Hud.font_b, name, 20, name_w), Palette.UI_TEXT)
 		var who := "Naturaleza" if e.owner < 0 else ("Tu pueblo" if e.owner == hud.local else "Rival · %s" % preload("res://src/game/ui/panel_comun.gd").player_name(sim, e.owner, hud.local))
 		draw_string(Hud.font, Vector2(x, 58), who, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Palette.UI_DIM)
 		if e.is_resource():
@@ -1242,3 +1264,29 @@ class SelectionPanel:
 				x = 14
 				y += 80
 		draw_string(Hud.font, Vector2(0, size.y - 14), "%d seleccionadas" % sel.size(), HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, 13, Palette.UI_DIM)
+		# --- casillas --- (jugador nuevo, ronda 4: «un ícono, un 6 y "6 seleccionadas"») qué se
+		# puede hacer con lo elegido, como el «punto de reunión» del centro. Solo con una fila.
+		var lines := ayuda_multi(sel, hud.local)
+		if y <= 14.0:
+			var ly := size.y - 14.0 - 18.0 * (lines.size() - 1)
+			for ln in lines:
+				draw_string(Hud.font, Vector2(14, ly), ln, HORIZONTAL_ALIGNMENT_LEFT, size.x - 140, 13, Palette.UI_DIM)
+				ly += 18.0
+
+	## Renglones de ayuda para una selección de varias unidades propias.
+	static func ayuda_multi(sel: Array[SimEntity], local: int) -> Array[String]:
+		var civil := false
+		var mil := false
+		for e in sel:
+			if e.owner != local or not e.is_unit():
+				return []
+			civil = civil or e.fn == "civil"
+			mil = mil or e.is_military()
+		var out: Array[String] = []
+		if civil:
+			out.append("Clic derecho en un árbol, arbusto, veta o animal: juntan. En una obra: construyen.")
+			out.append("Q Economía · W Militar · S Detener · F Refugio")
+		elif mil:
+			out.append("Clic derecho: mover o atacar. A y clic: avanzan peleando con lo que encuentren.")
+			out.append("Ctrl + número: grupo · S Detener · F Refugio")
+		return out

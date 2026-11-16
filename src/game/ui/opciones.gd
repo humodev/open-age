@@ -31,8 +31,9 @@ static var barras_siempre := false
 # --- aprender --- (proceso/23-como-aoe4/03-aprender-a-jugar.md)
 ## Avisos que enseñan (src/game/ui/consejos.gd).
 static var consejos := true
-## Nombre debajo del glifo en la grilla de órdenes.
-static var nombres_grilla := false
+## Nombre debajo del glifo en la grilla de órdenes. Prendido la primera vez: es lo que necesita
+## alguien nuevo y estaba escondido en Opciones → Ayuda (jugador nuevo, ronda 4).
+static var nombres_grilla := true
 ## Última dificultad elegida en el menú; la primera vez, Fácil.
 static var dificultad := "facil"
 ## Últimas opciones de partida del menú (sitios, hitos, tiempo_limite_min, recursos,
@@ -101,8 +102,8 @@ static func restablecer() -> void:
 	pantalla_completa = false
 	barras_siempre = false
 	consejos = true # --- aprender --- (la dificultad elegida no se restablece: no es una opción de este diálogo)
-	nombres_grilla = false
-	EstadoCasilla.nombres = false
+	nombres_grilla = true
+	EstadoCasilla.nombres = true
 
 
 # ---------------------------------------------------------------- Aplicar
