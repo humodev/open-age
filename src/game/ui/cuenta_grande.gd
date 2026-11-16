@@ -8,6 +8,8 @@ extends Control
 
 const ANCHO := 380.0
 const ALTO := 66.0
+## La cuenta del tiempo límite aparece en los últimos 5 minutos (como el aviso de AoE4).
+const AVISO_TIEMPO_S := 300
 
 var sim: Sim
 var local := 0
@@ -23,6 +25,32 @@ static func sites_holder(s: Sim) -> int:
 		if not p["defeated"] and int(p.get("sitios_ms", 0)) > 0:
 			return int(p["id"])
 	return -1
+
+
+## Segundos que faltan para el tiempo límite; -1 si la partida no tiene.
+static func time_left_s(s: Sim) -> int:
+	var mins := int(s._opts.get("tiempo_limite_min", 0))
+	if mins <= 0:
+		return -1
+	return maxi(0, mins * 60 - s.tick * s.tick_ms / 1000)
+
+
+## Primer jugador en pie del equipo con más puntos; -1 si hay empate arriba.
+static func leader(s: Sim) -> int:
+	var best := -1
+	var best_s := -1
+	var tie := false
+	for p in s.players:
+		if p["defeated"]:
+			continue
+		var ts := s.team_score(s.team_of(p["id"]))
+		if ts > best_s:
+			best_s = ts
+			best = int(p["id"])
+			tie = false
+		elif ts == best_s and s.team_of(p["id"]) != s.team_of(best):
+			tie = true
+	return -1 if tie else best
 
 
 static func sites_left_s(s: Sim, pid: int) -> int:
@@ -52,6 +80,17 @@ func _draw() -> void:
 	elif sim.scenario != null and sim.scenario.cuenta_s() >= 0:
 		secs = sim.scenario.cuenta_s()
 		title = String(sim.scenario.cuenta.get("texto", "")).to_upper()
+	elif time_left_s(sim) >= 0 and time_left_s(sim) <= AVISO_TIEMPO_S:
+		# Tiempo límite (opciones de partida): los últimos minutos, con el color de quien va ganando.
+		secs = time_left_s(sim)
+		var lead := leader(sim)
+		col = Palette.team(lead) if lead >= 0 else Palette.UI_DIM
+		if lead < 0:
+			title = "TIEMPO LÍMITE · EMPATE EN PUNTOS"
+		elif not sim.enemies(local, lead):
+			title = "TIEMPO LÍMITE · VA GANANDO TU EQUIPO"
+		else:
+			title = "TIEMPO LÍMITE · VA GANANDO %s" % Palette.team_name(lead).to_upper()
 	if secs < 0:
 		return
 	var r := Rect2((size.x - ANCHO) / 2.0, 0, ANCHO, ALTO)

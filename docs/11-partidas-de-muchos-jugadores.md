@@ -28,7 +28,7 @@ Pedido del autor: "Que se pueda jugar de a más de 2 civs en un mismo mapa, pens
 
 ### 2. Mapas para N jugadores
 - **Tamaño según la cantidad de jugadores.** `reglas.json → mapa_tam_por_jugadores`: 2→128, 3–4→176, 5–6→208, 7–8→240.
-- **Bases.** En un círculo alrededor del centro, a la misma distancia, con ángulos repartidos parejo. Con equipos, los aliados van juntos (vecinos en el círculo) o mezclados, según se elija.
+- **Bases.** En un círculo alrededor del centro, a la misma distancia, con ángulos repartidos parejo. Con equipos, los aliados van juntos (vecinos en el círculo) o mezclados, según se elija (`opts.ubicacion_equipos`, `Sim._team_slots`; en el menú, "Equipos").
 - **Equidad sin simetría exacta.** Con 6 o más jugadores, la simetría de la grilla no alcanza: rotar 60° no cae en casillas enteras. Cada base recibe el mismo kit en coordenadas locales, orientadas hacia el centro: frutos, bosque, piedra, arcilla, sitios. El terreno se aplana alrededor de cada base igual que hoy.
   - Una prueba mide la equidad con 50 semillas: distancia por camino al centro y a los recursos disputados (±10 %) y recursos alcanzables en los primeros 5 minutos.
 - **Lo disputado escala con los jugadores.**

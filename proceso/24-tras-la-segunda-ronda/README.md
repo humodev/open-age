@@ -155,6 +155,8 @@ Un cambio por torneo: 75 partidas, 5 semillas, 30 minutos, en 10 procesos.
 | [12](pruebas/12-torneo-ejercito-minimo.txt) | IA: ejército mínimo mientras ahorra | 52 | 60 | 72 | 12 | 72 | 32 |
 | [13](pruebas/13-torneo-jinete-noble.txt) | Etiopía: jinete noble 160 de vida y 13 de ataque (antes 140 y 10), mismo costo | 52 | 52 | 64 | **40** | 68 | 24 |
 | [14](pruebas/14-torneo-khlong.txt) | Ayutthaya: khlong junto a la base y arrozales junto al agua | 52 | 52 | 60 | 36 | 68 | **32** |
+| [15](pruebas/15-torneo-flecheiro.txt) | Palmares: flecheiro 7 de ataque (antes 8). **Descartado** | 52 | 48 | 56 | 32 | **84** | 28 |
+| [16](pruebas/16-torneo-acogida.txt) (10 semillas) | Palmares: acogida a 34 de fama (antes 28) | 54 | 62 | **74** | 38 | **34** | 38 |
 
 **Etiopía, de 56 % a 8 %.**
 - Con la misma partida seguida en el commit anterior a la etapa (`tools/ia_por_dentro.gd`, sierra contra Tawantinsuyu), el ejército etíope ya era chico (unas 20 unidades). Lo que cambió fue el rival: los arreglos de economía del paso 1 destrabaron el alimento de Tawantinsuyu, que pasó de 15 a 60 unidades.
@@ -174,4 +176,24 @@ Un cambio por torneo: 75 partidas, 5 semillas, 30 minutos, en 10 procesos.
 - **Arreglo** (un solo cambio: una parte sin la otra no sirve):
   - **Khlong:** las bases de Ayutthaya empiezan junto a un canal de agua baja (`modulos.khlong`: a 8 casillas del centro, 9 de largo y 2 de ancho). Se camina y no se edifica. Ayutthaya era una ciudad de canales. Con relieve real (misiones), manda la geografía del lugar.
   - **IA:** si la granja rinde más junto al agua, la IA busca primero un lugar junto al agua a 13 casillas del centro o menos (`ia_economia.granja_agua_radio`).
-- **Medida:** 6–9 arrozales con el bono de 10–21 en los cinco terrenos (antes, 0). Determinismo y equidad de los mapas, OK. [Captura](capturas/khlong-ayutthaya.png): el canal junto al centro, con los arrozales al lado.
+- **Medida:** 6–9 arrozales con el bono de 10–21 en los cinco terrenos (antes, 0). Torneo 14: Ayutthaya de 24 a 32 %. Determinismo y equidad de los mapas, OK. [Captura](capturas/khlong-ayutthaya.png): el canal junto al centro, con los arrozales al lado.
+
+## Trabajo en paralelo (desde 2026-11-16)
+
+> El autor: "paralelizá lo que se pueda, seguí documentando y avanzá orquestando todo".
+
+Cada frente tiene su agente en un worktree propio, con su rama y su documento. El orquestador corre los torneos (la máquina no da para dos a la vez), integra las ramas, resuelve conflictos, actualiza este README, el índice y `docs/09`, y publica.
+
+| Frente | Qué | Documento |
+|---|---|---|
+| Balance (orquestador) | Un cambio por torneo: Etiopía, Ayutthaya, Palmares | Esta página, paso 3 |
+| A · Mapuches | Por qué llegan tarde a la edad III; un cambio medido en paz (el torneo lo corre el orquestador) | [3b-mapuches.md](3b-mapuches.md) |
+| B · IA experta | Nueva dificultad: 80–100 aldeanos, segundo centro, oleadas grandes | [4a-ia-experta.md](4a-ia-experta.md) |
+| C · Opciones de partida | **Integrado (2022235).** Sitios sí o no, hitos sí o no, tiempo límite (30/45/60), recursos (normal, medios, altos), equipos juntos o mezclados; el puntaje pasa a la simulación. `tests/opciones_partida.gd` OK. Consultas C-45 a C-50. Pendiente: sin hitos, la IA no termina la conquista (C-49) | [4b-opciones-de-partida.md](4b-opciones-de-partida.md) |
+| D · Arte por edad | **Integrado (cac669b).** Obra en 3 etapas, aspecto por edad y por pueblo (`data/arte_edades.json`), torres propias (solo los invasores conservan almenas), margen de 0,3 casillas en la huella; sin créditos de Meshy | [4c-arte-por-edad.md](4c-arte-por-edad.md) |
+
+**Palmares y el ruido del torneo.**
+- Con el flecheiro más débil (torneo 15), Palmares *subió* de 68 a 84 %. La simulación es determinista, pero cualquier cambio altera todas las partidas que siguen.
+- Con 25 partidas por civ, el ruido de un porcentaje es de unos ±10 puntos: el 68 → 84 dice que ese no era el resorte, no que el flecheiro la fortalezca. Se vuelve a 8.
+- **Desde acá, las decisiones van con 10 semillas** (150 partidas, 50 por civ, ±7 puntos).
+- **El resorte de Palmares es la acogida.** Llega gente sin costo de alimento a cambio de fama (24 por minuto del centro, 15 por mocambo), y eso explica sus victorias rápidas y las por puntos. Torneo 16: acogida a 34 de fama (antes, 28), unas 18 % menos de personas regaladas. **Palmares de 68 a 34 %** con 10 semillas: era el resorte. Queda en el borde de abajo; se vuelve a mirar cuando cambien las demás. Ahora el que sobra es guaraníes (74 %).

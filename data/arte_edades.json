@@ -1,0 +1,145 @@
+{
+ "_doc": "Aspecto de los edificios y las tropas por pueblo y por edad, y la obra en etapas (proceso/24-tras-la-segunda-ronda/4c-arte-por-edad.md). Solo imagen: la simulación no lo lee. Las edades se acumulan: cada una hereda lo de la anterior y cambia lo que dice. Lo de 'civs' pisa lo de 'formas'. Colores en hex; *_pct en por ciento; *_cm en centímetros de maqueta (1 casilla = 100). Claves: muro, techo, acento (colores del pueblo en esa edad); alto_pct (alto de muros), techo_alto_pct, escala_pct (planta, sin pasar el margen); aparejo (pirca, piedra, canteria o adobe); zocalo_cm y zocalo (base de piedra); pisos_techo (techos escalonados); dorado (remates y bandas de oro); remate (punta, cruz, dorado); horcones (postes tallados y pintados en las esquinas); cerco {tipo, alto_cm} alrededor del centro (pirca, canteria, piedra, muro_blanco, empalizada, empalizada_doble, tacuara); rewe_cm (rewe junto al lof); tola_cm (montículo bajo el centro); modelo_tinte (tono de los modelos generados); torre (forma de la torre), torre_alto_pct, torre_cupula (torres_bajas: las que no se estiran a la altura mínima de torre); tropa {tela, casco, escudo_borde, oro} para las tropas de la maqueta. Afirmaciones históricas con [verificar] hasta tener cita en la ficha (docs/00-indice.md, regla 5).",
+ "margen_cm": 30,
+ "obra": {
+  "_doc": "Etapas de la obra según el avance: cimientos hasta el primer umbral, estructura a medio levantar hasta el segundo, casi terminado después. corte_pct: hasta qué parte del alto del edificio terminado llega cada etapa.",
+  "etapas_pct": [33, 66],
+  "corte_pct": [14, 50, 82]
+ },
+ "torres_bajas": ["fortin_rio"],
+ "torres_por_forma": {
+  "inca": "pukara", "redonda": "cresta", "guarani": "mangrullo", "mapuche": "mangrullo", "palmares": "mangrullo",
+  "etiopia": "amba", "ayutthaya": "fortin_rio", "azotea": "jugol", "fuerte": "almenada"
+ },
+ "formas": {
+  "redonda": {
+   "obra_material": ["piedra", "paja"],
+   "edades": [
+    {"alto_pct": 90, "escala_pct": 90},
+    {"alto_pct": 100, "escala_pct": 95, "aparejo": "pirca"},
+    {"alto_pct": 110, "escala_pct": 100, "cerco": {"tipo": "pirca", "alto_cm": 55}, "torre_alto_pct": 110},
+    {"alto_pct": 118, "techo_alto_pct": 115}
+   ]
+  },
+  "guarani": {
+   "obra_material": ["tacuara", "paja"],
+   "edades": [
+    {"alto_pct": 90, "escala_pct": 90},
+    {"alto_pct": 100, "escala_pct": 95},
+    {"alto_pct": 110, "escala_pct": 100, "horcones": true},
+    {"alto_pct": 118}
+   ]
+  },
+  "ayutthaya": {
+   "obra_material": ["ladrillo", "madera"],
+   "edades": [
+    {"pisos_techo": 1, "alto_pct": 90},
+    {"pisos_techo": 2, "alto_pct": 100},
+    {"pisos_techo": 3, "alto_pct": 110, "dorado": true, "remate": "dorado", "torre_alto_pct": 110},
+    {"alto_pct": 118, "techo_alto_pct": 112}
+   ]
+  },
+  "azotea": {
+   "obra_material": ["piedra", "adobe"],
+   "edades": [
+    {"alto_pct": 90},
+    {"alto_pct": 100},
+    {"alto_pct": 110, "cerco": {"tipo": "piedra", "alto_cm": 70}, "torre_alto_pct": 110},
+    {"alto_pct": 118}
+   ]
+  },
+  "fuerte": {
+   "obra_material": ["piedra", "madera"],
+   "edades": [
+    {"alto_pct": 90},
+    {"alto_pct": 100},
+    {"alto_pct": 110, "cerco": {"tipo": "piedra", "alto_cm": 80}, "torre_alto_pct": 110},
+    {"alto_pct": 118}
+   ]
+  }
+ },
+ "civs": {
+  "tawantinsuyu": {
+   "_nota": "De la pirca (piedra de campo con barro) a la cantería fina ensamblada y, en la última edad, las bandas de oro del Qorikancha. La kancha es un recinto cercado con casas adentro. La torre es una pukara escalonada, sin almenas. Fuentes: Gasparini y Margolies, Arquitectura inka (1977); Hyslop, Inka Settlement Planning (1990) [verificar].",
+   "obra_material": ["piedra", "paja"],
+   "edades": [
+    {"muro": "#a99a84", "techo": "#a58c5c", "aparejo": "pirca", "alto_pct": 90, "escala_pct": 90, "modelo_tinte": "#d8d0c2", "tropa": {"tela": "#c9b48e"}},
+    {"muro": "#b9a98f", "alto_pct": 100, "escala_pct": 95, "cerco": {"tipo": "pirca", "alto_cm": 50}, "modelo_tinte": "#e6dfd2", "tropa": {"tela": "#9c4a32", "casco": "#6b5a44"}},
+    {"muro": "#ddd3bd", "aparejo": "canteria", "alto_pct": 115, "techo_alto_pct": 112, "escala_pct": 100, "cerco": {"tipo": "canteria", "alto_cm": 70}, "torre_alto_pct": 115, "modelo_tinte": "#ffffff", "tropa": {"tela": "#8e2f25", "casco": "#a8823a", "escudo_borde": "#e2b13c"}},
+    {"alto_pct": 125, "dorado": true, "remate": "dorado", "torre_alto_pct": 125, "tropa": {"oro": true}}
+   ]
+  },
+  "mapuches": {
+   "_nota": "Sin piedra ni torres: la edad se lee en el tamaño de las rukas, el rewe junto al lof (cada vez más alto) y el equipo de la tropa, que suma coletos de cuero y después cascos tomados al enemigo. Fuentes: Bengoa, Historia del pueblo mapuche (1985); Boccara, Los vencedores (2007) [verificar].",
+   "obra_material": ["madera", "paja"],
+   "edades": [
+    {"escala_pct": 80, "alto_pct": 90, "modelo_tinte": "#e2dccd", "tropa": {"tela": "#6a6470"}},
+    {"escala_pct": 88, "rewe_cm": 220, "modelo_tinte": "#f0eadc", "tropa": {"tela": "#3b3a44"}},
+    {"escala_pct": 95, "alto_pct": 105, "techo_alto_pct": 115, "rewe_cm": 260, "modelo_tinte": "#ffffff", "tropa": {"casco": "#7a5a3a", "escudo_borde": "#a08060"}},
+    {"escala_pct": 100, "alto_pct": 112, "rewe_cm": 300, "estandartes": 2, "tropa": {"casco": "#8a8f96"}}
+   ]
+  },
+  "guaranies": {
+   "_nota": "De la casa larga de paja y barro a la madera labrada: horcones tallados y pintados, frentes de tabla y aldeas con empalizada. Fuentes: Susnik, Los aborígenes del Paraguay (1979–1982); Meliá, El guaraní conquistado y reducido (1986) [verificar].",
+   "obra_material": ["tacuara", "paja"],
+   "edades": [
+    {"techo": "#8a7848", "alto_pct": 90, "escala_pct": 90, "modelo_tinte": "#e0d8c6", "tropa": {"tela": "#d9c9a2"}},
+    {"alto_pct": 100, "escala_pct": 95, "cerco": {"tipo": "empalizada", "alto_cm": 80}, "modelo_tinte": "#ece6d8"},
+    {"muro": "#a87a4a", "techo": "#7d6a3c", "alto_pct": 110, "techo_alto_pct": 112, "escala_pct": 100, "horcones": true, "modelo_tinte": "#ffffff", "tropa": {"tela": "#c9a36a", "escudo_borde": "#d94a2a"}},
+    {"alto_pct": 120, "cerco": {"tipo": "empalizada_doble", "alto_cm": 110}, "remate": "punta", "tropa": {"tela": "#ece4d0"}}
+   ]
+  },
+  "etiopia": {
+   "_nota": "Del tukul de barro y paja a la piedra: primero un zócalo, después muros de piedra con techos cónicos de paja más altos y, en Gondar, piedra con cal y cruz en el remate. La torre de la amba es de piedra, cuadrada, con vigas a la vista, sin almenas; en Gondar suma cúpula. Fuentes: Phillipson, Ancient Churches of Ethiopia (2009); Pankhurst, History of Ethiopian Towns (1982) [verificar].",
+   "obra_material": ["adobe", "paja"],
+   "edades": [
+    {"muro": "#b89a72", "techo": "#9a7a4e", "alto_pct": 90, "modelo_tinte": "#ddd3c0", "tropa": {"tela": "#f2eee4"}},
+    {"zocalo_cm": 28, "zocalo": "#8c8478", "techo_alto_pct": 112, "alto_pct": 100, "obra_material": ["piedra", "paja"], "modelo_tinte": "#ebe4d6"},
+    {"muro": "#a49c8c", "aparejo": "piedra", "techo_alto_pct": 135, "alto_pct": 110, "cerco": {"tipo": "piedra", "alto_cm": 70}, "torre_alto_pct": 112, "modelo_tinte": "#ffffff", "tropa": {"escudo_borde": "#c9a227", "casco": "#a8743a"}},
+    {"muro": "#c4bba8", "aparejo": "canteria", "techo_alto_pct": 150, "alto_pct": 120, "remate": "cruz", "cerco": {"tipo": "piedra", "alto_cm": 95}, "torre_cupula": true, "torre_alto_pct": 125, "tropa": {"oro": true}}
+   ]
+  },
+  "palmares": {
+   "_nota": "Mocambos de pau-a-pique y palma; con cada edad la cerca de troncos crece y en Angola Janga se dobla (los relatos de las entradas hablan de cercas de pau-a-pique con fosos y estrepes). Fuentes: Freitas, Palmares: a guerra dos escravos (1978); Gomes, Palmares (2005) [verificar].",
+   "obra_material": ["madera", "paja"],
+   "edades": [
+    {"escala_pct": 88, "alto_pct": 90, "modelo_tinte": "#e0d8c6", "tropa": {"tela": "#b89a6a"}},
+    {"escala_pct": 94, "cerco": {"tipo": "empalizada", "alto_cm": 90}, "modelo_tinte": "#ece6d8", "tropa": {"tela": "#7a4a2a"}},
+    {"escala_pct": 100, "alto_pct": 105, "cerco": {"tipo": "empalizada", "alto_cm": 140}, "modelo_tinte": "#ffffff", "tropa": {"escudo_borde": "#8a5a2a", "casco": "#c9a24a"}},
+    {"alto_pct": 112, "cerco": {"tipo": "empalizada_doble", "alto_cm": 170}, "estandartes": 2}
+   ]
+  },
+  "ayutthaya": {
+   "_nota": "De la casa de madera sobre pilotes con techo de palma a los techos de teja roja escalonados y, desde la tercera edad, los remates dorados (chofa) y el muro blanco con almenas en hoja (bai sema), que no son las almenas europeas. El fortín de río es un baluarte de ladrillo encalado. Fuentes: Baker y Phongpaichit, A History of Ayutthaya (2017); Garnier, Ayutthaya: Venice of the East (2004) [verificar].",
+   "obra_material": ["ladrillo", "madera"],
+   "edades": [
+    {"muro": "#b58a5a", "techo": "#8a6a40", "pisos_techo": 1, "alto_pct": 90, "modelo_tinte": "#ddd5c4", "tropa": {"tela": "#cdbb98"}},
+    {"muro": "#e2d2b2", "techo": "#9e3b2a", "pisos_techo": 2, "alto_pct": 100, "modelo_tinte": "#ebe5d8", "tropa": {"tela": "#9e3b2a"}},
+    {"muro": "#f0e8d8", "pisos_techo": 3, "dorado": true, "remate": "dorado", "alto_pct": 110, "cerco": {"tipo": "muro_blanco", "alto_cm": 70}, "torre_alto_pct": 110, "modelo_tinte": "#ffffff", "tropa": {"casco": "#c9a227", "escudo_borde": "#c9a227"}},
+    {"alto_pct": 120, "techo_alto_pct": 115, "cerco": {"tipo": "muro_blanco", "alto_cm": 95}, "torre_alto_pct": 120, "tropa": {"oro": true}}
+   ]
+  },
+  "birmanos": {
+   "torre": "troncos",
+   "obra_material": ["madera", "madera"],
+   "edades": [
+    {"techo": "#6a5236", "pisos_techo": 1},
+    {"techo": "#4e3322", "pisos_techo": 2},
+    {"pisos_techo": 3, "dorado": true, "remate": "dorado", "cerco": {"tipo": "empalizada", "alto_cm": 120}},
+    {"alto_pct": 115}
+   ]
+  },
+  "adal": {
+   "torre": "jugol",
+   "edades": [
+    {"muro": "#c2a57a"},
+    {"muro": "#d8c39a"},
+    {"muro": "#ece4d2"},
+    {"acento": "#2f6b5a", "remate": "punta"}
+   ]
+  },
+  "caranquis": {"edades": [{"tola_cm": 45}, {"tola_cm": 60}, {"tola_cm": 75}]},
+  "chankas": {"estandartes": 2},
+  "tupies": {"edades": [{"cerco": {"tipo": "empalizada", "alto_cm": 100}}, {}, {"cerco": {"tipo": "empalizada_doble", "alto_cm": 120}}]}
+ }
+}

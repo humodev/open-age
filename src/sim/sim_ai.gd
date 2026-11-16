@@ -1239,7 +1239,8 @@ func _attack(army: Array[SimEntity]) -> void:
 	for e in sim.actives:
 		# También lo que cuenta para la victoria (mocambos, lofs): si no, un rival sin ejército
 		# seguía vivo para siempre (todos contra todos abierto a los 60 minutos, proceso/22).
-		if e.alive and e.is_building() and e.owner >= 0 and sim.enemies(player, e.owner) and (e.def.get("hito", false) or e.capital or e.def.get("cuenta_victoria", false)):
+		# Sin victoria por hitos (opciones de partida), cualquier edificio que cuente: Sim.counts_for_victory.
+		if e.alive and e.is_building() and e.owner >= 0 and sim.enemies(player, e.owner) and sim.counts_for_victory(e):
 			if focus >= 0 and e.owner != focus:
 				continue
 			var d := sim.dist_to(ref, e)

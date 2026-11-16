@@ -30,6 +30,9 @@ var events: Array[Dictionary] = []
 var game_over := false
 var winner := -1
 var winner_team := -1
+## Por qué terminó (proceso/24, paso 4b): "conquista", "sitios", "tiempo" o "" mientras sigue.
+var end_reason := ""
+var _time_limit_tick := 0 # tick del tiempo límite (opts.tiempo_limite_min); 0 = sin límite
 var terrain := ""
 var water_form := "" # forma del agua elegida (cruce, lago, costados, anillo, brazos)
 var rivers: Array = [] # trazos de río para la imagen; no son estado
@@ -74,13 +77,13 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null,
 	for i in num_players:
 		players.append({
 			"id": i,
-			"res": (data.reglas["recursos_iniciales"] as Dictionary).duplicate(),
+			"res": _starting_res(opts),
 			"age": 1,
 			"pop": 0,
 			"pop_cap": 0,
 			"defeated": false,
 			"alert_tick": -100000,
-			"stats": {"recolectado": 0, "entrenadas": 0, "bajas": 0, "muertes": 0},
+			"stats": {"recolectado": 0, "entrenadas": 0, "bajas": 0, "muertes": 0, "edificios_destruidos": 0},
 			"techs": {}, # investigaciones terminadas
 			"pending": {}, # investigaciones en cola
 			"mods": {}, # modificadores acumulados (docs/05, "Investigaciones")
@@ -97,6 +100,7 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null,
 			p["res"][rp["clave"]] = int(rp.get("inicial", 0))
 		for k in dd.civ.get("recursos_iniciales", {}):
 			p["res"][k] = dd.civ["recursos_iniciales"][k]
+	_time_limit_tick = int(opts.get("tiempo_limite_min", 0)) * 60000 / tick_ms
 	terrain = opts.get("terreno", "")
 	if terrain == "":
 		var kinds: Array = data.reglas["terrenos"].keys()
@@ -117,6 +121,14 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null,
 	_update_players()
 	for pid in players.size():
 		_update_fog(pid)
+
+
+## Recursos con los que arranca cada jugador según la opción `recursos` (normal, medios,
+## altos; reglas.opciones_partida.recursos). Una clave desconocida arranca con lo normal.
+func _starting_res(opts: Dictionary) -> Dictionary:
+	var key := str(opts.get("recursos", "normal"))
+	var tbl: Dictionary = data.reglas.get("opciones_partida", {}).get("recursos", {})
+	return ((tbl[key] if tbl.has(key) else data.reglas["recursos_iniciales"]) as Dictionary).duplicate()
 
 
 ## Datos de la civilización del jugador (capa común si no tiene).
@@ -981,6 +993,8 @@ func step() -> void:
 	tele.check_idle(self)
 	if tick % 10 == 5 and not game_over:
 		_check_victory()
+	if _time_limit_tick > 0 and tick >= _time_limit_tick and not game_over and scenario == null:
+		end_by_time()
 	if scenario != null:
 		scenario.on_step()
 	tick += 1
@@ -1630,6 +1644,8 @@ func _hit(a: SimEntity, t: SimEntity) -> void:
 			players[t.owner]["stats"]["muertes"] += 1
 		if a.owner >= 0:
 			players[a.owner]["stats"]["bajas"] += 1
+			if t.is_building() and t.owner >= 0 and enemies(a.owner, t.owner):
+				players[a.owner]["stats"]["edificios_destruidos"] = int(players[a.owner]["stats"].get("edificios_destruidos", 0)) + 1
 		mods.on_kill(t, a)
 		_kill(t, a)
 
@@ -2415,16 +2431,86 @@ static func _roman(n: int) -> String:
 
 # ---------------------------------------------------------------- Victoria
 
+## Conquista (siempre): pierde quien se queda sin los edificios que cuentan. Con la victoria
+## por hitos (la de siempre) cuentan la capital, los hitos y lo marcado `cuenta_victoria`;
+## sin ella (opts.hitos_sin_victoria), cualquier edificio terminado salvo muros, puertas y
+## caminos, y hay que arrasar todo.
 func _check_victory() -> void:
 	var has_hito := []
 	has_hito.resize(players.size())
 	has_hito.fill(false)
 	for b in actives:
-		if b.alive and b.is_building() and b.owner >= 0 and b.built and (b.def.get("hito", false) or b.capital or b.def.get("cuenta_victoria", false)):
+		if b.alive and b.owner >= 0 and b.is_building() and b.built and counts_for_victory(b):
 			has_hito[b.owner] = true
 	for p in players:
 		if not p["defeated"] and not has_hito[p["id"]]:
 			_defeat(p["id"])
+
+
+## ¿Este edificio mantiene vivo a su dueño? (ver `_check_victory`; la IA ataca estos).
+func counts_for_victory(b: SimEntity) -> bool:
+	if not _opts.get("hitos_sin_victoria", false):
+		return b.def.get("hito", false) or b.capital or b.def.get("cuenta_victoria", false)
+	return not (b.def.get("linea", false) or b.def.get("camino", false) or b.type == "puerta" or b.def.get("sagrado", false))
+
+
+## Puntaje (reglas.puntaje): recursos juntados, bajas, edificios enemigos destruidos, edad e
+## investigaciones. Decide la partida con tiempo límite; la interfaz lo muestra (F6).
+func score(pid: int) -> int:
+	var pc: Dictionary = data.reglas["puntaje"]
+	var p := players[pid]
+	var tot := 0
+	var book: Dictionary = p["stats"].get("origen", {})
+	for o in book:
+		for k in book[o]:
+			tot += int(book[o][k])
+	var s := tot / maxi(1, int(pc["recursos_por_punto"]))
+	s += int(p["stats"]["bajas"]) * int(pc["por_baja"])
+	s += int(p["stats"].get("edificios_destruidos", 0)) * int(pc["por_edificio_destruido"])
+	s += (int(p["age"]) - 1) * int(pc["por_edad"])
+	s += (p["techs"] as Dictionary).size() * int(pc["por_investigacion"])
+	return s
+
+
+## Puntaje de un equipo: la suma de sus jugadores (también los derrotados).
+func team_score(team: int) -> int:
+	var s := 0
+	for p in players:
+		if team_of(p["id"]) == team:
+			s += score(p["id"])
+	return s
+
+
+## Tiempo límite (opts.tiempo_limite_min): gana el equipo con más puntos, entre los que siguen
+## en pie. Si los dos primeros empatan, no gana nadie (winner = -1).
+func end_by_time() -> void:
+	var best := -1
+	var best_s := -1
+	var tie := false
+	var seen := {}
+	for p in players:
+		var tm := team_of(p["id"])
+		if p["defeated"] or seen.has(tm):
+			continue
+		seen[tm] = true
+		var ts := team_score(tm)
+		if ts > best_s:
+			best_s = ts
+			best = tm
+			tie = false
+		elif ts == best_s:
+			tie = true
+	game_over = true
+	end_reason = "tiempo"
+	winner = -1
+	winner_team = -1
+	if not tie and best >= 0:
+		winner_team = best
+		for p in players:
+			if team_of(p["id"]) == best and not p["defeated"]:
+				winner = p["id"]
+				break
+	events.append({"t": "victory", "player": winner, "equipo": winner_team, "motivo": "tiempo"})
 
 
 ## El monte paga al rey (Ayutthaya, §3.5.6): parte de lo que se entrega a un elefante
@@ -2578,7 +2664,9 @@ func _gather_origin(e: SimEntity) -> String:
 
 
 ## Victoria directa (sitios sagrados): todos los demás pierden.
-func win(pid: int) -> void:
+func win(pid: int, reason: String = "sitios") -> void:
+	if end_reason == "":
+		end_reason = reason
 	for p in players:
 		if enemies(pid, p["id"]):
 			_defeat(p["id"])
@@ -2598,9 +2686,11 @@ func _defeat(pid: int) -> void:
 	# Termina cuando queda un solo equipo en pie; gana el primer jugador de ese equipo.
 	if teams.size() <= 1 and not game_over:
 		game_over = true
+		if end_reason == "":
+			end_reason = "conquista"
 		winner = left[0] if left.size() >= 1 else -1
 		winner_team = team_of(winner) if winner >= 0 else -1
-		events.append({"t": "victory", "player": winner, "equipo": winner_team})
+		events.append({"t": "victory", "player": winner, "equipo": winner_team, "motivo": end_reason})
 
 
 # ---------------------------------------------------------------- Creación
@@ -2893,7 +2983,16 @@ func _generate_map_n() -> void:
 		var c := Vector2i(n / 2 + int(d[0]) * r / 1000, n / 2 + int(d[1]) * r / 1000)
 		bases.append(c - Vector2i(2, 2))
 		_base_dirs.append(Vector2i(-int(d[0]), -int(d[1]))) # hacia el centro, en milésimas
+	# El terreno se arma con las bases en el orden del círculo (ríos, islas y cercos
+	# suponen que la 0 y la 1 son vecinas); después cada jugador toma su lugar.
 	_generate_terrain()
+	var ring_bases := bases.duplicate()
+	var slot := _team_slots()
+	for pid in np:
+		bases[pid] = ring_bases[slot[pid]]
+		_base_dirs[pid] = Vector2i(-int(tbl[slot[pid]][0]), -int(tbl[slot[pid]][1]))
+	for g in _fort_gaps:
+		g[0] = slot.find(int(g[0]))
 	for pid in np:
 		var base := bases[pid]
 		var dd := dp(pid)
@@ -2926,11 +3025,11 @@ func _generate_map_n() -> void:
 			var t := map.nearest_free(ig.x, ig.y, 8)
 			if t.x >= 0 and map.is_free_rect(t.x - 1, t.y - 1, 5, 5) and map.is_flat(t.x, t.y, 3, 3):
 				spawn_building("ingenio", -1, t.x, t.y, true)
-	# Sitios sagrados: uno al centro y uno entre cada par de bases vecinas.
+	# Sitios sagrados: uno al centro y uno entre cada par de bases vecinas (en el círculo).
 	var spots: Array[Vector2i] = [Vector2i(n / 2 - 1, n / 2 - 1)]
 	for i in np:
-		var a := bases[i] + Vector2i(2, 2)
-		var b := bases[(i + 1) % np] + Vector2i(2, 2)
+		var a: Vector2i = ring_bases[i] + Vector2i(2, 2)
+		var b: Vector2i = ring_bases[(i + 1) % np] + Vector2i(2, 2)
 		var mid := (a + b) / 2
 		spots.append(mid + (Vector2i(n / 2, n / 2) - mid) / 3)
 	# Si el lugar cae en el agua o está ocupado, se acerca al centro hasta que entre: antes se
@@ -2974,6 +3073,42 @@ func _generate_map_n() -> void:
 			for t in [Vector2i(i, depth), Vector2i(depth, i), Vector2i(i, n - 1 - depth), Vector2i(n - 1 - depth, i)]:
 				if rng.range_i(0, 99) < chance:
 					_tree_at(t)
+
+
+## Lugar en el círculo de cada jugador (opts.ubicacion_equipos, proceso/24, paso 4b):
+## - "juntos": los de un mismo equipo, vecinos (por equipo en orden de aparición);
+## - "mezclados": un lugar de cada equipo por vuelta, así nadie tiene al aliado al lado;
+## - sin la opción, el orden de los jugadores (lo de siempre: tests y repeticiones viejas).
+## Todos contra todos queda igual en los tres casos.
+func _team_slots() -> Array:
+	var np := players.size()
+	var order: Array = []
+	var groups: Array = [] # jugadores por equipo, en orden de aparición
+	var gidx := {}
+	for pid in np:
+		var tm := team_of(pid)
+		if not gidx.has(tm):
+			gidx[tm] = groups.size()
+			groups.append([])
+		groups[gidx[tm]].append(pid)
+	match str(_opts.get("ubicacion_equipos", "")):
+		"juntos":
+			for g in groups:
+				order.append_array(g)
+		"mezclados":
+			var k := 0
+			while order.size() < np:
+				for g in groups:
+					if k < (g as Array).size():
+						order.append(g[k])
+				k += 1
+		_:
+			order = range(np)
+	var slot: Array = []
+	slot.resize(np)
+	for i in np:
+		slot[order[i]] = i
+	return slot
 
 
 ## Desplazamiento local de una base: `fwd` casillas hacia el centro y `side` de costado.
