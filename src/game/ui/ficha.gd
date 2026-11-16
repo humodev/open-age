@@ -297,7 +297,7 @@ func _cmd_content(cmd: Dictionary) -> Dictionary:
 			c["desc"] += "\n" + aura
 	c["cost"] = cmd.get("cost", c["cost"])
 	c["check_cost"] = true
-	c["hotkey"] = Controller.SLOT_LABELS[cmd["slot"]]
+	c["hotkey"] = Controller.etiqueta(cmd["slot"])
 	var n := 0
 	for e in sim.actives:
 		if e.alive and e.owner == hud.local and e.type == cmd["id"]:

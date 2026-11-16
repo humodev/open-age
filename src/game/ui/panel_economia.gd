@@ -33,7 +33,7 @@ func _draw() -> void:
 	var pid := hud.local
 	var p: Dictionary = sim.players[pid]
 	var w := size.x
-	C.frame(self, size, "Economía", "F2")
+	C.frame(self, size, "Economía", Teclas.texto("economia")) # --- veterano ronda 4 ---
 	var keys := C.res_keys(sim, pid)
 	var vill: Dictionary = datos.villagers(pid)
 

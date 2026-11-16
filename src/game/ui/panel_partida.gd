@@ -144,14 +144,14 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	var k := event as InputEventKey
 	if k == null or not k.pressed or k.echo or not hud.is_visible_in_tree():
 		return
-	match k.physical_keycode:
-		KEY_F2:
+	match Teclas.accion(k.physical_keycode): # --- veterano ronda 4 --- (Opciones → Teclas)
+		"economia":
 			toggle("economia")
-		KEY_F4:
+		"edad":
 			toggle("edad")
-		KEY_F5:
+		"sucesos":
 			toggle("sucesos")
-		KEY_F6:
+		"puntaje":
 			toggle("puntaje")
 		_:
 			return
@@ -209,4 +209,4 @@ class ButtonBar:
 				sb.bg_color = Palette.UI_BG_2
 			draw_style_box(sb, r)
 			draw_string(Hud.font_b, Vector2(r.position.x + 8, 21), b[1], HORIZONTAL_ALIGNMENT_LEFT, r.size.x - 30, 13, Palette.UI_ACCENT if on else Palette.UI_TEXT)
-			draw_string(Hud.font, Vector2(r.position.x, 21), b[2], HORIZONTAL_ALIGNMENT_RIGHT, r.size.x - 6, 11, Palette.UI_DIM)
+			draw_string(Hud.font, Vector2(r.position.x, 21), Teclas.texto("ayuda" if b[0] == "pueblo" else b[0]), HORIZONTAL_ALIGNMENT_RIGHT, r.size.x - 6, 11, Palette.UI_DIM)

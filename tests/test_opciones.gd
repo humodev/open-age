@@ -37,6 +37,35 @@ func _init() -> void:
 	check.call("en solo lectura no se escribe", Opciones.escala == 1.25)
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(PRUEBA))
 
+	# --- veterano ronda 4 --- teclas reasignables (src/game/ui/teclas.gd)
+	Opciones.solo_lectura = false
+	Teclas.de_fabrica()
+	check.call("de fábrica: H recorre los centros", Teclas.accion(KEY_H) == "centro" and Teclas.tecla("grilla_0") == KEY_Q)
+	check.call("de fábrica: sin choques", Teclas.choques().is_empty())
+	check.call("de fábrica: F7 es el marcador 1 y 0 el grupo 0", Teclas.accion(KEY_F7) == "marcador_1" and Teclas.accion(KEY_0) == "grupo_0")
+	var otra := Teclas.asignar("centro", KEY_J)
+	check.call("asignar J al centro: J lo hace y H queda libre", otra == "" and Teclas.accion(KEY_J) == "centro" and Teclas.accion(KEY_H) == "")
+	otra = Teclas.asignar("centro", KEY_M)
+	check.call("asignar una tecla usada intercambia (M era el ejército, pasa a J: %s)" % Teclas.texto("ejercito"), otra == "ejercito" and Teclas.tecla("ejercito") == KEY_J and Teclas.choques().is_empty())
+	Teclas.grupos_exclusivos = true
+	Opciones.guardar(PRUEBA)
+	Teclas.de_fabrica()
+	check.call("volver a las de fábrica deshace los cambios", Teclas.accion(KEY_H) == "centro" and Teclas.accion(KEY_M) == "ejercito" and not Teclas.grupos_exclusivos)
+	Opciones.cargar(PRUEBA)
+	check.call("se recuperan las teclas guardadas (centro %s, ejército %s)" % [Teclas.texto("centro"), Teclas.texto("ejercito")], Teclas.tecla("centro") == KEY_M and Teclas.tecla("ejercito") == KEY_J)
+	check.call("se recuperan los grupos exclusivos", Teclas.grupos_exclusivos)
+	var cf := ConfigFile.new()
+	cf.load(PRUEBA)
+	check.call("el archivo guarda las teclas por nombre (centro = %s)" % cf.get_value("teclas", "centro", "?"), cf.get_value("teclas", "centro", "") == "M" and cf.get_value("teclas", "marcador_4", "?") == "")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(PRUEBA))
+	Teclas.perfil("aoe4")
+	check.call("perfil AoE4: marcadores en F1–F4", Teclas.accion(KEY_F1) == "marcador_1" and Teclas.accion(KEY_F4) == "marcador_4")
+	check.call("perfil AoE4: los paneles siguen teniendo tecla y no hay choques (%s)" % str(Teclas.choques()), Teclas.choques().is_empty() and Teclas.tecla("ayuda") != 0 and Teclas.tecla("economia") != 0 and Teclas.tecla("puntaje") != 0)
+	check.call("perfil AoE4: grupos exclusivos", Teclas.grupos_exclusivos)
+	check.call("Esc, Mayús y las flechas no se asignan", Teclas.reservada(KEY_ESCAPE) and Teclas.reservada(KEY_SHIFT) and Teclas.reservada(KEY_LEFT) and not Teclas.reservada(KEY_J))
+	Teclas.de_fabrica()
+	# --- fin veterano ronda 4 ---
+
 	# Escala automática: 1,0 a 1080p, ×2 a 4K, 0,85 como piso a 1366×768.
 	Opciones.escala = 0.0
 	check.call("automática a 1920×1080 = 1,0", is_equal_approx(Opciones.factor(Vector2(1920, 1080)), 1.0))

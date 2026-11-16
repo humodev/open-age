@@ -125,6 +125,6 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	var k := event as InputEventKey
 	if k == null or not k.pressed or k.echo or not hud.is_visible_in_tree():
 		return
-	if k.physical_keycode == KEY_G or (k.physical_keycode == KEY_ESCAPE and _panel.visible):
+	if Teclas.es(k.physical_keycode, "guia") or (k.physical_keycode == KEY_ESCAPE and _panel.visible):
 		toggle()
 		get_viewport().set_input_as_handled()

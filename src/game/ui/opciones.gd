@@ -66,6 +66,7 @@ static func cargar(ruta: String = RUTA) -> void:
 	if po is Dictionary:
 		partida = po
 	EstadoCasilla.nombres = nombres_grilla
+	Teclas.cargar(cf) # --- veterano ronda 4 ---
 
 
 static func guardar(ruta: String = RUTA) -> void:
@@ -86,6 +87,7 @@ static func guardar(ruta: String = RUTA) -> void:
 	cf.set_value("ayuda", "nombres_grilla", nombres_grilla)
 	cf.set_value("partida", "dificultad", dificultad)
 	cf.set_value("partida", "opciones", partida)
+	Teclas.guardar(cf) # --- veterano ronda 4 ---
 	cf.save(ruta)
 
 
@@ -305,6 +307,24 @@ static func dialogo(host: Control, main: Node) -> PanelContainer:
 	rb.text = "Restablecer"
 	rb.custom_minimum_size = Vector2(200, 0)
 	botones.add_child(rb)
+	# --- veterano ronda 4 --- Teclas: la misma ventana cambia a la lista de atajos
+	var tb := Button.new()
+	tb.name = "BotonTeclas"
+	tb.text = "Teclas"
+	tb.custom_minimum_size = Vector2(200, 0)
+	botones.add_child(tb)
+	var teclas := _panel_teclas()
+	teclas.visible = false
+	vb.add_child(teclas)
+	vb.move_child(teclas, cols.get_index() + 1)
+	tb.pressed.connect(func() -> void:
+		teclas.visible = not teclas.visible
+		cols.visible = not teclas.visible
+		nota.visible = not teclas.visible
+		rb.visible = not teclas.visible
+		tl.text = "Opciones · Teclas" if teclas.visible else "Opciones"
+		tb.text = "Volver" if teclas.visible else "Teclas")
+	# --- fin veterano ronda 4 ---
 	var cb := Button.new()
 	cb.text = "Cerrar"
 	cb.custom_minimum_size = Vector2(200, 0)
@@ -332,6 +352,8 @@ static func dialogo(host: Control, main: Node) -> PanelContainer:
 		dim.visible = pc.visible
 		if not pc.visible:
 			guardar()
+			if teclas.visible: # --- veterano ronda 4 --- se vuelve a abrir en la vista general
+				tb.pressed.emit()
 		else:
 			# Encima de todo lo que se haya agregado después (paneles F1–F6, fichas).
 			dim.move_to_front()
@@ -340,6 +362,145 @@ static func dialogo(host: Control, main: Node) -> PanelContainer:
 	pc.visible = false
 	dim.visible = false
 	return pc
+
+
+# --- veterano ronda 4 ---
+## Lista de teclas reasignables (src/game/ui/teclas.gd): clic en una tecla y apretar la nueva.
+## Si la nueva ya era de otra acción, se intercambian y se avisa; Esc cancela. Arriba: perfil
+## (de fábrica o AoE4), grupos exclusivos y volver a las de fábrica.
+static func _panel_teclas() -> VBoxContainer:
+	var box := VBoxContainer.new()
+	box.name = "Teclas"
+	box.add_theme_constant_override("separation", 8)
+	var arriba := HBoxContainer.new()
+	arriba.add_theme_constant_override("separation", 14)
+	box.add_child(arriba)
+	var pl := Label.new()
+	pl.text = "Perfil"
+	arriba.add_child(pl)
+	var perf := OptionButton.new()
+	perf.name = "Perfil"
+	var claves: Array = Teclas.perfiles().keys()
+	for k in claves:
+		perf.add_item(Teclas.perfiles()[k])
+	perf.custom_minimum_size = Vector2(200, 0)
+	arriba.add_child(perf)
+	var gl := Label.new()
+	gl.text = "Grupos exclusivos"
+	gl.tooltip_text = "Asignar una unidad a un grupo la saca de los otros, como en AoE4."
+	gl.mouse_filter = Control.MOUSE_FILTER_PASS
+	arriba.add_child(gl)
+	var gx := _interruptor()
+	gx.name = "Exclusivos"
+	gx.button_pressed = Teclas.grupos_exclusivos
+	gx.toggled.connect(func(on: bool) -> void: Teclas.grupos_exclusivos = on)
+	arriba.add_child(gx)
+	var fab := Button.new()
+	fab.name = "Fabrica"
+	fab.text = "Volver a las de fábrica"
+	arriba.add_child(fab)
+	var msg := Label.new()
+	msg.name = "Mensaje"
+	msg.text = "Clic en una tecla y apretá la nueva (Esc cancela). Mayús, Ctrl y Alt no cambian: Ctrl + grupo asigna, Alt + grupo es el marcador."
+	msg.add_theme_font_size_override("font_size", 15)
+	msg.add_theme_color_override("font_color", Palette.UI_DIM)
+	msg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	msg.custom_minimum_size = Vector2(1080, 0)
+	box.add_child(msg)
+	var cols := HBoxContainer.new()
+	cols.add_theme_constant_override("separation", 34)
+	box.add_child(cols)
+	# Secciones repartidas en tres columnas, en el orden de data/interfaz.json.
+	var reparto := {"Grilla de órdenes": 0, "Selección": 1, "Paneles": 1, "Grupos de control": 2, "Marcadores de cámara": 2}
+	var colv: Array[VBoxContainer] = []
+	for i in 3:
+		var v := VBoxContainer.new()
+		v.add_theme_constant_override("separation", 3)
+		cols.add_child(v)
+		colv.append(v)
+	var botones := {}
+	var esperando := [""] # acción que espera su tecla (arreglo: lo cambian las lambdas)
+	var refrescar := func() -> void:
+		var ch := Teclas.choques()
+		for k in botones:
+			var b: Button = botones[k]
+			var c := Teclas.tecla(k)
+			b.text = Teclas.nombre(c) if esperando[0] != k else "Apretá una tecla…"
+			var mal := ch.has(c)
+			b.add_theme_color_override("font_color", Palette.UI_BAD if mal else (Palette.UI_DIM if c == 0 else Palette.UI_TEXT))
+		gx.set_pressed_no_signal(Teclas.grupos_exclusivos)
+		gx.text = "Sí" if Teclas.grupos_exclusivos else "No"
+	var seccion := ""
+	for a: Array in Teclas.acciones():
+		var v: VBoxContainer = colv[int(reparto.get(a[2], 2))]
+		if a[2] != seccion:
+			seccion = a[2]
+			_seccion(v, seccion)
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 10)
+		var l := Label.new()
+		l.text = a[1]
+		l.add_theme_font_size_override("font_size", 15)
+		l.custom_minimum_size = Vector2(250, 0)
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_child(l)
+		var b := Button.new()
+		b.name = a[0]
+		b.custom_minimum_size = Vector2(96, 0)
+		b.add_theme_font_size_override("font_size", 15)
+		var compacto := StyleBoxFlat.new()
+		compacto.bg_color = Color(1, 1, 1, 0.08)
+		compacto.set_corner_radius_all(5)
+		compacto.content_margin_top = 2
+		compacto.content_margin_bottom = 2
+		compacto.content_margin_left = 8
+		compacto.content_margin_right = 8
+		b.add_theme_stylebox_override("normal", compacto)
+		var acc: String = a[0]
+		b.pressed.connect(func() -> void:
+			esperando[0] = acc
+			msg.text = "«%s»: apretá la tecla nueva (Esc cancela)." % Teclas.titulo(acc)
+			refrescar.call())
+		b.gui_input.connect(func(ev: InputEvent) -> void:
+			if esperando[0] != acc or not (ev is InputEventKey) or not ev.pressed or ev.echo:
+				return
+			b.accept_event()
+			var code := (ev as InputEventKey).physical_keycode
+			if code == 0:
+				code = (ev as InputEventKey).keycode
+			esperando[0] = ""
+			if code == KEY_ESCAPE:
+				msg.text = "Sin cambios."
+			elif Teclas.reservada(code):
+				msg.text = "%s no se puede asignar (Esc, Mayús, Ctrl, Alt y las flechas quedan fijas)." % OS.get_keycode_string(code)
+			else:
+				var otra := Teclas.asignar(acc, code)
+				msg.text = "«%s»: %s." % [Teclas.titulo(acc), Teclas.nombre(code)]
+				if otra != "":
+					msg.text += " Chocaba con «%s», que pasa a %s." % [Teclas.titulo(otra), Teclas.nombre(Teclas.tecla(otra))]
+			refrescar.call())
+		b.focus_exited.connect(func() -> void:
+			if esperando[0] == acc:
+				esperando[0] = ""
+				refrescar.call())
+		row.add_child(b)
+		v.add_child(row)
+		botones[acc] = b
+	perf.item_selected.connect(func(i: int) -> void:
+		Teclas.perfil(claves[i])
+		msg.text = "Perfil %s." % Teclas.perfiles()[claves[i]] + (" Marcadores de cámara en F1–F4; los paneles pasan a F5–F9." if claves[i] == "aoe4" else "")
+		refrescar.call())
+	fab.pressed.connect(func() -> void:
+		Teclas.de_fabrica()
+		perf.selected = maxi(0, claves.find("fabrica"))
+		msg.text = "Teclas de fábrica."
+		refrescar.call())
+	box.visibility_changed.connect(func() -> void:
+		if box.visible:
+			refrescar.call())
+	refrescar.call()
+	return box
+# --- fin veterano ronda 4 ---
 
 
 ## Interruptor que se lee sin depender del color: dice "Sí" o "No" y cambia de fondo.

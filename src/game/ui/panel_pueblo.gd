@@ -126,7 +126,7 @@ func compose() -> String:
 		out += "•  %s\n" % l
 
 	out += _h("Controles")
-	out += "Clic izquierdo: seleccionar (arrastrar para un grupo; doble clic: todos los del tipo)\nClic derecho: mover, atacar, recolectar, construir, reparar o alojar\nGrilla Q W E R / A S D F / Z X C V: construir, entrenar, investigar\nA y clic: atacar en movimiento · S: detener · Supr: eliminar\nCtrl + 1…9: grupos · H: centro · . : aldeano inactivo · Z en el centro: campana\nFlechas, bordes o botón del medio: cámara · F3: velocidad · Esc: pausa\n"
+	out += "Clic izquierdo: seleccionar (arrastrar para un grupo; doble clic: todos los del tipo)\nClic derecho: mover, atacar, recolectar, construir, reparar o alojar\nGrilla Q W E R / A S D F / Z X C V: construir, entrenar, investigar\nA y clic: atacar en movimiento · S: detener · Supr: eliminar\nCtrl + 0…9: grupos · H: recorre los centros (dos veces: centra) · . : aldeano inactivo · Z en el centro: campana\nFlechas, bordes o botón del medio: cámara · F3: velocidad · Esc: pausa · las teclas se cambian en Opciones → Teclas\n"
 	out += "F1: tu pueblo · F2: economía · F4: avance de edad · F5: registro de sucesos · F6: puntaje\n"
 	out += ". y , : aldeano y militar ocioso (con Mayús, todos) · M: todos los militares · T o doble clic: todos los del tipo · Tab: edificios de producción\nD: mantener posición · E y clic: patrullar · Z X C V: bloque, línea, abierta, columna · arrastrar el clic derecho: hacia dónde miran\nCtrl + Alt + 1…8: guardar la cámara; Alt + 1…8: volver (F7…F9 también, para los tres primeros) · Alt + clic (mapa o minimapa): bengala para tu aliado\n" # --- órdenes ---
 	return out
