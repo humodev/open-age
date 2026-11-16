@@ -19,6 +19,7 @@ func _init() -> void:
 	_formations()
 	_flare_and_ask()
 	_flare_wave_and_wait() # --- equipos ronda 3 ---
+	_targets() # --- elección de blancos (5d) ---
 	for f in fails:
 		print("FALLO ", f)
 	print("ORDENES: ", "OK" if fails.is_empty() else "FALLO (%d)" % fails.size())
@@ -32,8 +33,8 @@ func _check(name: String, cond: bool) -> void:
 
 
 ## Un lugar despejado en el medio del mapa.
-func _clear_sim() -> Sim:
-	var s := Sim.new(3, 2, null, {"civs": ["mapuches", "guaranies"], "terreno": "llano", "sin_sitios": true})
+func _clear_sim(civs: Array = ["mapuches", "guaranies"]) -> Sim:
+	var s := Sim.new(3, 2, null, {"civs": civs, "terreno": "llano", "sin_sitios": true})
 	var y0 := s.map.n / 2
 	for e in s.entities.duplicate():
 		if e.alive and (e.is_resource() or e.is_building()) and absi(e.ty - y0) < 16 and e.tx > 4 and e.tx < 80:
@@ -235,3 +236,67 @@ func _flare_wave_and_wait() -> void:
 	_check("bengala sin tropa: \"voy con mi próxima oleada\" (%s)" % str(said.keys()), said_wave_at >= 0 and said_wave_at < 300)
 	_check("bengala sin tropa: al juntar el grupo sale y llega (%d a 20 casillas)" % sent, said.has("voy_atacar") and sent >= int(s.data.reglas["equipos"]["bengala"]["ia_grupo_min"]) * 3 / 4)
 	_check("pedido sin madera: avisa que junta y la da después (%d)" % got, said.has("junto") and got > 0 and not said.has("no_sobra"))
+
+
+# --- elección de blancos (proceso/24, 5d) ---
+## Como AoE4: en ataque en movimiento (o por su cuenta) la tropa deja el edificio por el militar
+## que le pega, prefiere militar > aldeano > edificio que dispara > edificio, y no elige caminos.
+## La orden directa y el asedio siguen con su edificio.
+func _targets() -> void:
+	var civs := ["guaranies", "tawantinsuyu"]
+	# 1. Le pega a la casa; un hondero le empieza a tirar.
+	for mode in ["amove", "directa", "asedio"]:
+		var s := _clear_sim(civs)
+		var y := s.map.n / 2 * 1000
+		var house := s.spawn_building("casa", 1, 24, s.map.n / 2 - 1, true)
+		var u := s.spawn_unit("ariete" if mode == "asedio" else "lancero", 0, 21000, y)
+		if mode == "directa":
+			s.push_command({"t": "target", "player": 0, "ids": [u.id], "target": house.id})
+		else:
+			s.push_command({"t": "move", "player": 0, "ids": [u.id], "x": 40000, "y": y, "amove": true})
+		for i in 40:
+			s.step()
+		var on_house := u.order == SimEntity.Order.ATTACK and u.target == house.id
+		var foe := s.spawn_unit("hondero", 1, 21000, y + 4500)
+		s.push_command({"t": "target", "player": 1, "ids": [foe.id], "target": u.id})
+		for i in 40:
+			s.step()
+		var what := "hondero" if u.target == foe.id else ("casa" if u.target == house.id else str(u.target))
+		if mode == "amove":
+			_check("blancos: en ataque en movimiento deja la casa por el hondero que le tira (casa %s, después %s)" % [on_house, what], on_house and u.target == foe.id)
+		else:
+			# El ariete puede tirar la casa en esos 4 s: vale que no se haya dado vuelta.
+			var ok: bool = u.target == house.id or (mode == "asedio" and not house.alive and u.target != foe.id)
+			_check("blancos: con %s sigue con la casa aunque le tiren (casa %s, después %s, casa en pie %s)" % [mode, on_house, what, house.alive], on_house and ok)
+	# 2. Prioridades: casa al lado, aldeano más lejos, militar más lejos todavía.
+	var s2 := _clear_sim(civs)
+	var y2 := s2.map.n / 2 * 1000
+	var u2 := s2.spawn_unit("lancero", 0, 21000, y2)
+	s2.spawn_building("casa", 1, 22, s2.map.n / 2 + 1, true)
+	var vill := s2.spawn_unit("aldeano", 1, 24500, y2)
+	s2._rebuild_hashes()
+	var p1 := s2.find_enemy(u2, u2.def["vision"], false)
+	var mil := s2.spawn_unit("hondero", 1, 27000, y2)
+	s2._rebuild_hashes()
+	var p2 := s2.find_enemy(u2, u2.def["vision"], false)
+	_check("blancos: aldeano antes que la casa de al lado y militar antes que el aldeano (%s, %s)" % [p1.type if p1 else "nada", p2.type if p2 else "nada"], p1 == vill and p2 == mil)
+	# 3. Caminos: el ataque en movimiento pasa de largo; con orden directa se los ataca.
+	var s3 := _clear_sim(civs)
+	var y3 := s3.map.n / 2 * 1000
+	var roads: Array[SimEntity] = []
+	for k in 6:
+		roads.append(s3.spawn_building("camino", 1, 26 + k, s3.map.n / 2, true))
+	var u3 := s3.spawn_unit("lancero", 0, 21000, y3)
+	s3.push_command({"t": "move", "player": 0, "ids": [u3.id], "x": 40000, "y": y3, "amove": true})
+	var hit_road := false
+	for i in 250:
+		s3.step()
+		for ev in s3.events:
+			if ev["t"] == "hit" and int(ev["a"]) == u3.id:
+				hit_road = true
+	_check("blancos: el ataque en movimiento no le pega a los caminos (llegó a x=%d)" % u3.x, not hit_road and u3.x > 36000)
+	s3.push_command({"t": "target", "player": 0, "ids": [u3.id], "target": roads[0].id})
+	var hp := roads[0].hp
+	for i in 200:
+		s3.step()
+	_check("blancos: con orden directa le pega al camino (vida %d → %d)" % [hp, roads[0].hp], roads[0].hp < hp)

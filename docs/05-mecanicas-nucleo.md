@@ -100,7 +100,8 @@ daño = max(minimo, ataque × multiplicador[función atacante][función objetivo
 - **Distancia**: se detiene a su `alcance` y dispara; el impacto es inmediato en la simulación y el proyectil es solo visual. Ver A-007 sobre proyectiles esquivables.
 - Las unidades militares inactivas atacan solas a cualquier enemigo dentro de su `vision`.
 - **Ataque en movimiento**: avanza hacia un punto y pelea con lo que encuentre en el camino.
-- Prioridad de objetivo automático: unidades militares, después aldeanos, después edificios.
+- Prioridad de objetivo automático, como AoE4 (proceso/24, 5d): unidades militares, después aldeanos, después edificios que disparan y la tienen a su alcance (torre, centro), después los demás edificios y por último las piezas transitables (granjas, andenes, gult, corrales); dentro de cada clase, el más cercano. Los edificios con `sin_blanco_automatico` (los tramos de camino inca) no se eligen solos: solo con orden directa.
+- La unidad que pelea **por su cuenta** (ataque en movimiento, patrulla o respuesta) contra un aldeano o un edificio se da vuelta en el momento en que un militar le pega (va contra ese), y cada `blancos.rebusca_cada_ticks` mira si tiene algo más importante en su visión. Con **orden directa** sigue con su blanco. El asedio (`solo_edificios`) sigue con el edificio que eligió (al elegir, prefiere los que disparan).
 - Edificios con `ataque` (centro, torre) disparan solos a unidades enemigas en alcance.
 
 ### Asedio y defensas
