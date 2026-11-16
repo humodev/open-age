@@ -332,3 +332,7 @@ Con lo de la cuarta ronda integrado (Q, R y S), juegan otra vez el veterano y el
 Informes en [`proceso/22-testers/ronda-5/`](../22-testers/ronda-5/).
 - **Torneo 27:** la emboscada a 35 % no los mueve (78 %). Vuelve a 50.
 - **Torneo 28:** alcance del arquero guaraní a 5500 (antes 6000; el hondero base, 5500). Con el guerrero más lento (C2), ese alcance de más les deja tirar sin que los alcancen.
+- **[Síntesis de la quinta ronda](../22-testers/ronda-5/00-sintesis.md):**
+  - El veterano tiene 9 de 9 arreglos bien y el jugador nuevo, 9 de 10.
+  - La escala nueva es "el cambio que más acercó la sensación a AoE4", pero faltan la velocidad (C-65) y el centro de 5×5 (C-66).
+  - El jugador nuevo todavía no le gana a la fácil (en curso: 4q).
