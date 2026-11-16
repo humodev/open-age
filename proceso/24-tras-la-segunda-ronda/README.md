@@ -187,7 +187,7 @@ Cada frente tiene su agente en un worktree propio, con su rama y su documento. E
 | Frente | Qué | Documento |
 |---|---|---|
 | Balance (orquestador) | Un cambio por torneo: Etiopía, Ayutthaya, Palmares | Esta página, paso 3 |
-| A · Mapuches | Por qué llegan tarde a la edad III; un cambio medido en paz (el torneo lo corre el orquestador) | [3b-mapuches.md](3b-mapuches.md) |
+| A · Mapuches | **Integrado (4b5243c).** Causa: la IA no hacía nunca el kawiñ y todo el alimento se iba en tropa, sin llegar a la mitad del hito. Desde la edad II hace la fiesta del corral más lleno si con eso entra en el ahorro (`ia_economia.kawin_corrales`). Edad III en paz de 18:43 a **17:02** (2 semillas), las demás civs igual. Falta el torneo | [3b-mapuches.md](3b-mapuches.md) |
 | B · IA experta | Nueva dificultad: 80–100 aldeanos, segundo centro, oleadas grandes | [4a-ia-experta.md](4a-ia-experta.md) |
 | C · Opciones de partida | **Integrado (2022235).** Sitios sí o no, hitos sí o no, tiempo límite (30/45/60), recursos (normal, medios, altos), equipos juntos o mezclados; el puntaje pasa a la simulación. `tests/opciones_partida.gd` OK. Consultas C-45 a C-50. Pendiente: sin hitos, la IA no termina la conquista (C-49) | [4b-opciones-de-partida.md](4b-opciones-de-partida.md) |
 | E · Hitos y animales | **Integrado (d7f4a9d).** Los 36 hitos con forma propia (ushnu, Qorikancha, nguillatuwe, aty guasu, iglesia etíope redonda, Lalibela, cerca real, Wat Mahathat…; `data/arte_hitos.json`) y 16 especies con silueta propia (llama, chilihueque, búfalo, tapir, órix, sambar…; `data/arte_animales.json`), con la caza según el pueblo más cercano. Pendiente: las puertas de los edificios comunes miran al lado que no ve la cámara | [4d-hitos-y-animales.md](4d-hitos-y-animales.md) |
