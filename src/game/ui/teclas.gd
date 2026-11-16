@@ -160,9 +160,20 @@ static func choques() -> Dictionary:
 static func cargar(cf: ConfigFile) -> void:
 	de_fabrica()
 	if cf.has_section("teclas"):
+		var nuevas: Array = [] # --- veterano ronda 5 --- acciones que el archivo no conoce
 		for a: Array in acciones():
 			if cf.has_section_key("teclas", a[0]):
 				mapa[a[0]] = codigo(str(cf.get_value("teclas", a[0], a[3])))
+			else:
+				nuevas.append(a[0])
+		# --- veterano ronda 5 --- una acción nueva (la campana, los marcadores 5 a 8…) no le
+		# roba la tecla a una que el jugador ya había elegido: queda sin tecla.
+		for k in nuevas:
+			var c := int(mapa[k])
+			for o in mapa:
+				if o != k and not nuevas.has(o) and int(mapa[o]) == c and c != 0:
+					mapa[k] = 0
+					break
 	grupos_exclusivos = bool(cf.get_value("controles", "grupos_exclusivos", grupos_exclusivos))
 	_reindexar()
 

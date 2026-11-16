@@ -9,7 +9,7 @@
     "bufalo": {"nombre": "Búfalo de agua", "forma": "bovino", "color": "#55585c", "cuernos": "bufalo", "cuerno_color": "#6b665f", "escala_pct": 157, "_nota": "Búfalo de pantano: cuerpo ancho, cabeza baja y cuernos gruesos y grises que se curvan hacia atrás y afuera en media luna, pegados a la cabeza (no hacia adelante). Era el animal de arado y de tiro del arrozal, no de carne: se lo carneaba viejo o en fiestas [verificar]. La simulación lo sigue contando como alimento."},
     "vaca": {"nombre": "Vaca", "forma": "bovino", "color": "#7a4a30", "cuernos": "corto", "escala_pct": 144, "_nota": "Ganado de la feria de frontera (parlamentos)."},
     "cerdo": {"nombre": "Cerdo", "escala_pct": 110, "forma": "cerdo", "color": "#9a6a62", "_nota": "Barril sobre patas cortas, hocico de disco y orejas caídas."},
-    "pecari": {"nombre": "Pecarí", "forma": "cerdo", "color": "#4a443e", "collar": "#d8d0c0", "crin": true, "escala_pct": 88, "_nota": "Pecarí de collar: más chico, crin en el lomo y collar claro."},
+    "pecari": {"nombre": "Pecarí", "forma": "cerdo", "color": "#4a443e", "collar": "#d8d0c0", "crin": true, "escala_pct": 105, "_nota": "Pecarí de collar: más chico, crin en el lomo y collar claro."},
     "venado": {"nombre": "Venado", "escala_pct": 89, "forma": "ciervo", "color": "#8a6a46", "cuernos": "ramificadas", "_nota": "Patas largas, cuello alzado, astas ramificadas y cola blanca."},
     "taruka": {"nombre": "Taruka", "forma": "ciervo", "color": "#8f8068", "cuernos": "horquilla", "escala_pct": 86, "_nota": "Ciervo andino de astas en horquilla [verificar]."},
     "huemul": {"nombre": "Huemul", "forma": "ciervo", "color": "#6e604c", "cuernos": "horquilla", "grueso_pct": 112, "escala_pct": 88, "_nota": "Ciervo del sur, robusto, astas en horquilla [verificar]."},
@@ -46,10 +46,10 @@
     "mapuches": ["guanaco", "huemul"],
     "guaranies": ["venado", "pecari", "tapir"], "tupies": ["venado", "pecari", "tapir"],
     "etiopia": ["walia", "bushbuck"], "adal": ["orix"],
-    "palmares": ["venado", "pecari"],
+    "palmares": ["venado", "venado", "pecari"],
     "ayutthaya": ["sambar"], "birmanos": ["sambar"],
     "invasores": ["venado"],
-    "_nota": "Etiopía por región: el íbice de Walia (Simien) y la dukula (bushbuck de Menelik) para las tierras altas cristianas; el órix, de las tierras bajas, para Adal. La nyala de montaña, de Bale (sur), queda afuera [verificar]."
+    "_nota": "Etiopía por región: el íbice de Walia (Simien) y la dukula (bushbuck de Menelik) para las tierras altas cristianas; el órix, de las tierras bajas, para Adal. La nyala de montaña, de Bale (sur), queda afuera [verificar]. Una especie repetida sale más seguido: en Palmares, dos venados por cada pecarí, que es chico y en la caza se leía como un perro (veterano, ronda 5)."
   },
   "caza_por_terreno": {
     "altiplano": ["guanaco", "taruka"],

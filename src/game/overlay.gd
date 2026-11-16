@@ -20,12 +20,50 @@ func setup(s: Sim, c: Controller, camera: RtsCamera) -> void:
 ## Ticks que la barra de una unidad sigue a la vista después de su último golpe
 ## (data/interfaz.json → mundo.barras_combate_s).
 static var _combat_s := -1.0
+static var _mundo := {} # --- veterano ronda 5 --- data/interfaz.json → mundo
 
 static func combat_ticks(s: Sim) -> int:
 	if _combat_s < 0.0:
-		var all: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/interfaz.json"))
-		_combat_s = float(all.get("mundo", {}).get("barras_combate_s", 4))
+		_combat_s = float(mundo().get("barras_combate_s", 4))
 	return int(_combat_s * 1000.0) / maxi(1, s.tick_ms)
+
+
+# --- veterano ronda 5 ---
+## data/interfaz.json → "mundo" (barras, ícono de ocioso).
+static func mundo() -> Dictionary:
+	if _mundo.is_empty():
+		var all: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/interfaz.json"))
+		_mundo = all.get("mundo", {})
+	return _mundo
+
+
+## ¿Se dibuja la barra de vida? Como en AoE4: lo elegido, lo que está bajo el mouse, lo dañado y
+## las obras. Las unidades sanas que pelean, solo con la opción «Barras de las tropas sanas al
+## pelear» (antes era siempre, y en una batalla de 30 contra 30 el rojo tapaba a las figuras).
+## `todas`: Alt mantenido o «Barras de vida siempre visibles».
+static func barra_visible(s: Sim, e: SimEntity, sel: bool, hov: bool, todas: bool, ticks: int = -1) -> bool:
+	if sel or hov or e.hp < e.hp_max or (e.is_building() and not e.built) or (todas and e.hp_max > 1):
+		return true
+	return Opciones.barras_pelea and en_combate(s, e, ticks)
+
+
+## Alto de la barra de una unidad sobre el suelo: la cabeza (la lanza o el arco no cuentan);
+## los montados y los elefantes, su figura entera. Se mide una vez por unidad.
+func _alto_barra(e: SimEntity, v: Dictionary) -> float:
+	if v.has("alto_barra"):
+		return v["alto_barra"]
+	var persona := WorldView.FIGURE_H * ctrl.view._unit_k
+	var alto := persona
+	if e.type == "ariete":
+		alto = 1.45
+	elif v.has("body") and is_instance_valid(v["body"]):
+		var top := WorldView._aabb(v["body"], Transform3D.IDENTITY).end.y
+		if e.def.get("montado", false) or top > persona * 2.05:
+			alto = top
+	alto += float((mundo().get("barra_unidad", {}) as Dictionary).get("sobre_cabeza", 0.12))
+	v["alto_barra"] = alto
+	return alto
+# --- fin veterano ronda 5 ---
 
 
 ## --- combate --- ¿Una unidad pegó o recibió un golpe hace poco? Su barra se ve sin Alt
@@ -44,25 +82,28 @@ func _draw() -> void:
 	var all_bars := Input.is_key_pressed(KEY_ALT) and ctrl.enabled # --- mundo --- Alt: todas las barras
 	all_bars = all_bars or Opciones.barras_siempre # --- opciones --- barras de vida siempre visibles
 	var combat_ticks := Overlay.combat_ticks(sim)
+	# --- veterano ronda 5 --- barras de unidad finas, sobre la cabeza (data/interfaz.json → mundo.barra_unidad)
+	var bu: Dictionary = Overlay.mundo().get("barra_unidad", {})
+	var uk := minf(zoom_k, float(bu.get("tope_zoom", 1.4)))
+	var uw := float(bu.get("ancho_px", 18)) * uk
+	var uh := maxf(2.0, round(float(bu.get("alto_px", 2)) * uk))
 	for e in sim.actives:
 		var sel := view.selected.has(e.id)
 		var hov := view.hovered == e.id
-		var damaged := e.hp < e.hp_max
-		# --- combate --- (proceso/24, 4k) por defecto, la barra de toda unidad que pelea
-		var fighting := Overlay.en_combate(sim, e, combat_ticks)
-		if not (sel or hov or damaged or fighting or (e.is_building() and not e.built) or (all_bars and e.hp_max > 1)):
+		# --- combate --- (proceso/24, 4k; veterano ronda 5: las sanas al pelear, solo con la opción)
+		if not Overlay.barra_visible(sim, e, sel, hov, all_bars, combat_ticks):
 			continue
 		var v: Dictionary = view.visuals.get(e.id, {})
 		if v.is_empty() or e.inside >= 0 or view.fog_state(e) < 2:
 			continue
 		var wp: Vector3 = (v["node"] as Node3D).position
-		wp.y += (1.6 if e.type == "ariete" else 1.2) if e.is_unit() else HEIGHTS.get(e.type, 2.0)
+		wp.y += _alto_barra(e, v) if e.is_unit() else HEIGHTS.get(e.type, 2.0)
 		if cam.cam.is_position_behind(wp):
 			continue
 		var sp := cam.cam.unproject_position(wp)
-		var w := (30.0 if e.is_unit() else 64.0) * zoom_k
-		var r := Rect2(sp.x - w / 2, sp.y, w, 4.0 if e.is_unit() else 5.0)
-		draw_rect(r.grow(1), Color(0, 0, 0, 0.6))
+		var w := uw if e.is_unit() else 64.0 * zoom_k
+		var r := Rect2(sp.x - w / 2, sp.y - (uh if e.is_unit() else 0.0), w, uh if e.is_unit() else 5.0)
+		draw_rect(r.grow(1), Color(0, 0, 0, 0.45 if e.is_unit() else 0.6))
 		var k := float(e.hp) / float(e.hp_max)
 		var col := Palette.team(e.owner)
 		if e.owner == ctrl.local:

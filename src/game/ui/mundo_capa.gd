@@ -480,6 +480,7 @@ func _dash(acc: Dictionary, a: Vector2, b: Vector2, col: Color, step: float) -> 
 func _draw_icons() -> void:
 	var zoom_k := clampf(40.0 / cam.zoom, 0.6, 1.4)
 	var show_work := cam.zoom < 55.0
+	var oc: Dictionary = Overlay.mundo().get("ocioso", {}) # --- veterano ronda 5 ---
 	var vr := get_viewport_rect().grow(20)
 	for e in sim.actives:
 		if e.owner != local or e.fn != "civil" or e.inside >= 0:
@@ -498,19 +499,25 @@ func _draw_icons() -> void:
 		var v: Dictionary = view.visuals.get(e.id, {})
 		if v.is_empty():
 			continue
-		var wp: Vector3 = (v["node"] as Node3D).position + Vector3(0, 1.75, 0)
+		# --- veterano ronda 5 --- el «Zz» va justo sobre la cabeza (la gente mide 0,75 casillas)
+		var alto := 1.75
+		if idle:
+			alto = WorldView.FIGURE_H * view._unit_k + float(oc.get("sobre_cabeza", 0.14))
+		var wp: Vector3 = (v["node"] as Node3D).position + Vector3(0, alto, 0)
 		if cam.cam.is_position_behind(wp):
 			continue
 		var sp := cam.cam.unproject_position(wp)
 		if not vr.has_point(sp):
 			continue
 		if idle:
-			var bob := sin(_time * 4.0 + e.id) * 2.0
-			var r := 9.0 * zoom_k
-			var c := sp + Vector2(0, -r + bob)
-			draw_circle(c, r + 1.5, Color(0, 0, 0, 0.6))
-			draw_circle(c, r, Palette.UI_ACCENT)
-			_text(c + Vector2(0, r * 0.45), "Zz", int(11 * zoom_k), Color(0.12, 0.1, 0.05), false)
+			# --- veterano ronda 5 --- del tamaño de la cabeza y sin disco: antes, un disco de 25 px
+			# sobre una persona de 33 px tapaba al aldeano (data/interfaz.json → mundo.ocioso).
+			var bob := sin(_time * 4.0 + e.id) * 1.0
+			var fs := maxi(6, int(round(float(oc.get("letra_px", 7)) * zoom_k)))
+			var c := sp + Vector2(0, bob)
+			var tw := _font.get_string_size("Zz", HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+			draw_string_outline(_font, c - Vector2(tw * 0.5, 0), "Zz", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, int(oc.get("contorno_px", 3)), Color(0.08, 0.06, 0.02, 0.85))
+			draw_string(_font, c - Vector2(tw * 0.5, 0), "Zz", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Palette.UI_ACCENT)
 		else:
 			var s := 15.0 * zoom_k
 			var c := sp + Vector2(0, -s * 0.5)

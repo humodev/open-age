@@ -1011,6 +1011,8 @@ func _want_h_of(owner: int, type: String, def: Dictionary, capital: bool) -> flo
 		cat = "casa"
 	elif type.begins_with("torre") or def.get("torre", false):
 		cat = "torre"
+	elif def.get("mercado", false): # --- veterano ronda 5 --- (el mercado no se levantaba)
+		cat = "mercado"
 	else:
 		for row in dd.hitos:
 			if (row as Array).has(type):
@@ -1029,7 +1031,10 @@ func _stretch_k(e: SimEntity, h: float) -> float:
 	if want <= 0.0 or h < 0.3:
 		return 1.0
 	var ev: Dictionary = sim.data.reglas.get("escala_visual", {})
-	return clampf(want / h, 1.0, float(ev.get("estirar_modelo_max_pct", 150)) / 100.0)
+	# --- veterano ronda 5 --- tope propio de un modelo (la ruka: domo bajo)
+	var modelo: String = sim.dp(e.owner).civ.get("estilo", {}).get("modelos", {}).get(e.type, "")
+	var tope := float((ev.get("estirar_modelo_max_por_modelo", {}) as Dictionary).get(modelo, ev.get("estirar_modelo_max_pct", 150)))
+	return clampf(want / h, 1.0, tope / 100.0)
 
 
 ## Maqueta: cómo subir muros y techos hasta el alto de la categoría (Meshes.levante), calculado

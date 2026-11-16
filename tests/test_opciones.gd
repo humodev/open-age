@@ -66,6 +66,39 @@ func _init() -> void:
 	Teclas.de_fabrica()
 	# --- fin veterano ronda 4 ---
 
+	# --- veterano ronda 5 --- atajos globales, los ocho marcadores y las barras al pelear
+	Teclas.de_fabrica()
+	check.call("de fábrica: B campana, N todos los aldeanos y P la producción militar", Teclas.accion(KEY_B) == "campana" and Teclas.accion(KEY_N) == "todos_aldeanos" and Teclas.accion(KEY_P) == "produccion_todos")
+	check.call("de fábrica: los atajos nuevos no chocan (%s)" % str(Teclas.choques()), Teclas.choques().is_empty())
+	var marcadores := 0
+	for a: Array in Teclas.acciones():
+		if str(a[0]).begins_with("marcador_"):
+			marcadores += 1
+	check.call("la lista de teclas tiene los 8 marcadores (%d)" % marcadores, marcadores == 8)
+	Teclas.perfil("aoe4")
+	check.call("perfil AoE4: los atajos nuevos siguen y no hay choques (%s)" % str(Teclas.choques()), Teclas.choques().is_empty() and Teclas.tecla("campana") == KEY_B and Teclas.tecla("marcador_8") == 0)
+	# Un archivo de antes, sin los atajos nuevos, donde el jugador puso la B en los centros: la
+	# campana queda sin tecla en vez de chocar.
+	var vieja := ConfigFile.new()
+	vieja.set_value("teclas", "centro", "B")
+	vieja.set_value("teclas", "ejercito", "M")
+	vieja.save(PRUEBA)
+	Opciones.cargar(PRUEBA)
+	check.call("archivo viejo con B en los centros: B sigue en los centros, la campana sin tecla y sin choques", Teclas.tecla("centro") == KEY_B and Teclas.tecla("campana") == 0 and Teclas.tecla("todos_aldeanos") == KEY_N and Teclas.choques().is_empty())
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(PRUEBA))
+	Teclas.de_fabrica()
+	Opciones.restablecer()
+	check.call("de fábrica: las tropas sanas que pelean no muestran barra", not Opciones.barras_pelea)
+	Opciones.barras_pelea = true
+	Opciones.guardar(PRUEBA)
+	Opciones.restablecer()
+	Opciones.cargar(PRUEBA)
+	check.call("se recupera «barras de las tropas sanas al pelear»", Opciones.barras_pelea)
+	Opciones.restablecer()
+	Teclas.de_fabrica()
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(PRUEBA))
+	# --- fin veterano ronda 5 ---
+
 	# Escala automática: 1,0 a 1080p, ×2 a 4K, 0,85 como piso a 1366×768.
 	Opciones.escala = 0.0
 	check.call("automática a 1920×1080 = 1,0", is_equal_approx(Opciones.factor(Vector2(1920, 1080)), 1.0))

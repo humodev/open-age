@@ -167,10 +167,30 @@ func _run() -> void:
 					res["cuartel"] = rb
 				elif type == "torre":
 					res["torre"] = rb
+				elif dd.edificios[type].get("mercado", false): # --- veterano ronda 5 ---
+					res["mercado"] = rb
 				else:
 					for row in dd.hitos:
 						if (row as Array).has(type):
 							res["hito"].append(rb)
+				# --- veterano ronda 5 --- el más bajo de los que entrenan (sin el centro, los hitos ni los
+				# corrales, que son un cerco y no se levantan)
+				var dt: Dictionary = dd.edificios[type]
+				if dt.has("produce") and not (dt["produce"] as Array).has("aldeano") and not dt.get("avanza_edad", false) and not dt.get("transitable", false) and type != dd.civ.get("inicio_edificio", "centro"):
+					if not res.has("prod_min") or rb < float(res["prod_min"]):
+						res["prod_min"] = rb
+						res["prod_min_tipo"] = type
+		# --- veterano ronda 5 --- la caza de este pueblo, especie por especie
+		var caza: Dictionary = Animales.data().get("caza_por_civ", {})
+		var lista: Array = caza.get(civ, caza.get("_defecto", ["venado"]))
+		var vistas := {}
+		for sp in lista:
+			if vistas.has(sp):
+				continue
+			vistas[sp] = true
+			var ah := Animales.mesh(str(sp)).get_aabb().size.y * unit_k
+			print("   caza %-11s alto %.2f (×%.2f aldeano), %d de cada %d" % [sp, ah, ah / person if person > 0 else 0.0, lista.count(sp), lista.size()])
+			res["caza_" + str(sp)] = ah / person if person > 0 else 0.0
 		resumen[civ] = res
 		# Animales y recursos sueltos de esta civ
 		for e in s.entities:
@@ -186,14 +206,26 @@ func _run() -> void:
 		tm += h
 	tm /= maxf(1.0, tree_h.size())
 	print("\n== Proporciones en personas (cuerpo del edificio / alto del aldeano)")
-	print("| Pueblo | Casa | Cuartel | Centro | Ancho del centro | Hitos (mín–máx, mediana) | Torre |")
-	print("|---|---|---|---|---|---|---|")
+	print("| Pueblo | Casa | Cuartel | Producción, el más bajo | Mercado | Centro | Ancho del centro | Hitos (mín–máx, mediana) | Torre |")
+	print("|---|---|---|---|---|---|---|---|---|")
 	for civ in resumen:
 		var r: Dictionary = resumen[civ]
 		var hs: Array = r["hito"]
 		hs.sort()
 		var hito := "-" if hs.is_empty() else "%.1f–%.1f, %.1f" % [hs[0], hs[-1], hs[hs.size() / 2]]
-		print("| %s | %s | %s | %s | %s | %s | %s |" % [civ, _f(r, "casa"), _f(r, "cuartel"), _f(r, "centro"), _f(r, "centro_ancho"), hito, _f(r, "torre")])
+		var prod := "%s (%s)" % [_f(r, "prod_min"), r.get("prod_min_tipo", "-")]
+		print("| %s | %s | %s | %s | %s | %s | %s | %s | %s |" % [civ, _f(r, "casa"), _f(r, "cuartel"), prod, _f(r, "mercado"), _f(r, "centro"), _f(r, "centro_ancho"), hito, _f(r, "torre")])
+	# --- veterano ronda 5 --- lo que pidió: ninguna casa bajo ~1,8 personas ni producción bajo ~2,4
+	var bajos := []
+	for civ in resumen:
+		var r: Dictionary = resumen[civ]
+		if float(r.get("casa", 9.0)) < 1.75:
+			bajos.append("%s: casa %.2f" % [civ, r["casa"]])
+		if float(r.get("prod_min", 9.0)) < 2.35:
+			bajos.append("%s: %s %.2f" % [civ, r.get("prod_min_tipo", "?"), r["prod_min"]])
+		if float(r.get("mercado", 9.0)) < 2.35:
+			bajos.append("%s: mercado %.2f" % [civ, r["mercado"]])
+	print("Por debajo de la regla (casa 1,8 · producción y mercado 2,4): %s" % ("ninguno" if bajos.is_empty() else ", ".join(bajos)))
 	print("Árbol medio: %.2f casillas = %.1f personas (persona de %.2f casillas)" % [tm, tm / person0, person0])
 	quit()
 

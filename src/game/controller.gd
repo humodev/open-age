@@ -976,6 +976,19 @@ func _key(k: InputEventKey) -> void:
 		"centro":
 			atajos.recorrer_centros(k.shift_pressed)
 			return
+		# --- veterano ronda 5 --- atajos globales: campana, todos los aldeanos y la producción
+		"campana":
+			atajos.campana()
+			get_viewport().set_input_as_handled()
+			return
+		"todos_aldeanos":
+			atajos.todos_aldeanos()
+			return
+		"produccion_todos":
+			atajos.todos_produccion()
+			get_viewport().set_input_as_handled()
+			return
+		# --- fin veterano ronda 5 ---
 		"borrar":
 			var ids := []
 			for e in selected_entities():

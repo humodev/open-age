@@ -28,6 +28,8 @@ static var bordes := true
 static var velocidad_camara := 100.0
 static var pantalla_completa := false
 static var barras_siempre := false
+## --- veterano ronda 5 --- barras de las unidades sanas que pelean (antes, siempre; ahora se elige).
+static var barras_pelea := false
 # --- aprender --- (proceso/23-como-aoe4/03-aprender-a-jugar.md)
 ## Avisos que enseñan (src/game/ui/consejos.gd).
 static var consejos := true
@@ -53,6 +55,7 @@ static func cargar(ruta: String = RUTA) -> void:
 	escala = float(cf.get_value("interfaz", "escala", escala))
 	paleta = str(cf.get_value("interfaz", "paleta", paleta))
 	barras_siempre = bool(cf.get_value("interfaz", "barras_siempre", barras_siempre))
+	barras_pelea = bool(cf.get_value("interfaz", "barras_pelea", barras_pelea)) # --- veterano ronda 5 ---
 	general = float(cf.get_value("sonido", "general", general))
 	musica = float(cf.get_value("sonido", "musica", musica))
 	efectos = float(cf.get_value("sonido", "efectos", efectos))
@@ -77,6 +80,7 @@ static func guardar(ruta: String = RUTA) -> void:
 	cf.set_value("interfaz", "escala", escala)
 	cf.set_value("interfaz", "paleta", paleta)
 	cf.set_value("interfaz", "barras_siempre", barras_siempre)
+	cf.set_value("interfaz", "barras_pelea", barras_pelea) # --- veterano ronda 5 ---
 	cf.set_value("sonido", "general", general)
 	cf.set_value("sonido", "musica", musica)
 	cf.set_value("sonido", "efectos", efectos)
@@ -103,6 +107,7 @@ static func restablecer() -> void:
 	velocidad_camara = 100.0
 	pantalla_completa = false
 	barras_siempre = false
+	barras_pelea = false # --- veterano ronda 5 ---
 	consejos = true # --- aprender --- (la dificultad elegida no se restablece: no es una opción de este diálogo)
 	nombres_grilla = true
 	EstadoCasilla.nombres = true
@@ -251,6 +256,12 @@ static func dialogo(host: Control, main: Node) -> PanelContainer:
 	barras.button_pressed = barras_siempre
 	barras.toggled.connect(func(on: bool) -> void: barras_siempre = on)
 	_fila(izq, "Barras de vida siempre visibles", barras)
+	# --- veterano ronda 5 --- por defecto, como AoE4: lo dañado, lo elegido y lo que está bajo el mouse
+	var pelea := _interruptor()
+	pelea.name = "BarrasPelea"
+	pelea.button_pressed = barras_pelea
+	pelea.toggled.connect(func(on: bool) -> void: barras_pelea = on)
+	_fila(izq, "Barras de las tropas sanas al pelear", pelea)
 
 	# --- aprender --- Ayuda para aprender a jugar
 	_seccion(izq, "Ayuda")
@@ -336,6 +347,7 @@ static func dialogo(host: Control, main: Node) -> PanelContainer:
 		esc.selected = 0
 		pal.selected = 0
 		barras.button_pressed = false
+		pelea.button_pressed = false # --- veterano ronda 5 ---
 		cons.button_pressed = true # --- aprender ---
 		nom.button_pressed = false
 		borde.button_pressed = true
@@ -412,7 +424,8 @@ static func _panel_teclas() -> VBoxContainer:
 	cols.add_theme_constant_override("separation", 34)
 	box.add_child(cols)
 	# Secciones repartidas en tres columnas, en el orden de data/interfaz.json.
-	var reparto := {"Grilla de órdenes": 0, "Selección": 1, "Paneles": 1, "Grupos de control": 2, "Marcadores de cámara": 2}
+	# --- veterano ronda 5 --- los atajos globales bajo la grilla; los ocho marcadores con los grupos.
+	var reparto := {"Grilla de órdenes": 0, "Atajos globales": 0, "Selección": 1, "Paneles": 1, "Grupos de control": 2, "Marcadores de cámara": 2}
 	var colv: Array[VBoxContainer] = []
 	for i in 3:
 		var v := VBoxContainer.new()

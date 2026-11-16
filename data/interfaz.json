@@ -12,7 +12,7 @@
     "arrastre_rumbo_px": 24
   },
   "teclas": {
-    "_doc": "Teclas reasignables (src/game/ui/teclas.gd, Opciones → Teclas; veterano, ronda 4). Cada acción: [clave, nombre, sección, tecla de fábrica] con el nombre de tecla de Godot (OS.get_keycode_string); \"\" es sin tecla. Los modificadores son fijos: Mayús en la grilla entrena 5; Ctrl + grupo asigna, Mayús + grupo suma y Alt + grupo es el marcador de ese número (Ctrl + Alt lo guarda); Ctrl + marcador guarda. Esc, Mayús, Ctrl, Alt y las flechas no se pueden asignar. perfiles: lo que cambia cada perfil sobre las de fábrica (aoe4: los marcadores en F1–F4 como en AoE4 y los paneles corridos a F5–F9). grupos_exclusivos: si el perfil prende la opción de grupos exclusivos. doble_toque_ms: ventana del doble toque de H.",
+    "_doc": "Teclas reasignables (src/game/ui/teclas.gd, Opciones → Teclas; veterano, ronda 4). Cada acción: [clave, nombre, sección, tecla de fábrica] con el nombre de tecla de Godot (OS.get_keycode_string); \"\" es sin tecla. Los modificadores son fijos: Mayús en la grilla entrena 5; Ctrl + grupo asigna, Mayús + grupo suma y Alt + grupo es el marcador de ese número (Ctrl + Alt lo guarda); Ctrl + marcador guarda. Esc, Mayús, Ctrl, Alt y las flechas no se pueden asignar. perfiles: lo que cambia cada perfil sobre las de fábrica (aoe4: los marcadores en F1–F4 como en AoE4 y los paneles corridos a F5–F9). grupos_exclusivos: si el perfil prende la opción de grupos exclusivos. doble_toque_ms: ventana del doble toque de H. Atajos globales (veterano, ronda 5): la campana sin elegir el centro, todos los aldeanos y todos los edificios de producción militar, en B, N y P, que no usa ninguna otra acción ni perfil. Los ocho marcadores están en la lista (Alt + 1…8 siempre vale); del 5 al 8 no tienen tecla de fábrica.",
     "doble_toque_ms": 350,
     "reservadas": ["Escape", "Shift", "Ctrl", "Alt", "Meta", "Left", "Right", "Up", "Down", "CapsLock"],
     "acciones": [
@@ -37,6 +37,9 @@
       ["borrar", "Borrar lo seleccionado", "Selección", "Delete"],
       ["ir_aviso", "Ir al último aviso", "Selección", "Space"],
       ["avisos_atras", "Recorrer avisos anteriores", "Selección", "Home"],
+      ["campana", "Campana (otra vez: toque de calma)", "Atajos globales", "B"],
+      ["todos_aldeanos", "Todos los aldeanos", "Atajos globales", "N"],
+      ["produccion_todos", "Todos los edificios de producción militar", "Atajos globales", "P"],
       ["grupo_1", "Grupo 1", "Grupos de control", "1"],
       ["grupo_2", "Grupo 2", "Grupos de control", "2"],
       ["grupo_3", "Grupo 3", "Grupos de control", "3"],
@@ -51,6 +54,10 @@
       ["marcador_2", "Marcador de cámara 2 (Ctrl: guarda)", "Marcadores de cámara", "F8"],
       ["marcador_3", "Marcador de cámara 3 (Ctrl: guarda)", "Marcadores de cámara", "F9"],
       ["marcador_4", "Marcador de cámara 4 (Ctrl: guarda)", "Marcadores de cámara", ""],
+      ["marcador_5", "Marcador de cámara 5 (Ctrl: guarda)", "Marcadores de cámara", ""],
+      ["marcador_6", "Marcador de cámara 6 (Ctrl: guarda)", "Marcadores de cámara", ""],
+      ["marcador_7", "Marcador de cámara 7 (Ctrl: guarda)", "Marcadores de cámara", ""],
+      ["marcador_8", "Marcador de cámara 8 (Ctrl: guarda)", "Marcadores de cámara", ""],
       ["ayuda", "Ayuda", "Paneles", "F1"],
       ["economia", "Panel de economía", "Paneles", "F2"],
       ["velocidad", "Velocidad del juego", "Paneles", "F3"],
@@ -73,8 +80,10 @@
     "terreno": { "batalla": "llano" }
   },
   "mundo": {
-    "_doc": "Información sobre el mapa (src/game/overlay.gd): segundos que la barra de vida de una unidad queda visible después de pegar o recibir un golpe, aunque tenga la vida llena.",
-    "barras_combate_s": 4
+    "_doc": "Información sobre el mapa (src/game/overlay.gd y src/game/ui/mundo_capa.gd). barras_combate_s: segundos que la barra de vida de una unidad que pegó o recibió un golpe queda visible aunque tenga la vida llena (solo con la opción «Barras de las tropas sanas al pelear»). barra_unidad (veterano, ronda 5: las barras tapaban a las figuras chicas en batalla): ancho_px y alto_px de la barra de una unidad a zoom 40 (crece al acercar la cámara, hasta tope_zoom), sobre_cabeza en casillas por encima de la cabeza. ocioso: el «Zz» del aldeano ocioso, del tamaño de la cabeza y sin el disco de antes (letra_px a zoom 40, contorno_px; sobre_cabeza en casillas).",
+    "barras_combate_s": 4,
+    "barra_unidad": { "ancho_px": 18, "alto_px": 2, "sobre_cabeza": 0.12, "tope_zoom": 1.4 },
+    "ocioso": { "letra_px": 7, "contorno_px": 3, "sobre_cabeza": 0.14 }
   },
   "frases_ia": {
     "_doc": "Lo que dice la IA aliada en el chat (suceso ia_dice de la simulación). {a}: el jugador nombrado; {n}: cantidad; {llegan}: lo que llega tras la comisión del tributo; {recurso}: recurso; {pedido}: el recurso pedido cuando manda otro.",
