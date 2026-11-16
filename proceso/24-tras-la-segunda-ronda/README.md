@@ -275,3 +275,17 @@ Con los pasos 1 a 4 integrados, los mismos cuatro jugadores de las rondas 1 y 2,
 - **Causa:** el clic derecho sobre una unidad propia se tomaba como "mover ahí" (`Controller._right_click`) y nunca llegaba la orden de carnear. La simulación ya carneaba el animal propio si la orden llegaba (C-32); por eso las pruebas de la simulación pasaban: mandan la orden directo.
 - **Arreglo:** un animal propio (`animal: true`) recibe la orden como un recurso, y el cursor muestra "juntar alimento".
 - **Prueba:** el autotest suma un clic derecho con el mouse sobre una llama propia. Verifica el cursor y que el aldeano la carnee y junte alimento.
+
+### Pedido del autor: del arbusto se iban a carnear
+
+> "Si los mando a los arbustos y uno se termina, los trabajadores van a carnear animales en lugar de pasar al arbusto siguiente."
+
+- **Causa:** el "carnear en cadena" del paso 1 corría para cualquier aldeano de alimento cuya fuente se agotara, no solo para el que venía de la carne.
+- **Arreglo:**
+  - Se carnea en cadena solo si se venía de carne o de un animal.
+  - Al agotarse una fuente, primero se busca otra del mismo tipo (el arbusto, el árbol o la veta de al lado; `find_resource(..., only_type)`) y después cualquiera de ese recurso, como AoE4.
+- **Prueba** (`tests/jugabilidad.gd`, "del arbusto al arbusto": incas con llamas cerca y el arbusto agotado):
+  - antes del arreglo: 0 de 3 seguían con arbustos y quedaban 2 de 5 llamas;
+  - ahora: 3 de 3 y 5 de 5.
+  - Carnear en cadena desde la carne sigue andando.
+- **Otras pruebas:** determinismo, mismo hash; civs sin errores; rendimiento 9,15 ms de promedio y 96 de peor caso, con la máquina cargada. Antes de C2 el peor caso era de unos 59: con el guerrero más lento hay más unidades vivas al final (129 contra 121). Queda anotado como riesgo.

@@ -11,6 +11,7 @@ func _init() -> void:
 	_aldeanos_en_bloque()
 	_animales()
 	_carnear_en_cadena()
+	_arbusto_al_arbusto()
 	_auras_de_hitos()
 	_depositar_por_cualquier_lado()
 	_paso_entre_edificios()
@@ -336,3 +337,39 @@ func _paso_entre_edificios() -> void:
 	var wall := s.map.is_solid(w.x + 2, w.y, 0) and s.map.is_solid(w.x + 1, w.y, 0)
 	_check(glued and open and rest and through and closed and wall and nw.alive,
 		"pasillo entre casas pegadas: se pegan %s, la nueva abre su columna %s, el resto tapa %s, se cruza en línea recta %s, se cierra sin la vieja %s, la empalizada cierra %s" % [glued, open, rest, through, closed, wall])
+
+
+## Del arbusto al arbusto (el autor, 2026-11-16): al agotarse un arbusto, los aldeanos
+## siguen con el arbusto de al lado; no van a carnear las llamas propias que están cerca.
+func _arbusto_al_arbusto() -> void:
+	var s := Sim.new(5, 2, null, {"civs": ["tawantinsuyu", "mapuches"], "terreno": "llano"})
+	var c: Vector2i = s.bases[0] + Vector2i(2, 2)
+	var bush: SimEntity = null
+	for e in s.entities:
+		if e.alive and e.type == "arbusto" and (bush == null or Sim.dist(e.x, e.y, c.x * 1000, c.y * 1000) < Sim.dist(bush.x, bush.y, c.x * 1000, c.y * 1000)):
+			bush = e
+	var llamas := 0
+	for e in s.actives:
+		if e.alive and e.owner == 0 and e.def.get("animal", false):
+			llamas += 1
+	var ids := []
+	for e in s.entities:
+		if e.alive and e.owner == 0 and e.type == "aldeano" and ids.size() < 3:
+			ids.append(e.id)
+	s.push_command({"t": "target", "player": 0, "ids": ids, "target": bush.id})
+	for i in 200:
+		s.step()
+	bush.amount = 1 # se agota en el próximo golpe
+	for i in 400:
+		s.step()
+	var left := 0
+	for e in s.actives:
+		if e.alive and e.owner == 0 and e.def.get("animal", false):
+			left += 1
+	var on_bush := 0
+	for id in ids:
+		var v: SimEntity = s.by_id[id]
+		var tg: SimEntity = s.by_id.get(v.target)
+		if tg != null and tg.type == "arbusto" or v.carry_src == "arbusto" and v.order == SimEntity.Order.RETURN:
+			on_bush += 1
+	_check(left == llamas and on_bush == ids.size(), "del arbusto al arbusto: %d de %d siguen con arbustos y quedan %d de %d llamas" % [on_bush, ids.size(), left, llamas])

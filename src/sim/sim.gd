@@ -1253,14 +1253,23 @@ func _do_gather(e: SimEntity) -> void:
 		# Como las ovejas de AoE4: si hay un animal propio cerca, se carnea antes que buscar
 		# otra cosa. Cubre la carne que se terminó (carnear en cadena) y el animal suelto que
 		# el mismo aldeano reclamó al llegar (jugadores de prueba, ronda 2).
-		if e.gather_kind == "alimento":
+		# Solo si venía de carne o de un animal: el que juntaba frutos sigue con el arbusto
+		# de al lado y no va a carnear la llama (el autor, 2026-11-16).
+		var from_beast: bool = e.carry_src == "carne" or (t != null and (t.type == "carne" or t.def.get("animal", false)))
+		if e.gather_kind == "alimento" and from_beast:
 			var beast := _own_animal_near(e, int(data.reglas["animales"]["cadena_radio"]))
 			if beast != null:
 				var meat := _slaughter(beast)
 				if meat != null and meat.alive:
 					_order_gather(e, meat)
 					return
-		t = find_resource(e.owner, e.gather_kind, e.x, e.y, data.reglas["radio_rebusca"], -1, e.id)
+		# Primero otro del mismo tipo (el arbusto, el árbol o la veta de al lado), como AoE4.
+		var same: String = t.type if t != null and t.is_resource() else ("" if e.carry_src in ["", "granja", "carne"] else e.carry_src)
+		t = null
+		if same != "":
+			t = find_resource(e.owner, e.gather_kind, e.x, e.y, data.reglas["radio_rebusca"], -1, e.id, same)
+		if t == null:
+			t = find_resource(e.owner, e.gather_kind, e.x, e.y, data.reglas["radio_rebusca"], -1, e.id)
 		if t == null:
 			if e.carry > 0:
 				e.order = O.RETURN
@@ -2022,13 +2031,13 @@ func find_enemy(e: SimEntity, radius: int, units_only: bool) -> SimEntity:
 	return best
 
 
-func find_resource(owner: int, kind: String, x: int, y: int, max_d: int, exclude: int = -1, worker: int = -1) -> SimEntity:
+func find_resource(owner: int, kind: String, x: int, y: int, max_d: int, exclude: int = -1, worker: int = -1, only_type: String = "") -> SimEntity:
 	var best: SimEntity = null
 	var best_d := max_d + 1
 	var probe := SimEntity.new()
 	probe.x = x
 	probe.y = y
-	if kind == "alimento":
+	if kind == "alimento" and only_type == "":
 		for t in actives:
 			if t.alive and t.is_building() and t.owner == owner and t.built and t.id != exclude and t.def.get("fuente", "") == kind and _farm_free(t, worker):
 				var d := dist_to(probe, t)
@@ -2048,7 +2057,7 @@ func find_resource(owner: int, kind: String, x: int, y: int, max_d: int, exclude
 					continue
 				var cell: Array = _res_cells.get((cx + dx) * 1024 + cy + dy, [])
 				for t: SimEntity in cell:
-					if not t.alive or t.id == exclude or t.res_kind != kind or t.amount <= 0:
+					if not t.alive or t.id == exclude or t.res_kind != kind or t.amount <= 0 or (only_type != "" and t.type != only_type):
 						continue
 					if kind == "riqueza" and t.res_owner != owner and disputed_room(owner) <= 0:
 						continue # techo de lo disputado lleno: no sirve ir a esa arcilla
