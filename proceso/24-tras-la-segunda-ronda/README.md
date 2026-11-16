@@ -161,6 +161,7 @@ Un cambio por torneo: 75 partidas, 5 semillas, 30 minutos, en 10 procesos.
 | [18](pruebas/18-torneo-roza-y-kawin.txt) (10) | Guaraníes: roza 900 (antes 1000) + IA mapuche: kawiñ | 58 | **70** | **56** | 42 | 42 | 32 |
 | [19](pruebas/19-torneo-kona.txt) (10) | Mapuches: kona montado 80/55 (antes 70/45; el base, 100/70) | 58 | **64** | 60 | 44 | 42 | 32 |
 | [20](pruebas/20-torneo-arrozal.txt) (10) | Ayutthaya: arrozal +35 % junto al agua (antes +25) | 60 | 58 | 58 | 50 | 40 | 34 |
+| [21](pruebas/21-torneo-hito-en-obra.txt) (10) | IA normal: ataca el hito en obra, no repite almacenes perdidos (4f) | 54 | **68** | **72** | 34 | 44 | **28** |
 
 **Etiopía, de 56 % a 8 %.**
 - Con la misma partida seguida en el commit anterior a la etapa (`tools/ia_por_dentro.gd`, sierra contra Tawantinsuyu), el ejército etíope ya era chico (unas 20 unidades). Lo que cambió fue el rival: los arreglos de economía del paso 1 destrabaron el alimento de Tawantinsuyu, que pasó de 15 a 60 unidades.
@@ -247,3 +248,8 @@ Con los pasos 1 a 4 integrados, los mismos cuatro jugadores de las rondas 1 y 2,
 | N · Micro (estudio) | **Integrado como estudio (9967d70), sin cambiar el balance.** Matriz de peleas (`tools/micro_matriz.gd`, 5 variantes por pelea) y modelo numérico (`tools/modelo_micro.py`). Causa: el guerrero común corre más que el hondero. Propuesta C2 (guerrero a 1350, línea +6 contra el choque): la mezcla sin micro pasa de 1 a 5 victorias de 5. Consulta C-64; el torneo, después de integrar la experta. Aparte: los dos números de velocidad fijos en `sim_mods.gd` pasan a `reglas.movimiento` (hash igual) | [5a-micro-estudio.md](5a-micro-estudio.md) |
 | L · Equipos, ronda 3 | En curso: bengala de ataque que se sume a la oleada, pedidos que pesen más que el tributo, tiempo límite por defecto en todos contra todos, fin por equipo, caminos en fortines | [4l-equipos-ronda-3.md](4l-equipos-ronda-3.md) |
 | M · Jugador nuevo, ronda 3 | **Integrado (ac450c4).** La fácil rodea los sitios y no gana por ellos (0 de 6 en 5 semillas; `tests/facil_sitios.gd`); la primera partida en Fácil sin sitios; el tutorial usa la espera del hito (5 mensajes y una tarea) y ordena los objetivos; grilla con nombre común y propio; "Empate" en color neutro; "Sitios 0/3 (no ganan, dan riqueza)"; aviso "Tenés ejército y recursos de sobra". Hash de la normal igual. Consultas C-61 a C-63 | [4j-jugador-nuevo-ronda-3.md](4j-jugador-nuevo-ronda-3.md) |
+
+### Después de la tercera ronda: balance otra vez
+
+- **Torneo 21:** la IA normal que ataca el hito en obra corre el balance (guaraníes 72, mapuches 68, Ayutthaya 28 %).
+- **Torneo 22:** se le suma la micro C2 (C-64 por defecto): guerrero común a 1350 y línea +6 contra el choque. Toca todo el combate, así que se rebalancea con los dos juntos.
