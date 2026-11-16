@@ -147,6 +147,10 @@ Condiciones comunes (`01`, capa común), configurables por partida:
 | **Rendición** | El jugador abandona | H1 |
 | **Maravilla** | Construir y defender una maravilla durante un tiempo | H2 |
 | **Sitios sagrados** | Tres sitios neutrales; se capturan con presencia exclusiva (`sitios.captura_ms`), rinden riqueza y quien sostiene todos durante `sitios.victoria_ms` gana | Hecho |
+| **Conquista sin hitos** | Opción de partida: sin la victoria por hitos, pierde quien se queda sin edificios terminados (no cuentan muros, puertas ni caminos) | Hecho |
+| **Tiempo límite** | Opción de partida: al cumplirse, gana el equipo con más puntos (`reglas.puntaje`); si empatan, nadie | Hecho |
+
+Opciones de partida (menú, `--sitios`, `--hitos`, `--tiempo`, `--recursos`, `--ubicacion`; `reglas.opciones_partida`): la conquista vale siempre; los sitios y los hitos se pueden sacar como victoria (sin la de sitios, los sitios siguen rindiendo); tiempo límite; recursos iniciales normales, medios o altos; aliados juntos o mezclados en el círculo de bases. Detalle en `proceso/24-tras-la-segunda-ronda/4b-opciones-de-partida.md`.
 
 Las victorias preferidas de cada civilización (`03-matriz-de-roles.md`) tienen que ser posibles con estas condiciones; no se agregan victorias exclusivas.
 

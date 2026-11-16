@@ -450,7 +450,7 @@ func _show_end(winner: int) -> void:
 	_end.visible = true
 	var p: Dictionary = sim.players[local]
 	var st: Dictionary = p["stats"]
-	_end_title.text = "Victoria" if winner == local else "Derrota"
+	_end_title.text = "Victoria" if winner == local else ("Empate" if winner < 0 and sim.end_reason == "tiempo" else "Derrota")
 	_end_title.add_theme_color_override("font_color", Palette.UI_ACCENT if winner == local else Palette.UI_BAD)
 	_end_body.text = "Tiempo %s · Edad %s\nRecursos recolectados %d · Unidades entrenadas %d\nBajas causadas %d · Pérdidas %d" % [_fmt_time(sim.tick * sim.tick_ms / 1000), Sim._roman(p["age"]), st["recolectado"], st["entrenadas"], st["bajas"], st["muertes"]]
 	# --- paneles ---

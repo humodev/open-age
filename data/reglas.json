@@ -9,6 +9,18 @@
   "radio_campana": 25000,
   "danio_minimo": 1,
   "recursos_iniciales": { "alimento": 200, "madera": 200, "piedra": 100, "riqueza": 100 },
+  "opciones_partida": { "_doc": "Opciones de partida como AoE4 (proceso/24, paso 4b). Viajan en los opts de Sim.new: sitios_sin_victoria, hitos_sin_victoria, tiempo_limite_min, recursos, ubicacion_equipos. `recursos`: lo de `recursos_iniciales` para 'normal' y estos para el resto (la civ puede sumar el suyo propio). `tiempo_limite_min`: valores que ofrece el menú (0 = sin límite); al cumplirse gana el equipo con más puntos (`puntaje`), y si empatan no gana nadie. `menu`: lo que el menú elige la primera vez.",
+    "recursos": { "medios": { "alimento": 500, "madera": 500, "piedra": 300, "riqueza": 300 }, "altos": { "alimento": 1000, "madera": 1000, "piedra": 700, "riqueza": 700 } },
+    "tiempo_limite_min": [0, 30, 45, 60],
+    "menu": { "sitios": true, "hitos": true, "tiempo_limite_min": 0, "recursos": "normal", "ubicacion_equipos": "juntos" } },
+  "puntaje": {
+    "_doc": "Puntaje = recursos juntados / recursos_por_punto + bajas x por_baja + edificios enemigos destruidos x por_edificio_destruido + (edad - 1) x por_edad + investigaciones x por_investigacion. Lo calcula la simulación (Sim.score): decide la partida con tiempo límite y lo muestra la interfaz (F6, pantalla de fin).",
+    "recursos_por_punto": 10,
+    "por_baja": 6,
+    "por_edificio_destruido": 25,
+    "por_edad": 150,
+    "por_investigacion": 20
+  },
   "aldeanos_iniciales": 6,
   "exploradores_iniciales": 1,
   "separacion_cada_ticks": 2,

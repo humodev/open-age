@@ -1,0 +1,14 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+puertas: la del jugador 2 deja pasar al jugador 0
+puertas: la del jugador 1 no deja pasar al jugador 0
+fortines con 4: encerrados []
+fortines con 6: encerrados []
+2v2  ["tawantinsuyu", "mapuches", "guaranies", "etiopia"] equipos [0, 1, 0, 1]  5:00  bajas 0  fuego amigo 0  tributos 0  | j0 tawa edad 1 en pie  | j1 mapu edad 1 en pie  | j2 guar edad 1 en pie  | j3 etio edad 1 en pie
+2v2  ["tawantinsuyu", "mapuches", "guaranies", "etiopia"] equipos [1, 0, 1, 0]  5:00  bajas 0  fuego amigo 0  tributos 0  | j0 tawa edad 1 en pie  | j1 mapu edad 1 en pie  | j2 guar edad 1 en pie  | j3 etio edad 1 en pie
+2v2  ["palmares", "ayutthaya", "mapuches", "tawantinsuyu"] equipos [0, 1, 0, 1]  5:00  bajas 7  fuego amigo 0  tributos 0  | j0 palm edad 1 en pie  | j1 ayut edad 1 en pie  | j2 mapu edad 1 en pie  | j3 tawa edad 1 en pie
+2v2  ["palmares", "ayutthaya", "mapuches", "tawantinsuyu"] equipos [1, 0, 1, 0]  5:00  bajas 7  fuego amigo 0  tributos 0  | j0 palm edad 1 en pie  | j1 ayut edad 1 en pie  | j2 mapu edad 1 en pie  | j3 tawa edad 1 en pie
+3v3  ["tawantinsuyu", "mapuches", "guaranies", "etiopia", "palmares", "ayutthaya"] equipos [0, 1, 0, 1, 0, 1]  5:00  bajas 0  fuego amigo 0  tributos 0  | j0 tawa edad 1 en pie  | j1 mapu edad 1 en pie  | j2 guar edad 1 en pie  | j3 etio edad 1 en pie  | j4 palm edad 1 en pie  | j5 ayut edad 1 en pie
+3v3  ["tawantinsuyu", "mapuches", "guaranies", "etiopia", "palmares", "ayutthaya"] equipos [1, 0, 1, 0, 1, 0]  5:00  bajas 0  fuego amigo 0  tributos 0  | j0 tawa edad 1 en pie  | j1 mapu edad 1 en pie  | j2 guar edad 1 en pie  | j3 etio edad 1 en pie  | j4 palm edad 1 en pie  | j5 ayut edad 1 en pie
+ffa6 ["tawantinsuyu", "mapuches", "guaranies", "etiopia", "palmares", "ayutthaya"] equipos [0, 1, 2, 3, 4, 5]  5:00  bajas 0  fuego amigo 0  tributos 0  | j0 tawa edad 1 en pie  | j1 mapu edad 1 en pie  | j2 guar edad 1 en pie  | j3 etio edad 1 en pie  | j4 palm edad 1 en pie  | j5 ayut edad 1 en pie
+EQUIPOS: OK
