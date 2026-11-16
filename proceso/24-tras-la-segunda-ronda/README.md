@@ -225,3 +225,9 @@ Cada frente tiene su agente en un worktree propio, con su rama y su documento. E
   - mapuches: kawiñ en la IA y kona a 80/55;
   - guaraníes: roza a 900.
 - Lección: con 5 semillas el ruido (±10) confundía; con 10, cada cambio se lee bien.
+
+## Tercera ronda de jugadores (desde 2026-11-16)
+
+Con los pasos 1 a 4 integrados, los mismos cuatro jugadores de las rondas 1 y 2, con su memoria, juegan la versión nueva. La experta contra la difícil (G) sigue en ajuste y se les avisa.
+- Informes en [`proceso/22-testers/ronda-3/`](../22-testers/ronda-3/): veterano de AoE4, nuevo en los RTS, historia y estética, equipos y todos contra todos.
+- La síntesis comparada con las rondas 1 y 2 va en `ronda-3/00-sintesis.md`.
