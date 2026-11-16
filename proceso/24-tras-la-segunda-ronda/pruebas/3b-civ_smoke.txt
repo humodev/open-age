@@ -1,0 +1,13 @@
+
+=== ["tawantinsuyu", "mapuches"] terreno=bosque ganador=-1
+tawantinsuyu edad 2 pob 62/65 res { "alimento": 39, "madera": 66, "piedra": 530, "riqueza": 687, "mita": 425 } tipos { "centro": 1, "aldeano": 41, "explorador": 1, "casa": 6, "almacen_madera": 3, "camino": 38, "qollqa": 2, "campo_tiro": 2, "almacen_mina": 2, "taller_tejido": 1, "ushnu": 1, "cuartel": 1, "granja": 18, "hondero": 6, "guerrero": 6, "boleador": 6, "ariete": 2 }
+mapuches edad 2 pob 49/49 res { "alimento": 18, "madera": 45, "piedra": 510, "riqueza": 746 } tipos { "lof": 3, "aldeano": 34, "explorador": 1, "casa": 3, "corral": 3, "cuartel": 2, "rewe_lonko": 1, "granja": 11, "hondero": 11, "guerrero": 2, "lancero": 1 }
+
+=== ["etiopia", "palmares"] terreno=bosque ganador=-1
+etiopia edad 2 pob 61/65 res { "alimento": 11, "madera": 124, "piedra": 215, "riqueza": 160 } tipos { "aldeano": 40, "casa": 6, "almacen_madera": 2, "gult": 3, "establo": 2, "almacen_mina": 2, "guerrero": 13, "almacen_alimento": 1, "iglesia": 1, "granja": 14, "taller": 1, "cuartel": 1, "mercado": 1, "torre": 1, "hondero": 4, "centro": 1, "lancero": 1, "ariete": 1 }
+palmares edad 2 pob 31/53 res { "alimento": 30, "madera": 25, "piedra": 170, "riqueza": 310, "fama": 26 } tipos { "centro": 1, "aldeano": 27, "explorador": 1, "casa": 3, "mocambo": 1, "cuartel": 1, "quilombo_central": 1, "almacen_alimento": 1, "hondero": 3, "granja": 5, "almacen_mina": 1 }
+
+=== ["guaranies", "ayutthaya"] terreno=bosque ganador=-1
+guaranies edad 2 pob 43/55 res { "alimento": 23, "madera": 45, "piedra": 62, "riqueza": 63 } tipos { "centro": 1, "aldeano": 40, "explorador": 1, "casa": 4, "almacen_madera": 7, "campo_tiro": 2, "granja": 9, "almacen_mina": 2, "karai_palabra": 1, "hondero": 2, "taller": 1, "cuartel": 1, "mercado": 1, "monte": 1 }
+ayutthaya edad 2 pob 58/65 res { "alimento": 23, "madera": 49, "piedra": 223, "riqueza": 538 } tipos { "centro": 1, "aldeano": 34, "explorador": 1, "casa": 6, "elefante_rey": 2, "cuartel": 2, "almacen_mina": 2, "wat": 1, "granja": 10, "campo_tiro": 1, "mercado": 1, "taller": 1, "guerrero": 11, "hondero": 8, "torre": 1, "kraal": 1, "rebano": 4, "barrio_japones": 1 }
+

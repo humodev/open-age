@@ -1,0 +1,53 @@
+{
+  "_doc": "Forma propia de cada hito (proceso/24-tras-la-segunda-ronda/4d-hitos-y-animales.md). Solo imagen: la simulación no lo lee. Cada entrada nombra la forma que arma src/game/hitos_meshes.gd y sus pocos parámetros; los materiales salen del aspecto de la edad del dueño (data/arte_edades.json: muro, techo, acento, aparejo, dorado, pisos_techo, rewe_cm, alto_pct), así el mismo hito se ve más noble al subir de edad. Los hitos con forma propia no se estiran a la altura mínima de la categoría (reglas.escala_visual): cada forma ya tiene su alto. Claves: forma; pisos (escalones o pisos de techo); puertas; anillos; mastiles; alto_cm (alto del muro principal). Afirmaciones históricas con [verificar] hasta tener la cita en la ficha (docs/00-indice.md, regla 5).",
+  "civs": {
+    "tawantinsuyu": {
+      "ushnu": {"forma": "ushnu", "pisos": 5, "_nota": "Plataforma escalonada con escalinata y asiento de piedra (tiana) frente a la plaza, como el ushnu de Vilcashuamán [verificar]."},
+      "pukara_mayor": {"forma": "pukara_anillos", "anillos": 3, "_nota": "Fortaleza de cerro con muros concéntricos en terrazas y vigía arriba, sin almenas (pukaras del Collasuyu y de la frontera chiriguana) [verificar]."},
+      "aqllawasi": {"forma": "aqllawasi", "alto_cm": 115, "_nota": "Recinto cerrado de muro alto, una sola portada de doble jamba y galpones adentro; tejido de tocapu en el muro. Aqllawasi del Cusco [verificar]."},
+      "kallanka_real": {"forma": "kallanka", "puertas": 5, "_nota": "Galpón largo a dos aguas con muchas portadas trapezoidales hacia la plaza y hastiales de piedra (kallankas de Huánuco Pampa) [verificar]."},
+      "qorikancha": {"forma": "qorikancha", "alto_cm": 130, "_nota": "El muro curvo de cantería fina, con banda de oro, el templo detrás con el disco del sol y el jardín de figuras de oro que describe Garcilaso [verificar]."},
+      "vilcabamba": {"forma": "vilcabamba", "_nota": "Refugio en la ceja de selva: cerro con andenes, casas de techo empinado (una con teja, como en Espíritu Pampa) y monte alrededor [verificar]."}
+    },
+    "mapuches": {
+      "rewe_lonko": {"forma": "nguillatuwe", "_nota": "Nguillatuwe: el rewe con canelos en el centro del campo ceremonial y las ramadas en media luna, abierta hacia el este; chilihueques del lof [verificar]."},
+      "rewe_malon": {"forma": "rewe_malon", "_nota": "Rewe del toqui: la toki kura (hacha de piedra, insignia del toqui) en su poste y lanzas de colihue apoyadas [verificar]."},
+      "rewe_caballeria": {"forma": "rewe_caballos", "_nota": "Rewe junto al corral de los caballos tomados y criados desde el siglo XVI [verificar]."},
+      "rewe_monte": {"forma": "rewe_monte", "_nota": "Rewe en el claro del monte, entre araucarias (pewen), con trampas de foso [verificar]."},
+      "parlamento": {"forma": "parlamento", "_nota": "Parlamento de frontera: ramada grande con los bancos enfrentados, rama de canelo como señal de paz, agasajos y ganado de la feria [verificar]."},
+      "weichan": {"forma": "weichan", "_nota": "Gran weichan: anillo de lanzas alrededor del fuego del consejo, la toki kura y los caballos listos [verificar]."}
+    },
+    "guaranies": {
+      "karai_palabra": {"forma": "oga_guasu", "_nota": "Oga guasu: la casa grande comunal de techo de paja hasta el suelo, con los bastones rituales (yvyra'i) y el mbaraka del karai en la plaza [verificar]."},
+      "aty_guasu": {"forma": "aty_guasu", "_nota": "Aty guasu: la plaza rodeada de casas largas, el fuego y la ronda de asientos de la gran asamblea [verificar]."},
+      "mision": {"forma": "mision", "_nota": "Iglesia de reducción: nave ancha con galerías sobre columnas de madera, techo de teja, frente con frontón, campanario de madera aparte y cruz en la plaza (San Ignacio Miní, Trinidad) [verificar]."},
+      "monte": {"forma": "monte", "_nota": "Monte libre: claro en la selva con refugios bajos (tapyi), hamaca y fuego, tapado por los árboles [verificar]."},
+      "tava": {"forma": "tava", "_nota": "Tava fortificada: el frente de piedra arenisca de la iglesia, la cruz de la plaza y la empalizada; Mbororé, 1641 [verificar]."},
+      "yvy_marane": {"forma": "trinchera", "_nota": "Ñande retã ('esta tierra tiene dueño', Sepé Tiarajú): trinchera y terraplén con empalizada y cañones de tacuara, como en la guerra guaranítica [verificar]."}
+    },
+    "etiopia": {
+      "iglesia": {"forma": "iglesia_redonda", "_nota": "Iglesia redonda (bete kristiyan) de tres anillos: zócalo, galería de postes bajo el alero, tambor y techo cónico empinado con la cruz y los huevos de avestruz; muro del atrio con portería y el bosque de la iglesia [verificar]."},
+      "monasterio": {"forma": "lalibela", "_nota": "Iglesia tallada en la roca, en cruz y dentro de un foso, como Bete Giyorgis de Lalibela (siglo XIII); celdas de monjes en la pared del foso [verificar]."},
+      "amba": {"forma": "amba", "_nota": "Amba: meseta de laderas a pique con muro en el borde, casas arriba y un solo camino de subida (Amba Geshen) [verificar]."},
+      "remonta": {"forma": "remonta", "_nota": "Corral de piedra con caballos y establo largo: los caballos que llegan como tributo [verificar]."},
+      "gondar": {"forma": "gondar", "_nota": "Fasil Ghebbi: castillo de dos pisos con torres redondas en las esquinas, cúpulas y una torre cuadrada más alta (siglo XVII) [verificar]."},
+      "alianza": {"forma": "alianza", "_nota": "Campamento de la corte con la tienda real, cajones del comercio, mosquetes y cañones de la alianza [verificar]."}
+    },
+    "palmares": {
+      "quilombo_central": {"forma": "macaco", "_nota": "Macaco, el mocambo del rey: casa grande de palma con alpendre, capilla y palmeras alrededor de la plaza (relatos de 1677) [verificar]."},
+      "mocambo_guerra": {"forma": "mocambo_guerra", "_nota": "Mocambo de guerra en la sierra: chozas en el cerro, estacas inclinadas al frente y jirau de vigía [verificar]."},
+      "cerca_real": {"forma": "cerca_anillos", "anillos": 3, "_nota": "Tres anillos de cerca con las entradas desfasadas y fojos (pozos con púas) entre anillos, como la cerca real del Macaco [verificar]."},
+      "ferraria": {"forma": "ferraria", "_nota": "Herrería: galpón de palma con fragua encendida, fuelles, yunque y carbón (las forjas de Palmares) [verificar]."},
+      "pacto_cucau": {"forma": "cucau", "_nota": "Cucaú: aldea en hileras con roças de maíz y la bandera blanca del pacto de 1678 [verificar]."},
+      "guerra_zumbi": {"forma": "serra_barriga", "_nota": "La Serra da Barriga: el cerro con la cerca en lo alto, el tambor y el estandarte de Zumbi (1694) [verificar]."}
+    },
+    "ayutthaya": {
+      "wat": {"forma": "wat_prang", "_nota": "Wat Mahathat: prang central (torre de mazorca, de tradición jemer) con prangs chicos en las esquinas, sobre basamento, y el viharn de techos escalonados al frente [verificar]."},
+      "kraal_real": {"forma": "kraal", "_nota": "Kraal real de elefantes (phaniat): empalizada de troncos de teca y el pabellón del rey sobre pilotes [verificar]."},
+      "puerto_real": {"forma": "puerto", "_nota": "Puerto real sobre el río: muelle, depósitos sobre pilotes, tinajas martaban y un sampán [verificar]."},
+      "fortaleza_rio": {"forma": "fortaleza_isla", "_nota": "Muralla de ladrillo encalado con almenas en hoja (bai sema), baluarte poligonal con cañones como el Pom Phet y portada con techos escalonados [verificar]."},
+      "junco_tributo": {"forma": "junco", "mastiles": 3, "_nota": "Junco de la misión de tributo a China: velas de listones, popa alta, ojo en la proa y el muelle con los cajones [verificar]."},
+      "guardia_extranjera": {"forma": "guardia", "_nota": "Barrio de las compañías extranjeras (japoneses, portugueses): cuartel siamés, casa a la europea, banderas de varias naciones y cañones [verificar]."}
+    }
+  }
+}

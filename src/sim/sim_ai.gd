@@ -294,7 +294,9 @@ func _most(counts: Dictionary, ratio: Dictionary, total: int, over: bool) -> Str
 
 # ---------------------------------------------------------------- Construcción
 
-func _wants_hito(p: Dictionary, n_vill: int, by_type: Dictionary) -> bool:
+## `extra` suma recursos que todavía no están en el banco (el kawiñ mapuche); con `strict`,
+## un recurso por debajo de la mitad es un no (sin el ahorro intermitente).
+func _wants_hito(p: Dictionary, n_vill: int, by_type: Dictionary, extra: Dictionary = {}, strict: bool = false) -> bool:
 	if p["age"] >= sim.dp(player).edades.size() or sim.hito_in_progress(player) or p["age"] >= int(level.get("edad_max", 99)):
 		return false
 	var need: int = 13 + 8 * (int(p["age"]) - 1)
@@ -309,8 +311,8 @@ func _wants_hito(p: Dictionary, n_vill: int, by_type: Dictionary) -> bool:
 	# Después, solo si el hito está al alcance: cada recurso cubre al menos la mitad.
 	var cost: Dictionary = sim.dp(player).cost_of(_hito_type(p), p["age"])
 	for k in cost:
-		if p["res"][k] * 2 < cost[k]:
-			return sim.tick % 1200 < 400 # ahorro intermitente para no congelar el ejército
+		if (int(p["res"][k]) + int(extra.get(k, 0))) * 2 < int(cost[k]):
+			return false if strict else sim.tick % 1200 < 400 # ahorro intermitente para no congelar el ejército
 	return true
 
 
@@ -341,16 +343,34 @@ func _engine(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_type: 
 		"etiopia":
 			_found_court(p, vill, centro, by_type)
 		"mapuches":
-			# Kawiñ solo si se ahorra para el hito y falta alimento: el corral más lleno, una vez por edad.
-			if saving and p["age"] < dd.edades.size():
-				var need := int(dd.cost_of(_hito_type(p), p["age"]).get("alimento", 0))
-				if int(p["res"]["alimento"]) < need:
-					var best: SimEntity = null
-					for c: SimEntity in by_type.get("corral", []):
-						if c.built and c.heads >= 4 and c.feast_age != int(p["age"]) and (best == null or c.heads > best.heads):
-							best = c
-					if best != null and int(p["res"]["alimento"]) + (best.heads - 1) * 30 >= need - 100:
-						sim.push_command({"t": "kawin", "player": player, "building": best.id})
+			if p["age"] >= dd.edades.size():
+				return
+			var need := int(dd.cost_of(_hito_type(p), p["age"]).get("alimento", 0))
+			var food := int(p["res"]["alimento"])
+			var feasts: Array[SimEntity] = []
+			for c: SimEntity in by_type.get("corral", []):
+				if c.built and c.heads >= 4 and c.feast_age != int(p["age"]):
+					feasts.append(c)
+			if feasts.is_empty():
+				return
+			# Los más llenos primero (a igual cabezas, el más viejo: determinista).
+			feasts.sort_custom(func(a: SimEntity, b: SimEntity) -> bool: return a.heads > b.heads or a.heads == b.heads and a.id < b.id)
+			var best: SimEntity = feasts[0]
+			# Desde la edad II el ejército (alimento y riqueza, y la riqueza sobra por el ganado)
+			# se come el alimento apenas llega, y nunca se junta la mitad del hito: la IA no entraba
+			# en el ahorro y llegaba a la edad III a las ~20 min (proceso/24, 3b). Si la fiesta de
+			# los corrales más llenos (`ia_economia.kawin_corrales`) completa esa mitad, se hace:
+			# el ganado se vuelve el alimento que destraba el ahorro.
+			feasts.resize(mini(feasts.size(), int(sim.data.reglas["ia_economia"]["kawin_corrales"])))
+			var gain := 0
+			for c in feasts:
+				gain += (c.heads - 1) * int(c.def["ganado"]["fiesta_alimento"])
+			if p["age"] >= 2 and food * 2 < need and _wants_hito(p, vill.size(), by_type, {"alimento": gain}, true):
+				for c in feasts:
+					sim.push_command({"t": "kawin", "player": player, "building": c.id})
+			# Ahorrando, el corral más lleno si con él casi alcanza, una vez por edad.
+			elif saving and food < need and food + (best.heads - 1) * int(best.def["ganado"]["fiesta_alimento"]) >= need - 100:
+				sim.push_command({"t": "kawin", "player": player, "building": best.id})
 		"palmares":
 			# Guarda fama para el hito solo mientras ahorra para él; si no, la gente sigue llegando.
 			if bool(p.get("guardar_fama", true)) != saving:

@@ -1,0 +1,12 @@
+# tests/economia.gd filtrado a las 4 partidas con mapuches (--paz --minutes=25 --seeds=2), con kawin_corrales = 1. Las demás filas son los rivales de los mapuches, no su promedio general.
+
+ECONOMÍA en paz, 25 min, terreno llano
+civ              riq@5      @10      @20      @30  edadII    III  riqueza por origen
+tawantinsuyu       211     1060     3531        0    6:30  14:40  propio 24%, casa 54%, disputado 0%, sitios 9%, recoleccion 1%, granja 0%, mercado 8%, cumbi 2%
+mapuches           202     1134     2880        0    7:25  17:02  casa 57%, propio 30%, recoleccion 1%, kawin 0%, granja 0%, sitios 11%, mercado 0%, disputado 0%
+guaranies          150      689     3422        0    8:40  14:30  casa 49%, propio 37%, granja 0%, recoleccion 1%, disputado 0%, sitios 8%, mercado 2%
+etiopia            288     1135     3585        0    6:50  16:40  propio 33%, casa 49%, recoleccion 1%, granja 0%, sitios 5%, disputado 9%, mercado 0%
+palmares             0        0        0        0       -      -  
+ayutthaya          203     1090     3586        0    7:10  17:40  casa 55%, propio 32%, sitios 10%, recoleccion 1%, granja 0%, mercado 0%, disputado 0%
+
+[exited with code 0]
