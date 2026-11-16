@@ -352,3 +352,11 @@ Con T a W integrados, juegan otra vez el veterano y el jugador nuevo.
 - **Los dos:** siguen con calidad de vida y usabilidad.
 
 Informes en [`proceso/22-testers/ronda-6/`](../22-testers/ronda-6/).
+- **[Síntesis de la sexta ronda](../22-testers/ronda-6/00-sintesis.md):**
+  - El jugador nuevo le gana a la fácil por primera vez (3 de 4).
+  - La elección de blancos es "lo mejor de la ronda" (veterano).
+  - Siguen:
+    - el consejo y la hoja que dicen "A y clic ataca lo primero que ve" (ya no es cierto);
+    - la experta lenta de edad;
+    - Alt sobre las unidades;
+    - el festejo de la primera victoria.
