@@ -1,0 +1,32 @@
+
+guaranies     almacen_madera «Tapyi» común «Granero y leñera» ícono +alimento+madera en Q Economía → E | madera: almacen_madera | piedra: almacen_mina
+    almacen_madera   Tapyi                    recibe alimento, madera                   ícono +alimento+madera       común «Granero y leñera»
+    almacen_mina     Ñai'ũ renda              recibe piedra, riqueza                    ícono +piedra+riqueza        común «Barrero»
+    centro           Oga guasu                recibe alimento, madera, piedra, riqueza  ícono centro                 común «Centro»
+    caza a 26 casillas: tras levantar Tapyi: 33 entregas ahí, 3 a otro lado
+tawantinsuyu  qollqa «Qollqa» común «Granero» ícono qollqa+alimento en W Militar → W | madera: almacen_madera | piedra: almacen_mina
+    almacen_madera   Llant'a wasi             recibe madera                             ícono +madera                común «Leñera»
+    almacen_mina     Kamayuq wasi             recibe piedra, riqueza                    ícono +piedra+riqueza        común «Barrero»
+    centro           Llaqta                   recibe alimento, madera, piedra, riqueza  ícono centro                 común «Centro»
+    qollqa           Qollqa                   recibe alimento                           ícono qollqa+alimento        común «Granero»
+    caza a 26 casillas: tras levantar Qollqa: 48 entregas ahí, 3 a otro lado
+mapuches      lof «Lof» común «Centro chico» ícono centro en Q Economía → R | madera: lof | piedra: lof
+    lof              Lof                      recibe alimento, madera, piedra, riqueza  ícono centro                 común «Centro chico»
+    caza a 26 casillas: tras levantar Lof: 54 entregas ahí, 3 a otro lado
+palmares      almacen_alimento «Paiol» común «Granero» ícono +alimento en Q Economía → Z | madera: mocambo | piedra: almacen_mina
+    almacen_alimento Paiol                    recibe alimento                           ícono +alimento              común «Granero»
+    almacen_mina     Olaria                   recibe piedra, riqueza                    ícono +piedra+riqueza        común «Barrero»
+    centro           Cerca real               recibe alimento, madera, piedra, riqueza  ícono centro                 común «Centro»
+    mocambo          Mocambo                  recibe alimento, madera, piedra, riqueza  ícono mocambo                común «Aldea y depósito»
+    caza a 26 casillas: tras levantar Paiol: 48 entregas ahí, 3 a otro lado
+etiopia       almacen_alimento «Gotära» común «Granero» ícono +alimento en Q Economía → Z | madera: almacen_madera | piedra: almacen_mina
+    almacen_alimento Gotära                   recibe alimento                           ícono +alimento              común «Granero»
+    almacen_madera   Inchet bet               recibe madera                             ícono +madera                común «Leñera»
+    almacen_mina     Dängay bet               recibe piedra, riqueza                    ícono +piedra+riqueza        común «Barrero»
+    centro           Kätäma (corte)           recibe alimento, madera, piedra, riqueza  ícono centro                 común «Centro»
+    caza a 26 casillas: tras levantar Gotära: 48 entregas ahí, 3 a otro lado
+ayutthaya     sin almacén: elefante_rey (se entrena en centro) | madera: ["elefante_rey", "centro"] | piedra: ["elefante_rey", "centro"]
+    centro           Wang (palacio)           recibe alimento, madera, piedra, riqueza  ícono centro                 común «Centro»
+    almacen_mina     Khlang din               recibe riqueza                            ícono +riqueza               común «Almacén de arcilla»
+    caza a 26 casillas: tras levantar Elefante del rey (chang luang): 43 entregas ahí, 3 a otro lado
+DEPÓSITOS LEJOS: OK

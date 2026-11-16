@@ -93,3 +93,29 @@ static func eje(def: Dictionary, key: String) -> String:
 ## Ícono propio de un edificio o unidad según la tabla de la interfaz (o "" si no tiene).
 static func icono(type: String) -> String:
 	return String((cfg().get("iconos", {}) as Dictionary).get(type, ""))
+
+
+## --- depósitos de comida --- Nombre común de un tipo para un pueblo (la capa sin civilización:
+## "Casa", "Granero"), o vacío si el propio ya es ese o no hay común. Un almacén se nombra por lo
+## que recibe en ese pueblo: el tapyi guaraní (alimento y madera) es "Granero y leñera", no la
+## "Leñera" común (proceso/24, 4m). Tabla en data/interfaz.json → grilla.comunes_deposito.
+static func comun(base: SimData, dd: SimData, type: String) -> String:
+	var own: Dictionary = dd.def_of(type)
+	var common: Dictionary = base.def_of(type)
+	var out: String = common.get("nombre", "")
+	var fixed: Dictionary = cfg().get("comunes", {})
+	if fixed.has(type):
+		out = fixed[type]
+	elif own.has("deposito") and not own.has("funcion") and not (own.get("produce", []) as Array).has("aldeano") and own.get("deposito") != common.get("deposito"):
+		out = String((cfg().get("comunes_deposito", {}) as Dictionary).get(recibe_clave(own["deposito"]), out))
+	return out if out != String(own.get("nombre", "")) else ""
+
+
+## "alimento+madera": lo que recibe un depósito, en el orden del banco.
+static func recibe_clave(dep: Array) -> String:
+	var parts: Array[String] = []
+	for k in Sim.RES_KINDS:
+		if dep.has(k):
+			parts.append(k)
+	return "+".join(parts)
+# --- fin depósitos de comida ---

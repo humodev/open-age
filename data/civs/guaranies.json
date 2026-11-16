@@ -69,7 +69,7 @@
  "edificios": {
   "campo_tiro": {"nombre": "Guyrapa róga", "tam": [2, 2], "costo": {"madera": 100}, "desc": "Casa del arco, junto al monte: más chica y barata, para tener varias."},
   "taller": {"nombre": "Taller de tacuara", "costo": {"madera": 150}},
-  "almacen_madera": {"nombre": "Tapyi", "deposito": ["alimento", "madera"], "costo": {"madera": 60}, "desc": "Rancho al borde del monte: recibe lo de la roza y la madera del mismo monte."},
+  "almacen_madera": {"nombre": "Tapyi", "deposito": ["alimento", "madera"], "costo": {"madera": 60}, "desc": "Rancho al borde del monte: guarda la comida (caza, frutos y roza) y la madera. Levantalo junto a la caza o el monte, así no vuelven hasta el Oga guasu."},
   "almacen_mina": {"nombre": "Ñai'ũ renda"},
   "centro": {
    "nombre": "Oga guasu"

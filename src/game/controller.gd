@@ -896,11 +896,10 @@ func select_ids(ids: Array[int]) -> void:
 ## Texto de efectos generado desde los datos: los números no se escriben a mano (D-008).
 ## --- aprender --- Nombre común de un edificio o una unidad (la capa sin civilización: "Casa",
 ## "Leñera", "Aldeano"), para la grilla con nombres; vacío si el propio ya es ese o no hay común
-## (los edificios propios de una civ). Jugador nuevo, ronda 3.
+## (los edificios propios de una civ). Jugador nuevo, ronda 3. Los almacenes, por lo que reciben
+## (proceso/24, 4m: el tapyi guaraní es "Granero y leñera", no "Leñera"): Grilla.comun.
 func common_name(type: String) -> String:
-	var base: String = sim.data.def_of(type).get("nombre", "")
-	var own: String = sim.dp(local).def_of(type).get("nombre", "")
-	return base if base != own else ""
+	return Grilla.comun(sim.data, sim.dp(local), type)
 
 
 func effects_text(efectos: Array) -> String:

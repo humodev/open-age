@@ -38,6 +38,9 @@
     "fijas": { "economia": 0, "militar": 1, "atacar": 4, "detener": 5, "refugio": 7, "hito_economia": 8, "hito_militar": 9, "volver": 11, "patrullar": 2, "mantener": 6, "form_bloque": 8, "form_linea": 9, "form_abierta": 10, "form_columna": 11 },
     "economia": { "casa": 0, "granja": 1, "deposito": 2, "almacen_madera": 2, "almacen_alimento": 8, "almacen_mina": 9, "centro": 3, "lof": 3, "mercado": 4, "anden": 5, "gult": 5, "taller_tejido": 6, "corral": 6, "corte_nueva": 7, "mocambo": 7 },
     "militar": { "cuartel": 0, "qollqa": 1, "kraal": 1, "barrio_japones": 2, "barrio_portugues": 3, "torre": 4, "empalizada": 5, "puerta": 6, "camino": 7, "campo_tiro": 8, "establo": 9, "taller": 10 },
+    "_doc_comunes": "Nombre común de la grilla con nombres y de la ficha (proceso/24, 4m). Un almacén se nombra por lo que recibe (comunes_deposito, recursos en el orden alimento, madera, piedra, riqueza): el tapyi guaraní, que recibe alimento y madera, no es una «Leñera». comunes: los propios de un pueblo que no tienen común en los datos.",
+    "comunes_deposito": { "alimento": "Granero", "madera": "Leñera", "piedra+riqueza": "Barrero", "riqueza": "Almacén de arcilla", "alimento+madera": "Granero y leñera", "alimento+madera+piedra": "Almacén que camina" },
+    "comunes": { "lof": "Centro chico", "mocambo": "Aldea y depósito", "elefante_rey": "Almacén que camina" },
     "iconos": { "campo_tiro": "hondero", "establo": "jinete", "taller": "ariete", "almacen_madera": "madera", "almacen_alimento": "alimento", "almacen_mina": "piedra", "anden": "terraza", "gult": "gult", "taller_tejido": "telar", "corral": "corral", "corte_nueva": "carpa", "mocambo": "mocambo", "qollqa": "qollqa", "kraal": "kraal", "barrio_japones": "barrio_japones", "barrio_portugues": "barrio_portugues" }
   },
   "avisos": {
@@ -60,6 +63,7 @@
     "flotando": { "riqueza": 500, "alimento": 900, "madera": 900, "piedra": 600 },
     "flotando_s": 60,
     "sitios_repetir_s": 60,
+    "lejos": { "_doc": "Aviso de viajes largos (proceso/24, 4m): con `aldeanos_min` aldeanos o más juntando un recurso (no de granja) a más de `casillas` del depósito más cercano que lo recibe, durante `durante_s` segundos seguidos, avisa con el almacén del pueblo («levantá un Tapyi junto a la caza»). Se calla si ya hay uno en obra a menos de `casillas` de donde juntan. `lugares`: cómo se nombra el lugar según el recurso del mapa.", "casillas": 12, "aldeanos_min": 3, "durante_s": 30, "repetir_s": 150, "recursos": ["alimento", "madera", "piedra"], "lugares": { "carne": "la caza", "venado": "la caza", "rebano_salvaje": "los animales", "arbusto": "los frutos", "arbol": "el monte", "roca": "la cantera" }, "femeninos": ["qollqa"] },
     "empujon": { "_doc": "Aviso que empuja a ganar (jugador nuevo, ronda 3): con `ejercito_min` tropas o más, `en_casa_pct` % de ellas a `casa_radio` casillas o menos de la capital y `recursos_min` o más sumando alimento, madera, piedra y riqueza, durante `durante_s` segundos seguidos, avisa «atacá o subí de edad». No en campañas", "ejercito_min": 15, "en_casa_pct": 75, "casa_radio": 22, "recursos_min": 2000, "durante_s": 90, "repetir_s": 240 }
   },
   "guia": {

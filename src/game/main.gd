@@ -1093,6 +1093,58 @@ func _autotest_ordenes(check: Callable) -> void:
 # --- veterano ---
 ## Pedidos de interfaz del veterano en la tercera ronda (proceso/24, 4k): costo real del hito,
 ## aura al colocarlo, ficha del hito en obra, ocho marcadores y barras al pelear.
+## --- depósitos de comida --- (proceso/24, 4m) tres aldeanos cazan lejos del centro: el aviso
+## nombra el almacén del pueblo («levantá un Tapyi junto a la caza»); con uno en obra junto a la
+## caza, se calla.
+func _autotest_lejos(check: Callable, cs, said: Callable, capital: SimEntity, vill_ids: Array[int]) -> void:
+	var c: Dictionary = cs.cfg.get("lejos", {})
+	var dist := int(c.get("casillas", 12)) + 10
+	var dir := 1 if capital.tx < sim.map.n / 2 else -1
+	var spot := sim.map.nearest_free(capital.tx + dir * dist, capital.ty, 8)
+	var meat: Array[SimEntity] = []
+	var hunters: Array[SimEntity] = []
+	for id in vill_ids:
+		var v: SimEntity = sim.by_id.get(id)
+		if v != null and v.alive and hunters.size() < int(c.get("aldeanos_min", 3)):
+			var m := sim.spawn_resource("carne", spot.x + hunters.size(), spot.y)
+			meat.append(m)
+			sim._order_gather(v, m)
+			hunters.append(v)
+	hud.avisos.lista.clear()
+	cs._said.erase("lejos_alimento")
+	cs._since.erase("lejos_alimento")
+	cs.check(0)
+	cs.check(int(c.get("durante_s", 30)) + 1)
+	var dd := sim.dp(local)
+	var store: String = hud.CONSEJOS.best_store(dd, "alimento", int(sim.players[local]["age"]))
+	var name: String = dd.edificios[store]["nombre"] if store != "" else "elefante del rey"
+	check.call("aviso de viaje largo con la caza a %d casillas: nombra «%s»" % [dist, name], said.call("junto a la caza") and said.call(name))
+	await _frames(2)
+	get_viewport().get_texture().get_image().save_png("screenshots/autotest_lejos.png")
+	# Con el almacén en obra junto a la caza, no vuelve a avisar.
+	var obra: SimEntity = null
+	if store != "":
+		var at := sim.map.nearest_free(spot.x, spot.y - 3, 6)
+		obra = sim.spawn_building(store, local, at.x, at.y, false)
+		hud.avisos.lista.clear()
+		cs._said.erase("lejos_alimento")
+		cs._since.erase("lejos_alimento")
+		cs.check(0)
+		cs.check(int(c.get("durante_s", 30)) + 1)
+		check.call("con %s en obra junto a la caza, el aviso se calla" % name, not said.call("junto a la caza"))
+	for m in meat:
+		sim._kill(m)
+	if obra != null:
+		sim._kill(obra)
+	var ids: Array[int] = []
+	for v in hunters:
+		ids.append(v.id)
+	sim.push_command({"t": "stop", "player": local, "ids": ids})
+	hud.avisos.lista.clear()
+	await _frames(3)
+# --- fin depósitos de comida ---
+
+
 func _autotest_veterano(check: Callable) -> void:
 	speed = 1.0
 	var base := sim.bases[local]
@@ -1527,11 +1579,33 @@ func _autotest() -> void:
 	for e in extra:
 		sim._kill(e)
 	sim.players[local]["res"] = bank_before
+	await _autotest_lejos(check, cs, said, capital, vill_ids) # --- depósitos de comida --- (4m)
 	EstadoCasilla.nombres = true
 	ctrl.select_ids(vill_ids)
 	await _frames(3)
 	get_viewport().get_texture().get_image().save_png("screenshots/autotest_nombres.png")
 	check.call("nombres en la grilla sin errores", hud._card.visible)
+	# --- depósitos de comida --- (4m) el submenú Economía con nombres: el almacén dice qué recibe.
+	ctrl.open_submenu(Grilla.ECONOMIA)
+	await _frames(3)
+	get_viewport().get_texture().get_image().save_png("screenshots/autotest_grilla_economia.png")
+	var food_store: String = hud.CONSEJOS.best_store(sim.dp(local), "alimento", int(sim.players[local]["age"]))
+	if food_store != "":
+		ctrl.open_submenu(Grilla.menu_de(sim.dp(local), food_store)) # la qollqa va en Militar
+		await _frames(2)
+		var cmd_food: Dictionary = {}
+		for cmd in ctrl.commands():
+			if cmd["id"] == food_store:
+				cmd_food = cmd
+		check.call("en la grilla, %s dice que recibe alimento (común «%s», ícono %s)" % [food_store, cmd_food.get("common", ""), cmd_food.get("icon", "")], String(cmd_food.get("icon", "")).contains("alimento") and cmd_food.get("common", "") != "Leñera")
+		if not cmd_food.is_empty():
+			var vs := get_viewport().get_visible_rect().size
+			hud.show_tip(cmd_food, Rect2(vs - Vector2(200, 200), Vector2(60, 60)))
+			await _frames(3)
+			get_viewport().get_texture().get_image().save_png("screenshots/autotest_grilla_ayuda.png")
+			hud.hide_tip()
+	ctrl.open_submenu(Grilla.RAIZ)
+	# --- fin depósitos de comida ---
 	EstadoCasilla.nombres = Opciones.nombres_grilla
 	var rg = hud.REGISTRO_GUIA.new()
 	hud.add_child(rg)

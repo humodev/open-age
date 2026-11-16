@@ -7,6 +7,9 @@ static func draw(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
 	var c := r.get_center()
 	var s := minf(r.size.x, r.size.y)
 	var w := maxf(1.5, s * 0.07)
+	if kind.contains("+"):
+		_recibe(ci, kind, r, col)
+		return
 	match kind:
 		"alimento":
 			ci.draw_circle(c + Vector2(-s * 0.12, s * 0.06), s * 0.2, col)
@@ -302,6 +305,18 @@ static func resolve(def: Dictionary, type: String) -> String:
 		return type
 	# --- grilla --- (ícono propio de la tabla de la interfaz; hitos por su eje: Z economía, X militar)
 	var own := Grilla.icono(type)
+	# --- depósitos de comida --- (proceso/24, 4m) el ícono de un almacén dice qué recibe: el
+	# tapyi guaraní (alimento y madera) no lleva el hacha de la leñera común.
+	if not def.has("funcion") and def.has("deposito") and not def.get("avanza_edad", false):
+		var dep: Array = def["deposito"]
+		if dep.size() < Sim.RES_KINDS.size() and not (def.get("produce", []) as Array).has("aldeano"):
+			var base := own if own != "" and not Sim.RES_KINDS.has(own) else ""
+			var parts: Array[String] = []
+			for k in Sim.RES_KINDS:
+				if dep.has(k):
+					parts.append(k)
+			return base + "+" + "+".join(parts)
+	# --- fin depósitos de comida ---
 	if own != "":
 		return own
 	if def.get("avanza_edad", false):
@@ -328,6 +343,46 @@ static func resolve(def: Dictionary, type: String) -> String:
 	if def.has("deposito"):
 		return "deposito"
 	return "casa"
+
+
+## --- depósitos de comida --- Ícono de lo que recibe un almacén: "+alimento+madera" son los
+## recursos encimados, en su color; "qollqa+alimento" es el edificio propio con el recurso abajo a
+## la derecha. Con uno solo, el glifo del recurso como antes (granero, leñera).
+static func _recibe(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
+	var parts := kind.split("+")
+	var base := parts[0]
+	var res: Array[String] = []
+	for i in range(1, parts.size()):
+		res.append(parts[i])
+	var s := minf(r.size.x, r.size.y)
+	var o := r.position + (r.size - Vector2(s, s)) / 2.0
+	if base != "":
+		draw(ci, base, Rect2(o, Vector2(s, s) * 0.8), col)
+		var bs := s * 0.46
+		for i in res.size():
+			var p := o + Vector2(s - bs - i * bs * 0.62, s - bs)
+			ci.draw_circle(p + Vector2(bs, bs) / 2.0, bs * 0.5, Color(0.06, 0.065, 0.075, 0.85))
+			draw(ci, res[i], Rect2(p, Vector2(bs, bs)), _tinte(res[i], col))
+		return
+	if res.size() == 1:
+		draw(ci, res[0], r, col)
+		return
+	# Dos o tres encimados en diagonal: el primero (alimento) adelante, abajo a la izquierda.
+	var gs := s * (0.7 if res.size() == 2 else 0.58)
+	var step := (s - gs) / float(res.size() - 1)
+	for i in range(res.size() - 1, -1, -1):
+		var p := o + Vector2(step * i, s - gs - step * i)
+		draw(ci, res[i], Rect2(p, Vector2(gs, gs)), _tinte(res[i], col))
+
+
+## Color del recurso, atenuado igual que el glifo (bloqueado o sin alcanzar: más oscuro).
+static func _tinte(k: String, col: Color) -> Color:
+	var c: Color = Color(Palette.RES.get(k, col)).lerp(col, 0.3)
+	if col != Palette.UI_TEXT:
+		c = c.darkened(0.35)
+	c.a = col.a
+	return c
+# --- fin depósitos de comida ---
 
 
 static func _figure(ci: CanvasItem, c: Vector2, s: float, col: Color, k: float) -> void:

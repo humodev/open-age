@@ -250,9 +250,8 @@ func _content() -> Dictionary:
 func _base(owner: int, type: String) -> Dictionary:
 	var dd := sim.dp(owner)
 	var def: Dictionary = dd.def_of(type)
-	var common: Dictionary = sim.data.def_of(type)
 	var c := {"owner": owner, "type": type, "def": def, "name": def.get("nombre", type), "alt": "", "lines": [], "stats": [], "cost": {}, "time": 0, "state": [], "strong": "", "weak": "", "foot": [], "is_res": false}
-	var base_name: String = common.get("nombre", "")
+	var base_name: String = Grilla.comun(sim.data, dd, type) # --- depósitos de comida --- (4m)
 	if base_name != "" and base_name != c["name"] and dd.clave != "":
 		c["alt"] = base_name
 	c["tex"] = portrait(dd.clave, type)
@@ -443,11 +442,18 @@ func _building_desc(dd: SimData, type: String, def: Dictionary) -> String:
 		var names: Array[String] = []
 		for k: String in def["deposito"]:
 			names.append(Palette.RES_NAMES.get(k, k).to_lower())
-		d += ("\n" if d != "" else "") + "Recibe %s." % ", ".join(names)
+		d += ("\n" if d != "" else "") + "Recibe %s." % y_lista(names) # --- depósitos de comida --- (4m)
 	var aura := _aura_text(dd, def)
 	if aura != "":
 		d += ("\n" if d != "" else "") + aura
 	return d
+
+
+## --- depósitos de comida --- "alimento, madera y piedra".
+static func y_lista(names: Array) -> String:
+	if names.size() <= 1:
+		return "".join(names)
+	return ", ".join(names.slice(0, names.size() - 1)) + " y " + str(names[-1])
 
 
 ## El aura del hito (reglas.aura_hito o la propia): importa dónde se levanta.

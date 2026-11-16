@@ -5,6 +5,7 @@ extends Node
 ##   - un recurso que se acumula sin gastarse (sobre todo la riqueza);
 ##   - el rival tiene todos los sitios sagrados: perdés en M:SS (y su par, "los tenés vos").
 ##   - ejército grande en casa y recursos de sobra durante un rato: atacá o subí de edad.
+##   - aldeanos que caminan lejos para dejar lo que juntan: levantá el almacén del pueblo ahí.
 ##
 ## Solo mira la simulación y llama a `hud.notify`. Se apagan en Opciones ("Avisos que enseñan").
 ## Los tiempos son de juego, no de reloj: con la partida a ×4 se revisa cuatro veces más seguido.
@@ -54,6 +55,7 @@ func check(dt: int) -> void:
 	_floating(dt)
 	_sites()
 	_push(dt)
+	_far(dt)
 
 
 func _now() -> int:
@@ -197,3 +199,144 @@ func _push(dt: int) -> void:
 		how += "; o con un aldeano encargá el hito de la próxima edad (Z o X)"
 	if _say("empujon", "Tenés ejército y recursos de sobra: atacá o subí de edad\n%s." % how, "decision", int(c.get("repetir_s", 240))):
 		_since["empujon"] = 0
+
+
+# ---------------------------------------------------------------- Viajes largos
+
+## --- depósitos de comida --- (proceso/24, 4m; el autor: "¿tengo que dejar que vuelvan hasta la
+## base a traer la comida?"). Cuenta, por recurso, los aldeanos que juntan del mapa (no de granja)
+## a más de `casillas` del depósito más cercano que lo recibe; si son `aldeanos_min` o más durante
+## `durante_s` seguidos, nombra el almacén de su pueblo que recibe ese recurso (o el elefante del
+## rey en Ayutthaya) y dónde está en la grilla. Umbrales en interfaz.json → consejos.lejos.
+func _far(dt: int) -> void:
+	var c: Dictionary = cfg.get("lejos", {})
+	if c.is_empty():
+		return
+	var sim: Sim = hud.sim
+	var lim := int(c.get("casillas", 12)) * Sim.P
+	var far := {} # recurso -> [aldeanos lejos, recurso del mapa del primero, depósito al que van]
+	for e in sim.actives:
+		if not (e.alive and e.owner == hud.local and e.is_unit() and e.fn == "civil" and e.inside < 0):
+			continue
+		if e.order != SimEntity.Order.GATHER and e.order != SimEntity.Order.RETURN:
+			continue
+		var t: SimEntity = sim.by_id.get(e.target)
+		if t == null or not t.alive or not t.is_resource():
+			continue # las granjas no: el aviso es para la caza, los frutos, el monte y la piedra
+		var kind: String = t.res_kind
+		if not (c.get("recursos", []) as Array).has(kind):
+			continue
+		var d := sim.nearest_dropoff(hud.local, kind, t.x, t.y)
+		if d != null and sim.dist_to(t, d) <= lim:
+			continue
+		if _store_coming(kind, t, lim):
+			continue
+		var f: Array = far.get(kind, [0, t, d])
+		f[0] += 1
+		far[kind] = f
+	for kind in c.get("recursos", []):
+		var key := "lejos_" + str(kind)
+		var f: Array = far.get(kind, [0, null, null])
+		if int(f[0]) < int(c.get("aldeanos_min", 3)):
+			_since[key] = 0
+			continue
+		_since[key] = int(_since.get(key, 0)) + dt
+		if int(_since[key]) < int(c.get("durante_s", 30)):
+			continue
+		var txt := far_text(kind, f[1], f[2])
+		if txt != "" and _say(key, txt, "decision", int(c.get("repetir_s", 150)), hud._lugar_de(f[1].x, f[1].y)):
+			_since[key] = 0
+			return # de a un recurso por revisión
+
+
+## Ya hay un depósito de ese recurso en obra cerca de donde juntan: no hace falta avisar.
+func _store_coming(kind: String, t: SimEntity, lim: int) -> bool:
+	var sim: Sim = hud.sim
+	for b in sim.actives:
+		if b.alive and b.owner == hud.local and b.is_building() and not b.built and (b.def.get("deposito", []) as Array).has(kind) and sim.dist_to(t, b) <= lim:
+			return true
+	return false
+
+
+## Texto del aviso: "Tus aldeanos llevan la comida hasta el centro (25 casillas)\nLevantá un
+## Tapyi junto a la caza (Q Economía → E): recibe alimento y madera." Vacío si el pueblo no tiene
+## con qué recibir ese recurso lejos.
+func far_text(kind: String, src: SimEntity, drop: SimEntity) -> String:
+	var sim: Sim = hud.sim
+	var dd := sim.dp(hud.local)
+	var c: Dictionary = cfg.get("lejos", {})
+	var what: String = {"alimento": "la comida", "madera": "la madera", "piedra": "la piedra"}.get(kind, Palette.RES_NAMES.get(kind, kind).to_lower())
+	var lugar: String = (c.get("lugares", {}) as Dictionary).get(src.type if src != null else "", "donde juntan")
+	var head := ""
+	if drop == null:
+		head = "Tus aldeanos no tienen dónde dejar %s" % what
+	else:
+		var hasta := "el centro" if drop.capital else ("el " + String(drop.def.get("nombre", "depósito")) if drop.is_building() else "el " + _short(drop.def.get("nombre", "")))
+		head = "Tus aldeanos llevan %s hasta %s (%d casillas)" % [what, hasta, sim.dist_to(src, drop) / Sim.P]
+	var store := best_store(dd, kind, int(sim.players[hud.local]["age"]))
+	if store != "":
+		var def: Dictionary = dd.edificios[store]
+		var art := "una" if (c.get("femeninos", []) as Array).has(store) else "un"
+		var names: Array[String] = []
+		for k: String in def["deposito"]:
+			names.append(Palette.RES_NAMES.get(k, k).to_lower())
+		return "%s\nLevantá %s %s junto a %s (%s): recibe %s." % [head, art, def["nombre"], lugar, grid_path(dd, store), Ficha.y_lista(names)]
+	var unit := walking_store(dd, kind)
+	if unit.is_empty():
+		return ""
+	var udef: Dictionary = dd.unidades[unit[0]]
+	var mine := false
+	for e in sim.actives:
+		mine = mine or (e.alive and e.owner == hud.local and e.type == unit[0])
+	var name := _short(udef.get("nombre", unit[0]))
+	if mine:
+		return "%s\nLlevá tu %s junto a %s: es un almacén que camina." % [head, name, lugar]
+	var where := String(dd.edificios.get(unit[1], {}).get("nombre", unit[1])).get_slice(" (", 0)
+	return "%s\nLlevá un %s junto a %s: es un almacén que camina (se entrena en el %s)." % [head, name, lugar, where]
+
+
+## "Elefante del rey (chang luang)" → "elefante del rey".
+static func _short(n: String) -> String:
+	var s := n.get_slice(" (", 0)
+	return s.left(1).to_lower() + s.substr(1)
+
+
+## El almacén más barato que construye el aldeano y recibe `kind`, fuera de los centros (primero
+## los que ya se pueden levantar en la edad). Vacío si no hay ninguno.
+static func best_store(dd: SimData, kind: String, age: int) -> String:
+	var best := ""
+	var best_k := 1 << 30
+	for type: String in dd.unidades["aldeano"].get("construye", []):
+		var def: Dictionary = dd.edificios.get(type, {})
+		if def.is_empty() or dd.is_hito(type) or def.get("capital", false) or type == "centro" or not (def.get("deposito", []) as Array).has(kind):
+			continue
+		var k := 0
+		for r in def.get("costo", {}):
+			k += int(def["costo"][r])
+		if int(def.get("edad_min", 1)) > age:
+			k += 1 << 20
+		if k < best_k:
+			best = type
+			best_k = k
+	return best
+
+
+## Unidad que hace de depósito (elefante del rey) y el edificio que la entrena: [tipo, edificio].
+static func walking_store(dd: SimData, kind: String) -> Array:
+	for b: String in dd.edificios:
+		for u: String in dd.edificios[b].get("produce", []):
+			if (dd.unidades.get(u, {}).get("deposito", []) as Array).has(kind):
+				return [u, b]
+	return []
+
+
+## Dónde está en la grilla del aldeano: "Q Economía → E".
+static func grid_path(dd: SimData, type: String) -> String:
+	var menu := Grilla.menu_de(dd, type)
+	var slots := Grilla.edificios(dd, menu)
+	var labels := Controller.SLOT_LABELS
+	var m := "%s %s" % [labels[Grilla.fija(menu, 0 if menu == Grilla.ECONOMIA else 1)], "Economía" if menu == Grilla.ECONOMIA else "Militar"]
+	for s in slots:
+		if slots[s] == type:
+			return "%s → %s" % [m, labels[s]]
+	return m
