@@ -5,10 +5,20 @@
   "sucesos_max": 80,
   "ordenes": {
     "_doc": "Comodidades de órdenes (proceso/23, parte B): marcadores de cámara, cola global y bengalas. Solo interfaz.",
-    "marcadores": ["F7", "F8", "F9"],
+    "marcadores": 8,
+    "_doc_marcadores": "Marcadores de cámara (proceso/24, 4k): Alt + 1…N vuelve y Ctrl + Alt + 1…N guarda (Ctrl + número son los grupos de control). marcadores_f: atajos de los primeros marcadores con teclas de función, Ctrl + F guarda.",
+    "marcadores_f": ["F7", "F8", "F9"],
     "cola_global_max": 14,
     "bengala_s": 8,
     "arrastre_rumbo_px": 24
+  },
+  "demos": {
+    "_doc": "Escenas de muestra (--demo, src/game/main.gd): población extra por encima de lo que ya hay, para que no arranquen trabadas en el tope.",
+    "pob_margen": 10
+  },
+  "mundo": {
+    "_doc": "Información sobre el mapa (src/game/overlay.gd): segundos que la barra de vida de una unidad queda visible después de pegar o recibir un golpe, aunque tenga la vida llena.",
+    "barras_combate_s": 4
   },
   "frases_ia": {
     "_doc": "Lo que dice la IA aliada en el chat (suceso ia_dice de la simulación). {a}: el jugador nombrado; {n}: cantidad; {llegan}: lo que llega tras la comisión del tributo; {recurso}: recurso.",

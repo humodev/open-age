@@ -7,14 +7,16 @@ extends RefCounted
 ##   M            todos los militares
 ##   T            todos los del tipo de lo seleccionado, en todo el mapa (también doble clic en un edificio)
 ##   Tab          recorre los edificios de producción
-##   Ctrl + F7…F9 guarda la cámara; F7…F9 vuelve (F1–F6 son los paneles y F10 la pausa)
+##   Alt + 1…8    vuelve a un marcador de cámara; Ctrl + Alt + 1…8 lo guarda (Ctrl + número
+##                es de los grupos de control, como en AoE4). F7…F9 son atajos de los
+##                marcadores 1 a 3 (Ctrl + F guarda); F1–F6 son los paneles y F10 la pausa.
 
 const O := SimEntity.Order
 
 static var _cfg: Dictionary = {}
 
 var ctrl: Controller
-var marcas := {} # tecla -> Vector3 (punto que mira la cámara)
+var marcas := {} # marcador (1…8) -> Vector3 (punto que mira la cámara)
 var _cycle := {"aldeano": -1, "militar": -1, "produccion": -1}
 
 
@@ -111,15 +113,15 @@ func recorrer_produccion() -> void:
 	ctrl.center_on_selection()
 
 
-## Marcador de cámara: guardar (Ctrl) o ir.
-func marca(tecla: String, guardar: bool) -> void:
+## Marcador de cámara `n` (1…8): guardar (Ctrl) o ir.
+func marca(n: int, guardar: bool) -> void:
 	if guardar:
-		marcas[tecla] = ctrl.cam.focus
-		ctrl.hud_notify("Cámara guardada en %s" % tecla, "info")
-	elif marcas.has(tecla):
-		ctrl.cam.look_at_point(marcas[tecla])
+		marcas[n] = ctrl.cam.focus
+		ctrl.hud_notify("Cámara guardada en el marcador %d (Alt + %d vuelve)" % [n, n], "info")
+	elif marcas.has(n):
+		ctrl.cam.look_at_point(marcas[n])
 	else:
-		ctrl.hud_notify("%s no tiene cámara guardada (Ctrl + %s la guarda)" % [tecla, tecla], "info")
+		ctrl.hud_notify("El marcador %d está vacío (Ctrl + Alt + %d guarda la cámara)" % [n, n], "info")
 
 
 ## Aldeanos que trabajan un recurso (Mayús + clic en el recurso de la barra).

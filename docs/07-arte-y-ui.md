@@ -98,9 +98,9 @@ Distribución (convención del género, sin copiar piezas):
 
 Lo que pasa en la partida se lee sobre el mapa, sin abrir paneles (`src/game/ui/mundo_*.gd`):
 
-- **Barras de vida** sobre lo dañado, lo seleccionado y lo que está bajo el mouse; en obra, el progreso con porcentaje y constructores.
+- **Barras de vida** sobre lo dañado, lo seleccionado, lo que está bajo el mouse y las unidades que pelean (unos segundos después de cada golpe, `interfaz.json` → `mundo.barras_combate_s`); en obra, el progreso con porcentaje y constructores.
 - **Textos flotantes**: "+N" de cada entrega en un depósito propio (se suman si caen juntas, con tope), golpes fuertes y "¡Edad II!".
-- **Al colocar un edificio**: alcance (y el de las defensas propias), radio de la campana, casillas que bloquean en rojo con el motivo, rendimiento del lugar (ladera, agua), máximo por edad ("2/3"), separación mínima y conexión por caminos.
+- **Al colocar un edificio**: alcance (y el de las defensas propias), radio de la campana, aura del hito en el suelo con lo que queda adentro, casillas que bloquean en rojo con el motivo, rendimiento del lugar (ladera, agua), máximo por edad ("2/3"), separación mínima y conexión por caminos.
 - **Indicadores**: "Zz" sobre los aldeanos ociosos, ícono del recurso que recolecta cada aldeano, punto de reunión con línea, orden en curso y órdenes en cola como líneas punteadas numeradas, alcance de torres seleccionadas.
 - **Sitios sagrados**: zona de captura con el color de quien lo tiene y anillo de progreso con el color de quien lo toma.
 - **Minimapa**: destello donde te pegan, sitios sagrados con su dueño, arcilla disputada, aldeanos ociosos; clic derecho para mover, encolar o fijar el punto de reunión.
@@ -117,6 +117,7 @@ Lo que pasa en la partida se lee sobre el mapa, sin abrir paneles (`src/game/ui/
 | Detener | `S` con unidades seleccionadas |
 | Grupos | `Ctrl + 1…9` para asignar, `Mayús + 1…9` para sumar la selección, `1…9` para seleccionar (doble toque centra) |
 | Ir al último ataque o suceso | `Espacio`; `Inicio` recorre los anteriores |
+| Marcadores de cámara (8) | `Ctrl + Alt + 1…8` guarda, `Alt + 1…8` vuelve; `F7…F9` son atajos de los tres primeros (`Ctrl + F7…F9` guarda). Con `Alt` porque `Ctrl + número` son los grupos |
 | Submenús del aldeano | `Q` Economía, `W` Militar; `Esc`, `V` o clic derecho sobre la grilla vuelve |
 | Aldeano inactivo | `.` |
 | Centro | `H` |

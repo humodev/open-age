@@ -1038,7 +1038,10 @@ func _build_struct(e: SimEntity, v: Dictionary, look: String) -> void:
 		var esc1 := minf(1.0, float(_age_cfg(e.owner, 1).get("escala_pct", 100)) / 100.0)
 		var cerco := 0.2 if cfg.has("cerco") and (CivMeshes._is_center(e.type, e.def) or e.capital) else 0.0
 		var body := maxf(0.8, minf(e.w, e.h) - 2.0 * mg - cerco)
-		model = _model_for(e.owner, e.type, body * esc, false)
+		# sin_modelo: en esa edad el tipo deja el modelo generado y usa la maqueta (el centro
+		# etíope en Gondar pasa de la tienda real al castillo; proceso/24, 4i).
+		if not (cfg.get("sin_modelo", []) as Array).has(e.type):
+			model = _model_for(e.owner, e.type, body * esc, false)
 		if model != null:
 			if cfg.has("modelo_tinte"):
 				_tint(model, Color(cfg["modelo_tinte"]))

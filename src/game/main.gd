@@ -29,6 +29,9 @@ extends Node3D
 ##   --nofog            sin niebla de guerra (automático en --aivai)
 ##   --autotest         prueba de punta a punta con eventos reales de mouse y teclado
 ##   --grilla=menu      abre el submenú del aldeano (economia, militar) antes de la captura
+##   --banco=rec:n,…    fija recursos del jugador antes de la captura (alimento:0,mita:0)
+##   --ayuda=N          muestra la ayuda de la casilla N de la grilla (8 = Z) en la captura
+##   --colocar=tipo     entra a colocar ese edificio ("hito": el hito económico de la edad II) en el centro de la pantalla
 ##   --ventana=ANCHOxALTO  ventana de ese tamaño (capturas a otras resoluciones)
 ##   --escala=auto|0.8|1|1.25|1.5  escala de la interfaz (si no, la de user://opciones.cfg)
 ##   --paleta=normal|deuteranopia|protanopia|tritanopia|relativa  modo de colores
@@ -569,6 +572,16 @@ func _demo(kind: String) -> void:
 				ids[pid].append(u.id)
 		sim.push_command({"t": "move", "player": 0, "ids": ids[0], "x": (c + 6) * 1000, "y": c * 1000, "amove": true})
 		sim.push_command({"t": "move", "player": 1, "ids": ids[1], "x": (c - 6) * 1000, "y": c * 1000, "amove": true})
+	# --- demos --- (proceso/24, 4k) la escena de muestra no arranca por encima del tope
+	# ("33/10"): el exceso queda como población extra, como en las misiones (sim_scenario),
+	# más un margen para seguir entrenando (data/interfaz.json → demos.pob_margen).
+	var margen := int((JSON.parse_string(FileAccess.get_file_as_string("res://data/interfaz.json")) as Dictionary).get("demos", {}).get("pob_margen", 0))
+	sim._update_players()
+	for p in sim.players:
+		if int(p["pop"]) + margen > int(p["pop_cap"]):
+			p["pob_extra"] = int(p.get("pob_extra", 0)) + int(p["pop"]) + margen - int(p["pop_cap"])
+	sim._update_players()
+	# --- fin demos ---
 
 
 ## Vitrina de --demo=animales: todas las especies de data/arte_animales.json en fila, con su
@@ -801,6 +814,37 @@ func _maybe_shot() -> void:
 			sim.step()
 			hud.on_events(sim.events)
 	# --- fin órdenes ---
+	# --- veterano --- (--banco=recurso:n,…; --colocar=tipo|hito: modo de colocación en el
+	# centro de la pantalla; --ayuda=N: ayuda de la casilla N de la grilla)
+	if _args.has("banco"):
+		for kv in (_args["banco"] as String).split(","):
+			var par := kv.split(":")
+			if par.size() == 2:
+				sim.players[local]["res"][par[0]] = int(par[1])
+	if _args.has("colocar"):
+		var ptype: String = _args["colocar"]
+		if ptype == "hito":
+			ptype = sim.dp(local).hitos[0][0]
+		var pcost := sim.dp(local).cost_of(ptype, int(sim.players[local]["age"]))
+		for k in pcost:
+			sim.players[local]["res"][k] = maxi(int(sim.players[local]["res"].get(k, 0)), int(pcost[k]))
+		var vids: Array[int] = []
+		for e in sim.actives:
+			if e.owner == local and e.fn == "civil" and e.inside < 0:
+				vids.append(e.id)
+		ctrl.select_ids(vids)
+		ctrl.run_command({"kind": "build", "id": ptype, "cost": pcost, "locked": ""})
+		ctrl.mouse_override = Vector2(960, 430)
+		ctrl.enabled = true # solo para que siga al cursor fijo; la entrada real sigue apagada
+	if _args.has("ayuda"):
+		await get_tree().process_frame
+		var slot := int(_args["ayuda"])
+		for c in ctrl.commands():
+			if int(c["slot"]) == slot:
+				var card: Control = hud._card
+				var sr: Rect2 = card.call("_slot_rect", slot)
+				hud.show_tip(c, Rect2(card.global_position + sr.position, sr.size))
+	# --- fin veterano ---
 	if _args.has("grilla"): # --- grilla --- (--grilla=economia|militar abre ese submenú para la captura)
 		ctrl.open_submenu(_args["grilla"])
 	# --- paneles --- (--panel=economia,edad,pueblo,sucesos,puntaje,fin para las capturas)
@@ -873,13 +917,14 @@ func _screen(x_tiles: float, z_tiles: float) -> Vector2:
 
 
 # --- órdenes ---
-func _key_mod(code: int, ctrl_on: bool, shift_on: bool = false) -> void:
+func _key_mod(code: int, ctrl_on: bool, shift_on: bool = false, alt_on: bool = false) -> void:
 	for pressed in [true, false]:
 		var k := InputEventKey.new()
 		k.physical_keycode = code
 		k.keycode = code
 		k.ctrl_pressed = ctrl_on
 		k.shift_pressed = shift_on
+		k.alt_pressed = alt_on
 		k.pressed = pressed
 		Input.parse_input_event(k)
 
@@ -993,7 +1038,7 @@ func _autotest_ordenes(check: Callable) -> void:
 		if sim.by_id[id].patrol:
 			patrol_left += 1
 	check.call("la orden nueva corta la patrulla", patrol_left == 0)
-	# Marcadores de cámara: Ctrl + F7 guarda, F7 vuelve.
+	# Marcadores de cámara: Ctrl + F7 guarda, F7 vuelve (atajo del marcador 1).
 	cam.look_at_point(Vector3(base.x + 3, 0, base.y + 3))
 	await _frames(2)
 	_key_mod(KEY_F7, true)
@@ -1043,6 +1088,127 @@ func _autotest_ordenes(check: Callable) -> void:
 	check.call("Alt + clic sin aliados no tira bengala", sim.recording.size() == n_cmd)
 	ctrl.select_ids(vill)
 	await _frames(2)
+
+
+# --- veterano ---
+## Pedidos de interfaz del veterano en la tercera ronda (proceso/24, 4k): costo real del hito,
+## aura al colocarlo, ficha del hito en obra, ocho marcadores y barras al pelear.
+func _autotest_veterano(check: Callable) -> void:
+	speed = 1.0
+	var base := sim.bases[local]
+	var dd := sim.dp(local)
+	var hito: String = dd.hitos[0][0]
+	var age := int(sim.players[local]["age"])
+	# 1. Costo del hito: sin recursos, la casilla nombra cada recurso que falta, sin "+".
+	var saved: Dictionary = (sim.players[local]["res"] as Dictionary).duplicate()
+	for k in sim.players[local]["res"]:
+		sim.players[local]["res"][k] = 0
+	var cost := dd.cost_of(hito, age)
+	var items := EstadoCasilla.faltan_textos(EstadoCasilla.faltante(cost, sim.players[local]["res"]))
+	var sin_mas := items.all(func(it: Array) -> bool: return not String(it[1]).contains("+"))
+	check.call("la casilla del hito muestra cada recurso que falta (%d de %d, %s)" % [items.size(), cost.size(), str(items)], items.size() == cost.size() and sin_mas)
+	var one := EstadoCasilla.faltan_textos({"madera": 40})
+	check.call("si falta uno solo, «−40»", one.size() == 1 and one[0][1] == "−40")
+	var tip = hud._tip
+	tip.set("cmd", {"name": "hito", "cost": cost, "desc": "", "locked": ""})
+	var ft: String = tip.call("_falta_texto")
+	var todos := true
+	for k in cost:
+		todos = todos and ft.contains(str(cost[k]))
+	check.call("la ayuda dice cuánto falta de cada uno (%s)" % ft, todos)
+	ctrl.select_ids(_vill_ids())
+	await _frames(3)
+	get_viewport().get_texture().get_image().save_png("screenshots/autotest_costo_hito.png")
+	for k in saved:
+		sim.players[local]["res"][k] = saved[k]
+	# 2. Al colocar el hito: aura en el suelo y qué queda adentro.
+	for k in cost:
+		sim.players[local]["res"][k] = int(sim.players[local]["res"].get(k, 0)) + int(cost[k])
+	ctrl.open_submenu(Grilla.RAIZ)
+	ctrl.run_command({"kind": "build", "id": hito, "cost": cost, "locked": ""})
+	cam.look_at_point(Vector3(base.x + 8, 0, base.y + 8))
+	await _frames(2)
+	_mouse(_screen(base.x + 10, base.y + 10), 0, false)
+	await _frames(4)
+	var tile: Vector2i = ctrl._ghost.get_meta("tile", Vector2i(-1, -1))
+	var lines := preload("res://src/game/ui/mundo_colocacion.gd").detalles(sim, local, hito, tile.x, tile.y)
+	var aura_line := ""
+	for l in lines:
+		if String(l[0]).begins_with("Aura") or String(l[0]).begins_with("En el aura"):
+			aura_line += String(l[0]) + " / "
+	check.call("al colocar el hito se ve el aura (%s)" % aura_line, ctrl.mode == "place" and aura_line.contains("casillas"))
+	get_viewport().get_texture().get_image().save_png("screenshots/autotest_aura_hito.png")
+	ctrl.cancel_mode()
+	for k in saved:
+		sim.players[local]["res"][k] = saved[k]
+	# 3. Ficha del hito en obra: lo que falta con los constructores y el rendimiento decreciente.
+	var spot := Vector2i(-1, -1)
+	for r in 8:
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				if spot.x < 0 and sim.can_place(hito, base.x + 12 + dx, base.y + 2 + dy, local):
+					spot = Vector2i(base.x + 12 + dx, base.y + 2 + dy)
+	var h := sim.spawn_building(hito, local, spot.x, spot.y, false)
+	h.build_time = dd.build_time_of(hito, age)
+	h.progress = h.build_time / 4
+	h.workers_prev = 4
+	h.workers_now = 4
+	# Con 4: tiempo × 3/(4+2) (P-006), o la obra colectiva guaraní (+pct por constructor extra).
+	var per_tick := sim.tick_ms * 6 / 3
+	if dd.has_mod("obra_colectiva"):
+		per_tick = sim.tick_ms * (100 + int(dd.mod("obra_colectiva")["pct_por_constructor"]) * 3) / 100
+	var want_ms := (h.build_time - h.progress) * sim.tick_ms / per_tick
+	var txt := Hud.obra_restante(sim, h)
+	var want_txt := "%d:%02d" % [want_ms / 60000, (want_ms / 1000) % 60]
+	check.call("la ficha del hito en obra dice cuánto falta con 4 (%s; esperado %s)" % [txt, want_txt], txt.begins_with("Faltan") and txt.contains(want_txt))
+	h.workers_prev = 0
+	h.workers_now = 0
+	check.call("sin constructores, «Parada» (%s)" % Hud.obra_restante(sim, h), Hud.obra_restante(sim, h).begins_with("Parada"))
+	h.workers_prev = 4
+	h.workers_now = 4
+	ctrl.select_ids([h.id] as Array[int])
+	cam.look_at_point(Vector3(spot.x + 1, 0, spot.y + 4))
+	await _frames(4)
+	get_viewport().get_texture().get_image().save_png("screenshots/autotest_hito_obra.png")
+	sim.remove_quietly(h)
+	await _frames(2)
+	# 5. Ocho marcadores: Ctrl + Alt + n guarda, Alt + n vuelve; Ctrl + n sigue siendo el grupo.
+	var groups_before: Dictionary = ctrl.groups.duplicate()
+	for n in [1, 8]:
+		cam.look_at_point(Vector3(base.x + n, 0, base.y + 2))
+		await _frames(2)
+		_key_mod(KEY_0 + n, true, false, true)
+		await _frames(2)
+	cam.look_at_point(Vector3(base.x + 30, 0, base.y + 30))
+	await _frames(2)
+	_key_mod(KEY_8, false, false, true)
+	await _frames(2)
+	check.call("Ctrl + Alt + 8 guarda y Alt + 8 vuelve (%.0f, %.0f)" % [cam.focus.x, cam.focus.z], Vector2(cam.focus.x, cam.focus.z).distance_to(Vector2(base.x + 8, base.y + 2)) < 1.5)
+	check.call("Ctrl + Alt + número no pisa los grupos de control", ctrl.groups.keys() == groups_before.keys())
+	_key_tap(KEY_F7)
+	await _frames(2)
+	check.call("F7 es atajo del marcador 1 (%.0f, %.0f)" % [cam.focus.x, cam.focus.z], Vector2(cam.focus.x, cam.focus.z).distance_to(Vector2(base.x + 1, base.y + 2)) < 1.5)
+	# 6. Barras al pelear sin la opción: una unidad que acaba de recibir un golpe.
+	var u: SimEntity = null
+	for e in sim.actives:
+		if e.owner == local and e.is_unit() and e.hp == e.hp_max:
+			u = e
+			break
+	if u != null:
+		var was := u.last_combat
+		check.call("sin pelear, no hay barra por combate", not Overlay.en_combate(sim, u) or was > sim.tick - Overlay.combat_ticks(sim))
+		u.last_combat = sim.tick
+		check.call("al pelear se ve la barra aunque esté sana y sin la opción", Overlay.en_combate(sim, u) and not Opciones.barras_siempre)
+		u.last_combat = was
+
+
+func _vill_ids() -> Array[int]:
+	var ids: Array[int] = []
+	for e in sim.actives:
+		if e.owner == local and e.fn == "civil" and e.inside < 0:
+			ids.append(e.id)
+	return ids
+# --- fin veterano ---
 
 
 func _alt(pressed: bool) -> InputEventKey:
@@ -1307,6 +1473,7 @@ func _autotest() -> void:
 		hud.cursores.hoja().save_png("screenshots/cursores.png")
 	# --- fin avisos ---
 	await _autotest_ordenes(check) # --- órdenes ---
+	await _autotest_veterano(check) # --- veterano ---
 	# --- aprender --- (avisos que enseñan, cuenta de sitios, nombres en la grilla, registro de la Guía y fin)
 	var cs = hud.consejos
 	Opciones.consejos = true

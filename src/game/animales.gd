@@ -136,6 +136,11 @@ static func _goat(p: Array, e: Dictionary) -> void:
 		for sx: float in [-1.0, 1.0]:
 			_horn(p, [hd + Vector3(sx * 0.025, 0.05, -0.01), hd + Vector3(sx * 0.04, 0.15, -0.07), hd + Vector3(sx * 0.06, 0.18, -0.16)], 0.018, Color("8a7a60"))
 		p.append([Meshes.cyl(0.02, 0.0, 0.08, 5), Meshes.xf(hd + Vector3(0, -0.07, 0.06)), col.darkened(0.2)]) # barba
+	elif str(e.get("cuernos", "")) == "ibice":
+		# Íbice: cuernos grandes y nudosos en arco hacia atrás, casi hasta el lomo.
+		for sx: float in [-1.0, 1.0]:
+			_horn(p, [hd + Vector3(sx * 0.025, 0.05, -0.01), hd + Vector3(sx * 0.05, 0.18, -0.06), hd + Vector3(sx * 0.07, 0.26, -0.17), hd + Vector3(sx * 0.08, 0.27, -0.3), hd + Vector3(sx * 0.08, 0.2, -0.4)], 0.026, _c(e, "cuerno_color", "#5a4e40"))
+		p.append([Meshes.cyl(0.02, 0.0, 0.07, 5), Meshes.xf(hd + Vector3(0, -0.07, 0.06)), col.darkened(0.2)]) # barba
 	p.append([Meshes.cyl(0.0, 0.025, 0.08, 5), Meshes.xf(Vector3(0, by + 0.13, -0.25), Vector3(-25, 0, 0)), col])
 	_legs(p, leg, 0.026, 0.08, 0.16, face.darkened(0.15) if wool else col.darkened(0.2))
 
@@ -151,10 +156,13 @@ static func _bovine(p: Array, e: Dictionary) -> void:
 	var hd := Vector3(0, by + 0.0, 0.5)
 	p.append([Meshes.sphere(0.1, 10), Meshes.xf(hd, Vector3(30, 0, 0), Vector3(0.95, 0.85, 1.45)), col.darkened(0.08)])
 	p.append([Meshes.box(0.13, 0.08, 0.08), Meshes.xf(hd + Vector3(0, -0.07, 0.1)), col.darkened(0.3)])
-	var horn := Color("c9c0b0") if str(e.get("cuernos", "")) == "bufalo" else Color("d9cfb8")
+	var horn := _c(e, "cuerno_color", "#d9cfb8")
 	if str(e.get("cuernos", "")) == "bufalo":
+		# Cuernos gruesos y grises en media luna: salen de lo alto de la frente hacia los
+		# costados, se curvan hacia atrás y suben un poco, con las puntas hacia adentro, pegados
+		# al plano de la cabeza. Nada hacia adelante ni hacia abajo (no son colmillos).
 		for sx: float in [-1.0, 1.0]:
-			_horn(p, [hd + Vector3(sx * 0.06, 0.07, -0.02), hd + Vector3(sx * 0.24, 0.1, -0.06), hd + Vector3(sx * 0.33, 0.17, -0.18), hd + Vector3(sx * 0.27, 0.24, -0.3)], 0.04, horn)
+			_horn(p, [hd + Vector3(sx * 0.05, 0.09, -0.05), hd + Vector3(sx * 0.17, 0.12, -0.1), hd + Vector3(sx * 0.25, 0.15, -0.2), hd + Vector3(sx * 0.24, 0.18, -0.32), hd + Vector3(sx * 0.15, 0.2, -0.4)], 0.048, horn)
 	else:
 		for sx: float in [-1.0, 1.0]:
 			_horn(p, [hd + Vector3(sx * 0.06, 0.07, -0.02), hd + Vector3(sx * 0.15, 0.13, 0.0)], 0.022, horn)
