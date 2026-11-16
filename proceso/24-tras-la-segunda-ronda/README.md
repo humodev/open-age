@@ -375,3 +375,8 @@ Informes en [`proceso/22-testers/ronda-6/`](../22-testers/ronda-6/).
   - Se abre un estudio de diagnóstico (5e), como el de Palmares, que encontró la acogida, en lugar de seguir con nerfs a ciegas.
   - El paso 1 del juego tardío (los niveles en lugar del bono por edad) también puede moverlo.
 - **Torneo 31:** con el arreglo del recurso inalcanzable, Tawantinsuyu sube de 42 a 48 % y Palmares de 46 a 52 %. Los guaraníes siguen arriba (72 %); se espera el diagnóstico (5e).
+- **Diagnóstico guaraní (5e, [documento](5e-guaranies-diagnostico.md)).** La causa no era la calidad del arquero ni la economía, sino la cantidad de productores:
+  - La casa del arco guaraní costaba 100 de madera y ocupa 2×2; el campo de tiro común, 150 y 3×3. Su IA levantaba hasta 5 y tenía el doble de ejército desde el minuto 15 (28 contra 14; 60 contra 27 al 30).
+  - El sigilo y la emboscada pesaban el 0,3 % del daño, y ganaban igual en terreno abierto.
+  - Medido con dosis creciente: casa a 150 → 56 %; casa común → 36 %.
+- **Torneo 33:** casa del arco guaraní a 150 de madera; sigue de 2×2, porque se levanta entre los árboles.
