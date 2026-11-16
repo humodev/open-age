@@ -1,0 +1,2 @@
+
+200 unidades, 600 ticks: promedio 19.40 ms, peor 162.45 ms, presupuesto 100 ms; vivas al final: 121

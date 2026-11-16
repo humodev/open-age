@@ -1,0 +1,8 @@
+
+tawantinsuyu  edad II 6:21 · ejército 13 · producción 4 · mercado no · parados 3 · ociosa 10 · viajes a/m/r/p 1/1/1/1  ⚠ sin mercado al minuto 15
+mapuches      edad II 8:02 · ejército 33 · producción 7 · mercado sí · parados 0 · ociosa 11 · viajes a/m/r/p 3/3/6/1  OK
+guaranies     edad II 8:49 · ejército 5 · producción 3 · mercado no · parados 2 · ociosa 5 · viajes a/m/r/p 1/2/0/-  ⚠ ejército de 5, sin mercado al minuto 15
+etiopia       edad II 5:55 · ejército 23 · producción 4 · mercado sí · parados 0 · ociosa 9 · viajes a/m/r/p 2/1/1/-  OK
+palmares      edad II 11:20 · ejército 14 · producción 2 · mercado no · parados 2 · ociosa 2 · viajes a/m/r/p 1/2/5/1  ⚠ edad II tarde (11:20), sin mercado al minuto 15
+ayutthaya     edad II 8:47 · ejército 23 · producción 5 · mercado no · parados 0 · ociosa 5 · viajes a/m/r/p 3/2/2/5  ⚠ sin mercado al minuto 15
+SALUD IA: 4 civs con problemas

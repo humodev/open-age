@@ -1,0 +1,99 @@
+# tools/ia_por_dentro.gd en paz, cada minuto, con la fiesta (kawiñ) acumulada; mapuches contra guaraníes, llano, semilla 931 (la de tests/economia.gd). ANTES del cambio.
+
+1:00 mapuches edad 1 · ejército {  } · banco { "alimento": 210, "madera": 60, "piedra": 100, "riqueza": 120 } · kawin {  }
+      aldeanos { "alimento:4": 4, "madera:5": 1, "madera:6": 1, "riqueza:4": 1, "madera:4": 1 } edificios { "lof": 2, "casa": 1 }
+1:00 guaranies edad 1 · ejército {  } · banco { "alimento": 160, "madera": 20, "piedra": 100, "riqueza": 120 } · kawin {  }
+      aldeanos { "alimento:4": 5, "madera:4": 2, "riqueza:4": 1, "madera:6": 1 } edificios { "centro": 1, "casa": 1, "granja": 1, "almacen_madera": 1 }
+2:00 mapuches edad 1 · ejército { "guerrero": 1 } · banco { "alimento": 75, "madera": 40, "piedra": 100, "riqueza": 70 } · kawin {  }
+      aldeanos { "alimento:4": 6, "alimento:5": 1, "madera:4": 3, "riqueza:4": 1, "madera:5": 1 } edificios { "lof": 2, "casa": 1, "corral": 1 }
+2:00 guaranies edad 1 · ejército {  } · banco { "alimento": 210, "madera": 30, "piedra": 100, "riqueza": 150 } · kawin {  }
+      aldeanos { "alimento:4": 5, "alimento:6": 2, "madera:4": 3, "riqueza:4": 1, "madera:5": 1 } edificios { "centro": 1, "casa": 1, "granja": 1, "almacen_madera": 1, "campo_tiro": 1 }
+3:00 mapuches edad 1 · ejército { "guerrero": 3 } · banco { "alimento": 250, "madera": 40, "piedra": 100, "riqueza": 86 } · kawin {  }
+      aldeanos { "alimento:4": 9, "madera:4": 3, "madera:5": 1, "riqueza:4": 2 } edificios { "lof": 2, "casa": 1, "corral": 2 }
+3:00 guaranies edad 1 · ejército {  } · banco { "alimento": 320, "madera": 80, "piedra": 100, "riqueza": 170 } · kawin {  }
+      aldeanos { "alimento:4": 10, "madera:4": 2, "madera:5": 2, "riqueza:4": 1 } edificios { "centro": 1, "casa": 1, "granja": 2, "almacen_madera": 1, "campo_tiro": 1 }
+4:00 mapuches edad 1 · ejército { "guerrero": 4 } · banco { "alimento": 660, "madera": 20, "piedra": 100, "riqueza": 131 } · kawin {  }
+      aldeanos { "alimento:4": 9, "alimento:6": 1, "madera:4": 4, "riqueza:6": 1, "madera:5": 1, "riqueza:4": 1, "riqueza:5": 1 } edificios { "lof": 3, "casa": 2, "corral": 2 }
+4:00 guaranies edad 1 · ejército {  } · banco { "alimento": 383, "madera": 10, "piedra": 100, "riqueza": 200 } · kawin {  }
+      aldeanos { "madera:6": 2, "alimento:4": 2, "madera:4": 9, "madera:5": 2, "alimento:5": 1, "riqueza:4": 1, "riqueza:5": 1 } edificios { "centro": 1, "casa": 2, "granja": 4, "almacen_madera": 2, "campo_tiro": 1 }
+5:00 mapuches edad 1 · ejército { "guerrero": 4 } · banco { "alimento": 900, "madera": 100, "piedra": 100, "riqueza": 243 } · kawin {  }
+      aldeanos { "alimento:6": 2, "madera:4": 6, "alimento:5": 3, "alimento:4": 4, "riqueza:5": 1, "riqueza:4": 4, "madera:5": 1 } edificios { "lof": 3, "casa": 2, "corral": 2, "cuartel": 1 }
+5:00 guaranies edad 1 · ejército {  } · banco { "alimento": 443, "madera": 30, "piedra": 100, "riqueza": 250 } · kawin {  }
+      aldeanos { "alimento:4": 5, "alimento:5": 2, "madera:4": 10, "madera:6": 2, "riqueza:5": 1, "riqueza:4": 1 } edificios { "centro": 1, "casa": 2, "granja": 8, "almacen_madera": 2, "campo_tiro": 1 }
+6:00 mapuches edad 1 · ejército { "guerrero": 5, "lancero": 1 } · banco { "alimento": 40, "madera": 225, "piedra": 100, "riqueza": 7 } · kawin {  }
+      aldeanos { "alimento:5": 3, "madera:4": 6, "alimento:6": 4, "madera:5": 2, "alimento:4": 6, "riqueza:4": 3 } edificios { "lof": 3, "casa": 2, "corral": 2, "cuartel": 1, "rewe_lonko": 1 }
+6:00 guaranies edad 1 · ejército {  } · banco { "alimento": 93, "madera": 130, "piedra": 100, "riqueza": 20 } · kawin {  }
+      aldeanos { "alimento:4": 8, "alimento:6": 1, "riqueza:4": 3, "madera:4": 7, "madera:5": 1, "riqueza:6": 2, "alimento:5": 1, "madera:6": 1 } edificios { "centro": 1, "casa": 2, "granja": 9, "almacen_madera": 2, "campo_tiro": 1, "almacen_mina": 1, "karai_palabra": 1 }
+7:00 mapuches edad 1 · ejército { "guerrero": 10, "lancero": 2, "hondero": 3 } · banco { "alimento": 48, "madera": 276, "piedra": 100, "riqueza": 101 } · kawin {  }
+      aldeanos { "alimento:6": 5, "madera:4": 7, "madera:5": 1, "alimento:4": 8, "alimento:5": 2, "riqueza:4": 2 } edificios { "lof": 3, "casa": 3, "corral": 2, "cuartel": 1, "rewe_lonko": 1 }
+7:00 guaranies edad 1 · ejército { "hondero": 4 } · banco { "alimento": 233, "madera": 70, "piedra": 100, "riqueza": 94 } · kawin {  }
+      aldeanos { "alimento:4": 11, "alimento:6": 1, "riqueza:4": 2, "madera:4": 10, "riqueza:6": 2, "madera:6": 1, "alimento:5": 1 } edificios { "centro": 1, "casa": 4, "granja": 10, "almacen_madera": 2, "campo_tiro": 1, "almacen_mina": 1, "karai_palabra": 1 }
+8:00 mapuches edad 2 · ejército { "guerrero": 12, "lancero": 2, "hondero": 7 } · banco { "alimento": 5, "madera": 22, "piedra": 113, "riqueza": 274 } · kawin {  }
+      aldeanos { "riqueza:4": 3, "alimento:4": 1, "madera:4": 14, "piedra:4": 1, "madera:5": 5, "alimento:5": 1, "riqueza:5": 1, ":6": 1 } edificios { "lof": 3, "casa": 3, "corral": 3, "cuartel": 2, "rewe_lonko": 1, "granja": 3 }
+8:00 guaranies edad 1 · ejército { "hondero": 8 } · banco { "alimento": 503, "madera": 10, "piedra": 100, "riqueza": 174 } · kawin {  }
+      aldeanos { "alimento:4": 13, "alimento:6": 1, "riqueza:4": 2, "madera:5": 2, "madera:4": 8, "riqueza:6": 2, "madera:6": 2, "alimento:5": 1 } edificios { "centro": 1, "casa": 4, "granja": 12, "almacen_madera": 3, "campo_tiro": 1, "almacen_mina": 1, "karai_palabra": 1 }
+9:00 mapuches edad 2 · ejército { "guerrero": 11, "lancero": 2, "hondero": 8 } · banco { "alimento": 14, "madera": 53, "piedra": 139, "riqueza": 517 } · kawin {  }
+      aldeanos { "riqueza:4": 4, "alimento:4": 9, "piedra:4": 2, "alimento:5": 2, "madera:5": 3, "madera:4": 7, ":6": 1 } edificios { "lof": 3, "casa": 3, "corral": 3, "cuartel": 2, "rewe_lonko": 1, "granja": 9 }
+9:00 guaranies edad 2 · ejército { "hondero": 6 } · banco { "alimento": 623, "madera": 35, "piedra": 110, "riqueza": 175 } · kawin {  }
+      aldeanos { "alimento:4": 7, "alimento:5": 2, "piedra:4": 2, "riqueza:4": 5, "madera:4": 11, "alimento:6": 3, "riqueza:5": 2, "madera:5": 1, "piedra:6": 1 } edificios { "centro": 1, "casa": 4, "granja": 12, "almacen_madera": 3, "campo_tiro": 1, "almacen_mina": 1, "karai_palabra": 1, "taller": 1, "cuartel": 1 }
+10:00 mapuches edad 2 · ejército { "guerrero": 12, "lancero": 2, "hondero": 14 } · banco { "alimento": 2, "madera": 14, "piedra": 191, "riqueza": 737 } · kawin {  }
+      aldeanos { "riqueza:4": 2, "alimento:5": 2, "alimento:4": 10, "piedra:4": 3, "madera:5": 5, "madera:4": 5, "riqueza:5": 3 } edificios { "lof": 3, "casa": 4, "corral": 3, "cuartel": 2, "rewe_lonko": 1, "granja": 9 }
+10:00 guaranies edad 2 · ejército { "hondero": 5, "lancero": 1 } · banco { "alimento": 623, "madera": 60, "piedra": 180, "riqueza": 279 } · kawin {  }
+      aldeanos { "alimento:4": 13, "piedra:4": 5, "riqueza:4": 5, "madera:4": 10, "riqueza:5": 3, "madera:5": 1 } edificios { "centro": 1, "casa": 4, "granja": 12, "almacen_madera": 3, "campo_tiro": 2, "almacen_mina": 2, "karai_palabra": 1, "taller": 1, "cuartel": 1 }
+11:00 mapuches edad 2 · ejército { "guerrero": 11, "lancero": 2, "hondero": 17 } · banco { "alimento": 0, "madera": 39, "piedra": 282, "riqueza": 837 } · kawin {  }
+      aldeanos { "alimento:5": 2, "alimento:4": 13, "madera:4": 10, "madera:5": 4, "piedra:4": 4 } edificios { "lof": 3, "casa": 5, "corral": 3, "cuartel": 2, "rewe_lonko": 1, "granja": 12 }
+11:00 guaranies edad 2 · ejército { "hondero": 8, "lancero": 2, "ariete": 1, "guerrero": 1 } · banco { "alimento": 883, "madera": 65, "piedra": 340, "riqueza": 594 } · kawin {  }
+      aldeanos { "alimento:4": 9, "piedra:4": 4, "riqueza:5": 6, "madera:4": 10, "alimento:6": 2, "riqueza:0": 1, "madera:5": 1, "riqueza:4": 6, "alimento:5": 1 } edificios { "centro": 1, "casa": 5, "granja": 12, "almacen_madera": 3, "campo_tiro": 3, "almacen_mina": 2, "karai_palabra": 1, "taller": 2, "cuartel": 1, "mercado": 1 }
+12:00 mapuches edad 2 · ejército { "guerrero": 14, "hondero": 25, "lancero": 1 } · banco { "alimento": 27, "madera": 91, "piedra": 386, "riqueza": 901 } · kawin {  }
+      aldeanos { "alimento:4": 13, "madera:5": 3, "alimento:5": 3, "madera:4": 11, "piedra:4": 4, "riqueza:4": 1 } edificios { "lof": 3, "casa": 6, "corral": 3, "cuartel": 2, "rewe_lonko": 1, "granja": 12 }
+12:00 guaranies edad 2 · ejército { "lancero": 1, "hondero": 6, "ariete": 1, "guerrero": 2 } · banco { "alimento": 40, "madera": 60, "piedra": 260, "riqueza": 117 } · kawin {  }
+      aldeanos { "alimento:4": 9, "alimento:5": 3, "piedra:6": 2, "madera:4": 9, "alimento:6": 4, "piedra:4": 2, "riqueza:5": 1, "madera:5": 4, "riqueza:4": 8 } edificios { "centro": 1, "casa": 5, "almacen_madera": 3, "campo_tiro": 3, "granja": 12, "almacen_mina": 3, "karai_palabra": 1, "taller": 2, "cuartel": 1, "mercado": 1, "monte": 1 }
+13:00 mapuches edad 2 · ejército { "guerrero": 15, "hondero": 28, "lancero": 2 } · banco { "alimento": 32, "madera": 31, "piedra": 477, "riqueza": 861 } · kawin {  }
+      aldeanos { "alimento:4": 17, "alimento:5": 4, "madera:4": 10, "piedra:4": 4, "madera:5": 3 } edificios { "lof": 3, "casa": 7, "corral": 3, "cuartel": 2, "rewe_lonko": 1, "granja": 17 }
+13:00 guaranies edad 2 · ejército { "lancero": 1, "hondero": 13, "ariete": 1, "guerrero": 5 } · banco { "alimento": 39, "madera": 40, "piedra": 360, "riqueza": 425 } · kawin {  }
+      aldeanos { "madera:5": 2, "alimento:4": 12, "piedra:6": 2, "madera:4": 12, "piedra:4": 2, "riqueza:4": 10, "alimento:6": 2 } edificios { "centro": 1, "casa": 6, "almacen_madera": 3, "campo_tiro": 3, "granja": 10, "almacen_mina": 3, "karai_palabra": 1, "taller": 2, "cuartel": 1, "mercado": 1, "monte": 1 }
+14:00 mapuches edad 2 · ejército { "guerrero": 21, "hondero": 35, "lancero": 3 } · banco { "alimento": 25, "madera": 51, "piedra": 581, "riqueza": 818 } · kawin {  }
+      aldeanos { "alimento:4": 18, "alimento:5": 3, "madera:4": 12, "piedra:4": 4, "piedra:5": 1, "madera:5": 1, "riqueza:4": 1 } edificios { "lof": 3, "casa": 8, "corral": 3, "cuartel": 2, "rewe_lonko": 1, "granja": 17 }
+14:00 guaranies edad 2 · ejército { "hondero": 19, "guerrero": 8 } · banco { "alimento": 119, "madera": 60, "piedra": 460, "riqueza": 623 } · kawin {  }
+      aldeanos { "madera:4": 19, "alimento:4": 11, "piedra:6": 2, "piedra:4": 2, "alimento:6": 2, "riqueza:4": 5, "madera:5": 1 } edificios { "centro": 1, "casa": 7, "almacen_madera": 4, "campo_tiro": 3, "granja": 9, "almacen_mina": 3, "karai_palabra": 1, "taller": 2, "cuartel": 1, "mercado": 1, "monte": 1 }
+15:00 mapuches edad 2 · ejército { "guerrero": 23, "hondero": 39, "lancero": 4, "jinete": 1 } · banco { "alimento": 232, "madera": 0, "piedra": 698, "riqueza": 669 } · kawin {  }
+      aldeanos { "alimento:4": 19, "alimento:5": 3, "alimento:6": 1, "madera:4": 13, "piedra:4": 4, "madera:5": 1, "riqueza:4": 1 } edificios { "lof": 3, "casa": 10, "corral": 3, "cuartel": 2, "rewe_lonko": 1, "granja": 17, "mercado": 1 }
+15:00 guaranies edad 3 · ejército { "guerrero": 11, "hondero": 27 } · banco { "alimento": 49, "madera": 40, "piedra": 570, "riqueza": 683 } · kawin {  }
+      aldeanos { "alimento:4": 15, "piedra:5": 1, "madera:5": 3, "madera:4": 15, "piedra:4": 3, "alimento:5": 1, "riqueza:4": 4 } edificios { "centro": 1, "casa": 7, "almacen_madera": 5, "campo_tiro": 3, "granja": 9, "almacen_mina": 3, "karai_palabra": 1, "taller": 2, "cuartel": 1, "mercado": 1, "monte": 1 }
+16:00 mapuches edad 2 · ejército { "hondero": 43, "guerrero": 25, "lancero": 6, "jinete": 5 } · banco { "alimento": 4, "madera": 40, "piedra": 776, "riqueza": 572 } · kawin {  }
+      aldeanos { "riqueza:4": 7, "alimento:4": 11, "riqueza:5": 1, "alimento:5": 6, "madera:5": 7, "piedra:5": 1, "madera:4": 7, "piedra:4": 2 } edificios { "lof": 3, "casa": 11, "corral": 3, "cuartel": 2, "rewe_lonko": 1, "granja": 17, "mercado": 1 }
+16:00 guaranies edad 3 · ejército { "guerrero": 13, "hondero": 36 } · banco { "alimento": 100, "madera": 5, "piedra": 700, "riqueza": 690 } · kawin {  }
+      aldeanos { "alimento:4": 19, "alimento:5": 2, "madera:4": 14, "madera:5": 4, "riqueza:4": 3 } edificios { "centro": 1, "casa": 8, "almacen_madera": 6, "campo_tiro": 3, "granja": 9, "almacen_mina": 3, "karai_palabra": 1, "taller": 2, "cuartel": 1, "mercado": 1, "monte": 1 }
+17:00 mapuches edad 2 · ejército { "guerrero": 26, "hondero": 45, "lancero": 7, "jinete": 6 } · banco { "alimento": 57, "madera": 36, "piedra": 828, "riqueza": 512 } · kawin {  }
+      aldeanos { "riqueza:4": 3, "alimento:4": 16, "riqueza:5": 4, "madera:5": 7, "madera:4": 7, "alimento:5": 4, "piedra:4": 1 } edificios { "lof": 3, "casa": 12, "corral": 3, "cuartel": 2, "rewe_lonko": 1, "granja": 17, "mercado": 1 }
+17:00 guaranies edad 3 · ejército { "guerrero": 15, "hondero": 42 } · banco { "alimento": 180, "madera": 25, "piedra": 700, "riqueza": 473 } · kawin {  }
+      aldeanos { "alimento:4": 18, "riqueza:4": 6, "alimento:5": 2, "madera:5": 2, "madera:4": 14 } edificios { "centro": 1, "casa": 9, "almacen_madera": 7, "campo_tiro": 3, "granja": 12, "almacen_mina": 3, "karai_palabra": 1, "taller": 2, "cuartel": 1, "mercado": 1, "monte": 1 }
+18:00 mapuches edad 2 · ejército { "guerrero": 31, "hondero": 51, "lancero": 7, "jinete": 10 } · banco { "alimento": 107, "madera": 145, "piedra": 854, "riqueza": 503 } · kawin {  }
+      aldeanos { "riqueza:5": 3, "alimento:4": 17, "riqueza:4": 5, "madera:4": 9, "alimento:5": 2, "madera:5": 5, "piedra:5": 1 } edificios { "lof": 3, "casa": 13, "corral": 3, "cuartel": 2, "rewe_lonko": 1, "granja": 17, "mercado": 1 }
+18:00 guaranies edad 3 · ejército { "guerrero": 17, "hondero": 48, "ariete": 1 } · banco { "alimento": 250, "madera": 45, "piedra": 700, "riqueza": 512 } · kawin {  }
+      aldeanos { "alimento:4": 17, "alimento:5": 2, "riqueza:4": 7, "madera:5": 3, "madera:4": 13 } edificios { "centro": 1, "casa": 10, "almacen_madera": 7, "campo_tiro": 3, "granja": 11, "almacen_mina": 3, "karai_palabra": 1, "taller": 2, "cuartel": 1, "mercado": 1, "monte": 1 }
+19:00 mapuches edad 2 · ejército { "guerrero": 35, "hondero": 51, "lancero": 7, "jinete": 12 } · banco { "alimento": 920, "madera": 298, "piedra": 893, "riqueza": 736 } · kawin { "alimento": 150 }
+      aldeanos { "riqueza:4": 4, "alimento:4": 7, "riqueza:5": 3, "alimento:5": 10, "madera:4": 12, "madera:5": 2, "alimento:6": 3, "piedra:4": 1 } edificios { "lof": 3, "casa": 15, "corral": 3, "cuartel": 3, "rewe_lonko": 1, "granja": 17, "mercado": 1 }
+19:00 guaranies edad 3 · ejército { "guerrero": 20, "hondero": 54, "ariete": 1 } · banco { "alimento": 580, "madera": 42, "piedra": 700, "riqueza": 670 } · kawin {  }
+      aldeanos { "alimento:4": 18, "riqueza:4": 4, "madera:4": 12, "alimento:5": 6, "madera:5": 2 } edificios { "centro": 1, "casa": 11, "almacen_madera": 7, "campo_tiro": 3, "granja": 13, "almacen_mina": 3, "karai_palabra": 1, "taller": 2, "cuartel": 1, "mercado": 1, "monte": 1 }
+20:00 mapuches edad 2 · ejército { "guerrero": 36, "hondero": 57, "lancero": 7, "jinete": 12 } · banco { "alimento": 37, "madera": 106, "piedra": 593, "riqueza": 147 } · kawin { "alimento": 300 }
+      aldeanos { "riqueza:5": 4, "alimento:4": 13, "alimento:6": 6, "riqueza:4": 3, "alimento:5": 1, "madera:5": 3, "madera:4": 11, "piedra:6": 1 } edificios { "lof": 3, "casa": 15, "corral": 3, "cuartel": 3, "rewe_lonko": 1, "granja": 17, "mercado": 1, "rewe_caballeria": 1 }
+20:00 guaranies edad 3 · ejército { "guerrero": 23, "hondero": 62, "ariete": 1 } · banco { "alimento": 781, "madera": 57, "piedra": 700, "riqueza": 662 } · kawin {  }
+      aldeanos { "alimento:4": 19, "riqueza:4": 5, "alimento:5": 4, "madera:5": 2, "madera:4": 12 } edificios { "centro": 1, "casa": 12, "almacen_madera": 8, "campo_tiro": 3, "granja": 12, "almacen_mina": 3, "karai_palabra": 1, "taller": 2, "cuartel": 1, "mercado": 1, "monte": 1 }
+21:00 mapuches edad 3 · ejército { "lancero": 8, "hondero": 61, "guerrero": 38, "jinete": 12 } · banco { "alimento": 14, "madera": 87, "piedra": 600, "riqueza": 194 } · kawin { "alimento": 300 }
+      aldeanos { "riqueza:4": 5, "alimento:4": 19, "riqueza:5": 4, "alimento:5": 5, "madera:4": 8, "madera:5": 1 } edificios { "lof": 3, "casa": 16, "corral": 3, "cuartel": 3, "rewe_lonko": 1, "granja": 17, "mercado": 1, "rewe_caballeria": 1 }
+21:00 guaranies edad 3 · ejército { "hondero": 67, "guerrero": 24, "ariete": 1 } · banco { "alimento": 1561, "madera": 287, "piedra": 700, "riqueza": 782 } · kawin {  }
+      aldeanos { "alimento:4": 20, "riqueza:4": 3, "madera:4": 12, "alimento:5": 2, "alimento:6": 2, "madera:6": 2, "madera:5": 1 } edificios { "centro": 1, "casa": 13, "almacen_madera": 8, "campo_tiro": 4, "granja": 13, "almacen_mina": 3, "karai_palabra": 1, "taller": 2, "cuartel": 2, "mercado": 1, "monte": 1 }
+22:00 mapuches edad 3 · ejército { "hondero": 65, "guerrero": 40, "lancero": 10, "jinete": 13 } · banco { "alimento": 105, "madera": 21, "piedra": 600, "riqueza": 149 } · kawin { "alimento": 300 }
+      aldeanos { "riqueza:5": 7, "alimento:4": 20, "riqueza:4": 2, "alimento:5": 4, "madera:4": 7, "madera:5": 2 } edificios { "lof": 3, "casa": 16, "corral": 3, "cuartel": 3, "rewe_lonko": 1, "granja": 17, "mercado": 1, "rewe_caballeria": 1 }
+22:00 guaranies edad 3 · ejército { "hondero": 67, "guerrero": 24, "ariete": 1 } · banco { "alimento": 2321, "madera": 557, "piedra": 700, "riqueza": 948 } · kawin {  }
+      aldeanos { "alimento:4": 21, "riqueza:4": 3, "madera:4": 14, "riqueza:5": 1, "madera:5": 1, "alimento:5": 1, "riqueza:6": 1 } edificios { "centro": 1, "casa": 13, "almacen_madera": 8, "campo_tiro": 5, "granja": 13, "almacen_mina": 5, "karai_palabra": 1, "taller": 2, "cuartel": 2, "mercado": 1, "monte": 1 }
+fin 22 ganador -1
+tele [199, "rechazo", 0, -1, -1, { "msg": "Población llena", "orden": "en_marcha", "ia": true }]
+tele [4251, "rechazo", 0, -1, -1, { "msg": "Recursos insuficientes", "orden": "build:mercado", "ia": true }]
+tele [5631, "rechazo", 0, -1, -1, { "msg": "Recursos insuficientes", "orden": "train:hondero", "ia": true }]
+tele [6911, "rechazo", 0, -1, -1, { "msg": "Recursos insuficientes", "orden": "train:hondero", "ia": true }]
+tele [7491, "rechazo", 0, -1, -1, { "msg": "Recursos insuficientes", "orden": "build:casa", "ia": true }]
+tele [8961, "rechazo", 0, -1, -1, { "msg": "Recursos insuficientes", "orden": "train:hondero", "ia": true }]
+tele [10590, "rechazo", 0, -1, -1, { "msg": "Población llena", "orden": "en_marcha", "ia": true }]
+tele [12151, "rechazo", 0, -1, -1, { "msg": "Recursos insuficientes", "orden": "train:hondero", "ia": true }]
