@@ -1861,7 +1861,17 @@ func _try_move(e: SimEntity, nx: int, ny: int) -> int:
 	var lim := map.n * P - 50
 	nx = clampi(nx, 50, lim)
 	ny = clampi(ny, 50, lim)
-	if map.is_solid(e.x / P, e.y / P, e.owner) or not map.is_solid(nx / P, ny / P, e.owner):
+	# --- equipos ronda 3 --- Sin cortar esquinas: pasar en diagonal entre dos casillas sólidas
+	# (dos árboles, un muro y una casa) metía a la unidad en un bolsillo de 1 a 3 casillas libres
+	# del que el buscador de caminos (diagonal solo sin obstáculos) no la saca: 1297 caminos
+	# imposibles en el 2v2 de fortines, todos de unidades que entraron así (proceso/24, paso 4l).
+	# Ahora vale la misma regla que el buscador; si no puede, se desliza por un eje.
+	var cx := e.x / P
+	var cy := e.y / P
+	var tx := nx / P
+	var ty := ny / P
+	var corner := tx != cx and ty != cy and (map.is_solid(tx, cy, e.owner) or map.is_solid(cx, ty, e.owner))
+	if map.is_solid(cx, cy, e.owner) or (not map.is_solid(tx, ty, e.owner) and not corner):
 		e.x = nx
 		e.y = ny
 		return 2
