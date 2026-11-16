@@ -106,7 +106,9 @@ static func comun(base: SimData, dd: SimData, type: String) -> String:
 	var fixed: Dictionary = cfg().get("comunes", {})
 	if fixed.has(type):
 		out = fixed[type]
-	elif own.has("deposito") and not own.has("funcion") and not (own.get("produce", []) as Array).has("aldeano") and own.get("deposito") != common.get("deposito"):
+	elif own.has("deposito") and not own.has("funcion") and not (own.get("produce", []) as Array).has("aldeano"):
+		# Siempre por lo que recibe, aunque coincida con el común: el «Barrero» no decía qué guarda
+		# (jugador nuevo, ronda 4); ahora es «Depósito de piedra y riqueza».
 		out = String((cfg().get("comunes_deposito", {}) as Dictionary).get(recibe_clave(own["deposito"]), out))
 	return out if out != String(own.get("nombre", "")) else ""
 

@@ -174,6 +174,17 @@
      "oculto": true
     },
     {
+     "id": "o12",
+     "texto": "Se acaban los frutos: construí una granja junto al centro (aldeanos seleccionados: Q abre Economía y W elige la Kokue). Es alimento que no se acaba: un aldeano trabaja en cada una.",
+     "tipo": "construir",
+     "params": {
+      "tipo": "granja",
+      "n": 1
+     },
+     "secundario": true,
+     "oculto": true
+    },
+    {
      "id": "pr",
      "texto": "Cuidá a tus aldeanos: si caen todos, la misión se pierde.",
      "tipo": "proteger",
@@ -562,6 +573,48 @@
       "params": {
        "quien": "Guía",
        "texto": "Ya falta poco. Al terminar el hito llegás a la edad II: tus edificios cambian de aspecto y se abren unidades y construcciones nuevas. Fijate en los avisos del centro de la pantalla."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "agotado",
+      "valor": "arbusto",
+      "radio": 16,
+      "quedan": 1
+     },
+     "accion": {
+      "tipo": "objetivo_nuevo",
+      "params": {
+       "id": "o12"
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "agotado",
+      "valor": "arbusto",
+      "radio": 16,
+      "quedan": 1
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Los frutos de cerca se terminan. El alimento sale de los frutos, de la caza y de las granjas, y la granja es la que dura toda la partida. Con aldeanos seleccionados, Q abre Economía y W elige la Kokue: ponela junto al centro y el aldeano que la levanta se queda a trabajarla."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o12"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Eso es: una granja por aldeano. Cuando los demás se queden sin frutos, hacé más; el punto (.) encuentra a los que quedaron sin trabajo."
       }
      }
     }

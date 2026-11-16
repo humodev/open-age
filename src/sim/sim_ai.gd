@@ -1048,8 +1048,22 @@ func _production(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], 
 		if _spend(budget, sim.dp(player).cost_of("aldeano", p["age"])):
 			sim.push_command({"t": "train", "player": player, "building": centro.id, "type": "aldeano"})
 	var threatened := _threat(centro) != null
-	# Tope de ejército por dificultad (la fácil: 15), salvo si atacan la base.
-	if army.size() >= int(level.get("ejercito_max", 1 << 20)) and not threatened:
+	# Tope de ejército por dificultad (la fácil: 15). Si atacan la base, el de emergencia
+	# (`ejercito_max_amenazada`; sin él, ninguno): la fácil atacada pasaba de 39 a 147 de
+	# población y el ataque que le pide el aviso no se podía ganar (jugador nuevo, ronda 4).
+	var tope := int(level.get("ejercito_max", 1 << 20))
+	if threatened:
+		tope = int(level.get("ejercito_max_amenazada", 1 << 20))
+	# Con tope, cuenta también lo que está en cola: cada edificio encola hasta dos y el tope se
+	# pasaba por 10 (el de emergencia de 30 llegaba a 40).
+	var en_cola := 0
+	if level.has("ejercito_max"):
+		for b in sim.actives:
+			if b.owner == player and b.is_building() and not b.queue.is_empty():
+				for q: String in b.queue:
+					var ud: Dictionary = sim.dp(player).unidades.get(q, {})
+					en_cola += 1 if not ud.is_empty() and ud.get("funcion", "") in ["choque", "distancia", "linea", "asedio"] else 0
+	if army.size() + en_cola >= tope:
 		return
 	# Ahorrando para el hito, solo se mantiene un ejército mínimo por edad con lo que sobra por
 	# encima de su costo. Cortar del todo dejaba a Etiopía con 9 de ejército y 979 de alimento

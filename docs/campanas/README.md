@@ -217,3 +217,4 @@ Todo es opcional y las misiones que no lo usan se comportan igual que antes (`sr
 - **`despues_de`** en un objetivo (id o lista de ids): no se cumple hasta que esos estén cumplidos. Lo que pasó antes cuenta igual (proceso/24, paso 4j: "abatí a los saqueadores" no se adelanta a "entrená 5 guerreros").
 - **`params.nuevos`** en un objetivo `entrenar`: cuenta solo lo entrenado desde que el objetivo aparece.
 - **Disparador `obra`** (`valor`: un tipo de edificio o `hito`): el jugador empezó a levantar uno. Con `espera`, sirve para que la Guía use la espera de una obra larga.
+- **Disparador `agotado`** (`valor`: un tipo de recurso del mapa, `radio` en casillas alrededor de la capital, `quedan`: cuántos con algo pueden quedar): se acaba esa fuente cerca de casa. El tutorial lo usa para pedir una granja cuando se acaban los frutos (proceso/24, paso 4n).

@@ -6,6 +6,7 @@ extends SceneTree
 ##
 ##   --modo=letra   sigue el texto: tres a la madera y tres a los frutos, aldeanos nuevos a la
 ##                  riqueza, explorador al sitio, guerreros y campana si no alcanzan. Debe ganar.
+##                  Cuando se acaban los frutos cerca, la Guía pide una granja (o12): la levanta.
 ##   --modo=indefenso  hace todo menos defenderse: no entrena guerreros hasta que pasa el
 ##                  ataque y no toca la campana. No puede quedar trabada: o gana o pierde con
 ##                  un motivo (antes, sin aldeanos, la misión seguía abierta para siempre).
@@ -151,6 +152,17 @@ func _init() -> void:
 				if src == null:
 					src = nearest("arbol", e.x, e.y)
 				s.push_command({"t": "target", "player": 0, "ids": [e.id], "target": src.id})
+		# "Se acaban los frutos: construí una granja junto al centro" (o12, jugador nuevo, ronda 4):
+		# la levanta uno de los que juntan frutos, que se queda a trabajarla.
+		if objs.get("o12") == "activo" and not step.has("granja_obj") and s.can_afford(0, s.dp(0).cost_of("granja", s.players[0]["age"])):
+			var cosecheros := v.filter(func(e: SimEntity) -> bool: return food_ids.has(e.id))
+			if cosecheros.is_empty():
+				cosecheros = v.slice(0, 1)
+			if not cosecheros.is_empty():
+				var p := place("granja", c, 5)
+				s.push_command({"t": "build", "player": 0, "ids": [cosecheros[0].id], "type": "granja", "tx": p.x, "ty": p.y})
+				step["granja_obj"] = true
+				print(t(), " objetivo de la granja: la levanto con un aldeano de los frutos")
 		if objs.get("o2") == "activo" and not step.has("casa") and int(r["madera"]) >= 50:
 			var p := place("casa", c, 4)
 			s.push_command({"t": "build", "player": 0, "ids": [v[0].id], "type": "casa", "tx": p.x, "ty": p.y})
@@ -201,6 +213,15 @@ func _init() -> void:
 	# Orden de los objetivos 8 y 9 (jugador nuevo, ronda 3): abatir a los saqueadores no se adelanta.
 	if done_at.has("o9") and int(done_at.get("o8", 1 << 60)) > int(done_at["o9"]):
 		print("FALLA: «abatí a los saqueadores» se cumplió antes que «entrená 5 guerreros»")
+		ok = false
+	# Granja (o12): si los frutos se acabaron, el tutorial la pidió, y en modo letra se cumple.
+	var o12 := ""
+	for o in s.scenario.objectives:
+		if o["id"] == "o12":
+			o12 = o["estado"]
+	print("objetivo de la granja (o12): %s" % o12)
+	if modo == "letra" and o12 == "activo":
+		print("FALLA: la Guía pidió la granja y quedó sin hacer")
 		ok = false
 	# La espera del hito tiene mensajes de la Guía.
 	if res == "victoria" and hito_tick >= 0:

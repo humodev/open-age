@@ -1,0 +1,54 @@
+00:00 guía: Primero, mirá alrededor: las flechas o el mouse contra el borde mueven la cámara
+00:10 guía: Ahora, a trabajar. Arrastrá el mouse sobre tus aldeanos para elegirlos. Con clic
+01:30 objetivo hecho o1 Juntá 100 de madera y 100 de alimento: mandá tres aldeanos a los árbol
+01:30 objetivo nuevo o2 Construí una casa (aldeanos seleccionados: Q abre Economía, Q otra vez
+01:30 guía: Bien. Arriba a la izquierda están tus recursos y, al lado de cada uno, cuántos a
+02:00 objetivo hecho o2 Construí una casa (aldeanos seleccionados: Q abre Economía, Q otra vez
+02:00 objetivo nuevo o3 Entrená 3 aldeanos en el centro (tecla H para seleccionarlo, después Q
+02:00 guía: Más manos, más recursos. Seleccioná el centro con H y entrená aldeanos con Q. Si
+02:57 objetivo hecho o3 Entrená 3 aldeanos en el centro (tecla H para seleccionarlo, después Q
+02:57 objetivo nuevo o4 Juntá 100 de riqueza: mandá a los aldeanos nuevos a la veta dorada con
+02:57 guía: Hay cuatro recursos. La riqueza (la veta dorada cerca del centro) paga guerreros
+03:00 recursos { "alimento": 360, "madera": 410, "piedra": 100, "riqueza": 150 } · aldeanos 9 · guerreros 0
+04:15 objetivo nuevo o12 Se acaban los frutos: construí una granja junto al centro (aldeanos se
+04:15 guía: Los frutos de cerca se terminan. El alimento sale de los frutos, de la caza y de
+04:18 objetivo de la granja: la levanto con un aldeano de los frutos
+04:26 objetivo hecho o4 Juntá 100 de riqueza: mandá a los aldeanos nuevos a la veta dorada con
+04:26 objetivo nuevo o5 Explorá: elegí al explorador y mandalo con clic derecho hacia el centr
+04:26 guía: Lo oscuro del mapa es lo que nadie vio todavía. El explorador es rápido y no jun
+04:35 objetivo hecho o5 Explorá: elegí al explorador y mandalo con clic derecho hacia el centr
+04:35 objetivo nuevo o6 Tomá el sitio sagrado: dejá al explorador parado al lado hasta que la 
+04:35 guía: Eso es un sitio sagrado. Se toma dejando una unidad al lado, sin enemigos cerca,
+04:36 objetivo hecho o12 Se acaban los frutos: construí una granja junto al centro (aldeanos se
+04:36 guía: Eso es: una granja por aldeano. Cuando los demás se queden sin frutos, hacé más;
+04:48 objetivo hecho o6 Tomá el sitio sagrado: dejá al explorador parado al lado hasta que la 
+04:48 objetivo nuevo o7 Construí un cuartel (aldeanos seleccionados: W abre Militar y Q elige 
+04:48 guía: Vas a necesitar soldados: construí un cuartel cerca del centro.
+05:29 objetivo hecho o7 Construí un cuartel (aldeanos seleccionados: W abre Militar y Q elige 
+05:29 objetivo nuevo o8 Entrená 5 guerreros en el cuartel (cuestan alimento y riqueza: dejá al
+05:29 guía: Choque vence a distancia, distancia vence a línea, línea vence a choque. El guer
+05:30 se acabaron los frutos cerca: hago granjas (Kokue (roza))
+05:59 guía: ¡Se juntan saqueadores al otro lado del monte! Llegan en 60 segundos: entrená gu
+05:59 objetivo nuevo o9 Defendé el pueblo: abatí a los 4 saqueadores (se cumple después de ent
+06:00 recursos { "alimento": 660, "madera": 280, "piedra": 100, "riqueza": 421 } · aldeanos 10 · guerreros 0
+06:29 guía: Faltan 30 segundos. Si no te alcanzan los guerreros, elegí el centro (H) y tocá 
+07:09 llegan 4 saqueadores; tengo 0 guerreros y 10 aldeanos
+09:00 recursos { "alimento": 970, "madera": 310, "piedra": 100, "riqueza": 665 } · aldeanos 2 · guerreros 0
+11:01 objetivo hecho o8 Entrená 5 guerreros en el cuartel (cuestan alimento y riqueza: dejá al
+11:01 objetivo hecho o9 Defendé el pueblo: abatí a los 4 saqueadores (se cumple después de ent
+11:01 objetivo nuevo o10 Avanzá a la edad II: con aldeanos seleccionados, construí uno de los d
+11:01 guía: Cada edad se gana con un hito, y cada pueblo tiene los suyos. El hito pide alime
+11:03 construyo el hito karai_palabra con { "alimento": 830, "madera": 310, "piedra": 100, "riqueza": 562 }
+11:03 guía: La obra del hito tarda unos minutos. La barra sobre la obra dice cuánto falta, y
+11:23 guía: Mientras tanto, abrí el panel de Edad (F4): dice qué cambia en la edad II y qué 
+11:23 objetivo nuevo o11 Mientras sube el hito (opcional): entrená 3 aldeanos más y mandalos a 
+12:00 recursos { "alimento": 330, "madera": 310, "piedra": 100, "riqueza": 279 } · aldeanos 2 · guerreros 5
+12:03 guía: Cada hito ayuda a su alrededor. El de economía hace que se junte más rápido cerc
+12:43 guía: Un truco para las peleas: elegí a tus guerreros y apretá Ctrl+1. Después, con so
+13:23 guía: Ya falta poco. Al terminar el hito llegás a la edad II: tus edificios cambian de
+14:06 objetivo hecho o10 Avanzá a la edad II: con aldeanos seleccionados, construí uno de los d
+14:06 MISIÓN victoria · 
+RESULTADO modo=indefenso victoria a las 14:06 · motivo: 
+objetivo de la granja (o12): hecho
+mensajes de la Guía mientras sube el hito: 5
+OK

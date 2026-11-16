@@ -147,6 +147,7 @@ func on_step() -> void:
 	if sim.tick == 0:
 		_fire("inicio", 0)
 	_obras()
+	_agotados()
 	for o in objectives:
 		if o["estado"] != "activo":
 			continue
@@ -261,6 +262,31 @@ func _obras() -> void:
 		_fire("obra", k)
 
 
+## Disparador "agotado" (`valor`: un tipo de recurso del mapa; `radio`, en casillas alrededor de la
+## capital; `quedan`, cuántos con algo pueden quedar): se acaba esa fuente cerca de casa. El
+## tutorial lo usa para pedir una granja cuando se acaban los frutos (jugador nuevo, ronda 4:
+## sin granjas, el principiante quedaba con la mitad de los aldeanos ociosos).
+func _agotados() -> void:
+	if sim.tick % 50 != 0:
+		return
+	var cap: SimEntity = null
+	for e in triggers:
+		if e["hecho"] or e.has("listo") or e["cuando"]["tipo"] != "agotado":
+			continue
+		if cap == null:
+			cap = _capital(0)
+			if cap == null:
+				return
+		var c: Dictionary = e["cuando"]
+		var r := int(c.get("radio", 16)) * P
+		var left := 0
+		for res in sim.entities:
+			if res.alive and res.is_resource() and res.type == String(c.get("valor", "")) and res.amount > 0 and absi(res.x - cap.x) <= r and absi(res.y - cap.y) <= r:
+				left += 1
+		if left <= int(c.get("quedan", 0)):
+			_fire("agotado", c.get("valor", ""))
+
+
 func _check_end() -> void:
 	if sim.players[0]["defeated"]:
 		if motivo == "":
@@ -303,7 +329,7 @@ func _fire(kind: String, value: Variant) -> void:
 			continue
 		if kind == "tiempo" and int(value) < int(c.get("valor", 0)):
 			continue
-		if (kind == "objetivo" or kind == "obra") and String(c.get("valor", "")) != String(value):
+		if (kind == "objetivo" or kind == "obra" or kind == "agotado") and String(c.get("valor", "")) != String(value):
 			continue
 		if int(c.get("espera", 0)) > 0:
 			if not e.has("listo"):

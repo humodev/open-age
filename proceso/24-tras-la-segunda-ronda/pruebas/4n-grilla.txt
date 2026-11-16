@@ -1,0 +1,7 @@
+tawantinsuyu   eco[Q=casa W=granja E=almacen_madera R=centro A=mercado S=anden D=taller_tejido X=almacen_mina]  mil[Q=cuartel W=qollqa A=torre F=camino Z=campo_tiro]  e1[Z=ushnu X=pukara_mayor]  e2[Z=aqllawasi X=kallanka_real]  e3[Z=qorikancha X=vilcabamba]
+mapuches       eco[Q=casa W=granja R=lof A=mercado D=corral]  mil[Q=cuartel S=empalizada D=puerta]  e1[Z=rewe_lonko X=rewe_malon]  e2[Z=rewe_monte X=rewe_caballeria]  e3[Z=parlamento X=weichan]
+guaranies      eco[Q=casa W=granja E=almacen_madera R=centro A=mercado X=almacen_mina]  mil[Q=cuartel S=empalizada D=puerta Z=campo_tiro C=taller]  e1[Z=karai_palabra X=aty_guasu]  e2[Z=mision X=monte]  e3[Z=tava X=yvy_marane]
+etiopia        eco[Q=casa W=granja E=almacen_madera R=centro A=mercado S=gult F=corte_nueva Z=almacen_alimento X=almacen_mina]  mil[Q=cuartel A=torre S=empalizada D=puerta X=establo C=taller]  e1[Z=iglesia X=monasterio]  e2[Z=amba X=remonta]  e3[Z=gondar X=alianza]
+palmares       eco[Q=casa W=granja R=centro A=mercado F=mocambo Z=almacen_alimento X=almacen_mina]  mil[Q=cuartel S=empalizada D=puerta]  e1[Z=quilombo_central X=mocambo_guerra]  e2[Z=cerca_real X=ferraria]  e3[Z=pacto_cucau X=guerra_zumbi]
+ayutthaya      eco[Q=casa W=granja R=centro A=mercado X=almacen_mina]  mil[Q=cuartel W=kraal E=barrio_japones R=barrio_portugues A=torre Z=campo_tiro C=taller]  e1[Z=wat X=kraal_real]  e2[Z=puerto_real X=fortaleza_rio]  e3[Z=junco_tributo X=guardia_extranjera]
+GRILLA: OK

@@ -194,11 +194,65 @@ func _push(dt: int) -> void:
 	_since["empujon"] = int(_since.get("empujon", 0)) + dt
 	if int(_since["empujon"]) < int(c.get("durante_s", 90)):
 		return
+	# --- dónde y con qué --- (jugador nuevo, ronda 4: «la base rival está en la niebla y no sé
+	# dónde queda»; «mis 20 soldados no tiran ningún edificio»). Rumbo a la capital rival más
+	# cercana, marcada en el minimapa y con lugar para Espacio; y qué asedio tira edificios.
+	var rival := _rival_capital(cap)
 	var how := "Elegí tus tropas, A y clic en la base rival"
+	if rival != null:
+		var seen: bool = sim.fog.is_explored(hud.local, rival)
+		how += " (%s hacia el %s: marcada en el minimapa, Espacio te lleva)" % ["la viste" if seen else "está", _rumbo(cap, rival)]
+	var siege := _asedio_texto(int(p["age"]))
+	if siege != "":
+		how += ".\n" + siege
 	if int(p["age"]) < sim.dp(hud.local).edades.size():
-		how += "; o con un aldeano encargá el hito de la próxima edad (Z o X)"
-	if _say("empujon", "Tenés ejército y recursos de sobra: atacá o subí de edad\n%s." % how, "decision", int(c.get("repetir_s", 240))):
+		how += ".\nO con un aldeano encargá el hito de la próxima edad (Z o X)"
+	if _say("empujon", "Tenés ejército y recursos de sobra: atacá o subí de edad\n%s." % how, "decision", int(c.get("repetir_s", 240)), WorldView.to_world(rival.x, rival.y) if rival != null else null):
 		_since["empujon"] = 0
+		if rival != null and hud.has_method("senalar_minimapa"):
+			hud.senalar_minimapa(rival.x, rival.y)
+
+
+## La capital (o el centro) rival más cercana a la nuestra.
+func _rival_capital(cap: SimEntity) -> SimEntity:
+	var sim: Sim = hud.sim
+	var best: SimEntity = null
+	for e in sim.actives:
+		if e.alive and e.is_building() and e.owner >= 0 and sim.enemies(hud.local, e.owner) and (e.capital or e.type == "centro"):
+			if best == null or Sim.dist(e.x, e.y, cap.x, cap.y) < Sim.dist(best.x, best.y, cap.x, cap.y):
+				best = e
+	return best
+
+
+## Rumbo de `a` a `b` como lo muestran la pantalla y el minimapa (que giran con la cámara):
+## arriba es el norte.
+func _rumbo(a: SimEntity, b: SimEntity) -> String:
+	var d := Vector3(b.x - a.x, 0, b.y - a.y)
+	var cam: RtsCamera = hud.ctrl.cam if hud.ctrl != null else null
+	var right := cam.right_xz() if cam != null else Vector3(1, 0, 0)
+	var fwd := cam.forward_xz() if cam != null else Vector3(0, 0, -1)
+	var sx := d.dot(right)
+	var sy := d.dot(fwd)
+	var names := ["este", "noreste", "norte", "noroeste", "oeste", "sudoeste", "sur", "sudeste"]
+	return names[posmod(int(round(atan2(sy, sx) / (PI / 4.0))), 8)]
+
+
+## «Para tirar edificios hace falta asedio: Ariete (en el Taller de tacuara, edad II).»
+func _asedio_texto(age: int) -> String:
+	var dd: SimData = hud.sim.dp(hud.local)
+	var parts: Array[String] = []
+	for u: String in dd.unidades:
+		var ud: Dictionary = dd.unidades[u]
+		if ud.get("funcion", "") != "asedio":
+			continue
+		for b: String in dd.edificios:
+			if (dd.edificios[b].get("produce", []) as Array).has(u) and not dd.is_hito(b):
+				var em := maxi(int(ud.get("edad_min", 1)), int(dd.edificios[b].get("edad_min", 1)))
+				parts.append("%s (%s%s)" % [ud.get("nombre", u), dd.edificios[b].get("nombre", b), "" if em <= age else ", edad %s" % Sim._roman(em)])
+				break
+	if parts.is_empty():
+		return ""
+	return "Para tirar edificios hace falta asedio: " + ", ".join(parts)
 
 
 # ---------------------------------------------------------------- Viajes largos

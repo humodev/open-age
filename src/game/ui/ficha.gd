@@ -182,10 +182,10 @@ func _pinned() -> Dictionary:
 		return p
 	if _pin.begins_with("cmd:"):
 		var slot := int(_pin.substr(4))
-		for c in ctrl.commands():
-			if c["slot"] == slot:
-				var card: Control = hud.get("_card")
-				return {"key": "pin", "cmd": c, "delay": 0.0, "at": card.get_global_rect() if card != null else Rect2()}
+		var c := Controller.cmd_at(ctrl.commands(), slot)
+		if not c.is_empty():
+			var card: Control = hud.get("_card")
+			return {"key": "pin", "cmd": c, "delay": 0.0, "at": hud.grid_anchor(card.get_global_rect()) if card != null else Rect2()}
 		return {}
 	var best: SimEntity = null
 	for e in sim.entities:

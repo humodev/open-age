@@ -14,7 +14,7 @@ const FONDO_PASTILLA := Color(0, 0, 0, 0.62)
 ## --- aprender --- Opción "Mostrar nombres en la grilla" (src/game/ui/opciones.gd): el glifo
 ## se achica y el nombre va debajo, en dos renglones (uno si abajo hay franja o edad). Si el
 ## propio no es el común ("Oga"), arriba va el común ("Casa") y abajo el propio, más tenue.
-static var nombres := false
+static var nombres := true
 
 
 ## Dibuja una casilla con comando. `res` es el banco del jugador; `rp` el recurso propio.
@@ -60,19 +60,33 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 		else:
 			Glyphs.draw(ci, c["icon"], _rect_glifo(r, locked, falta), col)
 	elif nombre != "":
-		Glyphs.draw(ci, c["icon"], Rect2(r.position.x + (r.size.x - 26) / 2.0 + 2, r.position.y + 3, 26, 26), col)
 		var lines := 1 if (locked and edad_pedida(str(c["locked"])) != "") or (not afford and not locked) else 2
+		# Compacto (jugador nuevo, ronda 4): sin común, un renglón no alcanza («Trabajo de la
+		# riqueza» con la edad abajo) → glifo chico y dos renglones arriba de la pastilla.
+		var compacto := comun == "" and lines == 1 and _fit_lineas(Hud.font, nombre, 10, r.size.x - 4, 1) < 9
+		if compacto:
+			Glyphs.draw(ci, c["icon"], Rect2(r.position.x + (r.size.x - 18) / 2.0 + 2, r.position.y + 3, 18, 18), col)
+			var fsc := _fit_lineas(Hud.font, nombre, 9, r.size.x - 4, 2)
+			ci.draw_multiline_string(Hud.font, Vector2(r.position.x + 2, r.position.y + 31), nombre, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, fsc, 2, col if col == Palette.UI_TEXT else Palette.UI_DIM.lightened(0.2))
+		else:
+			Glyphs.draw(ci, c["icon"], Rect2(r.position.x + (r.size.x - 26) / 2.0 + 2, r.position.y + 3, 26, 26), col)
 		var tcol := Palette.UI_TEXT if col == Palette.UI_TEXT else Palette.UI_DIM.lightened(0.2)
-		if comun != "" and lines == 2 and _fit(Hud.font_b, comun, 11, r.size.x - 4) < 9:
+		if compacto:
+			pass
+		elif comun != "" and lines == 2 and _fit(Hud.font_b, comun, 11, r.size.x - 4) < 9:
 			# --- depósitos de comida --- (4m) común largo ("Granero y leñera"): en dos renglones
 			# y sin el propio, que queda en la ayuda; achicado hasta lo ilegible no sirve.
-			ci.draw_multiline_string(Hud.font_b, Vector2(r.position.x + 2, r.position.y + 39), comun, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, 10, 2, tcol)
+			var fsb := _fit_lineas(Hud.font_b, comun, 10, r.size.x - 4, 2) # «Depósito de piedra y riqueza»
+			ci.draw_multiline_string(Hud.font_b, Vector2(r.position.x + 2, r.position.y + 39 - (10 - fsb) * 0.5), comun, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, fsb, 2, tcol)
 		elif comun != "":
 			ci.draw_string(Hud.font_b, Vector2(r.position.x + 2, r.position.y + 39), comun, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, _fit(Hud.font_b, comun, 11, r.size.x - 4), tcol)
 			if lines == 2:
 				ci.draw_string(Hud.font, Vector2(r.position.x + 2, r.position.y + 51), nombre, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, _fit(Hud.font, nombre, 10, r.size.x - 4), Palette.UI_DIM.lightened(0.2))
 		else:
-			ci.draw_multiline_string(Hud.font, Vector2(r.position.x + 2, r.position.y + 39), nombre, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, 10, lines, tcol)
+			# Achicado hasta que entre entero en sus renglones (jugador nuevo, ronda 4: «Mamposteri»,
+			# «Trabajo de»): una palabra larga no se corta por la mitad ni se pierde un renglón.
+			var fs := _fit_lineas(Hud.font, nombre, 10, r.size.x - 4, lines)
+			ci.draw_multiline_string(Hud.font, Vector2(r.position.x + 2, r.position.y + 39 - (10 - fs) * 0.5), nombre, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, fs, lines, tcol)
 	else:
 		Glyphs.draw(ci, c["icon"], _rect_glifo(r, locked, falta), col) # --- costo real ---
 	# --- fin aprender ---
@@ -109,6 +123,22 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 ## Tamaño de letra (de `size` para abajo, hasta 7) con el que `txt` entra en `w`.
 static func _fit(f: Font, txt: String, size: int, w: float) -> int:
 	while size > 7 and f.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x > w:
+		size -= 1
+	return size
+
+
+## Tamaño de letra (de `size` para abajo, hasta 7) con el que `txt` entra en `lines` renglones
+## de ancho `w` sin partir ninguna palabra.
+static func _fit_lineas(f: Font, txt: String, size: int, w: float, lines: int) -> int:
+	while size > 7:
+		var ok := true
+		for word in txt.split(" ", false):
+			ok = ok and f.get_string_size(word, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x <= w
+		if ok:
+			var used := f.get_multiline_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, w, size).y
+			ok = used <= f.get_height(size) * lines + 0.5
+		if ok:
+			break
 		size -= 1
 	return size
 

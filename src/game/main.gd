@@ -897,11 +897,11 @@ func _maybe_shot() -> void:
 	if _args.has("ayuda"):
 		await get_tree().process_frame
 		var slot := int(_args["ayuda"])
-		for c in ctrl.commands():
-			if int(c["slot"]) == slot:
-				var card: Control = hud._card
-				var sr: Rect2 = card.call("_slot_rect", slot)
-				hud.show_tip(c, Rect2(card.global_position + sr.position, sr.size))
+		var c := Controller.cmd_at(ctrl.commands(), slot)
+		if not c.is_empty():
+			var card: Control = hud._card
+			var sr: Rect2 = card.call("_slot_rect", slot)
+			hud.show_tip(c, Rect2(card.global_position + sr.position, sr.size))
 	# --- fin veterano ---
 	if _args.has("grilla"): # --- grilla --- (--grilla=economia|militar abre ese submenú para la captura)
 		ctrl.open_submenu(_args["grilla"])
@@ -1644,6 +1644,21 @@ func _autotest() -> void:
 	_mouse(beast_sp, 0, false)
 	await _frames(3)
 	check.call("cursor de juntar alimento sobre un animal propio (%s)" % ctrl.cursor_action(beast_sp), ctrl.cursor_action(beast_sp) == "recolectar_alimento")
+	# Con el aldeano elegido pegado al animal (el tester lo vio fallar según por dónde caminaba).
+	# El cursor entre los dos, más cerca del aldeano: antes ganaba el aldeano y decía «mover».
+	sim.push_command({"t": "stop", "player": local, "ids": [butcher.id]})
+	await _frames(3)
+	butcher.x = beast.x + 500
+	butcher.y = beast.y
+	butcher.goal_x = butcher.x
+	butcher.goal_y = butcher.y
+	await _frames(30) # que el modelo llegue a donde quedó
+	var b_sp := cam.cam.unproject_position((view.visuals[butcher.id]["node"] as Node3D).position + Vector3(0, 0.45, 0))
+	var a_sp := cam.cam.unproject_position((view.visuals[beast.id]["node"] as Node3D).position + Vector3(0, 0.45, 0))
+	beast_sp = b_sp.lerp(a_sp, 0.4)
+	_mouse(beast_sp, 0, false)
+	await _frames(3)
+	check.call("con el aldeano pegado al animal (a %.0f px), el cursor sigue en juntar (%s; bajo el cursor: %s)" % [b_sp.distance_to(a_sp), ctrl.cursor_action(beast_sp), sim.by_id[ctrl.pick(beast_sp, true)].type if ctrl.pick(beast_sp, true) >= 0 else "nada"], ctrl.cursor_action(beast_sp) == "recolectar_alimento")
 	_mouse(beast_sp, MOUSE_BUTTON_RIGHT, true)
 	_mouse(beast_sp, MOUSE_BUTTON_RIGHT, false)
 	await _frames(90)
@@ -1685,6 +1700,20 @@ func _autotest() -> void:
 	await _frames(3)
 	var centro: SimEntity = sim.by_id.get(ctrl.selection[0]) if ctrl.selection.size() == 1 else null
 	check.call("H selecciona la capital", centro != null and (centro.capital or centro.type == "centro"))
+	# --- casillas --- (jugador nuevo, ronda 4: en Q se dibujaba «Herramientas de tala» y entrenaba un aldeano)
+	await _frames(2)
+	var dib: Dictionary = hud._card.dibujadas
+	var en_q: Dictionary = dib.get(0, {})
+	var en_w: Dictionary = dib.get(1, {})
+	var quiere_q := centro != null and (centro.def.get("produce", []) as Array).has("aldeano")
+	check.call("la grilla del centro dibuja «%s» en Q y «%s» en W" % [en_q.get("name", "—"), en_w.get("name", "—")], (not quiere_q or en_q.get("id", "") == "aldeano") and ((centro == null or not (centro.def.get("produce", []) as Array).has("explorador")) or en_w.get("id", "") == "explorador"))
+	var repetidas := 0
+	var vistas := {}
+	for c in ctrl.commands():
+		repetidas += 1 if vistas.has(int(c["slot"])) else 0
+		vistas[int(c["slot"])] = true
+	check.call("ninguna casilla del centro tiene dos comandos (%d repetidas)" % repetidas, repetidas == 0)
+	# --- fin casillas ---
 	_key_tap(KEY_Q)
 	await get_tree().create_timer(0.3).timeout
 	check.call("Q en el centro encola un aldeano", centro != null and centro.queue.size() == 1)
@@ -1877,6 +1906,8 @@ func _autotest() -> void:
 	cs.check(0)
 	cs.check(int(emp.get("durante_s", 90)) + 1)
 	check.call("aviso «atacá o subí de edad» con ejército en casa y recursos de sobra", said.call("atacá o subí de edad"))
+	check.call("el aviso dice hacia dónde está la base rival y la marca en el minimapa", said.call("hacia el ") and not hud._mini.senalado.is_empty())
+	check.call("el aviso dice que los edificios caen con asedio", said.call("hace falta asedio"))
 	await _frames(2)
 	get_viewport().get_texture().get_image().save_png("screenshots/autotest_empujon.png")
 	for e in extra:
