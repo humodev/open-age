@@ -159,6 +159,7 @@ Un cambio por torneo: 75 partidas, 5 semillas, 30 minutos, en 10 procesos.
 | [16](pruebas/16-torneo-acogida.txt) (10 semillas) | Palmares: acogida a 34 de fama (antes 28) | 54 | 62 | **74** | 38 | **34** | 38 |
 | [17](pruebas/17-torneo-riqueza-guarani.txt) (10) | Guaraníes: riqueza 750 (antes 800). **Descartado** | 54 | 64 | **78** | 34 | 34 | 36 |
 | [18](pruebas/18-torneo-roza-y-kawin.txt) (10) | Guaraníes: roza 900 (antes 1000) + IA mapuche: kawiñ | 58 | **70** | **56** | 42 | 42 | 32 |
+| [19](pruebas/19-torneo-kona.txt) (10) | Mapuches: kona montado 80/55 (antes 70/45; el base, 100/70) | 58 | **64** | 60 | 44 | 42 | 32 |
 
 **Etiopía, de 56 % a 8 %.**
 - Con la misma partida seguida en el commit anterior a la etapa (`tools/ia_por_dentro.gd`, sierra contra Tawantinsuyu), el ejército etíope ya era chico (unas 20 unidades). Lo que cambió fue el rival: los arreglos de economía del paso 1 destrabaron el alimento de Tawantinsuyu, que pasó de 15 a 60 unidades.
@@ -207,3 +208,4 @@ Cada frente tiene su agente en un worktree propio, con su rama y su documento. E
 - El motor es la roza: 500 de alimento a 1000 (33 % más que la granja común, 750) y, al agotarse, un yerbal que da riqueza.
 - Torneo 18: roza a 900, todavía 20 % sobre la granja. Entra junto con el kawiñ mapuche (un arreglo de IA que queda igual). Son dos civs distintas: se mira cada una.
 - **Torneo 18:** guaraníes de 78 a 56 %; era la roza. Los mapuches suben de 64 a 70 % con el kawiñ, el riesgo que había anotado el frente A: llegan antes a la edad III y al kona montado.
+- **Torneo 19:** el kona montado costaba 30 % menos que el jinete base. Ahora cuesta 80/55: sigue más barato, porque el malón es su identidad. Mapuches de 70 a 64 %, y todas quedan entre 32 y 64 %.
