@@ -305,16 +305,52 @@ a) El balance se mide con la normal, y la experta solo se revisa para que ningun
 El sonido mapuche (fanfarria, alarma y órdenes) usa kultrun y trutruka sintetizados (`proceso/24-tras-la-segunda-ronda/4g-sonido.md`). El kultrun es un instrumento ceremonial de la machi. Ya estaba pendiente consultar la pifilka.
 a) Dejarlo, y consultarlo con una organización mapuche junto con la pifilka antes de publicar *(por defecto)* · b) Usar solo la trutruka hasta tener esa consulta
 
+*Mientras tanto se aplicó la opción b), la prudente (paso 4h, a pedido del jugador de historia en la ronda 3). Si contestás a), se vuelve: los modelos están en `456a59b`.*
+
 **Respuesta:**
 
 ### C-54 · (sonido) La begena en la música de paz etíope
 La música nueva de Etiopía (C-24) abre y cierra con begena, el arpa de la oración ortodoxa. Solo suena en la paz, nunca en combate ni en alarmas, y no hay voces ni nada que imite el zema.
 a) Así, y consultarlo con alguien de la tradición ortodoxa etíope antes de publicar *(por defecto)* · b) Reemplazar la begena por krar, que es profano
 
+*Mientras tanto se aplicó la opción b), la prudente (paso 4h, a pedido del jugador de historia en la ronda 3). Si contestás a), se vuelve: los modelos están en `456a59b`.*
+
 **Respuesta:**
 
 ### C-55 · (sonido) El berimbau en Palmares
 El sonido de Palmares usa berimbau y atabaque. El berimbau de arco con calabaza está documentado en Brasil sobre todo desde el siglo XIX [verificar]; en el Palmares del siglo XVII podría ser un anacronismo.
 a) Dejarlo: es el instrumento afrobrasileño que más se reconoce *(por defecto)* · b) Solo atabaque y agogô
+
+*Mientras tanto se aplicó la opción b), la prudente (paso 4h, a pedido del jugador de historia en la ronda 3). Si contestás a), se vuelve: los modelos están en `456a59b`.*
+
+**Respuesta:**
+
+### C-56 · (sonido) Mbaraka y takuapu guaraníes
+Son instrumentos rituales del opy mbyá. Desde el paso 4h no suenan en la tropa: en su lugar, mimby (flauta de caña) y angu'apu (tambor de tronco), según Montoya, 1639 [verificar].
+a) Así, hasta consultar con una organización mbyá *(por defecto)* · b) Volver a la mbaraka
+
+**Respuesta:**
+
+### C-57 · (sonido) La música de paz de Palmares
+Tiene dos grabaciones de berimbau con toques de capoeira y una de ijexá (un ritmo del candomblé). El sonido de tropa ya es de raíz angoleña (paso 4h).
+a) Dejarlas hasta tener una música propia sintetizada de ngoma y marimba *(por defecto)* · b) Sacarlas ya
+
+**Respuesta:**
+
+### C-58 · (sonido) El kebero etíope en la fanfarria, la alarma y el entrenado
+El kebero también es tambor litúrgico [verificar]. La orden ya pasó al krar.
+a) Dejarlo y preguntarlo junto con C-54 *(por defecto)* · b) Sacarlo también de esos tres
+
+**Respuesta:**
+
+### C-59 · (sonido) *Phleng Maha Nimit* en la música de Ayutthaya
+Podría ser del repertorio ceremonial naphat [verificar].
+a) Dejarla hasta confirmar *(por defecto)* · b) Sacarla
+
+**Respuesta:**
+
+### C-60 · (arte) La mbaraka del karai en el hito guaraní
+El hito "Casa del karai" muestra bastones con plumas y una mbaraka (`data/arte_hitos.json`).
+a) Dejarlo: es la casa del karai, donde corresponde *(por defecto)* · b) Sacar la mbaraka del modelo
 
 **Respuesta:**
