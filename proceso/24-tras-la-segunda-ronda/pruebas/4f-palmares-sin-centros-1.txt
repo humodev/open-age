@@ -1,0 +1,10 @@
+palmares      llano     s41  30:00  gana dificil por puntos     pts 4495-4849 | 10' 20a14mE2 / 19a1mE1 15' 33a10mE2 / 31a17mE2 20' 45a14mE2 / 45a15mE2
+palmares      llano     s42  30:00  gana dificil por puntos     pts 4559-4640 | 10' 19a14mE2 / 19a3mE1 15' 31a16mE2 / 30a40mE2 20' 44a13mE2 / 41a62mE2
+palmares      llano     s43  30:00  gana dificil por puntos     pts 4338-4721 | 10' 20a15mE1 / 18a13mE1 15' 32a9mE2 / 22a25mE1 20' 40a4mE2 / 40a39mE3
+palmares      llano     s44  30:00  gana EXPERTA por puntos     pts 4188-4021 | 10' 20a17mE2 / 17a2mE1 15' 31a5mE2 / 25a10mE2 20' 43a5mE2 / 35a12mE2
+palmares      rio       s41  21:44  gana dificil (sitios)       pts 1245-3034 | 10' 19a5mE2 / 20a11mE2 15' 15a0mE2 / 36a30mE2 20' 4a0mE2 / 63a36mE2
+palmares      rio       s42  29:22  gana EXPERTA (conquista)    pts 4993-2668 | 10' 18a6mE1 / 19a16mE2 15' 25a37mE2 / 29a3mE2 20' 40a24mE2 / 35a6mE2
+palmares      rio       s43  30:00  gana dificil por puntos     pts 3747-4794 | 10' 19a14mE2 / 18a1mE1 15' 30a16mE2 / 27a36mE2 20' 42a3mE2 / 42a32mE2
+palmares      rio       s44  30:00  gana dificil por puntos     pts 2902-5079 | 10' 19a12mE2 / 21a8mE1 15' 31a3mE2 / 26a23mE2 20' 40a2mE2 / 41a16mE2
+palmares      2/8  25%
+TOTAL 2/8 25%

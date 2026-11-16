@@ -1,0 +1,8 @@
+
+hito en obra · normal contra normal · llano · 16 minutos · apagado
+tawantinsuyu:etiopia     s7    enemigo cerca del hito en obra (s): 0 / 0 · hitos perdidos en obra: 0 / 0 · edades ["5:50"] / ["5:45"]
+tawantinsuyu:etiopia     s8    enemigo cerca del hito en obra (s): 0 / 0 · hitos perdidos en obra: 0 / 0 · edades ["6:04"] / ["5:29"]
+guaranies:mapuches       s7    enemigo cerca del hito en obra (s): 0 / 0 · hitos perdidos en obra: 0 / 0 · edades ["8:00"] / ["7:24"]
+guaranies:mapuches       s8    enemigo cerca del hito en obra (s): 0 / 0 · hitos perdidos en obra: 0 / 0 · edades ["8:23", "15:51"] / ["7:20"]
+ayutthaya:palmares       s7    enemigo cerca del hito en obra (s): 0 / 0 · hitos perdidos en obra: 0 / 0 · edades ["7:59"] / ["11:45"]
+ayutthaya:palmares       s8    enemigo cerca del hito en obra (s): 0 / 41 · hitos perdidos en obra: 0 / 0 · edades ["8:19"] / []

@@ -32,8 +32,12 @@ var level: Dictionary = {} # dificultad (reglas.json → dificultades)
 var centers: Array[SimEntity] = [] # edificios propios terminados que entrenan aldeanos (capital incluida)
 var last_expand := 0
 var last_hunt := 0
+var last_hito_hit := -100000 # último envío contra un hito rival en obra
+var last_retake := -100000 # último envío a recuperar un sitio (experta: `sitios_disputa`)
 var _holding: Dictionary = {} # lo que se junta para el centro siguiente (experta); vacío si nada
 var _ctype := "-" # edificio con el que se expande (calculado una vez: `_center_type`)
+var _stores := {} # almacenes propios (id -> casilla), para ver cuáles se perdieron
+var _stores_lost: Array = [] # [casilla, tick] de los almacenes perdidos hace poco
 
 # Reparto de aldeanos por recurso: reglas.json → ia_economia.
 var ratio_early := {}
@@ -574,6 +578,7 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 	# almacén cuando el alimento lejano iba primero y no se podía construir). Cuentan solo
 	# los almacenes que todavía tienen ese recurso cerca: el bosque se agota y se corre.
 	var eco: Dictionary = sim.data.reglas["ia_economia"]
+	_track_stores(by_type, eco)
 	var order := []
 	for kind in ["alimento", "madera", "riqueza", "piedra"]:
 		var far_n := _far_gatherers(vill, kind)
@@ -594,7 +599,7 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 			continue
 		var far: SimEntity = o[2][o[2].size() / 2]
 		var site := _site_near(dtype, Vector2i(far.x / P, far.y / P), 1)
-		if site.x < 0:
+		if site.x < 0 or _store_lost_near(site, eco):
 			continue
 		# Si no alcanza, se espera (no se gasta en otro almacén menos urgente).
 		if sim.can_afford(player, sim.dp(player).cost_of(dtype, p["age"])):
@@ -643,6 +648,40 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 	# Torre.
 	if p["age"] >= 2 and sim.dp(player).edificios.has("torre") and by_type.get("torre", []).size() < 1 and p["res"]["piedra"] >= 250:
 		_try_build("torre", p, vill, centro, 1)
+
+
+## Almacenes perdidos: los que estaban en la pensada anterior y ya no están (rotos por el
+## rival). La IA los volvía a levantar en el mismo lugar sin fin: 55 graneros en 20 minutos
+## junto a los venados del medio (veterano, ronda 3; proceso/24, paso 4f).
+func _track_stores(by_type: Dictionary, eco: Dictionary) -> void:
+	var types := {}
+	for kind in ["alimento", "madera", "riqueza", "piedra"]:
+		var t := _dropsite_for(kind)
+		if t != "":
+			types[t] = true
+	var now := {}
+	for t in types:
+		for b: SimEntity in by_type.get(t, []):
+			now[b.id] = Vector2i(b.tx, b.ty)
+	for id in _stores:
+		if not now.has(id):
+			_stores_lost.append([_stores[id], sim.tick])
+	_stores = now
+	var wait := int(eco["almacen_perdido_espera_ticks"])
+	while not _stores_lost.is_empty() and sim.tick - int(_stores_lost[0][1]) > wait:
+		_stores_lost.pop_front()
+
+
+## Si cerca de `site` se perdieron `almacen_perdido_max` almacenes o más en la espera, no se
+## vuelve a construir ahí.
+func _store_lost_near(site: Vector2i, eco: Dictionary) -> bool:
+	var r := int(eco["almacen_perdido_radio"])
+	var n := 0
+	for l in _stores_lost:
+		var t: Vector2i = l[0]
+		if absi(t.x - site.x) <= r and absi(t.y - site.y) <= r:
+			n += 1
+	return n >= int(eco["almacen_perdido_max"])
 
 
 func _main_producer() -> String:
@@ -1087,8 +1126,10 @@ func _threat(centro: SimEntity) -> SimEntity:
 	var cell := 4 * P
 	var r := near_b / cell + 1
 	var near_cells := {}
+	# El hito propio en obra también se defiende (`ataca_hito_en_obra`: quien ataca el ajeno cuida el suyo).
+	var guard_hito: bool = level.get("ataca_hito_en_obra", false)
 	for b in sim.actives:
-		if b.alive and b.owner == player and b.is_building() and b.built and b != centro and b.def.get("fuente", "") == "":
+		if b.alive and b.owner == player and b.is_building() and (b.built or guard_hito and b.def.get("hito", false)) and b != centro and b.def.get("fuente", "") == "":
 			var bx := b.x / cell
 			var by := b.y / cell
 			for dy in range(-r, r + 1):
@@ -1114,6 +1155,14 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 	var ally := _ally_threat(centro)
 	if threat != null:
 		_say("atacan", {})
+	# Experta (`defensa_proporcional`): a la amenaza va lo que hace falta y el resto sigue con lo
+	# suyo. Antes un explorador o un grupito rival cerca de un almacén retenía a todo el ejército
+	# en la base, y la difícil ganaba por sitios con la experta mirando (proceso/24, paso 4f).
+	if threat != null and ally == null and not (level.get("defensa_proporcional", {}) as Dictionary).is_empty():
+		army = _defend_some(army, threat)
+		if army.is_empty():
+			return
+		threat = null
 	if threat != null or ally != null:
 		var ids := []
 		var help := []
@@ -1140,6 +1189,10 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 	var need: int = int(st.get("ataque_base", level["ataque_base"])) + int(st.get("ataque_paso", level["ataque_paso"])) * wave
 	var gap: int = int(st.get("ataque_espera_ticks", level["ataque_espera_ticks"]))
 	var attacks: bool = st.get("ataca_base", personality != "pasiva") and sim.tick >= int(level.get("primer_ataque_ticks", 0))
+	if _retake_site(army):
+		return
+	if attacks and _hit_hito(army):
+		return
 	if attacks and army.size() >= need and sim.tick - last_attack > gap:
 		wave += 1
 		last_attack = sim.tick
@@ -1219,7 +1272,7 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 		if site != null:
 			var ids := []
 			for u in army:
-				if u.order == O.IDLE and ids.size() < 4:
+				if u.order == O.IDLE and ids.size() < int(level.get("sitio_grupo", 4)):
 					ids.append(u.id)
 			if not ids.is_empty():
 				sim.push_command({"t": "move", "player": player, "ids": ids, "x": site.x, "y": site.y, "amove": true})
@@ -1230,6 +1283,107 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 			idle.append(u.id)
 	if not idle.is_empty():
 		sim.push_command({"t": "move", "player": player, "ids": idle, "x": rally.x, "y": rally.y})
+
+
+## Manda a la amenaza `factor_pct` de los enemigos que hay a `radio` de ella (al menos `minimo`),
+## contando a los propios que ya están ahí; los más cercanos primero. Devuelve el resto del ejército.
+func _defend_some(army: Array[SimEntity], threat: SimEntity) -> Array[SimEntity]:
+	var cfg: Dictionary = level["defensa_proporcional"]
+	var r := int(cfg["radio"])
+	var enemies := 0
+	for e in sim.actives:
+		if e.alive and e.owner >= 0 and e.is_unit() and sim.enemies(player, e.owner) and (e.is_military() or e.fn == "explorador") and Sim.dist(e.x, e.y, threat.x, threat.y) <= r:
+			enemies += 1
+	var need := maxi(int(cfg["minimo"]), enemies * int(cfg["factor_pct"]) / 100)
+	var rest: Array[SimEntity] = []
+	var cand := []
+	for u in army:
+		var d := Sim.dist(u.x, u.y, threat.x, threat.y)
+		if d <= r:
+			need -= 1 # ya está ahí
+		elif u.order == O.ATTACK:
+			continue # peleando en otro lado: sigue
+		elif _at_flare(u):
+			rest.append(u)
+		else:
+			cand.append([d, u.id, u])
+	cand.sort_custom(func(a, b): return a[0] < b[0] or a[0] == b[0] and a[1] < b[1])
+	var ids := []
+	for c in cand:
+		if ids.size() < need:
+			ids.append((c[2] as SimEntity).id)
+		else:
+			rest.append(c[2])
+	if not ids.is_empty():
+		sim.push_command({"t": "move", "player": player, "ids": ids, "x": threat.x, "y": threat.y, "amove": true})
+	return rest
+
+
+## Sitios (experta, `sitios_disputa`): si un rival tiene todos los sitios y corre su cuenta, todo
+## el ejército libre va al sitio suyo más cercano, cada `cada_ticks`. Antes iban 4 por vez y la
+## difícil ganaba por sitios con la experta mirando (proceso/24, paso 4f).
+func _retake_site(army: Array[SimEntity]) -> bool:
+	var cfg: Dictionary = level.get("sitios_disputa", {})
+	if cfg.is_empty() or sim.tick - last_retake < int(cfg["cada_ticks"]) or army.size() < int(cfg["ejercito_min"]):
+		return false
+	var running := false
+	for q in sim.players:
+		if sim.enemies(player, q["id"]) and int(q.get("sitios_ms", 0)) > 0:
+			running = true
+	if not running:
+		return false
+	var site: SimEntity = null
+	var best := 1 << 60
+	for e in sim.actives:
+		if e.alive and e.def.get("sagrado", false) and e.holder >= 0 and sim.enemies(player, e.holder):
+			var d := Sim.dist(e.x, e.y, rally.x, rally.y)
+			if d < best:
+				best = d
+				site = e
+	if site == null:
+		return false
+	last_retake = sim.tick
+	var ids := []
+	for u in army:
+		if u.order != O.ATTACK and not _at_flare(u):
+			ids.append(u.id)
+	if not ids.is_empty():
+		sim.push_command({"t": "move", "player": player, "ids": ids, "x": site.x, "y": site.y, "amove": true})
+	return true
+
+
+## Hito rival en obra (`ataca_hito_en_obra`, reglas.ia_hito_en_obra): es el blanco más rico
+## de la partida, como el landmark de AoE4 (95–125 s de obra). Con `ejercito_min` o más, el
+## ejército libre va a pegarle, cada `cada_ticks`; nadie vuelve al punto de reunión mientras
+## (veterano, ronda 3: ningún enemigo se acercaba a 12 casillas de un hito en obra).
+func _hit_hito(army: Array[SimEntity]) -> bool:
+	if not level.get("ataca_hito_en_obra", false):
+		return false
+	var cfg: Dictionary = sim.data.reglas["ia_hito_en_obra"]
+	if army.size() < int(cfg["ejercito_min"]) or sim.tick - last_hito_hit < int(cfg["cada_ticks"]):
+		return false
+	var ref := army[0]
+	var target: SimEntity = null
+	var best_d := 1 << 60
+	for e in sim.actives:
+		if e.alive and e.is_building() and not e.built and e.owner >= 0 and sim.enemies(player, e.owner) and e.def.get("hito", false):
+			var d := sim.dist_to(ref, e)
+			if d < best_d:
+				best_d = d
+				target = e
+	if target == null:
+		return false
+	last_hito_hit = sim.tick
+	var ids := []
+	for u in army:
+		if u.order != O.ATTACK and not _at_flare(u):
+			ids.append(u.id)
+	if ids.is_empty():
+		return true
+	focus = target.owner
+	_say("ataco", {"a": target.owner})
+	sim.push_command({"t": "target", "player": player, "ids": ids, "target": target.id})
+	return true
 
 
 ## Base rival: sus edificios principales (capital, centros e hitos).

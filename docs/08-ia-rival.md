@@ -29,6 +29,10 @@ Cuatro niveles por parámetros, no por trampas (`reglas.json` → `dificultades`
 
 La **experta** juega como un veterano de AoE4: entrena aldeanos sin parar desde todos sus centros hasta su tope, levanta un segundo centro (y un tercero si hay lugar) junto a la riqueza, la piedra o el bosque de su lado del mapa, mantiene un ejército mínimo más alto mientras ahorra para el hito y ataca en oleadas más grandes. Los mapuches se expanden con lofs, que son su centro. Palmares no entrena aldeanos (los suma con la fama), así que solo gana lo demás. Normal es la del torneo de balance.
 
+Además, la experta defiende en proporción (`defensa_proporcional`: a la amenaza va 1,5 veces lo que hay, y el resto sigue con lo suyo) y, si el rival tiene todos los sitios sagrados, va con todo el ejército libre a recuperar uno (`sitios_disputa`). Se mide contra la difícil con `tools/experta_vs_dificil.gd`.
+
+Normal, difícil y experta atacan el hito rival en obra (`ataca_hito_en_obra`, `reglas.json` → `ia_hito_en_obra`) y defienden el propio como cualquier edificio. Ninguna dificultad vuelve a levantar un almacén donde perdió uno hace poco (`ia_economia.almacen_perdido_*`).
+
 Sin victoria por hitos (opciones de partida), toda IA caza los edificios que cuentan para la victoria cuando el rival casi no tiene ejército o le saca el doble (`reglas.json` → `ia_caza`). Con hitos no cambia nada.
 
 ## Pruebas
