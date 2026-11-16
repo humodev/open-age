@@ -1,0 +1,10 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+guaranies vs tawantinsuyu semilla 500: 29:39 · ganador guaranies · golpes 10620: militar_que_pega 354 (3%), militar 1729 (16%), aldeano 270 (2%), edif_dispara 3882 (36%), edificio 4159 (39%), transitable 226 (2%) · bajas militares 246 (pegándole a un edificio 63)
+guaranies vs tawantinsuyu semilla 517: 16:03 · ganador tawantinsuyu · golpes 1254: militar_que_pega 166 (13%), militar 497 (39%), aldeano 201 (16%), edif_dispara 5 (0%), edificio 338 (26%), transitable 47 (3%) · bajas militares 68 (pegándole a un edificio 6)
+mapuches vs tawantinsuyu semilla 500: 19:29 · ganador mapuches · golpes 2309: militar_que_pega 303 (13%), militar 246 (10%), aldeano 120 (5%), edif_dispara 151 (6%), edificio 1190 (51%), transitable 299 (12%) · bajas militares 156 (pegándole a un edificio 31)
+mapuches vs tawantinsuyu semilla 517: 27:45 · ganador mapuches · golpes 6216: militar_que_pega 710 (11%), militar 2336 (37%), aldeano 320 (5%), edif_dispara 340 (5%), edificio 2441 (39%), transitable 69 (1%) · bajas militares 356 (pegándole a un edificio 27)
+etiopia vs ayutthaya semilla 500: 25:42 · ganador etiopia · golpes 3361: militar_que_pega 560 (16%), militar 2102 (62%), aldeano 98 (2%), edif_dispara 409 (12%), edificio 191 (5%), transitable 1 (0%) · bajas militares 250 (pegándole a un edificio 8)
+etiopia vs ayutthaya semilla 517: 30:00 · ganador ninguno · golpes 8422: militar_que_pega 556 (6%), militar 1639 (19%), aldeano 238 (2%), edif_dispara 646 (7%), edificio 3953 (46%), transitable 1390 (16%) · bajas militares 239 (pegándole a un edificio 59)
+
+TOTAL golpes 32182: militar_que_pega 2649 (8%), militar 8549 (26%), aldeano 1247 (3%), edif_dispara 5433 (16%), edificio 12272 (38%), transitable 2032 (6%) · bajas militares 1315 (pegándole a un edificio 194)

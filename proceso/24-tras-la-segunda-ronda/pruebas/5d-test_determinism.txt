@@ -1,0 +1,6 @@
+# antes
+ticks=3000 hash=2203695307
+DETERMINISMO: OK
+# después
+ticks=3000 hash=2203695307
+DETERMINISMO: OK

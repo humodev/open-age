@@ -55,6 +55,7 @@ var _dirty := false
 var _teams := PackedInt32Array() # equipo de cada jugador (copia de players[i].equipo)
 var _emask := {} # celda de `_ehash` -> bits de dueños presentes (bit 0: naturaleza)
 var _foe_bits := PackedInt32Array() # por jugador: bits de quienes le pueden ser blanco
+var _retarget_every := 3 # reglas.blancos.rebusca_cada_ticks (se lee una vez: corre por cada unidad que ataca)
 const _NONE: Array = [] # celda vacía de las grillas: sin crear un arreglo por consulta
 const RC := 8
 
@@ -63,6 +64,7 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null,
 	data = data_override if data_override != null else SimData.load_default()
 	_opts = opts
 	tick_ms = data.reglas["tick_ms"]
+	_retarget_every = maxi(1, int(data.reglas["blancos"]["rebusca_cada_ticks"]))
 	rng = SimRng.new(seed_value)
 	# Escaramuza de 3 o más jugadores: mapa más grande y bases en círculo (docs/11).
 	var size: int = data.reglas["mapa_tam"]
@@ -1143,6 +1145,7 @@ func _update_unit(e: SimEntity) -> void:
 					e.order = O.ATTACK
 					e.target = t.id
 					e.resume_amove = true
+					e.auto_tgt = true
 					e.path_target = -1
 					return
 			if e.group >= 0:
@@ -1211,14 +1214,17 @@ func _do_idle(e: SimEntity) -> void:
 	if e.is_military() and (tick + e.id) % 4 == 0:
 		var t := find_enemy(e, e.def["vision"], false)
 		if t != null:
-			_order_attack(e, t)
+			_order_attack(e, t, true)
 
 
-func _order_attack(e: SimEntity, t: SimEntity) -> void:
+## `auto`: el blanco lo eligió la unidad (respuesta, inactiva que ve a alguien); si es false
+## es orden directa y se respeta aunque aparezca algo más importante.
+func _order_attack(e: SimEntity, t: SimEntity, auto := false) -> void:
 	e.order = O.ATTACK
 	e.target = t.id
 	e.path_target = -1
 	e.resume_amove = false
+	e.auto_tgt = auto
 
 
 func _order_gather(e: SimEntity, t: SimEntity) -> void:
@@ -1246,6 +1252,15 @@ func _do_attack(e: SimEntity) -> void:
 			_set_idle(e)
 			_do_idle(e)
 		return
+	# Blanco elegido por su cuenta contra un aldeano o un edificio: cada tantos ticks mira si
+	# hay algo más importante en su visión (proceso/24, 5d). Contra militares no rebusca.
+	if e.auto_tgt and (tick + e.id) % _retarget_every == 0 and not (t.cat == SimEntity.Cat.UNIT and t.is_military()) \
+			and not e.def.get("solo_edificios", false):
+		var better := find_enemy(e, e.def["vision"], false)
+		if better != null and better != t and target_class(e, better) < target_class(e, t):
+			e.target = better.id
+			e.path_target = -1
+			t = better
 	var reach: int = e.def["alcance"]
 	if _approach(e, t, reach):
 		e.anchored = true
@@ -1661,7 +1676,15 @@ func _hit(a: SimEntity, t: SimEntity) -> void:
 	events.append({"t": "hit", "a": a.id, "b": t.id, "ranged": ranged, "dmg": dmg})
 	if t.owner >= 0:
 		if t.is_unit() and t.is_military() and t.order == O.IDLE:
-			_order_attack(t, a)
+			_order_attack(t, a, true)
+		elif t.is_unit() and t.order == O.ATTACK and t.auto_tgt and a.is_unit() and a.is_military() \
+				and a.alive and not t.def.get("solo_edificios", false):
+			# Le pega un militar mientras ella, por su cuenta, le pegaba a un aldeano o a un
+			# edificio: se da vuelta (proceso/24, 5d).
+			var cur: SimEntity = by_id.get(t.target)
+			if cur == null or not cur.alive or target_class(t, cur) >= TC_CIVIL:
+				t.target = a.id
+				t.path_target = -1
 		var p := players[t.owner]
 		if tick - p["alert_tick"] > 150:
 			p["alert_tick"] = tick
@@ -2007,8 +2030,39 @@ func _separate() -> void:
 
 # ---------------------------------------------------------------- Consultas
 
+## Prioridad de blanco automático de una unidad, como AoE4 (proceso/24, 5d): cuanto más chica,
+## más importante. Dentro de la misma clase gana el más cercano. El militar que le pega va
+## primero por otro lado: `_hit` la da vuelta hacia él en el momento del golpe. Entre militares
+## no se ordena por "quién me tiene de blanco": cuesta en el bench (persiguen al de atrás) y
+## cambia las peleas entre tropas, que no son lo que se arregla acá.
+const TC_MILITARY := 1  # militar
+const TC_CIVIL := 2     # aldeano (y cualquier unidad no militar)
+const TC_SHOOTER := 3   # edificio terminado que dispara y la tiene a su alcance (torre, centro)
+const TC_BUILDING := 4  # otro edificio
+const TC_FLOOR := 5     # pieza transitable (granja, andén, gult, corral): lo último
+const TC_STEP := 1 << 24 # más que cualquier distancia del mapa
+
+
+func target_class(e: SimEntity, o: SimEntity) -> int:
+	if o.is_unit():
+		return TC_MILITARY if o.is_military() else TC_CIVIL
+	return _building_class(e, o, dist_to(e, o))
+
+
+func _building_class(e: SimEntity, o: SimEntity, d: int) -> int:
+	if o.def.get("transitable", false):
+		return TC_FLOOR
+	if o.built and o.def.has("ataque") and d <= int(o.def["alcance"]) + mod(o.owner, "b_alcance"):
+		return TC_SHOOTER
+	return TC_BUILDING
+
+
+## El enemigo más importante a `radius` de `e`. Una unidad elige por `target_class` y nunca
+## elige sola un edificio con `sin_blanco_automatico` (los caminos: solo con orden directa); un
+## edificio que dispara mantiene su criterio (distancia, con los aldeanos y los edificios más lejos).
 func find_enemy(e: SimEntity, radius: int, units_only: bool) -> SimEntity:
-	var buildings_only: bool = e.is_unit() and e.def.get("solo_edificios", false)
+	var by_unit := e.is_unit()
+	var buildings_only: bool = by_unit and e.def.get("solo_edificios", false)
 	var best: SimEntity = null
 	var best_score := 1 << 60
 	var x0 := maxi(0, (e.x - radius) / EC)
@@ -2033,13 +2087,22 @@ func find_enemy(e: SimEntity, radius: int, units_only: bool) -> SimEntity:
 					continue
 				if buildings_only and not o.is_building():
 					continue
+				# Caminos: solo con orden directa (5d).
+				if by_unit and o.is_building() and o.def.get("sin_blanco_automatico", false):
+					continue
 				if mods.is_hidden_now(o) and not mods.detected_by(o, e.owner):
 					continue
 				var d := dist_to(e, o)
 				if d > radius:
 					continue
 				var score := d
-				if not o.is_unit():
+				if by_unit:
+					# target_class(e, o) en línea: esto corre por cada candidato.
+					if o.cat == SimEntity.Cat.UNIT:
+						score += (TC_MILITARY if o.is_military() else TC_CIVIL) * TC_STEP
+					else:
+						score += _building_class(e, o, d) * TC_STEP
+				elif not o.is_unit():
 					score += 6000
 				elif not o.is_military():
 					score += 3000

@@ -151,6 +151,7 @@
    "transitable": true,
    "linea": true,
    "camino": true,
+   "sin_blanco_automatico": true,
    "ranura": 10,
    "desc": "Acelera a quien lo transite. Une los edificios a la llaqta: los conectados producen más rápido."
   },

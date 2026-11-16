@@ -1,0 +1,15 @@
+# tests/bench.gd alternando main (antes) y 5d (después), con la misma carga
+antes: 200 unidades, 600 ticks: promedio 8.90 ms, peor 93.05 ms, presupuesto 100 ms; vivas al final: 129
+despues: 200 unidades, 600 ticks: promedio 9.10 ms, peor 92.57 ms, presupuesto 100 ms; vivas al final: 125
+antes: 200 unidades, 600 ticks: promedio 8.98 ms, peor 93.79 ms, presupuesto 100 ms; vivas al final: 129
+despues: 200 unidades, 600 ticks: promedio 8.62 ms, peor 90.68 ms, presupuesto 100 ms; vivas al final: 125
+antes: 200 unidades, 600 ticks: promedio 8.47 ms, peor 90.30 ms, presupuesto 100 ms; vivas al final: 129
+despues: 200 unidades, 600 ticks: promedio 8.94 ms, peor 91.52 ms, presupuesto 100 ms; vivas al final: 125
+
+# intento descartado: entre militares, primero el que me tiene de blanco
+antes: 200 unidades, 600 ticks: promedio 8.90 ms, peor 92.67 ms, presupuesto 100 ms; vivas al final: 129
+despues: 200 unidades, 600 ticks: promedio 9.85 ms, peor 60.89 ms, presupuesto 100 ms; vivas al final: 122
+antes: 200 unidades, 600 ticks: promedio 8.76 ms, peor 92.69 ms, presupuesto 100 ms; vivas al final: 129
+despues: 200 unidades, 600 ticks: promedio 9.46 ms, peor 60.98 ms, presupuesto 100 ms; vivas al final: 122
+antes: 200 unidades, 600 ticks: promedio 8.65 ms, peor 96.42 ms, presupuesto 100 ms; vivas al final: 129
+despues: 200 unidades, 600 ticks: promedio 9.74 ms, peor 63.45 ms, presupuesto 100 ms; vivas al final: 122

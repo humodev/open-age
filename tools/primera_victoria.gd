@@ -27,6 +27,8 @@ var ram_udmg := 0    # daño de arietes a unidades (no debería)
 var ram_closest := 1 << 60
 var ram_lost := 0
 var bld_lost := {}
+var my_kills := {}   # unidades de la IA que maté (militar, aldeano)
+var my_hits := {}    # golpes de mi tropa (sin asedio) por blanco (proceso/24, 5d)
 var ai_bld := {}
 var first_bld_min := -1
 var ram_kill_by := {}
@@ -105,6 +107,11 @@ func watch_events() -> void:
 				var w := who(a)
 				dmg_by[w] = int(dmg_by.get(w, 0)) + int(ev["dmg"])
 				last_hit[b.id] = w
+			if a.owner == ME and b.owner == 1 and a.is_unit() and a.is_military() and a.fn != "asedio":
+				var hk := "militar" if b.is_unit() and b.is_military() else ("aldeano" if b.is_unit() else \
+					("camino" if b.def.get("camino", false) else ("transitable" if b.def.get("transitable", false) else \
+					("edif. que dispara" if b.def.has("ataque") else "edificio"))))
+				my_hits[hk] = int(my_hits.get(hk, 0)) + 1
 			if a.owner == ME and b.owner == 1:
 				if b.is_building():
 					my_bdmg[b.type] = int(my_bdmg.get(b.type, 0)) + int(ev["dmg"])
@@ -119,6 +126,9 @@ func watch_events() -> void:
 				if ev["type"] == "ariete":
 					ram_lost += 1
 					ram_kill_by[w] = int(ram_kill_by.get(w, 0)) + 1
+			elif int(ev["owner"]) == 1 and int(ev["by"]) == ME and int(ev["cat"]) == 0:
+				var kk: String = "aldeano" if ev["type"] == "aldeano" else "militar"
+				my_kills[kk] = int(my_kills.get(kk, 0)) + 1
 			elif int(ev["owner"]) == 1 and int(ev["by"]) == ME and int(ev["cat"]) == 1:
 				bld_lost[ev["type"]] = int(bld_lost.get(ev["type"], 0)) + 1
 				if first_bld_min < 0:
@@ -148,7 +158,7 @@ func _init() -> void:
 
 func play(seed: int, a: Dictionary) -> bool:
 	dmg_by = {}; kills_by = {}; last_hit = {}; my_bdmg = {}; ram_bdmg = 0; ram_udmg = 0
-	ram_closest = 1 << 60; ram_lost = 0; bld_lost = {}; first_bld_min = -1; ram_kill_by = {}
+	ram_closest = 1 << 60; ram_lost = 0; bld_lost = {}; first_bld_min = -1; ram_kill_by = {}; my_kills = {}; my_hits = {}
 	var minutes := int(a["min"])
 	s = Sim.new(seed, 2, data_over, {"civs": [a["civ"], a["rival"]], "terreno": "llano", "sitios_sin_victoria": true})
 	s.ais = [SimAI.new(s, 1, a["dif"])]
@@ -322,7 +332,8 @@ func play(seed: int, a: Dictionary) -> bool:
 	var mm := s.tick / 600
 	var ss := s.tick / 10 % 60
 	print("semilla %d: %s a las %02d:%02d (%s) · ataques %d (%s) · tropa perdida %d" % [seed, "GANA" if won else ("pierde" if s.game_over else "sin terminar"), mm, ss, s.end_reason, attacks, ", ".join(ai_def_at_attack), lost_army])
-	print("  bajas propias por último golpe: %s" % _sorted(kills_by))
+	print("  bajas propias por último golpe: %s · bajas que hice: %s" % [_sorted(kills_by), _sorted(my_kills)])
+	print("  golpes de mi tropa (sin asedio) por blanco: %s" % _sorted(my_hits))
 	print("  daño recibido por atacante: %s" % _sorted(dmg_by))
 	print("  arietes: más cerca de la capital rival %d casillas · perdidos %d (%s) · daño a edificios %d · a unidades %d" % [ram_closest / 1000, ram_lost, _sorted(ram_kill_by), ram_bdmg, ram_udmg])
 	print("  daño mío a edificios: %s · tirados: %s (primero al minuto %d) · capital rival mín %d" % [_sorted(my_bdmg), _sorted(bld_lost), first_bld_min, cap_hp_min])

@@ -1,0 +1,6 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+semilla  7  30:00  sitios tomados por la fácil: 0  ociosa en un sitio (unidad·s): 0  sigue
+semilla 21  30:00  sitios tomados por la fácil: 0  ociosa en un sitio (unidad·s): 0  sigue
+semilla  3  30:00  sitios tomados por la fácil: 0  ociosa en un sitio (unidad·s): 0  sigue
+FACIL_SITIOS: OK (0 sitios tomados)
