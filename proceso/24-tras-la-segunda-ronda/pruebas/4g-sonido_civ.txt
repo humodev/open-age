@@ -1,0 +1,103 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+ok    tawantinsuyu tiene fanfarria
+ok    tawantinsuyu tiene alarma
+ok    tawantinsuyu tiene entrenado
+ok    tawantinsuyu tiene orden
+ok    mapuches tiene fanfarria
+ok    mapuches tiene alarma
+ok    mapuches tiene entrenado
+ok    mapuches tiene orden
+ok    guaranies tiene fanfarria
+ok    guaranies tiene alarma
+ok    guaranies tiene entrenado
+ok    guaranies tiene orden
+ok    etiopia tiene fanfarria
+ok    etiopia tiene alarma
+ok    etiopia tiene entrenado
+ok    etiopia tiene orden
+ok    palmares tiene fanfarria
+ok    palmares tiene alarma
+ok    palmares tiene entrenado
+ok    palmares tiene orden
+ok    ayutthaya tiene fanfarria
+ok    ayutthaya tiene alarma
+ok    ayutthaya tiene entrenado
+ok    ayutthaya tiene orden
+ok    carga civ/tawantinsuyu/tawantinsuyu_fanfarria.ogg (5.20 s)
+ok    carga civ/tawantinsuyu/tawantinsuyu_alarma.ogg (3.83 s)
+ok    carga civ/tawantinsuyu/tawantinsuyu_entrenado.ogg (1.71 s)
+ok    carga civ/tawantinsuyu/tawantinsuyu_orden.ogg (0.21 s)
+ok    carga musica/tawantinsuyu/musica_andes_flauta_de_pan_1.ogg (186.80 s)
+ok    carga musica/tawantinsuyu/musica_andes_charango_1.ogg (36.01 s)
+ok    carga musica/musica_flauta_de_pan.ogg (75.79 s)
+ok    carga civ/mapuches/mapuches_fanfarria.ogg (6.26 s)
+ok    carga civ/mapuches/mapuches_alarma.ogg (3.81 s)
+ok    carga civ/mapuches/mapuches_entrenado.ogg (1.80 s)
+ok    carga civ/mapuches/mapuches_orden.ogg (0.35 s)
+ok    carga musica/mapuche/musica_mapuche_pifilka_1.ogg (32.84 s)
+ok    carga musica/mapuche/musica_mapuche_pifilka_2.ogg (38.09 s)
+ok    carga musica/musica_marcha_batalla.ogg (33.05 s)
+ok    carga civ/guaranies/guaranies_fanfarria.ogg (4.79 s)
+ok    carga civ/guaranies/guaranies_alarma.ogg (3.24 s)
+ok    carga civ/guaranies/guaranies_entrenado.ogg (0.97 s)
+ok    carga civ/guaranies/guaranies_orden.ogg (0.14 s)
+ok    carga musica/guarani/musica_guarani_selva_generica_1.ogg (131.40 s)
+ok    carga civ/etiopia/etiopia_fanfarria.ogg (6.04 s)
+ok    carga civ/etiopia/etiopia_alarma.ogg (3.86 s)
+ok    carga civ/etiopia/etiopia_entrenado.ogg (1.55 s)
+ok    carga civ/etiopia/etiopia_orden.ogg (0.30 s)
+ok    carga musica/etiopia/musica_etiopia_begena_kebero_1.ogg (34.56 s)
+ok    carga civ/palmares/palmares_fanfarria.ogg (6.03 s)
+ok    carga civ/palmares/palmares_alarma.ogg (4.03 s)
+ok    carga civ/palmares/palmares_entrenado.ogg (1.85 s)
+ok    carga civ/palmares/palmares_orden.ogg (0.30 s)
+ok    carga musica/quilombo/musica_quilombo_berimbau_iuna_1.ogg (148.40 s)
+ok    carga musica/quilombo/musica_quilombo_berimbau_angola_1.ogg (17.80 s)
+ok    carga musica/quilombo/musica_quilombo_ijexa_1.ogg (23.70 s)
+ok    carga musica/quilombo/musica_quilombo_tambores_combate_1.ogg (17.83 s)
+ok    carga civ/ayutthaya/ayutthaya_fanfarria.ogg (5.84 s)
+ok    carga civ/ayutthaya/ayutthaya_alarma.ogg (3.87 s)
+ok    carga civ/ayutthaya/ayutthaya_entrenado.ogg (2.12 s)
+ok    carga civ/ayutthaya/ayutthaya_orden.ogg (0.30 s)
+ok    carga musica/ayutthaya/musica_ayutthaya_xilofono_1.ogg (92.57 s)
+ok    carga musica/ayutthaya/musica_ayutthaya_maha_nimit_1.ogg (79.86 s)
+ok    carga musica/ayutthaya/musica_ayutthaya_combate_xilofono_1.ogg (76.80 s)
+ok    Etiopía tiene música de paz propia
+   tawantinsuyu: edad 2, sonaron ["entrenado", "alarma", "fanfarria"]
+   mapuches: edad 2, sonaron ["entrenado", "alarma", "fanfarria"]
+   etiopia: edad 2, sonaron ["entrenado", "alarma", "fanfarria"]
+   palmares: edad 1, sonaron ["entrenado", "alarma"]
+   guaranies: edad 2, sonaron ["entrenado", "alarma", "fanfarria"]
+   ayutthaya: edad 2, sonaron ["entrenado", "fanfarria", "alarma"]
+ok    tawantinsuyu: fanfarria al subir de edad
+ok    tawantinsuyu: sonido de entrenado
+ok    mapuches: fanfarria al subir de edad
+ok    mapuches: sonido de entrenado
+ok    guaranies: fanfarria al subir de edad
+ok    guaranies: sonido de entrenado
+ok    etiopia: fanfarria al subir de edad
+ok    etiopia: sonido de entrenado
+ok    palmares: fanfarria al subir de edad (no subió en la partida; ver el suceso forzado)
+ok    palmares: sonido de entrenado
+ok    ayutthaya: fanfarria al subir de edad
+ok    ayutthaya: sonido de entrenado
+   alarma propia en partida: ["tawantinsuyu", "mapuches", "guaranies", "etiopia", "palmares", "ayutthaya"]
+ok    tawantinsuyu: suceso de edad y de ataque → ["tawantinsuyu_fanfarria.ogg", "tawantinsuyu_alarma.ogg"]
+ok    tawantinsuyu: ráfaga de 60 sucesos → 2 sonidos
+ok    mapuches: suceso de edad y de ataque → ["mapuches_fanfarria.ogg", "mapuches_alarma.ogg"]
+ok    mapuches: ráfaga de 60 sucesos → 2 sonidos
+ok    guaranies: suceso de edad y de ataque → ["guaranies_fanfarria.ogg", "guaranies_alarma.ogg"]
+ok    guaranies: ráfaga de 60 sucesos → 2 sonidos
+ok    etiopia: suceso de edad y de ataque → ["etiopia_fanfarria.ogg", "etiopia_alarma.ogg"]
+ok    etiopia: ráfaga de 60 sucesos → 2 sonidos
+ok    palmares: suceso de edad y de ataque → ["palmares_fanfarria.ogg", "palmares_alarma.ogg"]
+ok    palmares: ráfaga de 60 sucesos → 2 sonidos
+ok    ayutthaya: suceso de edad y de ataque → ["ayutthaya_fanfarria.ogg", "ayutthaya_alarma.ogg"]
+ok    ayutthaya: ráfaga de 60 sucesos → 2 sonidos
+ok    adal sin fanfarria propia: suena la genérica
+RESULTADO: OK
+WARNING: 26675 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 51 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

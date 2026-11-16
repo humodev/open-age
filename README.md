@@ -51,4 +51,4 @@ godot --path . -- --autotest --civ=guaranies --terreno=llano
 
 ## Licencias
 
-La fuente Fira Sans se distribuye bajo la SIL Open Font License (`assets/fonts/OFL.txt`). El audio y las texturas son CC0; detalle por archivo en [`assets/CREDITOS.md`](assets/CREDITOS.md).
+La fuente Fira Sans se distribuye bajo la SIL Open Font License (`assets/fonts/OFL.txt`). El audio de terceros y las texturas son CC0; los sonidos de los pueblos y la música de Etiopía son obra propia sintetizada (`tools/audio/`). Detalle por archivo en [`assets/CREDITOS.md`](assets/CREDITOS.md).

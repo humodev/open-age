@@ -32,9 +32,15 @@ Son demostraciones de instrumentos que publicó el propio intérprete (Juan Huic
 
 No encontré nada guaraní con licencia libre clara.
 
-## Etiopía
+## Etiopía (`etiopia/`)
 
-Sin pistas. No encontré krar, masenqo, washint ni kebero con licencia CC0 o PD. Por ahora, usar las genéricas de la raíz.
+| archivo | duración | momento | notas |
+|---|---|---|---|
+| musica_etiopia_begena_kebero_1.ogg | 0:35 | paz (loop corto) | **Sintetizada, obra propia** (`tools/audio/generar_sonidos.py`, C-24): begena, masenqo y kebero en el modo ambassel, 16 compases de 6/8. Empalma sin corte. Diseño en `proceso/24-tras-la-segunda-ronda/4g-sonido.md` |
+
+Se engancha desde `data/audio.json` (`civs.etiopia.musica`), no desde `CIV_MUSIC`.
+
+Antes no había pistas. No encontré krar, masenqo, washint ni kebero con licencia CC0 o PD. Por ahora, usar las genéricas de la raíz.
 
 Segunda búsqueda (2026-11-14), en Commons, Internet Archive (con los discos de 78 rpm) y OpenGameArt: solo hay material CC-BY-SA, discos comerciales mal licenciados o registros etnográficos y litúrgicos (zema). El detalle está en `proceso/19-arte-y-sonido/01-modelos-y-musica.md` y la decisión, en la consulta C-24.
 

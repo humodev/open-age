@@ -1,6 +1,6 @@
 # Créditos de assets de terceros
 
-Todos los archivos de `audio/` y `texturas/` son **CC0 / dominio público**. No hay atribución obligatoria; se registra igual por trazabilidad. Las fuentes de `assets/fonts/` no están en esta tabla.
+Los archivos de `audio/` y `texturas/` que vienen de terceros son **CC0 / dominio público**. No hay atribución obligatoria; se registra igual por trazabilidad. Los sonidos de los pueblos (`audio/civ/`) y la música de Etiopía (`audio/musica/etiopia/`) son **obra propia**, sintetizada con código; están al final de la sección de audio. Las fuentes de `assets/fonts/` no están en esta tabla.
 
 Los archivos fueron recortados, mezclados, normalizados y convertidos a Ogg Vorbis (sonidos en mono a 44,1 kHz). Las texturas se reescalaron a 512×512.
 
@@ -81,6 +81,20 @@ Todas CC0 o dominio público. Convertidas a Ogg Vorbis estéreo 44,1 kHz (calida
 | ayutthaya/musica_ayutthaya_maha_nimit_1.ogg | https://commons.wikimedia.org/wiki/File:Phleng_Maha_Nimit_(Tra_Nimitr)_-_Royal_Thai_Navy_Band.ogg (sin los 8,8 s de silencio inicial) | Composición: Jangwang Tua Patayakosol; interpretación: Banda de la Armada Real Tailandesa (1934) | Dominio público (PD-Thailand) |
 | ayutthaya/musica_ayutthaya_xilofono_1.ogg | https://opengameart.org/content/kingdom-of-a-million-elephants-under-a-white-parasol | Spring Spring | CC0 |
 | ayutthaya/musica_ayutthaya_combate_xilofono_1.ogg | https://opengameart.org/content/bamboo-blitz (`bamboo_blitz.flac`) | Tsorthan Grove | CC0 |
+
+## Audio sintetizado: obra propia (`audio/civ/`, `audio/musica/etiopia/`)
+
+Sin muestras grabadas ni material de terceros: osciladores, ruido y filtros escritos para el proyecto (`tools/audio/dsp.py`), un modelo por instrumento (`tools/audio/instrumentos.py`) y una partitura por sonido (`tools/audio/generar_sonidos.py`). Se regeneran con `python3 tools/audio/generar_sonidos.py [civ …]` (numpy y ffmpeg con libvorbis) y salen iguales, porque las semillas son fijas. Ogg Vorbis calidad 4, a 44,1 kHz: los efectos en mono a −16 LUFS (fanfarria y alarma), −18 (entrenado) o con pico a −4,5 dBFS (orden, demasiado corta para medir LUFS); la música en estéreo a −16 LUFS. La sonoridad de cada archivo queda en `tools/audio/medidas.json`. Son obra propia del proyecto y se distribuyen con la misma licencia que el resto del juego. Diseño y fuentes de cada instrumento: `proceso/24-tras-la-segunda-ronda/4g-sonido.md`.
+
+| archivo | instrumentos que imita | uso |
+|---|---|---|
+| civ/tawantinsuyu/tawantinsuyu_{fanfarria,alarma,entrenado,orden}.ogg | quena, tropa de sikus, wankara | edad, ataque, unidad lista, orden |
+| civ/mapuches/mapuches_{…}.ogg | kultrun, trutruka | ídem |
+| civ/guaranies/guaranies_{…}.ogg | mbaraka, takuapu | ídem |
+| civ/etiopia/etiopia_{…}.ogg | kebero, masenqo | ídem |
+| civ/palmares/palmares_{…}.ogg | berimbau con caxixi, atabaque | ídem |
+| civ/ayutthaya/ayutthaya_{…}.ogg | khong wong yai, ranat ek, ching | ídem |
+| musica/etiopia/musica_etiopia_begena_kebero_1.ogg | begena, masenqo, kebero (34,6 s, loop) | música de paz de Etiopía |
 
 ## Texturas (`texturas/`)
 
