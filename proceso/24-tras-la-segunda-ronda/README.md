@@ -167,6 +167,7 @@ Un cambio por torneo: 75 partidas, 5 semillas, 30 minutos, en 10 procesos.
 | [24](pruebas/24-torneo-roza-850.txt) (10) | Guaraníes: roza 850. **Descartado** | 58 | 60 | 72 | 36 | 46 | 28 |
 | [25](pruebas/25-torneo-arquero-guarani.txt) (10) | Guaraníes: arquero 7 de ataque (antes 8); roza de vuelta a 900 | 58 | 60 | **66** | 38 | 44 | 34 |
 | [26](pruebas/26-torneo-sitios-y-llamas.txt) (10) | IA que disputa sitios (5b) + una llama por vez | 62 | 58 | **80** | 34 | 32 | 34 |
+| [27](pruebas/27-torneo-emboscada.txt) (10) | Guaraníes: emboscada 35 %. **Descartado** | 60 | 60 | 78 | 34 | 34 | 34 |
 
 **Etiopía, de 56 % a 8 %.**
 - Con la misma partida seguida en el commit anterior a la etapa (`tools/ia_por_dentro.gd`, sierra contra Tawantinsuyu), el ejército etíope ya era chico (unas 20 unidades). Lo que cambió fue el rival: los arreglos de economía del paso 1 destrabaron el alimento de Tawantinsuyu, que pasó de 15 a 60 unidades.
@@ -329,3 +330,5 @@ Con lo de la cuarta ronda integrado (Q, R y S), juegan otra vez el veterano y el
 - siguen con calidad de vida y usabilidad.
 
 Informes en [`proceso/22-testers/ronda-5/`](../22-testers/ronda-5/).
+- **Torneo 27:** la emboscada a 35 % no los mueve (78 %). Vuelve a 50.
+- **Torneo 28:** alcance del arquero guaraní a 5500 (antes 6000; el hondero base, 5500). Con el guerrero más lento (C2), ese alcance de más les deja tirar sin que los alcancen.
