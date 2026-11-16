@@ -386,7 +386,7 @@ a) Guerrero común a 1350 y la línea +6 contra el choque (antes +5), como el ho
 Del análisis de escala del veterano (`proceso/22-testers/ronda-4/03-escala-veterano.md`): el aldeano anda a 1,86 m/s, un trote, cerca de 35 % más rápido que en AoE4 en relación con su cuerpo. Con la persona más chica (paso 1, solo vista) va a parecer más rápido todavía. Bajar `velocidad_pct` de 90 a 72 cambia toda la simulación: viajes, economía, llegada de ataques y micro.
 a) Bajarla a 72 con un torneo de 10 semillas solo para eso, y mirarlo vos a ×1 *(por defecto)* · b) Probar 80 · c) Dejarla
 
-**Respuesta:**
+**Respuesta:** c) Dejarla. El autor (2026-11-16): "¿Era solo un tema visual? Ignoremos entonces, porque necesitamos eventualmente hacer animaciones para los modelos que logremos generar, así que hasta que podamos no vale la pena." Se retoma con las animaciones de los modelos.
 
 ### C-66 · (escala) Huellas del centro y los hitos
 En AoE4 el centro y los hitos dominan la ciudad. Acá ocupan 4×4 casillas (el lof mapuche, 3×3). Pasarlos a 5×5 (el lof a 4×4) toca la colocación, la IA, el generador de mapas (quizás un mapa de 136 en vez de 128), los caminos, las 25 misiones y el balance. Las casas, granjas y almacenes no cambian.
