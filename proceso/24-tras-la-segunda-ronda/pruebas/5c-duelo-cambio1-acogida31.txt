@@ -1,0 +1,29 @@
+# Cambio 1 + acogida 31, 1 contra 1 de 30 min
+
+cambio: palmares/modulos/acogida/costo=31
+palmares     vs tawantinsuyu 16:05 ganador palmares (destrucción)  juntado 13142-10711  aldeanos 43-42  edades 2-2
+tawantinsuyu vs palmares     18:37 ganador palmares (destrucción)  juntado 16934-14602  aldeanos 42-49  edades 2-2
+palmares     vs tawantinsuyu 30:00 ganador palmares (puntos)  juntado 33146-37140  aldeanos 49-31  edades 3-3
+tawantinsuyu vs palmares     20:01 ganador tawantinsuyu (destrucción)  juntado 23739-13117  aldeanos 49-7  edades 3-2
+  Palmares contra tawantinsuyu: 3 / 4
+palmares     vs mapuches     30:00 ganador palmares (puntos)  juntado 28610-27853  aldeanos 53-43  edades 3-3
+mapuches     vs palmares     29:25 ganador mapuches (destrucción)  juntado 34400-18818  aldeanos 43-2  edades 3-2
+palmares     vs mapuches     24:09 ganador palmares (destrucción)  juntado 21547-9207  aldeanos 49-19  edades 2-2
+mapuches     vs palmares     30:00 ganador palmares (puntos)  juntado 32958-32026  aldeanos 37-51  edades 3-3
+  Palmares contra mapuches: 3 / 4
+palmares     vs guaranies    30:00 ganador palmares (puntos)  juntado 31028-35420  aldeanos 50-30  edades 3-2
+guaranies    vs palmares     16:44 ganador palmares (destrucción)  juntado 2814-13231  aldeanos 9-48  edades 1-3
+palmares     vs guaranies    28:09 ganador guaranies (destrucción)  juntado 21079-33181  aldeanos 7-42  edades 2-4
+guaranies    vs palmares     17:12 ganador palmares (destrucción)  juntado 6099-12971  aldeanos 29-45  edades 1-2
+  Palmares contra guaranies: 3 / 4
+palmares     vs etiopia      30:00 ganador etiopia (puntos)  juntado 27289-29455  aldeanos 53-47  edades 2-3
+etiopia      vs palmares     30:00 ganador palmares (puntos)  juntado 26953-29674  aldeanos 17-54  edades 3-3
+palmares     vs etiopia      19:47 ganador etiopia (destrucción)  juntado 8462-21403  aldeanos 0-42  edades 2-2
+etiopia      vs palmares     30:00 ganador palmares (puntos)  juntado 30188-30381  aldeanos 16-54  edades 3-3
+  Palmares contra etiopia: 2 / 4
+palmares     vs ayutthaya    30:00 ganador palmares (puntos)  juntado 34375-27403  aldeanos 50-42  edades 3-3
+ayutthaya    vs palmares     30:00 ganador palmares (puntos)  juntado 27768-30621  aldeanos 25-50  edades 3-3
+palmares     vs ayutthaya    30:00 ganador ayutthaya (puntos)  juntado 26146-38890  aldeanos 48-44  edades 2-3
+ayutthaya    vs palmares     30:00 ganador ayutthaya (puntos)  juntado 26691-29744  aldeanos 42-51  edades 3-3
+  Palmares contra ayutthaya: 2 / 4
+PALMARES EN 1 CONTRA 1: 13 / 20 (65 %)

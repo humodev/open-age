@@ -1,0 +1,76 @@
+# Cambio 1 + acogida 28 (--set=palmares/modulos/acogida/costo=28), semilla 61, 75 min
+
+cambio: palmares/modulos/acogida/costo=28
+== ffa6 semilla 61 terreno llano, 75 minutos ==
+-- minuto 10 --
+j0 tawantinsuyu  edad 2 pob  57/ 65 ald  41 mil  15  puntaje  1131  juntado   8975 | propio 1102 casa 7151 recoleccion 214 sitios 68 granja 240 mercado 200
+j1 mapuches      edad 2 pob  36/ 49 ald  22 mil  13  puntaje   735  juntado   5259 | casa 4602 propio 271 recoleccion 140 sitios 26 disputado 220
+j2 guaranies     edad 2 pob  41/ 55 ald  36 mil   4  puntaje   949  juntado   6819 | casa 5280 granja 1409 recoleccion 100 sitios 30
+j3 etiopia       edad 2 pob  43/ 55 ald  33 mil   9  puntaje   929  juntado   7254 | propio 506 casa 6537 recoleccion 171 granja 40
+j4 palmares      edad 1 pob  35/ 38 ald  20 mil  14  puntaje   705  juntado   4638 | propio 973 casa 3585 recoleccion 80
+   fama ganada 457 (propio 457) · acogida 16 personas = 448 · hitos 90 · ahora 9 · tirada por el tope 0
+   liberados 0 · oficios 3 puestos, riqueza propia 516 · edificios { "centro": 1, "casa": 2, "mocambo": 1 } · juntado sin fama 4181 · 17 s en el techo de población
+j5 ayutthaya     edad 2 pob  37/ 55 ald  28 mil   6  puntaje   837  juntado   5819 | casa 5311 recoleccion 143 propio 144 granja 221
+-- minuto 20 --
+j0 tawantinsuyu  edad 3 pob  87/ 90 ald  42 mil  45  puntaje  2985  juntado  24437 | propio 3095 casa 14193 recoleccion 386 sitios 336 granja 4985 mercado 1200 ingenio 122 cumbi 100 disputado 20
+j1 mapuches      edad 2 pob  66/ 79 ald  42 mil  22  puntaje  1790  juntado  15288 | casa 10052 propio 960 recoleccion 460 sitios 175 disputado 1160 mercado 1100 granja 1380 arreo 1
+j2 guaranies     edad 3 pob  60/100 ald  42 mil  15  puntaje  2871  juntado  22210 | casa 14341 granja 6180 recoleccion 274 sitios 275 propio 870 ingenio 100 mercado 170
+j3 etiopia       edad 2 pob 116/125 ald  42 mil  67  puntaje  2293  juntado  20296 | propio 1255 casa 14647 recoleccion 393 granja 3101 mercado 900
+j4 palmares      edad 1 pob  56/ 54 ald  22 mil  33  puntaje  2881  juntado  10978 | propio 2521 casa 7502 recoleccion 188 disputado 767
+   fama ganada 1066 (propio 1066) · acogida 32 personas = 896 · hitos 90 · ahora 170 · tirada por el tope 0
+   liberados 0 · oficios 5 puestos, riqueza propia 1455 · edificios { "centro": 1, "casa": 2, "mocambo": 3 } · juntado sin fama 9912 · 491 s en el techo de población
+j5 ayutthaya     edad 2 pob  53/ 85 ald  42 mil   4  puntaje  2212  juntado  18709 | casa 12037 recoleccion 483 propio 490 granja 5499 mercado 200
+-- minuto 30 --
+j0 tawantinsuyu  edad 3 pob  79/110 ald  42 mil  37  puntaje  5550  juntado  39645 | propio 5134 casa 18243 recoleccion 788 sitios 743 granja 11845 mercado 1880 ingenio 222 cumbi 100 disputado 690
+j1 mapuches      edad 3 pob  73/104 ald  41 mil  30  puntaje  3654  juntado  26228 | casa 13692 propio 1540 recoleccion 550 sitios 314 disputado 1160 mercado 1200 granja 7221 arreo 1 kawin 450 ingenio 100
+j2 guaranies     edad 4 pob  69/105 ald  42 mil  26  puntaje  4850  juntado  35084 | casa 18510 granja 11354 recoleccion 872 sitios 567 propio 2751 ingenio 250 mercado 470 disputado 310
+j3 etiopia       edad 2 pob 133/165 ald  42 mil  76  puntaje  5084  juntado  32688 | propio 1861 casa 18841 recoleccion 1084 granja 7953 mercado 2385 sitios 50 ingenio 150 disputado 364
+j4 palmares     caído  edad 1 pob   0/  0 ald   0 mil   0  puntaje  3879  juntado  13438 | propio 3215 casa 8659 recoleccion 303 disputado 871 granja 390
+   fama ganada 1377 (propio 1377) · acogida 48 personas = 1344 · hitos 0 · ahora 33 · tirada por el tope 90
+   liberados 0 · oficios 0 puestos, riqueza propia 1838 · edificios {  } · juntado sin fama 12061 · 751 s en el techo de población
+j5 ayutthaya     edad 2 pob  53/ 75 ald  37 mil   6  puntaje  3946  juntado  27961 | casa 15651 recoleccion 874 propio 864 granja 10229 mercado 200 disputado 143
+-- minuto 40 --
+j0 tawantinsuyu  edad 3 pob  85/110 ald  42 mil  43  puntaje  7702  juntado  52101 | propio 7103 casa 18243 recoleccion 1115 sitios 953 granja 19265 mercado 2360 ingenio 222 cumbi 100 disputado 2740
+j1 mapuches      edad 3 pob  54/124 ald  40 mil  13  puntaje  5411  juntado  37810 | casa 16372 propio 2500 recoleccion 872 sitios 486 disputado 1233 mercado 1270 granja 14301 arreo 126 kawin 450 ingenio 200
+j2 guaranies     edad 4 pob 130/145 ald  42 mil  87  puntaje  6413  juntado  45072 | casa 19580 granja 13344 recoleccion 1718 sitios 612 propio 4598 ingenio 300 mercado 1870 disputado 3050
+j3 etiopia       edad 2 pob  66/165 ald  42 mil  23  puntaje  6258  juntado  42403 | propio 2460 casa 18841 recoleccion 1383 granja 13628 mercado 2804 sitios 362 ingenio 167 disputado 2758
+j4 palmares     caído  edad 1 pob   0/  0 ald   0 mil   0  puntaje  3879  juntado  13438 | propio 3215 casa 8659 recoleccion 303 disputado 871 granja 390
+   fama ganada 1377 (propio 1377) · acogida 48 personas = 1344 · hitos 0 · ahora 33 · tirada por el tope 90
+   liberados 0 · oficios 0 puestos, riqueza propia 1838 · edificios {  } · juntado sin fama 12061 · 751 s en el techo de población
+j5 ayutthaya     edad 3 pob 114/120 ald  42 mil  66  puntaje  6048  juntado  40324 | casa 18225 recoleccion 1813 propio 1299 granja 15638 mercado 1124 disputado 2061 sitios 164
+-- minuto 50 --
+j0 tawantinsuyu  edad 3 pob  54/120 ald  26 mil  28  puntaje  9829  juntado  63839 | propio 9073 casa 18243 recoleccion 1375 sitios 1121 granja 26555 mercado 2840 ingenio 222 cumbi 100 disputado 4310
+j1 mapuches      edad 3 pob  93/129 ald  41 mil  48  puntaje  7107  juntado  47924 | casa 17707 propio 3460 recoleccion 1307 sitios 644 disputado 1707 mercado 1410 granja 20733 arreo 206 kawin 450 ingenio 300
+j2 guaranies     edad 4 pob 116/155 ald  42 mil  73  puntaje  8241  juntado  54444 | casa 20360 granja 15294 recoleccion 2242 sitios 763 propio 5995 ingenio 300 mercado 3070 disputado 6420
+j3 etiopia       edad 2 pob  88/165 ald  42 mil  44  puntaje  7597  juntado  52670 | propio 3059 casa 18841 recoleccion 1591 granja 19530 mercado 3286 sitios 685 ingenio 177 disputado 5501
+j4 palmares     caído  edad 1 pob   0/  0 ald   0 mil   0  puntaje  3879  juntado  13438 | propio 3215 casa 8659 recoleccion 303 disputado 871 granja 390
+   fama ganada 1377 (propio 1377) · acogida 48 personas = 1344 · hitos 0 · ahora 33 · tirada por el tope 90
+   liberados 0 · oficios 0 puestos, riqueza propia 1838 · edificios {  } · juntado sin fama 12061 · 751 s en el techo de población
+j5 ayutthaya     edad 3 pob 120/150 ald  42 mil  68  puntaje  8136  juntado  53082 | casa 18225 recoleccion 2567 propio 2134 granja 21449 mercado 1329 disputado 6861 sitios 417 ingenio 100
+-- minuto 60 --
+j0 tawantinsuyu  edad 3 pob  20/105 ald  19 mil   1  puntaje 10818  juntado  67905 | propio 10145 casa 18243 recoleccion 1385 sitios 1135 granja 29285 mercado 2910 ingenio 222 cumbi 100 disputado 4480
+j1 mapuches      edad 3 pob  97/129 ald  42 mil  51  puntaje 10503  juntado  60789 | casa 17954 propio 4420 recoleccion 2087 sitios 1124 disputado 3800 mercado 1964 granja 28221 arreo 369 kawin 450 ingenio 400
+j2 guaranies     edad 4 pob 121/155 ald  16 mil 104  puntaje  9770  juntado  62115 | casa 20640 granja 18194 recoleccion 2727 sitios 879 propio 7215 ingenio 350 mercado 3970 disputado 8140
+j3 etiopia       edad 2 pob 109/165 ald  42 mil  62  puntaje  9049  juntado  64424 | propio 3659 casa 18841 recoleccion 1786 granja 25367 mercado 4122 sitios 739 ingenio 327 disputado 9583
+j4 palmares     caído  edad 1 pob   0/  0 ald   0 mil   0  puntaje  3879  juntado  13438 | propio 3215 casa 8659 recoleccion 303 disputado 871 granja 390
+   fama ganada 1377 (propio 1377) · acogida 48 personas = 1344 · hitos 0 · ahora 33 · tirada por el tope 90
+   liberados 0 · oficios 0 puestos, riqueza propia 1838 · edificios {  } · juntado sin fama 12061 · 751 s en el techo de población
+j5 ayutthaya     edad 3 pob 173/190 ald  42 mil 117  puntaje 11713  juntado  65568 | casa 18225 recoleccion 3230 propio 2767 granja 27728 mercado 1605 disputado 11300 sitios 613 ingenio 100
+-- minuto 70 --
+j0 tawantinsuyu caído  edad 3 pob   1/ 20 ald   1 mil   0  puntaje 11619  juntado  70159 | propio 10889 casa 18243 recoleccion 1405 sitios 1135 granja 30675 mercado 2910 ingenio 222 cumbi 100 disputado 4580
+j1 mapuches      edad 3 pob 111/149 ald  42 mil  59  puntaje 14100  juntado  73742 | casa 18032 propio 5380 recoleccion 3150 sitios 1591 disputado 5490 mercado 2647 granja 35722 arreo 780 kawin 450 ingenio 500
+j2 guaranies     edad 4 pob 104/155 ald  18 mil  85  puntaje 10904  juntado  65775 | casa 20732 granja 19314 recoleccion 2857 sitios 927 propio 7955 ingenio 400 mercado 4670 disputado 8920
+j3 etiopia       edad 2 pob  79/165 ald  42 mil  32  puntaje 10475  juntado  75683 | propio 4258 casa 18841 recoleccion 2059 granja 31165 mercado 5026 sitios 879 ingenio 440 disputado 13015
+j4 palmares     caído  edad 1 pob   0/  0 ald   0 mil   0  puntaje  3879  juntado  13438 | propio 3215 casa 8659 recoleccion 303 disputado 871 granja 390
+   fama ganada 1377 (propio 1377) · acogida 48 personas = 1344 · hitos 0 · ahora 33 · tirada por el tope 90
+   liberados 0 · oficios 0 puestos, riqueza propia 1838 · edificios {  } · juntado sin fama 12061 · 751 s en el techo de población
+j5 ayutthaya     edad 3 pob 202/200 ald  42 mil 144  puntaje 16703  juntado  78100 | casa 18225 recoleccion 3802 propio 3353 granja 34787 mercado 1953 disputado 15045 sitios 735 ingenio 200
+-- minuto 75 --
+j0 tawantinsuyu caído  edad 3 pob   0/  0 ald   0 mil   0  puntaje 11621  juntado  70179 | propio 10889 casa 18243 recoleccion 1405 sitios 1135 granja 30675 mercado 2910 ingenio 222 cumbi 100 disputado 4600
+j1 mapuches      edad 3 pob  96/149 ald  42 mil  53  puntaje 15612  juntado  79206 | casa 18032 propio 5860 recoleccion 3710 sitios 1616 disputado 6140 mercado 2717 granja 39401 arreo 780 kawin 450 ingenio 500
+j2 guaranies     edad 4 pob 100/155 ald  27 mil  72  puntaje 11622  juntado  68388 | casa 20732 granja 20014 recoleccion 2977 sitios 1130 propio 8385 ingenio 400 mercado 5170 disputado 9580
+j3 etiopia       edad 2 pob  66/165 ald  41 mil  24  puntaje 11074  juntado  80593 | propio 4558 casa 18841 recoleccion 2267 granja 34064 mercado 5166 sitios 942 ingenio 440 disputado 14315
+j4 palmares     caído  edad 1 pob   0/  0 ald   0 mil   0  puntaje  3879  juntado  13438 | propio 3215 casa 8659 recoleccion 303 disputado 871 granja 390
+   fama ganada 1377 (propio 1377) · acogida 48 personas = 1344 · hitos 0 · ahora 33 · tirada por el tope 90
+   liberados 0 · oficios 0 puestos, riqueza propia 1838 · edificios {  } · juntado sin fama 12061 · 751 s en el techo de población
+j5 ayutthaya     edad 3 pob  99/200 ald  42 mil  49  puntaje 19260  juntado  85185 | casa 18225 recoleccion 4049 propio 3626 granja 38700 mercado 2426 disputado 16852 sitios 907 ingenio 400
