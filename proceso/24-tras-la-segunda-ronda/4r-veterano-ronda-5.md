@@ -104,7 +104,7 @@ Sección nueva **«Atajos globales»** en Opciones → Teclas:
 ## Pruebas
 | Prueba | Resultado |
 |---|---|
-| `godot --path . -- --autotest --civ=guaranies --terreno=llano` | **AUTOTEST: OK**, 108 chequeos ([salida](pruebas/4r-autotest.txt)). Nuevos: N elige los 7 aldeanos, P elige los 2 edificios de producción y no el centro, B toca la campana y la calma sin elegir el centro, Opciones → Teclas muestra los 8 marcadores y la campana en B; una unidad sana que pelea no muestra barra, sí con la opción, y una dañada siempre |
+| `godot --path . -- --autotest --civ=guaranies --terreno=llano` | **AUTOTEST: OK**, 107 chequeos (101 en la quinta ronda del veterano) ([salida](pruebas/4r-autotest.txt)). Nuevos: N elige los 7 aldeanos, P elige los 2 edificios de producción y no el centro, B toca la campana y la calma sin elegir el centro, Opciones → Teclas muestra los 8 marcadores y la campana en B; una unidad sana que pelea no muestra barra, sí con la opción, y una dañada siempre |
 | `tests/test_opciones.gd` | **OK** ([salida](pruebas/4r-test-opciones.txt)). Nuevos: B/N/P de fábrica y sin choques, 8 marcadores, perfil AoE4 sin choques, archivo viejo con B ocupada, ida y vuelta de `barras_pelea` |
 | `tests/test_determinism.gd` | **OK**, hash 2203695307 (igual) |
 | `tools/escala.gd` | Ninguna casa bajo 1,8 personas, ninguna producción ni mercado bajo 2,4 |

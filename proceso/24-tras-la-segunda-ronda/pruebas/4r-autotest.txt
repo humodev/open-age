@@ -18,10 +18,10 @@ OK    ninguna casilla del centro tiene dos comandos (0 repetidas)
 OK    Q en el centro encola un aldeano
 OK    Ctrl+1 asigna el grupo
 OK    la fila de grupos muestra el grupo 1
-OK    los aldeanos construyen la casa (17200 ms)
+OK    los aldeanos construyen la casa (12900 ms)
 OK    entra alimento al banco (160)
 OK    arrastrar coloca una línea de empalizada (6)
-OK    la campana refugia aldeanos (7)
+OK    la campana refugia aldeanos (6)
 OK    el toque de calma los saca (0)
 OK    F2 abre el panel de economía
 OK    el ✕ cierra el panel de economía
@@ -58,7 +58,7 @@ OK    Alt + clic sin aliados no tira bengala
 OK    la casilla del hito muestra cada recurso que falta (2 de 2, [["alimento", "−500"], ["riqueza", "−300"]])
 OK    si falta uno solo, «−40»
 OK    la ayuda dice cuánto falta de cada uno (Faltan 500 de alimento y 300 de riqueza)
-OK    al colocar el hito se ve el aura (Aura: +15 % de recolección a 9 casillas / En el aura: 4 fuentes de alimento, 44 árboles, 1 veta de piedra / )
+OK    al colocar el hito se ve el aura (Aura: +15 % de recolección a 9 casillas / En el aura: 4 fuentes de alimento, 19 árboles, 1 veta de piedra / )
 OK    la ficha del hito en obra dice cuánto falta con 4 (Faltan 1:54 con 4 constructores; esperado 1:54)
 OK    sin constructores, «Parada» (Parada: sin constructores (con uno, 2:22))
 OK    Ctrl + Alt + 8 guarda y Alt + 8 vuelve (30, 24)
