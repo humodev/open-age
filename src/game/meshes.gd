@@ -417,11 +417,85 @@ static func foundation_mesh(w: int, h: int) -> ArrayMesh:
 	p.append([box(fw, 0.12, t), xf(Vector3(0, 0.06, fh / 2)), Palette.WOOD_BEAM])
 	p.append([box(t, 0.12, fh), xf(Vector3(-fw / 2, 0.06, 0)), Palette.WOOD_BEAM])
 	p.append([box(t, 0.12, fh), xf(Vector3(fw / 2, 0.06, 0)), Palette.WOOD_BEAM])
-	for c in [Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, 1)]:
-		p.append([box(0.08, 0.9, 0.08), xf(Vector3(c.x * fw / 2, 0.45, c.y * fh / 2)), Palette.WOOD_BEAM])
+	# Las estacas y el andamio van con la etapa de la obra (CivMeshes.obra).
 	var mesh := merge(p)
 	_cache[key] = mesh
 	return mesh
+
+
+static var _clip_cache := {}
+static var _obra_mats := {}
+
+
+## Obra a medio levantar: la malla cortada a `cut` metros de alto. Los triángulos que cruzan
+## el corte se recortan (no se tiran), así los muros quedan abiertos arriba como una pared que
+## sube. Doble cara, para que se vea el interior de lo cortado. Se guarda por malla y altura.
+static func clip_below(mesh: Mesh, cut: float) -> ArrayMesh:
+	var key := "%d_%d" % [mesh.get_instance_id(), int(cut * 100.0)]
+	if _clip_cache.has(key):
+		return _clip_cache[key]
+	var out := ArrayMesh.new()
+	for s in mesh.get_surface_count():
+		var arr := mesh.surface_get_arrays(s)
+		var vs: PackedVector3Array = arr[Mesh.ARRAY_VERTEX]
+		var ns: PackedVector3Array = arr[Mesh.ARRAY_NORMAL] if arr[Mesh.ARRAY_NORMAL] != null else PackedVector3Array()
+		if ns.size() != vs.size():
+			ns.resize(vs.size())
+			ns.fill(Vector3.UP)
+		var order := PackedInt32Array()
+		if arr[Mesh.ARRAY_INDEX] != null and (arr[Mesh.ARRAY_INDEX] as PackedInt32Array).size() > 0:
+			order = arr[Mesh.ARRAY_INDEX]
+		else:
+			order.resize(vs.size())
+			for i in vs.size():
+				order[i] = i
+		var ov := PackedVector3Array()
+		var on := PackedVector3Array()
+		for t in range(0, order.size() - 2, 3):
+			var pv: Array[Vector3] = [vs[order[t]], vs[order[t + 1]], vs[order[t + 2]]]
+			var pn: Array[Vector3] = [ns[order[t]], ns[order[t + 1]], ns[order[t + 2]]]
+			if pv[0].y <= cut and pv[1].y <= cut and pv[2].y <= cut:
+				ov.append_array(PackedVector3Array(pv))
+				on.append_array(PackedVector3Array(pn))
+				continue
+			# Sutherland–Hodgman contra y <= cut, en el mismo orden (no cambia el giro).
+			var cv: Array[Vector3] = []
+			var cn: Array[Vector3] = []
+			for i in 3:
+				var a := pv[i]
+				var b := pv[(i + 1) % 3]
+				var a_in := a.y <= cut
+				var b_in := b.y <= cut
+				if a_in:
+					cv.append(a)
+					cn.append(pn[i])
+				if a_in != b_in:
+					var k := (cut - a.y) / (b.y - a.y)
+					cv.append(a.lerp(b, k))
+					cn.append(pn[i].lerp(pn[(i + 1) % 3], k).normalized())
+			for i in range(1, cv.size() - 1):
+				ov.append_array(PackedVector3Array([cv[0], cv[i], cv[i + 1]]))
+				on.append_array(PackedVector3Array([cn[0], cn[i], cn[i + 1]]))
+		if ov.is_empty():
+			continue
+		var a2 := []
+		a2.resize(Mesh.ARRAY_MAX)
+		a2[Mesh.ARRAY_VERTEX] = ov
+		a2[Mesh.ARRAY_NORMAL] = on
+		out.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, a2)
+		out.surface_set_material(out.get_surface_count() - 1, _obra_mat(mesh.surface_get_material(s)))
+	_clip_cache[key] = out
+	return out
+
+
+static func _obra_mat(src: Material) -> Material:
+	if not src is BaseMaterial3D:
+		return src
+	if not _obra_mats.has(src):
+		var m := (src as BaseMaterial3D).duplicate() as BaseMaterial3D
+		m.cull_mode = BaseMaterial3D.CULL_DISABLED
+		_obra_mats[src] = m
+	return _obra_mats[src]
 
 
 # ---------------------------------------------------------------- Recursos

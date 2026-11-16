@@ -10,7 +10,7 @@ extends Node3D
 ##   --estilo=pacifica|normal|acosadora|agresiva  estilo de juego de la IA
 ##   --cam=x,z,zoom[,inclinación]  posición de cámara para la captura (bX,bZ: relativa a la base propia)
 ##   --select=tipo      selecciona entidades de ese tipo del jugador local antes de la captura
-##   --demo=base|batalla|multitud|formacion|bloque  escena armada para revisar modelos, combate, el costo de 200 unidades o un grupo en marcha
+##   --demo=base|obras|batalla|multitud|formacion|bloque  escena armada para revisar modelos, combate, el costo de 200 unidades o un grupo en marcha
 ##   --menu             fuerza el menú de inicio (sin argumentos se abre solo)
 ##   --terreno=<clave de reglas.json "terrenos"> tipo de mapa (llano, valle, delta…)
 ##   --civ=clave        civilización propia (tawantinsuyu, mapuches, guaranies, etiopia, palmares, ayutthaya, azar)
@@ -384,7 +384,33 @@ func _build_scene(aivai: bool) -> void:
 
 func _demo(kind: String) -> void:
 	var b := sim.bases[0]
-	if kind == "base":
+	if _args.has("edad"): # --edad=N: la base de muestra en esa edad (aspecto por edad, proceso/24)
+		sim.players[0]["age"] = clampi(int(_args["edad"]), 1, 4)
+	if kind == "obras":
+		# Obras en marcha en sus tres etapas (cimientos, estructura, casi terminado): una fila
+		# por edificio, columnas al 15, 50 y 85 % (proceso/24, 4c). Cámara: --cam=b6,b6,16.
+		var types: Array = [sim.dp(0).civ.get("casa", "casa"), "cuartel", "torre", "almacen_mina", sim.dp(0).civ.get("inicio_edificio", "centro")]
+		for row in types.size():
+			var type: String = types[row]
+			if not sim.dp(0).edificios.has(type):
+				continue
+			for col in 3:
+				var tx0: int = b.x - 6 + col * 6
+				var ty0: int = b.y + 5 + row * 5
+				for r in 4:
+					var found := false
+					for dy in range(-r, r + 1):
+						for dx in range(-r, r + 1):
+							if not found and sim.can_place(type, tx0 + dx, ty0 + dy, 0):
+								var e := sim.spawn_building(type, 0, tx0 + dx, ty0 + dy, false)
+								e.build_time = sim.dp(0).build_time_of(type, 1)
+								e.progress = e.build_time * [15, 50, 85][col] / 100
+								e.hp = maxi(1, e.hp_max * [15, 50, 85][col] / 100)
+								found = true
+					if found:
+						break
+		sim.set_meta("demo_cam", Vector2(b.x + 1, b.y + 13))
+	elif kind == "base":
 		var place := func(type: String, tx0: int, ty0: int, built: bool) -> void:
 			if not sim.dp(0).edificios.has(type):
 				return

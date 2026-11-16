@@ -756,6 +756,7 @@ func _make_visual(e: SimEntity) -> Dictionary:
 		if body == null:
 			body = MeshInstance3D.new()
 			(body as MeshInstance3D).mesh = unit_mesh_for(e)
+			v["age"] = _age_of(e.owner) # la maqueta cambia de equipo con la edad
 		_unit_k = float(sim.data.reglas.get("escala_visual", {}).get("unidad_pct", 100)) / 100.0
 		body.scale = Vector3.ONE * _unit_k
 		root.add_child(body)
@@ -770,20 +771,13 @@ func _make_visual(e: SimEntity) -> Dictionary:
 		root.add_child(ring)
 		v.merge({"kind": "unit", "body": body, "carry": carry, "ring": ring, "yaw": 0.0, "lunge": 0.0, "spawn": 0.0, "phase": randf() * TAU})
 	else:
-		var struct: Node3D = _model_for(e.owner, e.type, minf(e.w, e.h) * 0.98, false)
-		if struct == null:
-			struct = MeshInstance3D.new()
-			(struct as MeshInstance3D).mesh = building_mesh_for(e.owner, e.type, e.def)
-		else:
-			Meshes.team_banner(struct, Vector3(e.w * 0.42, 0, -e.h * 0.42), Palette.team(e.owner))
-		struct = _stretch_to_scale(e, struct)
-		root.add_child(struct)
 		var found := MeshInstance3D.new()
 		found.mesh = Meshes.foundation_mesh(e.w, e.h)
 		root.add_child(found)
 		var ring := _ring(1, Vector2(e.w + 0.3, e.h + 0.3))
 		root.add_child(ring)
-		v.merge({"kind": "building", "struct": struct, "found": found, "ring": ring, "pop": 0.0})
+		v.merge({"kind": "building", "found": found, "ring": ring, "pop": 0.0})
+		_build_struct(e, v, _look(e))
 		_settle_building(e, root)
 		if e.def.get("sagrado", false):
 			var flag := MeshInstance3D.new()
@@ -965,8 +959,9 @@ static func _each_geo(n: Node, f: Callable) -> void:
 
 
 ## Escala coherente (docs/10, paso 5): cada edificio llega al menos a la altura
-## de su categoría, para que una casa mida unas tres veces un aldeano.
-func _stretch_to_scale(e: SimEntity, struct: Node3D) -> Node3D:
+## de su categoría, para que una casa mida unas tres veces un aldeano. `h`: alto del
+## edificio en la edad I, así lo que crece con la edad no se pierde al estirar.
+func _stretch_k(e: SimEntity, h: float) -> float:
 	var ev: Dictionary = sim.data.reglas.get("escala_visual", {})
 	var mins: Dictionary = ev.get("altura_min_cm", {})
 	var cat := ""
@@ -983,30 +978,138 @@ func _stretch_to_scale(e: SimEntity, struct: Node3D) -> Node3D:
 				cat = "hito"
 		if cat == "" and e.def.has("entrena"):
 			cat = "produccion"
-	var outer := Node3D.new()
-	outer.add_child(struct)
-	if cat == "" or not mins.has(cat) or e.def.get("transitable", false):
-		return outer
-	var h := _aabb(struct, Transform3D.IDENTITY).size.y
-	if h < 0.3:
-		return outer
+	if cat == "" or not mins.has(cat) or e.def.get("transitable", false) or h < 0.3:
+		return 1.0
 	var want := float(mins[cat]) / 100.0
-	struct.scale.y *= clampf(want / h, 1.0, float(ev.get("estirar_max_pct", 150)) / 100.0)
-	return outer
+	return clampf(want / h, 1.0, float(ev.get("estirar_max_pct", 150)) / 100.0)
 
 
-## Malla de unidad según la civilización del dueño (CivMeshes) o la de la capa común.
+# ---------------------------------------------------------------- Aspecto por edad y obra
+
+## Edad del dueño (1 a 4); los neutrales, la I.
+func _age_of(owner: int) -> int:
+	if owner < 0 or owner >= sim.players.size():
+		return 1
+	return int(sim.players[owner].get("age", 1))
+
+
+## Aspecto del pueblo del dueño en una edad (data/arte_edades.json).
+func _age_cfg(owner: int, age: int) -> Dictionary:
+	if owner < 0 or owner >= sim.players.size():
+		return {}
+	var style: Dictionary = sim.dp(owner).civ.get("estilo", {})
+	return CivMeshes.age_cfg(str(sim.players[owner].get("civ", "")), str(style.get("forma", "")), age)
+
+
+## Qué se dibuja: "f<edad>" terminado, "o<etapa>_<edad>" en obra (etapas de data/arte_edades.json).
+func _look(e: SimEntity) -> String:
+	var age := _age_of(e.owner)
+	if e.built:
+		return "f%d" % age
+	var pct := 100 * e.progress / maxi(1, e.build_time)
+	var stage := 0
+	for t in CivMeshes.arte().get("obra", {}).get("etapas_pct", [33, 66]):
+		if pct >= int(t):
+			stage += 1
+	return "o%d_%d" % [stage, age]
+
+
+## Arma el cuerpo del edificio para `look`. Terminado: el modelo generado (con los adornos de
+## la edad) o la maqueta de la edad. En obra: siempre la maqueta, cortada a la altura de la
+## etapa, con andamio y material. Se rehace solo cuando cambia la etapa o la edad.
+func _build_struct(e: SimEntity, v: Dictionary, look: String) -> void:
+	var old: Node3D = v.get("struct")
+	if old != null and is_instance_valid(old):
+		old.queue_free()
+	v["look"] = look
+	v["fog_drawn"] = -1
+	var age := _age_of(e.owner)
+	var cfg := _age_cfg(e.owner, age)
+	var mg := CivMeshes.margin()
+	var outer := Node3D.new()
+	var team := Palette.team(e.owner)
+	var model: Node3D = null
+	if e.built:
+		var esc := minf(1.0, float(cfg.get("escala_pct", 100)) / 100.0)
+		var esc1 := minf(1.0, float(_age_cfg(e.owner, 1).get("escala_pct", 100)) / 100.0)
+		var cerco := 0.2 if cfg.has("cerco") and (CivMeshes._is_center(e.type, e.def) or e.capital) else 0.0
+		var body := maxf(0.8, minf(e.w, e.h) - 2.0 * mg - cerco)
+		model = _model_for(e.owner, e.type, body * esc, false)
+		if model != null:
+			if cfg.has("modelo_tinte"):
+				_tint(model, Color(cfg["modelo_tinte"]))
+			var top := _aabb(model, Transform3D.IDENTITY).end.y # el techo, sin el estandarte
+			Meshes.team_banner(model, Vector3(e.w * 0.42, 0, -e.h * 0.42), team)
+			var h := _aabb(model, Transform3D.IDENTITY).size.y
+			var k := _stretch_k(e, h * esc1 / maxf(esc, 0.01))
+			var alto := float(cfg.get("alto_pct", 100)) / 100.0
+			model.scale.y *= k * alto
+			outer.add_child(model)
+			var dm := CivMeshes.decor(e.type, e.def, team, cfg, e.w, e.h, top * k * alto, body * esc)
+			if dm != null:
+				var di := MeshInstance3D.new()
+				di.mesh = dm
+				outer.add_child(di)
+	if model == null:
+		var fin := building_mesh_for(e.owner, e.type, e.def, age)
+		var k := _stretch_k(e, building_mesh_for(e.owner, e.type, e.def, 1).get_aabb().size.y)
+		if e.type == "torre" and str(cfg.get("torre", "")) in CivMeshes.arte().get("torres_bajas", []):
+			k = 1.0 # baluarte bajo: no se estira a la altura de una torre
+		var mi := MeshInstance3D.new()
+		mi.scale.y = k
+		outer.add_child(mi)
+		if e.built:
+			mi.mesh = fin
+		else:
+			var stage := int(look.substr(1, 1))
+			var cuts: Array = CivMeshes.arte().get("obra", {}).get("corte_pct", [14, 50, 82])
+			var top := fin.get_aabb().end.y
+			var cut := top * float(cuts[clampi(stage, 0, cuts.size() - 1)]) / 100.0
+			mi.mesh = Meshes.clip_below(fin, cut)
+			if not (e.def.get("linea", false) or e.def.get("puerta", false) or e.def.get("transitable", false)):
+				var ex := MeshInstance3D.new()
+				ex.mesh = CivMeshes.obra(stage, e.w, e.h, cut * k, cfg)
+				outer.add_child(ex)
+	(v["node"] as Node3D).add_child(outer)
+	v["struct"] = outer
+
+
+static var _tint_cache := {}
+
+
+## Tono de la edad sobre un modelo generado (data/arte_edades.json → modelo_tinte): más
+## apagado en la edad I, más claro y limpio desde la III. Materiales compartidos por tono.
+static func _tint(n: Node, tint: Color) -> void:
+	_each_geo(n, func(g: GeometryInstance3D) -> void:
+		if not g is MeshInstance3D or (g as MeshInstance3D).mesh == null:
+			return
+		var mi := g as MeshInstance3D
+		for i in mi.mesh.get_surface_count():
+			var m := mi.get_surface_override_material(i)
+			if not m is StandardMaterial3D:
+				continue
+			var key := "%d_%s" % [m.get_instance_id(), tint.to_html()]
+			if not _tint_cache.has(key):
+				var c := (m as StandardMaterial3D).duplicate() as StandardMaterial3D
+				c.albedo_color = (m as StandardMaterial3D).albedo_color * tint
+				_tint_cache[key] = c
+			mi.set_surface_override_material(i, _tint_cache[key]))
+
+
+## Malla de unidad según la civilización del dueño (CivMeshes) o la de la capa común; las
+## tropas cambian de equipo con la edad.
 func unit_mesh_for(e: SimEntity) -> Mesh:
 	if e.def.get("animal", false):
 		return Meshes.animal_mesh(Color(e.def.get("color", "#c9b08a")))
 	var style: Dictionary = sim.dp(e.owner).civ.get("estilo", {})
 	if style.is_empty():
 		return Meshes.unit_mesh(e.type, Palette.team(e.owner))
-	return CivMeshes.unit(e.type, e.def, Palette.team(e.owner), style)
+	return CivMeshes.unit(e.type, e.def, Palette.team(e.owner), style, _age_cfg(e.owner, _age_of(e.owner)))
 
 
-## Malla de edificio según la civilización; los hitos eligen forma por opción y edad.
-func building_mesh_for(owner: int, type: String, def: Dictionary) -> Mesh:
+## Malla de edificio según la civilización y la edad (por defecto, la del dueño); los hitos
+## eligen forma por opción y edad de destino.
+func building_mesh_for(owner: int, type: String, def: Dictionary, age: int = -1) -> Mesh:
 	var dd := sim.dp(owner)
 	var style: Dictionary = dd.civ.get("estilo", {})
 	if style.is_empty():
@@ -1018,7 +1121,9 @@ func building_mesh_for(owner: int, type: String, def: Dictionary) -> Mesh:
 		if idx >= 0:
 			variant = idx
 			tier = row
-	return CivMeshes.building(type, def, Palette.team(owner), style, variant, tier)
+	if age < 0:
+		age = _age_of(owner)
+	return CivMeshes.building(type, def, Palette.team(owner), style, variant, tier, _age_cfg(owner, age))
 
 
 func _ring(shape: int, size: Vector2) -> MeshInstance3D:
@@ -1265,6 +1370,9 @@ func _render_unit(e: SimEntity, v: Dictionary, alpha: float, delta: float) -> vo
 		v["prev"] = v["cur"]
 		return
 	var body: Node3D = v["body"]
+	if v.has("age") and int(v["age"]) != _age_of(e.owner):
+		v["age"] = _age_of(e.owner)
+		(body as MeshInstance3D).mesh = unit_mesh_for(e)
 	# Sigilo: las unidades propias escondidas en el monte se ven translúcidas.
 	if e.owner == local and (tick_counter() + e.id) % 5 == 0:
 		v["hidden"] = sim.mods.is_hidden_now(e)
@@ -1324,12 +1432,19 @@ func _render_unit(e: SimEntity, v: Dictionary, alpha: float, delta: float) -> vo
 
 
 func _render_building(e: SimEntity, v: Dictionary, delta: float) -> void:
-	var struct: Node3D = v["struct"]
 	var found: MeshInstance3D = v["found"]
 	if v.has("flag"):
 		(v["flag"] as MeshInstance3D).material_override = Meshes.mat(Palette.team(e.holder) if e.holder >= 0 else Color("e8e2d4"), 0.6, 0.25)
 	var fs := fog_state(e)
 	(v["node"] as Node3D).visible = fs > 0
+	# Etapa de obra o edad nueva: se rehace el cuerpo (lo ajeno, solo si se ve).
+	var look := _look(e)
+	if look != v["look"] and fs == 2:
+		var aged := e.built and str(v["look"]).begins_with("f")
+		_build_struct(e, v, look)
+		if aged:
+			v["pop"] = 0.7
+	var struct: Node3D = v["struct"]
 	if fs != int(v.get("fog_drawn", -1)):
 		v["fog_drawn"] = fs
 		var ov := Meshes.fog_overlay() if fs == 1 else null
@@ -1341,9 +1456,7 @@ func _render_building(e: SimEntity, v: Dictionary, delta: float) -> void:
 		struct.scale = Vector3(1.0 + pop * 0.06, 1.0 + pop * 0.1, 1.0 + pop * 0.06)
 	else:
 		found.visible = true
-		var k := float(e.progress) / float(maxi(1, e.build_time))
-		struct.scale = Vector3(1, 0.04 + 0.96 * k, 1)
-		struct.visible = k > 0.01
+		struct.scale = Vector3.ONE
 	_update_ring(e, v)
 
 
