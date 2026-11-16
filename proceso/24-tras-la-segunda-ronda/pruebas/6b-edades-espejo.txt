@@ -1,0 +1,137 @@
+# Paso 6b · edades de la experta: experta contra experta, cada civ contra sí misma, llano, semilla 41, 20 minutos (tools/experta_edades.gd, con --ajuste).
+# Por jugador: hito puesto→edad alcanzada (II, III, IV); a los 5/10/15/20': aldeanos a, ejército m, centros c, [torres t], edad E
+
+## antes (main)
+jugadores 12 | II antes de 6:00: 1 | II media 9:25 | III antes de 15:00: 3 | III en 20': 4 ['14:30', '16:42', '13:47', '13:41']
+tawantinsuyu  tawantinsuyu  s41  P0 experta hito→edad II/III/IV: --:--→--:-- --:--→--:-- --:--→--:-- |  5' 25a0m1cE1 10' 30a0m1cE1 15' 26a0m1cE1 · gana P1 (sitios, 18:04)
+tawantinsuyu  tawantinsuyu  s41  P1 experta hito→edad II/III/IV: 4:53→6:25 --:--→--:-- --:--→--:-- |  5' 25a0m1cE1 10' 28a20m1cE2 15' 36a18m2cE2 · gana P1 (sitios, 18:04)
+guaranies     guaranies     s41  P0 experta hito→edad II/III/IV: 6:18→8:57 11:41→14:30 --:--→--:-- |  5' 22a0m1cE1 10' 37a5m1cE2 15' 50a17m1cE3 20' 72a16m2cE3
+guaranies     guaranies     s41  P1 experta hito→edad II/III/IV: 7:04→9:40 13:36→16:42 --:--→--:-- |  5' 22a0m1cE1 10' 37a7m1cE2 15' 49a12m2cE2 20' 79a30m2cE3
+palmares      palmares      s41  P0 experta hito→edad II/III/IV: 7:53→9:35 --:--→--:-- --:--→--:-- |  5' 14a5m0cE1 10' 19a13m0cE2 15' 27a7m0cE2 20' 38a13m0cE2
+palmares      palmares      s41  P1 experta hito→edad II/III/IV: 7:48→13:28 --:--→--:-- --:--→--:-- |  5' 14a4m0cE1 10' 20a10m0cE1 15' 31a12m0cE2 20' 44a15m0cE2
+mapuches      mapuches      s41  P0 experta hito→edad II/III/IV: 5:56→7:35 --:--→--:-- --:--→--:-- |  5' 27a2m3cE1 10' 37a1m3cE2 15' 36a0m3cE2 20' 1a0m2cE2
+mapuches      mapuches      s41  P1 experta hito→edad II/III/IV: 8:15→9:40 11:58→13:47 --:--→--:-- |  5' 28a2m2cE1 10' 58a13m3cE2 15' 82a37m3cE3 20' 93a103m3cE3
+etiopia       etiopia       s41  P0 experta hito→edad II/III/IV: 4:21→5:57 --:--→--:-- --:--→--:-- |  5' 21a0m1cE1 10' 27a12m1cE2 15' 40a15m2cE2 20' 75a13m3cE2
+etiopia       etiopia       s41  P1 experta hito→edad II/III/IV: 4:55→6:38 --:--→--:-- --:--→--:-- |  5' 22a0m1cE1 10' 32a7m1cE2 15' 57a10m2cE2 20' 99a29m3cE2
+ayutthaya     ayutthaya     s41  P0 experta hito→edad II/III/IV: 5:32→7:06 --:--→--:-- --:--→--:-- |  5' 18a3m1cE1 10' 23a4m1cE2 15' 25a1m1cE2 · gana P1 (sitios, 19:39)
+ayutthaya     ayutthaya     s41  P1 experta hito→edad II/III/IV: 6:28→8:07 11:48→13:41 --:--→--:-- |  5' 18a4m1cE1 10' 29a14m1cE2 15' 45a12m2cE3 · gana P1 (sitios, 19:39)
+
+## V1 comida_inalcanzable
+jugadores 12 | II antes de 6:00: 1 | II media 8:31 | III antes de 15:00: 2 | III en 20': 7 ['16:46', '19:03', '13:29', '17:22', '16:31', '17:21', '13:47']
+tawantinsuyu  tawantinsuyu  s41  P0 experta hito→edad II/III/IV: 6:44→8:24 14:55→16:46 --:--→--:-- |  5' 25a0m1cE1 10' 39a13m1cE2 15' 64a22m2cE2 20' 100a22m2cE3
+tawantinsuyu  tawantinsuyu  s41  P1 experta hito→edad II/III/IV: 5:05→6:48 14:56→--:-- --:--→--:-- |  5' 25a0m1cE1 10' 37a8m1cE2 15' 58a11m2cE2 20' 85a25m2cE2
+etiopia       etiopia       s41  P0 experta hito→edad II/III/IV: 4:21→5:57 17:06→19:03 --:--→--:-- |  5' 21a0m1cE1 10' 30a16m1cE2 15' 49a22m2cE2 20' 81a41m2cE3
+etiopia       etiopia       s41  P1 experta hito→edad II/III/IV: 4:55→6:38 --:--→--:-- --:--→--:-- |  5' 22a0m1cE1 10' 32a9m1cE2 15' 57a18m2cE2 20' 99a11m3cE2
+mapuches      mapuches      s41  P0 experta hito→edad II/III/IV: 6:07→7:51 11:22→13:29 --:--→--:-- |  5' 27a2m3cE1 10' 56a11m3cE2 15' 38a1m3cE3 20' 6a0m3cE3
+mapuches      mapuches      s41  P1 experta hito→edad II/III/IV: 8:18→9:43 15:52→17:22 --:--→--:-- |  5' 28a2m2cE1 10' 61a12m3cE2 15' 70a35m3cE2 20' 90a104m3cE3
+palmares      palmares      s41  P0 experta hito→edad II/III/IV: 7:53→9:35 --:--→--:-- --:--→--:-- |  5' 14a5m0cE1 10' 19a13m0cE2 15' 28a8m0cE2 20' 39a13m0cE2
+palmares      palmares      s41  P1 experta hito→edad II/III/IV: 7:48→13:28 --:--→--:-- --:--→--:-- |  5' 14a4m0cE1 10' 20a10m0cE1 15' 31a13m0cE2 20' 44a24m0cE2
+guaranies     guaranies     s41  P0 experta hito→edad II/III/IV: 6:23→8:54 13:33→16:31 --:--→--:-- |  5' 22a0m1cE1 10' 38a5m1cE2 15' 46a16m2cE2 20' 71a2m2cE3
+guaranies     guaranies     s41  P1 experta hito→edad II/III/IV: 6:56→9:31 14:37→17:21 --:--→--:-- |  5' 22a0m1cE1 10' 36a7m1cE2 15' 50a7m2cE2 20' 80a55m2cE3
+ayutthaya     ayutthaya     s41  P0 experta hito→edad II/III/IV: 5:32→7:15 --:--→--:-- --:--→--:-- |  5' 18a3m1cE1 10' 28a5m1cE2 15' 37a9m1cE2 20' 53a3m1cE2
+ayutthaya     ayutthaya     s41  P1 experta hito→edad II/III/IV: 6:28→8:08 11:50→13:47 --:--→--:-- |  5' 18a4m1cE1 10' 29a15m1cE2 15' 43a10m2cE3 20' 72a33m2cE3
+
+## V2 = V1 + ahorro_con_minimo
+jugadores 12 | II antes de 6:00: 1 | II media 8:31 | III antes de 15:00: 3 | III en 20': 9 ['16:26', '16:45', '19:02', '15:56', '13:18', '14:38', '16:31', '17:21', '13:47']
+tawantinsuyu  tawantinsuyu  s41  P0 experta hito→edad II/III/IV: 6:44→8:24 14:35→16:26 --:--→--:-- |  5' 25a0m1cE1 10' 39a13m1cE2 15' 63a15m2cE2 20' 99a21m2cE3
+tawantinsuyu  tawantinsuyu  s41  P1 experta hito→edad II/III/IV: 5:05→6:48 14:49→16:45 --:--→--:-- |  5' 25a0m1cE1 10' 37a8m1cE2 15' 58a8m2cE2 20' 89a18m2cE3
+etiopia       etiopia       s41  P0 experta hito→edad II/III/IV: 4:21→5:57 17:11→19:02 --:--→--:-- |  5' 21a0m1cE1 10' 30a16m1cE2 15' 49a6m2cE2 20' 81a34m2cE3
+etiopia       etiopia       s41  P1 experta hito→edad II/III/IV: 4:55→6:38 14:18→15:56 --:--→--:-- |  5' 22a0m1cE1 10' 32a9m1cE2 15' 58a15m2cE2 20' 85a13m2cE3
+mapuches      mapuches      s41  P0 experta hito→edad II/III/IV: 6:07→7:51 11:22→13:18 --:--→--:-- |  5' 27a2m3cE1 10' 56a11m3cE2 15' 79a29m3cE3 20' 87a37m3cE3
+mapuches      mapuches      s41  P1 experta hito→edad II/III/IV: 8:18→9:43 13:08→14:38 18:42→--:-- |  5' 28a2m2cE1 10' 61a12m3cE2 15' 86a36m3cE3 20' 100a46m3cE3
+palmares      palmares      s41  P0 experta hito→edad II/III/IV: 7:53→9:35 --:--→--:-- --:--→--:-- |  5' 14a5m0cE1 10' 19a13m0cE2 15' 28a8m0cE2 20' 39a13m0cE2
+palmares      palmares      s41  P1 experta hito→edad II/III/IV: 7:48→13:28 --:--→--:-- --:--→--:-- |  5' 14a4m0cE1 10' 20a10m0cE1 15' 31a13m0cE2 20' 44a24m0cE2
+guaranies     guaranies     s41  P0 experta hito→edad II/III/IV: 6:23→8:54 13:33→16:31 --:--→--:-- |  5' 22a0m1cE1 10' 38a5m1cE2 15' 46a16m2cE2 20' 77a18m2cE3
+guaranies     guaranies     s41  P1 experta hito→edad II/III/IV: 6:56→9:31 14:37→17:21 --:--→--:-- |  5' 22a0m1cE1 10' 36a7m1cE2 15' 50a7m2cE2 20' 79a48m2cE3
+ayutthaya     ayutthaya     s41  P0 experta hito→edad II/III/IV: 5:32→7:15 --:--→--:-- --:--→--:-- |  5' 18a3m1cE1 10' 28a5m1cE2 15' 37a9m1cE2 20' 53a3m1cE2
+ayutthaya     ayutthaya     s41  P1 experta hito→edad II/III/IV: 6:28→8:08 11:50→13:47 --:--→--:-- |  5' 18a4m1cE1 10' 29a15m1cE2 15' 43a10m2cE3 20' 72a33m2cE3
+
+## V3 = V2 + expansion.reserva_hito
+jugadores 12 | II antes de 6:00: 1 | II media 8:31 | III antes de 15:00: 2 | III en 20': 8 ['16:00', '16:44', '18:50', '17:05', '13:18', '14:38', '15:31', '15:53']
+tawantinsuyu  tawantinsuyu  s41  P0 experta hito→edad II/III/IV: 6:44→8:24 14:09→16:00 --:--→--:-- |  5' 25a0m1cE1 10' 39a13m1cE2 15' 63a20m2cE2 20' 94a16m2cE3
+tawantinsuyu  tawantinsuyu  s41  P1 experta hito→edad II/III/IV: 5:05→6:48 14:49→16:44 --:--→--:-- |  5' 25a0m1cE1 10' 37a8m1cE2 15' 58a9m2cE2 20' 91a31m2cE3
+etiopia       etiopia       s41  P0 experta hito→edad II/III/IV: 4:21→5:57 16:55→18:50 --:--→--:-- |  5' 21a0m1cE1 10' 30a16m1cE2 15' 48a17m2cE2 20' 80a39m2cE3
+etiopia       etiopia       s41  P1 experta hito→edad II/III/IV: 4:55→6:38 15:12→17:05 --:--→--:-- |  5' 22a0m1cE1 10' 32a9m1cE2 15' 52a11m2cE2 20' 83a11m2cE3
+mapuches      mapuches      s41  P0 experta hito→edad II/III/IV: 6:07→7:51 11:22→13:18 --:--→--:-- |  5' 27a2m3cE1 10' 56a11m3cE2 15' 79a29m3cE3 20' 87a37m3cE3
+mapuches      mapuches      s41  P1 experta hito→edad II/III/IV: 8:18→9:43 13:08→14:38 18:42→--:-- |  5' 28a2m2cE1 10' 61a12m3cE2 15' 86a36m3cE3 20' 100a46m3cE3
+palmares      palmares      s41  P0 experta hito→edad II/III/IV: 7:53→9:35 --:--→--:-- --:--→--:-- |  5' 14a5m0cE1 10' 19a13m0cE2 15' 28a8m0cE2 20' 39a13m0cE2
+palmares      palmares      s41  P1 experta hito→edad II/III/IV: 7:48→13:28 --:--→--:-- --:--→--:-- |  5' 14a4m0cE1 10' 20a10m0cE1 15' 31a13m0cE2 20' 44a24m0cE2
+guaranies     guaranies     s41  P0 experta hito→edad II/III/IV: 6:23→8:54 13:20→--:-- --:--→--:-- |  5' 22a0m1cE1 10' 38a5m1cE2 15' 47a8m2cE2 20' 65a21m2cE2
+guaranies     guaranies     s41  P1 experta hito→edad II/III/IV: 6:56→9:31 12:47→15:31 --:--→--:-- |  5' 22a0m1cE1 10' 36a7m1cE2 15' 47a20m2cE2 20' 79a21m2cE3
+ayutthaya     ayutthaya     s41  P0 experta hito→edad II/III/IV: 5:32→7:15 --:--→--:-- --:--→--:-- |  5' 18a3m1cE1 10' 28a5m1cE2 15' 37a13m1cE2 20' 44a1m1cE2
+ayutthaya     ayutthaya     s41  P1 experta hito→edad II/III/IV: 6:28→8:08 13:57→15:53 --:--→--:-- |  5' 18a4m1cE1 10' 29a15m1cE2 15' 48a8m2cE2 20' 71a31m2cE3
+
+## V4 = V2 + proporcion_tardia 50/28/13/9
+jugadores 12 | II antes de 6:00: 1 | II media 8:31 | III antes de 15:00: 1 | III en 20': 6 ['16:19', '17:31', '16:58', '15:00', '16:02', '16:26']
+tawantinsuyu  tawantinsuyu  s41  P0 experta hito→edad II/III/IV: 6:44→8:24 14:21→16:19 --:--→--:-- |  5' 25a0m1cE1 10' 38a11m1cE2 15' 63a10m2cE2 20' 94a23m2cE3
+tawantinsuyu  tawantinsuyu  s41  P1 experta hito→edad II/III/IV: 5:05→6:48 15:33→17:31 --:--→--:-- |  5' 25a0m1cE1 10' 37a9m1cE2 15' 58a18m2cE2 20' 96a17m2cE3
+etiopia       etiopia       s41  P0 experta hito→edad II/III/IV: 4:21→5:57 13:47→--:-- --:--→--:-- |  5' 21a0m1cE1 10' 31a19m1cE2 15' 35a0m2cE2 20' 6a0m2cE2
+etiopia       etiopia       s41  P1 experta hito→edad II/III/IV: 4:55→6:38 15:06→16:58 --:--→--:-- |  5' 22a0m1cE1 10' 30a1m1cE2 15' 56a23m2cE2 20' 86a36m2cE3
+mapuches      mapuches      s41  P0 experta hito→edad II/III/IV: 6:07→7:51 15:14→--:-- --:--→--:-- |  5' 27a2m3cE1 10' 56a11m3cE2 15' 75a7m3cE2 20' 72a19m3cE2
+mapuches      mapuches      s41  P1 experta hito→edad II/III/IV: 8:18→9:43 13:19→15:00 18:40→--:-- |  5' 28a2m2cE1 10' 61a12m3cE2 15' 83a51m3cE3 20' 100a60m3cE3
+palmares      palmares      s41  P0 experta hito→edad II/III/IV: 7:53→9:35 --:--→--:-- --:--→--:-- |  5' 14a5m0cE1 10' 19a13m0cE2 15' 28a8m0cE2 20' 39a13m0cE2
+palmares      palmares      s41  P1 experta hito→edad II/III/IV: 7:48→13:28 --:--→--:-- --:--→--:-- |  5' 14a4m0cE1 10' 20a10m0cE1 15' 31a13m0cE2 20' 44a24m0cE2
+guaranies     guaranies     s41  P0 experta hito→edad II/III/IV: 6:23→8:54 13:35→--:-- --:--→--:-- |  5' 22a0m1cE1 10' 38a5m1cE2 15' 46a8m2cE2 20' 71a17m2cE2
+guaranies     guaranies     s41  P1 experta hito→edad II/III/IV: 6:56→9:31 13:01→16:02 --:--→--:-- |  5' 22a0m1cE1 10' 36a7m1cE2 15' 46a26m2cE2 20' 78a28m2cE3
+ayutthaya     ayutthaya     s41  P0 experta hito→edad II/III/IV: 5:32→7:15 17:28→--:-- --:--→--:-- |  5' 18a3m1cE1 10' 30a6m1cE2 15' 44a15m1cE2 20' 58a26m1cE2
+ayutthaya     ayutthaya     s41  P1 experta hito→edad II/III/IV: 6:28→8:08 14:48→16:26 --:--→--:-- |  5' 18a4m1cE1 10' 29a15m1cE2 15' 40a11m2cE2 20' 70a16m2cE3
+
+## V5 = V1 + ahorro_continuo
+jugadores 12 | II antes de 6:00: 1 | II media 8:30 | III antes de 15:00: 6 | III en 20': 8 ['14:35', '12:45', '17:30', '14:11', '12:33', '15:48', '13:42', '13:01']
+tawantinsuyu  tawantinsuyu  s41  P0 experta hito→edad II/III/IV: 6:44→8:24 13:53→--:-- --:--→--:-- |  5' 25a0m1cE1 10' 39a13m1cE2 15' 65a11m2cE2 20' 98a22m2cE2
+tawantinsuyu  tawantinsuyu  s41  P1 experta hito→edad II/III/IV: 5:05→6:48 12:53→14:35 --:--→--:-- |  5' 25a0m1cE1 10' 37a8m1cE2 15' 55a27m2cE3 20' 90a16m2cE3
+etiopia       etiopia       s41  P0 experta hito→edad II/III/IV: 4:21→5:57 9:24→12:45 18:32→--:-- |  5' 21a0m1cE1 10' 32a5m1cE2 15' 43a2m1cE3 20' 56a4m1cE3
+etiopia       etiopia       s41  P1 experta hito→edad II/III/IV: 4:55→6:38 15:36→17:30 --:--→--:-- |  5' 22a0m1cE1 10' 32a13m1cE2 15' 56a17m2cE2 20' 86a32m2cE3
+mapuches      mapuches      s41  P0 experta hito→edad II/III/IV: 6:07→7:51 10:16→14:11 --:--→--:-- |  5' 27a2m3cE1 10' 60a0m3cE2 15' 76a44m3cE3 20' 100a60m3cE3
+mapuches      mapuches      s41  P1 experta hito→edad II/III/IV: 8:18→9:43 10:39→12:33 --:--→--:-- |  5' 28a2m2cE1 10' 61a12m3cE2 15' 84a18m3cE3 20' 97a14m3cE3
+palmares      palmares      s41  P0 experta hito→edad II/III/IV: 7:53→9:35 18:35→--:-- --:--→--:-- |  5' 14a5m0cE1 10' 19a13m0cE2 15' 27a2m0cE2 20' 39a17m0cE2
+palmares      palmares      s41  P1 experta hito→edad II/III/IV: 7:48→13:28 --:--→--:-- --:--→--:-- |  5' 14a4m0cE1 10' 20a10m0cE1 15' 31a9m0cE2 20' 46a15m0cE2
+guaranies     guaranies     s41  P0 experta hito→edad II/III/IV: 6:23→8:54 13:33→--:-- --:--→--:-- |  5' 22a0m1cE1 10' 38a5m1cE2 15' 46a7m2cE2 20' 71a4m2cE2
+guaranies     guaranies     s41  P1 experta hito→edad II/III/IV: 6:56→9:31 12:51→15:48 --:--→--:-- |  5' 22a0m1cE1 10' 36a7m1cE2 15' 44a21m2cE2 20' 74a11m2cE3
+ayutthaya     ayutthaya     s41  P0 experta hito→edad II/III/IV: 5:32→7:15 11:55→13:42 18:10→--:-- |  5' 18a3m1cE1 10' 32a0m1cE2 15' 44a13m1cE3 20' 55a22m1cE3
+ayutthaya     ayutthaya     s41  P1 experta hito→edad II/III/IV: 6:28→8:07 11:07→13:01 --:--→--:-- |  5' 18a4m1cE1 10' 31a13m1cE2 15' 42a1m2cE3 20' 74a16m2cE3
+
+## V6 = V5 + hito_constructores 8
+jugadores 12 | II antes de 6:00: 1 | II media 7:57 | III antes de 15:00: 4 | III en 20': 10 ['15:02', '15:39', '15:54', '15:03', '12:53', '11:23', '16:31', '15:43', '13:01', '12:36']
+tawantinsuyu  tawantinsuyu  s41  P0 experta hito→edad II/III/IV: 6:44→7:48 13:51→15:02 --:--→--:-- |  5' 25a0m1cE1 10' 41a11m1cE2 15' 61a16m2cE2 20' 91a19m2cE3
+tawantinsuyu  tawantinsuyu  s41  P1 experta hito→edad II/III/IV: 5:05→6:13 14:27→15:39 --:--→--:-- |  5' 25a0m1cE1 10' 36a8m1cE2 15' 60a17m2cE2 20' 98a25m2cE3
+etiopia       etiopia       s41  P0 experta hito→edad II/III/IV: 4:21→5:21 9:29→15:54 --:--→--:-- |  5' 21a0m1cE1 10' 34a3m1cE2 15' 46a1m1cE2 20' 62a24m1cE3
+etiopia       etiopia       s41  P1 experta hito→edad II/III/IV: 4:55→6:05 13:09→15:03 --:--→--:-- |  5' 22a0m1cE1 10' 32a11m1cE2 15' 58a14m2cE2 20' 88a27m2cE3
+mapuches      mapuches      s41  P0 experta hito→edad II/III/IV: 6:07→7:18 11:39→12:53 --:--→--:-- |  5' 27a2m3cE1 10' 61a4m3cE2 15' 85a36m3cE3 20' 100a40m3cE3
+mapuches      mapuches      s41  P1 experta hito→edad II/III/IV: 8:19→9:21 10:16→11:23 --:--→--:-- |  5' 28a2m2cE1 10' 61a10m3cE2 15' 88a0m3cE3 20' 100a36m3cE3
+palmares      palmares      s41  P0 experta hito→edad II/III/IV: 7:53→9:13 --:--→--:-- --:--→--:-- |  5' 14a5m0cE1 10' 19a9m0cE2 15' 31a4m0cE2 20' 35a8m0cE2
+palmares      palmares      s41  P1 experta hito→edad II/III/IV: 7:48→12:27 --:--→--:-- --:--→--:-- |  5' 14a4m0cE1 10' 20a7m0cE1 15' 32a13m0cE2 20' 45a22m0cE2
+guaranies     guaranies     s41  P0 experta hito→edad II/III/IV: 6:23→8:28 14:19→16:31 --:--→--:-- |  5' 22a0m1cE1 10' 38a3m1cE2 15' 46a6m2cE2 20' 78a25m2cE3
+guaranies     guaranies     s41  P1 experta hito→edad II/III/IV: 6:56→9:04 13:25→15:43 --:--→--:-- |  5' 22a0m1cE1 10' 34a7m1cE2 15' 41a15m2cE2 20' 70a32m2cE3
+ayutthaya     ayutthaya     s41  P0 experta hito→edad II/III/IV: 5:32→6:34 11:45→13:01 19:25→--:-- |  5' 18a3m1cE1 10' 32a0m1cE2 15' 45a23m1cE3 20' 57a8m1cE3
+ayutthaya     ayutthaya     s41  P1 experta hito→edad II/III/IV: 6:28→7:34 11:22→12:36 17:16→18:33 |  5' 18a4m1cE1 10' 31a10m1cE2 15' 39a0m1cE3 20' 43a5m1cE4
+
+## V7 = V6 + refuerzo_hito 24
+jugadores 12 | II antes de 6:00: 3 | II media 7:42 | III antes de 15:00: 5 | III en 20': 10 ['16:30', '16:33', '11:36', '18:54', '11:08', '12:55', '16:30', '16:28', '12:21', '11:37']
+tawantinsuyu  tawantinsuyu  s41  P0 experta hito→edad II/III/IV: 5:13→6:17 15:14→16:30 --:--→--:-- |  5' 25a0m1cE1 10' 29a15m1cE2 15' 48a16m1cE2 20' 77a15m2cE3
+tawantinsuyu  tawantinsuyu  s41  P1 experta hito→edad II/III/IV: 4:30→5:27 15:13→16:33 --:--→--:-- |  5' 25a2m1cE1 10' 37a13m1cE2 15' 48a13m2cE2 20' 86a27m2cE3
+etiopia       etiopia       s41  P0 experta hito→edad II/III/IV: 3:52→5:05 10:20→11:36 --:--→--:-- |  5' 21a2m1cE1 10' 37a3m1cE2 15' 50a14m1cE3 20' 64a12m1cE3
+etiopia       etiopia       s41  P1 experta hito→edad II/III/IV: 4:39→5:47 17:37→18:54 --:--→--:-- |  5' 22a1m1cE1 10' 33a12m1cE2 15' 51a11m2cE2 20' 51a18m2cE3
+mapuches      mapuches      s41  P0 experta hito→edad II/III/IV: 5:44→6:44 9:48→11:08 --:--→--:-- |  5' 27a2m3cE1 10' 59a3m3cE2 15' 79a5m3cE3 20' 100a26m3cE3
+mapuches      mapuches      s41  P1 experta hito→edad II/III/IV: 9:11→10:18 11:39→12:55 --:--→--:-- |  5' 28a2m2cE1 10' 57a14m3cE1 15' 75a17m3cE3 20' 100a39m3cE3
+palmares      palmares      s41  P0 experta hito→edad II/III/IV: 7:53→9:13 --:--→--:-- --:--→--:-- |  5' 14a5m0cE1 10' 19a9m0cE2 15' 31a4m0cE2 20' 32a5m0cE2
+palmares      palmares      s41  P1 experta hito→edad II/III/IV: 7:48→12:27 --:--→--:-- --:--→--:-- |  5' 14a4m0cE1 10' 20a7m0cE1 15' 32a13m0cE2 20' 45a22m0cE2
+guaranies     guaranies     s41  P0 experta hito→edad II/III/IV: 6:15→8:22 14:11→16:30 --:--→--:-- |  5' 22a0m1cE1 10' 38a4m1cE2 15' 44a3m1cE2 20' 75a11m2cE3
+guaranies     guaranies     s41  P1 experta hito→edad II/III/IV: 6:44→8:56 13:55→16:28 --:--→--:-- |  5' 22a0m1cE1 10' 37a5m1cE2 15' 50a19m2cE2 20' 82a30m2cE3
+ayutthaya     ayutthaya     s41  P0 experta hito→edad II/III/IV: 5:19→6:17 11:08→12:21 17:28→18:50 |  5' 18a3m1cE1 10' 31a5m1cE2 15' 45a19m1cE3 20' 66a19m2cE4
+ayutthaya     ayutthaya     s41  P1 experta hito→edad II/III/IV: 6:22→7:35 10:26→11:37 16:44→18:08 |  5' 18a4m1cE1 10' 31a7m1cE2 15' 39a1m1cE3 20' 40a7m1cE4
+
+## FINAL = V7 con ahorro_con_minimo en lugar de ahorro_continuo, + campana_en_centros, ejercito_segun_rival y torre_por_centro
+jugadores 12 | II antes de 6:00: 3 | II media 7:23 | III antes de 15:00: 2 | III en 20': 8 ['16:25', '17:44', '12:14', '13:46', '16:30', '16:28', '16:57', '19:32']
+tawantinsuyu  tawantinsuyu  s41  P0 experta hito→edad II/III/IV: 5:13→6:17 --:--→--:-- --:--→--:-- |  5' 25a0m1c0tE1 10' 29a15m1c0tE2 15' 49a14m2c1tE2 20' 73a3m3c1tE2
+tawantinsuyu  tawantinsuyu  s41  P1 experta hito→edad II/III/IV: 4:30→5:27 15:09→16:25 --:--→--:-- |  5' 25a2m1c0tE1 10' 37a13m1c0tE2 15' 48a12m2c0tE2 20' 80a31m2c1tE3
+etiopia       etiopia       s41  P0 experta hito→edad II/III/IV: 3:52→5:05 --:--→--:-- --:--→--:-- |  5' 21a2m1c0tE1 10' 33a6m2c0tE2 15' 59a11m2c2tE2 20' 87a18m2c2tE2
+etiopia       etiopia       s41  P1 experta hito→edad II/III/IV: 4:39→5:47 16:32→17:44 --:--→--:-- |  5' 22a1m1c0tE1 10' 33a12m1c0tE2 15' 50a18m2c2tE2 20' 81a21m2c2tE3
+mapuches      mapuches      s41  P0 experta hito→edad II/III/IV: 5:44→6:44 11:14→12:14 --:--→--:-- |  5' 27a2m3c0tE1 10' 53a11m3c0tE2 15' 73a11m3c0tE3 20' 86a25m3c0tE3
+mapuches      mapuches      s41  P1 experta hito→edad II/III/IV: 9:07→10:14 12:34→13:46 --:--→--:-- |  5' 28a2m2c0tE1 10' 57a15m3c0tE1 15' 78a31m3c0tE3 20' 98a42m3c0tE3
+palmares      palmares      s41  P0 experta hito→edad II/III/IV: 7:53→9:13 --:--→--:-- --:--→--:-- |  5' 14a5m0c0tE1 10' 19a9m0c0tE2 15' 31a11m0c0tE2 20' 44a10m0c0tE2
+palmares      palmares      s41  P1 experta hito→edad II/III/IV: 7:48→8:48 --:--→--:-- --:--→--:-- |  5' 14a4m0c0tE1 10' 20a12m0c0tE2 15' 33a7m0c0tE2 20' 47a29m0c0tE2
+guaranies     guaranies     s41  P0 experta hito→edad II/III/IV: 6:15→8:22 14:11→16:30 --:--→--:-- |  5' 22a0m1c0tE1 10' 38a4m1c0tE2 15' 44a3m1c0tE2 20' 73a19m2c0tE3
+guaranies     guaranies     s41  P1 experta hito→edad II/III/IV: 6:44→8:56 13:55→16:28 --:--→--:-- |  5' 22a0m1c0tE1 10' 37a5m1c0tE2 15' 50a19m2c0tE2 20' 78a21m2c0tE3
+ayutthaya     ayutthaya     s41  P0 experta hito→edad II/III/IV: 5:19→6:17 15:47→16:57 --:--→--:-- |  5' 18a3m1c0tE1 10' 30a8m1c0tE2 15' 44a12m1c0tE2 20' 69a20m2c0tE3
+ayutthaya     ayutthaya     s41  P1 experta hito→edad II/III/IV: 6:22→7:35 18:18→19:32 --:--→--:-- |  5' 18a4m1c0tE1 10' 31a10m1c0tE2 15' 51a6m2c2tE2 20' 77a20m2c2tE3
