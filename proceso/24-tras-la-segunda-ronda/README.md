@@ -164,6 +164,7 @@ Un cambio por torneo: 75 partidas, 5 semillas, 30 minutos, en 10 procesos.
 | [21](pruebas/21-torneo-hito-en-obra.txt) (10) | IA normal: ataca el hito en obra, no repite almacenes perdidos (4f) | 54 | **68** | **72** | 34 | 44 | **28** |
 | [22](pruebas/22-torneo-micro-c2.txt) (10) | Micro C2 (C-64 por defecto): guerrero común a 1350, línea +6 contra el choque | 60 | 60 | **76** | 36 | 34 | 34 |
 | [23](pruebas/23-torneo-todo-junto.txt) (10) | Todo junto: C2, hito en obra, equipos (movimiento nuevo), depósitos | 56 | 58 | **76** | 38 | 44 | **28** |
+| [24](pruebas/24-torneo-roza-850.txt) (10) | Guaraníes: roza 850. **Descartado** | 58 | 60 | 72 | 36 | 46 | 28 |
 
 **Etiopía, de 56 % a 8 %.**
 - Con la misma partida seguida en el commit anterior a la etapa (`tools/ia_por_dentro.gd`, sierra contra Tawantinsuyu), el ejército etíope ya era chico (unas 20 unidades). Lo que cambió fue el rival: los arreglos de economía del paso 1 destrabaron el alimento de Tawantinsuyu, que pasó de 15 a 60 unidades.
@@ -258,3 +259,9 @@ Con los pasos 1 a 4 integrados, los mismos cuatro jugadores de las rondas 1 y 2,
 - **Torneo 22:** se le suma la micro C2 (C-64 por defecto): guerrero común a 1350 y línea +6 contra el choque. Toca todo el combate, así que se rebalancea con los dos juntos.
 - **Torneo 22:** C2 no rompe nada (mapuches de 68 a 60, Ayutthaya de 28 a 34). Queda; los guaraníes siguen arriba (76 %).
 - **Torneo 23**, con todo integrado: guaraníes 76 % (29 de 38 por puntos) y Ayutthaya 28 %. Se rebalancea un cambio por torneo: guaraníes primero (roza 850).
+- **Torneo 24:** la roza a 850 casi no mueve a los guaraníes (76 → 72, dentro del ruido). Vuelve a 900.
+- **Puntaje por partes** (`tools/puntaje_partes.gd`, guaraníes contra mapuches, Tawantinsuyu y Etiopía en llano):
+  - Los guaraníes no ganan por economía: juntan lo mismo o menos.
+  - Ganan por bajas: 1488 contra 678, 2100 contra 792 y 702 contra 294 puntos.
+  - Su arquero (8 de ataque, 70 de vida, 6000 de alcance) y la emboscada al 50 % kitean mejor desde que el guerrero es más lento (C2).
+- **Torneo 25:** arquero guaraní a 7 de ataque. El alcance y la emboscada quedan: son su identidad.
