@@ -583,10 +583,11 @@ func production_pct(b: SimEntity) -> int:
 
 func speed(e: SimEntity) -> int:
 	var s := e.speed
+	var mv: Dictionary = sim.data.reglas["movimiento"]
 	if e.slow_until > sim.tick:
-		s = s * 55 / 100
+		s = s * int(mv["frenado_pct"]) / 100
 	if _roads[clampi(e.y / P, 0, sim.map.n - 1) * sim.map.n + clampi(e.x / P, 0, sim.map.n - 1)] != 0:
-		var pct := 30
+		var pct := int(mv["camino_pct"])
 		for p in sim.players:
 			if has(p["id"], "caminos"):
 				pct = int(m(p["id"], "caminos")["velocidad_pct"])

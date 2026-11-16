@@ -372,3 +372,12 @@ La primera partida en Fácil arranca con los sitios apagados. En IA contra IA, d
 a) Que IA contra IA siempre arranque con los sitios prendidos *(por defecto)* · b) Igual que la partida normal
 
 **Respuesta:**
+
+### C-64 · (combate) La micro: que la mezcla de línea y distancia pague
+El veterano lo pide por tercera ronda. El estudio (`proceso/24-tras-la-segunda-ronda/5a-micro-estudio.md`) encontró dos causas. El guerrero común corre más que el hondero (1600 contra 1250), así que funciona como un jinete a pie y no se lo puede kitear. Y el hondero casi no le hace daño. Lo que ya paga: la línea mantiene y la distancia escalona detrás.
+- Con a), 5 lanceros + 5 honderos sin micro pasan de ganar 1 de 5 a ganar 5 de 5 contra 10 guerreros, y los honderos que escalonan quedan con 5,2 vivos.
+- El weichafe, el jinete noble y el jinete conservan su velocidad.
+
+a) Guerrero común a 1350 y la línea +6 contra el choque (antes +5), como el hombre de armas de AoE4, medido con torneo *(por defecto)* · b) Solo la línea +10 contra el choque · c) Un hostigador montado por pueblo (pide modelo, edificio e IA) · d) Dejarlo así y enseñar en el juego la micro que ya paga
+
+**Respuesta:**
