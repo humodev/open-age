@@ -10,7 +10,7 @@ Contexto: hoy la edad IV no trae unidades nuevas, hay 18 mejoras compartidas y n
 |---|---|---|
 | 1 | **Hecho.** El veterano: cantidad buena de unidades, mejoras y opciones por civ; recompensas por edad; el final de partida de AoE4; riesgos y orden | [01-veterano-cantidades.md](01-veterano-cantidades.md) |
 | 2 | **Hecho.** Recopilación: 51 errores históricos (H-01 a H-51) y 27 pedidos del veterano (J-01 a J-27), con prioridad y orden | [docs/diseno/26-pendientes-historia-y-juego.md](../../docs/diseno/26-pendientes-historia-y-juego.md) |
-| 3 | Diseño del juego tardío con un equipo de agentes y un modelo numérico, cruzado con los historiadores | por hacer |
+| 3 | **Hecho.** Diseño del juego tardío y de los saberes: 8 mejoras y 3 unidades propias por pueblo, cada una con su nivel de evidencia y su fuente; una maravilla por pueblo; el progreso por edad; un modelo numérico (`tools/modelo_progreso.py`). En el paso 1 el poder no cambia (0 a −2 %). Consultas C-75 a C-83. En revisión de los tres historiadores | [docs/diseno/27-juego-tardio-y-saberes.md](../../docs/diseno/27-juego-tardio-y-saberes.md) |
 | 4 | Decisión: si rompe el balance, queda diseñado como contenido y se retoma con más contenido (modelos, animaciones) | por hacer |
 
 ## Pedido del autor: saberes de los pueblos

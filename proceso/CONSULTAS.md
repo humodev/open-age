@@ -472,3 +472,60 @@ a) Todo eso, con música propia de paz para Palmares (ngoma y marimba) y para Ay
 a) Así *(por defecto)* · b) Otra cosa
 
 **Respuesta:**
+
+
+> **C-75 a C-83 vienen del diseño del juego tardío y los saberes** (`docs/diseno/27-juego-tardio-y-saberes.md`, etapa 26). Las consultas a comunidades de ese diseño se suman a C-74.
+
+### C-75 · (juego tardío) Regla del ×2
+¿"Una unidad de la edad IV no vale más de dos comunes" (ley cuadrada, como mide el modelo) o "ni el ataque ni la vida pasan de ×2" (más permisiva)?
+a) Valor en comunes *(por defecto)* · b) Por estadística
+
+**Respuesta:**
+
+### C-76 · (juego tardío) Hitos militares con aura
+En la III y la IV, el bono del hito militar vale solo cerca del hito, en lugar de ser global. Es lo que más desinfla la edad IV.
+a) Sí, en el paso 4 *(por defecto)* · b) Solo el de la IV · c) No
+
+**Respuesta:**
+
+### C-77 · (juego tardío) Paso 1
+Sacar el bono automático de ataque por edad y reemplazarlo por cosas que se compran: el +10 % de la II va a la herrería I, y los niveles veterano y élite se compran. El modelo da el mismo poder (0 a −2 %).
+a) Sí, arrancar por ahí *(por defecto)* · b) Primero la herrería separada
+
+**Respuesta:**
+
+### C-78 · (juego tardío) Maravilla
+Costo de 1500 de madera, piedra y riqueza; 600 s de obra; una cuenta de 15 minutos para ganar; opción del menú.
+a) Así *(por defecto)* · b) Otros números
+
+**Respuesta:**
+
+### C-79 · (juego tardío) Maravilla de Ayutthaya
+Krung, la ciudad isla con el fuerte Phom Phet (no es sagrada), o el Wat Phra Si Sanphet (con consulta).
+a) Krung *(por defecto)* · b) El wat, si la consulta lo acepta
+
+**Respuesta:**
+
+### C-80 · (juego tardío) Unidades nuevas sin modelo
+¿Esperan al arte o entran con una maqueta de silueta propia?
+a) Esperan *(por defecto)* · b) Maqueta con silueta propia
+
+**Respuesta:**
+
+### C-81 · (saberes) Trepanación
+El saber destacado inca: el 20 % de los caídos cerca del sanador o de la kallanka vuelve con media vida, en lugar de un sanador más fuerte. Evidencia arqueológica fuerte (Verano, 2016).
+a) Así *(por defecto)* · b) Solo un sanador más fuerte
+
+**Respuesta:**
+
+### C-82 · (saberes) Etiopía y el *Bahrä Hasab*
+Un saber eclesiástico (el cómputo del calendario) usado en una mecánica económica.
+a) Consultar a la Iglesia Tewahedo y, si no, "Cartógrafos de la corte" *(por defecto)* · b) Sacarlo ya
+
+**Respuesta:**
+
+### C-83 · (saberes) Saberes con evidencia "debatida"
+El kilombo, el shotel, los armeros de Gondar y el yachaywasi tienen evidencia debatida.
+a) Entran con la marca "debatido" en la ficha *(por defecto)* · b) Solo saberes documentados y arqueológicos
+
+**Respuesta:**
