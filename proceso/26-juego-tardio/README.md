@@ -8,7 +8,16 @@ Contexto: hoy la edad IV no trae unidades nuevas, hay 18 mejoras compartidas y n
 ## Plan
 | Paso | Qué | Documento |
 |---|---|---|
-| 1 | El veterano: cantidad buena de unidades, mejoras y opciones por civ; recompensas por edad; el final de partida de AoE4; riesgos y orden | [01-veterano-cantidades.md](01-veterano-cantidades.md) |
-| 2 | Recopilación: errores históricos importantes y sugerencias de gameplay del veterano que siguen pendientes | [docs/diseno/26-pendientes-historia-y-juego.md](../../docs/diseno/26-pendientes-historia-y-juego.md) |
+| 1 | **Hecho.** El veterano: cantidad buena de unidades, mejoras y opciones por civ; recompensas por edad; el final de partida de AoE4; riesgos y orden | [01-veterano-cantidades.md](01-veterano-cantidades.md) |
+| 2 | **Hecho.** Recopilación: 51 errores históricos (H-01 a H-51) y 27 pedidos del veterano (J-01 a J-27), con prioridad y orden | [docs/diseno/26-pendientes-historia-y-juego.md](../../docs/diseno/26-pendientes-historia-y-juego.md) |
 | 3 | Diseño del juego tardío con un equipo de agentes y un modelo numérico, cruzado con los historiadores | por hacer |
 | 4 | Decisión: si rompe el balance, queda diseñado como contenido y se retoma con más contenido (modelos, animaciones) | por hacer |
+
+## Pedido del autor: saberes de los pueblos
+
+> "Me gusta la cantidad. Quisiera que nos pongamos creativos: se sabe que en Latinoamérica había pueblos que hacían operaciones cerebrales con éxito antes de la invasión española. Creo que es importante que tengamos la mente abierta a esas cosas de estos pueblos que, al ser exterminados, se perdió mucho de lo que sabían y hacían, por no poder ellos contar la historia, y porque se contaba por sus exterminadores."
+
+**Criterio para el diseño:**
+- Las mejoras y unidades propias de cada pueblo parten de sus **saberes**: medicina, ingeniería, agricultura, administración, metalurgia, navegación, astronomía. Se toman de la arqueología y de las fuentes propias, no de la mirada del conquistador. Ejemplo: la trepanación andina, con miles de cráneos con cirugía exitosa y tasas de supervivencia muy altas [verificar cifras].
+- Cada saber lleva su **nivel de evidencia**: documentado, arqueológico o debatido. Así se cuenta lo que se borró sin caer en el mito al revés.
+- Lo sagrado sigue con el mismo cuidado de la etapa 25: no se usa como bono de combate sin consulta.
