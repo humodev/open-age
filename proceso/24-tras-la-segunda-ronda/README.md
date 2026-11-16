@@ -154,6 +154,7 @@ Un cambio por torneo: 75 partidas, 5 semillas, 30 minutos, en 10 procesos.
 | [11 · base](pruebas/11-torneo-base.txt) | Pasos 1 y 2 | 64 | 52 | 76 | **8** | 68 | 32 |
 | [12](pruebas/12-torneo-ejercito-minimo.txt) | IA: ejército mínimo mientras ahorra | 52 | 60 | 72 | 12 | 72 | 32 |
 | [13](pruebas/13-torneo-jinete-noble.txt) | Etiopía: jinete noble 160 de vida y 13 de ataque (antes 140 y 10), mismo costo | 52 | 52 | 64 | **40** | 68 | 24 |
+| [14](pruebas/14-torneo-khlong.txt) | Ayutthaya: khlong junto a la base y arrozales junto al agua | 52 | 52 | 60 | 36 | 68 | **32** |
 
 **Etiopía, de 56 % a 8 %.**
 - Con la misma partida seguida en el commit anterior a la etapa (`tools/ia_por_dentro.gd`, sierra contra Tawantinsuyu), el ejército etíope ya era chico (unas 20 unidades). Lo que cambió fue el rival: los arreglos de economía del paso 1 destrabaron el alimento de Tawantinsuyu, que pasó de 15 a 60 unidades.
@@ -164,3 +165,13 @@ Un cambio por torneo: 75 partidas, 5 semillas, 30 minutos, en 10 procesos.
 **Jinete noble.**
 - Costaba 80 de alimento y 40 de riqueza (el guerrero base, 60 y 25) y tenía apenas 17 % más de vida y un punto menos de ataque.
 - La debilidad de la civ dice "unidades caras y pocas". Ahora son caras y fuertes: Etiopía pasa de 12 a 40 %.
+
+**Ayutthaya, de 24 %: el arrozal sin agua.**
+- Siguiendo una partida (selva, contra los mapuches): Ayutthaya pasa toda la partida con 0–70 de alimento en el banco y no llega a la edad III antes del minuto 21. Junta piedra y riqueza que no usa.
+- Su arrozal rinde +25 % a 2 casillas del agua, pero **ninguno** de los arrozales de la IA tenía el bono: 0 de 9–20 en selva, llano, río, delta y sierra.
+  - En casi ningún mapa hay agua a menos de 30 casillas de la base. En delta, a 21; en islas, a 19.
+  - Los jugadores de prueba ya lo habían visto: "arrozales sin agua".
+- **Arreglo** (un solo cambio: una parte sin la otra no sirve):
+  - **Khlong:** las bases de Ayutthaya empiezan junto a un canal de agua baja (`modulos.khlong`: a 8 casillas del centro, 9 de largo y 2 de ancho). Se camina y no se edifica. Ayutthaya era una ciudad de canales. Con relieve real (misiones), manda la geografía del lugar.
+  - **IA:** si la granja rinde más junto al agua, la IA busca primero un lugar junto al agua a 13 casillas del centro o menos (`ia_economia.granja_agua_radio`).
+- **Medida:** 6–9 arrozales con el bono de 10–21 en los cinco terrenos (antes, 0). Determinismo y equidad de los mapas, OK. [Captura](capturas/khlong-ayutthaya.png): el canal junto al centro, con los arrozales al lado.

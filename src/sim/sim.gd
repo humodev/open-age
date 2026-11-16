@@ -113,6 +113,7 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null,
 				bits |= 1 << (q + 1)
 		_foe_bits.append(bits)
 	_generate_map()
+	_civ_landscape()
 	_update_players()
 	for pid in players.size():
 		_update_fog(pid)
@@ -2842,6 +2843,44 @@ func n_layout() -> bool:
 ## distancia del centro, y el mismo juego de recursos en coordenadas locales de cada
 ## base (adelante = hacia el centro). No hay simetría exacta con 6 u 8 lados, pero
 ## cada base recibe lo mismo; tests/equidad.gd lo mide.
+## Paisaje propio de una civ junto a su base (proceso/24, paso 3): el khlong de Ayutthaya, un
+## canal de agua baja (se camina, no se edifica) para que el arrozal tenga su agua. Antes ningún
+## arrozal de la IA tenía el bono: casi ningún mapa trae agua a menos de 30 casillas de la base.
+## Con relieve real (misiones) manda la geografía del lugar.
+func _civ_landscape() -> void:
+	if _opts.has("relieve"):
+		return
+	for pid in mini(players.size(), bases.size()):
+		var dd := dp(pid)
+		if not dd.has_mod("khlong"):
+			continue
+		var cfg: Dictionary = dd.mod("khlong")
+		var c := bases[pid] + Vector2i(2, 2)
+		var dist := int(cfg["distancia"])
+		var long := int(cfg["largo"])
+		var wide := int(cfg["ancho"])
+		# Ocho rumbos en orden fijo; el primero donde el canal entra entero en lugar libre.
+		for d in [Vector2i(-1, 0), Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, -1), Vector2i(1, -1), Vector2i(-1, 1), Vector2i(1, 1)]:
+			var mid: Vector2i = c + d * dist
+			var along := Vector2i(-d.y, d.x) if d.x == 0 or d.y == 0 else Vector2i(d.x, -d.y)
+			var tiles: Array[Vector2i] = []
+			for i in range(-long / 2, long - long / 2):
+				for j in wide:
+					var t: Vector2i = mid + along * i + d * j
+					tiles.append(t)
+					if d.x != 0 and d.y != 0:
+						tiles.append(t + Vector2i(d.x, 0)) # en diagonal, sin huecos
+			var ok := true
+			for t in tiles:
+				if not map.in_bounds(t.x, t.y) or map.occupant(t.x, t.y) != -1 or map.is_water(t.x, t.y) or map.is_rock(t.x, t.y):
+					ok = false
+					break
+			if ok:
+				for t in tiles:
+					map.set_water(t.x, t.y, 2)
+				break
+
+
 func _generate_map_n() -> void:
 	var n := map.n
 	var np := players.size()

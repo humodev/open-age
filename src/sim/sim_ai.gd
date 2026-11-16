@@ -227,7 +227,7 @@ func _economy(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, saving: 
 				t = null
 		if t == null and kind == "alimento":
 			if sim.can_afford(player, sim.dp(player).cost_of("granja", p["age"])):
-				var site := _site("granja", centro, 0)
+				var site := _farm_site(centro)
 				if site.x >= 0:
 					sim.push_command({"t": "build", "player": player, "ids": [v.id], "type": "granja", "tx": site.x, "ty": site.y})
 					counts[kind] += 1
@@ -698,6 +698,26 @@ func _nearest_villager(vill: Array[SimEntity], x: int, y: int) -> SimEntity:
 
 func _site(type: String, centro: SimEntity, margin: int) -> Vector2i:
 	return _site_near(type, Vector2i(centro.tx + 2, centro.ty + 2), margin, 4)
+
+
+## Lugar para una granja: si rinde más junto al agua (arrozal de Ayutthaya), primero junto al
+## agua a `ia_economia.granja_agua_radio` del centro o menos; si no, lo de siempre. Antes
+## ningún arrozal de la IA tenía el bono, ni en río ni en delta (proceso/24, paso 3).
+func _farm_site(centro: SimEntity) -> Vector2i:
+	var def: Dictionary = sim.dp(player).edificios.get("granja", {})
+	if def.has("bono_agua_pct"):
+		var tam: Array = def["tam"]
+		var c := Vector2i(centro.tx + 2, centro.ty + 2)
+		for r in range(3, int(sim.data.reglas["ia_economia"]["granja_agua_radio"])):
+			for dy in range(-r, r + 1):
+				for dx in range(-r, r + 1):
+					if absi(dx) != r and absi(dy) != r:
+						continue
+					var tx: int = c.x + dx - int(tam[0]) / 2
+					var ty: int = c.y + dy - int(tam[1]) / 2
+					if sim._near_water(tx, ty, tam[0], tam[1], 2) and sim.can_place("granja", tx, ty, player):
+						return Vector2i(tx, ty)
+	return _site("granja", centro, 0)
 
 
 ## Busca un lugar libre en anillos alrededor de `c`, dejando `margin` casillas de paso.
