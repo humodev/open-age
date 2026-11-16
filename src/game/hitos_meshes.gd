@@ -93,10 +93,8 @@ static func build(p: Array, type: String, w: float, d: float, pal: Array, team: 
 			return false
 	# Las formas se arman con el frente hacia +z; la cámara mira hacia +x+z (RtsCamera.YAW_DEG),
 	# así que se giran media vuelta para que la portada, la escalinata o el muro curvo den a
-	# la cámara.
-	var turn := Transform3D(Basis(Vector3.UP, PI), Vector3.ZERO)
-	for i in range(first, p.size()):
-		p[i][1] = turn * (p[i][1] as Transform3D)
+	# la cámara (como todos los edificios: Meshes.face_camera).
+	Meshes.face_camera(p, first)
 	_p = []
 	return true
 

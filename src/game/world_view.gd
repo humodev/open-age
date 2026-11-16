@@ -799,6 +799,10 @@ func _make_visual(e: SimEntity) -> Dictionary:
 
 static var _models := {} # ruta -> PackedScene (o null si no existe)
 const FIGURE_H := 1.25 # alto de una persona generada, antes de escala_visual.unidad_pct
+## Giro de los edificios generados (GLB): vienen con la puerta en +z, el lado que la cámara no
+## ve (mira hacia +x+z, RtsCamera.YAW_DEG). Media vuelta, como las mallas procedurales
+## (Meshes.face_camera); conserva la huella (proceso/24, 4e).
+const GLB_FRENTE_YAW := PI
 
 
 ## Modelo GLB generado (assets/generados/modelos) declarado por la civilización en estilo.modelos.
@@ -1040,6 +1044,7 @@ func _build_struct(e: SimEntity, v: Dictionary, look: String) -> void:
 				_tint(model, Color(cfg["modelo_tinte"]))
 			var top := _aabb(model, Transform3D.IDENTITY).end.y # el techo, sin el estandarte
 			Meshes.team_banner(model, Vector3(e.w * 0.42, 0, -e.h * 0.42), team)
+			model.rotation.y = GLB_FRENTE_YAW
 			var h := _aabb(model, Transform3D.IDENTITY).size.y
 			var k := _stretch_k(e, h * esc1 / maxf(esc, 0.01))
 			var alto := float(cfg.get("alto_pct", 100)) / 100.0
