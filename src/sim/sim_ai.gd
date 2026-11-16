@@ -53,8 +53,6 @@ var _lost_buildings := 0 # cuántos de esos se perdieron en la partida (`rendici
 var _army_n := 0 # ejército propio en la pensada (para `_min_army`)
 var _seen := 0 # mayor ejército rival visto hace poco (`ejercito_segun_rival`)
 var _seen_tick := -100000
-var _unreach := {} # comida a la que no se llega (`comida_inalcanzable`): id -> true
-var _reach_ok := {} # id -> tick hasta el que se da por alcanzable
 
 # Reparto de aldeanos por recurso: reglas.json → ia_economia.
 var ratio_early := {}
@@ -138,8 +136,6 @@ func think() -> void:
 	var held := _reserve(p, 1)
 	_army_n = army.size()
 	_watch_rival_army()
-	if level.get("comida_inalcanzable", false):
-		_free_stuck_gatherers(vill)
 	var saving := _wants_hito(p, vill.size(), by_type)
 	_economy(p, vill, centro, saving)
 	_buildings(p, vill, centro, by_type, saving)
@@ -316,18 +312,12 @@ func _economy(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, saving: 
 		if kind == "alimento":
 			# Primero la carne abierta; un animal nuevo recién cuando no queda (una llama por vez).
 			var meat := sim.find_resource(player, "alimento", centro.x, centro.y, int(sim.data.reglas["animales"]["cadena_radio"]) * 2, -1, v.id, "carne")
-			if meat != null and _unreach.has(meat.id):
-				meat = null
 			var beast: SimEntity = meat if meat != null else _own_animal(centro)
 			if beast != null:
 				sim.push_command({"t": "target", "player": player, "ids": [v.id], "target": beast.id})
 				counts[kind] += 1
 				continue
 		var t := sim.find_resource(player, kind, home.x, home.y, 40000, -1, v.id)
-		if t != null and _unreach.has(t.id):
-			t = sim.find_resource(player, kind, home.x, home.y, 40000, t.id, v.id)
-			if t != null and _unreach.has(t.id):
-				t = null
 		# Alimento lejos de todo almacén (venados, animales sueltos del medio): como en AoE4,
 		# cuando se acaba lo cercano conviene pasar a las granjas antes que caminar (la edad III
 		# se atrasaba hasta 25 minutos; proceso/23, paso 10).
@@ -822,52 +812,6 @@ func _watch_rival_army() -> void:
 	if n >= _seen or sim.tick - _seen_tick > int(cfg["memoria_ticks"]):
 		_seen = n
 		_seen_tick = sim.tick
-
-
-## Experta (`comida_inalcanzable`): un animal carneado en un hueco cerrado por árboles atrapaba
-## a todos los aldeanos del alimento (21 aldeanos esperando 5 minutos junto a los árboles, con el
-## banco en 0; Tawantinsuyu, espejo de expertas, semilla 41). Quien junta y no llega a un recurso
-## al que no hay camino va a otro, y ese recurso no se vuelve a elegir.
-func _free_stuck_gatherers(vill: Array[SimEntity]) -> void:
-	var moved := {}
-	for v in vill:
-		if v.order != O.GATHER or v.carry > 0 or v.anchored:
-			continue
-		var t: SimEntity = sim.by_id.get(v.target)
-		if t == null or not t.alive or t.is_building() or not t.is_resource():
-			continue
-		if Sim.dist(v.x, v.y, t.x, t.y) > int(sim.data.reglas["ia_economia"]["inalcanzable_lejos"]):
-			continue # todavía en camino: se mira de cerca
-		if _reachable(v, t):
-			continue
-		var alt := sim.find_resource(player, v.gather_kind, v.x, v.y, 40000, t.id, v.id)
-		if alt == null or _unreach.has(alt.id):
-			alt = sim.find_resource(player, "madera", v.x, v.y, 40000, -1, v.id)
-		if alt == null:
-			continue
-		if not moved.has(alt.id):
-			moved[alt.id] = []
-		moved[alt.id].append(v.id)
-	for id in moved:
-		sim.push_command({"t": "target", "player": player, "ids": moved[id], "target": id})
-
-
-func _reachable(v: SimEntity, t: SimEntity) -> bool:
-	if _unreach.has(t.id):
-		return false
-	if sim.tick < int(_reach_ok.get(t.id, -1)):
-		return true
-	var to := Vector2i(t.x / P, t.y / P)
-	var from := sim.map.nearest_free(v.x / P, v.y / P, 3, player)
-	if from.x < 0:
-		return true
-	var path := sim.map.find_path(from, to, player)
-	var end: Vector2i = from if path.is_empty() else path[path.size() - 1]
-	if maxi(absi(end.x - to.x), absi(end.y - to.y)) <= 1:
-		_reach_ok[t.id] = sim.tick + int(sim.data.reglas["ia_economia"]["inalcanzable_recheck_ticks"])
-		return true
-	_unreach[t.id] = true
-	return false
 
 
 ## Almacenes perdidos: los que estaban en la pensada anterior y ya no están (rotos por el

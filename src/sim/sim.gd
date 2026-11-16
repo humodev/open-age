@@ -50,6 +50,7 @@ var _grid := {} # celda de 1 casilla -> unidades (separación)
 var _ehash := {} # celda de EC -> unidades y edificios (búsqueda)
 var _res_cells := {} # celda de RC casillas -> recursos
 var _wild: Array[SimEntity] = [] # animales sueltos que se pueden reclamar (proceso/23)
+var _unreach_res := {} # recurso al que un jugador no llega: id * 64 + jugador -> tick hasta el que no se elige (paso 6c)
 var _auras: Array = [] # por jugador: hitos terminados con aura (reglas.aura_hito), de este tick
 var _dirty := false
 var _teams := PackedInt32Array() # equipo de cada jugador (copia de players[i].equipo)
@@ -1327,19 +1328,46 @@ func _do_gather(e: SimEntity) -> void:
 		e.path_target = -1
 		return
 	var in_range: bool
+	var fresh := e.path_target != t.id # elige camino en este tick
 	if t.def.get("transitable", false):
 		in_range = _approach(e, t, 0)
 	else:
 		in_range = _approach(e, t, e.radius + INTERACT)
 	if not in_range:
-		if e.stuck > 25:
-			var alt := find_resource(e.owner, e.gather_kind, e.x, e.y, data.reglas["radio_rebusca"], t.id, e.id)
+		if fresh:
+			e.prog_d = 1 << 60
+			e.prog_i = 0
+			e.prog_tick = tick
+		# Recurso al que no se llega (paso 6c): el camino no termina junto a él (nadie del
+		# jugador lo vuelve a elegir por un rato), o pasan sin_avance_ticks a más de una casilla
+		# sin acercarse ni pasar de casilla del camino (se desliza contra algo; ese aldeano va a
+		# otro). A una casilla o menos no cuenta: es la cola de gente alrededor de la carne.
+		var d := dist_to(e, t)
+		if d < e.prog_d or e.path_i > e.prog_i or d <= P:
+			e.prog_d = mini(d, e.prog_d)
+			e.prog_i = maxi(e.path_i, e.prog_i)
+			e.prog_tick = tick
+		var cfg: Dictionary = data.reglas["recurso_inalcanzable"]
+		var no_path := fresh and e.path_target == t.id and not _path_reaches(e, t)
+		if e.stuck > 25 or no_path or tick - e.prog_tick >= int(cfg["sin_avance_ticks"]):
+			if no_path:
+				_unreach_res[t.id * 64 + e.owner] = tick + int(cfg["olvido_ticks"])
+			var alt: SimEntity = null
+			if t.is_resource():
+				alt = find_resource(e.owner, e.gather_kind, e.x, e.y, data.reglas["radio_rebusca"], t.id, e.id, t.type)
+			if alt == null:
+				alt = find_resource(e.owner, e.gather_kind, e.x, e.y, data.reglas["radio_rebusca"], t.id, e.id)
 			if alt != null:
 				e.target = alt.id
+				e.path_target = -1
+			elif e.carry > 0:
+				e.order = O.RETURN
+				e.aux = -1
 				e.path_target = -1
 			else:
 				_set_idle(e)
 		return
+	e.prog_d = 1 << 60 # si lo empujan fuera de alcance, vuelve a contar desde ahí
 	e.anchored = true
 	if t.is_building():
 		t.farmer = e.id
@@ -1360,6 +1388,15 @@ func _do_gather(e: SimEntity) -> void:
 			if t.amount <= 0:
 				_exhaust(t)
 				break
+
+
+## ¿El camino recién elegido termina junto a `t` (o adentro, si se camina)? Si no, no hay
+## forma de llegar: el buscador devolvió el tramo hasta lo más cerca que se puede.
+func _path_reaches(e: SimEntity, t: SimEntity) -> bool:
+	if e.path.is_empty():
+		return true # sin camino calculado: no se juzga acá
+	var end: Vector2i = e.path[e.path.size() - 1]
+	return end.x >= t.tx - 1 and end.x <= t.tx + t.w and end.y >= t.ty - 1 and end.y <= t.ty + t.h
 
 
 ## Bonificación por sitio de una granja: ladera (andenes) o agua cercana (arrozales).
@@ -2132,6 +2169,7 @@ func find_resource(owner: int, kind: String, x: int, y: int, max_d: int, exclude
 	var cx := x / P / RC
 	var cy := y / P / RC
 	var max_r := max_d / P / RC + 1
+	var skip := not _unreach_res.is_empty() and owner >= 0
 	for r in range(0, max_r + 1):
 		if best != null and (r - 1) * RC * P > best_d:
 			break
@@ -2145,6 +2183,8 @@ func find_resource(owner: int, kind: String, x: int, y: int, max_d: int, exclude
 						continue
 					if kind == "riqueza" and t.res_owner != owner and disputed_room(owner) <= 0:
 						continue # techo de lo disputado lleno: no sirve ir a esa arcilla
+					if skip and tick < int(_unreach_res.get(t.id * 64 + owner, -1)):
+						continue # no se llega (paso 6c)
 					var d := dist_to(probe, t)
 					if d < best_d or (d == best_d and best != null and t.id < best.id):
 						if not map.has_free_neighbor(t.tx, t.ty, t.w, t.h):
