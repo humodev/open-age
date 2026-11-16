@@ -2,9 +2,9 @@
  "nombre": "Palmares",
  "adjetivo": "palmarista",
  "riqueza_nombre": "Oficios", "riqueza_desc": "La gente que llega trabaja en los oficios del mocambo (herrero, alfarero, cestero, tejedor de palma): 15 por minuto por puesto. Además, la arcilla de casa.",
- "frase": "La libertad que llega sola y se esconde en la sierra.",
- "region": "Serra da Barriga y alrededores, 1605–1714",
- "descripcion": "No entrena aldeanos: la gente llega por la fama. Mocambos ocultos, correrías que liberan, cercas con estrepes que hieren a quien las ataca.",
+ "frase": "La libertad que se toma y se defiende en la sierra.",
+ "region": "Palmares de Pernambuco (hoy Alagoas), fines del siglo XVI a 1714",
+ "descripcion": "No entrena aldeanos: la gente huye de los ingenios y llega por la fama. Mocambos ocultos, correrías que liberan, cercas con estrepes que hieren a quien las ataca.",
  "estilo": {
   "forma": "palmares",
   "arcilla": "#c9b28a",
@@ -36,7 +36,7 @@
   "lancero": {
    "nombre": "Lanceiro"
   },
-  "arcabucero": {"nombre": "Espingardeiro", "desc": "Espingarda: arma de fuego de chispa. Las de Palmares venían de las correrías y del trato a escondidas con los moradores.", "edad_min": 2, "costo": {"alimento": 60, "riqueza": 65}}
+  "arcabucero": {"nombre": "Espingardeiro", "desc": "Espingarda: arma de fuego larga, de mecha o de pedernal. Las de Palmares venían de las correrías y del trato a escondidas con los moradores.", "edad_min": 2, "costo": {"alimento": 60, "riqueza": 65}}
  },
  "edificios": {
   "almacen_alimento": {"nombre": "Paiol"},

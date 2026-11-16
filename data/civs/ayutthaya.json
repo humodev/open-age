@@ -1,10 +1,10 @@
 {
  "nombre": "Ayutthaya",
  "adjetivo": "siamés",
- "riqueza_nombre": "Tributo del rey", "riqueza_desc": "El monte paga al rey: parte de lo que se entrega a los elefantes del rey (madera, arbustos, piedra y arroz) entra como riqueza. Además, la arcilla de casa.",
+ "riqueza_nombre": "Tributo del rey", "riqueza_desc": "El monte paga al rey (suai): los phrai del monte pagan en sapán, cueros y estaño en lugar de servir, y el Phra Khlang, el almacén real, lo vende. Parte de lo que se entrega a los elefantes del rey (madera, arbustos, piedra y arroz) entra como riqueza. Además, la arcilla de casa.",
  "frase": "La ciudad isla que comercia con el mundo y pelea sobre elefantes.",
  "region": "Siam, 1351–1767",
- "descripcion": "Arrozales que rinden junto al agua, barrios extranjeros que pagan y alquilan compañías, y elefantes de guerra que arrasan en área.",
+ "descripcion": "Arroz de crecida que rinde junto al agua, el suai del monte que vende el Phra Khlang, barrios extranjeros que pagan y alquilan compañías, y elefantes de guerra que arrasan en área.",
  "estilo": {
   "forma": "ayutthaya",
   "arcilla": "#e2d2b2",
@@ -49,7 +49,7 @@
   }
  },
  "unidades_nuevas": {
-  "elefante_rey": { "nombre": "Elefante del rey (chang luang)", "funcion": "carga", "edad_min": 1, "pob": 2, "costo": { "alimento": 80, "madera": 80 }, "tiempo_ms": 45000, "pv": 600, "armadura": 0, "ataque": 0, "alcance": 0, "cadencia_ms": 1000, "velocidad": 850, "vision": 6000, "radio": 620, "elefante": true, "maximo_por_edad": [1, 2, 3, 4], "deposito": ["alimento", "madera", "piedra"], "tributo": { "arbol": 35, "arbusto": 35, "roca": 35, "granja": 15, "tope_por_edad": [24, 34, 42, 48], "separacion": 8 }, "desc": "Almacén que camina: recibe madera, alimento y piedra. El monte paga al rey: el 35 % de la madera, los arbustos y la piedra (sapán, cueros y estaño) y el 15 % del arroz entra además como riqueza, hasta 24 por minuto por elefante (34 en la edad II, 42 en la III y 48 en la IV). Sin ataque." },
+  "elefante_rey": { "nombre": "Elefante del rey (chang luang)", "funcion": "carga", "edad_min": 1, "pob": 2, "costo": { "alimento": 80, "madera": 80 }, "tiempo_ms": 45000, "pv": 600, "armadura": 0, "ataque": 0, "alcance": 0, "cadencia_ms": 1000, "velocidad": 850, "vision": 6000, "radio": 620, "elefante": true, "maximo_por_edad": [1, 2, 3, 4], "deposito": ["alimento", "madera", "piedra"], "tributo": { "arbol": 35, "arbusto": 35, "roca": 35, "granja": 15, "tope_por_edad": [24, 34, 42, 48], "separacion": 8 }, "desc": "Almacén que camina: recibe madera, alimento y piedra. El monte paga al rey (suai): el 35 % de la madera, los arbustos y la piedra (sapán, cueros y estaño) y el 15 % del arroz entra además como riqueza, hasta 24 por minuto por elefante (34 en la edad II, 42 en la III y 48 en la IV). Sin ataque." },
   "chang_suek": {"nombre": "Elefante de guerra (chang suek)", "funcion": "choque", "edad_min": 2, "pob": 3, "costo": {"alimento": 160, "riqueza": 120}, "tiempo_ms": 34000, "pv": 640, "armadura": 3, "armadura_distancia": 3, "ataque": 22, "alcance": 700, "cadencia_ms": 2200, "velocidad": 1050, "vision": 9000, "radio": 620, "area": 1600, "area_pct": 45, "elefante": true},
   "compania_japonesa": {"nombre": "Compañía japonesa", "funcion": "choque", "edad_min": 2, "pob": 1, "costo": {"riqueza": 85}, "tiempo_ms": 12000, "pv": 140, "armadura": 2, "armadura_distancia": 2, "ataque": 13, "alcance": 450, "cadencia_ms": 1150, "velocidad": 1550, "vision": 8000, "radio": 260}
  },
@@ -65,7 +65,7 @@
   "granja": {
    "nombre": "Arrozal",
    "bono_agua_pct": 35,
-   "tasa_clave": "granja", "desc": "Arroz de inundación: +35 % de alimento a 2 casillas del agua o menos. La base empieza junto a un khlong, un canal."
+   "tasa_clave": "granja", "desc": "Arroz de crecida: +35 % de alimento a 2 casillas del agua o menos, en la tierra que inunda el río. La base empieza junto a un khlong, un canal que era camino de agua más que riego."
   },
   "cuartel": {
    "nombre": "Cuartel de la guardia"
@@ -205,7 +205,7 @@
    "avanza_edad": true,
    "hito": true,
    "pob": 5,
-   "desc": "El almacén vende a los barcos de cada monzón.",
+   "desc": "El Phra Khlang, el almacén real, vende a los barcos de cada monzón.",
    "efectos": []
   },
   "fortaleza_rio": { "eje": "militar",

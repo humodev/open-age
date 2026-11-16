@@ -4,7 +4,7 @@
  "riqueza_nombre": "Amole (sal)", "riqueza_desc": "Barras de sal: la corte saca riqueza sola de la arcilla cercana y los gult rinden tributo, más cerca de la corte. Además, la arcilla de casa.",
  "frase": "La corte que camina.",
  "region": "Imperio salomónico, 1434–1769",
- "descripcion": "La corte (kätäma) se desarma y se muda; el gult asigna tierras que rinden sin trabajo; caballería desde la edad I y defensa en la altura.",
+ "descripcion": "La corte (kätäma) se desarma y se muda; el gult da a un señor el derecho a cobrar el tributo de los campesinos (gäbbar) de una tierra: la corte cobra sin poner aldeanos; caballería desde la edad I y defensa en la altura.",
  "estilo": {
   "forma": "etiopia",
   "arcilla": "#d5c3a0",
@@ -117,7 +117,7 @@
    "regimiento": { "edad": 2, "descuento_pct": 15, "tope_pct": 30, "radio": 14000 },
    "motor": true,
    "ranura": 7,
-   "desc": "Tierra repartida a un señor: el tributo campesino llega a la corte en amole (barras de sal) sin aldeanos. Rinde 17 de riqueza y 3 de alimento por minuto, y 19 de riqueza si está a 14 casillas o menos de la corte."
+   "desc": "Derecho de tributo dado a un señor: lo paga el gäbbar que trabaja esa tierra, y llega a la corte en amole (barras de sal) sin aldeanos. Rinde 17 de riqueza y 3 de alimento por minuto, y 19 de riqueza si está a 14 casillas o menos de la corte."
   },
   "iglesia": { "eje": "economia",
    "nombre": "Iglesia",
@@ -134,7 +134,7 @@
    "avanza_edad": true,
    "hito": true,
    "pob": 5,
-   "desc": "Comunidad y tabot: recolección y vida.",
+   "desc": "Comunidad de la iglesia: recolección y vida.",
    "efectos": [
     {
      "tipo": "tasa",

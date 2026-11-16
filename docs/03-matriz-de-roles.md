@@ -10,7 +10,7 @@ Cómo se juega cada civilización, función por función. Los números están en
 | Mapuches | El enjambre | "No hay capital que tomar." |
 | Guaraníes | El monte | "El pueblo que se mueve con el río y el monte." |
 | Etiopía | La corte que camina | "La corte que camina." |
-| Palmares | El refugio | "La libertad que llega sola y se esconde en la sierra." |
+| Palmares | El refugio | "La libertad que se toma y se defiende en la sierra." |
 | Ayutthaya | El puerto | "La ciudad isla que comercia con el mundo y pelea sobre elefantes." |
 
 ## Matriz

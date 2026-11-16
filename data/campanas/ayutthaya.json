@@ -10,7 +10,7 @@
    "lugar": "Nong Sarai, en las tierras de Suphanburi",
    "intro": [
     "Escribo en Thonburi, en la otra orilla, porque la isla ya no es lo que era. Antes de contar cómo se perdió, quiero contar cómo se defendía.",
-    "En 1569 la ciudad cayó ante Pegu, y durante quince años el tributo bajó por el río hacia allá. En 1584 el príncipe Naresuan dijo que no se mandaba más. Pegu vino dos años después, en la estación seca, y sitió la isla cuatro meses. Cuando el agua empezó a subir, se fue. Así se defendía Ayutthaya: con murallas y con el calendario.",
+    "En 1569 la ciudad cayó ante Pegu, y durante quince años el tributo salió hacia el oeste, a Pegu. En 1584 el príncipe Naresuan dijo que no se mandaba más. Pegu vino dos años después, en la estación seca, y sitió la isla cuatro meses. Cuando el agua empezó a subir, se fue. Así se defendía Ayutthaya: con murallas y con el calendario.",
     "A fines de 1592 bajó el uparat de Pegu, el príncipe heredero Mingyi Swa, con su ejército y sus elefantes. Naresuan, ya rey, salió a buscarlo antes de que llegara a la isla. Si se lo espera adentro, quema los campos de afuera."
    ],
    "epilogo": [
@@ -307,11 +307,11 @@
    "intro": [
     "Mi oficio es el almacén real. Todo lo que entraba y salía por el río pasaba por el Phra Khlang: el palo de sapán, los cueros, el estaño, el arroz. El rey compraba primero y vendía cuando el monzón traía los barcos.",
     "Alrededor de la isla vivían barrios enteros de otros pueblos, cada uno con su jefe, su templo y un título que le daba la corona: chinos, japoneses, portugueses, persas, makasares. El puerto de la derecha lo había ordenado un persa, el jeque Ahmad Qomi, hacía casi ochenta años. Nadie lo llamaba extranjero cuando firmaba con sello siamés.",
-    "En 1663 tres barcos holandeses cerraron la boca del río, y el rey Narai tuvo que firmar lo que ellos querían. Aprendió la lección: buscó otros compradores y otros amigos, mandó embajadas a Francia y le dio el comercio a un griego, Phaulkon, con título siamés. En 1687 desembarcaron soldados franceses y se quedaron en la fortaleza de Bangkok, en la boca del río.",
-    "Una fortaleza ajena en la boca del río es como tres barcos holandeses, con una diferencia: no se va con el viento."
+    "En 1664 los barcos holandeses cerraron la boca del río, y el rey Narai tuvo que firmar lo que ellos querían. Aprendió la lección: buscó otros compradores y otros amigos, mandó embajadas a Francia y le dio el comercio a un griego, Phaulkon, con título siamés. En 1687 desembarcaron soldados franceses y se quedaron en la fortaleza de Bangkok, en la boca del río.",
+    "Una fortaleza ajena en la boca del río es como los barcos holandeses, con una diferencia: no se va con el viento."
    ],
    "epilogo": [
-    "Narai murió en Lopburi en julio de 1688. Phra Phetracha, que mandaba los elefantes del rey, tomó el palacio. Ejecutaron a Phaulkon, y también murieron los que podían heredar. No todo lo que se hizo ese año fue limpio, y en el almacén lo sabíamos.",
+    "Narai se moría en Lopburi. En mayo de 1688 Phra Phetracha, que mandaba los elefantes del rey, tomó el palacio. En junio ejecutaron a Phaulkon, cercaron a los franceses en Bangkok y también murieron los que podían heredar. En julio murió Narai. No todo lo que se hizo ese año fue limpio, y en el almacén lo sabíamos.",
     "Los franceses aguantaron meses en Bangkok, y en noviembre se fueron en sus barcos, por acuerdo. Después escribieron que Siam había cerrado su puerto. Los juncos chinos siguieron llegando cada monzón, y los holandeses también. Lo que cerramos fue la boca del río a los soldados."
    ],
    "fuentes": [
@@ -400,7 +400,7 @@
     },
     {
      "id": "o5",
-     "texto": "Narai se muere en Lopburi. Cercá la fortaleza de Bangkok hasta que los franceses acepten irse.",
+     "texto": "Narai agoniza en Lopburi. Cercá la fortaleza de Bangkok hasta que los franceses acepten irse.",
      "tipo": "destruir_hitos",
      "params": {
       "jugador": 1
@@ -587,7 +587,7 @@
    "anio": "1767",
    "lugar": "La isla de Ayutthaya",
    "intro": [
-    "En 1760 el rey de Ava, Alaungpaya, sitió la isla y se fue cuando llegaron las lluvias, como Pegu en tiempos de Naresuan. La isla había aprendido a esperar el agua.",
+    "En 1760 el rey de Ava, Alaungpaya, sitió la isla, cayó enfermo y se retiró; murió en el camino. Las lluvias estaban cerca, como cuando Pegu en tiempos de Naresuan, y la isla había aprendido a esperar el agua.",
     "En 1765 su hijo Hsinbyushin mandó dos ejércitos, uno por el norte y otro por el oeste, con Ne Myo Thihapate y Maha Nawrahta. Llegaron con la lluvia y no se fueron: levantaron veintisiete fuertes en lo alto, alrededor de la ciudad, y pasaron la crecida adentro.",
     "La corte llamó a las provincias a encerrarse en la isla. Era lo que siempre había funcionado. En las murallas peleaban los nuestros, los chinos de sus barrios y los portugueses de los suyos. Entre los gobernadores llamados estaba Phraya Tak, señor de Tak, hijo de un teochew."
    ],
@@ -943,8 +943,8 @@
    ],
    "epilogo": [
     "El 28 de diciembre de 1767 Phraya Tak se coronó en Thonburi, en la otra orilla y cerca del mar. No volvimos a la isla: estaba quemada, y además el mundo había cambiado de lugar. El reino ahora miraba hacia la boca del río.",
-    "El emperador Qing no lo reconoció al principio, porque decía que no era de la casa real. Ya lo reconocerá: los barcos de arroz no esperan a los emperadores. A mi hermano, que es phrai, le tatuaron en la muñeca la marca de su registro, para que nadie se pierda de las cuentas. Así se reconstruye un reino: con barcos, con arroz y con tinta en la piel de la gente.",
-    "Todavía hay otros señores que se dicen herederos de Ayutthaya, en Phitsanulok, en Phimai, en Fang. Cada uno tiene sus razones. Esto no terminó, y yo sigo anotando."
+    "El emperador Qing no lo reconoció al principio, porque decía que no era de la casa real. Ya lo reconocerá: los barcos de arroz no esperan a los emperadores. Dicen que a los phrai como mi hermano les van a tatuar en la muñeca la marca de su registro, para que nadie se pierda de las cuentas. Así se reconstruye un reino: con barcos, con arroz y con tinta en la piel de la gente.",
+    "Todavía hay otros señores que se dicen herederos de Ayutthaya, en Phitsanulok, en Phimai, en Fang, en Nakhon Si Thammarat. Cada uno tiene sus razones. Esto no terminó, y yo sigo anotando."
    ],
    "fuentes": [
     "Chris Baker y Pasuk Phongpaichit, A History of Ayutthaya: Siam in the Early Modern World (Cambridge UP, 2017)",
