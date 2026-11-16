@@ -160,4 +160,5 @@ En el bench, el peor tick fue de 203 ms, con la máquina cargada por el torneo q
 
 ## Commits
 - `ceff3a3`: avance (casillas, tope de la fácil, aviso, granja del tutorial).
-- Merge de `main` (4o) con el resto del paso: la resolución del conflicto en `_multi`, el despacho de teclas por `cmd_at`, la cola en el tope de la fácil, los nombres compactos, la documentación, las capturas y las pruebas.
+- `197c887`: merge de `main` (4o) con el resto del paso: la resolución del conflicto en `_multi`, el despacho de teclas por `cmd_at`, la cola en el tope de la fácil, los nombres compactos, la documentación, las capturas y las pruebas.
+- `d272bb3`: merge de `main` (4p, escala; torneo 26), sin conflictos. Después se volvieron a correr `tests/casillas.gd`, los dos autotests y `tests/test_determinism.gd` (mismo hash).
