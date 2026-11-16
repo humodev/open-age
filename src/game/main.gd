@@ -1778,9 +1778,15 @@ func _autotest() -> void:
 			break
 	ctrl.select_ids([butcher.id] as Array[int])
 	await _frames(4)
+	# El animal pasta y se mueve: la posición en pantalla se toma de su figura justo antes de mirar
+	# el cursor (antes fallaba de a ratos con "mover": el mouse quedaba donde la llama ya no estaba).
 	var beast_sp := cam.cam.unproject_position(WorldView.to_world(beast.x, beast.y, 0.4))
 	_mouse(beast_sp, 0, false)
 	await _frames(3)
+	var bv: Dictionary = view.visuals.get(beast.id, {})
+	if not bv.is_empty():
+		beast_sp = cam.cam.unproject_position((bv["node"] as Node3D).position + Vector3(0, 0.3, 0))
+		_mouse(beast_sp, 0, false)
 	check.call("cursor de juntar alimento sobre un animal propio (%s)" % ctrl.cursor_action(beast_sp), ctrl.cursor_action(beast_sp) == "recolectar_alimento")
 	# Con el aldeano elegido pegado al animal (el tester lo vio fallar según por dónde caminaba).
 	# El cursor entre los dos, más cerca del aldeano: antes ganaba el aldeano y decía «mover».
