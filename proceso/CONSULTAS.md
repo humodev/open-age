@@ -252,3 +252,39 @@ La parte D sumó seis civs solo de IA: Adal, Birmania (Toungoo y Konbaung juntos
 a) Así *(por defecto)* · b) Separar también a los europeos por potencia (Castilla, Portugal, Países Bajos, Francia), con nombres de edad propios en vez de *Virreinato* para todos
 
 **Respuesta:**
+
+### C-45 · (opciones de partida) Recursos medios y altos
+Hoy son 500/500/300/300 y 1000/1000/700/700 (alimento, madera, piedra, riqueza), parecidos a los de AoE2 (`proceso/24-tras-la-segunda-ronda/4b-opciones-de-partida.md`).
+a) Esos *(por defecto)* · b) Otros (decí cuáles)
+
+**Respuesta:**
+
+### C-46 · (opciones de partida) Ubicación de los equipos por defecto
+Ahora el 2v2 y el 3v3 del menú arrancan con los aliados juntos, como el lobby de AoE4. Antes quedaban mezclados por el orden de los lugares.
+a) Juntos *(por defecto)* · b) Mezclados
+
+**Respuesta:**
+
+### C-47 · (opciones de partida) Empate al tiempo límite
+Si al cumplirse el tiempo los puntos empatan, hoy no gana nadie y la pantalla dice "Empate".
+a) Empate *(por defecto)* · b) Desempate por edificios en pie o por sitios
+
+**Respuesta:**
+
+### C-48 · (opciones de partida) Conquista sin hitos: ¿cuentan las unidades?
+Con "Hitos: no", pierde quien se queda sin edificios terminados. No cuentan muros, puertas ni caminos; sí granjas, casas y almacenes.
+a) Solo edificios *(por defecto)* · b) También las unidades, como algunos modos de AoE4 (se alarga la caza del último aldeano)
+
+**Respuesta:**
+
+### C-49 · (opciones de partida) Hitos apagados sin tiempo límite
+En 4 partidas de IA contra IA de hasta 45 minutos, sin hitos ni sitios, la IA nunca termina la conquista (al mapuche le quedaban 41 edificios).
+a) El menú sugiere un tiempo límite al apagar "Hitos", y la IA aprende a cazar los últimos edificios en el paso de la IA experta *(por defecto)* · b) Solo mejorar la IA
+
+**Respuesta:**
+
+### C-50 · (opciones de partida) Opciones del lobby de AoE4 que faltan
+Faltan maravilla (no existe todavía), edad inicial, población máxima y "revelar mapa".
+a) Población máxima y revelar mapa ahora; edad inicial y maravilla después *(por defecto)* · b) Ninguna por ahora · c) Todas
+
+**Respuesta:**

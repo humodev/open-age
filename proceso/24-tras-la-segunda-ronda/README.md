@@ -189,7 +189,7 @@ Cada frente tiene su agente en un worktree propio, con su rama y su documento. E
 | Balance (orquestador) | Un cambio por torneo: Etiopía, Ayutthaya, Palmares | Esta página, paso 3 |
 | A · Mapuches | Por qué llegan tarde a la edad III; un cambio medido en paz (el torneo lo corre el orquestador) | [3b-mapuches.md](3b-mapuches.md) |
 | B · IA experta | Nueva dificultad: 80–100 aldeanos, segundo centro, oleadas grandes | [4a-ia-experta.md](4a-ia-experta.md) |
-| C · Opciones de partida | Sitios sí o no, hitos sí o no, tiempo límite, recursos iniciales, equipos juntos o mezclados | [4b-opciones-de-partida.md](4b-opciones-de-partida.md) |
+| C · Opciones de partida | **Integrado (2022235).** Sitios sí o no, hitos sí o no, tiempo límite (30/45/60), recursos (normal, medios, altos), equipos juntos o mezclados; el puntaje pasa a la simulación. `tests/opciones_partida.gd` OK. Consultas C-45 a C-50. Pendiente: sin hitos, la IA no termina la conquista (C-49) | [4b-opciones-de-partida.md](4b-opciones-de-partida.md) |
 | D · Arte por edad | **Integrado (cac669b).** Obra en 3 etapas, aspecto por edad y por pueblo (`data/arte_edades.json`), torres propias (solo los invasores conservan almenas), margen de 0,3 casillas en la huella; sin créditos de Meshy | [4c-arte-por-edad.md](4c-arte-por-edad.md) |
 
 **Palmares y el ruido del torneo.**
