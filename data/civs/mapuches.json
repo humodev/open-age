@@ -46,7 +46,7 @@
    },
    "edad_min": 1
   },
-  "jinete": {"nombre": "Kona montado", "edad_min": 2, "costo": {"alimento": 70, "riqueza": 45}}
+  "jinete": {"nombre": "Kona montado", "edad_min": 2, "costo": {"alimento": 80, "riqueza": 55}}
  },
  "edificios": {
   "casa": {
