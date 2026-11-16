@@ -162,6 +162,10 @@ func _building_node(dd: SimData, type: String) -> Node3D:
 				variant = idx
 				tier = row
 		mi.mesh = CivMeshes.building(type, def, TEAM, style, variant, tier)
+	# Las mallas procedurales vienen con el frente en -z (Meshes.face_camera), hacia la cámara
+	# del juego; el retrato mira desde +z, así que se deshace la media vuelta (los GLB, sin girar,
+	# ya tienen la puerta en +z).
+	mi.rotation.y = PI
 	if def.get("sagrado", false):
 		var root := Node3D.new()
 		root.add_child(mi)

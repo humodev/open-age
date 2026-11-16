@@ -50,6 +50,16 @@ static func merge(parts: Array) -> ArrayMesh:
 	return out
 
 
+## De frente a la cámara: media vuelta alrededor del eje vertical para las partes desde `first`.
+## Los edificios se arman con la puerta en +z y la cámara mira hacia +x+z (RtsCamera.YAW_DEG),
+## así que el frente queda en -z, del lado que se ve. La media vuelta conserva la huella (w×d),
+## el margen y el centro (proceso/24, 4e).
+static func face_camera(p: Array, first := 0) -> void:
+	var turn := Transform3D(Basis(Vector3.UP, PI), Vector3.ZERO)
+	for i in range(first, p.size()):
+		p[i][1] = turn * (p[i][1] as Transform3D)
+
+
 static func xf(pos: Vector3, rot_deg: Vector3 = Vector3.ZERO, scl: Vector3 = Vector3.ONE) -> Transform3D:
 	var b := Basis.from_euler(rot_deg * (PI / 180.0)).scaled(scl)
 	return Transform3D(b, pos)
@@ -394,6 +404,7 @@ static func building_mesh(type: String, team: Color) -> ArrayMesh:
 			_banner(p, Vector3(0, 2.7, -0.2), 1.6, team)
 			for c in [Vector2(-1.7, 1.7), Vector2(1.7, 1.7)]:
 				_banner(p, Vector3(c.x, 1.15, c.y), 1.2, team)
+	face_camera(p)
 	var mesh := merge(p)
 	_cache[key] = mesh
 	return mesh

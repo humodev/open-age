@@ -86,10 +86,12 @@ static func building(type: String, def: Dictionary, team: Color, style: Dictiona
 	var id := d - 2.0 * margin()
 	var esc := _f(cfg, "escala_pct")
 	var base_y := 0.0
+	var turned := false # los hitos con forma propia ya vienen de frente (HitosMeshes.build)
 	# Sin plinto: el suelo pintado (tierra pisada) ya asienta el edificio (docs/10).
 	if def.get("avanza_edad", false):
 		# Hitos con forma propia (data/arte_hitos.json); si no, el monumento genérico de la forma.
 		if HitosMeshes.build(p, type, w, d, pal, team, cfg):
+			turned = true
 			for c: Vector2 in [Vector2(-1, -1), Vector2(1, 1)]:
 				Meshes._banner(p, Vector3(c.x * w * 0.44, 0.1, c.y * d * 0.44), 1.4, team)
 		else:
@@ -124,6 +126,9 @@ static func building(type: String, def: Dictionary, team: Color, style: Dictiona
 	else:
 		_hut(p, forma, Vector3(0, base_y, 0), minf(w * 0.78, iw) * minf(esc, 1.0), minf(d * 0.72, id) * minf(esc, 1.0), 0.9, pal, cfg)
 		Meshes._banner(p, Vector3(w * 0.38, base_y, d * 0.38), 1.5, team)
+	# Todo se arma con la puerta en +z; media vuelta para que dé a la cámara (proceso/24, 4e).
+	if not turned:
+		Meshes.face_camera(p)
 	var mesh := Meshes.merge(p)
 	_cache[key] = mesh
 	return mesh
@@ -356,7 +361,7 @@ static func decor_parts(p: Array, w: float, d: float, team: Color, cfg: Dictiona
 
 
 ## Cerco alrededor del centro, en el borde del margen (el pasillo de la huella queda libre).
-## Deja una entrada al frente (+z).
+## Deja una entrada al frente (+z, antes de la media vuelta de Meshes.face_camera).
 static func _cerco(p: Array, tipo: String, hgt: float, hx: float, hz: float) -> void:
 	var gap := 0.55
 	var segs: Array = [] # [desde, hasta] en coordenadas: lados como [a, b]
@@ -435,6 +440,7 @@ static func decor(type: String, def: Dictionary, team: Color, cfg: Dictionary, w
 		p.append([Meshes.cyl(body * 0.47, body * 0.5, zc, 16), Meshes.xf(Vector3(0, zc / 2.0, 0)), Color(cfg.get("zocalo", "#8c8478"))])
 	if cfg.get("horcones", false):
 		_horcones(p, Vector3.ZERO, body * 0.86, body * 0.86, minf(top * 0.45, 1.4))
+	Meshes.face_camera(p) # la entrada del cerco, como el modelo, del lado de la cámara
 	var mesh: ArrayMesh = Meshes.merge(p) if not p.is_empty() else null
 	_cache[key] = mesh
 	return mesh
@@ -687,6 +693,7 @@ static func obra(stage: int, w: float, d: float, hgt: float, cfg: Dictionary) ->
 		spots.append(Vector3(hx * 0.1, 0, -hz + 0.1))
 	for s: Vector3 in spots:
 		_pile(p, mat, s)
+	Meshes.face_camera(p) # el tablón y las pilas, del lado de la puerta
 	var mesh := Meshes.merge(p)
 	_cache[key] = mesh
 	return mesh
