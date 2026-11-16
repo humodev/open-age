@@ -1,0 +1,199 @@
+== escala_visual: {"_doc":"Solo imagen (proceso/24-tras-la-segunda-ronda/4p-escala.md). unidad_pct: alto de la gente (la persona generada mide 1,25 casillas antes de esto); altura_min_cm: alto mínimo del cuerpo de cada categoría, sin los estandartes; las maquetas suben muros y techos por encima del zocalo_cm (puertas y cercos quedan a la escala de la gente), con techo_pct del estiramiento extra para la mitad de arriba, hasta estirar_max_pct; los modelos generados se estiran parejo hasta estirar_modelo_max_pct; arbol_alto_pct y arbol_ancho_pct: árboles del mapa; pasto_pct: matas del suelo.","altura_min_cm":{"capital":380.0,"casa":190.0,"hito":480.0,"produccion":240.0,"torre":450.0},"arbol_alto_pct":150.0,"arbol_ancho_pct":125.0,"estirar_max_pct":230.0,"estirar_modelo_max_pct":190.0,"pasto_pct":60.0,"techo_pct":55.0,"unidad_pct":60.0,"zocalo_cm":40.0}
+== Naturaleza (alto × ancho en casillas; la casilla = 1 unidad de mundo)
+   árbol variante 0: malla 2.10 · copa 0.59 · medio en el mapa 3.29
+   árbol variante 1: malla 1.80 · copa 1.70 · medio en el mapa 2.82
+   árbol variante 2: malla 2.12 · copa 1.70 · medio en el mapa 3.33
+   árbol variante 3: malla 2.30 · copa 1.60 · medio en el mapa 3.61
+   árbol variante 4: malla 1.27 · copa 1.90 · medio en el mapa 1.99
+   arbusto: alto 0.70 · ancho 1.00
+== Animales (alto en personas, con la persona de 0.75 casillas)
+   llama          alto 0.66 (×0.88 persona) · largo 0.45 (×0.60)
+   chilihueque    alto 0.60 (×0.80 persona) · largo 0.45 (×0.60)
+   guanaco        alto 0.68 (×0.90 persona) · largo 0.44 (×0.58)
+   cabra          alto 0.37 (×0.50 persona) · largo 0.34 (×0.45)
+   oveja          alto 0.36 (×0.48 persona) · largo 0.40 (×0.53)
+   bufalo         alto 0.64 (×0.85 persona) · largo 1.04 (×1.38)
+   vaca           alto 0.59 (×0.78 persona) · largo 0.95 (×1.27)
+   cerdo          alto 0.31 (×0.41 persona) · largo 0.58 (×0.78)
+   pecari         alto 0.26 (×0.35 persona) · largo 0.46 (×0.61)
+   venado         alto 0.64 (×0.85 persona) · largo 0.44 (×0.59)
+   taruka         alto 0.59 (×0.78 persona) · largo 0.43 (×0.57)
+   huemul         alto 0.60 (×0.80 persona) · largo 0.44 (×0.58)
+   tapir          alto 0.48 (×0.65 persona) · largo 0.75 (×1.00)
+   orix           alto 0.76 (×1.01 persona) · largo 0.49 (×0.66)
+   walia          alto 0.66 (×0.89 persona) · largo 0.54 (×0.72)
+   bushbuck       alto 0.51 (×0.68 persona) · largo 0.33 (×0.44)
+   sambar         alto 0.86 (×1.15 persona) · largo 0.59 (×0.79)
+== tawantinsuyu
+   centro           Llaqta                     cuerpo 3.00 (×4.0 aldeano) · total 3.18 (×4.2) · planta 3.24 · huella 4x4
+   aldeano          Runa                       alto 0.75 (×1.00 aldeano) · ancho 0.45 · velocidad 1.12 casillas/s
+   explorador       Chaski                     alto 0.80 (×1.07 aldeano) · ancho 0.46 · velocidad 2.25 casillas/s
+   rebano           Llama                      alto 0.66 (×0.88 aldeano) · ancho 0.45 · velocidad 0.81 casillas/s
+   casa             Kancha                     cuerpo 1.60 (×2.1 aldeano) · total 2.40 (×3.2) · planta 1.50 · huella 2x2
+   campo_tiro       Warak'a kancha             cuerpo 2.30 (×3.1 aldeano) · total 2.69 (×3.6) · planta 2.48 · huella 3x3
+   almacen_madera   Llant'a wasi               cuerpo 1.04 (×1.4 aldeano) · total 1.60 (×2.1) · planta 1.96 · huella 2x2
+   almacen_mina     Kamayuq wasi               cuerpo 1.04 (×1.4 aldeano) · total 1.60 (×2.1) · planta 1.96 · huella 2x2
+   granja           Chacra                     cuerpo 0.12 (×0.2 aldeano) · total 0.38 (×0.5) · planta 2.95 · huella 3x3
+   cuartel          Kallanka                   cuerpo 2.30 (×3.1 aldeano) · total 2.69 (×3.6) · planta 2.48 · huella 3x3
+   torre            Pukara                     cuerpo 4.47 (×6.0 aldeano) · total 4.50 (×6.0) · planta 1.47 · huella 2x2
+   mercado          Mercado                    cuerpo 1.10 (×1.5 aldeano) · total 1.80 (×2.4) · planta 2.50 · huella 3x3
+   tambo            Tambo                      cuerpo 1.30 (×1.7 aldeano) · total 1.50 (×2.0) · planta 2.63 · huella 3x3
+   taller_tejido    Taller de tejido           cuerpo 1.30 (×1.7 aldeano) · total 1.50 (×2.0) · planta 1.87 · huella 2x2
+   anden            Andén                      cuerpo 0.80 (×1.1 aldeano) · total 0.80 (×1.1) · planta 2.80 · huella 3x3
+   qollqa           Qollqa                     cuerpo 2.30 (×3.1 aldeano) · total 2.69 (×3.6) · planta 1.66 · huella 2x2
+   ushnu            Ushnu y plaza              cuerpo 2.09 (×2.8 aldeano) · total 2.09 (×2.8) · planta 3.97 · huella 4x4
+   pukara_mayor     Pukara de frontera         cuerpo 4.53 (×6.0 aldeano) · total 4.80 (×6.4) · planta 3.99 · huella 4x4
+   aqllawasi        Aqllawasi                  cuerpo 3.47 (×4.6 aldeano) · total 3.81 (×5.1) · planta 4.06 · huella 4x4
+   kallanka_real    Kallanka real              cuerpo 3.34 (×4.4 aldeano) · total 3.67 (×4.9) · planta 3.97 · huella 4x4
+   qorikancha       Qorikancha                 cuerpo 4.77 (×6.4 aldeano) · total 4.80 (×6.4) · planta 3.97 · huella 4x4
+   vilcabamba       Vilcabamba                 cuerpo 4.38 (×5.8 aldeano) · total 4.80 (×6.4) · planta 3.98 · huella 4x4
+   guerrero         Guerrero de porra          alto 0.75 (×1.00 aldeano) · ancho 0.52 · velocidad 1.22 casillas/s
+   hondero          Hondero                    alto 0.75 (×1.00 aldeano) · ancho 0.44 · velocidad 1.12 casillas/s
+   lancero          Lancero con escudo         alto 1.49 (×1.99 aldeano) · ancho 0.44 · velocidad 0.99 casillas/s
+   jinete           Jinete                     alto 1.26 (×1.68 aldeano) · ancho 1.01 · velocidad 1.98 casillas/s
+   roca             alto 1.00 (×1.33 aldeano) · ancho 2.32
+   riqueza          alto 1.48 (×1.97 aldeano) · ancho 2.64
+   venado           alto 0.59 (×0.78 aldeano) · ancho 0.43
+== mapuches
+   lof              Lof                        cuerpo 1.72 (×2.3 aldeano) · total 2.40 (×3.2) · planta 2.25 · huella 3x3
+   aldeano          Che                        alto 0.75 (×1.00 aldeano) · ancho 0.48 · velocidad 1.12 casillas/s
+   explorador       Werken                     alto 0.80 (×1.07 aldeano) · ancho 0.46 · velocidad 1.89 casillas/s
+   rebano           Chilihueque                alto 0.60 (×0.80 aldeano) · ancho 0.45 · velocidad 0.81 casillas/s
+   casa             Ruka                       cuerpo 0.95 (×1.3 aldeano) · total 2.40 (×3.2) · planta 1.43 · huella 2x2
+   granja           Chacra                     cuerpo 0.12 (×0.2 aldeano) · total 0.38 (×0.5) · planta 2.95 · huella 3x3
+   cuartel          Ruka de guerra             cuerpo 1.91 (×2.5 aldeano) · total 2.96 (×3.9) · planta 2.48 · huella 3x3
+   mercado          Mercado                    cuerpo 1.10 (×1.5 aldeano) · total 1.80 (×2.4) · planta 2.50 · huella 3x3
+   corral           Corral                     cuerpo 1.12 (×1.5 aldeano) · total 2.00 (×2.7) · planta 2.48 · huella 3x3
+   rewe_malon       Rewe del toqui de malón    cuerpo 3.77 (×5.0 aldeano) · total 4.10 (×5.5) · planta 3.10 · huella 3x3
+   rewe_lonko       Rewe del lonko             cuerpo 4.68 (×6.2 aldeano) · total 4.80 (×6.4) · planta 3.10 · huella 3x3
+   rewe_caballeria  Rewe del toqui de caballería cuerpo 1.06 (×1.4 aldeano) · total 1.66 (×2.2) · planta 3.10 · huella 3x3
+   rewe_monte       Rewe del toqui del monte   cuerpo 4.80 (×6.4 aldeano) · total 4.80 (×6.4) · planta 3.43 · huella 3x3
+   parlamento       Parlamento                 cuerpo 2.65 (×3.5 aldeano) · total 2.70 (×3.6) · planta 3.10 · huella 3x3
+   weichan          Gran weichan               cuerpo 0.42 (×0.6 aldeano) · total 3.72 (×5.0) · planta 3.10 · huella 3x3
+   guerrero         Weichafe                   alto 0.75 (×1.00 aldeano) · ancho 0.52 · velocidad 1.57 casillas/s
+   hondero          Arquero                    alto 0.81 (×1.08 aldeano) · ancho 0.38 · velocidad 1.12 casillas/s
+   lancero          Lanza larga                alto 1.49 (×1.99 aldeano) · ancho 0.46 · velocidad 0.99 casillas/s
+   jinete           Kona montado               alto 1.14 (×1.52 aldeano) · ancho 1.02 · velocidad 1.98 casillas/s
+   roca             alto 1.00 (×1.33 aldeano) · ancho 2.32
+   riqueza          alto 1.48 (×1.97 aldeano) · ancho 2.64
+   venado           alto 0.60 (×0.80 aldeano) · ancho 0.45
+== guaranies
+   centro           Oga guasu                  cuerpo 2.47 (×3.3 aldeano) · total 2.52 (×3.4) · planta 3.24 · huella 4x4
+   aldeano          Ava                        alto 0.75 (×1.00 aldeano) · ancho 0.38 · velocidad 1.12 casillas/s
+   explorador       Baqueano                   alto 0.89 (×1.18 aldeano) · ancho 0.46 · velocidad 1.89 casillas/s
+   casa             Oga                        cuerpo 1.50 (×2.0 aldeano) · total 2.40 (×3.2) · planta 1.50 · huella 2x2
+   campo_tiro       Guyrapa róga               cuerpo 1.91 (×2.5 aldeano) · total 2.94 (×3.9) · planta 1.66 · huella 2x2
+   taller           Taller de tacuara          cuerpo 1.91 (×2.5 aldeano) · total 2.94 (×3.9) · planta 2.48 · huella 3x3
+   almacen_madera   Tapyi                      cuerpo 1.23 (×1.6 aldeano) · total 1.60 (×2.1) · planta 2.21 · huella 2x2
+   almacen_mina     Ñai'ũ renda                cuerpo 1.23 (×1.6 aldeano) · total 1.60 (×2.1) · planta 2.21 · huella 2x2
+   granja           Kokue (roza)               cuerpo 0.12 (×0.2 aldeano) · total 0.38 (×0.5) · planta 2.95 · huella 3x3
+   cuartel          Aty de guerra              cuerpo 1.91 (×2.5 aldeano) · total 2.94 (×3.9) · planta 2.48 · huella 3x3
+   mercado          Mercado                    cuerpo 1.10 (×1.5 aldeano) · total 1.80 (×2.4) · planta 2.50 · huella 3x3
+   karai_palabra    Casa del karai             cuerpo 2.85 (×3.8 aldeano) · total 3.22 (×4.3) · planta 3.97 · huella 4x4
+   aty_guasu        Aty guasu                  cuerpo 2.34 (×3.1 aldeano) · total 3.35 (×4.5) · planta 3.97 · huella 4x4
+   mision           Pueblo de misión           cuerpo 4.24 (×5.6 aldeano) · total 4.80 (×6.4) · planta 3.97 · huella 4x4
+   monte            Monte libre                cuerpo 4.74 (×6.3 aldeano) · total 4.80 (×6.4) · planta 4.23 · huella 4x4
+   tava             Tava fortificada           cuerpo 4.32 (×5.8 aldeano) · total 4.80 (×6.4) · planta 3.97 · huella 4x4
+   yvy_marane       Ñande retã                 cuerpo 2.99 (×4.0 aldeano) · total 2.99 (×4.0) · planta 3.97 · huella 4x4
+   guerrero         Guerrero de macana         alto 0.89 (×1.18 aldeano) · ancho 0.52 · velocidad 1.22 casillas/s
+   hondero          Arquero                    alto 0.75 (×1.00 aldeano) · ancho 0.39 · velocidad 1.12 casillas/s
+   lancero          Lancero                    alto 1.49 (×1.99 aldeano) · ancho 0.46 · velocidad 0.99 casillas/s
+   jinete           Jinete                     alto 1.40 (×1.86 aldeano) · ancho 1.01 · velocidad 1.98 casillas/s
+   rebano           Animal del rebaño          alto 0.35 (×0.47 aldeano) · ancho 0.46 · velocidad 0.81 casillas/s
+   roca             alto 1.00 (×1.33 aldeano) · ancho 2.74
+   riqueza          alto 1.48 (×1.97 aldeano) · ancho 2.56
+   venado           alto 0.48 (×0.65 aldeano) · ancho 0.76
+== etiopia
+   centro           Kätäma (corte)             cuerpo 2.02 (×2.7 aldeano) · total 3.34 (×4.5) · planta 3.41 · huella 4x4
+   aldeano          Gäbbar                     alto 0.75 (×1.00 aldeano) · ancho 0.36 · velocidad 1.12 casillas/s
+   explorador       Mensajero                  alto 0.80 (×1.07 aldeano) · ancho 0.46 · velocidad 1.89 casillas/s
+   rebano           Cabra                      alto 0.37 (×0.50 aldeano) · ancho 0.37 · velocidad 0.81 casillas/s
+   casa             Tukul                      cuerpo 1.62 (×2.2 aldeano) · total 2.40 (×3.2) · planta 1.57 · huella 2x2
+   establo          Färäs bet                  cuerpo 1.98 (×2.6 aldeano) · total 2.50 (×3.3) · planta 2.57 · huella 3x3
+   taller           Taller de asedio           cuerpo 1.98 (×2.6 aldeano) · total 2.50 (×3.3) · planta 2.57 · huella 3x3
+   almacen_alimento Gotära                     cuerpo 1.34 (×1.8 aldeano) · total 1.60 (×2.1) · planta 2.26 · huella 2x2
+   almacen_madera   Inchet bet                 cuerpo 1.34 (×1.8 aldeano) · total 1.60 (×2.1) · planta 2.26 · huella 2x2
+   almacen_mina     Dängay bet                 cuerpo 1.34 (×1.8 aldeano) · total 1.60 (×2.1) · planta 2.26 · huella 2x2
+   granja           Granja                     cuerpo 0.12 (×0.2 aldeano) · total 0.38 (×0.5) · planta 2.95 · huella 3x3
+   cuartel          Campamento de chewa        cuerpo 1.98 (×2.6 aldeano) · total 2.50 (×3.3) · planta 2.57 · huella 3x3
+   torre            Torre de la amba           cuerpo 4.50 (×6.0 aldeano) · total 4.68 (×6.2) · planta 1.40 · huella 2x2
+   mercado          Mercado                    cuerpo 1.10 (×1.5 aldeano) · total 1.80 (×2.4) · planta 2.50 · huella 3x3
+   corte_nueva      Corte nueva (cimiento)     cuerpo 1.47 (×2.0 aldeano) · total 1.50 (×2.0) · planta 3.74 · huella 4x4
+   gult             Gult                       cuerpo 0.87 (×1.2 aldeano) · total 1.30 (×1.7) · planta 4.36 · huella 4x4
+   iglesia          Iglesia                    cuerpo 4.80 (×6.4 aldeano) · total 4.80 (×6.4) · planta 4.11 · huella 4x4
+   monasterio       Monasterio                 cuerpo 4.41 (×5.9 aldeano) · total 4.72 (×6.3) · planta 3.97 · huella 4x4
+   amba             Amba fortificada           cuerpo 4.64 (×6.2 aldeano) · total 4.80 (×6.4) · planta 3.97 · huella 4x4
+   remonta          Remonta                    cuerpo 1.51 (×2.0 aldeano) · total 1.68 (×2.2) · planta 3.97 · huella 4x4
+   gondar           Recinto de Gondar          cuerpo 4.72 (×6.3 aldeano) · total 4.80 (×6.4) · planta 3.97 · huella 4x4
+   alianza          Alianza con armas de fuego cuerpo 3.22 (×4.3 aldeano) · total 3.89 (×5.2) · planta 3.97 · huella 4x4
+   guerrero         Jinete noble               alto 1.17 (×1.57 aldeano) · ancho 1.02 · velocidad 1.89 casillas/s
+   hondero          Jabalinero                 alto 0.75 (×1.00 aldeano) · ancho 0.60 · velocidad 1.12 casillas/s
+   lancero          Chewa                      alto 1.49 (×1.99 aldeano) · ancho 0.46 · velocidad 0.99 casillas/s
+   jinete           Jinete                     alto 1.26 (×1.68 aldeano) · ancho 1.01 · velocidad 1.98 casillas/s
+   roca             alto 1.00 (×1.33 aldeano) · ancho 2.32
+   riqueza          alto 1.48 (×1.97 aldeano) · ancho 2.64
+   venado           alto 0.51 (×0.68 aldeano) · ancho 0.33
+== palmares
+   centro           Cerca real                 cuerpo 2.89 (×3.8 aldeano) · total 3.06 (×4.1) · planta 3.21 · huella 4x4
+   aldeano          Palmarista                 alto 0.75 (×1.00 aldeano) · ancho 0.43 · velocidad 1.12 casillas/s
+   explorador       Batedor                    alto 0.80 (×1.07 aldeano) · ancho 0.46 · velocidad 1.89 casillas/s
+   rebano           Cerdo                      alto 0.35 (×0.47 aldeano) · ancho 0.58 · velocidad 0.81 casillas/s
+   casa             Casa de palha              cuerpo 1.50 (×2.0 aldeano) · total 2.40 (×3.2) · planta 1.49 · huella 2x2
+   almacen_alimento Paiol                      cuerpo 1.23 (×1.6 aldeano) · total 1.60 (×2.1) · planta 2.21 · huella 2x2
+   almacen_mina     Olaria                     cuerpo 1.23 (×1.6 aldeano) · total 1.60 (×2.1) · planta 2.21 · huella 2x2
+   granja           Roça de mandioca           cuerpo 0.12 (×0.2 aldeano) · total 0.38 (×0.5) · planta 2.95 · huella 3x3
+   cuartel          Casa de guerra             cuerpo 1.88 (×2.5 aldeano) · total 2.91 (×3.9) · planta 2.48 · huella 3x3
+   mercado          Mercado                    cuerpo 1.10 (×1.5 aldeano) · total 1.80 (×2.4) · planta 2.50 · huella 3x3
+   mocambo          Mocambo                    cuerpo 2.40 (×3.2 aldeano) · total 3.65 (×4.9) · planta 2.91 · huella 3x3
+   quilombo_central Macaco                     cuerpo 4.51 (×6.0 aldeano) · total 4.80 (×6.4) · planta 4.17 · huella 4x4
+   mocambo_guerra   Mocambo de guerra          cuerpo 3.89 (×5.2 aldeano) · total 4.07 (×5.4) · planta 4.06 · huella 4x4
+   cerca_real       Cerca real en anillos      cuerpo 2.57 (×3.4 aldeano) · total 2.57 (×3.4) · planta 3.97 · huella 4x4
+   ferraria         Ferraria grande            cuerpo 3.42 (×4.6 aldeano) · total 3.47 (×4.6) · planta 3.97 · huella 4x4
+   pacto_cucau      Pacto de Cucaú             cuerpo 4.45 (×5.9 aldeano) · total 4.80 (×6.4) · planta 4.19 · huella 4x4
+   guerra_zumbi     Guerra de Zumbi            cuerpo 5.26 (×7.0 aldeano) · total 5.26 (×7.0) · planta 3.97 · huella 4x4
+   guerrero         Gente de guerra            alto 0.75 (×1.00 aldeano) · ancho 0.52 · velocidad 1.22 casillas/s
+   hondero          Flecheiro                  alto 0.75 (×1.00 aldeano) · ancho 0.38 · velocidad 1.12 casillas/s
+   lancero          Lanceiro                   alto 1.49 (×1.99 aldeano) · ancho 0.46 · velocidad 0.99 casillas/s
+   jinete           Jinete                     alto 1.26 (×1.68 aldeano) · ancho 1.01 · velocidad 1.98 casillas/s
+   roca             alto 1.00 (×1.33 aldeano) · ancho 2.32
+   riqueza          alto 1.48 (×1.97 aldeano) · ancho 2.64
+   venado           alto 0.26 (×0.35 aldeano) · ancho 0.49
+== ayutthaya
+   centro           Wang (palacio)             cuerpo 3.20 (×4.3 aldeano) · total 3.34 (×4.5) · planta 3.42 · huella 4x4
+   aldeano          Phrai                      alto 0.75 (×1.00 aldeano) · ancho 0.42 · velocidad 1.12 casillas/s
+   explorador       Jinete explorador          alto 0.97 (×1.30 aldeano) · ancho 0.46 · velocidad 1.89 casillas/s
+   rebano           Búfalo de agua             alto 0.64 (×0.85 aldeano) · ancho 1.04 · velocidad 0.81 casillas/s
+   casa             Ruean                      cuerpo 1.49 (×2.0 aldeano) · total 2.40 (×3.2) · planta 1.58 · huella 2x2
+   campo_tiro       Sanam ying thanu           cuerpo 2.30 (×3.1 aldeano) · total 2.96 (×4.0) · planta 2.80 · huella 3x3
+   taller           Taller de asedio           cuerpo 2.30 (×3.1 aldeano) · total 2.96 (×4.0) · planta 2.80 · huella 3x3
+   almacen_mina     Khlang din                 cuerpo 1.23 (×1.6 aldeano) · total 1.60 (×2.1) · planta 2.21 · huella 2x2
+   granja           Arrozal                    cuerpo 0.12 (×0.2 aldeano) · total 0.38 (×0.5) · planta 2.95 · huella 3x3
+   cuartel          Cuartel de la guardia      cuerpo 2.30 (×3.1 aldeano) · total 2.96 (×4.0) · planta 2.80 · huella 3x3
+   torre            Fortín de río              cuerpo 2.70 (×3.6 aldeano) · total 2.70 (×3.6) · planta 1.49 · huella 2x2
+   mercado          Mercado                    cuerpo 1.10 (×1.5 aldeano) · total 1.80 (×2.4) · planta 2.50 · huella 3x3
+   kraal            Kraal de elefantes         cuerpo 2.32 (×3.1 aldeano) · total 2.96 (×4.0) · planta 3.82 · huella 4x4
+   barrio_japones   Barrio japonés             cuerpo 2.30 (×3.1 aldeano) · total 2.96 (×4.0) · planta 2.80 · huella 3x3
+   barrio_portugues Barrio portugués           cuerpo 2.30 (×3.1 aldeano) · total 2.96 (×4.0) · planta 2.80 · huella 3x3
+   wat              Wat Mahathat               cuerpo 4.28 (×5.7 aldeano) · total 4.80 (×6.4) · planta 3.97 · huella 4x4
+   kraal_real       Kraal real                 cuerpo 3.23 (×4.3 aldeano) · total 3.47 (×4.6) · planta 3.98 · huella 4x4
+   puerto_real      Puerto real                cuerpo 1.68 (×2.2 aldeano) · total 1.69 (×2.3) · planta 3.97 · huella 4x4
+   fortaleza_rio    Fortaleza de la isla       cuerpo 2.42 (×3.2 aldeano) · total 3.67 (×4.9) · planta 4.13 · huella 4x4
+   junco_tributo    Junco de tributo           cuerpo 0.90 (×1.2 aldeano) · total 3.70 (×4.9) · planta 3.97 · huella 4x4
+   guardia_extranjera Guardia extranjera         cuerpo 2.49 (×3.3 aldeano) · total 3.81 (×5.1) · planta 3.97 · huella 4x4
+   guerrero         Infantería de dap          alto 0.97 (×1.30 aldeano) · ancho 0.61 · velocidad 1.22 casillas/s
+   hondero          Arquero                    alto 0.97 (×1.30 aldeano) · ancho 0.36 · velocidad 1.12 casillas/s
+   lancero          Lancero                    alto 1.49 (×1.99 aldeano) · ancho 0.46 · velocidad 0.99 casillas/s
+   jinete           Jinete                     alto 1.48 (×1.98 aldeano) · ancho 1.01 · velocidad 1.98 casillas/s
+   roca             alto 1.00 (×1.33 aldeano) · ancho 2.32
+   riqueza          alto 1.48 (×1.97 aldeano) · ancho 2.64
+   venado           alto 0.86 (×1.15 aldeano) · ancho 0.62
+== Proporciones en personas (cuerpo del edificio / alto del aldeano)
+| Pueblo | Casa | Cuartel | Centro | Ancho del centro | Hitos (mín–máx, mediana) | Torre |
+|---|---|---|---|---|---|---|
+| tawantinsuyu | 2.1 | 3.1 | 4.0 | 4.3 | 2.8–6.4, 5.8 | 6.0 |
+| mapuches | 1.3 | 2.5 | 2.3 | 3.0 | 0.6–6.4, 5.0 | - |
+| guaranies | 2.0 | 2.5 | 3.3 | 4.3 | 3.1–6.3, 5.6 | - |
+| etiopia | 2.2 | 2.6 | 2.7 | 4.5 | 2.0–6.4, 6.2 | 6.0 |
+| palmares | 2.0 | 2.5 | 3.8 | 4.3 | 3.4–7.0, 5.9 | - |
+| ayutthaya | 2.0 | 3.1 | 4.3 | 4.6 | 1.2–5.7, 3.3 | 3.6 |
+Árbol medio: 3.01 casillas = 4.0 personas (persona de 0.75 casillas)

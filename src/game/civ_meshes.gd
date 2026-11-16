@@ -72,10 +72,12 @@ static func _is_center(type: String, def: Dictionary) -> bool:
 
 # ---------------------------------------------------------------- Edificios
 
-static func building(type: String, def: Dictionary, team: Color, style: Dictionary, variant: int, tier: int, cfg: Dictionary = {}) -> ArrayMesh:
+## `lev`: cómo levantar muros y techos hasta el alto de la categoría (Meshes.levante; proceso/24,
+## 4p). Se calcula con el alto de la edad I (alto_cuerpo), así lo que crece con la edad se conserva.
+static func building(type: String, def: Dictionary, team: Color, style: Dictionary, variant: int, tier: int, cfg: Dictionary = {}, lev: Dictionary = {}) -> ArrayMesh:
 	var forma: String = style.get("forma", "")
 	# La paleta entra en la clave: dos civs con la misma forma (Ayutthaya y Birmania) se ven distintas.
-	var key := "%s_%s_%s_%s_%s_%d_%d_%d" % [forma, style.get("arcilla", ""), style.get("techo", ""), type, team.to_html(), variant, tier, str(cfg).hash()]
+	var key := "%s_%s_%s_%s_%s_%d_%d_%d_%d" % [forma, style.get("arcilla", ""), style.get("techo", ""), type, team.to_html(), variant, tier, str(cfg).hash(), str(lev).hash()]
 	if _cache.has(key):
 		return _cache[key]
 	var pal := _pal(style, cfg)
@@ -129,9 +131,20 @@ static func building(type: String, def: Dictionary, team: Color, style: Dictiona
 	# Todo se arma con la puerta en +z; media vuelta para que dé a la cámara (proceso/24, 4e).
 	if not turned:
 		Meshes.face_camera(p)
+	var h := Meshes.alto_partes(p)
+	Meshes.levantar(p, lev)
 	var mesh := Meshes.merge(p)
 	_cache[key] = mesh
+	_alto[mesh.get_instance_id()] = h
 	return mesh
+
+
+static var _alto := {} # id de la malla -> alto del cuerpo antes de levantarlo, sin estandartes
+
+
+## Alto del cuerpo de una malla de `building` antes de levantarla (sin estandartes ni figuras).
+static func alto_cuerpo(mesh: Mesh) -> float:
+	return float(_alto.get(mesh.get_instance_id(), mesh.get_aabb().end.y))
 
 
 ## Casa típica de cada civilización, apoyada en `at`. `cfg`: aspecto de la edad.
@@ -332,7 +345,11 @@ static func _center(p: Array, forma: String, w: float, d: float, pal: Array, tea
 		# dentro del cerco (las casas de los lados le tapaban el frente).
 		HitosMeshes.castillo(p, Vector3(0, by, -d * 0.1), minf(w * 0.6, 2.0 * half_w - 0.7), d * 0.34, pal, cfg)
 	else:
-		_hut(p, forma, Vector3(0, by + tola, -d * 0.08), minf(w * 0.55, 2.0 * half_w - 0.1) * esc, d * 0.5 * esc, 1.5, pal, cfg)
+		# Casa principal ancha (proceso/24, 4p): casi todo el ancho útil y contra el fondo, así el
+		# centro se lee más grande que un cuartel; las dos casas chicas quedan adelante.
+		var mw := minf(w * 0.78, 2.0 * half_w - 0.1) * esc
+		var md := minf(d * 0.58, 2.0 * half_d - side * 0.93 - 0.1) * esc
+		_hut(p, forma, Vector3(0, by + tola, -half_d + md / 2.0), mw, md, 1.5, pal, cfg)
 		var sx := half_w - side * 0.5
 		var sz := half_d - side * 0.5
 		_hut(p, forma, Vector3(-sx, by, sz), side, side * 0.93, 0.9, pal, cfg)
@@ -457,7 +474,8 @@ static func decor(type: String, def: Dictionary, team: Color, cfg: Dictionary, w
 static func _barracks(p: Array, forma: String, w: float, d: float, pal: Array, team: Color, by: float, type: String, cfg: Dictionary = {}) -> void:
 	var iw := w - 2.0 * margin()
 	var esc := minf(_f(cfg, "escala_pct"), 1.0)
-	_hut(p, forma, Vector3(0, by, -d * 0.2), minf(w * 0.85, iw) * esc, d * 0.45 * esc, 1.1, pal, cfg)
+	# Galpón hondo (proceso/24, 4p): al subir muros y techos no queda una lámina.
+	_hut(p, forma, Vector3(0, by, -d * 0.14), minf(w * 0.85, iw) * esc, d * 0.52 * esc, 1.1, pal, cfg)
 	for i in 5:
 		p.append([Meshes.box(0.08, 0.42, 0.08), Meshes.xf(Vector3(-iw * 0.5 + i * iw * 0.25, by + 0.21, d * 0.38)), pal[1].darkened(0.3)])
 	p.append([Meshes.box(iw, 0.06, 0.06), Meshes.xf(Vector3(0, by + 0.38, d * 0.38)), pal[1].darkened(0.3)])

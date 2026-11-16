@@ -11,9 +11,9 @@ const EDGE := 6
 
 var cam: Camera3D
 var focus := Vector3(24, 0, 24)
-var zoom := 32.0
+var zoom := 28.0 # con la gente al 60 % (proceso/24, 4p) el aldeano mide unos 33 px a 1080p
 var pitch_deg := PITCH_DEG # las capturas de documentación pueden bajarlo
-var _zoom_target := 32.0
+var _zoom_target := 28.0
 var map_size := 128.0
 var edge_pan := true
 var _drag := false
