@@ -233,4 +233,16 @@ Cada frente tiene su agente en un worktree propio, con su rama y su documento. E
 
 Con los pasos 1 a 4 integrados, los mismos cuatro jugadores de las rondas 1 y 2, con su memoria, juegan la versión nueva. La experta contra la difícil (G) sigue en ajuste y se les avisa.
 - Informes en [`proceso/22-testers/ronda-3/`](../22-testers/ronda-3/): veterano de AoE4, nuevo en los RTS, historia y estética, equipos y todos contra todos.
-- La síntesis comparada con las rondas 1 y 2 va en `ronda-3/00-sintesis.md`.
+- **[Síntesis comparada](../22-testers/ronda-3/00-sintesis.md):** el hito tiene ventana de riesgo, los sitios duran 10 minutos, la caza y la ciudad andan, el balance queda en 34–60 %, las opciones de partida son "lo que más me ayudó" (nuevo) y el arte "mejoró mucho" (historia).
+- Se atiende ya:
+  - lo sagrado en el sonido (4h) y el arte marcado (4i), integrados;
+  - la interfaz del veterano (4k), integrada;
+  - la IA que ataque el hito en obra (G), el jugador nuevo (4j) y los equipos (4l), en curso.
+- Pedidos que siguen:
+  - la micro (mezcla de línea y distancia), con torneo y consulta;
+  - la IA que dispute sitios;
+  - Palmares en partidas largas de varios;
+  - modelos de tropas.
+
+| L · Equipos, ronda 3 | En curso: bengala de ataque que se sume a la oleada, pedidos que pesen más que el tributo, tiempo límite por defecto en todos contra todos, fin por equipo, caminos en fortines | [4l-equipos-ronda-3.md](4l-equipos-ronda-3.md) |
+| M · Jugador nuevo, ronda 3 | En curso: la fácil sin ganar por sitios, primera partida sin sitios, tutorial en la espera del hito, nombres comunes, color del empate, aviso para salir a ganar | [4j-jugador-nuevo-ronda-3.md](4j-jugador-nuevo-ronda-3.md) |
