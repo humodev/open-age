@@ -83,6 +83,10 @@ func _own_resource(pid: int, p: Dictionary) -> void:
 		per_v = int(by_age[clampi(int(p["age"]) - 1, 0, by_age.size() - 1)])
 	per_min += vill * per_v
 	_gain(pid, key, per_min * P / 60)
+	# Lo que pasa del tope se pierde: tampoco cuenta como juntado (puntaje).
+	var over := int(p["res"].get(key, 0)) - cap
+	if over > 0:
+		sim.ledger(pid, "propio", key, -over)
 	p["res"][key] = mini(p["res"].get(key, 0), cap)
 	p["tope_" + key] = cap
 
@@ -220,7 +224,7 @@ func _welcome(pid: int, p: Dictionary) -> void:
 	var cfg := m(pid, "acogida")
 	var key: String = cfg["recurso"]
 	var cost: int = cfg["costo"]
-	if int(p["res"].get(key, 0)) < cost or p["pop"] >= p["pop_cap"]:
+	if int(p["res"].get(key, 0)) < cost or p["pop"] >= p["pop_cap"] or p.get("acogida_pausa", false):
 		return
 	# "Guardar fama para el hito" (prendido por defecto): no gasta la fama que pide el próximo hito.
 	if p.get("guardar_" + key, true) and int(p["res"].get(key, 0)) - cost < sim.hito_extra_need(pid, key):

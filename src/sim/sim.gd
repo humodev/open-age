@@ -268,6 +268,9 @@ func _apply(c: Dictionary) -> void:
 		"guardar":
 			# "Guardar <recurso> para el hito" (fama de Palmares): prendido por defecto.
 			players[pid]["guardar_" + str(c["res"])] = bool(c["on"])
+		"acoger":
+			# Acogida prendida o en pausa (Palmares): con la pausa la fama se junta y no llega gente.
+			players[pid]["acogida_pausa"] = not bool(c["on"])
 		"reserve":
 			# Reserva de un recurso propio que los motores de conversión no tocan.
 			players[pid]["reserva_" + str(c["res"])] = clampi(int(c["n"]), 0, 1000)

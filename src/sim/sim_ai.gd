@@ -436,6 +436,19 @@ func _engine(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_type: 
 			# Guarda fama para el hito solo mientras ahorra para él; si no, la gente sigue llegando.
 			if bool(p.get("guardar_fama", true)) != saving:
 				sim.push_command({"t": "guardar", "player": player, "res": "fama", "on": saving})
+			# La gente que llega por la fama respeta el tope de aldeanos de la dificultad, como
+			# los centros de las otras civs. Cuentan también los guarecidos; los de los oficios
+			# no (son el motor, como los aldeanos virtuales de las otras civs).
+			var people := 0
+			for e in sim.actives:
+				if e.alive and e.owner == player:
+					if e.is_unit() and e.fn == "civil":
+						people += 1
+					elif e.is_building():
+						people -= e.crafts.size()
+			var welcome := people < max_villagers
+			if bool(p.get("acogida_pausa", false)) == welcome:
+				sim.push_command({"t": "acoger", "player": player, "on": welcome})
 		"tawantinsuyu":
 			var want_res := 60 if saving else 0
 			if int(p.get("reserva_mita", 0)) != want_res:
