@@ -171,6 +171,7 @@ Un cambio por torneo: 75 partidas, 5 semillas, 30 minutos, en 10 procesos.
 | [28](pruebas/28-torneo-alcance-guarani.txt) (10) | Guaraníes: alcance del arquero 5500 (antes 6000); emboscada de vuelta a 50 % | **68** | 60 | **68** | 38 | 32 | 34 |
 | [29](pruebas/29-torneo-blancos.txt) (10) | Elección de blancos como AoE4 (5d) | **42** | 68 | **76** | 34 | 48 | 32 |
 | [30](pruebas/30-torneo-sigilo-guarani.txt) (10) | Guaraníes: sigilo detectado a 4,5 casillas. **Descartado** | 42 | 66 | 76 | 38 | 46 | 32 |
+| [31](pruebas/31-torneo-inalcanzable.txt) (10) | Recurso inalcanzable (6c) y experta (6b; no juega en el torneo) | 48 | 60 | **72** | 36 | 52 | 32 |
 
 **Etiopía, de 56 % a 8 %.**
 - Con la misma partida seguida en el commit anterior a la etapa (`tools/ia_por_dentro.gd`, sierra contra Tawantinsuyu), el ejército etíope ya era chico (unas 20 unidades). Lo que cambió fue el rival: los arreglos de economía del paso 1 destrabaron el alimento de Tawantinsuyu, que pasó de 15 a 60 unidades.
@@ -373,3 +374,4 @@ Informes en [`proceso/22-testers/ronda-6/`](../22-testers/ronda-6/).
   - Seis palancas (riqueza, roza, emboscada, ataque, alcance y sigilo) sin efecto duradero: la causa es otra.
   - Se abre un estudio de diagnóstico (5e), como el de Palmares, que encontró la acogida, en lugar de seguir con nerfs a ciegas.
   - El paso 1 del juego tardío (los niveles en lugar del bono por edad) también puede moverlo.
+- **Torneo 31:** con el arreglo del recurso inalcanzable, Tawantinsuyu sube de 42 a 48 % y Palmares de 46 a 52 %. Los guaraníes siguen arriba (72 %); se espera el diagnóstico (5e).
