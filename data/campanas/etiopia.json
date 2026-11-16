@@ -9,12 +9,12 @@
       "anio": "1445",
       "lugar": "Gomit, en Dawaro, y Debre Berhan",
       "intro": [
-        "Escribo en Gondar, donde por primera vez en trescientos años el rey duerme cada noche en el mismo lugar. Antes no era así. El reino era una ciudad que caminaba: tiendas, iglesias, mercado y tesoro, levantados en un llano y desarmados cuando el llano se cansaba.",
+        "Escribo en Gondar, donde por primera vez en mucho tiempo el rey vuelve cada estación de lluvias al mismo lugar. Antes no era así. El reino era una ciudad que caminaba: tiendas, iglesias, mercado y tesoro, levantados en un llano y desarmados cuando el llano se cansaba.",
         "Las crónicas que copio empiezan con Zara Yaqob. En 1445 el sultán Badlay de Adal entró en Dawaro con su ejército. El rey no lo esperó en un palacio, porque no tenía palacio: llevó la corte hacia él.",
         "Un rey sin capital gobierna con la tierra. A cada señor, a cada regimiento y a cada monasterio le da el derecho a cobrar tributo de un pedazo de tierra, el gult, y se lo puede quitar cuando quiere. Por eso los señores vienen cuando él los llama."
       ],
       "epilogo": [
-        "Badlay murió en Gomit. Once años después, Zara Yaqob vio una luz en el cielo, fundó una iglesia en ese lugar y la llamó Debre Berhan, monte de la luz. Se quedó allí casi el resto de su vida: la primera vez que la corte que caminaba se sentó.",
+        "Badlay murió en Gomit. Once años después apareció una luz en el cielo, dicen, el día en que el rey hizo apedrear a unos monjes que no se postraban ante la cruz ni ante la Virgen, los estefanitas. Las crónicas lo cuentan como milagro. Zara Yaqob fundó una iglesia en ese lugar y la llamó Debre Berhan, monte de la luz. Se quedó allí casi el resto de su vida: la primera vez que la corte que caminaba se sentó.",
         "Pero un rey sentado deja de ver lo que pasa lejos. Después de él, la corte volvió a caminar."
       ],
       "fuentes": [
@@ -68,13 +68,13 @@
       ],
       "epilogo": [
         "Amba Geshen resistió en 1531 y otra vez en 1533. Cayó en 1540, cuando ya no quedaba quién la abasteciera. Ese mismo año Lebna Dengel murió refugiado en Debre Damo, una montaña a la que solo se sube trepando por una cuerda de cuero.",
-        "Su hijo Galawdewos heredó un reino que era casi solo montañas. Desde una de ellas mandó a buscar a los portugueses."
+        "Su hijo Galawdewos heredó un reino que era casi solo montañas, y la respuesta a la carta que su padre había mandado a Portugal."
       ],
       "fuentes": [
         "Shihab al-Din Arab Faqih, Futuh al-Habasha, trad. P. L. Stenhouse (Tsehai, 2003)",
         "Francisco Álvares, Verdadera información de las tierras del Preste Juan (1540), cap. LVIII",
-        "Shumet Sishagn, Ayele Tariku y Temesgen Gebeyehu, A History of Amba Prisons and Imprisonment in Gojjam (Ethiopian Journal of Social Sciences 9:1, 2023)",
-        "Library of Congress, Ethiopia: A Country Study (1991)"
+        "Shumet Sishagn, Ayele Tariku y Temesgen Gebeyehu, A History of Amba Prisons and Imprisonment in Gojjam (Ethiopian Journal of Social Sciences 9:1, 2023) [verificar que exista]",
+        "Harold G. Marcus, A History of Ethiopia (University of California Press, 1994)"
       ],
       "mapa": { "semilla": 1531, "terreno": "mesetas" },
       "jugador": {
@@ -115,7 +115,7 @@
       "anio": "1543",
       "lugar": "Wayna Daga, cerca del lago Tana",
       "intro": [
-        "Galawdewos tenía dieciocho años. En 1541 habían desembarcado en Massawa cuatrocientos portugueses con mosquetes, pedidos por su padre. Su madre, la reina Seble Wongel, los recibió y caminó con ellos.",
+        "Galawdewos tenía unos veintiún años; había subido al trono con dieciocho. En 1541 habían desembarcado en Massawa cuatrocientos portugueses con mosquetes, pedidos por su padre. Su madre, la reina Seble Wongel, los recibió y caminó con ellos.",
         "En Wofla, en 1542, el imán los venció, se quedó con sus armas y mató a su capitán, Cristóvão da Gama. Quedaron unos doscientos. Los turcos le habían prestado al imán sus propios mosqueteros, y él, confiado, los devolvió.",
         "Galawdewos convocó a los señores que le quedaban. Cada uno trajo su gente, y mientras estuvieran en campaña sus tierras no pagaban: era ahora o nunca. En febrero de 1543 los dos ejércitos se encontraron en Wayna Daga."
       ],
@@ -169,9 +169,9 @@
       "lugar": "Gondar, al norte del lago Tana",
       "intro": [
         "En 1622 el rey Susenyos se hizo católico, y el patriarca que mandó Roma ordenó volver a bautizarnos, volver a ordenar a nuestros sacerdotes y cambiar nuestras fiestas. El reino se levantó. Fueron diez años de guerra entre nosotros.",
-        "En 1632, después de una batalla en la que murieron miles de campesinos, Susenyos devolvió la fe antigua y dejó el trono a su hijo Fasiladas. Fasiladas echó a los jesuitas.",
-        "Después hizo lo que ningún rey había hecho en trescientos años: eligió un lugar y se quedó. En Gondar, sobre las rutas del comercio, empezó a levantar un castillo de piedra. Los maestros fueron nuestros, albañiles beta israel y artesanos que habían aprendido de todos.",
-        "Pero en Lasta había señores que no querían un rey quieto."
+        "En 1632, después de una batalla en la que murieron miles de campesinos, Susenyos devolvió la fe antigua y dejó el trono a su hijo Fasiladas. Fasiladas echó a los jesuitas. Susenyos se había criado entre los oromo, que desde hacía casi un siglo se asentaban en el sur y el centro del reino: no eran una horda, se gobernaban por el gada, clases de edad que se pasaban el mando cada ocho años, y fueron para nuestros reyes aliados, soldados y rivales.",
+        "Después hizo lo que ningún rey había hecho en mucho tiempo: eligió un lugar para volver cada estación de lluvias. En Gondar, sobre las rutas del comercio, empezó a levantar un castillo de piedra. Los maestros fueron nuestros, albañiles beta israel, a los que Susenyos había quitado la tierra con la guerra y que vivían de su oficio, y artesanos que habían aprendido de todos.",
+        "Pero los señores de Lasta, la vieja tierra de los zagwe, se habían alzado contra Susenyos por la fe y seguían queriendo mandarse solos."
       ],
       "epilogo": [
         "Fasiladas terminó su castillo, y sus hijos y nietos le agregaron otros, hasta que Gondar fue una ciudad de piedra con iglesias, baños y bibliotecas. En esta ciudad escribo.",
@@ -180,8 +180,9 @@
       "fuentes": [
         "Crónica de Susenyos, ed. F. M. Esteves Pereira, Chronica de Susenyos, rei de Ethiopia (1892)",
         "UNESCO, Fasil Ghebbi, Gondar Region",
-        "Library of Congress, Ethiopia: A Country Study (1991)",
-        "Merid Wolde Aregay, Southern Ethiopia and the Christian Kingdom 1508-1708 (tesis, Londres, 1971)"
+        "Steven Kaplan, The Beta Israel (Falasha) in Ethiopia (NYU Press, 1992)",
+        "Merid Wolde Aregay, Southern Ethiopia and the Christian Kingdom 1508-1708 (tesis, Londres, 1971)",
+        "Mohammed Hassen, The Oromo and the Christian Kingdom of Ethiopia, 1300-1700 (James Currey, 2015)"
       ],
       "mapa": { "semilla": 1636, "terreno": "mesetas" },
       "jugador": {

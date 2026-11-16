@@ -19,7 +19,7 @@
         "Después de Tucapel muchos lonko volvieron a sus siembras. El hacha negra se baja cuando termina la guerra. Así es entre nosotros, aunque al toqui no le guste."
       ],
       "fuentes": [
-        "Memoria Chilena, El toqui Lautaro (ca. 1534-1557)",
+        "José Bengoa, Historia de los antiguos mapuches del sur (Catalonia, 2003)",
         "Jerónimo de Vivar, Crónica y relación copiosa y verdadera de los reinos de Chile (1558)",
         "Guillaume Boccara, Guerre et ethnogenèse mapuche dans le Chili colonial (1998)",
         "José Bengoa, Historia del pueblo mapuche (LOM, 2000)",
@@ -62,7 +62,7 @@
       "anio": "1554",
       "lugar": "Cuesta de Marigüeñu y Concepción",
       "intro": [
-        "Al año siguiente, Francisco de Villagra subió la cuesta de Marigüeñu con caballos, arcabuces y cañones. Lautaro lo esperó arriba, donde a los caballos les falta el aire.",
+        "Al año siguiente, Francisco de Villagra subió la cuesta de Marigüeñu con caballos, arcabuces y cañones. Lautaro lo esperó arriba, donde a los caballos les pesa la cuesta.",
         "Malón no es guerra. La guerra se hace por la tierra; el malón, para llevarse lo que el otro guardó. Se entra rápido, se toma el ganado y se vuelve antes de que el otro se arme. Lo que no llega a casa no cuenta.",
         "Si Villagra caía, Concepción quedaba sola, con sus sementeras, sus corrales y sus depósitos."
       ],
@@ -71,10 +71,10 @@
         "Las armas de fuego las probamos en Quiapo, cuatro años después, detrás de una empalizada. Perdimos. No sabíamos hacer pólvora, y la que quitábamos se acababa. Nos quedamos con lo que sí podíamos criar: caballos."
       ],
       "fuentes": [
-        "Memoria Chilena, Batalla de Marigüeñu",
+        "Guillaume Boccara, Los vencedores: historia del pueblo mapuche en la época colonial (2007)",
         "Alonso de Góngora Marmolejo, Historia de todas las cosas que han acaecido en el Reino de Chile (1575)",
         "Guillaume Boccara, Etnogénesis mapuche (Hispanic American Historical Review 79:3, 1999)",
-        "J. Mendoza Pinto y A. Castro González, artículo sobre el impacto de las armas de fuego en la cultura mapuche (Cuadernos CANELA 31, 2021)"
+        "J. Mendoza Pinto y A. Castro González, artículo sobre el impacto de las armas de fuego en la cultura mapuche (Cuadernos CANELA 31, 2021) [verificar que exista]"
       ],
       "mapa": { "semilla": 1554, "terreno": "montana" },
       "jugador": {
@@ -123,10 +123,10 @@
         "Pero la guerra no terminó. El rey mandó plata todos los años para pagar soldados de oficio, y en 1608 firmó que podían esclavizarnos. Del otro lado del río, la guerra se volvió un negocio."
       ],
       "fuentes": [
-        "Memoria Chilena, La Guerra de Arauco (1550-1656)",
+        "Diego de Rosales, Historia general del Reino de Chile (c. 1674)",
         "Tom D. Dillehay, Monuments, Empires, and Resistance: The Araucanian Polity and Ritual Narratives (Cambridge UP, 2007)",
         "Alonso González de Nájera, Desengaño y reparo de la guerra del Reino de Chile (1614)",
-        "Memoria Chilena, Estrategias y Esclavitud indígena"
+        "Guillaume Boccara, Guerre et ethnogenèse mapuche dans le Chili colonial (1998)"
       ],
       "mapa": { "semilla": 1598, "terreno": "bosque_templado" },
       "jugador": {
@@ -166,18 +166,18 @@
       "lugar": "La frontera del Biobío y los llanos de Quilín",
       "intro": [
         "Ahora llego a mi tiempo. Durante treinta años los wingka cruzaron el río a buscar esclavos, y Lientur lo cruzó al revés a buscar ganado. En Las Cangrejeras derrotó a su ejército, y Maulicán se llevó prisionero a un capitán joven que vivió entre nosotros y comió de nuestra comida.",
-        "Los lonko de los cuatro butalmapu, costa, llanos, precordillera y cordillera, decidieron que era tiempo de hablar. No para rendirse: para que el río quedara como raya y que de este lado no entrara nadie armado.",
+        "Los lonko de los ayllarewe de la costa, de los llanos y de la precordillera decidieron que era tiempo de hablar. No para rendirse: para que el río quedara como raya y que de este lado no entrara nadie armado.",
         "Un parlamento no se gana conversando. Se gana llegando con tanto ganado, tantos caballos y tantos lof en pie que al otro le convenga más pagar regalos que pagar soldados."
       ],
       "epilogo": [
         "En enero de 1641, en Quilín, el gobernador entró con ramas de canelo y se sacrificó un chilihueque. El Biobío quedó como frontera, y dos años después el rey de España firmó lo que habíamos acordado.",
-        "No fue la paz para siempre. Hubo alzamientos, ferias, abusos y otros parlamentos, casi cincuenta en ciento sesenta años. Pero desde Quilín, cada vez que alguien quiso cruzar el río, primero tuvo que sentarse a hablar con nosotros."
+        "No fue la paz para siempre. Hubo alzamientos, ferias, abusos y otros parlamentos, decenas en ciento sesenta años. Pero desde Quilín, cada vez que alguien quiso cruzar el río, primero tuvo que sentarse a hablar con nosotros."
       ],
       "fuentes": [
         "José Manuel Zavala Cepeda (ed.), Los parlamentos hispano-mapuches 1593-1803: textos fundamentales (2015)",
-        "Jonathan Sauer, When Chile's Indigenous Made the Spanish Back Down (Americas Quarterly, 2022)",
+        "Guillaume Boccara, Los vencedores: historia del pueblo mapuche en la época colonial (2007)",
         "Francisco Núñez de Pineda y Bascuñán, Cautiverio feliz (1673)",
-        "Memoria Chilena, Esclavitud indígena",
+        "Alonso de Ovalle, Histórica relación del Reino de Chile (1646)",
         "Leonardo León Solís, Maloqueros y conchavadores en Araucanía y las Pampas, 1700-1800 (1991)"
       ],
       "mapa": { "semilla": 1641, "terreno": "rio" },
@@ -194,7 +194,7 @@
         { "id": "o1", "texto": "Malón al otro lado del río: arrasá 5 estancias (granjas) y traé el ganado.", "tipo": "destruir", "params": { "tipo": "granja", "n": 5, "jugador": 1 }, "secundario": false },
         { "id": "o2", "texto": "Juntá el kulliñ: ganado y ponchos para llegar fuertes al parlamento (1200 de riqueza).", "tipo": "recolectar", "params": { "recurso": "riqueza", "n": 1200 }, "secundario": false },
         { "id": "o3", "texto": "Que no quede ningún cuartel de ellos de este lado del Biobío: destruí 2.", "tipo": "destruir", "params": { "tipo": "cuartel", "n": 2, "jugador": 1 }, "secundario": false },
-        { "id": "o4", "texto": "Convocá a los cuatro butalmapu al parlamento (avanzá a la edad IV).", "tipo": "edad", "params": { "n": 4 }, "secundario": false },
+        { "id": "o4", "texto": "Convocá a los lonko de los ayllarewe al parlamento (avanzá a la edad IV).", "tipo": "edad", "params": { "n": 4 }, "secundario": false },
         { "id": "o5", "texto": "Mientras se habla en Quilín, que ningún soldado cruce el río.", "tipo": "sobrevivir", "params": { "segundos": 300 }, "secundario": false, "oculto": true },
         { "id": "o6", "texto": "Protegé las sementeras de las malocas esclavistas.", "tipo": "proteger", "params": { "tipo": "granja", "jugador": 0 }, "secundario": true }
       ],

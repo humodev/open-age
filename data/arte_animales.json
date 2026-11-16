@@ -2,7 +2,7 @@
   "_doc": "Silueta de cada animal (proceso/24-tras-la-segunda-ronda/4d-hitos-y-animales.md). Solo imagen: la simulación no lo lee. 'especies': forma (camelido, cabra, bovino, cerdo, ciervo, tapir) y lo que la distingue: color, vientre (color de abajo), lana, cuello_cm y patas_cm, grueso_pct (ancho del cuerpo), escala_pct (tamaño, en proporción con la gente: la llama a la altura de una persona baja, el búfalo y la vaca más grandes que una persona de largo; proceso/24-tras-la-segunda-ronda/4p-escala.md), cuernos (forma de cuernos o astas: bufalo, corto, cabra, ibice, ramificadas, horquilla, rectos, espiral, no), cuerno_color y crin. 'rebano_por_civ': el animal propio de cada pueblo; sin entrada, el del '_defecto'. Los animales sueltos (rebano_salvaje) toman la especie de 'sueltos_por_civ' del pueblo de la base más cercana, y la caza (venado) una de 'caza_por_civ'; 'caza_por_terreno' pisa a las dos en los terrenos con fauna propia. Afirmaciones históricas con [verificar].",
   "especies": {
     "llama": {"nombre": "Llama", "escala_pct": 89, "forma": "camelido", "color": "#e8dcc4", "cara": "#8a7a64", "lana": true, "cuello_cm": 52, "patas_cm": 34, "grueso_pct": 105, "_nota": "Cuello largo y vertical, orejas en banana, cola alzada."},
-    "chilihueque": {"nombre": "Chilihueque", "escala_pct": 89, "forma": "camelido", "color": "#8a6a4a", "cara": "#5a4632", "lana": true, "cuello_cm": 44, "patas_cm": 31, "grueso_pct": 115, "_nota": "Camélido de los mapuches, más bajo y lanudo que la llama [verificar]."},
+    "chilihueque": {"nombre": "Chilihueque", "escala_pct": 89, "forma": "camelido", "color": "#8a6a4a", "cara": "#5a4632", "lana": true, "cuello_cm": 44, "patas_cm": 31, "grueso_pct": 115, "_nota": "Camélido de los mapuches (hueque, 'carnero de la tierra'): lana, carga y sacrificio, documentado por Vivar (1558). Se discute si era una llama o un guanaco domesticado: más bajo y lanudo que la llama [verificar el aspecto, no la existencia]."},
     "guanaco": {"nombre": "Guanaco", "escala_pct": 86, "forma": "camelido", "color": "#b07a48", "vientre": "#efe6d6", "cara": "#5a5450", "cuello_cm": 54, "patas_cm": 40, "grueso_pct": 92, "_nota": "Esbelto, bicolor (lomo canela, vientre blanco), cara gris."},
     "cabra": {"nombre": "Cabra", "escala_pct": 85, "forma": "cabra", "color": "#3a3530", "cuernos": "cabra", "_nota": "Patas cortas, cuernos hacia atrás, barba y cola parada."},
     "oveja": {"nombre": "Oveja", "forma": "cabra", "color": "#d9d0bc", "cara": "#3a3530", "lana": true, "cuernos": "no", "_nota": "La que traen los europeos."},
@@ -28,7 +28,7 @@
     "palmares": "cerdo",
     "ayutthaya": "bufalo", "birmanos": "bufalo",
     "invasores": "oveja",
-    "_nota": "Guaraníes y tupíes no crían rebaño; lo que reclaman se ve como pecarí, que se amansaba en las aldeas [verificar]."
+    "_nota": "Guaraníes y tupíes no crían rebaño en la edad I; lo que reclaman se ve como pecarí, que se amansaba en la casa como animal criado (mymba), no en rebaño [verificar]. Las reducciones sí tuvieron grandes estancias de ganado vacuno (Yapeyú)."
   },
   "sueltos_por_civ": {
     "_defecto": "oveja",

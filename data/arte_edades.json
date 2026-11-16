@@ -60,13 +60,13 @@
  },
  "civs": {
   "tawantinsuyu": {
-   "_nota": "De la pirca (piedra de campo con barro) a la cantería fina ensamblada, gris como la andesita del Cusco (no blanca: ronda 3 de jugadores, proceso/24, 4i) y, en la última edad, las bandas de oro del Qorikancha. La kancha es un recinto cercado con casas adentro. La torre es una pukara escalonada, sin almenas. Fuentes: Gasparini y Margolies, Arquitectura inka (1977); Hyslop, Inka Settlement Planning (1990) [verificar].",
+   "_nota": "De la pirca (piedra de campo con barro) a la cantería fina ensamblada, gris como la andesita del Cusco (no blanca: ronda 3 de jugadores, proceso/24, 4i). Sin oro en las kanchas ni en las qollqas: el oro era del Qorikancha, de los palacios y de la vajilla del Inka, y en la edad IV (Vilcabamba, 1537–1572) el del Cusco ya se había fundido para el rescate de Cajamarca (1533). El oro queda solo en el hito del Qorikancha. Bauer, Fonseca Santa Cruz y Aráoz Silva, Vilcabamba and the Archaeology of Inca Resistance (2015). La kancha es un recinto cercado con casas adentro. La torre es una pukara escalonada, sin almenas. Fuentes: Gasparini y Margolies, Arquitectura inka (1977); Hyslop, Inka Settlement Planning (1990) [verificar].",
    "obra_material": ["piedra", "paja"],
    "edades": [
     {"muro": "#a99a84", "techo": "#a58c5c", "aparejo": "pirca", "alto_pct": 90, "escala_pct": 90, "modelo_tinte": "#d8d0c2", "tropa": {"tela": "#c9b48e"}},
     {"muro": "#b9a98f", "alto_pct": 100, "escala_pct": 95, "cerco": {"tipo": "pirca", "alto_cm": 50}, "modelo_tinte": "#e6dfd2", "tropa": {"tela": "#9c4a32", "casco": "#6b5a44"}},
     {"muro": "#8f8a81", "aparejo": "canteria", "alto_pct": 115, "techo_alto_pct": 112, "escala_pct": 100, "cerco": {"tipo": "canteria", "alto_cm": 70, "color": "#87827a"}, "torre_alto_pct": 115, "modelo_tinte": "#ffffff", "tropa": {"tela": "#8e2f25", "casco": "#a8823a", "escudo_borde": "#e2b13c"}},
-    {"alto_pct": 125, "dorado": true, "remate": "dorado", "torre_alto_pct": 125, "tropa": {"oro": true}}
+    {"alto_pct": 125, "torre_alto_pct": 125}
    ]
   },
   "mapuches": {
@@ -100,7 +100,7 @@
    ]
   },
   "palmares": {
-   "_nota": "Mocambos de pau-a-pique y palma; con cada edad la cerca de troncos crece y en Angola Janga se dobla (los relatos de las entradas hablan de cercas de pau-a-pique con fosos y estrepes). Fuentes: Freitas, Palmares: a guerra dos escravos (1978); Gomes, Palmares (2005) [verificar].",
+   "_nota": "Mocambos de pau-a-pique y palma; con cada edad la cerca de troncos crece y en Angola Janga se dobla (los relatos de las entradas hablan de cercas de pau-a-pique con fosos y estrepes). Fuentes: Gomes, Palmares: escravidão e liberdade no Atlântico Sul (2005); Lara, O território dos Palmares (2021) [verificar]. No se cita a Freitas: parte de sus documentos nunca se localizó.",
    "obra_material": ["madera", "paja"],
    "edades": [
     {"escala_pct": 88, "alto_pct": 90, "modelo_tinte": "#e0d8c6", "tropa": {"tela": "#b89a6a"}},
@@ -120,11 +120,12 @@
    ]
   },
   "birmanos": {
+   "_nota": "Madera de teca oscura, no el ladrillo encalado de Ayutthaya: casa sobre pilotes (ein) y monasterio de teca (kyaung). Comparte la forma 'ayutthaya' porque todavía no hay mallas birmanas; lo pendiente es el pyatthat (techo de muchos pisos sobre palacios y puertas) y la zedi (estupa en campana) como remate, en lugar del prang siamés (revisión 25, informe 03, n.º 6) [verificar con un especialista].",
    "torre": "troncos",
    "obra_material": ["madera", "madera"],
    "edades": [
-    {"techo": "#6a5236", "pisos_techo": 1},
-    {"techo": "#4e3322", "pisos_techo": 2},
+    {"muro": "#7a5636", "techo": "#6a5236", "pisos_techo": 1},
+    {"muro": "#6a4a2e", "techo": "#4e3322", "pisos_techo": 2},
     {"pisos_techo": 3, "dorado": true, "remate": "dorado", "cerco": {"tipo": "empalizada", "alto_cm": 120}},
     {"alto_pct": 115}
    ]

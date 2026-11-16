@@ -335,6 +335,8 @@ a) Así, hasta consultar con una organización mbyá *(por defecto)* · b) Volve
 Tiene dos grabaciones de berimbau con toques de capoeira y una de ijexá (un ritmo del candomblé). El sonido de tropa ya es de raíz angoleña (paso 4h).
 a) Dejarlas hasta tener una música propia sintetizada de ngoma y marimba *(por defecto)* · b) Sacarlas ya
 
+*Aplicada la b) por la revisión histórica (etapa 25): la música de paz de Palmares quedó sin pistas propias. Si contestás a), se revierten dos líneas de `audio.gd`.*
+
 **Respuesta:**
 
 ### C-58 · (sonido) El kebero etíope en la fanfarria, la alarma y el entrenado
@@ -391,5 +393,82 @@ a) Bajarla a 72 con un torneo de 10 semillas solo para eso, y mirarlo vos a ×1 
 ### C-66 · (escala) Huellas del centro y los hitos
 En AoE4 el centro y los hitos dominan la ciudad. Acá ocupan 4×4 casillas (el lof mapuche, 3×3). Pasarlos a 5×5 (el lof a 4×4) toca la colocación, la IA, el generador de mapas (quizás un mapa de 136 en vez de 128), los caminos, las 25 misiones y el balance. Las casas, granjas y almacenes no cambian.
 a) Esperar a ver el paso 1 (solo vista) y decidir después *(por defecto)* · b) Hacerlo ya, con su torneo · c) No
+
+**Respuesta:**
+
+
+> **C-67 a C-74 vienen de la revisión histórica** (`proceso/25-revision-historica/`): tres historiadores, de América Latina, África y Asia. Lo que no cambiaba mecánicas ya se corrigió (`04-correcciones-aplicadas.md`). Esto son las decisiones que cambian el juego o los nombres. La opción por defecto es la que recomiendan ellos.
+
+### C-67 · (historia, guaraníes) La yerba
+Hoy la roza agotada deja un yerbal. Pero la yerba (*ka'a*) era un árbol silvestre del monte. En la colonia se cosechó con trabajo forzado de encomienda, y solo las reducciones del siglo XVIII la plantaron (Garavaglia, 1983).
+a) La yerba como recurso silvestre del monte; el yerbal plantado recién en la vía misión; la roza agotada deja capuera; ganado vacuno en la vía misión. Medido con torneo *(por defecto)* · b) Dejarlo y aclararlo en la descripción
+
+**Respuesta:**
+
+### C-68 · (historia, Palmares) Pacto de Cucaú y liberación
+El Pacto de Cucaú promete "cerrar la puerta a quienes llegan", pero en los datos es un +25 % sin costo. La liberación "libera" gente de cualquier casa enemiga, también guaraní o etíope.
+a) El pacto apaga o reduce a la mitad la acogida y la liberación; la liberación vale solo contra los ingenios y los invasores (contra los demás pueblos, nada). Medido con torneo *(por defecto)* · b) Dejarlo
+
+**Respuesta:**
+
+### C-69 · (historia, Etiopía) Lalibela y la iglesia
+Lalibela es un sitio zagwe del siglo XIII con culto vivo: en el juego se construye y da +25 % de vida a los edificios. La iglesia da +5 % de vida a las tropas.
+a) Lalibela pasa a sitio sagrado neutral del mapa (no se construye) y el hito se ve como Debre Damo; la iglesia cambia su bono de combate por uno económico o de población *(por defecto)* · b) Dejarlo
+
+**Respuesta:**
+
+### C-70 · (historia) Nombres de edad
+Las propuestas de los historiadores:
+- incas: *Inkarri* → *Willkapampa*, y el hito militar → *Espíritu Pampa* (C-39);
+- guaraníes: *Tekoha → Guára → Mbororé → Ñande retã* (C-41; desaconsejan *tovaja*; *guára*, a confirmar con un hablante);
+- birmanos: *Hanthawaddy* → *Toungoo*;
+- Ayutthaya: *Mueang Tha* → *Krung Thonburi*, y explicar *Ekkarat* en el panel;
+- Palmares: no la a) de C-42, sino la b) "1678" o la d);
+- Qorikancha: a la edad II o III (C-40 b).
+
+a) Todo eso *(por defecto)* · b) Elegir de a uno (decí cuáles)
+
+**Respuesta:**
+
+### C-71 · (historia, Asia) Birmania y los extranjeros de Ayutthaya
+- *Bayingyi* (tiradores) y *kathe* (caballería) son de 1613 en adelante y de la época Konbaung; en la edad II y en Nong Sarai (1593) son anacrónicos.
+- Falta el barrio chino, la comunidad extranjera más grande de Ayutthaya (defendió la muralla en 1767 y sostuvo a Taksin).
+
+a) Bayingyi y kathe solo en la edad IV (antes, "tiradores portugueses a sueldo" y "jinete shan"); barrio chino como tercer barrio de Ayutthaya; Birmania con monasterio de teca, pyatthat y zedi propios *(por defecto)* · b) Solo los nombres
+
+**Respuesta:**
+
+### C-72 · (historia) Otros nombres
+- **Hitos mapuches:** Malón del toqui, Nguillatuwe del rewe, Corral de la remonta (o *Kawellu*) y Pewenal. Hoy inventan cargos como "toqui de caballería".
+- **Edificios:** "Ruka de guerra" → "Junta de guerra"; "Kamayuq wasi" → *Qhuya wasi*; "Tukul" → *Gojjo bet*.
+- **Ayutthaya:** la riqueza pasa a llamarse "Suai (pago al rey)".
+- **Rebaños:** cerdo o gallinas en Palmares; buey cebú en Etiopía.
+- **Rivales:** europeos por potencia, y Velho como facción "paulista" (C-44 b).
+
+a) Todo eso *(por defecto)* · b) De a uno
+
+**Respuesta:**
+
+### C-73 · (historia, sonido) Lo que quedaba abierto
+- C-58: nagarit (el timbal real de guerra) en la fanfarria y la alarma etíopes, en lugar del kebero litúrgico.
+- C-59: sacar *Tra Nimit* (muy probablemente del repertorio ceremonial *naphat*; la grabación es de una banda naval de 1934). Hoy es la única pista propia de Ayutthaya.
+- Alarma de Ayutthaya con klong chana, pi chawa y sang.
+
+a) Todo eso, con música propia de paz para Palmares (ngoma y marimba) y para Ayutthaya, sintetizadas *(por defecto)* · b) De a uno
+
+**Respuesta:**
+
+### C-74 · (historia) Representación y consultas
+- **Wat:** que no muestre una imagen del Buda reconocible hasta consultar, y revisar si conviene que se pueda destruir.
+- **Hito guaraní:** la mbaraka sale del modelo hasta la consulta mbyá (C-60 b).
+- **A futuro:** los oromo como facción de IA, con el gada; misiones de Adal; rivales Lan Na, Lan Xang y Camboya.
+- **Consultas antes de publicar:**
+  - la Iglesia ortodoxa Tewahedo;
+  - las comunidades hararí, oromo y beta israel;
+  - las organizaciones mapuches, mbyá, quechuas y quilombolas (CONAQ);
+  - mestres de capoeira angola;
+  - lingüistas de kimbundu.
+
+a) Así *(por defecto)* · b) Otra cosa
 
 **Respuesta:**

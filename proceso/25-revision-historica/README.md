@@ -21,4 +21,19 @@ Ninguno cambia el juego: los cambios se hacen después, con las consultas que ha
 | Asia | Ayutthaya y Birmania | [03-asia.md](03-asia.md) |
 
 ## Paso a paso
-1. Revisiones en curso.
+1. **Tres revisiones** (01–03), con unos 105 problemas en total.
+   - El nivel general es alto: narradores de adentro, fuentes reales, nada de "Grañ", ni de Adal como horda, ni de Aqualtune.
+   - Lo más serio:
+     - la yerba guaraní;
+     - los anacronismos de la edad IV inca;
+     - lo sagrado usado como bono (Lalibela, la iglesia);
+     - los silencios de la campaña etíope (oromo, beta israel, estefanitas);
+     - la música de Palmares (capoeira, candomblé) y de Ayutthaya (*Tra Nimit*, Lan Xang);
+     - los anacronismos birmanos.
+2. **Correcciones que no cambian mecánicas** ([04-correcciones-aplicadas.md](04-correcciones-aplicadas.md), commit `0af58e0`):
+   - 82 cambios en 21 archivos: fechas, fuentes, frases, el gult, una línea para los oromo, los beta israel y los estefanitas;
+   - arte: sin oro inca en la edad IV y teca birmana;
+   - sonido: sin las pistas de capoeira, ijexá, Lan Xang y "Bamboo Blitz";
+   - mismo hash; las 25 misiones, las civs, el sonido y el autotest dan OK.
+   - [Capturas](capturas/).
+3. **Decisiones para el autor:** C-67 a C-74 en `CONSULTAS.md` (yerba, Pacto de Cucaú y liberación, Lalibela e iglesia, nombres de edad, Birmania y barrio chino, otros nombres, sonido, representación y consultas a comunidades).
