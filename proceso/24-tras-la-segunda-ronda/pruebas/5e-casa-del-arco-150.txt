@@ -1,0 +1,447 @@
+cambio: guaranies/edificios/campo_tiro/costo={"madera":150}
+ayutthaya    vs guaranies    bosque_templado 30:00  ganador guaranies (puntos)  edades 2-4  criterio 2770-5453  puntaje 3624-5247
+  guaranies    edades II 7:32 III 14:06 IV 29:40 · primer ataque 7:32 · bajas 163 · pob 129 · ald/ejército 5':21/0 10':35/2 15':42/25 20':42/24 25':42/30 30':42/79
+     juntado 36341 (casa 16458, granja 13770, propio 2601, mercado 1971, disputado 624, recoleccion 422, sitios 395, ingenio 100)
+     entrenó { "hondero": 121, "guerrero": 42, "ariete": 13, "lancero": 16 } · productores al final { "campo_tiro": 5, "taller": 2, "cuartel": 2 }
+     riqueza: casa 2330, propio 2513, granja 96, recoleccion 120, sitios 395, mercado 671, ingenio 100
+     alimento: casa 1709, propio 88, granja 13663, recoleccion 63, mercado 100
+     hitos (edad, obra, constructores): ed2 140s/7 ed3 157s/7 ed4 212s/4 · bajas: hondero>militar 112, guerrero>militar 30, hondero>aldeano 8, centro>militar 6, lancero>militar 3, guerrero>aldeano 2, ariete>edificio 1, hondero>animal 1 · unidades muertas en el monte 16/161
+  ayutthaya    edades II 6:54 III --:-- IV --:-- · primer ataque 7:37 · bajas 110 · pob 66 · ald/ejército 5':18/3 10':28/8 15':37/3 20':42/17 25':43/11 30':43/15
+     juntado 27341 (casa 13666, granja 9638, mercado 1603, disputado 819, propio 708, recoleccion 589, sitios 318)
+     entrenó { "elefante_rey": 3, "guerrero": 83, "lancero": 4, "hondero": 68, "ariete": 6, "chang_suek": 3 } · productores al final { "cuartel": 5, "campo_tiro": 2, "taller": 1, "kraal": 1, "barrio_japones": 1, "barrio_portugues": 1 }
+     riqueza: casa 2348, propio 708, recoleccion 47, sitios 318, granja 5, mercado 1003
+     alimento: casa 2501, recoleccion 224, granja 9633, disputado 819, mercado 600
+     hitos (edad, obra, constructores): ed2 86s/5 · bajas: guerrero>militar 44, hondero>militar 36, centro>militar 15, ?>militar 8, torre>militar 4, hondero>aldeano 2, lancero>militar 1 · unidades muertas en el monte 8/110
+  sigilo: ejército guaraní oculto 22 %, oculto y sin detectar 21 % · rival en el monte 17 % · emboscada 16 de 1987 golpes (+97 de 17391 daño)
+guaranies    vs ayutthaya    bosque_templado 29:47  ganador guaranies (destrucción)  edades 3-2  criterio 4075-2401  puntaje 5300-3292
+  guaranies    edades II 8:08 III 16:30 IV --:-- · primer ataque 9:24 · bajas 155 · pob 92 · ald/ejército 5':21/0 10':37/2 15':42/15 20':42/38 25':42/28
+     juntado 34458 (casa 15872, granja 10230, disputado 3847, propio 2072, mercado 1137, recoleccion 685, sitios 615)
+     entrenó { "hondero": 133, "guerrero": 44, "ariete": 11, "lancero": 22 } · productores al final { "campo_tiro": 5, "taller": 2, "cuartel": 2 }
+     riqueza: casa 2343, propio 2009, granja 6, recoleccion 224, sitios 615, mercado 137
+     alimento: casa 2067, propio 63, granja 10215, recoleccion 105, disputado 2458
+     hitos (edad, obra, constructores): ed2 151s/5 ed3 183s/4 · bajas: hondero>militar 90, hondero>aldeano 27, hondero>edificio 13, guerrero>militar 10, centro>militar 7, lancero>militar 4, ariete>edificio 3, hondero>hito 1 · unidades muertas en el monte 23/138
+  ayutthaya    edades II 7:25 III --:-- IV --:-- · primer ataque 8:50 · bajas 161 · pob 24 · ald/ejército 5':18/3 10':29/11 15':42/17 20':36/6 25':22/0
+     juntado 20767 (casa 11037, granja 5512, disputado 1703, propio 1054, recoleccion 691, mercado 640, sitios 130)
+     entrenó { "elefante_rey": 2, "guerrero": 53, "hondero": 47, "lancero": 4, "ariete": 4, "chang_suek": 1 } · productores al final { "cuartel": 3, "campo_tiro": 2, "kraal": 1, "barrio_japones": 1, "barrio_portugues": 1 }
+     riqueza: casa 2323, recoleccion 77, propio 1054, sitios 130, mercado 140
+     alimento: casa 2051, recoleccion 402, granja 5512, disputado 338, mercado 500
+     hitos (edad, obra, constructores): ed2 99s/4 · bajas: centro>militar 59, hondero>militar 34, guerrero>militar 27, torre>militar 27, ?>militar 13, hondero>aldeano 1 · unidades muertas en el monte 9/161
+  sigilo: ejército guaraní oculto 21 %, oculto y sin detectar 20 % · rival en el monte 16 % · emboscada 23 de 6884 golpes (+43 de 23420 daño)
+ayutthaya    vs guaranies    bosque          30:00  ganador guaranies (puntos)  edades 3-3  criterio 3827-4038  puntaje 4196-4564
+  guaranies    edades II 8:01 III 16:47 IV --:-- · primer ataque 7:44 · bajas 178 · pob 86 · ald/ejército 5':21/0 10':28/0 15':41/14 20':42/58 25':42/21 30':41/42
+     juntado 30417 (casa 13947, granja 8438, disputado 4500, propio 1845, mercado 1100, recoleccion 587)
+     entrenó { "hondero": 118, "guerrero": 33, "lancero": 14, "ariete": 8 } · productores al final { "campo_tiro": 5, "taller": 2, "cuartel": 2 }
+     riqueza: casa 2330, granja 18, propio 1820, recoleccion 100
+     alimento: casa 3477, granja 8416, propio 25, recoleccion 131, disputado 1310
+     hitos (edad, obra, constructores): ed2 139s/7 ed3 180s/4 · bajas: hondero>militar 101, hondero>aldeano 28, guerrero>militar 16, centro>militar 13, lancero>militar 7, lancero>aldeano 5, guerrero>aldeano 4, ariete>edificio 3 · unidades muertas en el monte 13/175
+  ayutthaya    edades II 7:09 III 22:21 IV --:-- · primer ataque 7:51 · bajas 157 · pob 67 · ald/ejército 5':18/3 10':26/15 15':40/26 20':42/19 25':40/32 30':22/38
+     juntado 28042 (casa 13941, granja 10063, propio 1208, disputado 1079, recoleccion 968, mercado 783)
+     entrenó { "elefante_rey": 4, "guerrero": 97, "lancero": 29, "hondero": 56, "ariete": 1, "chang_suek": 1 } · productores al final { "cuartel": 4, "campo_tiro": 1, "taller": 1, "kraal": 1, "barrio_japones": 1, "barrio_portugues": 1 }
+     riqueza: casa 2323, recoleccion 61, propio 1208, granja 16, mercado 583
+     alimento: casa 3814, recoleccion 685, granja 10047, disputado 1079, mercado 100
+     hitos (edad, obra, constructores): ed2 78s/6 ed3 184s/4 · bajas: hondero>militar 42, guerrero>militar 38, centro>militar 24, torre>militar 23, guerrero>aldeano 16, hondero>aldeano 6, lancero>aldeano 3, lancero>militar 3 · unidades muertas en el monte 2/155
+  sigilo: ejército guaraní oculto 16 %, oculto y sin detectar 16 % · rival en el monte 11 % · emboscada 44 de 1541 golpes (+204 de 16261 daño)
+guaranies    vs ayutthaya    bosque          30:00  ganador ayutthaya (puntos)  edades 2-3  criterio 2296-4432  puntaje 3233-4609
+  guaranies    edades II 7:44 III --:-- IV --:-- · primer ataque 9:55 · bajas 146 · pob 15 · ald/ejército 5':21/0 10':37/12 15':47/7 20':44/1 25':24/9 30':14/0
+     juntado 21678 (casa 11370, granja 4500, disputado 2760, propio 1435, mercado 1000, recoleccion 613)
+     entrenó { "hondero": 73, "ariete": 7, "lancero": 11, "guerrero": 26 } · productores al final { "campo_tiro": 2, "taller": 1, "cuartel": 1 }
+     riqueza: casa 2340, propio 1400, granja 3, recoleccion 66
+     alimento: casa 2870, propio 35, granja 4490, recoleccion 217, disputado 2760
+     hitos (edad, obra, constructores): ed2 151s/6 · bajas: hondero>militar 60, centro>militar 50, guerrero>militar 23, ?>militar 9, lancero>militar 4 · unidades muertas en el monte 1/146
+  ayutthaya    edades II 7:48 III 16:15 IV --:-- · primer ataque 8:18 · bajas 182 · pob 125 · ald/ejército 5':18/4 10':30/15 15':42/19 20':42/56 25':42/50 30':42/72
+     juntado 29922 (casa 12201, granja 11687, disputado 2938, propio 1245, recoleccion 1202, mercado 649)
+     entrenó { "elefante_rey": 3, "guerrero": 86, "hondero": 69, "lancero": 69, "chang_suek": 2 } · productores al final { "cuartel": 4, "campo_tiro": 2, "taller": 2, "kraal": 1, "barrio_japones": 1, "barrio_portugues": 1 }
+     riqueza: casa 2309, propio 1245, recoleccion 91, mercado 549
+     alimento: casa 2506, recoleccion 877, granja 11687, disputado 1911
+     hitos (edad, obra, constructores): ed2 103s/4 ed3 116s/4 · bajas: hondero>militar 61, hondero>aldeano 47, guerrero>militar 45, lancero>militar 11, guerrero>aldeano 8, lancero>aldeano 5, ?>edificio 2, guerrero>edificio 1 · unidades muertas en el monte 21/177
+  sigilo: ejército guaraní oculto 2 %, oculto y sin detectar 2 % · rival en el monte 7 % · emboscada 1 de 782 golpes (+4 de 7494 daño)
+ayutthaya    vs guaranies    mesetas         30:00  ganador ayutthaya (puntos)  edades 3-3  criterio 4109-3793  puntaje 5152-5031
+  guaranies    edades II 7:29 III 18:38 IV --:-- · primer ataque 8:47 · bajas 193 · pob 60 · ald/ejército 5':21/0 10':29/1 15':42/6 20':42/38 25':42/18 30':42/13
+     juntado 34286 (casa 13219, granja 12495, disputado 4819, propio 1956, recoleccion 809, mercado 700, sitios 288)
+     entrenó { "hondero": 127, "lancero": 22, "guerrero": 43, "ariete": 13 } · productores al final { "campo_tiro": 5, "taller": 2, "cuartel": 2 }
+     riqueza: casa 2328, granja 93, recoleccion 180, propio 1907, sitios 288
+     alimento: casa 1607, granja 12396, recoleccion 75, propio 49, disputado 1101
+     hitos (edad, obra, constructores): ed2 155s/5 ed3 156s/7 · bajas: hondero>militar 149, guerrero>militar 19, lancero>militar 17, centro>militar 6, hondero>aldeano 1, ariete>edificio 1 · unidades muertas en el monte 8/192
+  ayutthaya    edades II 7:19 III 19:06 IV --:-- · primer ataque 7:48 · bajas 199 · pob 91 · ald/ejército 5':18/4 10':27/18 15':41/14 20':41/20 25':42/26 30':42/37
+     juntado 35183 (casa 15294, granja 13534, mercado 1980, propio 1361, disputado 1352, recoleccion 1072, sitios 590)
+     entrenó { "elefante_rey": 3, "guerrero": 104, "lancero": 32, "hondero": 88, "chang_suek": 6, "ariete": 2 } · productores al final { "cuartel": 3, "campo_tiro": 2, "taller": 1, "kraal": 1, "barrio_japones": 1, "barrio_portugues": 1 }
+     riqueza: casa 2322, recoleccion 77, propio 1361, sitios 590, granja 1, mercado 1380
+     alimento: casa 3837, recoleccion 665, granja 13533, disputado 1105, mercado 300
+     hitos (edad, obra, constructores): ed2 77s/6 ed3 123s/4 · bajas: hondero>militar 106, guerrero>militar 64, lancero>militar 15, guerrero>aldeano 7, hondero>aldeano 3, ?>militar 2, fortaleza_rio>militar 1, chang_suek>militar 1 · unidades muertas en el monte 18/199
+  sigilo: ejército guaraní oculto 5 %, oculto y sin detectar 4 % · rival en el monte 5 % · emboscada 7 de 2203 golpes (+46 de 22453 daño)
+guaranies    vs ayutthaya    mesetas         30:00  ganador ayutthaya (puntos)  edades 3-3  criterio 3156-4774  puntaje 2975-5559
+  guaranies    edades II 7:41 III 15:57 IV --:-- · primer ataque 8:29 · bajas 156 · pob 0 · ald/ejército 5':21/0 10':35/0 15':28/1 20':39/10 25':16/0 30':0/0
+     juntado 16799 (casa 10845, granja 4266, disputado 710, propio 622, recoleccion 326, sitios 30)
+     entrenó { "hondero": 56, "lancero": 8, "guerrero": 13, "ariete": 3 } · productores al final {  }
+     riqueza: casa 1930, propio 610, granja 8, recoleccion 21, sitios 30
+     alimento: casa 2855, propio 12, granja 4258, recoleccion 125, disputado 710
+     hitos (edad, obra, constructores): ed2 153s/7 ed3 181s/4 · bajas: hondero>militar 66, centro>militar 61, ?>militar 19, lancero>militar 6, guerrero>militar 4 · unidades muertas en el monte 1/156
+  ayutthaya    edades II 8:09 III 19:11 IV --:-- · primer ataque 8:33 · bajas 174 · pob 160 · ald/ejército 5':18/3 10':30/15 15':42/17 20':42/33 25':42/43 30':42/99
+     juntado 35701 (casa 15688, granja 14287, propio 1455, mercado 1211, recoleccion 1170, disputado 1118, sitios 772)
+     entrenó { "elefante_rey": 3, "guerrero": 108, "hondero": 102, "chang_suek": 8, "lancero": 33, "ariete": 4 } · productores al final { "cuartel": 3, "campo_tiro": 2, "kraal": 1, "barrio_japones": 1, "barrio_portugues": 1, "taller": 1 }
+     riqueza: casa 2276, recoleccion 114, propio 1455, sitios 772, mercado 1111
+     alimento: casa 3151, recoleccion 675, granja 14287, mercado 100, disputado 988
+     hitos (edad, obra, constructores): ed2 101s/4 ed3 114s/4 · bajas: hondero>militar 48, hondero>aldeano 42, guerrero>militar 32, guerrero>aldeano 29, hondero>edificio 9, lancero>edificio 6, guerrero>edificio 5, chang_suek>militar 1 · unidades muertas en el monte 30/153
+  sigilo: ejército guaraní oculto 8 %, oculto y sin detectar 7 % · rival en el monte 2 % · emboscada 1 de 843 golpes (+7 de 6214 daño)
+etiopia      vs guaranies    delta           30:00  ganador guaranies (puntos)  edades 3-4  criterio 3450-5049  puntaje 3832-4553
+  guaranies    edades II 7:22 III 17:46 IV 28:37 · primer ataque 7:37 · bajas 139 · pob 91 · ald/ejército 5':21/0 10':30/1 15':42/11 20':42/56 25':42/30 30':39/51
+     juntado 30790 (casa 15298, granja 9081, disputado 2233, propio 2138, mercado 953, recoleccion 758, sitios 329)
+     entrenó { "hondero": 114, "lancero": 10, "guerrero": 55, "ariete": 4 } · productores al final { "campo_tiro": 5, "taller": 2, "cuartel": 2 }
+     riqueza: casa 2034, propio 2083, granja 10, recoleccion 77, sitios 329, mercado 553
+     alimento: casa 2846, propio 55, granja 9068, recoleccion 336, disputado 2233
+     hitos (edad, obra, constructores): ed2 147s/6 ed3 181s/5 ed4 204s/4 · bajas: hondero>militar 56, hondero>aldeano 33, guerrero>militar 26, centro>militar 12, guerrero>aldeano 8, lancero>militar 2, hondero>edificio 1, ?>edificio 1 · unidades muertas en el monte 4/137
+  etiopia      edades II 5:35 III 16:47 IV --:-- · primer ataque 7:40 · bajas 140 · pob 31 · ald/ejército 5':20/1 10':31/6 15':42/15 20':42/17 25':17/36 30':8/17
+     juntado 25721 (casa 13263, granja 7438, propio 2123, disputado 2003, recoleccion 377, sitios 317, mercado 200)
+     entrenó { "guerrero": 59, "hondero": 46, "ariete": 7 } · productores al final { "establo": 4, "taller": 2, "cuartel": 1 }
+     riqueza: propio 1848, casa 2080, recoleccion 79, sitios 317, disputado 53
+     alimento: propio 275, casa 3475, recoleccion 125, granja 7438, disputado 143, mercado 100
+     hitos (edad, obra, constructores): ed2 99s/4 ed3 78s/8 · bajas: hondero>militar 60, guerrero>militar 38, centro>militar 27, guerrero>aldeano 8, hondero>aldeano 4, torre>militar 3 · unidades muertas en el monte 1/140
+  sigilo: ejército guaraní oculto 1 %, oculto y sin detectar 1 % · rival en el monte 0 % · emboscada 0 de 4638 golpes (+0 de 17518 daño)
+guaranies    vs etiopia      llano           30:00  ganador guaranies (puntos)  edades 4-3  criterio 4927-3743  puntaje 4810-4525
+  guaranies    edades II 8:10 III 19:31 IV 29:12 · primer ataque 8:55 · bajas 137 · pob 79 · ald/ejército 5':21/0 10':27/0 15':42/22 20':42/18 25':42/33 30':42/34
+     juntado 31988 (casa 14251, granja 11932, propio 2561, disputado 1680, mercado 638, recoleccion 517, sitios 409)
+     entrenó { "hondero": 114, "guerrero": 65, "ariete": 7, "lancero": 7 } · productores al final { "campo_tiro": 5, "taller": 2, "cuartel": 2 }
+     riqueza: casa 2341, propio 2470, granja 21, recoleccion 78, sitios 409, mercado 138
+     alimento: casa 1730, propio 91, granja 11911, recoleccion 70, disputado 1000
+     hitos (edad, obra, constructores): ed2 159s/4 ed3 180s/5 ed4 210s/4 · bajas: hondero>militar 72, guerrero>militar 24, hondero>aldeano 19, centro>militar 7, ?>edificio 7, guerrero>aldeano 4, lancero>militar 3, hondero>edificio 1 · unidades muertas en el monte 2/129
+  etiopia      edades II 5:55 III 18:35 IV --:-- · primer ataque 8:11 · bajas 163 · pob 58 · ald/ejército 5':20/0 10':33/8 15':42/16 20':43/23 25':25/60 30':25/30
+     juntado 31278 (casa 15830, granja 11439, propio 2070, disputado 657, recoleccion 471, mercado 440, sitios 371)
+     entrenó { "guerrero": 57, "hondero": 64, "lancero": 14, "ariete": 5 } · productores al final { "establo": 3, "taller": 2, "cuartel": 2 }
+     riqueza: propio 1800, casa 2126, recoleccion 61, disputado 44, granja 1, sitios 371, mercado 140
+     alimento: propio 270, casa 3310, recoleccion 257, disputado 170, granja 11435, mercado 200
+     hitos (edad, obra, constructores): ed2 96s/4 ed3 88s/8 · bajas: hondero>militar 79, guerrero>militar 59, centro>militar 10, hondero>aldeano 6, guerrero>aldeano 5, lancero>militar 4 · unidades muertas en el monte 7/163
+  sigilo: ejército guaraní oculto 6 %, oculto y sin detectar 4 % · rival en el monte 22 % · emboscada 6 de 2862 golpes (+17 de 18428 daño)
+etiopia      vs guaranies    llano           28:45  ganador guaranies (destrucción)  edades 2-4  criterio 2285-5462  puntaje 3452-5894
+  guaranies    edades II 8:04 III 13:55 IV 25:55 · primer ataque 7:30 · bajas 202 · pob 126 · ald/ejército 5':21/0 10':37/11 15':42/48 20':42/40 25':42/67
+     juntado 34422 (casa 15124, granja 12743, propio 2213, disputado 2034, mercado 878, recoleccion 837, sitios 593)
+     entrenó { "hondero": 137, "ariete": 8, "lancero": 15, "guerrero": 58 } · productores al final { "campo_tiro": 5, "taller": 2, "cuartel": 2 }
+     riqueza: casa 2349, granja 35, propio 2166, recoleccion 61, sitios 593, mercado 278
+     alimento: casa 915, granja 12708, propio 47, recoleccion 267, disputado 1131
+     hitos (edad, obra, constructores): ed2 154s/5 ed3 149s/8 ed4 203s/4 · bajas: hondero>militar 124, hondero>aldeano 34, hondero>edificio 16, guerrero>militar 12, ariete>edificio 7, lancero>militar 4, guerrero>aldeano 2, guerrero>edificio 2 · unidades muertas en el monte 6/176
+  etiopia      edades II 5:51 III --:-- IV --:-- · primer ataque 7:31 · bajas 125 · pob 16 · ald/ejército 5':21/2 10':34/8 15':42/12 20':22/8 25':17/6
+     juntado 23721 (casa 11294, granja 6402, disputado 3101, propio 1786, recoleccion 561, mercado 500, sitios 77)
+     entrenó { "guerrero": 48, "hondero": 86, "lancero": 1, "ariete": 5 } · productores al final { "establo": 1, "taller": 1, "cuartel": 1 }
+     riqueza: propio 1562, casa 2101, recoleccion 105, granja 4, sitios 77
+     alimento: propio 224, casa 2763, recoleccion 247, granja 6398, mercado 500
+     hitos (edad, obra, constructores): ed2 107s/4 · bajas: torre>militar 47, hondero>militar 42, guerrero>militar 29, centro>militar 6, lancero>militar 1 · unidades muertas en el monte 2/125
+  sigilo: ejército guaraní oculto 7 %, oculto y sin detectar 7 % · rival en el monte 4 % · emboscada 15 de 10720 golpes (+57 de 34047 daño)
+guaranies    vs etiopia      fortines        30:00  ganador guaranies (puntos)  edades 3-2  criterio 3467-3103  puntaje 4445-5341
+  guaranies    edades II 7:35 III 16:55 IV --:-- · primer ataque 8:47 · bajas 207 · pob 26 · ald/ejército 5':21/0 10':37/5 15':42/17 20':42/57 25':42/23 30':25/1
+     juntado 26834 (casa 12187, granja 8548, disputado 2599, propio 2072, recoleccion 926, sitios 302, mercado 200)
+     entrenó { "hondero": 135, "lancero": 10, "guerrero": 56 } · productores al final { "campo_tiro": 3, "taller": 1, "cuartel": 1 }
+     riqueza: casa 880, granja 2, propio 2027, recoleccion 138, sitios 302
+     alimento: casa 1110, granja 8538, propio 45, recoleccion 405, disputado 2599
+     hitos (edad, obra, constructores): ed2 147s/6 ed3 183s/4 · bajas: hondero>militar 107, guerrero>militar 42, hondero>aldeano 19, centro>militar 9, guerrero>aldeano 9, lancero>militar 7, ?>militar 6, lancero>aldeano 4 · unidades muertas en el monte 9/203
+  etiopia      edades II 5:41 III --:-- IV --:-- · primer ataque 8:50 · bajas 233 · pob 87 · ald/ejército 5':21/1 10':35/16 15':42/21 20':30/39 25':29/57 30':42/38
+     juntado 34688 (casa 15112, granja 12843, disputado 2215, propio 1862, mercado 1205, recoleccion 854, sitios 597)
+     entrenó { "guerrero": 84, "hondero": 128, "ariete": 6 } · productores al final { "establo": 5, "taller": 2, "cuartel": 2 }
+     riqueza: propio 1625, casa 740, recoleccion 36, granja 2, sitios 597, mercado 1205
+     alimento: propio 237, casa 2842, recoleccion 532, granja 12833, disputado 1845
+     hitos (edad, obra, constructores): ed2 99s/4 · bajas: hondero>militar 127, guerrero>militar 72, hondero>aldeano 24, guerrero>aldeano 3, hondero>edificio 3, guerrero>edificio 2, torre>militar 2 · unidades muertas en el monte 11/228
+  sigilo: ejército guaraní oculto 3 %, oculto y sin detectar 3 % · rival en el monte 5 % · emboscada 4 de 3007 golpes (+19 de 19240 daño)
+etiopia      vs guaranies    fortines        27:49  ganador guaranies (destrucción)  edades 2-4  criterio 2287-5333  puntaje 3071-5214
+  guaranies    edades II 7:44 III 17:05 IV 26:49 · primer ataque 8:46 · bajas 163 · pob 117 · ald/ejército 5':21/0 10':37/4 15':42/29 20':42/47 25':42/52
+     juntado 31817 (casa 16075, granja 9202, propio 2777, disputado 1571, recoleccion 1165, sitios 517, mercado 410, ingenio 100)
+     entrenó { "hondero": 133, "lancero": 19, "guerrero": 36, "ariete": 6 } · productores al final { "campo_tiro": 5, "taller": 2, "cuartel": 2 }
+     riqueza: casa 860, propio 2693, granja 48, recoleccion 161, disputado 10, sitios 517, mercado 210, ingenio 100
+     alimento: casa 2523, propio 84, granja 9150, recoleccion 367, disputado 1431, mercado 100
+     hitos (edad, obra, constructores): ed2 160s/4 ed3 182s/5 ed4 199s/5 · bajas: hondero>militar 89, hondero>aldeano 41, hondero>edificio 10, guerrero>militar 8, ariete>edificio 5, centro>militar 4, lancero>militar 2, ?>edificio 1 · unidades muertas en el monte 12/145
+  etiopia      edades II 5:41 III --:-- IV --:-- · primer ataque 8:24 · bajas 117 · pob 17 · ald/ejército 5':21/1 10':32/11 15':42/8 20':19/3 25':16/0
+     juntado 19442 (casa 10234, granja 5259, propio 1693, disputado 1137, recoleccion 518, mercado 375, sitios 226)
+     entrenó { "guerrero": 45, "hondero": 55, "ariete": 3 } · productores al final { "establo": 2, "cuartel": 1 }
+     riqueza: propio 1477, casa 780, recoleccion 14, sitios 226, mercado 275
+     alimento: propio 216, casa 2390, recoleccion 375, granja 5258, mercado 100, disputado 1128
+     hitos (edad, obra, constructores): ed2 101s/4 · bajas: guerrero>militar 51, hondero>militar 34, centro>militar 29, guerrero>edificio 3 · unidades muertas en el monte 4/114
+  sigilo: ejército guaraní oculto 11 %, oculto y sin detectar 11 % · rival en el monte 17 % · emboscada 14 de 7021 golpes (+63 de 23681 daño)
+guaranies    vs etiopia      delta           20:25  ganador etiopia (destrucción)  edades 2-2  criterio 2345-2937  puntaje 1771-3383
+  guaranies    edades II 7:24 III --:-- IV --:-- · primer ataque 8:04 · bajas 85 · pob 26 · ald/ejército 5':21/0 10':36/1 15':22/1 20':25/0
+     juntado 10710 (casa 7540, granja 1863, disputado 1020, recoleccion 177, propio 110)
+     entrenó { "hondero": 31, "lancero": 10, "guerrero": 10 } · productores al final { "taller": 1, "cuartel": 1 }
+     riqueza: casa 1580, propio 100, recoleccion 20
+     alimento: casa 2620, granja 1861, propio 10, recoleccion 97, disputado 1020
+     hitos (edad, obra, constructores): ed2 135s/7 · bajas: centro>militar 54, ?>militar 12, hondero>militar 10, lancero>militar 5, guerrero>militar 4 · unidades muertas en el monte 1/85
+  etiopia      edades II 6:22 III --:-- IV --:-- · primer ataque 8:06 · bajas 97 · pob 84 · ald/ejército 5':21/1 10':35/14 15':42/30 20':42/38
+     juntado 22962 (casa 12604, granja 5507, disputado 2129, propio 1274, recoleccion 849, mercado 345, sitios 254)
+     entrenó { "guerrero": 73, "hondero": 31, "lancero": 11, "ariete": 4 } · productores al final { "establo": 4, "taller": 2, "cuartel": 2 }
+     riqueza: propio 1126, casa 2139, recoleccion 54, granja 2, sitios 254, mercado 345
+     alimento: propio 148, casa 3253, recoleccion 641, granja 5505, disputado 1934
+     hitos (edad, obra, constructores): ed2 100s/4 · bajas: guerrero>militar 44, guerrero>aldeano 37, hondero>militar 7, guerrero>edificio 2, hondero>edificio 2, ariete>edificio 2, lancero>hito 1, lancero>aldeano 1 · unidades muertas en el monte 6/90
+  sigilo: ejército guaraní oculto 5 %, oculto y sin detectar 5 % · rival en el monte 5 % · emboscada 0 de 205 golpes (+0 de 1726 daño)
+guaranies    vs mapuches     delta           30:00  ganador guaranies (puntos)  edades 3-2  criterio 4869-2126  puntaje 5432-2655
+  guaranies    edades II 8:25 III 17:47 IV --:-- · primer ataque 8:49 · bajas 209 · pob 166 · ald/ejército 5':21/0 10':36/5 15':42/18 20':42/74 25':42/78 30':42/120
+     juntado 33236 (casa 14308, granja 7907, disputado 5226, propio 1974, mercado 1770, recoleccion 1689, sitios 362)
+     entrenó { "hondero": 156, "guerrero": 61, "lancero": 3, "ariete": 7 } · productores al final { "campo_tiro": 4, "taller": 2, "cuartel": 1 }
+     riqueza: casa 2310, propio 1897, granja 65, recoleccion 105, sitios 362, mercado 470
+     alimento: casa 2715, propio 64, granja 7842, recoleccion 1143, disputado 3224
+     hitos (edad, obra, constructores): ed2 151s/5 ed3 173s/6 · bajas: hondero>militar 91, guerrero>militar 43, hondero>aldeano 38, hondero>edificio 14, centro>militar 9, guerrero>aldeano 7, lancero>militar 5, guerrero>edificio 1 · unidades muertas en el monte 5/194
+  mapuches     edades II 7:56 III --:-- IV --:-- · primer ataque 7:42 · bajas 106 · pob 2 · ald/ejército 5':21/4 10':33/8 15':42/20 20':42/20 25':13/2 30':0/2
+     juntado 17899 (casa 10020, granja 2790, propio 1497, disputado 1330, mercado 1000, recoleccion 876, sitios 296, kawin 90)
+     entrenó { "guerrero": 52, "lancero": 4, "hondero": 96 } · productores al final { "corral": 1, "cuartel": 1 }
+     riqueza: casa 1460, propio 1497, recoleccion 20, sitios 296
+     alimento: casa 2580, recoleccion 766, kawin 90, granja 2790, disputado 1330, mercado 1000
+     hitos (edad, obra, constructores): ed2 98s/4 · bajas: hondero>militar 56, lof>militar 44, guerrero>militar 5, hondero>aldeano 1 · unidades muertas en el monte 0/106
+  sigilo: ejército guaraní oculto 7 %, oculto y sin detectar 6 % · rival en el monte 2 % · emboscada 13 de 9958 golpes (+117 de 25248 daño)
+mapuches     vs guaranies    montana         30:00  ganador mapuches (puntos)  edades 3-3  criterio 4384-3533  puntaje 5466-4573
+  guaranies    edades II 7:20 III 13:25 IV --:-- · primer ataque 5:41 · bajas 213 · pob 32 · ald/ejército 5':21/0 10':37/4 15':42/43 20':41/36 25':35/2 30':27/5
+     juntado 28358 (casa 13755, granja 7570, disputado 3147, propio 2098, mercado 800, recoleccion 787, sitios 201)
+     entrenó { "hondero": 133, "ariete": 9, "guerrero": 43, "lancero": 11 } · productores al final { "campo_tiro": 2, "taller": 1, "cuartel": 1 }
+     riqueza: casa 1986, granja 68, propio 2046, recoleccion 76, sitios 201
+     alimento: casa 2821, granja 7496, propio 52, recoleccion 185, disputado 1601
+     hitos (edad, obra, constructores): ed2 141s/7 ed3 157s/8 · bajas: hondero>militar 132, centro>militar 40, guerrero>militar 29, ?>militar 6, lancero>militar 5, ariete>militar 1 · unidades muertas en el monte 10/213
+  mapuches     edades II 5:58 III 16:41 IV --:-- · primer ataque 5:50 · bajas 234 · pob 115 · ald/ejército 5':20/5 10':33/9 15':42/13 20':42/62 25':42/55 30':42/61
+     juntado 34923 (granja 15314, casa 13992, propio 1760, recoleccion 1010, mercado 1005, disputado 585, sitios 572, kawin 300, arreo 285, ingenio 100)
+     entrenó { "guerrero": 100, "hondero": 100, "jinete": 39, "lancero": 41 } · productores al final { "lof": 3, "corral": 4, "cuartel": 2 }
+     riqueza: casa 2305, recoleccion 95, propio 1760, sitios 572, mercado 905, ingenio 100
+     alimento: casa 3179, recoleccion 235, granja 15314, kawin 300, mercado 100, disputado 585, arreo 280
+     hitos (edad, obra, constructores): ed2 89s/5 ed3 110s/4 · bajas: hondero>militar 93, guerrero>militar 75, hondero>aldeano 14, jinete>aldeano 14, jinete>militar 13, lancero>militar 9, guerrero>aldeano 8, lancero>edificio 2 · unidades muertas en el monte 24/227
+  sigilo: ejército guaraní oculto 8 %, oculto y sin detectar 7 % · rival en el monte 8 % · emboscada 6 de 1753 golpes (+31 de 17017 daño)
+guaranies    vs mapuches     montana         25:32  ganador mapuches (destrucción)  edades 2-3  criterio 2092-4448  puntaje 1680-3833
+  guaranies    edades II 7:41 III --:-- IV --:-- · primer ataque 9:23 · bajas 92 · pob 0 · ald/ejército 5':21/0 10':25/0 15':16/2 20':14/0 25':0/0
+     juntado 9386 (casa 4610, granja 4197, propio 449, recoleccion 80, disputado 50)
+     entrenó { "hondero": 27 } · productores al final { "campo_tiro": 1 }
+     riqueza: casa 1030, propio 420, recoleccion 10
+     alimento: casa 560, propio 29, granja 4197, recoleccion 20, disputado 50
+     hitos (edad, obra, constructores): ed2 161s/4 · bajas: centro>militar 67, hondero>militar 25 · unidades muertas en el monte 4/92
+  mapuches     edades II 7:55 III 18:57 IV --:-- · primer ataque 7:31 · bajas 118 · pob 133 · ald/ejército 5':21/4 10':29/17 15':40/23 20':42/54 25':42/76
+     juntado 23802 (casa 11830, granja 6960, propio 1198, disputado 1000, recoleccion 826, mercado 600, sitios 512, kawin 480, arreo 296, ingenio 100)
+     entrenó { "guerrero": 62, "lancero": 35, "hondero": 75, "jinete": 6 } · productores al final { "lof": 3, "corral": 4, "cuartel": 3 }
+     riqueza: casa 2210, propio 1198, recoleccion 20, sitios 512, ingenio 100
+     alimento: casa 2420, recoleccion 220, kawin 480, granja 6960, mercado 500, arreo 280, disputado 1000
+     hitos (edad, obra, constructores): ed2 103s/4 ed3 114s/4 · bajas: hondero>aldeano 39, guerrero>aldeano 34, hondero>militar 26, hondero>edificio 9, lancero>aldeano 3, guerrero>edificio 3, guerrero>militar 2, lancero>animal 1 · unidades muertas en el monte 18/104
+  sigilo: ejército guaraní oculto 0 %, oculto y sin detectar 0 % · rival en el monte 11 % · emboscada 0 de 145 golpes (+0 de 1047 daño)
+mapuches     vs guaranies    mesetas         30:00  ganador mapuches (puntos)  edades 3-3  criterio 4791-3206  puntaje 5977-4198
+  guaranies    edades II 11:03 III 15:04 IV --:-- · primer ataque 6:44 · bajas 186 · pob 2 · ald/ejército 5':21/0 10':37/6 15':42/29 20':42/5 25':38/5 30':2/0
+     juntado 26428 (casa 15491, granja 5952, disputado 1827, propio 1282, recoleccion 883, mercado 800, sitios 193)
+     entrenó { "hondero": 124, "ariete": 3, "guerrero": 43, "lancero": 6 } · productores al final { "taller": 1, "cuartel": 1 }
+     riqueza: casa 2376, recoleccion 77, propio 1247, sitios 193
+     alimento: casa 3635, granja 5948, recoleccion 218, propio 35, disputado 1203, mercado 400
+     hitos (edad, obra, constructores): ed2 329s/7 ed3 183s/4 · bajas: hondero>militar 99, centro>militar 50, guerrero>militar 24, ?>militar 12, lancero>militar 1 · unidades muertas en el monte 0/186
+  mapuches     edades II 7:13 III 16:39 IV --:-- · primer ataque 6:50 · bajas 261 · pob 153 · ald/ejército 5':21/4 10':32/12 15':42/12 20':44/45 25':44/39 30':44/98
+     juntado 33518 (casa 15464, granja 12592, propio 1746, disputado 1131, recoleccion 932, sitios 604, arreo 459, kawin 390, mercado 200)
+     entrenó { "guerrero": 92, "lancero": 74, "hondero": 97, "jinete": 21 } · productores al final { "lof": 3, "corral": 4, "cuartel": 3 }
+     riqueza: casa 2364, propio 1746, recoleccion 36, sitios 604
+     alimento: casa 3316, recoleccion 358, kawin 390, arreo 440, granja 12592, disputado 1131, mercado 100
+     hitos (edad, obra, constructores): ed2 100s/4 ed3 113s/4 · bajas: guerrero>militar 77, hondero>militar 71, hondero>aldeano 20, guerrero>aldeano 19, lancero>militar 16, jinete>militar 13, jinete>aldeano 13, hondero>edificio 9 · unidades muertas en el monte 11/237
+  sigilo: ejército guaraní oculto 0 %, oculto y sin detectar 0 % · rival en el monte 0 % · emboscada 0 de 1420 golpes (+0 de 12037 daño)
+guaranies    vs mapuches     mesetas         29:53  ganador guaranies (destrucción)  edades 4-2  criterio 5659-2106  puntaje 5884-2825
+  guaranies    edades II 8:22 III 15:11 IV 26:20 · primer ataque 6:13 · bajas 239 · pob 142 · ald/ejército 5':21/0 10':36/10 15':42/22 20':42/34 25':42/46
+     juntado 33700 (casa 15268, granja 10419, disputado 3298, propio 2486, mercado 800, sitios 745, recoleccion 584, ingenio 100)
+     entrenó { "hondero": 133, "ariete": 8, "guerrero": 62, "lancero": 14 } · productores al final { "campo_tiro": 5, "taller": 2, "cuartel": 2 }
+     riqueza: casa 2330, propio 2430, granja 76, recoleccion 124, sitios 745, ingenio 100
+     alimento: casa 2958, propio 56, granja 10329, recoleccion 83, disputado 1450
+     hitos (edad, obra, constructores): ed2 190s/5 ed3 178s/4 ed4 204s/4 · bajas: hondero>militar 135, hondero>aldeano 43, guerrero>militar 13, guerrero>aldeano 12, lancero>aldeano 9, ariete>edificio 8, hondero>edificio 7, lancero>militar 4 · unidades muertas en el monte 8/216
+  mapuches     edades II 6:49 III --:-- IV --:-- · primer ataque 6:28 · bajas 106 · pob 0 · ald/ejército 5':21/4 10':30/2 15':37/3 20':42/9 25':39/9
+     juntado 19998 (casa 10920, granja 6301, propio 1286, recoleccion 753, disputado 590, kawin 90, sitios 58)
+     entrenó { "guerrero": 37, "hondero": 86, "lancero": 25, "jinete": 3 } · productores al final { "corral": 2, "cuartel": 2 }
+     riqueza: casa 1390, propio 1286, recoleccion 20, sitios 58
+     alimento: casa 2250, recoleccion 294, kawin 90, granja 6301, disputado 590
+     hitos (edad, obra, constructores): ed2 101s/4 · bajas: lof>militar 50, hondero>militar 42, guerrero>militar 13, lancero>militar 1 · unidades muertas en el monte 0/106
+  sigilo: ejército guaraní oculto 0 %, oculto y sin detectar 0 % · rival en el monte 0 % · emboscada 1 de 5989 golpes (+9 de 28962 daño)
+mapuches     vs guaranies    montana         20:00  ganador mapuches (destrucción)  edades 3-2  criterio 4317-2076  puntaje 3271-1286
+  guaranies    edades II 7:12 III --:-- IV --:-- · primer ataque 7:08 · bajas 56 · pob 2 · ald/ejército 5':21/0 10':14/1 15':8/0 20':2/0
+     juntado 7606 (casa 4680, granja 2410, propio 376, recoleccion 140)
+     entrenó { "hondero": 28 } · productores al final {  }
+     riqueza: casa 770, propio 370, recoleccion 10
+     alimento: casa 1640, propio 6, granja 2410, recoleccion 40
+     hitos (edad, obra, constructores): ed2 143s/6 · bajas: centro>militar 39, hondero>militar 17 · unidades muertas en el monte 0/56
+  mapuches     edades II 7:28 III 19:30 IV --:-- · primer ataque 7:29 · bajas 97 · pob 122 · ald/ejército 5':21/3 10':32/8 15':42/29 20':42/75
+     juntado 19640 (casa 10855, granja 6592, propio 731, recoleccion 545, kawin 540, sitios 327, arreo 50)
+     entrenó { "guerrero": 48, "hondero": 59, "lancero": 15, "jinete": 9 } · productores al final { "lof": 3, "corral": 3, "cuartel": 4 }
+     riqueza: casa 1795, recoleccion 25, propio 731, sitios 327
+     alimento: casa 2210, recoleccion 240, kawin 540, granja 6592, arreo 40
+     hitos (edad, obra, constructores): ed2 99s/4 ed3 126s/4 · bajas: hondero>aldeano 28, guerrero>aldeano 18, hondero>militar 17, guerrero>militar 12, jinete>aldeano 9, hondero>edificio 7, guerrero>edificio 3, lancero>edificio 3 · unidades muertas en el monte 17/84
+  sigilo: ejército guaraní oculto 0 %, oculto y sin detectar 0 % · rival en el monte 1 % · emboscada 0 de 181 golpes (+0 de 1351 daño)
+guaranies    vs palmares     selva           30:00  ganador guaranies (puntos)  edades 4-3  criterio 4883-4216  puntaje 5060-4096
+  guaranies    edades II 7:51 III 18:13 IV 26:37 · primer ataque 6:18 · bajas 153 · pob 73 · ald/ejército 5':19/0 10':31/4 15':40/7 20':42/33 25':42/41 30':30/43
+     juntado 34076 (casa 13970, granja 9333, disputado 5613, propio 2846, mercado 1170, recoleccion 880, sitios 264)
+     entrenó { "hondero": 153, "guerrero": 45, "ariete": 4, "lancero": 5 } · productores al final { "campo_tiro": 5, "taller": 2, "cuartel": 2 }
+     riqueza: casa 2335, propio 2749, granja 41, recoleccion 117, sitios 264, mercado 70
+     alimento: casa 3471, propio 97, granja 9283, disputado 1155, recoleccion 198, mercado 400
+     hitos (edad, obra, constructores): ed2 151s/6 ed3 184s/4 ed4 207s/4 · bajas: hondero>militar 111, guerrero>militar 30, centro>militar 5, hondero>aldeano 3, tava>militar 3, hondero>edificio 1 · unidades muertas en el monte 33/152
+  palmares     edades II 8:56 III 25:58 IV --:-- · primer ataque 3:53 · bajas 186 · pob 103 · ald/ejército 5':14/10 10':20/14 15':26/17 20':37/12 25':50/23 30':50/52
+     juntado 25952 (casa 13272, granja 6351, propio 3899, disputado 760, recoleccion 583, sitios 493, renta 420, mercado 100, saqueo 74)
+     entrenó { "hondero": 119, "guerrero": 64, "arcabucero": 19, "lancero": 1 } · productores al final { "mocambo": 3, "cuartel": 2 }
+     riqueza: propio 2495, casa 1690, recoleccion 30, sitios 493
+     alimento: casa 3472, recoleccion 143, granja 6350, disputado 760, mercado 100
+     hitos (edad, obra, constructores): ed2 96s/4 ed3 332s/6 · bajas: hondero>militar 100, guerrero>militar 33, hondero>aldeano 21, mocambo>militar 14, arcabucero>militar 9, centro>militar 7, hondero>edificio 1, guerrero>aldeano 1 · unidades muertas en el monte 55/185
+  sigilo: ejército guaraní oculto 25 %, oculto y sin detectar 23 % · rival en el monte 33 % · emboscada 32 de 1651 golpes (+179 de 14171 daño)
+palmares     vs guaranies    selva           26:03  ganador palmares (destrucción)  edades 3-2  criterio 4668-2174  puntaje 4318-2099
+  guaranies    edades II 15:53 III --:-- IV --:-- · primer ataque 7:00 · bajas 104 · pob 7 · ald/ejército 5':21/0 10':27/1 15':32/12 20':30/1 25':7/0
+     juntado 12851 (casa 7051, granja 4175, propio 1021, recoleccion 270, disputado 231, sitios 103)
+     entrenó { "hondero": 49, "guerrero": 15 } · productores al final { "campo_tiro": 1, "cuartel": 1 }
+     riqueza: casa 190, propio 990, granja 1, disputado 1, sitios 103
+     alimento: casa 1871, propio 31, granja 4170, recoleccion 40, disputado 230
+     hitos (edad, obra, constructores): ed2 404s/4 · bajas: hondero>militar 49, centro>militar 43, ?>militar 10, guerrero>militar 2 · unidades muertas en el monte 2/104
+  palmares     edades II 8:44 III 16:39 IV --:-- · primer ataque 4:12 · bajas 148 · pob 152 · ald/ejército 5':14/11 10':21/18 15':35/0 20':50/39 25':53/84
+     juntado 26807 (casa 14262, granja 5311, propio 3578, disputado 1143, saqueo 841, recoleccion 556, sitios 515, renta 345, mercado 200, liberacion 56)
+     entrenó { "hondero": 110, "guerrero": 55, "arcabucero": 25, "lancero": 6 } · productores al final { "mocambo": 3, "cuartel": 2 }
+     riqueza: propio 2988, casa 1821, recoleccion 20, sitios 515
+     alimento: casa 4261, recoleccion 206, granja 5311, mercado 100, disputado 1140
+     hitos (edad, obra, constructores): ed2 97s/5 ed3 116s/4 · bajas: hondero>militar 46, hondero>aldeano 32, guerrero>aldeano 29, guerrero>militar 12, hondero>edificio 11, lancero>aldeano 5, arcabucero>aldeano 3, arcabucero>militar 2 · unidades muertas en el monte 13/134
+  sigilo: ejército guaraní oculto 22 %, oculto y sin detectar 21 % · rival en el monte 18 % · emboscada 2 de 477 golpes (+8 de 3594 daño)
+guaranies    vs palmares     bosque          30:00  ganador guaranies (puntos)  edades 3-3  criterio 4089-3919  puntaje 4603-3684
+  guaranies    edades II 12:36 III 24:13 IV --:-- · primer ataque 7:08 · bajas 189 · pob 90 · ald/ejército 5':16/0 10':27/5 15':41/1 20':46/10 25':51/35 30':51/36
+     juntado 28446 (casa 12458, granja 6357, disputado 3888, propio 2950, recoleccion 1520, mercado 1040, sitios 233)
+     entrenó { "hondero": 124, "guerrero": 52, "ariete": 8 } · productores al final { "campo_tiro": 5, "taller": 2, "cuartel": 2 }
+     riqueza: casa 1236, propio 2872, granja 12, recoleccion 117, sitios 233, mercado 140
+     alimento: casa 2772, propio 78, granja 6342, disputado 2422, recoleccion 1168
+     hitos (edad, obra, constructores): ed2 155s/4 ed3 265s/4 · bajas: hondero>militar 110, hondero>aldeano 30, guerrero>militar 20, centro>militar 15, guerrero>aldeano 6, hondero>edificio 4, ingenio>aldeano 2, ?>militar 1 · unidades muertas en el monte 17/184
+  palmares     edades II 9:58 III 19:47 IV --:-- · primer ataque 4:07 · bajas 159 · pob 76 · ald/ejército 5':14/7 10':19/10 15':31/14 20':32/20 25':45/13 30':36/39
+     juntado 23905 (casa 10161, propio 5563, disputado 2960, granja 2350, mercado 900, recoleccion 826, sitios 703, renta 399, saqueo 43)
+     entrenó { "hondero": 112, "guerrero": 57, "arcabucero": 13, "lancero": 3 } · productores al final { "mocambo": 3, "cuartel": 2 }
+     riqueza: propio 3607, casa 470, sitios 703
+     alimento: casa 3371, recoleccion 584, disputado 2490, mercado 700, granja 2350
+     hitos (edad, obra, constructores): ed2 100s/5 ed3 116s/4 · bajas: hondero>militar 108, guerrero>militar 32, hondero>aldeano 8, guerrero>aldeano 3, arcabucero>militar 3, mocambo>militar 3, lancero>militar 2 · unidades muertas en el monte 18/159
+  sigilo: ejército guaraní oculto 18 %, oculto y sin detectar 18 % · rival en el monte 21 % · emboscada 14 de 2442 golpes (+147 de 14384 daño)
+palmares     vs guaranies    bosque          18:34  ganador palmares (destrucción)  edades 3-1  criterio 4056-1108  puntaje 2657-782
+  guaranies    edades II --:-- III --:-- IV --:-- · primer ataque 10:35 · bajas 48 · pob 6 · ald/ejército 5':21/0 10':20/0 15':6/0
+     juntado 4547 (casa 2729, granja 1361, disputado 258, recoleccion 109, propio 90)
+     entrenó { "hondero": 8 } · productores al final {  }
+     riqueza: casa 172, granja 4, propio 90, recoleccion 10
+     alimento: casa 720, granja 1357, recoleccion 50, disputado 258
+     hitos (edad, obra, constructores): · bajas: centro>militar 46, ?>aldeano 1, hondero>militar 1 · unidades muertas en el monte 0/48
+  palmares     edades II 8:28 III 15:21 IV --:-- · primer ataque 3:45 · bajas 56 · pob 100 · ald/ejército 5':15/12 10':23/23 15':41/27
+     juntado 16361 (casa 9381, propio 2864, granja 2772, sitios 430, saqueo 403, renta 201, recoleccion 180, disputado 130)
+     entrenó { "hondero": 58, "guerrero": 27, "arcabucero": 3, "lancero": 5 } · productores al final { "mocambo": 3, "cuartel": 2 }
+     riqueza: propio 1740, casa 841, sitios 430, granja 2
+     alimento: casa 3020, recoleccion 60, granja 2770, disputado 130
+     hitos (edad, obra, constructores): ed2 95s/5 ed3 92s/6 · bajas: hondero>aldeano 21, guerrero>aldeano 13, hondero>edificio 9, hondero>militar 9, ?>edificio 2, lancero>hito 1, guerrero>edificio 1 · unidades muertas en el monte 3/43
+  sigilo: ejército guaraní oculto 0 %, oculto y sin detectar 0 % · rival en el monte 11 % · emboscada 0 de 10 golpes (+0 de 70 daño)
+guaranies    vs palmares     mesetas         26:56  ganador palmares (destrucción)  edades 2-3  criterio 2271-4477  puntaje 2670-4649
+  guaranies    edades II 7:45 III --:-- IV --:-- · primer ataque 5:37 · bajas 141 · pob 13 · ald/ejército 5':19/0 10':28/6 15':34/10 20':31/2 25':18/0
+     juntado 16544 (casa 10388, granja 4730, propio 1015, recoleccion 319, disputado 80, sitios 12)
+     entrenó { "hondero": 61, "guerrero": 31, "ariete": 4 } · productores al final { "campo_tiro": 1, "taller": 1 }
+     riqueza: casa 892, propio 990, granja 1, recoleccion 20, sitios 12
+     alimento: casa 3106, propio 25, granja 4723, disputado 80, recoleccion 89
+     hitos (edad, obra, constructores): ed2 156s/6 · bajas: centro>militar 65, hondero>militar 64, guerrero>militar 10, ?>militar 2 · unidades muertas en el monte 0/141
+  palmares     edades II 10:04 III 20:38 IV --:-- · primer ataque 4:09 · bajas 177 · pob 130 · ald/ejército 5':14/9 10':20/18 15':31/21 20':45/20 25':52/65
+     juntado 29422 (casa 14257, granja 7935, propio 3865, disputado 1105, sitios 707, recoleccion 424, saqueo 393, renta 336, mercado 300, ingenio 100)
+     entrenó { "hondero": 125, "guerrero": 57, "arcabucero": 28, "lancero": 12 } · productores al final { "mocambo": 3, "cuartel": 3 }
+     riqueza: propio 2764, casa 1928, recoleccion 25, sitios 707, ingenio 100
+     alimento: casa 3255, recoleccion 182, granja 7934, disputado 1105
+     hitos (edad, obra, constructores): ed2 177s/4 ed3 91s/6 · bajas: hondero>militar 71, hondero>aldeano 58, guerrero>militar 14, arcabucero>militar 10, hondero>edificio 7, guerrero>aldeano 5, arcabucero>aldeano 4, lancero>aldeano 3 · unidades muertas en el monte 13/167
+  sigilo: ejército guaraní oculto 1 %, oculto y sin detectar 1 % · rival en el monte 3 % · emboscada 1 de 531 golpes (+4 de 4349 daño)
+palmares     vs guaranies    mesetas         30:00  ganador guaranies (puntos)  edades 2-4  criterio 2137-5557  puntaje 2612-5734
+  guaranies    edades II 7:21 III 18:14 IV 27:56 · primer ataque 5:24 · bajas 207 · pob 135 · ald/ejército 5':21/0 10':36/2 15':43/14 20':44/60 25':44/30 30':44/90
+     juntado 35274 (casa 14965, granja 11053, disputado 3954, propio 2725, recoleccion 1037, mercado 944, sitios 496, ingenio 100)
+     entrenó { "hondero": 142, "lancero": 18, "guerrero": 59, "ariete": 5 } · productores al final { "campo_tiro": 5, "taller": 2, "cuartel": 2 }
+     riqueza: casa 2130, granja 53, recoleccion 26, propio 2633, sitios 496, mercado 344, ingenio 100
+     alimento: casa 2884, granja 10997, recoleccion 253, propio 92, mercado 100, disputado 2199
+     hitos (edad, obra, constructores): ed2 149s/5 ed3 156s/8 ed4 211s/4 · bajas: hondero>militar 102, hondero>aldeano 35, guerrero>aldeano 20, guerrero>militar 18, lancero>militar 6, centro>militar 5, ariete>edificio 5, hondero>edificio 4 · unidades muertas en el monte 15/191
+  palmares     edades II 9:15 III --:-- IV --:-- · primer ataque 6:00 · bajas 137 · pob 0 · ald/ejército 5':14/7 10':19/21 15':29/14 20':40/7 25':15/1 30':0/0
+     juntado 16207 (casa 8966, granja 3170, propio 2940, renta 414, recoleccion 363, sitios 317, saqueo 37)
+     entrenó { "hondero": 50, "guerrero": 59, "arcabucero": 10, "lancero": 12 } · productores al final {  }
+     riqueza: propio 1538, casa 1071, recoleccion 39, sitios 317
+     alimento: casa 3520, recoleccion 84, granja 3170
+     hitos (edad, obra, constructores): ed2 81s/7 · bajas: centro>militar 53, hondero>militar 29, guerrero>militar 25, mocambo>militar 13, hondero>aldeano 6, lancero>militar 4, arcabucero>militar 4, arcabucero>aldeano 2 · unidades muertas en el monte 2/137
+  sigilo: ejército guaraní oculto 2 %, oculto y sin detectar 2 % · rival en el monte 0 % · emboscada 6 de 5733 golpes (+138 de 25040 daño)
+guaranies    vs tawantinsuyu rio             30:00  ganador guaranies (puntos)  edades 3-2  criterio 4989-2700  puntaje 3870-3788
+  guaranies    edades II 7:48 III 27:38 IV --:-- · primer ataque 7:00 · bajas 159 · pob 183 · ald/ejército 5':21/0 10':33/9 15':42/22 20':42/45 25':37/92 30':42/140
+     juntado 24967 (casa 12575, granja 4885, disputado 4458, propio 1602, recoleccion 1347, mercado 100)
+     entrenó { "hondero": 124, "ariete": 1, "guerrero": 44, "lancero": 3 } · productores al final { "campo_tiro": 2, "cuartel": 1, "taller": 1 }
+     riqueza: casa 1628, propio 1560, recoleccion 66, disputado 4
+     alimento: casa 2811, propio 32, granja 4885, recoleccion 778, disputado 3050
+     hitos (edad, obra, constructores): ed2 149s/8 ed3 177s/5 · bajas: hondero>militar 112, guerrero>militar 40, centro>militar 4, ?>militar 1, lancero>militar 1, hondero>aldeano 1 · unidades muertas en el monte 12/159
+  tawantinsuyu edades II 5:43 III --:-- IV --:-- · primer ataque 6:56 · bajas 60 · pob 64 · ald/ejército 5':24/4 10':37/17 15':42/22 20':42/26 25':42/36 30':42/21
+     juntado 29983 (casa 12729, disputado 5064, propio 4975, granja 3668, recoleccion 2047, mercado 1500)
+     entrenó { "hondero": 82, "ariete": 31, "boleador": 16, "guerrero": 52 } · productores al final { "qollqa": 3, "campo_tiro": 2, "cuartel": 1 }
+     riqueza: propio 1326, casa 2380, recoleccion 20
+     alimento: casa 2920, recoleccion 1482, disputado 2170, mercado 1300, granja 3661
+     hitos (edad, obra, constructores): ed2 83s/7 · bajas: hondero>militar 25, hondero>aldeano 23, guerrero>militar 7, ariete>edificio 4, boleador>militar 1 · unidades muertas en el monte 5/56
+  sigilo: ejército guaraní oculto 8 %, oculto y sin detectar 8 % · rival en el monte 15 % · emboscada 23 de 1995 golpes (+65 de 11893 daño)
+tawantinsuyu vs guaranies    selva           30:00  ganador tawantinsuyu (puntos)  edades 3-3  criterio 5040-5020  puntaje 4328-3933
+  guaranies    edades II 8:15 III 14:12 IV --:-- · primer ataque --:-- · bajas 0 · pob 202 · ald/ejército 5':21/0 10':37/11 15':42/53 20':42/125 25':42/157 30':42/157
+     juntado 34538 (casa 16771, granja 10045, disputado 2846, propio 2226, mercado 1797, recoleccion 502, sitios 351)
+     entrenó { "hondero": 120, "ariete": 2, "guerrero": 35 } · productores al final { "campo_tiro": 5, "taller": 2, "cuartel": 2 }
+     riqueza: casa 2325, granja 62, propio 2158, recoleccion 80, sitios 351, mercado 497
+     alimento: casa 2285, granja 9978, propio 68, recoleccion 143, disputado 1904, mercado 200
+     hitos (edad, obra, constructores): ed2 137s/8 ed3 164s/7 · bajas:  · unidades muertas en el monte 0/0
+  tawantinsuyu edades II 5:46 III 20:32 IV --:-- · primer ataque --:-- · bajas 0 · pob 204 · ald/ejército 5':23/3 10':39/26 15':42/70 20':42/117 25':42/161 30':42/161
+     juntado 37089 (casa 17531, granja 9875, propio 5237, disputado 1862, mercado 1376, recoleccion 863, sitios 245, cumbi 100)
+     entrenó { "hondero": 87, "ariete": 11, "boleador": 24, "guerrero": 39 } · productores al final { "qollqa": 3, "campo_tiro": 5, "cuartel": 2 }
+     riqueza: propio 1612, casa 2346, recoleccion 43, granja 9, mercado 276, disputado 2, sitios 245, cumbi 100
+     alimento: casa 2933, recoleccion 462, granja 9866, mercado 900, disputado 1262
+     hitos (edad, obra, constructores): ed2 88s/7 ed3 87s/7 · bajas:  · unidades muertas en el monte 0/0
+  sigilo: ejército guaraní oculto 9 %, oculto y sin detectar 9 % · rival en el monte 42 % · emboscada 0 de 0 golpes (+0 de 0 daño)
+guaranies    vs tawantinsuyu selva           30:00  ganador guaranies (puntos)  edades 3-3  criterio 5040-5020  puntaje 3764-3377
+  guaranies    edades II 7:53 III 14:25 IV --:-- · primer ataque --:-- · bajas 0 · pob 204 · ald/ejército 5':21/0 10':37/11 15':42/49 20':42/108 25':42/152 30':42/152
+     juntado 31846 (casa 16469, granja 6896, disputado 3277, propio 2533, mercado 1573, recoleccion 753, sitios 345)
+     entrenó { "hondero": 108, "guerrero": 38, "ariete": 9 } · productores al final { "campo_tiro": 5, "taller": 2, "cuartel": 1 }
+     riqueza: casa 2377, granja 43, propio 2467, recoleccion 50, sitios 345, mercado 273
+     alimento: casa 2861, granja 6851, propio 66, recoleccion 378, disputado 2200
+     hitos (edad, obra, constructores): ed2 140s/7 ed3 175s/5 · bajas:  · unidades muertas en el monte 0/0
+  tawantinsuyu edades II 6:07 III 28:51 IV --:-- · primer ataque --:-- · bajas 0 · pob 202 · ald/ejército 5':24/4 10':38/28 15':42/70 20':42/117 25':42/159 30':42/159
+     juntado 28779 (casa 13733, granja 7136, propio 4200, disputado 1443, mercado 1340, recoleccion 505, sitios 322, cumbi 100)
+     entrenó { "hondero": 71, "boleador": 29, "ariete": 11, "guerrero": 49 } · productores al final { "qollqa": 3, "campo_tiro": 4, "cuartel": 2 }
+     riqueza: propio 1077, casa 2370, recoleccion 30, sitios 322, mercado 140, cumbi 100
+     alimento: casa 2620, recoleccion 372, granja 7136, disputado 1030, mercado 300
+     hitos (edad, obra, constructores): ed2 95s/4 ed3 79s/9 · bajas:  · unidades muertas en el monte 0/0
+  sigilo: ejército guaraní oculto 44 %, oculto y sin detectar 44 % · rival en el monte 31 % · emboscada 0 de 0 golpes (+0 de 0 daño)
+tawantinsuyu vs guaranies    montana         30:00  ganador guaranies (puntos)  edades 3-4  criterio 3395-5244  puntaje 4580-5814
+  guaranies    edades II 8:48 III 14:07 IV 28:21 · primer ataque 7:14 · bajas 264 · pob 98 · ald/ejército 5':21/0 10':37/9 15':42/42 20':42/11 25':42/48 30':42/55
+     juntado 34553 (casa 13202, granja 12396, disputado 4520, propio 2713, recoleccion 685, mercado 600, sitios 437)
+     entrenó { "hondero": 149, "guerrero": 58, "ariete": 6, "lancero": 20 } · productores al final { "campo_tiro": 5, "taller": 2, "cuartel": 2 }
+     riqueza: casa 2320, propio 2620, granja 50, recoleccion 160, sitios 437
+     alimento: casa 1022, propio 93, granja 12334, recoleccion 47, disputado 1380
+     hitos (edad, obra, constructores): ed2 153s/4 ed3 172s/5 ed4 205s/4 · bajas: hondero>militar 166, guerrero>militar 33, guerrero>aldeano 27, hondero>aldeano 19, hondero>edificio 4, ariete>edificio 4, lancero>aldeano 4, centro>militar 3 · unidades muertas en el monte 23/255
+  tawantinsuyu edades II 6:15 III 14:27 IV --:-- · primer ataque 7:14 · bajas 175 · pob 22 · ald/ejército 5':24/1 10':37/8 15':42/16 20':34/14 25':42/9 30':21/1
+     juntado 31254 (casa 15167, granja 8489, propio 4470, disputado 1092, mercado 800, recoleccion 706, sitios 430, cumbi 100)
+     entrenó { "hondero": 93, "guerrero": 76, "boleador": 16, "ariete": 21 } · productores al final { "qollqa": 3, "campo_tiro": 3, "cuartel": 1 }
+     riqueza: propio 1335, casa 2339, recoleccion 61, sitios 430, cumbi 100
+     alimento: casa 3978, recoleccion 261, disputado 806, granja 8463, mercado 700
+     hitos (edad, obra, constructores): ed2 89s/7 ed3 72s/10 · bajas: hondero>militar 86, centro>militar 51, guerrero>militar 22, ?>militar 12, boleador>militar 2, ariete>edificio 1, ariete>militar 1 · unidades muertas en el monte 2/174
+  sigilo: ejército guaraní oculto 3 %, oculto y sin detectar 3 % · rival en el monte 3 % · emboscada 2 de 7271 golpes (+14 de 27443 daño)
+guaranies    vs tawantinsuyu montana         30:00  ganador guaranies (puntos)  edades 4-2  criterio 5383-2374  puntaje 5254-3764
+  guaranies    edades II 8:48 III 14:13 IV 26:14 · primer ataque 7:12 · bajas 223 · pob 116 · ald/ejército 5':21/0 10':37/11 15':42/29 20':42/17 25':42/66 30':42/74
+     juntado 31167 (casa 14779, granja 6926, disputado 4111, propio 2498, mercado 1237, recoleccion 1016, sitios 500, ingenio 100)
+     entrenó { "hondero": 131, "ariete": 4, "guerrero": 49, "lancero": 8 } · productores al final { "campo_tiro": 5, "taller": 2, "cuartel": 2 }
+     riqueza: casa 2340, propio 2440, granja 42, recoleccion 90, sitios 500, mercado 137, ingenio 100
+     alimento: casa 3399, propio 58, granja 6880, disputado 2031, recoleccion 338, mercado 600
+     hitos (edad, obra, constructores): ed2 156s/5 ed3 160s/6 ed4 241s/4 · bajas: hondero>militar 137, guerrero>militar 37, hondero>aldeano 20, guerrero>aldeano 13, hondero>edificio 5, centro>militar 2, guerrero>edificio 2, lancero>militar 1 · unidades muertas en el monte 5/212
+  tawantinsuyu edades II 5:52 III --:-- IV --:-- · primer ataque 9:54 · bajas 114 · pob 26 · ald/ejército 5':24/2 10':33/11 15':42/4 20':31/0 25':42/8 30':26/0
+     juntado 28909 (casa 14111, granja 7348, propio 3794, disputado 1721, mercado 900, recoleccion 695, sitios 340)
+     entrenó { "hondero": 104, "boleador": 25, "guerrero": 40, "ariete": 8 } · productores al final { "qollqa": 3, "campo_tiro": 3, "cuartel": 1 }
+     riqueza: propio 921, casa 2321, recoleccion 79, sitios 340
+     alimento: casa 2681, recoleccion 320, granja 7340, mercado 700, disputado 1180
+     hitos (edad, obra, constructores): ed2 81s/9 · bajas: centro>militar 55, hondero>militar 33, torre>militar 13, boleador>militar 9, guerrero>militar 4 · unidades muertas en el monte 0/114
+  sigilo: ejército guaraní oculto 6 %, oculto y sin detectar 4 % · rival en el monte 1 % · emboscada 23 de 7279 golpes (+30 de 24976 daño)
+tawantinsuyu vs guaranies    bosque_templado 30:00  ganador tawantinsuyu (puntos)  edades 3-3  criterio 4113-3895  puntaje 5733-5805
+  guaranies    edades II 12:07 III 16:36 IV --:-- · primer ataque 7:28 · bajas 255 · pob 64 · ald/ejército 5':21/0 10':36/10 15':42/35 20':42/46 25':42/18 30':25/35
+     juntado 36702 (casa 15092, granja 14757, disputado 2427, propio 1835, mercado 1275, recoleccion 765, sitios 451, ingenio 100)
+     entrenó { "hondero": 143, "guerrero": 50, "ariete": 11, "lancero": 8 } · productores al final { "campo_tiro": 4, "taller": 2, "cuartel": 2 }
+     riqueza: casa 2020, propio 1796, granja 55, recoleccion 96, sitios 451, mercado 875, ingenio 100
+     alimento: casa 1008, propio 39, granja 14699, recoleccion 47, disputado 958
+     hitos (edad, obra, constructores): ed2 150s/5 ed3 168s/6 · bajas: hondero>militar 220, guerrero>militar 18, hondero>aldeano 6, ariete>edificio 3, lancero>militar 2, centro>militar 1, guerrero>aldeano 1, hondero>edificio 1 · unidades muertas en el monte 8/249
+  tawantinsuyu edades II 6:23 III 25:27 IV --:-- · primer ataque 7:34 · bajas 203 · pob 91 · ald/ejército 5':24/0 10':36/12 15':42/7 20':47/6 25':58/23 30':58/33
+     juntado 39102 (casa 15538, granja 11658, propio 5363, disputado 4004, mercado 1203, recoleccion 1059, sitios 177, cumbi 100)
+     entrenó { "hondero": 120, "ariete": 19, "guerrero": 78, "boleador": 46, "lancero": 11 } · productores al final { "qollqa": 3, "campo_tiro": 4, "cuartel": 1 }
+     riqueza: propio 1420, casa 2368, recoleccion 32, sitios 177, mercado 203, cumbi 100
+     alimento: casa 3192, recoleccion 729, granja 11658, mercado 800, disputado 1248
+     hitos (edad, obra, constructores): ed2 89s/7 ed3 93s/7 · bajas: hondero>militar 86, boleador>militar 40, guerrero>militar 29, hondero>aldeano 18, ?>militar 7, centro>militar 5, lancero>militar 5, lancero>aldeano 5 · unidades muertas en el monte 16/198
+  sigilo: ejército guaraní oculto 11 %, oculto y sin detectar 11 % · rival en el monte 10 % · emboscada 18 de 4606 golpes (+72 de 23494 daño)
+==== TOTALES (30 partidas) ====
+Guaraníes ganan 17 (56 %): por destrucción 4, por puntos 13 (con más edad 10, misma edad 3)
+Partidas por puntos: 20; el puntaje del juego (Sim.score) da el mismo ganador en 18
+Edad al final: guaraníes I 1, II 6, III 13, IV 10 · rivales II 11, III 19
+Por rival: ayutthaya 3/6 etiopia 5/6 mapuches 2/6 palmares 3/6 tawantinsuyu 4/6
+Por terreno: bosque 2/4 bosque_templado 2/3 delta 2/3 fortines 2/2 llano 2/2 mesetas 2/6 montana 2/5 rio 1/1 selva 2/4
+Guaraníes edades promedio: II 8:33 (29 de 30) III 16:58 (23 de 30) IV 27:34 (10 de 30) · primer ataque 7:44 (28) · bajas 4662
+   aldeanos/ejército promedio: 5':20/0 10':32/4 15':37/19 20':38/34 25':36/40 30':33/56
+   obra de los hitos, promedio: ed2 165s con 5 constructores (29) ed3 175s con 5 constructores (23) ed4 209s con 4 constructores (10)
+   juntado promedio 26825: casa 12691, granja 7947, disputado 2586, propio 1837, mercado 763, recoleccion 706, sitios 272, ingenio 20
+   por recurso: alimento 12010, madera 10073, piedra 576, riqueza 4165
+   riqueza por origen: casa 1813, disputado 0, granja 30, ingenio 20, mercado 159, propio 1785, recoleccion 82, sitios 272
+   bajas por tipo (atacante>víctima): hondero>militar 2607, centro>militar 623, guerrero>militar 535, hondero>aldeano 405, guerrero>aldeano 116, lancero>militar 92, hondero>edificio 83, ?>militar 81, ariete>edificio 41, lancero>aldeano 26, ?>edificio 15, guerrero>edificio 13
+   entrenadas por partida: ariete 5, guerrero 38, hondero 106, lancero 8 · productores al final (x10, promedio): campo_tiro 33, cuartel 13, taller 14
+   unidades que mató en el monte: 238 de 4495
+Rivales   edades promedio: II 7:09 (30 de 30) III 19:34 (19 de 30) IV --:-- (0 de 30) · primer ataque 7:03 (28) · bajas 4195
+   aldeanos/ejército promedio: 5':19/4 10':30/13 15':39/19 20':39/31 25':36/40 30':33/48
+   obra de los hitos, promedio: ed2 96s con 4 constructores (30) ed3 118s con 5 constructores (19)
+   juntado promedio 27277: casa 13078, granja 8007, propio 2560, disputado 1539, recoleccion 769, mercado 711, sitios 356, renta 70, kawin 63, saqueo 59, arreo 36, cumbi 13, ingenio 10, liberacion 1
+   por recurso: alimento 12913, madera 8449, piedra 647, riqueza 4201, fama 384
+   riqueza por origen: casa 1911, cumbi 13, disputado 3, granja 1, ingenio 10, mercado 275, propio 1583, recoleccion 47, sitios 356
+   bajas por tipo (atacante>víctima): hondero>militar 1574, guerrero>militar 905, hondero>aldeano 425, centro>militar 342, guerrero>aldeano 244, torre>militar 119, lof>militar 95, lancero>militar 75, hondero>edificio 69, boleador>militar 52, ?>militar 43, jinete>aldeano 36
+   entrenadas por partida: arcabucero 3, ariete 4, boleador 5, chang_suek 0, elefante_rey 0, guerrero 64, hondero 82, jinete 2, lancero 14 · productores al final (x10, promedio): barrio_japones 2, barrio_portugues 2, campo_tiro 10, corral 6, cuartel 21, establo 6, kraal 2, lof 4, mocambo 5, qollqa 6, taller 5
+   unidades que mató en el monte: 316 de 4046
+Sigilo: ejército guaraní oculto 13 % del tiempo, oculto y sin detectar 12 % · ejército rival en el monte 16 %
+Emboscada: 272 de 94134 golpes guaraníes a algo del rival (0 %), 1371 de daño de más sobre 442949 (0 %)
