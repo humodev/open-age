@@ -13,7 +13,7 @@
     "nombre": "Guerrero de choque", "funcion": "choque", "edad_min": 1, "pob": 1,
     "costo": { "alimento": 60, "riqueza": 25 }, "tiempo_ms": 16000,
     "pv": 120, "armadura": 1, "armadura_distancia": 0, "ataque": 11, "alcance": 450, "cadencia_ms": 1250,
-    "velocidad": 1600, "vision": 8000, "radio": 260
+    "velocidad": 1350, "vision": 8000, "radio": 260
   },
   "hondero": {
     "nombre": "Hondero", "funcion": "distancia", "edad_min": 1, "pob": 1,
