@@ -293,6 +293,9 @@ func _cmd_content(cmd: Dictionary) -> Dictionary:
 	c["name"] = cmd.get("name", c["name"])
 	if cmd["kind"] == "build" and sim.dp(hud.local).is_hito(cmd["id"]):
 		c["desc"] = cmd.get("desc", "")
+		var aura := _aura_text(sim.dp(hud.local), c["def"]) # --- aura del hito --- (proceso/24, 4k)
+		if aura != "":
+			c["desc"] += "\n" + aura
 	c["cost"] = cmd.get("cost", c["cost"])
 	c["check_cost"] = true
 	c["hotkey"] = Controller.SLOT_LABELS[cmd["slot"]]
@@ -321,6 +324,9 @@ func _cmd_content(cmd: Dictionary) -> Dictionary:
 			c["foot"].append(["Clic: investigar en este edificio", Palette.UI_DIM])
 	if cmd.get("locked", "") != "":
 		c["foot"].append([cmd["locked"], Palette.UI_BAD])
+	# --- costo real --- (proceso/24, 4k) cuánto falta de cada recurso, con nombre
+	elif not EstadoCasilla.faltante(c["cost"], sim.players[hud.local]["res"]).is_empty():
+		c["state"].append([ctrl.missing_text(c["cost"]), Palette.UI_BAD])
 	return c
 
 
@@ -618,6 +624,7 @@ func _building_state(c: Dictionary, e: SimEntity) -> void:
 		var k := e.progress * 100 / maxi(1, e.build_time)
 		c["bar"] = [k / 100.0, Palette.UI_ACCENT]
 		c["state"].append(["En obra · %d%% · %d %s" % [k, e.workers_now, "constructor" if e.workers_now == 1 else "constructores"], Palette.UI_TEXT])
+		c["state"].append([Hud.obra_restante(sim, e), Palette.UI_ACCENT]) # --- obra --- (proceso/24, 4k)
 		return
 	if not e.queue.is_empty():
 		var first: String = e.queue[0]

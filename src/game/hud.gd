@@ -5,6 +5,7 @@ extends Control
 const O := SimEntity.Order
 const SLOT := 62.0
 const GAP := 6.0
+const Colocacion := preload("res://src/game/ui/mundo_colocacion.gd") # --- obra --- (aura del hito)
 
 static var font: Font
 static var font_b: Font
@@ -487,7 +488,7 @@ func _build_help() -> void:
 		if dd.has_mod("recurso_propio"):
 			civ_txt += "\nRecurso propio: %s." % dd.mod("recurso_propio")["nombre"]
 		civ_txt += "\nEdades: %s.\nDebilidad: %s" % [", ".join(c.get("edades", [])), c.get("debilidad", "")]
-	var controls := "Clic izquierdo: seleccionar (arrastrar para un grupo; doble clic: todos los del tipo)\nClic derecho: mover, atacar, recolectar, construir, reparar o alojar\nGrilla Q W E R / A S D F / Z X C V: construir, entrenar, investigar\nAldeanos: Q economía y W militar (submenús; Esc o V vuelve) · Z hito de economía · X hito militar\nLos grupos marchan en formación; Alt + clic derecho: suelto, para retirarse\nA y clic: atacar en movimiento · S: detener · F: refugiarse · Supr: eliminar\nCtrl + 1…9: asignar grupo · Mayús + 1…9: sumar al grupo · H: centro · . : aldeano inactivo · Z en el centro: campana\nEspacio: ir al último ataque o suceso · Inicio: recorrer los avisos anteriores\n. y , : aldeano y militar ocioso (Mayús: todos) · M: militares · T: todos del tipo · Tab: producción · D: mantener · E: patrullar · Ctrl + F7…F9: cámara · Alt + clic: bengala\nFlechas, bordes o botón del medio: cámara · F3: velocidad · Esc: pausa"
+	var controls := "Clic izquierdo: seleccionar (arrastrar para un grupo; doble clic: todos los del tipo)\nClic derecho: mover, atacar, recolectar, construir, reparar o alojar\nGrilla Q W E R / A S D F / Z X C V: construir, entrenar, investigar\nAldeanos: Q economía y W militar (submenús; Esc o V vuelve) · Z hito de economía · X hito militar\nLos grupos marchan en formación; Alt + clic derecho: suelto, para retirarse\nA y clic: atacar en movimiento · S: detener · F: refugiarse · Supr: eliminar\nCtrl + 1…9: asignar grupo · Mayús + 1…9: sumar al grupo · H: centro · . : aldeano inactivo · Z en el centro: campana\nEspacio: ir al último ataque o suceso · Inicio: recorrer los avisos anteriores\n. y , : aldeano y militar ocioso (Mayús: todos) · M: militares · T: todos del tipo · Tab: producción · D: mantener · E: patrullar · Alt + 1…8: ir a la cámara guardada (Ctrl + Alt + 1…8 la guarda) · Alt + clic: bengala\nFlechas, bordes o botón del medio: cámara · F3: velocidad · Esc: pausa"
 	_help = _make_dialog("Cómo se juega", civ_txt + "\n\n" + controls, [["Cerrar", func() -> void: _help.visible = false]])
 	(_help.get_meta("body") as Label).horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	(_help.get_meta("body") as Label).custom_minimum_size = Vector2(760, 0)
@@ -501,6 +502,20 @@ func _toggle_help() -> void:
 func toggle_menu() -> void:
 	_menu.visible = not _menu.visible
 	main.set_paused(_menu.visible)
+
+
+## --- obra --- "Faltan 1:23 con 4 constructores": lo que le queda a una obra al ritmo de la
+## simulación (rendimiento decreciente: con n constructores, tiempo × 3/(n+2); o la obra
+## colectiva de la civ). Sin nadie trabajando, cuánto tardaría uno solo.
+static func obra_restante(s: Sim, b: SimEntity) -> String:
+	var left := maxi(0, b.build_time - b.progress)
+	var nb := maxi(b.workers_now, b.workers_prev)
+	var per_tick := s.mods.build_step(b, maxi(1, nb)) * maxi(1, nb) # progreso por tick, todos juntos
+	var ms := left * s.tick_ms / maxi(1, per_tick)
+	var t := "%d:%02d" % [ms / 60000, (ms / 1000) % 60]
+	if nb == 0:
+		return "Parada: sin constructores (con uno, %s)" % t
+	return "Faltan %s con %d %s" % [t, nb, "constructor" if nb == 1 else "constructores"]
 
 
 func show_tip(cmd: Dictionary, anchor: Rect2) -> void:
@@ -969,12 +984,23 @@ class Tooltip:
 		var h := 44.0
 		if not (cmd.get("cost", {}) as Dictionary).is_empty():
 			h += 28
+			if _falta_texto() != "": # --- costo real ---
+				h += 20
 		if cmd.get("desc", "") != "":
 			var lines := Hud.font.get_multiline_string_size(cmd["desc"], HORIZONTAL_ALIGNMENT_LEFT, w - 28, 15)
 			h += lines.y + 6
 		if cmd.get("locked", "") != "":
 			h += 24
 		return Vector2(w, h + 8)
+
+	## --- costo real --- "Faltan 200 de alimento y 40 de mit'a" ("" si alcanza o no hay costo).
+	func _falta_texto() -> String:
+		var cost: Dictionary = cmd.get("cost", {})
+		if cost.is_empty() or hud == null or hud.sim == null or hud.ctrl == null:
+			return ""
+		if EstadoCasilla.faltante(cost, hud.sim.players[hud.local]["res"]).is_empty():
+			return ""
+		return hud.ctrl.missing_text(cost)
 
 	func _draw() -> void:
 		if cmd.is_empty():
@@ -1006,6 +1032,11 @@ class Tooltip:
 				draw_string(Hud.font_b, Vector2(x + 24, y + 18), str(cost[k]), HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Palette.UI_TEXT if ok else Palette.UI_BAD)
 				x += 78
 			y += 28
+			# --- costo real --- (proceso/24, 4k) cuánto falta de cada recurso, con nombre
+			var ft := _falta_texto()
+			if ft != "":
+				draw_string(Hud.font_b, Vector2(14, y + 12), ft, HORIZONTAL_ALIGNMENT_LEFT, size.x - 28, 14, Palette.UI_BAD.lightened(0.15))
+				y += 20
 		if cmd.get("desc", "") != "":
 			draw_multiline_string(Hud.font, Vector2(14, y + 14), cmd["desc"], HORIZONTAL_ALIGNMENT_LEFT, size.x - 28, 15, -1, Palette.UI_DIM)
 			y += Hud.font.get_multiline_string_size(cmd["desc"], HORIZONTAL_ALIGNMENT_LEFT, size.x - 28, 15).y + 6
@@ -1097,6 +1128,14 @@ class SelectionPanel:
 			var k := float(e.progress) / float(maxi(1, e.build_time))
 			draw_string(Hud.font, Vector2(x, 92), "En construcción · %d%%" % int(k * 100), HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Palette.UI_TEXT)
 			_bar(Rect2(x, 104, size.x - x - 20, 8), k, Palette.UI_ACCENT)
+			# --- obra --- (proceso/24, 4k) cuánto falta con los constructores de ahora y, en un
+			# hito, el aura que va a tener: lo que pidió el veterano en la tercera ronda.
+			if e.owner == hud.local or e.def.get("hito", false):
+				draw_string(Hud.font_b, Vector2(x, 132), Hud.obra_restante(sim, e), HORIZONTAL_ALIGNMENT_LEFT, size.x - x - 16, 14, Palette.UI_ACCENT)
+			var aura_t := Hud.Colocacion.aura_texto(Hud.Colocacion.aura_def(sim, e.def))
+			if aura_t != "":
+				draw_string(Hud.font, Vector2(x, 152), "Al terminar, aura: " + aura_t, HORIZONTAL_ALIGNMENT_LEFT, size.x - x - 16, 13, Palette.UI_GOOD)
+			# --- fin obra ---
 			return
 		if e.def.has("pob"):
 			draw_string(Hud.font, Vector2(0, 36), "+%d población" % e.def["pob"], HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, 13, Palette.UI_DIM)
