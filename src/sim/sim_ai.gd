@@ -251,7 +251,9 @@ func _economy(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, saving: 
 		var home := _home(v, centro)
 		# Alimento: primero los animales propios (como AoE4), carneados de a uno.
 		if kind == "alimento":
-			var beast := _own_animal(centro)
+			# Primero la carne abierta; un animal nuevo recién cuando no queda (una llama por vez).
+			var meat := sim.find_resource(player, "alimento", centro.x, centro.y, int(sim.data.reglas["animales"]["cadena_radio"]) * 2, -1, v.id, "carne")
+			var beast: SimEntity = meat if meat != null else _own_animal(centro)
 			if beast != null:
 				sim.push_command({"t": "target", "player": player, "ids": [v.id], "target": beast.id})
 				counts[kind] += 1

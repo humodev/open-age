@@ -199,13 +199,22 @@ func _carnear_en_cadena() -> void:
 		if e.alive and e.owner == 0 and e.type == "aldeano" and ids.size() < 4:
 			ids.append(e.id)
 	s.push_command({"t": "target", "player": 0, "ids": ids, "target": llama.id})
-	for i in 1500:
+	# Una llama por vez (el autor, 2026-11-16): nunca más de una carne abierta.
+	var max_open := 0
+	for i in 4000: # una por vez: unas 330 s para las 5
 		s.step()
+		if i % 10 == 0:
+			var open := 0
+			for e in s.entities:
+				if e.alive and e.type == "carne" and e.amount > 0:
+					open += 1
+			max_open = maxi(max_open, open)
 	var left := 0
 	for e in s.entities:
 		if e.alive and e.owner == 0 and e.def.get("animal", false):
 			left += 1
 	_check(left == 0, "carnear en cadena: 4 aldeanos terminan las 5 llamas sin volver a mandarlos (quedan %d)" % left)
+	_check(max_open <= 1, "una llama por vez: como mucho %d carne abierta a la vez" % max_open)
 	var s2 := Sim.new(5, 2, null, {"civs": ["tawantinsuyu", "guaranies"], "terreno": "llano"})
 	var wild: SimEntity = null
 	var v: SimEntity = null

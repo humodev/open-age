@@ -296,3 +296,17 @@ Con los pasos 1 a 4 integrados, los mismos cuatro jugadores de las rondas 1 y 2,
 
 - Juegan el veterano de AoE4 y el jugador nuevo, con su memoria de las rondas 1–3, sobre main con todo lo de la ronda 3 integrado.
 - Cada informe trae una sección "Calidad de vida y usabilidad" ordenada por gravedad, en [`proceso/22-testers/ronda-4/`](../22-testers/ronda-4/).
+
+### Pedido del autor: una llama por vez
+
+> "No deberían matar todas las llamas de una: primero se mata una, se le termina de sacar la carne y luego se sigue con la otra, y todo así, a menos que se indique directamente lo contrario."
+
+- **Antes:**
+  - en la cadena, cada aldeano que terminaba una carne carneaba otro animal, aunque un compañero ya hubiera abierto uno;
+  - la IA mandaba a cada aldeano a un animal distinto.
+- **Arreglo:**
+  - La cadena primero busca carne abierta cerca y carnea un animal nuevo recién cuando no queda.
+  - La IA hace lo mismo: carne abierta antes que un animal.
+  - Una orden directa sobre una llama la sigue carneando, y con varios aldeanos en una sola orden se carnea un solo animal y todos juntan su carne.
+- **Prueba:** "una llama por vez" en `tests/jugabilidad.gd`: nunca más de una carne abierta. Los 4 aldeanos terminan las 5 llamas en unos 330 s, una tras otra, y siguen con los arbustos.
+- **Determinismo:** cambia el hash (2203695307), porque la IA también carnea de a una. Se mide con torneo junto con la IA que disputa sitios (5b).

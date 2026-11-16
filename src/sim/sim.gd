@@ -1257,7 +1257,14 @@ func _do_gather(e: SimEntity) -> void:
 		# de al lado y no va a carnear la llama (el autor, 2026-11-16).
 		var from_beast: bool = e.carry_src == "carne" or (t != null and (t.type == "carne" or t.def.get("animal", false)))
 		if e.gather_kind == "alimento" and from_beast:
-			var beast := _own_animal_near(e, int(data.reglas["animales"]["cadena_radio"]))
+			# Primero la carne que ya está abierta cerca; se carnea otro animal recién cuando no
+			# queda (como las ovejas de AoE4; el autor: "no deberían matar todas las llamas de una").
+			var radius := int(data.reglas["animales"]["cadena_radio"])
+			var open_meat := find_resource(e.owner, "alimento", e.x, e.y, radius, -1, e.id, "carne")
+			if open_meat != null:
+				_order_gather(e, open_meat)
+				return
+			var beast := _own_animal_near(e, radius)
 			if beast != null:
 				var meat := _slaughter(beast)
 				if meat != null and meat.alive:
