@@ -737,8 +737,16 @@ func _production(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], 
 	# Tope de ejército por dificultad (la fácil: 15), salvo si atacan la base.
 	if army.size() >= int(level.get("ejercito_max", 1 << 20)) and not threatened:
 		return
+	# Ahorrando para el hito, solo se mantiene un ejército mínimo por edad con lo que sobra por
+	# encima de su costo. Cortar del todo dejaba a Etiopía con 9 de ejército y 979 de alimento
+	# en el banco; gastar todo lo que sobra demoraba la edad III 3–4 minutos (proceso/24).
 	if saving and not threatened:
-		return
+		var mins: Array = sim.data.reglas["ia_economia"]["ejercito_minimo_ahorrando"]
+		if army.size() >= int(mins[clampi(int(p["age"]) - 1, 0, mins.size() - 1)]):
+			return
+		var hc: Dictionary = sim.dp(player).cost_of(_hito_type(p), p["age"])
+		for k in hc:
+			budget[k] = maxi(0, int(budget.get(k, 0)) - int(hc[k]))
 	var order := _counter_order(p)
 	var producers: Array = []
 	for k in by_type:

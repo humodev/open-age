@@ -143,3 +143,24 @@ La lista sale de la [síntesis de la segunda ronda](../22-testers/ronda-2/00-sin
 **Pruebas:**
 - Determinismo, órdenes, civs, las 25 misiones (sin errores), las puertas y los cercos de fortines, y autotest: OK. El tutorial se gana a las 10:42 (con la regla de separación).
 - Rendimiento, sola en la máquina: 8,56 ms de promedio y 59 de peor caso (antes, 8,35 y 57,9). Con el torneo de 10 procesos en paralelo había dado 18 ms, que era la carga.
+
+### Paso 3: balance con todo junto
+
+Un cambio por torneo: 75 partidas, 5 semillas, 30 minutos, en 10 procesos.
+
+| Torneo | Cambio | Tawantinsuyu | Mapuches | Guaraníes | Etiopía | Palmares | Ayutthaya |
+|---|---|---|---|---|---|---|---|
+| Etapa 23 | (antes de esta etapa) | 44 | 32 | 44 | 56 | 88 | 36 |
+| [11 · base](pruebas/11-torneo-base.txt) | Pasos 1 y 2 | 64 | 52 | 76 | **8** | 68 | 32 |
+| [12](pruebas/12-torneo-ejercito-minimo.txt) | IA: ejército mínimo mientras ahorra | 52 | 60 | 72 | 12 | 72 | 32 |
+| [13](pruebas/13-torneo-jinete-noble.txt) | Etiopía: jinete noble 160 de vida y 13 de ataque (antes 140 y 10), mismo costo | 52 | 52 | 64 | **40** | 68 | 24 |
+
+**Etiopía, de 56 % a 8 %.**
+- Con la misma partida seguida en el commit anterior a la etapa (`tools/ia_por_dentro.gd`, sierra contra Tawantinsuyu), el ejército etíope ya era chico (unas 20 unidades). Lo que cambió fue el rival: los arreglos de economía del paso 1 destrabaron el alimento de Tawantinsuyu, que pasó de 15 a 60 unidades.
+- El problema propio: mientras ahorra para el hito, la IA no entrenaba nada. A las 15:00 tenía 979 de alimento en el banco (el hito pide 1000) y 9 de ejército.
+- **Primer intento (descartado):** producir con todo lo que sobra por encima del costo del hito. Etiopía no llegaba a la edad III, cuatro civs se quedaban sin mercado y, en paz, la edad III llegaba 3–4 minutos más tarde.
+- **Queda:** mientras ahorra, la IA mantiene un ejército mínimo por edad (`ia_economia.ejercito_minimo_ahorrando`: 10, 16, 20) con lo que sobra por encima del hito. Etiopía, de 8 a 12 %.
+
+**Jinete noble.**
+- Costaba 80 de alimento y 40 de riqueza (el guerrero base, 60 y 25) y tenía apenas 17 % más de vida y un punto menos de ataque.
+- La debilidad de la civ dice "unidades caras y pocas". Ahora son caras y fuertes: Etiopía pasa de 12 a 40 %.
