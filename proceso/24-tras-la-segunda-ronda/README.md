@@ -320,3 +320,12 @@ Con los pasos 1 a 4 integrados, los mismos cuatro jugadores de las rondas 1 y 2,
   - En curso: 4n (jugador nuevo) y 4o (veterano).
 - **Torneo 26:** con la IA que disputa sitios terminan menos partidas por hitos (57 contra 77) y más por puntos. Los guaraníes suben a 80 % (27 de 40 por puntos, que salen de las bajas).
 - **Torneo 27:** emboscada guaraní a 35 % (antes 50; la de Palmares, 30). Sigue siendo la mayor: es su identidad.
+
+## Quinta ronda de jugadores (desde 2026-11-16)
+
+Con lo de la cuarta ronda integrado (Q, R y S), juegan otra vez el veterano y el jugador nuevo:
+- verifican cada arreglo de su ronda 4;
+- juzgan la escala nueva contra AoE4 (¿alcanza el paso 1 o hacen falta la velocidad, C-65, y las huellas, C-66?);
+- siguen con calidad de vida y usabilidad.
+
+Informes en [`proceso/22-testers/ronda-5/`](../22-testers/ronda-5/).
