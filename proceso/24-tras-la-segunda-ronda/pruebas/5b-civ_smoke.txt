@@ -1,0 +1,13 @@
+=== ["tawantinsuyu", "mapuches"] terreno=bosque ganador=-1
+tawantinsuyu edad 2 pob 60/75 res { "alimento": 41, "madera": 122, "piedra": 351, "riqueza": 599, "mita": 450 } tipos { "centro": 1, "aldeano": 42, "explorador": 1, "casa": 6, "almacen_madera": 2, "camino": 75, "qollqa": 2, "campo_tiro": 2, "almacen_mina": 2, "taller_tejido": 1, "ushnu": 1, "cuartel": 1, "hondero": 9, "granja": 17, "boleador": 4, "mercado": 1, "ariete": 2, "torre": 1, "guerrero": 2 }
+mapuches edad 2 pob 65/69 res { "alimento": 15, "madera": 60, "piedra": 540, "riqueza": 761 } tipos { "lof": 3, "aldeano": 37, "explorador": 1, "casa": 5, "corral": 3, "cuartel": 2, "rewe_lonko": 1, "granja": 9, "hondero": 23, "guerrero": 4 }
+=== ["etiopia", "palmares"] terreno=bosque ganador=-1
+etiopia edad 2 pob 52/55 res { "alimento": 72, "madera": 120, "piedra": 223, "riqueza": 206 } tipos { "aldeano": 38, "explorador": 1, "casa": 5, "almacen_madera": 3, "gult": 3, "establo": 2, "almacen_mina": 2, "iglesia": 1, "almacen_alimento": 1, "granja": 13, "mercado": 1, "taller": 1, "cuartel": 1, "guerrero": 5, "hondero": 3, "torre": 1, "lancero": 2, "centro": 1, "ariete": 1 }
+palmares edad 2 pob 34/53 res { "alimento": 150, "madera": 40, "piedra": 250, "riqueza": 128, "fama": 10 } tipos { "centro": 1, "aldeano": 23, "explorador": 1, "casa": 3, "mocambo": 1, "almacen_alimento": 2, "cuartel": 1, "granja": 1, "quilombo_central": 1, "arcabucero": 1, "hondero": 5, "lancero": 4 }
+=== ["guaranies", "ayutthaya"] terreno=bosque ganador=-1
+guaranies edad 2 pob 49/75 res { "alimento": 17, "madera": 40, "piedra": 170, "riqueza": 100 } tipos { "centro": 1, "aldeano": 42, "explorador": 1, "casa": 6, "granja": 11, "almacen_madera": 8, "campo_tiro": 2, "almacen_mina": 2, "karai_palabra": 1, "taller": 1, "cuartel": 1, "mercado": 1, "monte": 1, "hondero": 5, "guerrero": 1 }
+ayutthaya edad 2 pob 49/55 res { "alimento": 21, "madera": 57, "piedra": 223, "riqueza": 505 } tipos { "centro": 1, "aldeano": 34, "explorador": 1, "casa": 5, "elefante_rey": 2, "cuartel": 2, "almacen_mina": 2, "wat": 1, "granja": 10, "campo_tiro": 1, "rebano": 2, "mercado": 1, "taller": 1, "guerrero": 5, "hondero": 5, "torre": 1, "kraal": 1, "barrio_japones": 1 }
+WARNING: 10534 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 10 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

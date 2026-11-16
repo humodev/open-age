@@ -1,0 +1,16 @@
+puertas: la del jugador 2 deja pasar al jugador 0
+puertas: la del jugador 1 no deja pasar al jugador 0
+fortines con 4: encerrados []
+fortines con 6: encerrados []
+2v2  ["tawantinsuyu", "mapuches", "guaranies", "etiopia"] equipos [0, 1, 0, 1]  10:00  bajas 36  fuego amigo 0  tributos 2  | j0 tawa edad 2 en pie  | j1 mapu edad 2 en pie  | j2 guar edad 2 en pie  | j3 etio edad 2 en pie
+2v2  ["tawantinsuyu", "mapuches", "guaranies", "etiopia"] equipos [1, 0, 1, 0]  10:00  bajas 36  fuego amigo 0  tributos 2  | j0 tawa edad 2 en pie  | j1 mapu edad 2 en pie  | j2 guar edad 2 en pie  | j3 etio edad 2 en pie
+2v2  ["palmares", "ayutthaya", "mapuches", "tawantinsuyu"] equipos [0, 1, 0, 1]  10:00  bajas 48  fuego amigo 0  tributos 5  | j0 palm edad 2 en pie  | j1 ayut edad 1 en pie  | j2 mapu edad 2 en pie  | j3 tawa edad 2 en pie
+2v2  ["palmares", "ayutthaya", "mapuches", "tawantinsuyu"] equipos [1, 0, 1, 0]  10:00  bajas 48  fuego amigo 0  tributos 5  | j0 palm edad 2 en pie  | j1 ayut edad 1 en pie  | j2 mapu edad 2 en pie  | j3 tawa edad 2 en pie
+3v3  ["tawantinsuyu", "mapuches", "guaranies", "etiopia", "palmares", "ayutthaya"] equipos [0, 1, 0, 1, 0, 1]  10:00  bajas 60  fuego amigo 0  tributos 3  | j0 tawa edad 2 en pie  | j1 mapu edad 2 en pie  | j2 guar edad 2 en pie  | j3 etio edad 2 en pie  | j4 palm edad 1 en pie  | j5 ayut edad 2 en pie
+3v3  ["tawantinsuyu", "mapuches", "guaranies", "etiopia", "palmares", "ayutthaya"] equipos [1, 0, 1, 0, 1, 0]  10:00  bajas 60  fuego amigo 0  tributos 3  | j0 tawa edad 2 en pie  | j1 mapu edad 2 en pie  | j2 guar edad 2 en pie  | j3 etio edad 2 en pie  | j4 palm edad 1 en pie  | j5 ayut edad 2 en pie
+ffa6 ["tawantinsuyu", "mapuches", "guaranies", "etiopia", "palmares", "ayutthaya"] equipos [0, 1, 2, 3, 4, 5]  10:00  bajas 87  fuego amigo 0  tributos 0  | j0 tawa edad 2 en pie  | j1 mapu edad 2 en pie  | j2 guar edad 2 en pie  | j3 etio edad 2 en pie  | j4 palm edad 1 en pie  | j5 ayut edad 2 en pie
+EQUIPOS: OK
+WARNING: 37322 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 10 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

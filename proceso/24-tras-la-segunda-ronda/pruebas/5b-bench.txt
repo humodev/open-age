@@ -1,0 +1,5 @@
+200 unidades, 600 ticks: promedio 16.97 ms, peor 155.50 ms, presupuesto 100 ms; vivas al final: 129
+WARNING: 1619 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 9 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

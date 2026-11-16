@@ -1,0 +1,15 @@
+disputa de sitios · normal contra normal · 30 minutos · semillas [41, 42] · terrenos ["llano"]
+cuenta: arranca / se interrumpe / llega a cero (por jugador A/B; A = normal) · quitados = sitios que se le sacan al rival · ejército del que pierde por sitios
+tawantinsuyu  llano  s41  30:00 gana A (puntos)     cuenta A 1/1/0 (máx  16s) B 4/4/0 (máx 188s) · quitados A 9 B 8
+tawantinsuyu  llano  s42  30:00 gana A (puntos)     cuenta A 2/1/0 (máx 227s) B 2/2/0 (máx  97s) · quitados A 11 B 9
+mapuches      llano  s41  25:31 gana A (sitios)     cuenta A 2/1/1 (máx 599s) B 0/0/0 (máx   0s) · quitados A 4 B 3 · pierde con 0 militares
+mapuches      llano  s42  30:00 gana B (puntos)     cuenta A 3/3/0 (máx 107s) B 4/4/0 (máx 144s) · quitados A 11 B 13
+guaranies     llano  s41  30:00 gana A (puntos)     cuenta A 1/1/0 (máx  57s) B 1/1/0 (máx  40s) · quitados A 4 B 4
+guaranies     llano  s42  30:00 gana B (puntos)     cuenta A 3/3/0 (máx 178s) B 5/4/0 (máx 128s) · quitados A 11 B 11
+etiopia       llano  s41  21:57 gana A (sitios)     cuenta A 1/0/1 (máx 599s) B 0/0/0 (máx   0s) · quitados A 2 B 0 · pierde con 3 militares
+etiopia       llano  s42  30:00 gana B (puntos)     cuenta A 2/2/0 (máx  90s) B 2/1/0 (máx 452s) · quitados A 5 B 8
+palmares      llano  s41  30:00 gana A (puntos)     cuenta A 0/0/0 (máx   0s) B 5/5/0 (máx 246s) · quitados A 9 B 9
+palmares      llano  s42  30:00 gana A (puntos)     cuenta A 3/2/0 (máx 456s) B 2/2/0 (máx  43s) · quitados A 12 B 10
+ayutthaya     llano  s41  30:00 gana A (puntos)     cuenta A 4/4/0 (máx 274s) B 1/1/0 (máx  33s) · quitados A 10 B 9
+ayutthaya     llano  s42  30:00 gana B (puntos)     cuenta A 1/1/0 (máx  64s) B 4/3/0 (máx 519s) · quitados A 5 B 8
+TOTAL 12 partidas · cuentas que arrancan 53, se interrumpen 46, llegan a cero 2 · sitios quitados al rival 185 · fin: sitios 2, conquista 0, puntos 10 · gana A 8
