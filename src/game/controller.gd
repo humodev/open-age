@@ -207,7 +207,7 @@ func commands() -> Array[Dictionary]:
 		for slot in slots:
 			var type: String = slots[slot]
 			var def: Dictionary = sim.dp(local).edificios[type]
-			var cmd := {"slot": slot, "id": type, "icon": Glyphs.resolve(def, type), "kind": "build", "name": def["nombre"], "cost": sim.dp(local).cost_of(type, age), "desc": DESCS.get(type, def.get("desc", "")), "locked": ""}
+			var cmd := {"slot": slot, "id": type, "icon": Glyphs.resolve(def, type), "kind": "build", "name": def["nombre"], "common": common_name(type), "cost": sim.dp(local).cost_of(type, age), "desc": DESCS.get(type, def.get("desc", "")), "locked": ""}
 			if age < def.get("edad_min", 1):
 				cmd["locked"] = "Requiere edad %s" % Sim._roman(def["edad_min"])
 			if sim.dp(local).is_hito(type):
@@ -215,6 +215,7 @@ func commands() -> Array[Dictionary]:
 					cmd["locked"] = "Edad máxima alcanzada"
 				else:
 					cmd["name"] = "%s · avanzar a edad %s" % [def["nombre"], Sim._roman(age + 1)]
+					cmd["common"] = "Hito · edad %s" % Sim._roman(age + 1)
 					cmd["desc"] = "%s\n%s\n%s" % [def.get("desc", ""), effects_text(def.get("efectos", [])), unlocks_text(age + 1)]
 					if sim.hito_in_progress(local):
 						cmd["locked"] = "Ya hay un hito en obra"
@@ -239,7 +240,7 @@ func commands() -> Array[Dictionary]:
 		var i := 0
 		for type: String in first.def.get("produce", []):
 			var udef: Dictionary = sim.dp(local).unidades[type]
-			var cmd := {"slot": i, "id": type, "icon": Glyphs.resolve(udef, type), "kind": "train", "name": udef["nombre"], "cost": sim.dp(local).cost_of(type, age), "desc": DESCS.get(type, ""), "locked": "", "building": first.id}
+			var cmd := {"slot": i, "id": type, "icon": Glyphs.resolve(udef, type), "kind": "train", "name": udef["nombre"], "common": common_name(type), "cost": sim.dp(local).cost_of(type, age), "desc": DESCS.get(type, ""), "locked": "", "building": first.id}
 			if age < udef.get("edad_min", 1):
 				cmd["locked"] = "Requiere edad %s" % Sim._roman(udef["edad_min"])
 			out.append(cmd)
@@ -893,6 +894,15 @@ func select_ids(ids: Array[int]) -> void:
 
 
 ## Texto de efectos generado desde los datos: los números no se escriben a mano (D-008).
+## --- aprender --- Nombre común de un edificio o una unidad (la capa sin civilización: "Casa",
+## "Leñera", "Aldeano"), para la grilla con nombres; vacío si el propio ya es ese o no hay común
+## (los edificios propios de una civ). Jugador nuevo, ronda 3.
+func common_name(type: String) -> String:
+	var base: String = sim.data.def_of(type).get("nombre", "")
+	var own: String = sim.dp(local).def_of(type).get("nombre", "")
+	return base if base != own else ""
+
+
 func effects_text(efectos: Array) -> String:
 	var parts: Array[String] = []
 	for ef: Dictionary in efectos:

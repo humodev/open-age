@@ -214,3 +214,6 @@ Todo es opcional y las misiones que no lo usan se comportan igual que antes (`sr
 - **`cuando.espera`** (segundos): el evento se dispara esa cantidad de segundos después de cumplirse su condición.
 - **Acción `cuenta`** (`texto`, `segundos`): cuenta regresiva grande arriba al centro, la misma caja que la de los sitios sagrados.
 - **`distancia`** en la acción `ataque` (casillas): la columna aparece a esa distancia de la capital, del lado del rival, para que "llegan en 60 s" sea cierto.
+- **`despues_de`** en un objetivo (id o lista de ids): no se cumple hasta que esos estén cumplidos. Lo que pasó antes cuenta igual (proceso/24, paso 4j: "abatí a los saqueadores" no se adelanta a "entrená 5 guerreros").
+- **`params.nuevos`** en un objetivo `entrenar`: cuenta solo lo entrenado desde que el objetivo aparece.
+- **Disparador `obra`** (`valor`: un tipo de edificio o `hito`): el jugador empezó a levantar uno. Con `espera`, sirve para que la Guía use la espera de una obra larga.

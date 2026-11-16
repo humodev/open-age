@@ -142,13 +142,14 @@
     },
     {
      "id": "o9",
-     "texto": "Defendé el pueblo: abatí a los 4 saqueadores.",
+     "texto": "Defendé el pueblo: abatí a los 4 saqueadores (se cumple después de entrenar los 5 guerreros).",
      "tipo": "matar",
      "params": {
       "n": 4
      },
      "secundario": false,
-     "oculto": true
+     "oculto": true,
+     "despues_de": "o8"
     },
     {
      "id": "o10",
@@ -158,6 +159,18 @@
       "n": 2
      },
      "secundario": false,
+     "oculto": true
+    },
+    {
+     "id": "o11",
+     "texto": "Mientras sube el hito (opcional): entrená 3 aldeanos más y mandalos a juntar. En la edad II vas a querer más manos.",
+     "tipo": "entrenar",
+     "params": {
+      "tipo": "aldeano",
+      "n": 3,
+      "nuevos": true
+     },
+     "secundario": true,
      "oculto": true
     },
     {
@@ -467,6 +480,88 @@
       "params": {
        "quien": "Guía",
        "texto": "Cada edad se gana con un hito, y cada pueblo tiene los suyos. El hito pide alimento y riqueza: el panel de Edad (F4) muestra cuánto falta. Elegí: economía (Z) o guerra (X)."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "obra",
+      "valor": "hito"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "La obra del hito tarda unos minutos. La barra sobre la obra dice cuánto falta, y con más aldeanos trabajando sube más rápido: seleccioná a otros y clic derecho sobre la obra."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "obra",
+      "valor": "hito",
+      "espera": 20
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Mientras tanto, abrí el panel de Edad (F4): dice qué cambia en la edad II y qué vas a poder construir y entrenar."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "obra",
+      "valor": "hito",
+      "espera": 20
+     },
+     "accion": {
+      "tipo": "objetivo_nuevo",
+      "params": {
+       "id": "o11"
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "obra",
+      "valor": "hito",
+      "espera": 60
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Cada hito ayuda a su alrededor. El de economía hace que se junte más rápido cerca de él, y el de guerra cura a tus tropas. Por eso conviene levantarlo junto a los campos y los árboles, no en cualquier lado. Cuando ubiques el próximo, el círculo que aparece al colocarlo muestra hasta dónde llega."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "obra",
+      "valor": "hito",
+      "espera": 100
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Un truco para las peleas: elegí a tus guerreros y apretá Ctrl+1. Después, con solo tocar 1 los volvés a elegir, estén donde estén; dos toques seguidos llevan la cámara hasta ellos."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "obra",
+      "valor": "hito",
+      "espera": 140
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Ya falta poco. Al terminar el hito llegás a la edad II: tus edificios cambian de aspecto y se abren unidades y construcciones nuevas. Fijate en los avisos del centro de la pantalla."
       }
      }
     }

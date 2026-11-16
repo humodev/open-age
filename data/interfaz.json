@@ -48,7 +48,7 @@
     "px": 32
   },
   "consejos": {
-    "_doc": "Avisos que enseñan (src/game/ui/consejos.gd), apagables en Opciones. Segundos: cada cuánto se revisa, cuánto tiene que durar una situación antes de avisar y cada cuánto puede repetirse el mismo aviso. Radios en casillas. flotando: banco por recurso a partir del cual se avisa que no se gasta.",
+    "_doc": "Avisos que enseñan (src/game/ui/consejos.gd), apagables en Opciones. Segundos: cada cuánto se revisa, cuánto tiene que durar una situación antes de avisar y cada cuánto puede repetirse el mismo aviso. Radios en casillas. flotando: banco por recurso a partir del cual se avisa que no se gasta. empujon: el aviso de atacar o subir de edad.",
     "revisar_s": 5,
     "ociosos_s": 20,
     "ociosos_min": 1,
@@ -56,7 +56,8 @@
     "frutos_radio": 16,
     "flotando": { "riqueza": 500, "alimento": 900, "madera": 900, "piedra": 600 },
     "flotando_s": 60,
-    "sitios_repetir_s": 60
+    "sitios_repetir_s": 60,
+    "empujon": { "_doc": "Aviso que empuja a ganar (jugador nuevo, ronda 3): con `ejercito_min` tropas o más, `en_casa_pct` % de ellas a `casa_radio` casillas o menos de la capital y `recursos_min` o más sumando alimento, madera, piedra y riqueza, durante `durante_s` segundos seguidos, avisa «atacá o subí de edad». No en campañas", "ejercito_min": 15, "en_casa_pct": 75, "casa_radio": 22, "recursos_min": 2000, "durante_s": 90, "repetir_s": 240 }
   },
   "guia": {
     "_doc": "Mensajes de la Guía en campañas (src/game/hud.gd y src/game/ui/registro_guia.gd): cuánto quedan en pantalla según el largo (letras por segundo, mínimo y máximo) y cuántos guarda el registro que se relee con F7.",

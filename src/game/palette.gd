@@ -37,6 +37,9 @@ const UI_LINE := Color(1, 1, 1, 0.07)
 const UI_TEXT := Color("ece8e1")
 const UI_DIM := Color("9a958c")
 const UI_ACCENT := Color("e3b23c")
+## Ni ganar ni perder: "Empate" y "Fin de la partida" (jugador nuevo, ronda 3: el empate en el
+## naranja de la derrota parecía una derrota). Frío, lejos del dorado y del naranja (tests/test_paleta.gd).
+const UI_NEUTRAL := Color("9fc3e6")
 # --- paleta ---
 static var UI_BAD := Color("ff5a26")
 static var UI_GOOD := Color("85f2c4")

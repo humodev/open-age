@@ -452,7 +452,7 @@ func _show_end(winner: int) -> void:
 	var p: Dictionary = sim.players[local]
 	var st: Dictionary = p["stats"]
 	_end_title.text = "Victoria" if winner == local else ("Empate" if winner < 0 and sim.end_reason == "tiempo" else "Derrota")
-	_end_title.add_theme_color_override("font_color", Palette.UI_ACCENT if winner == local else Palette.UI_BAD)
+	_end_title.add_theme_color_override("font_color", Palette.UI_ACCENT if winner == local else (Palette.UI_NEUTRAL if winner < 0 else Palette.UI_BAD))
 	_end_body.text = "Tiempo %s · Edad %s\nRecursos recolectados %d · Unidades entrenadas %d\nBajas causadas %d · Pérdidas %d" % [_fmt_time(sim.tick * sim.tick_ms / 1000), Sim._roman(p["age"]), st["recolectado"], st["entrenadas"], st["bajas"], st["muertes"]]
 	# --- paneles ---
 	if paneles != null:
@@ -856,12 +856,16 @@ class ClockBar:
 		if total > 0:
 			var left: int = (int(sim.data.reglas["sitios"]["victoria_ms"]) - int(sim.players[hud.local].get("sitios_ms", 0))) / 1000
 			var txt := "Sitios %d/%d" % [mine, total]
+			# Sin victoria por sitios (opción de partida o tutorial) solo dan riqueza: que no parezca una cuenta para ganar (jugador nuevo, ronda 3).
+			var no_win: bool = sim._opts.get("sitios_sin_victoria", false)
+			if no_win:
+				txt += " (no ganan, dan riqueza)"
 			if mine == total and int(sim.players[hud.local].get("sitios_ms", 0)) > 0: # --- aprender --- (el tutorial no gana por sitios)
 				txt += " · victoria en %s" % Hud._fmt_time(left)
 			for p in sim.players:
 				if p["id"] != hud.local and int(p.get("sitios_ms", 0)) > 0:
 					txt = "¡El rival controla todos los sitios! %s" % Hud._fmt_time((int(sim.data.reglas["sitios"]["victoria_ms"]) - int(p["sitios_ms"])) / 1000)
-			draw_string(Hud.font, Vector2(16, 64), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Palette.UI_ACCENT if mine == total else Palette.UI_DIM)
+			draw_string(Hud.font, Vector2(16, 64), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Palette.UI_ACCENT if mine == total and not no_win else Palette.UI_DIM)
 		var secs := sim.tick * sim.tick_ms / 1000
 		var t := Hud._fmt_time(secs)
 		var speed: float = hud.main.speed

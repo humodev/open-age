@@ -149,7 +149,9 @@ func _draw() -> void:
 		sb.shadow_size = 6
 		draw_style_box(sb, r)
 		Glyphs.draw(self, TIPOS[a["tipo"]]["icono"], Rect2(r.position + Vector2(14, 8), Vector2(22, 22)), Color(col, alpha))
-		draw_string(Hud.font_b, Vector2(r.position.x + 46, r.position.y + 25), titulo, HORIZONTAL_ALIGNMENT_LEFT, ANCHO - 140, 17, Color(Palette.UI_TEXT, alpha))
+		# Un título largo achica la letra (hasta 14) antes que cortarse ("…atacá o subí de edad", 4j).
+		var ts := maxi(14, EstadoCasilla._fit(Hud.font_b, titulo, 17, ANCHO - 140))
+		draw_string(Hud.font_b, Vector2(r.position.x + 46, r.position.y + 25), titulo, HORIZONTAL_ALIGNMENT_LEFT, ANCHO - 140, ts, Color(Palette.UI_TEXT, alpha))
 		if resto != "":
 			draw_multiline_string(Hud.font, Vector2(r.position.x + 46, r.position.y + 45), resto, HORIZONTAL_ALIGNMENT_LEFT, ANCHO - 60, 14, -1, Color(Palette.UI_DIM.lightened(0.15), alpha))
 		var right := ""

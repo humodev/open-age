@@ -89,7 +89,7 @@ func _draw() -> void:
 	var sim := hud.sim
 	var won := winner == hud.local
 	var head := "Victoria" if won else ("Empate" if winner < 0 and sim.end_reason == "tiempo" else ("Fin de la partida" if winner < 0 else "Derrota"))
-	C.text(self, o + Vector2(32, 56), head, 40, Palette.UI_ACCENT if won else Palette.UI_BAD, true)
+	C.text(self, o + Vector2(32, 56), head, 40, Palette.UI_ACCENT if won else (Palette.UI_NEUTRAL if winner < 0 else Palette.UI_BAD), true)
 	var secs: int = datos.now_s()
 	var sub := "Duración %s · mapa %s" % [C.fmt_time(secs), sim.terrain]
 	if winner >= 0 and winner != hud.local:

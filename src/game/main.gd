@@ -1505,6 +1505,28 @@ func _autotest() -> void:
 	check.call("aviso «perdés en M:SS»", said.call("perdés en"))
 	get_viewport().get_texture().get_image().save_png("screenshots/autotest_sitios.png")
 	sim.players[rival]["sitios_ms"] = 0
+	# Empujón (4j): ejército grande en casa y recursos de sobra → «atacá o subí de edad».
+	var emp: Dictionary = cs.cfg.get("empujon", {})
+	var capital: SimEntity = null
+	for e in sim.actives:
+		if e.alive and e.owner == local and e.capital:
+			capital = e
+	var extra: Array[SimEntity] = []
+	for ki in int(emp.get("ejercito_min", 15)):
+		extra.append(sim.spawn_unit("guerrero", local, capital.x + 3000 + (ki % 5) * 800, capital.y + 3000 + (ki / 5) * 800))
+	var bank_before: Dictionary = (sim.players[local]["res"] as Dictionary).duplicate()
+	sim.players[local]["res"]["madera"] = int(sim.players[local]["res"]["madera"]) + int(emp.get("recursos_min", 2000))
+	hud.avisos.lista.clear()
+	cs._said.erase("empujon")
+	cs._since.erase("empujon")
+	cs.check(0)
+	cs.check(int(emp.get("durante_s", 90)) + 1)
+	check.call("aviso «atacá o subí de edad» con ejército en casa y recursos de sobra", said.call("atacá o subí de edad"))
+	await _frames(2)
+	get_viewport().get_texture().get_image().save_png("screenshots/autotest_empujon.png")
+	for e in extra:
+		sim._kill(e)
+	sim.players[local]["res"] = bank_before
 	EstadoCasilla.nombres = true
 	ctrl.select_ids(vill_ids)
 	await _frames(3)
