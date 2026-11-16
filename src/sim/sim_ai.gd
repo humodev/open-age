@@ -128,7 +128,8 @@ func think() -> void:
 	_military(army, centro)
 	_flares(army, centro)
 	# Al final: mira también las órdenes que el resto de la IA acaba de dar en este turno.
-	if not level.get("toma_sitios", true):
+	# Sin victoria por sitios (opción de partida, tutorial) no hace falta: tomarlos no gana.
+	if not level.get("toma_sitios", true) and not sim._opts.get("sitios_sin_victoria", false):
 		_avoid_sites(army)
 
 

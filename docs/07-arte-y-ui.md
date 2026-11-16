@@ -86,9 +86,10 @@ Distribución (convención del género, sin copiar piezas):
 └──────────────────────────────────────────────────────────┘
 ```
 
-- **Grilla de comandos** con atajos por posición (`Q W E R` / `A S D F` / `Z X C V`). La posición de un comando es estable entre unidades, edificios y civilizaciones. El aldeano muestra dos submenús, `Q` Economía y `W` Militar y defensa, y los hitos de la edad siguiente en `Z` (economía) y `X` (militar); dentro de cada submenú, cada edificio tiene casilla fija por función (tabla en `data/interfaz.json` → `grilla`). `S` detiene y `F` refugia en aldeanos y tropas; `V` o `Esc` vuelve de un submenú.
+- **Grilla de comandos** con atajos por posición (`Q W E R` / `A S D F` / `Z X C V`). La posición de un comando es estable entre unidades, edificios y civilizaciones. El aldeano muestra dos submenús, `Q` Economía y `W` Militar y defensa, y los hitos de la edad siguiente en `Z` (economía) y `X` (militar); dentro de cada submenú, cada edificio tiene casilla fija por función (tabla en `data/interfaz.json` → `grilla`). `S` detiene y `F` refugia en aldeanos y tropas; `V` o `Esc` vuelve de un submenú. Con la opción "Mostrar nombres en la grilla", cada casilla lleva el nombre común arriba ("Casa", "Leñera") y el propio del pueblo abajo, más tenue ("Oga", "Tapyi").
 - **Cursores contextuales**: el cursor dice qué hará el clic derecho antes de darlo (mover, atacar, recolectar cada recurso, construir, reparar, refugiarse, depositar, punto de reunión, no se puede).
 - **Información sobre costos** al pasar el mouse; lo que no se puede pagar se muestra apagado con el recurso faltante resaltado.
+- **Fin de la partida**: "Victoria" en dorado, "Derrota" en naranja y "Empate" en un azul neutro (`Palette.UI_NEUTRAL`).
 - **Avisos** breves al centro, con fondo, ícono y color por tipo (ataque, decisión, hito, información), apilados sin pisarse. Los que tienen lugar en el mapa se pueden saltar con `Espacio` (último ataque) e `Inicio` (recorre los anteriores) o con un clic.
 - **Grupos de control** visibles en una fila sobre el panel de selección, con número, tipo y cantidad.
 - **Sin selección**, el panel de selección y la grilla se ocultan para no tapar el mapa.

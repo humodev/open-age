@@ -146,8 +146,13 @@ func on_step() -> void:
 		cuenta = {}
 	if sim.tick == 0:
 		_fire("inicio", 0)
+	_obras()
 	for o in objectives:
 		if o["estado"] != "activo":
+			continue
+		# "despues_de": no se cumple antes que esos objetivos (el tutorial: abatir a los
+		# saqueadores no se adelanta a "entrená 5 guerreros"; jugador nuevo, ronda 3).
+		if not _done(o.get("despues_de", [])):
 			continue
 		var st := _eval(o)
 		if st == "hecho":
@@ -172,6 +177,9 @@ func _eval(o: Dictionary) -> String:
 			var n := 0
 			for t in _aliases(pr["tipo"]):
 				n += int(trained.get(t, 0))
+				# "nuevos": solo lo entrenado desde que apareció el objetivo.
+				if pr.get("nuevos", false):
+					n -= int((o.get("base_entrenadas", {}) as Dictionary).get(t, 0))
 			return "hecho" if n >= int(pr.get("n", 1)) else ""
 		"recolectar":
 			return "hecho" if int(p0["res"].get(pr["recurso"], 0)) >= int(pr.get("n", 0)) else ""
@@ -222,6 +230,37 @@ func _eval(o: Dictionary) -> String:
 	return ""
 
 
+## ¿Están cumplidos todos estos objetivos (ids)?
+func _done(ids: Variant) -> bool:
+	if ids is String:
+		ids = [ids]
+	for id in ids:
+		for o in objectives:
+			if o["id"] == id and o["estado"] != "hecho":
+				return false
+	return true
+
+
+## Disparador "obra" (`valor`: un tipo de edificio, o "hito"): el jugador empezó a levantar uno.
+## Sirve para usar la espera de una obra larga (el hito del tutorial tarda unos minutos).
+func _obras() -> void:
+	var want := false
+	for e in triggers:
+		if not e["hecho"] and not e.has("listo") and e["cuando"]["tipo"] == "obra":
+			want = true
+			break
+	if not want:
+		return
+	var seen := {}
+	for b in sim.actives:
+		if b.alive and b.owner == 0 and b.is_building() and not b.built:
+			seen[b.type] = true
+			if b.def.get("hito", false) or b.def.get("avanza_edad", false):
+				seen["hito"] = true
+	for k in seen:
+		_fire("obra", k)
+
+
 func _check_end() -> void:
 	if sim.players[0]["defeated"]:
 		if motivo == "":
@@ -264,7 +303,7 @@ func _fire(kind: String, value: Variant) -> void:
 			continue
 		if kind == "tiempo" and int(value) < int(c.get("valor", 0)):
 			continue
-		if kind == "objetivo" and String(c.get("valor", "")) != String(value):
+		if (kind == "objetivo" or kind == "obra") and String(c.get("valor", "")) != String(value):
 			continue
 		if int(c.get("espera", 0)) > 0:
 			if not e.has("listo"):
@@ -306,6 +345,7 @@ func _act(a: Dictionary) -> void:
 					o["estado"] = "activo"
 					o["desde"] = sim.tick
 					o["base"] = _gathered(0)
+					o["base_entrenadas"] = trained.duplicate()
 					sim.events.append({"t": "objetivo", "id": o["id"], "estado": "nuevo", "texto": o["texto"]})
 
 

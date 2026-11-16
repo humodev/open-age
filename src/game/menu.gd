@@ -595,6 +595,8 @@ func _refresh_match_options(save := false) -> void:
 	if _op_sitios.button_pressed:
 		ways.append("por sitios sagrados (%d minutos con todos)" % (int(_data.reglas["sitios"]["victoria_ms"]) / 60000))
 	var txt := "Se gana " + " o ".join(ways) + "."
+	if not _op_sitios.button_pressed:
+		txt += " Los sitios sagrados dan riqueza, pero no ganan."
 	var mins := int(_tiempos[maxi(0, _op_tiempo.selected)])
 	if mins > 0:
 		txt += " A los %d minutos gana el equipo con más puntos." % mins

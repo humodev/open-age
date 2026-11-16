@@ -4,6 +4,7 @@ extends Node
 ##   - se acabaron los frutos cerca del centro;
 ##   - un recurso que se acumula sin gastarse (sobre todo la riqueza);
 ##   - el rival tiene todos los sitios sagrados: perdés en M:SS (y su par, "los tenés vos").
+##   - ejército grande en casa y recursos de sobra durante un rato: atacá o subí de edad.
 ##
 ## Solo mira la simulación y llama a `hud.notify`. Se apagan en Opciones ("Avisos que enseñan").
 ## Los tiempos son de juego, no de reloj: con la partida a ×4 se revisa cuatro veces más seguido.
@@ -52,6 +53,7 @@ func check(dt: int) -> void:
 	_bushes()
 	_floating(dt)
 	_sites()
+	_push(dt)
 
 
 func _now() -> int:
@@ -155,3 +157,43 @@ func _sites() -> void:
 		_say("sitios", "%s tiene todos los sitios sagrados: perdés en %s\nLlevá tropas a pararse en un sitio: con tener uno se corta la cuenta." % [Palette.team_name(holder), Hud._fmt_time(left)], "ataque", rep, at)
 	elif fresh:
 		_say("sitios", "%s todos los sitios sagrados: ganás en %s\nDefendelos: si el rival pisa uno, la cuenta se corta." % ["Tenés" if holder == hud.local else "Tu equipo tiene", Hud._fmt_time(left)], "hito", 1 << 30)
+
+
+# ---------------------------------------------------------------- Empujón
+
+## Ejército grande en casa y recursos sin gastar durante un rato (jugador nuevo, ronda 3: su
+## jugador "aplicado" terminaba con 7.000 recursos y 25 soldados que nunca salían).
+## Umbrales en interfaz.json → consejos.empujon. No en campañas: ahí manda el objetivo.
+func _push(dt: int) -> void:
+	var sim: Sim = hud.sim
+	var c: Dictionary = cfg.get("empujon", {})
+	if c.is_empty() or sim.scenario != null:
+		return
+	var p: Dictionary = sim.players[hud.local]
+	var cap: SimEntity = null
+	for e in sim.actives:
+		if e.alive and e.owner == hud.local and e.is_building() and e.capital:
+			cap = e
+			break
+	var total := 0
+	var home := 0
+	var r := int(c.get("casa_radio", 22)) * Sim.P
+	for e in sim.actives:
+		if e.alive and e.owner == hud.local and e.is_unit() and e.is_military() and e.inside < 0:
+			total += 1
+			if cap != null and absi(e.x - cap.x) <= r and absi(e.y - cap.y) <= r:
+				home += 1
+	var bank := 0
+	for k in Sim.RES_KINDS:
+		bank += int(p["res"].get(k, 0))
+	if cap == null or total < int(c.get("ejercito_min", 15)) or home * 100 < total * int(c.get("en_casa_pct", 75)) or bank < int(c.get("recursos_min", 2000)):
+		_since["empujon"] = 0
+		return
+	_since["empujon"] = int(_since.get("empujon", 0)) + dt
+	if int(_since["empujon"]) < int(c.get("durante_s", 90)):
+		return
+	var how := "Elegí tus tropas, A y clic en la base rival"
+	if int(p["age"]) < sim.dp(hud.local).edades.size():
+		how += "; o con un aldeano encargá el hito de la próxima edad (Z o X)"
+	if _say("empujon", "Tenés ejército y recursos de sobra: atacá o subí de edad\n%s." % how, "decision", int(c.get("repetir_s", 240))):
+		_since["empujon"] = 0

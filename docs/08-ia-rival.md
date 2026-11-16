@@ -29,6 +29,8 @@ Cuatro niveles por parámetros, no por trampas (`reglas.json` → `dificultades`
 
 La **experta** juega como un veterano de AoE4: entrena aldeanos sin parar desde todos sus centros hasta su tope, levanta un segundo centro (y un tercero si hay lugar) junto a la riqueza, la piedra o el bosque de su lado del mapa, mantiene un ejército mínimo más alto mientras ahorra para el hito y ataca en oleadas más grandes. Los mapuches se expanden con lofs, que son su centro. Palmares no entrena aldeanos (los suma con la fama), así que solo gana lo demás. Normal es la del torneo de balance.
 
+La **fácil** no va a buscar sitios sagrados (`toma_sitios: false`) y tampoco los toma al pasar: en su grilla de caminos el cuadro de cada sitio cuesta más y lo rodea, y quien queda adentro sin rivales sale al borde y sigue (`reglas.json` → `ia_sin_sitios`; prueba: `tests/facil_sitios.gd`). Con los sitios sin victoria no hace falta y no lo hace.
+
 Sin victoria por hitos (opciones de partida), toda IA caza los edificios que cuentan para la victoria cuando el rival casi no tiene ejército o le saca el doble (`reglas.json` → `ia_caza`). Con hitos no cambia nada.
 
 ## Pruebas

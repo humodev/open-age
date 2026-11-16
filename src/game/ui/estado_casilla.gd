@@ -47,7 +47,19 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 	# Con nombre común ("Casa" para "Oga"), el común arriba y el propio abajo, más tenue
 	# (jugador nuevo, ronda 3); si abajo hay franja o edad, solo el común.
 	var comun := str(c.get("common", "")) if nombres else ""
-	if nombre != "":
+	# Franja de lo que falta en varios renglones (costo real, 4k): el glifo se achica y queda un
+	# solo nombre (el común si hay) justo encima; si no entra, solo el glifo, como sin nombres.
+	var franja := _alto_franja(falta.size()) + 2.0 if not afford and not locked and falta.size() > 1 else 0.0
+	if nombre != "" and franja > 0.0:
+		var label := comun if comun != "" else nombre
+		var top := r.end.y - franja
+		var gs := minf(26.0, top - r.position.y - 3.0 - 13.0)
+		if gs >= 10.0:
+			Glyphs.draw(ci, c["icon"], Rect2(r.position.x + (r.size.x - gs) / 2.0 + 2, r.position.y + 3, gs, gs), col)
+			ci.draw_string(Hud.font_b, Vector2(r.position.x + 2, top - 2.0), label, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, _fit(Hud.font_b, label, 10, r.size.x - 4), Palette.UI_DIM.lightened(0.2))
+		else:
+			Glyphs.draw(ci, c["icon"], _rect_glifo(r, locked, falta), col)
+	elif nombre != "":
 		Glyphs.draw(ci, c["icon"], Rect2(r.position.x + (r.size.x - 26) / 2.0 + 2, r.position.y + 3, 26, 26), col)
 		var lines := 1 if (locked and edad_pedida(str(c["locked"])) != "") or (not afford and not locked) else 2
 		var tcol := Palette.UI_TEXT if col == Palette.UI_TEXT else Palette.UI_DIM.lightened(0.2)

@@ -78,13 +78,24 @@ func _init() -> void:
 	var alarm := false
 	var last_dialog := ""
 	var wealth_ids := {}
+	var done_at := {} # objetivo -> tick en que se cumplió
+	var raiders := 0 # saqueadores que hay que abatir (o9)
+	for o in s.scenario.objectives:
+		if o["id"] == "o9":
+			raiders = int(o["params"]["n"])
+	var dialogs_hito := 0 # mensajes de la Guía mientras se construye el hito
+	var hito_tick := -1
 	for i in 30 * 600:
 		s.step()
 		for ev in s.events:
 			if ev["t"] == "objetivo":
+				if ev["estado"] == "hecho":
+					done_at[ev["id"]] = s.tick
 				print(t(), " objetivo ", ev["estado"], " ", ev["id"], " ", String(ev["texto"]).substr(0, 70))
 			elif ev["t"] == "dialogo":
 				last_dialog = ev["texto"]
+				if hito_tick >= 0:
+					dialogs_hito += 1
 				print(t(), " guía: ", String(ev["texto"]).substr(0, 80))
 			elif ev["t"] == "mision":
 				print(t(), " MISIÓN ", ev["resultado"], " · ", ev.get("motivo", ""))
@@ -108,12 +119,15 @@ func _init() -> void:
 		if not enemies.is_empty() and not mine("guerrero").is_empty():
 			s.push_command({"t": "target", "player": 0, "ids": ids(mine("guerrero")), "target": enemies[0].id})
 		# "Faltan 30 segundos. Si no te alcanzan los guerreros, … tocá la campana".
-		if modo == "letra" and not alarm and last_dialog.begins_with("Faltan 30") and mine("guerrero").size() < 4:
+		if modo == "letra" and not alarm and not step.has("campana") and last_dialog.begins_with("Faltan 30") and mine("guerrero").size() < 4:
+			step["campana"] = true
 			s.push_command({"t": "alarm", "player": 0, "on": true})
 			alarm = true
 			print(t(), " toco la campana con %d guerreros" % mine("guerrero").size())
 		# "Cuando pase el peligro, Z otra vez los devuelve al trabajo".
-		if alarm and att_seen > 0 and enemies.is_empty() and objs.get("o9") == "hecho":
+		# "Pasó el peligro": cayeron los saqueadores que pide o9 (o9 ya no se cumple antes que o8).
+		var raid_over: bool = s.scenario.kills >= raiders
+		if alarm and raid_over:
 			s.push_command({"t": "alarm", "player": 0, "on": false})
 			alarm = false
 			print(t(), " calma")
@@ -165,7 +179,7 @@ func _init() -> void:
 			var builders := v.filter(func(e: SimEntity) -> bool: return not food_ids.has(e.id) and not wealth_ids.has(e.id)).slice(0, 2)
 			s.push_command({"t": "build", "player": 0, "ids": ids(builders), "type": "cuartel", "tx": p.x, "ty": p.y})
 			step["cuartel"] = true
-		if objs.get("o8") == "activo" and (modo == "letra" or objs.get("o9") == "hecho"):
+		if objs.get("o8") == "activo" and (modo == "letra" or raid_over):
 			for cu in mine("cuartel"):
 				if cu.built and cu.queue.is_empty():
 					s.push_command({"t": "train", "player": 0, "building": cu.id, "type": "guerrero"})
@@ -177,11 +191,22 @@ func _init() -> void:
 				var p := place(hito, c, 6)
 				s.push_command({"t": "build", "player": 0, "ids": ids(v.slice(0, mini(4, v.size()))), "type": hito, "tx": p.x, "ty": p.y})
 				step["hito"] = true
+				hito_tick = s.tick
 				print(t(), " construyo el hito ", hito, " con ", r)
 		if s.tick % 1800 == 0:
 			print(t(), " recursos ", r, " · aldeanos ", v.size(), " · guerreros ", mine("guerrero").size())
 	var res: String = s.scenario.result
 	print("RESULTADO modo=%s %s a las %s · motivo: %s" % [modo, res if res != "" else "(abierta)", t(), s.scenario.motivo])
 	var ok := res == "victoria" if modo == "letra" else (res == "victoria" or res == "derrota" and s.scenario.motivo != "")
+	# Orden de los objetivos 8 y 9 (jugador nuevo, ronda 3): abatir a los saqueadores no se adelanta.
+	if done_at.has("o9") and int(done_at.get("o8", 1 << 60)) > int(done_at["o9"]):
+		print("FALLA: «abatí a los saqueadores» se cumplió antes que «entrená 5 guerreros»")
+		ok = false
+	# La espera del hito tiene mensajes de la Guía.
+	if res == "victoria" and hito_tick >= 0:
+		print("mensajes de la Guía mientras sube el hito: %d" % dialogs_hito)
+		if dialogs_hito < 2:
+			print("FALLA: la obra del hito pasa sin mensajes de la Guía")
+			ok = false
 	print("OK" if ok else "FALLA")
 	quit(0 if ok else 1)
