@@ -289,3 +289,10 @@ Con los pasos 1 a 4 integrados, los mismos cuatro jugadores de las rondas 1 y 2,
   - ahora: 3 de 3 y 5 de 5.
   - Carnear en cadena desde la carne sigue andando.
 - **Otras pruebas:** determinismo, mismo hash; civs sin errores; rendimiento 9,15 ms de promedio y 96 de peor caso, con la máquina cargada. Antes de C2 el peor caso era de unos 59: con el guerrero más lento hay más unidades vivas al final (129 contra 121). Queda anotado como riesgo.
+
+## Cuarta ronda de jugadores (desde 2026-11-16)
+
+> El autor: "Lo antes posible hay que correr otra prueba. Yo diría solo el jugador experto y el principiante, y que se concentren en calidad de vida y usabilidad, además de lo que ya miran."
+
+- Juegan el veterano de AoE4 y el jugador nuevo, con su memoria de las rondas 1–3, sobre main con todo lo de la ronda 3 integrado.
+- Cada informe trae una sección "Calidad de vida y usabilidad" ordenada por gravedad, en [`proceso/22-testers/ronda-4/`](../22-testers/ronda-4/).
