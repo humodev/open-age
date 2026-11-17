@@ -1,0 +1,7 @@
+FALLO tawantinsuyu: 'fortaleza' no está en la tabla de militar
+FALLO mapuches: 'fortaleza' no está en la tabla de militar
+FALLO guaranies: 'fortaleza' no está en la tabla de militar
+FALLO etiopia: 'fortaleza' no está en la tabla de militar
+FALLO palmares: 'fortaleza' no está en la tabla de militar
+FALLO ayutthaya: 'fortaleza' no está en la tabla de militar
+GRILLA: FALLO (6)

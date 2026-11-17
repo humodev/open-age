@@ -975,8 +975,7 @@ func _maybe_shot() -> void:
 		var c := Controller.cmd_at(ctrl.commands(), slot)
 		if not c.is_empty():
 			var card: Control = hud._card
-			var sr: Rect2 = card.call("_slot_rect", slot)
-			hud.show_tip(c, Rect2(card.global_position + sr.position, sr.size))
+			hud.show_tip(c, card.get_global_rect()) # --- iconos --- anclada a la grilla, como con el mouse (no tapa la fila de arriba)
 	# --- fin veterano ---
 	if _args.has("grilla"): # --- grilla --- (--grilla=economia|militar abre ese submenú para la captura)
 		ctrl.open_submenu(_args["grilla"])
@@ -2208,6 +2207,7 @@ func _autotest() -> void:
 	await _autotest_veterano4(check) # --- veterano ronda 4 ---
 	await _autotest_veterano5(check) # --- veterano ronda 5 ---
 	await _autotest_ronda6(check) # --- ronda 6 ---
+	await preload("res://src/game/autotest_iconos.gd").correr(self, check) # --- iconos --- (proceso/28)
 	# --- aprender --- (avisos que enseñan, cuenta de sitios, nombres en la grilla, registro de la Guía y fin)
 	var cs = hud.consejos
 	Opciones.consejos = true

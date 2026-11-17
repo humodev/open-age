@@ -277,7 +277,8 @@ func _type_content(owner: int, type: String) -> Dictionary:
 		c["stats"] = _building_stats(owner, def, -1, -1)
 		_counters(c, "edificio", def)
 	elif dd.tecnologias.has(type):
-		c["role"] = "Investigación · %s" % dd.edificios.get(def.get("edificio", ""), {}).get("nombre", "")
+		var donde: String = dd.edificios.get(def.get("edificio", ""), {}).get("nombre", "")
+		c["role"] = "Investigación · %s" % donde if donde != "" else "Investigación" # --- iconos --- sin «Investigación ·» colgando
 		if def.get("escuela", false): # --- paso 3 ---
 			c["role"] = "Escuela de la edad IV · %s" % ctrl.escuela_info()["nombre"]
 		c["desc"] = def.get("desc", "")
@@ -288,6 +289,7 @@ func _type_content(owner: int, type: String) -> Dictionary:
 
 
 func _cmd_content(cmd: Dictionary) -> Dictionary:
+	cmd = _cmd_vivo(cmd) # --- iconos ---
 	var c := _type_content(hud.local, cmd["id"])
 	if cmd["kind"] == "research":
 		c["glyph"] = cmd.get("icon", "")
@@ -323,12 +325,27 @@ func _cmd_content(cmd: Dictionary) -> Dictionary:
 			c["foot"].append(["Clic y elegí el lugar · Mayús: varios seguidos", Palette.UI_DIM])
 		"research":
 			c["foot"].append(["Clic: investigar en este edificio", Palette.UI_DIM])
-	if cmd.get("locked", "") != "":
-		c["foot"].append([cmd["locked"], Palette.UI_BAD])
-	# --- costo real --- (proceso/24, 4k) cuánto falta de cada recurso, con nombre
-	elif not EstadoCasilla.faltante(c["cost"], sim.players[hud.local]["res"]).is_empty():
-		c["state"].append([ctrl.missing_text(c["cost"]), Palette.UI_BAD])
+	# --- iconos --- (proceso/28) Lo que impide el clic, lo que falta y «Podés…» van en la primera
+	# línea, debajo del encabezado (EstadoCasilla.lineas_ayuda): rojo solo si bloquea. Antes el
+	# bloqueo iba al pie en rojo y lo que faltaba, en rojo en «Ahora».
+	var res: Dictionary = sim.players[hud.local]["res"]
+	var falta_txt := ctrl.missing_text(c["cost"]) if not EstadoCasilla.faltante(c["cost"], res).is_empty() else ""
+	c["status"] = EstadoCasilla.lineas_ayuda(cmd, res, falta_txt)
+	c["edad"] = int(cmd.get("edad", 0))
+	if EstadoCasilla.estado(cmd, res) in ["bloqueado", "tope", "en_curso"]:
+		c["foot"] = [] # «Clic: investigar…» no va cuando el clic no hace nada
+	# --- fin iconos ---
 	return c
+
+
+## --- iconos --- La ayuda guardaba el comando del momento en que entró el mouse: si después
+## alcanzaban los recursos, se subía de edad o terminaba el hito, seguía diciendo lo de antes.
+## Ahora se vuelve a leer de la grilla en cada cuadro (mismo id en la misma casilla).
+func _cmd_vivo(cmd: Dictionary) -> Dictionary:
+	if ctrl == null or int(cmd.get("slot", -1)) < 0:
+		return cmd
+	var c := Controller.cmd_at(ctrl.commands(), int(cmd["slot"]))
+	return c if not c.is_empty() and c.get("id", "") == cmd.get("id", "") else cmd
 
 
 func _entity_content(e: SimEntity) -> Dictionary:
@@ -661,7 +678,7 @@ func _building_state(c: Dictionary, e: SimEntity) -> void:
 			c["state"].append(["Después: " + ", ".join(rest), Palette.UI_DIM])
 		var p: Dictionary = sim.players[e.owner]
 		if e.queue_progress == 0 and p["pop"] >= p["pop_cap"]:
-			c["state"].append(["Detenido: población llena", Palette.UI_BAD])
+			c["state"].append(["Detenido: población llena", Iconos.color_estado("falta", Palette.UI_ACCENT)]) # --- iconos --- advertencia, no error
 	elif e.def.has("produce") and e.owner == hud.local:
 		c["state"].append(["Sin nada en producción", Palette.UI_DIM])
 	var cap := sim.garrison_cap(e)
@@ -715,7 +732,7 @@ func _engine_state(c: Dictionary, e: SimEntity, dd: SimData) -> void:
 		gives.append("%d de %s" % [int(cv["da"][k]) * pct / 100 * boost / 100, _res_name(dd, k)])
 	c["state"].append(["Motor: %d de %s/min → %s/min" % [cv["consume_min"], _res_name(dd, src), ", ".join(gives)], Palette.UI_GOOD if pct == 100 else Palette.UI_ACCENT])
 	if pct < 100:
-		c["state"].append(["Falta %s: rinde al %d%%" % [_res_name(dd, src), pct], Palette.UI_BAD])
+		c["state"].append(["Falta %s: rinde al %d%%" % [_res_name(dd, src), pct], Iconos.color_estado("falta", Palette.UI_ACCENT)]) # --- iconos --- advertencia, no error
 	if boost > 100:
 		c["state"].append(["Mejora de motor: +%d%%" % (boost - 100), Palette.UI_DIM])
 
@@ -812,13 +829,26 @@ func _paint(paint: bool) -> float:
 	hy += 22
 	if paint:
 		_flag(Vector2(hx, hy - 11), team, owner < 0 and not c["is_res"])
-		draw_string(Hud.font, Vector2(hx + 20, hy), _people_line(c), HORIZONTAL_ALIGNMENT_LEFT, hw - 20, 14, team.lightened(0.35) if owner >= 0 else Palette.UI_DIM)
+		# --- iconos --- la edad a la que pertenece, en su color (data/iconos.json → edades)
+		var edad := int(c.get("edad", 0))
+		var ew := 0.0
+		if edad > 0:
+			var et := "Edad %s" % Sim._roman(edad)
+			ew = Hud.font_b.get_string_size(et, HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x + 8
+			draw_string(Hud.font_b, Vector2(hx, hy), et, HORIZONTAL_ALIGNMENT_RIGHT, hw, 13, Iconos.texto_edad(edad))
+		# --- fin iconos ---
+		draw_string(Hud.font, Vector2(hx + 20, hy), _people_line(c), HORIZONTAL_ALIGNMENT_LEFT, hw - 20 - ew, 14, team.lightened(0.35) if owner >= 0 else Palette.UI_DIM)
 	var role: String = c.get("role", "")
 	if role != "":
 		var rh := Hud.font_b.get_multiline_string_size(role, HORIZONTAL_ALIGNMENT_LEFT, hw, 13).y
 		if paint:
 			draw_multiline_string(Hud.font_b, Vector2(hx, hy + 20), role, HORIZONTAL_ALIGNMENT_LEFT, hw, 13, -1, Palette.UI_ACCENT)
 		hy += 6 + rh
+	# --- iconos --- primera línea: «Podés…», «Falta: …» o «Necesita la edad III»
+	var status: Array = c.get("status", [])
+	if not status.is_empty():
+		hy += 8 + EstadoCasilla.dibujar_lineas(self, Vector2(hx, hy + 22), status, 14, hw, paint)
+	# --- fin iconos ---
 	y = maxf(y + PORTRAIT, hy) + 10
 	# Barra (vida, obra, cola o recurso).
 	var e: SimEntity = c.get("entity")
@@ -882,7 +912,7 @@ func _paint(paint: bool) -> float:
 			y += sh + 3
 		y += 3
 	# Fortalezas y debilidades.
-	for pair in [["Fuerte contra", c["strong"], Palette.UI_GOOD], ["Débil", c["weak"], Palette.UI_BAD]]:
+	for pair in [["Fuerte contra", c["strong"], Palette.UI_GOOD], ["Débil", c["weak"], Iconos.color_estado("debil", Palette.UI_DIM)]]: # --- iconos --- «Débil» informa, no bloquea: sin rojo
 		if pair[1] == "":
 			continue
 		var txt: String = "%s: %s" % [pair[0], pair[1]]
@@ -964,7 +994,7 @@ func _draw_cost(at: Vector2, cost: Dictionary, time_ms: int, check: bool, owner:
 		var col: Color = Palette.RES.get(k, Color(rp.get("color", "#cccccc")))
 		Glyphs.draw(self, k if Palette.RES.has(k) else rp.get("icono", "riqueza"), Rect2(x, at.y + 2, 18, 18), col)
 		var ok: bool = not check or int(res.get(k, 0)) >= int(cost[k])
-		draw_string(Hud.font_b, Vector2(x + 22, at.y + 17), str(cost[k]), HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Palette.UI_TEXT if ok else Palette.UI_BAD)
+		draw_string(Hud.font_b, Vector2(x + 22, at.y + 17), str(cost[k]), HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Palette.UI_TEXT if ok else Iconos.color_estado("falta", Palette.UI_ACCENT)) # --- iconos --- ámbar: falta juntar
 		x += 70
 	if time_ms > 0:
 		draw_string(Hud.font, Vector2(at.x, at.y + 17), "Tiempo %d s" % (time_ms / 1000), HORIZONTAL_ALIGNMENT_RIGHT, W - PAD * 2, 14, Palette.UI_DIM)

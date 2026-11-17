@@ -1,0 +1,60 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+  +alimento                    almacen_alimento
+  +alimento+madera             almacen_madera
+  +madera                      almacen_madera
+  +piedra+riqueza              almacen_mina
+  +riqueza                     almacen_mina
+  aldeano                      aldeano
+  arcabuz                      arcabucero
+  arcabuz^1                    veterano_polvora
+* ariete                       ariete, incendiarios, taller
+  ariete^1                     veterano_asedio
+  atacar~guerrero~1            ataque_cc_1
+  atacar~hondero~1             ataque_dist_1
+  barrio_japones               barrio_japones
+  barrio_portugues             barrio_portugues
+  camino                       camino
+  carga                        cestas
+  carpa                        corte_nueva
+* casa                         casa, mamposteria, reparacion_rapida
+  catapulta                    catapulta
+* centro                       centro, lof
+  corral                       corral
+  cuartel                      cuartel
+* elefante                     elefante_rey, chang_suek
+  empalizada                   empalizada
+  escudo~guerrero~1            armadura_cc_1
+  escudo~hondero~1             armadura_dist_1
+  explorador                   explorador
+  fortaleza                    fortaleza
+* granja                       granja, riego
+* guerrero                     guerrero, compania_japonesa
+  guerrero^1                   veterano_choque
+  gult                         gult
+* hito_economia                ushnu, aqllawasi, qorikancha, rewe_lonko, rewe_monte, parlamento, karai_palabra, mision, tava, iglesia, amba, gondar, quilombo_central, cerca_real, pacto_cucau, wat, puerto_real, junco_tributo
+* hito_guerra                  pukara_mayor, kallanka_real, vilcabamba, rewe_malon, rewe_caballeria, weichan, aty_guasu, monte, yvy_marane, monasterio, remonta, alianza, mocambo_guerra, ferraria, guerra_zumbi, kraal_real, fortaleza_rio, guardia_extranjera
+* hondero                      campo_tiro, hondero, boleador
+  hondero^1                    veterano_distancia
+* jinete                       jinete, establo
+  jinete^1                     veterano_montados
+  kraal                        kraal
+* lancero                      lancero, awqa
+  lancero^1                    veterano_linea
+  madera                       hachas
+  mercado                      mercado
+  mocambo                      mocambo
+  piedra                       canteria
+  puerta                       puerta
+  qollqa+alimento              qollqa
+* riqueza                      orfebreria, oficio_motor
+  telar                        taller_tejido
+  terraza                      anden
+* torre                        torre, vigias, aspilleras, fortaleza_reforzada
+  velocidad                    marcha
+  vida                         adiestramiento
+FALLO tawantinsuyu e4 campo_tiro: 'hondero' y 'boleador' comparten el ícono 'hondero'
+FALLO ayutthaya e4 fortaleza: 'aspilleras' y 'fortaleza_reforzada' comparten el ícono 'torre'
+FALLO tawantinsuyu e4 kallanka_real: 'hondero' y 'boleador' comparten el ícono 'hondero'
+ICONOS: 580 grillas, 53 íconos distintos, FALLO (3)
+ERROR: 9 resources still in use at exit (run with --verbose for details).

@@ -9,7 +9,7 @@ extends RefCounted
 ## La letra del atajo va en una pastilla oscura propia, arriba a la izquierda.
 ## Todos los textos y glifos quedan a 4,5:1 o más contra su fondo (tests/test_paleta.gd).
 
-const FONDO_BLOQUEO := Color(0, 0, 0, 0.32)
+const FONDO_BLOQUEO := Color(0, 0, 0, 0.5) # --- iconos --- más oscuro: se lee apagado (proceso/28)
 const FONDO_PASTILLA := Color(0, 0, 0, 0.62)
 ## --- aprender --- Opción "Mostrar nombres en la grilla" (src/game/ui/opciones.gd): el glifo
 ## se achica y el nombre va debajo, en dos renglones (uno si abajo hay franja o edad). Si el
@@ -18,9 +18,14 @@ static var nombres := true
 
 
 ## Dibuja una casilla con comando. `res` es el banco del jugador; `rp` el recurso propio.
+## --- iconos --- (proceso/28) Cada estado se ve sin depender del color ni del candado
+## (estado()): falta recurso → borde y tinte ámbar y la franja de lo que falta; bloqueado o tope →
+## oscurecida y rayada en diagonal, con la edad que pide en su color o «Máx. n»; en curso → borde
+## y tilde; población llena → borde y pastilla de población; en la cola → borde y cuántos.
 static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, hover: bool, active: bool, letra: String, rp: Dictionary) -> void:
-	var locked: bool = c["locked"] != ""
-	var falta := faltante(c.get("cost", {}), res)
+	var est := estado(c, res)
+	var locked: bool = est == "bloqueado" or est == "tope"
+	var falta := faltante(c.get("cost", {}), res) if est == "falta" else {}
 	var afford := falta.is_empty()
 	var sb := StyleBoxFlat.new()
 	sb.set_corner_radius_all(6)
@@ -29,18 +34,26 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 		sb.bg_color = Color(Palette.UI_ACCENT, 0.3)
 	sb.border_color = Color(1, 1, 1, 0.1)
 	sb.set_border_width_all(1)
-	if not afford and not locked:
-		sb.border_color = Palette.UI_BAD
+	var borde := _color_borde(est, c)
+	if borde.a > 0.0:
+		sb.border_color = borde
 		sb.set_border_width_all(2)
+		if est == "falta":
+			sb.bg_color = sb.bg_color.blend(Color(borde, 0.1))
 	ci.draw_style_box(sb, r)
 	if locked:
 		var dark := StyleBoxFlat.new()
 		dark.set_corner_radius_all(6)
 		dark.bg_color = FONDO_BLOQUEO
 		ci.draw_style_box(dark, r)
+		_rayado(ci, r.grow(-2))
+	_franja_edad(ci, r, c)
 	var col := Palette.UI_TEXT
-	if locked or not afford:
-		col = Palette.UI_DIM
+	if locked:
+		col = GLIFO_BLOQUEO
+	elif not afford:
+		col = Palette.UI_DIM.lerp(Iconos.color_estado("falta", Palette.UI_ACCENT), 0.45)
+	# --- fin iconos ---
 	# --- aprender ---
 	var nombre := str(c.get("name", "")).trim_prefix("Construir: ") if nombres else ""
 	nombre = nombre.left(1).to_upper() + nombre.substr(1)
@@ -74,7 +87,7 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 		ci.draw_string(Hud.font_b, Vector2(r.position.x + 2, r.position.y + 30), str(dos[0]), HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, _fit(Hud.font_b, str(dos[0]), 10, r.size.x - 4), Palette.UI_DIM.lightened(0.2))
 		ci.draw_string(Hud.font_b, Vector2(r.position.x + 2, r.position.y + 40.5), str(dos[1]), HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, _fit(Hud.font_b, str(dos[1]), 11, r.size.x - 4), tcol2)
 	elif nombre != "":
-		var lines := 1 if (locked and edad_pedida(str(c["locked"])) != "") or (not afford and not locked) else 2
+		var lines := 1 if (locked and (edad_pedida(str(c["locked"])) != "" or est == "tope")) or (not afford and not locked) else 2
 		# Compacto (jugador nuevo, ronda 4): sin común, un renglón no alcanza («Trabajo de la
 		# riqueza» con la edad abajo) → glifo chico y dos renglones arriba de la pastilla.
 		var compacto := comun == "" and lines == 1 and _fit_lineas(Hud.font, nombre, 10, r.size.x - 4, 1) < 9
@@ -106,11 +119,20 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 	# --- fin aprender ---
 	_pastilla(ci, Rect2(r.position + Vector2(3, 3), Vector2(17, 17)), letra, Palette.UI_TEXT)
 	if locked:
-		_candado(ci, Rect2(r.end.x - 19, r.position.y + 4, 15, 16), Palette.UI_TEXT)
+		# --- iconos --- candado chico (ya no es lo único que avisa) y la edad en su color, o el tope
+		_candado(ci, Rect2(r.end.x - 17, r.position.y + 4, 13, 14), Palette.UI_DIM)
 		var edad := edad_pedida(str(c["locked"]))
-		if edad != "":
-			var w := Hud.font_b.get_string_size(edad, HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x + 8
-			_pastilla(ci, Rect2(r.end.x - w - 3, r.end.y - 20, w, 17), edad, Palette.UI_TEXT)
+		if est == "tope":
+			_pastilla_color(ci, r, "Máx. " + str(c["locked"]).get_slice(":", 1).strip_edges(), Iconos.color_estado("tope", Palette.UI_NEUTRAL))
+		elif edad != "":
+			var n := Iconos.edad_de_romano(edad)
+			# Solo el número: «Edad III» tapaba el segundo renglón del nombre; la ayuda lo dice entero.
+			_pastilla_color(ci, r, edad, Iconos.color_edad(n), "", 13)
+		# --- fin iconos ---
+	elif est == "en_curso":
+		_tilde(ci, Rect2(r.end.x - 19, r.position.y + 3, 16, 16), Iconos.color_estado("hecho", Palette.UI_GOOD)) # --- iconos ---
+	elif est == "aviso":
+		_aviso_pob(ci, Rect2(r.end.x - 21, r.position.y + 3, 18, 17), Iconos.color_estado("tope", Palette.UI_NEUTRAL)) # --- iconos ---
 	elif not afford:
 		# --- costo real --- (proceso/24, 4k) cada recurso que falta con su número, uno por
 		# renglón: el hito ya no dice "−300+" sino todo lo que pide (también mit'a o fama).
@@ -130,8 +152,167 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 			var icon_k := k if Palette.RES.has(k) else str(rp.get("icono", "riqueza"))
 			var icol: Color = Palette.RES.get(k, Color(rp.get("color", "#cccccc")))
 			Glyphs.draw(ci, icon_k, Rect2(p.x + 3, p.y + (rh - gs) / 2.0, gs, gs), icol)
-			ci.draw_string(Hud.font_b, Vector2(p.x + gs + 5, p.y + rh - (4.0 if solo else 2.5)), items[i][1], HORIZONTAL_ALIGNMENT_LEFT, band.size.x - gs - 6, 13 if solo else 12, Palette.UI_BAD.lightened(0.15))
+			# --- iconos --- el número en el color del recurso que falta (no en rojo: no es un error)
+			ci.draw_string(Hud.font_b, Vector2(p.x + gs + 5, p.y + rh - (4.0 if solo else 2.5)), items[i][1], HORIZONTAL_ALIGNMENT_LEFT, band.size.x - gs - 6, 13 if solo else 12, _texto_recurso(icol))
 		# --- fin costo real ---
+	# --- iconos --- cuántas hay en la cola de lo elegido (arriba a la derecha)
+	var cola := int(c.get("en_cola", 0))
+	if cola > 0 and not locked:
+		var txt := "×%d" % cola
+		var tw := Hud.font_b.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x + 8
+		var pr := Rect2(r.end.x - tw - 3, r.position.y + 3, tw, 17)
+		var psb := StyleBoxFlat.new()
+		psb.bg_color = FONDO_PASTILLA
+		psb.set_corner_radius_all(4)
+		ci.draw_style_box(psb, pr)
+		ci.draw_string(Hud.font_b, Vector2(pr.position.x, pr.end.y - 4), txt, HORIZONTAL_ALIGNMENT_CENTER, pr.size.x, 12, Palette.UI_ACCENT)
+
+
+## --- iconos --- (proceso/28) Estado de una casilla, en orden de prioridad:
+##   en_curso   investigación ya pedida (no se puede volver a pedir, pero no es un bloqueo);
+##   tope       máximo por edad alcanzado (bloquea);
+##   bloqueado  falta la edad o un requisito (bloquea);
+##   falta      no alcanzan los recursos;
+##   aviso      se puede, pero no va a salir enseguida (población llena);
+##   disponible se puede ya.
+static func estado(c: Dictionary, res: Dictionary) -> String:
+	if c.get("en_curso", false):
+		return "en_curso"
+	if c.get("tope", false):
+		return "tope"
+	if str(c.get("locked", "")) != "":
+		return "bloqueado"
+	if not faltante(c.get("cost", {}), res).is_empty():
+		return "falta"
+	if str(c.get("aviso", "")) != "":
+		return "aviso"
+	return "disponible"
+
+
+const GLIFO_BLOQUEO := Color("6f6b64")
+
+
+static func _color_borde(est: String, c: Dictionary) -> Color:
+	match est:
+		"falta":
+			return Iconos.color_estado("falta", Palette.UI_ACCENT)
+		"en_curso":
+			return Iconos.color_estado("hecho", Palette.UI_GOOD)
+		"aviso":
+			return Iconos.color_estado("tope", Palette.UI_NEUTRAL)
+		"disponible":
+			if int(c.get("en_cola", 0)) > 0:
+				return Color(Iconos.color_estado("hecho", Palette.UI_GOOD), 0.75)
+	return Color(0, 0, 0, 0)
+
+
+## Rayas diagonales finas: lo bloqueado se distingue de lo que solo no alcanza también en grises.
+static func _rayado(ci: CanvasItem, r: Rect2) -> void:
+	var paso := 7.0
+	var col := Color(1, 1, 1, 0.07)
+	var d := 0.0
+	while d < r.size.x + r.size.y:
+		# Recta x + y = d (en coordenadas de r), recortada al rectángulo.
+		var a := Vector2(minf(d, r.size.x), d - minf(d, r.size.x))
+		var b := Vector2(d - minf(d, r.size.y), minf(d, r.size.y))
+		ci.draw_line(r.position + a, r.position + b, col, 1.5)
+		d += paso
+
+
+## Franja de la edad a la izquierda: toda investigación y lo que se habilita desde la edad II.
+static func _franja_edad(ci: CanvasItem, r: Rect2, c: Dictionary) -> void:
+	var edad := int(c.get("edad", 0))
+	if edad <= 0 or (edad < 2 and c.get("kind", "") != "research"):
+		return
+	ci.draw_rect(Rect2(r.position.x + 1, r.position.y + 6, 4, r.size.y - 12), Iconos.color_edad(edad))
+
+
+## Pastilla de color abajo a la derecha («III» en el color de la edad, «Máx. 2»); si no entra,
+## `corto`.
+static func _pastilla_color(ci: CanvasItem, r: Rect2, txt: String, fondo: Color, corto: String = "", fs: int = 11) -> void:
+	if corto != "" and Hud.font_b.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x + 8 > r.size.x - 8:
+		txt = corto
+		fs = 13
+	var w := Hud.font_b.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x + 8
+	var pr := Rect2(r.end.x - w - 3, r.end.y - 19, w, 16)
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = fondo
+	sb.set_corner_radius_all(4)
+	ci.draw_style_box(sb, pr)
+	ci.draw_string(Hud.font_b, Vector2(pr.position.x, pr.end.y - 4), txt, HORIZONTAL_ALIGNMENT_CENTER, pr.size.x, fs, Iconos.texto_sobre(fondo))
+
+
+## Tilde en un círculo: investigación en curso.
+static func _tilde(ci: CanvasItem, r: Rect2, col: Color) -> void:
+	ci.draw_circle(r.get_center(), r.size.x * 0.5, col)
+	var p := r.position
+	var s := r.size.x
+	ci.draw_polyline(PackedVector2Array([p + Vector2(s * 0.24, s * 0.52), p + Vector2(s * 0.43, s * 0.72), p + Vector2(s * 0.78, s * 0.3)]), Iconos.OSCURO, 2.2, true)
+
+
+## Población llena: la figura de población con un signo, en la pastilla del tope.
+static func _aviso_pob(ci: CanvasItem, r: Rect2, col: Color) -> void:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = col
+	sb.set_corner_radius_all(4)
+	ci.draw_style_box(sb, r)
+	Glyphs.draw(ci, "pob", Rect2(r.position + Vector2(1, 1), Vector2(r.size.y - 2, r.size.y - 2)), Iconos.OSCURO)
+	ci.draw_string(Hud.font_b, Vector2(r.position.x + r.size.y - 5, r.end.y - 3), "!", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Iconos.OSCURO)
+
+
+## Primera línea de la ayuda y de la ficha (proceso/28): qué pasa si hago clic ahora. Devuelve
+## renglones de tramos [[texto, color], …]. Rojo (estados.bloquea) solo para lo que impide el clic
+## por edad, requisito o tope; ámbar (estados.falta) para lo que falta juntar o lo que no bloquea;
+## verde (estados.puede) si se puede. `falta_txt` es el «Faltan 40 de madera» del controlador.
+static func lineas_ayuda(c: Dictionary, res: Dictionary, falta_txt: String) -> Array:
+	var rojo := Iconos.color_estado("bloquea", Palette.UI_BAD)
+	var ambar := Iconos.color_estado("falta", Palette.UI_ACCENT)
+	var verde := Iconos.color_estado("puede", Palette.UI_GOOD)
+	var locked := str(c.get("locked", ""))
+	match estado(c, res):
+		"en_curso":
+			return [[["Ya está en investigación", Iconos.color_estado("hecho", Palette.UI_GOOD)]]]
+		"tope":
+			return [[["No se puede: " + locked.to_lower(), rojo]]]
+		"bloqueado":
+			var edad := edad_pedida(locked)
+			if edad != "":
+				return [[["Necesita la ", rojo], ["edad " + edad, Iconos.texto_edad(Iconos.edad_de_romano(edad))]]]
+			return [[["No se puede: " + locked.left(1).to_lower() + locked.substr(1), rojo]]]
+		"falta":
+			return [[["Falta: " + falta_txt.trim_prefix("Faltan ").trim_prefix("Falta "), ambar]]]
+	var puede := {"build": "Podés construirlo", "train": "Podés entrenarlo", "research": "Podés investigarlo"}.get(c.get("kind", ""), "Podés hacerlo") as String
+	var out: Array = [[[puede, verde]]]
+	if str(c.get("aviso", "")) != "":
+		out.append([[str(c["aviso"]), ambar]])
+	return out
+
+
+## Dibuja los renglones de lineas_ayuda desde `at` (línea de base del primero); devuelve el alto.
+static func dibujar_lineas(ci: CanvasItem, at: Vector2, lineas: Array, fs0: int, w: float, paint: bool) -> float:
+	var y := 0.0
+	for ln: Array in lineas:
+		var fs := fs0
+		while fs > 10 and ln.reduce(func(acc: float, seg: Array) -> float: return acc + Hud.font_b.get_string_size(seg[0], HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x, 0.0) > w:
+			fs -= 1
+		var x := at.x
+		for seg: Array in ln:
+			if paint:
+				ci.draw_string(Hud.font_b, Vector2(x, at.y + y), seg[0], HORIZONTAL_ALIGNMENT_LEFT, -1, fs, seg[1])
+			x += Hud.font_b.get_string_size(seg[0], HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+		y += fs0 + 6
+	return y
+
+
+## Color de recurso aclarado para que el número se lea sobre la franja oscura (4,5:1 o más).
+static func _texto_recurso(c: Color) -> Color:
+	var t := c
+	for i in 6:
+		if Iconos.luminancia(t) >= 0.3:
+			break
+		t = t.lightened(0.15)
+	return t
+# --- fin iconos ---
 
 
 ## Tamaño de letra (de `size` para abajo, hasta 7) con el que `txt` entra en `w`.

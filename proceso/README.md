@@ -33,4 +33,9 @@ Las preguntas para el autor están en [`CONSULTAS.md`](CONSULTAS.md) y se revisa
 | [25 · Revisión histórica](25-revision-historica/README.md) | 2026-11-16 | Tres historiadores (América Latina, África, Asia) revisaron civs, campañas, arte y sonido: 82 correcciones sin cambio de mecánicas aplicadas; decisiones en C-67 a C-74 |
 | [26 · Juego tardío](26-juego-tardio/README.md) | 2026-11-16 | En curso: pendientes de historia y de juego agrupados; cantidades por civ según el veterano; diseño del final de partida y de las recompensas de edad como AoE4 |
 | [27 · Animaciones](27-animaciones/README.md) | 2026-11-16 | Paso 1 hecho (ae87303): aldeanos animados con el esqueleto de KayKit (CC0) y un cuerpo de piezas con la ropa de cada pueblo, con 10 estados (talar, picar, cosechar, construir, pegar, morir…) y un paso que no patina. Suma +1 a 1,5 ms por cuadro con 200 aldeanos. Los modelos de Meshy no tienen esqueleto: hay que riggearlos para usarlos. Se vuelve a la figura de antes con `--animaciones=0` o `data/arte_animaciones.json`. Faltan los soldados |
-| [28 · Íconos y estados](28-iconos-y-estados/README.md) | 2026-11-16 | Íconos propios en la grilla, color por edad, estados de color en lugar del candado, rojo de la ayuda solo si bloquea — en curso |
+| [28 · Íconos y estados](28-iconos-y-estados/README.md) | 2026-11-16 | Hecho (07d2559):
+- **Íconos:** 69 propios, sin repetidos en una grilla; cambiables por imágenes desde `data/iconos.json`.
+- **Color por edad:** violeta, pizarra, verde y celeste, con luminancia creciente, apto para daltónicos.
+- **Estados:** ámbar si falta recurso; oscurecido y rayado si está bloqueado, con la edad que falta en su color; tilde; cola; población llena.
+- **Ayuda flotante:** la primera línea dice qué pasa al hacer clic, y el rojo queda solo para lo que bloquea. Causa del rojo engañoso: la ayuda no se refrescaba después de juntar recursos o subir de edad.
+- **Al integrar:** la fortaleza del paso 4 tomó una casilla libre de la grilla militar (lista de preferencias en `interfaz.json`). |
