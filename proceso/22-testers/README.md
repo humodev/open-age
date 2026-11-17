@@ -110,3 +110,5 @@ Al final, una síntesis con lo que repiten varios y un plan priorizado: [00-sint
     - mapas de varios que ya se juegan.
 
     Aparecieron errores nuevos chicos, como la IA fácil en el centro, aldeanos que no carnean y misiones por encima del tope de población, que se arreglan ya. Lo más pedido ahora: hitos lentos, sitios a 10 minutos, opciones de partida e identidad visual y sonora.
+
+- **Séptima ronda** (2026-11-17, [síntesis](ronda-7/00-sintesis.md)): veterano y jugador nuevo con el juego tardío completo. La grilla se entiende sin leer y la experta se defiende. Pero el nuevo ya no le gana a la fácil (los honderos tiran sus arietes), y el final casi no se juega porque las partidas terminan antes de la IV.
