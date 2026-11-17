@@ -1,0 +1,89 @@
+# tests/civ_smoke.gd (paso 2)
+
+=== ["tawantinsuyu", "mapuches"] terreno=bosque ganador=-1
+tawantinsuyu edad 2 pob 53/75 res { "alimento": 55, "madera": 84, "piedra": 342, "riqueza": 667, "mita": 496 } tipos { "centro": 1, "aldeano": 42, "explorador": 1, "casa": 6, "almacen_madera": 3, "camino": 119, "qollqa": 3, "campo_tiro": 2, "almacen_mina": 2, "taller_tejido": 1, "ushnu": 1, "cuartel": 1, "mercado": 1, "granja": 12, "hondero": 5, "torre": 1, "ariete": 1, "guerrero": 2, "boleador": 2 }
+mapuches edad 2 pob 71/79 res { "alimento": 25, "madera": 35, "piedra": 390, "riqueza": 629 } tipos { "lof": 3, "aldeano": 41, "explorador": 1, "casa": 6, "corral": 3, "cuartel": 2, "granja": 12, "rewe_lonko": 1, "guerrero": 9, "hondero": 18, "mercado": 1, "lancero": 2 }
+=== ["etiopia", "palmares"] terreno=bosque ganador=-1
+etiopia edad 2 pob 42/55 res { "alimento": 29, "madera": 108, "piedra": 158, "riqueza": 196 } tipos { "centro": 1, "aldeano": 41, "casa": 4, "almacen_madera": 3, "gult": 3, "establo": 2, "almacen_mina": 2, "iglesia": 1, "almacen_alimento": 1, "granja": 18, "mercado": 1, "taller": 1, "cuartel": 1, "torre": 1, "guerrero": 1 }
+palmares edad 1 pob 45/48 res { "alimento": 30, "madera": 10, "piedra": 270, "riqueza": 138, "fama": 0 } tipos { "centro": 1, "aldeano": 22, "explorador": 1, "casa": 4, "mocambo": 1, "hondero": 11, "cuartel": 1, "almacen_alimento": 4, "quilombo_central": 1, "guerrero": 11, "rebano": 2 }
+=== ["guaranies", "ayutthaya"] terreno=bosque ganador=-1
+guaranies edad 2 pob 53/75 res { "alimento": 80, "madera": 47, "piedra": 110, "riqueza": 39 } tipos { "centro": 1, "aldeano": 42, "explorador": 1, "casa": 6, "granja": 11, "almacen_madera": 7, "campo_tiro": 2, "almacen_mina": 2, "karai_palabra": 1, "hondero": 8, "taller": 1, "cuartel": 1, "mercado": 1, "monte": 1, "guerrero": 1, "lancero": 1 }
+ayutthaya edad 2 pob 41/55 res { "alimento": 12, "madera": 56, "piedra": 340, "riqueza": 220 } tipos { "centro": 1, "aldeano": 31, "explorador": 1, "casa": 4, "elefante_rey": 2, "cuartel": 2, "almacen_mina": 1, "wat": 1, "granja": 11, "campo_tiro": 1, "mercado": 1, "rebano": 3, "taller": 1, "torre": 1, "guerrero": 3, "hondero": 2, "kraal": 1 }
+
+
+# tests/campaign_smoke.gd (paso 2)
+# Igual que en el paso 1 salvo palmares-1, o7 («protegé a los aldeanos», secundario): fallado a los 2:48 (antes activo). Ver abajo.
+
+ayutthaya-1      Nong Sarai                    3:00 resultado=(abierta) o1:activo o2:hecho o3:activo o4:activo o5:oculto o6:activo
+ayutthaya-2      La boca del río               3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+ayutthaya-3      Veintisiete fuertes           3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:oculto o5:oculto o6:activo
+ayutthaya-4      La otra orilla                3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo o6:oculto
+etiopia-1        La luz de Debre Berhan        3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+etiopia-2        La montaña de los príncipes   3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+etiopia-3        Wayna Daga                    3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo
+etiopia-4        Gondar                        3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+guaranies-1      Lambaré                       3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+guaranies-2      Río abajo                     3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo
+guaranies-3      Mbororé                       3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo
+guaranies-4      Esta tierra tiene dueño       3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo o6:activo
+mapuches-1       El hacha negra                3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+mapuches-2       Lo que no llega a casa no cu  3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo
+mapuches-3       Curalaba                      3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:oculto o5:activo
+mapuches-4       Quilín                        3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+palmares-1       Cuatro fraguas                3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo o7:fallado
+palmares-2       La cerca real                 3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:oculto o5:activo o6:activo
+palmares-3       El papel de Cucaú             3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:oculto o5:oculto o6:activo
+palmares-4       Tres cercas                   3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:oculto
+tawantinsuyu-1   Los que se quedaron           3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+tawantinsuyu-2   La frontera de piedra         3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo o6:activo
+tawantinsuyu-3   El agua de Ollantaytambo      3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:oculto o5:activo o6:activo
+tawantinsuyu-4   Tinta                         3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo o6:oculto
+tutorial-1       Primeros pasos                3:00 resultado=(abierta) o1:activo o2:oculto o3:oculto o4:oculto o5:oculto o6:oculto o7:oculto o8:oculto o9:oculto o10:oculto o11:oculto o12:oculto pr:activo
+
+
+# Misiones: lo que trae cada jugador al empezar (Sim.grant_age_purchases). Mismo reparto que el paso 1 (armas_1 → las dos de ataque I)
+ayutthaya-1: J0 edad 2 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 0 · J1 edad 3 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 5 · 
+ayutthaya-2: J0 edad 3 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 5 · J1 edad 3 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 5 · 
+ayutthaya-3: J0 edad 4 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 10 · J1 edad 4 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 10 · J2 edad 4 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 10 · 
+ayutthaya-4: J0 edad 2 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 0 · J1 edad 3 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 5 · J2 edad 2 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 0 · 
+etiopia-1: J0 edad 1 ataque_cc_1 false ataque_dist_1 false herrería 0 niveles 0 · J1 edad 1 ataque_cc_1 false ataque_dist_1 false herrería 0 niveles 0 · 
+etiopia-2: J0 edad 2 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 0 · J1 edad 3 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 5 · 
+etiopia-3: J0 edad 3 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 4 · J1 edad 3 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 5 · 
+etiopia-4: J0 edad 3 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 4 · J1 edad 3 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 4 · 
+guaranies-1: J0 edad 1 ataque_cc_1 false ataque_dist_1 false herrería 0 niveles 0 · J1 edad 2 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 0 · 
+guaranies-2: J0 edad 2 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 0 · J1 edad 2 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 0 · J2 edad 2 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 0 · 
+guaranies-3: J0 edad 2 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 0 · J1 edad 2 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 0 · J2 edad 2 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 0 · 
+guaranies-4: J0 edad 3 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 4 · J1 edad 4 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 10 · J2 edad 4 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 10 · 
+mapuches-1: J0 edad 1 ataque_cc_1 false ataque_dist_1 false herrería 0 niveles 0 · J1 edad 2 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 0 · 
+mapuches-2: J0 edad 2 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 0 · J1 edad 2 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 0 · 
+mapuches-3: J0 edad 2 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 0 · J1 edad 3 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 5 · J2 edad 3 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 5 · 
+mapuches-4: J0 edad 3 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 4 · J1 edad 3 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 5 · 
+palmares-1: J0 edad 1 ataque_cc_1 false ataque_dist_1 false herrería 0 niveles 0 · J1 edad 2 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 0 · 
+palmares-2: J0 edad 2 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 0 · J1 edad 3 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 5 · 
+palmares-3: J0 edad 3 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 4 · J1 edad 3 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 5 · 
+palmares-4: J0 edad 3 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 4 · J1 edad 3 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 5 · J2 edad 3 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 5 · J3 edad 2 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 0 · 
+tawantinsuyu-1: J0 edad 1 ataque_cc_1 false ataque_dist_1 false herrería 0 niveles 0 · J1 edad 1 ataque_cc_1 false ataque_dist_1 false herrería 0 niveles 0 · 
+tawantinsuyu-2: J0 edad 2 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 0 · J1 edad 2 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 0 · 
+tawantinsuyu-3: J0 edad 2 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 0 · J1 edad 2 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 0 · J2 edad 2 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 0 · 
+tawantinsuyu-4: J0 edad 3 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 5 · J1 edad 3 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 5 · J2 edad 3 ataque_cc_1 true ataque_dist_1 true herrería 2 niveles 5 · 
+tutorial-1: J0 edad 1 ataque_cc_1 false ataque_dist_1 false herrería 0 niveles 0 · J1 edad 1 ataque_cc_1 false ataque_dist_1 false herrería 0 niveles 0 · 
+
+
+# palmares-1 (Cuatro fraguas), 3 minutos sin nadie del lado del jugador: con y sin la herrería de la IA (sim_ai._smith)
+con herrería de la IA: o7 fallado a 2:48; compras del rival: hachas 0:43, armadura_cc_1 0:55, canteria 1:13, armadura_dist_1 1:20, orfebreria 1:43, marcha 2:06, cestas 2:08
+sin herrería de la IA: o7 fallado a nunca; compras del rival: hachas 0:43, armadura_dist_1 0:55, orfebreria 1:00, canteria 1:13, cestas 1:25, vigias 1:43, marcha 1:47, mamposteria 2:18
+
+
+# tests/jugabilidad.gd
+  ok   toda tecnología tiene dónde investigarse en cada civ 
+JUGABILIDAD: OK
+
+
+# tests/casillas.gd
+CASILLAS: 480 grillas revisadas, OK
+
+
+# Autotest: godot --path . -- --autotest --civ=guaranies --terreno=llano
+AUTOTEST: OK
+corrupted size vs. prev_size while consolidating
+(al salir, después del OK, Godot aborta con «corrupted size vs. prev_size», como en el paso 1)

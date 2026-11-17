@@ -480,12 +480,13 @@ func _unit_stats(owner: int, def: Dictionary, hp: int, hp_max: int) -> Array:
 	var atk_bonus := sim.mod(owner, "ataque:" + fn) if owner >= 0 else 0
 	var arm: int = def.get("armadura", 0)
 	var arm_d: int = def.get("armadura_distancia", arm)
-	var arm_bonus := sim.mod(owner, "armadura:" + fn) if owner >= 0 else 0
+	var arm_bonus := sim.armor_bonus(owner, fn, false) if owner >= 0 else 0
+	var arm_d_bonus := sim.armor_bonus(owner, fn, true) if owner >= 0 else 0
 	var reach: int = def.get("alcance", 0)
 	var out := [
 		["Vida", "%d/%d" % [hp, hp_max] if hp >= 0 else str(def.get("pv", 0)), _hp_col(hp, hp_max)],
 		["Ataque", _plus(atk, atk_bonus) + _pct(sim.attack_pct(owner, def, false)), Palette.UI_TEXT],
-		["Armadura", "%s cuerpo · %s distancia" % [_plus(arm, arm_bonus), _plus(arm_d, arm_bonus)], Palette.UI_TEXT],
+		["Armadura", "%s cuerpo · %s distancia" % [_plus(arm, arm_bonus), _plus(arm_d, arm_d_bonus)], Palette.UI_TEXT],
 		["Alcance", "contacto" if reach <= 1000 else "%.1f casillas" % (reach / 1000.0), Palette.UI_TEXT],
 		["Velocidad", "%.2f" % (def.get("velocidad", 0) / 1000.0), Palette.UI_TEXT],
 		["Cadencia", "%.1f s" % (def.get("cadencia_ms", 0) / 1000.0), Palette.UI_TEXT],
