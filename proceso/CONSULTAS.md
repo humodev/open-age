@@ -637,3 +637,7 @@ a) Así *(por defecto)* · b) Otra
   - ¿Alcanza el tono nuevo del aldeano (`27-animaciones/capturas/11`), o lo oscurecemos más? ¿Querés un tono de piel por pueblo?
   - ¿Están bien las armas de cada pueblo (`27-animaciones/02-soldados.md`)? Por ejemplo: macana a dos manos para guaraníes y mapuches, dos espadas para Ayutthaya, jabalina etíope y estólica caranqui.
   - Por defecto: así como está, hasta que lo veas.
+
+## Decisión del 2026-11-17
+
+- **Arte de las unidades compartidas, por civ:** "Las unidades compartidas, a nivel de arte, también deben ser independientes, para poder hacer el aspecto específico de cada civ." Cada unidad (guerrero, lancero, hondero o arquero, asedio, las del paso 5) tiene su aspecto propio por pueblo: colores, tocado, arma y, cuando haya modelos de Meshy, uno por pueblo. Va en el paso 5 y en las animaciones (`tropas.por_civ` en `data/arte_animaciones.json`).
