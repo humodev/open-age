@@ -1,0 +1,11 @@
+# Paso 09 (costos por recurso): solo cambian costos en data/tecnologias.json.
+
+godot --headless --path . -s tests/test_determinism.gd
+ticks=3000 hash=2203695307
+DETERMINISMO: OK
+(el mismo hash que el paso 2: la prueba corre 3000 ticks en la edad I, donde no cambió ningún costo)
+
+godot --headless --path . -s tests/bench.gd
+200 unidades, 600 ticks: promedio 17.22 ms, peor 146.19 ms, presupuesto 100 ms; vivas al final: 125
+(con carga 26 en 12 núcleos: el torneo de 8 partes de otro agente corría al mismo tiempo. El bench no tiene
+IA ni investigaciones; un cambio de costos no está en su camino. Paso 2, sin carga: 9,0 ms y 94 ms)
