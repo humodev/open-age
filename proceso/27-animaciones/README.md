@@ -1,5 +1,7 @@
 # 27 · Animaciones (paso 1: aldeanos)
 
+> **Paso 2** (soldados a pie, esqueletos compartidos y el aldeano más terroso, C-98 c): [`02-soldados.md`](02-soldados.md). El glTF de este paso, `aldeano_kaykit.glb`, pasó a llamarse `personas_kaykit.glb`.
+
 ## Pedido
 
 > El autor (2026-11-16), sobre el plan de `proceso/24-tras-la-segunda-ronda/4s-recursos-gratuitos.md`: "Empecemos con KayKit, sí."
