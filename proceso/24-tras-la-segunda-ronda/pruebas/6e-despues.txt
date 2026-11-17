@@ -1,0 +1,42 @@
+# DESPUÉS (arreglo del paso 6e) — 6561ff6 WIP 6e c — 2026-11-17T07:37:49-03:00
+# godot 4.7.2.stable.arch_linux.ed1daf0bf
+menú con ventana, --quit-after 120 (#1): código 0
+menú con ventana, --quit-after 120 (#2): código 0
+menú con ventana, --quit-after 120 (#3): código 0
+menú headless, --quit-after 60 (#1): código 0
+menú headless, --quit-after 60 (#2): código 0
+menú headless, --quit-after 60 (#3): código 0
+    WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+    ERROR: 4 resources still in use at exit (run with --verbose for details).
+menú headless, --audio-driver Dummy: código 0
+menú headless, --animaciones=0: código 0
+    WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+    ERROR: 4 resources still in use at exit (run with --verbose for details).
+tests/cierre.gd, menú y cerrar la ventana (#1): código 0
+    cierre: se pide cerrar la ventana
+tests/cierre.gd, menú y cerrar la ventana (#2): código 0
+    cierre: se pide cerrar la ventana
+tests/cierre.gd, menú y cerrar la ventana (#3): código 0
+    cierre: se pide cerrar la ventana
+tests/cierre.gd, menú + 3 partidas y cerrar: código 0
+    cierre: partida 1
+    cierre: partida 2
+    cierre: partida 3
+    cierre: se pide cerrar la ventana
+tests/cierre.gd, menú y botón Salir (#1): código 0
+    cierre: botón «Salir» del menú: true
+tests/cierre.gd, menú y botón Salir (#2): código 0
+    cierre: botón «Salir» del menú: true
+tests/cierre.gd, menú y botón Salir (#3): código 0
+    cierre: botón «Salir» del menú: true
+--shot del menú: código 0
+autotest guaraníes llano (#1): código 0
+    AUTOTEST: OK
+autotest guaraníes llano (#2): código 0
+    AUTOTEST: OK
+autotest guaraníes llano (#3): código 0
+    AUTOTEST: OK
+autotest guaraníes llano (#4): código 0
+    AUTOTEST: OK
+autotest guaraníes llano (#5): código 0
+    AUTOTEST: OK

@@ -80,3 +80,8 @@ func _measure(types: Array, count: int, dist: int) -> Dictionary:
 	for id in ids:
 		disp = maxi(disp, Sim.dist(s.by_id[id].x, s.by_id[id].y, ax, ay))
 	return {"spread_s": (last - first) * s.tick_ms / 1000.0 if arrive.size() > 0 else -1.0, "disp": disp / 1000.0, "stretch": stretch / 1000.0, "arrived": arrive.size()}
+
+
+## Al salir se sueltan las partidas creadas (ciclos de referencias; proceso/24, paso 6e).
+func _finalize() -> void:
+	Sim.soltar_todas()

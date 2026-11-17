@@ -188,3 +188,8 @@ func _init() -> void:
 		_check("crecida: hay agua baja que frena (mapa con río)", not s.mods._slow.is_empty() or true, "%d casillas" % s.mods._slow.size())
 	print("maravilla: %s" % ("OK" if fallas.is_empty() else "FALLAS: " + ", ".join(fallas)))
 	quit(1 if not fallas.is_empty() else 0)
+
+
+## Al salir se sueltan las partidas creadas (ciclos de referencias; proceso/24, paso 6e).
+func _finalize() -> void:
+	Sim.soltar_todas()

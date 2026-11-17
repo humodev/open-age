@@ -77,6 +77,15 @@ static func cfg() -> Dictionary:
 	return _cfg
 
 
+## Al cerrar el juego (main.gd, _exit_tree): el esqueleto molde nunca entra al árbol y, como
+## es un nodo, nadie lo libera solo ("1 ObjectDB instance was leaked"). Paso 6e.
+static func soltar() -> void:
+	var sk: Variant = _tpl.get("sk")
+	if sk is Skeleton3D and is_instance_valid(sk) and not (sk as Skeleton3D).is_inside_tree():
+		(sk as Skeleton3D).free()
+	_tpl = {}
+
+
 ## Si esta unidad se dibuja animada: los aldeanos y, con tropas.activo, los soldados a pie de
 ## las funciones de tropas.funciones (el asedio, solo los tipos que tienen equipo, como los
 ## incendiarios). Caballos, elefantes, piezas y la corte móvil, no.

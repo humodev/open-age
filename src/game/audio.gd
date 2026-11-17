@@ -121,10 +121,38 @@ func _ready() -> void:
 	_ambient = AudioStreamPlayer.new()
 	_ambient.volume_db = -20.0
 	add_child(_ambient)
-	_ambient.finished.connect(func() -> void: _ambient.play())
+	_ambient.finished.connect(_ambiente_otra_vez)
+
+
+func _ambiente_otra_vez() -> void:
+	if not _mudo:
+		_ambient.play()
+
+
+var _mudo := false
+
+## Al cerrar: se cortan los sonidos y se sueltan las pistas antes de que se vaya el servidor
+## de audio; si no, a veces la música y el ambiente quedan "still in use at exit" (paso 6e).
+## main.salir() lo llama unos cuadros antes de quit(), y vuelve a correr en _exit_tree.
+func callar() -> void:
+	_mudo = true
+	set_process(false)
+	var todos: Array = Array(_pool)
+	todos.append_array([_music, _ambient])
+	for p: AudioStreamPlayer in todos:
+		if p != null and is_instance_valid(p):
+			p.stop()
+			p.stream = null
+	_streams.clear()
+
+
+func _exit_tree() -> void:
+	callar()
 
 
 func _stream(path: String) -> AudioStream:
+	if _mudo:
+		return null # cerrando el juego: nada vuelve a sonar
 	if not _streams.has(path):
 		_streams[path] = load(BASE + path) if ResourceLoader.exists(BASE + path) else null
 	return _streams[path]
@@ -205,7 +233,7 @@ func _play_music(mood: String, _again: bool) -> void:
 
 
 func ambient(on: bool) -> void:
-	if on and not _ambient.playing:
+	if on and not _ambient.playing and not _mudo:
 		_ambient.stream = _stream("ambiente/ambiente_pajaros_loop.ogg")
 		_ambient.play()
 	elif not on:

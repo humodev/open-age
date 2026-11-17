@@ -62,6 +62,9 @@ const RC := 8
 
 
 func _init(seed_value: int, num_players: int = 2, data_override: SimData = null, opts: Dictionary = {}) -> void:
+	if _vivas.size() >= 64: # torneos: miles de partidas; las ya liberadas se descartan
+		_vivas = _vivas.filter(func(w: WeakRef) -> bool: return w.get_ref() != null)
+	_vivas.append(weakref(self)) # paso 6e: para soltar_todas() al cerrar
 	data = data_override if data_override != null else SimData.load_default()
 	_opts = opts
 	tick_ms = data.reglas["tick_ms"]
@@ -1048,6 +1051,35 @@ func _cmd_rally(pid: int, bid: int, x: int, y: int, target_id: int) -> void:
 	b.rally_x = x
 	b.rally_y = y
 	b.rally_target = target_id
+
+
+## Suelta una partida que ya no se usa: mods, grupos, IA y escenario guardan `sim` y forman
+## ciclos de referencias que nunca se liberan (miles de objetos "leaked" al salir, y una
+## partida entera colgada en memoria por cada reinicio). No cambia el estado: después de
+## esto la partida ya no avanza (proceso/24, paso 6e).
+func soltar() -> void:
+	for ai in ais:
+		ai.sim = null
+	ais = []
+	if mods != null:
+		mods.sim = null
+	if groups != null:
+		groups.sim = null
+	if scenario != null:
+		scenario.sim = null
+
+
+## Las partidas creadas desde que arrancó el programa (referencias débiles: no las retienen).
+static var _vivas: Array = []
+
+## Suelta todas las partidas que sigan vivas: las pruebas lo llaman al terminar (_finalize)
+## para no dejar miles de objetos colgados al salir.
+static func soltar_todas() -> void:
+	for w in _vivas:
+		var s: Sim = w.get_ref()
+		if s != null:
+			s.soltar()
+	_vivas.clear()
 
 
 # ---------------------------------------------------------------- Paso

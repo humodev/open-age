@@ -70,6 +70,8 @@ const REPLAY := "user://ultima_partida.json"
 
 func _ready() -> void:
 	OS.add_logger(_errores)
+	# Cerrar la ventana pasa por salir(): primero se calla el audio y después se sale (paso 6e).
+	get_tree().auto_accept_quit = false
 	for a in OS.get_cmdline_user_args():
 		var kv := a.trim_prefix("--").split("=", true, 1)
 		_args[kv[0]] = kv[1] if kv.size() > 1 else "1"
@@ -369,7 +371,7 @@ func _build_scene(aivai: bool) -> void:
 	add_child(cam)
 	cam.edge_pan = Opciones.bordes # --- opciones ---
 	Palette.local = local # --- opciones --- (modo de colores "yo, aliados y rivales")
-	Palette.es_aliado = func(a: int, b: int) -> bool: return a != b and not sim.enemies(a, b)
+	Palette.es_aliado = _es_aliado # método con nombre, no lambda: ver palette.gd (paso 6e)
 	var base := sim.bases[local]
 	cam.look_at_point(Vector3(base.x + 6, 0, base.y + 6))
 	# --- hud --- (cámara inicial sobre la capital, un poco por encima del centro: el panel no la tapa)
@@ -819,15 +821,47 @@ func save_replay() -> void:
 		f.store_string(JSON.stringify(r))
 
 
+## Para Palette.es_aliado (modo de colores relativo y nombres "Aliado"/"Rival").
+func _es_aliado(a: int, b: int) -> bool:
+	return a != b and sim != null and not sim.enemies(a, b)
+
+
 func _exit_tree() -> void:
-	# Sin esto Godot y el script liberan el registro de errores dos veces al salir
-	# ("double free or corruption", código 134 al terminar cada --shot).
+	# El registro de errores sale de OS antes de que se libere el script.
 	OS.remove_logger(_errores)
+	# Lo estático que apunta a esta partida se suelta acá: una Callable estática que
+	# sobrevive al cierre tiraba "double free or corruption" (código 134, paso 6e).
+	if Palette.es_aliado.is_valid() and Palette.es_aliado.get_object() == self:
+		Palette.es_aliado = Callable()
+	if sim != null:
+		sim.soltar()
+	AldeanoAnimado.soltar()
 
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		save_replay()
+		salir()
+
+
+var _saliendo := false
+
+## Cierre ordenado (paso 6e): se calla el audio, se deja pasar un par de cuadros para que el
+## servidor de audio suelte las pistas y recién ahí se sale. La ventana, los botones "Salir",
+## las capturas y el autotest pasan por acá.
+func salir(codigo := 0) -> void:
+	if _saliendo:
+		return
+	_saliendo = true
+	paused = true
+	if audio != null:
+		audio.callar()
+	# El hilo de audio suelta las pistas paradas en su próxima mezcla: unos cuadros no
+	# alcanzan sin ventana (los cuadros pasan en microsegundos), así que se espera tiempo real.
+	for i in 3:
+		await get_tree().process_frame
+	await get_tree().create_timer(0.15, true, false, true).timeout
+	get_tree().quit(codigo)
 
 
 func to_menu() -> void:
@@ -843,7 +877,10 @@ func restart(seed_value: int = -1) -> void:
 	_seed = seed_value if seed_value >= 0 else randi() % 100000
 	paused = false
 	_acc = 0.0
+	var vieja := sim
 	await get_tree().process_frame
+	if vieja != null:
+		vieja.soltar() # paso 6e: sin esto cada reinicio dejaba la partida anterior en memoria
 	_new_game()
 
 
@@ -1037,7 +1074,7 @@ func _maybe_shot() -> void:
 	img.save_png(path)
 	print("captura: ", path)
 	save_telemetry() # las partidas que terminan con --shot también dejan su telemetría
-	get_tree().quit()
+	salir()
 
 
 # ---------------------------------------------------------------- Prueba de punta a punta
@@ -2412,4 +2449,4 @@ func _autotest() -> void:
 		if r.begins_with("FALLO"):
 			ok = false
 	print("AUTOTEST: ", "OK" if ok else "FALLO")
-	get_tree().quit(0 if ok else 1)
+	salir(0 if ok else 1)

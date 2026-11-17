@@ -1,0 +1,30 @@
+
+Using host libthread_db library "/usr/lib/libthread_db.so.1".
+[Detaching after vfork from child process 3985728]
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+double free or corruption (!prev)
+
+Thread 1 "godot" received signal SIGABRT, Aborted.
+Downloading source file /usr/src/debug/glibc/glibc/nptl/pthread_kill.c...
+__pthread_kill_implementation (threadid=<optimized out>, signo=6, no_tid=0) at pthread_kill.c:44
+44	      return INTERNAL_SYSCALL_ERROR_P (ret) ? INTERNAL_SYSCALL_ERRNO (ret) : 0;
+#0  __pthread_kill_implementation (threadid=<optimized out>, signo=6, no_tid=0) at pthread_kill.c:44
+#1  __pthread_kill_internal (threadid=<optimized out>, signo=6) at pthread_kill.c:89
+#2  __GI___pthread_kill (threadid=<optimized out>, signo=signo@entry=6) at pthread_kill.c:100
+#3  0x00007ffff4e44d48 in __GI_raise (sig=sig@entry=6) at ../sysdeps/posix/raise.c:26
+#4  0x00007ffff4e257c1 in __GI_abort () at abort.c:77
+#5  0x00007ffff4e26a5d in __libc_message_impl (vma_name=vma_name@entry=0x7ffff4fed8f6 "glibc: fatal", fmt=fmt@entry=0x7ffff4ff09f4 "%s\n") at ../sysdeps/posix/libc_fatal.c:138
+#6  0x00007ffff4eba09e in __libc_message_wrapper (vmaname=0x7ffff4fed8f6 "glibc: fatal", fmt=0x7ffff4ff09f4 "%s\n") at ../include/stdio.h:203
+#7  malloc_printerr (str=str@entry=0x7ffff4ff33f0 "double free or corruption (!prev)") at malloc.c:5093
+#8  0x00007ffff4ebbc4c in _int_free_merge_chunk (av=av@entry=0x7ffff5050ac0 <main_arena>, p=0x555568b0c430, size=64) at malloc.c:4121
+#9  0x00007ffff4ebbd04 in _int_free_chunk (av=<optimized out>, p=<optimized out>, size=<optimized out>) at malloc.c:4069
+#10 0x0000555556dddd55 in ?? ()
+#11 0x000055555bb96f4b in ?? ()
+#12 0x0000555556714a2b in ?? ()
+#13 0x0000555556df557a in ?? ()
+#14 0x0000555556df724d in ?? ()
+#15 0x0000555556661a80 in ?? ()
+#16 0x00007ffff4e27d0e in __libc_start_call_main (main=main@entry=0x555556660180, argc=argc@entry=6, argv=argv@entry=0x7fffffffdd78) at ../sysdeps/nptl/libc_start_call_main.h:59
+#17 0x00007ffff4e27e4b in __libc_start_main_impl (main=0x555556660180, argc=6, argv=0x7fffffffdd78, init=<optimized out>, fini=<optimized out>, rtld_fini=<optimized out>, stack_end=0x7fffffffdd68) at ../csu/libc-start.c:372
+#18 0x00005555566d63f5 in ?? ()

@@ -1,0 +1,43 @@
+Reproducción mínima del error de Godot 4.7.2 (paso 6e). Proyecto vacío con tres archivos:
+
+--- project.godot ---
+config_version=5
+
+[application]
+
+config/name="repro"
+
+--- holder.gd ---
+class_name Holder
+extends RefCounted
+
+static var cb := Callable()
+
+--- main.gd ---
+extends SceneTree
+
+var x := 3
+
+
+func _init() -> void:
+	Holder.cb = func(a: int) -> bool: return a == x
+	quit()
+
+--- corrida ---
+$ godot --headless --path . --import
+$ godot --headless --path . -s main.gd      (tres veces)
+main.gd rc=134 main.gd rc=134 main.gd rc=134
+double free or corruption (!prev)
+
+Variantes (tres corridas cada una):
+- limpio.gd: igual, pero `Holder.cb = Callable()` antes de quit()          -> rc=0 rc=0 rc=0
+- metodo.gd: `Holder.cb = _igual` (método con nombre en vez de lambda)      -> rc=0 rc=0 rc=0
+- sin_self.gd: lambda que no toca miembros (captura una variable local)     -> rc=134
+
+Conclusión: una variable estática de un script con class_name que todavía guarda una lambda
+(GDScriptLambdaCallable / GDScriptLambdaSelfCallable) al salir. Al cerrar, GDScript libera
+primero la función de la lambda junto con el script que la definió y después limpia las
+variables estáticas de Holder: el destructor de la Callable toca memoria ya liberada.
+Sin símbolos de depuración del paquete (CachyOS, binario sin símbolos y sin debuginfod) el
+backtrace queda en direcciones: ver 6e-gdb-backtrace.txt (se cae en el hilo principal, dentro
+de free(), llamado desde main() después del último cuadro).

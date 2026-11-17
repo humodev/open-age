@@ -197,10 +197,10 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 	ctrl.cursores = cursores
 	# --- fin cursores ---
 
-	_menu = _make_dialog("Pausa", "", [["Reanudar", func() -> void: toggle_menu()], ["Cómo se juega (%s)" % Teclas.texto("ayuda"), func() -> void: _toggle_help()], ["Atajos de teclado (%s)" % Teclas.texto("atajos"), func() -> void: _abrir_atajos()], ["Opciones", func() -> void: _options.visible = true], ["Nueva partida", func() -> void: main.restart()], ["Menú principal", func() -> void: main.to_menu()], ["Salir", func() -> void: get_tree().quit()]])
+	_menu = _make_dialog("Pausa", "", [["Reanudar", func() -> void: toggle_menu()], ["Cómo se juega (%s)" % Teclas.texto("ayuda"), func() -> void: _toggle_help()], ["Atajos de teclado (%s)" % Teclas.texto("atajos"), func() -> void: _abrir_atajos()], ["Opciones", func() -> void: _options.visible = true], ["Nueva partida", func() -> void: main.restart()], ["Menú principal", func() -> void: main.to_menu()], ["Salir", func() -> void: main.salir()]])
 	_build_options()
 	_build_help()
-	_end = _make_dialog("", "", [["Seguir mirando", func() -> void: _end.visible = false], ["Nueva partida", func() -> void: main.restart()], ["Menú principal", func() -> void: main.to_menu()], ["Salir", func() -> void: get_tree().quit()]])
+	_end = _make_dialog("", "", [["Seguir mirando", func() -> void: _end.visible = false], ["Nueva partida", func() -> void: main.restart()], ["Menú principal", func() -> void: main.to_menu()], ["Salir", func() -> void: main.salir()]])
 	_end_title = _end.get_meta("title")
 	_end_body = _end.get_meta("body")
 	# --- paneles ---

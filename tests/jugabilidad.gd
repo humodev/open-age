@@ -432,3 +432,8 @@ func _carne_encerrada() -> void:
 	var food := int(s.players[0]["res"]["alimento"])
 	_check(on_meat == 0 and gathering == ids.size() and food > food0 and meat.amount == int(s.data.recursos["carne"]["cantidad"]), \
 		"carne encerrada entre árboles: %d de %d siguen con ella, %d juntan otra cosa, alimento de %d a %d" % [on_meat, ids.size(), gathering, food0, food])
+
+
+## Al salir se sueltan las partidas creadas (ciclos de referencias; proceso/24, paso 6e).
+func _finalize() -> void:
+	Sim.soltar_todas()

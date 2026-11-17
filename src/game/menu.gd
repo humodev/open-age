@@ -216,7 +216,7 @@ func _ready() -> void:
 	var ob := _button("Opciones", func() -> void: open_options())
 	ob.custom_minimum_size.x = 185
 	orow.add_child(ob)
-	var qb := _button("Salir", func() -> void: get_tree().quit())
+	var qb := _button("Salir", _salir)
 	qb.custom_minimum_size.x = 185
 	orow.add_child(qb)
 	_options = Opciones.dialogo(self, get_parent().get_parent() if get_parent() != null else null)
@@ -254,6 +254,15 @@ func _ready() -> void:
 
 # --- opciones ---
 var _options: PanelContainer
+
+
+## "Salir": el cierre ordenado de main.gd (paso 6e); fuera del juego, quit() a secas.
+func _salir() -> void:
+	var m := get_tree().current_scene
+	if m != null and m.has_method("salir"):
+		m.salir()
+	else:
+		get_tree().quit()
 
 
 func open_options() -> void:

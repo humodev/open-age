@@ -95,3 +95,8 @@ func _init() -> void:
 				fails += 1
 	print("SALUD IA: ", "OK" if fails == 0 else "%d civs con problemas" % fails)
 	quit()
+
+
+## Al salir se sueltan las partidas creadas (ciclos de referencias; proceso/24, paso 6e).
+func _finalize() -> void:
+	Sim.soltar_todas()

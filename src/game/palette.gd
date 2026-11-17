@@ -113,6 +113,9 @@ static var modo := "normal"
 ## Jugador local, para el modo relativo (lo fija main.gd al armar la partida).
 static var local := 0
 ## (a, b) -> bool: si b es aliado de a. Lo puede fijar el modo por equipos; sin él, todos son rivales.
+## Nunca una lambda: Godot 4.7.2 libera la lambda antes que las variables estáticas y al
+## salir la vuelve a liberar ("double free", código 134). main.gd pasa un método con nombre
+## y lo suelta en _exit_tree (proceso/24, paso 6e).
 static var es_aliado := Callable()
 
 

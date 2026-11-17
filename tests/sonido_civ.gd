@@ -123,3 +123,8 @@ func _sonando(au: GameAudio) -> int:
 		if p.stream != null and p.stream.resource_path.contains("/civ/"):
 			n += 1
 	return n
+
+
+## Al salir se sueltan las partidas creadas (ciclos de referencias; proceso/24, paso 6e).
+func _finalize() -> void:
+	Sim.soltar_todas()

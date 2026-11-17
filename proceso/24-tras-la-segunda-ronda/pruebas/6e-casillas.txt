@@ -1,0 +1,14 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+ESCUELA tawantinsuyu: Yachaywasi (6) (kallanka_real)
+ESCUELA tawantinsuyu capital: Yachaywasi (6) (centro)
+ESCUELA mapuches: Trawün de los weupife (6) (parlamento)
+ESCUELA mapuches capital: Trawün de los weupife (6) (lof)
+ESCUELA guaranies: Óga guasu (6) (tava)
+ESCUELA guaranies capital: Óga guasu (6) (centro)
+ESCUELA etiopia: Talleres de Gondar (6) (gondar)
+ESCUELA etiopia capital: Talleres de Gondar (6) (centro)
+ESCUELA palmares: Oficinas do Macaco (6) (quilombo_central)
+ESCUELA palmares capital: Oficinas do Macaco (6) (centro)
+ESCUELA ayutthaya capital: Phra Khlang (6) (centro)
+CASILLAS: 532 grillas revisadas, OK

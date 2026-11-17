@@ -398,3 +398,8 @@ Informes en [`proceso/22-testers/ronda-6/`](../22-testers/ronda-6/).
   - el cierre de Godot que aborta;
   - la ficha de «Marcha forzada» en el lof;
   - la campana en los lof que no son capital.
+- **Godot ya no se cae al cerrar (6e, [documento](6e-cierre-de-godot.md)).** La causa era una lambda guardada en una variable estática (`Palette.es_aliado`, desde `951f6f4`). Godot 4.7.2 la libera dos veces al salir: es un error del motor que el juego disparaba. Ahora va un método con nombre, y el juego sale en orden: calla el audio y suelta la partida, el esqueleto molde y los ciclos de la `Sim`.
+  - Autotest: código 0 en 5 de 5; antes, 134 en 5 de 5.
+  - Las pruebas headless ya no dejan objetos colgados.
+  - Cada reinicio dejaba en memoria la partida anterior; ya no.
+  - Prueba nueva: `tests/cierre.gd`.

@@ -22,3 +22,8 @@ func _init() -> void:
 			line += "%s edad %d pob %d/%d res %s tipos %s\n" % [p["civ"], p["age"], p["pop"], p["pop_cap"], p["res"], kinds]
 		print("=== ", pair, " terreno=", s.terrain, " ganador=", s.winner, "\n", line)
 	quit()
+
+
+## Al salir se sueltan las partidas creadas (ciclos de referencias; proceso/24, paso 6e).
+func _finalize() -> void:
+	Sim.soltar_todas()

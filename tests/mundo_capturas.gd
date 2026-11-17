@@ -271,3 +271,8 @@ func _measure(secs: float) -> float:
 		await process_frame
 		n += 1
 	return n / ((Time.get_ticks_usec() - t0) / 1000000.0)
+
+
+## Al salir se sueltan las partidas creadas (ciclos de referencias; proceso/24, paso 6e).
+func _finalize() -> void:
+	Sim.soltar_todas()

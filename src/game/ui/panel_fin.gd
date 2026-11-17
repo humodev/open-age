@@ -45,7 +45,7 @@ func open(w: int) -> void:
 		["Seguir mirando", func() -> void: visible = false],
 		["Nueva partida", func() -> void: hud.main.restart()],
 		["Menú principal", func() -> void: hud.main.to_menu()],
-		["Salir", func() -> void: get_tree().quit()],
+		["Salir", func() -> void: hud.main.salir()],
 	]
 	# --- ronda 6 --- la misma partida contra la dificultad siguiente, primero y resaltado
 	if siguiente != "":

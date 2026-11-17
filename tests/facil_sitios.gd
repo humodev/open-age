@@ -59,3 +59,8 @@ func _orders(s: Sim, site: SimEntity, r: int) -> String:
 func _t(tick: int) -> String:
 	var sec := tick / 10
 	return "%02d:%02d" % [sec / 60, sec % 60]
+
+
+## Al salir se sueltan las partidas creadas (ciclos de referencias; proceso/24, paso 6e).
+func _finalize() -> void:
+	Sim.soltar_todas()

@@ -300,3 +300,8 @@ func _targets() -> void:
 	for i in 200:
 		s3.step()
 	_check("blancos: con orden directa le pega al camino (vida %d → %d)" % [hp, roads[0].hp], roads[0].hp < hp)
+
+
+## Al salir se sueltan las partidas creadas (ciclos de referencias; proceso/24, paso 6e).
+func _finalize() -> void:
+	Sim.soltar_todas()

@@ -81,3 +81,8 @@ func _length(path) -> int:
 		var d: Vector2i = Vector2i(path[i]) - Vector2i(path[i - 1])
 		tot += 14 if d.x != 0 and d.y != 0 else 10 * maxi(absi(d.x), absi(d.y))
 	return tot
+
+
+## Al salir se sueltan las partidas creadas (ciclos de referencias; proceso/24, paso 6e).
+func _finalize() -> void:
+	Sim.soltar_todas()

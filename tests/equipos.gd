@@ -97,3 +97,8 @@ func _gates() -> int:
 		if passes != pair[1]:
 			bad += 1
 	return bad
+
+
+## Al salir se sueltan las partidas creadas (ciclos de referencias; proceso/24, paso 6e).
+func _finalize() -> void:
+	Sim.soltar_todas()

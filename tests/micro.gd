@@ -122,3 +122,8 @@ func _retreat(loose: bool) -> void:
 		if arrived == _alive(s, ids) and all_arrive < 0 and arrived > 0:
 			all_arrive = t
 	print("   llegan %d/12 (jinetes %d, lanceros %d); primero a los %.1f s, todos a los %.1f s; vida de los jinetes %d" % [_alive(s, ids), _alive(s, jin), _alive(s, lan), first_arrive / 10.0, all_arrive / 10.0, _hp(s, jin)])
+
+
+## Al salir se sueltan las partidas creadas (ciclos de referencias; proceso/24, paso 6e).
+func _finalize() -> void:
+	Sim.soltar_todas()

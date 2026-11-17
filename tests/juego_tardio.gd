@@ -94,3 +94,8 @@ func _init() -> void:
 
 	print("JUEGO TARDÍO: %s" % ("OK" if fallas.is_empty() else "FALLO (%d)" % fallas.size()))
 	quit(0 if fallas.is_empty() else 1)
+
+
+## Al salir se sueltan las partidas creadas (ciclos de referencias; proceso/24, paso 6e).
+func _finalize() -> void:
+	Sim.soltar_todas()

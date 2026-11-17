@@ -1,0 +1,54 @@
+# ANTES (código de 49e425d) — 2a1bddd WIP 6e — 2026-11-17T07:17:56-03:00
+# godot 4.7.2.stable.arch_linux.ed1daf0bf
+menú con ventana, --quit-after 120 (#1): código 134
+    corrupted size vs. prev_size while consolidating
+menú con ventana, --quit-after 120 (#2): código 134
+    double free or corruption (!prev)
+menú con ventana, --quit-after 120 (#3): código 134
+    corrupted size vs. prev_size while consolidating
+menú headless, --quit-after 60 (#1): código 134
+    double free or corruption (!prev)
+menú headless, --quit-after 60 (#2): código 134
+    corrupted size vs. prev_size while consolidating
+menú headless, --quit-after 60 (#3): código 134
+    corrupted size vs. prev_size while consolidating
+menú headless, --audio-driver Dummy: código 134
+    corrupted size vs. prev_size while consolidating
+menú headless, --animaciones=0: código 134
+    double free or corruption (!prev)
+tests/cierre.gd, menú y cerrar la ventana (#1): código 134
+    cierre: se pide cerrar la ventana
+    CIERRE: FALLO (no salió solo)
+    corrupted size vs. prev_size while consolidating
+tests/cierre.gd, menú y cerrar la ventana (#2): código 134
+    cierre: se pide cerrar la ventana
+    CIERRE: FALLO (no salió solo)
+    double free or corruption (!prev)
+tests/cierre.gd, menú y cerrar la ventana (#3): código 134
+    cierre: se pide cerrar la ventana
+    CIERRE: FALLO (no salió solo)
+    corrupted size vs. prev_size while consolidating
+tests/cierre.gd, menú + 3 partidas y cerrar: código 134
+    cierre: partida 1
+    cierre: partida 2
+    cierre: partida 3
+    cierre: se pide cerrar la ventana
+    CIERRE: FALLO (no salió solo)
+    corrupted size vs. prev_size while consolidating
+--shot del menú: código 134
+    corrupted size vs. prev_size while consolidating
+autotest guaraníes llano (#1): código 134
+    AUTOTEST: OK
+    corrupted size vs. prev_size while consolidating
+autotest guaraníes llano (#2): código 134
+    AUTOTEST: OK
+    corrupted size vs. prev_size while consolidating
+autotest guaraníes llano (#3): código 134
+    AUTOTEST: OK
+    double free or corruption (!prev)
+autotest guaraníes llano (#4): código 134
+    AUTOTEST: OK
+    corrupted size vs. prev_size while consolidating
+autotest guaraníes llano (#5): código 134
+    AUTOTEST: OK
+    corrupted size vs. prev_size while consolidating

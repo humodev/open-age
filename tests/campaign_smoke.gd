@@ -37,3 +37,8 @@ func _init() -> void:
 				states.append("%s:%s" % [o["id"], o["estado"]])
 			print("%-16s %-28s %5s resultado=%-9s %s" % [m["id"], m["titulo"].substr(0, 28), "%d:%02d" % [s.tick / 600, (s.tick / 10) % 60], sc.result if sc.result != "" else "(abierta)", " ".join(states)])
 	quit()
+
+
+## Al salir se sueltan las partidas creadas (ciclos de referencias; proceso/24, paso 6e).
+func _finalize() -> void:
+	Sim.soltar_todas()

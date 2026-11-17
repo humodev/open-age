@@ -130,3 +130,8 @@ func _init() -> void:
 
 	print("ASEDIO: %s" % ("OK" if fails == 0 else "%d FALLAS" % fails))
 	quit(1 if fails > 0 else 0)
+
+
+## Al salir se sueltan las partidas creadas (ciclos de referencias; proceso/24, paso 6e).
+func _finalize() -> void:
+	Sim.soltar_todas()
