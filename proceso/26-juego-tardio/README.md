@@ -40,7 +40,10 @@ Contexto: hoy la edad IV no trae unidades nuevas, hay 18 mejoras compartidas y n
   - El veterano de AoE4 midió que en la II había 400 o más de riqueza quieta el 71 % del tiempo.
   - La herrería y las mejoras militares de la II y la III pasan a riqueza y alimento, sin madera, con el mismo tiempo de aldeano.
   - Riqueza quieta: 59 % del tiempo. La III llega a los 17,5 min (antes, 18,3).
-  - Su consejo al jugador: el mercado como salida de la riqueza que sobra. Se confirma en el torneo siguiente. | [09-costos-por-recurso.md](09-costos-por-recurso.md) |
+  - Su consejo al jugador: el mercado como salida de la riqueza que sobra. **Torneo 35** ([resultados](pruebas/35-torneo-costos.txt)): Tawantinsuyu 52, mapuches **70** (antes 60), guaraníes 48, Etiopía 34, Palmares 58, Ayutthaya 38.
+  - Los costos quedan: la riqueza se usa, que era el pedido.
+  - Los mapuches vuelven a 70 %, con la herrería pagada en riqueza (su riqueza viene de la kona y del malón). Su diagnóstico (5f) se hace sobre esta base.
+  - Las partidas por destrucción de hitos bajan a 53 y la IV aparece en 5 partidas. | [09-costos-por-recurso.md](09-costos-por-recurso.md) |
 | 10 | Decisión: si un paso rompe el balance, queda diseñado como contenido y se retoma con más contenido (modelos, animaciones) | por hacer |
 
 ## Pedido del autor: saberes de los pueblos
