@@ -29,7 +29,7 @@ Jugaron el veterano de AoE4 y el jugador nuevo sobre main en `da4d074`, con el j
 
 ## Plan
 
-1. **Error de los arietes y la primera victoria:** buscar la causa con `tools/primera_victoria.gd` y corregirla.
+1. ~~Error de los arietes y la primera victoria~~ **Hecho (6f):** la fácil no compra los niveles de la herrería; la primera victoria vuelve a 3 de 3.
 2. **Que se juegue el final:**
    - la victoria por sitios con un mínimo según la edad;
    - medir la IV con más semillas;

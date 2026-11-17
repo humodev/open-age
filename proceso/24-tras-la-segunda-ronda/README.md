@@ -403,3 +403,8 @@ Informes en [`proceso/22-testers/ronda-6/`](../22-testers/ronda-6/).
   - Las pruebas headless ya no dejan objetos colgados.
   - Cada reinicio dejaba en memoria la partida anterior; ya no.
   - Prueba nueva: `tests/cierre.gd`.
+- **Arietes y primera victoria (6f, [documento](6f-arietes-primera-victoria.md)), de la ronda 7.**
+  - **Causa:** desde el paso 1, la IA de todas las dificultades compraba la herrería I, y el principiante no. Sus honderos ganaban la pelea y los arietes quedaban sin escolta, muertos de a 1 por piedra.
+  - **Arreglo:** la fácil no compra niveles (`"niveles": false`).
+  - **Primera victoria:** de 1 a 3 de 3, por rendición, entre las 26 y las 28.
+  - **Pruebas:** mismo hash.
