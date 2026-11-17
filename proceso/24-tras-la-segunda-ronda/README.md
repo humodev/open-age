@@ -385,3 +385,8 @@ Informes en [`proceso/22-testers/ronda-6/`](../22-testers/ronda-6/).
   - Los guaraníes bajan de 70 a 44 %: la causa era esa.
   - Cinco pueblos quedan entre 42 y 54 %, la menor dispersión hasta ahora.
   - Los mapuches suben a 70 % y quedan solos arriba de la banda. Siguiendo la regla nueva, no se corre un torneo por cambio: se diagnostican con la herramienta dirigida (como 5e) y su arreglo se confirma en el torneo del hito, junto con los pasos 2 a 4 del juego tardío.
+- **Diagnóstico mapuche (5f, [documento](5f-mapuches-diagnostico.md)):**
+  - **Causa:** el weichafe rápido (1750, contra 1350 del guerrero común) y barato (55/20) desde la edad I. Al minuto 10 tienen 13 de ejército contra 6, y el rival pierde 26 aldeanos por partida.
+  - **La riqueza del ganado** (1380 por partida) paga la herrería, que desde los costos por recurso se paga en riqueza. Por eso pasaron de 60 a 70 % entre los torneos 34 y 35.
+  - **No es la causa:** el malón, la kona, el relevo ni la emboscada.
+  - **Ajuste:** el weichafe cuesta lo del guerrero común (60/25) y sigue rápido, porque esa es su identidad. En 30 partidas dio 73 → 60 %. Torneo 36.
