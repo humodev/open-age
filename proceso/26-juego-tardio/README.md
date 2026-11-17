@@ -31,8 +31,17 @@ Contexto: hoy la edad IV no trae unidades nuevas, hay 18 mejoras compartidas y n
   - **Escuela de la IV:** con nombre por pueblo (Yachaywasi, Trawün de los weupife, Escritura del cabildo, Talleres de Gondar, Oficinas do Macaco, Phra Khlang), con 6 mejoras comunes y «los registros» propios de cada pueblo (khipu, pron, actas, Ṣäḥafe tə'əzaz, memoria de los mocambos, Chindamani).
   - **No cumple la meta del §6:** la IA llega a la IV en 22 % con y sin el paso. Llegar depende de que la IA quiera subir y del paso 7.
   - **Pruebas:** mismo hash; juego tardío, casillas (504 grillas) y autotest OK. | [07-paso-3-economia-y-escuela.md](07-paso-3-economia-y-escuela.md) |
-| 8 | **Torneo del hito (34):** pasos 2, 3 y 4 juntos | en curso |
-| 9 | Decisión: si un paso rompe el balance, queda diseñado como contenido y se retoma con más contenido (modelos, animaciones) | por hacer |
+| 8 | **Torneo del hito (34)** ([resultados](pruebas/34-torneo-hito-pasos-2-4.txt)), pasos 2, 3 y 4 juntos:
+  - Todas entre 42 y 60 %: Tawantinsuyu 52, mapuches 60 (antes 70), guaraníes 42, Etiopía 46, Palmares 58 (antes 46: el aura no la castigó), Ayutthaya 42.
+  - Es la banda más pareja hasta ahora: **los pasos 2 a 4 quedan**.
+  - Las partidas por destrucción de hitos bajan de 82 a 64, porque se alargan.
+  - **La IV aparece en 7 partidas (antes, 16):** la fortaleza y el asedio frenan el ritmo. Que se llegue a la IV es el trabajo del paso 7 y de que la IA quiera subir. | hecho |
+| 9 | **Costos por recurso (ece45e8)**, pedido del autor ("acumulo riqueza…"):
+  - El veterano de AoE4 midió que en la II había 400 o más de riqueza quieta el 71 % del tiempo.
+  - La herrería y las mejoras militares de la II y la III pasan a riqueza y alimento, sin madera, con el mismo tiempo de aldeano.
+  - Riqueza quieta: 59 % del tiempo. La III llega a los 17,5 min (antes, 18,3).
+  - Su consejo al jugador: el mercado como salida de la riqueza que sobra. Se confirma en el torneo siguiente. | [09-costos-por-recurso.md](09-costos-por-recurso.md) |
+| 10 | Decisión: si un paso rompe el balance, queda diseñado como contenido y se retoma con más contenido (modelos, animaciones) | por hacer |
 
 ## Pedido del autor: saberes de los pueblos
 
