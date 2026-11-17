@@ -1,0 +1,20 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+  ok   tapyi (leñera guaraní) junto al bosque: 3 de 3 aldeanos recolectan madera al terminar
+  ok   toda tecnología tiene dónde investigarse en cada civ 
+  ok   lejos (19 casillas): 6 de 6 marchan en grupo
+  ok   al llegar los 6 recolectan; del primero al último, 0.0 s
+  ok   cerca: van directo, sin grupo (0 en grupo)
+  ok   animales al arrancar: incas 5 (llamas), guaraníes 0
+  ok   el explorador reclama el rebaño suelto (ahora 9 propios, eran 5)
+  ok   el aldeano carnea y junta: alimento de 200 a 220
+  ok   carnear en cadena: 4 aldeanos terminan las 5 llamas sin volver a mandarlos (quedan 0)
+  ok   una llama por vez: como mucho 1 carne abierta a la vez
+  ok   aldeano a un animal suelto: lo reclama y lo carnea (orden 5)
+  ok   del arbusto al arbusto: 3 de 3 siguen con arbustos y quedan 5 de 5 llamas
+  ok   aura militar: el guerrero herido junto al hito se cura (60 → 70)
+  ok   aura de economía: tres leñadores junto al hito juntan 290 contra 260 sin él
+  ok   depositar por cualquier lado: entrega de su lado en los cuatro (sí 1.8 s, sí 5.9 s, sí 1.8 s, sí 2.7 s)
+  ok   pasillo entre casas pegadas: se pegan true, la nueva abre su columna true, el resto tapa true, se cruza en línea recta true, se cierra sin la vieja true, la empalizada cierra true
+  ok   carne encerrada entre árboles: 0 de 3 siguen con ella, 3 juntan otra cosa, alimento de 200 a 460
+JUGABILIDAD: OK

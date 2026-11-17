@@ -202,7 +202,7 @@ func _hito_type(p: Dictionary) -> String:
 ## gasta la misma plata. Devuelve lo apartado.
 func _levels(p: Dictionary, army: Array[SimEntity], by_type: Dictionary, saving: bool, threatened: bool) -> Dictionary:
 	var cfg: Dictionary = sim.data.reglas.get("ia_niveles", {})
-	if cfg.is_empty() or int(p["age"]) < 2 or (saving and not cfg.get("ahorrando", true)) or (saving and _goal_is_wonder()): # --- paso 7 --- la maravilla junta todo
+	if cfg.is_empty() or not level.get("niveles", true) or int(p["age"]) < 2 or (saving and not cfg.get("ahorrando", true)) or (saving and _goal_is_wonder()): # --- paso 7 --- la maravilla junta todo
 		return {}
 	var techs: Dictionary = sim.dp(player).tecnologias
 	var count := {}

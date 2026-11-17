@@ -23,7 +23,8 @@ var kills_by := {}   # bajas de mi tropa, por quien dio el último golpe
 var last_hit := {}   # id -> atacante
 var my_bdmg := {}    # daño mío a edificios rivales, por tipo de edificio
 var ram_bdmg := 0
-var ram_udmg := 0    # daño de arietes a unidades (no debería)
+var ram_udmg := 0
+var ram_dmg_by := {}  # daño recibido por los arietes, por atacante: [daño, golpes] (proceso/24, 6f)    # daño de arietes a unidades (no debería)
 var ram_closest := 1 << 60
 var ram_lost := 0
 var bld_lost := {}
@@ -107,6 +108,10 @@ func watch_events() -> void:
 				var w := who(a)
 				dmg_by[w] = int(dmg_by.get(w, 0)) + int(ev["dmg"])
 				last_hit[b.id] = w
+				if b.type == "ariete":
+					var rd: Array = ram_dmg_by.get(w, [0, 0])
+					ram_dmg_by[w] = [rd[0] + int(ev["dmg"]), rd[1] + 1]
+					if OS.has_environment("DBG6F"): print("DBG %d ram %d hp %d/%d dmg %d by %s" % [s.tick, b.id, b.hp, b.hp_max, ev["dmg"], w])
 			if a.owner == ME and b.owner == 1 and a.is_unit() and a.is_military() and a.fn != "asedio":
 				var hk := "militar" if b.is_unit() and b.is_military() else ("aldeano" if b.is_unit() else \
 					("camino" if b.def.get("camino", false) else ("transitable" if b.def.get("transitable", false) else \
@@ -157,7 +162,7 @@ func _init() -> void:
 
 
 func play(seed: int, a: Dictionary) -> bool:
-	dmg_by = {}; kills_by = {}; last_hit = {}; my_bdmg = {}; ram_bdmg = 0; ram_udmg = 0
+	dmg_by = {}; kills_by = {}; last_hit = {}; my_bdmg = {}; ram_bdmg = 0; ram_udmg = 0; ram_dmg_by = {}
 	ram_closest = 1 << 60; ram_lost = 0; bld_lost = {}; first_bld_min = -1; ram_kill_by = {}; my_kills = {}; my_hits = {}
 	var minutes := int(a["min"])
 	s = Sim.new(seed, 2, data_over, {"civs": [a["civ"], a["rival"]], "terreno": "llano", "sitios_sin_victoria": true})
@@ -335,6 +340,7 @@ func play(seed: int, a: Dictionary) -> bool:
 	print("  bajas propias por último golpe: %s · bajas que hice: %s" % [_sorted(kills_by), _sorted(my_kills)])
 	print("  golpes de mi tropa (sin asedio) por blanco: %s" % _sorted(my_hits))
 	print("  daño recibido por atacante: %s" % _sorted(dmg_by))
+	print("  daño a los arietes por atacante [daño, golpes]: %s" % str(ram_dmg_by))
 	print("  arietes: más cerca de la capital rival %d casillas · perdidos %d (%s) · daño a edificios %d · a unidades %d" % [ram_closest / 1000, ram_lost, _sorted(ram_kill_by), ram_bdmg, ram_udmg])
 	print("  daño mío a edificios: %s · tirados: %s (primero al minuto %d) · capital rival mín %d" % [_sorted(my_bdmg), _sorted(bld_lost), first_bld_min, cap_hp_min])
 	print("  IA: ejército máx %d · edificios al final %s" % [ai_army_max, _sorted(ai_bld)])
