@@ -60,7 +60,12 @@ Contexto: hoy la edad IV no trae unidades nuevas, hay 18 mejoras compartidas y n
   - **Guaraníes:** canoa ygá, caballería de las misiones y ka'aguygua.
   - **En `civ_diag`:** los mapuches pasan de 62 a 58 % y los guaraníes de 40 a 30 %, una caída sin explicar.
   - **Pruebas:** mismo hash; saberes (82 comprobaciones), casillas, grilla, íconos, campañas y autotest OK. Torneo 38. | [11-paso-6-par-1.md](11-paso-6-par-1.md) |
-| 12 | Decisión: si un paso rompe el balance, queda diseñado como contenido y se retoma con más contenido (modelos, animaciones) | por hacer |
+| 12 | **Paso 6, par 2 integrado (5eb0b45): Palmares y Etiopía**, con 8 mejoras y 3 unidades propias cada uno.
+  - **Etiopía:** cota de malla, amba, caravanas de amole, actas en ge'ez, pólvora de Massawa; guerrero de gaša, färäsäñña con cota y caballería de la corte.
+  - **Palmares:** forja, sanguar, fojos e estrepes, hierro de Angola Janga; zagaieiro, guarnição da cerca y capitão de mocambo.
+  - **En civ_diag (30 partidas):** Etiopía queda igual, 36 %. Palmares baja de 70 a 56 %, con la renta del mocambo de 6 a 4 y el zagaieiro a 20 de riqueza.
+  - **Pruebas:** mismo hash; saberes (146), casillas (540), grilla, íconos, campañas, civ_smoke y autotest OK. bench: 9,74 ms. | [12-paso-6-par-2.md](12-paso-6-par-2.md) |
+| 13 | Decisión: si un paso rompe el balance, queda diseñado como contenido y se retoma con más contenido (modelos, animaciones) | por hacer |
 
 ## Pedido del autor: saberes de los pueblos
 
