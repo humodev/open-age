@@ -70,7 +70,10 @@ Contexto: hoy la edad IV no trae unidades nuevas, hay 18 mejoras compartidas y n
   - **Ayutthaya:** recetario de Narai y nuat (la tropa se cura fuera de combate), Si Satchanalai, barrio chino, khlong lat, astilleros. Unidades: ngao y defensores de Suan Phlu.
   - **Arte por civ (pedido del autor):** `tropas.por_civ` acepta tela, tocado y color. Cualquier unidad, también las compartidas, se ve distinta en cada pueblo.
   - **civ_diag:** Ayutthaya, 50 % con y sin el paso; Tawantinsuyu, de 53 a 43 %.
-  - **Pruebas:** mismo hash; saberes, casillas, grilla, íconos y autotest OK. bench: 9,63 ms. Torneo del hito: 39. | [13-paso-6-par-3.md](13-paso-6-par-3.md) |
+  - **Pruebas:** mismo hash; saberes, casillas, grilla, íconos y autotest OK. bench: 9,63 ms. **Torneo del hito 39** ([resultados](pruebas/39-torneo-paso-6-completo.txt)), con los seis pueblos completos:
+  - Tawantinsuyu 44, mapuches 62, guaraníes 34, Etiopía 44, Palmares 64, Ayutthaya 52.
+  - Todas entre 34 y 64 %: **el paso 6 queda**.
+  - En observación: guaraníes (en el borde de abajo) y Palmares (arriba). | [13-paso-6-par-3.md](13-paso-6-par-3.md) |
 | 14 | Decisión: si un paso rompe el balance, queda diseñado como contenido y se retoma con más contenido (modelos, animaciones) | por hacer |
 
 ## Pedido del autor: saberes de los pueblos
