@@ -275,7 +275,7 @@ func commands() -> Array[Dictionary]:
 		for slot in slots:
 			var type: String = slots[slot]
 			var def: Dictionary = sim.dp(local).edificios[type]
-			var cmd := {"slot": slot, "id": type, "icon": Glyphs.resolve(def, type), "kind": "build", "name": def["nombre"], "common": common_name(type), "cost": sim.dp(local).cost_of(type, age), "desc": DESCS.get(type, def.get("desc", "")), "locked": ""}
+			var cmd := {"slot": slot, "id": type, "icon": Glyphs.resolve(def, type), "kind": "build", "name": def["nombre"], "common": common_name(type), "cost": sim.build_cost(local, type), "desc": DESCS.get(type, def.get("desc", "")), "locked": ""}
 			if age < def.get("edad_min", 1):
 				cmd["locked"] = "Requiere edad %s" % Sim._roman(def["edad_min"])
 			# --- paso 7 --- la maravilla (una, la de la vía, sin el Pacto de Cucaú) y la corte fija
@@ -298,6 +298,10 @@ func commands() -> Array[Dictionary]:
 			out.append(cmd)
 	elif first.is_unit() and first.def.has("despliega_en"):
 		out.append({"slot": 0, "id": "armar", "icon": "centro", "kind": "unpack", "name": "Armar la corte aquí", "cost": {}, "desc": "La corte se asienta donde está: vuelve a ser la capital.", "locked": "", "unit": first.id})
+	elif first.is_unit() and int(first.def.get("guarnicion", 0)) > 0:
+		# --- paso 6 --- La canoa: bajar a la gente en la orilla más cercana.
+		out.append({"slot": Grilla.fija("detener", 5), "id": "detener", "icon": "detener", "kind": "stop", "name": "Detener", "cost": {}, "desc": DESCS["detener"], "locked": ""})
+		out.append({"slot": 11, "id": "expulsar", "icon": "expulsar", "kind": "ungarrison", "name": "Desembarcar (%d/%d)" % [first.garrison.size(), sim.garrison_cap(first)], "cost": {}, "desc": "Baja a la gente en la orilla más cercana (a 2 casillas o menos). Para subir, elegí la tropa o los aldeanos y hacé clic derecho sobre la canoa.", "locked": "" if not first.garrison.is_empty() else "No va nadie en la canoa"})
 	elif first.is_unit():
 		out.append({"slot": Grilla.fija("atacar", 4), "id": "atacar", "icon": "atacar", "kind": "amove", "name": "Atacar en movimiento", "cost": {}, "desc": DESCS["atacar"], "locked": ""}) # --- grilla ---
 		out.append({"slot": Grilla.fija("detener", 5), "id": "detener", "icon": "detener", "kind": "stop", "name": "Detener", "cost": {}, "desc": DESCS["detener"], "locked": ""}) # --- grilla ---
@@ -332,9 +336,13 @@ func commands() -> Array[Dictionary]:
 					i += 1
 				slot = i
 				i += 1
-			var cmd := {"slot": slot, "id": type, "icon": Glyphs.resolve(udef, type), "kind": "train", "name": udef["nombre"], "common": common_name(type), "cost": sim.dp(local).cost_of(type, age), "desc": DESCS.get(type, ""), "locked": "", "building": first.id}
+			var cmd := {"slot": slot, "id": type, "icon": Glyphs.resolve(udef, type), "kind": "train", "name": udef["nombre"], "common": common_name(type), "cost": sim.train_cost(local, first, type), "desc": DESCS.get(type, ""), "locked": "", "building": first.id}
+			if udef.get("propia", false): # --- paso 6 --- el saber y su evidencia
+				cmd["desc"] = "%s\nEvidencia: %s" % [udef.get("desc", ""), udef.get("evidencia", "")]
 			if age < udef.get("edad_min", 1):
 				cmd["locked"] = "Requiere edad %s" % Sim._roman(udef["edad_min"])
+			elif sim.train_block(local, first, type) != "":
+				cmd["locked"] = sim.train_block(local, first, type)
 			out.append(cmd)
 		# Investigaciones: de cada cadena (hachas → hachas_2), la primera que falta. Su casilla se
 		# reparte al final (_ubicar_investigaciones): no pisan lo que entrena el edificio.
@@ -349,10 +357,14 @@ func commands() -> Array[Dictionary]:
 				root = techs[root]["requiere"]
 			if not sim.tech_here(t, first) or used.has(root) or sim.players[local]["techs"].has(tech):
 				continue
+			if t.has("requiere_hito") and not sim.has_done_hito(local, t["requiere_hito"]):
+				continue # --- paso 6 --- la mejora de la otra vía (guaraníes) no se muestra
 			used[root] = true
 			var why := sim.research_block(local, tech)
 			var pref := int(t["ranura"]) if produce.is_empty() else int((Grilla.cfg().get("investigaciones_con_tropa", {}) as Dictionary).get(tech if not t.has("requiere") else root, t["ranura"]))
 			var rc := {"slot": pref, "id": tech, "icon": Iconos.de_tecnologia(tech, t), "kind": "research", "name": tech_name(tech), "cost": sim.tech_cost(local, tech), "desc": effects_text(t["efectos"]), "locked": why, "tech": true, "building": first.id}
+			if t.get("propia", false): # --- paso 6 --- el saber y su evidencia
+				rc["desc"] = "%s\n%s\nEvidencia: %s" % [rc["desc"], t.get("desc", ""), t.get("evidencia", "")]
 			# --- paso 3 --- La escuela de la IV va en su propio submenú, con el nombre del pueblo.
 			if t.get("escuela", false):
 				school.append(rc)
@@ -683,7 +695,7 @@ func run_command(cmd: Dictionary) -> void:
 			sim.push_command({"t": "cumbi", "player": local})
 		"ungarrison":
 			for e in selected_entities():
-				if e.is_building() and e.owner == local:
+				if (e.is_building() or int(e.def.get("guarnicion", 0)) > 0) and e.owner == local: # --- paso 6 --- también la canoa
 					sim.push_command({"t": "ungarrison", "player": local, "building": e.id})
 		"amove":
 			mode = "amove"
@@ -833,6 +845,9 @@ func cursor_action(m: Vector2) -> String:
 		return "atacar" if hits else "no"
 	if t.is_resource():
 		return "recolectar_" + t.res_kind if civil else "mover"
+	# --- paso 6 --- Canoa propia: subir.
+	if t.is_unit() and t.owner == local and sim.garrison_cap(t) > 0 and not units.any(func(e: SimEntity) -> bool: return e.def.get("navega", false)):
+		return "refugio" if t.garrison.size() < sim.garrison_cap(t) else "no"
 	# Animal propio: el aldeano lo carnea (cursor de juntar alimento).
 	if t.is_unit() and t.owner == local and t.def.get("animal", false):
 		return "recolectar_alimento" if civil else "mover"
@@ -1331,6 +1346,42 @@ func effects_text(efectos: Array) -> String:
 			"reparacion_pct":
 				parts.append("+%d%% de velocidad de reparación" % ef["pct"])
 			# --- fin paso 4 ---
+			# --- paso 6 --- saberes propios
+			"habilita":
+				parts.append("Permite construir: %s" % ", ".join((ef["edificios"] as Array).map(func(t: String) -> String: return String(sim.dp(local).edificios.get(t, {}).get("nombre", t)))))
+			"relevo_pct":
+				parts.append("El relevo cura %d%% más" % ef["pct"])
+			"arreo_extra":
+				parts.append("+%d %s arreada por minuto" % [ef["n"], "cabeza" if int(ef["n"]) == 1 else "cabezas"])
+			"corral_pct":
+				parts.append("+%d%% de cabezas por corral" % ef["pct"])
+			"renta":
+				parts.append("+%d de %s por minuto por cada %s" % [ef["por_min"], RES_LABEL.get(ef["recurso"], ef["recurso"]), ", ".join((ef["tipos"] as Array).map(func(t: String) -> String: return String(sim.dp(local).edificios.get(t, {}).get("nombre", t))))])
+			"mercado_venta_pct":
+				parts.append("+%d%% de riqueza por lo que se vende en el mercado" % ef["pct"])
+			"costo_unidad_pct":
+				parts.append("%d%% de costo de %s" % [ef["pct"], ", ".join((ef["tipos"] as Array).map(func(t: String) -> String: return String(sim.dp(local).unidades.get(t, {}).get("nombre", t))))])
+			"cantidad_pct":
+				parts.append("+%d%% de duración de las rozas" % ef["pct"])
+			"velocidad_vado_pct":
+				parts.append("+%d%% de velocidad en los vados" % ef["pct"])
+			"carga_rio":
+				parts.append("+%d de carga a %d casillas del agua" % [ef["n"], ef.get("radio", 2)])
+			"regen_monte":
+				parts.append("La tropa junto al monte sana %d de vida por segundo fuera de combate" % ef["n"])
+			"obra_pct":
+				parts.append("%d%% de tiempo de obra de casas y almacenes" % ef["pct"])
+			"costo_edificio_pct":
+				parts.append("%d%% de %s en casas y almacenes" % [ef["pct"], RES_LABEL.get(ef.get("recurso", ""), "costo")])
+			"potiro_extra":
+				parts.append("+%d%% de obra por constructor (potirõ)" % ef["n"])
+			"alcance":
+				parts.append("+%.0f %s de alcance de %s" % [ef["n"] / 1000.0, "casilla" if int(ef["n"]) == 1000 else "casillas", ", ".join((ef["tipos"] as Array).map(func(t: String) -> String: return String(sim.dp(local).unidades.get(t, {}).get("nombre", t))))])
+			"armadura_rio":
+				parts.append("+%d de armadura %s a %d casillas del agua" % [ef["n"], functions_text(ef.get("funciones", [])), ef.get("radio", 2)])
+			"emboscada_pct":
+				parts.append("+%d%% de daño de la emboscada" % ef["pct"])
+			# --- fin paso 6 ---
 	return " · ".join(parts)
 
 

@@ -1,0 +1,41 @@
+# micro_matriz · civs mapuches / guaranies · edad 2 con compras · parche ninguno
+# bonos {"choque":{"distancia":6},"distancia":{"linea":4},"linea":{"choque":6}}
+# guerrero: pv 120, ataque 11, armadura 1/0, alcance 450, cadencia 1250, velocidad 1750, costo {"alimento":60,"riqueza":25}
+# hondero: pv 65, ataque 7, armadura 0/0, alcance 5500, cadencia 1750, velocidad 1250, costo {"alimento":30,"madera":45}
+# lancero: pv 140, ataque 8, armadura 3/0, alcance 650, cadencia 1500, velocidad 1100, costo {"alimento":50,"madera":25}
+# jinete: pv 170, ataque 13, armadura 1/2, alcance 500, cadencia 1250, velocidad 2200, costo {"alimento":80,"riqueza":55}
+# 5 variantes por pelea (semilla 3..7, B corrido 0, -1, 1, -2, 2 casillas)
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+custom | infanteria_montada:10 | guerrero:10 | nada | - | 54.3 s | 2/5 | 2.6/10 | 1.6/10 | 1050 / 850
+custom | guerrero:10 | guerrero:10 | nada | - | 31.9 s | 5/5 | 5.4/10 | 0.0/10 | 850 / 850
+custom | infanteria_montada:10 | hondero:14 | nada | - | 30.4 s | 4/5 | 5.2/10 | 0.4/14 | 1050 / 1050
+custom | guerrero:10 | hondero:14 | nada | - | 32.6 s | 4/5 | 5.0/10 | 0.4/14 | 850 / 1050
+custom | infanteria_montada:10 | lancero:12 | nada | - | 23.0 s | 0/5 | 0.0/10 | 8.2/12 | 1050 / 1140
+custom | guerrero:10 | lancero:12 | nada | - | 26.3 s | 0/5 | 0.0/10 | 6.4/12 | 850 / 1140
+# micro_matriz · civs mapuches / etiopia · edad 4 con compras · parche ninguno
+# bonos {"choque":{"distancia":6},"distancia":{"linea":4},"linea":{"choque":6}}
+# guerrero: pv 120, ataque 11, armadura 1/0, alcance 450, cadencia 1250, velocidad 1750, costo {"alimento":60,"riqueza":25}
+# hondero: pv 65, ataque 7, armadura 0/0, alcance 5500, cadencia 1750, velocidad 1250, costo {"alimento":30,"madera":45}
+# lancero: pv 140, ataque 8, armadura 3/0, alcance 650, cadencia 1500, velocidad 1100, costo {"alimento":50,"madera":25}
+# jinete: pv 170, ataque 13, armadura 1/2, alcance 500, cadencia 1250, velocidad 2200, costo {"alimento":80,"riqueza":55}
+# 5 variantes por pelea (semilla 3..7, B corrido 0, -1, 1, -2, 2 casillas)
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+custom | kona_waiki:6 | jinete:6 | nada | - | 17.5 s | 5/5 | 5.4/6 | 0.0/6 | 1260 / 1020
+custom | jinete:6 | jinete:6 | nada | - | 55.3 s | 2/5 | 1.8/6 | 1.4/6 | 810 / 1020
+custom | kona_waiki:6 | guerrero:10 | nada | - | 29.1 s | 3/5 | 1.8/6 | 0.8/10 | 1260 / 1200
+custom | kona_waiki:6 | hondero:14 | nada | - | 19.9 s | 0/5 | 0.0/6 | 8.4/14 | 1260 / 980
+custom | kona_waiki:6 | lancero:10 | nada | - | 69.9 s | 1/5 | 0.8/6 | 2.0/10 | 1260 / 950
+# micro_matriz · civs guaranies / etiopia · edad 4 con compras · parche ninguno
+# bonos {"choque":{"distancia":6},"distancia":{"linea":4},"linea":{"choque":6}}
+# guerrero: pv 120, ataque 11, armadura 1/0, alcance 450, cadencia 1250, velocidad 1350, costo {"alimento":60,"riqueza":25}
+# hondero: pv 70, ataque 7, armadura 0/0, alcance 5500, cadencia 1750, velocidad 1250, costo {"alimento":30,"madera":45}
+# lancero: pv 115, ataque 8, armadura 3/0, alcance 650, cadencia 1500, velocidad 1100, costo {"alimento":60,"madera":25,"riqueza":10}
+# jinete: pv 170, ataque 13, armadura 1/2, alcance 500, cadencia 1250, velocidad 2200, costo {"alimento":100,"riqueza":70}
+# 5 variantes por pelea (semilla 3..7, B corrido 0, -1, 1, -2, 2 casillas)
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+custom | kaaguygua:10 | guerrero:10 | nada | - | 35.1 s | 2/5 | 1.0/10 | 3.6/10 | 1200 / 1200
+custom | guerrero:10 | guerrero:10 | nada | - | 22.0 s | 0/5 | 0.0/10 | 6.6/10 | 850 / 1200
+custom | kaaguygua:10 | hondero:14 | nada | - | 36.6 s | 4/5 | 4.6/10 | 0.4/14 | 1200 / 980
+custom | caballeria_mision:6 | jinete:6 | nada | - | 28.4 s | 5/5 | 4.2/6 | 0.0/6 | 1140 / 1020
+custom | caballeria_mision:6 | hondero:14 | nada | - | 27.4 s | 4/5 | 2.6/6 | 0.4/14 | 1140 / 980
+custom | caballeria_mision:6 | lancero:10 | nada | - | 25.8 s | 0/5 | 0.0/6 | 7.0/10 | 1140 / 950

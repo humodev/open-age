@@ -172,6 +172,35 @@ func find_path(from: Vector2i, to: Vector2i, pid: int = -1) -> Array[Vector2i]:
 	return _grid(pid).get_id_path(from, to, true)
 
 
+# --- paso 6 --- Canoas: grilla propia donde solo el agua (honda o vado) se navega. Se arma la
+# primera vez que una canoa busca camino (el agua no cambia después de generar el mapa).
+var _boat: AStarGrid2D = null
+
+
+func find_boat_path(from: Vector2i, to: Vector2i) -> Array[Vector2i]:
+	if _boat == null:
+		_boat = _new_astar()
+		for i in n * n:
+			if water[i] == 0:
+				_boat.set_point_solid(Vector2i(i % n, i / n), true)
+	if not is_water(from.x, from.y):
+		return [] as Array[Vector2i]
+	to = Vector2i(clampi(to.x, 0, n - 1), clampi(to.y, 0, n - 1))
+	return _boat.get_id_path(from, to, true)
+
+
+## Agua más cercana a (tx, ty) buscando en anillos ((-1, -1) si no hay).
+func nearest_water(tx: int, ty: int, max_r: int = 6) -> Vector2i:
+	if is_water(tx, ty):
+		return Vector2i(tx, ty)
+	for r in range(1, max_r + 1):
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				if (absi(dx) == r or absi(dy) == r) and is_water(tx + dx, ty + dy):
+					return Vector2i(tx + dx, ty + dy)
+	return Vector2i(-1, -1)
+
+
 func h_at(tx: int, ty: int) -> int:
 	if not in_bounds(tx, ty):
 		return 0

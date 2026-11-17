@@ -19,6 +19,7 @@ var _wfx := {} # jugador -> {tipo: efecto} de su maravilla terminada en pie (se 
 var _slow := {} # casilla -> [dueño, pct]: agua que frena a sus enemigos (inundación, crecida)
 var _wmask := {} # clave -> [tick, {casilla: true}]: casillas bajas junto al agua (se rehace cada tanto)
 var _protected: Array = [] # [dueño, x, y, radio] de los koyagtun sin enemigos dentro
+var traps: Array[SimEntity] = [] # --- paso 6 --- hoyos con estacas (mapuches), ver «Trampas»
 
 
 func _init(s: Sim) -> void:
@@ -184,6 +185,14 @@ func _rents(pid: int, _p: Dictionary) -> void:
 			var wpct := 100 + int(wr["pct"]) if not wr.is_empty() and (wr.get("tipos", []) as Array).has(e.type) else 100
 			for k in r:
 				_gain(pid, k, int(r[k]) * mult * P / 60 * (boost if k == "riqueza" else 100) / 100 * wpct / 100, origin)
+	# --- paso 6 --- Renta que dan las mejoras a un tipo de edificio (makuñ: cada lof da riqueza).
+	var extra: Dictionary = sim.players[pid].get("renta_tipos", {})
+	if not extra.is_empty():
+		for e in sim.actives:
+			if e.alive and e.owner == pid and e.is_building() and e.built and extra.has(e.type):
+				var r2: Dictionary = extra[e.type]
+				for k in r2:
+					_gain(pid, k, int(r2[k]) * P / 60, "renta")
 	if has(pid, "corte_extrae") and capital != null:
 		var src := capital
 		for e in sim.actives:
@@ -324,7 +333,8 @@ func corral_cap(e: SimEntity) -> int:
 		if t.type == "arbol":
 			open_land = false
 			break
-	return mini(6, int(g["max_pradera"] if open_land else g["max"]))
+	var cap := mini(6, int(g["max_pradera"] if open_land else g["max"]))
+	return cap * (100 + sim.mod(e.owner, "corral_pct")) / 100 # --- paso 6 --- arreo en tropilla
 
 
 func _nearest_corral(pid: int, x: int, y: int, with_room: bool) -> SimEntity:
@@ -438,15 +448,43 @@ func craft_stopped(e: SimEntity) -> bool:
 	return n >= int(cfg.get("para_enemigos", 3))
 
 
-## Relevo: las unidades fuera de combate se curan.
+## Relevo: las unidades fuera de combate se curan. --- paso 6 --- El lawen mapuche cura más
+## (`relevo_pct`); los remedios del monte guaraníes (`regen_monte`) curan a la tropa junto al monte.
 func _regen() -> void:
 	for e in sim.actives:
-		if not e.alive or not e.is_unit() or e.hp >= e.hp_max or not has(e.owner, "relevo"):
+		if not e.alive or not e.is_unit() or e.hp >= e.hp_max or e.owner < 0:
 			continue
-		var cfg := m(e.owner, "relevo")
-		if sim.tick - e.last_combat < int(cfg["espera_ms"]) / sim.tick_ms:
-			continue
-		e.hp = mini(e.hp_max, e.hp + maxi(1, e.hp_max * int(cfg["pct_por_seg"]) / 100))
+		if has(e.owner, "relevo"):
+			var cfg := m(e.owner, "relevo")
+			if sim.tick - e.last_combat >= int(cfg["espera_ms"]) / sim.tick_ms:
+				e.hp = mini(e.hp_max, e.hp + maxi(1, e.hp_max * int(cfg["pct_por_seg"]) * (100 + sim.mod(e.owner, "relevo_pct")) / 10000))
+				continue
+		var rm := sim.mod(e.owner, "regen_monte")
+		if rm > 0 and e.is_military() and e.inside < 0 and sim.tick - e.last_combat >= int(sim.players[e.owner].get("regen_monte_espera", 0)) / sim.tick_ms and in_forest(e):
+			e.hp = mini(e.hp_max, e.hp + rm)
+
+
+## --- paso 6 --- ¿Hay árboles en las 8 casillas de alrededor de la unidad (o en la suya)?
+func in_forest(e: SimEntity) -> bool:
+	var tx := e.x / P
+	var ty := e.y / P
+	for dy in [-1, 0, 1]:
+		for dx in [-1, 0, 1]:
+			var o: SimEntity = sim.by_id.get(sim.map.occupant(tx + dx, ty + dy))
+			if o != null and o.is_resource() and o.res_kind == "madera":
+				return true
+	return false
+
+
+## --- paso 6 --- ¿Hay agua a `r` casillas o menos de la unidad? (Mbororé: los arqueros junto al río.)
+func near_water(e: SimEntity, r: int) -> bool:
+	var tx := e.x / P
+	var ty := e.y / P
+	for yy in range(ty - r, ty + r + 1):
+		for xx in range(tx - r, tx + r + 1):
+			if sim.map.is_water(xx, yy):
+				return true
+	return false
 
 
 ## Sitios sagrados: captura por presencia exclusiva, renta de riqueza y victoria por control total.
@@ -515,6 +553,8 @@ func _sacred() -> void:
 # ---------------------------------------------------------------- Caminos
 
 func on_building_placed(b: SimEntity) -> void:
+	if b.def.has("trampa"): # --- paso 6 ---
+		traps.append(b)
 	if b.def.get("camino", false):
 		for yy in range(b.ty, b.ty + b.h):
 			for xx in range(b.tx, b.tx + b.w):
@@ -614,6 +654,11 @@ func speed(e: SimEntity) -> int:
 		var sl: Array = _slow.get(clampi(e.y / P, 0, sim.map.n - 1) * sim.map.n + clampi(e.x / P, 0, sim.map.n - 1), [])
 		if not sl.is_empty() and sim.enemies(int(sl[0]), e.owner):
 			s = s * (100 - int(sl[1])) / 100
+	# --- paso 6 --- Ygá: las tropas propias cruzan los vados más rápido (guaraníes).
+	if e.owner >= 0:
+		var vv := sim.mod(e.owner, "vel_vado")
+		if vv > 0 and sim.map.in_bounds(e.x / P, e.y / P) and sim.map.water[(e.y / P) * sim.map.n + e.x / P] == 2:
+			s = s * (100 + vv) / 100
 	if _roads[clampi(e.y / P, 0, sim.map.n - 1) * sim.map.n + clampi(e.x / P, 0, sim.map.n - 1)] != 0:
 		var pct := int(mv["camino_pct"])
 		for p in sim.players:
@@ -630,7 +675,7 @@ func damage(a: SimEntity, t: SimEntity, dmg: int) -> int:
 		if dh > 0:
 			dmg = dmg * (100 - int(m(t.owner, "defensa_altura")["pct"])) / 100
 	if a.is_unit() and has(a.owner, "sigilo") and a.last_combat < sim.tick - 50 and is_hidden_now(a):
-		dmg = dmg * (100 + int(m(a.owner, "sigilo").get("emboscada_pct", 0))) / 100
+		dmg = dmg * (100 + int(m(a.owner, "sigilo").get("emboscada_pct", 0)) + sim.mod(a.owner, "emboscada")) / 100 # --- paso 6 --- aty
 	return maxi(1, dmg)
 
 
@@ -778,7 +823,7 @@ func _drive(a: SimEntity, t: SimEntity, dmg: int) -> void:
 	var used: Array = _acc.get(mk, [minute, 0])
 	if int(used[0]) != minute:
 		used = [minute, 0]
-	if int(used[1]) >= int(cfg["max_por_min"]) or sim.disputed_room(a.owner) < int(cfg["cuenta_disputado"]):
+	if int(used[1]) >= int(cfg["max_por_min"]) + sim.mod(a.owner, "arreo_extra") or sim.disputed_room(a.owner) < int(cfg["cuenta_disputado"]):
 		_acc[mk] = used
 		return
 	used[1] = int(used[1]) + 1
@@ -853,6 +898,8 @@ func detected_by(e: SimEntity, viewer: int) -> bool:
 	if not is_hidden_now(e):
 		return true
 	var r: int = m(e.owner, "sigilo").get("radio_deteccion", 3000)
+	if e.def.has("deteccion"): # --- paso 6 --- el hoyo con estacas se ve recién de cerca
+		r = int(e.def["deteccion"])
 	var ws := wonder_fx(e.owner, "sigilo_monte") # --- paso 7 --- la aldea grande del monte en pie
 	if not ws.is_empty():
 		r = r * int(ws["deteccion_pct"]) / 100
@@ -871,10 +918,52 @@ func build_step(b: SimEntity, nb: int) -> int:
 	if has(b.owner, "obra_colectiva"):
 		var pct: int = m(b.owner, "obra_colectiva")["pct_por_constructor"]
 		pct += int(wonder_fx(b.owner, "obra_colectiva").get("pct_por_constructor", 0)) # --- paso 7 --- el cabildo de la tava
+		pct += sim.mod(b.owner, "potiro") # --- paso 6 --- óga de takuára
 		return t * (100 + pct * (nb - 1)) / (100 * nb)
 	if sim.data.reglas["construccion_decreciente"]:
 		return t * (nb + 2) / (3 * nb)
 	return t
+
+
+# ---------------------------------------------------------------- Trampas (paso 6)
+
+## Hoyos con estacas (mapuches, `trampa` en el edificio): cada tick, el primer enemigo de a pie o a
+## caballo que pisa el hoyo terminado recibe el daño (más a los montados) y queda frenado; el hoyo
+## se pierde. Solo corre si hay hoyos (Sim.step).
+func tick_traps() -> void:
+	var keep: Array[SimEntity] = []
+	for b in traps:
+		if not b.alive:
+			continue
+		keep.append(b)
+		if not b.built:
+			continue
+		var victim: SimEntity = null
+		for ox in range(b.tx - 1, b.tx + 2):
+			for oy in range(b.ty - 1, b.ty + 2):
+				for o: SimEntity in sim._grid.get(ox * 4096 + oy, []):
+					if victim == null and o.alive and o.owner >= 0 and sim.enemies(b.owner, o.owner) and (o.is_military() or o.fn == "civil") \
+							and absi(o.x - b.x) <= 600 and absi(o.y - b.y) <= 600:
+						victim = o
+		if victim == null:
+			continue
+		var tr: Dictionary = b.def["trampa"]
+		var dmg := int(tr["danio"])
+		if victim.def.get("montado", false) or victim.def.get("a_caballo", false):
+			dmg = dmg * int(tr.get("montado_pct", 100)) / 100
+		victim.slow_until = sim.tick + int(tr.get("frena_ms", 0)) / sim.tick_ms
+		victim.hp -= dmg
+		victim.last_combat = sim.tick
+		sim.events.append({"t": "trampa", "id": b.id, "player": b.owner, "victima": victim.id, "dmg": dmg, "x": b.x, "y": b.y})
+		sim.events.append({"t": "hit", "a": b.id, "b": victim.id, "ranged": false, "dmg": dmg})
+		if victim.hp <= 0:
+			sim.players[victim.owner]["stats"]["muertes"] += 1
+			sim.players[b.owner]["stats"]["bajas"] += 1
+			on_kill(victim, b)
+			sim._kill(victim, b)
+		sim._kill(b)
+		keep.pop_back()
+	traps = keep
 
 
 # ---------------------------------------------------------------- Maravillas (paso 7)

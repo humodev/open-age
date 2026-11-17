@@ -31,6 +31,7 @@ const FN_ROLE := {
 	"linea": "Línea · escudo al frente y lanza larga",
 	"explorador": "Exploración · rápido y de visión amplia",
 	"asedio": "Asedio · derriba edificios",
+	"transporte": "Transporte · lleva gente por el río, sin combate", # --- paso 6 --- la canoa guaraní
 }
 const RES_DESC := {
 	"madera": "Los aldeanos la talan y la llevan al depósito más cercano.",
@@ -267,6 +268,7 @@ func _type_content(owner: int, type: String) -> Dictionary:
 	if dd.unidades.has(type):
 		c["role"] = _unit_role(def)
 		c["desc"] = Controller.DESCS.get(type, def.get("desc", ""))
+		_saber(c, def) # --- paso 6 ---
 		c["time"] = int(def.get("tiempo_ms", 0))
 		c["stats"] = _unit_stats(owner, def, -1, -1)
 		_counters(c, def.get("funcion", ""), def)
@@ -282,6 +284,7 @@ func _type_content(owner: int, type: String) -> Dictionary:
 		if def.get("escuela", false): # --- paso 3 ---
 			c["role"] = "Escuela de la edad IV · %s" % ctrl.escuela_info()["nombre"]
 		c["desc"] = def.get("desc", "")
+		_saber(c, def) # --- paso 6 ---
 		c["effects"] = ctrl.effects_text(def.get("efectos", []))
 		c["cost"] = def.get("costo", {})
 		c["time"] = int(def.get("tiempo_ms", 0))
@@ -406,6 +409,19 @@ func _resource_content(e: SimEntity, live: bool) -> Dictionary:
 
 
 # ---------------------------------------------------------------- Textos desde los datos
+
+## --- paso 6 --- Saberes propios (docs/diseno/27, §3): el rol dice que es del pueblo y la ficha
+## suma el nivel de evidencia y la fuente (`evidencia` en data/civs).
+func _saber(c: Dictionary, def: Dictionary) -> void:
+	if not def.get("propia", false):
+		return
+	if def.get("elite", false):
+		c["role"] = "Élite de la edad IV · " + String(c.get("role", ""))
+	elif def.has("eje"):
+		c["role"] = "Saber propio · %s" % {"economia": "economía", "militar": "militar", "mecanica": "mecánica del pueblo"}.get(String(def["eje"]), String(def["eje"]))
+	if def.has("evidencia"):
+		c["desc"] = "%s\nEvidencia: %s" % [c.get("desc", ""), def["evidencia"]]
+
 
 func _unit_role(def: Dictionary) -> String:
 	var r: String = FN_ROLE.get(def.get("funcion", ""), "")

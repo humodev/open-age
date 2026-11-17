@@ -20,6 +20,68 @@
  "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",
  "escuela": {"nombre": "Escritura del cabildo y talleres", "edificios": ["tava", "aty_guasu"], "desc": "En las misiones, los cabildos guaraníes escribían cartas, actas y memorias en su lengua (las cartas de 1753 contra el Tratado de Madrid) y los talleres hacían grabados, instrumentos y herrería (Neumann, 2015; Wilde, 2009). Se investiga en el oga guasu, la tava y el aty guasu.", "variantes": {"monte": {"nombre": "Óga guasu", "desc": "En el monte, el saber se transmitía en la casa grande comunal (Montoya, 1639; Susnik).", "tecnologias": {"escuela_registros": {"nombre": "La memoria del óga guasu"}}}}},
  "tecnologias": {"escuela_registros": {"nombre": "Actas del cabildo", "desc": "Actas, cartas y memorias del cabildo, escritas en guaraní (Neumann, Letra de índios, 2015)."}},
+ "_doc_saberes": "--- paso 6 --- Saberes propios (docs/diseno/27, §3.3): 8 mejoras (2 en la II, 3 en la III, 3 en la IV; dos de la IV con una versión por vía, en el edificio del hito misión o monte) y 3 unidades (la élite de la IV, una por vía). Cada una lleva `desc` (qué hace y el saber) y `evidencia` (nivel y fuente), que la ficha muestra. Nada sagrado: ni opy, ni karai, ni mbaraka, ni takuapu. `propia`: la cuenta el modelo (tools/modelo_progreso.py) y la compra la IA según `ia_propias`.",
+ "tecnologias_nuevas": {
+  "kokue": {"propia": true, "eje": "economia", "nombre": "Kokue (roza en policultivo)", "en": {"tipo": "almacen_madera"}, "edificio": "almacen_madera", "ranura": 3, "edad_min": 2, "costo": {"alimento": 75, "madera": 100}, "tiempo_ms": 30000, "icono": "mandioca",
+   "efectos": [{"tipo": "tasa", "recurso": "roza", "pct": 15}, {"tipo": "cantidad_pct", "tipos": ["granja"], "pct": 25}],
+   "desc": "Mandioca (mandi'o), maíz (avati), porotos (kumanda) y decenas de variedades juntas en la misma roza: el monte manejado, no la selva virgen. Las rozas rinden 15 % más y tardan 25 % más en agotarse.",
+   "evidencia": "Documentado y arqueológico. Montoya, Tesoro de la lengua guaraní (1639); Noelli, Sem tekohá não há tekó (disertación, PUCRS, 1993) [verificar el título completo]."},
+  "canoas_rio": {"propia": true, "eje": "mecanica", "nombre": "Ygá (canoas)", "en": {"tipo": "almacen_madera"}, "edificio": "almacen_madera", "ranura": 4, "edad_min": 2, "costo": {"alimento": 50, "madera": 125}, "tiempo_ms": 30000, "icono": "remo",
+   "efectos": [{"tipo": "velocidad_vado_pct", "pct": 30}, {"tipo": "carga_rio", "n": 2, "radio": 2}],
+   "desc": "Navegación del Paraná y el Uruguay. Las tropas cruzan los vados 30 % más rápido y el aldeano que junta a 2 casillas del agua carga 2 más por viaje (la canoa lleva lo que la espalda no). Ygara es la forma del tupí antiguo; en el guaraní de Montoya, ygá [verificar].",
+   "evidencia": "Documentado. Cartas anuas de la Compañía de Jesús; Furlong, Misiones y sus pueblos de guaraníes (1962); flota de canoas en Mbororé (1641)."},
+  "poha_nana": {"propia": true, "eje": "militar", "nombre": "Pohã ñana (remedios del monte)", "en": {"tipo": "cuartel"}, "edificio": "cuartel", "ranura": 0, "edad_min": 3, "costo": {"alimento": 150, "riqueza": 100}, "tiempo_ms": 40000, "icono": "yuyo",
+   "efectos": [{"tipo": "regen_monte", "n": 1, "espera_ms": 6000}],
+   "desc": "Farmacopea guaraní que recogieron las misiones: plantas, usos y nombres. La tropa propia junto al monte, 6 s sin pelear, sana 1 de vida por segundo. Cuánto es guaraní y cuánto jesuita se discute, y la ficha lo dice. Pohã ñana es la expresión paraguaya actual para los yuyos medicinales. El sanador (enfermero o pohãnohára) llega con el resto del paso 4.",
+   "evidencia": "Documentado; la autoría, debatida. Montenegro, Materia médica misionera (1710; manuscrito, publicado en 1945); Montoya (1639)."},
+  "oga_takuara": {"propia": true, "eje": "economia", "nombre": "Óga de takuára", "en": {"tipo": "almacen_madera"}, "edificio": "almacen_madera", "ranura": 5, "edad_min": 3, "costo": {"madera": 200, "riqueza": 100}, "tiempo_ms": 40000, "icono": "oga",
+   "efectos": [{"tipo": "obra_pct", "tipos": ["casa", "almacen_madera", "almacen_mina"], "pct": -30}, {"tipo": "costo_edificio_pct", "tipos": ["casa", "almacen_madera", "almacen_mina"], "recurso": "madera", "pct": -20}, {"tipo": "potiro_extra", "n": 2}],
+   "desc": "La gran casa comunal (óga guasu), que levantaba todo el grupo: postes de madera, techo de paja o de pindó y tacuara en las paredes y los entramados. Casas y almacenes: 30 % menos de obra y 20 % menos de madera; el potirõ suma 2 % más por constructor.",
+   "evidencia": "Documentado. Montoya (1639); Susnik, Los aborígenes del Paraguay (1979–80); Noelli (1993)."},
+  "defensa_mborore": {"propia": true, "eje": "militar", "nombre": "Defensa de Mbororé", "en": {"tipo": "taller"}, "edificio": "taller", "ranura": 2, "edad_min": 3, "costo": {"madera": 150, "riqueza": 150}, "tiempo_ms": 40000, "icono": "mborore",
+   "efectos": [{"tipo": "ataque_pct", "lineas": ["asedio"], "pct": 25}, {"tipo": "alcance", "tipos": ["catapulta"], "n": 1000}, {"tipo": "armadura_rio", "funciones": ["distancia"], "n": 1, "radio": 2}],
+   "desc": "La batalla de Mbororé (1641): canoas, arcabuces llegados con un permiso real de esos años [verificar la fecha] y cañones de tacuara forrados en cuero contra la bandeira. El cañón de tacuara pega 25 % más y alcanza 1 casilla más; los arqueros a 2 casillas del agua tienen +1 de armadura.",
+   "evidencia": "Documentado. Cartas anuas; Furlong (1962); Avellaneda y Quarleri (2007)."},
+  "kaa_plantada": {"propia": true, "eje": "economia", "via": "mision", "nombre": "Ka'a plantada", "en": {"tipo": "mision"}, "edificio": "mision", "ranura": 4, "edad_min": 4, "costo": {"alimento": 200, "madera": 300}, "tiempo_ms": 50000, "icono": "yerba",
+   "efectos": [{"tipo": "tasa", "recurso": "yerba", "pct": 25}],
+   "desc": "Vía misión. En las reducciones, a comienzos del siglo XVIII, se logró que germinara la semilla de la yerba y se plantaron yerbales. Los yerbales rinden 25 % más. La yerba fue también tributo y trabajo forzado en la encomienda: lo dice la ficha. Quién encontró la técnica de germinación se discute.",
+   "evidencia": "Documentado; la técnica, debatida. Garavaglia, Mercado interno y economía colonial (1983)."},
+  "kaa_kaaguy": {"propia": true, "eje": "economia", "via": "monte", "nombre": "Ka'a ka'aguy (yerba del monte)", "en": {"tipo": "monte"}, "edificio": "monte", "ranura": 4, "edad_min": 4, "costo": {"alimento": 200, "madera": 300}, "tiempo_ms": 50000, "icono": "yerba+madera",
+   "efectos": [{"tipo": "tasa", "recurso": "yerba", "pct": 25}],
+   "desc": "Vía monte. La cosecha de los yerbales silvestres, sin encomienda: rinden 25 % más. La yerba fue también tributo y trabajo forzado para los reducidos y encomendados: lo dice la ficha.",
+   "evidencia": "Documentado. Garavaglia (1983)."},
+  "uy_hata": {"propia": true, "eje": "militar", "nombre": "U'y hatã (flecha dura)", "en": {"tipo": "campo_tiro"}, "edificio": "campo_tiro", "ranura": 2, "edad_min": 4, "costo": {"alimento": 200, "riqueza": 200}, "tiempo_ms": 50000, "icono": "flecha_dura",
+   "efectos": [{"tipo": "ataque", "funciones": ["distancia"], "n": 1}],
+   "desc": "Arcos de madera dura (guyrapa, el arco) y puntas endurecidas al fuego o de hueso: arqueros temidos desde las primeras crónicas. +1 de ataque a la distancia. El nombre, a verificar con hablantes.",
+   "evidencia": "Documentado. Schmidl (1567); Montoya (1639) [verificar los pasajes]."},
+  "imprenta": {"propia": true, "eje": "mecanica", "via": "mision", "nombre": "Imprenta de las misiones", "en": {"tipo": "taller"}, "requiere_hito": "mision", "edificio": "taller", "ranura": 5, "edad_min": 4, "costo": {"alimento": 300, "riqueza": 200}, "tiempo_ms": 50000, "icono": "imprenta",
+   "efectos": [{"tipo": "costo_tec_pct", "edad_min": 1, "pct": 15}],
+   "desc": "Vía misión. La primera imprenta del Río de la Plata: un Martirologio romano (1700) y De la diferencia entre lo temporal y lo eterno de Nieremberg en la versión guaraní de José Serrano (1705), con grabados de artesanos guaraníes como Juan Yaparí. Todas las mejoras cuestan 15 % menos. Que los tipos los fundieran guaraníes lo sostiene Furlong: a verificar el detalle.",
+   "evidencia": "Documentado. Furlong, Historia y bibliografía de las primeras imprentas rioplatenses (1953); Neumann, Letra de índios (2015)."},
+  "aty": {"propia": true, "eje": "mecanica", "via": "monte", "nombre": "Aty (la asamblea)", "en": {"tipo": "monte"}, "edificio": "monte", "ranura": 5, "edad_min": 4, "costo": {"alimento": 300, "riqueza": 200}, "tiempo_ms": 50000, "icono": "aty",
+   "efectos": [{"tipo": "emboscada_pct", "pct": 25}],
+   "desc": "Vía monte. La asamblea como gobierno: se decide entre todos dónde y cuándo esperar al enemigo. La emboscada desde el monte pega 25 % más.",
+   "evidencia": "Documentado. Susnik (1979–82); Meliá, El guaraní conquistado y reducido (1986)."}
+ },
+ "ia_propias": {"_doc": "Orden de compra de la IA (sim_ai.gd, _own_buys): la primera que sirve y alcanza; `tropa`: hace falta esa cantidad de tropa de esas líneas o tipos; `granjas`: tantas granjas (rozas). `ahorrando: false`: no compra saberes mientras ahorra para el hito o la maravilla (con la economía más justa, gastar ahí demoraba la edad: diagnóstico del paso 6, proceso/26-juego-tardio/11).",
+  "ahorrando": false,
+  "orden": [
+   {"tec": "kokue", "granjas": 4},
+   {"tec": "poha_nana", "tropa": {"n": 10}},
+   {"tec": "defensa_mborore", "tropa": {"tipos": ["catapulta"], "n": 1}},
+   {"tec": "oga_takuara"},
+   {"tec": "uy_hata", "tropa": {"lineas": ["distancia"], "n": 6}},
+   {"tec": "aty", "tropa": {"n": 10}},
+   {"tec": "imprenta"},
+   {"tec": "kaa_plantada"},
+   {"tec": "kaa_kaaguy"},
+   {"tec": "canoas_rio", "agua": true}
+  ],
+  "unidades": [
+   {"tipo": "caballeria_mision", "max_pct": 30},
+   {"tipo": "kaaguygua", "max_pct": 35}
+  ]
+ },
  "edades": [
   "Tekoha",
   "Amundá",
@@ -69,6 +131,17 @@
    "nombre": "Milicia arcabucera",
    "edad_min": 3
   }
+ },
+ "unidades_nuevas": {
+  "yga": {"nombre": "Ygá (canoa)", "propia": true, "funcion": "transporte", "edad_min": 2, "pob": 1, "costo": {"madera": 100}, "tiempo_ms": 20000, "pv": 150, "armadura": 0, "armadura_distancia": 2, "ataque": 0, "alcance": 0, "cadencia_ms": 1000, "velocidad": 2200, "vision": 7000, "radio": 400, "navega": true, "guarnicion": 6, "agua_max": 5,
+   "desc": "La canoa monóxila del Paraná: solo anda por el agua y lleva 6 personas. Sin combate (D-020): se las baja en la otra orilla. Se hace en el tapyi junto al río (con agua a 5 casillas o menos). Si se hunde, los que van adentro nadan a la orilla más cercana, si la hay.",
+   "evidencia": "Documentado. Cartas anuas; Furlong (1962). Las doce mil personas de Loreto y San Ignacio bajaron el Paranapanema en canoas y balsas (1631)."},
+  "caballeria_mision": {"nombre": "Caballería de las misiones", "propia": true, "elite": true, "funcion": "choque", "montado": true, "edad_min": 4, "pob": 2, "costo": {"alimento": 110, "riqueza": 80}, "tiempo_ms": 24000, "pv": 190, "armadura": 2, "armadura_distancia": 2, "ataque": 13, "alcance": 600, "cadencia_ms": 1300, "velocidad": 2100, "vision": 9000, "radio": 380, "bono": {"distancia": 4},
+   "desc": "Vía misión, élite de la IV. Jinete de lanza de las compañías de las misiones, que tenían estancias, caballada y milicias. Es la gente de la Guerra Guaranítica (1754–1756), que pelearon los siete pueblos, y de Sepé Tiaraju, corregidor de San Miguel. La frase «esta tierra tiene dueño» se le atribuye: es tradición de la literatura riograndense, sin documento de época. Se entrena en el pueblo de misión.",
+   "evidencia": "Documentado. Ganson, The Guaraní under Spanish Rule (2003); Avellaneda y Quarleri (2007). La frase: Golin (1998), tradición [verificar si aparece en algún diario de 1756]."},
+  "kaaguygua": {"nombre": "Ka'aguygua", "propia": true, "elite": true, "funcion": "choque", "edad_min": 4, "pob": 1, "costo": {"alimento": 75, "riqueza": 45}, "tiempo_ms": 18000, "pv": 140, "armadura": 1, "armadura_distancia": 1, "ataque": 13, "alcance": 450, "cadencia_ms": 1250, "velocidad": 1450, "vision": 8500, "radio": 260, "armadura_monte": 2,
+   "desc": "Vía monte, élite de la IV. «Los del monte»: los monteses o caaiguás de las fuentes, que resistieron la reducción hasta el siglo XVIII. Choque con +2 de armadura cuando pelea junto al monte. La grafía, a verificar. Se entrena en el hito del monte libre.",
+   "evidencia": "Documentado. Susnik (1979–82); Meliá (1986)."}
  },
  "edificios": {
   "_doc_maravilla": "--- paso 7 --- docs/diseno/27, §3 y §4.1; lo común en data/edificios.json → maravilla",
@@ -170,7 +243,8 @@
    ],
    "produce": [
     "arcabucero",
-    "lancero"
+    "lancero",
+    "caballeria_mision"
    ],
    
    "guarnicion": 12,
@@ -179,7 +253,7 @@
    "alcance": 7000,
    "cadencia_ms": 2000
   },
-  "monte": { "eje": "militar",
+  "monte": { "eje": "militar", "produce": ["kaaguygua"],
    "nombre": "Monte libre",
    "edad_min": 1,
    "tam": [
@@ -293,7 +367,7 @@
   ]
  ],
  "construye": ["casa", "granja", "almacen_madera", "almacen_mina", "cuartel", "campo_tiro", "taller", "fortaleza", "centro", "empalizada", "puerta", "mercado", "maravilla", "maravilla_monte"],
- "produce": {"cuartel": ["guerrero", "lancero"], "campo_tiro": ["hondero"], "taller": ["ariete", "catapulta"]},
+ "produce": {"cuartel": ["guerrero", "lancero"], "campo_tiro": ["hondero"], "taller": ["ariete", "catapulta"], "almacen_madera": ["yga"]},
  "recursos_semilla": [{ "tipo": "yerbal", "cantidad": 100 }],
  "modulos": {
   "sigilo": {

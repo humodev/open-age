@@ -116,6 +116,18 @@ Sirve para que una economía sin ejército pueda sobrevivir a la presión tempra
 - En la grilla, la escuela es un botón con su nombre (casilla `interfaz.json → grilla.fijas.escuela`) que abre su submenú; aparece desde la IV y mientras le queden mejoras.
 - **La IA** (normal, difícil y experta) las compra en el orden de `reglas.ia_compras_tardias`, una por turno, después de los niveles y antes de la tropa, cuando le alcanza con reserva y no junta para un hito. Salta la de una línea que su pueblo no entrena y las del asedio si no tiene asedio. Las misiones no las reciben con la edad: antes no las daba nada.
 
+### Saberes propios (paso 6 del juego tardío, docs/diseno/27 §3 y §6; primer par: mapuches y guaraníes)
+- Cada pueblo tiene **8 mejoras propias** (2 en la II, 3 en la III y 3 en la IV) en `civs/<pueblo>.json → tecnologias_nuevas` (marcadas `propia`) y **3 unidades propias** (II, III y IV; la de la IV es la élite). Cada una lleva `desc` (qué hace y el saber que la inspira) y `evidencia` (nivel y fuente): la ficha y la ayuda de la casilla los muestran. Nada sagrado entra como arma.
+- Se compran en el edificio de su eje (`en`: el cuartel, el corral, el lof, el tapyi, el taller, el campo de tiro o el hito de la vía). Una mejora puede pedir un hito (`requiere_hito`: la imprenta pide la misión; la de la otra vía no se muestra) y un edificio puede pedir una mejora (`requiere_tec`: el hoyo con estacas).
+- **Efectos nuevos** (`sim.gd`, `_apply_effects`): `relevo_pct`, `arreo_extra`, `corral_pct`, `renta` (por tipo de edificio), `mercado_venta_pct`, `costo_unidad_pct`, `costo_edificio_pct`, `obra_pct`, `cantidad_pct`, `velocidad_vado_pct`, `carga_rio`, `regen_monte`, `potiro_extra`, `alcance` (por tipo de unidad), `armadura_rio`, `emboscada_pct` y `habilita`.
+- **Mecánicas nuevas:**
+  - **Trampa** (`trampa` en el edificio; el hoyo mapuche): oculta al rival salvo a `deteccion`; el primer enemigo que la pisa recibe el daño (más si va a caballo) y queda frenado; la trampa se pierde.
+  - **Desmontar** (`desmonta_ms`, `desmonta_tras_ms`; el weichafe montado): anda a caballo y pelea a pie; tarda en empezar a pegar cuando llega a pelear después de un rato sin combate. No cuenta como montado para los bonos.
+  - **Carga** (`carga`; el kona de waiki): el primer golpe después de `espera_ms` sin pelear pega `extra` más y frena al blanco.
+  - **Armadura del monte** (`armadura_monte`; el ka'aguygua): suma armadura con árboles a una casilla.
+  - **Canoa** (`navega`, `guarnicion`; la ygá guaraní, D-020: sin combate naval): solo anda por el agua (una grilla de caminos propia, `SimMap.find_boat_path`), se hace en un edificio con agua a `agua_max` casillas, lleva gente (clic derecho sobre la canoa para subir; «Desembarcar» baja en la orilla a 2 casillas o menos) y, si se hunde, los de adentro nadan a la orilla a `reglas.canoa.nado_casillas` o se ahogan.
+- **La IA** las compra en el orden de `civs/<pueblo>.json → ia_propias.orden`, con condiciones (tropa de ciertas líneas, granjas, corrales, agua cerca), la primera que alcanza; ahorrando para un hito, solo con lo que sobra por encima de la meta (`reglas.ia_propias`). Entrena las unidades propias primero mientras no pasen su `max_pct` del ejército, y los mapuches cavan hoyos delante de su base. La canoa no la usa.
+
 ## Producción
 
 - Cada edificio productor tiene una cola (`reglas.json` → `cola_max`). Solo el primer elemento avanza.

@@ -480,6 +480,10 @@ func _cmd_target(pid: int, units: Array[SimEntity], target_id: int) -> void:
 				_order_gather(e, t)
 			else:
 				plain.append(e)
+		elif t.is_unit() and t.owner == pid and garrison_cap(t) > 0 and not e.def.get("navega", false) and e.def.get("pob", 1) > 0:
+			e.order = O.GARRISON # --- paso 6 --- subir a la canoa (ygá)
+			e.target = t.id
+			e.path_target = -1
 		elif e.fn == "civil" and can_repair_unit(pid, t):
 			_order_build(e, t) # --- paso 3 --- el asedio se repara en el campo (escuela)
 		elif t.is_building() and t.owner == pid:
@@ -523,7 +527,7 @@ func _cmd_build(pid: int, units: Array[SimEntity], type: String, tx: int, ty: in
 	if why != "":
 		_notify(pid, why)
 		return
-	var cost := dp(pid).cost_of(type, p["age"])
+	var cost := build_cost(pid, type)
 	if not can_afford(pid, cost):
 		_notify(pid, "Recursos insuficientes")
 		return
@@ -533,7 +537,7 @@ func _cmd_build(pid: int, units: Array[SimEntity], type: String, tx: int, ty: in
 	_replace_wall(type, tx, ty, pid)
 	_pay(pid, cost)
 	var b := spawn_building(type, pid, tx, ty, false)
-	b.build_time = dp(pid).build_time_of(type, p["age"])
+	b.build_time = dp(pid).build_time_of(type, p["age"]) * (100 + mod(pid, "obra_t:" + type)) / 100 # --- paso 6 --- óga de takuára
 	events.append({"t": "placed", "id": b.id, "player": pid})
 	if def.get("maravilla", false): # --- paso 7 --- todos se enteran y la ven (como en AoE4)
 		events.append({"t": "maravilla_obra", "id": b.id, "player": pid})
@@ -574,6 +578,10 @@ func _cmd_train(pid: int, bid: int, type: String) -> void:
 	# --- fin paso 4 ---
 	if b.queue.size() >= data.reglas["cola_max"]:
 		_notify(pid, "Cola llena")
+		return
+	var why_t := train_block(pid, b, type)
+	if why_t != "":
+		_notify(pid, why_t)
 		return
 	var cost := train_cost(pid, b, type)
 	if not can_afford(pid, cost):
@@ -618,6 +626,8 @@ func research_block(pid: int, tech: String) -> String:
 		return "Requiere %s" % dp(pid).tecnologias[t["requiere"]]["nombre"]
 	if p["age"] < t.get("edad_min", 1):
 		return "Requiere edad %s" % _roman(t["edad_min"])
+	if t.has("requiere_hito") and not has_done_hito(pid, t["requiere_hito"]): # --- paso 6 --- la vía guaraní
+		return "Requiere el hito %s" % dp(pid).edificios.get(t["requiere_hito"], {}).get("nombre", t["requiere_hito"])
 	return ""
 
 
@@ -739,8 +749,9 @@ func _cmd_trade(pid: int, bid: int, kind: String, op: String) -> void:
 			_notify(pid, "No alcanza para vender")
 			return
 		res[kind] -= lot
-		res["riqueza"] += price * (100 - int(cfg["comision_pct"])) / 100
-		ledger(pid, "mercado", "riqueza", price * (100 - int(cfg["comision_pct"])) / 100)
+		var got := price * (100 - int(cfg["comision_pct"])) / 100 * (100 + mod(pid, "venta_pct")) / 100 # --- paso 6 --- makuñ
+		res["riqueza"] += got
+		ledger(pid, "mercado", "riqueza", got)
 		p["precios"][kind] = maxi(int(cfg["minimo"]), price - int(cfg["paso"]))
 	events.append({"t": "trade", "player": pid})
 
@@ -817,6 +828,9 @@ func _cmd_ungarrison(pid: int, bid: int) -> void:
 	var b: SimEntity = by_id.get(bid)
 	if b == null or b.owner != pid:
 		return
+	if b.is_unit(): # --- paso 6 --- bajar de la canoa
+		_unload(b, 2)
+		return
 	_eject(b)
 
 
@@ -890,6 +904,9 @@ func nearest_shelter(pid: int, x: int, y: int, exclude_walker: int = -1) -> SimE
 
 func _do_garrison(e: SimEntity) -> void:
 	var b: SimEntity = by_id.get(e.target)
+	if b != null and b.is_unit() and (not b.alive or b.owner != e.owner or b.garrison.size() >= garrison_cap(b)):
+		_set_idle(e) # --- paso 6 --- la canoa se fue o está llena
+		return
 	if b == null or not b.alive or b.owner != e.owner or b.garrison.size() >= garrison_cap(b):
 		b = nearest_shelter(e.owner, e.x, e.y, e.id)
 		if b == null:
@@ -897,7 +914,8 @@ func _do_garrison(e: SimEntity) -> void:
 			return
 		e.target = b.id
 		e.path_target = -1
-	if not _approach(e, b, e.radius + INTERACT):
+	var boat_reach := int(data.reglas.get("canoa", {}).get("alcance_embarque", 0)) if b.is_unit() else 0
+	if not _approach(e, b, e.radius + INTERACT + boat_reach):
 		if e.stuck > 25:
 			_tele_stuck(e)
 			_set_idle(e)
@@ -1022,6 +1040,43 @@ func _apply_effects(pid: int, efectos: Array) -> void:
 			"reparacion_pct":
 				_add_mod(pid, "reparacion", ef["pct"])
 			# --- fin paso 4 ---
+			# --- paso 6 --- saberes propios (docs/diseno/27, §3; data/civs → tecnologias_nuevas)
+			"relevo_pct", "corral_pct", "mercado_venta_pct", "velocidad_vado_pct", "emboscada_pct":
+				_add_mod(pid, {"relevo_pct": "relevo_pct", "corral_pct": "corral_pct", "mercado_venta_pct": "venta_pct", "velocidad_vado_pct": "vel_vado", "emboscada_pct": "emboscada"}[ef["tipo"]], ef["pct"])
+			"arreo_extra", "potiro_extra":
+				_add_mod(pid, "arreo_extra" if ef["tipo"] == "arreo_extra" else "potiro", ef["n"])
+			"regen_monte":
+				_add_mod(pid, "regen_monte", ef["n"])
+				players[pid]["regen_monte_espera"] = int(ef.get("espera_ms", 0))
+			"carga_rio":
+				_add_mod(pid, "carga_rio", ef["n"])
+				players[pid]["carga_rio_radio"] = int(ef.get("radio", 2))
+			"renta":
+				var rt: Dictionary = players[pid].get_or_add("renta_tipos", {})
+				for ty in ef["tipos"]:
+					var r1: Dictionary = rt.get_or_add(str(ty), {})
+					r1[ef["recurso"]] = int(r1.get(ef["recurso"], 0)) + int(ef["por_min"])
+			"costo_unidad_pct":
+				for ty in ef["tipos"]:
+					_add_mod(pid, "costo_u:" + str(ty), ef["pct"])
+			"costo_edificio_pct":
+				for ty in ef["tipos"]:
+					_add_mod(pid, "costo_b:%s:%s" % [ty, ef.get("recurso", "*")], ef["pct"])
+			"obra_pct":
+				for ty in ef["tipos"]:
+					_add_mod(pid, "obra_t:" + str(ty), ef["pct"])
+			"cantidad_pct":
+				for ty in ef["tipos"]:
+					_add_mod(pid, "cant_pct:" + str(ty), ef["pct"])
+			"alcance":
+				for ty in ef["tipos"]:
+					_add_mod(pid, "alcance_u:" + str(ty), ef["n"])
+			"armadura_rio":
+				for f in ef["funciones"]:
+					_add_mod(pid, "armadura_rio:" + str(f), ef["n"])
+				players[pid]["armadura_rio_radio"] = int(ef.get("radio", 2))
+			# "habilita": no suma nada; el edificio pide la mejora (`requiere_tec`, build_block)
+			# --- fin paso 6 ---
 	for e in actives:
 		if e.alive and e.owner == pid:
 			_apply_stats(e)
@@ -1115,6 +1170,8 @@ func step() -> void:
 		elif e.is_building():
 			_update_building(e)
 	_separate()
+	if not mods.traps.is_empty(): # --- paso 6 --- hoyos con estacas
+		mods.tick_traps()
 	if tick % 10 == 0:
 		mods.tick_second()
 		_aura_heal()
@@ -1394,7 +1451,7 @@ func _patrol_turn(e: SimEntity) -> void:
 ## Mantener posición: no se mueve; ataca lo que tenga a su alcance y suelta lo que se aleja.
 func _do_hold(e: SimEntity) -> void:
 	e.anchored = true
-	var reach: int = e.def.get("alcance", 0)
+	var reach := reach_of(e)
 	var t: SimEntity = by_id.get(e.target)
 	if t == null or not t.alive or dist_to(e, t) > reach:
 		e.target = -1
@@ -1470,8 +1527,12 @@ func _do_attack(e: SimEntity) -> void:
 			e.target = better.id
 			e.path_target = -1
 			t = better
-	var reach: int = e.def["alcance"]
+	var reach := reach_of(e)
 	if _approach(e, t, reach):
+		# --- paso 6 --- el weichafe montado tarda en bajarse del caballo cuando llega a pelear (no
+		# entre un blanco y el siguiente: solo si venía de `desmonta_tras_ms` sin combate)
+		if not e.anchored and e.def.has("desmonta_ms") and tick - e.last_combat >= int(e.def.get("desmonta_tras_ms", 0)) / tick_ms:
+			e.cooldown = maxi(e.cooldown, int(e.def["desmonta_ms"]))
 		e.anchored = true
 		if e.cooldown <= 0:
 			_hit(e, t)
@@ -1484,6 +1545,9 @@ func _do_attack(e: SimEntity) -> void:
 func _do_gather(e: SimEntity) -> void:
 	var cap: int = int(e.def.get("carga", 10)) + mod(e.owner, "carga")
 	var t: SimEntity = by_id.get(e.target)
+	# --- paso 6 --- Ygá (guaraníes): el que junta junto al agua carga más.
+	if t != null and e.owner >= 0 and mod(e.owner, "carga_rio") > 0 and _res_near_water(t, int(players[e.owner].get("carga_rio_radio", 2))):
+		cap += mod(e.owner, "carga_rio")
 	if not _valid_source(e, t):
 		# Como las ovejas de AoE4: si hay un animal propio cerca, se carnea antes que buscar
 		# otra cosa. Cubre la carne que se terminó (carnear en cadena) y el animal suelto que
@@ -1617,6 +1681,15 @@ func _site_bonus(t: SimEntity) -> int:
 	if t.def.has("bono_agua_pct") and _near_water(t.tx, t.ty, t.w, t.h, 2):
 		bonus += int(t.def["bono_agua_pct"])
 	return bonus
+
+
+## --- paso 6 --- ¿La fuente está a `r` casillas del agua? Se guarda por fuente (no se mueven).
+var _water_near_cache := {}
+func _res_near_water(t: SimEntity, r: int) -> bool:
+	var k := t.id * 8 + r
+	if not _water_near_cache.has(k):
+		_water_near_cache[k] = _near_water(t.tx, t.ty, t.w, t.h, r)
+	return _water_near_cache[k]
 
 
 func _near_water(tx: int, ty: int, w: int, h: int, r: int) -> bool:
@@ -1912,7 +1985,20 @@ func grant_age_purchases(pid: int, age: int) -> void:
 ## `armadura_distancia` en el dato, vale la misma que contra cuerpo a cuerpo.
 func effective_armor(t: SimEntity, ranged: bool = false) -> int:
 	var base := int(t.def.get("armadura_distancia", t.def.get("armadura", 0))) if ranged else int(t.def.get("armadura", 0))
-	return base + (armor_bonus(t.owner, t.fn, ranged) + aura_armor(t, ranged) if t.is_unit() else 0)
+	if not t.is_unit():
+		return base
+	var extra := 0
+	# --- paso 6 --- el ka'aguygua junto al monte; los arqueros guaraníes junto al río (Mbororé)
+	if t.def.has("armadura_monte") and mods.in_forest(t):
+		extra += int(t.def["armadura_monte"])
+	if t.owner >= 0 and mod(t.owner, "armadura_rio:" + t.fn) > 0 and mods.near_water(t, int(players[t.owner].get("armadura_rio_radio", 2))):
+		extra += mod(t.owner, "armadura_rio:" + t.fn)
+	return base + armor_bonus(t.owner, t.fn, ranged) + aura_armor(t, ranged) + extra
+
+
+## --- paso 6 --- Alcance de una unidad: el de los datos más el de las mejoras (Mbororé: el cañón de tacuara).
+func reach_of(e: SimEntity) -> int:
+	return int(e.def.get("alcance", 0)) + (mod(e.owner, "alcance_u:" + e.type) if e.owner >= 0 else 0)
 
 
 ## Prefijo del modificador de armadura según `contra` (paso 2 del juego tardío: la herrería
@@ -1952,6 +2038,10 @@ func attack_bonus(a: SimEntity, t: SimEntity) -> int:
 
 func _hit(a: SimEntity, t: SimEntity) -> void:
 	var atk := effective_attack(a) + attack_bonus(a, t)
+	# --- paso 6 --- Carga (kona de waiki): el primer golpe después de un rato sin pelear pega más y derriba.
+	if a.def.has("carga") and t.is_unit() and tick - a.last_combat >= int(a.def["carga"]["espera_ms"]) / tick_ms:
+		atk += int(a.def["carga"]["extra"])
+		t.slow_until = maxi(t.slow_until, tick + int(a.def["carga"]["frena_ms"]) / tick_ms)
 	if a.fn == "asedio" and t.is_building():
 		atk = atk * (100 + mod(a.owner, "asedio_pct")) / 100 # --- paso 3 --- escuela: oficio del asedio
 	var mult := counter_mult(a, t) # --- paso 4 ---
@@ -2088,6 +2178,8 @@ func _kill(e: SimEntity, killer: SimEntity = null) -> void:
 	_dirty = true
 	if e.is_unit() and e.def.has("carne"):
 		_leave_meat(e) # un animal muerto (también uno robado al rival) deja su carne
+	if e.is_unit() and not e.garrison.is_empty(): # --- paso 6 --- la canoa se hunde: nadan a la orilla
+		_unload(e, int(data.reglas.get("canoa", {}).get("nado_casillas", 3)), true)
 	if e.is_building() or e.is_resource():
 		map.clear(e.tx, e.ty, e.w, e.h)
 	if e.is_building():
@@ -2180,6 +2272,10 @@ func _finish_tech(pid: int, tech: String) -> void:
 
 func _spawn_from(b: SimEntity, type: String) -> void:
 	var tile := _spawn_tile(b)
+	if dp(b.owner).unidades[type].get("navega", false): # --- paso 6 --- la canoa sale al agua
+		var wt := water_tile_near(b, int(dp(b.owner).unidades[type].get("agua_max", 5)))
+		if wt.x >= 0:
+			tile = wt
 	var u := spawn_unit(type, b.owner, tile.x * P + P / 2, tile.y * P + P / 2)
 	players[b.owner]["stats"]["entrenadas"] += 1
 	events.append({"t": "trained", "id": u.id, "player": b.owner, "type": type})
@@ -2210,6 +2306,70 @@ func _spawn_tile(b: SimEntity) -> Vector2i:
 	return Vector2i(b.tx, b.ty + b.h)
 
 
+# ---------------------------------------------------------------- Canoas (paso 6)
+
+## ¿La casilla es sólida para `e`? La canoa (`navega`) solo anda por el agua (honda o vado); el
+## resto, como siempre (map.is_solid con sus puertas).
+func solid_for(e: SimEntity, tx: int, ty: int) -> bool:
+	if e.def.get("navega", false):
+		return not map.is_water(tx, ty)
+	return map.is_solid(tx, ty, e.owner)
+
+
+## Agua libre más cerca del edificio `b`, a `r` casillas o menos de su borde ((-1, -1) si no hay).
+func water_tile_near(b: SimEntity, r: int) -> Vector2i:
+	for k in range(1, r + 1):
+		for yy in range(b.ty - k, b.ty + b.h + k):
+			for xx in range(b.tx - k, b.tx + b.w + k):
+				if (xx == b.tx - k or xx == b.tx + b.w + k - 1 or yy == b.ty - k or yy == b.ty + b.h + k - 1) and map.is_water(xx, yy):
+					return Vector2i(xx, yy)
+	return Vector2i(-1, -1)
+
+
+## Baja a los que van en la canoa `boat` a la tierra libre más cercana, a `r` casillas o menos. Sin
+## orilla cerca, se quedan arriba (con un aviso) o, si se hunde (`sinking`), se ahogan.
+func _unload(boat: SimEntity, r: int, sinking: bool = false) -> void:
+	var cx := boat.x / P
+	var cy := boat.y / P
+	var land := Vector2i(-1, -1)
+	var best := 1 << 30
+	for yy in range(cy - r, cy + r + 1):
+		for xx in range(cx - r, cx + r + 1):
+			if map.in_bounds(xx, yy) and not map.is_water(xx, yy) and not map.is_solid(xx, yy, boat.owner):
+				var d := (xx - cx) * (xx - cx) + (yy - cy) * (yy - cy)
+				if d < best:
+					best = d
+					land = Vector2i(xx, yy)
+	if land.x < 0:
+		if not sinking:
+			_notify(boat.owner, "Acercá la canoa a la orilla para bajar")
+			return
+		for id in boat.garrison:
+			var u: SimEntity = by_id.get(id)
+			if u != null and u.alive:
+				u.inside = -1
+				_kill(u)
+		boat.garrison.clear()
+		return
+	var ids := boat.garrison.duplicate()
+	boat.garrison.clear()
+	for id in ids:
+		var e: SimEntity = by_id.get(id)
+		if e == null or not e.alive:
+			continue
+		e.inside = -1
+		e.x = land.x * P + P / 2
+		e.y = land.y * P + P / 2
+		_set_idle(e)
+		events.append({"t": "ungarrison", "id": e.id})
+
+
+func _path_for(e: SimEntity, from: Vector2i, to: Vector2i) -> Array[Vector2i]:
+	if e.def.get("navega", false):
+		return map.find_boat_path(from, to)
+	return map.find_path(from, to, e.owner)
+
+
 # ---------------------------------------------------------------- Movimiento
 
 func _set_goal(e: SimEntity, gx: int, gy: int, target_id: int = -1) -> void:
@@ -2222,14 +2382,14 @@ func _set_goal(e: SimEntity, gx: int, gy: int, target_id: int = -1) -> void:
 	e.stuck = 0
 	var from := Vector2i(e.x / P, e.y / P)
 	var to := Vector2i(gx / P, gy / P)
-	if map.is_solid(from.x, from.y, e.owner):
-		var f2 := map.nearest_free(from.x, from.y, 6, e.owner)
+	if solid_for(e, from.x, from.y):
+		var f2 := map.nearest_free(from.x, from.y, 6, e.owner) if not e.def.get("navega", false) else map.nearest_water(from.x, from.y, 6)
 		e.path = [from] as Array[Vector2i]
 		if f2.x >= 0:
-			e.path.append_array(map.find_path(f2, to, e.owner))
+			e.path.append_array(_path_for(e, f2, to))
 		e.path_i = 1
 	else:
-		e.path = map.find_path(from, to, e.owner)
+		e.path = _path_for(e, from, to)
 		e.path_i = 1
 	# Telemetría: el camino no llega a la casilla pedida (y la casilla no es sólida: no es un edificio).
 	if tele.on and e.owner >= 0 and not map.is_solid(to.x, to.y, e.owner) and (e.path.is_empty() or e.path[e.path.size() - 1] != to):
@@ -2247,7 +2407,7 @@ func _follow(e: SimEntity) -> bool:
 		var last := e.path_i == e.path.size() - 1
 		var px := wp.x * P + P / 2
 		var py := wp.y * P + P / 2
-		if last and wp == goal_tile and not map.is_solid(wp.x, wp.y, e.owner):
+		if last and wp == goal_tile and not solid_for(e, wp.x, wp.y):
 			px = e.goal_x
 			py = e.goal_y
 		if not last and dist(e.x, e.y, px, py) < 380:
@@ -2257,7 +2417,7 @@ func _follow(e: SimEntity) -> bool:
 			e.path_i += 1
 			return e.path_i >= e.path.size()
 		return false
-	if map.is_solid(goal_tile.x, goal_tile.y, e.owner):
+	if solid_for(e, goal_tile.x, goal_tile.y):
 		return true
 	return _step_toward(e, e.goal_x, e.goal_y)
 
@@ -2302,6 +2462,19 @@ func _try_move(e: SimEntity, nx: int, ny: int) -> int:
 	var cy := e.y / P
 	var tx := nx / P
 	var ty := ny / P
+	if e.def.get("navega", false): # --- paso 6 --- la canoa, solo por el agua
+		var bc := tx != cx and ty != cy and (not map.is_water(tx, cy) or not map.is_water(cx, ty))
+		if not map.is_water(cx, cy) or (map.is_water(tx, ty) and not bc):
+			e.x = nx
+			e.y = ny
+			return 2
+		if map.is_water(nx / P, e.y / P):
+			e.x = nx
+			return 1
+		if map.is_water(e.x / P, ny / P):
+			e.y = ny
+			return 1
+		return 0
 	var corner := tx != cx and ty != cy and (map.is_solid(tx, cy, e.owner) or map.is_solid(cx, ty, e.owner))
 	if map.is_solid(cx, cy, e.owner) or (not map.is_solid(tx, ty, e.owner) and not corner):
 		e.x = nx
@@ -2936,7 +3109,7 @@ func _check_victory() -> void:
 func counts_for_victory(b: SimEntity) -> bool:
 	if not _opts.get("hitos_sin_victoria", false):
 		return b.def.get("hito", false) or b.capital or b.def.get("cuenta_victoria", false)
-	return not (b.def.get("linea", false) or b.def.get("camino", false) or b.type == "puerta" or b.def.get("sagrado", false))
+	return not (b.def.get("linea", false) or b.def.get("camino", false) or b.type == "puerta" or b.def.get("sagrado", false) or b.def.has("trampa"))
 
 
 ## Puntaje (reglas.puntaje): recursos juntados, bajas, edificios enemigos destruidos, edad e
@@ -3029,12 +3202,36 @@ func _tribute(e: SimEntity, d: SimEntity) -> void:
 	ledger(d.owner, "propio", "riqueza", add)
 
 
+## --- paso 6 --- Por qué no se puede entrenar `type` en `b` además de la edad, la cola y el costo
+## ("" si se puede): la canoa necesita agua cerca del edificio.
+func train_block(_pid: int, b: SimEntity, type: String) -> String:
+	var udef: Dictionary = dp(b.owner).unidades.get(type, {})
+	if udef.get("navega", false) and water_tile_near(b, int(udef.get("agua_max", 5))).x < 0:
+		return "Hace falta agua a %d casillas o menos" % int(udef.get("agua_max", 5))
+	return ""
+
+
+## --- paso 6 --- Costo de levantar `type` para `pid`: el de la tabla con los descuentos de las
+## mejoras por tipo y recurso (óga de takuára: casas y almacenes con menos madera).
+func build_cost(pid: int, type: String) -> Dictionary:
+	var cost := dp(pid).cost_of(type, players[pid]["age"]).duplicate()
+	for k in cost:
+		var pct := mod(pid, "costo_b:%s:%s" % [type, k]) + mod(pid, "costo_b:%s:*" % type)
+		if pct != 0:
+			cost[k] = int(cost[k]) * (100 + pct) / 100
+	return cost
+
+
 ## Costo de entrenar en un edificio: el de la tabla, menos el descuento de los gult
 ## en regimiento cercanos para los jinetes (Etiopía, §3.5.4).
 func train_cost(pid: int, b: SimEntity, type: String) -> Dictionary:
 	var cost := dp(pid).cost_of(type, players[pid]["age"]).duplicate()
 	var udef: Dictionary = dp(pid).unidades.get(type, {})
-	if not udef.get("montado", false):
+	var own := mod(pid, "costo_u:" + type) # --- paso 6 --- kawellu: la gente a caballo cuesta menos
+	if own != 0:
+		for k in cost:
+			cost[k] = int(cost[k]) * (100 + own) / 100
+	if not udef.get("montado", false) or b == null:
 		return cost
 	var pct := 0
 	for g in actives:
@@ -3177,6 +3374,8 @@ func has_done_hito(pid: int, type: String) -> bool:
 ## (`impide_hito`); con Fasil Gəbbi en pie la corte etíope no se muda (`corte_fija`).
 func build_block(pid: int, type: String) -> String:
 	var def: Dictionary = dp(pid).edificios.get(type, {})
+	if def.has("requiere_tec") and not players[pid]["techs"].has(def["requiere_tec"]): # --- paso 6 --- el hoyo con estacas
+		return "Requiere %s" % dp(pid).tecnologias.get(def["requiere_tec"], {}).get("nombre", def["requiere_tec"])
 	if def.has("funda_corte") and not mods.wonder_fx(pid, "corte_fija").is_empty():
 		return "Con %s en pie la corte ya no se muda" % wonder_of(pid).def.get("nombre", "la maravilla")
 	if not def.get("maravilla", false):
@@ -3317,6 +3516,8 @@ func spawn_building(type: String, owner: int, tx: int, ty: int, built: bool) -> 
 	_refresh_corridor(e)
 	if def.has("cantidad"):
 		e.amount = def["cantidad"]
+		if owner >= 0 and mod(owner, "cant_pct:" + type) != 0: # --- paso 6 --- kokue: la roza dura más
+			e.amount = e.amount * (100 + mod(owner, "cant_pct:" + type)) / 100
 	mods.on_building_placed(e)
 	return e
 

@@ -133,10 +133,31 @@ PROPIAS = {
 }
 
 
-def propias(civ_clave, edad):
+# --- paso 6 (proceso/26-juego-tardio/11) --- Los pueblos que ya tienen sus saberes en data/civs
+# (`tecnologias_nuevas` con `propia`) se leen de ahí, no de PROPIAS: solo los efectos que el modelo
+# sabe sumar (ataque, armadura, vida y ataque por línea), por la edad de cada mejora.
+MODELABLES = ("ataque", "armadura", "vida_pct", "ataque_pct")
+DATOS_PROPIAS = {}
+
+
+def propias_de_datos(civ):
+    por_edad = {}
+    for t in civ.get("tecnologias_nuevas", {}).values():
+        if not t.get("propia"):
+            continue
+        efs = [ef for ef in t.get("efectos", []) if ef["tipo"] in MODELABLES]
+        if efs:
+            por_edad.setdefault(t.get("edad_min", 1), []).extend(efs)
+    return por_edad
+
+
+def propias(civ_clave, edad, sin=False):
+    if sin:
+        return []
+    fuente = DATOS_PROPIAS.get(civ_clave) or PROPIAS[civ_clave]
     efs = []
     for e in range(2, edad + 1):
-        efs += PROPIAS[civ_clave].get(e, [])
+        efs += fuente.get(e, [])
     return efs
 
 
@@ -288,6 +309,8 @@ def main():
     ap.add_argument("--vara-fija", action="store_true",
                     help="tabla 1 contra el mismo rival en todas las edades (el genérico de la II sin mejoras)")
     ap.add_argument("--economia", action="store_true", help="tablas 4 y 5: la economía del final (paso 3)")
+    ap.add_argument("--propias", action="store_true",
+                    help="tabla 6: cuánto poder suma cada pueblo con sus saberes propios en cada edad (paso 6)")
     ap.add_argument("--hitos-globales", action="store_true",
                     help="la columna de los datos con los hitos militares de la III y la IV globales (como antes del paso 4)")
     args = ap.parse_args()
@@ -304,6 +327,8 @@ def main():
     for c in CIVS:
         with open(os.path.join(RAIZ, "data/civs/%s.json" % c), encoding="utf-8") as f:
             civs[c] = json.load(f)
+        if any(t.get("propia") for t in civs[c].get("tecnologias_nuevas", {}).values()):
+            DATOS_PROPIAS[c] = propias_de_datos(civs[c])
 
     def p_hoy(c, u, e, rival):
         return poder(reglas, ejercito(reglas, u, COMPOSICION[c][e], efectos_hoy(tecs, GASTO_HOY[e]) + hitos_militares(civs[c], e + 1), bonos[e]), rival)
@@ -317,11 +342,29 @@ def main():
     def p_paso1(c, u, e, rival):
         return poder(reglas, ejercito(reglas, u, COMPOSICION[c][e], efectos_de(tecs, GASTO_PASO1[e]) + hitos_militares(civs[c], min(e + 1, desde - 1)), 0), rival)
 
-    def efs_completo(c, e):
-        return efectos_de(tecs, GASTO_COMPLETO[e]) + hitos_completo(civs[c], e + 1) + propias(c, e + 1)
+    def efs_completo(c, e, sin=False):
+        return efectos_de(tecs, GASTO_COMPLETO[e]) + hitos_completo(civs[c], e + 1) + propias(c, e + 1, sin)
 
-    def p_completo(c, u, e, rival):
-        return poder(reglas, ejercito(reglas, u, COMPOSICION[c][e], efs_completo(c, e), 0), rival)
+    def p_completo(c, u, e, rival, sin=False):
+        return poder(reglas, ejercito(reglas, u, COMPOSICION[c][e], efs_completo(c, e, sin), 0), rival)
+
+    if args.propias:
+        # Tabla 6 (paso 6): el diseño completo con el gasto típico, con y sin los saberes militares
+        # propios; Δ = lo que suman. «datos»: leídos de data/civs; «diseño»: los de PROPIAS.
+        print("### Tabla 6 · Lo que suman los saberes propios al ejército de 30, por edad (diseño completo, rival fijo)\n")
+        print("| Pueblo | Fuente | II | III | IV | IV con / sin, contra la media de los otros |")
+        print("|---|---|---|---|---|---|")
+        filas = {}
+        for c in CIVS:
+            u = unidades_civ(base, civs[c])
+            filas[c] = [(p_completo(c, u, e, vara), p_completo(c, u, e, vara, True)) for e in range(4)]
+        for c in CIVS:
+            f = filas[c]
+            d = lambda e: "%+.1f %%" % (100 * (f[e][0] / f[e][1] - 1))
+            otros = [filas[o][3][0] / filas[o][0][0] for o in CIVS if o != c]
+            rel = (f[3][0] / f[0][0]) / (sum(otros) / len(otros))
+            print("| %s | %s | %s | %s | %s | ×%.2f |" % (c, "datos" if c in DATOS_PROPIAS else "diseño", d(1), d(2), d(3), rel))
+        return
 
     print("### Tabla 1 · Pasos 1 y 2: el poder no cambia (contra el rival de referencia de %s; edad I de hoy = 100)\n"
           % ("la II sin mejoras, en todas las edades" if args.vara_fija else "la misma edad, con las reglas de hoy"))
