@@ -36,8 +36,20 @@
   "ariete": {
     "nombre": "Ariete", "funcion": "asedio", "edad_min": 2, "pob": 3,
     "costo": { "madera": 200, "riqueza": 60 }, "tiempo_ms": 30000,
-    "pv": 400, "armadura": 2, "armadura_distancia": 6, "ataque": 45, "alcance": 450, "cadencia_ms": 3000,
-    "velocidad": 750, "vision": 5000, "radio": 420, "solo_edificios": true
+    "pv": 400, "armadura": 2, "armadura_distancia": 6, "ataque": 49, "alcance": 450, "cadencia_ms": 3000,
+    "velocidad": 750, "vision": 5000, "radio": 420, "solo_edificios": true,
+    "_doc_paso4": "Paso 4 del juego tardío (docs/diseno/27, §4.2): el asedio ya no sube solo con la edad. El ataque base pasó de 45 a 49 (el +10 % que daba la II); el resto está en los niveles veterano_asedio y elite_asedio (tecnologias.json)."
+  },
+  "catapulta": {
+    "nombre": "Catapulta", "funcion": "asedio", "edad_min": 3, "pob": 3,
+    "costo": { "madera": 150, "riqueza": 100 }, "tiempo_ms": 35000,
+    "pv": 150, "armadura": 0, "armadura_distancia": 1, "ataque": 16, "alcance": 7000, "cadencia_ms": 5000,
+    "velocidad": 750, "vision": 8500, "radio": 420,
+    "area": 1000, "area_borde_pct": 40,
+    "contadores": { "choque": 100, "distancia": 100, "linea": 100, "civil": 100, "explorador": 100, "asedio": 100, "edificio": 100 },
+    "recibe": { "distancia": 40 },
+    "_doc": "Asedio de área de la edad III (paso 4 del juego tardío, docs/diseno/27, §2 y §4.2): rompe bloques de tropa y le hace poco a los edificios. area: radio del golpe en milésimas de casilla; area_borde_pct: lo que pega en el borde (en el centro, todo). contadores: los multiplicadores propios contra cada función (pisan los de reglas.contadores.asedio, que dejan al ariete sin dañar tropa); recibe: lo que le pegan otras funciones (la distancia, 40 % en lugar del 15 % del ariete). Números de la matriz de micro del paso 4 (proceso/26-juego-tardio/08): con los del diseño (20 de ataque, 1,2 casillas, 50 % en el borde, casi inmune a la distancia) dos catapultas le ganaban 5 de 5 a una mezcla igual de 20 con cualquier micro. Cada pueblo le pone su nombre y su forma (data/civs).",
+    "desc": "Asedio de área: pega a todos los enemigos cerca del blanco (menos en el borde). Le hace poco a los edificios. Sin escolta muere: el choque la rompe y la distancia la daña de a poco."
   },
   "jinete": {
     "nombre": "Jinete", "funcion": "choque", "edad_min": 2, "pob": 2,

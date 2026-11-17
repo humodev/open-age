@@ -499,11 +499,14 @@ func _unit_stats(owner: int, def: Dictionary, hp: int, hp_max: int) -> Array:
 	var line := SimData.line_of(def)
 	if line != "" and owner >= 0:
 		var lvl := sim.line_level(owner, def)
-		out.append(["Nivel", "%s · %s" % [Controller.LEVEL_NAMES[lvl].capitalize(), Controller.LINE_NAMES.get(line, line)], Palette.UI_ACCENT if lvl > 0 else Palette.UI_DIM])
+		out.append(["Nivel", "%s · %s" % [Controller.LEVEL_NAMES[lvl].capitalize(), Controller.LINE_NAMES.get(line, "el asedio" if line == "asedio" else line)], Palette.UI_ACCENT if lvl > 0 else Palette.UI_DIM])
 	if def.has("carga"):
 		out.append(["Carga", str(int(def["carga"]) + (sim.mod(owner, "carga") if owner >= 0 else 0)), Palette.UI_TEXT])
 	if def.has("municion"):
 		out.append(["Munición", str(def["municion"]), Palette.UI_TEXT])
+	# --- paso 4 --- asedio de área
+	if def.has("area_borde_pct"):
+		out.append(["Área", "%.1f casillas · %d %% en el borde" % [int(def["area"]) / 1000.0, int(def["area_borde_pct"])], Palette.UI_TEXT])
 	return out
 
 
@@ -663,7 +666,7 @@ func _building_state(c: Dictionary, e: SimEntity) -> void:
 		c["state"].append(["Sin nada en producción", Palette.UI_DIM])
 	var cap := sim.garrison_cap(e)
 	if cap > 0:
-		var shots: int = int(e.def.get("flechas", 1)) + e.garrison.size() if e.def.has("ataque") else 0
+		var shots: int = sim.volley_shots(e) if e.def.has("ataque") else 0 # --- paso 4 --- aspilleras
 		var txt := "Guarnición %d/%d" % [e.garrison.size(), cap]
 		if shots > 0:
 			txt += " · %d %s" % [shots, "flecha" if shots == 1 else "flechas"]

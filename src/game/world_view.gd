@@ -1009,7 +1009,7 @@ func _want_h_of(owner: int, type: String, def: Dictionary, capital: bool) -> flo
 		cat = "capital"
 	elif type == "casa" or type == dd.civ.get("casa", ""):
 		cat = "casa"
-	elif type.begins_with("torre") or def.get("torre", false):
+	elif type.begins_with("torre") or def.get("torre", false) or def.get("fortaleza", false): # --- paso 4 ---
 		cat = "torre"
 	elif def.get("mercado", false): # --- veterano ronda 5 --- (el mercado no se levantaba)
 		cat = "mercado"
@@ -1300,6 +1300,12 @@ func on_tick(events: Array) -> void:
 					selected.erase(ev["id"])
 			"hit":
 				_on_hit(ev)
+			# --- paso 4 --- asedio de área: polvo en el círculo del golpe
+			"area":
+				var c := to_world(int(ev["x"]), int(ev["y"]), 0.2)
+				var rr := float(ev["r"]) / 1000.0
+				for i in 6:
+					_dust(c + Vector3(randf_range(-rr, rr) * 0.7, 0.0, randf_range(-rr, rr) * 0.7), 0.45 + randf() * 0.35)
 			"built":
 				var v: Dictionary = visuals.get(ev["id"], {})
 				if not v.is_empty():

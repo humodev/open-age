@@ -18,7 +18,15 @@ Contexto: hoy la edad IV no trae unidades nuevas, hay 18 mejoras compartidas y n
   - La edad IV, en 16 de 150 partidas (el paso 1 no busca moverla).
   - Rendimiento, solo en la máquina: 9,31 ms de promedio y 93 de peor caso. | [05-paso-1-niveles.md](05-paso-1-niveles.md) |
 | 5 | **Paso 2 integrado (56032a5):** herrería en el cuartel (como dice el diseño §1.1), con 12 mejoras: ataque cuerpo a cuerpo y a distancia, y armadura contra cada uno, en 3 tandas (II, III y IV). Reemplaza a armas y escudos con el mismo poder total; el modelo y la micro dan igual. El lof, el mocambo y la qollqa no la tienen, porque no entra en su submenú. Mismo hash. Palmares 1: el objetivo secundario «protegé a los aldeanos» falla a los 2:48 en la prueba de humo, porque la IA rival cambia el orden de compra. Confirmación en el torneo del hito | [06-paso-2-herreria.md](06-paso-2-herreria.md) |
-| 6 | Decisión: si un paso rompe el balance, queda diseñado como contenido y se retoma con más contenido (modelos, animaciones) | por hacer |
+| 6 | **Paso 4 integrado (460098f):** asedio y fortaleza.
+  - **Asedio:** sin bono por edad (niveles veterano y élite). Asedio de área en la III con forma por pueblo: hondero de piedra caliente, cañón de tacuara, pieza ligera, cañón de muralla, incendiarios mapuches contra la madera; Palmares, sin asedio.
+  - **Fortaleza de la III** por pueblo, y mejoras de defensa.
+  - **Hitos militares con aura (C-76 a):** es lo que más mueve. Según el modelo, el ejército lejos de casa pierde en la IV entre −14 y −39 % (Palmares, el que más).
+  - **Área:** se bajaron los números del diseño, porque 2 catapultas decidían cualquier pelea.
+  - **IA contra IA:** las partidas duran unos 3 minutos más, y levantan 9 fortalezas en 19 llegadas a la III, sin que caiga ninguna.
+  - **Pruebas:** mismo hash; asedio, jugabilidad y autotest OK.
+  - Si el torneo del hito castiga a Palmares: `aura_hito.militar.combate_desde_edad: 0`. | [08-paso-4-asedio-y-fortaleza.md](08-paso-4-asedio-y-fortaleza.md) |
+| 7 | Decisión: si un paso rompe el balance, queda diseñado como contenido y se retoma con más contenido (modelos, animaciones) | por hacer |
 
 ## Pedido del autor: saberes de los pueblos
 

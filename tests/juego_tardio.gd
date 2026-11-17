@@ -59,10 +59,15 @@ func _init() -> void:
 
 	# Asedio: +15 % de ataque y reparación en el campo.
 	var ram := s.spawn_unit("ariete", 0, capital.x + 6000, capital.y + 6000)
-	var a0 := s.effective_attack(ram)
+	var foe := s.spawn_building("casa", 1, capital.tx + 20, capital.ty + 20, true)
+	var h_a := foe.hp
+	s._hit(ram, foe)
+	var d0 := h_a - foe.hp
 	s._finish_tech(0, "escuela_asedio")
-	var a1 := s.effective_attack(ram)
-	_check("asedio +15 %", a1 > a0, "%d -> %d" % [a0, a1])
+	var h_b := foe.hp
+	s._hit(ram, foe)
+	var d1 := h_b - foe.hp
+	_check("asedio +15 % contra edificios", d1 > d0, "%d -> %d de daño" % [d0, d1])
 	ram.hp = ram.hp_max / 2
 	_check("sin la mejora no se repara", not s.can_repair_unit(0, ram))
 	s._finish_tech(0, "escuela_reparar")

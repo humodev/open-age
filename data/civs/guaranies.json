@@ -27,6 +27,7 @@
   "Tava"
  ],
  "unidades": {
+  "catapulta": {"nombre": "Cañón de tacuara", "reemplaza": "ariete", "pv": 140, "armadura": 0, "armadura_distancia": 1, "ataque": 18, "alcance": 7000, "cadencia_ms": 4500, "velocidad": 1000, "radio": 300, "pob": 2, "municion": 8, "contadores": {"choque": 100, "distancia": 100, "linea": 100, "civil": 100, "explorador": 100, "asedio": 100, "edificio": 600}, "costo": {"madera": 130, "riqueza": 60}, "desc": "Desde la edad III el cañón de tacuara pasa a la ranura del asedio de área: tacuara reforzada con cuero que tira metralla sobre la tropa (Mbororé, 1641: cartas anuas; Furlong, 1962). Pega a todos los enemigos cerca del blanco; le hace poco a la piedra y se rompe después de 8 disparos."},
   "aldeano": {
    "nombre": "Ava",
    "tasa": {
@@ -52,7 +53,7 @@
   "ariete": {
    "nombre": "Cañón de tacuara",
    "alcance": 6500,
-   "ataque": 38,
+   "ataque": 41,
    "velocidad": 1000,
    "pv": 140,
    "radio": 300,
@@ -70,6 +71,7 @@
   }
  },
  "edificios": {
+  "fortaleza": {"nombre": "Trinchera de tacuara", "material": "madera", "pv": 3200, "costo": {"madera": 250, "piedra": 300}, "desc": "Trinchera y empalizada doble de tacuara y troncos, con plataformas para los arqueros y los arcabuces, como las de las misiones contra las malocas (Furlong, 1962) [verificar el pasaje]. La defensa que aguanta de la edad III."},
   "campo_tiro": {"nombre": "Guyrapa róga", "tam": [2, 2], "costo": {"madera": 150}, "desc": "Casa del arco, junto al monte: más chica, para levantarla entre los árboles."},
   "taller": {"nombre": "Taller de tacuara", "costo": {"madera": 150}},
   "almacen_madera": {"nombre": "Tapyi", "deposito": ["alimento", "madera"], "costo": {"madera": 60}, "desc": "Rancho al borde del monte: guarda la comida (caza, frutos y roza) y la madera. Levantalo junto a la caza o el monte, así no vuelven hasta el Oga guasu."},
@@ -287,8 +289,8 @@
    "yvy_marane"
   ]
  ],
- "construye": ["casa", "granja", "almacen_madera", "almacen_mina", "cuartel", "campo_tiro", "taller", "centro", "empalizada", "puerta", "mercado"],
- "produce": {"cuartel": ["guerrero", "lancero"], "campo_tiro": ["hondero"], "taller": ["ariete"]},
+ "construye": ["casa", "granja", "almacen_madera", "almacen_mina", "cuartel", "campo_tiro", "taller", "fortaleza", "centro", "empalizada", "puerta", "mercado"],
+ "produce": {"cuartel": ["guerrero", "lancero"], "campo_tiro": ["hondero"], "taller": ["ariete", "catapulta"]},
  "recursos_semilla": [{ "tipo": "yerbal", "cantidad": 100 }],
  "modulos": {
   "sigilo": {

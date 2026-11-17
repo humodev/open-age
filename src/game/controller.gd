@@ -286,7 +286,7 @@ func commands() -> Array[Dictionary]:
 					cmd["common"] = "Hito · edad %s" % Sim._roman(age + 1)
 					cmd["common_corto"] = "Edad %s" % Sim._roman(age + 1) # si no entra (ronda 5: «Hito · edad I…»)
 					cmd["common_dos"] = ["Hito", "Edad %s" % Sim._roman(age + 1)] # --- ronda 6 --- sin perder «hito»
-					cmd["desc"] = "%s\n%s\n%s" % [def.get("desc", ""), effects_text(def.get("efectos", [])), unlocks_text(age + 1)]
+					cmd["desc"] = "%s\n%s\n%s" % [def.get("desc", ""), hito_effects_text(def, age + 1), unlocks_text(age + 1)] # --- paso 4 --- aura
 					if sim.hito_in_progress(local):
 						cmd["locked"] = "Ya hay un hito en obra"
 			out.append(cmd)
@@ -318,6 +318,8 @@ func commands() -> Array[Dictionary]:
 		var i := 0
 		for type: String in produce:
 			var udef: Dictionary = sim.dp(local).unidades[type]
+			if sim.dp(local).replaced_by(type, age) != "":
+				continue # --- paso 4 --- el ariete inca y el guaraní pasan al asedio de área en la III
 			var slot := int(fijas.get(type, -1))
 			if slot < 0:
 				while reservadas.has(i):
@@ -1239,6 +1241,31 @@ func effects_text(efectos: Array) -> String:
 				parts.append("+%d de ataque de centros, torres e hitos" % ef["n"])
 			"edificio_alcance":
 				parts.append("+%.1f casillas de alcance de los edificios" % (ef["n"] / 1000.0))
+			# --- paso 4 ---
+			"edificio_flechas":
+				parts.append("+%d %s por andanada de %s" % [ef["n"], "flecha" if int(ef["n"]) == 1 else "flechas", "las fortalezas" if ef.has("tipos") else "centros, torres, fortalezas e hitos"])
+			"reparacion_pct":
+				parts.append("+%d%% de velocidad de reparación" % ef["pct"])
+			# --- fin paso 4 ---
+	return " · ".join(parts)
+
+
+## --- paso 4 --- Efectos de un hito que lleva a `dest_age`: los de combate de los hitos
+## militares de la III y la IV valen en su aura (C-76 a; reglas.aura_hito.militar).
+func hito_effects_text(def: Dictionary, dest_age: int) -> String:
+	var efs: Array = def.get("efectos", [])
+	if not sim.hito_combat_in_aura(def, dest_age):
+		return effects_text(efs)
+	var glob: Array = []
+	var aura: Array = []
+	for ef: Dictionary in efs:
+		(aura if String(ef["tipo"]) in Sim.AURA_TYPES else glob).append(ef)
+	var parts: Array[String] = []
+	if not glob.is_empty():
+		parts.append(effects_text(glob))
+	if not aura.is_empty():
+		var r := int(sim.data.reglas.get("aura_hito", {}).get("militar", {}).get("radio", 0))
+		parts.append("A %d casillas del hito o menos: %s" % [r / 1000, effects_text(aura)])
 	return " · ".join(parts)
 
 
@@ -1263,7 +1290,7 @@ static func lines_text(lineas: Array) -> String:
 		return "toda la tropa"
 	var names: Array[String] = []
 	for l in lineas:
-		names.append(LINE_NAMES.get(l, l))
+		names.append(LINE_NAMES.get(l, "el asedio" if l == "asedio" else l)) # --- paso 4 ---
 	if names.size() == 1 and lineas[0] == "choque":
 		return "la tropa de choque a pie"
 	return ", ".join(names)
@@ -1303,7 +1330,7 @@ func unlocks_text(age: int) -> String:
 	if school > 0:
 		txt += ". Escuela: %s (%d mejoras, en la capital)" % [escuela_info()["nombre"], school]
 	if bonus > 0:
-		txt += ". Ataque de edificios y asedio +%d%%." % bonus
+		txt += ". Ataque de edificios +%d%%." % bonus # --- paso 4 --- el asedio sube con sus niveles
 	return txt
 
 

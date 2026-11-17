@@ -555,6 +555,12 @@ func _cmd_train(pid: int, bid: int, type: String) -> void:
 	if p["age"] < dp(pid).unidades[type].get("edad_min", 1):
 		_notify(pid, "Requiere edad %s" % _roman(dp(pid).unidades[type]["edad_min"]))
 		return
+	# --- paso 4 --- reemplazada desde esta edad (el ariete inca y el guaraní pasan al asedio de área)
+	var rep := dp(pid).replaced_by(type, int(p["age"]))
+	if rep != "":
+		_notify(pid, "Ahora se entrena %s" % str(dp(pid).unidades[rep].get("nombre", rep)))
+		return
+	# --- fin paso 4 ---
 	if b.queue.size() >= data.reglas["cola_max"]:
 		_notify(pid, "Cola llena")
 		return
@@ -972,7 +978,12 @@ func _apply_effects(pid: int, efectos: Array) -> void:
 				for f in ef["funciones"]:
 					_add_mod(pid, "vel:" + f, ef["pct"])
 			"edificio_vida_pct":
-				_add_mod(pid, "b_vida", ef["pct"])
+				# --- paso 4 --- `tipos`: solo esos edificios (la fortaleza reforzada)
+				if ef.has("tipos"):
+					for ty in ef["tipos"]:
+						_add_mod(pid, "b_vida_t:" + str(ty), ef["pct"])
+				else:
+					_add_mod(pid, "b_vida", ef["pct"])
 			"motor_pct":
 				_add_mod(pid, "motor", ef["pct"])
 			"edificio_ataque":
@@ -987,6 +998,16 @@ func _apply_effects(pid: int, efectos: Array) -> void:
 			"costo_tec_pct":
 				_add_mod(pid, "tec_desc:%d" % int(ef["edad_min"]), ef["pct"])
 			# --- fin paso 3 ---
+			# --- paso 4 --- flechas por andanada (aspilleras) y reparación más rápida
+			"edificio_flechas":
+				if ef.has("tipos"):
+					for ty in ef["tipos"]:
+						_add_mod(pid, "b_flechas_t:" + str(ty), ef["n"])
+				else:
+					_add_mod(pid, "b_flechas", ef["n"])
+			"reparacion_pct":
+				_add_mod(pid, "reparacion", ef["pct"])
+			# --- fin paso 4 ---
 	for e in actives:
 		if e.alive and e.owner == pid:
 			_apply_stats(e)
@@ -995,17 +1016,17 @@ func _apply_effects(pid: int, efectos: Array) -> void:
 ## Vida máxima y velocidad según datos y modificadores; conserva la proporción de vida.
 func _apply_stats(e: SimEntity) -> void:
 	var base: int = e.def["pv"]
-	var pct := mod(e.owner, "b_vida") if e.is_building() else mod(e.owner, "vida:" + e.fn)
+	var pct := mod(e.owner, "b_vida") + mod(e.owner, "b_vida_t:" + e.type) if e.is_building() else mod(e.owner, "vida:" + e.fn) + aura_mod(e, "vida:" + e.fn)
 	if e.is_unit():
 		var line := SimData.line_of(e.def)
 		if line != "":
-			pct += mod(e.owner, "vida_l:" + line)
+			pct += mod(e.owner, "vida_l:" + line) + aura_mod(e, "vida_l:" + line)
 	var new_max := base * (100 + pct) / 100
 	if e.hp_max > 0 and new_max != e.hp_max:
 		e.hp = maxi(1, e.hp * new_max / e.hp_max)
 	e.hp_max = new_max
 	if e.is_unit():
-		e.speed = int(e.def["velocidad"]) * (100 + mod(e.owner, "vel:" + e.fn)) / 100 * int(data.reglas.get("velocidad_pct", 100)) / 100 * tick_ms / 1000
+		e.speed = int(e.def["velocidad"]) * (100 + mod(e.owner, "vel:" + e.fn) + aura_mod(e, "vel:" + e.fn)) / 100 * int(data.reglas.get("velocidad_pct", 100)) / 100 * tick_ms / 1000
 
 
 func _cmd_rally(pid: int, bid: int, x: int, y: int, target_id: int) -> void:
@@ -1054,6 +1075,7 @@ func step() -> void:
 	if tick % 10 == 0:
 		mods.tick_second()
 		_aura_heal()
+		_aura_combat() # --- paso 4 ---
 	var every: int = data.reglas["niebla_cada_ticks"]
 	for pid in players.size():
 		if (tick + team_of(pid)) % every == 0:
@@ -1134,6 +1156,91 @@ func _aura_heal() -> void:
 			for u in actives:
 				if u.alive and u.is_unit() and u.inside < 0 and u.owner >= 0 and u.is_military() and u.hp < u.hp_max and not enemies(pid, u.owner) and dist_to(u, h) <= r:
 					u.hp = mini(u.hp_max, u.hp + int(a["cura_por_s"]))
+
+
+# --- paso 4 --- Hitos militares con aura (C-76 a, docs/diseno/27 §4.2)
+
+## ¿El hito `def`, terminado al llegar a la edad `age`, da su bono de combate solo en su aura?
+## (reglas.aura_hito.militar.combate_desde_edad: los hitos militares de la III y la IV).
+func hito_combat_in_aura(def: Dictionary, age: int) -> bool:
+	if String(def.get("eje", "")) != "militar" or not def.get("avanza_edad", false):
+		return false
+	var desde := int(data.reglas.get("aura_hito", {}).get("militar", {}).get("combate_desde_edad", 0))
+	return desde > 0 and age >= desde
+
+
+const AURA_TYPES := ["ataque", "armadura", "vida_pct", "velocidad_pct", "ataque_pct"]
+
+
+## Separa los efectos de un hito: [los que siguen siendo globales, las claves de combate en aura].
+func _split_aura(efectos: Array) -> Array:
+	var keep: Array = []
+	var aura := {}
+	for ef: Dictionary in efectos:
+		var t: String = ef["tipo"]
+		if not t in AURA_TYPES:
+			keep.append(ef)
+			continue
+		match t:
+			"ataque":
+				for f in ef["funciones"]:
+					aura["ataque:" + f] = int(aura.get("ataque:" + f, 0)) + int(ef["n"])
+			"armadura":
+				var pre: String = ARMOR_KEYS.get(ef.get("contra", ""), "armadura:")
+				for f in ef["funciones"]:
+					aura[pre + f] = int(aura.get(pre + f, 0)) + int(ef["n"])
+			"vida_pct":
+				for f in ef.get("funciones", []):
+					aura["vida:" + f] = int(aura.get("vida:" + f, 0)) + int(ef["pct"])
+				for l in ef.get("lineas", []):
+					aura["vida_l:" + l] = int(aura.get("vida_l:" + l, 0)) + int(ef["pct"])
+			"velocidad_pct":
+				for f in ef["funciones"]:
+					aura["vel:" + f] = int(aura.get("vel:" + f, 0)) + int(ef["pct"])
+			"ataque_pct":
+				for l in ef["lineas"]:
+					aura["atk_pct:" + l] = int(aura.get("atk_pct:" + l, 0)) + int(ef["pct"])
+	return [keep, aura]
+
+
+## Lo que suma el aura de los hitos militares a una unidad que está dentro (bits de `aura_bits`).
+func aura_mod(e: SimEntity, key: String) -> int:
+	if e.aura_bits == 0 or e.owner < 0:
+		return 0
+	var list: Array = players[e.owner].get("aura_combate", [])
+	var v := 0
+	for i in list.size():
+		if e.aura_bits & (1 << i):
+			v += int((list[i]["mods"] as Dictionary).get(key, 0))
+	return v
+
+
+## Cada segundo: qué tropa propia está dentro del aura de cada hito militar en pie.
+func _aura_combat() -> void:
+	var radio := int(data.reglas.get("aura_hito", {}).get("militar", {}).get("radio", 0))
+	var lists: Array = []
+	var any := false
+	for p in players:
+		lists.append(p.get("aura_combate", _NONE))
+		any = any or not (lists[-1] as Array).is_empty()
+	if not any:
+		return # nadie tiene hitos militares con aura: no hay bits que limpiar
+	for u in actives:
+		if not u.alive or not u.is_unit() or u.owner < 0:
+			continue
+		var list: Array = lists[u.owner]
+		if list.is_empty() and u.aura_bits == 0:
+			continue
+		var bits := 0
+		if u.inside < 0 and u.is_military():
+			for i in list.size():
+				var h: SimEntity = by_id.get(int(list[i]["id"]))
+				if h != null and h.alive and h.built and dist_to(u, h) <= radio:
+					bits |= 1 << i
+		if bits != u.aura_bits:
+			u.aura_bits = bits
+			_apply_stats(u)
+# --- fin paso 4 ---
 
 
 func _rebuild_hashes() -> void:
@@ -1619,7 +1726,7 @@ func _do_build(e: SimEntity) -> void:
 	if b.built:
 		# Reparación: a la velocidad de construcción, sin costo en H1.
 		var t_rep: int = maxi(1, dp(b.owner).build_time_of(b.type, 1))
-		b.hp = mini(b.hp_max, b.hp + maxi(1, b.hp_max * tick_ms / t_rep))
+		b.hp = mini(b.hp_max, b.hp + maxi(1, b.hp_max * tick_ms * (100 + mod(b.owner, "reparacion")) / 100 / t_rep)) # --- paso 4 --- reparación rápida
 		return
 	if b.build_time <= 0:
 		_complete(b)
@@ -1647,7 +1754,16 @@ func _complete(b: SimEntity) -> void:
 	if b.def.get("avanza_edad", false):
 		var p := players[b.owner]
 		p["age"] = mini(dp(b.owner).edades.size(), p["age"] + 1)
-		_apply_effects(b.owner, b.def.get("efectos", []))
+		# --- paso 4 --- C-76 a): desde la III, el bono de combate de los hitos militares vale
+		# en su aura, no en todo el mapa (docs/diseno/27, §4.2).
+		var efs: Array = b.def.get("efectos", [])
+		if hito_combat_in_aura(b.def, int(p["age"])):
+			var split := _split_aura(efs)
+			efs = split[0]
+			if not (split[1] as Dictionary).is_empty():
+				(p.get_or_add("aura_combate", []) as Array).append({"id": b.id, "mods": split[1]})
+		_apply_effects(b.owner, efs)
+		# --- fin paso 4 ---
 		events.append({"t": "age", "player": b.owner, "age": p["age"], "hito": b.type})
 
 
@@ -1699,21 +1815,21 @@ func effective_attack(a: SimEntity) -> int:
 	var atk: int = a.def.get("ataque", 0)
 	if a.is_building():
 		atk += mod(a.owner, "b_ataque")
-	else:
-		atk += mod(a.owner, "ataque:" + a.fn)
-	return atk * (100 + attack_pct(a.owner, a.def, a.is_building())) / 100
+		return atk * (100 + attack_pct(a.owner, a.def, true)) / 100
+	atk += mod(a.owner, "ataque:" + a.fn) + aura_mod(a, "ataque:" + a.fn) # --- paso 4 --- aura
+	var line := SimData.line_of(a.def)
+	return atk * (100 + attack_pct(a.owner, a.def, false) + (aura_mod(a, "atk_pct:" + line) if line != "" else 0)) / 100
 
 
-## Porcentaje de ataque (docs/diseno/27, paso 1): los edificios que disparan y el asedio
-## siguen subiendo con la edad (`bono_ataque_edificio`, `bono_ataque_asedio`); la tropa, solo
-## con lo que se compra por línea (`ataque_pct`: la herrería I de ataque, veterano y élite).
+## Porcentaje de ataque (docs/diseno/27, paso 1): los edificios que disparan siguen subiendo
+## con la edad (`bono_ataque_edificio`); la tropa, solo con lo que se compra por línea
+## (`ataque_pct`: la herrería I de ataque, veterano y élite). El asedio, desde el paso 4, con
+## sus niveles (veterano_asedio, elite_asedio).
 func attack_pct(pid: int, def: Dictionary, building: bool) -> int:
 	if pid < 0:
 		return 0
-	var fn: String = def.get("funcion", "")
-	if building or fn == "asedio":
-		var by_age := int(dp(pid).edades[players[pid]["age"] - 1].get("bono_ataque_edificio" if building else "bono_ataque_asedio", 0))
-		return by_age + (0 if building else mod(pid, "asedio_pct")) # --- paso 3 --- (escuela: oficio del asedio)
+	if building:
+		return int(dp(pid).edades[players[pid]["age"] - 1].get("bono_ataque_edificio", 0))
 	var line := SimData.line_of(def)
 	return mod(pid, "atk_pct:" + line) if line != "" else 0
 
@@ -1749,7 +1865,7 @@ func grant_age_purchases(pid: int, age: int) -> void:
 ## `armadura_distancia` en el dato, vale la misma que contra cuerpo a cuerpo.
 func effective_armor(t: SimEntity, ranged: bool = false) -> int:
 	var base := int(t.def.get("armadura_distancia", t.def.get("armadura", 0))) if ranged else int(t.def.get("armadura", 0))
-	return base + (armor_bonus(t.owner, t.fn, ranged) if t.is_unit() else 0)
+	return base + (armor_bonus(t.owner, t.fn, ranged) + aura_armor(t, ranged) if t.is_unit() else 0)
 
 
 ## Prefijo del modificador de armadura según `contra` (paso 2 del juego tardío: la herrería
@@ -1760,6 +1876,13 @@ const ARMOR_KEYS := {"": "armadura:", "cuerpo": "armadura_c:", "distancia": "arm
 ## Armadura que suman las mejoras a una función: la de las dos clases más la de la clase del golpe.
 func armor_bonus(pid: int, fn: String, ranged: bool) -> int:
 	return mod(pid, "armadura:" + fn) + mod(pid, ("armadura_d:" if ranged else "armadura_c:") + fn)
+
+
+## --- paso 4 --- La armadura del aura de los hitos militares, con la misma separación.
+func aura_armor(t: SimEntity, ranged: bool) -> int:
+	if t.aura_bits == 0:
+		return 0
+	return aura_mod(t, "armadura:" + t.fn) + aura_mod(t, ("armadura_d:" if ranged else "armadura_c:") + t.fn)
 
 
 ## ¿Pega a distancia? Decide qué armadura usa el blanco.
@@ -1782,7 +1905,9 @@ func attack_bonus(a: SimEntity, t: SimEntity) -> int:
 
 func _hit(a: SimEntity, t: SimEntity) -> void:
 	var atk := effective_attack(a) + attack_bonus(a, t)
-	var mult: int = data.reglas["contadores"].get(a.fn, {}).get(t.fn, 100)
+	if a.fn == "asedio" and t.is_building():
+		atk = atk * (100 + mod(a.owner, "asedio_pct")) / 100 # --- paso 3 --- escuela: oficio del asedio
+	var mult := counter_mult(a, t) # --- paso 4 ---
 	var armor := effective_armor(t, is_ranged(a))
 	# Altura (D-027): quien dispara desde más arriba pega más fuerte.
 	if int(a.def.get("alcance", 0)) > 1500:
@@ -1800,7 +1925,7 @@ func _hit(a: SimEntity, t: SimEntity) -> void:
 			_kill(a)
 	mods.on_hit(a, t, dmg)
 	# Daño en área (elefantes): una fracción a los enemigos cercanos al objetivo.
-	if a.def.has("area") and t.is_unit():
+	if a.def.has("area") and t.is_unit() and not a.def.has("area_borde_pct"): # --- paso 4 --- el asedio de área va por _splash
 		var r: int = a.def["area"]
 		for o in actives:
 			if o != t and o.alive and o.is_unit() and o.inside < 0 and o.owner >= 0 and enemies(a.owner, o.owner) and absi(o.x - t.x) <= r and absi(o.y - t.y) <= r:
@@ -1808,6 +1933,10 @@ func _hit(a: SimEntity, t: SimEntity) -> void:
 				if o.hp <= 0:
 					mods.on_kill(o, a)
 					_kill(o)
+	# --- paso 4 --- Asedio de área (catapulta y la de cada pueblo): golpe con caída hacia el borde.
+	if a.def.has("area_borde_pct"):
+		_splash(a, t)
+	# --- fin paso 4 ---
 	# Munición limitada (cañón de tacuara): se rompe tras n disparos.
 	if a.def.has("municion"):
 		a.shots += 1
@@ -1840,6 +1969,66 @@ func _hit(a: SimEntity, t: SimEntity) -> void:
 				players[a.owner]["stats"]["edificios_destruidos"] = int(players[a.owner]["stats"].get("edificios_destruidos", 0)) + 1
 		mods.on_kill(t, a)
 		_kill(t, a)
+
+
+# --- paso 4 ---
+## Multiplicador de `a` contra `t`: reglas.contadores, pisado por los `contadores` propios del
+## que pega (el asedio de área pega a la tropa), por los de `recibe` del blanco (los
+## incendiarios mapuches no son máquinas: la distancia los daña entero) y, contra edificios, por
+## `bono_material` (madera o piedra: `material`, o piedra si cuesta piedra o es hito).
+func counter_mult(a: SimEntity, t: SimEntity) -> int:
+	var mult: int = data.reglas["contadores"].get(a.fn, {}).get(t.fn, 100)
+	if a.def.has("contadores"):
+		mult = int((a.def["contadores"] as Dictionary).get(t.fn, mult))
+	if t.def.has("recibe"):
+		mult = int((t.def["recibe"] as Dictionary).get(a.fn, mult))
+	if t.is_building() and a.def.has("bono_material"):
+		mult = mult * int((a.def["bono_material"] as Dictionary).get(material_of(t.def), 100)) / 100
+	return mult
+
+
+static func material_of(def: Dictionary) -> String:
+	if def.has("material"):
+		return String(def["material"])
+	return "piedra" if int((def.get("costo", {}) as Dictionary).get("piedra", 0)) > 0 or def.get("avanza_edad", false) else "madera"
+
+
+## Daño de área alrededor del blanco: a cada enemigo a `area` o menos, el golpe que le tocaría
+## (con su armadura), entero en el centro y `area_borde_pct` en el borde. Busca en la grilla de
+## enemigos (`_ehash`), así no cuesta recorrer todo el mapa por disparo.
+func _splash(a: SimEntity, t: SimEntity) -> void:
+	if a.owner < 0:
+		return
+	var r := int(a.def["area"])
+	var edge := int(a.def["area_borde_pct"])
+	var base := effective_attack(a)
+	var ranged := is_ranged(a)
+	var cx := t.x
+	var cy := t.y
+	for gx in range(maxi(0, (cx - r) / EC), (cx + r) / EC + 1):
+		for gy in range(maxi(0, (cy - r) / EC), (cy + r) / EC + 1):
+			var cell: Array = _ehash.get(gx * 1024 + gy, _NONE)
+			for o: SimEntity in cell:
+				if o == t or not o.alive or not o.is_unit() or o.inside >= 0 or o.owner < 0 or not enemies(a.owner, o.owner):
+					continue
+				var d := Sim.dist(cx, cy, o.x, o.y)
+				if d > r:
+					continue
+				var full := maxi(int(data.reglas["danio_minimo"]), (base + attack_bonus(a, o)) * counter_mult(a, o) / 100 - effective_armor(o, ranged))
+				var dmg := maxi(1, mods.damage(a, o, full * (100 - (100 - edge) * d / r) / 100))
+				o.hp -= dmg
+				if o.hp <= 0:
+					players[o.owner]["stats"]["muertes"] += 1
+					players[a.owner]["stats"]["bajas"] += 1
+					mods.on_kill(o, a)
+					_kill(o, a)
+	events.append({"t": "area", "a": a.id, "x": cx, "y": cy, "r": r})
+
+
+## Flechas de una andanada: las propias, las de las mejoras (aspilleras) y una por unidad adentro.
+func volley_shots(b: SimEntity) -> int:
+	return int(b.def.get("flechas", 1)) + mod(b.owner, "b_flechas") + mod(b.owner, "b_flechas_t:" + b.type) + b.garrison.size()
+# --- fin paso 4 ---
 
 
 func _kill(e: SimEntity, killer: SimEntity = null) -> void:
@@ -1918,7 +2107,7 @@ func _update_building(b: SimEntity) -> void:
 		else:
 			# Andanada: flechas propias más una por unidad alojada.
 			var reach: int = int(b.def["alcance"]) + mod(b.owner, "b_alcance")
-			var shots: int = int(b.def.get("flechas", 1)) + b.garrison.size()
+			var shots: int = volley_shots(b) # --- paso 4 --- aspilleras
 			var t := find_enemy(b, reach, true)
 			if t != null:
 				for i in shots:

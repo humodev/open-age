@@ -114,7 +114,7 @@ func _draw() -> void:
 		var key: String = opts[i]
 		var def: Dictionary = dd.edificios.get(key, {})
 		var body := String(def.get("desc", ""))
-		var ef: String = hud.ctrl.effects_text(def.get("efectos", []))
+		var ef: String = hud.ctrl.hito_effects_text(def, age + 1) # --- paso 4 --- aura
 		var extra: Array[String] = []
 		if ef != "":
 			extra.append(ef)

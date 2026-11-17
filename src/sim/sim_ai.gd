@@ -192,6 +192,10 @@ func _levels(p: Dictionary, army: Array[SimEntity], by_type: Dictionary, saving:
 		var l := SimData.line_of(u.def)
 		if l != "":
 			count[l] = int(count.get(l, 0)) + 1
+	# --- paso 4 --- el asedio no compite por las dos líneas: tiene su propia regla
+	var siege_n := int(count.get("asedio", 0))
+	count.erase("asedio")
+	# --- fin paso 4 ---
 	var lines: Array = []
 	for l in count:
 		if int(count[l]) >= int(cfg.get("tropa_minima", 1)):
@@ -207,6 +211,7 @@ func _levels(p: Dictionary, army: Array[SimEntity], by_type: Dictionary, saving:
 					for l in sim.dp(player).lines_made_by(b.def):
 						made[l] = int(made.get(l, 0)) + 1
 		var extra: Array = made.keys().filter(func(l: String) -> bool: return not lines.has(l))
+		extra.erase("asedio") # --- paso 4 ---
 		extra.sort_custom(func(a: String, b: String) -> bool: return made[a] > made[b] or (made[a] == made[b] and a < b))
 		lines.append_array(extra)
 	lines = lines.slice(0, n_first)
@@ -214,6 +219,13 @@ func _levels(p: Dictionary, army: Array[SimEntity], by_type: Dictionary, saving:
 	for k: String in techs:
 		if techs[k].get("ia_prioridad", false):
 			want.append(k)
+	# --- paso 4 --- el nivel del asedio, apenas hay asedio (reemplaza al bono por edad que tenía)
+	if siege_n >= int(sim.data.reglas.get("ia_asedio", {}).get("asedio_para_nivel", 1 << 20)):
+		for lvl in [1, 2]:
+			for k: String in techs:
+				if techs[k].get("linea", "") == "asedio" and int(techs[k].get("nivel", 0)) == lvl:
+					want.append(k)
+	# --- fin paso 4 ---
 	for lvl in [1, 2]:
 		for l: String in lines:
 			for k: String in techs:
@@ -949,6 +961,8 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 						return
 					_no_route[bb.id] = sim.tick + 1200 # sin paso: se reintenta en 2 minutos
 					sim.tele.add(sim.tick, "ia_sin_ruta", player, bb.tx, bb.ty, {"tipo": bb.type}, "isr:%d" % bb.id, 1200)
+	if not saving:
+		_fortress(p, vill, centro, by_type, unbuilt) # --- paso 4 --- (ahorrando para el hito, no)
 	# Torre (la fácil, ninguna: `torres_max`; proceso/24, 4q).
 	if p["age"] >= 2 and sim.dp(player).edificios.has("torre") and by_type.get("torre", []).size() < int(level.get("torres_max", 1)) and p["res"]["piedra"] >= 250:
 		_try_build("torre", p, vill, centro, 1)
@@ -1449,10 +1463,24 @@ func _production(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], 
 			continue
 		# Arietes desde la edad II: sin asedio los ataques no derriban edificios.
 		var makes: Array = b.def.get("produce", [])
-		if p["age"] >= 2 and makes.has("ariete") and _count(army, "ariete") < 1 + wave / 2 and army.size() >= 6:
-			if _spend(budget, sim.dp(player).cost_of("ariete", p["age"])):
-				sim.push_command({"t": "train", "player": player, "building": b.id, "type": "ariete"})
-				continue
+		# --- paso 4 --- el asedio contra edificios puede ser el ariete, su reemplazo de la III
+		# (hondero de piedra caliente, cañón de tacuara) o los incendiarios mapuches; y el asedio
+		# de área sale si el rival junta tropa (reglas.ia_asedio).
+		var siege := _siege_units(makes, int(p["age"]))
+		var ram: String = siege[0]
+		var area: String = siege[1]
+		var want_ram: bool = p["age"] >= 2 and ram != "" and _count(army, ram) < 1 + wave / 2 and army.size() >= 6
+		var want_area: bool = area != "" and area != ram and _wants_area_siege(army, area)
+		# Con las dos, la que falta más (el ariete solo, sin el de área, llenaba el taller).
+		var pick := ""
+		if want_area and (not want_ram or _count(army, area) < _count(army, ram)):
+			pick = area
+		elif want_ram:
+			pick = ram
+		if pick != "" and _spend(budget, sim.dp(player).cost_of(pick, p["age"])):
+			sim.push_command({"t": "train", "player": player, "building": b.id, "type": pick})
+			continue
+		# --- fin paso 4 ---
 		# La preferida si alcanza; si no, la siguiente que se pueda pagar.
 		for type in order:
 			if not makes.has(type) or p["age"] < int(sim.dp(player).unidades.get(type, {}).get("edad_min", 1)):
@@ -1461,6 +1489,70 @@ func _production(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], 
 			if _keeps_reserve(p, c) and _spend(budget, c):
 				sim.push_command({"t": "train", "player": player, "building": b.id, "type": type})
 				break
+
+
+# --- paso 4 ---
+## [asedio contra edificios, asedio de área] que `makes` entrena en la edad `age` ("" si no hay).
+## Lo reemplazado (el ariete inca y el guaraní desde la III) no cuenta; el reemplazo hace las dos cosas.
+func _siege_units(makes: Array, age: int) -> Array:
+	var dd := sim.dp(player)
+	var ram := ""
+	var area := ""
+	for u: String in makes:
+		var d: Dictionary = dd.unidades.get(u, {})
+		if d.get("funcion", "") != "asedio" or age < int(d.get("edad_min", 1)) or dd.replaced_by(u, age) != "":
+			continue
+		if d.has("area_borde_pct") and area == "":
+			area = u
+		if (d.get("solo_edificios", false) or d.has("reemplaza")) and ram == "":
+			ram = u
+	return [ram, area]
+
+
+## Asedio de área (reglas.ia_asedio): con ejército propio y tropa rival que valga la pena, hasta
+## 1 + oleada / oleadas_por_unidad (tope).
+func _wants_area_siege(army: Array[SimEntity], type: String) -> bool:
+	var cfg: Dictionary = sim.data.reglas.get("ia_asedio", {})
+	if cfg.is_empty() or army.size() < int(cfg["ejercito_min"]):
+		return false
+	if _count(army, type) >= mini(int(cfg["tope"]), 1 + wave / maxi(1, int(cfg["oleadas_por_unidad"]))):
+		return false
+	var foes := 0
+	for e in sim.actives:
+		if e.alive and e.owner >= 0 and e.is_unit() and e.is_military() and sim.enemies(player, e.owner):
+			foes += 1
+			if foes >= int(cfg["enemigos_min"]):
+				return true
+	return false
+
+
+## Fortaleza (reglas.ia_asedio): desde su edad, junto al centro del lado del rival, cuando no
+## ahorra para el hito siguiente (lo decide `_buildings`).
+func _fortress(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_type: Dictionary, unbuilt: Dictionary) -> void:
+	var cfg: Dictionary = sim.data.reglas.get("ia_asedio", {})
+	var dd := sim.dp(player)
+	if cfg.is_empty() or not dd.edificios.has("fortaleza") or unbuilt.has("fortaleza"):
+		return
+	if p["age"] < int(dd.edificios["fortaleza"].get("edad_min", 1)) or vill.size() < int(cfg["aldeanos_min"]):
+		return
+	if (by_type.get("fortaleza", []) as Array).size() >= int(level.get("fortalezas", cfg["fortalezas_por_defecto"])):
+		return
+	if not sim.can_afford(player, dd.cost_of("fortaleza", p["age"])):
+		return
+	var eb := Vector2i(centro.tx, centro.ty)
+	var best := 1 << 60
+	for j in mini(sim.players.size(), sim.bases.size()):
+		if sim.enemies(player, j):
+			var d := Sim.dist(sim.bases[j].x * P, sim.bases[j].y * P, centro.x, centro.y)
+			if d < best:
+				best = d
+				eb = sim.bases[j]
+	var off := int(cfg["adelante"])
+	var at := Vector2i(centro.tx + centro.w / 2 + signi(eb.x - centro.tx) * off, centro.ty + centro.h / 2 + signi(eb.y - centro.ty) * off)
+	var site := _site_near("fortaleza", at, 1)
+	if site.x >= 0:
+		_build_at("fortaleza", site, vill, int(cfg["constructores"]))
+# --- fin paso 4 ---
 
 
 ## Unidades en orden de preferencia: primero la que vence a la función enemiga más numerosa (triángulo, docs/05).
