@@ -92,6 +92,9 @@ static func eje(def: Dictionary, key: String) -> String:
 
 ## Ícono propio de un edificio o unidad según la tabla de la interfaz (o "" si no tiene).
 static func icono(type: String) -> String:
+	var propio := Iconos.de_tipo(type) # --- iconos --- (proceso/28: data/iconos.json → tipos)
+	if propio != "":
+		return propio
 	return String((cfg().get("iconos", {}) as Dictionary).get(type, ""))
 
 

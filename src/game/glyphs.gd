@@ -4,6 +4,8 @@ extends RefCounted
 
 
 static func draw(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
+	if Iconos.dibujar(ci, kind, r, col): # --- iconos --- (proceso/28: imágenes de data/iconos.json y glifos nuevos)
+		return
 	var c := r.get_center()
 	var s := minf(r.size.x, r.size.y)
 	var w := maxf(1.5, s * 0.07)

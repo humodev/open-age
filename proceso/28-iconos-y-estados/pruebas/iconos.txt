@@ -1,0 +1,73 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+  +alimento                    almacen_alimento
+  +alimento+madera             almacen_madera
+  +madera                      almacen_madera
+  +piedra+riqueza              almacen_mina
+  +riqueza                     almacen_mina
+  adiestramiento               adiestramiento
+  aldeano                      aldeano
+  arcabuz                      arcabucero
+  arcabuz^1                    veterano_polvora
+  arco~hondero~1               ataque_dist_1
+  ariete                       ariete
+  ariete^1                     veterano_asedio
+  aspillera                    aspilleras
+  awqa                         awqa
+  barrio_japones               barrio_japones
+  barrio_portugues             barrio_portugues
+  boleador                     boleador
+  camino                       camino
+  canasta                      cestas
+  carpa                        corte_nueva
+  casa                         casa
+  catapulta                    catapulta
+  centro                       centro
+  corral                       corral
+  cuartel                      cuartel
+  diana                        campo_tiro
+  elefante+alimento+madera+piedra elefante_rey
+  elefante_guerra              chang_suek
+  empalizada                   empalizada
+  engranaje                    oficio_motor
+  escudo~guerrero~1            armadura_cc_1
+  escudo~hondero~1             armadura_dist_1
+  espada~guerrero~1            ataque_cc_1
+  establo                      establo
+  explorador                   explorador
+  fortaleza                    fortaleza
+  fortaleza~escudo             fortaleza_reforzada
+  granja                       granja
+  guerrero                     guerrero
+  guerrero^1                   veterano_choque
+  gult                         gult
+  hacha                        hachas
+* hito_economia                ushnu, aqllawasi, qorikancha, rewe_lonko, rewe_monte, parlamento, karai_palabra, mision, tava, iglesia, amba, gondar, quilombo_central, cerca_real, pacto_cucau, wat, puerto_real, junco_tributo
+* hito_guerra                  pukara_mayor, kallanka_real, vilcabamba, rewe_malon, rewe_caballeria, weichan, aty_guasu, monte, yvy_marane, monasterio, remonta, alianza, mocambo_guerra, ferraria, guerra_zumbi, kraal_real, fortaleza_rio, guardia_extranjera
+  hondero                      hondero
+  hondero^1                    veterano_distancia
+  incendiario                  incendiarios
+  jinete                       jinete
+  jinete^1                     veterano_montados
+  katana                       compania_japonesa
+  kraal                        kraal
+  lancero                      lancero
+  lancero^1                    veterano_linea
+  martillo                     reparacion_rapida
+  mercado                      mercado
+  mocambo                      mocambo
+  muro                         mamposteria
+  orfebre                      orfebreria
+  pico                         canteria
+  puerta                       puerta
+  qollqa+alimento              qollqa
+  riego                        riego
+  ruka                         lof
+  taller_asedio                taller
+  telar                        taller_tejido
+  terraza                      anden
+  torre                        torre
+  velocidad                    marcha
+  vigia                        vigias
+EDADES: luminancia 0.13 · 0.21 · 0.51 · 0.79
+ICONOS: 580 grillas, 69 íconos distintos, OK

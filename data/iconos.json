@@ -1,0 +1,57 @@
+{
+  "_doc": "Íconos de la grilla, color por edad y colores de los estados de una casilla (proceso/28-iconos-y-estados; src/game/ui/iconos.gd y src/game/ui/estado_casilla.gd). Solo interfaz: nada de esto toca la simulación.",
+  "edades": {
+    "_doc": "Un color por edad (I, II, III, IV) para la franja de las casillas, la pastilla de la edad que falta y el texto «Edad III» de la ficha y de la ayuda. Se distinguen por luminosidad además de por tono (violeta, azul pizarra, verde, blanco celeste: luminancia relativa 0,13 · 0,21 · 0,51 · 0,79), así que se leen en escala de grises y con deuteranopía, protanopía y tritanopía (tests/iconos.gd mide ΔE ≥ 20 entre edades vecinas en las cuatro visiones). Ninguno es ámbar (falta recurso) ni rojo (bloquea). colores: franja y relleno de la pastilla; texto: para escribir sobre el fondo oscuro (contraste 4,5:1 o más).",
+    "colores": ["#8a2ee6", "#607cbf", "#4bd683", "#d7e9f5"],
+    "texto": ["#b98af5", "#8fa8e0", "#4bd683", "#d7e9f5"]
+  },
+  "estados": {
+    "_doc": "Colores de los estados de una casilla (src/game/ui/estado_casilla.gd). falta: le falta recurso (borde, tinte del glifo y la línea «Falta…» de la ayuda; ámbar, no rojo: no es un error). bloquea: lo que impide hacer clic por edad o requisito (solo en la ayuda; la casilla se oscurece y se raya). hecho: investigación en curso o tropa en la cola (borde y tilde). tope: máximo por edad o población llena (pastilla propia). puede: la primera línea «Podés hacerlo» de la ayuda. debil: el «Débil: …» de la ficha (informa contra qué sufre; antes iba en rojo y parecía un error).",
+    "falta": "#f0a030",
+    "bloquea": "#ff5a26",
+    "hecho": "#85f2c4",
+    "tope": "#9fc3e6",
+    "puede": "#85f2c4",
+    "debil": "#d9c6b3"
+  },
+  "tipos": {
+    "_doc": "Ícono de un edificio o una unidad cuando el de la tabla de la grilla (data/interfaz.json → grilla.iconos) o el deducido por función se repite con otro comando (tests/iconos.gd). Gana sobre los dos.",
+    "campo_tiro": "diana",
+    "establo": "establo",
+    "taller": "taller_asedio",
+    "lof": "ruka",
+    "boleador": "boleador",
+    "incendiarios": "incendiario",
+    "awqa": "awqa",
+    "compania_japonesa": "katana",
+    "chang_suek": "elefante_guerra",
+    "elefante_rey": "elefante+alimento+madera+piedra"
+  },
+  "tecnologias": {
+    "_doc": "Ícono de cada investigación por lo que mejora; si una no está acá, vale el campo `icono` de data/tecnologias.json. «x#2»: el glifo x con dos palotes dorados (segunda tanda). «arma~clase~n»: herrería (arma, clase abajo a la derecha, tanda en palotes). «línea^n»: galones de nivel.",
+    "hachas": "hacha",
+    "hachas_2": "hacha#2",
+    "canteria": "pico",
+    "orfebreria": "orfebre",
+    "cestas": "canasta",
+    "riego": "riego",
+    "riego_2": "riego#2",
+    "mamposteria": "muro",
+    "mamposteria_2": "muro#2",
+    "reparacion_rapida": "martillo",
+    "vigias": "vigia",
+    "aspilleras": "aspillera",
+    "fortaleza_reforzada": "fortaleza~escudo",
+    "oficio_motor": "engranaje",
+    "ataque_cc_1": "espada~guerrero~1",
+    "ataque_cc_2": "espada~guerrero~2",
+    "ataque_cc_3": "espada~guerrero~3",
+    "ataque_dist_1": "arco~hondero~1",
+    "ataque_dist_2": "arco~hondero~2",
+    "ataque_dist_3": "arco~hondero~3",
+    "adiestramiento": "adiestramiento"
+  },
+  "imagenes": {
+    "_doc": "Imagen que reemplaza a un glifo (para cuando haya arte, p. ej. de Meshy): {nombre del ícono: ruta res://}. El nombre es el del ícono, no el del comando: «hacha», «diana», «espada~guerrero~2», «guerrero^1». Si la ruta no existe, se dibuja el glifo. La imagen se atenúa igual que el glifo cuando la casilla está bloqueada o le falta recurso. Ejemplo: \"hacha\": \"res://assets/ui/iconos/hacha.png\"."
+  }
+}

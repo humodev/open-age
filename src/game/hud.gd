@@ -363,7 +363,7 @@ func _check_pop() -> void:
 
 func queue_icon(item: String) -> String:
 	if item.begins_with("@"):
-		return sim.dp(local).tecnologias[item.substr(1)]["icono"]
+		return Iconos.de_tecnologia(item.substr(1), sim.dp(local).tecnologias[item.substr(1)]) # --- iconos ---
 	return Glyphs.resolve(sim.dp(local).unidades.get(item, {}), item)
 
 
@@ -1021,8 +1021,7 @@ class CommandCard:
 					var r := _slot_rect(c["slot"])
 					var k := float(b.queue_progress) / float(hud.sim.dp(b.owner).queue_time(b.queue[0]))
 					draw_rect(Rect2(r.position + Vector2(4, r.size.y - 6), Vector2((r.size.x - 8) * k, 3)), Palette.UI_ACCENT)
-					var n := b.queue.count(b.queue[0])
-					draw_string(Hud.font_b, r.position + Vector2(0, 16), str(n), HORIZONTAL_ALIGNMENT_RIGHT, r.size.x - 6, 14, Palette.UI_ACCENT)
+					# --- iconos --- cuántas en la cola: la pastilla «×n» de EstadoCasilla (en_cola)
 
 
 class Tooltip:
@@ -1036,15 +1035,12 @@ class Tooltip:
 	func measure() -> Vector2:
 		var w := 330.0
 		var h := 44.0
+		h += EstadoCasilla.dibujar_lineas(self, Vector2.ZERO, _lineas(), 14, w - 28, false) # --- iconos ---
 		if not (cmd.get("cost", {}) as Dictionary).is_empty():
 			h += 28
-			if _falta_texto() != "": # --- costo real ---
-				h += 20
 		if cmd.get("desc", "") != "":
 			var lines := Hud.font.get_multiline_string_size(cmd["desc"], HORIZONTAL_ALIGNMENT_LEFT, w - 28, 15)
 			h += lines.y + 6
-		if cmd.get("locked", "") != "":
-			h += 24
 		return Vector2(w, h + 8)
 
 	## --- costo real --- "Faltan 200 de alimento y 40 de mit'a" ("" si alcanza o no hay costo).
@@ -1055,6 +1051,30 @@ class Tooltip:
 		if EstadoCasilla.faltante(cost, hud.sim.players[hud.local]["res"]).is_empty():
 			return ""
 		return hud.ctrl.missing_text(cost)
+
+	## --- iconos --- (proceso/28) Primera línea, debajo del título: rojo solo si bloquea
+	## («No se puede: no hay unidades alojadas»), ámbar si falta juntar y «Podés hacerlo» si
+	## cuesta algo y alcanza. Las órdenes sin costo ni bloqueo (Detener) no llevan línea.
+	func _lineas() -> Array:
+		if hud == null or hud.sim == null or int(cmd.get("slot", -1)) < 0:
+			return []
+		if str(cmd.get("locked", "")) == "" and (cmd.get("cost", {}) as Dictionary).is_empty():
+			return []
+		return EstadoCasilla.lineas_ayuda(cmd, hud.sim.players[hud.local]["res"], _falta_texto())
+
+	## --- iconos --- El comando se vuelve a leer de la grilla en cada cuadro: la ayuda ya no se
+	## queda con «No hay unidades alojadas» cuando entra alguien, ni con lo que faltaba.
+	func _process(_delta: float) -> void:
+		if not visible or cmd.is_empty() or hud == null or hud.ctrl == null or int(cmd.get("slot", -1)) < 0:
+			return
+		var c := Controller.cmd_at(hud.ctrl.commands(), int(cmd["slot"]))
+		if not c.is_empty() and c.get("id", "") == cmd.get("id", ""):
+			cmd = c
+		var sz := measure()
+		if sz != size:
+			position.y += size.y - sz.y
+			size = sz
+		queue_redraw()
 
 	func _draw() -> void:
 		if cmd.is_empty():
@@ -1068,6 +1088,12 @@ class Tooltip:
 		if int(cmd.get("slot", -1)) >= 0:
 			draw_string(Hud.font_b, Vector2(0, y), "[%s]" % Controller.etiqueta(cmd["slot"]), HORIZONTAL_ALIGNMENT_RIGHT, size.x - 14, 13, Palette.UI_DIM)
 		y += 12
+		# --- iconos --- primera línea (antes el bloqueo iba al final, en rojo, y lo que faltaba
+		# también en rojo debajo del costo)
+		var lineas := _lineas()
+		if not lineas.is_empty():
+			y += EstadoCasilla.dibujar_lineas(self, Vector2(14, y + 14), lineas, 14, size.x - 28, true)
+		# --- fin iconos ---
 		var cost: Dictionary = cmd.get("cost", {})
 		if not cost.is_empty():
 			var res: Dictionary = hud.sim.players[hud.local]["res"]
@@ -1083,19 +1109,12 @@ class Tooltip:
 				var col: Color = Palette.RES.get(k, Color(rp.get("color", "#cccccc")))
 				Glyphs.draw(self, k if Palette.RES.has(k) else rp.get("icono", "riqueza"), Rect2(x, y + 2, 20, 20), col)
 				var ok: bool = res.get(k, 0) >= cost[k]
-				draw_string(Hud.font_b, Vector2(x + 24, y + 18), str(cost[k]), HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Palette.UI_TEXT if ok else Palette.UI_BAD)
+				draw_string(Hud.font_b, Vector2(x + 24, y + 18), str(cost[k]), HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Palette.UI_TEXT if ok else Iconos.color_estado("falta", Palette.UI_ACCENT)) # --- iconos ---
 				x += 78
 			y += 28
-			# --- costo real --- (proceso/24, 4k) cuánto falta de cada recurso, con nombre
-			var ft := _falta_texto()
-			if ft != "":
-				draw_string(Hud.font_b, Vector2(14, y + 12), ft, HORIZONTAL_ALIGNMENT_LEFT, size.x - 28, 14, Palette.UI_BAD.lightened(0.15))
-				y += 20
 		if cmd.get("desc", "") != "":
 			draw_multiline_string(Hud.font, Vector2(14, y + 14), cmd["desc"], HORIZONTAL_ALIGNMENT_LEFT, size.x - 28, 15, -1, Palette.UI_DIM)
 			y += Hud.font.get_multiline_string_size(cmd["desc"], HORIZONTAL_ALIGNMENT_LEFT, size.x - 28, 15).y + 6
-		if cmd.get("locked", "") != "":
-			draw_string(Hud.font_b, Vector2(14, y + 16), cmd["locked"], HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Palette.UI_BAD)
 
 
 # ---------------------------------------------------------------- Panel de selección
