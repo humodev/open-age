@@ -115,7 +115,10 @@ const PROPIOS := ["diana", "establo", "taller_asedio", "ruka", "boleador", "ince
 	"weichafe_montado", "kona_waiki", "canoa", "jinete_lanza", "kaaguygua", "hoyo",
 	# --- paso 6, par 2 --- Etiopía y Palmares
 	"arado", "acta", "kosso", "cota", "amba", "amole", "massawa", "katama", "palmera", "vigia_mocambo", "fuelle", "sanguar", "kilombo", "trato", "hierro", "fojo",
-	"gasa", "farasanna", "jinete_corte", "zagaia", "guarnicao", "capitao"]
+	"gasa", "farasanna", "jinete_corte", "zagaia", "guarnicao", "capitao",
+	# --- paso 6, par 3 --- Tawantinsuyu y Ayutthaya
+	"chunu", "khipu", "tumi", "puente_soga", "champi", "wayrachina", "waraka", "chaski", "cornaca", "vasija", "recetario", "arroz_crecida", "junco", "canal", "fundicion", "astillero",
+	"galga", "jinete_manco", "ngao", "suan_phlu"]
 const OSCURO := Color(0.06, 0.065, 0.075)
 const _SABERES := preload("res://src/game/ui/iconos_saberes.gd") # --- paso 6 --- glifos de los saberes propios
 

@@ -25,6 +25,9 @@ var traps: Array[SimEntity] = [] # --- paso 6 --- hoyos con estacas (mapuches), 
 var mando := {} # --- paso 6, par 2 --- id de unidad -> ataque extra por un capitão de mocambo cerca (cada segundo)
 
 
+## --- paso 6, par 3 --- Lo que cuenta como fuerte para los defensores de Suan Phlu.
+const FUERTES := ["torre", "fortaleza", "fortaleza_rio"]
+
 func _init(s: Sim) -> void:
 	sim = s
 	_roads.resize(s.map.n * s.map.n)
@@ -473,6 +476,11 @@ func _regen() -> void:
 			if sim.tick - e.last_combat >= int(cfg["espera_ms"]) / sim.tick_ms:
 				e.hp = mini(e.hp_max, e.hp + maxi(1, e.hp_max * int(cfg["pct_por_seg"]) * (100 + sim.mod(e.owner, "relevo_pct")) / 10000))
 				continue
+		# --- paso 6, par 3 --- Recetario de Narai y nuat (Ayutthaya): la tropa fuera de combate sana.
+		var rt := sim.mod(e.owner, "regen_tropa")
+		if rt > 0 and e.is_military() and sim.tick - e.last_combat >= int(sim.players[e.owner].get("regen_tropa_espera", 0)) / sim.tick_ms:
+			e.hp = mini(e.hp_max, e.hp + rt)
+			continue
 		var rm := sim.mod(e.owner, "regen_monte")
 		if rm > 0 and e.is_military() and e.inside < 0 and sim.tick - e.last_combat >= int(sim.players[e.owner].get("regen_monte_espera", 0)) / sim.tick_ms and in_forest(e):
 			e.hp = mini(e.hp_max, e.hp + rm)
@@ -499,13 +507,13 @@ func dodge(a: SimEntity, t: SimEntity, dmg: int) -> int:
 
 
 ## --- paso 6, par 2 --- ¿Hay una cerca, puerta o fortaleza propia a `r` casillas? (guarnição da cerca)
-func near_wall(e: SimEntity, r: int) -> bool:
+func near_wall(e: SimEntity, r: int, fuertes := false) -> bool:
 	var tx := e.x / P
 	var ty := e.y / P
 	for yy in range(ty - r, ty + r + 1):
 		for xx in range(tx - r, tx + r + 1):
 			var o: SimEntity = sim.by_id.get(sim.map.occupant(xx, yy))
-			if o != null and o.owner == e.owner and o.is_building() and o.built and (o.def.has("espinas") or o.type in ["empalizada", "puerta"]):
+			if o != null and o.owner == e.owner and o.is_building() and o.built and (o.def.has("espinas") or o.type in ["empalizada", "puerta"] or (fuertes and o.type in FUERTES)):
 				return true
 	return false
 
@@ -726,6 +734,8 @@ func speed(e: SimEntity) -> int:
 		for p in sim.players:
 			if has(p["id"], "caminos"):
 				pct = int(m(p["id"], "caminos")["velocidad_pct"])
+		if e.owner >= 0:
+			pct += sim.mod(e.owner, "camino_pct") # --- paso 6, par 3 --- q'eswa chaka
 		s = s * (100 + pct) / 100
 	return s
 
@@ -738,6 +748,8 @@ func damage(a: SimEntity, t: SimEntity, dmg: int) -> int:
 			dmg = dmg * (100 - int(m(t.owner, "defensa_altura")["pct"]) - sim.mod(t.owner, "altura_pct")) / 100 # --- paso 6, par 2 --- amba
 	if a.is_unit() and has(a.owner, "sigilo") and a.last_combat < sim.tick - 50 and is_hidden_now(a):
 		dmg = dmg * (100 + int(m(a.owner, "sigilo").get("emboscada_pct", 0)) + sim.mod(a.owner, "emboscada")) / 100 # --- paso 6 --- aty
+	if a.def.has("galga") and sim.map.h_at(a.x / P, a.y / P) <= sim.map.h_at(t.x / P, t.y / P): # --- paso 6, par 3 --- galgas: cuesta abajo, enteras
+		dmg = dmg * int(a.def["galga"]["llano_pct"]) / 100
 	if t.owner >= 0 and has(t.owner, "oficios"): # --- paso 6, par 2 --- sanguar (solo Palmares tiene esquiva)
 		dmg = dodge(a, t, dmg)
 	return maxi(1, dmg)
@@ -1146,3 +1158,29 @@ func _rising(w: SimEntity, cfg: Dictionary) -> void:
 				free = false
 		if free:
 			_slow[idx] = [w.owner, int(cfg["frenado_pct"])]
+
+
+## --- paso 6, par 3 --- Cirugía de cráneo (Tawantinsuyu, docs/diseno/27 §3.1): de cada 100 que caen
+## a golpes (no por pólvora ni asedio) de los `tipos`, a `radio` casillas de uno de los `edificios`
+## propios, `pct` no mueren: quedan con `vida_pct` de la vida y vuelven a ese edificio. Sin azar:
+## una cuenta por jugador.
+func trepan(a: SimEntity, t: SimEntity) -> void:
+	var cfg: Dictionary = sim.players[t.owner]["trepanacion"]
+	if not (cfg["tipos"] as Array).has(t.type) or a.def.get("polvora", false) or a.fn == "asedio":
+		return
+	var r := int(cfg["radio"]) * P
+	var home: SimEntity = null
+	for b in sim.actives:
+		if b.alive and b.owner == t.owner and b.is_building() and b.built and (cfg["edificios"] as Array).has(b.type) and absi(b.x - t.x) <= r and absi(b.y - t.y) <= r:
+			home = b
+			break
+	if home == null:
+		return
+	cfg["n"] = int(cfg["n"]) + int(cfg["pct"])
+	if int(cfg["n"]) < 100:
+		return
+	cfg["n"] = int(cfg["n"]) - 100
+	t.hp = maxi(1, t.hp_max * int(cfg["vida_pct"]) / 100)
+	t.target = -1
+	sim.order_move(t, home.x, home.y)
+	sim.events.append({"t": "trepanacion", "player": t.owner, "x": t.x, "y": t.y})

@@ -83,7 +83,10 @@
       "caranquis": { "hondero": { "arma": "estolica", "golpe": "lanzar" } },
       "tupies":    { "guerrero": { "arma": "macana", "golpe": "golpe_2m", "quieto": "quieto_2m" } },
       "adal":      { "guerrero": { "arma": "espada", "escudo": "redondo" }, "hondero": { "arma": "arco", "golpe": "arco", "quieto": "quieto_arco", "carcaj": true } },
-      "birmanos":  { "guerrero": { "arma": "espada", "golpe": "golpe_1m" } }
+      "birmanos":  { "guerrero": { "arma": "espada", "golpe": "golpe_1m" } },
+      "_doc_paso6_par3": "--- paso 6, par 3 --- Las unidades nuevas de Tawantinsuyu y Ayutthaya con color (tela), tocado (llawtu, lomphok, pano; tocado_color) y arma propios. También valen en la maqueta fija (civ_meshes.gd).",
+      "tawantinsuyu": {"galgueros": {"arma": "galga", "golpe": "lanzar", "tela": "#7a4a2a", "tocado": "llawtu", "tocado_color": "#a63a2a"}, "jinete_manco": {"tela": "#4a2424", "tocado": "llawtu", "tocado_color": "#e2b13c"}},
+      "ayutthaya": {"ngao": {"arma": "guja", "golpe": "estocada_2m", "largo_pct": 125, "tela": "#2f4a6a", "tocado": "lomphok", "tocado_color": "#c9a24a"}, "defensores_suan_phlu": {"arma": "lanza", "golpe": "estocada", "escudo": "redondo", "largo_pct": 130, "tela": "#1f2a3a", "tocado": "pano", "tocado_color": "#2a2a2a"}}
     }
   }
 }

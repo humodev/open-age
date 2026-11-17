@@ -910,10 +910,10 @@ static func _walls(p: Array, w: float, d: float, col: Color, hgt: float) -> void
 # ---------------------------------------------------------------- Unidades
 
 ## Unidad de maqueta; `cfg`: aspecto de la edad (data/arte_edades.json → tropa).
-static func unit(type: String, def: Dictionary, team: Color, style: Dictionary, cfg: Dictionary = {}) -> ArrayMesh:
+static func unit(type: String, def: Dictionary, team: Color, style: Dictionary, cfg: Dictionary = {}, civ := "") -> ArrayMesh:
 	var forma: String = style.get("forma", "")
 	var tropa: Dictionary = cfg.get("tropa", {}) if def.get("funcion", "civil") != "civil" else {}
-	var key := "u_%s_%s_%s_%s_%d" % [forma, style.get("arcilla", ""), type, team.to_html(), str(tropa).hash()]
+	var key := "u_%s_%s_%s_%s_%s_%d" % [civ, forma, style.get("arcilla", ""), type, team.to_html(), str(tropa).hash()]
 	if _cache.has(key):
 		return _cache[key]
 	var p: Array = []
@@ -933,15 +933,19 @@ static func unit(type: String, def: Dictionary, team: Color, style: Dictionary, 
 	elif def.has("area_borde_pct") and not def.has("reemplaza"): # --- paso 4 --- pieza ligera, cañón de muralla
 		_field_gun(p, team, pal)
 	else:
-		_person(p, fn, Vector3(0, rider_y, 0), team, pal, forma, def, tropa)
+		# --- paso 6, par 3 --- color y tocado propios de la unidad en su pueblo (tropas.por_civ)
+		var eq: Dictionary = (AldeanoAnimado.cfg().get("tropas", {}).get("por_civ", {}).get(civ, {}) as Dictionary).get(type, {})
+		_person(p, fn, Vector3(0, rider_y, 0), team, pal, forma, def, tropa, eq)
 	var mesh := Meshes.merge(p)
 	_cache[key] = mesh
 	return mesh
 
 
-static func _person(p: Array, fn: String, at: Vector3, team: Color, pal: Array, forma: String, def: Dictionary, tropa: Dictionary = {}) -> void:
+static func _person(p: Array, fn: String, at: Vector3, team: Color, pal: Array, forma: String, def: Dictionary, tropa: Dictionary = {}, eq: Dictionary = {}) -> void:
 	var clay := Palette.CLAY
 	var cloth: Color = Color(tropa["tela"]) if tropa.has("tela") else pal[0].lightened(0.2)
+	if eq.has("tela"):
+		cloth = Color(eq["tela"])
 	var big := fn == "choque" or fn == "linea"
 	var r := 0.2 if big else 0.16
 	p.append([Meshes.capsule(r, 0.68), Meshes.xf(at + Vector3(0, 0.34, 0)), cloth])
@@ -965,6 +969,16 @@ static func _person(p: Array, fn: String, at: Vector3, team: Color, pal: Array, 
 		"ayutthaya":
 			if fn != "civil":
 				p.append([Meshes.cyl(0.0, 0.12, 0.35, 10), Meshes.xf(at + Vector3(0, 1.02, 0)), Palette.WEALTH]) # lomphok
+	# --- paso 6, par 3 --- tocado propio (data/arte_animaciones.json → tropas.por_civ)
+	if eq.has("tocado") and not tropa.has("casco"):
+		var tc := Color(eq.get("tocado_color", "#a63a2a"))
+		match str(eq["tocado"]):
+			"llawtu":
+				p.append([Meshes.cyl(0.132, 0.132, 0.07, 10), Meshes.xf(at + Vector3(0, 0.86, 0)), tc])
+			"lomphok":
+				p.append([Meshes.cyl(0.0, 0.12, 0.35, 10), Meshes.xf(at + Vector3(0, 1.02, 0)), tc])
+			"pano":
+				p.append([Meshes.sphere(0.135, 10), Meshes.xf(at + Vector3(0, 0.86, 0), Vector3.ZERO, Vector3(1, 0.6, 1)), tc])
 	# Equipo de la edad: casco (cuero, metal, fibra), pectoral de oro.
 	if tropa.has("casco") and fn != "explorador":
 		p.append([Meshes.sphere(0.135, 10), Meshes.xf(at + Vector3(0, 0.84, 0), Vector3.ZERO, Vector3(1, 0.62, 1)), Color(tropa["casco"])])

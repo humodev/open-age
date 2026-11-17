@@ -1,0 +1,152 @@
+tools/civ_diag.gd --seeds=6 --breve (30 partidas por pueblo, 30 min). «sin» = --set=<civ>/ia_propias/orden=[];<civ>/ia_propias/unidades=[]
+== tawantinsuyu sin
+ayutthaya    vs tawantinsuyu montana         30:00  ganador ayutthaya (puntos)  edades 3-3  criterio 3876-3614  puntaje 4862-5851
+tawantinsuyu vs ayutthaya    sierra          15:21  ganador tawantinsuyu (destrucción)  edades 3-2  criterio 3831-2471  puntaje 2637-1550
+ayutthaya    vs tawantinsuyu sierra          19:41  ganador ayutthaya (destrucción)  edades 3-2  criterio 4080-2182  puntaje 4108-2403
+tawantinsuyu vs ayutthaya    delta           30:00  ganador ayutthaya (puntos)  edades 3-3  criterio 3743-3866  puntaje 6299-4913
+ayutthaya    vs tawantinsuyu delta           20:00  ganador tawantinsuyu (destrucción)  edades 3-3  criterio 3492-3706  puntaje 2883-3569
+tawantinsuyu vs ayutthaya    llano           17:34  ganador tawantinsuyu (destrucción)  edades 3-2  criterio 3786-2275  puntaje 3281-1588
+etiopia      vs tawantinsuyu sierra          30:00  ganador tawantinsuyu (puntos)  edades 3-3  criterio 3190-4265  puntaje 4624-6341
+tawantinsuyu vs etiopia      sierra          30:00  ganador tawantinsuyu (puntos)  edades 3-3  criterio 3786-3441  puntaje 4832-4531
+etiopia      vs tawantinsuyu valle           30:00  ganador etiopia (puntos)  edades 3-3  criterio 3899-3728  puntaje 6679-5169
+tawantinsuyu vs etiopia      valle           30:00  ganador tawantinsuyu (puntos)  edades 3-3  criterio 3767-3336  puntaje 6846-3897
+etiopia      vs tawantinsuyu sierra          30:00  ganador tawantinsuyu (puntos)  edades 3-3  criterio 3486-3936  puntaje 5239-5920
+tawantinsuyu vs etiopia      sierra          30:00  ganador tawantinsuyu (puntos)  edades 4-3  criterio 4904-3302  puntaje 5779-4080
+guaranies    vs tawantinsuyu rio             30:00  ganador guaranies (puntos)  edades 4-2  criterio 5047-2299  puntaje 4507-2978
+tawantinsuyu vs guaranies    selva           30:00  ganador tawantinsuyu (puntos)  edades 4-4  criterio 5990-5591  puntaje 5495-4832
+guaranies    vs tawantinsuyu selva           30:00  ganador tawantinsuyu (puntos)  edades 4-4  criterio 5170-5940  puntaje 3939-4984
+tawantinsuyu vs guaranies    montana         14:03  ganador tawantinsuyu (destrucción)  edades 2-1  criterio 2749-1265  puntaje 2486-855
+guaranies    vs tawantinsuyu montana         22:40  ganador tawantinsuyu (destrucción)  edades 3-3  criterio 3564-3760  puntaje 3417-3568
+tawantinsuyu vs guaranies    bosque_templado 13:30  ganador tawantinsuyu (destrucción)  edades 2-2  criterio 2760-2152  puntaje 2191-1154
+mapuches     vs tawantinsuyu rio             20:04  ganador mapuches (destrucción)  edades 3-2  criterio 3805-2123  puntaje 3346-1412
+tawantinsuyu vs mapuches     rio             30:00  ganador mapuches (puntos)  edades 2-4  criterio 2777-5091  puntaje 4333-5833
+mapuches     vs tawantinsuyu mesetas         19:56  ganador mapuches (destrucción)  edades 3-2  criterio 3670-2460  puntaje 2969-1993
+tawantinsuyu vs mapuches     mesetas         30:00  ganador tawantinsuyu (puntos)  edades 3-3  criterio 3787-3549  puntaje 5439-4650
+mapuches     vs tawantinsuyu llano           30:00  ganador mapuches (puntos)  edades 4-3  criterio 5028-3595  puntaje 4943-4238
+tawantinsuyu vs mapuches     llano           30:00  ganador mapuches (puntos)  edades 3-4  criterio 3813-5013  puntaje 6339-4770
+palmares     vs tawantinsuyu llano           30:00  ganador tawantinsuyu (puntos)  edades 2-3  criterio 2652-3832  puntaje 3534-6653
+tawantinsuyu vs palmares     bosque          15:45  ganador palmares (destrucción)  edades 2-2  criterio 2180-2667  puntaje 963-1628
+palmares     vs tawantinsuyu bosque          16:36  ganador palmares (destrucción)  edades 3-1  criterio 3566-1264  puntaje 1942-1062
+tawantinsuyu vs palmares     rio             23:28  ganador palmares (destrucción)  edades 2-3  criterio 2183-3882  puntaje 1630-3417
+palmares     vs tawantinsuyu rio             30:00  ganador tawantinsuyu (puntos)  edades 3-4  criterio 3676-4688  puntaje 4440-5878
+tawantinsuyu vs palmares     altiplano       16:01  ganador palmares (destrucción)  edades 1-2  criterio 1092-2757  puntaje 650-1717
+tawantinsuyu gana 16 (53 %): por destrucción 6, por puntos 10 (con más edad 3, misma edad 7)
+Partidas por puntos: 17; el puntaje del juego (Sim.score) da el mismo ganador en 14
+== tawantinsuyu con, primera corrida (galgueros en ia_propias.unidades, compra ahorrando): 10 de 30
+tawantinsuyu gana 10 (33 %): por destrucción 6, por puntos 4 (con más edad 2, misma edad 2)
+== tawantinsuyu con, misma lista, no compra ahorrando, ch'uñu y khipu más baratos (4 partes): 10 de 30
+tawantinsuyu gana 0 (0 %): por destrucción 0, por puntos 0 (con más edad 0, misma edad 0)
+tawantinsuyu gana 2 (40 %): por destrucción 2, por puntos 0 (con más edad 0, misma edad 0)
+tawantinsuyu gana 2 (20 %): por destrucción 1, por puntos 1 (con más edad 0, misma edad 1)
+tawantinsuyu gana 6 (60 %): por destrucción 2, por puntos 4 (con más edad 3, misma edad 1)
+== tawantinsuyu con, solo las mejoras (unidades=[], 2 partes): 15 de 30
+tawantinsuyu gana 6 (40 %): por destrucción 0, por puntos 6 (con más edad 3, misma edad 2)
+tawantinsuyu gana 9 (60 %): por destrucción 4, por puntos 5 (con más edad 1, misma edad 4)
+== tawantinsuyu con, solo las unidades (orden=[], 2 partes): 11 de 30
+tawantinsuyu gana 4 (26 %): por destrucción 1, por puntos 3 (con más edad 0, misma edad 3)
+tawantinsuyu gana 7 (46 %): por destrucción 4, por puntos 3 (con más edad 1, misma edad 2)
+== tawantinsuyu con, final (sin galgueros en la lista; 4 partes): 13 de 30
+ayutthaya    vs tawantinsuyu sierra          28:22  ganador ayutthaya (destrucción)  edades 4-2  criterio 5211-2648  puntaje 6126-4371
+etiopia      vs tawantinsuyu valle           30:00  ganador etiopia (puntos)  edades 4-3  criterio 4789-4013  puntaje 7007-5569
+guaranies    vs tawantinsuyu selva           30:00  ganador tawantinsuyu (puntos)  edades 4-4  criterio 5120-5980  puntaje 4211-4748
+mapuches     vs tawantinsuyu mesetas         19:56  ganador mapuches (destrucción)  edades 3-2  criterio 3739-2215  puntaje 2986-1406
+palmares     vs tawantinsuyu bosque          16:36  ganador palmares (destrucción)  edades 3-1  criterio 3566-1264  puntaje 1942-1062
+tawantinsuyu gana 1 (20 %): por destrucción 0, por puntos 1 (con más edad 0, misma edad 1)
+Partidas por puntos: 2; el puntaje del juego (Sim.score) da el mismo ganador en 2
+tawantinsuyu vs ayutthaya    delta           30:00  ganador tawantinsuyu (puntos)  edades 3-3  criterio 3921-3874  puntaje 6171-4607
+tawantinsuyu vs etiopia      valle           30:00  ganador tawantinsuyu (puntos)  edades 3-3  criterio 3953-3779  puntaje 5944-5447
+tawantinsuyu vs guaranies    montana         11:22  ganador tawantinsuyu (destrucción)  edades 2-2  criterio 2698-2253  puntaje 1915-833
+tawantinsuyu vs mapuches     mesetas         30:00  ganador mapuches (puntos)  edades 3-4  criterio 3585-5092  puntaje 4839-5460
+tawantinsuyu vs palmares     rio             23:28  ganador palmares (destrucción)  edades 2-3  criterio 2214-3811  puntaje 1453-3226
+tawantinsuyu gana 3 (60 %): por destrucción 1, por puntos 2 (con más edad 0, misma edad 2)
+Partidas por puntos: 3; el puntaje del juego (Sim.score) da el mismo ganador en 3
+ayutthaya    vs tawantinsuyu montana         30:00  ganador ayutthaya (puntos)  edades 3-3  criterio 4143-4026  puntaje 5018-5482
+ayutthaya    vs tawantinsuyu delta           26:44  ganador tawantinsuyu (destrucción)  edades 3-3  criterio 3692-4042  puntaje 4693-5752
+etiopia      vs tawantinsuyu sierra          19:14  ganador etiopia (destrucción)  edades 3-2  criterio 3973-2025  puntaje 3365-1099
+etiopia      vs tawantinsuyu sierra          30:00  ganador etiopia (puntos)  edades 3-3  criterio 4869-3862  puntaje 5545-5355
+guaranies    vs tawantinsuyu rio             30:00  ganador guaranies (puntos)  edades 4-2  criterio 5066-2239  puntaje 4419-2949
+guaranies    vs tawantinsuyu montana         24:34  ganador tawantinsuyu (destrucción)  edades 3-3  criterio 3620-3884  puntaje 3842-3874
+mapuches     vs tawantinsuyu rio             21:54  ganador mapuches (destrucción)  edades 4-2  criterio 5098-2065  puntaje 3867-1193
+mapuches     vs tawantinsuyu llano           30:00  ganador tawantinsuyu (puntos)  edades 3-4  criterio 3622-5074  puntaje 4435-6334
+palmares     vs tawantinsuyu llano           30:00  ganador palmares (puntos)  edades 4-3  criterio 5001-3985  puntaje 5907-5697
+palmares     vs tawantinsuyu rio             30:00  ganador tawantinsuyu (puntos)  edades 3-4  criterio 3336-4920  puntaje 4161-6096
+tawantinsuyu gana 4 (40 %): por destrucción 2, por puntos 2 (con más edad 2, misma edad 0)
+Partidas por puntos: 6; el puntaje del juego (Sim.score) da el mismo ganador en 5
+tawantinsuyu vs ayutthaya    sierra          19:25  ganador tawantinsuyu (destrucción)  edades 3-2  criterio 3833-2339  puntaje 3672-1854
+tawantinsuyu vs ayutthaya    llano           30:00  ganador ayutthaya (puntos)  edades 3-4  criterio 3812-4750  puntaje 5983-4984
+tawantinsuyu vs etiopia      sierra          30:00  ganador tawantinsuyu (puntos)  edades 3-3  criterio 4091-3805  puntaje 5437-5212
+tawantinsuyu vs etiopia      sierra          30:00  ganador etiopia (puntos)  edades 3-3  criterio 3757-4035  puntaje 5717-5346
+tawantinsuyu vs guaranies    selva           30:00  ganador tawantinsuyu (puntos)  edades 4-4  criterio 5550-5381  puntaje 5691-4846
+tawantinsuyu vs guaranies    bosque_templado 20:27  ganador tawantinsuyu (destrucción)  edades 3-3  criterio 4086-3592  puntaje 3386-2876
+tawantinsuyu vs mapuches     rio             25:29  ganador mapuches (destrucción)  edades 2-4  criterio 2201-4899  puntaje 1930-4145
+tawantinsuyu vs mapuches     llano           30:00  ganador tawantinsuyu (puntos)  edades 3-2  criterio 3830-2601  puntaje 6707-3325
+tawantinsuyu vs palmares     bosque          15:45  ganador palmares (destrucción)  edades 2-2  criterio 2173-2704  puntaje 914-1597
+tawantinsuyu vs palmares     altiplano       16:01  ganador palmares (destrucción)  edades 1-2  criterio 1092-2757  puntaje 650-1717
+tawantinsuyu gana 5 (50 %): por destrucción 2, por puntos 3 (con más edad 1, misma edad 2)
+Partidas por puntos: 5; el puntaje del juego (Sim.score) da el mismo ganador en 3
+== ayutthaya sin
+ayutthaya    vs etiopia      montana         16:57  ganador ayutthaya (destrucción)  edades 2-2  criterio 2819-2501  puntaje 2256-1800
+etiopia      vs ayutthaya    fortines        27:34  ganador ayutthaya (destrucción)  edades 2-4  criterio 2457-5651  puntaje 3755-5612
+ayutthaya    vs etiopia      fortines        30:00  ganador ayutthaya (puntos)  edades 4-3  criterio 5080-4251  puntaje 4809-4433
+etiopia      vs ayutthaya    selva           30:00  ganador ayutthaya (puntos)  edades 2-3  criterio 2679-4098  puntaje 4539-4848
+ayutthaya    vs etiopia      selva           30:00  ganador ayutthaya (puntos)  edades 3-3  criterio 4180-3678  puntaje 4635-5482
+etiopia      vs ayutthaya    altiplano       30:00  ganador etiopia (puntos)  edades 3-3  criterio 4249-3736  puntaje 4688-4239
+ayutthaya    vs guaranies    bosque_templado 30:00  ganador guaranies (puntos)  edades 3-4  criterio 4186-4835  puntaje 4693-5123
+guaranies    vs ayutthaya    bosque_templado 30:00  ganador guaranies (puntos)  edades 4-3  criterio 4744-3860  puntaje 4731-4455
+ayutthaya    vs guaranies    bosque          27:52  ganador ayutthaya (destrucción)  edades 2-4  criterio 3178-4614  puntaje 3788-4702
+guaranies    vs ayutthaya    bosque          21:34  ganador ayutthaya (destrucción)  edades 2-2  criterio 2087-3470  puntaje 2123-3812
+ayutthaya    vs guaranies    mesetas         20:39  ganador ayutthaya (destrucción)  edades 2-3  criterio 2857-3548  puntaje 2782-2914
+guaranies    vs ayutthaya    mesetas         19:08  ganador ayutthaya (destrucción)  edades 2-2  criterio 2053-3351  puntaje 1335-2913
+ayutthaya    vs mapuches     rio             30:00  ganador mapuches (puntos)  edades 3-4  criterio 3792-4821  puntaje 4572-5215
+mapuches     vs ayutthaya    selva           30:00  ganador ayutthaya (puntos)  edades 2-4  criterio 2391-5187  puntaje 3182-5843
+ayutthaya    vs mapuches     selva           21:14  ganador mapuches (destrucción)  edades 2-3  criterio 2208-3693  puntaje 1780-3040
+mapuches     vs ayutthaya    altiplano       30:00  ganador mapuches (puntos)  edades 4-2  criterio 4719-2794  puntaje 4796-3168
+ayutthaya    vs mapuches     altiplano       30:00  ganador ayutthaya (puntos)  edades 4-3  criterio 4917-3796  puntaje 5218-4588
+mapuches     vs ayutthaya    sierra          30:00  ganador ayutthaya (puntos)  edades 3-4  criterio 3676-5172  puntaje 4865-5895
+ayutthaya    vs palmares     sierra          30:00  ganador palmares (puntos)  edades 3-4  criterio 4077-4938  puntaje 4912-5066
+palmares     vs ayutthaya    sierra          30:00  ganador palmares (puntos)  edades 3-3  criterio 4204-3694  puntaje 4852-4871
+ayutthaya    vs palmares     rio             30:00  ganador palmares (puntos)  edades 4-4  criterio 4778-5034  puntaje 4988-4881
+palmares     vs ayutthaya    rio             30:00  ganador palmares (puntos)  edades 3-2  criterio 3820-2687  puntaje 3955-3014
+ayutthaya    vs palmares     bosque_templado 30:00  ganador ayutthaya (puntos)  edades 3-3  criterio 3906-3811  puntaje 4489-3985
+palmares     vs ayutthaya    bosque_templado 30:00  ganador ayutthaya (puntos)  edades 3-4  criterio 3966-4914  puntaje 3991-5324
+ayutthaya    vs tawantinsuyu montana         30:00  ganador tawantinsuyu (puntos)  edades 3-4  criterio 3795-4921  puntaje 4779-5990
+tawantinsuyu vs ayutthaya    sierra          26:00  ganador tawantinsuyu (destrucción)  edades 4-2  criterio 5070-2672  puntaje 5660-3208
+ayutthaya    vs tawantinsuyu sierra          30:00  ganador ayutthaya (puntos)  edades 4-2  criterio 4764-2919  puntaje 6450-4380
+tawantinsuyu vs ayutthaya    delta           12:24  ganador tawantinsuyu (destrucción)  edades 2-2  criterio 2808-2167  puntaje 2061-955
+ayutthaya    vs tawantinsuyu delta           30:00  ganador tawantinsuyu (puntos)  edades 2-3  criterio 2944-3908  puntaje 4712-6491
+tawantinsuyu vs ayutthaya    llano           30:00  ganador tawantinsuyu (puntos)  edades 3-3  criterio 4215-3797  puntaje 6075-4511
+ayutthaya gana 15 (50 %): por destrucción 6, por puntos 9 (con más edad 7, misma edad 2)
+Partidas por puntos: 21; el puntaje del juego (Sim.score) da el mismo ganador en 18
+== ayutthaya con
+ayutthaya    vs etiopia      montana         16:57  ganador ayutthaya (destrucción)  edades 2-2  criterio 2895-2122  puntaje 2451-1462
+etiopia      vs ayutthaya    fortines        30:00  ganador ayutthaya (puntos)  edades 2-4  criterio 2719-5435  puntaje 4134-6415
+ayutthaya    vs etiopia      fortines        30:00  ganador ayutthaya (puntos)  edades 3-3  criterio 4181-3744  puntaje 4819-4482
+etiopia      vs ayutthaya    selva           30:00  ganador ayutthaya (puntos)  edades 2-4  criterio 2736-4820  puntaje 4710-4585
+ayutthaya    vs etiopia      selva           30:00  ganador ayutthaya (puntos)  edades 3-3  criterio 3915-3503  puntaje 5425-5204
+etiopia      vs ayutthaya    altiplano       30:00  ganador etiopia (puntos)  edades 3-2  criterio 3765-2841  puntaje 5570-4222
+ayutthaya    vs guaranies    bosque_templado 30:00  ganador guaranies (puntos)  edades 3-4  criterio 3737-4829  puntaje 4551-5722
+guaranies    vs ayutthaya    bosque_templado 30:00  ganador guaranies (puntos)  edades 3-3  criterio 4032-3648  puntaje 4714-4613
+ayutthaya    vs guaranies    bosque          30:00  ganador guaranies (puntos)  edades 3-4  criterio 3836-4822  puntaje 4404-4959
+guaranies    vs ayutthaya    bosque          24:49  ganador ayutthaya (destrucción)  edades 2-3  criterio 2389-3808  puntaje 2987-4479
+ayutthaya    vs guaranies    mesetas         20:45  ganador ayutthaya (destrucción)  edades 2-3  criterio 2935-3540  puntaje 2778-2914
+guaranies    vs ayutthaya    mesetas         17:58  ganador ayutthaya (destrucción)  edades 2-2  criterio 2052-3267  puntaje 1316-2683
+ayutthaya    vs mapuches     rio             30:00  ganador mapuches (puntos)  edades 2-4  criterio 2758-4691  puntaje 3675-5266
+mapuches     vs ayutthaya    selva           30:00  ganador ayutthaya (puntos)  edades 3-3  criterio 3743-4036  puntaje 4323-5403
+ayutthaya    vs mapuches     selva           21:14  ganador mapuches (destrucción)  edades 2-3  criterio 2208-3693  puntaje 1780-3040
+mapuches     vs ayutthaya    altiplano       30:00  ganador mapuches (puntos)  edades 4-2  criterio 4730-2656  puntaje 4803-3162
+ayutthaya    vs mapuches     altiplano       30:00  ganador mapuches (puntos)  edades 3-3  criterio 3777-3799  puntaje 5268-4823
+mapuches     vs ayutthaya    sierra          30:00  ganador mapuches (puntos)  edades 3-2  criterio 3675-3169  puntaje 5087-5046
+ayutthaya    vs palmares     sierra          30:00  ganador ayutthaya (puntos)  edades 3-3  criterio 3811-3796  puntaje 5303-4500
+palmares     vs ayutthaya    sierra          30:00  ganador palmares (puntos)  edades 4-3  criterio 5100-3794  puntaje 4887-4877
+ayutthaya    vs palmares     rio             30:00  ganador palmares (puntos)  edades 3-4  criterio 3746-5209  puntaje 5006-5008
+palmares     vs ayutthaya    rio             30:00  ganador palmares (puntos)  edades 3-2  criterio 3820-2687  puntaje 3955-3014
+ayutthaya    vs palmares     bosque_templado 30:00  ganador ayutthaya (puntos)  edades 2-2  criterio 3305-2360  puntaje 4791-3395
+palmares     vs ayutthaya    bosque_templado 30:00  ganador ayutthaya (puntos)  edades 3-4  criterio 3877-4572  puntaje 4228-5263
+ayutthaya    vs tawantinsuyu montana         30:00  ganador ayutthaya (puntos)  edades 3-3  criterio 3828-3774  puntaje 4948-6002
+tawantinsuyu vs ayutthaya    sierra          26:00  ganador tawantinsuyu (destrucción)  edades 4-2  criterio 5070-2672  puntaje 5660-3209
+ayutthaya    vs tawantinsuyu sierra          30:00  ganador ayutthaya (puntos)  edades 4-2  criterio 4940-2708  puntaje 6612-4293
+tawantinsuyu vs ayutthaya    delta           12:24  ganador tawantinsuyu (destrucción)  edades 2-2  criterio 2808-2167  puntaje 2061-955
+ayutthaya    vs tawantinsuyu delta           30:00  ganador tawantinsuyu (puntos)  edades 3-4  criterio 3809-5064  puntaje 5471-6430
+tawantinsuyu vs ayutthaya    llano           30:00  ganador ayutthaya (puntos)  edades 3-3  criterio 3690-4150  puntaje 6003-4481
+ayutthaya gana 15 (50 %): por destrucción 4, por puntos 11 (con más edad 4, misma edad 7)
+Partidas por puntos: 23; el puntaje del juego (Sim.score) da el mismo ganador en 19

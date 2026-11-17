@@ -1092,6 +1092,14 @@ func _apply_effects(pid: int, efectos: Array) -> void:
 				var vx: Dictionary = fog.vision_extra.get_or_add(pid, {})
 				for ty in ef["tipos"]:
 					vx[str(ty)] = int(vx.get(str(ty), 0)) + int(ef["n"])
+			# --- paso 6, par 3 --- Tawantinsuyu y Ayutthaya (docs/diseno/27, §3.1 y §3.6)
+			"camino_pct", "suai_pct":
+				_add_mod(pid, ef["tipo"], ef["pct"])
+			"regen_tropa":
+				_add_mod(pid, "regen_tropa", ef["n"])
+				players[pid]["regen_tropa_espera"] = int(ef.get("espera_ms", 0))
+			"trepanacion":
+				players[pid]["trepanacion"] = {"pct": int(ef["pct"]), "radio": int(ef["radio"]), "vida_pct": int(ef["vida_pct"]), "tipos": ef["tipos"], "edificios": ef["edificios"], "n": 0}
 			# --- fin paso 6 ---
 	for e in actives:
 		if e.alive and e.owner == pid:
@@ -2012,7 +2020,7 @@ func effective_armor(t: SimEntity, ranged: bool = false) -> int:
 	# --- paso 6 --- el ka'aguygua junto al monte; los arqueros guaraníes junto al río (Mbororé)
 	if t.def.has("armadura_monte") and mods.in_forest(t):
 		extra += int(t.def["armadura_monte"])
-	if t.def.has("armadura_cerca") and mods.near_wall(t, int(t.def["armadura_cerca"]["radio"])): # --- paso 6, par 2 --- guarnição da cerca
+	if t.def.has("armadura_cerca") and mods.near_wall(t, int(t.def["armadura_cerca"]["radio"]), t.def["armadura_cerca"].get("fuertes", false)): # --- paso 6, par 2 --- guarnição da cerca
 		extra += int(t.def["armadura_cerca"]["n"])
 	if t.owner >= 0 and mod(t.owner, "armadura_rio:" + t.fn) > 0 and mods.near_water(t, int(players[t.owner].get("armadura_rio_radio", 2))):
 		extra += mod(t.owner, "armadura_rio:" + t.fn)
@@ -2077,6 +2085,8 @@ func _hit(a: SimEntity, t: SimEntity) -> void:
 	var dmg := maxi(data.reglas["danio_minimo"], atk * mult / 100 - armor)
 	dmg = mods.damage(a, t, dmg)
 	t.hp -= dmg
+	if t.hp <= 0 and t.is_unit() and t.owner >= 0 and players[t.owner].has("trepanacion"): # --- paso 6, par 3 --- cirugía de cráneo
+		mods.trepan(a, t)
 	if t.hp <= 0 and t.built and t.def.has("sitiada"): # --- paso 7 --- la maravilla sitiada no cae (C-97 a)
 		t.hp = 1
 	# Espinas (cerca con estrepes de Palmares): devuelve daño al atacante cuerpo a cuerpo.
@@ -3204,7 +3214,8 @@ func end_by_time() -> void:
 ## cobra solo el de id menor.
 func _tribute(e: SimEntity, d: SimEntity) -> void:
 	var tb: Dictionary = d.def["tributo"]
-	var pct := int(tb.get(e.carry_src, 0))
+	var suai := 100 + mod(d.owner, "suai_pct") # --- paso 6, par 3 --- cerámica de Si Satchanalai
+	var pct := int(tb.get(e.carry_src, 0)) * suai / 100
 	if pct <= 0:
 		return
 	var sep := int(tb.get("separacion", 8)) * P
@@ -3216,7 +3227,7 @@ func _tribute(e: SimEntity, d: SimEntity) -> void:
 		d.trib_min = minute
 		d.trib_used = 0
 	var caps: Array = tb["tope_por_edad"]
-	var cap := int(caps[clampi(int(players[d.owner]["age"]) - 1, 0, caps.size() - 1)]) + mods.tribute_cap_bonus(d.owner)
+	var cap := (int(caps[clampi(int(players[d.owner]["age"]) - 1, 0, caps.size() - 1)]) + mods.tribute_cap_bonus(d.owner)) * suai / 100
 	var add := mini(e.carry * pct / 100, cap - d.trib_used)
 	if add <= 0:
 		return

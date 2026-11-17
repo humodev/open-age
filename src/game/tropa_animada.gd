@@ -33,6 +33,8 @@ static func malla(style: Dictionary, team: Color, eq: Dictionary, tropa: Diction
 	var vest: Dictionary = c["vest"]
 	var oscurecer := float(AldeanoAnimado.cfg().get("aspecto", {}).get("tela_tropa_pct", 18)) / 100.0
 	var tela: Color = Color(tropa["tela"]).darkened(oscurecer) if tropa.has("tela") else c["tela"]
+	if eq.has("tela"): # --- paso 6, par 3 --- el color propio de la unidad en su pueblo
+		tela = Color(eq["tela"])
 	var prenda := str(vest.get("prenda", "ninguna"))
 	var prenda_col := Color(vest.get("prenda_color", tela.to_html()))
 	if prenda == "poncho" and tropa.has("tela"):
@@ -48,6 +50,8 @@ static func malla(style: Dictionary, team: Color, eq: Dictionary, tropa: Diction
 	if tropa.get("oro", false):
 		var ch := AldeanoAnimado._P(sk, "chest")
 		parts.append([AldeanoAnimado._cyl(0.04, 0.04, 0.012, 10), Transform3D(Basis(Vector3.RIGHT, PI / 2), ch + Vector3(0, 0.08, 0.072)), Palette.WEALTH, sk.find_bone("chest"), AldeanoAnimado.Pieza.METAL])
+	if eq.has("tocado") and not casco: # --- paso 6, par 3 --- el tocado propio de la unidad en su pueblo
+		_tocado(parts, str(eq["tocado"]), Color(eq.get("tocado_color", "#a63a2a")), head, hb)
 	var largo := float(eq.get("largo_pct", 100)) / 100.0
 	_arma(parts, str(eq.get("arma", "maza")), sk, c, largo)
 	var esc := str(eq.get("escudo", "ninguno"))
@@ -62,6 +66,19 @@ static func malla(style: Dictionary, team: Color, eq: Dictionary, tropa: Diction
 
 ## Arma en la mano derecha. Como las de KayKit Adventurers: el mango por el +y del hueso
 ## handslot.r, desde el puño, y el filo hacia +x. El arco va en la izquierda.
+## --- paso 6, par 3 --- Tocado propio (data/arte_animaciones.json → tropas.por_civ): «llawtu» (la
+## banda andina), «lomphok» (el gorro alto siamés) o «pano» (paño atado a la cabeza).
+static func _tocado(parts: Array, kind: String, col: Color, head: Vector3, hb: int) -> void:
+	var T := AldeanoAnimado.Pieza.TELA
+	match kind:
+		"llawtu":
+			parts.append([AldeanoAnimado._cyl(0.082, 0.082, 0.028, 12), Transform3D(Basis.IDENTITY, head + Vector3(0, 0.07, -0.004)), col, hb, T])
+		"lomphok":
+			parts.append([AldeanoAnimado._cyl(0.0, 0.07, 0.17, 10), Transform3D(Basis.IDENTITY, head + Vector3(0, 0.19, -0.004)), col, hb, T])
+		"pano":
+			parts.append([AldeanoAnimado._sphere(0.08, 10), Transform3D(Basis.from_scale(Vector3(1.05, 0.6, 1.08)), head + Vector3(0, 0.1, -0.008)), col, hb, T])
+
+
 static func _arma(parts: Array, arma: String, sk: Skeleton3D, c: Dictionary, largo: float) -> void:
 	var slot := sk.find_bone("handslot.r")
 	var g := sk.get_bone_global_rest(slot)
@@ -98,6 +115,12 @@ static func _arma(parts: Array, arma: String, sk: Skeleton3D, c: Dictionary, lar
 			var gl := sk.get_bone_global_rest(sl)
 			parts.append([AldeanoAnimado._cyl(0.012, 0.012, 0.1), gl * Transform3D(Basis.IDENTITY, Vector3(0, 0.0, 0)), c["cuero"], sl, M])
 			parts.append([AldeanoAnimado._box(Vector3(0.032, 0.3, 0.007)), gl * Transform3D(Basis.IDENTITY, Vector3(0, 0.21, 0)), metal, sl, AldeanoAnimado.Pieza.METAL])
+		"guja": # --- paso 6, par 3 --- ngao: asta con hoja curva de un filo
+			var L := 1.05 * largo
+			parts.append([AldeanoAnimado._cyl(0.01, 0.011, L), X.call(Vector3(0, L * 0.5 - 0.3, 0)), dark, slot, M])
+			parts.append([AldeanoAnimado._box(Vector3(0.05, 0.2, 0.01)), X.call(Vector3(0.02, L - 0.2, 0), Basis(Vector3.FORWARD, -0.25)), metal, slot, AldeanoAnimado.Pieza.METAL])
+		"galga": # --- paso 6, par 3 --- galgueros: la piedra que se suelta ladera abajo
+			parts.append([AldeanoAnimado._sphere(0.07, 8), X.call(Vector3(0, 0.02, 0.04)), stone, slot, AldeanoAnimado.Pieza.METAL])
 		"honda": # cuerda que cuelga del puño con la piedra en la bolsa
 			parts.append([AldeanoAnimado._cyl(0.004, 0.004, 0.26, 4), X.call(Vector3(0, -0.13, 0)), cuerda, slot])
 			parts.append([AldeanoAnimado._sphere(0.026, 6), X.call(Vector3(0, -0.27, 0)), stone, slot, AldeanoAnimado.Pieza.METAL])

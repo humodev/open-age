@@ -35,7 +35,9 @@
     "hoyo": "hoyo",
     "_doc_paso6_par2": "--- paso 6, par 2 --- Las unidades propias de Etiopía y Palmares (proceso/26-juego-tardio/12). El fojo de Palmares usa el tipo `hoyo`.",
     "guerrero_gasa": "gasa", "farasanna": "farasanna", "caballeria_corte": "jinete_corte",
-    "zagaieiro": "zagaia", "guarnicao_cerca": "guarnicao", "capitao_mocambo": "capitao"
+    "zagaieiro": "zagaia", "guarnicao_cerca": "guarnicao", "capitao_mocambo": "capitao",
+    "_doc_paso6_par3": "--- paso 6, par 3 --- Las unidades propias de Tawantinsuyu y Ayutthaya (proceso/26-juego-tardio/13).",
+    "galgueros": "galga", "jinete_manco": "jinete_manco", "ngao": "ngao", "defensores_suan_phlu": "suan_phlu"
   },
   "tecnologias": {
     "_doc": "Ícono de cada investigación por lo que mejora; si una no está acá, vale el campo `icono` de data/tecnologias.json. «x#2»: el glifo x con dos palotes dorados (segunda tanda). «arma~clase~n»: herrería (arma, clase abajo a la derecha, tanda en palotes). «línea^n»: galones de nivel.",
@@ -45,6 +47,9 @@
     "_doc_paso6_par2": "--- paso 6, par 2 --- Saberes propios de Etiopía y Palmares.",
     "maresha_tef": "arado", "actas_geez": "acta", "faws_kosso": "kosso", "cota_malla": "cota", "amba_fortaleza": "amba", "caravanas_amole": "amole", "polvora_massawa": "massawa", "orden_katama": "katama",
     "rocas_palmeiras": "palmera", "aviso_mocambos": "vigia_mocambo", "forja_mocambos": "fuelle", "sanguar": "sanguar", "kilombo": "kilombo", "trato_moradores": "trato", "hierro_angola_janga": "hierro", "fojos_estrepes": "fojo",
+    "_doc_paso6_par3": "--- paso 6, par 3 --- Saberes propios de Tawantinsuyu y Ayutthaya.",
+    "chunu_charki": "chunu", "khipukamayuq": "khipu", "trepanacion": "tumi", "qeswa_chaka": "puente_soga", "champi": "champi", "wayrachina": "wayrachina", "waraka_trenzada": "waraka", "chaski": "chaski",
+    "khotchasat": "cornaca", "ceramica_satchanalai": "vasija", "recetario_narai": "recetario", "arroz_crecida": "arroz_crecida", "barrio_chino": "junco", "khlong_lat": "canal", "fundicion_real": "fundicion", "astilleros_juncos": "astillero",
     "hachas": "hacha",
     "hachas_2": "hacha#2",
     "canteria": "pico",
