@@ -193,165 +193,23 @@
       }
     ]
   },
-  "armas_1": { "en": {"militar": true},
-    "nombre": "Armas templadas",
-    "edificio": "cuartel",
-    "ranura": 4,
-    "edad_min": 2,
-    "costo": {
-      "alimento": 100,
-      "riqueza": 50
-    },
-    "tiempo_ms": 35000,
-    "icono": "atacar",
-    "ia_prioridad": true,
-    "_doc_paso1": "Paso 1 del juego tardío (docs/diseno/27, §1.2): además del +1, el +10 % de ataque que antes daba gratis la edad II, a todas las líneas. La IA la compra apenas llega a la II (ia_prioridad).",
-    "efectos": [
-      {
-        "tipo": "ataque",
-        "funciones": [
-          "choque",
-          "distancia",
-          "linea"
-        ],
-        "n": 1
-      },
-      {
-        "tipo": "ataque_pct",
-        "lineas": [
-          "choque",
-          "distancia",
-          "linea",
-          "montados",
-          "polvora"
-        ],
-        "pct": 10
-      }
-    ]
-  },
-  "armas_2": { "en": {"militar": true},
-    "nombre": "Armas reforzadas",
-    "edificio": "cuartel",
-    "ranura": 4,
-    "edad_min": 3,
-    "requiere": "armas_1",
-    "costo": {
-      "alimento": 200,
-      "riqueza": 150
-    },
-    "tiempo_ms": 45000,
-    "icono": "atacar",
-    "efectos": [
-      {
-        "tipo": "ataque",
-        "funciones": [
-          "choque",
-          "distancia",
-          "linea"
-        ],
-        "n": 1
-      }
-    ]
-  },
-  "armas_3": { "en": {"militar": true},
-    "nombre": "Armas de maestría",
-    "edificio": "cuartel",
-    "ranura": 4,
-    "edad_min": 4,
-    "requiere": "armas_2",
-    "costo": {
-      "alimento": 300,
-      "riqueza": 250
-    },
-    "tiempo_ms": 60000,
-    "icono": "atacar",
-    "efectos": [
-      {
-        "tipo": "ataque",
-        "funciones": [
-          "choque",
-          "distancia",
-          "linea"
-        ],
-        "n": 2
-      }
-    ]
-  },
-  "escudos_1": { "en": {"militar": true},
-    "nombre": "Escudos de cuero",
-    "edificio": "cuartel",
-    "ranura": 5,
-    "edad_min": 2,
-    "costo": {
-      "madera": 100,
-      "riqueza": 50
-    },
-    "tiempo_ms": 35000,
-    "icono": "escudo",
-    "efectos": [
-      {
-        "tipo": "armadura",
-        "funciones": [
-          "choque",
-          "distancia",
-          "linea"
-        ],
-        "n": 1
-      }
-    ]
-  },
-  "escudos_2": { "en": {"militar": true},
-    "nombre": "Escudos acolchados",
-    "edificio": "cuartel",
-    "ranura": 5,
-    "edad_min": 3,
-    "requiere": "escudos_1",
-    "costo": {
-      "madera": 200,
-      "riqueza": 150
-    },
-    "tiempo_ms": 45000,
-    "icono": "escudo",
-    "efectos": [
-      {
-        "tipo": "armadura",
-        "funciones": [
-          "choque",
-          "distancia",
-          "linea"
-        ],
-        "n": 1
-      }
-    ]
-  },
-  "escudos_3": { "en": {"militar": true},
-    "nombre": "Escudos de maestría",
-    "edificio": "cuartel",
-    "ranura": 5,
-    "edad_min": 4,
-    "requiere": "escudos_2",
-    "costo": {
-      "madera": 300,
-      "riqueza": 250
-    },
-    "tiempo_ms": 60000,
-    "icono": "escudo",
-    "efectos": [
-      {
-        "tipo": "armadura",
-        "funciones": [
-          "choque",
-          "distancia",
-          "linea"
-        ],
-        "n": 1
-      }
-    ]
-  },
+  "_doc_herreria": "Herrería (docs/diseno/27, §1.1 y §6, paso 2): 12 mejoras en lugar de armas y escudos (6), en cualquier edificio militar (el cuartel y los demás que entrenan tropa; el diseño no pide un edificio nuevo), salvo los que además son almacén o centro (en.sin_deposito: el lof, el mocambo y la qollqa, que tienen la grilla llena de economía). Ataque cuerpo a cuerpo (funciones choque y línea; su ataque_pct, también los montados) y a distancia (función distancia; su ataque_pct, también la pólvora); armadura contra cuerpo a cuerpo y contra distancia (efecto armadura con contra). Tandas I, II y III en las edades II, III y IV. Comprar las 12 da lo mismo que armas y escudos: +1/+1/+2 de ataque y +1/+1/+1 de cada armadura. Las dos de ataque I llevan además el +10 % que antes daba gratis la edad II (paso 1), tienen ia_prioridad y juntas cuestan lo que costaba armas_1; las demás, el 60 % de la de antes cada una. herreria: el grupo, para la IA (reglas.ia_niveles.herreria).",
+  "ataque_cc_1": {"en": {"militar": true, "sin_deposito": true}, "nombre": "Armas templadas", "edificio": "cuartel", "ranura": 4, "edad_min": 2, "herreria": "ataque_cuerpo", "costo": {"alimento": 50, "riqueza": 25}, "tiempo_ms": 25000, "icono": "atacar~guerrero~1", "ia_prioridad": true, "efectos": [{"tipo": "ataque", "funciones": ["choque", "linea"], "n": 1}, {"tipo": "ataque_pct", "lineas": ["choque", "linea", "montados"], "pct": 10}]},
+  "ataque_cc_2": {"en": {"militar": true, "sin_deposito": true}, "nombre": "Armas reforzadas", "edificio": "cuartel", "ranura": 4, "edad_min": 3, "requiere": "ataque_cc_1", "herreria": "ataque_cuerpo", "costo": {"alimento": 120, "riqueza": 90}, "tiempo_ms": 30000, "icono": "atacar~guerrero~2", "efectos": [{"tipo": "ataque", "funciones": ["choque", "linea"], "n": 1}]},
+  "ataque_cc_3": {"en": {"militar": true, "sin_deposito": true}, "nombre": "Armas de maestría", "edificio": "cuartel", "ranura": 4, "edad_min": 4, "requiere": "ataque_cc_2", "herreria": "ataque_cuerpo", "costo": {"alimento": 180, "riqueza": 150}, "tiempo_ms": 40000, "icono": "atacar~guerrero~3", "efectos": [{"tipo": "ataque", "funciones": ["choque", "linea"], "n": 2}]},
+  "ataque_dist_1": {"en": {"militar": true, "sin_deposito": true}, "nombre": "Proyectiles afinados", "edificio": "cuartel", "ranura": 5, "edad_min": 2, "herreria": "ataque_distancia", "costo": {"alimento": 50, "riqueza": 25}, "tiempo_ms": 25000, "icono": "atacar~hondero~1", "ia_prioridad": true, "efectos": [{"tipo": "ataque", "funciones": ["distancia"], "n": 1}, {"tipo": "ataque_pct", "lineas": ["distancia", "polvora"], "pct": 10}]},
+  "ataque_dist_2": {"en": {"militar": true, "sin_deposito": true}, "nombre": "Proyectiles reforzados", "edificio": "cuartel", "ranura": 5, "edad_min": 3, "requiere": "ataque_dist_1", "herreria": "ataque_distancia", "costo": {"alimento": 120, "riqueza": 90}, "tiempo_ms": 30000, "icono": "atacar~hondero~2", "efectos": [{"tipo": "ataque", "funciones": ["distancia"], "n": 1}]},
+  "ataque_dist_3": {"en": {"militar": true, "sin_deposito": true}, "nombre": "Proyectiles de maestría", "edificio": "cuartel", "ranura": 5, "edad_min": 4, "requiere": "ataque_dist_2", "herreria": "ataque_distancia", "costo": {"alimento": 180, "riqueza": 150}, "tiempo_ms": 40000, "icono": "atacar~hondero~3", "efectos": [{"tipo": "ataque", "funciones": ["distancia"], "n": 2}]},
+  "armadura_cc_1": {"en": {"militar": true, "sin_deposito": true}, "nombre": "Escudos de cuero", "edificio": "cuartel", "ranura": 6, "edad_min": 2, "herreria": "armadura_cuerpo", "costo": {"madera": 60, "riqueza": 30}, "tiempo_ms": 25000, "icono": "escudo~guerrero~1", "efectos": [{"tipo": "armadura", "contra": "cuerpo", "funciones": ["choque", "distancia", "linea"], "n": 1}]},
+  "armadura_cc_2": {"en": {"militar": true, "sin_deposito": true}, "nombre": "Escudos acolchados", "edificio": "cuartel", "ranura": 6, "edad_min": 3, "requiere": "armadura_cc_1", "herreria": "armadura_cuerpo", "costo": {"madera": 120, "riqueza": 90}, "tiempo_ms": 30000, "icono": "escudo~guerrero~2", "efectos": [{"tipo": "armadura", "contra": "cuerpo", "funciones": ["choque", "distancia", "linea"], "n": 1}]},
+  "armadura_cc_3": {"en": {"militar": true, "sin_deposito": true}, "nombre": "Escudos de maestría", "edificio": "cuartel", "ranura": 6, "edad_min": 4, "requiere": "armadura_cc_2", "herreria": "armadura_cuerpo", "costo": {"madera": 180, "riqueza": 150}, "tiempo_ms": 40000, "icono": "escudo~guerrero~3", "efectos": [{"tipo": "armadura", "contra": "cuerpo", "funciones": ["choque", "distancia", "linea"], "n": 1}]},
+  "armadura_dist_1": {"en": {"militar": true, "sin_deposito": true}, "nombre": "Corazas de cuero", "edificio": "cuartel", "ranura": 7, "edad_min": 2, "herreria": "armadura_distancia", "costo": {"madera": 60, "riqueza": 30}, "tiempo_ms": 25000, "icono": "escudo~hondero~1", "efectos": [{"tipo": "armadura", "contra": "distancia", "funciones": ["choque", "distancia", "linea"], "n": 1}]},
+  "armadura_dist_2": {"en": {"militar": true, "sin_deposito": true}, "nombre": "Corazas acolchadas", "edificio": "cuartel", "ranura": 7, "edad_min": 3, "requiere": "armadura_dist_1", "herreria": "armadura_distancia", "costo": {"madera": 120, "riqueza": 90}, "tiempo_ms": 30000, "icono": "escudo~hondero~2", "efectos": [{"tipo": "armadura", "contra": "distancia", "funciones": ["choque", "distancia", "linea"], "n": 1}]},
+  "armadura_dist_3": {"en": {"militar": true, "sin_deposito": true}, "nombre": "Corazas de maestría", "edificio": "cuartel", "ranura": 7, "edad_min": 4, "requiere": "armadura_dist_2", "herreria": "armadura_distancia", "costo": {"madera": 180, "riqueza": 150}, "tiempo_ms": 40000, "icono": "escudo~hondero~3", "efectos": [{"tipo": "armadura", "contra": "distancia", "funciones": ["choque", "distancia", "linea"], "n": 1}]},
   "marcha": { "en": {"militar": true},
     "nombre": "Marcha forzada",
     "edificio": "cuartel",
-    "ranura": 6,
+    "ranura": 9,
     "edad_min": 2,
     "costo": {
       "alimento": 100,
@@ -374,7 +232,7 @@
   "adiestramiento": { "en": {"militar": true},
     "nombre": "Adiestramiento",
     "edificio": "cuartel",
-    "ranura": 7,
+    "ranura": 10,
     "edad_min": 3,
     "costo": {
       "alimento": 200,
@@ -394,7 +252,7 @@
       }
     ]
   },
-  "_doc_niveles": "Niveles por línea (docs/diseno/27, §1.1 y §1.2, paso 1): veterano en la III y élite en la IV, en cualquier edificio que entrene esa línea (en.linea). Líneas: choque, distancia, linea, montados (montado o elefante) y polvora (sim.gd, line_of). Reemplazan, junto con armas_1, el bono de ataque por edad que tenían las unidades.",
+  "_doc_niveles": "Niveles por línea (docs/diseno/27, §1.1 y §1.2, paso 1): veterano en la III y élite en la IV, en cualquier edificio que entrene esa línea (en.linea). Líneas: choque, distancia, linea, montados (montado o elefante) y polvora (sim.gd, line_of). Reemplazan, junto con ataque_cc_1 y ataque_dist_1 (herrería I de ataque), el bono de ataque por edad que tenían las unidades.",
   "veterano_choque": {"en": {"linea": "choque"}, "nombre": "Choque veterano", "edificio": "cuartel", "ranura": 8, "edad_min": 3, "nivel": 1, "linea": "choque", "costo": {"alimento": 150, "riqueza": 150}, "tiempo_ms": 45000, "icono": "guerrero^1", "efectos": [{"tipo": "ataque_pct", "lineas": ["choque"], "pct": 5}, {"tipo": "vida_pct", "lineas": ["choque"], "pct": 5}]},
   "elite_choque": {"en": {"linea": "choque"}, "nombre": "Choque de élite", "edificio": "cuartel", "ranura": 8, "edad_min": 4, "requiere": "veterano_choque", "nivel": 2, "linea": "choque", "costo": {"alimento": 300, "riqueza": 300}, "tiempo_ms": 60000, "icono": "guerrero^2", "efectos": [{"tipo": "ataque_pct", "lineas": ["choque"], "pct": 10}, {"tipo": "vida_pct", "lineas": ["choque"], "pct": 5}]},
   "veterano_distancia": {"en": {"linea": "distancia"}, "nombre": "Distancia veterana", "edificio": "cuartel", "ranura": 8, "edad_min": 3, "nivel": 1, "linea": "distancia", "costo": {"alimento": 150, "riqueza": 150}, "tiempo_ms": 45000, "icono": "hondero^1", "efectos": [{"tipo": "ataque_pct", "lineas": ["distancia"], "pct": 5}, {"tipo": "vida_pct", "lineas": ["distancia"], "pct": 5}]},

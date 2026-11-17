@@ -1160,9 +1160,13 @@ func effects_text(efectos: Array) -> String:
 			"carga":
 				parts.append("+%d de carga por viaje" % ef["n"])
 			"ataque":
-				parts.append("+%d de ataque militar" % ef["n"])
+				parts.append("+%d de ataque %s" % [ef["n"], functions_text(ef.get("funciones", []))])
 			"armadura":
-				parts.append("+%d de armadura militar" % ef["n"])
+				var contra: String = {"cuerpo": " contra cuerpo a cuerpo", "distancia": " contra distancia"}.get(ef.get("contra", ""), "")
+				var who := functions_text(ef.get("funciones", []))
+				if contra != "" and who == "militar":
+					who = "de toda la tropa"
+				parts.append("+%d de armadura %s%s" % [ef["n"], who, contra])
 			"vida_pct":
 				if ef.has("lineas"):
 					parts.append("+%d%% de vida de %s" % [ef["pct"], lines_text(ef["lineas"])])
@@ -1209,6 +1213,17 @@ func hito_effects_text(def: Dictionary, dest_age: int) -> String:
 ## Nombre de las líneas de un efecto: «toda la tropa» si son todas (docs/diseno/27, §1.1).
 const LEVEL_NAMES := ["común", "veterano", "élite"]
 const LINE_NAMES := {"choque": "choque a pie", "distancia": "la distancia", "linea": "la línea", "montados": "los montados", "polvora": "la pólvora"}
+
+
+## Quién recibe una mejora por función (la herrería separa cuerpo a cuerpo y distancia, paso 2).
+static func functions_text(funciones: Array) -> String:
+	var has_d := funciones.has("distancia")
+	var has_c := funciones.has("choque") or funciones.has("linea")
+	if has_d and not has_c:
+		return "de la tropa a distancia"
+	if has_c and not has_d:
+		return "de la tropa cuerpo a cuerpo"
+	return "militar"
 
 
 static func lines_text(lineas: Array) -> String:

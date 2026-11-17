@@ -13,6 +13,9 @@ static func draw(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
 	if kind.contains("^"):
 		_nivel(ci, kind, r, col)
 		return
+	if kind.contains("~"):
+		_herreria(ci, kind, r, col)
+		return
 	match kind:
 		"alimento":
 			ci.draw_circle(c + Vector2(-s * 0.12, s * 0.06), s * 0.2, col)
@@ -385,6 +388,26 @@ static func _nivel(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
 		var y := o.y + s * (0.08 + 0.13 * i)
 		var x := o.x + s * 0.78
 		ci.draw_polyline(PackedVector2Array([Vector2(x - s * 0.16, y), Vector2(x, y + s * 0.1), Vector2(x + s * 0.16, y)]), gold, w)
+
+
+## Herrería (paso 2 del juego tardío): «atacar~guerrero~2» es el arma (o «escudo», la armadura)
+## con la clase abajo a la derecha (guerrero: cuerpo a cuerpo; hondero: distancia) y la tanda en
+## palotes dorados arriba a la derecha (I, II, III). Sin arte nuevo.
+static func _herreria(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
+	var parts := kind.split("~")
+	var s := minf(r.size.x, r.size.y)
+	var o := r.position + (r.size - Vector2(s, s)) / 2.0
+	draw(ci, parts[0], Rect2(o + Vector2(0, s * 0.06), Vector2(s, s) * 0.78), col)
+	if parts.size() > 1:
+		var bs := s * 0.46
+		var p := o + Vector2(s - bs, s - bs)
+		ci.draw_circle(p + Vector2(bs, bs) / 2.0, bs * 0.5, Color(0.06, 0.065, 0.075, 0.85))
+		draw(ci, parts[1], Rect2(p, Vector2(bs, bs)), col)
+	var n := int(parts[2]) if parts.size() > 2 else 0
+	var w := maxf(1.5, s * 0.07)
+	for i in n:
+		var x := o.x + s * (0.94 - 0.11 * (n - 1 - i))
+		ci.draw_line(Vector2(x, o.y + s * 0.02), Vector2(x, o.y + s * 0.26), Palette.UI_ACCENT, w)
 
 
 static func _recibe(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:

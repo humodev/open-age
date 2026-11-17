@@ -623,6 +623,10 @@ func tech_here(t: Dictionary, b: SimEntity) -> bool:
 		return dp(b.owner).lines_made_by(b.def).has(en["linea"])
 	if en.get("militar", false):
 		# Mejoras militares: en cualquier edificio que entrene tropa (cuartel, campo de tiro, corral, taller…).
+		# La herrería (`sin_deposito`, paso 2), no en los que además son almacén o centro (el lof, el
+		# mocambo, la qollqa): su grilla ya está llena de economía.
+		if en.get("sin_deposito", false) and not (b.def.get("deposito", []) as Array).is_empty():
+			return false
 		var units: Dictionary = dp(b.owner).unidades
 		for u in b.def.get("produce", []):
 			if units.get(u, {}).get("funcion", "") in ["choque", "distancia", "linea", "asedio"]:
@@ -933,8 +937,11 @@ func _apply_effects(pid: int, efectos: Array) -> void:
 				for l in ef["lineas"]:
 					_add_mod(pid, "atk_pct:" + l, ef["pct"])
 			"armadura":
+				# Sin `contra`, contra las dos; con `contra` (herrería, paso 2), solo contra cuerpo
+				# a cuerpo ("cuerpo") o contra distancia ("distancia").
+				var pre: String = ARMOR_KEYS.get(ef.get("contra", ""), "armadura:")
 				for f in ef["funciones"]:
-					_add_mod(pid, "armadura:" + f, ef["n"])
+					_add_mod(pid, pre + f, ef["n"])
 			"vida_pct":
 				for f in ef.get("funciones", []):
 					_add_mod(pid, "vida:" + f, ef["pct"])
@@ -1144,8 +1151,9 @@ func _split_aura(efectos: Array) -> Array:
 				for f in ef["funciones"]:
 					aura["ataque:" + f] = int(aura.get("ataque:" + f, 0)) + int(ef["n"])
 			"armadura":
+				var pre: String = ARMOR_KEYS.get(ef.get("contra", ""), "armadura:")
 				for f in ef["funciones"]:
-					aura["armadura:" + f] = int(aura.get("armadura:" + f, 0)) + int(ef["n"])
+					aura[pre + f] = int(aura.get(pre + f, 0)) + int(ef["n"])
 			"vida_pct":
 				for f in ef.get("funciones", []):
 					aura["vida:" + f] = int(aura.get("vida:" + f, 0)) + int(ef["pct"])
@@ -1780,7 +1788,8 @@ func effective_attack(a: SimEntity) -> int:
 
 ## Porcentaje de ataque (docs/diseno/27, paso 1): los edificios que disparan siguen subiendo
 ## con la edad (`bono_ataque_edificio`); la tropa, solo con lo que se compra por línea
-## (`ataque_pct`: armas_1, veterano y élite). El asedio, desde el paso 4, con sus niveles.
+## (`ataque_pct`: la herrería I de ataque, veterano y élite). El asedio, desde el paso 4, con
+## sus niveles (veterano_asedio, elite_asedio).
 func attack_pct(pid: int, def: Dictionary, building: bool) -> int:
 	if pid < 0:
 		return 0
@@ -1821,7 +1830,24 @@ func grant_age_purchases(pid: int, age: int) -> void:
 ## `armadura_distancia` en el dato, vale la misma que contra cuerpo a cuerpo.
 func effective_armor(t: SimEntity, ranged: bool = false) -> int:
 	var base := int(t.def.get("armadura_distancia", t.def.get("armadura", 0))) if ranged else int(t.def.get("armadura", 0))
-	return base + (mod(t.owner, "armadura:" + t.fn) + aura_mod(t, "armadura:" + t.fn) if t.is_unit() else 0)
+	return base + (armor_bonus(t.owner, t.fn, ranged) + aura_armor(t, ranged) if t.is_unit() else 0)
+
+
+## Prefijo del modificador de armadura según `contra` (paso 2 del juego tardío: la herrería
+## separa la armadura contra cuerpo a cuerpo de la armadura contra distancia).
+const ARMOR_KEYS := {"": "armadura:", "cuerpo": "armadura_c:", "distancia": "armadura_d:"}
+
+
+## Armadura que suman las mejoras a una función: la de las dos clases más la de la clase del golpe.
+func armor_bonus(pid: int, fn: String, ranged: bool) -> int:
+	return mod(pid, "armadura:" + fn) + mod(pid, ("armadura_d:" if ranged else "armadura_c:") + fn)
+
+
+## --- paso 4 --- La armadura del aura de los hitos militares, con la misma separación.
+func aura_armor(t: SimEntity, ranged: bool) -> int:
+	if t.aura_bits == 0:
+		return 0
+	return aura_mod(t, "armadura:" + t.fn) + aura_mod(t, ("armadura_d:" if ranged else "armadura_c:") + t.fn)
 
 
 ## ¿Pega a distancia? Decide qué armadura usa el blanco.

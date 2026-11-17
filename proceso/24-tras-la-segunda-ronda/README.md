@@ -172,6 +172,7 @@ Un cambio por torneo: 75 partidas, 5 semillas, 30 minutos, en 10 procesos.
 | [29](pruebas/29-torneo-blancos.txt) (10) | Elección de blancos como AoE4 (5d) | **42** | 68 | **76** | 34 | 48 | 32 |
 | [30](pruebas/30-torneo-sigilo-guarani.txt) (10) | Guaraníes: sigilo detectado a 4,5 casillas. **Descartado** | 42 | 66 | 76 | 38 | 46 | 32 |
 | [31](pruebas/31-torneo-inalcanzable.txt) (10) | Recurso inalcanzable (6c) y experta (6b; no juega en el torneo) | 48 | 60 | **72** | 36 | 52 | 32 |
+| [33](pruebas/33-torneo-casa-del-arco.txt) (10) | Casa del arco guaraní a 150 (diagnóstico 5e), con el paso 1 del juego tardío | 54 | **70** | 44 | 44 | 46 | 42 |
 
 **Etiopía, de 56 % a 8 %.**
 - Con la misma partida seguida en el commit anterior a la etapa (`tools/ia_por_dentro.gd`, sierra contra Tawantinsuyu), el ejército etíope ya era chico (unas 20 unidades). Lo que cambió fue el rival: los arreglos de economía del paso 1 destrabaron el alimento de Tawantinsuyu, que pasó de 15 a 60 unidades.
@@ -380,3 +381,7 @@ Informes en [`proceso/22-testers/ronda-6/`](../22-testers/ronda-6/).
   - El sigilo y la emboscada pesaban el 0,3 % del daño, y ganaban igual en terreno abierto.
   - Medido con dosis creciente: casa a 150 → 56 %; casa común → 36 %.
 - **Torneo 33:** casa del arco guaraní a 150 de madera; sigue de 2×2, porque se levanta entre los árboles.
+- **Torneo 33:**
+  - Los guaraníes bajan de 70 a 44 %: la causa era esa.
+  - Cinco pueblos quedan entre 42 y 54 %, la menor dispersión hasta ahora.
+  - Los mapuches suben a 70 % y quedan solos arriba de la banda. Siguiendo la regla nueva, no se corre un torneo por cambio: se diagnostican con la herramienta dirigida (como 5e) y su arreglo se confirma en el torneo del hito, junto con los pasos 2 a 4 del juego tardío.
