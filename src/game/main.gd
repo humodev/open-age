@@ -28,7 +28,8 @@ extends Node3D
 ##   --dificultad=facil|normal|dificil|experta  (en el menú, la preelige)
 ##   --nofog            sin niebla de guerra (automático en --aivai)
 ##   --autotest         prueba de punta a punta con eventos reales de mouse y teclado
-##   --animaciones=0|1  aldeanos animados (KayKit) o la figura de antes; pisa data/arte_animaciones.json
+##   --animaciones=0|1  gente animada (KayKit) o la figura de antes; pisa data/arte_animaciones.json
+##   --compartir=0|1    esqueletos compartidos entre la gente animada que hace lo mismo
 ##   --grilla=menu      abre el submenú del aldeano (economia, militar) antes de la captura
 ##   --banco=rec:n,…    fija recursos del jugador antes de la captura (alimento:0,mita:0)
 ##   --ayuda=N          muestra la ayuda de la casilla N de la grilla (8 = Z) en la captura
@@ -77,6 +78,10 @@ func _ready() -> void:
 	_menu_mode = _args.is_empty() or _args.has("menu")
 	if _args.has("animaciones"): # --animaciones=0|1: aldeanos animados o la figura de antes (proceso/27)
 		AldeanoAnimado.forzar = int(_args["animaciones"])
+	if _args.has("compartir"): # --compartir=0|1: esqueletos compartidos (proceso/27, paso 2)
+		AldeanoAnimado.forzar_compartir = int(_args["compartir"])
+		AldeanoAnimado.cfg()
+		AldeanoAnimado.compartir = AldeanoAnimado.forzar_compartir == 1
 	# --- escala --- (--ventana=ANCHOxALTO: ventana de ese tamaño, para capturas a otras resoluciones)
 	if _args.has("ventana"):
 		_ventana(str(_args["ventana"]))

@@ -13,10 +13,16 @@ import sys
 import bpy
 
 ANIMS = {
-    "General": ["Idle_A", "Interact", "PickUp", "Death_A", "Hit_A"],
+    "General": ["Idle_A", "Interact", "PickUp", "Death_A", "Death_B", "Hit_A", "Hit_B", "Throw"],
     "MovementBasic": ["Walking_A", "Running_A"],
     "Tools": ["Chopping", "Pickaxing", "Digging", "Working_A", "Hammering"],
-    "CombatMelee": ["Melee_1H_Attack_Chop"],
+    # Paso 2 (soldados, proceso/27-animaciones/02-soldados.md): golpe con una y con dos manos,
+    # estocada, dos armas, bloqueo y guardia.
+    "CombatMelee": ["Melee_1H_Attack_Chop", "Melee_1H_Attack_Stab", "Melee_2H_Attack_Chop", "Melee_2H_Attack_Stab",
+                    "Melee_2H_Idle", "Melee_Dualwield_Attack_Slice", "Melee_Block_Hit", "Melee_Blocking"],
+    # Arco (tensar y soltar) y arma de fuego de dos manos (disparar y recargar). La honda no está
+    # en KayKit: usa Throw.
+    "CombatRanged": ["Ranged_Bow_Draw", "Ranged_Bow_Release", "Ranged_Bow_Idle", "Ranged_2H_Shoot", "Ranged_2H_Reload", "Ranged_2H_Aiming"],
 }
 
 argv = sys.argv[sys.argv.index("--") + 1:]

@@ -1,0 +1,4 @@
+# godot --headless --path . -s tests/bench.gd (paso 2, soldados)
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+200 unidades, 600 ticks: promedio 9.35 ms, peor 92.13 ms, presupuesto 100 ms; vivas al final: 125

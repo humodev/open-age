@@ -1,0 +1,10 @@
+# godot --path . -- --autotest --civ=guaranies --terreno=llano (tres corridas)
+## 1) animado, con otro Godot corriendo al lado
+FALLO cursor de juntar alimento sobre un animal propio (mover)
+AUTOTEST: FALLO
+## 2) animado
+OK    cursor de juntar alimento sobre un animal propio (recolectar_alimento)
+AUTOTEST: OK
+## 3) --animaciones=0
+OK    cursor de juntar alimento sobre un animal propio (recolectar_alimento)
+AUTOTEST: OK

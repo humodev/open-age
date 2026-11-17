@@ -1,7 +1,7 @@
 {
-  "_doc": "Aldeanos animados con KayKit Character Animations (CC0; proceso/27-animaciones). Solo imagen: la simulación no lo lee y el hash no cambia. activo: false vuelve a la figura de antes (modelo generado o maqueta); también --animaciones=0 en la línea de comandos. archivo: el glTF con el esqueleto y las animaciones elegidas (tools/kaykit_extraer.py). acciones: qué animación y qué herramienta usa cada estado (talar, picar, juntar, cosechar, carnear, construir, pegar, quieto, caminar, correr, morir); vel_pct acelera o frena la animación de trabajo. por_recurso: acción de cada tipo de recurso del mapa (data/recursos.json); por_clase: acción por clase de recurso cuando el tipo no está; los edificios que dan recurso (granjas, corrales) usan 'granja'. correr_desde_pasos: pasos por segundo a partir de los cuales el paso se vuelve trote (con la velocidad de hoy el aldeano da unos 2,4 pasos por segundo); el paso sigue siempre a la distancia recorrida, no patina. mezcla_s: segundos de mezcla entre estados; cambio_s: cuánto tiene que durar un estado nuevo para cambiar de animación (en un montón, el moverse y el quedarse quieto titilan de un tick a otro). rendimiento: max_por_cuadro es cuántos aldeanos se animan por cuadro (con más en pantalla, cada uno se actualiza cada 2 o 3 cuadros); lejos_m: a más de esta distancia de la cámara (en casillas; la cámara normal está a 28), se anima a la mitad de cuadros; los que están fuera de la pantalla no se animan. vestimenta: por forma del pueblo (estilo.forma de data/civs): tela (color de la ropa; sin esto, la arcilla del pueblo aclarada, como la maqueta), piel, pelo, prenda (unku, poncho, tipoy, shamma, pano, ninguna) con prenda_color, tocado (vincha, plumas, turbante, ninguno) con tocado_color; los mismos colores que la maqueta de src/game/civ_meshes.gd. Afirmaciones históricas de la vestimenta con [verificar] en las fichas de cada pueblo (docs/00-indice.md, regla 5).",
+  "_doc": "Gente animada con KayKit Character Animations (CC0; proceso/27-animaciones): aldeanos (paso 1) y soldados a pie (paso 2, 02-soldados.md). Solo imagen: la simulación no lo lee y el hash no cambia. activo: false vuelve a la figura de antes (modelo generado o maqueta); también --animaciones=0 en la línea de comandos. tropas.activo: false deja a los soldados como antes (maqueta o modelo generado) y anima solo a los aldeanos. archivo: el glTF con el esqueleto y las animaciones elegidas (tools/kaykit_extraer.py). acciones: qué animación y qué herramienta usa cada estado (talar, picar, juntar, cosechar, carnear, construir, pegar, quieto, caminar, correr, morir, y los golpes de los soldados); anims (en vez de anim) encadena varias en un ciclo, como tensar y soltar el arco; vel_pct acelera o frena la animación de trabajo; impacto_pct: en qué parte del ciclo cae el golpe o sale el tiro (sin esto, se mide solo: el momento en que la mano va más rápido); cada golpe de la simulación lleva la animación a ese punto y el ciclo dura lo que la cadencia, así que el siguiente golpe cae justo. por_recurso: acción de cada tipo de recurso del mapa (data/recursos.json); por_clase: acción por clase de recurso cuando el tipo no está; los edificios que dan recurso (granjas, corrales) usan 'granja'. correr_desde_pasos: pasos por segundo a partir de los cuales el paso se vuelve trote; el paso sigue siempre a la distancia recorrida, no patina. mezcla_s: segundos de mezcla entre estados; cambio_s: cuánto tiene que durar un estado nuevo para cambiar de animación (en un montón, el moverse y el quedarse quieto titilan de un tick a otro). reaccion: golpeado (sin escudo) y bloquear (con escudo, bloquear_pct de las veces) al recibir un golpe, solo si hay tiempo antes del golpe propio. rendimiento: max_por_cuadro es cuántas figuras con esqueleto propio se animan por cuadro (con más en pantalla, cada una se actualiza cada 2 o 3 cuadros); lejos_m: a más de esta distancia de la cámara (en casillas; la cámara normal está a 28), se anima a la mitad de cuadros; las que están fuera de la pantalla no se animan. compartir: las que hacen lo mismo (quieto, caminar al mismo paso, el mismo trabajo) comparten un esqueleto por animación, por fase (fases) y por paso (pasos de paso_pct): a más de compartir_desde_m de la cámara, o con más de compartir_con_mas_de figuras en pantalla salvo las que están a menos de cerca_m; los esqueletos compartidos de una animación y un paso forman un grupo con un reloj común, cada uno corrido una fase; el golpe también se comparte de lejos (fases_ataque fases por ciclo: cada figura toma la fase más cercana a su ciclo de ataque); caminando, el paso se toma del que manda la simulación (el del grupo en marcha o el propio) si la velocidad medida está a menos de ajuste_paso_pct de él, en pasos de paso_pct; si no, la medida, en pasos más gruesos (paso_caminar_pct) y nunca por debajo de paso_min_pct (los empujados en un montón). La reacción y la muerte van siempre con esqueleto propio; de cerca (o con poca gente), todo. aspecto (C-98): textura_pct, cuánto se ve la trama de la tela (la piel y el metal, menos); sombra_pies_pct, cuánto se oscurece la figura hacia los pies; variacion_pct, cuánto cambia el tono de una figura a otra; tela_tropa_pct, cuánto se oscurece la tela de la edad de los soldados (data/arte_edades.json → tropa) respecto de la maqueta. vestimenta: por forma del pueblo (estilo.forma de data/civs): tela (color de la ropa), piel, pelo, prenda (unku, poncho, tipoy, shamma, pano, ninguna) con prenda_color, tocado (vincha, plumas, turbante, ninguno) con tocado_color; los soldados toman además la tela, el casco, el borde del escudo y el oro de su edad (data/arte_edades.json → tropa). tropas: el arma, el escudo y el golpe de cada tipo de soldado (tipos), con lo propio de cada forma (por_forma) y de cada pueblo (por_civ, que pisa a por_forma); armas: maza, macana, hacha, lanza, espada, katana, dap (una en cada mano), honda, jabalina, estolica, boleadoras, arco, ballesta, arcabuz, antorcha, vara; escudo: redondo, cuadrado o ninguno; carcaj: true; largo_pct: largo de la lanza; quieto: la animación de guardia (si no, quieto). arco_curva: cuánto se curvan las palas del arco; escudo_z: a qué distancia del antebrazo va el escudo (alto de la persona = 1). Afirmaciones históricas de la vestimenta y las armas con [verificar] en las fichas de cada pueblo (docs/00-indice.md, regla 5).",
   "activo": true,
-  "archivo": "res://assets/animaciones/kaykit/aldeano_kaykit.glb",
+  "archivo": "res://assets/animaciones/kaykit/personas_kaykit.glb",
   "acciones": {
     "quieto":    { "anim": "Idle_A" },
     "caminar":   { "anim": "Walking_A" },
@@ -13,22 +13,77 @@
     "carnear":   { "anim": "Working_A", "herramienta": "cuchillo" },
     "construir": { "anim": "Hammering", "herramienta": "martillo" },
     "pegar":     { "anim": "Melee_1H_Attack_Chop", "herramienta": "hacha" },
-    "morir":     { "anim": "Death_A" }
+    "morir":     { "anim": "Death_A" },
+    "morir_b":   { "anim": "Death_B" },
+    "golpeado":  { "anim": "Hit_A" },
+    "bloquear":  { "anim": "Melee_Block_Hit" },
+    "golpe_1m":  { "anim": "Melee_1H_Attack_Chop" },
+    "golpe_2m":  { "anim": "Melee_2H_Attack_Chop" },
+    "estocada":  { "anim": "Melee_1H_Attack_Stab" },
+    "estocada_2m": { "anim": "Melee_2H_Attack_Stab" },
+    "dos_armas": { "anim": "Melee_Dualwield_Attack_Slice" },
+    "arco":      { "anims": ["Ranged_Bow_Release", "Ranged_Bow_Draw"], "impacto_pct": 5 },
+    "lanzar":    { "anim": "Throw" },
+    "fuego":     { "anims": ["Ranged_2H_Shoot", "Ranged_2H_Reload", "Ranged_2H_Aiming"], "impacto_pct": 4 },
+    "quieto_2m": { "anim": "Melee_2H_Idle" },
+    "quieto_arco": { "anim": "Ranged_Bow_Idle" },
+    "quieto_fuego": { "anim": "Ranged_2H_Aiming" }
   },
   "por_recurso": { "arbol": "talar", "capuera": "talar", "roca": "picar", "riqueza": "picar", "arbusto": "juntar", "yerbal": "juntar", "carne": "carnear", "venado": "carnear", "rebano_salvaje": "carnear" },
   "por_clase": { "madera": "talar", "piedra": "picar", "riqueza": "picar", "alimento": "juntar" },
   "correr_desde_pasos": 3.2,
   "mezcla_s": 0.18,
   "cambio_s": 0.2,
-  "rendimiento": { "max_por_cuadro": 80, "lejos_m": 46 },
+  "reaccion": { "bloquear_pct": 60 },
+  "rendimiento": { "max_por_cuadro": 80, "lejos_m": 46, "compartir": true, "compartir_desde_m": 34, "compartir_con_mas_de": 90, "cerca_m": 18, "fases": 3, "fases_ataque": 6, "paso_pct": 8, "paso_caminar_pct": 15, "ajuste_paso_pct": 12, "paso_min_pct": 50 },
+  "aspecto": { "textura_pct": 55, "sombra_pies_pct": 26, "variacion_pct": 7, "tela_tropa_pct": 18 },
   "vestimenta": {
-    "inca":      { "tela": "#a8774f", "prenda": "unku",   "prenda_color": "#e2b13c", "tocado": "vincha",   "tocado_color": "#a63a2a" },
-    "mapuche":   { "prenda": "poncho", "prenda_color": "#3b3a44", "tocado": "vincha",   "tocado_color": "#c9ccd2" },
-    "guarani":   { "prenda": "tipoy",  "prenda_color": "#efe6cf", "tocado": "plumas",   "tocado_color": "#d94a2a" },
-    "etiopia":   { "prenda": "shamma", "prenda_color": "#f2eee4", "tocado": "ninguno" },
-    "palmares":  { "prenda": "pano",   "prenda_color": "#8a5a3a", "tocado": "turbante", "tocado_color": "#c9a24a" },
-    "ayutthaya": { "prenda": "pano",   "prenda_color": "#7a3b5a", "tocado": "ninguno" },
-    "_otro":     { "prenda": "ninguna", "tocado": "ninguno" }
+    "inca":      { "tela": "#8a5f3e", "prenda": "unku",   "prenda_color": "#b88a32", "tocado": "vincha",   "tocado_color": "#8e3226" },
+    "mapuche":   { "tela": "#7a6a52", "prenda": "poncho", "prenda_color": "#34333b", "tocado": "vincha",   "tocado_color": "#a9acb2" },
+    "guarani":   { "tela": "#7a5232", "prenda": "tipoy",  "prenda_color": "#a08054", "tocado": "plumas",   "tocado_color": "#b8402a" },
+    "etiopia":   { "tela": "#9a8664", "prenda": "shamma", "prenda_color": "#b5a682", "tocado": "ninguno" },
+    "palmares":  { "tela": "#7e5a3c", "prenda": "pano",   "prenda_color": "#74492f", "tocado": "turbante", "tocado_color": "#a8873e" },
+    "ayutthaya": { "tela": "#7a5a40", "prenda": "pano",   "prenda_color": "#663149", "tocado": "ninguno" },
+    "redonda":   { "tela": "#86664a", "prenda": "unku",   "prenda_color": "#9a6a3a", "tocado": "vincha",   "tocado_color": "#6e5a3a" },
+    "azotea":    { "tela": "#9a8466", "prenda": "shamma", "prenda_color": "#b9ab8c", "tocado": "turbante", "tocado_color": "#d2c6aa" },
+    "fuerte":    { "tela": "#6a5a48", "prenda": "ninguna", "tocado": "ninguno" },
+    "_otro":     { "tela": "#7e6a52", "prenda": "ninguna", "tocado": "ninguno" }
   },
-  "colores": { "piel": "#c99c76", "pelo": "#2a221c", "madera": "#7a5a3a", "piedra": "#6c6a66", "fibra": "#b99a5a", "cuero": "#5a4030" }
+  "colores": { "piel": "#8c5636", "pelo": "#231c17", "madera": "#6e5034", "piedra": "#5e5c58", "fibra": "#9a7e4a", "cuero": "#4e3828", "metal": "#7c7f84", "cuerda": "#8a7552" },
+  "tropas": {
+    "activo": true,
+    "arco_curva": 0.07,
+    "escudo_z": 0.06,
+    "funciones": ["choque", "linea", "distancia", "explorador", "asedio"],
+    "tipos": {
+      "guerrero":   { "arma": "maza", "golpe": "golpe_1m" },
+      "lancero":    { "arma": "lanza", "escudo": "redondo", "golpe": "estocada" },
+      "awqa":       { "arma": "lanza", "escudo": "cuadrado", "golpe": "estocada" },
+      "hondero":    { "arma": "honda", "golpe": "lanzar" },
+      "boleador":   { "arma": "boleadoras", "golpe": "lanzar" },
+      "arcabucero": { "arma": "arcabuz", "golpe": "fuego", "quieto": "quieto_fuego" },
+      "explorador": { "arma": "vara", "golpe": "estocada" },
+      "incendiarios": { "arma": "antorcha", "golpe": "golpe_1m" },
+      "compania_japonesa": { "arma": "katana", "golpe": "golpe_2m", "quieto": "quieto_2m" },
+      "_choque":    { "arma": "maza", "golpe": "golpe_1m" },
+      "_linea":     { "arma": "lanza", "escudo": "redondo", "golpe": "estocada" },
+      "_distancia": { "arma": "honda", "golpe": "lanzar" }
+    },
+    "por_forma": {
+      "inca":      { "lancero": { "escudo": "cuadrado" } },
+      "guarani":   { "guerrero": { "arma": "macana", "golpe": "golpe_2m", "quieto": "quieto_2m" }, "hondero": { "arma": "arco", "golpe": "arco", "quieto": "quieto_arco", "carcaj": true } },
+      "mapuche":   { "guerrero": { "arma": "macana", "golpe": "golpe_2m", "quieto": "quieto_2m" }, "lancero": { "escudo": "ninguno", "golpe": "estocada_2m", "largo_pct": 150 }, "hondero": { "arma": "arco", "golpe": "arco", "quieto": "quieto_arco", "carcaj": true } },
+      "palmares":  { "hondero": { "arma": "arco", "golpe": "arco", "quieto": "quieto_arco", "carcaj": true } },
+      "ayutthaya": { "guerrero": { "arma": "dap", "golpe": "dos_armas" }, "hondero": { "arma": "arco", "golpe": "arco", "quieto": "quieto_arco", "carcaj": true } },
+      "etiopia":   { "hondero": { "arma": "jabalina", "golpe": "lanzar" } },
+      "fuerte":    { "guerrero": { "arma": "espada", "escudo": "redondo" }, "lancero": { "escudo": "ninguno", "golpe": "estocada_2m", "largo_pct": 170 }, "hondero": { "arma": "ballesta", "golpe": "fuego", "quieto": "quieto_fuego" } }
+    },
+    "por_civ": {
+      "canaris":   { "guerrero": { "arma": "hacha" } },
+      "caranquis": { "hondero": { "arma": "estolica", "golpe": "lanzar" } },
+      "tupies":    { "guerrero": { "arma": "macana", "golpe": "golpe_2m", "quieto": "quieto_2m" } },
+      "adal":      { "guerrero": { "arma": "espada", "escudo": "redondo" }, "hondero": { "arma": "arco", "golpe": "arco", "quieto": "quieto_arco", "carcaj": true } },
+      "birmanos":  { "guerrero": { "arma": "espada", "golpe": "golpe_1m" } }
+    }
+  }
 }

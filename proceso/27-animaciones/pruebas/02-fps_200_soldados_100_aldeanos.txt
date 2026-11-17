@@ -1,0 +1,174 @@
+# Cuadros por segundo con 200 soldados y 100 aldeanos animados en pantalla (283 dentro del cuadro)
+# godot --path . -s tools/aldeanos_animados.gd -- --modo=fps --soldados=200 --aldeanos=100 <modo> --civ=mapuches --rival=tawantinsuyu --terreno=llano --nofog --mute --seed=7
+# 1920x1080, RTX 2060 Super, carga de la máquina indicada en cada corrida (12 núcleos).
+# Modos: --compartir=1 (lo de data/, esqueletos compartidos); --compartir=0 (cada figura con su esqueleto, 80 por cuadro);
+# --compartir=0 --max_por_cuadro=1000 (cada figura con su esqueleto, todas en cada cuadro); --animaciones=0 (la figura de antes).
+
+=== corrida 1: --compartir=1 · carga 9.03
+  ronda 1: 35.2 fps · proceso 64.51 ms · vista 8.48 ms · actualizar 1.16 ms (avance 0.00 ms, compartidos 0.81 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0 · esqueletos propios 7 · compartidos activos 87
+  ronda 2: 34.4 fps · proceso 94.12 ms · vista 8.53 ms · actualizar 1.23 ms (avance 0.00 ms, compartidos 0.87 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.1 · esqueletos propios 7 · compartidos activos 80
+  ronda 3: 35.9 fps · proceso 55.63 ms · vista 8.11 ms · actualizar 1.15 ms (avance 0.00 ms, compartidos 0.91 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.1 · esqueletos propios 7 · compartidos activos 96
+  ronda 4: 33.6 fps · proceso 56.91 ms · vista 8.62 ms · actualizar 1.20 ms (avance 0.00 ms, compartidos 1.04 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.1 · esqueletos propios 7 · compartidos activos 103
+  ronda 5: 36.0 fps · proceso 57.35 ms · vista 8.33 ms · actualizar 1.10 ms (avance 0.00 ms, compartidos 1.00 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0 · esqueletos propios 7 · compartidos activos 99
+vista (WorldView.render) ms por cuadro: mediana=8.48 [8.11004895104895, 8.32753472222222, 8.47579432624113, 8.52612408759124, 8.61761481481481] · GPU ms: [13.6070003509521, 15.9069995880127, 17.8339996337891, 15.460000038147, 15.8059997558594]
+esqueletos compartidos activos por animación: { "Idle_A": 3, "Melee_2H_Idle": 3, "Ranged_Bow_Idle": 3, "Melee_2H_Attack_Stab": 5, "Throw": 4, "Melee_1H_Attack_Chop": 5, "Walking_A": 30, "Running_A": 29, "Melee_2H_Attack_Chop": 5, "Melee_1H_Attack_Stab": 4, "Ranged_Bow_Release+Ranged_Bow_Draw": 5, "Chopping": 3 }
+FPS animaciones=data compartir=true unidades en pantalla=283 animadas=283 mediana=35.2 min=33.6 max=36.0 muestras=[33.6456312518567, 34.4149335691301, 35.1709357364644, 35.8963584273981, 36.0446683552593]
+=== corrida 1: --compartir=0 · carga 7.49
+  ronda 1: 35.8 fps · proceso 60.60 ms · vista 7.92 ms · actualizar 1.37 ms (avance 0.68 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 5.2 · malla por cuadro 0.0 · esqueletos propios 306 · compartidos activos 0
+  ronda 2: 35.3 fps · proceso 81.22 ms · vista 7.82 ms · actualizar 1.36 ms (avance 0.68 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 5.6 · malla por cuadro 0.1 · esqueletos propios 306 · compartidos activos 0
+  ronda 3: 32.8 fps · proceso 59.24 ms · vista 8.01 ms · actualizar 1.42 ms (avance 0.69 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 6.0 · malla por cuadro 0.1 · esqueletos propios 306 · compartidos activos 0
+  ronda 4: 34.6 fps · proceso 57.72 ms · vista 7.89 ms · actualizar 1.41 ms (avance 0.70 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 5.4 · malla por cuadro 0.1 · esqueletos propios 306 · compartidos activos 0
+  ronda 5: 35.1 fps · proceso 55.46 ms · vista 7.97 ms · actualizar 1.40 ms (avance 0.70 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 5.3 · malla por cuadro 0.0 · esqueletos propios 306 · compartidos activos 0
+vista (WorldView.render) ms por cuadro: mediana=7.92 [7.82065492957746, 7.89202189781022, 7.91928368794326, 7.96706382978723, 8.00819696969697] · GPU ms: [13.8120002746582, 13.8140001296997, 12.3929996490479, 13.2270002365112, 12.7620000839233]
+esqueletos compartidos activos por animación: {  }
+FPS animaciones=data compartir=false unidades en pantalla=283 animadas=283 mediana=35.1 min=32.8 max=35.8 muestras=[32.7857695850886, 34.6205524277726, 35.0777070722877, 35.3357418042231, 35.7877557650648]
+=== corrida 1: --compartir=0 [OJO: en esta corrida zsh pasó «--compartir=0 --max_por_cuadro=1000» como un solo argumento; el tope quedó en 80: es una repetición de la de arriba; ver las corridas (bis)] · carga 6.87
+  ronda 1: 37.0 fps · proceso 56.60 ms · vista 7.84 ms · actualizar 1.34 ms (avance 0.66 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 4.8 · malla por cuadro 0.0 · esqueletos propios 306 · compartidos activos 0
+  ronda 2: 36.3 fps · proceso 77.17 ms · vista 7.78 ms · actualizar 1.36 ms (avance 0.67 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 5.7 · malla por cuadro 0.1 · esqueletos propios 306 · compartidos activos 0
+  ronda 3: 35.3 fps · proceso 64.65 ms · vista 7.79 ms · actualizar 1.38 ms (avance 0.68 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 6.0 · malla por cuadro 0.1 · esqueletos propios 306 · compartidos activos 0
+  ronda 4: 36.2 fps · proceso 52.77 ms · vista 7.65 ms · actualizar 1.35 ms (avance 0.67 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 5.3 · malla por cuadro 0.1 · esqueletos propios 306 · compartidos activos 0
+  ronda 5: 37.8 fps · proceso 50.35 ms · vista 7.63 ms · actualizar 1.34 ms (avance 0.66 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 4.9 · malla por cuadro 0.0 · esqueletos propios 306 · compartidos activos 0
+vista (WorldView.render) ms por cuadro: mediana=7.78 [7.63189473684211, 7.6528275862069, 7.78176712328767, 7.78567625899281, 7.83938513513514] · GPU ms: [14.048999786377, 13.710000038147, 6.65399980545044, 13.8219995498657, 13.7580003738403]
+esqueletos compartidos activos por animación: {  }
+FPS animaciones=data compartir=false unidades en pantalla=283 animadas=283 mediana=36.3 min=35.3 max=37.8 muestras=[35.3035060191208, 36.1780418747112, 36.2864361798634, 37.0312265818151, 37.836621468499]
+=== corrida 1: --animaciones=0 · carga 6.62
+  ronda 1: 42.0 fps · proceso 52.59 ms · vista 5.57 ms · actualizar 0.00 ms (avance 0.00 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0 · esqueletos propios 0 · compartidos activos 0
+  ronda 2: 41.7 fps · proceso 68.21 ms · vista 5.41 ms · actualizar 0.00 ms (avance 0.00 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0 · esqueletos propios 0 · compartidos activos 0
+  ronda 3: 41.7 fps · proceso 65.57 ms · vista 5.43 ms · actualizar 0.00 ms (avance 0.00 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0 · esqueletos propios 0 · compartidos activos 0
+  ronda 4: 40.6 fps · proceso 50.94 ms · vista 5.61 ms · actualizar 0.00 ms (avance 0.00 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0 · esqueletos propios 0 · compartidos activos 0
+  ronda 5: 40.6 fps · proceso 50.81 ms · vista 5.75 ms · actualizar 0.00 ms (avance 0.00 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0 · esqueletos propios 0 · compartidos activos 0
+vista (WorldView.render) ms por cuadro: mediana=5.57 [5.4141377245509, 5.42613939393939, 5.56985798816568, 5.60507975460123, 5.75450920245399] · GPU ms: [15.1379995346069, 14.2829999923706, 15.9350004196167, 17.1439990997314, 16.1439990997314]
+esqueletos compartidos activos por animación: {  }
+FPS animaciones=0 compartir=true unidades en pantalla=283 animadas=0 mediana=41.7 min=40.6 max=42.0 muestras=[40.6251791371013, 40.6374647008771, 41.7009388454483, 41.7205346195732, 42.0018112970458]
+=== corrida 2: --compartir=1 · carga 7.11
+  ronda 1: 36.3 fps · proceso 60.35 ms · vista 8.34 ms · actualizar 1.29 ms (avance 0.00 ms, compartidos 0.80 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0 · esqueletos propios 7 · compartidos activos 80
+  ronda 2: 35.0 fps · proceso 74.02 ms · vista 8.37 ms · actualizar 1.22 ms (avance 0.00 ms, compartidos 0.86 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.1 · esqueletos propios 7 · compartidos activos 87
+  ronda 3: 33.9 fps · proceso 59.50 ms · vista 8.38 ms · actualizar 1.21 ms (avance 0.00 ms, compartidos 0.97 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.1 · esqueletos propios 7 · compartidos activos 98
+  ronda 4: 33.2 fps · proceso 60.04 ms · vista 8.58 ms · actualizar 1.23 ms (avance 0.00 ms, compartidos 1.03 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.1 · esqueletos propios 7 · compartidos activos 105
+  ronda 5: 34.7 fps · proceso 59.23 ms · vista 8.54 ms · actualizar 1.16 ms (avance 0.00 ms, compartidos 1.02 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0 · esqueletos propios 7 · compartidos activos 98
+vista (WorldView.render) ms por cuadro: mediana=8.38 [8.34172413793103, 8.37049285714286, 8.37844444444444, 8.53858695652174, 8.58277443609023] · GPU ms: [13.1409997940063, 13.5179996490479, 12.7600002288818, 13.3430004119873, 13.9020004272461]
+esqueletos compartidos activos por animación: { "Idle_A": 3, "Melee_2H_Idle": 3, "Ranged_Bow_Idle": 3, "Melee_2H_Attack_Stab": 4, "Throw": 4, "Melee_1H_Attack_Chop": 6, "Walking_A": 30, "Running_A": 31, "Melee_2H_Attack_Chop": 5, "Ranged_Bow_Release+Ranged_Bow_Draw": 5, "Melee_1H_Attack_Stab": 4, "Chopping": 3 }
+FPS animaciones=data compartir=true unidades en pantalla=283 animadas=283 mediana=34.7 min=33.2 max=36.3 muestras=[33.1626578498879, 33.8616758068109, 34.6946194679052, 34.9977338967302, 36.2813924748389]
+=== corrida 2: --compartir=0 · carga 7.47
+  ronda 1: 37.3 fps · proceso 68.31 ms · vista 7.71 ms · actualizar 1.34 ms (avance 0.66 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 5.0 · malla por cuadro 0.0 · esqueletos propios 306 · compartidos activos 0
+  ronda 2: 34.6 fps · proceso 72.54 ms · vista 7.88 ms · actualizar 1.39 ms (avance 0.69 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 5.9 · malla por cuadro 0.1 · esqueletos propios 306 · compartidos activos 0
+  ronda 3: 34.6 fps · proceso 60.14 ms · vista 7.72 ms · actualizar 1.39 ms (avance 0.69 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 6.2 · malla por cuadro 0.1 · esqueletos propios 306 · compartidos activos 0
+  ronda 4: 34.7 fps · proceso 61.44 ms · vista 7.72 ms · actualizar 1.37 ms (avance 0.68 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 5.6 · malla por cuadro 0.1 · esqueletos propios 306 · compartidos activos 0
+  ronda 5: 35.6 fps · proceso 53.69 ms · vista 7.87 ms · actualizar 1.39 ms (avance 0.69 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 5.3 · malla por cuadro 0.0 · esqueletos propios 306 · compartidos activos 0
+vista (WorldView.render) ms por cuadro: mediana=7.72 [7.7054527027027, 7.72002898550725, 7.72435251798561, 7.86597183098592, 7.87840287769784] · GPU ms: [15.826000213623, 13.7969999313354, 13.1059999465942, 13.8660001754761, 9.31900024414062]
+esqueletos compartidos activos por animación: {  }
+FPS animaciones=data compartir=false unidades en pantalla=283 animadas=283 mediana=34.7 min=34.6 max=37.3 muestras=[34.5975391121419, 34.6225802490385, 34.6671368760819, 35.584959089827, 37.3379928457378]
+=== corrida 2: --compartir=0 [OJO: en esta corrida zsh pasó «--compartir=0 --max_por_cuadro=1000» como un solo argumento; el tope quedó en 80: es una repetición de la de arriba; ver las corridas (bis)] · carga 7.67
+  ronda 1: 37.3 fps · proceso 64.57 ms · vista 7.70 ms · actualizar 1.31 ms (avance 0.66 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 4.9 · malla por cuadro 0.0 · esqueletos propios 306 · compartidos activos 0
+  ronda 2: 36.1 fps · proceso 74.83 ms · vista 7.58 ms · actualizar 1.31 ms (avance 0.66 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 5.4 · malla por cuadro 0.1 · esqueletos propios 306 · compartidos activos 0
+  ronda 3: 35.4 fps · proceso 61.79 ms · vista 7.58 ms · actualizar 1.35 ms (avance 0.67 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 5.8 · malla por cuadro 0.1 · esqueletos propios 306 · compartidos activos 0
+  ronda 4: 36.3 fps · proceso 50.42 ms · vista 7.59 ms · actualizar 1.35 ms (avance 0.67 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 5.1 · malla por cuadro 0.1 · esqueletos propios 306 · compartidos activos 0
+  ronda 5: 34.2 fps · proceso 63.26 ms · vista 8.16 ms · actualizar 1.43 ms (avance 0.71 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 5.3 · malla por cuadro 0.0 · esqueletos propios 306 · compartidos activos 0
+vista (WorldView.render) ms por cuadro: mediana=7.59 [7.58070629370629, 7.58372222222222, 7.58777397260274, 7.6983422818792, 8.15768888888889] · GPU ms: [13.3839998245239, 13.4049997329712, 13.3149995803833, 13.3479995727539, 14.0500001907349]
+esqueletos compartidos activos por animación: {  }
+FPS animaciones=data compartir=false unidades en pantalla=283 animadas=283 mediana=36.1 min=34.2 max=37.3 muestras=[34.2202720891856, 35.4290043632181, 36.0900265712821, 36.3369470344198, 37.3351802136575]
+=== corrida 2: --animaciones=0 · carga 7.26
+  ronda 1: 42.6 fps · proceso 52.74 ms · vista 5.54 ms · actualizar 0.00 ms (avance 0.00 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0 · esqueletos propios 0 · compartidos activos 0
+  ronda 2: 41.9 fps · proceso 70.08 ms · vista 5.41 ms · actualizar 0.00 ms (avance 0.00 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0 · esqueletos propios 0 · compartidos activos 0
+  ronda 3: 41.1 fps · proceso 54.24 ms · vista 5.48 ms · actualizar 0.00 ms (avance 0.00 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0 · esqueletos propios 0 · compartidos activos 0
+  ronda 4: 40.9 fps · proceso 50.13 ms · vista 5.47 ms · actualizar 0.00 ms (avance 0.00 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0 · esqueletos propios 0 · compartidos activos 0
+  ronda 5: 41.3 fps · proceso 49.48 ms · vista 5.66 ms · actualizar 0.00 ms (avance 0.00 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0 · esqueletos propios 0 · compartidos activos 0
+vista (WorldView.render) ms por cuadro: mediana=5.48 [5.41342857142857, 5.46813414634146, 5.48438036809816, 5.53709356725146, 5.65975757575758] · GPU ms: [14.9040002822876, 12.1090002059937, 7.12599992752075, 7.125, 9.28699970245361]
+esqueletos compartidos activos por animación: {  }
+FPS animaciones=0 compartir=true unidades en pantalla=283 animadas=0 mediana=41.3 min=40.9 max=42.6 muestras=[40.9287532727405, 41.0519680137169, 41.3256465960941, 41.8876050836593, 42.5524714276329]
+=== corrida 1 (bis): --compartir=0 --max_por_cuadro=1000 · carga 8.83
+  ronda 1: 30.7 fps · proceso 65.81 ms · vista 11.42 ms · actualizar 4.60 ms (avance 2.35 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 6.5 · malla por cuadro 0.0 · esqueletos propios 306 · compartidos activos 0
+  ronda 2: 30.1 fps · proceso 76.78 ms · vista 11.27 ms · actualizar 4.59 ms (avance 2.34 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 7.1 · malla por cuadro 0.1 · esqueletos propios 306 · compartidos activos 0
+  ronda 3: 29.0 fps · proceso 62.24 ms · vista 11.38 ms · actualizar 4.75 ms (avance 2.39 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 7.7 · malla por cuadro 0.1 · esqueletos propios 306 · compartidos activos 0
+  ronda 4: 29.0 fps · proceso 62.24 ms · vista 11.75 ms · actualizar 4.88 ms (avance 2.48 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 7.4 · malla por cuadro 0.2 · esqueletos propios 306 · compartidos activos 0
+  ronda 5: 29.9 fps · proceso 56.92 ms · vista 11.50 ms · actualizar 4.75 ms (avance 2.43 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 7.3 · malla por cuadro 0.0 · esqueletos propios 306 · compartidos activos 0
+vista (WorldView.render) ms por cuadro: mediana=11.42 [11.2729504132231, 11.3793189655172, 11.4249672131148, 11.500325, 11.7508793103448] · GPU ms: [13.003999710083, 13.3299999237061, 14.2340002059937, 6.71400022506714, 6.82200002670288]
+esqueletos compartidos activos por animación: {  }
+FPS animaciones=data compartir=false unidades en pantalla=283 animadas=283 mediana=29.9 min=29.0 max=30.7 muestras=[28.9562832513613, 29.0277360017497, 29.9188451325779, 30.0792625857476, 30.7055429042007]
+=== corrida 1 (bis): --compartir=1 · carga 9.68
+  ronda 1: 36.5 fps · proceso 61.78 ms · vista 8.30 ms · actualizar 1.12 ms (avance 0.00 ms, compartidos 0.82 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0 · esqueletos propios 7 · compartidos activos 80
+  ronda 2: 35.3 fps · proceso 77.04 ms · vista 8.39 ms · actualizar 1.18 ms (avance 0.00 ms, compartidos 0.87 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.1 · esqueletos propios 7 · compartidos activos 88
+  ronda 3: 34.7 fps · proceso 62.70 ms · vista 8.23 ms · actualizar 1.17 ms (avance 0.00 ms, compartidos 0.93 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.1 · esqueletos propios 7 · compartidos activos 89
+  ronda 4: 34.8 fps · proceso 57.68 ms · vista 8.44 ms · actualizar 1.19 ms (avance 0.00 ms, compartidos 0.97 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.1 · esqueletos propios 7 · compartidos activos 94
+  ronda 5: 36.1 fps · proceso 56.43 ms · vista 8.28 ms · actualizar 1.10 ms (avance 0.00 ms, compartidos 0.94 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0 · esqueletos propios 7 · compartidos activos 88
+vista (WorldView.render) ms por cuadro: mediana=8.30 [8.23395652173913, 8.27610344827586, 8.29999305555556, 8.38741549295775, 8.43945714285714] · GPU ms: [12.923999786377, 12.1000003814697, 13.1409997940063, 13.2510004043579, 13.9759998321533]
+esqueletos compartidos activos por animación: { "Idle_A": 3, "Melee_2H_Idle": 3, "Ranged_Bow_Idle": 3, "Melee_1H_Attack_Chop": 5, "Ranged_Bow_Release+Ranged_Bow_Draw": 5, "Walking_A": 29, "Throw": 4, "Melee_2H_Attack_Chop": 4, "Running_A": 25, "Melee_2H_Attack_Stab": 4, "Melee_1H_Attack_Stab": 2, "Chopping": 3 }
+FPS animaciones=data compartir=true unidades en pantalla=283 animadas=283 mediana=35.3 min=34.7 max=36.5 muestras=[34.686762199372, 34.8070038653178, 35.2992443724428, 36.1299402086865, 36.540312465347]
+=== corrida 2 (bis): --compartir=0 --max_por_cuadro=1000 · carga 8.14
+  ronda 1: 30.1 fps · proceso 88.30 ms · vista 11.64 ms · actualizar 4.72 ms (avance 2.42 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 6.8 · malla por cuadro 0.0 · esqueletos propios 306 · compartidos activos 0
+  ronda 2: 29.5 fps · proceso 78.21 ms · vista 11.47 ms · actualizar 4.71 ms (avance 2.40 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 7.4 · malla por cuadro 0.1 · esqueletos propios 306 · compartidos activos 0
+  ronda 3: 29.7 fps · proceso 60.84 ms · vista 11.31 ms · actualizar 4.74 ms (avance 2.41 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 7.5 · malla por cuadro 0.1 · esqueletos propios 306 · compartidos activos 0
+  ronda 4: 28.1 fps · proceso 60.54 ms · vista 11.78 ms · actualizar 4.91 ms (avance 2.49 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 8.1 · malla por cuadro 0.1 · esqueletos propios 306 · compartidos activos 0
+  ronda 5: 29.0 fps · proceso 59.57 ms · vista 11.75 ms · actualizar 4.85 ms (avance 2.48 ms, compartidos 0.00 ms) por cuadro
+    play por cuadro 7.5 · malla por cuadro 0.0 · esqueletos propios 306 · compartidos activos 0
+vista (WorldView.render) ms por cuadro: mediana=11.64 [11.314093220339, 11.4687983193277, 11.6395, 11.7527844827586, 11.7843362831858] · GPU ms: [14.2250003814697, 14.0710000991821, 13.7720003128052, 16.1259994506836, 17.8400001525879]
+esqueletos compartidos activos por animación: {  }
+FPS animaciones=data compartir=false unidades en pantalla=283 animadas=283 mediana=29.5 min=28.1 max=30.1 muestras=[28.1115366263469, 29.0345147794441, 29.5386142914766, 29.696038397481, 30.1459600964569]
+=== corrida 2 (bis): --compartir=1 · carga 8.03
+  ronda 1: 37.3 fps · proceso 72.22 ms · vista 8.13 ms · actualizar 1.13 ms (avance 0.00 ms, compartidos 0.80 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0 · esqueletos propios 7 · compartidos activos 81
+  ronda 2: 36.4 fps · proceso 72.44 ms · vista 8.17 ms · actualizar 1.19 ms (avance 0.00 ms, compartidos 0.84 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.1 · esqueletos propios 7 · compartidos activos 81
+  ronda 3: 34.8 fps · proceso 51.36 ms · vista 8.18 ms · actualizar 1.18 ms (avance 0.00 ms, compartidos 0.94 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.1 · esqueletos propios 7 · compartidos activos 98
+  ronda 4: 35.4 fps · proceso 58.94 ms · vista 8.21 ms · actualizar 1.16 ms (avance 0.00 ms, compartidos 1.00 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.1 · esqueletos propios 7 · compartidos activos 100
+  ronda 5: 35.8 fps · proceso 55.10 ms · vista 8.25 ms · actualizar 1.11 ms (avance 0.00 ms, compartidos 0.99 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0 · esqueletos propios 7 · compartidos activos 94
+vista (WorldView.render) ms por cuadro: mediana=8.18 [8.12846979865772, 8.17054109589041, 8.18352857142857, 8.20958865248227, 8.2537972027972] · GPU ms: [8.96199989318848, 8.20600032806396, 13.4270000457764, 13.4340000152588, 13.8109998703003]
+esqueletos compartidos activos por animación: { "Idle_A": 3, "Walking_A": 29, "Ranged_Bow_Release+Ranged_Bow_Draw": 5, "Melee_1H_Attack_Chop": 5, "Throw": 6, "Melee_2H_Attack_Stab": 5, "Melee_2H_Idle": 3, "Running_A": 25, "Melee_2H_Attack_Chop": 4, "Melee_1H_Attack_Stab": 4, "Ranged_Bow_Idle": 3, "Chopping": 3 }
+FPS animaciones=data compartir=true unidades en pantalla=283 animadas=283 mediana=35.8 min=34.8 max=37.3 muestras=[34.8152355449629, 35.4102401894172, 35.8482421074956, 36.4427939242374, 37.3205077693032]

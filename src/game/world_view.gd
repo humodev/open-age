@@ -38,7 +38,10 @@ var _water_mat: ShaderMaterial
 var velocidad := 1.0 # velocidad del juego (main.gd): las animaciones de trabajo la siguen
 var _anim_frame := 0
 var _anim_div := 1
-var _anim_vis := 0
+var _anim_vis := 0 # figuras con esqueleto propio en pantalla (el presupuesto por cuadro)
+var _anim_total := 0 # todas las figuras animadas en pantalla
+var _anim_total_prev := 0
+var _anim_div_comp := 1
 var _anim_cam: Camera3D
 var render_us := 0 # tiempo acumulado en render (tools/aldeanos_animados.gd lo lee para medir)
 
@@ -767,10 +770,15 @@ func _make_visual(e: SimEntity) -> Dictionary:
 		var msize := 2.6 if e.def.get("elefante", false) else (1.7 if e.def.get("montado", false) else 0.9)
 		var body: Node3D = null
 		var bk := _unit_k
-		# Aldeano animado (KayKit; proceso/27-animaciones): persona de alto 1, a la escala de la gente.
-		if AldeanoAnimado.usa(e.def):
-			var av := AldeanoAnimado.crear(sim.dp(e.owner).civ.get("estilo", {}), team, FIGURE_H * _unit_k)
+		# Gente animada (KayKit; proceso/27-animaciones): aldeanos y soldados a pie, persona de
+		# alto 1, a la escala de la gente.
+		if AldeanoAnimado.usa(e.def, e.type):
+			var civ := str(sim.players[e.owner].get("civ", "")) if e.owner >= 0 and e.owner < sim.players.size() else ""
+			var tropa: Dictionary = _age_cfg(e.owner, _age_of(e.owner)).get("tropa", {})
+			var av := AldeanoAnimado.crear(sim.dp(e.owner).civ.get("estilo", {}), team, FIGURE_H * _unit_k, civ, e.type, e.def, tropa)
 			v["anim"] = av
+			if av.tropa:
+				v["anim_age"] = _age_of(e.owner) # el equipo cambia con la edad
 			body = av.node
 			bk = FIGURE_H * _unit_k
 		else:
@@ -1347,8 +1355,8 @@ func _on_died(id: int) -> void:
 	if v.get("ring") != null:
 		v["ring"].visible = false
 	if v["kind"] == "unit" and v.has("anim"):
-		AldeanoAnimado.morir(v["anim"])
-		_fx.append({"kind": "die_anim", "node": node, "t": 0.0, "dur": 2.6, "ap": (v["anim"] as AldeanoAnimado.Estado).ap})
+		var ap := AldeanoAnimado.morir(v["anim"])
+		_fx.append({"kind": "die_anim", "node": node, "t": 0.0, "dur": 2.6, "ap": ap})
 	elif v["kind"] == "unit":
 		_fx.append({"kind": "die_unit", "node": node, "t": 0.0, "dur": 2.2, "yaw": node.rotation.y})
 	else:
@@ -1368,10 +1376,18 @@ func _on_hit(ev: Dictionary) -> void:
 		var to := to_world(b.x, b.y, 0.45) if b != null else from
 		if b != null and not b.is_unit():
 			to.y = 0.8
-		_projectile(from, to, a.is_building())
+		# Flecha desde torres y desde arqueros y ballesteros animados; piedra o bala, el resto.
+		var flecha := a.is_building() or (va.has("anim") and str((va["anim"] as AldeanoAnimado.Estado).eq.get("arma", "")) in ["arco", "ballesta"])
+		_projectile(from, to, flecha)
+		if not va.is_empty() and va["kind"] == "unit":
+			va["golpe"] = true # el tiro sale con el gesto (gente animada)
 	elif not va.is_empty() and va["kind"] == "unit":
 		va["lunge"] = 1.0
 		va["golpe"] = true
+	# Reacción del que recibe el golpe (gente animada).
+	var vr: Dictionary = visuals.get(ev["b"], {})
+	if not vr.is_empty() and vr.has("anim"):
+		vr["recibe"] = true
 	if b != null and b.is_building():
 		var vb: Dictionary = visuals.get(ev["b"], {})
 		if not vb.is_empty() and randf() < 0.35:
@@ -1428,9 +1444,17 @@ func render(alpha: float, delta: float) -> void:
 	# Presupuesto de los aldeanos animados (data/arte_animaciones.json → rendimiento): con muchos
 	# en pantalla, cada uno se actualiza cada `_anim_div` cuadros.
 	_anim_frame += 1
+	# Las de esqueleto propio y las compartidas llevan cada una su turno: las compartidas se
+	# mueven solas cada cuadro y solo hay que mirar si cambiaron de estado.
 	_anim_div = maxi(1, ceili(float(_anim_vis) / float(AldeanoAnimado.max_por_cuadro)))
+	_anim_div_comp = maxi(1, ceili(float(_anim_total - _anim_vis) / float(AldeanoAnimado.max_por_cuadro)))
 	_anim_vis = 0
+	_anim_total_prev = _anim_total
+	_anim_total = 0
 	_anim_cam = get_viewport().get_camera_3d()
+	# Esqueletos compartidos entre las figuras que hacen lo mismo (rendimiento.compartir).
+	AldeanoAnimado.preparar_coros(self)
+	AldeanoAnimado.avanzar_coros(delta * velocidad)
 	for id in visuals:
 		var v: Dictionary = visuals[id]
 		var e: SimEntity = sim.by_id.get(id)
@@ -1516,6 +1540,9 @@ func _render_unit(e: SimEntity, v: Dictionary, alpha: float, delta: float) -> vo
 		v["prev"] = v["cur"]
 		return
 	var body: Node3D = v["body"]
+	if v.has("anim_age") and int(v["anim_age"]) != _age_of(e.owner):
+		v["anim_age"] = _age_of(e.owner)
+		AldeanoAnimado.equipar(v["anim"], _age_cfg(e.owner, _age_of(e.owner)).get("tropa", {}))
 	if v.has("age") and int(v["age"]) != _age_of(e.owner):
 		v["age"] = _age_of(e.owner)
 		(body as MeshInstance3D).mesh = unit_mesh_for(e)
@@ -1583,31 +1610,41 @@ func _render_unit(e: SimEntity, v: Dictionary, alpha: float, delta: float) -> vo
 	_update_ring(e, v)
 
 
-## Aldeano animado (AldeanoAnimado): fuera de la pantalla no se anima; lejos de la cámara, a la
-## mitad de cuadros; con muchos en pantalla, por turnos (render): entre turno y turno se junta la
-## distancia y el tiempo, y se aplican juntos.
+## Figura animada (AldeanoAnimado): fuera de la pantalla no se anima; lejos de la cámara, a la
+## mitad de cuadros; con muchas en pantalla, por turnos (render): entre turno y turno se junta
+## la distancia y el tiempo, y se aplican juntos. Lejos (o con mucha gente en pantalla), las
+## que hacen lo mismo comparten esqueleto.
 func _render_anim(e: SimEntity, v: Dictionary, moving: bool, walked: float, delta: float) -> void:
 	var node: Node3D = v["node"]
 	var av: AldeanoAnimado.Estado = v["anim"]
-	var div := _anim_div
+	var div := _anim_div if av.coro == null else _anim_div_comp
+	var dist := 0.0
 	if _anim_cam != null:
 		if not _anim_cam.is_position_in_frustum(node.position + Vector3(0, 0.4, 0)):
 			return
-		if _anim_cam.global_position.distance_to(node.position) > AldeanoAnimado.lejos_m:
+		dist = _anim_cam.global_position.distance_to(node.position)
+		if dist > AldeanoAnimado.lejos_m:
 			div *= 2
-	_anim_vis += 1
+	var lejos := dist > AldeanoAnimado.compartir_desde_m or (_anim_total_prev > AldeanoAnimado.compartir_con_mas_de and dist > AldeanoAnimado.cerca_m)
+	_anim_total += 1
+	if av.coro == null:
+		_anim_vis += 1
 	av.walk_acc += walked
 	av.dt_acc += delta * velocidad
 	if v.get("golpe", false):
 		v["golpe"] = false
 		av.golpe = true
-	if (e.id + _anim_frame) % div != 0:
+	if v.get("recibe", false):
+		v["recibe"] = false
+		av.recibe = true
+	if (e.id + _anim_frame) % div != 0 and not av.sin_pose():
 		return
 	var t0 := Time.get_ticks_usec()
-	AldeanoAnimado.actualizar(av, e, sim, moving, av.walk_acc, av.dt_acc, av.golpe)
+	AldeanoAnimado.actualizar(av, e, sim, moving, av.walk_acc, av.dt_acc, av.golpe, av.recibe, lejos)
 	av.walk_acc = 0.0
 	av.dt_acc = 0.0
 	av.golpe = false
+	av.recibe = false
 	AldeanoAnimado.us_actualizar += Time.get_ticks_usec() - t0
 
 

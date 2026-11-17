@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://c28bm34n8518v"
-path="res://.godot/imported/aldeano_kaykit.glb-49735127d404c668e53743e1eba48c26.scn"
+uid="uid://cphqnjpas1266"
+path="res://.godot/imported/personas_kaykit.glb-fea74cf552293571b03fd3066e58f2d3.scn"
 
 [deps]
 
-source_file="res://assets/animaciones/kaykit/aldeano_kaykit.glb"
-dest_files=["res://.godot/imported/aldeano_kaykit.glb-49735127d404c668e53743e1eba48c26.scn"]
+source_file="res://assets/animaciones/kaykit/personas_kaykit.glb"
+dest_files=["res://.godot/imported/personas_kaykit.glb-fea74cf552293571b03fd3066e58f2d3.scn"]
 
 [params]
 
