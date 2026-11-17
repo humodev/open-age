@@ -47,13 +47,24 @@ static func edificios(dd: SimData, menu: String) -> Dictionary:
 	var table: Dictionary = cfg().get(menu, {})
 	var out := {}
 	var pending: Array[String] = []
+	# Primero los de casilla fija y después los de lista, para que una lista no ocupe una casilla fija.
+	var mine: Array[String] = []
 	for type: String in dd.unidades["aldeano"].get("construye", []):
-		if not dd.edificios.has(type) or dd.is_hito(type) or menu_de(dd, type) != menu:
-			continue
-		var slot := int(table.get(type, -1))
-		if slot >= 0 and not out.has(slot):
-			out[slot] = type
-		else:
+		if dd.edificios.has(type) and not dd.is_hito(type) and menu_de(dd, type) == menu:
+			mine.append(type)
+	mine.sort_custom(func(a: String, b: String) -> bool: return not (table.get(a, -1) is Array) and table.get(b, -1) is Array)
+	for type: String in mine:
+		# Una casilla fija, o una lista de casillas en orden de preferencia (la primera libre).
+		var want: Variant = table.get(type, -1)
+		var slots: Array = want if want is Array else [want]
+		var placed := false
+		for sl: Variant in slots:
+			var slot := int(sl)
+			if slot >= 0 and not out.has(slot):
+				out[slot] = type
+				placed = true
+				break
+		if not placed:
 			pending.append(type)
 	var back := fija("volver", 11)
 	for type in pending:

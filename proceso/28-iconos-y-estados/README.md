@@ -183,3 +183,9 @@ Solo interfaz: la simulación no cambia (mismo hash).
   - `effects_text` y `unlocks_text` no se tocaron.
 - **Tecnologías nuevas del paso 3:** usan su `icono` de `data/tecnologias.json`. Si repiten uno en la misma grilla, `tests/iconos.gd` lo marca, y se arregla agregándolas a `data/iconos.json → tecnologias`.
 - **`main.gd`:** una línea en `_autotest` y el ancla de `--ayuda`.
+
+## Integración (orquestador)
+
+- **Conflictos:** en `controller.gd` y `ficha.gd`, con la escuela de la IV del paso 3. Se resolvieron conservando las dos cosas: la escuela usa el ícono por tecnología, y la ficha dice «Escuela de la edad IV · nombre».
+- **`tests/grilla.gd` fallaba en los seis pueblos** porque la fortaleza del paso 4 no tenía casilla. Ahora `interfaz.json → grilla.militar` acepta una lista de casillas en orden de preferencia (`"fortaleza": [6, 7, 9, 5, 3, 2, 1]`): primero se ubican los de casilla fija, después los de lista. Queda en D o en F según el pueblo, sin pisar la puerta.
+- **Pruebas después de integrar:** grilla, íconos (588 grillas), casillas (504), determinismo (mismo hash) y autotest: OK.
