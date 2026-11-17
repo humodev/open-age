@@ -138,11 +138,13 @@ func centrar_en_grueso() -> void:
 	ctrl.cam.look_at_point(WorldView.to_world(mejor.x, mejor.y))
 
 
-## Centros propios (la capital primero, después por id): lo que recorre H.
+## Centros propios (la capital primero, después por id): lo que recorre H. El centro de cada
+## pueblo es su edificio de inicio (`inicio_edificio`): los mapuches no tienen centro, tienen lof.
 func centros() -> Array[SimEntity]:
 	var out: Array[SimEntity] = []
+	var propio: String = ctrl.sim.dp(ctrl.local).civ.get("inicio_edificio", "centro")
 	for e in ctrl.sim.actives:
-		if e.alive and e.owner == ctrl.local and e.is_building() and (e.capital or e.type == "centro"):
+		if e.alive and e.owner == ctrl.local and e.is_building() and (e.capital or e.type == "centro" or e.type == propio):
 			if e.capital:
 				out.push_front(e)
 			else:

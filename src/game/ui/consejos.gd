@@ -522,9 +522,10 @@ func fight_text(deaths: Array, kills: int) -> String:
 	# Qué llevar: el asedio contra lo que tira flechas y la tropa que le gana a la que más mató.
 	var bring: Array[String] = []
 	var vs_shooters := shooters * 100 >= n * int(c.get("edificios_pct", 25))
-	if vs_shooters:
-		var siege := _siege_name()
-		bring.append(siege if siege != "" else "asedio")
+	var siege := _siege_name()
+	# Sin asedio en el pueblo (Palmares) no se lo pide: no hay dónde hacerlo.
+	if vs_shooters and siege != "":
+		bring.append(siege)
 	if top_unit != "":
 		var counter := _counter_name(top_owner, top_unit)
 		if counter != "":
@@ -535,7 +536,7 @@ func fight_text(deaths: Array, kills: int) -> String:
 	var am := "%s y clic" % Teclas.texto("grilla_4")
 	if busy * 100 >= n * int(c.get("ocupados_pct", 30)):
 		lines.append("%d le pegaban a edificios: con %s van primero a los soldados" % [busy, am])
-	elif vs_shooters:
+	elif vs_shooters and siege != "":
 		lines.append("Contra lo que tira flechas%s, el asedio con clic derecho sobre el edificio" % (" (con gente adentro tira más)" if garrisoned else ""))
 	else:
 		lines.append("Con %s van primero a los soldados y después a los aldeanos" % am)

@@ -35,12 +35,19 @@ static func correr(m: Node, check: Callable) -> void:
 		p["res"][k] = 0
 	p["age"] = 1
 	var cmds := ctrl.commands()
+	# El aldeano; en Palmares, que no entrena aldeanos, lo primero que entrena el centro (el batedor).
 	var ald := _de(cmds, "aldeano")
-	check.call("sin recursos, el aldeano está en «falta» (%s)" % EstadoCasilla.estado(ald, p["res"]), EstadoCasilla.estado(ald, p["res"]) == "falta")
+	if ald.is_empty():
+		for c in cmds:
+			if c["kind"] == "train" and (ald.is_empty() or int(c["slot"]) < int(ald["slot"])):
+				ald = c
+	var u_id := str(ald.get("id", "aldeano"))
+	var u_nom := "el aldeano" if u_id == "aldeano" else "«%s»" % ald.get("name", u_id)
+	check.call("sin recursos, %s está en «falta» (%s)" % [u_nom, EstadoCasilla.estado(ald, p["res"])], EstadoCasilla.estado(ald, p["res"]) == "falta")
 	var l_falta := EstadoCasilla.lineas_ayuda(ald, p["res"], ctrl.missing_text(ald.get("cost", {})))
 	check.call("la ayuda empieza con «Falta: …» en ámbar, no en rojo (%s)" % _txt(l_falta), _txt(l_falta).begins_with("Falta: ") and not _usa(l_falta, rojo))
 	var bloq := {}
-	for c in cmds:
+	for c in _con_investigar(ctrl, cmds):
 		if c["kind"] == "research" and int(c.get("edad", 0)) >= 2 and EstadoCasilla.estado(c, p["res"]) == "bloqueado":
 			bloq = c
 			break
@@ -53,7 +60,8 @@ static func correr(m: Node, check: Callable) -> void:
 		await m._frames(20)
 		m.get_viewport().get_texture().get_image().save_png("screenshots/iconos_bloqueado.png")
 	await m._frames(2)
-	check.call("la grilla dibuja lo mismo que resuelve (aldeano en Q)", (hud._card.dibujadas.get(0, {}) as Dictionary).get("id", "") == "aldeano")
+	var u_slot := int(ald.get("slot", 0))
+	check.call("la grilla dibuja lo mismo que resuelve (%s en %s)" % [u_id, Controller.etiqueta(u_slot)], (hud._card.dibujadas.get(u_slot, {}) as Dictionary).get("id", "") == u_id)
 	_ayuda(m, ald)
 	await m._frames(20)
 	m.get_viewport().get_texture().get_image().save_png("screenshots/iconos_falta.png")
@@ -63,11 +71,16 @@ static func correr(m: Node, check: Callable) -> void:
 	var viejo := ald.duplicate()
 	var fc: Dictionary = hud.ficha._cmd_content(viejo)
 	var st: Array = fc.get("status", [])
-	check.call("con recursos, la ficha del aldeano dice «Podés entrenarlo» aunque el mouse entró sin recursos (%s)" % _txt(st), _txt(st).begins_with("Podés") and not _usa(st, rojo))
+	check.call("con recursos, la ficha de " + u_nom + " dice «Podés entrenarlo» aunque el mouse entró sin recursos (%s)" % _txt(st), _txt(st).begins_with("Podés") and not _usa(st, rojo))
 	# 3. Edad II con recursos: la investigación ya está disponible y su línea es verde.
 	p["age"] = 2
+	# Si la investigación vive en el submenú, se abre como lo haría el jugador: la ficha relee el
+	# comando de la grilla abierta.
+	var en_sub := not bloq.is_empty() and _de(ctrl.commands(), str(bloq["id"])).is_empty()
+	if en_sub:
+		ctrl.open_submenu(Controller.INVESTIGAR)
 	cmds = ctrl.commands()
-	var disp := _de(cmds, str(bloq.get("id", "")))
+	var disp := _de(_con_investigar(ctrl, cmds), str(bloq.get("id", "")))
 	if not disp.is_empty():
 		var l_ok := EstadoCasilla.lineas_ayuda(disp, p["res"], "")
 		check.call("en la edad II la misma investigación se puede: «%s», sin rojo" % _txt(l_ok), EstadoCasilla.estado(disp, p["res"]) == "disponible" and _txt(l_ok).begins_with("Podés") and not _usa(l_ok, rojo))
@@ -80,19 +93,22 @@ static func correr(m: Node, check: Callable) -> void:
 		sim.push_command({"t": "research", "player": local, "building": capital.id, "tech": disp["id"]})
 		sim.step()
 		cmds = ctrl.commands()
-		var curso := _de(cmds, str(disp["id"]))
+		var curso := _de(_con_investigar(ctrl, cmds), str(disp["id"]))
 		check.call("pedida, la investigación queda «en curso» (%s)" % EstadoCasilla.estado(curso, p["res"]), EstadoCasilla.estado(curso, p["res"]) == "en_curso")
 		var l_cur := EstadoCasilla.lineas_ayuda(curso, p["res"], "")
 		check.call("…y la ayuda no lo pinta de rojo (%s)" % _txt(l_cur), not _usa(l_cur, rojo))
 		_ayuda(m, curso)
 		await m._frames(20)
 		m.get_viewport().get_texture().get_image().save_png("screenshots/iconos_en_curso.png")
+	if en_sub:
+		ctrl.open_submenu(Grilla.RAIZ)
+		await m._frames(2)
 	# 5. Población llena: el aldeano sigue disponible, con aviso propio y sin rojo.
 	p["pop_cap"] = int(p["pop"])
 	cmds = ctrl.commands()
-	ald = _de(cmds, "aldeano")
+	ald = _de(cmds, u_id)
 	var l_pob := EstadoCasilla.lineas_ayuda(ald, p["res"], "")
-	check.call("con la población llena, el aldeano está en «aviso» (%s)" % EstadoCasilla.estado(ald, p["res"]), EstadoCasilla.estado(ald, p["res"]) == "aviso")
+	check.call("con la población llena, %s está en «aviso» (%s)" % [u_nom, EstadoCasilla.estado(ald, p["res"])], EstadoCasilla.estado(ald, p["res"]) == "aviso")
 	check.call("…la ayuda dice «Podés entrenarlo» y avisa en ámbar, sin rojo (%s)" % _txt(l_pob), _txt(l_pob).begins_with("Podés") and _txt(l_pob).contains("Población llena") and not _usa(l_pob, rojo))
 	_ayuda(m, ald)
 	await m._frames(20)
@@ -117,6 +133,19 @@ static func correr(m: Node, check: Callable) -> void:
 	p["pop_cap"] = saved_cap
 	m.paused = false
 	await m._frames(2)
+
+
+## La raíz de la grilla más el submenú de investigaciones, si lo hay: cuando el centro entrena
+## más cosas (el lof y el guerrero, el elefante del rey, el cumbi, desarmar la corte), las
+## investigaciones no entran en la raíz y van a ese submenú. La raíz queda abierta.
+static func _con_investigar(ctrl: Controller, cmds: Array) -> Array:
+	if not cmds.any(func(c: Dictionary) -> bool: return c.get("menu", "") == Controller.INVESTIGAR):
+		return cmds
+	var antes: String = ctrl.submenu
+	ctrl.submenu = Controller.INVESTIGAR
+	var out: Array = cmds + ctrl.commands()
+	ctrl.submenu = antes
+	return out
 
 
 static func _de(cmds: Array, id: String) -> Dictionary:

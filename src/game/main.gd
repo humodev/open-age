@@ -1228,7 +1228,10 @@ func _autotest_ordenes(check: Callable) -> void:
 			centro = e
 	sim.players[local]["res"]["alimento"] = int(sim.players[local]["res"]["alimento"]) + 500
 	sim.players[local]["pob_extra"] = 10 # que no la frene el tope (el tope se recalcula cada tick)
-	sim.push_command({"t": "train", "player": local, "building": centro.id, "type": "aldeano"})
+	# Lo que entrena el centro: el aldeano, o el batedor en Palmares (no entrena aldeanos).
+	var prod_centro: Array = centro.def.get("produce", [])
+	var u_cola: String = "aldeano" if prod_centro.has("aldeano") or prod_centro.is_empty() else str(prod_centro[0])
+	sim.push_command({"t": "train", "player": local, "building": centro.id, "type": u_cola})
 	# La orden entra en el próximo tick: esperar hasta un segundo (con carga, los cuadros no son ticks).
 	for i in 60:
 		await _frames(1)
@@ -1308,7 +1311,11 @@ func _autotest_pelea(check: Callable, cs, said: Callable) -> void:
 	# --- ronda 6 --- título y tres renglones cortos; A y clic va primero a los soldados (5d)
 	var rr: Array[String] = hud.avisos.renglones_de(txt.substr(txt.find("\n") + 1))
 	check.call("el resumen de la pelea va en un título y tres renglones (%d)" % rr.size(), rr.size() == 3 and rr[0].begins_with("Te frenaron") and rr[1].begins_with("Llevá:"))
-	check.call("el aviso de la pelea dice qué llevar: asedio y la tropa que les gana", rr.size() == 3 and rr[1].contains(hud.consejos._siege_name()) and rr[1].contains(" y "))
+	var asedio_n: String = hud.consejos._siege_name()
+	if asedio_n != "":
+		check.call("el aviso de la pelea dice qué llevar: asedio y la tropa que les gana", rr.size() == 3 and rr[1].contains(asedio_n) and rr[1].contains(" y "))
+	else: # Palmares: sin asedio, no se lo pide; sí la tropa que les gana
+		check.call("sin asedio en el pueblo, el aviso de la pelea pide solo la tropa que les gana (%s)" % (rr[1] if rr.size() > 1 else ""), rr.size() == 3 and not rr[1].contains("asedio") and rr[1].length() > "Llevá: ".length())
 	var am := "%s y clic" % Teclas.texto("grilla_4")
 	check.call("el aviso enseña que %s va primero a los soldados (no «lo primero que ven»)" % am, txt.contains(am + " van primero a los soldados") and not txt.contains("primero que ve"))
 	var largo := 0
@@ -1657,8 +1664,10 @@ func _autotest_veterano4(check: Callable) -> void:
 		check.call("grupo 0: Ctrl + 0 asigna y 0 lo elige (%d)" % ctrl.selection.size(), ctrl.groups.has(0) and ctrl.selection.size() == 2)
 		check.call("la fila de grupos muestra el 0", hud.grupos.grupos().any(func(g: Array) -> bool: return g[0] == 0) if hud.get("grupos") != null else true)
 	# 3. H recorre los centros; dos toques o Mayús + H centran la cámara.
-	var c2_at := _lugar_libre("centro", Vector2i(base.x + 22, base.y - 14)) if dd.edificios.has("centro") else Vector2i(-1, -1)
-	var otro: SimEntity = sim.spawn_building("centro", local, c2_at.x, c2_at.y, true) if c2_at.x >= 0 else null
+	# El centro de cada pueblo: el lof mapuche, el centro común en los demás.
+	var tipo_centro: String = dd.civ.get("inicio_edificio", "centro")
+	var c2_at := _lugar_libre(tipo_centro, Vector2i(base.x + 22, base.y - 14)) if dd.edificios.has(tipo_centro) else Vector2i(-1, -1)
+	var otro: SimEntity = sim.spawn_building(tipo_centro, local, c2_at.x, c2_at.y, true) if c2_at.x >= 0 else null
 	await _frames(2)
 	ctrl.select_ids([] as Array[int])
 	cam.look_at_point(Vector3(base.x + 40, 0, base.y + 40))
@@ -2002,24 +2011,54 @@ func _autotest() -> void:
 			gathering += 1
 	check.call("clic derecho en arbustos pone a recolectar (%d)" % gathering, gathering >= ctrl.selection.size() - 1 and gathering > 0)
 	# --- animal propio --- (el autor: "mis aldeanos no matan las llamas porque son aliados")
-	var beast := sim.spawn_unit("rebano", local, (base.x - 4) * 1000, (base.y + 6) * 1000)
+	# Lejos de los demás (los aldeanos van y vienen de los arbustos: si uno pasaba por delante de la
+	# llama, ganaba él y el cursor decía «mover»), con el juego en pausa para que la llama no
+	# pasture y con la figura ya quieta: el punto en pantalla es el mismo que mira `pick`.
+	var beast_at := Vector2i(base.x - 4, base.y + 6)
+	var vis := get_viewport().get_visible_rect().size
+	var hallado := false
+	for r in range(0, 6):
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				if hallado or maxi(absi(dx), absi(dy)) != r:
+					continue
+				var tx := base.x - 4 + dx
+				var ty := base.y + 6 + dy
+				if not sim.map.in_bounds(tx, ty) or sim.map.is_solid(tx, ty) or sim.map.occupant(tx, ty) >= 0:
+					continue
+				var sp := _screen(tx + 0.5, ty + 0.5)
+				if sp.x < 100 or sp.y < 100 or sp.x > vis.x - 100 or sp.y > vis.y - 320:
+					continue
+				var libre := true
+				for e in sim.actives:
+					if e.alive and e.is_unit() and absi(e.x - (tx * 1000 + 500)) < 3500 and absi(e.y - (ty * 1000 + 500)) < 3500:
+						libre = false
+						break
+				if libre:
+					beast_at = Vector2i(tx, ty)
+					hallado = true
+	var beast := sim.spawn_unit("rebano", local, beast_at.x * 1000 + 500, beast_at.y * 1000 + 500)
 	var butcher: SimEntity = null
 	for e in sim.actives:
 		if e.owner == local and e.fn == "civil" and e.is_unit():
 			butcher = e
 			break
 	ctrl.select_ids([butcher.id] as Array[int])
-	await _frames(4)
-	# El animal pasta y se mueve: la posición en pantalla se toma de su figura justo antes de mirar
-	# el cursor (antes fallaba de a ratos con "mover": el mouse quedaba donde la llama ya no estaba).
-	var beast_sp := cam.cam.unproject_position(WorldView.to_world(beast.x, beast.y, 0.4))
-	_mouse(beast_sp, 0, false)
-	await _frames(3)
+	for _i in 120: # la figura nace con un tick: recién ahí se pausa
+		if view.visuals.has(beast.id):
+			break
+		await _frames(1)
+	paused = true
+	await _frames(20)
+	var beast_sp := _screen(beast.x / 1000.0, beast.y / 1000.0)
 	var bv: Dictionary = view.visuals.get(beast.id, {})
 	if not bv.is_empty():
-		beast_sp = cam.cam.unproject_position((bv["node"] as Node3D).position + Vector3(0, 0.3, 0))
-		_mouse(beast_sp, 0, false)
-	check.call("cursor de juntar alimento sobre un animal propio (%s)" % ctrl.cursor_action(beast_sp), ctrl.cursor_action(beast_sp) == "recolectar_alimento")
+		beast_sp = cam.cam.unproject_position((bv["node"] as Node3D).position + Vector3(0, 0.45, 0))
+	_mouse(beast_sp, 0, false)
+	await _frames(3)
+	var bajo: int = ctrl.pick(beast_sp, true)
+	check.call("cursor de juntar alimento sobre un animal propio (%s; bajo el cursor: %s)" % [ctrl.cursor_action(beast_sp), sim.by_id[bajo].type if bajo >= 0 else "nada"], ctrl.cursor_action(beast_sp) == "recolectar_alimento")
+	paused = false
 	# Con el aldeano elegido pegado al animal (el tester lo vio fallar según por dónde caminaba).
 	# El cursor entre los dos, más cerca del aldeano: antes ganaba el aldeano y decía «mover».
 	sim.push_command({"t": "stop", "player": local, "ids": [butcher.id]})
@@ -2090,9 +2129,18 @@ func _autotest() -> void:
 		vistas[int(c["slot"])] = true
 	check.call("ninguna casilla del centro tiene dos comandos (%d repetidas)" % repetidas, repetidas == 0)
 	# --- fin casillas ---
-	_key_tap(KEY_Q)
+	# El aldeano va en Q; en Palmares, que no entrena aldeanos, se prueba lo primero que entrena
+	# el centro (el batedor, en W) con su tecla.
+	var primero: Dictionary = {}
+	for c in ctrl.commands():
+		if c["kind"] == "train" and (primero.is_empty() or int(c["slot"]) < int(primero["slot"])):
+			primero = c
+	if quiere_q or primero.is_empty():
+		_key_tap(KEY_Q)
+	else:
+		_key_tap(Teclas.tecla("grilla_%d" % int(primero["slot"])))
 	await get_tree().create_timer(0.3).timeout
-	check.call("Q en el centro encola un aldeano", centro != null and centro.queue.size() == 1)
+	check.call("%s en el centro encola %s" % ["Q" if quiere_q or primero.is_empty() else Controller.etiqueta(int(primero["slot"])), "un aldeano" if quiere_q else str(primero.get("name", "?"))], centro != null and centro.queue.size() == 1)
 
 	# 5. Grupo de control.
 	var k := InputEventKey.new()
@@ -2293,7 +2341,9 @@ func _autotest() -> void:
 	cs.check(int(emp.get("durante_s", 90)) + 1)
 	check.call("aviso «atacá o subí de edad» con ejército en casa y recursos de sobra", said.call("atacá o subí de edad"))
 	check.call("el aviso dice hacia dónde está la base rival y la marca en el minimapa", said.call("hacia el ") and not hud._mini.senalado.is_empty())
-	check.call("el aviso dice que los edificios caen con asedio", said.call("hace falta asedio"))
+	# Palmares no tiene asedio («Sin caballo ni asedio»): el aviso no lo nombra.
+	var con_asedio: bool = hud.consejos._siege_name() != ""
+	check.call("el aviso dice que los edificios caen con asedio" if con_asedio else "sin asedio en el pueblo, el aviso no lo pide", said.call("hace falta asedio") == con_asedio)
 	await _frames(2)
 	get_viewport().get_texture().get_image().save_png("screenshots/autotest_empujon.png")
 	for e in extra:
@@ -2318,7 +2368,14 @@ func _autotest() -> void:
 		for cmd in ctrl.commands():
 			if cmd["id"] == food_store:
 				cmd_food = cmd
-		check.call("en la grilla, %s dice que recibe alimento (común «%s», ícono %s)" % [food_store, cmd_food.get("common", ""), cmd_food.get("icon", "")], String(cmd_food.get("icon", "")).contains("alimento") and cmd_food.get("common", "") != "Leñera")
+		# El almacén de comida lo dice con su ícono; un centro que también es depósito (el lof
+		# mapuche, que no tiene almacenes) lo dice en su ayuda: «Recibe alimento, madera…».
+		var ayuda_food: String = str(hud.ficha._cmd_content(cmd_food).get("desc", "")) if not cmd_food.is_empty() else ""
+		var recibe := ""
+		for ln in ayuda_food.split("\n"):
+			if ln.begins_with("Recibe "):
+				recibe = ln
+		check.call("en la grilla, %s dice que recibe alimento (común «%s», ícono %s, «%s»)" % [food_store, cmd_food.get("common", ""), cmd_food.get("icon", ""), recibe], (String(cmd_food.get("icon", "")).contains("alimento") or recibe.contains("alimento")) and cmd_food.get("common", "") != "Leñera")
 		if not cmd_food.is_empty():
 			var vs := get_viewport().get_visible_rect().size
 			hud.show_tip(cmd_food, Rect2(vs - Vector2(200, 200), Vector2(60, 60)))
