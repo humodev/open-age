@@ -14,6 +14,7 @@ var civ: Dictionary = {} # el JSON crudo de la civilización
 var hitos: Array = [] # por edad de destino (II, III, IV): lista de claves de hito
 var modulos: Dictionary = {}
 var civs := {} # clave -> SimData fusionada (solo en la tabla base)
+var reemplazos := {} # --- paso 4 --- unidad -> la que la reemplaza desde su edad_min
 
 
 static func load_default() -> SimData:
@@ -57,6 +58,13 @@ func _merge(c: Dictionary) -> SimData:
 		var lin: String = m.tecnologias[k].get("en", {}).get("linea", "")
 		if lin != "" and not made.has(lin):
 			m.tecnologias.erase(k)
+	# --- paso 4 --- Una unidad que `reemplaza` a otra desde su edad (el hondero de piedra
+	# caliente y el cañón de tacuara pasan a la ranura del asedio de área en la III).
+	for u in m.unidades:
+		var rep: String = m.unidades[u].get("reemplaza", "")
+		if rep != "" and m.unidades.has(rep):
+			m.reemplazos[rep] = u
+	# --- fin paso 4 ---
 	if c.has("construye"):
 		m.unidades["aldeano"]["construye"] = c["construye"]
 	m.edades = edades.duplicate(true)
@@ -89,8 +97,13 @@ func for_civ(key: String) -> SimData:
 
 ## Línea de una unidad para los niveles veterano y élite (docs/diseno/27, §1.1): pólvora,
 ## montados (montado o elefante) o su función (choque, distancia, linea). Vacío si no es tropa.
+## El asedio es su propia línea desde el paso 4 (veterano_asedio, elite_asedio).
 static func line_of(def: Dictionary) -> String:
 	var fn: String = def.get("funcion", "")
+	# --- paso 4 ---
+	if fn == "asedio":
+		return "asedio"
+	# --- fin paso 4 ---
 	if not fn in ["choque", "distancia", "linea"]:
 		return ""
 	if def.get("polvora", false):
@@ -108,6 +121,15 @@ func lines_made_by(bdef: Dictionary) -> Array:
 		if l != "" and not out.has(l):
 			out.append(l)
 	return out
+
+
+## --- paso 4 --- ¿`type` ya no se entrena en la edad `age` porque otra lo reemplaza?
+## Devuelve la clave del reemplazo o "".
+func replaced_by(type: String, age: int) -> String:
+	var rep: String = reemplazos.get(type, "")
+	if rep != "" and age >= int(unidades[rep].get("edad_min", 1)):
+		return rep
+	return ""
 
 
 func mod(name: String) -> Dictionary:

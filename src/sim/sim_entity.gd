@@ -62,6 +62,7 @@ var inside: int = -1 # id del edificio que la aloja
 var last_combat: int = -100000 # último tick en que pegó o recibió un golpe
 var slow_until: int = -1 # frenada (boleadoras) hasta este tick
 var shots: int = 0 # disparos hechos (munición limitada)
+var aura_bits: int = 0 # --- paso 4 --- hitos militares de su dueño en cuya aura está (Sim._aura_combat)
 
 # --- Edificios ---
 var built := true

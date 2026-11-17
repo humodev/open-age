@@ -13,6 +13,9 @@ static func draw(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
 	if kind.contains("^"):
 		_nivel(ci, kind, r, col)
 		return
+	if kind.contains("~"):
+		_herreria(ci, kind, r, col)
+		return
 	match kind:
 		"alimento":
 			ci.draw_circle(c + Vector2(-s * 0.12, s * 0.06), s * 0.2, col)
@@ -100,6 +103,15 @@ static func draw(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
 			ci.draw_arc(c + Vector2(0, -s * 0.1), s * 0.22, PI, TAU, 10, col, w)
 			for i in 3:
 				ci.draw_line(c + Vector2(-s * 0.22 + i * s * 0.22, -s * 0.02), c + Vector2(-s * 0.18 + i * s * 0.18, s * 0.3), col.darkened(0.35), w * 0.6)
+		"escuela":
+			# --- paso 3 --- La escuela de la IV: una cuerda principal con cuerdas colgantes y
+			# nudos (registro y cuenta), sin ser el ícono de ningún pueblo en particular.
+			ci.draw_line(c + Vector2(-s * 0.38, -s * 0.3), c + Vector2(s * 0.38, -s * 0.3), col, w * 1.4)
+			for i in 4:
+				var x := -s * 0.27 + i * s * 0.18
+				ci.draw_line(c + Vector2(x, -s * 0.3), c + Vector2(x + s * 0.02, s * 0.36), col.darkened(0.15), w)
+				for j in (i % 3) + 1:
+					ci.draw_circle(c + Vector2(x + s * 0.01, -s * 0.12 + j * s * 0.15), w * 1.2, col.lightened(0.2))
 		"escudo":
 			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.3, -s * 0.36), c + Vector2(s * 0.3, -s * 0.36), c + Vector2(s * 0.3, 0), c + Vector2(0, s * 0.4), c + Vector2(-s * 0.3, 0)]), col)
 			ci.draw_line(c + Vector2(0, -s * 0.3), c + Vector2(0, s * 0.3), col.darkened(0.35), w)
@@ -293,6 +305,22 @@ static func draw(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
 			_figure(ci, c + Vector2(-s * 0.08, 0), s * 0.9, col, 0.9)
 			ci.draw_string(ThemeDB.fallback_font, c + Vector2(s * 0.12, -s * 0.12), "z", HORIZONTAL_ALIGNMENT_LEFT, -1, int(s * 0.36), col)
 		# --- fin órdenes ---
+		# --- paso 4 ---
+		"catapulta":
+			ci.draw_circle(c + Vector2(-s * 0.22, s * 0.28), s * 0.11, col)
+			ci.draw_circle(c + Vector2(s * 0.22, s * 0.28), s * 0.11, col)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.36, s * 0.08), Vector2(s * 0.72, s * 0.1)), col)
+			ci.draw_line(c + Vector2(-s * 0.1, s * 0.1), c + Vector2(s * 0.3, -s * 0.32), col, w * 1.2)
+			ci.draw_circle(c + Vector2(s * 0.32, -s * 0.36), s * 0.1, col)
+			ci.draw_circle(c + Vector2(-s * 0.3, -s * 0.3), s * 0.05, col)
+			ci.draw_circle(c + Vector2(-s * 0.12, -s * 0.42), s * 0.05, col)
+		"fortaleza":
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.4, -s * 0.05), Vector2(s * 0.8, s * 0.42)), col)
+			for i in 4:
+				ci.draw_rect(Rect2(c + Vector2(-s * 0.4 + i * s * 0.21, -s * 0.15), Vector2(s * 0.12, s * 0.12)), col)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.14, -s * 0.42), Vector2(s * 0.28, s * 0.4)), col.lightened(0.15))
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.07, s * 0.17), Vector2(s * 0.14, s * 0.2)), col.darkened(0.5))
+		# --- fin paso 4 ---
 		"arbol", "arbusto", "roca":
 			draw(ci, {"arbol": "madera", "arbusto": "alimento", "roca": "piedra"}[kind], r, col)
 		_:
@@ -326,6 +354,8 @@ static func resolve(def: Dictionary, type: String) -> String:
 		return "hito_guerra" if Grilla.eje(def, type) == "militar" else "hito_economia"
 	# --- fin grilla ---
 	if def.has("funcion"):
+		if def.has("area_borde_pct"): # --- paso 4 ---
+			return "catapulta"
 		if def.get("elefante", false):
 			return "elefante"
 		if def.get("montado", false):
@@ -337,6 +367,8 @@ static func resolve(def: Dictionary, type: String) -> String:
 		return "hito_guerra" if def.has("produce") or def.has("flechas") else "hito_economia"
 	if def.get("camino", false):
 		return "camino"
+	if def.get("fortaleza", false): # --- paso 4 ---
+		return "fortaleza"
 	if (def.get("produce", []) as Array).has("aldeano") or def.get("cuenta_victoria", false):
 		return "centro"
 	if def.has("produce"):
@@ -365,6 +397,26 @@ static func _nivel(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
 		var y := o.y + s * (0.08 + 0.13 * i)
 		var x := o.x + s * 0.78
 		ci.draw_polyline(PackedVector2Array([Vector2(x - s * 0.16, y), Vector2(x, y + s * 0.1), Vector2(x + s * 0.16, y)]), gold, w)
+
+
+## Herrería (paso 2 del juego tardío): «atacar~guerrero~2» es el arma (o «escudo», la armadura)
+## con la clase abajo a la derecha (guerrero: cuerpo a cuerpo; hondero: distancia) y la tanda en
+## palotes dorados arriba a la derecha (I, II, III). Sin arte nuevo.
+static func _herreria(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
+	var parts := kind.split("~")
+	var s := minf(r.size.x, r.size.y)
+	var o := r.position + (r.size - Vector2(s, s)) / 2.0
+	draw(ci, parts[0], Rect2(o + Vector2(0, s * 0.06), Vector2(s, s) * 0.78), col)
+	if parts.size() > 1:
+		var bs := s * 0.46
+		var p := o + Vector2(s - bs, s - bs)
+		ci.draw_circle(p + Vector2(bs, bs) / 2.0, bs * 0.5, Color(0.06, 0.065, 0.075, 0.85))
+		draw(ci, parts[1], Rect2(p, Vector2(bs, bs)), col)
+	var n := int(parts[2]) if parts.size() > 2 else 0
+	var w := maxf(1.5, s * 0.07)
+	for i in n:
+		var x := o.x + s * (0.94 - 0.11 * (n - 1 - i))
+		ci.draw_line(Vector2(x, o.y + s * 0.02), Vector2(x, o.y + s * 0.26), Palette.UI_ACCENT, w)
 
 
 static func _recibe(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:

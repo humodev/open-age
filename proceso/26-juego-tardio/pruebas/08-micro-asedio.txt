@@ -1,0 +1,134 @@
+# Paso 4: asedio de área en la micro (tools/micro_matriz.gd --edad=3 --compras --variantes=5, capa común).
+# A se mueve como grupo (o mantiene, o escalona); B, en ataque en movimiento. Mismo armado que la etapa 24 (5a).
+
+## 1. Con los números del diseño (20 de ataque, 1,2 casillas, 50 % en el borde, armadura a distancia 4, la distancia le pega el 15 %)
+# micro_matriz · civs capa común / capa común · edad 3 con compras · parche ninguno
+# bonos {"choque":{"distancia":6},"distancia":{"linea":4},"linea":{"choque":6}}
+# guerrero: pv 120, ataque 11, armadura 1/0, alcance 450, cadencia 1250, velocidad 1350, costo {"alimento":60,"riqueza":25}
+# hondero: pv 65, ataque 7, armadura 0/0, alcance 5500, cadencia 1750, velocidad 1250, costo {"alimento":30,"madera":45}
+# lancero: pv 140, ataque 8, armadura 3/0, alcance 650, cadencia 1500, velocidad 1100, costo {"alimento":60,"madera":25,"riqueza":10}
+# jinete: pv 170, ataque 13, armadura 1/2, alcance 500, cadencia 1250, velocidad 2200, costo {"alimento":100,"riqueza":70}
+# 5 variantes por pelea (semilla 3..7, B corrido 0, -1, 1, -2, 2 casillas)
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+custom | lancero:5+hondero:5 | lancero:5+hondero:5 | nada | - | 45.4 s | 4/5 | 3.0/10 | 0.4/10 | 850 / 850
+custom | lancero:5+hondero:5 | lancero:4+hondero:3+catapulta:1 | nada | - | 51.9 s | 2/5 | 2.4/10 | 0.6/8 | 850 / 855
+custom | lancero:5+hondero:5 | lancero:4+hondero:3+catapulta:1 | mantener+escalonar | - | 114.1 s | 0/5 | 1.0/10 | 2.2/8 | 850 / 855
+custom | lancero:5+hondero:5 | lancero:4+hondero:3+catapulta:1 | nada | abierta | 60.1 s | 1/5 | 1.4/10 | 0.8/8 | 850 / 855
+custom | lancero:4+hondero:3+guerrero:3 | lancero:4+hondero:3+catapulta:1 | nada | - | 48.1 s | 3/5 | 3.2/10 | 0.4/8 | 860 / 855
+custom | guerrero:10 | lancero:4+hondero:3+catapulta:1 | nada | - | 36.5 s | 4/5 | 2.2/10 | 1.0/8 | 850 / 855
+custom | hondero:10 | lancero:4+hondero:3+catapulta:1 | nada | - | 34.5 s | 0/5 | 0.0/10 | 1.2/8 | 750 / 855
+custom | lancero:10 | lancero:4+hondero:3+catapulta:1 | nada | - | 43.0 s | 1/5 | 0.4/10 | 3.6/8 | 950 / 855
+custom | guerrero:3 | catapulta:2 | nada | - | 21.0 s | 4/5 | 2.4/3 | 0.4/2 | 255 / 500
+custom | hondero:6 | catapulta:2 | nada | - | 21.3 s | 0/5 | 0.0/6 | 2.0/2 | 450 / 500
+custom | lancero:10+hondero:10 | lancero:8+hondero:6+catapulta:2 | nada | - | 49.9 s | 0/5 | 0.0/20 | 3.8/16 | 1700 / 1710
+custom | lancero:10+hondero:10 | lancero:8+hondero:6+catapulta:2 | mantener+escalonar | - | 126.4 s | 0/5 | 2.8/20 | 3.0/16 | 1700 / 1710
+custom | lancero:10+hondero:10 | lancero:8+hondero:6+catapulta:2 | nada | abierta | 51.2 s | 0/5 | 0.0/20 | 3.8/16 | 1700 / 1710
+custom | lancero:8+hondero:6+catapulta:2 | lancero:10+hondero:10 | nada | - | 75.5 s | 5/5 | 2.2/16 | 0.0/20 | 1710 / 1700
+custom | lancero:6+hondero:5+guerrero:5 | lancero:8+hondero:6+catapulta:2 | nada | - | 46.2 s | 0/5 | 0.0/16 | 5.4/16 | 1370 / 1710
+custom | lancero:4+hondero:3+catapulta:1 | lancero:4+hondero:3+catapulta:1 | nada | - | 87.2 s | 4/5 | 0.8/8 | 0.2/8 | 855 / 855
+
+## 2. Parche p1: 14 de ataque, 1 casilla, 40 % en el borde (sigue casi inmune a la distancia)
+custom | lancero:5+hondero:5 | lancero:5+hondero:5 | nada | - | 45.4 s | 4/5 | 3.0/10 | 0.4/10 | 850 / 850
+custom | lancero:5+hondero:5 | lancero:4+hondero:3+catapulta:1 | nada | - | 44.4 s | 5/5 | 6.4/10 | 0.0/8 | 850 / 855
+custom | lancero:5+hondero:5 | lancero:4+hondero:3+catapulta:1 | mantener+escalonar | - | 132.8 s | 0/5 | 1.8/10 | 1.8/8 | 850 / 855
+custom | lancero:5+hondero:5 | lancero:4+hondero:3+catapulta:1 | nada | abierta | 42.8 s | 5/5 | 6.2/10 | 0.0/8 | 850 / 855
+custom | lancero:4+hondero:3+guerrero:3 | lancero:4+hondero:3+catapulta:1 | nada | - | 52.0 s | 4/5 | 5.0/10 | 0.2/8 | 860 / 855
+custom | guerrero:10 | lancero:4+hondero:3+catapulta:1 | nada | - | 35.6 s | 4/5 | 3.8/10 | 1.0/8 | 850 / 855
+custom | hondero:10 | lancero:4+hondero:3+catapulta:1 | nada | - | 59.3 s | 0/5 | 0.0/10 | 1.2/8 | 750 / 855
+custom | lancero:10 | lancero:4+hondero:3+catapulta:1 | nada | - | 54.1 s | 3/5 | 2.2/10 | 1.8/8 | 950 / 855
+custom | guerrero:3 | catapulta:2 | nada | - | 23.1 s | 4/5 | 2.4/3 | 0.4/2 | 255 / 500
+custom | hondero:6 | catapulta:2 | nada | - | 31.1 s | 0/5 | 0.0/6 | 2.0/2 | 450 / 500
+custom | lancero:10+hondero:10 | lancero:8+hondero:6+catapulta:2 | nada | - | 76.9 s | 2/5 | 4.4/20 | 1.2/16 | 1700 / 1710
+custom | lancero:10+hondero:10 | lancero:8+hondero:6+catapulta:2 | mantener+escalonar | - | 150.0 s | 0/5 | 4.2/20 | 3.0/16 | 1700 / 1710
+custom | lancero:10+hondero:10 | lancero:8+hondero:6+catapulta:2 | nada | abierta | 71.2 s | 2/5 | 4.0/20 | 1.2/16 | 1700 / 1710
+custom | lancero:8+hondero:6+catapulta:2 | lancero:10+hondero:10 | nada | - | 107.7 s | 4/5 | 2.2/16 | 0.2/20 | 1710 / 1700
+custom | lancero:6+hondero:5+guerrero:5 | lancero:8+hondero:6+catapulta:2 | nada | - | 54.2 s | 0/5 | 0.0/16 | 5.4/16 | 1370 / 1710
+custom | lancero:4+hondero:3+catapulta:1 | lancero:4+hondero:3+catapulta:1 | nada | - | 107.3 s | 4/5 | 0.8/8 | 0.2/8 | 855 / 855
+
+## 3. Parche p2: p1 con armadura a distancia 1 y la distancia le pega el 60 %
+custom | lancero:5+hondero:5 | lancero:5+hondero:5 | nada | - | 45.4 s | 4/5 | 3.0/10 | 0.4/10 | 850 / 850
+custom | lancero:5+hondero:5 | lancero:4+hondero:3+catapulta:1 | nada | - | 39.3 s | 5/5 | 6.4/10 | 0.0/8 | 850 / 855
+custom | lancero:5+hondero:5 | lancero:4+hondero:3+catapulta:1 | mantener+escalonar | - | 95.1 s | 3/5 | 5.2/10 | 0.6/8 | 850 / 855
+custom | lancero:5+hondero:5 | lancero:4+hondero:3+catapulta:1 | nada | abierta | 36.6 s | 5/5 | 6.2/10 | 0.0/8 | 850 / 855
+custom | lancero:4+hondero:3+guerrero:3 | lancero:4+hondero:3+catapulta:1 | nada | - | 39.3 s | 5/5 | 5.8/10 | 0.0/8 | 860 / 855
+custom | guerrero:10 | lancero:4+hondero:3+catapulta:1 | nada | - | 35.6 s | 4/5 | 3.8/10 | 1.0/8 | 850 / 855
+custom | hondero:10 | lancero:4+hondero:3+catapulta:1 | nada | - | 35.8 s | 5/5 | 6.0/10 | 0.0/8 | 750 / 855
+custom | lancero:10 | lancero:4+hondero:3+catapulta:1 | nada | - | 54.1 s | 3/5 | 2.2/10 | 1.8/8 | 950 / 855
+custom | guerrero:3 | catapulta:2 | nada | - | 23.1 s | 4/5 | 2.4/3 | 0.4/2 | 255 / 500
+custom | hondero:6 | catapulta:2 | nada | - | 40.7 s | 0/5 | 0.0/6 | 1.0/2 | 450 / 500
+custom | lancero:10+hondero:10 | lancero:8+hondero:6+catapulta:2 | nada | - | 58.7 s | 5/5 | 8.0/20 | 0.0/16 | 1700 / 1710
+custom | lancero:10+hondero:10 | lancero:8+hondero:6+catapulta:2 | mantener+escalonar | - | 99.7 s | 3/5 | 8.4/20 | 0.6/16 | 1700 / 1710
+custom | lancero:10+hondero:10 | lancero:8+hondero:6+catapulta:2 | nada | abierta | 58.5 s | 4/5 | 6.8/20 | 0.2/16 | 1700 / 1710
+custom | lancero:8+hondero:6+catapulta:2 | lancero:10+hondero:10 | nada | - | 95.3 s | 1/5 | 1.0/16 | 3.4/20 | 1710 / 1700
+custom | lancero:6+hondero:5+guerrero:5 | lancero:8+hondero:6+catapulta:2 | nada | - | 54.4 s | 1/5 | 0.8/16 | 4.0/16 | 1370 / 1710
+custom | lancero:4+hondero:3+catapulta:1 | lancero:4+hondero:3+catapulta:1 | nada | - | 92.3 s | 4/5 | 0.8/8 | 0.2/8 | 855 / 855
+
+## 4. Parche p4: p1 con armadura a distancia 1 y la distancia le pega el 40 %
+custom | lancero:5+hondero:5 | lancero:5+hondero:5 | nada | - | 45.4 s | 4/5 | 3.0/10 | 0.4/10 | 850 / 850
+custom | lancero:5+hondero:5 | lancero:4+hondero:3+catapulta:1 | nada | - | 42.6 s | 5/5 | 6.4/10 | 0.0/8 | 850 / 855
+custom | lancero:5+hondero:5 | lancero:4+hondero:3+catapulta:1 | mantener+escalonar | - | 131.6 s | 1/5 | 2.6/10 | 1.0/8 | 850 / 855
+custom | lancero:5+hondero:5 | lancero:4+hondero:3+catapulta:1 | nada | abierta | 39.8 s | 5/5 | 6.2/10 | 0.0/8 | 850 / 855
+custom | lancero:4+hondero:3+guerrero:3 | lancero:4+hondero:3+catapulta:1 | nada | - | 43.6 s | 5/5 | 5.8/10 | 0.0/8 | 860 / 855
+custom | guerrero:10 | lancero:4+hondero:3+catapulta:1 | nada | - | 35.6 s | 4/5 | 3.8/10 | 1.0/8 | 850 / 855
+custom | hondero:10 | lancero:4+hondero:3+catapulta:1 | nada | - | 53.6 s | 3/5 | 2.6/10 | 0.4/8 | 750 / 855
+custom | lancero:10 | lancero:4+hondero:3+catapulta:1 | nada | - | 54.1 s | 3/5 | 2.2/10 | 1.8/8 | 950 / 855
+custom | guerrero:3 | catapulta:2 | nada | - | 23.1 s | 4/5 | 2.4/3 | 0.4/2 | 255 / 500
+custom | hondero:6 | catapulta:2 | nada | - | 31.1 s | 0/5 | 0.0/6 | 2.0/2 | 450 / 500
+custom | lancero:10+hondero:10 | lancero:8+hondero:6+catapulta:2 | nada | - | 77.3 s | 2/5 | 4.6/20 | 1.0/16 | 1700 / 1710
+custom | lancero:10+hondero:10 | lancero:8+hondero:6+catapulta:2 | mantener+escalonar | - | 150.0 s | 0/5 | 4.4/20 | 2.8/16 | 1700 / 1710
+custom | lancero:10+hondero:10 | lancero:8+hondero:6+catapulta:2 | nada | abierta | 67.4 s | 2/5 | 4.4/20 | 1.2/16 | 1700 / 1710
+custom | lancero:8+hondero:6+catapulta:2 | lancero:10+hondero:10 | nada | - | 107.7 s | 4/5 | 2.2/16 | 0.2/20 | 1710 / 1700
+custom | lancero:6+hondero:5+guerrero:5 | lancero:8+hondero:6+catapulta:2 | nada | - | 57.1 s | 0/5 | 0.0/16 | 4.8/16 | 1370 / 1710
+custom | lancero:4+hondero:3+catapulta:1 | lancero:4+hondero:3+catapulta:1 | nada | - | 93.3 s | 4/5 | 0.8/8 | 0.2/8 | 855 / 855
+
+## 5. Final (en data/): 16 de ataque, 1 casilla, 40 % en el borde, armadura a distancia 1, la distancia le pega el 40 %
+# micro_matriz · civs capa común / capa común · edad 3 con compras · parche ninguno
+# bonos {"choque":{"distancia":6},"distancia":{"linea":4},"linea":{"choque":6}}
+# guerrero: pv 120, ataque 11, armadura 1/0, alcance 450, cadencia 1250, velocidad 1350, costo {"alimento":60,"riqueza":25}
+# hondero: pv 65, ataque 7, armadura 0/0, alcance 5500, cadencia 1750, velocidad 1250, costo {"alimento":30,"madera":45}
+# lancero: pv 140, ataque 8, armadura 3/0, alcance 650, cadencia 1500, velocidad 1100, costo {"alimento":60,"madera":25,"riqueza":10}
+# jinete: pv 170, ataque 13, armadura 1/2, alcance 500, cadencia 1250, velocidad 2200, costo {"alimento":100,"riqueza":70}
+# 5 variantes por pelea (semilla 3..7, B corrido 0, -1, 1, -2, 2 casillas)
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+custom | lancero:5+hondero:5 | lancero:5+hondero:5 | nada | - | 45.4 s | 4/5 | 3.0/10 | 0.4/10 | 850 / 850
+custom | lancero:5+hondero:5 | lancero:4+hondero:3+catapulta:1 | nada | - | 45.6 s | 5/5 | 6.4/10 | 0.0/8 | 850 / 855
+custom | lancero:5+hondero:5 | lancero:4+hondero:3+catapulta:1 | mantener+escalonar | - | 132.2 s | 1/5 | 1.8/10 | 1.2/8 | 850 / 855
+custom | lancero:5+hondero:5 | lancero:4+hondero:3+catapulta:1 | nada | abierta | 43.6 s | 5/5 | 6.0/10 | 0.0/8 | 850 / 855
+custom | lancero:4+hondero:3+guerrero:3 | lancero:4+hondero:3+catapulta:1 | nada | - | 44.9 s | 5/5 | 5.6/10 | 0.0/8 | 860 / 855
+custom | guerrero:10 | lancero:4+hondero:3+catapulta:1 | nada | - | 36.2 s | 4/5 | 4.4/10 | 0.6/8 | 850 / 855
+custom | hondero:10 | lancero:4+hondero:3+catapulta:1 | nada | - | 56.1 s | 1/5 | 0.8/10 | 0.8/8 | 750 / 855
+custom | lancero:10 | lancero:4+hondero:3+catapulta:1 | nada | - | 51.9 s | 2/5 | 1.4/10 | 2.2/8 | 950 / 855
+custom | guerrero:3 | catapulta:2 | nada | - | 22.1 s | 4/5 | 2.4/3 | 0.4/2 | 255 / 500
+custom | hondero:6 | catapulta:2 | nada | - | 26.7 s | 0/5 | 0.0/6 | 2.0/2 | 450 / 500
+custom | lancero:10+hondero:10 | lancero:8+hondero:6+catapulta:2 | nada | - | 68.6 s | 2/5 | 4.4/20 | 1.2/16 | 1700 / 1710
+custom | lancero:10+hondero:10 | lancero:8+hondero:6+catapulta:2 | mantener+escalonar | - | 148.7 s | 0/5 | 3.4/20 | 2.8/16 | 1700 / 1710
+custom | lancero:10+hondero:10 | lancero:8+hondero:6+catapulta:2 | nada | abierta | 63.7 s | 2/5 | 3.8/20 | 1.2/16 | 1700 / 1710
+custom | lancero:8+hondero:6+catapulta:2 | lancero:10+hondero:10 | nada | - | 103.1 s | 5/5 | 2.0/16 | 0.0/20 | 1710 / 1700
+custom | lancero:6+hondero:5+guerrero:5 | lancero:8+hondero:6+catapulta:2 | nada | - | 47.3 s | 0/5 | 0.0/16 | 6.0/16 | 1370 / 1710
+custom | lancero:4+hondero:3+catapulta:1 | lancero:4+hondero:3+catapulta:1 | nada | - | 83.3 s | 3/5 | 0.8/8 | 0.4/8 | 855 / 855
+
+## 6. Matriz por defecto en la III con compras (sin asedio): main (bde3f6f) y el paso 4 dan las mismas filas
+base | guerrero:10 | guerrero:10 | nada | - | 39.5 s | 4/5 | 2.2/10 | 0.6/10 | 850 / 850
+base | hondero:10 | hondero:10 | nada | - | 32.0 s | 3/5 | 2.4/10 | 1.0/10 | 750 / 750
+base | lancero:10 | lancero:10 | nada | - | 100.0 s | 2/5 | 3.6/10 | 1.0/10 | 950 / 950
+base | hondero:10 | guerrero:10 | nada | - | 19.6 s | 0/5 | 0.0/10 | 7.0/10 | 750 / 850
+base | hondero:10 | guerrero:10 | foco | - | 21.5 s | 0/5 | 0.0/10 | 5.6/10 | 750 / 850
+base | hondero:10 | lancero:10 | nada | - | 42.7 s | 3/5 | 3.8/10 | 0.8/10 | 750 / 950
+base | guerrero:10 | lancero:10 | nada | - | 51.4 s | 0/5 | 0.4/10 | 5.4/10 | 850 / 950
+base | jinete:5 | hondero:10 | nada | - | 32.3 s | 4/5 | 3.0/5 | 0.4/10 | 850 / 750
+base | lancero:10 | jinete:5 | nada | - | 30.4 s | 5/5 | 8.2/10 | 0.0/5 | 950 / 850
+base | guerrero:10 | jinete:5 | nada | - | 48.1 s | 4/5 | 8.0/10 | 0.4/5 | 850 / 850
+kiteo | hondero:10 | guerrero:10 | kitear | - | 120.1 s | 0/5 | 0.0/10 | 5.2/10 | 750 / 850
+kiteo | hondero:10 | guerrero:10 | escalonar | - | 49.6 s | 5/5 | 8.2/10 | 0.0/10 | 750 / 850
+kiteo | hondero:10 | lancero:10 | kitear | - | 69.2 s | 5/5 | 10.0/10 | 0.0/10 | 750 / 950
+kiteo | hondero:10 | lancero:10 | escalonar | - | 32.0 s | 5/5 | 10.0/10 | 0.0/10 | 750 / 950
+kiteo | hondero:10 | jinete:5 | escalonar | - | 39.7 s | 2/5 | 3.2/10 | 2.0/5 | 750 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | nada | - | 36.4 s | 5/5 | 7.2/10 | 0.0/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | mantener | - | 98.1 s | 3/5 | 7.2/10 | 0.8/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | foco | - | 54.6 s | 4/5 | 8.4/10 | 0.4/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | mantener+escalonar | - | 66.8 s | 5/5 | 7.6/10 | 0.0/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | nada | linea | 36.4 s | 5/5 | 7.2/10 | 0.0/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | jinete:5 | nada | - | 32.2 s | 5/5 | 8.6/10 | 0.0/5 | 850 / 850
+mezcla | lancero:5+hondero:5 | hondero:10 | nada | - | 36.3 s | 4/5 | 3.0/10 | 0.6/10 | 850 / 750
+mezcla | lancero:5+hondero:5 | lancero:10 | nada | - | 60.0 s | 4/5 | 8.2/10 | 0.4/10 | 850 / 950
+mezcla | guerrero:5+hondero:5 | lancero:5+hondero:5 | nada | - | 43.8 s | 2/5 | 2.0/10 | 1.0/10 | 800 / 850

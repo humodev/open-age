@@ -1,0 +1,78 @@
+### Tabla 1 · Pasos 1 y 2: el poder no cambia (contra el rival de referencia de la misma edad, con las reglas de hoy; edad I de hoy = 100)
+
+| Pueblo | I | II hoy | II pasos 1-2 | III hoy | III pasos 1-2 | IV hoy | IV pasos 1-2 | Δ II | Δ III | Δ IV |
+|---|---|---|---|---|---|---|---|---|---|---|
+| tawantinsuyu | 100 | 93 | 93 | 173 | 142 | 198 | 141 | +0 % | -18 % | -29 % |
+| mapuches | 100 | 111 | 111 | 167 | 153 | 202 | 151 | +0 % | -8 % | -25 % |
+| guaranies | 100 | 108 | 108 | 124 | 113 | 153 | 113 | +0 % | -8 % | -26 % |
+| etiopia | 100 | 144 | 144 | 194 | 179 | 199 | 161 | +0 % | -8 % | -19 % |
+| palmares | 100 | 104 | 104 | 143 | 113 | 184 | 112 | +0 % | -21 % | -39 % |
+| ayutthaya | 100 | 191 | 191 | 206 | 205 | 230 | 199 | +0 % | -1 % | -14 % |
+
+### Tabla 2 · Diseño completo: el poder crece por compras (contra el mismo rival fijo, edad I = 100)
+
+| Pueblo | I | II | III | IV sin comprar nada | IV con el gasto típico | IV/III | IV hoy |
+|---|---|---|---|---|---|---|---|
+| tawantinsuyu | 100 | 135 | 300 | 300 | 444 | ×1.48 | 621 |
+| mapuches | 100 | 180 | 329 | 329 | 493 | ×1.50 | 578 |
+| guaranies | 100 | 163 | 218 | 218 | 323 | ×1.49 | 418 |
+| etiopia | 100 | 214 | 376 | 340 | 487 | ×1.29 | 575 |
+| palmares | 100 | 160 | 225 | 225 | 332 | ×1.48 | 574 |
+| ayutthaya | 100 | 311 | 443 | 443 | 647 | ×1.46 | 732 |
+
+### Tabla 3 · Valor de cada línea en la edad IV, en unidades comunes (regla del veterano: ≤ ×2)
+
+| Pueblo | Unidad | Línea | IV hoy | IV diseño completo |
+|---|---|---|---|---|
+| tawantinsuyu | Leva (awqa kamayuq [verificar]) | linea | ×2.45 | ×2.01 ⚠ |
+| tawantinsuyu | Boleador | distancia | ×2.41 | ×1.91 |
+| tawantinsuyu | Guerrero de porra | choque | ×2.12 | ×1.93 |
+| tawantinsuyu | Hondero | distancia | ×2.18 | ×1.79 |
+| tawantinsuyu | Lancero con escudo | linea | ×2.49 | ×2.06 ⚠ |
+| mapuches | Weichafe | choque | ×1.99 | ×1.86 |
+| mapuches | Arquero | distancia | ×1.95 | ×1.68 |
+| mapuches | Kona montado | montados | ×1.96 | ×1.87 |
+| mapuches | Lanza larga | linea | ×2.12 | ×1.83 |
+| guaranies | Milicia arcabucera | polvora | ×1.86 | ×1.75 |
+| guaranies | Guerrero de macana | choque | ×1.95 | ×1.73 |
+| guaranies | Arquero | distancia | ×2.17 | ×1.90 |
+| guaranies | Lancero | linea | ×2.21 | ×1.83 |
+| etiopia | Mosquetero | polvora | ×1.68 | ×1.69 |
+| etiopia | Jinete noble | montados | ×1.92 | ×1.77 |
+| etiopia | Jabalinero | distancia | ×1.81 | ×1.64 |
+| etiopia | Jinete | montados | ×1.95 | ×1.80 |
+| etiopia | Chewa | linea | ×2.05 | ×1.83 |
+| palmares | Espingardeiro | polvora | ×2.06 | ×1.67 |
+| palmares | Gente de guerra | choque | ×2.31 | ×1.84 |
+| palmares | Flecheiro | distancia | ×2.35 | ×1.73 |
+| palmares | Lanceiro | linea | ×2.76 | ×1.91 |
+| ayutthaya | Compañía portuguesa | polvora | ×1.68 | ×1.69 |
+| ayutthaya | Elefante de guerra (chang suek) | montados | ×1.89 | ×1.85 |
+| ayutthaya | Compañía japonesa | choque | ×1.95 | ×1.85 |
+| ayutthaya | Infantería de dap | choque | ×1.91 | ×1.81 |
+| ayutthaya | Arquero | distancia | ×1.89 | ×1.68 |
+| ayutthaya | Lancero | linea | ×2.05 | ×1.83 |
+
+### Tabla 4 · Lo que junta un aldeano por minuto, con toda la economía de la edad comprada (paso 3)
+
+Supuestos: distancia de la fuente al depósito (casillas) madera 4, granja 1.5, piedra 5, riqueza 5. «Antes» = sin lo del paso 3.
+
+| Recurso | I | II | III | IV antes | IV | IV / III | Vida del aldeano (IV) |
+|---|---|---|---|---|---|---|---|
+| madera | 39.6 | 40.8 | 44.4 | 42.9 | 51.1 | ×1.15 | 65 |
+| granja | 39.5 | 46.9 | 53.6 | 52.8 | 60.2 | ×1.12 | 65 |
+| piedra | 29.4 | 34.3 | 34.3 | 33.2 | 36.5 | ×1.06 | 65 |
+| riqueza | 29.4 | 34.3 | 37.1 | 33.2 | 39.7 | ×1.07 | 65 |
+
+### Tabla 5 · Repago de las mejoras de economía del paso 3 (15 aldeanos en el recurso; las de carga y velocidad, 15 en cada uno de los cuatro) y de los registros
+
+| Mejora | Edad | Costo | Efecto | + por minuto | Se paga en (min) |
+|---|---|---|---|---|---|
+| Sendas de trabajo | II | 250 | velocidad_pct 10 | 59 | 4.2 |
+| Tejidos de abrigo | III | 300 | vida_pct 30 | 0 | — (no junta más) |
+| Talleres de la riqueza | III | 350 | tasa 15 | 42 | 8.3 |
+| Tala de monte alto | IV | 500 | tasa 15 | 57 | 8.8 |
+| Barbecho y abono | IV | 600 | tasa 15 | 76 | 7.8 |
+| Fardos de carga | IV | 450 | carga 3 | 150 | 3.0 |
+
+Todas las mejoras de la IV (sin los registros): 9520 recursos. Los registros (−10 %) ahorran 952 y cuestan 400: se pagan si se compra más de 42 % de lo demás de la IV.

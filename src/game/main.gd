@@ -28,6 +28,7 @@ extends Node3D
 ##   --dificultad=facil|normal|dificil|experta  (en el menú, la preelige)
 ##   --nofog            sin niebla de guerra (automático en --aivai)
 ##   --autotest         prueba de punta a punta con eventos reales de mouse y teclado
+##   --animaciones=0|1  aldeanos animados (KayKit) o la figura de antes; pisa data/arte_animaciones.json
 ##   --grilla=menu      abre el submenú del aldeano (economia, militar) antes de la captura
 ##   --banco=rec:n,…    fija recursos del jugador antes de la captura (alimento:0,mita:0)
 ##   --ayuda=N          muestra la ayuda de la casilla N de la grilla (8 = Z) en la captura
@@ -74,6 +75,8 @@ func _ready() -> void:
 	_seed = int(_args.get("seed", str(randi() % 100000)))
 	speed = float(_args.get("speed", "1"))
 	_menu_mode = _args.is_empty() or _args.has("menu")
+	if _args.has("animaciones"): # --animaciones=0|1: aldeanos animados o la figura de antes (proceso/27)
+		AldeanoAnimado.forzar = int(_args["animaciones"])
 	# --- escala --- (--ventana=ANCHOxALTO: ventana de ese tamaño, para capturas a otras resoluciones)
 	if _args.has("ventana"):
 		_ventana(str(_args["ventana"]))
@@ -529,6 +532,36 @@ func _demo(kind: String) -> void:
 			sim.spawn_unit(showcase[i], 0, (b.x + 10 + i % 4) * 1000 + 500, (b.y + 7 + i / 4) * 1000 + 500)
 		for i in 0:
 			sim.spawn_unit(["guerrero", "hondero", "lancero"][i % 3], 0, (b.x + 10 + i % 3) * 1000 + 500, (b.y + 7 + i / 3) * 1000 + 500)
+	# --- paso 4 --- La fortaleza del pueblo, su asedio de la III (el de área o los incendiarios) y
+	# un bloque rival que se acerca para ver el golpe de área (proceso/26-juego-tardio/08).
+	# Cámara: la pone sola (demo_cam); --edad=3 o más para el aspecto de la edad.
+	elif kind == "asedio":
+		sim.players[0]["age"] = maxi(3, int(sim.players[0]["age"]))
+		var fort_at := Vector2i(-1, -1)
+		for r in 8:
+			for dy in range(-r, r + 1):
+				for dx in range(-r, r + 1):
+					if fort_at.x < 0 and sim.can_place("fortaleza", b.x + 6 + dx, b.y + 6 + dy, 0):
+						fort_at = Vector2i(b.x + 6 + dx, b.y + 6 + dy)
+		if fort_at.x >= 0 and sim.dp(0).edificios.has("fortaleza"):
+			sim.spawn_building("fortaleza", 0, fort_at.x, fort_at.y, true)
+		var siege := ""
+		for u in sim.dp(0).unidades:
+			var ud: Dictionary = sim.dp(0).unidades[u]
+			if ud.get("funcion", "") == "asedio" and int(ud.get("edad_min", 1)) == 3:
+				siege = u
+		var ids := []
+		for i in 3:
+			if siege != "":
+				var t := sim.map.nearest_free(b.x + 4 + i * 2, b.y + 12, 6, 0)
+				ids.append(sim.spawn_unit(siege, 0, t.x * 1000 + 500, t.y * 1000 + 500).id)
+		var foes := []
+		for i in 12:
+			var t := sim.map.nearest_free(b.x + 4 + i % 4, b.y + 19 + i / 4, 6, 1)
+			foes.append(sim.spawn_unit(["lancero", "hondero"][i % 2], 1, t.x * 1000 + 500, t.y * 1000 + 500).id)
+		sim.push_command({"t": "move", "player": 1, "ids": foes, "x": (b.x + 6) * 1000, "y": (b.y + 14) * 1000, "amove": true})
+		sim.set_meta("demo_cam", Vector2(b.x + 7, b.y + 13))
+	# --- fin paso 4 ---
 	elif kind == "multitud":
 		# 200 aldeanos que se cruzan en el centro: mide el costo de los modelos generados
 		# (proceso/19-arte-y-sonido). Con --perf imprime los cuadros por segundo.
@@ -862,6 +895,7 @@ func _process(delta: float) -> void:
 			steps += 1
 		if steps == MAX_STEPS_PER_FRAME:
 			_acc = 0.0
+		view.velocidad = speed
 		view.render(_acc / tick_s, delta)
 		if _menu_mode:
 			# Cámara de fondo que recorre el mapa despacio.

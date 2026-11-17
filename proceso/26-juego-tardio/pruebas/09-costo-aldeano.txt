@@ -1,0 +1,29 @@
+# python3 tools/costo_aldeano.py <tecnologias.json del commit bde3f6f>  (después = data/ de este paso)
+
+| Investigación | Edad | Antes | Después | s de aldeano antes | después | Δ |
+|---|---|---|---|---|---|---|
+| mamposteria | II | 100m 100p | 50m 145p | 261 | 266 | +2 % |
+| vigias | II | 75m 75r | 40p 100r | 195 | 200 | +2 % |
+| ataque_cc_1 | II | 50a 25r | 20a 45r | 86 | 84 | -2 % |
+| ataque_cc_2 | III | 120a 90r | 80a 120r | 249 | 251 | +1 % |
+| ataque_cc_3 | IV | 180a 150r | 120a 190r | 394 | 391 | -1 % |
+| ataque_dist_1 | II | 50a 25r | 20a 45r | 86 | 84 | -2 % |
+| ataque_dist_2 | III | 120a 90r | 80a 120r | 249 | 251 | +1 % |
+| ataque_dist_3 | IV | 180a 150r | 120a 190r | 394 | 391 | -1 % |
+| armadura_cc_1 | II | 60m 30r | 20a 65r | 113 | 113 | -1 % |
+| armadura_cc_2 | III | 120m 90r | 80a 130r | 270 | 266 | -1 % |
+| armadura_cc_3 | IV | 180m 150r | 120a 215r | 426 | 427 | +0 % |
+| armadura_dist_1 | II | 60m 30r | 20a 65r | 113 | 113 | -1 % |
+| armadura_dist_2 | III | 120m 90r | 80a 130r | 270 | 266 | -1 % |
+| armadura_dist_3 | IV | 180m 150r | 120a 215r | 426 | 427 | +0 % |
+| marcha | II | 100a 75r | 50a 110r | 207 | 207 | +0 % |
+
+Todas las investigaciones comunes, por edad (a = alimento, m = madera, r = riqueza, p = piedra):
+
+| Edad | Antes | Después | s de aldeano antes | después | Δ |
+|---|---|---|---|---|---|
+| I | 125a 125m | 125a 125m | 272 | 272 | +0.0 % |
+| II | 475a 645m 260r 100p | 405a 400m 430r 185p | 1748 | 1754 | +0.3 % |
+| III | 1790a 840m 1360r | 1870a 600m 1500r | 4721 | 4719 | -0.0 % |
+| IV | 1860a 360m 2100r | 1980a 2310r | 5284 | 5280 | -0.1 % |
+| **todas** | 4250a 1970m 3720r 100p | 4380a 1125m 4240r 185p | 12025 | 12025 | +0.0 % |

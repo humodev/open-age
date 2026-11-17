@@ -17,6 +17,9 @@
    "casa": "tawantinsuyu_casa"
   }
  },
+ "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",
+ "escuela": {"nombre": "Yachaywasi", "edificios": ["kallanka_real"], "desc": "La «casa del saber», donde los amawta enseñaban lengua, khipu e historia a los hijos de la nobleza. La fundación por Inka Roca es la versión de Garcilaso (1609) y su forma de escuela formal está debatida; lo mejor documentado es la formación de los khipukamayuq (Urton, 2003). Se investiga en la capital y en la kallanka real."},
+ "tecnologias": {"escuela_registros": {"nombre": "Khipu", "desc": "Las cuerdas anudadas de los khipukamayuq: cuentas y registros del Estado (Urton, 2003)."}},
  "edades": [
   "Ayllu",
   "Suyu",
@@ -24,6 +27,7 @@
   "Inkarri"
  ],
  "unidades": {
+  "catapulta": {"nombre": "Hondero de piedra caliente", "reemplaza": "ariete", "pv": 110, "armadura": 0, "armadura_distancia": 1, "ataque": 16, "alcance": 6500, "cadencia_ms": 4500, "velocidad": 1200, "radio": 240, "pob": 2, "area": 1000, "contadores": {"choque": 100, "distancia": 100, "linea": 100, "civil": 100, "explorador": 100, "asedio": 100, "edificio": 700}, "costo": {"madera": 100, "riqueza": 60, "mita": 30}, "desc": "Desde la edad III el hondero de piedra caliente pasa a la ranura del asedio de área: piedras al rojo envueltas en algodón que caen sobre la tropa y encienden los techos de paja (Cusco, 1536: Titu Cusi Yupanqui, 1570; Pedro Pizarro, 1571). Pega a todos los enemigos cerca del blanco y sigue sirviendo contra los edificios."},
   "rebano": {"nombre": "Llama", "color": "#e8dcc4", "desc": "Llama de los rebaños del ayllu: se arrea y se carnea."},
   "aldeano": {
    "nombre": "Runa"
@@ -47,7 +51,7 @@
   "ariete": {
    "nombre": "Hondero de piedra caliente",
    "alcance": 6000,
-   "ataque": 32,
+   "ataque": 35,
    "velocidad": 1200,
    "pv": 110,
    "radio": 240,
@@ -104,6 +108,7 @@
   }
  },
  "edificios": {
+  "fortaleza": {"nombre": "Hatun pukara", "desc": "Hatun pukara [verificar el compuesto]: la fortaleza mayor de piedra en lo alto, con muros en terrazas y guarnición, como las del Qhapaq Ñan y la frontera (Hyslop, 1990). La defensa que aguanta de la edad III."},
   "campo_tiro": {"nombre": "Warak'a kancha", "desc": "Recinto de los honderos: hondero, boleador y el hondero de piedra caliente, el asedio inca (Cusco, 1536)."},
   "almacen_madera": {"nombre": "Llant'a wasi"},
   "almacen_mina": {"nombre": "Kamayuq wasi"},
@@ -408,8 +413,8 @@
    "vilcabamba"
   ]
  ],
- "construye": ["taller_tejido", "casa", "granja", "almacen_madera", "almacen_mina", "cuartel", "campo_tiro", "torre", "centro", "camino", "anden", "qollqa", "mercado"],
- "produce": {"centro": ["aldeano", "explorador"], "cuartel": ["guerrero", "lancero"], "campo_tiro": ["hondero", "boleador", "ariete"]},
+ "construye": ["taller_tejido", "casa", "granja", "almacen_madera", "almacen_mina", "cuartel", "campo_tiro", "torre", "fortaleza", "centro", "camino", "anden", "qollqa", "mercado"],
+ "produce": {"centro": ["aldeano", "explorador"], "cuartel": ["guerrero", "lancero"], "campo_tiro": ["hondero", "boleador", "ariete", "catapulta"]},
  "modulos": {
   "regalo_cumbi": { "recurso": "mita", "costo": 120, "edad": 3, "edificio": "tambo" },
   "recurso_propio": {

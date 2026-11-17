@@ -1,0 +1,100 @@
+# tools/niveles_ia.gd con el paso 2 (herrería separada): minuto de cada edad, de la herrería I de ataque (cc, dist),
+# de cada nivel y de cada tanda de la herrería, por jugador (IA contra IA). Una semilla, 6 partidas por dificultad (12 jugadores).
+# Herrería: ac/ad = ataque cuerpo a cuerpo / distancia; rc/rd = armadura contra cuerpo a cuerpo / contra distancia; el número es la tanda.
+# v1 = primera versión (_smith dentro de _levels, antes de la tropa y también mientras ahorra para el hito): la III llegaba tarde.
+# final = _smith después de la tropa, sin ahorrar para el hito y sin compra ni junta de nivel en el turno (normal, difícil y experta a 40 min; fácil a 30).
+# Paso 1 (pruebas/05-niveles-ia.txt, final): armas_1 tras la II 0:54 / 0:51 / 0:53 / 0:42 (normal, difícil, experta, fácil);
+# 1.er veterano tras la III 0:55 / 1:37 / 1:01; III alcanzada (mediana) 16:53 / 20:40 / 17:33.
+
+## v1 (solo normal, 8 jugadores antes de cortarla)
+dificultad | ataque I (las dos) tras la II | 1.er veterano tras la III | 1.ª herrería no prioritaria tras la II | tanda II de herrería tras la III (1.ª) | III alcanzada | IV alcanzada
+normal | 1:07 (0:53–1:31, n=8) | 1:55 (0:53–2:49, n=7) | 2:50 (1:01–6:11, n=8) | 1:54 (1:19–4:10, n=5) | 17:04 (14:53–29:25, n=7) | 36:09 (36:09–36:09, n=1)
+
+## final
+dificultad | ataque I (las dos) tras la II | 1.er veterano tras la III | 1.ª herrería no prioritaria tras la II | tanda II de herrería tras la III (1.ª) | III alcanzada | IV alcanzada
+normal | 1:08 (0:51–1:36, n=12) | 1:45 (0:48–3:21, n=9) | 5:16 (1:01–24:19, n=10) | 2:31 (1:56–8:05, n=5) | 18:24 (15:13–31:50, n=11) | 30:28 (30:28–30:28, n=1)
+dificil | 1:02 (0:53–1:56, n=11) | 1:38 (0:58–2:07, n=8) | 7:40 (2:21–25:50, n=9) | 2:47 (0:53–3:54, n=8) | 21:02 (13:26–25:07, n=9) | 32:09 (24:22–39:56, n=2)
+experta | 1:03 (0:40–1:51, n=11) | 1:20 (1:00–2:14, n=10) | 3:16 (2:23–14:36, n=11) | 2:48 (0:39–3:38, n=9) | 18:16 (13:32–27:47, n=11) | 26:01 (24:52–27:11, n=2)
+facil | 0:55 (0:51–1:45, n=12) | - | - | - | - | -
+
+## Pares iguales (dificultad, pueblo, rival), paso 1 final contra paso 2 final: diferencia en minutos:segundos (+ = más tarde ahora)
+normal II: mediana +0 s, n=12, rango -114..+378 s; llegó solo en el paso 1: 0, solo en el paso 2: 0
+normal III: mediana +13 s, n=8, rango -160..+197 s; llegó solo en el paso 1: 0, solo en el paso 2: 3
+dificil II: mediana +0 s, n=12, rango -203..+165 s; llegó solo en el paso 1: 0, solo en el paso 2: 0
+dificil III: mediana -1 s, n=6, rango -368..+266 s; llegó solo en el paso 1: 2, solo en el paso 2: 3
+experta II: mediana -48 s, n=12, rango -148..+174 s; llegó solo en el paso 1: 0, solo en el paso 2: 0
+experta III: mediana -28 s, n=6, rango -131..+610 s; llegó solo en el paso 1: 1, solo en el paso 2: 5
+
+dificultad | semilla | pueblo | rival | II | ataque I (cc, dist) | III | veteranos (min) | IV | élites (min) | herrería (min) | niveles al final | ganador
+
+# v1: niv_0.txt
+normal | 0 | ayutthaya | etiopia | 6:45 | 7:18, 7:43 | 29:25 | distancia 32:10, linea 33:05 | - | - | rc1 8:40, rd1 11:53, ad2 33:35, rc2 37:10 | 2 | -1
+normal | 0 | etiopia | ayutthaya | 5:44 | 6:13, 6:38 | 23:08 | distancia 25:03, montados 38:44 | - | - | rc1 11:55, rd1 13:18 | 2 | -1
+
+# niv_1.txt
+normal | 0 | etiopia | guaranies | 4:54 | 5:35, 6:00 | 24:29 | distancia 27:18, montados 27:42 | - | - | rc1 7:45, rd1 8:26 | 2 | -1
+normal | 0 | guaranies | etiopia | 11:56 | 12:24, 13:04 | 17:04 | distancia 18:07, choque 18:23, linea 19:24 | 36:09 | distancia 37:19, choque 37:39 | rc1 13:01, rd1 14:19, ad2 18:55, ac2 19:43, rc2 23:19, rd2 24:12 | 5 | -1
+
+# niv_2.txt
+normal | 0 | guaranies | mapuches | 7:52 | 8:35, 9:00 | 15:01 | distancia 15:54, choque 16:15, linea 17:41 | - | - | rc1 11:58, rd1 12:23, ac2 16:20, ad2 16:24, rc2 18:55, rd2 19:47 | 3 | -1
+normal | 0 | mapuches | guaranies | 7:01 | 7:29, 7:54 | 16:57 | distancia 19:28, choque 20:02, linea 21:15, montados 27:25 | - | - | rd1 12:49, rc1 14:35, ad2 20:54, rd2 23:08, ac2 24:47 | 4 | -1
+normal | 0 | tawantinsuyu | ayutthaya | 6:05 | 6:50, 7:36 | 14:53 | distancia 15:49, choque 16:07, linea 17:51 | - | - | rc1 8:55, rd1 12:41, ad2 16:47, rc2 17:12 | 3 | 0
+normal | 0 | ayutthaya | tawantinsuyu | 7:16 | 7:52, 8:44 | - | - | - | - | rd1 8:17, rc1 9:09 | 0 | 0
+
+# niv2_0.txt
+normal | 0 | ayutthaya | etiopia | 6:45 | 7:18, 7:43 | 20:44 | - | - | - | rc1 12:25, rd1 12:28 | 0 | 1
+normal | 0 | etiopia | ayutthaya | 5:44 | 6:13, 6:38 | 18:23 | distancia 20:08, montados 20:16 | - | - | rd1 11:55, rc1 12:20, rc2 20:46 | 2 | 1
+normal | 0 | mapuches | palmares | 15:51 | 16:17, 16:42 | 31:50 | linea 35:11, distancia 36:43 | - | - | rc1 19:05, rd1 19:30 | 2 | -1
+normal | 0 | palmares | mapuches | 9:02 | 9:45, 10:26 | 18:24 | distancia 21:39, polvora 21:52, choque 25:11, linea 27:41 | - | - | ad2 26:29, ac2 27:42, rc1 33:21, rd1 37:21 | 4 | -1
+dificil | 0 | ayutthaya | etiopia | 6:43 | 7:15, 7:40 | 22:51 | distancia 24:07, linea 24:26 | - | - | rc1 14:23, ad2 25:28 | 2 | 0
+dificil | 0 | etiopia | ayutthaya | 5:37 | 6:11, 6:36 | - | - | - | - | rc1 14:29, rd1 15:15 | 0 | 0
+dificil | 0 | mapuches | palmares | 10:44 | 11:12, 11:37 | 25:07 | distancia 26:47 | - | - | rd1 13:05, rc1 24:26 | 1 | 0
+dificil | 0 | palmares | mapuches | 9:29 | -, - | - | - | - | - | - | 0 | 0
+experta | 0 | ayutthaya | etiopia | 6:12 | 6:52, 6:49 | 23:15 | - | - | - | rc1 9:21, rd1 9:46 | 0 | 1
+experta | 0 | etiopia | ayutthaya | 5:33 | 6:13, 6:38 | 22:18 | montados 23:18, distancia 24:28, linea 29:54 | - | - | rc1 8:15, rd1 9:38, ad2 25:26, rc2 28:24, ac2 28:35, rd2 28:54 | 3 | 1
+experta | 0 | mapuches | palmares | 10:36 | 11:01, 11:26 | 18:16 | distancia 19:37, linea 20:22 | - | - | rc1 17:35 | 2 | 0
+experta | 0 | palmares | mapuches | 9:29 | -, - | - | - | - | - | - | 0 | 0
+
+# niv2_1.txt
+normal | 0 | etiopia | guaranies | 4:54 | 5:35, 6:00 | 16:20 | distancia 17:55, montados 18:06 | - | - | rc1 7:45, rd1 8:26 | 2 | -1
+normal | 0 | guaranies | etiopia | 11:56 | 12:24, 13:04 | 18:54 | distancia 19:58, choque 20:25, linea 21:42 | 30:28 | distancia 31:33, choque 31:48 | ad2 21:25, ac2 21:38, ad3 32:28, ac3 32:58 | 5 | -1
+normal | 0 | palmares | tawantinsuyu | 9:38 | 10:29, 11:14 | 20:53 | - | - | - | - | 0 | 1
+normal | 0 | tawantinsuyu | palmares | 6:58 | 7:52, 8:12 | 18:38 | distancia 20:40, choque 20:51, linea 26:43 | - | - | rd1 11:26, ad2 21:30, ac2 23:30 | 3 | 1
+dificil | 0 | etiopia | guaranies | 5:14 | 5:51, 6:16 | 16:32 | - | - | - | rd1 11:48, rc1 13:37, rd2 17:25, rc2 18:21 | 0 | 1
+dificil | 0 | guaranies | etiopia | 8:42 | 9:28, 10:38 | 13:26 | distancia 15:25, choque 15:37, linea 17:41 | 24:22 | distancia 25:27, choque 25:48 | ac2 17:20, ad2 17:25, ad3 26:07 | 5 | 1
+dificil | 0 | palmares | tawantinsuyu | 9:31 | 10:25, 11:06 | 21:02 | distancia 22:58, choque 23:07, polvora 23:36, linea 33:41 | - | - | ad2 24:25, ac2 30:13, rd1 35:21, rd2 37:26, rc1 37:51, rc2 39:41 | 4 | -1
+dificil | 0 | tawantinsuyu | palmares | 8:43 | 9:17, 9:50 | 18:37 | distancia 20:44, choque 20:55, linea 22:28 | - | - | rc1 18:19, rd1 18:54, ad2 21:34, rd2 21:55, ac2 27:30, rc2 31:30 | 3 | -1
+experta | 0 | etiopia | guaranies | 4:36 | 5:04, 5:29 | 22:28 | distancia 23:48, montados 25:12, linea 35:22 | - | - | rd1 8:07, rc1 13:56, rd2 24:25, rc2 25:42, ad2 34:37, ac2 35:27 | 3 | 0
+experta | 0 | guaranies | etiopia | 9:37 | 10:18, 11:28 | 15:22 | distancia 17:13, choque 17:13, linea 18:26 | - | - | rc1 12:23, rd1 12:48, ad2 18:10, ac2 18:25 | 3 | 0
+experta | 0 | palmares | tawantinsuyu | 9:28 | 10:25, 11:06 | 19:41 | distancia 20:53, choque 21:18, polvora 22:53, linea 33:26 | 24:52 | distancia 26:17, choque 26:35, linea 34:47 | ad2 22:08, rc1 24:04, rd1 24:47, rd2 27:18, rc2 37:36, rc3 39:00 | 7 | -1
+experta | 0 | tawantinsuyu | palmares | 5:40 | 6:13, 6:33 | 27:47 | choque 29:47, distancia 29:49, linea 30:40 | - | - | rc1 8:56, rd1 11:09, rd2 31:17, rc2 31:30, ad2 38:15 | 3 | -1
+
+# niv2_2.txt
+normal | 0 | guaranies | mapuches | 7:52 | 8:35, 9:00 | 15:29 | distancia 16:28, choque 16:46, linea 19:07 | - | - | rd1 12:45, rc1 16:23, ad2 17:25, ac2 17:58 | 3 | 0
+normal | 0 | mapuches | guaranies | 7:01 | 7:29, 7:54 | 17:11 | distancia 20:28, montados 20:53 | - | - | rd1 16:31 | 2 | 0
+normal | 0 | tawantinsuyu | ayutthaya | 6:05 | 6:50, 7:36 | 15:13 | distancia 16:01, choque 16:16 | - | - | rd1 13:55 | 2 | 0
+normal | 0 | ayutthaya | tawantinsuyu | 7:16 | 7:52, 8:44 | - | - | - | - | rd1 8:17 | 0 | 0
+dificil | 0 | guaranies | mapuches | 8:09 | 8:39, 9:04 | 22:22 | distancia 23:25, choque 23:27, linea 25:16 | 39:56 | - | rc1 16:49, ad2 23:25, ac2 23:55 | 3 | -1
+dificil | 0 | mapuches | guaranies | 7:30 | 8:00, 8:25 | 21:07 | distancia 22:44, choque 23:05, montados 23:17, linea 25:40 | - | - | rc1 13:05, rd1 15:05, ad2 24:09, ac2 25:10 | 4 | -1
+dificil | 0 | tawantinsuyu | ayutthaya | 5:58 | 6:36, 7:09 | 16:26 | choque 17:24, distancia 18:25, linea 19:59 | - | - | rd1 13:13, rc1 13:46, rc2 19:03, rd2 19:18, ad2 19:40 | 3 | 0
+dificil | 0 | ayutthaya | tawantinsuyu | 6:57 | 7:35, 8:14 | - | - | - | - | - | 0 | 0
+experta | 0 | guaranies | mapuches | 8:08 | 8:58, 9:38 | 16:01 | distancia 18:15, choque 18:43, linea 21:04 | - | - | rc1 11:18, rd1 12:13, ad2 19:10, ac2 19:41, rc2 21:25, rd2 22:23 | 3 | -1
+experta | 0 | mapuches | guaranies | 9:29 | 9:55, 10:20 | 13:32 | distancia 14:33, montados 14:45, linea 16:33, choque 19:27 | - | - | rc1 13:18, rd1 13:43, ac2 17:10, ad2 21:10, rc2 39:52 | 4 | -1
+experta | 0 | tawantinsuyu | ayutthaya | 5:56 | 6:35, 7:21 | 15:55 | distancia 17:13, choque 17:17, linea 18:05 | 27:11 | distancia 28:15, choque 28:30, linea 28:34 | rc1 8:19, rd1 8:53, ad2 18:04, rd2 19:17, rc2 19:55, ac2 19:55, ad3 28:33, rd3 28:40, rc3 29:01, ac3 29:29 | 6 | 0
+experta | 0 | ayutthaya | tawantinsuyu | 6:53 | 7:31, 7:56 | 17:00 | choque 18:56, distancia 22:57, linea 25:56 | - | - | rc1 13:21, rd1 14:05, rc2 17:39, rd2 34:17 | 3 | 0
+
+# nivf_0.txt
+facil | 0 | ayutthaya | etiopia | 6:18 | 6:58, 7:23 | - | - | - | - | - | 0 | -1
+facil | 0 | etiopia | ayutthaya | 5:50 | 6:23, 6:48 | - | - | - | - | - | 0 | -1
+facil | 0 | guaranies | mapuches | 8:15 | 8:58, 9:38 | - | - | - | - | - | 0 | -1
+facil | 0 | mapuches | guaranies | 7:31 | 7:57, 8:22 | - | - | - | - | - | 0 | -1
+facil | 0 | palmares | tawantinsuyu | 9:15 | 9:43, 10:08 | - | - | - | - | - | 0 | -1
+facil | 0 | tawantinsuyu | palmares | 6:09 | 7:00, 7:25 | - | - | - | - | - | 0 | -1
+
+# nivf_1.txt
+facil | 0 | etiopia | guaranies | 5:07 | 5:34, 5:59 | - | - | - | - | - | 0 | 0
+facil | 0 | guaranies | etiopia | 9:09 | 9:36, 10:01 | - | - | - | - | - | 0 | 0
+facil | 0 | mapuches | palmares | 8:03 | 8:31, 8:56 | - | - | - | - | - | 0 | -1
+facil | 0 | palmares | mapuches | 9:13 | 9:39, 10:04 | - | - | - | - | - | 0 | -1
+facil | 0 | tawantinsuyu | ayutthaya | 6:17 | 7:07, 8:02 | - | - | - | - | - | 0 | -1
+facil | 0 | ayutthaya | tawantinsuyu | 6:59 | 7:34, 7:59 | - | - | - | - | - | 0 | -1

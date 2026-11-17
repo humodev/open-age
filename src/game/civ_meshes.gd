@@ -112,6 +112,8 @@ static func building(type: String, def: Dictionary, team: Color, style: Dictiona
 		_center(p, forma, w, d, pal, team, base_y, cfg)
 	elif type == "torre":
 		_tower(p, str(cfg.get("torre", "almenada")), pal, team, cfg)
+	elif def.get("fortaleza", false): # --- paso 4 ---
+		_fortress(p, forma, w, d, pal, team, def)
 	elif def.get("mercado", false):
 		_market(p, forma, w, d, pal, team, base_y, cfg) # --- veterano ronda 5 ---
 	elif def.has("produce"):
@@ -921,6 +923,8 @@ static func unit(type: String, def: Dictionary, team: Color, style: Dictionary, 
 		rider_y = 0.62
 	if def.has("despliega_en"):
 		_mobile_court(p, team, pal)
+	elif def.has("area_borde_pct") and not def.has("reemplaza"): # --- paso 4 --- pieza ligera, cañón de muralla
+		_field_gun(p, team, pal)
 	else:
 		_person(p, fn, Vector3(0, rider_y, 0), team, pal, forma, def, tropa)
 	var mesh := Meshes.merge(p)
@@ -983,9 +987,78 @@ static func _person(p: Array, fn: String, at: Vector3, team: Color, pal: Array, 
 			p.append([Meshes.cyl(0.018, 0.018, 1.7, 6), Meshes.xf(at + Vector3(-0.24, 0.85, 0.05)), wood])
 			p.append([Meshes.cyl(0.0, 0.045, 0.16, 6), Meshes.xf(at + Vector3(-0.24, 1.75, 0.05)), Palette.CLAY_DARK])
 		"asedio":
-			p.append([Meshes.box(0.3, 0.3, 0.6), Meshes.xf(at + Vector3(0, 0.15, 0.5)), wood])
+			if def.has("bono_material"): # --- paso 4 --- incendiarios: antorcha encendida
+				p.append([Meshes.cyl(0.02, 0.025, 0.55, 6), Meshes.xf(at + Vector3(0.24, 0.7, 0.14), Vector3(25, 0, 0)), wood])
+				p.append([Meshes.sphere(0.08, 6), Meshes.xf(at + Vector3(0.24, 0.98, 0.27)), Color("e8762c")])
+			else:
+				p.append([Meshes.box(0.3, 0.3, 0.6), Meshes.xf(at + Vector3(0, 0.15, 0.5)), wood])
 		"explorador":
 			p.append([Meshes.cyl(0.015, 0.015, 1.0, 6), Meshes.xf(at + Vector3(0.16, 0.5, 0.12), Vector3(18, 0, 0)), wood])
+
+
+# --- paso 4 ---
+## Pieza de asedio de área de maqueta: cureña de madera con dos ruedas y caño oscuro.
+static func _field_gun(p: Array, team: Color, pal: Array) -> void:
+	var wood := Palette.WOOD_BEAM
+	for x in [-0.32, 0.32]:
+		p.append([Meshes.cyl(0.26, 0.26, 0.07, 12), Meshes.xf(Vector3(x, 0.26, 0.0), Vector3(0, 0, 90)), Palette.TRUNK])
+	p.append([Meshes.box(0.5, 0.12, 0.95), Meshes.xf(Vector3(0, 0.3, -0.2), Vector3(-8, 0, 0)), wood])
+	p.append([Meshes.cyl(0.08, 0.11, 1.0, 10), Meshes.xf(Vector3(0, 0.5, 0.2), Vector3(80, 0, 0)), Color("3f3b36")])
+	p.append([Meshes.box(0.52, 0.05, 0.3), Meshes.xf(Vector3(0, 0.38, -0.55)), team])
+	_person(p, "civil", Vector3(0.35, 0, -0.75), team, pal, "", {}, {})
+
+
+## Fortaleza de maqueta: cuatro lienzos con torres en las esquinas y un torreón al centro; de
+## piedra (bloques y almenas) o de madera (troncos aguzados), según `material`.
+static func _fortress(p: Array, forma: String, w: float, d: float, pal: Array, team: Color, def: Dictionary) -> void:
+	var stone := String(def.get("material", "piedra")) == "piedra"
+	var wall: Color = pal[2] if stone else Palette.WOOD_BEAM
+	var hw := w / 2.0 - margin()
+	var hd := d / 2.0 - margin()
+	var hgt := 1.1
+	if stone:
+		for side in [Vector2(0, -1), Vector2(0, 1), Vector2(-1, 0), Vector2(1, 0)]:
+			var sz := Vector3(hw * 2.0, hgt, 0.22) if side.x == 0 else Vector3(0.22, hgt, hd * 2.0)
+			var at := Vector3(side.x * (hw - 0.11), hgt / 2.0, side.y * (hd - 0.11))
+			p.append([Meshes.box(sz.x, sz.y, sz.z), Meshes.xf(at), wall])
+			var n := 5
+			for i in n:
+				var t := -1.0 + 2.0 * (i + 0.5) / n
+				var mpos := at + (Vector3(t * hw, hgt / 2.0 + 0.1, 0) if side.x == 0 else Vector3(0, hgt / 2.0 + 0.1, t * hd))
+				p.append([Meshes.box(0.16, 0.2, 0.16), Meshes.xf(mpos), wall.darkened(0.08)])
+		p.append([Meshes.box(0.5, 0.7, 0.08), Meshes.xf(Vector3(0, 0.35, hd + 0.0)), Palette.TRUNK])
+	else:
+		var step := 0.3
+		for side in [Vector2(0, -1), Vector2(0, 1), Vector2(-1, 0), Vector2(1, 0)]:
+			var ln := hw * 2.0 if side.x == 0 else hd * 2.0
+			var n := int(ln / step)
+			for i in n:
+				var t := -ln / 2.0 + (i + 0.5) * step
+				var o := Vector3(t, 0, side.y * (hd - 0.1)) if side.x == 0 else Vector3(side.x * (hw - 0.1), 0, t)
+				var hh := hgt + float(i % 2) * 0.12
+				p.append([Meshes.cyl(0.12, 0.13, hh, 6), Meshes.xf(o + Vector3(0, hh / 2.0, 0)), wall])
+				p.append([Meshes.cyl(0.0, 0.12, 0.18, 6), Meshes.xf(o + Vector3(0, hh + 0.09, 0)), Palette.TRUNK])
+	for c in [Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, 1)]:
+		var tp := Vector3(c.x * (hw - 0.25), 0, c.y * (hd - 0.25))
+		if stone:
+			p.append([Meshes.box(0.6, hgt + 0.6, 0.6), Meshes.xf(tp + Vector3(0, (hgt + 0.6) / 2.0, 0)), wall.lightened(0.04)])
+		else:
+			for k in 4:
+				var lg := Vector3(-0.2 + (k % 2) * 0.4, 0, -0.2 + (k / 2) * 0.4)
+				p.append([Meshes.cyl(0.05, 0.06, hgt + 0.7, 5), Meshes.xf(tp + lg + Vector3(0, (hgt + 0.7) / 2.0, 0)), wall])
+			p.append([Meshes.box(0.6, 0.08, 0.6), Meshes.xf(tp + Vector3(0, hgt + 0.7, 0)), wall])
+			p.append([Meshes.cyl(0.0, 0.45, 0.4, 6), Meshes.xf(tp + Vector3(0, hgt + 0.95, 0)), pal[1]])
+	# Torreón al centro: de piedra con almenas, o casa de vigía de madera y paja.
+	if stone:
+		p.append([Meshes.box(1.1, 2.0, 1.1), Meshes.xf(Vector3(0, 1.0, -0.1)), wall.darkened(0.04)])
+		for i in 4:
+			var a := Vector3(-0.42 + (i % 2) * 0.84, 2.1, -0.52 + (i / 2) * 0.84)
+			p.append([Meshes.box(0.22, 0.24, 0.22), Meshes.xf(a), wall])
+		Meshes._banner(p, Vector3(0, 2.0, -0.1), 1.3, team)
+	else:
+		_hut(p, forma, Vector3(0, 0.0, -0.1), 1.0, 1.0, 1.0, pal, {})
+		Meshes._banner(p, Vector3(0.6, 0.0, 0.5), 2.0, team)
+# --- fin paso 4 ---
 
 
 static func _horse(p: Array, team: Color) -> void:

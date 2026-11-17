@@ -1,0 +1,87 @@
+# Paso 4: pruebas de entrega (la máquina estaba cargada con otros agentes: los tiempos del bench son ruidosos)
+
+## tests/test_determinism.gd
+ticks=3000 hash=2203695307
+DETERMINISMO: OK
+
+## tests/bench.gd (alternado con main bde3f6f, en la misma carga)
+paso 4:  200 unidades, 600 ticks: promedio 10.42 ms, peor 110.10 ms, presupuesto 100 ms; vivas al final: 125
+main:    200 unidades, 600 ticks: promedio 10.69 ms, peor 95.64 ms, presupuesto 100 ms; vivas al final: 125
+paso 4:  200 unidades, 600 ticks: promedio 9.87 ms, peor 104.72 ms, presupuesto 100 ms; vivas al final: 125
+main:    200 unidades, 600 ticks: promedio 11.55 ms, peor 121.73 ms, presupuesto 100 ms; vivas al final: 125
+paso 4 con 20 catapultas (-- --asedio):  200 unidades (20 catapultas), 600 ticks: promedio 10.61 ms, peor 79.75 ms, presupuesto 100 ms; vivas al final: 119
+
+## tests/asedio.gd (nueva)
+OK   ariete común edad 2: 49 (antes 49) 
+OK   ariete común edad 3: 54 (antes 54) 
+OK   ariete común edad 4: 60 (antes 60) 
+OK   ariete tawantinsuyu edad 2: 35 (antes 35) 
+OK   ariete tawantinsuyu edad 3: 38 (antes 38) 
+OK   ariete tawantinsuyu edad 4: 43 (antes 43) 
+OK   ariete guaranies edad 2: 41 (antes 41) 
+OK   ariete guaranies edad 3: 45 (antes 45) 
+OK   ariete guaranies edad 4: 50 (antes 51) 
+OK   el área daña a los 9 honderos del bloque (9 dañados)
+OK   pega más en el centro que en el borde (centro 16, esquina 9)
+OK   no daña a los propios 
+OK   tawantinsuyu: el ariete se entrena en la II 
+OK   tawantinsuyu: desde la III lo reemplaza Hondero de piedra caliente 
+OK   guaranies: el ariete se entrena en la II 
+OK   guaranies: desde la III lo reemplaza Cañón de tacuara 
+OK   mapuches: incendiarios en la III, sin catapulta 
+OK   Palmares: sin asedio de área ni niveles de asedio 
+OK   la kallanka real llevó a la III 
+OK   cerca del hito, +2 de ataque (cerca 13, lejos 11)
+OK   al entrar al aura, lo gana 
+OK   el hito militar de la II sigue global 
+OK   aspilleras y reforzada: +3 flechas (3 → 6)
+OK   reforzada: +30 % de vida (3500 → 4550)
+OK   incendiarios: madera ×450 %, piedra ×90 % 
+ASEDIO: OK
+
+## tests/civ_smoke.gd
+=== ["tawantinsuyu", "mapuches"] terreno=bosque ganador=-1
+tawantinsuyu edad 2 pob 53/75 res { "alimento": 55, "madera": 84, "piedra": 342, "riqueza": 667, "mita": 496 } tipos { "centro": 1, "aldeano": 42, "explorador": 1, "casa": 6, "almacen_madera": 3, "camino": 119, "qollqa": 3, "campo_tiro": 2, "almacen_mina": 2, "taller_tejido": 1, "ushnu": 1, "cuartel": 1, "mercado": 1, "granja": 12, "hondero": 5, "torre": 1, "ariete": 1, "guerrero": 2, "boleador": 2 }
+mapuches edad 2 pob 71/79 res { "alimento": 25, "madera": 35, "piedra": 390, "riqueza": 629 } tipos { "lof": 3, "aldeano": 41, "explorador": 1, "casa": 6, "corral": 3, "cuartel": 2, "granja": 12, "rewe_lonko": 1, "guerrero": 9, "hondero": 18, "mercado": 1, "lancero": 2 }
+=== ["etiopia", "palmares"] terreno=bosque ganador=-1
+etiopia edad 2 pob 48/55 res { "alimento": 30, "madera": 96, "piedra": 211, "riqueza": 202 } tipos { "centro": 1, "aldeano": 40, "casa": 4, "almacen_madera": 2, "gult": 3, "establo": 2, "almacen_mina": 2, "iglesia": 1, "almacen_alimento": 2, "granja": 9, "taller": 1, "cuartel": 1, "mercado": 1, "torre": 1, "ariete": 1, "guerrero": 3, "hondero": 2, "corte_nueva": 1 }
+palmares edad 1 pob 44/48 res { "alimento": 0, "madera": 0, "piedra": 260, "riqueza": 193, "fama": 31 } tipos { "centro": 1, "aldeano": 21, "explorador": 1, "casa": 4, "mocambo": 1, "cuartel": 1, "almacen_alimento": 3, "quilombo_central": 1, "hondero": 9, "guerrero": 13, "rebano": 2 }
+=== ["guaranies", "ayutthaya"] terreno=bosque ganador=-1
+guaranies edad 2 pob 43/75 res { "alimento": 19, "madera": 112, "piedra": 131, "riqueza": 175 } tipos { "centro": 1, "aldeano": 42, "explorador": 1, "casa": 6, "granja": 12, "almacen_madera": 8, "almacen_mina": 2, "campo_tiro": 2, "karai_palabra": 1, "taller": 1, "cuartel": 1, "mercado": 1, "monte": 1 }
+ayutthaya edad 2 pob 48/55 res { "alimento": 0, "madera": 21, "piedra": 301, "riqueza": 477 } tipos { "centro": 1, "aldeano": 29, "explorador": 1, "casa": 4, "elefante_rey": 2, "cuartel": 2, "almacen_mina": 2, "wat": 1, "granja": 10, "campo_tiro": 1, "rebano": 4, "mercado": 1, "taller": 1, "hondero": 9, "torre": 1, "guerrero": 5, "kraal": 1 }
+
+## tests/campaign_smoke.gd
+ayutthaya-1      Nong Sarai                    3:00 resultado=(abierta) o1:activo o2:hecho o3:activo o4:activo o5:oculto o6:activo
+ayutthaya-2      La boca del río               3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+ayutthaya-3      Veintisiete fuertes           3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:oculto o5:oculto o6:activo
+ayutthaya-4      La otra orilla                3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo o6:oculto
+etiopia-1        La luz de Debre Berhan        3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+etiopia-2        La montaña de los príncipes   3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+etiopia-3        Wayna Daga                    3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo
+etiopia-4        Gondar                        3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+guaranies-1      Lambaré                       3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+guaranies-2      Río abajo                     3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo
+guaranies-3      Mbororé                       3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo
+guaranies-4      Esta tierra tiene dueño       3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo o6:activo
+mapuches-1       El hacha negra                3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+mapuches-2       Lo que no llega a casa no cu  3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo
+mapuches-3       Curalaba                      3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:oculto o5:activo
+mapuches-4       Quilín                        3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+palmares-1       Cuatro fraguas                3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo o7:activo
+palmares-2       La cerca real                 3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:oculto o5:activo o6:activo
+palmares-3       El papel de Cucaú             3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:oculto o5:oculto o6:activo
+palmares-4       Tres cercas                   3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:oculto
+tawantinsuyu-1   Los que se quedaron           3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+tawantinsuyu-2   La frontera de piedra         3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo o6:activo
+tawantinsuyu-3   El agua de Ollantaytambo      3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:oculto o5:activo o6:activo
+tawantinsuyu-4   Tinta                         3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo o6:oculto
+tutorial-1       Primeros pasos                3:00 resultado=(abierta) o1:activo o2:oculto o3:oculto o4:oculto o5:oculto o6:oculto o7:oculto o8:oculto o9:oculto o10:oculto o11:oculto o12:oculto pr:activo
+
+## tests/jugabilidad.gd
+JUGABILIDAD: OK
+
+## tests/casillas.gd
+CASILLAS: 504 grillas revisadas, OK
+
+## Autotest (godot --path . -- --autotest --civ=guaranies --terreno=llano)
+AUTOTEST: OK

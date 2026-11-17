@@ -17,7 +17,31 @@ Contexto: hoy la edad IV no trae unidades nuevas, hay 18 mejoras compartidas y n
   - Palmares baja 12 puntos (de 52 a 40) y pasa el ±7 de la regla, pero queda en la banda y el conjunto mejora: **el paso 1 queda**, con Palmares en observación.
   - La edad IV, en 16 de 150 partidas (el paso 1 no busca moverla).
   - Rendimiento, solo en la máquina: 9,31 ms de promedio y 93 de peor caso. | [05-paso-1-niveles.md](05-paso-1-niveles.md) |
-| 5 | Decisión: si un paso rompe el balance, queda diseñado como contenido y se retoma con más contenido (modelos, animaciones) | por hacer |
+| 5 | **Paso 2 integrado (56032a5):** herrería en el cuartel (como dice el diseño §1.1), con 12 mejoras: ataque cuerpo a cuerpo y a distancia, y armadura contra cada uno, en 3 tandas (II, III y IV). Reemplaza a armas y escudos con el mismo poder total; el modelo y la micro dan igual. El lof, el mocambo y la qollqa no la tienen, porque no entra en su submenú. Mismo hash. Palmares 1: el objetivo secundario «protegé a los aldeanos» falla a los 2:48 en la prueba de humo, porque la IA rival cambia el orden de compra. Confirmación en el torneo del hito | [06-paso-2-herreria.md](06-paso-2-herreria.md) |
+| 6 | **Paso 4 integrado (460098f):** asedio y fortaleza.
+  - **Asedio:** sin bono por edad (niveles veterano y élite). Asedio de área en la III con forma por pueblo: hondero de piedra caliente, cañón de tacuara, pieza ligera, cañón de muralla, incendiarios mapuches contra la madera; Palmares, sin asedio.
+  - **Fortaleza de la III** por pueblo, y mejoras de defensa.
+  - **Hitos militares con aura (C-76 a):** es lo que más mueve. Según el modelo, el ejército lejos de casa pierde en la IV entre −14 y −39 % (Palmares, el que más).
+  - **Área:** se bajaron los números del diseño, porque 2 catapultas decidían cualquier pelea.
+  - **IA contra IA:** las partidas duran unos 3 minutos más, y levantan 9 fortalezas en 19 llegadas a la III, sin que caiga ninguna.
+  - **Pruebas:** mismo hash; asedio, jugabilidad y autotest OK.
+  - Si el torneo del hito castiga a Palmares: `aura_hito.militar.combate_desde_edad: 0`. | [08-paso-4-asedio-y-fortaleza.md](08-paso-4-asedio-y-fortaleza.md) |
+| 7 | **Paso 3 integrado (896a985):** economía del final y escuela de la IV.
+  - **Economía:** velocidad (II) y vida (III) del aldeano, una tercera tanda de tala, granja y carga en la IV, y los sitios rinden +50 % en la IV.
+  - **Escuela de la IV:** con nombre por pueblo (Yachaywasi, Trawün de los weupife, Escritura del cabildo, Talleres de Gondar, Oficinas do Macaco, Phra Khlang), con 6 mejoras comunes y «los registros» propios de cada pueblo (khipu, pron, actas, Ṣäḥafe tə'əzaz, memoria de los mocambos, Chindamani).
+  - **No cumple la meta del §6:** la IA llega a la IV en 22 % con y sin el paso. Llegar depende de que la IA quiera subir y del paso 7.
+  - **Pruebas:** mismo hash; juego tardío, casillas (504 grillas) y autotest OK. | [07-paso-3-economia-y-escuela.md](07-paso-3-economia-y-escuela.md) |
+| 8 | **Torneo del hito (34)** ([resultados](pruebas/34-torneo-hito-pasos-2-4.txt)), pasos 2, 3 y 4 juntos:
+  - Todas entre 42 y 60 %: Tawantinsuyu 52, mapuches 60 (antes 70), guaraníes 42, Etiopía 46, Palmares 58 (antes 46: el aura no la castigó), Ayutthaya 42.
+  - Es la banda más pareja hasta ahora: **los pasos 2 a 4 quedan**.
+  - Las partidas por destrucción de hitos bajan de 82 a 64, porque se alargan.
+  - **La IV aparece en 7 partidas (antes, 16):** la fortaleza y el asedio frenan el ritmo. Que se llegue a la IV es el trabajo del paso 7 y de que la IA quiera subir. | hecho |
+| 9 | **Costos por recurso (ece45e8)**, pedido del autor ("acumulo riqueza…"):
+  - El veterano de AoE4 midió que en la II había 400 o más de riqueza quieta el 71 % del tiempo.
+  - La herrería y las mejoras militares de la II y la III pasan a riqueza y alimento, sin madera, con el mismo tiempo de aldeano.
+  - Riqueza quieta: 59 % del tiempo. La III llega a los 17,5 min (antes, 18,3).
+  - Su consejo al jugador: el mercado como salida de la riqueza que sobra. Se confirma en el torneo siguiente. | [09-costos-por-recurso.md](09-costos-por-recurso.md) |
+| 10 | Decisión: si un paso rompe el balance, queda diseñado como contenido y se retoma con más contenido (modelos, animaciones) | por hacer |
 
 ## Pedido del autor: saberes de los pueblos
 

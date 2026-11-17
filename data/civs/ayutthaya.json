@@ -17,6 +17,9 @@
    "casa": "ayutthaya_casa"
   }
  },
+ "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",
+ "escuela": {"nombre": "Phra Khlang", "edificios": [], "desc": "El tesoro y los puertos, con sus escribanos, contadores e intérpretes (lam): lenguas, cuentas, cartas náuticas y tratados (La Loubère, 1691; Van Vliet's Siam, 2005). Se investiga en el wang."},
+ "tecnologias": {"escuela_registros": {"nombre": "Chindamani", "desc": "El manual de lengua y versificación de la corte de Narai (autoría y fecha, debatidas)."}},
  "edades": [
   "Mueang",
   "Krung Si",
@@ -24,6 +27,7 @@
   "Mueang Tha"
  ],
  "unidades": {
+  "catapulta": {"nombre": "Cañón de muralla", "ataque": 13, "alcance": 6500, "area": 1300, "desc": "Asedio de área: metralla de un cañón liviano de muralla (puen lek [verificar]; puen solo es cualquier arma de fuego). Pega a todos los enemigos en un radio grande, menos fuerte que la catapulta; le hace poco a los edificios (Charney, 2004)."},
   "rebano": {"nombre": "Búfalo de agua", "color": "#55585c", "desc": "Búfalo de agua: tiraba del arado en el arrozal y de la carreta, y se lo carneaba viejo o en fiestas [verificar]. Se arrea y da alimento."},
   "aldeano": {
    "nombre": "Phrai"
@@ -54,6 +58,7 @@
   "compania_japonesa": {"nombre": "Compañía japonesa", "funcion": "choque", "edad_min": 2, "pob": 1, "costo": {"riqueza": 85}, "tiempo_ms": 12000, "pv": 140, "armadura": 2, "armadura_distancia": 2, "ataque": 13, "alcance": 450, "cadencia_ms": 1150, "velocidad": 1550, "vision": 8000, "radio": 260}
  },
  "edificios": {
+  "fortaleza": {"nombre": "Pom", "desc": "Pom (ป้อม): fuerte de ladrillo en la muralla o en la orilla, como Pom Phet en la esquina sureste de la isla (Baker y Pasuk, 2017). La defensa que aguanta de la edad III."},
   "campo_tiro": {"nombre": "Sanam ying thanu"},
   "almacen_mina": {"nombre": "Khlang din", "deposito": ["riqueza"], "desc": "Almacén de tierra: solo arcilla. El elefante del rey no la carga."},
   "centro": {
@@ -308,8 +313,8 @@
    "guardia_extranjera"
   ]
  ],
- "construye": ["casa", "granja", "cuartel", "campo_tiro", "taller", "torre", "centro", "kraal", "barrio_japones", "barrio_portugues", "mercado", "almacen_mina"],
- "produce": {"centro": ["aldeano", "explorador", "elefante_rey"], "cuartel": ["guerrero", "lancero"], "campo_tiro": ["hondero"], "taller": ["ariete"]},
+ "construye": ["casa", "granja", "cuartel", "campo_tiro", "taller", "torre", "fortaleza", "centro", "kraal", "barrio_japones", "barrio_portugues", "mercado", "almacen_mina"],
+ "produce": {"centro": ["aldeano", "explorador", "elefante_rey"], "cuartel": ["guerrero", "lancero"], "campo_tiro": ["hondero"], "taller": ["ariete", "catapulta"]},
  "modulos": {"khlong": {"_doc": "Canal de agua baja junto a la base (proceso/24): el arrozal rinde +35 % a 2 casillas del agua. distancia: casillas del centro; largo y ancho del canal", "distancia": 8, "largo": 9, "ancho": 2}},
  "ia_unidades": [
   "chang_suek"

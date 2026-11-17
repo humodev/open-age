@@ -1,0 +1,90 @@
+# Paso 4: partidas IA contra IA (tools/asedio_ia.gd -- --minutes=45 --seeds=2 --dificultad=normal, en dos partes).
+
+## Paso 4
+=== normal s0 ayutthaya contra etiopia · ganador nadie · fin 45:00 sin terminar (-)
+  ayutthaya: III 28:29 · IV — · asedio contra edificios 9 · de área 2 (10 disparos) · niveles [veterano_asedio 31:51] · fortaleza [hecha 29:46, primer golpe 40:02, cae —] · daño a la fortaleza { "tropa": 150, "asedio": 3480 } · defensa []
+  etiopia: III 20:55 · IV — · asedio contra edificios 10 · de área 3 (39 disparos) · niveles [veterano_asedio 22:46] · fortaleza [hecha 22:01, primer golpe —, cae —] · daño a la fortaleza {  } · defensa []
+=== normal s0 guaranies contra mapuches · ganador mapuches · fin 23:26 (sitios)
+  guaranies: III — · IV — · asedio contra edificios 2 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa [] · derrotado
+  mapuches: III 16:54 · IV — · asedio contra edificios 6 · de área 0 (0 disparos) · niveles [veterano_asedio 19:11] · fortaleza [hecha 21:40, primer golpe —, cae —] · daño a la fortaleza {  } · defensa []
+=== normal s0 palmares contra tawantinsuyu · ganador palmares · fin 39:02 (conquista)
+  palmares: III 21:08 · IV — · asedio contra edificios 0 · de área 0 (0 disparos) · niveles [] · fortaleza [hecha 27:35, primer golpe —, cae —] · daño a la fortaleza {  } · defensa []
+  tawantinsuyu: III 22:25 · IV — · asedio contra edificios 9 · de área 2 (9 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa [] · derrotado
+=== normal s1 ayutthaya contra guaranies · ganador guaranies · fin 40:50 (sitios)
+  ayutthaya: III 27:24 · IV — · asedio contra edificios 4 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa [] · derrotado
+  guaranies: III 14:31 · IV 29:34 · asedio contra edificios 2 · de área 7 (51 disparos) · niveles [veterano_asedio 16:21, elite_asedio 30:58] · fortaleza [] · daño a la fortaleza {  } · defensa []
+=== normal s1 guaranies contra palmares · ganador nadie · fin 45:00 sin terminar (-)
+  guaranies: III 28:18 · IV 35:30 · asedio contra edificios 4 · de área 1 (8 disparos) · niveles [veterano_asedio 29:50, elite_asedio 37:52] · fortaleza [] · daño a la fortaleza {  } · defensa []
+  palmares: III 18:45 · IV — · asedio contra edificios 0 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa []
+=== normal s1 palmares contra ayutthaya · ganador nadie · fin 45:00 sin terminar (-)
+  palmares: III 25:16 · IV — · asedio contra edificios 0 · de área 0 (0 disparos) · niveles [] · fortaleza [hecha 27:35, primer golpe —, cae —] · daño a la fortaleza {  } · defensa []
+  ayutthaya: III 17:04 · IV — · asedio contra edificios 3 · de área 0 (0 disparos) · niveles [veterano_asedio 18:07] · fortaleza [hecha 20:17, primer golpe 25:29, cae —] · daño a la fortaleza { "tropa": 1763 } · defensa []
+=== normal s0 etiopia contra guaranies · ganador guaranies · fin 33:34 (conquista)
+  etiopia: III — · IV — · asedio contra edificios 3 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa [] · derrotado
+  guaranies: III 16:26 · IV 29:22 · asedio contra edificios 4 · de área 4 (32 disparos) · niveles [veterano_asedio 19:40] · fortaleza [] · daño a la fortaleza {  } · defensa []
+=== normal s0 mapuches contra palmares · ganador mapuches · fin 16:53 (sitios)
+  mapuches: III — · IV — · asedio contra edificios 0 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa []
+  palmares: III — · IV — · asedio contra edificios 0 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa [] · derrotado
+=== normal s0 tawantinsuyu contra ayutthaya · ganador tawantinsuyu · fin 32:53 (sitios)
+  tawantinsuyu: III 15:46 · IV — · asedio contra edificios 5 · de área 14 (220 disparos) · niveles [veterano_asedio 17:40] · fortaleza [hecha 19:44, primer golpe —, cae —] · daño a la fortaleza {  } · defensa []
+  ayutthaya: III — · IV — · asedio contra edificios 7 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa [] · derrotado
+=== normal s1 etiopia contra mapuches · ganador etiopia · fin 37:22 (conquista)
+  etiopia: III 15:10 · IV — · asedio contra edificios 9 · de área 9 (132 disparos) · niveles [veterano_asedio 16:20] · fortaleza [hecha 18:28, primer golpe —, cae —] · daño a la fortaleza {  } · defensa []
+  mapuches: III 25:00 · IV — · asedio contra edificios 3 · de área 0 (0 disparos) · niveles [veterano_asedio 30:07] · fortaleza [] · daño a la fortaleza {  } · defensa [] · derrotado
+=== normal s1 mapuches contra tawantinsuyu · ganador tawantinsuyu · fin 21:53 (conquista)
+  mapuches: III 16:20 · IV — · asedio contra edificios 4 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa [] · derrotado
+  tawantinsuyu: III 15:08 · IV — · asedio contra edificios 6 · de área 6 (42 disparos) · niveles [veterano_asedio 16:52] · fortaleza [] · daño a la fortaleza {  } · defensa []
+=== normal s1 tawantinsuyu contra etiopia · ganador tawantinsuyu · fin 41:15 (sitios)
+  tawantinsuyu: III 25:45 · IV — · asedio contra edificios 19 · de área 4 (6 disparos) · niveles [veterano_asedio 26:35] · fortaleza [] · daño a la fortaleza {  } · defensa []
+  etiopia: III 16:43 · IV — · asedio contra edificios 5 · de área 2 (58 disparos) · niveles [veterano_asedio 17:29] · fortaleza [hecha 18:46, primer golpe 38:05, cae —] · daño a la fortaleza { "tropa": 1372 } · defensa [aspilleras 22:13] · derrotado
+
+## Antes (main bde3f6f, con la misma herramienta)
+=== normal s0 ayutthaya contra etiopia · ganador etiopia · fin 31:22 (sitios)
+  ayutthaya: III 23:21 · IV — · asedio contra edificios 7 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa [] · derrotado
+  etiopia: III 20:55 · IV — · asedio contra edificios 10 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa []
+=== normal s0 guaranies contra mapuches · ganador mapuches · fin 23:26 (sitios)
+  guaranies: III — · IV — · asedio contra edificios 2 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa [] · derrotado
+  mapuches: III 18:45 · IV — · asedio contra edificios 0 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa []
+=== normal s0 palmares contra tawantinsuyu · ganador nadie · fin 45:00 sin terminar (-)
+  palmares: III 19:13 · IV — · asedio contra edificios 0 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa []
+  tawantinsuyu: III 22:30 · IV — · asedio contra edificios 32 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa []
+=== normal s1 ayutthaya contra guaranies · ganador guaranies · fin 29:12 (conquista)
+  ayutthaya: III — · IV — · asedio contra edificios 4 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa [] · derrotado
+  guaranies: III 14:31 · IV 26:19 · asedio contra edificios 11 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa []
+=== normal s1 guaranies contra palmares · ganador palmares · fin 36:19 (sitios)
+  guaranies: III — · IV — · asedio contra edificios 7 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa [] · derrotado
+  palmares: III 18:45 · IV 30:08 · asedio contra edificios 0 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa []
+=== normal s1 palmares contra ayutthaya · ganador nadie · fin 45:00 sin terminar (-)
+  palmares: III — · IV — · asedio contra edificios 0 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa []
+  ayutthaya: III 18:38 · IV — · asedio contra edificios 9 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa []
+=== normal s0 etiopia contra guaranies · ganador guaranies · fin 33:43 (conquista)
+  etiopia: III — · IV — · asedio contra edificios 3 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa [] · derrotado
+  guaranies: III 16:25 · IV 30:12 · asedio contra edificios 8 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa []
+=== normal s0 mapuches contra palmares · ganador mapuches · fin 16:53 (sitios)
+  mapuches: III — · IV — · asedio contra edificios 0 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa []
+  palmares: III — · IV — · asedio contra edificios 0 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa [] · derrotado
+=== normal s0 tawantinsuyu contra ayutthaya · ganador tawantinsuyu · fin 41:24 (conquista)
+  tawantinsuyu: III 15:46 · IV — · asedio contra edificios 38 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa []
+  ayutthaya: III 23:26 · IV — · asedio contra edificios 7 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa [] · derrotado
+=== normal s1 etiopia contra mapuches · ganador etiopia · fin 24:36 (conquista)
+  etiopia: III 19:01 · IV — · asedio contra edificios 6 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa []
+  mapuches: III — · IV — · asedio contra edificios 0 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa [] · derrotado
+=== normal s1 mapuches contra tawantinsuyu · ganador tawantinsuyu · fin 21:31 (conquista)
+  mapuches: III 16:20 · IV — · asedio contra edificios 0 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa [] · derrotado
+  tawantinsuyu: III 15:08 · IV — · asedio contra edificios 13 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa []
+=== normal s1 tawantinsuyu contra etiopia · ganador tawantinsuyu · fin 32:09 (conquista)
+  tawantinsuyu: III 20:55 · IV — · asedio contra edificios 18 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa []
+  etiopia: III 16:43 · IV — · asedio contra edificios 9 · de área 0 (0 disparos) · niveles [] · fortaleza [] · daño a la fortaleza {  } · defensa [] · derrotado
+
+## Cuánto tarda en caer una defensa sola (tools/asedio_ia.gd -- --caida; III con los niveles; amove sobre el edificio)
+defensor | edificio | adentro | atacante | segundos hasta caer | atacantes perdidos
+común | Torre | 0 | ariete:3 | 22 | 0 de 3
+común | Fortaleza | 0 | ariete:3 | 61 | 0 de 3
+común | Fortaleza | 10 | ariete:3 | 61 | 0 de 3
+común | Fortaleza | 10 | ariete:3+lancero:10 | 84 | 10 de 13
+común | Fortaleza | 0 | catapulta:3 | no cae en 600 | 1 de 3
+común | Fortaleza | 0 | guerrero:15 | no cae en 600 | 15 de 15
+mapuches | Pukara | 0 | incendiarios:6 | no cae en 600 | 6 de 6
+etiopia | Fortaleza de amba | 0 | incendiarios:6 | no cae en 600 | 6 de 6
+palmares | Baluarte da cerca | 0 | guerrero:15 | no cae en 600 | 15 de 15
+guaranies | Trinchera de tacuara | 0 | catapulta:3 | no cae en 600 | 3 de 3

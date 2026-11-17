@@ -1,8 +1,10 @@
 extends SceneTree
 ## ¿La IA compra a tiempo lo que reemplaza al bono de ataque por edad? (proceso/26, paso 5;
 ## docs/diseno/27, paso 1). Partidas IA contra IA: por jugador, el minuto de cada edad, de la
-## herrería I (armas_1, con el +10 %) y de cada nivel veterano y élite, y cuántos niveles tenía
-## al terminar. Las partidas se reparten como en el torneo (--parte=i/n).
+## herrería I de ataque (ataque_cc_1 y ataque_dist_1, con el +10 %), de cada nivel veterano y
+## élite y de cada tanda de la herrería (paso 2), y cuántos niveles tenía al terminar. En la
+## columna de la herrería: ac/ad = ataque cuerpo a cuerpo / distancia, rc/rd = armadura contra
+## cuerpo a cuerpo / contra distancia, con la tanda (ac2 = ataque cuerpo a cuerpo II). Las partidas se reparten como en el torneo (--parte=i/n).
 ##
 ## Uso:
 ##   godot --headless --path . -s tools/niveles_ia.gd -- --minutes=30 --seeds=1 --dificultad=normal
@@ -34,7 +36,7 @@ func _init() -> void:
 	civs.sort()
 	# Cada pueblo juega una vez por semilla y dificultad, contra el siguiente de la lista.
 	var game_i := 0
-	print("dificultad | semilla | pueblo | rival | II | armas_1 | III | veteranos (min) | IV | élites (min) | niveles al final | ganador")
+	print("dificultad | semilla | pueblo | rival | II | ataque I (cc, dist) | III | veteranos (min) | IV | élites (min) | herrería (min) | niveles al final | ganador")
 	for diff: String in diffs:
 		for sd in seeds:
 			for i in civs.size():
@@ -52,19 +54,27 @@ func _init() -> void:
 							log[ev["player"]]["edad%d" % int(ev["age"])] = s.tick
 						elif ev["t"] == "tech":
 							var k: String = ev["tech"]
-							if k == "armas_1" or k.begins_with("veterano_") or k.begins_with("elite_"):
+							if s.dp(ev["player"]).tecnologias.get(k, {}).has("herreria") or k.begins_with("veterano_") or k.begins_with("elite_"):
 								log[ev["player"]][k] = s.tick
 				for pid in 2:
 					var l: Dictionary = log[pid]
 					var vets := []
 					var elis := []
+					var smith := []
 					for k: String in l:
+						if SMITH.has(k.left(k.length() - 2)) and k != "ataque_cc_1" and k != "ataque_dist_1":
+							smith.append([l[k], "%s%s %s" % [SMITH[k.left(k.length() - 2)], k.right(1), _m(l[k])]])
 						if k.begins_with("veterano_"):
 							vets.append("%s %s" % [k.substr(9), _m(l[k])])
 						elif k.begins_with("elite_"):
 							elis.append("%s %s" % [k.substr(6), _m(l[k])])
-					print("%s | %d | %s | %s | %s | %s | %s | %s | %s | %s | %d | %d" % [diff, sd, pair[pid], pair[1 - pid], _m(l.get("edad2", -1)), _m(l.get("armas_1", -1)), _m(l.get("edad3", -1)), ", ".join(vets) if not vets.is_empty() else "-", _m(l.get("edad4", -1)), ", ".join(elis) if not elis.is_empty() else "-", vets.size() + elis.size(), s.winner])
+					smith.sort_custom(func(a: Array, b: Array) -> bool: return int(a[0]) < int(b[0]))
+					var smith_txt := ", ".join(smith.map(func(x: Array) -> String: return x[1]))
+					print("%s | %d | %s | %s | %s | %s, %s | %s | %s | %s | %s | %s | %d | %d" % [diff, sd, pair[pid], pair[1 - pid], _m(l.get("edad2", -1)), _m(l.get("ataque_cc_1", -1)), _m(l.get("ataque_dist_1", -1)), _m(l.get("edad3", -1)), ", ".join(vets) if not vets.is_empty() else "-", _m(l.get("edad4", -1)), ", ".join(elis) if not elis.is_empty() else "-", smith_txt if smith_txt != "" else "-", vets.size() + elis.size(), s.winner])
 	quit()
+
+
+const SMITH := {"ataque_cc": "ac", "ataque_dist": "ad", "armadura_cc": "rc", "armadura_dist": "rd"}
 
 
 func _m(tick: int) -> String:

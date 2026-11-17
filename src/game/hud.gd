@@ -392,7 +392,7 @@ func on_events(events: Array) -> void:
 				var name: String = sim.dp(pid).edades[ev["age"] - 1]["nombre"]
 				if pid == local:
 					var hdef: Dictionary = sim.dp(pid).edificios.get(ev.get("hito", ""), {})
-					var efx := ctrl.effects_text(hdef.get("efectos", []))
+					var efx := ctrl.hito_effects_text(hdef, int(ev["age"])) # --- paso 4 --- aura
 					notify("Edad %s alcanzada · %s" % [Sim._roman(ev["age"]), name] + ("\n" + efx if efx != "" else ""), -1.0, "hito")
 				else:
 					notify("%s llegó a la edad %s" % [preload("res://src/game/ui/panel_comun.gd").player_name(sim, pid, local), Sim._roman(ev["age"])], -1.0, "info")
@@ -959,8 +959,8 @@ class CommandCard:
 		draw_style_box(Hud.panel_box(), Rect2(Vector2.ZERO, size))
 		var cmds := hud.ctrl.commands()
 		# --- grilla --- (pestaña con el submenú abierto, encima de la grilla)
-		if hud.ctrl.submenu != Grilla.RAIZ and (hud.ctrl.grilla_aldeano() or hud.ctrl.submenu == Controller.INVESTIGAR): # --- ronda 6 ---
-			var title := "ECONOMÍA" if hud.ctrl.submenu == Grilla.ECONOMIA else "INVESTIGACIONES" if hud.ctrl.submenu == Controller.INVESTIGAR else "MILITAR Y DEFENSA"
+		if hud.ctrl.submenu != Grilla.RAIZ and (hud.ctrl.grilla_aldeano() or hud.ctrl.submenu == Controller.INVESTIGAR or hud.ctrl.submenu == Controller.ESCUELA): # --- ronda 6 ---
+			var title := "ECONOMÍA" if hud.ctrl.submenu == Grilla.ECONOMIA else "INVESTIGACIONES" if hud.ctrl.submenu == Controller.INVESTIGAR else String(hud.ctrl.escuela_info()["nombre"]).to_upper() if hud.ctrl.submenu == Controller.ESCUELA else "MILITAR Y DEFENSA"
 			var tw := Hud.font_b.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x + 92
 			var tab := StyleBoxFlat.new()
 			tab.bg_color = Color(Palette.UI_BG, 0.95)
@@ -1211,7 +1211,7 @@ class SelectionPanel:
 			draw_string(Hud.font, Vector2(0, 36), "+%d población" % e.def["pob"], HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, 13, Palette.UI_DIM)
 		var cap := sim.garrison_cap(e)
 		if cap > 0:
-			var shots: int = int(e.def.get("flechas", 1)) + e.garrison.size()
+			var shots: int = sim.volley_shots(e) # --- paso 4 --- aspilleras
 			draw_string(Hud.font_b, Vector2(0, 58), "Guarnición %d/%d · %d flechas" % [e.garrison.size(), cap, shots], HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, 13, Palette.UI_ACCENT if not e.garrison.is_empty() else Palette.UI_DIM)
 		# --- veterano ronda 4 --- el círculo que se dibuja al elegir un centro o una torre
 		# (mundo_capa._draw_ranges) es el alcance de sus flechas: que el panel lo diga.
