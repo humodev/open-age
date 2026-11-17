@@ -26,7 +26,13 @@ Contexto: hoy la edad IV no trae unidades nuevas, hay 18 mejoras compartidas y n
   - **IA contra IA:** las partidas duran unos 3 minutos más, y levantan 9 fortalezas en 19 llegadas a la III, sin que caiga ninguna.
   - **Pruebas:** mismo hash; asedio, jugabilidad y autotest OK.
   - Si el torneo del hito castiga a Palmares: `aura_hito.militar.combate_desde_edad: 0`. | [08-paso-4-asedio-y-fortaleza.md](08-paso-4-asedio-y-fortaleza.md) |
-| 7 | Decisión: si un paso rompe el balance, queda diseñado como contenido y se retoma con más contenido (modelos, animaciones) | por hacer |
+| 7 | **Paso 3 integrado (896a985):** economía del final y escuela de la IV.
+  - **Economía:** velocidad (II) y vida (III) del aldeano, una tercera tanda de tala, granja y carga en la IV, y los sitios rinden +50 % en la IV.
+  - **Escuela de la IV:** con nombre por pueblo (Yachaywasi, Trawün de los weupife, Escritura del cabildo, Talleres de Gondar, Oficinas do Macaco, Phra Khlang), con 6 mejoras comunes y «los registros» propios de cada pueblo (khipu, pron, actas, Ṣäḥafe tə'əzaz, memoria de los mocambos, Chindamani).
+  - **No cumple la meta del §6:** la IA llega a la IV en 22 % con y sin el paso. Llegar depende de que la IA quiera subir y del paso 7.
+  - **Pruebas:** mismo hash; juego tardío, casillas (504 grillas) y autotest OK. | [07-paso-3-economia-y-escuela.md](07-paso-3-economia-y-escuela.md) |
+| 8 | **Torneo del hito (34):** pasos 2, 3 y 4 juntos | en curso |
+| 9 | Decisión: si un paso rompe el balance, queda diseñado como contenido y se retoma con más contenido (modelos, animaciones) | por hacer |
 
 ## Pedido del autor: saberes de los pueblos
 
