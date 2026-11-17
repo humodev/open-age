@@ -622,3 +622,8 @@ La Cerca do Outeiro da Barriga queda "sitiada" hasta consultar si se puede mostr
 a) Así *(por defecto)* · b) Otra
 
 **Respuesta:**
+
+## Respuestas del 2026-11-16
+
+- **Animaciones con KayKit:** "Lets start with kaykit yes." Las animaciones de los aldeanos arrancan con KayKit Character Animations (CC0). Etapa 27.
+- **Íconos, color por edad y estados de la grilla** (observación al jugar): íconos propios para construir, entrenar e investigar; un color por edad; estados de color en lugar del candado; y el rojo de la ayuda flotante solo cuando de verdad bloquea. Cuando haya créditos de Meshy se harán imágenes para algunas cosas. Etapa 28.
