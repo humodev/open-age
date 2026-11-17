@@ -1,0 +1,89 @@
+# Pruebas del paso 3 (después de fusionar main con los pasos 2 y 4)
+## test_determinism.gd y casillas.gd
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+ticks=3000 hash=2203695307
+J0 edad=1 pob=24/30 res={ "alimento": 820, "madera": 520, "piedra": 100, "riqueza": 260 } stats={ "recolectado": 2470, "entrenadas": 17, "bajas": 0, "muertes": 0, "edificios_destruidos": 0, "ordenes": { "target": 23, "build:casa": 2, "train:aldeano": 16, "move": 10, "build:deposito": 2, "build:cuartel": 1, "rally": 1, "train:guerrero": 2 }, "origen": { "casa": { "alimento": 1510, "madera": 710, "riqueza": 210 }, "recoleccion": { "madera": 10, "alimento": 30 } } }
+J1 edad=1 pob=24/30 res={ "alimento": 40, "madera": 230, "piedra": 100, "riqueza": 25 } stats={ "recolectado": 2130, "entrenadas": 17, "bajas": 0, "muertes": 0, "edificios_destruidos": 0, "ordenes": { "target": 26, "build:casa": 2, "train:aldeano": 16, "build:deposito": 3, "build:cuartel": 1, "rally": 1, "train:guerrero": 1, "train:hondero": 3, "build:hito_economia": 1 }, "origen": { "casa": { "alimento": 1100, "madera": 620, "riqueza": 250 }, "recoleccion": { "alimento": 140, "madera": 20 } } }
+game_over=false winner=-1 entidades=2452
+DETERMINISMO: OK
+CASILLAS: 504 grillas revisadas, OK
+## bench.gd (dos corridas, con otros Godot de otros agentes corriendo al lado)
+200 unidades, 600 ticks: promedio 13.65 ms, peor 150.60 ms; 2.ª: promedio 12.96 ms, peor 148.94 ms (presupuesto 100 ms)
+## juego_tardio.gd
+OK    escuela en la capital 
+OK    escuela en la tava 
+OK    escuela no en una casa 
+OK    nombre propio de los registros Actas del cabildo
+OK    registros: descuento en la IV { "alimento": 300, "madera": 200 } -> { "alimento": 270, "madera": 180 }
+OK    registros: nada en la II 
+OK    se paga con descuento 180
+OK    velocidad del aldeano 112 -> 123
+OK    vida del aldeano 50 -> 65
+OK    asedio +15 % contra edificios 163 -> 187 de daño
+OK    sin la mejora no se repara 
+OK    con la mejora se repara 
+OK    el aldeano repara el asedio 70 -> 140 de 140
+OK    pólvora +10 % 16 -> 17
+OK    choque +10 % de vida 120 -> 132
+OK    renta de los sitios por edad en los datos 
+JUEGO TARDÍO: OK
+## jugabilidad.gd
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+  ok   tapyi (leñera guaraní) junto al bosque: 3 de 3 aldeanos recolectan madera al terminar
+  ok   toda tecnología tiene dónde investigarse en cada civ 
+  ok   lejos (19 casillas): 6 de 6 marchan en grupo
+  ok   al llegar los 6 recolectan; del primero al último, 0.0 s
+  ok   cerca: van directo, sin grupo (0 en grupo)
+  ok   animales al arrancar: incas 5 (llamas), guaraníes 0
+  ok   el explorador reclama el rebaño suelto (ahora 9 propios, eran 5)
+  ok   el aldeano carnea y junta: alimento de 200 a 220
+  ok   carnear en cadena: 4 aldeanos terminan las 5 llamas sin volver a mandarlos (quedan 0)
+  ok   una llama por vez: como mucho 1 carne abierta a la vez
+  ok   aldeano a un animal suelto: lo reclama y lo carnea (orden 5)
+  ok   del arbusto al arbusto: 3 de 3 siguen con arbustos y quedan 5 de 5 llamas
+  ok   aura militar: el guerrero herido junto al hito se cura (60 → 70)
+  ok   aura de economía: tres leñadores junto al hito juntan 290 contra 260 sin él
+  ok   depositar por cualquier lado: entrega de su lado en los cuatro (sí 1.8 s, sí 5.9 s, sí 1.8 s, sí 2.7 s)
+  ok   pasillo entre casas pegadas: se pegan true, la nueva abre su columna true, el resto tapa true, se cruza en línea recta true, se cierra sin la vieja true, la empalizada cierra true
+  ok   carne encerrada entre árboles: 0 de 3 siguen con ella, 3 juntan otra cosa, alimento de 200 a 460
+JUGABILIDAD: OK
+## civ_smoke.gd
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+=== ["tawantinsuyu", "mapuches"] terreno=bosque ganador=-1
+tawantinsuyu edad 2 pob 53/75 res { "alimento": 55, "madera": 84, "piedra": 342, "riqueza": 667, "mita": 496 } tipos { "centro": 1, "aldeano": 42, "explorador": 1, "casa": 6, "almacen_madera": 3, "camino": 119, "qollqa": 3, "campo_tiro": 2, "almacen_mina": 2, "taller_tejido": 1, "ushnu": 1, "cuartel": 1, "mercado": 1, "granja": 12, "hondero": 5, "torre": 1, "ariete": 1, "guerrero": 2, "boleador": 2 }
+mapuches edad 2 pob 71/79 res { "alimento": 25, "madera": 35, "piedra": 390, "riqueza": 629 } tipos { "lof": 3, "aldeano": 41, "explorador": 1, "casa": 6, "corral": 3, "cuartel": 2, "granja": 12, "rewe_lonko": 1, "guerrero": 9, "hondero": 18, "mercado": 1, "lancero": 2 }
+=== ["etiopia", "palmares"] terreno=bosque ganador=-1
+etiopia edad 2 pob 48/55 res { "alimento": 30, "madera": 96, "piedra": 211, "riqueza": 202 } tipos { "centro": 1, "aldeano": 40, "casa": 4, "almacen_madera": 2, "gult": 3, "establo": 2, "almacen_mina": 2, "iglesia": 1, "almacen_alimento": 2, "granja": 9, "taller": 1, "cuartel": 1, "mercado": 1, "torre": 1, "ariete": 1, "guerrero": 3, "hondero": 2, "corte_nueva": 1 }
+palmares edad 1 pob 44/48 res { "alimento": 0, "madera": 0, "piedra": 260, "riqueza": 193, "fama": 31 } tipos { "centro": 1, "aldeano": 21, "explorador": 1, "casa": 4, "mocambo": 1, "cuartel": 1, "almacen_alimento": 3, "quilombo_central": 1, "hondero": 9, "guerrero": 13, "rebano": 2 }
+=== ["guaranies", "ayutthaya"] terreno=bosque ganador=-1
+guaranies edad 2 pob 43/75 res { "alimento": 19, "madera": 112, "piedra": 131, "riqueza": 175 } tipos { "centro": 1, "aldeano": 42, "explorador": 1, "casa": 6, "granja": 12, "almacen_madera": 8, "almacen_mina": 2, "campo_tiro": 2, "karai_palabra": 1, "taller": 1, "cuartel": 1, "mercado": 1, "monte": 1 }
+ayutthaya edad 2 pob 48/55 res { "alimento": 0, "madera": 21, "piedra": 301, "riqueza": 477 } tipos { "centro": 1, "aldeano": 29, "explorador": 1, "casa": 4, "elefante_rey": 2, "cuartel": 2, "almacen_mina": 2, "wat": 1, "granja": 10, "campo_tiro": 1, "rebano": 4, "mercado": 1, "taller": 1, "hondero": 9, "torre": 1, "guerrero": 5, "kraal": 1 }
+## campaign_smoke.gd
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+ayutthaya-1      Nong Sarai                    3:00 resultado=(abierta) o1:activo o2:hecho o3:activo o4:activo o5:oculto o6:activo
+ayutthaya-2      La boca del río               3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+ayutthaya-3      Veintisiete fuertes           3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:oculto o5:oculto o6:activo
+ayutthaya-4      La otra orilla                3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo o6:oculto
+etiopia-1        La luz de Debre Berhan        3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+etiopia-2        La montaña de los príncipes   3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+etiopia-3        Wayna Daga                    3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo
+etiopia-4        Gondar                        3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+guaranies-1      Lambaré                       3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+guaranies-2      Río abajo                     3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo
+guaranies-3      Mbororé                       3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo
+guaranies-4      Esta tierra tiene dueño       3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo o6:activo
+mapuches-1       El hacha negra                3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+mapuches-2       Lo que no llega a casa no cu  3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo
+mapuches-3       Curalaba                      3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:oculto o5:activo
+mapuches-4       Quilín                        3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+palmares-1       Cuatro fraguas                3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo o7:activo
+palmares-2       La cerca real                 3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:oculto o5:activo o6:activo
+palmares-3       El papel de Cucaú             3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:oculto o5:oculto o6:activo
+palmares-4       Tres cercas                   3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:oculto
+tawantinsuyu-1   Los que se quedaron           3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:oculto o6:activo
+tawantinsuyu-2   La frontera de piedra         3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo o6:activo
+tawantinsuyu-3   El agua de Ollantaytambo      3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:oculto o5:activo o6:activo
+tawantinsuyu-4   Tinta                         3:00 resultado=(abierta) o1:activo o2:activo o3:activo o4:activo o5:activo o6:oculto
+tutorial-1       Primeros pasos                3:00 resultado=(abierta) o1:activo o2:oculto o3:oculto o4:oculto o5:oculto o6:oculto o7:oculto o8:oculto o9:oculto o10:oculto o11:oculto o12:oculto pr:activo
+## autotest guaraníes llano
+AUTOTEST: OK
