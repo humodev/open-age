@@ -627,3 +627,9 @@ a) Así *(por defecto)* · b) Otra
 
 - **Animaciones con KayKit:** "Lets start with kaykit yes." Las animaciones de los aldeanos arrancan con KayKit Character Animations (CC0). Etapa 27.
 - **Íconos, color por edad y estados de la grilla** (observación al jugar): íconos propios para construir, entrenar e investigar; un color por edad; estados de color en lugar del candado; y el rojo de la ayuda flotante solo cuando de verdad bloquea. Cuando haya créditos de Meshy se harán imágenes para algunas cosas. Etapa 28.
+- **C-98 · (animaciones) Aspecto de los aldeanos animados.** De lejos, el aldeano animado se ve más claro y menos integrado que el modelo de Meshy (ver `27-animaciones/capturas/04` y `05`): ganamos el movimiento y perdimos textura. Opciones:
+  - a) dejarlos animados y riggear los modelos de Meshy cuando se pueda (Mixamo o a mano), para tener las dos cosas;
+  - b) volver a Meshy quieto hasta riggear;
+  - c) animados, pero con colores más oscuros y terrosos ya.
+
+  Por defecto: a + c. Preguntas del agente: ¿un tono de piel por pueblo? ¿Riggear los aldeanos de Meshy antes que los soldados?
