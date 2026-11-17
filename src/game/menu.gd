@@ -36,6 +36,7 @@ var _dif_keys: Array = [] # claves de reglas.json → dificultades, en su orden 
 # --- fin lugares ---
 # --- opciones de partida --- (proceso/24, paso 4b; como AoE4)
 var _op_sitios: CheckButton
+var _op_maravilla: CheckButton # --- paso 7 ---
 var _op_hitos: CheckButton
 var _op_tiempo: OptionButton
 var _op_recursos: OptionButton
@@ -489,6 +490,10 @@ func _build_match_options(col: VBoxContainer) -> void:
 	vrow.add_child(_op_sitios)
 	_op_hitos = _check("Hitos", bool(cur.get("hitos", true)), "Pierde quien se queda sin su capital ni hitos. Sin esta victoria hay que arrasar todos los edificios del rival (salvo muros y puertas).")
 	vrow.add_child(_op_hitos)
+	# --- paso 7 --- Victoria por maravilla (docs/diseno/27, §4.1; C-78 a).
+	var won_min := int(_data.reglas.get("maravilla", {}).get("victoria_ms", 0)) / 60000
+	_op_maravilla = _check("Maravilla", bool(cur.get("maravilla", true)), "Gana quien mantiene en pie su maravilla de la edad IV durante %d minutos después de terminarla. Sin esta victoria, la maravilla igual da su efecto." % won_min)
+	vrow.add_child(_op_maravilla)
 	col.add_child(vrow)
 	# Tiempo límite y recursos, en un renglón.
 	var trow := HBoxContainer.new()
@@ -532,7 +537,7 @@ func _build_match_options(col: VBoxContainer) -> void:
 	_op_tiempo.item_selected.connect(func(_i: int) -> void: _ffa_auto = false) # --- equipos ronda 3 --- lo eligió el jugador
 	for ob: OptionButton in [_op_tiempo, _op_recursos, _op_ubic]:
 		ob.item_selected.connect(func(_i: int) -> void: _refresh_match_options(true))
-	for cb: CheckButton in [_op_sitios, _op_hitos]:
+	for cb: CheckButton in [_op_sitios, _op_hitos, _op_maravilla]:
 		cb.toggled.connect(func(_b: bool) -> void: _refresh_match_options(true))
 	# --sitios=no, --tiempo=30… también preeligen en el menú (para las capturas).
 	var ma := {}
@@ -544,6 +549,8 @@ func _build_match_options(col: VBoxContainer) -> void:
 		_op_sitios.button_pressed = ma["sitios"] != "no"
 	if ma.has("hitos"):
 		_op_hitos.button_pressed = ma["hitos"] != "no"
+	if ma.has("maravilla"):
+		_op_maravilla.button_pressed = ma["maravilla"] != "no"
 	if ma.has("tiempo"):
 		_op_tiempo.selected = maxi(0, _tiempos.find(int(ma["tiempo"])))
 		_ffa_was = true # --- equipos ronda 3 --- el tiempo pedido por argumento no se toca
@@ -603,7 +610,9 @@ func _refresh_match_options(save := false) -> void:
 		ways[0] = "por conquista (arrasando todos los edificios)"
 	if _op_sitios.button_pressed:
 		ways.append("por sitios sagrados (%d minutos con todos)" % (int(_data.reglas["sitios"]["victoria_ms"]) / 60000))
-	var txt := "Se gana " + " o ".join(ways) + "."
+	if _op_maravilla.button_pressed: # --- paso 7 ---
+		ways.append("por maravilla (%d minutos en pie)" % (int(_data.reglas.get("maravilla", {}).get("victoria_ms", 0)) / 60000))
+	var txt := "Se gana " + ", ".join(ways.slice(0, ways.size() - 1)) + (" o " if ways.size() > 1 else "") + str(ways[ways.size() - 1]) + "."
 	if not _op_sitios.button_pressed:
 		txt += " Los sitios sagrados dan riqueza, pero no ganan."
 	var mins := int(_tiempos[maxi(0, _op_tiempo.selected)])
@@ -617,7 +626,7 @@ func _refresh_match_options(save := false) -> void:
 	if save:
 		# Lo que puso el menú por ser todos contra todos no se recuerda para la próxima partida.
 		var keep_mins := _ffa_prev if _ffa_auto else mins
-		Opciones.partida = {"sitios": _op_sitios.button_pressed, "hitos": _op_hitos.button_pressed, "tiempo_limite_min": keep_mins, "recursos": RECURSOS[maxi(0, _op_recursos.selected)][0], "ubicacion_equipos": UBICACION[maxi(0, _op_ubic.selected)][0]}
+		Opciones.partida = {"sitios": _op_sitios.button_pressed, "hitos": _op_hitos.button_pressed, "maravilla": _op_maravilla.button_pressed, "tiempo_limite_min": keep_mins, "recursos": RECURSOS[maxi(0, _op_recursos.selected)][0], "ubicacion_equipos": UBICACION[maxi(0, _op_ubic.selected)][0]}
 		Opciones.guardar()
 
 
@@ -643,6 +652,7 @@ func match_args() -> Dictionary:
 	var out := {
 		"sitios": "si" if _op_sitios.button_pressed else "no",
 		"hitos": "si" if _op_hitos.button_pressed else "no",
+		"maravilla": "si" if _op_maravilla.button_pressed else "no",
 		"tiempo": str(int(_tiempos[maxi(0, _op_tiempo.selected)])),
 		"recursos": RECURSOS[maxi(0, _op_recursos.selected)][0],
 	}

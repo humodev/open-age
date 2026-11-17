@@ -74,6 +74,8 @@
   }
  },
  "edificios": {
+  "_doc_maravilla": "--- paso 7 --- docs/diseno/27, §3 y §4.1; lo común en data/edificios.json → maravilla",
+  "maravilla": {"nombre": "Fasil Gəbbi", "arte": "maravilla_fasil", "desc": "El recinto de Gondar (ፋሲል ግቢ; «Fasil Ghebbi» en la UNESCO), en piedra parda y gris: los castillos de Fasilädäs y de Iyasu I y la muralla, sin las iglesias del recinto. Mientras está en pie, la corte deja de mudarse y los gult de todo el mapa rinden más: el paso de la corte en marcha a la capital fija, que salió de los campamentos de lluvias. Documentado (Pankhurst, 1982; Horvath, 1969; UNESCO, 1979).", "efectos_maravilla": [{"tipo": "renta_pct", "tipos": ["gult"], "pct": 25}, {"tipo": "corte_fija"}]},
   "fortaleza": {"nombre": "Fortaleza de amba", "desc": "Fortaleza sobre una amba, la meseta de paredes a pique que servía de fortaleza, prisión y tesoro (Amba Gəšän; Taddesse Tamrat, 1972). La defensa que aguanta de la edad III; suma la defensa en altura."},
   "almacen_mina": {"nombre": "Dängay bet", "desc": "Casa de la piedra: lo que se cava. La corte se lleva la arcilla de su entorno; la que juntan los aldeanos viene acá."},
   "establo": {"nombre": "Färäs bet", "edad_min": 1, "costo": {"madera": 150}, "desc": "Casa del caballo: el jinete noble desde la edad I."},
@@ -316,7 +318,7 @@
    "alianza"
   ]
  ],
- "construye": ["corte_nueva", "casa", "granja", "almacen_alimento", "almacen_madera", "almacen_mina", "cuartel", "establo", "taller", "torre", "fortaleza", "centro", "gult", "empalizada", "puerta", "mercado"],
+ "construye": ["corte_nueva", "casa", "granja", "almacen_alimento", "almacen_madera", "almacen_mina", "cuartel", "establo", "taller", "torre", "fortaleza", "centro", "gult", "empalizada", "puerta", "mercado", "maravilla"],
  "produce": {"cuartel": ["lancero", "hondero"], "establo": ["guerrero", "jinete"], "taller": ["ariete", "catapulta"]},
  "modulos": {
   "defensa_altura": {

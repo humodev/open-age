@@ -1,0 +1,29 @@
+# tools/maravilla_ia.gd, normal, 60 minutos, semillas 3-5 (18 partidas, mapa al azar), con el paso 7.
+# Columnas: modo | semilla | pueblo A | pueblo B | II A | III A | IV A | II B | III B | IV B | maravillas | ganador | motivo | fin
+
+con | 3 | ayutthaya | palmares | 7:55 | 20:57 | - | 10:46 | 22:36 | - | - | 0 | conquista | 47:46
+con | 3 | mapuches | etiopia | 7:41 | 16:42 | 35:19 | 5:43 | 20:30 | - | - | -1 | abierta | 60:00
+con | 4 | ayutthaya | tawantinsuyu | 7:33 | 19:20 | 43:32 | 5:58 | 18:20 | 55:46 | J0 puesta 52:28 terminada - cae 52:49 | -1 | abierta | 60:00
+con | 4 | mapuches | guaranies | 7:33 | - | - | 8:02 | 15:24 | 21:38 | - | 1 | rendicion | 26:39
+con | 5 | ayutthaya | ayutthaya | 6:19 | 20:47 | 27:43 | 7:03 | 19:09 | 32:58 | J1 puesta 43:02 terminada 52:52 cae - (le faltaban 7:53) | -1 | abierta | 60:00
+con | 5 | mapuches | mapuches | 7:27 | 19:50 | 26:34 | 7:37 | 16:46 | - | - | -1 | abierta | 60:00
+con | 3 | etiopia | tawantinsuyu | 5:44 | 18:51 | 39:38 | 5:32 | 22:42 | - | J0 puesta 58:09 terminada - cae - | -1 | abierta | 60:00
+con | 3 | palmares | guaranies | 8:31 | 15:51 | 20:48 | 7:55 | 20:15 | 48:45 | - | 0 | rendicion | 54:55
+con | 4 | etiopia | ayutthaya | 5:40 | 18:15 | 23:32 | 7:16 | - | - | J0 puesta 31:10 terminada - cae - | 0 | sitios | 32:30
+con | 4 | palmares | mapuches | 9:32 | 16:35 | 23:07 | 7:50 | 23:02 | - | - | 0 | conquista | 53:55
+con | 5 | etiopia | etiopia | 5:37 | 18:54 | - | 5:33 | 19:50 | 29:48 | - | 1 | sitios | 34:16
+con | 5 | palmares | palmares | 10:44 | 19:35 | 31:28 | 9:36 | 21:56 | 27:55 | - | 0 | sitios | 47:15
+con | 3 | guaranies | ayutthaya | 8:13 | 15:59 | - | 7:26 | 22:54 | - | - | 1 | rendicion | 24:01
+con | 3 | tawantinsuyu | mapuches | 5:41 | - | - | 7:19 | 16:48 | - | - | 1 | sitios | 21:32
+con | 4 | guaranies | etiopia | 7:42 | - | - | 5:39 | - | - | - | 1 | rendicion | 21:38
+con | 4 | tawantinsuyu | palmares | 7:20 | 19:07 | - | 9:24 | 19:05 | 29:38 | - | 1 | rendicion | 40:30
+con | 5 | guaranies | guaranies | 7:45 | 13:46 | 28:14 | 7:55 | 13:33 | 20:10 | - | 0 | rendicion | 30:54
+con | 5 | tawantinsuyu | tawantinsuyu | 6:15 | 14:49 | - | 5:57 | - | - | - | 0 | conquista | 15:41
+
+partidas: 18
+con la IV (algún jugador): 13 de 18 (72 %); de las que duran 25 min o más: 13 de 14
+jugadores en la III: 30 de 36, mediana 19.1 min
+jugadores en la IV: 18 de 36, mediana 28.9 min, rango 20.2-55.8
+maravillas puestas 4, terminadas 1, caídas 1, partidas ganadas por maravilla 0
+motivos de fin: abierta 5, conquista 3, rendicion 6, sitios 4
+duración media 41.8 min

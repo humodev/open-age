@@ -2,6 +2,7 @@
   "_doc": "Forma propia de cada hito (proceso/24-tras-la-segunda-ronda/4d-hitos-y-animales.md). Solo imagen: la simulación no lo lee. Cada entrada nombra la forma que arma src/game/hitos_meshes.gd y sus pocos parámetros; los materiales salen del aspecto de la edad del dueño (data/arte_edades.json: muro, techo, acento, aparejo, dorado, pisos_techo, rewe_cm, alto_pct), así el mismo hito se ve más noble al subir de edad. Los hitos suben muros y techos hasta el alto mínimo de la categoría (reglas.escala_visual; proceso/24-tras-la-segunda-ronda/4p-escala.md), sin estirar la gente, los animales ni los estandartes; levantar_max_pct pone un tope propio a los chatos o abiertos (el ushnu, los corrales, el barco), que estirados dejan de leerse como lo que son. Claves: forma; pisos (escalones o pisos de techo); alto_piso_cm (alto de cada cuerpo); piedra (color propio de la piedra, que no cambia con la edad); puertas; anillos; mastiles; alto_cm (alto del muro principal). Afirmaciones históricas con [verificar] hasta tener la cita en la ficha (docs/00-indice.md, regla 5).",
   "civs": {
     "tawantinsuyu": {
+      "maravilla_ollantaytambo": {"forma": "ollantaytambo", "levantar_max_pct": 130, "piedra": "#b48a7c", "_nota": "--- paso 7 --- Maravilla: los andenes del cerro con la escalinata, el templo inconcluso de los seis monolitos de piedra rosada arriba, el pueblo en canchas con portadas trapezoidales y los canales del llano (Protzen, 1993) [verificar]."},
       "ushnu": {"forma": "ushnu", "levantar_max_pct": 140, "pisos": 5, "alto_piso_cm": 15, "piedra": "#8d8880", "_nota": "Plataforma baja y ancha de cinco cuerpos, de andesita gris, con la escalinata al frente, la portada trapezoidal de doble jamba arriba y la tiana (asiento de piedra) frente a la plaza, como el ushnu de Vilcashuamán. Siempre de piedra gris, sin oro: antes se leía como una pirámide mesoamericana, blanca y empinada (ronda 3 de jugadores) [verificar]."},
       "pukara_mayor": {"forma": "pukara_anillos", "anillos": 3, "_nota": "Fortaleza de cerro con muros concéntricos en terrazas y vigía arriba, sin almenas (pukaras del Collasuyu y de la frontera chiriguana) [verificar]."},
       "aqllawasi": {"forma": "aqllawasi", "alto_cm": 115, "_nota": "Recinto cerrado de muro alto, una sola portada de doble jamba y galpones adentro; tejido de tocapu en el muro. Aqllawasi del Cusco [verificar]."},
@@ -10,6 +11,7 @@
       "vilcabamba": {"forma": "vilcabamba", "_nota": "Refugio en la ceja de selva: cerro con andenes, casas de techo empinado (una con teja, como en Espíritu Pampa) y monte alrededor [verificar]."}
     },
     "mapuches": {
+      "maravilla_koyagtun": {"forma": "koyagtun", "levantar_max_pct": 140, "_nota": "--- paso 7 --- Maravilla: el campo de parlamento con dos grandes ramadas enfrentadas, bancos, caballos y ruka. Sin el rito (canelo, sacrificio): la consulta es imprescindible."},
       "rewe_lonko": {"forma": "nguillatuwe", "_nota": "Nguillatuwe: el rewe con canelos en el centro del campo ceremonial y las ramadas en media luna, abierta hacia el este; chilihueques del lof. Es el único hito con el rewe, el altar de la machi: en los otros, 'rewe' nombra a la agrupación de lof que comparte el ngillatun, no al poste [verificar]."},
       "rewe_malon": {"forma": "rewe_malon", "_nota": "Toqui de malón: la ruka grande del toqui, la toki kura (hacha de piedra, insignia del toqui) en su poste junto a un canelo, el haz de lanzas de colihue y el botín. Sin el rewe: el altar de la machi no se mezcla con la guerra [verificar]."},
       "rewe_caballeria": {"forma": "rewe_caballos", "levantar_max_pct": 150, "_nota": "El corral grande de los caballos tomados y criados desde el siglo XVI, la ruka y el palenque con las monturas; sin rewe [verificar]."},
@@ -18,6 +20,7 @@
       "weichan": {"forma": "weichan", "levantar_max_pct": 150, "_nota": "Gran weichan: el campo de guerra, con el anillo de dieciocho lanzas alrededor del fuego del consejo, la toki kura y cuatro caballos listos [verificar]."}
     },
     "guaranies": {
+      "maravilla_cabildo": {"forma": "cabildo_tava", "_nota": "--- paso 7 --- Maravilla de la vía misión: la plaza, el cabildo de dos plantas con galería y los talleres; no la fachada de la iglesia (H-37)."}, "maravilla_aldea_monte": {"forma": "aldea_monte", "levantar_max_pct": 140, "_nota": "--- paso 7 --- Maravilla de la vía monte: óga guasu en ronda alrededor de la plaza, en el monte alto. Sin bastones rituales (H-23)."},
       "karai_palabra": {"forma": "oga_guasu", "levantar_max_pct": 170, "_nota": "Oga guasu: la casa grande comunal de techo de paja hasta el suelo, con los bastones rituales (yvyra'i) y el mbaraka del karai en la plaza [verificar]."},
       "aty_guasu": {"forma": "aty_guasu", "_nota": "Aty guasu: la plaza rodeada de casas largas, el fuego y la ronda de asientos de la gran asamblea [verificar]."},
       "mision": {"forma": "mision", "_nota": "Iglesia de reducción: nave ancha con galerías sobre columnas de madera, techo de teja, frente con frontón, campanario de madera aparte y cruz en la plaza (San Ignacio Miní, Trinidad) [verificar]."},
@@ -26,6 +29,7 @@
       "yvy_marane": {"forma": "trinchera", "levantar_max_pct": 140, "_nota": "Ñande retã ('esta tierra tiene dueño', Sepé Tiarajú): trinchera y terraplén con empalizada y cañones de tacuara, como en la guerra guaranítica [verificar]."}
     },
     "etiopia": {
+      "maravilla_fasil": {"forma": "fasil_gebbi", "piedra": "#8a7a68", "_nota": "--- paso 7 --- Maravilla: el recinto de Gondar en piedra parda y gris (H-49), la muralla con su portada y los castillos de Fasilädäs y de Iyasu I, sin las iglesias del recinto."},
       "iglesia": {"forma": "iglesia_redonda", "_nota": "Iglesia redonda (bete kristiyan) de tres anillos: zócalo, galería de postes bajo el alero, tambor y techo cónico empinado con la cruz y los huevos de avestruz; muro del atrio con portería y el bosque de la iglesia [verificar]."},
       "monasterio": {"forma": "lalibela", "_nota": "Iglesia tallada en la roca, en cruz y dentro de un foso, como Bete Giyorgis de Lalibela (siglo XIII); celdas de monjes en la pared del foso [verificar]. Pendiente: Lalibela es zagwe, anterior al juego, y un lugar de peregrinación vivo; la investigación pedía que las iglesias excavadas fueran sitios del mapa y no algo que se construye. Propuesta: que el monasterio se vea como Debre Damo (amba con cuerda de cuero) y Lalibela pase a sitio sagrado neutral (revisión 25, informe 02)."},
       "amba": {"forma": "amba", "_nota": "Amba: meseta de laderas a pique con muro en el borde, casas arriba y un solo camino de subida (Amba Geshen) [verificar]."},
@@ -34,6 +38,7 @@
       "alianza": {"forma": "alianza", "_nota": "Campamento de la corte con la tienda real, cajones del comercio, mosquetes y cañones de la alianza [verificar]."}
     },
     "palmares": {
+      "maravilla_barriga": {"forma": "cerca_barriga", "levantar_max_pct": 130, "_nota": "--- paso 7 --- Maravilla: la sierra con los tres anillos de la cerca (H-17) y las casas adentro. Sitiada, no se la ve caer (C-97 a)."},
       "quilombo_central": {"forma": "macaco", "_nota": "Macaco, el mocambo del rey: casa grande de palma con alpendre, capilla y palmeras alrededor de la plaza (relatos de 1677) [verificar]."},
       "mocambo_guerra": {"forma": "mocambo_guerra", "_nota": "Mocambo de guerra en la sierra: chozas en el cerro, estacas inclinadas al frente y jirau de vigía [verificar]."},
       "cerca_real": {"forma": "cerca_anillos", "levantar_max_pct": 150, "anillos": 3, "_nota": "Tres anillos de cerca con las entradas desfasadas y fojos (pozos con púas) entre anillos, [verificar]. Las tres cercas son las que Jorge Velho describe en la Barriga (carta del 27-XI-1692); para el Macaco de 1677 las fuentes hablan de una cerca de pau a pique con estrepes (Lara, O território dos Palmares, 2021)."},
@@ -42,6 +47,7 @@
       "guerra_zumbi": {"forma": "serra_barriga", "_nota": "La Serra da Barriga: el cerro con la cerca en lo alto, el tambor y el estandarte del jugador. No hay fuente de época de un estandarte de Zumbi: el estandarte es solo el color del equipo, no un dato."}
     },
     "ayutthaya": {
+      "maravilla_krung": {"forma": "krung_si", "_nota": "--- paso 7 --- Maravilla: la ciudad isla rodeada de agua, la muralla blanca con fuertes en las esquinas (Pom Phet, octogonal, al sureste) y los salones del palacio. Sin el wat del palacio (C-79 a)."},
       "wat": {"forma": "wat_prang", "_nota": "Wat Mahathat: prang central (torre de mazorca, de tradición jemer) con prangs chicos en las esquinas, sobre basamento, y el viharn de techos escalonados al frente [verificar]."},
       "kraal_real": {"forma": "kraal", "_nota": "Kraal real de elefantes (phaniat): empalizada de troncos de teca y el pabellón del rey sobre pilotes [verificar]."},
       "puerto_real": {"forma": "puerto", "levantar_max_pct": 150, "_nota": "Puerto real sobre el río: muelle, depósitos sobre pilotes, tinajas martaban y un sampán [verificar]."},

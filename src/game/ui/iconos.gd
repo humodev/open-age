@@ -109,7 +109,7 @@ static func dibujar_imagen(ci: CanvasItem, kind: String, r: Rect2, col: Color) -
 ## Nombres que dibuja Glyphs.draw (los de antes) más los de acá. Los compuestos se revisan por
 ## partes. tests/iconos.gd lo usa para que ningún comando caiga en el círculo de reserva.
 const DE_GLYPHS := ["aldeano", "alimento", "arbol", "arbusto", "arcabuz", "ariete", "atacar", "barrio_japones", "barrio_portugues", "bengala", "calma", "camino", "campana", "carga", "carpa", "casa", "catapulta", "centro", "corral", "cuartel", "decision", "deposito", "detener", "elefante", "empalizada", "escudo", "explorador", "expulsar", "form_abierta", "form_bloque", "form_columna", "form_linea", "fortaleza", "granja", "guerrero", "gult", "hito", "hito_economia", "hito_guerra", "hito_logro", "hondero", "info", "jinete", "kraal", "lancero", "madera", "mantener", "menu_economia", "menu_militar", "mercado", "mocambo", "ocioso", "patrullar", "piedra", "pob", "puerta", "qollqa", "refugio", "riqueza", "roca", "telar", "terraza", "torre", "velocidad", "vida", "volver"]
-const PROPIOS := ["diana", "establo", "taller_asedio", "ruka", "boleador", "incendiario", "awqa", "katana", "elefante_guerra", "hacha", "pico", "orfebre", "canasta", "riego", "muro", "martillo", "vigia", "aspillera", "engranaje", "investigar", "espada", "arco", "adiestramiento"]
+const PROPIOS := ["diana", "establo", "taller_asedio", "ruka", "boleador", "incendiario", "awqa", "katana", "elefante_guerra", "hacha", "pico", "orfebre", "canasta", "riego", "muro", "martillo", "vigia", "aspillera", "engranaje", "investigar", "espada", "arco", "adiestramiento", "maravilla"]
 const OSCURO := Color(0.06, 0.065, 0.075)
 
 
@@ -145,6 +145,17 @@ static func dibujar(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> bool:
 	var w := maxf(1.5, s * 0.07)
 	var claro := col == Palette.UI_TEXT
 	match kind:
+		"maravilla":
+			# --- paso 7 --- Maravilla: obra grande de tres cuerpos escalonados, con portada y
+			# estandarte arriba; sin símbolos sagrados (sol, cruz, templo).
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.46, s * 0.22), Vector2(s * 0.92, s * 0.2)), col)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.34, s * 0.02), Vector2(s * 0.68, s * 0.22)), col.darkened(0.12))
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.22, -s * 0.2), Vector2(s * 0.44, s * 0.24)), col)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.07, s * 0.24), Vector2(s * 0.14, s * 0.18)), OSCURO)
+			for x: float in [-0.13, 0.0, 0.13]:
+				ci.draw_rect(Rect2(c + Vector2(s * (x - 0.03), -s * 0.12), Vector2(s * 0.06, s * 0.1)), OSCURO)
+			ci.draw_line(c + Vector2(0, -s * 0.2), c + Vector2(0, -s * 0.48), col, w)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(0, -s * 0.48), c + Vector2(s * 0.26, -s * 0.42), c + Vector2(0, -s * 0.35)]), Palette.UI_ACCENT if claro else col)
 		"diana":
 			# Campo de tiro: blanco de anillos con una flecha clavada.
 			var dc := c + Vector2(-s * 0.06, s * 0.06)

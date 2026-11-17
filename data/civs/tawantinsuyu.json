@@ -108,6 +108,8 @@
   }
  },
  "edificios": {
+  "_doc_maravilla": "--- paso 7 --- docs/diseno/27, §3 y §4.1; lo común en data/edificios.json → maravilla",
+  "maravilla": {"nombre": "Ollantaytambo", "arte": "maravilla_ollantaytambo", "desc": "La llaqta y finca real de Pachakutiq, con el templo inconcluso de los grandes monolitos, que Manco Inka convirtió en fortaleza en 1536–1537 antes de dejarla por Vitcos. Mientras está en pie, el llano junto al agua se inunda cuando entra tropa enemiga: es lo que hizo Manco en 1537 contra Hernando Pizarro, que desvió el río por los canales y anegó el llano bajo los caballos. Documentado (Pedro Pizarro, Relación, 1571; Hemming, 1970; Protzen, 1993). Es un pueblo vivo: falta la consulta a la municipalidad y a las comunidades de Ollantaytambo.", "efectos_maravilla": [{"tipo": "inundacion", "radio": 12, "agua_radio": 3, "altura_max": 1, "frenado_pct": 50, "dura_ms": 45000, "cada_ms": 300000, "enemigos_min": 3}]},
   "fortaleza": {"nombre": "Hatun pukara", "desc": "Hatun pukara [verificar el compuesto]: la fortaleza mayor de piedra en lo alto, con muros en terrazas y guarnición, como las del Qhapaq Ñan y la frontera (Hyslop, 1990). La defensa que aguanta de la edad III."},
   "campo_tiro": {"nombre": "Warak'a kancha", "desc": "Recinto de los honderos: hondero, boleador y el hondero de piedra caliente, el asedio inca (Cusco, 1536)."},
   "almacen_madera": {"nombre": "Llant'a wasi"},
@@ -413,7 +415,7 @@
    "vilcabamba"
   ]
  ],
- "construye": ["taller_tejido", "casa", "granja", "almacen_madera", "almacen_mina", "cuartel", "campo_tiro", "torre", "fortaleza", "centro", "camino", "anden", "qollqa", "mercado"],
+ "construye": ["taller_tejido", "casa", "granja", "almacen_madera", "almacen_mina", "cuartel", "campo_tiro", "torre", "fortaleza", "centro", "camino", "anden", "qollqa", "mercado", "maravilla"],
  "produce": {"centro": ["aldeano", "explorador"], "cuartel": ["guerrero", "lancero"], "campo_tiro": ["hondero", "boleador", "ariete", "catapulta"]},
  "modulos": {
   "regalo_cumbi": { "recurso": "mita", "costo": 120, "edad": 3, "edificio": "tambo" },

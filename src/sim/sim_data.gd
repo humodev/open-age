@@ -86,6 +86,15 @@ static func _overlay(base: Dictionary, over: Dictionary, extra: Dictionary, remo
 			for f in over[k]:
 				merged[f] = over[k][f]
 	for k in extra:
+		# --- paso 7 --- `hereda`: parte de otro de la tabla ya fusionada (la maravilla de la vía
+		# monte guaraní hereda costo, vida y obra de la maravilla común y cambia nombre y efecto).
+		var src: String = (extra[k] as Dictionary).get("hereda", "")
+		if src != "" and out.has(src):
+			var merged_h: Dictionary = (out[src] as Dictionary).duplicate(true)
+			for f in extra[k]:
+				merged_h[f] = extra[k][f]
+			out[k] = merged_h
+			continue
 		out[k] = (extra[k] as Dictionary).duplicate(true)
 	return out
 

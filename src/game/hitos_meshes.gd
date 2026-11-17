@@ -89,6 +89,14 @@ static func build(p: Array, type: String, w: float, d: float, pal: Array, team: 
 		"fortaleza_isla": _fortaleza_isla()
 		"junco": _junco()
 		"guardia": _guardia()
+		# --- paso 7 --- maravillas (docs/diseno/27, §3 y §4.1)
+		"ollantaytambo": _ollantaytambo()
+		"koyagtun": _koyagtun()
+		"cabildo_tava": _cabildo_tava()
+		"aldea_monte": _aldea_monte()
+		"fasil_gebbi": _fasil_gebbi()
+		"cerca_barriga": _cerca_barriga()
+		"krung_si": _krung_si()
 		_:
 			return false
 	# Las formas se arman con el frente hacia +z; la cámara mira hacia +x+z (RtsCamera.YAW_DEG),
@@ -1298,3 +1306,185 @@ static func _guardia() -> void:
 		_box(Vector3(0.38, 0.25, 0.02), fp + Vector3(0.2, 1.92, 0), flags[i])
 	_cannon(Vector3(-0.1, 0, 0.6), 0.0)
 	_cannon(Vector3(0.55, 0, 0.45), 10.0)
+
+
+# ---------------------------------------------------------------- Maravillas (paso 7)
+# Las seis maravillas de la edad IV (docs/diseno/27, §3 y §4.1; proceso/26-juego-tardio/10), en
+# una huella de 6×6. Nada sagrado en el modelo: ni el rito del parlamento, ni las iglesias de
+# Gondar, ni la fachada de la iglesia de la misión, ni el wat del palacio de Ayutthaya, ni los
+# bastones rituales guaraníes.
+
+## Ollantaytambo: los andenes subiendo el cerro, la escalinata al medio, arriba el templo
+## inconcluso de los seis monolitos rosados; abajo, el pueblo en canchas con portadas
+## trapezoidales, y los canales con los que Manco anegó el llano.
+static func _ollantaytambo() -> void:
+	var stone: Color = _pal[0]
+	var pink := Color(str(_e.get("piedra", "#b48a7c")))
+	var roof: Color = _pal[1]
+	var green := Color("6f8a44")
+	var back := -_hd + 0.2
+	# Andenes: cinco terrazas a lo ancho del fondo, cada una más baja y más adelante.
+	for i in 5:
+		var w := _hw * 2.0 - i * 0.28
+		var h := 0.42 * (5 - i)
+		var z := back + i * 0.32
+		_stone_block(Vector3(w, h, 0.34), Vector3(0, 0, z), stone.darkened(0.05 * (i % 2)))
+		_box(Vector3(w - 0.04, 0.04, 0.3), Vector3(0, h + 0.02, z), green)
+	var top := 2.1
+	# Escalinata al medio, del llano hasta el templo.
+	for j in 10:
+		var hj := top - j * 0.21
+		_box(Vector3(0.55, hj, 0.17), Vector3(0, hj / 2.0, back + 0.05 + j * 0.17), stone.lightened(0.05))
+	# El templo de los seis monolitos, arriba, sin terminar (bloques sueltos al costado).
+	var tz := back
+	for k in 6:
+		_box(Vector3(0.34, 1.45, 0.42), Vector3(-0.95 + k * 0.38, top + 0.72, tz), pink.darkened(0.04 * (k % 2)))
+	for k in 5:
+		_box(Vector3(0.05, 1.3, 0.44), Vector3(-0.76 + k * 0.38, top + 0.65, tz), pink.darkened(0.3))
+	_box(Vector3(0.6, 0.4, 0.5), Vector3(1.45, top + 0.2, tz + 0.1), pink, Vector3(0, 12, 0))
+	_box(Vector3(0.5, 0.35, 0.45), Vector3(-1.5, top + 0.18, tz + 0.08), pink.darkened(0.05), Vector3(0, -8, 4))
+	# El pueblo: canchas con casas a dos aguas y portadas trapezoidales.
+	for q: Vector2 in [Vector2(-1.55, 0.55), Vector2(1.55, 0.55), Vector2(-1.55, 1.6), Vector2(1.55, 1.6)]:
+		var c := Vector3(q.x, 0, q.y)
+		_stone_block(Vector3(1.0, 0.8, 0.7), c, stone)
+		_gable(c + Vector3(0, 0.78, 0), 1.06, 0.82, 0.55, roof)
+		_trap(c + Vector3(0, 0, 0.36), 0.14, 0.22, 0.5, DARK)
+	# Canales y el agua del llano, al frente.
+	_water(Vector3(0, 0.03, _hd - 0.2), _hw * 2.0, 0.35)
+	for x: float in [-0.55, 0.55]:
+		_water(Vector3(x, 0.035, 1.2), 0.12, 2.0)
+
+
+## El gran koyagtun: el campo de parlamento con dos grandes ramadas enfrentadas, los bancos, los
+## caballos atados y las ruka a los costados. Sin el rito (ni canelo ni sacrificio): la consulta
+## es imprescindible (docs/diseno/27, §7).
+static func _koyagtun() -> void:
+	_box(Vector3(_hw * 2.0, 0.03, _hd * 2.0), Vector3(0, 0.015, 0), Palette.DIRT.lightened(0.12))
+	for side: float in [-1.0, 1.0]:
+		var cz := side * 1.45
+		var lx := _hw * 2.0 - 0.6
+		for i in 6:
+			var x := -lx / 2.0 + i * lx / 5.0
+			for j in 2:
+				_cyl(0.045, 0.055, 1.6, Vector3(x, 0.8, cz + (j - 0.5) * 0.8), Palette.WOOD_BEAM, 6)
+		_box(Vector3(lx + 0.15, 0.07, 1.0), Vector3(0, 1.62, cz), Color("6e6a3e"))
+		for i in 12:
+			_sph(0.26, Vector3(-lx / 2.0 + 0.2 + (i % 6) * (lx - 0.4) / 5.0, 1.68, cz + (i / 6) * 0.5 - 0.25), Color("5e6a36") if i % 2 == 0 else Color("6a7440"), Vector3(1.3, 0.35, 1.1), 6)
+		_cyl(0.07, 0.07, lx - 0.4, Vector3(0, 0.1, cz - side * 0.55), Palette.TRUNK, 6, Vector3(0, 0, 90))
+	for s: float in [-1.0, 1.0]:
+		_ruka(Vector3(s * 2.15, 0, 0), 0.8, 0.7, 0.9)
+		for k in 3:
+			_horse(Vector3(s * 1.25, 0, -0.35 + k * 0.35), 90.0 * s, 0.5)
+	_banner(Vector3(-0.3, 0, 0), 2.4)
+	_banner(Vector3(0.3, 0, 0), 2.4)
+
+
+## La plaza y el cabildo de la tava (vía misión): la plaza grande, el cabildo de dos plantas con
+## galería, los talleres y las tiras de casas con galerías. No la fachada de la iglesia (H-37).
+static func _cabildo_tava() -> void:
+	var walls := Color("c99a76")
+	var tile := Color("9e4a32")
+	_box(Vector3(_hw * 2.0, 0.03, _hd * 2.0), Vector3(0, 0.015, 0), Palette.DIRT.lightened(0.2))
+	# Cabildo al fondo: dos plantas, galería de columnas abajo y balcón arriba.
+	var cz := -_hd + 0.65
+	_box(Vector3(3.4, 2.0, 0.9), Vector3(0, 1.0, cz), walls)
+	_p.append([Meshes.prism(1.3, 0.75, 3.6), Meshes.xf(Vector3(0, 2.0 + 0.375, cz), Vector3(0, 90, 0)), tile])
+	for i in 8:
+		_cyl(0.05, 0.055, 0.95, Vector3(-1.6 + i * 3.2 / 7.0, 0.48, cz + 0.6), Palette.WOOD_BEAM, 6)
+	_box(Vector3(3.5, 0.08, 0.35), Vector3(0, 1.0, cz + 0.6), Palette.WOOD_BEAM)
+	for i in 6:
+		_box(Vector3(0.18, 0.4, 0.03), Vector3(-1.25 + i * 0.5, 1.45, cz + 0.46), DARK)
+	_box(Vector3(0.5, 0.7, 0.03), Vector3(0, 0.35, cz + 0.46), DARK)
+	# Talleres y casas con galería a los lados de la plaza.
+	for s: float in [-1.0, 1.0]:
+		var x := s * (_hw - 0.45)
+		_box(Vector3(0.6, 0.9, 3.0), Vector3(x, 0.45, 0.45), walls.darkened(0.05))
+		_p.append([Meshes.prism(1.05, 0.5, 3.1), Meshes.xf(Vector3(x - s * 0.05, 0.9 + 0.25, 0.45)), tile])
+		for i in 5:
+			_cyl(0.035, 0.04, 0.85, Vector3(x - s * 0.42, 0.42, -0.9 + i * 0.66), Palette.WOOD_BEAM, 5)
+	# La fragua del taller encendida y el yunque.
+	_fire(Vector3(-1.5, 0, 2.0))
+	_box(Vector3(0.22, 0.2, 0.14), Vector3(-1.15, 0.1, 2.0), IRON)
+	_banner(Vector3(0.0, 0, 0.5), 2.4)
+
+
+## Aldea grande del monte (vía monte): las óga guasu en ronda alrededor de la plaza, con el monte
+## alto alrededor, hamacas y fuegos. Sin los bastones rituales (H-23).
+static func _aldea_monte() -> void:
+	_box(Vector3(_hw * 2.0 - 0.6, 0.03, _hd * 2.0 - 0.6), Vector3(0, 0.015, 0), Palette.DIRT.lightened(0.15))
+	_longhouse(Vector3(0, 0, -1.5), 3.4, 1.2, 1.9)
+	_longhouse(Vector3(-1.55, 0, 0.35), 2.4, 1.0, 1.6, true)
+	_longhouse(Vector3(1.55, 0, 0.35), 2.4, 1.0, 1.6, true)
+	_fire(Vector3(-0.3, 0, 0.2))
+	_fire(Vector3(0.45, 0, 0.9))
+	var trees: Array = [Vector3(-2.5, 0, -2.4), Vector3(-1.2, 0, -2.55), Vector3(0.3, 0, -2.6), Vector3(1.6, 0, -2.5), Vector3(2.5, 0, -1.9), Vector3(-2.55, 0, -0.9), Vector3(2.55, 0, 2.3), Vector3(-2.5, 0, 2.4), Vector3(-1.0, 0, 2.55), Vector3(1.2, 0, 2.6)]
+	for i in trees.size():
+		_tree(trees[i], 3.0 + float(i % 3) * 0.4, Color("2f5a30") if i % 2 == 0 else Color("3a6a34"))
+	var a := Vector3(-2.55, 0.8, -0.9)
+	var b := Vector3(-2.5, 0.8, 2.4)
+	_slab(a, a.lerp(b, 0.5) + Vector3(0, -0.25, 0), 0.24, 0.03, Color("e8e0cc"))
+	_slab(a.lerp(b, 0.5) + Vector3(0, -0.25, 0), b, 0.24, 0.03, Color("e8e0cc"))
+
+
+## Fasil Gəbbi: el recinto de Gondar en piedra parda y gris, con la muralla y su portada, el
+## castillo de Fasilädäs (con la torre alta) y el de Iyasu I. Sin las iglesias del recinto.
+static func _fasil_gebbi() -> void:
+	var stone := Color(str(_e.get("piedra", "#8a7a68")))
+	_cfg = _cfg.duplicate()
+	_cfg.erase("remate") # sin cruz en la torre: la maravilla no muestra lo eclesiástico
+	for side in [[Vector3(-_hw, 0, -_hd), Vector3(_hw, 0, -_hd)], [Vector3(-_hw, 0, -_hd), Vector3(-_hw, 0, _hd)], [Vector3(_hw, 0, -_hd), Vector3(_hw, 0, _hd)], [Vector3(-_hw, 0, _hd), Vector3(-0.45, 0, _hd)], [Vector3(0.45, 0, _hd), Vector3(_hw, 0, _hd)]]:
+		_seg(side[0], side[1], 0.75, 0.18, stone.darkened(0.08), 0.18)
+	for s: float in [-1.0, 1.0]:
+		_cyl(0.22, 0.24, 1.05, Vector3(s * 0.55, 0.52, _hd), stone, 10)
+		_sph(0.23, Vector3(s * 0.55, 1.05, _hd), Color("8a5a3a"), Vector3(1, 0.85, 1), 10)
+	_keep(Vector3(-0.75, 0, -0.85), 2.3, 1.5, 2.2, stone, [Vector2(-1, 1), Vector2(1, 1), Vector2(-1, -1)], true)
+	_keep(Vector3(1.35, 0, 0.55), 1.4, 1.1, 1.6, stone.lightened(0.04), [Vector2(1, 1), Vector2(-1, 1)], false)
+	_banner(Vector3(-1.8, 0, 1.6), 2.2)
+
+
+## Cerca do Outeiro da Barriga: la sierra con los tres anillos de la cerca, las casas adentro y,
+## arriba, la casa grande. Queda «sitiada», no se la ve caer (C-97 a).
+static func _cerca_barriga() -> void:
+	var h := 1.1
+	_cyl(1.7, _hw, h, Vector3(0, h / 2.0, 0), Color("6f6a54"), 12)
+	_cyl(1.7, 1.7, 0.03, Vector3(0, h + 0.015, 0), Color("7d7a4c"), 12)
+	_box(Vector3(0.8, 0.5, 0.6), Vector3(2.0, 0.25, 1.4), ROCK, Vector3(8, 25, -6))
+	var gate := 0.3
+	var offs: Array[float] = [0.0, PI * 0.55, -PI * 0.55]
+	for ring in 3:
+		var r := _hw - 0.08 if ring == 0 else 1.62 - (ring - 1) * 0.55
+		var base := 0.0 if ring == 0 else h
+		var ga: float = PI / 2.0 + offs[ring]
+		_stakes_arc(Vector3(0, base, 0), r, ga + gate, ga + TAU - gate, 0.16, 1.3 - ring * 0.15, 0.055, Palette.WOOD_BEAM)
+	for q: Vector3 in [Vector3(-0.7, h, 0.3), Vector3(0.75, h, 0.25), Vector3(0.0, h, 0.85), Vector3(-0.35, h, -0.75)]:
+		CivMeshes._hut(_p, "palmares", q, 0.55, 0.45, 0.7, _pal, {})
+	CivMeshes._hut(_p, "palmares", Vector3(0.25, h, -0.15), 0.85, 0.7, 1.0, _pal, {})
+	_banner(Vector3(0.0, h, 0.2), 2.4)
+	_slab(Vector3(-0.3, 0, _hd), Vector3(-0.2, h, 1.55), 0.3, 0.06, Palette.DIRT)
+
+
+## Krung Si Ayutthaya y Pom Phet: la ciudad isla rodeada de agua, la muralla blanca de ladrillo
+## con los fuertes en las esquinas (Pom Phet, el octogonal del sureste) y los salones del palacio
+## con techos escalonados. Sin el wat del palacio (C-79 a).
+static func _krung_si() -> void:
+	var wall := Color("eee8dc")
+	_water(Vector3(0, 0.02, 0), _hw * 2.0, _hd * 2.0)
+	var r := _hw - 0.35
+	_box(Vector3(r * 2.0, 0.12, r * 2.0), Vector3(0, 0.06, 0), Palette.DIRT.lightened(0.1))
+	for side in [[Vector3(-r, 0, -r), Vector3(r, 0, -r)], [Vector3(-r, 0, -r), Vector3(-r, 0, r)], [Vector3(r, 0, -r), Vector3(r, 0, r)], [Vector3(-r, 0, r), Vector3(-0.4, 0, r)], [Vector3(0.4, 0, r), Vector3(r, 0, r)]]:
+		_seg(side[0], side[1], 0.7, 0.16, wall, 0.16)
+	for c: Vector2 in [Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1)]:
+		_cyl(0.28, 0.3, 0.95, Vector3(c.x * r, 0.48, c.y * r), wall.darkened(0.03), 8, Vector3(0, 22.5, 0))
+	# Pom Phet, más grande, con cañones.
+	var pp := Vector3(r, 0, r)
+	_cyl(0.5, 0.56, 1.15, pp + Vector3(0, 0.58, 0), wall.darkened(0.03), 8, Vector3(0, 22.5, 0))
+	for i in 8:
+		var a := TAU * i / 8.0
+		_cyl(0.0, 0.09, 0.2, pp + Vector3(cos(a) * 0.48, 1.25, sin(a) * 0.48), wall, 4, Vector3(0, 45, 0), Vector3(1, 1, 0.45))
+	for a: float in [0.3, 1.25]:
+		CivMeshes._pole(_p, pp + Vector3(cos(a) * 0.35, 0.95, sin(a) * 0.35), pp + Vector3(cos(a) * 0.72, 0.97, sin(a) * 0.72), 0.05, IRON)
+	# Salones del palacio.
+	_thai_hall(Vector3(0, 0, -0.7), 2.8, 1.0, 1.0, _pal[0], 0.7)
+	_thai_hall(Vector3(-0.9, 0, 0.9), 1.4, 0.8, 0.8, _pal[0], 0.55)
+	_thai_hall(Vector3(0.95, 0, 0.6), 1.1, 0.7, 0.75, _pal[0], 0.5)
+	_banner(Vector3(0.0, 0, 1.5), 2.2)

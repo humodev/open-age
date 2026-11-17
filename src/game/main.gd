@@ -334,6 +334,8 @@ static func match_opts(args: Dictionary) -> Dictionary:
 		out["sitios_sin_victoria"] = true
 	if str(args.get("hitos", "si")) == "no":
 		out["hitos_sin_victoria"] = true
+	if str(args.get("maravilla", "si")) == "no": # --- paso 7 ---
+		out["maravilla_sin_victoria"] = true
 	if int(args.get("tiempo", "0")) > 0:
 		out["tiempo_limite_min"] = int(args["tiempo"])
 	if str(args.get("recursos", "normal")) != "normal":
@@ -455,6 +457,28 @@ func _demo(kind: String) -> void:
 					if found:
 						break
 		sim.set_meta("demo_cam", Vector2(b.x + 1, b.y + 13))
+	elif kind == "maravilla":
+		# --- paso 7 --- La maravilla del pueblo terminada, con la cuenta corriendo, y un aldeano
+		# seleccionable al lado (los guaraníes, las dos: la de la misión y la del monte). Edad IV.
+		# Cámara: la pone sola.
+		sim.players[0]["age"] = 4
+		var types: Array = []
+		for t: String in sim.dp(0).unidades["aldeano"].get("construye", []):
+			if sim.dp(0).edificios.get(t, {}).get("maravilla", false):
+				types.append(t)
+		for i in types.size():
+			var type: String = types[i]
+			var tx0: int = b.x + 5 + i * 8
+			var ty0: int = b.y + 6
+			var done := false
+			for r in 8:
+				for dy in range(-r, r + 1):
+					for dx in range(-r, r + 1):
+						if not done and sim.can_place(type, tx0 + dx, ty0 + dy, 0):
+							var w := sim.spawn_building(type, 0, tx0 + dx, ty0 + dy, true)
+							sim.events.append({"t": "maravilla", "id": w.id, "player": 0})
+							done = true
+		sim.set_meta("demo_cam", Vector2(b.x + 8 + (types.size() - 1) * 4, b.y + 9))
 	elif kind == "hitos":
 		# Los seis hitos del pueblo terminados, en dos filas (una por eje, económico y militar)
 		# y una columna por edad de destino (proceso/24, 4d). Cámara: --cam=b9,b6,24.

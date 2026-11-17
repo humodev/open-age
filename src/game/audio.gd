@@ -269,6 +269,19 @@ func on_events(events: Array) -> void:
 				ui("objetivo", -6.0)
 			"mision":
 				ui("edad", -2.0)
+			# --- paso 7 --- La maravilla: la propia suena con la fanfarria del pueblo (sintetizada y
+			# revisada, sin instrumentos sagrados: proceso/24, 4h); la del rival, con la alerta.
+			"maravilla":
+				if pid == local:
+					if not civ_sfx("fanfarria"):
+						ui("edad", -4.0)
+				else:
+					ui("alerta", -4.0)
+			"maravilla_obra":
+				if pid != local:
+					ui("alerta", -8.0)
+			"maravilla_cae":
+				ui("edad", -6.0)
 
 
 ## Ruido de trabajo: aldeanos cerca de la cámara talando, picando, recolectando o construyendo.

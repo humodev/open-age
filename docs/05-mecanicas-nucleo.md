@@ -195,13 +195,13 @@ Condiciones comunes (`01`, capa común), configurables por partida:
 | Condición | Regla | Estado |
 |---|---|---|
 | **Hitos** | Pierde quien se queda sin su centro inicial (capital) ni hitos de edad terminados. Los centros extra no cuentan | H1 |
-| **Rendición** | El jugador abandona | H1 |
-| **Maravilla** | Construir y defender una maravilla durante un tiempo | H2 |
+| **Rendición** | El jugador abandona. La IA se rinde según su dificultad (`dificultades.<nivel>.rendicion`; normal, difícil y experta: 10 edificios perdidos, menos de un tercio del ejército rival visto y la capital atacada) | H1; IA, paso 7 |
+| **Maravilla** | Una por pueblo en la edad IV (`edificios.maravilla` y `data/civs` → `edificios.maravilla`), una por jugador; todos la ven. Terminada, corre una cuenta de `reglas.maravilla.victoria_ms`: si llega a cero, gana su dueño; si cae, se pierde. La de Palmares no cae: queda sitiada (con tropa enemiga adentro la cuenta vuelve a empezar, C-97 a). Cada una tiene su efecto mientras está en pie (`efectos_maravilla`) y suma `puntaje.por_maravilla` (paso 7, `proceso/26-juego-tardio/10-paso-7-maravilla-y-final.md`) | Hecho |
 | **Sitios sagrados** | Tres sitios neutrales; se capturan con presencia exclusiva (`sitios.captura_ms`), rinden riqueza y quien sostiene todos durante `sitios.victoria_ms` gana | Hecho |
 | **Conquista sin hitos** | Opción de partida: sin la victoria por hitos, pierde quien se queda sin edificios terminados (no cuentan muros, puertas ni caminos) | Hecho |
 | **Tiempo límite** | Opción de partida: al cumplirse, gana el equipo con más puntos (`reglas.puntaje`); si empatan, nadie | Hecho |
 
-Opciones de partida (menú, `--sitios`, `--hitos`, `--tiempo`, `--recursos`, `--ubicacion`; `reglas.opciones_partida`): la conquista vale siempre; los sitios y los hitos se pueden sacar como victoria (sin la de sitios, los sitios siguen rindiendo); tiempo límite; recursos iniciales normales, medios o altos; aliados juntos o mezclados en el círculo de bases. Detalle en `proceso/24-tras-la-segunda-ronda/4b-opciones-de-partida.md`.
+Opciones de partida (menú, `--sitios`, `--hitos`, `--maravilla`, `--tiempo`, `--recursos`, `--ubicacion`; `reglas.opciones_partida`): la conquista vale siempre; los sitios, los hitos y la maravilla se pueden sacar como victoria (sin la de sitios, los sitios siguen rindiendo); tiempo límite; recursos iniciales normales, medios o altos; aliados juntos o mezclados en el círculo de bases. Detalle en `proceso/24-tras-la-segunda-ronda/4b-opciones-de-partida.md`.
 
 Las victorias preferidas de cada civilización (`03-matriz-de-roles.md`) tienen que ser posibles con estas condiciones; no se agregan victorias exclusivas.
 

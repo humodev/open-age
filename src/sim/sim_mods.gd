@@ -14,6 +14,11 @@ var _tambo_of := {} # tambo inca -> tipo de ingenio que vuelve si cae # [tipo, t
 var _craft_hits := {} # edificio con oficios -> [[tick, daño], …] de los últimos 5 s
 var _roads := PackedByteArray() # casillas con camino
 var _connected := {} # id de edificio -> true si está conectado a la capital
+# --- paso 7 --- maravillas (ver «Maravillas»)
+var _wfx := {} # jugador -> {tipo: efecto} de su maravilla terminada en pie (se rehace cada segundo)
+var _slow := {} # casilla -> [dueño, pct]: agua que frena a sus enemigos (inundación, crecida)
+var _wmask := {} # clave -> [tick, {casilla: true}]: casillas bajas junto al agua (se rehace cada tanto)
+var _protected: Array = [] # [dueño, x, y, radio] de los koyagtun sin enemigos dentro
 
 
 func _init(s: Sim) -> void:
@@ -46,6 +51,7 @@ func tick_second() -> void:
 		if has(pid, "caminos") and sim.tick % 50 == 0:
 			_update_connection(pid)
 	_regen()
+	_wonder_tick() # --- paso 7 --- antes de los sitios (koyagtun)
 	_sacred()
 	if not _respawns.is_empty():
 		_respawn_neutrals()
@@ -85,6 +91,9 @@ func _own_resource(pid: int, p: Dictionary) -> void:
 	_gain(pid, key, per_min * P / 60)
 	# Lo que pasa del tope se pierde: tampoco cuenta como juntado (puntaje).
 	var over := int(p["res"].get(key, 0)) - cap
+	if not wonder_fx(pid, "fama_sin_tope").is_empty(): # --- paso 7 --- la Cerca de la Barriga en pie
+		over = 0
+		cap = maxi(cap, int(p["res"].get(key, 0)))
 	if over > 0:
 		sim.ledger(pid, "propio", key, -over)
 	p["res"][key] = mini(p["res"].get(key, 0), cap)
@@ -170,8 +179,11 @@ func _rents(pid: int, _p: Dictionary) -> void:
 					mult = 2 # fiesta de llegada de la corte
 			var origin := "propio" if e.def.get("motor", false) else "renta"
 			var boost := 100 + sim.mod(pid, "motor") if e.def.get("motor", false) else 100
+			# --- paso 7 --- Fasil Gəbbi en pie: los gult de todo el mapa rinden más.
+			var wr := wonder_fx(pid, "renta_pct")
+			var wpct := 100 + int(wr["pct"]) if not wr.is_empty() and (wr.get("tipos", []) as Array).has(e.type) else 100
 			for k in r:
-				_gain(pid, k, int(r[k]) * mult * P / 60 * (boost if k == "riqueza" else 100) / 100, origin)
+				_gain(pid, k, int(r[k]) * mult * P / 60 * (boost if k == "riqueza" else 100) / 100 * wpct / 100, origin)
 	if has(pid, "corte_extrae") and capital != null:
 		var src := capital
 		for e in sim.actives:
@@ -224,6 +236,9 @@ func _welcome(pid: int, p: Dictionary) -> void:
 	var cfg := m(pid, "acogida")
 	var key: String = cfg["recurso"]
 	var cost: int = cfg["costo"]
+	var wa := wonder_fx(pid, "acogida_pct") # --- paso 7 --- la Cerca de la Barriga: la acogida cuesta menos
+	if not wa.is_empty():
+		cost = cost * int(wa["pct"]) / 100
 	if int(p["res"].get(key, 0)) < cost or p["pop"] >= p["pop_cap"] or p.get("acogida_pausa", false):
 		return
 	# "Guardar fama para el hito" (prendido por defecto): no gasta la fama que pide el próximo hito.
@@ -455,6 +470,8 @@ func _sacred() -> void:
 		if present.size() != 1:
 			continue
 		var who: int = present.values()[0]
+		if _site_protected(site, who): # --- paso 7 --- el koyagtun: los rivales no toman los sitios cercanos
+			continue
 		if site.holder >= 0 and sim.team_of(site.holder) == sim.team_of(who):
 			who = site.holder
 		if site.holder == who:
@@ -593,6 +610,10 @@ func speed(e: SimEntity) -> int:
 	var mv: Dictionary = sim.data.reglas["movimiento"]
 	if e.slow_until > sim.tick:
 		s = s * int(mv["frenado_pct"]) / 100
+	if not _slow.is_empty() and e.owner >= 0: # --- paso 7 --- inundación de Ollantaytambo, crecida de Ayutthaya
+		var sl: Array = _slow.get(clampi(e.y / P, 0, sim.map.n - 1) * sim.map.n + clampi(e.x / P, 0, sim.map.n - 1), [])
+		if not sl.is_empty() and sim.enemies(int(sl[0]), e.owner):
+			s = s * (100 - int(sl[1])) / 100
 	if _roads[clampi(e.y / P, 0, sim.map.n - 1) * sim.map.n + clampi(e.x / P, 0, sim.map.n - 1)] != 0:
 		var pct := int(mv["camino_pct"])
 		for p in sim.players:
@@ -832,6 +853,9 @@ func detected_by(e: SimEntity, viewer: int) -> bool:
 	if not is_hidden_now(e):
 		return true
 	var r: int = m(e.owner, "sigilo").get("radio_deteccion", 3000)
+	var ws := wonder_fx(e.owner, "sigilo_monte") # --- paso 7 --- la aldea grande del monte en pie
+	if not ws.is_empty():
+		r = r * int(ws["deteccion_pct"]) / 100
 	for o in sim.actives:
 		if o.alive and o.owner == viewer and (o.is_unit() or o.is_building()) and o.inside < 0:
 			if absi(o.x - e.x) <= r + 2000 and absi(o.y - e.y) <= r + 2000 and sim.dist_to(o, e) <= r:
@@ -846,7 +870,126 @@ func build_step(b: SimEntity, nb: int) -> int:
 	var t := sim.tick_ms
 	if has(b.owner, "obra_colectiva"):
 		var pct: int = m(b.owner, "obra_colectiva")["pct_por_constructor"]
+		pct += int(wonder_fx(b.owner, "obra_colectiva").get("pct_por_constructor", 0)) # --- paso 7 --- el cabildo de la tava
 		return t * (100 + pct * (nb - 1)) / (100 * nb)
 	if sim.data.reglas["construccion_decreciente"]:
 		return t * (nb + 2) / (3 * nb)
 	return t
+
+
+# ---------------------------------------------------------------- Maravillas (paso 7)
+
+## Efecto `tipo` de la maravilla terminada y en pie de `pid` (data/civs → edificios.maravilla →
+## efectos_maravilla), o vacío. Se rehace una vez por segundo (`_wonder_tick`).
+func wonder_fx(pid: int, tipo: String) -> Dictionary:
+	return (_wfx.get(pid, {}) as Dictionary).get(tipo, {})
+
+
+## Una vez por segundo: qué efectos dan las maravillas en pie, el agua que frena al enemigo
+## (inundación inca, crecida de Ayutthaya) y los sitios que protege el koyagtun mapuche.
+func _wonder_tick() -> void:
+	_wfx.clear()
+	_slow.clear()
+	_protected.clear()
+	for w in sim.actives:
+		if not (w.alive and w.owner >= 0 and w.is_building() and w.built and w.def.get("maravilla", false)):
+			continue
+		var fx := {}
+		for ef: Dictionary in w.def.get("efectos_maravilla", []):
+			fx[ef["tipo"]] = ef
+		_wfx[w.owner] = fx
+		if fx.has("inundacion"):
+			_flood(w, fx["inundacion"])
+		if fx.has("crecida"):
+			_rising(w, fx["crecida"])
+		if fx.has("sitios_protegidos"):
+			var sp: Dictionary = fx["sitios_protegidos"]
+			if not sim._enemy_troops_near(w, int(sp["libre_radio"])):
+				_protected.append([w.owner, w.x, w.y, int(sp["radio"]) * P])
+
+
+## ¿El koyagtun de un rival de `who` protege este sitio?
+func _site_protected(site: SimEntity, who: int) -> bool:
+	for pr: Array in _protected:
+		if sim.enemies(int(pr[0]), who) and Sim.dist(site.x, site.y, int(pr[1]), int(pr[2])) <= int(pr[3]):
+			return true
+	return false
+
+
+## Casillas bajas (altura ≤ `altura_max`) a `radio` de (cx, cy) con agua a `agua_radio` o menos.
+## Se guardan medio minuto: el agua casi no cambia (los khlong de Ayutthaya, sí).
+func _low_water(key: String, cx: int, cy: int, cfg: Dictionary) -> Dictionary:
+	var c: Array = _wmask.get(key, [])
+	if not c.is_empty() and sim.tick - int(c[0]) < 300:
+		return c[1]
+	var out := {}
+	var n := sim.map.n
+	var r := int(cfg["radio"])
+	var ar := int(cfg["agua_radio"])
+	var hmax := int(cfg["altura_max"])
+	for dy in range(-r, r + 1):
+		for dx in range(-r, r + 1):
+			var x := cx + dx
+			var y := cy + dy
+			if dx * dx + dy * dy > r * r or x < 0 or y < 0 or x >= n or y >= n or sim.map.is_water(x, y) or sim.map.h_at(x, y) > hmax:
+				continue
+			var wet := false
+			for yy in range(maxi(0, y - ar), mini(n, y + ar + 1)):
+				for xx in range(maxi(0, x - ar), mini(n, x + ar + 1)):
+					if not wet and sim.map.is_water(xx, yy):
+						wet = true
+			if wet:
+				out[y * n + x] = true
+	_wmask[key] = [sim.tick, out]
+	return out
+
+
+## Ollantaytambo: cuando entra en el llano junto al agua tropa enemiga (al menos `enemigos_min`),
+## se inunda: el enemigo anda más lento durante `dura_ms`, una vez cada `cada_ms`.
+func _flood(w: SimEntity, cfg: Dictionary) -> void:
+	var p: Dictionary = sim.players[w.owner]
+	var tiles := _low_water("i%d" % w.id, w.x / P, w.y / P, cfg)
+	if tiles.is_empty():
+		return
+	if sim.tick >= int(p.get("inundacion_hasta", 0)):
+		if sim.tick < int(p.get("inundacion_lista", 0)):
+			return
+		var n := 0
+		for u in sim.actives:
+			if u.alive and u.is_unit() and u.inside < 0 and u.owner >= 0 and u.is_military() and sim.enemies(w.owner, u.owner) and tiles.has(u.y / P * sim.map.n + u.x / P):
+				n += 1
+		if n < int(cfg["enemigos_min"]):
+			return
+		p["inundacion_hasta"] = sim.tick + int(cfg["dura_ms"]) / sim.tick_ms
+		p["inundacion_lista"] = sim.tick + int(cfg["cada_ms"]) / sim.tick_ms
+		sim.events.append({"t": "inundacion", "id": w.id, "player": w.owner})
+	for idx in tiles:
+		_slow[idx] = [w.owner, int(cfg["frenado_pct"])]
+
+
+## Krung Si Ayutthaya: la crecida como muralla. El agua baja cerca de la capital frena al enemigo,
+## salvo a `torre_radio` casillas de una torre o un fuerte suyo (la respuesta de 1766).
+func _rising(w: SimEntity, cfg: Dictionary) -> void:
+	var cap: SimEntity = null
+	for e in sim.actives:
+		if e.alive and e.owner == w.owner and e.is_building() and e.capital:
+			cap = e
+			break
+	if cap == null:
+		return
+	var tiles := _low_water("c%d" % cap.id, cap.x / P, cap.y / P, cfg)
+	var forts: Array[SimEntity] = []
+	var reach := (int(cfg["radio"]) + int(cfg["torre_radio"]) + 3) * P
+	for e in sim.actives:
+		if e.alive and e.owner >= 0 and e.is_building() and e.built and sim.enemies(w.owner, e.owner) and (e.type == "torre" or e.def.get("torre", false) or e.def.get("fortaleza", false)) \
+				and Sim.dist(e.x, e.y, cap.x, cap.y) <= reach:
+			forts.append(e)
+	var tr := int(cfg["torre_radio"]) * P
+	var n := sim.map.n
+	for idx: int in tiles:
+		var free := true
+		for f in forts:
+			if free and Sim.dist(f.x, f.y, (idx % n) * P + P / 2, (idx / n) * P + P / 2) <= tr + f.w * P / 2:
+				free = false
+		if free:
+			_slow[idx] = [w.owner, int(cfg["frenado_pct"])]

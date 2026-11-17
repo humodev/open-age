@@ -1019,7 +1019,9 @@ func _want_h_of(owner: int, type: String, def: Dictionary, capital: bool) -> flo
 	var mins: Dictionary = ev.get("altura_min_cm", {})
 	var cat := ""
 	var dd := sim.dp(owner)
-	if capital or type == dd.civ.get("inicio_edificio", "centro") or type == "centro":
+	if def.get("maravilla", false): # --- paso 7 ---
+		cat = "maravilla"
+	elif capital or type == dd.civ.get("inicio_edificio", "centro") or type == "centro":
 		cat = "capital"
 	elif type == "casa" or type == dd.civ.get("casa", ""):
 		cat = "casa"
@@ -1063,8 +1065,9 @@ func _lev_for(owner: int, type: String, def: Dictionary, capital: bool, age: int
 		return {}
 	var ev: Dictionary = sim.data.reglas.get("escala_visual", {})
 	var kmax := float(ev.get("estirar_max_pct", 150)) / 100.0
-	if HitosMeshes.has(type):
-		kmax = minf(kmax, float(HitosMeshes.data()[type].get("levantar_max_pct", kmax * 100.0)) / 100.0)
+	var art: String = def.get("arte", type) if def.get("maravilla", false) else type # --- paso 7 ---
+	if HitosMeshes.has(art):
+		kmax = minf(kmax, float(HitosMeshes.data()[art].get("levantar_max_pct", kmax * 100.0)) / 100.0)
 	var h1 := CivMeshes.alto_cuerpo(building_mesh_for(owner, type, def, 1, {}))
 	return Meshes.levante(h1, want, float(ev.get("zocalo_cm", 40)) / 100.0, float(ev.get("techo_pct", 50)) / 100.0, kmax)
 
@@ -1473,6 +1476,8 @@ func _stealthed(e: SimEntity) -> bool:
 ## Estado de niebla del jugador local (2 = visible) para una entidad.
 func fog_state(e: SimEntity) -> int:
 	if not fog_on or e.owner == local:
+		return 2
+	if e.is_building() and e.def.get("maravilla", false): # --- paso 7 --- la maravilla la ven todos
 		return 2
 	if sim.fog.is_visible(local, e):
 		return 0 if _stealthed(e) else 2

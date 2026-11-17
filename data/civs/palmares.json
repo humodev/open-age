@@ -42,6 +42,8 @@
   "arcabucero": {"nombre": "Espingardeiro", "desc": "Espingarda: arma de fuego larga, de mecha o de pedernal. Las de Palmares venían de las correrías y del trato a escondidas con los moradores.", "edad_min": 2, "costo": {"alimento": 60, "riqueza": 65}}
  },
  "edificios": {
+  "_doc_maravilla": "--- paso 7 --- docs/diseno/27, §3 y §4.1; lo común en data/edificios.json → maravilla",
+  "maravilla": {"nombre": "Cerca do Outeiro da Barriga", "arte": "maravilla_barriga", "impide_hito": "pacto_cucau", "sitiada": {"radio": 3}, "desc": "La cerca real de la Serra da Barriga, con sus tres anillos (H-17): el asalto que falla es el de 1692 y la caída, febrero de 1694. Mientras está en pie, la fama no se pierde por el tope y la acogida cuesta la mitad. No cae: queda sitiada, y su cuenta se corta mientras haya tropa enemiga adentro, hasta la consulta a la CONAQ y al Parque Memorial (C-97 a); hoy es sitio de memoria del 20 de noviembre. Con el Pacto de Cucaú no se puede levantar: es el precio del pacto (C-68). Documentado (Lara, 2021; Ennes, 1938).", "efectos_maravilla": [{"tipo": "fama_sin_tope"}, {"tipo": "acogida_pct", "pct": 50}]},
   "fortaleza": {"nombre": "Baluarte da cerca", "material": "madera", "espinas": 3, "costo": {"madera": 250, "piedra": 300}, "desc": "Palmares no tuvo asedio: en su lugar, la defensa (docs/diseno/27, §2). Baluarte de la cerca real, de troncos y estrepes, con guarnición; como la cerca, hiere al que la ataca cuerpo a cuerpo. Las cercas de 1692-1694: Ennes (1938); Lara (2021). El nombre es descriptivo [verificar]."},
   "almacen_alimento": {"nombre": "Paiol"},
   "almacen_mina": {"nombre": "Olaria"},
@@ -295,7 +297,7 @@
    "guerra_zumbi"
   ]
  ],
- "construye": ["casa", "granja", "almacen_alimento", "almacen_mina", "cuartel", "centro", "mocambo", "fortaleza", "empalizada", "puerta", "mercado"],
+ "construye": ["casa", "granja", "almacen_alimento", "almacen_mina", "cuartel", "centro", "mocambo", "fortaleza", "empalizada", "puerta", "mercado", "maravilla"],
  "produce": {"centro": ["explorador"], "cuartel": ["guerrero", "lancero", "arcabucero"], "mocambo": ["hondero"]},
  "modulos": {
     "oficios": { "puestos": { "mocambo": 3, "cerca_real": 2 }, "por_min": 20, "tope_por_edad": [5, 8, 10, 10], "para_pct": 2, "para_enemigos": 3, "para_radio": 6000 },

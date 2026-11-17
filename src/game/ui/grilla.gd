@@ -50,7 +50,7 @@ static func edificios(dd: SimData, menu: String) -> Dictionary:
 	# Primero los de casilla fija y después los de lista, para que una lista no ocupe una casilla fija.
 	var mine: Array[String] = []
 	for type: String in dd.unidades["aldeano"].get("construye", []):
-		if dd.edificios.has(type) and not dd.is_hito(type) and menu_de(dd, type) == menu:
+		if dd.edificios.has(type) and not dd.is_hito(type) and not dd.edificios[type].get("maravilla", false) and menu_de(dd, type) == menu: # --- paso 7 --- la maravilla va en la raíz
 			mine.append(type)
 	mine.sort_custom(func(a: String, b: String) -> bool: return not (table.get(a, -1) is Array) and table.get(b, -1) is Array)
 	for type: String in mine:

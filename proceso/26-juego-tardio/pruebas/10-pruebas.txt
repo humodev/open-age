@@ -1,0 +1,34 @@
+# Paso 7 (maravilla y final de partida): pruebas de siempre, con el código final.
+# Con 3 procesos de Godot de medición corriendo al lado (las partidas de 60 minutos).
+
+tests/test_determinism.gd
+  ticks=3000 hash=2203695307
+  DETERMINISMO: OK            (el hash no cambia: la prueba corre en la edad I)
+
+tests/bench.gd
+  200 unidades, 600 ticks: promedio 9.74 ms, peor 98.50 ms, presupuesto 100 ms; vivas al final: 125
+
+tests/maravilla.gd (nueva)
+  45 comprobaciones: nombre, forma y efecto por pueblo; la de la vía monte hereda costo y obra;
+  las facciones de IA no la tienen; no en la III; una por jugador; 600 s con 10 constructores;
+  la cuenta corre al terminar, suma puntos y gana; si cae se pierde; con la opción apagada no
+  hay cuenta; vía misión y vía monte; el Pacto de Cucaú la impide; la Cerca no cae y con tropa
+  enemiga adentro la cuenta se corta y vuelve a correr; acogida a la mitad; Fasil Gəbbi fija la
+  corte y los gult rinden +25 % (14 de alimento en 4 min contra 12); el koyagtun no deja tomar el
+  sitio; la crecida frena en el agua baja (60 casillas, mapa con río).
+  maravilla: OK
+
+tests/civ_smoke.gd            sin errores
+tests/campaign_smoke.gd       25 misiones, el mismo resultado línea por línea que en el paso 4 (pruebas/08-pruebas.txt)
+tests/jugabilidad.gd          JUGABILIDAD: OK
+tests/casillas.gd             CASILLAS: 532 grillas revisadas, OK
+tests/grilla.gd               GRILLA: OK  (la maravilla va en la raíz del aldeano, como los hitos: la prueba la saltea en los submenús)
+tests/iconos.gd               ICONOS: 616 grillas, 70 íconos distintos, OK  (ícono propio «maravilla», data/iconos.json)
+tests/juego_tardio.gd         JUEGO TARDÍO: OK
+tests/opciones_partida.gd     OPCIONES DE PARTIDA: OK
+
+godot --path . -- --autotest --civ=guaranies --terreno=llano
+  AUTOTEST: OK
+
+Capturas (una por maravilla): godot --path . -- --demo=maravilla --civ=<pueblo> --terreno=llano --seed=21 --nofog --shot=... --shot-at=3
+  capturas/10-maravilla-*.jpg

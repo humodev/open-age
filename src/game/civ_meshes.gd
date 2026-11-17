@@ -77,7 +77,7 @@ static func _is_center(type: String, def: Dictionary) -> bool:
 static func building(type: String, def: Dictionary, team: Color, style: Dictionary, variant: int, tier: int, cfg: Dictionary = {}, lev: Dictionary = {}) -> ArrayMesh:
 	var forma: String = style.get("forma", "")
 	# La paleta entra en la clave: dos civs con la misma forma (Ayutthaya y Birmania) se ven distintas.
-	var key := "%s_%s_%s_%s_%s_%d_%d_%d_%d" % [forma, style.get("arcilla", ""), style.get("techo", ""), type, team.to_html(), variant, tier, str(cfg).hash(), str(lev).hash()]
+	var key := "%s_%s_%s_%s_%s_%d_%d_%d_%d_%s" % [forma, style.get("arcilla", ""), style.get("techo", ""), type, team.to_html(), variant, tier, str(cfg).hash(), str(lev).hash(), def.get("arte", "")]
 	if _cache.has(key):
 		return _cache[key]
 	var pal := _pal(style, cfg)
@@ -90,7 +90,12 @@ static func building(type: String, def: Dictionary, team: Color, style: Dictiona
 	var base_y := 0.0
 	var turned := false # los hitos con forma propia ya vienen de frente (HitosMeshes.build)
 	# Sin plinto: el suelo pintado (tierra pisada) ya asienta el edificio (docs/10).
-	if def.get("avanza_edad", false):
+	# --- paso 7 --- La maravilla de cada pueblo: su forma está en data/arte_hitos.json (`arte`).
+	if def.get("maravilla", false) and HitosMeshes.build(p, str(def.get("arte", "")), w, d, pal, team, cfg):
+		turned = true
+		for c: Vector2 in [Vector2(-1, -1), Vector2(1, 1)]:
+			Meshes._banner(p, Vector3(c.x * w * 0.46, 0.1, c.y * d * 0.46), 1.8, team)
+	elif def.get("avanza_edad", false):
 		# Hitos con forma propia (data/arte_hitos.json); si no, el monumento genérico de la forma.
 		if HitosMeshes.build(p, type, w, d, pal, team, cfg):
 			turned = true

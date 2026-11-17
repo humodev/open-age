@@ -71,6 +71,8 @@
   }
  },
  "edificios": {
+  "_doc_maravilla": "--- paso 7 --- docs/diseno/27, §3 y §4.1; lo común en data/edificios.json → maravilla",
+  "maravilla": {"nombre": "La plaza y el cabildo de la tava", "arte": "maravilla_cabildo", "requiere_hito": "mision", "desc": "El cabildo guaraní de un pueblo de misión, con su escritura, sus talleres y la plaza; no la fachada de la iglesia (H-37). Mientras está en pie, la obra colectiva (potirõ) no tiene freno: cada constructor suma el doble. Solo por la vía de la misión. (Neumann, 2015; Wilde, 2009.) Con consulta a mbyá, paĩ-tavyterã, avá guaraní y kaiowá.", "efectos_maravilla": [{"tipo": "obra_colectiva", "pct_por_constructor": 8}]},
   "fortaleza": {"nombre": "Trinchera de tacuara", "material": "madera", "pv": 3200, "costo": {"madera": 250, "piedra": 300}, "desc": "Trinchera y empalizada doble de tacuara y troncos, con plataformas para los arqueros y los arcabuces, como las de las misiones contra las malocas (Furlong, 1962) [verificar el pasaje]. La defensa que aguanta de la edad III."},
   "campo_tiro": {"nombre": "Guyrapa róga", "tam": [2, 2], "costo": {"madera": 150}, "desc": "Casa del arco, junto al monte: más chica, para levantarla entre los árboles."},
   "taller": {"nombre": "Taller de tacuara", "costo": {"madera": 150}},
@@ -89,6 +91,7 @@
  },
  "sin_edificios": ["torre", "hito_economia", "hito_guerra", "deposito", "almacen_alimento", "establo"],
  "edificios_nuevos": {
+  "maravilla_monte": {"hereda": "maravilla", "nombre": "Aldea grande del monte", "arte": "maravilla_aldea_monte", "requiere_hito": "monte", "desc": "Una gran aldea de óga guasu en el monte cerrado. Mientras está en pie, la tropa propia escondida en el monte se deja ver solo de más cerca. No se usa tekoha guasu: es una categoría de los avá guaraní y los kaiowá en los litigios por tierras de los siglos XX y XXI, y una palabra de lucha presente (C-85 a). Solo por la vía del monte. (Meliá, Grünberg y Grünberg, 1976.) Con consulta a mbyá, paĩ-tavyterã, avá guaraní y kaiowá.", "efectos_maravilla": [{"tipo": "sigilo_monte", "deteccion_pct": 50}]},
   "karai_palabra": { "eje": "economia",
    "nombre": "Casa del karai",
    "edad_min": 1,
@@ -289,7 +292,7 @@
    "yvy_marane"
   ]
  ],
- "construye": ["casa", "granja", "almacen_madera", "almacen_mina", "cuartel", "campo_tiro", "taller", "fortaleza", "centro", "empalizada", "puerta", "mercado"],
+ "construye": ["casa", "granja", "almacen_madera", "almacen_mina", "cuartel", "campo_tiro", "taller", "fortaleza", "centro", "empalizada", "puerta", "mercado", "maravilla", "maravilla_monte"],
  "produce": {"cuartel": ["guerrero", "lancero"], "campo_tiro": ["hondero"], "taller": ["ariete", "catapulta"]},
  "recursos_semilla": [{ "tipo": "yerbal", "cantidad": 100 }],
  "modulos": {

@@ -53,6 +53,18 @@ static func leader(s: Sim) -> int:
 	return -1 if tie else best
 
 
+## --- paso 7 --- Jugador con la cuenta de la maravilla más adelantada (-1 si ninguna corre).
+static func wonder_holder(s: Sim) -> int:
+	var best := -1
+	var best_left := 1 << 30
+	for p in s.players:
+		var left := s.wonder_left_s(int(p["id"]))
+		if left >= 0 and left < best_left:
+			best_left = left
+			best = int(p["id"])
+	return best
+
+
 static func sites_left_s(s: Sim, pid: int) -> int:
 	return maxi(0, (int(s.data.reglas["sitios"]["victoria_ms"]) - int(s.players[pid].get("sitios_ms", 0))) / 1000)
 
@@ -68,7 +80,18 @@ func _draw() -> void:
 	var secs := -1
 	var col := Palette.UI_BAD
 	var holder := sites_holder(sim)
-	if holder >= 0:
+	var wonder := wonder_holder(sim) # --- paso 7 --- la que gana antes manda
+	if wonder >= 0 and (holder < 0 or sim.wonder_left_s(wonder) <= sites_left_s(sim, holder)):
+		secs = sim.wonder_left_s(wonder)
+		col = Palette.team(wonder)
+		var wname := String(sim.wonder_of(wonder).def.get("nombre", "la maravilla")).to_upper() if sim.wonder_of(wonder) != null else "LA MARAVILLA"
+		if wonder == local:
+			title = "%s EN PIE · GANÁS SI RESISTE" % wname
+		elif not sim.enemies(local, wonder):
+			title = "MARAVILLA DE TU EQUIPO · %s" % wname
+		else:
+			title = "%s: %s · DESTRUILA" % [Palette.team_name(wonder).to_upper(), wname]
+	elif holder >= 0:
 		secs = sites_left_s(sim, holder)
 		col = Palette.team(holder)
 		if holder == local:

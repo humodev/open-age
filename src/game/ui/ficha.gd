@@ -424,6 +424,8 @@ func _unit_role(def: Dictionary) -> String:
 func _building_role(dd: SimData, type: String, def: Dictionary) -> String:
 	if def.get("sagrado", false):
 		return "Sitio sagrado · se toma con presencia"
+	if def.get("maravilla", false): # --- paso 7 ---
+		return "Maravilla de la edad IV · una por pueblo"
 	if def.get("avanza_edad", false):
 		return "Hito · lleva a la edad siguiente"
 	var parts: Array[String] = []
@@ -465,6 +467,8 @@ func _building_desc(dd: SimData, type: String, def: Dictionary) -> String:
 	var aura := _aura_text(dd, def)
 	if aura != "":
 		d += ("\n" if d != "" else "") + aura
+	if def.get("maravilla", false): # --- paso 7 ---
+		d += ("\n" if d != "" else "") + ctrl.wonder_text(def)
 	return d
 
 
@@ -659,6 +663,15 @@ func _unit_state(c: Dictionary, e: SimEntity) -> void:
 
 func _building_state(c: Dictionary, e: SimEntity) -> void:
 	var dd := sim.dp(e.owner)
+	# --- paso 7 --- La cuenta de la maravilla, para todos.
+	if e.def.get("maravilla", false) and e.built:
+		var left := sim.wonder_left_s(e.owner)
+		if left >= 0:
+			var vic := int(sim.data.reglas["maravilla"]["victoria_ms"]) / 1000
+			c["bar"] = [1.0 - float(left) / float(maxi(1, vic)), Palette.team(e.owner)]
+			c["state"].append(["%s gana en %s si sigue en pie" % ["Tu pueblo" if e.owner == hud.local else _who(e.owner).capitalize(), Hud._fmt_time(left)], Palette.UI_GOOD if not sim.enemies(hud.local, e.owner) else Palette.UI_BAD])
+		elif e.def.has("sitiada") and not sim._opts.get("maravilla_sin_victoria", false):
+			c["state"].append(["Sitiada: con tropa enemiga adentro la cuenta no corre", Palette.UI_BAD])
 	if not e.built:
 		var k := e.progress * 100 / maxi(1, e.build_time)
 		c["bar"] = [k / 100.0, Palette.UI_ACCENT]

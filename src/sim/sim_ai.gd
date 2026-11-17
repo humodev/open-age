@@ -53,6 +53,11 @@ var _lost_buildings := 0 # cuántos de esos se perdieron en la partida (`rendici
 var _army_n := 0 # ejército propio en la pensada (para `_min_army`)
 var _seen := 0 # mayor ejército rival visto hace poco (`ejercito_segun_rival`)
 var _seen_tick := -100000
+# --- paso 7 --- (docs/diseno/27, §4; reglas.ia_edad_iv, ia_maravilla)
+var _goal := "" # lo que se ahorra este turno: el hito de la edad siguiente o la maravilla
+var _age4_tick := -1 # cuándo llegó a la IV
+var last_wonder_hit := -100000 # último envío contra una maravilla rival
+var _wonder_on := false # ya decidió levantar la maravilla: sigue juntando aunque baje un poco la tropa
 
 # Reparto de aldeanos por recurso: reglas.json → ia_economia.
 var ratio_early := {}
@@ -136,7 +141,17 @@ func think() -> void:
 	var held := _reserve(p, 1)
 	_army_n = army.size()
 	_watch_rival_army()
+	# --- paso 7 --- en la IV se ahorra para la maravilla (si le conviene) con lo mismo que el hito.
+	if int(p["age"]) >= 4 and _age4_tick < 0:
+		_age4_tick = sim.tick
+	_goal = _hito_type(p)
 	var saving := _wants_hito(p, vill.size(), by_type)
+	if not saving and (_wonder_on and _keeps_wonder() or _wants_wonder(p, vill.size(), _threat(centro) != null)):
+		saving = true
+		_wonder_on = true
+		_goal = _wonder_type()
+	else:
+		_wonder_on = false
 	_economy(p, vill, centro, saving)
 	_buildings(p, vill, centro, by_type, saving)
 	var held_levels := _levels(p, army, by_type, saving, _threat(centro) != null)
@@ -184,7 +199,7 @@ func _hito_type(p: Dictionary) -> String:
 ## gasta la misma plata. Devuelve lo apartado.
 func _levels(p: Dictionary, army: Array[SimEntity], by_type: Dictionary, saving: bool, threatened: bool) -> Dictionary:
 	var cfg: Dictionary = sim.data.reglas.get("ia_niveles", {})
-	if cfg.is_empty() or int(p["age"]) < 2 or (saving and not cfg.get("ahorrando", true)):
+	if cfg.is_empty() or int(p["age"]) < 2 or (saving and not cfg.get("ahorrando", true)) or (saving and _goal_is_wonder()): # --- paso 7 --- la maravilla junta todo
 		return {}
 	var techs: Dictionary = sim.dp(player).tecnologias
 	var count := {}
@@ -466,13 +481,19 @@ func _surrenders(by_type: Dictionary, centro: SimEntity) -> bool:
 			if b == null or not b.alive:
 				_lost_buildings += 1
 	_built_ids = now
-	var beaten: bool = _lost_buildings >= int(cfg["edificios_perdidos"]) and _threat(centro) != null
+	var threat := _threat(centro)
+	var beaten: bool = _lost_buildings >= int(cfg["edificios_perdidos"]) and threat != null
 	var capital: SimEntity = null
 	for k in by_type:
 		for b: SimEntity in by_type[k]:
 			if b.capital:
 				capital = b
-	if capital != null and capital.hp * 100 <= capital.hp_max * int(cfg["capital_pct"]):
+	# --- paso 7 --- Normal, difícil y experta (docs/diseno/27, §4.4.4), con umbrales más duros:
+	# además tiene menos de `ejercito_rival_pct` % del mayor ejército rival visto y la capital atacada.
+	if beaten and cfg.has("ejercito_rival_pct"):
+		beaten = _army_n * 100 < _seen * int(cfg["ejercito_rival_pct"]) and capital != null \
+				and Sim.dist(threat.x, threat.y, capital.x, capital.y) <= int(sim.data.reglas["ia_economia"]["amenaza_capital"])
+	if cfg.has("capital_pct") and capital != null and capital.hp * 100 <= capital.hp_max * int(cfg["capital_pct"]):
 		beaten = true
 	if not beaten:
 		return false
@@ -490,7 +511,7 @@ func _economy(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, saving: 
 		var eco: Dictionary = sim.data.reglas["ia_economia"]
 		ratio = (eco["proporcion_temprana"] if p["age"] < 2 else eco["proporcion_tardia"]).duplicate()
 	# Ajuste por banco: menos gente en lo que sobra, más en lo que falta para el hito.
-	var hito_cost: Dictionary = sim.dp(player).cost_of(_hito_type(p), p["age"]) if saving else {}
+	var hito_cost: Dictionary = _goal_cost(p) if saving else {}
 	for k in Sim.RES_KINDS:
 		if p["res"][k] > 600:
 			ratio[k] = ratio[k] / 3
@@ -607,6 +628,10 @@ func _wants_hito(p: Dictionary, n_vill: int, by_type: Dictionary, extra: Diction
 	# En la edad I se ahorra apenas hay aldeanos suficientes, como en AoE: el avance
 	# a la II es la prioridad (compuerta de la etapa 1: edad II entre 6:30 y 9:00).
 	if p["age"] == 1:
+		return true
+	# --- paso 7 --- Hacia la IV: con la economía y el ejército hechos y sin un rival mucho más
+	# fuerte a la vista, el hito va primero (reglas.ia_edad_iv).
+	if not strict and _wants_up(p, n_vill):
 		return true
 	# Experta (`ahorro_con_minimo`): con el ejército mínimo de la edad hecho, el hito va primero,
 	# sin el ahorro intermitente (la edad III llegaba a los 15–20 minutos o nunca; veterano, ronda 6).
@@ -833,8 +858,8 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 	# Expansión (experta): segundo y tercer centro, aunque se esté ahorrando para el hito.
 	_expand(p, vill, centro, by_type, saving, unbuilt)
 	# Hito.
-	if saving and sim.can_afford(player, sim.dp(player).cost_of(_hito_type(p), p["age"])):
-		_try_build(_hito_type(p), p, vill, centro, int(level.get("hito_constructores", 4)))
+	if saving and sim.can_afford(player, _goal_cost(p)):
+		_try_build(_goal, p, vill, centro, _goal_builders())
 		return
 	_center_towers(p, vill, by_type, unbuilt)
 	# Juntando para el centro, lo demás espera (como con el mercado): si no, la madera se va
@@ -964,7 +989,7 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 	if not saving:
 		_fortress(p, vill, centro, by_type, unbuilt) # --- paso 4 --- (ahorrando para el hito, no)
 	# Torre (la fácil, ninguna: `torres_max`; proceso/24, 4q).
-	if p["age"] >= 2 and sim.dp(player).edificios.has("torre") and by_type.get("torre", []).size() < int(level.get("torres_max", 1)) and p["res"]["piedra"] >= 250:
+	if p["age"] >= 2 and sim.dp(player).edificios.has("torre") and by_type.get("torre", []).size() < int(level.get("torres_max", 1)) and p["res"]["piedra"] >= 250 and not (saving and _goal_is_wonder()): # --- paso 7 --- la piedra de la maravilla
 		_try_build("torre", p, vill, centro, 1)
 
 
@@ -1026,6 +1051,8 @@ func _min_army(p: Dictionary) -> int:
 ## edificios) y recuerda el mayor (`ejercito_segun_rival`).
 func _watch_rival_army() -> void:
 	var cfg: Dictionary = level.get("ejercito_segun_rival", {})
+	if cfg.is_empty() and level.get("sube_a_la_iv", false): # --- paso 7 --- mira al rival antes de subir
+		cfg = sim.data.reglas.get("ia_edad_iv", {})
 	if cfg.is_empty():
 		return
 	var n := 0
@@ -1259,7 +1286,7 @@ func _expansion_need(p: Dictionary, n_vill: int, saving: bool) -> Dictionary:
 	var out: Dictionary = dd.cost_of(ctype, p["age"]).duplicate()
 	# `reserva_hito`: el centro nunca se come lo del hito siguiente, aunque no se esté ahorrando.
 	if saving or cfg.get("reserva_hito", false) and p["age"] < dd.edades.size() and p["age"] < int(level.get("edad_max", 99)) and not sim.hito_in_progress(player):
-		var hc: Dictionary = dd.cost_of(_hito_type(p), p["age"])
+		var hc: Dictionary = _goal_cost(p)
 		for k in out:
 			out[k] = int(out[k]) + int(hc.get(k, 0))
 	return out
@@ -1437,10 +1464,12 @@ func _production(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], 
 	# Ahorrando para el hito, solo se mantiene un ejército mínimo por edad con lo que sobra por
 	# encima de su costo. Cortar del todo dejaba a Etiopía con 9 de ejército y 979 de alimento
 	# en el banco; gastar todo lo que sobra demoraba la edad III 3–4 minutos (proceso/24).
-	if saving and not threatened:
-		if army.size() >= _min_army(p):
+	# --- paso 7 --- la maravilla se sigue juntando con la base atacada si hay tropa (si no, se
+	# gastaba en un minuto lo juntado en diez).
+	if saving and (not threatened or _goal_is_wonder() and army.size() >= _min_army(p)):
+		if army.size() >= _min_army(p) and not threatened:
 			return
-		var hc: Dictionary = sim.dp(player).cost_of(_hito_type(p), p["age"])
+		var hc: Dictionary = _goal_cost(p)
 		for k in hc:
 			budget[k] = maxi(0, int(budget.get(k, 0)) - int(hc[k]))
 	# Juntando para el centro (experta), la tropa sale de lo que sobra por encima, salvo que
@@ -1607,7 +1636,7 @@ func _threat(centro: SimEntity) -> SimEntity:
 	# El hito propio en obra también se defiende (`ataca_hito_en_obra`: quien ataca el ajeno cuida el suyo).
 	var guard_hito: bool = level.get("ataca_hito_en_obra", false)
 	for b in sim.actives:
-		if b.alive and b.owner == player and b.is_building() and (b.built or guard_hito and b.def.get("hito", false)) and b != centro and b.def.get("fuente", "") == "":
+		if b.alive and b.owner == player and b.is_building() and (b.built or guard_hito and (b.def.get("hito", false) or b.def.get("maravilla", false))) and b != centro and b.def.get("fuente", "") == "":
 			var bx := b.x / cell
 			var by := b.y / cell
 			for dy in range(-r, r + 1):
@@ -1686,6 +1715,8 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 	if army.is_empty():
 		if _contest_held:
 			_regroup(home)
+		return
+	if attacks and _hit_wonder(army): # --- paso 7 --- la maravilla rival va primero
 		return
 	if attacks and _hit_hito(army):
 		return
@@ -2071,6 +2102,123 @@ func _hit_hito(army: Array[SimEntity]) -> bool:
 	if target == null:
 		return false
 	last_hito_hit = sim.tick
+	var ids := []
+	for u in army:
+		if u.order != O.ATTACK and not _at_flare(u):
+			ids.append(u.id)
+	if ids.is_empty():
+		return true
+	focus = target.owner
+	_say("ataco", {"a": target.owner})
+	sim.push_command({"t": "target", "player": player, "ids": ids, "target": target.id})
+	return true
+
+
+# --- paso 7 --- Edad IV y maravilla (docs/diseno/27, §4; reglas.ia_edad_iv e ia_maravilla)
+
+## ¿Ahorra sin pausa para el hito de la IV? Solo las dificultades con `sube_a_la_iv`, desde
+## `desde_edad`, con `aldeanos_min` aldeanos, el ejército mínimo de la edad hecho y sin un rival
+## que le saque más de `rival_pct_max` % de ejército (el mayor que vio hace poco). Antes la IA
+## normal ahorraba un tercio del tiempo y en 45 minutos casi nunca llegaba (proceso/26, 07 y 10).
+func _wants_up(p: Dictionary, n_vill: int) -> bool:
+	var cfg: Dictionary = sim.data.reglas.get("ia_edad_iv", {})
+	if cfg.is_empty() or not level.get("sube_a_la_iv", false) or int(p["age"]) < int(cfg["desde_edad"]):
+		return false
+	if n_vill < int(cfg["aldeanos_min"]) or _army_n < _min_army(p):
+		return false
+	return not _rival_ahead(int(cfg["rival_pct_max"]), int(cfg["memoria_ticks"]))
+
+
+## ¿El mayor ejército rival visto en `memory` ticks supera `pct` % del propio?
+func _rival_ahead(pct: int, memory: int) -> bool:
+	return sim.tick - _seen_tick <= memory and _seen * 100 > maxi(1, _army_n) * pct
+
+
+## La maravilla que este pueblo puede levantar ahora ("" si ninguna: ya tiene una, le falta la
+## vía o el Pacto de Cucaú la impide).
+func _wonder_type() -> String:
+	var dd := sim.dp(player)
+	for t: String in dd.unidades["aldeano"].get("construye", []):
+		if dd.edificios.get(t, {}).get("maravilla", false) and sim.build_block(player, t) == "":
+			return t
+	return ""
+
+
+## ¿Ahorra para la maravilla? En la IV, `tras_iv_ticks` después de llegar, con `aldeanos_min`
+## aldeanos y `ejercito_min` de tropa, sin la base atacada (salvo con `ejercito_min`), sin un rival más fuerte a la vista y
+## sin una maravilla rival en pie (a esa se la va a romper: `_hit_wonder`). Sin la victoria por
+## maravilla no la levanta.
+func _wants_wonder(p: Dictionary, n_vill: int, threatened: bool) -> bool:
+	var cfg: Dictionary = sim.data.reglas.get("ia_maravilla", {})
+	if cfg.is_empty() or not level.get("maravilla", false) or int(p["age"]) < 4:
+		return false
+	# Con la base atacada sigue juntando si tiene tropa; si no, primero la defensa.
+	if threatened and _army_n < int(cfg["ejercito_min"]):
+		return false
+	if sim._opts.get("maravilla_sin_victoria", false) or sim.scenario != null:
+		return false
+	if sim.tick - _age4_tick < int(cfg["tras_iv_ticks"]) or n_vill < int(cfg["aldeanos_min"]) or _army_n < int(cfg["ejercito_min"]):
+		return false
+	if _rival_ahead(int(cfg["rival_pct_max"]), int(cfg["memoria_ticks"])) or _rival_wonder() != null:
+		return false
+	return _wonder_type() != ""
+
+
+## ¿Lo que se ahorra este turno es la maravilla?
+func _goal_is_wonder() -> bool:
+	return sim.dp(player).edificios.get(_goal, {}).get("maravilla", false)
+
+
+## Ya decidida la maravilla, sigue juntando mientras se pueda levantar, no haya una rival y le
+## quede al menos `sigue_ejercito_pct` % de `ejercito_min` (si no, el banco se iba en tropa cada vez
+## que bajaba un soldado del mínimo y no se juntaba nunca).
+func _keeps_wonder() -> bool:
+	var cfg: Dictionary = sim.data.reglas["ia_maravilla"]
+	return _wonder_type() != "" and _rival_wonder() == null and _army_n * 100 >= int(cfg["ejercito_min"]) * int(cfg["sigue_ejercito_pct"])
+
+
+## Lo que cuesta lo que se ahorra este turno (el hito o la maravilla).
+func _goal_cost(p: Dictionary) -> Dictionary:
+	return sim.dp(player).cost_of(_goal, p["age"])
+
+
+## Cuántos aldeanos van a la obra de lo que se ahorra.
+func _goal_builders() -> int:
+	if sim.dp(player).edificios.get(_goal, {}).get("maravilla", false):
+		return int(sim.data.reglas["ia_maravilla"]["constructores"])
+	return int(level.get("hito_constructores", 4))
+
+
+## La maravilla rival más cercana a la base (en obra o terminada), o null.
+func _rival_wonder() -> SimEntity:
+	var best: SimEntity = null
+	var best_d := 1 << 60
+	for e in sim.actives:
+		if e.alive and e.is_building() and e.owner >= 0 and sim.enemies(player, e.owner) and e.def.get("maravilla", false):
+			var d := Sim.dist(e.x, e.y, rally.x, rally.y)
+			if d < best_d:
+				best_d = d
+				best = e
+	return best
+
+
+## Maravilla rival (reglas.ia_maravilla.ataque): es el blanco que decide la partida. Con
+## `ejercito_min` o más, todo el ejército libre va a romperla cada `cada_ticks`; terminada y con
+## la cuenta corriendo, va aunque sea poco. A la sitiada (Palmares) se la rodea: con tropa
+## adentro su cuenta se corta.
+func _hit_wonder(army: Array[SimEntity]) -> bool:
+	var cfg: Dictionary = sim.data.reglas.get("ia_maravilla", {}).get("ataque", {})
+	if cfg.is_empty() or not level.get("ataca_maravilla", false) or army.is_empty():
+		return false
+	var target := _rival_wonder()
+	if target == null:
+		return false
+	var counting := target.built
+	if army.size() < int(cfg["ejercito_min"]) and not counting:
+		return false
+	if sim.tick - last_wonder_hit < int(cfg["cada_ticks"]):
+		return true # sigue a lo suyo: nadie vuelve al punto de reunión mientras
+	last_wonder_hit = sim.tick
 	var ids := []
 	for u in army:
 		if u.order != O.ATTACK and not _at_flare(u):
@@ -2601,13 +2749,26 @@ func _trade(p: Dictionary, by_type: Dictionary) -> void:
 	var m: SimEntity = markets[0]
 	var res: Dictionary = p["res"]
 	# Lo que falta para el hito se compra con la riqueza que sobra por encima de lo que pide el hito.
-	if p["age"] < sim.dp(player).edades.size():
-		var hc: Dictionary = sim.dp(player).cost_of(_hito_type(p), p["age"])
+	if p["age"] < sim.dp(player).edades.size() or _goal != _hito_type(p):
+		var hc: Dictionary = _goal_cost(p)
 		var spare := int(res["riqueza"]) - int(hc.get("riqueza", 0))
 		for k in ["piedra", "alimento", "madera"]:
 			if int(res[k]) < int(hc.get(k, 0)) and spare >= sim.trade_price(player, k) + 50:
 				sim.push_command({"t": "trade", "player": player, "building": m.id, "recurso": k, "op": "comprar"})
 				return
+		# --- paso 7 --- Hacia la IV y la maravilla: si falta algo y no alcanza la riqueza, se vende
+		# lo que sobra por encima de lo que pide la meta (`ia_edad_iv.vende_sobra`). Sin esto la IA
+		# esperaba en la III con 1800 de madera y alimento y la piedra quieta en 245 (proceso/26, 10).
+		var cfg4: Dictionary = sim.data.reglas.get("ia_edad_iv", {})
+		if level.get("sube_a_la_iv", false) and int(p["age"]) >= int(cfg4.get("desde_edad", 99)):
+			var short := false
+			for k: String in hc:
+				short = short or int(res.get(k, 0)) < int(hc[k])
+			if short:
+				for k in ["alimento", "madera", "piedra"]:
+					if int(res[k]) > int(hc.get(k, 0)) + int(cfg4["vende_sobra"]):
+						sim.push_command({"t": "trade", "player": player, "building": m.id, "recurso": k, "op": "vender"})
+						return
 	for k in ["alimento", "madera", "piedra"]:
 		if int(res[k]) > 900 and int(res["riqueza"]) < 400:
 			sim.push_command({"t": "trade", "player": player, "building": m.id, "recurso": k, "op": "vender"})

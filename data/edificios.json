@@ -79,6 +79,13 @@
     "_doc": "La defensa que aguanta (paso 4 del juego tardío, docs/diseno/27, §4.2): una por pueblo, con su nombre (data/civs). Dispara como la torre, más fuerte, y aguanta al asedio. material: piedra o madera (los incendiarios mapuches pegan más contra la madera).",
     "desc": "La defensa que aguanta, desde la edad III: dispara una andanada (más una flecha por cada unidad adentro) y resiste el asedio. Se refuerza con las mejoras de defensa."
   },
+  "maravilla": {
+    "nombre": "Maravilla", "edad_min": 4, "tam": [6, 6], "pv": 9000, "armadura": 4,
+    "costo": { "madera": 1500, "piedra": 1500, "riqueza": 1500 }, "tiempo_ms": 2400000, "vision": 9000,
+    "maravilla": true, "material": "piedra",
+    "_doc": "--- paso 7 --- La maravilla de la edad IV (docs/diseno/27, §4.1; C-78 a): una por jugador, con nombre, forma y efecto propios por pueblo (data/civs/<pueblo>.json → edificios.maravilla). tiempo_ms es el de un constructor: con 10, por la obra decreciente (×3/12), son 600 s como pide el diseño. La cuenta para ganar está en reglas.maravilla. requiere_hito: solo con ese hito hecho (la vía de los guaraníes); impide_hito: ese hito la impide (el Pacto de Cucaú). sitiada: no cae; la cuenta se corta mientras haya tropa enemiga adentro (Palmares, C-97 a). efectos_maravilla: lo que da mientras está en pie (src/sim/sim_mods.gd, «Maravillas»). arte: la forma de data/arte_hitos.json.",
+    "desc": "La obra de la edad IV, una por pueblo. Mientras está en pie, todos la ven y corre una cuenta: si llega a cero, su dueño gana. Si cae, la cuenta se pierde."
+  },
   "hito_economia": {
     "nombre": "Hito de la abundancia", "edad_min": 1, "tam": [4, 4], "pv": 3000, "armadura": 2,
     "costo": {}, "tiempo_ms": 0, "vision": 7000,

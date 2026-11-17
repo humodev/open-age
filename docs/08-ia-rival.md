@@ -49,3 +49,7 @@ Sin victoria por hitos (opciones de partida), toda IA caza los edificios que cue
 
 - `tests/test_determinism.gd` usa una partida IA contra IA.
 - Desde H2: torneo automático de perfiles contra perfiles con varias semillas; resultado en una tabla de victorias por apertura. Una apertura que gana en todos los cruces es un fallo de diseño (test de las tres aperturas).
+
+## Edad IV y maravilla (paso 7 del juego tardío)
+
+Normal, difícil y experta (`sube_a_la_iv`, `reglas.ia_edad_iv`): desde la III, con suficientes aldeanos, el ejército mínimo de la edad y sin un rival que le saque mucho ejército a la vista, ahorran para el hito de la IV sin pausa. En la IV (`maravilla`, `reglas.ia_maravilla`), un rato después de llegar y con economía y tropa, ahorran para la maravilla de su pueblo como para un hito y mandan diez constructores; no la levantan si el rival ya tiene una o le saca ejército. Con `ataca_maravilla`, la maravilla rival (en obra o con la cuenta corriendo) es el blanco antes que cualquier otro; a la sitiada de Palmares se la rodea. Las tres se rinden (`rendicion`) si perdieron 10 edificios, tienen menos de un tercio del mayor ejército rival visto y les atacan la capital. Se mide con `tools/maravilla_ia.gd` (proceso/26-juego-tardio/10).

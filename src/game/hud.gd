@@ -310,6 +310,52 @@ func _place_top() -> void:
 	cola_global.size = Vector2(maxf(60.0, size.x - 342.0 - 20.0 - cola_global.position.x), 54)
 
 
+## --- paso 7 --- Aviso de la maravilla para el jugador local: la propia, la de un aliado o la de
+## un rival, con su nombre y su lugar (clic en el aviso: salta). La cuenta grande la muestra
+## CuentaGrande; esto avisa los cambios.
+func _wonder_notice(ev: Dictionary) -> void:
+	var pid := int(ev["player"])
+	var w: SimEntity = sim.by_id.get(ev.get("id", -1))
+	var name: String = w.def.get("nombre", "la maravilla") if w != null else sim.dp(pid).edificios.get(str(ev.get("tipo", "")), {}).get("nombre", "la maravilla")
+	var at: Variant = _lugar_de(w.x, w.y) if w != null else (_lugar_de(int(ev["x"]), int(ev["y"])) if ev.has("x") else null)
+	var mine := pid == local
+	var foe := sim.enemies(local, pid)
+	var who := "Tu pueblo" if mine else Palette.team_name(pid)
+	var mins := int(sim.data.reglas.get("maravilla", {}).get("victoria_ms", 0)) / 60000
+	var no_win: bool = sim._opts.get("maravilla_sin_victoria", false)
+	var txt := ""
+	var tipo := "hito"
+	match String(ev["t"]):
+		"maravilla_obra":
+			txt = "%s empezó %s" % [who, name] if mine else "%s empezó su maravilla: %s" % [who, name]
+			tipo = "decision" if foe else "hito"
+		"maravilla":
+			if no_win:
+				txt = "%s terminó %s" % [who, name]
+			elif mine:
+				txt = "¡%s está en pie! Defendela %d minutos y ganás" % [name, mins]
+			elif foe:
+				txt = "%s terminó %s: si sigue en pie %d minutos, gana" % [who, name, mins]
+				tipo = "ataque"
+			else:
+				txt = "Tu aliado terminó %s: defiéndanla %d minutos" % [name, mins]
+		"maravilla_cae":
+			if not bool(ev.get("terminada", false)):
+				txt = "Cayó la obra de %s" % name
+			else:
+				txt = "Cayó %s: la cuenta se pierde" % name
+		"maravilla_sitiada":
+			txt = "%s está sitiada: su cuenta vuelve a empezar" % name
+			tipo = "ataque" if mine else "hito"
+		"inundacion":
+			txt = "%s inunda el llano: el enemigo se empantana" % name if not foe else "%s inunda el llano: tu tropa se empantana" % name
+			tipo = "ataque" if foe else "hito"
+	if txt != "":
+		notify(txt, 6.0, tipo, at)
+		if w != null and _mini != null and (foe or mine):
+			_mini.ping(w.x, w.y)
+
+
 ## Frase de la IA aliada (suceso "ia_dice"), armada con data/interfaz.json → frases_ia.
 func _ia_dice(ev: Dictionary) -> void:
 	var pid := int(ev["player"])
@@ -424,6 +470,9 @@ func on_events(events: Array) -> void:
 			"rendicion": # --- 4q --- la IA fácil abandona
 				if pid != local:
 					notify("%s se rinde" % Palette.team_name(pid), -1.0, "hito")
+			# --- paso 7 --- La maravilla: todos se enteran, con el lugar (docs/diseno/27, §4.1).
+			"maravilla_obra", "maravilla", "maravilla_cae", "maravilla_sitiada", "inundacion":
+				_wonder_notice(ev)
 			"victory":
 				if sim.scenario == null:
 					# Con equipos gana todo el equipo: si ganó un aliado, ganaste vos.
@@ -899,6 +948,13 @@ class ClockBar:
 				if p["id"] != hud.local and int(p.get("sitios_ms", 0)) > 0:
 					txt = "¡El rival controla todos los sitios! %s" % Hud._fmt_time((int(sim.data.reglas["sitios"]["victoria_ms"]) - int(p["sitios_ms"])) / 1000)
 			draw_string(Hud.font, Vector2(16, 64), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Palette.UI_ACCENT if mine == total and not no_win else Palette.UI_DIM)
+		# --- paso 7 --- La cuenta de la maravilla (la propia o la del rival), debajo de los sitios.
+		for p in sim.players:
+			var wl := sim.wonder_left_s(int(p["id"]))
+			if wl >= 0:
+				var mine_w: bool = not sim.enemies(hud.local, int(p["id"]))
+				draw_string(Hud.font, Vector2(0, 64), ("Maravilla: gana en %s" if mine_w else "¡Maravilla rival! %s") % Hud._fmt_time(wl), HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, 14, Palette.UI_GOOD if mine_w else Palette.UI_BAD)
+				break
 		var secs := sim.tick * sim.tick_ms / 1000
 		var t := Hud._fmt_time(secs)
 		var speed: float = hud.main.speed

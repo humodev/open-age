@@ -514,6 +514,12 @@ func _cmd_build(pid: int, units: Array[SimEntity], type: String, tx: int, ty: in
 		if hito_in_progress(pid):
 			_notify(pid, "Ya hay un hito en obra")
 			return
+	# --- paso 7 --- la maravilla: una por jugador y con las condiciones de su pueblo; la corte
+	# etíope no se muda mientras está en pie Fasil Gəbbi.
+	var why := build_block(pid, type)
+	if why != "":
+		_notify(pid, why)
+		return
 	var cost := dp(pid).cost_of(type, p["age"])
 	if not can_afford(pid, cost):
 		_notify(pid, "Recursos insuficientes")
@@ -526,6 +532,8 @@ func _cmd_build(pid: int, units: Array[SimEntity], type: String, tx: int, ty: in
 	var b := spawn_building(type, pid, tx, ty, false)
 	b.build_time = dp(pid).build_time_of(type, p["age"])
 	events.append({"t": "placed", "id": b.id, "player": pid})
+	if def.get("maravilla", false): # --- paso 7 --- todos se enteran y la ven (como en AoE4)
+		events.append({"t": "maravilla_obra", "id": b.id, "player": pid})
 	for e in units:
 		if e.fn == "civil":
 			_order_build(e, b)
@@ -759,6 +767,9 @@ func trade_price(pid: int, kind: String) -> int:
 func _cmd_pack(pid: int, bid: int) -> void:
 	var b: SimEntity = by_id.get(bid)
 	if b == null or not b.alive or b.owner != pid or not b.built or not b.def.has("empaca_en") or not b.queue.is_empty():
+		return
+	if not mods.wonder_fx(pid, "corte_fija").is_empty(): # --- paso 7 --- Fasil Gəbbi en pie
+		_notify(pid, "Con %s en pie la corte ya no se muda" % wonder_of(pid).def.get("nombre", "la maravilla"))
 		return
 	var kind: String = b.def["empaca_en"]
 	var tile := Vector2i(b.tx + b.w / 2, b.ty + b.h / 2)
@@ -1076,6 +1087,7 @@ func step() -> void:
 		mods.tick_second()
 		_aura_heal()
 		_aura_combat() # --- paso 4 ---
+		_wonders() # --- paso 7 ---
 	var every: int = data.reglas["niebla_cada_ticks"]
 	for pid in players.size():
 		if (tick + team_of(pid)) % every == 0:
@@ -1751,8 +1763,11 @@ func _complete(b: SimEntity) -> void:
 	if b.def.has("funda_corte"):
 		_move_court(b)
 		return
+	if b.def.get("maravilla", false): # --- paso 7 --- arranca la cuenta (ver `_wonders`)
+		events.append({"t": "maravilla", "id": b.id, "player": b.owner})
 	if b.def.get("avanza_edad", false):
 		var p := players[b.owner]
+		(p.get_or_add("hitos_hechos", []) as Array).append(b.type) # --- paso 7 --- (requiere_hito, impide_hito)
 		p["age"] = mini(dp(b.owner).edades.size(), p["age"] + 1)
 		# --- paso 4 --- C-76 a): desde la III, el bono de combate de los hitos militares vale
 		# en su aura, no en todo el mapa (docs/diseno/27, §4.2).
@@ -1917,6 +1932,8 @@ func _hit(a: SimEntity, t: SimEntity) -> void:
 	var dmg := maxi(data.reglas["danio_minimo"], atk * mult / 100 - armor)
 	dmg = mods.damage(a, t, dmg)
 	t.hp -= dmg
+	if t.hp <= 0 and t.built and t.def.has("sitiada"): # --- paso 7 --- la maravilla sitiada no cae (C-97 a)
+		t.hp = 1
 	# Espinas (cerca con estrepes de Palmares): devuelve daño al atacante cuerpo a cuerpo.
 	if t.def.has("espinas") and a.is_unit() and int(a.def.get("alcance", 0)) <= 1500:
 		a.hp -= int(t.def["espinas"])
@@ -2050,6 +2067,8 @@ func _kill(e: SimEntity, killer: SimEntity = null) -> void:
 			if item.begins_with("@"):
 				players[e.owner]["pending"].erase(item.substr(1))
 	events.append({"t": "died", "id": e.id, "owner": e.owner, "type": e.type, "cat": e.cat, "by": killer.owner if killer != null else -1, "x": e.x, "y": e.y})
+	if e.is_building() and e.def.get("maravilla", false) and e.owner >= 0: # --- paso 7 ---
+		events.append({"t": "maravilla_cae", "id": e.id, "player": e.owner, "terminada": e.built, "tipo": e.type, "x": e.x, "y": e.y})
 
 
 func _cleanup() -> void:
@@ -2903,6 +2922,10 @@ func score(pid: int) -> int:
 	s += int(p["stats"].get("edificios_destruidos", 0)) * int(pc["por_edificio_destruido"])
 	s += (int(p["age"]) - 1) * int(pc["por_edad"])
 	s += (p["techs"] as Dictionary).size() * int(pc["por_investigacion"])
+	# --- paso 7 --- La maravilla en pie suma puntos (docs/diseno/27, §4.4).
+	var w := wonder_of(pid)
+	if w != null and w.built:
+		s += int(pc.get("por_maravilla", 0))
 	return s
 
 
@@ -3095,6 +3118,89 @@ func _gather_origin(e: SimEntity) -> String:
 		return "propio" # yerbal: motor guaraní
 	var b := bases[e.owner % bases.size()] + Vector2i(2, 2)
 	return "disputado" if Sim.dist(t.x, t.y, b.x * P, b.y * P) > 20 * P else "casa"
+
+
+# ---------------------------------------------------------------- Maravilla (paso 7)
+
+## La maravilla de `pid` (en obra o terminada), o null: hay una por jugador (docs/diseno/27, §4.1).
+func wonder_of(pid: int) -> SimEntity:
+	for e in actives:
+		if e.alive and e.owner == pid and e.is_building() and e.def.get("maravilla", false):
+			return e
+	return null
+
+
+## ¿`pid` hizo el hito `type` (o lo tiene en pie, como en las misiones que lo dan hecho)?
+func has_done_hito(pid: int, type: String) -> bool:
+	if (players[pid].get("hitos_hechos", []) as Array).has(type):
+		return true
+	for e in actives:
+		if e.alive and e.owner == pid and e.type == type and e.is_building() and e.built:
+			return true
+	return false
+
+
+## Por qué `pid` no puede levantar `type` ("" si puede, salvo la edad y el costo): la maravilla
+## es una por jugador, con la vía de los guaraníes (`requiere_hito`) y sin el Pacto de Cucaú
+## (`impide_hito`); con Fasil Gəbbi en pie la corte etíope no se muda (`corte_fija`).
+func build_block(pid: int, type: String) -> String:
+	var def: Dictionary = dp(pid).edificios.get(type, {})
+	if def.has("funda_corte") and not mods.wonder_fx(pid, "corte_fija").is_empty():
+		return "Con %s en pie la corte ya no se muda" % wonder_of(pid).def.get("nombre", "la maravilla")
+	if not def.get("maravilla", false):
+		return ""
+	if wonder_of(pid) != null:
+		return "Ya hay una maravilla"
+	var req: String = def.get("requiere_hito", "")
+	if req != "" and not has_done_hito(pid, req):
+		return "Requiere el hito %s" % dp(pid).edificios.get(req, {}).get("nombre", req)
+	var no: String = def.get("impide_hito", "")
+	if no != "" and has_done_hito(pid, no):
+		return "%s cerró este camino" % dp(pid).edificios.get(no, {}).get("nombre", no)
+	return ""
+
+
+## Cuenta de la maravilla (docs/diseno/27, §4.1 y §4.4; reglas.maravilla): corre mientras la
+## maravilla terminada está en pie, y si cae se pierde. La sitiada (Palmares, C-97 a) no cae:
+## su cuenta vuelve a empezar mientras haya tropa enemiga adentro. Sin la victoria por maravilla
+## (opción de partida) y en las misiones, no hay cuenta.
+func _wonders() -> void:
+	var cfg: Dictionary = data.reglas.get("maravilla", {})
+	var off: bool = cfg.is_empty() or _opts.get("maravilla_sin_victoria", false) or scenario != null
+	for p in players:
+		var pid: int = p["id"]
+		var w: SimEntity = null if p["defeated"] or off else wonder_of(pid)
+		if w == null or not w.built:
+			if int(p.get("maravilla_ms", 0)) != 0:
+				p["maravilla_ms"] = 0
+			continue
+		if w.def.has("sitiada") and _enemy_troops_near(w, int(w.def["sitiada"].get("radio", 3))):
+			if int(p.get("maravilla_ms", 0)) > 0:
+				events.append({"t": "maravilla_sitiada", "id": w.id, "player": pid})
+			p["maravilla_ms"] = 0
+			continue
+		p["maravilla_ms"] = int(p.get("maravilla_ms", 0)) + 1000
+		if int(p["maravilla_ms"]) >= int(cfg["victoria_ms"]) and not game_over:
+			win(pid, "maravilla")
+
+
+## Segundos que le faltan a la cuenta de la maravilla de `pid`; -1 si no corre.
+func wonder_left_s(pid: int) -> int:
+	var ms := int(players[pid].get("maravilla_ms", 0))
+	if ms <= 0:
+		return -1
+	return maxi(0, (int(data.reglas["maravilla"]["victoria_ms"]) - ms) / 1000)
+
+
+## ¿Hay tropa enemiga de `b.owner` a `r` casillas o menos del borde de `b`?
+func _enemy_troops_near(b: SimEntity, r: int) -> bool:
+	for u in actives:
+		if u.alive and u.is_unit() and u.inside < 0 and u.owner >= 0 and u.is_military() and enemies(b.owner, u.owner):
+			var tx := u.x / P
+			var ty := u.y / P
+			if tx >= b.tx - r and tx < b.tx + b.w + r and ty >= b.ty - r and ty < b.ty + b.h + r:
+				return true
+	return false
 
 
 ## Victoria directa (sitios sagrados): todos los demás pierden.

@@ -16,7 +16,7 @@
   },
   "tipos": {
     "_doc": "Ícono de un edificio o una unidad cuando el de la tabla de la grilla (data/interfaz.json → grilla.iconos) o el deducido por función se repite con otro comando (tests/iconos.gd). Gana sobre los dos.",
-    "campo_tiro": "diana",
+    "campo_tiro": "diana", "maravilla": "maravilla", "maravilla_monte": "maravilla",
     "establo": "establo",
     "taller": "taller_asedio",
     "lof": "ruka",

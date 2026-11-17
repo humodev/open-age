@@ -34,13 +34,14 @@ func _init() -> void:
 							fallas.append("%s: '%s' cambia de lugar (%s, antes %s)" % [civ, t, k, donde[t]])
 						donde[t] = k
 			linea += "  %s[%s]" % [menu.substr(0, 3), " ".join(parts)]
-		# Todo lo que construye el aldeano aparece en algún submenú (salvo los hitos).
+		# Todo lo que construye el aldeano aparece en algún submenú (salvo los hitos y la maravilla,
+		# que van en la raíz: --- paso 7 ---).
 		var vistos := {}
 		for menu in [Grilla.ECONOMIA, Grilla.MILITAR]:
 			for t in Grilla.edificios(dd, menu).values():
 				vistos[t] = true
 		for t: String in dd.unidades["aldeano"].get("construye", []):
-			if dd.edificios.has(t) and not dd.is_hito(t) and not vistos.has(t):
+			if dd.edificios.has(t) and not dd.is_hito(t) and not dd.edificios[t].get("maravilla", false) and not vistos.has(t):
 				fallas.append("%s: '%s' no aparece en la grilla" % [civ, t])
 		# Hitos: Z economía, X militar, íconos distintos.
 		for age in range(1, dd.hitos.size() + 1):

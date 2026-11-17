@@ -278,6 +278,12 @@ func commands() -> Array[Dictionary]:
 			var cmd := {"slot": slot, "id": type, "icon": Glyphs.resolve(def, type), "kind": "build", "name": def["nombre"], "common": common_name(type), "cost": sim.dp(local).cost_of(type, age), "desc": DESCS.get(type, def.get("desc", "")), "locked": ""}
 			if age < def.get("edad_min", 1):
 				cmd["locked"] = "Requiere edad %s" % Sim._roman(def["edad_min"])
+			# --- paso 7 --- la maravilla (una, la de la vía, sin el Pacto de Cucaú) y la corte fija
+			if cmd["locked"] == "" and sim.build_block(local, type) != "":
+				cmd["locked"] = sim.build_block(local, type)
+			if def.get("maravilla", false):
+				cmd["common"] = "Maravilla · edad IV"
+				cmd["desc"] = "%s\n%s" % [def.get("desc", ""), wonder_text(def)]
 			if sim.dp(local).is_hito(type):
 				if age >= sim.dp(local).edades.size():
 					cmd["locked"] = "Edad máxima alcanzada"
@@ -592,8 +598,26 @@ static func cmd_at(cmds: Array, slot: int) -> Dictionary:
 func villager_slots(menu: String = "?") -> Dictionary:
 	var which := submenu if menu == "?" else menu
 	if which == Grilla.RAIZ:
-		return Grilla.hitos(sim.dp(local), int(sim.players[local]["age"]))
+		var root := Grilla.hitos(sim.dp(local), int(sim.players[local]["age"]))
+		var wt := wonder_build_type() # --- paso 7 --- la maravilla, junto a los hitos (C)
+		if wt != "" and int(sim.players[local]["age"]) >= int(sim.dp(local).edificios[wt].get("edad_min", 1)):
+			root[Grilla.fija("maravilla", 10)] = wt
+		return root
 	return Grilla.edificios(sim.dp(local), which)
+
+
+## --- paso 7 --- La maravilla que muestra la grilla: la que se puede levantar (los guaraníes
+## tienen una por vía); si ninguna, la primera, con el motivo en el candado.
+func wonder_build_type() -> String:
+	var dd := sim.dp(local)
+	var first := ""
+	for t: String in dd.unidades["aldeano"].get("construye", []):
+		if dd.edificios.get(t, {}).get("maravilla", false):
+			if sim.build_block(local, t) == "":
+				return t
+			if first == "":
+				first = t
+	return first
 
 
 ## Abre un submenú del aldeano ("economia", "militar") o vuelve a la raíz ("").
@@ -1308,6 +1332,39 @@ func effects_text(efectos: Array) -> String:
 				parts.append("+%d%% de velocidad de reparación" % ef["pct"])
 			# --- fin paso 4 ---
 	return " · ".join(parts)
+
+
+## --- paso 7 --- Qué da la maravilla mientras está en pie y cómo gana (docs/diseno/27, §4.1), con
+## los números de los datos (data/civs → edificios.maravilla.efectos_maravilla; reglas.maravilla).
+func wonder_text(def: Dictionary) -> String:
+	var parts: Array[String] = []
+	for ef: Dictionary in def.get("efectos_maravilla", []):
+		match String(ef["tipo"]):
+			"inundacion":
+				parts.append("Cuando entran %d o más soldados enemigos al llano junto al agua (a %d casillas), se inunda: andan %d%% más lento durante %d s, una vez cada %d minutos" % [ef["enemigos_min"], ef["radio"], ef["frenado_pct"], int(ef["dura_ms"]) / 1000, int(ef["cada_ms"]) / 60000])
+			"sitios_protegidos":
+				parts.append("Sin enemigos a %d casillas, los rivales no pueden tomar los sitios sagrados a %d casillas" % [ef["libre_radio"], ef["radio"]])
+			"obra_colectiva":
+				parts.append("El potirõ suma +%d%% más por cada constructor" % ef["pct_por_constructor"])
+			"sigilo_monte":
+				parts.append("La tropa escondida en el monte se ve desde el %d%% de la distancia" % ef["deteccion_pct"])
+			"renta_pct":
+				parts.append("+%d%% de renta de los gult de todo el mapa" % ef["pct"])
+			"corte_fija":
+				parts.append("La corte deja de mudarse")
+			"fama_sin_tope":
+				parts.append("La fama no se pierde por el tope")
+			"acogida_pct":
+				parts.append("La acogida cuesta el %d%%" % ef["pct"])
+			"crecida":
+				parts.append("El agua baja a %d casillas de la capital frena %d%% a la tropa enemiga, salvo a %d casillas de una torre o un fuerte suyo" % [ef["radio"], ef["frenado_pct"], ef["torre_radio"]])
+	var mins := int(sim.data.reglas.get("maravilla", {}).get("victoria_ms", 0)) / 60000
+	var win := "Victoria: si sigue en pie %d minutos después de terminada, gana su pueblo; si cae, la cuenta se pierde." % mins
+	if def.has("sitiada"):
+		win = "Victoria: si sigue en pie %d minutos, gana. No cae: con tropa enemiga a %d casillas, la cuenta vuelve a empezar." % [mins, int(def["sitiada"].get("radio", 3))]
+	if sim._opts.get("maravilla_sin_victoria", false):
+		win = "En esta partida la maravilla no gana (opciones de partida)."
+	return ("Mientras está en pie: " + "; ".join(parts) + ".\n" if not parts.is_empty() else "") + win
 
 
 ## --- paso 4 --- Efectos de un hito que lleva a `dest_age`: los de combate de los hitos
