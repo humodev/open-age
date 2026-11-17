@@ -216,6 +216,7 @@ func _play(data: SimData, pair: Array, sv: int, minutes: int, terrain: String) -
 	var vic_20 := [0, 0] # edificios que cuentan para la victoria al minuto 20
 	var trained15 := [{}, {}] # tipo -> entrenadas antes del minuto 15
 	var vill_lost15 := [0, 0] # aldeanos perdidos antes del minuto 15
+	var techs := [{}, {}] # investigación -> minuto en que terminó
 	while s.tick < minutes * 600 and not s.game_over:
 		# Antes del paso: qué unidades de la civ pegarían con emboscada (la condición de
 		# SimMods.damage: sin combate en 5 s y ocultas ahora).
@@ -251,6 +252,8 @@ func _play(data: SimData, pair: Array, sv: int, minutes: int, terrain: String) -
 					ages[int(ev["player"])][int(ev["age"]) - 1] = s.tick
 				"arreo":
 					arreos[int(ev["player"])] += 1
+				"tech":
+					techs[int(ev["player"])][str(ev["tech"])] = s.tick / 600
 				"placed":
 					var b: SimEntity = s.by_id.get(int(ev["id"]))
 					if b != null and s.dp(b.owner).is_hito(b.type):
@@ -370,7 +373,7 @@ func _play(data: SimData, pair: Array, sv: int, minutes: int, terrain: String) -
 		"score": [s.score(0), s.score(1)], "trained": trained, "prods": prods, "hito_obra": hito_obra, "timeline": timeline,
 		"lost": lost, "hitos_elegidos": hitos_elegidos, "arreos": arreos, "dmg_taken": dmg_taken,
 		"healed": healed, "blds": blds, "heads": heads, "vic_20": vic_20,
-		"trained15": trained15, "vill_lost15": vill_lost15}
+		"trained15": trained15, "vill_lost15": vill_lost15, "techs": techs}
 	_print_game(s, pair, r)
 	return r
 
@@ -495,6 +498,9 @@ func _sum(tot: Dictionary, r: Dictionary) -> void:
 			_add(tot, "%s_hito_%s" % [side[0], k], 1)
 		_add(tot, "%s_arreos" % side[0], r["arreos"][side[1]])
 		_add(tot, "%s_vlost15" % side[0], r["vill_lost15"][side[1]])
+		for k in r["techs"][side[1]]:
+			_add(tot, "%s_tc_%s" % [side[0], k], 1)
+			_add(tot, "%s_tcmin_%s" % [side[0], k], r["techs"][side[1]][k])
 		for k in r["trained15"][side[1]]:
 			_add(tot, "%s_t15_%s" % [side[0], k], r["trained15"][side[1]][k])
 		_add(tot, "%s_heads" % side[0], r["heads"][side[1]])
@@ -617,6 +623,12 @@ func _totals(t: Dictionary) -> void:
 				t15.append("%s %d" % [k.trim_prefix(s + "_t15_"), int(t[k]) * 10 / n])
 		print("   entrenadas antes del minuto 15 (x10, por partida): %s · aldeanos perdidos antes del 15: %d (x10)" % [", ".join(t15), int(t.get(s + "_vlost15", 0)) * 10 / n])
 		print("   unidades perdidas por partida: %s" % ", ".join(lo))
+		var tc := []
+		for k in keys:
+			if k.begins_with(s + "_tc_"):
+				var nm: String = k.trim_prefix(s + "_tc_")
+				tc.append("%s %d (min %d)" % [nm, t[k], int(t.get(s + "_tcmin_" + nm, 0)) / maxi(1, int(t[k]))])
+		print("   investigaciones (partidas en que la compró, minuto promedio): %s" % ", ".join(tc))
 		print("   edificios al final (x10, promedio): %s" % ", ".join(bl))
 		print("   hitos levantados: %s" % ", ".join(hi))
 		print("   arreos por partida %d · ganado al final %d · daño recibido por la tropa %d · edificios que cuentan para la victoria al minuto 20: %d (x10)" % [

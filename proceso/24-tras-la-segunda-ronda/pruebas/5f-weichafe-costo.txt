@@ -1,0 +1,39 @@
+==== TOTALES (30 partidas) ====
+mapuches gana 18 (60 %): por destrucción 10, por puntos 8 (con más edad 4, misma edad 4)
+Partidas por puntos: 16; el puntaje del juego (Sim.score) da el mismo ganador en 15
+Edad al final: mapuches II 6, III 24 · rivales I 1, II 14, III 14, IV 1
+Por rival: ayutthaya 4/6 etiopia 4/6 guaranies 2/6 palmares 5/6 tawantinsuyu 3/6
+Por terreno: altiplano 2/2 bosque_templado 1/2 delta 1/2 fortines 2/2 islas 3/4 llano 1/4 mesetas 2/5 montana 2/3 rio 3/3 selva 1/2 sierra 0/1
+mapuches edades promedio: II 7:33 (30 de 30) III 18:17 (24 de 30) IV --:-- (0 de 30) · primer ataque 6:30 (28) · bajas 3685
+   aldeanos/ejército promedio: 5':20/4 10':30/12 15':39/20 20':40/36 25':39/35 30':36/42
+   obra de los hitos, promedio: ed2 97s con 4 constructores (30) ed3 107s con 4 constructores (24)
+   juntado promedio 24363: casa 11798, granja 8144, propio 1291, disputado 873, recoleccion 801, mercado 529, kawin 472, sitios 364, arreo 74, ingenio 13
+   por recurso: alimento 12593, madera 7028, piedra 746, riqueza 3991
+   riqueza por origen: casa 1934, granja 0, ingenio 13, mercado 329, propio 1291, recoleccion 57, sitios 364
+   bajas por tipo (atacante>víctima): hondero>militar 1314, guerrero>militar 847, hondero>aldeano 375, lancero>militar 297, lof>militar 284, guerrero>aldeano 232, lancero>aldeano 70, jinete>militar 65, hondero>edificio 52, fortaleza>militar 30, jinete>aldeano 20, guerrero>edificio 17
+   entrenadas por partida: guerrero 53, hondero 61, incendiarios 5, jinete 4, lancero 35 · productores al final (x10, promedio): corral 35, cuartel 26, lof 27
+   unidades que mató en el monte: 362 de 3541
+   entrenadas antes del minuto 15 (x10, por partida): guerrero 195, hondero 304, jinete 1, lancero 66 · aldeanos perdidos antes del 15: 15 (x10)
+   unidades perdidas por partida: aldeano 10, guerrero 41, hondero 48, incendiarios 2, jinete 3, lancero 23
+   investigaciones (partidas en que la compró, minuto promedio): 
+   edificios al final (x10, promedio): casa 69, corral 35, cuartel 26, empalizada 10, fortaleza 3, granja 155, lof 27, mercado 8, puerta 2, rewe_caballeria 8, rewe_lonko 9
+   hitos levantados: rewe_caballeria 26, rewe_lonko 30
+   arreos por partida 4 · ganado al final 20 · daño recibido por la tropa 11621 · edificios que cuentan para la victoria al minuto 20: 46 (x10)
+rivales edades promedio: II 7:21 (29 de 30) III 17:33 (15 de 30) IV 29:55 (1 de 30) · primer ataque 7:05 (28) · bajas 4011
+   aldeanos/ejército promedio: 5':19/2 10':27/7 15':31/16 20':34/23 25':37/43 30':38/53
+   obra de los hitos, promedio: ed2 108s con 5 constructores (29) ed3 130s con 5 constructores (15) ed4 195s con 6 constructores (1)
+   juntado promedio 23558: casa 11437, granja 6455, propio 2189, disputado 1813, recoleccion 686, mercado 681, sitios 208, renta 63, cumbi 13, ingenio 8, saqueo 2
+   por recurso: alimento 10859, madera 7398, piedra 627, riqueza 3931, fama 334
+   riqueza por origen: casa 1792, cumbi 13, disputado 0, granja 4, ingenio 8, mercado 374, propio 1465, recoleccion 63, sitios 208
+   bajas por tipo (atacante>víctima): hondero>militar 1977, guerrero>militar 715, centro>militar 411, hondero>aldeano 153, lancero>militar 121, mocambo>militar 110, guerrero>aldeano 108, boleador>militar 90, torre>militar 69, ?>militar 61, hondero>edificio 25, boleador>aldeano 24
+   entrenadas por partida: arcabucero 2, ariete 2, boleador 3, catapulta 1, chang_suek 0, elefante_rey 0, guerrero 41, hondero 69, lancero 9 · productores al final (x10, promedio): barrio_japones 1, barrio_portugues 1, campo_tiro 14, cuartel 16, establo 6, kraal 1, mocambo 3, qollqa 4, taller 7
+   unidades que mató en el monte: 222 de 3918
+   entrenadas antes del minuto 15 (x10, por partida): arcabucero 2, ariete 9, boleador 17, elefante_rey 3, guerrero 145, hondero 274, lancero 13 · aldeanos perdidos antes del 15: 82 (x10)
+   unidades perdidas por partida: aldeano 23, arcabucero 1, ariete 1, boleador 3, catapulta 0, chang_suek 0, guerrero 32, hondero 49, lancero 6
+   investigaciones (partidas en que la compró, minuto promedio): 
+   edificios al final (x10, promedio): almacen_alimento 8, almacen_madera 31, almacen_mina 19, barrio_japones 1, barrio_portugues 1, camino 292, campo_tiro 14, casa 70, centro 9, cuartel 16, empalizada 5, establo 6, ferraria 1, fortaleza 1, fortaleza_rio 1, granja 117, gult 6, iglesia 2, kallanka_real 1, karai_palabra 1, kraal 1, mercado 8, mocambo 3, monte 1, puerta 1, qollqa 4, quilombo_central 1, remonta 0, taller 7, taller_tejido 4, tambo 1, tava 0, torre 5, ushnu 1, wat 2
+   hitos levantados: ferraria 4, fortaleza_rio 3, iglesia 6, kallanka_real 3, karai_palabra 6, monte 5, quilombo_central 5, remonta 2, tava 2, ushnu 6, wat 6
+   arreos por partida 0 · ganado al final 0 · daño recibido por la tropa 8915 · edificios que cuentan para la victoria al minuto 20: 29 (x10)
+Relevo: 691 de vida recuperada por partida (5 % del daño que recibió la tropa)
+Sigilo: ejército propio oculto 19 % del tiempo, oculto y sin detectar 18 % · ejército rival en el monte 18 %
+Emboscada: 323 de 72740 golpes propios a algo del rival (0 %), 1015 de daño de más sobre 359338 (0 %)

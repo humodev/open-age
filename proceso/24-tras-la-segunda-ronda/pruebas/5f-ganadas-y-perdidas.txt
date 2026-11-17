@@ -1,0 +1,9 @@
+50 partidas
+gana 35
+  min 10: ejército mapuche 13.2, rival 6.4 · aldeanos mapuches 30.7, rival 25.2
+  min 15: ejército mapuche 26.6, rival 12.1 · aldeanos mapuches 41.2, rival 27.9
+  min 20: ejército mapuche 39.7, rival 14.1 · aldeanos mapuches 41.9, rival 30.9
+pierde 15
+  min 10: ejército mapuche 9.8, rival 6.8 · aldeanos mapuches 31.1, rival 30.8
+  min 15: ejército mapuche 13.5, rival 16.4 · aldeanos mapuches 40.5, rival 39.7
+  min 20: ejército mapuche 18.9, rival 25.4 · aldeanos mapuches 41.9, rival 43.0
