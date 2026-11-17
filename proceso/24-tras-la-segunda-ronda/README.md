@@ -390,3 +390,11 @@ Informes en [`proceso/22-testers/ronda-6/`](../22-testers/ronda-6/).
   - **La riqueza del ganado** (1380 por partida) paga la herrería, que desde los costos por recurso se paga en riqueza. Por eso pasaron de 60 a 70 % entre los torneos 34 y 35.
   - **No es la causa:** el malón, la kona, el relevo ni la emboscada.
   - **Ajuste:** el weichafe cuesta lo del guerrero común (60/25) y sigue rápido, porque esa es su identidad. En 30 partidas dio 73 → 60 %. **Torneo 36** ([resultados](pruebas/36-torneo-weichafe.txt)): Tawantinsuyu 56, mapuches 58, guaraníes 48, Etiopía 38, Palmares 60, Ayutthaya 40. Las seis quedan entre 38 y 60 %.
+- **Autotest en los seis pueblos (6d, [documento](6d-autotest-seis-pueblos.md)).** OK en los seis. Arreglos del juego:
+  - H recorre también los lof mapuches.
+  - El aviso de pelea ya no le pide asedio a Palmares, que no lo tiene.
+  
+  Las demás fallas eran de comprobaciones que suponían un centro común o un aldeano entrenable. El cursor sobre el animal propio quedó estable. Siguen pendientes:
+  - el cierre de Godot que aborta;
+  - la ficha de «Marcha forzada» en el lof;
+  - la campana en los lof que no son capital.
