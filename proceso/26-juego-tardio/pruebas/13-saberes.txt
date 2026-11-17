@@ -1,0 +1,206 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+OK    mapuches coseletes_cuero: saber y evidencia Documentado. Góngora Marmolejo
+OK    mapuches trigo_manzana: saber y evidencia Documentado. Bengoa, Historia 
+OK    mapuches hoyos_estacas: saber y evidencia Documentado. Hoyos encubiertos
+OK    mapuches lawen: saber y evidencia Documentado tardío: Mösbach, B
+OK    mapuches arreo_tropilla: saber y evidencia Documentado. León Solís, Maloq
+OK    mapuches makun: saber y evidencia Documentado. León Solís (1990/
+OK    mapuches kawellu: saber y evidencia Documentado. Boccara, Los venc
+OK    mapuches werken_pron: saber y evidencia Documentado. Boccara (2007); e
+OK    mapuches: 8 mejoras propias (2 · 3 · 3) { 2: 2, 3: 3, 4: 3 }
+OK    mapuches: la unidad infanteria_montada existe 
+OK    mapuches infanteria_montada: saber y evidencia 
+OK    mapuches infanteria_montada: glifo propio weichafe_montado
+OK    mapuches: la unidad incendiarios existe 
+OK    mapuches: la unidad kona_waiki existe 
+OK    mapuches kona_waiki: saber y evidencia 
+OK    mapuches kona_waiki: glifo propio kona_waiki
+OK    mapuches: unidades propias en la II, la III y la IV [2, 3, 4]
+OK    guaranies kokue: saber y evidencia Documentado y arqueológico. Mo
+OK    guaranies canoas_rio: saber y evidencia Documentado. Cartas anuas de l
+OK    guaranies poha_nana: saber y evidencia Documentado; la autoría, debat
+OK    guaranies oga_takuara: saber y evidencia Documentado. Montoya (1639); S
+OK    guaranies defensa_mborore: saber y evidencia Documentado. Cartas anuas; Fur
+OK    guaranies kaa_plantada: saber y evidencia Documentado; la técnica, debat
+OK    guaranies uy_hata: saber y evidencia Documentado. Schmidl (1567); M
+OK    guaranies imprenta: saber y evidencia Documentado. Furlong, Historia
+OK    guaranies: 8 mejoras propias (2 · 3 · 3) { 2: 2, 3: 3, 4: 3 }
+OK    guaranies: la unidad yga existe 
+OK    guaranies yga: saber y evidencia 
+OK    guaranies yga: glifo propio canoa
+OK    guaranies: la unidad catapulta existe 
+OK    guaranies: la unidad caballeria_mision existe 
+OK    guaranies caballeria_mision: saber y evidencia 
+OK    guaranies caballeria_mision: glifo propio jinete_lanza
+OK    guaranies: la unidad kaaguygua existe 
+OK    guaranies kaaguygua: saber y evidencia 
+OK    guaranies kaaguygua: glifo propio kaaguygua
+OK    guaranies: unidades propias en la II, la III y la IV [2, 3, 4]
+OK    coseletes: +1 contra cuerpo a cuerpo 1 -> 2
+OK    trigo y manzana: +15 % granjas 
+OK    hoyo: pide la mejora Requiere Hoyos y estacas
+OK    hoyo: con la mejora se cava 
+OK    hoyo: oculto al rival lejos 
+OK    hoyo: se ve a 2 casillas 
+OK    hoyo: daña y frena 120 -> 80
+OK    hoyo: se pierde 
+OK    hoyo: el doble al montado 80
+OK    lawen: el relevo cura más 6 -> 7 por segundo
+OK    arreo: el corral guarda más 6 -> 7
+OK    arreo: una cabeza más por minuto 
+OK    makuñ: 4 de riqueza por minuto por lof 1 lof, +39 en 10 minutos
+OK    makuñ: el mercado paga más 
+OK    kawellu: vida de los montados 170 -> 178
+OK    kawellu: el jinete cuesta menos { "alimento": 80, "riqueza": 55 } -> { "alimento": 72, "riqueza": 49 }
+OK    werken y pron: +10 % de velocidad 157 -> 173
+OK    weichafe montado: anda como jinete 207 > 173
+OK    weichafe montado: tarda en desmontar llega 14, pega 25
+OK    weichafe montado: la lanza no le hace el extra contra caballería 
+OK    kona de waiki: la carga pega más y derriba 34 contra 26
+OK    kona de waiki: +8 contra montados 
+OK    kokue: +15 % en las rozas 
+OK    kokue: la roza dura 25 % más 500 -> 625
+OK    ygá: más rápido en el vado 121 -> 157
+OK    ygá: carga junto al agua 
+OK    pohã ñana: sana junto al monte 20 -> 21
+OK    óga de takuára: casa con menos madera { "madera": 50 } -> { "madera": 40 }
+OK    óga de takuára: obra y potirõ 
+OK    Mbororé: cañón +25 % 18 -> 22
+OK    Mbororé: cañón +1 casilla 
+OK    Mbororé: arquero junto al agua +1 1, 0
+OK    u'y hatã: +1 de ataque 
+OK    imprenta: pide el hito de la misión Requiere el hito Pueblo de misión
+OK    imprenta: con la misión, en el taller 
+OK    ka'a plantada: en la misión 
+OK    imprenta: −15 % en las mejoras { "alimento": 200, "madera": 300 } -> { "alimento": 170, "madera": 255 }
+OK    ka'a plantada: +25 % yerba 
+OK    aty: emboscada +25 % 
+OK    ka'aguygua: +2 junto al monte 3, 1
+OK    canoa: hace falta agua cerca Hace falta agua a 5 casillas o menos
+OK    canoa: suben 2273 2273
+OK    canoa: llega por el agua a 1000 de (70, 13)
+OK    canoa: bajan en la orilla 69,12
+OK    canoa: si se hunde, nadan 
+OK    etiopia maresha_tef: saber y evidencia Documentado y arqueológico. Ál
+OK    etiopia actas_geez: saber y evidencia Documentado. Crummey (2000); H
+OK    etiopia faws_kosso: saber y evidencia Documentado para los siglos XV
+OK    etiopia cota_malla: saber y evidencia Documentado. Futūḥ al-Ḥabaša (
+OK    etiopia amba_fortaleza: saber y evidencia Documentado. Taddesse Tamrat, 
+OK    etiopia caravanas_amole: saber y evidencia Documentado. Pankhurst, An Int
+OK    etiopia polvora_massawa: saber y evidencia Documentado (la importación). 
+OK    etiopia orden_katama: saber y evidencia Documentado. Álvares (1540, lo
+OK    etiopia: 8 mejoras propias (2 · 3 · 3) { 2: 2, 3: 3, 4: 3 }
+OK    etiopia: la unidad guerrero_gasa existe 
+OK    etiopia guerrero_gasa: saber y evidencia 
+OK    etiopia guerrero_gasa: glifo propio gasa
+OK    etiopia: la unidad farasanna existe 
+OK    etiopia farasanna: saber y evidencia 
+OK    etiopia farasanna: glifo propio farasanna
+OK    etiopia: la unidad caballeria_corte existe 
+OK    etiopia caballeria_corte: saber y evidencia 
+OK    etiopia caballeria_corte: glifo propio jinete_corte
+OK    etiopia: unidades propias en la II, la III y la IV [2, 3, 4]
+OK    palmares rocas_palmeiras: saber y evidencia Documentado. Blaer, diario (16
+OK    palmares aviso_mocambos: saber y evidencia Documentado. Blaer (1645); Gom
+OK    palmares forja_mocambos: saber y evidencia Arqueológico (la técnica centr
+OK    palmares sanguar: saber y evidencia Documentado en Angola: Cavazzi
+OK    palmares kilombo: saber y evidencia Debatido. Miller, Kings and Ki
+OK    palmares trato_moradores: saber y evidencia Documentado. Gomes (2005); Lar
+OK    palmares hierro_angola_janga: saber y evidencia Documentado (las forjas) / deb
+OK    palmares fojos_estrepes: saber y evidencia Documentado. Ennes, As guerras
+OK    palmares: 8 mejoras propias (2 · 3 · 3) { 2: 2, 3: 3, 4: 3 }
+OK    palmares: la unidad zagaieiro existe 
+OK    palmares zagaieiro: saber y evidencia 
+OK    palmares zagaieiro: glifo propio zagaia
+OK    palmares: la unidad guarnicao_cerca existe 
+OK    palmares guarnicao_cerca: saber y evidencia 
+OK    palmares guarnicao_cerca: glifo propio guarnicao
+OK    palmares: la unidad capitao_mocambo existe 
+OK    palmares capitao_mocambo: saber y evidencia 
+OK    palmares capitao_mocambo: glifo propio capitao
+OK    palmares: unidades propias en la II, la III y la IV [2, 3, 4]
+OK    maresha y ṭef: +15 % granjas 
+OK    actas en ge'ez: gult +15 % 
+OK    fäws y kosso: relevo +25 % 
+OK    cota de malla: +1 cuerpo a cuerpo al choque 
+OK    amba: la altura defiende 35 % 
+OK    amole: el mercado paga más 
+OK    massawa: sin mercado no suma 16
+OK    massawa: con el mercado en pie, +10 % 16 -> 17
+OK    massawa: cae el mercado, se corta 
+OK    kätäma: la corte en la mitad del tiempo 
+OK    gaša: +1 de armadura a distancia 
+OK    gaša: la jabalina al cerrar pega más 14 contra 8
+OK    färäsäñña: 220 de vida, armadura 3 220
+OK    caballería de la corte: +6 contra la distancia 
+OK    roças e palmeiras: +15 % granjas y renta del mocambo 
+OK    aviso: los mocambos ven 3 casillas más 
+OK    forja: oficios +25 % y estrepes +50 % 
+OK    sanguar: -15 % de la distancia en movimiento 100 100 85
+OK    kilombo: 1 de cada 4 llega como gente de guerra 1
+OK    trato: el mercado casi sin comisión 
+OK    hierro de Angola Janga: +1 al choque 
+OK    fojo: pide la mejora 
+OK    fojo: con la mejora se cava 
+OK    guarnição: +2 junto a la cerca 3 -> 5
+OK    capitão: +1 a la tropa cerca 
+OK    zagaieiro: tiro corto (3 casillas) 
+OK    tawantinsuyu chunu_charki: saber y evidencia Documentado y arqueológico. Mu
+OK    tawantinsuyu khipukamayuq: saber y evidencia Arqueológico y documentado par
+OK    tawantinsuyu trepanacion: saber y evidencia Arqueológico (fuerte). Verano,
+OK    tawantinsuyu qeswa_chaka: saber y evidencia Documentado. Garcilaso, Coment
+OK    tawantinsuyu champi: saber y evidencia Arqueológico (la aleación). Le
+OK    tawantinsuyu wayrachina: saber y evidencia Documentado y arqueológico (fu
+OK    tawantinsuyu waraka_trenzada: saber y evidencia Documentado (Titu Cusi Yupanqu
+OK    tawantinsuyu chaski: saber y evidencia Documentado. Cieza de León, El
+OK    tawantinsuyu: 8 mejoras propias (2 · 3 · 3) { 2: 2, 3: 3, 4: 3 }
+OK    tawantinsuyu: la unidad boleador existe 
+OK    tawantinsuyu boleador: saber y evidencia 
+OK    tawantinsuyu boleador: glifo propio boleador
+OK    tawantinsuyu: la unidad galgueros existe 
+OK    tawantinsuyu galgueros: saber y evidencia 
+OK    tawantinsuyu galgueros: glifo propio galga
+OK    tawantinsuyu: la unidad jinete_manco existe 
+OK    tawantinsuyu jinete_manco: saber y evidencia 
+OK    tawantinsuyu jinete_manco: glifo propio jinete_manco
+OK    tawantinsuyu: unidades propias en la II, la III y la IV [2, 3, 4]
+OK    ayutthaya khotchasat: saber y evidencia Documentado (el manejo y la ca
+OK    ayutthaya ceramica_satchanalai: saber y evidencia Arqueológico (fuerte): cientos
+OK    ayutthaya recetario_narai: saber y evidencia Documentado (el texto y el mas
+OK    ayutthaya arroz_crecida: saber y evidencia Documentado. La Loubère (1691)
+OK    ayutthaya barrio_chino: saber y evidencia Documentado. Sarasin Viraphol,
+OK    ayutthaya khlong_lat: saber y evidencia Documentado. Baker y Pasuk (20
+OK    ayutthaya fundicion_real: saber y evidencia Documentado (la artillería). C
+OK    ayutthaya astilleros_juncos: saber y evidencia Documentado (sobre todo en el 
+OK    ayutthaya: 8 mejoras propias (2 · 3 · 3) { 2: 2, 3: 3, 4: 3 }
+OK    ayutthaya: la unidad chang_suek existe 
+OK    ayutthaya: la unidad ngao existe 
+OK    ayutthaya ngao: saber y evidencia 
+OK    ayutthaya ngao: glifo propio ngao
+OK    ayutthaya: la unidad defensores_suan_phlu existe 
+OK    ayutthaya defensores_suan_phlu: saber y evidencia 
+OK    ayutthaya defensores_suan_phlu: glifo propio suan_phlu
+OK    ayutthaya: unidades propias en la II, la III y la IV [2, 3, 4]
+OK    ch'uñu y ch'arki: +10 % granjas y andenes 
+OK    khipukamayuq: el taller de tejido rinde +10 % 
+OK    q'eswa chaka: caminos +5 % 
+OK    champi: +1 al choque 
+OK    wayrachina: riqueza +20 % 
+OK    warak'a: +media casilla a los honderos 6000 -> 6500
+OK    chaski: los caminos ven 3 casillas más 
+OK    trepanación: 1 de cada 5 junto a la kallanka 1
+OK    trepanación: lejos de la kallanka, no 0
+OK    galgueros: en el llano, la mitad 
+OK    jinete de Manco: +4 contra los montados y tope de 8 en la IV 
+OK    khotchasat: +10 % de vida a los elefantes 640 -> 704
+OK    cerámica: suai +15 % y renta del mercado 
+OK    arroz de crecida: +10 % arrozales 
+OK    barrio chino: los barrios pagan más 
+OK    khlong lat: +25 % por el agua baja 
+OK    astilleros: el mercado paga más 
+OK    fundición: +10 % a la pólvora 
+OK    recetario: sana fuera de combate 10 11
+OK    ngao: +6 contra los montados 
+OK    Suan Phlu: +2 junto a una torre 3 -> 5
+SABERES: OK

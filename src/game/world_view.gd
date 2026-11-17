@@ -1233,7 +1233,8 @@ func unit_mesh_for(e: SimEntity) -> Mesh:
 	var style: Dictionary = sim.dp(e.owner).civ.get("estilo", {})
 	if style.is_empty():
 		return Meshes.unit_mesh(e.type, Palette.team(e.owner))
-	return CivMeshes.unit(e.type, e.def, Palette.team(e.owner), style, _age_cfg(e.owner, _age_of(e.owner)))
+	var civ_u := str(sim.players[e.owner].get("civ", "")) if e.owner >= 0 and e.owner < sim.players.size() else "" # --- paso 6, par 3 ---
+	return CivMeshes.unit(e.type, e.def, Palette.team(e.owner), style, _age_cfg(e.owner, _age_of(e.owner)), civ_u)
 
 
 ## Malla de edificio según la civilización y la edad (por defecto, la del dueño); los hitos

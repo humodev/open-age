@@ -315,6 +315,137 @@ static func dibujar(ci: CanvasItem, kind: String, c: Vector2, s: float, w: float
 			Glyphs._figure(ci, c + Vector2(0, s * 0.06), s, col, 0.8)
 			ci.draw_line(c + Vector2(s * 0.16, s * 0.3), c + Vector2(s * 0.16, -s * 0.46), dark, w * 0.6)
 			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(s * 0.16, -s * 0.46), c + Vector2(s * 0.4, -s * 0.38), c + Vector2(s * 0.16, -s * 0.3)]), acc)
+		# --- paso 6, par 3 --- Tawantinsuyu (§3.1) y Ayutthaya (§3.6). Sin cráneos, wat ni imágenes sagradas.
+		"chunu":
+			# Ch'uñu y ch'arki: tres papas secas delante de una qollqa.
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.3, -s * 0.2), Vector2(s * 0.6, s * 0.4)), dark)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.36, -s * 0.2), c + Vector2(0, -s * 0.46), c + Vector2(s * 0.36, -s * 0.2)]), col)
+			for i in 3:
+				ci.draw_circle(c + Vector2(-s * 0.24 + i * s * 0.24, s * 0.32), s * 0.1, col.lightened(0.3))
+		"khipu":
+			# Khipu: cuerda principal con cuerdas colgantes y nudos.
+			ci.draw_line(c + Vector2(-s * 0.44, -s * 0.36), c + Vector2(s * 0.44, -s * 0.36), dark, w)
+			for i in 5:
+				var x := -s * 0.34 + i * s * 0.17
+				ci.draw_line(c + Vector2(x, -s * 0.36), c + Vector2(x, s * 0.4 - (i % 2) * s * 0.14), col, w * 0.6)
+				ci.draw_circle(c + Vector2(x, -s * 0.06 + (i % 3) * s * 0.12), s * 0.05, acc)
+		"tumi":
+			# Cirugía de cráneo: solo el instrumento, el tumi de hoja semicircular y mango.
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.06, -s * 0.44), Vector2(s * 0.12, s * 0.5)), dark)
+			ci.draw_colored_polygon(_elipse(c + Vector2(0, s * 0.18), s * 0.36, s * 0.2), col)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.4, -s * 0.02), Vector2(s * 0.8, s * 0.12)), col.darkened(0.15))
+		"puente_soga":
+			# Q'eswa chaka: dos cuerdas colgantes entre dos estribos.
+			for x: float in [-0.42, 0.34]:
+				ci.draw_rect(Rect2(c + Vector2(s * x, -s * 0.3), Vector2(s * 0.08, s * 0.6)), dark)
+			for k in 2:
+				var pts := PackedVector2Array()
+				for i in 9:
+					var t := i / 8.0
+					pts.append(c + Vector2(-s * 0.38 + t * s * 0.76, -s * 0.26 + k * s * 0.22 + 4.0 * t * (1.0 - t) * s * 0.18))
+				ci.draw_polyline(pts, col if k == 1 else acc, w * 0.7)
+		"champi":
+			# Champi: porra con cabeza de estrella de metal.
+			ci.draw_line(c + Vector2(-s * 0.36, s * 0.4), c + Vector2(s * 0.12, -s * 0.1), dark, w)
+			var star := PackedVector2Array()
+			for i in 12:
+				var a := TAU * i / 12.0
+				star.append(c + Vector2(s * 0.2, -s * 0.2) + Vector2(cos(a), sin(a)) * s * (0.24 if i % 2 == 0 else 0.13))
+			ci.draw_colored_polygon(star, col)
+		"wayrachina":
+			# Wayrachina: horno de barro con aberturas y la llama arriba.
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.3, s * 0.42), c + Vector2(-s * 0.2, -s * 0.2), c + Vector2(s * 0.2, -s * 0.2), c + Vector2(s * 0.3, s * 0.42)]), col)
+			for i in 3:
+				ci.draw_circle(c + Vector2(-s * 0.12 + i * s * 0.12, s * 0.12), s * 0.04, OSCURO)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.12, -s * 0.2), c + Vector2(0, -s * 0.46), c + Vector2(s * 0.12, -s * 0.2)]), acc)
+		"waraka":
+			# Warak'a trenzada: honda con la trenza en zigzag y la piedra.
+			var zz := PackedVector2Array()
+			for i in 9:
+				zz.append(c + Vector2(-s * 0.4 + i * s * 0.08, -s * 0.3 + (i % 2) * s * 0.08 + i * s * 0.05))
+			ci.draw_polyline(zz, col, w * 0.6)
+			ci.draw_line(c + Vector2(s * 0.24, s * 0.14), c + Vector2(s * 0.4, -s * 0.2), col, w * 0.6)
+			ci.draw_circle(c + Vector2(s * 0.28, s * 0.24), s * 0.1, acc)
+		"chaski":
+			# Chaski: corredor sobre el camino con el khipu en la mano.
+			ci.draw_line(c + Vector2(-s * 0.46, s * 0.42), c + Vector2(s * 0.46, s * 0.42), dark, w)
+			Glyphs._figure(ci, c + Vector2(-s * 0.06, 0), s * 0.9, col, 0.8)
+			for i in 3:
+				ci.draw_line(c + Vector2(s * 0.22 + i * s * 0.05, -s * 0.06), c + Vector2(s * 0.22 + i * s * 0.05, s * 0.14), acc, w * 0.4)
+		"cornaca":
+			# Khotchasat: cabeza de elefante con el gancho del cornaca.
+			ci.draw_circle(c + Vector2(-s * 0.04, -s * 0.1), s * 0.26, col)
+			ci.draw_line(c + Vector2(-s * 0.04, s * 0.1), c + Vector2(s * 0.02, s * 0.44), col, w * 1.6)
+			ci.draw_line(c + Vector2(s * 0.3, -s * 0.44), c + Vector2(s * 0.3, s * 0.1), dark, w * 0.6)
+			ci.draw_arc(c + Vector2(s * 0.38, -s * 0.38), s * 0.08, PI, TAU, 6, acc, w * 0.6)
+		"vasija":
+			# Cerámica de Si Satchanalai: jarra de celadón.
+			ci.draw_colored_polygon(_elipse(c + Vector2(0, s * 0.1), s * 0.28, s * 0.3), col)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.1, -s * 0.36), Vector2(s * 0.2, s * 0.18)), col.darkened(0.1))
+			ci.draw_line(c + Vector2(-s * 0.24, s * 0.06), c + Vector2(s * 0.24, s * 0.06), acc, w * 0.5)
+		"recetario":
+			# Recetario de Narai: hoja de recetas y un mortero (sin imágenes sagradas).
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.4, -s * 0.4), Vector2(s * 0.44, s * 0.6)), col)
+			for i in 3:
+				ci.draw_line(c + Vector2(-s * 0.32, -s * 0.28 + i * s * 0.14), c + Vector2(-s * 0.04, -s * 0.28 + i * s * 0.14), OSCURO, w * 0.4)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(s * 0.06, s * 0.14), c + Vector2(s * 0.42, s * 0.14), c + Vector2(s * 0.34, s * 0.42), c + Vector2(s * 0.14, s * 0.42)]), acc)
+			ci.draw_line(c + Vector2(s * 0.24, s * 0.2), c + Vector2(s * 0.4, -s * 0.12), dark, w * 0.6)
+		"arroz_crecida":
+			# Arroz de crecida: espigas que salen del agua.
+			for i in 3:
+				ci.draw_line(c + Vector2(-s * 0.2 + i * s * 0.2, s * 0.2), c + Vector2(-s * 0.16 + i * s * 0.2, -s * 0.4), col, w * 0.6)
+				ci.draw_circle(c + Vector2(-s * 0.12 + i * s * 0.2, -s * 0.36), s * 0.06, acc)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.46, s * 0.2), Vector2(s * 0.92, s * 0.22)), dark)
+		"junco":
+			# Barrio chino y puertos: casco de junco con dos velas de listones.
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.46, s * 0.12), c + Vector2(s * 0.46, s * 0.12), c + Vector2(s * 0.3, s * 0.36), c + Vector2(-s * 0.34, s * 0.36)]), dark)
+			for x: float in [-0.2, 0.14]:
+				ci.draw_rect(Rect2(c + Vector2(s * x, -s * 0.42), Vector2(s * 0.24, s * 0.5)), col)
+				for i in 3:
+					ci.draw_line(c + Vector2(s * x, -s * 0.3 + i * s * 0.12), c + Vector2(s * (x + 0.24), -s * 0.3 + i * s * 0.12), OSCURO, w * 0.3)
+		"canal":
+			# Khlong lat: el río en curva y el canal recto que la corta.
+			var rio := PackedVector2Array()
+			for i in 9:
+				var a := PI * i / 8.0
+				rio.append(c + Vector2(-cos(a) * s * 0.36, -sin(a) * s * 0.36 + s * 0.2))
+			ci.draw_polyline(rio, col.darkened(0.2), w * 1.2)
+			ci.draw_line(c + Vector2(-s * 0.36, s * 0.2), c + Vector2(s * 0.36, s * 0.2), acc, w * 1.2)
+		"fundicion":
+			# Fundición real: caño de cañón sobre su cureña.
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.4, -s * 0.06), c + Vector2(s * 0.42, -s * 0.2), c + Vector2(s * 0.42, -s * 0.02), c + Vector2(-s * 0.4, s * 0.14)]), col)
+			ci.draw_circle(c + Vector2(-s * 0.12, s * 0.26), s * 0.14, dark)
+			ci.draw_circle(c + Vector2(s * 0.2, s * 0.26), s * 0.14, dark)
+		"astillero":
+			# Astilleros de juncos: costillar de un casco a medio hacer sobre la grada.
+			ci.draw_line(c + Vector2(-s * 0.44, s * 0.36), c + Vector2(s * 0.44, s * 0.36), dark, w)
+			for i in 5:
+				var x := -s * 0.32 + i * s * 0.16
+				ci.draw_line(c + Vector2(x, s * 0.3), c + Vector2(x * 1.2, -s * 0.2), col, w * 0.6)
+			ci.draw_line(c + Vector2(-s * 0.4, s * 0.3), c + Vector2(s * 0.4, s * 0.3), acc, w * 0.8)
+		"galga":
+			# Galgueros: piedras que ruedan por la ladera.
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.46, -s * 0.3), c + Vector2(s * 0.46, s * 0.42), c + Vector2(-s * 0.46, s * 0.42)]), dark)
+			ci.draw_circle(c + Vector2(-s * 0.16, -s * 0.2), s * 0.12, col)
+			ci.draw_circle(c + Vector2(s * 0.14, s * 0.06), s * 0.1, col)
+			Glyphs._figure(ci, c + Vector2(-s * 0.34, -s * 0.36), s * 0.4, acc, 0.5)
+		"jinete_manco":
+			# Jinete de Manco: caballo con jinete y lanza.
+			ci.draw_colored_polygon(_elipse(c + Vector2(0, s * 0.18), s * 0.34, s * 0.14), dark)
+			ci.draw_line(c + Vector2(s * 0.3, s * 0.14), c + Vector2(s * 0.42, -s * 0.06), dark, w)
+			Glyphs._figure(ci, c + Vector2(0, -s * 0.08), s * 0.7, col, 0.6)
+			ci.draw_line(c + Vector2(-s * 0.4, -s * 0.26), c + Vector2(s * 0.46, -s * 0.44), acc, w * 0.6)
+		"ngao":
+			# Ngao: asta con hoja curva de un filo.
+			ci.draw_line(c + Vector2(-s * 0.3, s * 0.44), c + Vector2(s * 0.14, -s * 0.2), dark, w * 0.8)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(s * 0.1, -s * 0.16), c + Vector2(s * 0.36, -s * 0.46), c + Vector2(s * 0.3, -s * 0.12), c + Vector2(s * 0.18, -s * 0.06)]), col)
+		"suan_phlu":
+			# Defensores de Suan Phlu: figura con asta delante de una muralla almenada.
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.46, s * 0.1), Vector2(s * 0.92, s * 0.32)), dark)
+			for i in 4:
+				ci.draw_rect(Rect2(c + Vector2(-s * 0.46 + i * s * 0.26, 0), Vector2(s * 0.14, s * 0.12)), dark)
+			Glyphs._figure(ci, c + Vector2(0, -s * 0.12), s * 0.8, col, 0.7)
+			ci.draw_line(c + Vector2(s * 0.2, s * 0.1), c + Vector2(s * 0.2, -s * 0.48), acc, w * 0.6)
 		_:
 			return false
 	return true

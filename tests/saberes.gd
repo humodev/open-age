@@ -8,7 +8,8 @@ extends SceneTree
 var fallas: Array[String] = []
 const NIVELES := ["Documentado", "Arqueológico", "Debatido", "Tradición"]
 const SAGRADO := ["machi", "rewe", "kultrun", "foye", "canelo", "opy", "mbaraka", "takuapu", "karai", "ngillatun",
-	"tabot", "kebero", "lalibela", "iglesia", "calundu", "nganga", "kimbanda", "capoeira"] # --- paso 6, par 2 ---
+	"tabot", "kebero", "lalibela", "iglesia", "calundu", "nganga", "kimbanda", "capoeira", # --- paso 6, par 2 ---
+	"huaca", "wak'a", "inti", "qorikancha", "wat", "buda", "phra si", "sak yant"] # --- paso 6, par 3 ---
 
 
 func _check(name: String, ok: bool, detail: String = "") -> void:
@@ -35,6 +36,15 @@ func _init() -> void:
 	_cantidades(s2)
 	_etiopia(s2)
 	_palmares(s2)
+	# --- paso 6, par 3 --- Tawantinsuyu y Ayutthaya (proceso/26-juego-tardio/13)
+	var s3 := Sim.new(13, 2, null, {"civs": ["tawantinsuyu", "ayutthaya"], "terreno": "llano"})
+	for pid in 2:
+		s3.players[pid]["age"] = 4
+		for k in ["alimento", "madera", "piedra", "riqueza"]:
+			s3.players[pid]["res"][k] = 20000
+	_cantidades(s3)
+	_tawantinsuyu(s3)
+	_ayutthaya(s3)
 	print("SABERES: %s" % ("OK" if fallas.is_empty() else "FALLO (%d)" % fallas.size()))
 	quit(0 if fallas.is_empty() else 1)
 
@@ -43,7 +53,8 @@ func _init() -> void:
 ## todas con su ficha: saber (desc) y evidencia con nivel; ningún nombre sagrado.
 func _cantidades(s: Sim) -> void:
 	var propias_u := {"mapuches": ["infanteria_montada", "incendiarios", "kona_waiki"], "guaranies": ["yga", "catapulta", "caballeria_mision", "kaaguygua"],
-		"etiopia": ["guerrero_gasa", "farasanna", "caballeria_corte"], "palmares": ["zagaieiro", "guarnicao_cerca", "capitao_mocambo"]}
+		"etiopia": ["guerrero_gasa", "farasanna", "caballeria_corte"], "palmares": ["zagaieiro", "guarnicao_cerca", "capitao_mocambo"],
+		"tawantinsuyu": ["boleador", "galgueros", "jinete_manco"], "ayutthaya": ["chang_suek", "ngao", "defensores_suan_phlu"]}
 	for pid in 2:
 		var dd := s.dp(pid)
 		var civ := dd.clave
@@ -452,3 +463,106 @@ func _palmares(s: Sim) -> void:
 	_check("capitão: +1 a la tropa cerca", s.effective_attack(w) == aw + 1 and s.effective_attack(far) == af)
 	var z := s.spawn_unit("zagaieiro", 1, home.x + 5000, home.y + 3000)
 	_check("zagaieiro: tiro corto (3 casillas)", s.reach_of(z) == 3000)
+
+
+## --- paso 6, par 3 --- Tawantinsuyu (§3.1).
+func _tawantinsuyu(s: Sim) -> void:
+	var home := _home(s, 0)
+	s._finish_tech(0, "chunu_charki")
+	_check("ch'uñu y ch'arki: +10 % granjas y andenes", s.mod(0, "tasa:granja") == 10)
+	s._finish_tech(0, "khipukamayuq")
+	_check("khipukamayuq: el taller de tejido rinde +10 %", s.mod(0, "motor") == 10)
+	s._finish_tech(0, "qeswa_chaka")
+	_check("q'eswa chaka: caminos +5 %", s.mod(0, "camino_pct") == 5)
+	var g := s.spawn_unit("guerrero", 0, home.x + 6000, home.y)
+	var atk0 := s.effective_attack(g)
+	s._finish_tech(0, "champi")
+	_check("champi: +1 al choque", s.effective_attack(g) == atk0 + 1)
+	s._finish_tech(0, "wayrachina")
+	_check("wayrachina: riqueza +20 %", s.mod(0, "tasa:riqueza") == 20)
+	var h := s.spawn_unit("hondero", 0, home.x + 6000, home.y + 2000)
+	var r0 := s.reach_of(h)
+	s._finish_tech(0, "waraka_trenzada")
+	_check("warak'a: +media casilla a los honderos", s.reach_of(h) == r0 + 500, "%d -> %d" % [r0, s.reach_of(h)])
+	s._finish_tech(0, "chaski")
+	_check("chaski: los caminos ven 3 casillas más", int(s.fog.vision_extra[0]["camino"]) == 3000)
+	# Cirugía de cráneo: 1 de cada 5 que caen a golpes junto a la kallanka vuelve herido; lejos, no.
+	s._finish_tech(0, "trepanacion")
+	var spot := _land(s, home.tx + 10, home.ty + 6, true)
+	var k := s.spawn_building("cuartel", 0, spot.x, spot.y, true)
+	var salvos := 0
+	for i in 5:
+		var w := s.spawn_unit("guerrero", 0, k.x + 2000, k.y + 2000)
+		var foe := s.spawn_unit("guerrero", 1, w.x + 400, w.y)
+		w.hp = 1
+		s._hit(foe, w)
+		salvos += 1 if w.alive and w.hp == w.hp_max / 2 else 0
+		s._kill(foe)
+		if w.alive:
+			s._kill(w)
+	_check("trepanación: 1 de cada 5 junto a la kallanka", salvos == 1, "%d" % salvos)
+	var lejos := 0
+	for i in 5:
+		var w2 := s.spawn_unit("guerrero", 0, k.x + 20000, k.y + 20000)
+		var foe2 := s.spawn_unit("guerrero", 1, w2.x + 400, w2.y)
+		w2.hp = 1
+		s._hit(foe2, w2)
+		lejos += 1 if w2.alive else 0
+		s._kill(foe2)
+		if w2.alive:
+			s._kill(w2)
+	_check("trepanación: lejos de la kallanka, no", lejos == 0, "%d" % lejos)
+	# Galgueros: cuesta abajo enteros; en el llano, la mitad.
+	var gl := s.spawn_unit("galgueros", 0, home.x + 5000, home.y + 4000)
+	var t1 := s.spawn_unit("guerrero", 1, gl.x + 3000, gl.y)
+	_check("galgueros: en el llano, la mitad", s.mods.damage(gl, t1, 100) == 50 or s.map.h_at(gl.x / 1000, gl.y / 1000) > s.map.h_at(t1.x / 1000, t1.y / 1000))
+	var jm := s.spawn_unit("jinete_manco", 0, home.x + 6000, home.y - 3000)
+	var jn := s.spawn_unit("jinete", 1, jm.x + 400, jm.y)
+	_check("jinete de Manco: +4 contra los montados y tope de 8 en la IV", s.attack_bonus(jm, jn) >= 4 and int(jm.def["maximo_por_edad"][3]) == 8)
+	for e in [g, h, gl, t1, jm, jn]:
+		if e.alive:
+			s._kill(e)
+
+
+## --- paso 6, par 3 --- Ayutthaya (§3.6).
+func _ayutthaya(s: Sim) -> void:
+	var home := _home(s, 1)
+	var el := s.spawn_unit("chang_suek", 1, home.x + 6000, home.y)
+	var hp0 := el.hp_max
+	s._finish_tech(1, "khotchasat")
+	_check("khotchasat: +10 % de vida a los elefantes", el.hp_max == hp0 * 110 / 100, "%d -> %d" % [hp0, el.hp_max])
+	s._finish_tech(1, "ceramica_satchanalai")
+	_check("cerámica: suai +15 % y renta del mercado", s.mod(1, "suai_pct") == 15 and int(s.players[1]["renta_tipos"]["mercado"]["riqueza"]) == 4)
+	s._finish_tech(1, "arroz_crecida")
+	_check("arroz de crecida: +10 % arrozales", s.mod(1, "tasa:granja") == 10)
+	s._finish_tech(1, "barrio_chino")
+	_check("barrio chino: los barrios pagan más", int(s.players[1]["renta_tipos"]["barrio_japones"]["riqueza"]) == 6)
+	s._finish_tech(1, "khlong_lat")
+	_check("khlong lat: +25 % por el agua baja", s.mod(1, "vel_vado") == 25)
+	s._finish_tech(1, "astilleros_juncos")
+	_check("astilleros: el mercado paga más", s.mod(1, "venta_pct") == 15)
+	var mq := s.spawn_unit("arcabucero", 1, home.x + 7000, home.y)
+	var a0 := s.effective_attack(mq)
+	s._finish_tech(1, "fundicion_real")
+	_check("fundición: +10 % a la pólvora", s.effective_attack(mq) == a0 * 110 / 100)
+	# Recetario de Narai: fuera de combate, la tropa sana; peleando, no.
+	s._finish_tech(1, "recetario_narai")
+	var w := s.spawn_unit("guerrero", 1, home.x + 8000, home.y + 3000)
+	w.hp = 10
+	w.last_combat = s.tick
+	s.mods._regen()
+	var peleando := w.hp
+	s.tick += 200
+	s.mods._regen()
+	_check("recetario: sana fuera de combate", peleando == 10 and w.hp == 11, "%d %d" % [peleando, w.hp])
+	var ng := s.spawn_unit("ngao", 1, home.x + 5000, home.y + 5000)
+	var foe := s.spawn_unit("jinete", 0, ng.x + 400, ng.y)
+	_check("ngao: +6 contra los montados", s.attack_bonus(ng, foe) >= 6)
+	var spot := _land(s, home.tx - 10, home.ty + 4, true)
+	var d := s.spawn_unit("defensores_suan_phlu", 1, spot.x * 1000 + 500, spot.y * 1000 + 500)
+	var ar0 := s.effective_armor(d, false)
+	s.spawn_building("torre", 1, spot.x + 1, spot.y, true)
+	_check("Suan Phlu: +2 junto a una torre", s.effective_armor(d, false) == ar0 + 2, "%d -> %d" % [ar0, s.effective_armor(d, false)])
+	for e in [el, mq, w, ng, foe, d]:
+		if e.alive:
+			s._kill(e)

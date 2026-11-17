@@ -1398,6 +1398,15 @@ func effects_text(efectos: Array) -> String:
 				parts.append("De cada %d que llegan por la fama, 1 entra como %s" % [ef["cada"], String(sim.dp(local).unidades.get(ef["unidad"], {}).get("nombre", ef["unidad"]))])
 			"vision_edificio":
 				parts.append("+%d casillas de visión de %s" % [int(ef["n"]) / 1000, ", ".join((ef["tipos"] as Array).map(func(t: String) -> String: return String(sim.dp(local).edificios.get(t, {}).get("nombre", t))))])
+			# --- paso 6, par 3 --- Tawantinsuyu y Ayutthaya
+			"camino_pct":
+				parts.append("+%d%% de velocidad en los caminos" % ef["pct"])
+			"suai_pct":
+				parts.append("+%d%% de riqueza del suai" % ef["pct"])
+			"regen_tropa":
+				parts.append("La tropa sana %d de vida por segundo tras %d s sin pelear" % [ef["n"], int(ef.get("espera_ms", 0)) / 1000])
+			"trepanacion":
+				parts.append("%d%% de %s que caen a golpes a %d casillas de %s no mueren: vuelven con el %d%% de la vida" % [ef["pct"], ", ".join((ef["tipos"] as Array).map(func(t: String) -> String: return String(sim.dp(local).unidades.get(t, {}).get("nombre", t)))), ef["radio"], ", ".join((ef["edificios"] as Array).map(func(t: String) -> String: return String(sim.dp(local).edificios.get(t, {}).get("nombre", t)))), ef["vida_pct"]])
 			# --- fin paso 6 ---
 	return " · ".join(parts)
 
