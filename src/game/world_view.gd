@@ -35,6 +35,12 @@ var _fog_tex: ImageTexture
 var _fog_t := 0.0
 var _fog_tick := -1
 var _water_mat: ShaderMaterial
+var velocidad := 1.0 # velocidad del juego (main.gd): las animaciones de trabajo la siguen
+var _anim_frame := 0
+var _anim_div := 1
+var _anim_vis := 0
+var _anim_cam: Camera3D
+var render_us := 0 # tiempo acumulado en render (tools/aldeanos_animados.gd lo lee para medir)
 
 
 func setup(s: Sim, local_player: int) -> void:
@@ -759,8 +765,16 @@ func _make_visual(e: SimEntity) -> Dictionary:
 	var v := {"node": root, "type": e.type, "owner": e.owner}
 	if e.is_unit():
 		var msize := 2.6 if e.def.get("elefante", false) else (1.7 if e.def.get("montado", false) else 0.9)
-		var body: Node3D = _model_for(e.owner, e.type, msize, true, team)
+		var body: Node3D = null
 		var bk := _unit_k
+		# Aldeano animado (KayKit; proceso/27-animaciones): persona de alto 1, a la escala de la gente.
+		if AldeanoAnimado.usa(e.def):
+			var av := AldeanoAnimado.crear(sim.dp(e.owner).civ.get("estilo", {}), team, FIGURE_H * _unit_k)
+			v["anim"] = av
+			body = av.node
+			bk = FIGURE_H * _unit_k
+		else:
+			body = _model_for(e.owner, e.type, msize, true, team)
 		if body == null:
 			body = MeshInstance3D.new()
 			(body as MeshInstance3D).mesh = unit_mesh_for(e)
@@ -1329,7 +1343,10 @@ func _on_died(id: int) -> void:
 	var node: Node3D = v["node"]
 	if v.get("ring") != null:
 		v["ring"].visible = false
-	if v["kind"] == "unit":
+	if v["kind"] == "unit" and v.has("anim"):
+		AldeanoAnimado.morir(v["anim"])
+		_fx.append({"kind": "die_anim", "node": node, "t": 0.0, "dur": 2.6, "ap": (v["anim"] as AldeanoAnimado.Estado).ap})
+	elif v["kind"] == "unit":
 		_fx.append({"kind": "die_unit", "node": node, "t": 0.0, "dur": 2.2, "yaw": node.rotation.y})
 	else:
 		_fx.append({"kind": "die_building", "node": node, "t": 0.0, "dur": 2.5})
@@ -1351,6 +1368,7 @@ func _on_hit(ev: Dictionary) -> void:
 		_projectile(from, to, a.is_building())
 	elif not va.is_empty() and va["kind"] == "unit":
 		va["lunge"] = 1.0
+		va["golpe"] = true
 	if b != null and b.is_building():
 		var vb: Dictionary = visuals.get(ev["b"], {})
 		if not vb.is_empty() and randf() < 0.35:
@@ -1402,7 +1420,14 @@ func add_marker(pos: Vector3, color: Color) -> void:
 # ---------------------------------------------------------------- Imagen
 
 func render(alpha: float, delta: float) -> void:
+	var t0 := Time.get_ticks_usec()
 	_time += delta
+	# Presupuesto de los aldeanos animados (data/arte_animaciones.json → rendimiento): con muchos
+	# en pantalla, cada uno se actualiza cada `_anim_div` cuadros.
+	_anim_frame += 1
+	_anim_div = maxi(1, ceili(float(_anim_vis) / float(AldeanoAnimado.max_por_cuadro)))
+	_anim_vis = 0
+	_anim_cam = get_viewport().get_camera_3d()
 	for id in visuals:
 		var v: Dictionary = visuals[id]
 		var e: SimEntity = sim.by_id.get(id)
@@ -1424,6 +1449,7 @@ func render(alpha: float, delta: float) -> void:
 	_render_rally()
 	_render_fx(delta)
 	_render_fog(delta)
+	render_us += Time.get_ticks_usec() - t0
 
 
 func tick_counter() -> int:
@@ -1513,6 +1539,12 @@ func _render_unit(e: SimEntity, v: Dictionary, alpha: float, delta: float) -> vo
 				want = atan2(d.x, d.z)
 	v["yaw"] = lerp_angle(float(v["yaw"]), want, clampf(delta * 10.0, 0.0, 1.0))
 	node.rotation.y = v["yaw"]
+	if v.has("anim"):
+		_render_anim(e, v, moving, Vector2(node.position.x - before.x, node.position.z - before.z).length(), delta)
+		v["spawn"] = maxf(0.0, float(v["spawn"]) - delta * 3.0)
+		body.scale = Vector3.ONE * float(v.get("k", _unit_k)) * (1.0 - float(v["spawn"]) * 0.7)
+		_update_ring(e, v)
+		return
 	# Animaciones de maqueta: paso, trabajo y golpe.
 	var phase: float = v["phase"]
 	var bob := 0.0
@@ -1544,6 +1576,34 @@ func _render_unit(e: SimEntity, v: Dictionary, alpha: float, delta: float) -> vo
 	if carry.visible:
 		carry.material_override = Meshes.mat(Palette.RES.get(e.carry_res, Color.WHITE))
 	_update_ring(e, v)
+
+
+## Aldeano animado (AldeanoAnimado): fuera de la pantalla no se anima; lejos de la cámara, a la
+## mitad de cuadros; con muchos en pantalla, por turnos (render): entre turno y turno se junta la
+## distancia y el tiempo, y se aplican juntos.
+func _render_anim(e: SimEntity, v: Dictionary, moving: bool, walked: float, delta: float) -> void:
+	var node: Node3D = v["node"]
+	var av: AldeanoAnimado.Estado = v["anim"]
+	var div := _anim_div
+	if _anim_cam != null:
+		if not _anim_cam.is_position_in_frustum(node.position + Vector3(0, 0.4, 0)):
+			return
+		if _anim_cam.global_position.distance_to(node.position) > AldeanoAnimado.lejos_m:
+			div *= 2
+	_anim_vis += 1
+	av.walk_acc += walked
+	av.dt_acc += delta * velocidad
+	if v.get("golpe", false):
+		v["golpe"] = false
+		av.golpe = true
+	if (e.id + _anim_frame) % div != 0:
+		return
+	var t0 := Time.get_ticks_usec()
+	AldeanoAnimado.actualizar(av, e, sim, moving, av.walk_acc, av.dt_acc, av.golpe)
+	av.walk_acc = 0.0
+	av.dt_acc = 0.0
+	av.golpe = false
+	AldeanoAnimado.us_actualizar += Time.get_ticks_usec() - t0
 
 
 func _render_building(e: SimEntity, v: Dictionary, delta: float) -> void:
@@ -1625,6 +1685,9 @@ func _render_fx(delta: float) -> void:
 				var fall := clampf(f["t"] / 0.35, 0.0, 1.0)
 				node.rotation = Vector3(fall * PI * 0.5 * 0.95, f["yaw"], 0)
 				node.position.y = -maxf(0.0, f["t"] - 1.2) * 0.4
+			"die_anim":
+				(f["ap"] as AnimationPlayer).advance(delta * velocidad)
+				node.position.y = -maxf(0.0, f["t"] - 1.6) * 0.4
 			"die_building":
 				node.position.y = -k * k * 3.2
 				node.rotation.z = sin(f["t"] * 30.0) * 0.015 * (1.0 - k)

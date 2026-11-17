@@ -28,6 +28,7 @@ extends Node3D
 ##   --dificultad=facil|normal|dificil|experta  (en el menú, la preelige)
 ##   --nofog            sin niebla de guerra (automático en --aivai)
 ##   --autotest         prueba de punta a punta con eventos reales de mouse y teclado
+##   --animaciones=0|1  aldeanos animados (KayKit) o la figura de antes; pisa data/arte_animaciones.json
 ##   --grilla=menu      abre el submenú del aldeano (economia, militar) antes de la captura
 ##   --banco=rec:n,…    fija recursos del jugador antes de la captura (alimento:0,mita:0)
 ##   --ayuda=N          muestra la ayuda de la casilla N de la grilla (8 = Z) en la captura
@@ -74,6 +75,8 @@ func _ready() -> void:
 	_seed = int(_args.get("seed", str(randi() % 100000)))
 	speed = float(_args.get("speed", "1"))
 	_menu_mode = _args.is_empty() or _args.has("menu")
+	if _args.has("animaciones"): # --animaciones=0|1: aldeanos animados o la figura de antes (proceso/27)
+		AldeanoAnimado.forzar = int(_args["animaciones"])
 	# --- escala --- (--ventana=ANCHOxALTO: ventana de ese tamaño, para capturas a otras resoluciones)
 	if _args.has("ventana"):
 		_ventana(str(_args["ventana"]))
@@ -892,6 +895,7 @@ func _process(delta: float) -> void:
 			steps += 1
 		if steps == MAX_STEPS_PER_FRAME:
 			_acc = 0.0
+		view.velocidad = speed
 		view.render(_acc / tick_s, delta)
 		if _menu_mode:
 			# Cámara de fondo que recorre el mapa despacio.
