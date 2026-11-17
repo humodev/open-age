@@ -75,12 +75,23 @@ La élite de la misión era «a elección» (jinete o milicia de a pie) en el di
 
 ## Medidas
 
-MEDIDAS
+- **`tools/civ_diag.gd`, las 50 partidas del torneo de cada pueblo** (30 minutos; sin el paso = la misma base, 9bcf3f8):
+  - **Mapuches: 31 → 29 de 50 (62 → 58 %).** Contra los otros cuatro pueblos, igual (26 de 40 antes y después); baja el cruce con los guaraníes, que también tienen su paso. El weichafe montado reemplaza a buena parte del jinete en el corral (621 contra 84 jinetes; antes, 263).
+  - **Guaraníes: 20 → 15 de 50 (40 → 30 %).** Contra los mapuches suben (5 → 7); contra el resto bajan (15 → 8 de 40) y llegan menos a la IV (24 → 19 partidas). Segunda corrida con `ia_propias.ahorrando: false` (no compran saberes mientras ahorran para el hito): 14 de 50 (28 %), sin mejora: la causa no es esa y queda pendiente ([pruebas/11-civ-diag.txt](pruebas/11-civ-diag.txt)).
+- **Modelo (`modelo_progreso.py --propias`, [pruebas/11-modelo-propias.txt](pruebas/11-modelo-propias.txt)):** lo que suman los saberes al ejército de 30 en la IV: mapuches +9,7 % (con kawellu a +10 % de vida daba +11,6 %: se bajó a +5 %), guaraníes +3,6 %; los demás pueblos, con el diseño, de +2 a +7 %. Ninguno pasa el +10 %.
+- **Micro ([pruebas/11-micro-matriz.txt](pruebas/11-micro-matriz.txt)):** el kona de waiki gana 5 de 5 a los jinetes y pierde con los arqueros y los lanceros; la caballería de las misiones gana a jinetes y arqueros y pierde con los lanceros; el ka'aguygua (sin monte en la arena) empata con el choque de igual costo. El weichafe montado pagaba 2 s en cada cambio de blanco y perdía todo: ahora 1 s y solo al entrar en pelea, 75 + 30 de costo; queda un poco por debajo del weichafe a pie (2 de 5) y 20 % más rápido.
+- **Pruebas:** `test_determinism.gd` OK, **mismo hash** (2203695307); `bench.gd` 21,6 ms contra 20,4 de la base bajo la misma carga (mismas 125 vivas); `civ_smoke.gd`, `campaign_smoke.gd`, `jugabilidad.gd`, `juego_tardio.gd`, `saberes.gd` (82), `casillas.gd` (536 grillas), `grilla.gd` e `iconos.gd` OK; autotest con guaraníes OK (con mapuches, las mismas 4 fallas que la base). Capturas: [unidades mapuches](capturas/11-unidades-mapuches.jpg), [unidades guaraníes](capturas/11-unidades-guaranies.jpg), [grilla del corral con la ficha del kawellu](capturas/11-grilla-corral.jpg), [tapyi con la canoa](capturas/11-grilla-tapyi.jpg), [la canoa](capturas/11-canoa.jpg).
 
 ## Tropiezos
 
-TROPIEZOS
+- La IA no compraba ninguna mejora: esperaba la primera que no alcanzaba y no compraba ahorrando. Ahora compra la primera que alcanza y junta desde la III.
+- Más de 11 investigaciones en el cuartel, el corral, la misión y el oga guasu no entran en el submenú: se repartieron por eje (corral, tapyi, taller, hitos de la vía).
+- La óga de takuára en el oga guasu dejaba sin investigaciones la grilla de arriba (falla del autotest): pasó al tapyi.
+- La canoa se dibujaba bajo el agua: la maqueta flota más alto.
 
 ## Riesgos
 
-RIESGOS
+- **Guaraníes por debajo de la base** (ver Medidas): si la segunda corrida no lo arregla, bajar costos de kokue, pohã ñana y óga de takuára o subir el ka'aguygua, en `data/`.
+- **C-80 a)** decía que las unidades nuevas esperan al arte; entraron como maquetas por el pedido.
+- Sin sanador (resto del paso 4): el lawen y el pohã ñana curan por el relevo y el monte.
+- Conflictos: `sim.gd`, `sim_ai.gd`, `sim_mods.gd`, `controller.gd`, `main.gd`, `iconos.gd`, `data/reglas.json`, `data/interfaz.json`, `data/iconos.json`, `docs/05` y `docs/08` (otros pasos los tocan); los cambios van marcados «--- paso 6 ---».

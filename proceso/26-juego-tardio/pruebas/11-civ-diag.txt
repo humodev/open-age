@@ -1,0 +1,50 @@
+== mapuches sin el paso
+partidas 50 · gana 31 (62 %) · por destrucción 15 · por puntos 16
+  contra ayutthaya     6 de 10
+  contra etiopia       6 de 10
+  contra guaranies     5 de 10
+  contra palmares      5 de 10
+  contra tawantinsuyu  9 de 10
+  edad IV propia: 16 partidas · rival: 11
+  entrenadas: hondero 3209, guerrero 2450, lancero 1405, jinete 263, incendiarios 173
+  investigaciones (partidas): adiestramiento 4, armadura_cc_1 48, armadura_cc_2 8, armadura_dist_1 44, armadura_dist_2 4, ataque_cc_1 50, ataque_cc_2 17, ataque_dist_1 50, ataque_dist_2 14, canteria 2, cestas 8, elite_asedio 1, elite_choque 3, elite_distancia 4, elite_linea 5, elite_montados 1, escuela_choque 1, escuela_registros 1, hachas 22, mamposteria 28, marcha 23, orfebreria 2, riego 1, vel_aldeano 25, veterano_asedio 25, veterano_choque 37, veterano_distancia 40, veterano_linea 27, veterano_montados 23, vida_aldeano 5, vigias 49
+== mapuches con el paso
+partidas 50 · gana 29 (58 %) · por destrucción 14 · por puntos 15
+  contra ayutthaya     5 de 10
+  contra etiopia       6 de 10
+  contra guaranies     3 de 10
+  contra palmares      7 de 10
+  contra tawantinsuyu  8 de 10
+  edad IV propia: 15 partidas · rival: 14
+  entrenadas: hondero 3137, guerrero 2613, lancero 1443, infanteria_montada 621, incendiarios 109, jinete 84, kona_waiki 2
+  investigaciones (partidas): adiestramiento 1, armadura_cc_1 39, armadura_cc_2 5, armadura_dist_1 28, armadura_dist_2 4, arreo_tropilla 8, ataque_cc_1 50, ataque_cc_2 11, ataque_dist_1 50, ataque_dist_2 12, canteria 1, cestas 9, cestas_2 1, coseletes_cuero 41, elite_choque 4, elite_distancia 4, elite_linea 2, elite_montados 1, escuela_registros 1, hachas 18, hachas_2 1, hachas_3 1, hoyos_estacas 4, lawen 17, mamposteria 22, marcha 8, trigo_manzana 42, vel_aldeano 26, veterano_asedio 23, veterano_choque 36, veterano_distancia 37, veterano_linea 28, veterano_montados 10, vida_aldeano 6, vigias 49
+== guaranies sin el paso
+partidas 50 · gana 20 (40 %) · por destrucción 3 · por puntos 17
+  contra ayutthaya     6 de 10
+  contra etiopia       4 de 10
+  contra mapuches      5 de 10
+  contra palmares      2 de 10
+  contra tawantinsuyu  3 de 10
+  edad IV propia: 24 partidas · rival: 12
+  entrenadas: hondero 3911, guerrero 1267, lancero 285, ariete 91, catapulta 66
+  investigaciones (partidas): adiestramiento 6, armadura_cc_1 45, armadura_cc_2 17, armadura_dist_1 45, armadura_dist_2 17, ataque_cc_1 45, ataque_cc_2 15, ataque_cc_3 2, ataque_dist_1 45, ataque_dist_2 23, ataque_dist_3 3, cestas 10, cestas_2 2, elite_asedio 10, elite_choque 13, elite_distancia 20, elite_linea 2, escuela_choque 5, escuela_polvora 1, escuela_registros 12, hachas 6, hachas_2 2, mamposteria 5, marcha 40, vel_aldeano 22, veterano_asedio 30, veterano_choque 33, veterano_distancia 34, veterano_linea 18, vida_aldeano 15, vigias 40
+== guaranies con el paso
+partidas 50 · gana 15 (30 %) · por destrucción 0 · por puntos 15
+  contra ayutthaya     2 de 10
+  contra etiopia       4 de 10
+  contra mapuches      7 de 10
+  contra palmares      0 de 10
+  contra tawantinsuyu  2 de 10
+  edad IV propia: 19 partidas · rival: 12
+  entrenadas: hondero 3451, guerrero 1151, lancero 239, ariete 66, kaaguygua 58, catapulta 45
+  investigaciones (partidas): adiestramiento 8, armadura_cc_1 45, armadura_cc_2 14, armadura_dist_1 45, armadura_dist_2 13, ataque_cc_1 45, ataque_cc_2 11, ataque_dist_1 45, ataque_dist_2 19, ataque_dist_3 1, cestas 6, cestas_2 1, defensa_mborore 6, elite_asedio 4, elite_choque 11, elite_distancia 15, elite_linea 2, escuela_choque 6, escuela_polvora 1, escuela_registros 11, hachas 6, hachas_2 2, hachas_3 1, kokue 33, mamposteria 6, marcha 43, oga_takuara 12, poha_nana 26, uy_hata 1, vel_aldeano 26, veterano_asedio 21, veterano_choque 32, veterano_distancia 32, veterano_linea 17, vida_aldeano 22, vigias 40
+== guaranies con el paso, ahorrando false
+partidas 50 · gana 14 (28 %) · por destrucción 0 · por puntos 14
+  contra ayutthaya     2 de 10
+  contra etiopia       4 de 10
+  contra mapuches      6 de 10
+  contra palmares      0 de 10
+  contra tawantinsuyu  2 de 10
+  edad IV propia: 19 partidas · rival: 12
+  entrenadas: hondero 3468, guerrero 1159, lancero 245, ariete 64, kaaguygua 53, catapulta 40
+  investigaciones (partidas): adiestramiento 9, armadura_cc_1 45, armadura_cc_2 15, armadura_dist_1 45, armadura_dist_2 14, ataque_cc_1 45, ataque_cc_2 11, ataque_dist_1 45, ataque_dist_2 20, ataque_dist_3 1, cestas 6, cestas_2 1, defensa_mborore 6, elite_asedio 4, elite_choque 11, elite_distancia 14, elite_linea 2, escuela_choque 5, escuela_registros 10, hachas 6, hachas_2 2, hachas_3 1, kokue 31, mamposteria 6, marcha 43, oga_takuara 10, poha_nana 26, uy_hata 1, vel_aldeano 26, veterano_asedio 20, veterano_choque 32, veterano_distancia 32, veterano_linea 15, vida_aldeano 21, vigias 40
