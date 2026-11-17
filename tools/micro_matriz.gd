@@ -13,7 +13,7 @@ extends SceneTree
 ##   --civs=a,b    pueblos de los bandos A y B (vacío: capa común, sin reemplazos ni módulos)
 ##   --edad=N      edad de los dos bandos (por defecto 2: está el lancero)
 ##   --compras     los dos bandos con lo que reemplaza al bono por edad desde el paso 1 del juego
-##                 tardío (armas_1 en la II, más los niveles veterano y élite en la III y la IV)
+##                 tardío (la herrería I de ataque en la II, más los niveles veterano y élite en la III y la IV)
 ##   --parche=F    JSON con {"reglas": {...}, "unidades": {tipo: {campo: valor}},
 ##                 "civs": {pueblo: {"unidades": {...}, "unidades_nuevas": {...}}}}; se fusiona
 ##                 en memoria antes de armar las tablas de cada pueblo

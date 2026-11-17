@@ -1,0 +1,18 @@
+# tests/micro.gd con el paso 2: idéntico a la salida del paso 1 (pruebas/05-micro.txt, «con el paso 1»; diff vacío)
+
+== A. 10 honderos contra 10 guerreros, los dos con ataque en movimiento
+   15.3 s · quedan hondero 0/10 (vida 0%) · guerrero 9/10 (vida 69%)
+== B. Lo mismo, pero los honderos retroceden cuando un guerrero se acerca (kiteo)
+   35.2 s · quedan hondero 0/10 (vida 0%) · guerrero 9/10 (vida 88%)
+== C. 10 honderos contra 10 lanceros (distancia contra línea)
+   37.3 s · quedan hondero 4/10 (vida 21%) · lancero 0/10 (vida 0%)
+== D. 10 guerreros contra 10 lanceros (choque contra línea)
+   27.6 s · quedan guerrero 0/10 (vida 0%) · lancero 7/10 (vida 47%)
+== E. 8 jinetes contra 10 honderos (choque contra distancia)
+   14.8 s · quedan jinete 7/8 (vida 82%) · hondero 0/10 (vida 0%)
+== F. 10 honderos con todo el fuego a un blanco por vez (foco) contra 10 guerreros
+   18.9 s · quedan hondero 0/10 (vida 0%) · guerrero 7/10 (vida 67%)
+== G. Retirada: 6 jinetes + 6 lanceros pasan junto a 8 honderos con orden de mover (sin ataque)
+   llegan 8/12 (jinetes 3, lanceros 5); primero a los 21.2 s, todos a los 22.6 s; vida de los jinetes 505
+== H. La misma retirada, suelta (Alt)
+   llegan 9/12 (jinetes 6, lanceros 3); primero a los 9.7 s, todos a los -0.1 s; vida de los jinetes 920
