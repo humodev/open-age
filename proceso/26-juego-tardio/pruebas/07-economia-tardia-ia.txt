@@ -1,0 +1,139 @@
+# tools/economia_tardia_ia.gd -- --minutes=45 --seeds=3 (normal), sobre main con el paso 2 y sin el 4
+## Con el paso 3
+con | normal | 0 | ayutthaya | etiopia | 7:13 | 21:04 | - | vel_aldeano 7:46, vida_aldeano 22:40, orfebreria_2 25:35 | - | - | 36 | -1 | 45:00
+con | normal | 0 | etiopia | ayutthaya | 6:58 | 20:31 | - | vel_aldeano 15:18, vida_aldeano 21:32, orfebreria_2 24:25 | - | - | 40 | -1 | 45:00
+con | normal | 0 | mapuches | palmares | 8:21 | - | - | - | - | - | 42 | 0 | 17:45
+con | normal | 0 | palmares | mapuches | - | - | - | - | - | - | 0 | 0 | 17:45
+con | normal | 1 | ayutthaya | guaranies | 7:12 | 19:06 | - | vel_aldeano 7:46, vida_aldeano 21:15, orfebreria_2 32:25 | - | - | 15 | -1 | 45:00
+con | normal | 1 | guaranies | ayutthaya | 7:40 | 17:22 | 35:49 | vel_aldeano 32:55, vida_aldeano 37:28, escuela_registros 40:52, hachas_3 41:43, cestas_2 43:46, riego_3 44:41 | 37:10 | 1581 | 42 | -1 | 45:00
+con | normal | 1 | mapuches | tawantinsuyu | 7:21 | 16:43 | - | vel_aldeano 21:10, vida_aldeano 23:15 | - | - | 42 | 0 | 23:22
+con | normal | 1 | tawantinsuyu | mapuches | 5:49 | - | - | - | - | - | 0 | 0 | 23:22
+con | normal | 2 | ayutthaya | mapuches | 7:10 | 21:08 | - | vel_aldeano 7:46 | - | - | 0 | 1 | 35:33
+con | normal | 2 | mapuches | ayutthaya | 7:14 | 19:23 | - | vel_aldeano 15:10, vida_aldeano 23:15 | - | - | 47 | 1 | 35:33
+con | normal | 2 | mapuches | ayutthaya | 7:27 | 16:23 | - | vel_aldeano 19:10, vida_aldeano 21:38 | - | - | 42 | 0 | 25:01
+con | normal | 2 | ayutthaya | mapuches | 7:05 | - | - | - | - | - | 18 | 0 | 25:01
+con | normal | 0 | etiopia | guaranies | 5:35 | 18:08 | - | vel_aldeano 15:10 | - | - | 10 | 1 | 30:00
+con | normal | 0 | guaranies | etiopia | 8:23 | 14:32 | - | vel_aldeano 29:07 | - | - | 42 | 1 | 30:00
+con | normal | 0 | palmares | tawantinsuyu | 9:00 | 21:44 | 34:48 | vel_aldeano 9:48, vida_aldeano 29:15 | 38:30 | 1080 | 52 | -1 | 45:00
+con | normal | 0 | tawantinsuyu | palmares | 10:05 | 21:06 | - | vel_aldeano 25:05, vida_aldeano 27:09 | - | - | 42 | -1 | 45:00
+con | normal | 1 | etiopia | mapuches | 5:34 | 24:33 | - | vel_aldeano 19:10, orfebreria_2 25:58 | - | - | 46 | 0 | 32:28
+con | normal | 1 | mapuches | etiopia | 7:30 | - | - | - | - | - | 0 | 0 | 32:28
+con | normal | 1 | palmares | ayutthaya | 9:28 | 22:36 | - | - | - | - | 56 | -1 | 45:00
+con | normal | 1 | ayutthaya | palmares | 8:44 | 20:34 | - | vel_aldeano 18:27 | - | - | 31 | -1 | 45:00
+con | normal | 2 | etiopia | palmares | 9:21 | 20:57 | - | vel_aldeano 17:10, vida_aldeano 22:28 | - | - | 42 | 0 | 24:22
+con | normal | 2 | palmares | etiopia | 9:39 | - | - | - | - | - | 3 | 0 | 24:22
+con | normal | 2 | palmares | etiopia | 12:33 | - | - | - | - | - | 24 | 1 | 29:55
+con | normal | 2 | etiopia | palmares | 9:25 | 18:15 | - | vel_aldeano 11:27, vida_aldeano 21:15, orfebreria_2 23:20 | - | - | 44 | 1 | 29:55
+con | normal | 0 | guaranies | mapuches | 7:30 | 16:29 | - | vel_aldeano 23:18 | - | - | 42 | 0 | 27:03
+con | normal | 0 | mapuches | guaranies | 6:58 | - | - | vel_aldeano 15:10 | - | - | 0 | 0 | 27:03
+con | normal | 0 | tawantinsuyu | ayutthaya | 5:39 | - | - | vel_aldeano 15:05 | - | - | 7 | 1 | 26:22
+con | normal | 0 | ayutthaya | tawantinsuyu | 7:55 | 14:35 | - | vel_aldeano 17:10, vida_aldeano 17:46 | - | - | 42 | 1 | 26:22
+con | normal | 1 | guaranies | palmares | 9:59 | 23:53 | 31:04 | vel_aldeano 23:39, vida_aldeano 24:46 | - | - | 49 | 0 | 31:24
+con | normal | 1 | palmares | guaranies | 9:15 | - | - | - | - | - | 9 | 0 | 31:24
+con | normal | 1 | tawantinsuyu | etiopia | 6:04 | 18:47 | - | vel_aldeano 16:18 | - | - | 42 | 0 | 43:08
+con | normal | 1 | etiopia | tawantinsuyu | 6:02 | - | - | - | - | - | 18 | 0 | 43:08
+con | normal | 2 | guaranies | tawantinsuyu | 8:05 | 14:00 | - | - | - | - | 0 | 1 | 34:49
+con | normal | 2 | tawantinsuyu | guaranies | 6:00 | 16:39 | - | vel_aldeano 13:05, vida_aldeano 23:09 | - | - | 42 | 1 | 34:49
+con | normal | 2 | tawantinsuyu | guaranies | 6:18 | - | - | vel_aldeano 13:05 | - | - | 3 | 1 | 40:21
+con | normal | 2 | guaranies | tawantinsuyu | 8:20 | 13:40 | 32:45 | vel_aldeano 21:10, vida_aldeano 29:54, escuela_registros 36:16, hachas_3 39:25 | 34:16 | 997 | 42 | 1 | 40:21
+
+== /tmp/claude-1000/-mnt-games-01-Projects-open-age/481c6f08-db17-4268-bf0b-14788944cecc/scratchpad/con_final2.txt jugadores 36 partidas 18
+llegan a la III: 24/36; a la IV: 4/36 jugadores; partidas con alguien en la IV: 4/18
+mediana II 7:30, III 18:57, IV 33:46; duración media 33.4 min
+recolectado por min en la IV: mediana 1080 (997-1581), n=3
+  cestas_2            1 de  4 que llegaron a su edad; después de la edad: mediana 7:57 (7:57-7:57)
+  escuela_registros   2 de  4 que llegaron a su edad; después de la edad: mediana 4:17 (3:31-5:03)
+  hachas_3            2 de  4 que llegaron a su edad; después de la edad: mediana 6:17 (5:54-6:40)
+  orfebreria_2        5 de 24 que llegaron a su edad; después de la edad: mediana 4:31 (1:25-13:19)
+  riego_3             1 de  4 que llegaron a su edad; después de la edad: mediana 8:52 (8:52-8:52)
+  vel_aldeano        25 de 35 que llegaron a su edad; después de la edad: mediana 9:26 (0:33-25:15)
+  vida_aldeano       15 de 24 que llegaron a su edad; después de la edad: mediana 3:52 (0:53-20:06)
+
+## Sin el paso 3 (--sin-paso3, mismas semillas)
+sin | normal | 0 | ayutthaya | etiopia | 7:13 | 23:21 | - | - | - | - | 6 | 1 | 31:22
+sin | normal | 0 | etiopia | ayutthaya | 6:58 | 20:55 | - | - | - | - | 42 | 1 | 31:22
+sin | normal | 0 | mapuches | palmares | 8:21 | 16:51 | - | - | - | - | 42 | 0 | 17:45
+sin | normal | 0 | palmares | mapuches | - | - | - | - | - | - | 8 | 0 | 17:45
+sin | normal | 1 | ayutthaya | guaranies | 7:12 | 21:21 | - | - | - | - | 38 | -1 | 45:00
+sin | normal | 1 | guaranies | ayutthaya | 7:40 | 12:59 | 36:41 | - | 38:46 | 1384 | 42 | -1 | 45:00
+sin | normal | 1 | mapuches | tawantinsuyu | 7:21 | 16:27 | - | - | - | - | 42 | 0 | 22:41
+sin | normal | 1 | tawantinsuyu | mapuches | 5:49 | - | - | - | - | - | 0 | 0 | 22:41
+sin | normal | 2 | ayutthaya | mapuches | 7:10 | 21:28 | - | - | - | - | 8 | 1 | 36:11
+sin | normal | 2 | mapuches | ayutthaya | 7:14 | 18:47 | - | - | - | - | 42 | 1 | 36:11
+sin | normal | 2 | mapuches | ayutthaya | 7:27 | 16:23 | - | - | - | - | 42 | 0 | 25:01
+sin | normal | 2 | ayutthaya | mapuches | 7:05 | - | - | - | - | - | 18 | 0 | 25:01
+sin | normal | 0 | etiopia | guaranies | 5:35 | 18:07 | - | - | - | - | 5 | 1 | 34:13
+sin | normal | 0 | guaranies | etiopia | 8:23 | 14:32 | 30:47 | - | 31:54 | 1096 | 42 | 1 | 34:13
+sin | normal | 0 | palmares | tawantinsuyu | 9:00 | 20:32 | - | - | - | - | 0 | 1 | 36:10
+sin | normal | 0 | tawantinsuyu | palmares | 10:05 | 26:33 | - | - | - | - | 42 | 1 | 36:10
+sin | normal | 1 | etiopia | mapuches | 5:34 | 38:46 | - | - | - | - | 39 | -1 | 45:00
+sin | normal | 1 | mapuches | etiopia | 7:30 | 27:21 | - | - | - | - | 42 | -1 | 45:00
+sin | normal | 1 | palmares | ayutthaya | 9:28 | 22:36 | - | - | - | - | 51 | -1 | 45:00
+sin | normal | 1 | ayutthaya | palmares | 8:44 | 20:40 | - | - | - | - | 42 | -1 | 45:00
+sin | normal | 2 | etiopia | palmares | 9:21 | 20:34 | - | - | - | - | 42 | 0 | 21:46
+sin | normal | 2 | palmares | etiopia | 9:38 | - | - | - | - | - | 0 | 0 | 21:46
+sin | normal | 2 | palmares | etiopia | 12:33 | - | - | - | - | - | 26 | 1 | 25:41
+sin | normal | 2 | etiopia | palmares | 9:25 | 18:16 | - | - | - | - | 42 | 1 | 25:41
+sin | normal | 0 | guaranies | mapuches | 7:30 | 16:29 | 27:21 | - | - | 1462 | 42 | 0 | 28:36
+sin | normal | 0 | mapuches | guaranies | 6:58 | - | - | - | - | - | 0 | 0 | 28:36
+sin | normal | 0 | tawantinsuyu | ayutthaya | 5:39 | - | - | - | - | - | 2 | 1 | 29:03
+sin | normal | 0 | ayutthaya | tawantinsuyu | 7:55 | 14:35 | - | - | - | - | 42 | 1 | 29:03
+sin | normal | 1 | guaranies | palmares | 9:59 | 23:53 | 30:46 | - | 31:47 | 1253 | 49 | 0 | 32:54
+sin | normal | 1 | palmares | guaranies | 9:15 | - | - | - | - | - | 3 | 0 | 32:54
+sin | normal | 1 | tawantinsuyu | etiopia | 6:04 | 25:13 | - | - | - | - | 42 | -1 | 45:00
+sin | normal | 1 | etiopia | tawantinsuyu | 6:02 | 20:30 | - | - | - | - | 0 | -1 | 45:00
+sin | normal | 2 | guaranies | tawantinsuyu | 8:05 | 14:00 | - | - | - | - | 4 | 1 | 25:02
+sin | normal | 2 | tawantinsuyu | guaranies | 6:00 | 16:44 | - | - | - | - | 42 | 1 | 25:02
+sin | normal | 2 | tawantinsuyu | guaranies | 6:18 | 22:40 | - | - | - | - | 42 | 0 | 30:33
+sin | normal | 2 | guaranies | tawantinsuyu | 8:20 | 13:40 | - | - | - | - | 3 | 0 | 30:33
+
+== /tmp/claude-1000/-mnt-games-01-Projects-open-age/481c6f08-db17-4268-bf0b-14788944cecc/scratchpad/sin_final.txt jugadores 36 partidas 18
+llegan a la III: 28/36; a la IV: 4/36 jugadores; partidas con alguien en la IV: 4/18
+mediana II 7:30, III 20:31, IV 30:46; duración media 32.1 min
+recolectado por min en la IV: mediana 1318 (1096-1462), n=4
+
+## Primera versión (sin juntar en la IV, antes de fusionar el paso 2)
+con | normal | 0 | ayutthaya | etiopia | 7:13 | 27:10 | - | vel_aldeano 7:46, vida_aldeano 33:15 | - | - | 42 | 0 | 41:29
+con | normal | 0 | etiopia | ayutthaya | 6:58 | 20:18 | - | vel_aldeano 11:16, vida_aldeano 21:34, orfebreria_2 31:37 | - | - | 11 | 0 | 41:29
+con | normal | 0 | mapuches | palmares | 8:21 | 16:43 | - | - | - | - | 42 | 0 | 17:45
+con | normal | 0 | palmares | mapuches | - | - | - | - | - | - | 7 | 0 | 17:45
+con | normal | 1 | ayutthaya | guaranies | 7:12 | 17:17 | - | vel_aldeano 13:26, vida_aldeano 19:25, orfebreria_2 30:17 | - | - | 4 | -1 | 45:00
+con | normal | 1 | guaranies | ayutthaya | 7:40 | 13:08 | 35:38 | vel_aldeano 21:55, vida_aldeano 32:47 | 37:47 | 1387 | 42 | -1 | 45:00
+con | normal | 1 | mapuches | tawantinsuyu | 7:21 | 16:22 | - | vel_aldeano 19:10, vida_aldeano 21:15 | - | - | 42 | 0 | 21:43
+con | normal | 1 | tawantinsuyu | mapuches | 5:49 | - | - | - | - | - | 16 | 0 | 21:43
+con | normal | 2 | ayutthaya | mapuches | 7:10 | 29:23 | - | vel_aldeano 7:46, vida_aldeano 32:27, orfebreria_2 39:20 | - | - | 42 | 0 | 44:00
+con | normal | 2 | mapuches | ayutthaya | 7:14 | 16:40 | - | vel_aldeano 15:37, vida_aldeano 23:15 | - | - | 0 | 0 | 44:00
+con | normal | 2 | mapuches | ayutthaya | 7:27 | 18:23 | - | vel_aldeano 15:12, vida_aldeano 21:15 | - | - | 42 | 0 | 23:42
+con | normal | 2 | ayutthaya | mapuches | 7:05 | - | - | - | - | - | 1 | 0 | 23:42
+con | normal | 0 | etiopia | guaranies | 5:35 | 16:52 | - | vel_aldeano 14:48, orfebreria_2 31:31 | - | - | 9 | -1 | 45:00
+con | normal | 0 | guaranies | etiopia | 8:23 | 14:38 | 30:06 | vel_aldeano 27:10 | 32:21 | 1005 | 42 | -1 | 45:00
+con | normal | 0 | palmares | tawantinsuyu | 9:00 | 22:17 | - | vel_aldeano 9:48, vida_aldeano 29:15 | - | - | 50 | 0 | 38:49
+con | normal | 0 | tawantinsuyu | palmares | 10:05 | 19:13 | - | vel_aldeano 21:05, vida_aldeano 23:09 | - | - | 32 | 0 | 38:49
+con | normal | 1 | etiopia | mapuches | 5:34 | - | - | - | - | - | 7 | 1 | 29:39
+con | normal | 1 | mapuches | etiopia | 7:30 | 23:09 | - | vel_aldeano 17:10 | - | - | 42 | 1 | 29:39
+con | normal | 1 | palmares | ayutthaya | 9:28 | 24:32 | 32:42 | - | 34:12 | 1095 | 50 | 0 | 38:17
+con | normal | 1 | ayutthaya | palmares | 8:44 | - | - | vel_aldeano 14:17 | - | - | 43 | 0 | 38:17
+con | normal | 2 | etiopia | palmares | 9:21 | 18:59 | - | - | - | - | 42 | 0 | 27:37
+con | normal | 2 | palmares | etiopia | 9:39 | - | - | - | - | - | 0 | 0 | 27:37
+con | normal | 2 | palmares | etiopia | 12:33 | - | - | - | - | - | 0 | 1 | 26:21
+con | normal | 2 | etiopia | palmares | 9:25 | 18:25 | - | vel_aldeano 11:27, orfebreria_2 25:20 | - | - | 42 | 1 | 26:21
+con | normal | 0 | guaranies | mapuches | 7:30 | 16:42 | 24:27 | vel_aldeano 16:21, vida_aldeano 18:01, orfebreria_2 18:41 | 26:38 | 1343 | 42 | 0 | 36:19
+con | normal | 0 | mapuches | guaranies | 6:58 | 20:54 | - | vel_aldeano 15:21, vida_aldeano 23:15 | - | - | 0 | 0 | 36:19
+con | normal | 0 | tawantinsuyu | ayutthaya | 5:39 | 17:08 | - | vel_aldeano 19:05 | - | - | 42 | 0 | 24:47
+con | normal | 0 | ayutthaya | tawantinsuyu | 7:55 | - | - | - | - | - | 7 | 0 | 24:47
+con | normal | 1 | guaranies | palmares | 9:59 | 20:03 | - | - | - | - | 42 | 0 | 22:41
+con | normal | 1 | palmares | guaranies | 9:15 | - | - | - | - | - | 0 | 0 | 22:41
+con | normal | 1 | tawantinsuyu | etiopia | 6:04 | - | - | - | - | - | 0 | 1 | 30:51
+con | normal | 1 | etiopia | tawantinsuyu | 6:02 | 24:13 | - | vel_aldeano 13:16, vida_aldeano 27:15, orfebreria_2 29:20 | - | - | 42 | 1 | 30:51
+con | normal | 2 | guaranies | tawantinsuyu | 8:05 | 22:02 | - | - | - | - | 11 | 1 | 30:44
+con | normal | 2 | tawantinsuyu | guaranies | 6:00 | 15:08 | - | vel_aldeano 17:05, vida_aldeano 29:17 | - | - | 42 | 1 | 30:44
+con | normal | 2 | tawantinsuyu | guaranies | 6:18 | 24:17 | - | vel_aldeano 19:48, vida_aldeano 27:09 | - | - | 46 | 0 | 36:04
+con | normal | 2 | guaranies | tawantinsuyu | 8:20 | 14:29 | 25:17 | - | 27:21 | 770 | 1 | 0 | 36:04
+
+== /tmp/claude-1000/-mnt-games-01-Projects-open-age/481c6f08-db17-4268-bf0b-14788944cecc/scratchpad/previo.txt jugadores 36 partidas 18
+llegan a la III: 26/36; a la IV: 5/36 jugadores; partidas con alguien en la IV: 5/18
+mediana II 7:30, III 18:42, IV 30:06; duración media 32.3 min
+recolectado por min en la IV: mediana 1095 (770-1387), n=5
+  orfebreria_2        7 de 26 que llegaron a su edad; después de la edad: mediana 9:57 (1:59-14:39)
+  vel_aldeano        21 de 35 que llegaron a su edad; después de la edad: mediana 8:23 (0:33-18:47)
+  vida_aldeano       15 de 26 que llegaron a su edad; después de la edad: mediana 3:04 (1:16-19:39)

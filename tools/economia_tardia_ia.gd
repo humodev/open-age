@@ -3,7 +3,7 @@ extends SceneTree
 ## docs/diseno/27, §1.1, §1.3 y §4.3). Partidas IA contra IA: por jugador, el minuto de cada
 ## edad, el de cada compra del paso 3 (y del primer élite), cuánto recolectó por minuto en la
 ## IV y si llegó a la IV. Con --sin-paso3 se borra lo del paso 3 (las tecnologías con
-## `paso: 3` y la renta de los sitios por edad) para comparar con las mismas semillas.
+## `paso: 3`, la renta de los sitios por edad y el orden de compra de la IA) para comparar con las mismas semillas.
 ## Las partidas se reparten como en el torneo (--parte=i/n).
 ##
 ## Uso:
@@ -93,6 +93,7 @@ func _turn_off(d: SimData) -> void:
 			if int(dd.tecnologias[k].get("paso", 0)) == 3:
 				dd.tecnologias.erase(k)
 	(d.reglas["sitios"] as Dictionary).erase("renta_edad_pct")
+	d.reglas.erase("ia_compras_tardias")
 
 
 func _m(tick: int) -> String:
