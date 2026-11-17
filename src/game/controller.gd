@@ -346,7 +346,7 @@ func commands() -> Array[Dictionary]:
 			used[root] = true
 			var why := sim.research_block(local, tech)
 			var pref := int(t["ranura"]) if produce.is_empty() else int((Grilla.cfg().get("investigaciones_con_tropa", {}) as Dictionary).get(tech if not t.has("requiere") else root, t["ranura"]))
-			var rc := {"slot": pref, "id": tech, "icon": t["icono"], "kind": "research", "name": tech_name(tech), "cost": sim.tech_cost(local, tech), "desc": effects_text(t["efectos"]), "locked": why, "tech": true, "building": first.id}
+			var rc := {"slot": pref, "id": tech, "icon": Iconos.de_tecnologia(tech, t), "kind": "research", "name": tech_name(tech), "cost": sim.tech_cost(local, tech), "desc": effects_text(t["efectos"]), "locked": why, "tech": true, "building": first.id}
 			# --- paso 3 --- La escuela de la IV va en su propio submenú, con el nombre del pueblo.
 			if t.get("escuela", false):
 				school.append(rc)
@@ -416,6 +416,7 @@ func commands() -> Array[Dictionary]:
 		var mil_first: Array[Dictionary] = research.filter(func(c: Dictionary) -> bool: return techs.get(c["id"], {}).get("en", {}).get("militar", false))
 		mil_first.append_array(research.filter(func(c: Dictionary) -> bool: return not techs.get(c["id"], {}).get("en", {}).get("militar", false)))
 		out = _ubicar_investigaciones(out, mil_first)
+	_marcar_estados(out) # --- iconos ---
 	return out
 
 
@@ -457,7 +458,7 @@ func _ubicar_investigaciones(out: Array[Dictionary], research: Array[Dictionary]
 		return inner
 	for alt in [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]:
 		if not taken.has(alt):
-			out.append({"slot": alt, "id": INVESTIGAR, "icon": "carga", "kind": "submenu", "menu": INVESTIGAR, "name": "Investigaciones (%d)" % research.filter(func(c: Dictionary) -> bool: return c["kind"] == "research").size(), "cost": {}, "desc": "Mejoras que se investigan en este edificio: " + ", ".join(research.map(func(c: Dictionary) -> String: return c["name"])) + ".", "locked": ""})
+			out.append({"slot": alt, "id": INVESTIGAR, "icon": "investigar", "kind": "submenu", "menu": INVESTIGAR, "name": "Investigaciones (%d)" % research.filter(func(c: Dictionary) -> bool: return c["kind"] == "research").size(), "cost": {}, "desc": "Mejoras que se investigan en este edificio: " + ", ".join(research.map(func(c: Dictionary) -> String: return c["name"])) + ".", "locked": ""})
 			break
 	return out
 
@@ -513,6 +514,65 @@ func _repartir(research: Array[Dictionary], taken: Dictionary) -> void:
 				c["slot"] = alt
 				break
 # --- fin casillas ---
+
+
+# --- iconos --- (proceso/28) Lo que la casilla necesita para mostrar su estado de un vistazo:
+## `edad` (la edad a la que pertenece: color de la franja y de la pastilla), `tope` (bloqueado por
+## el máximo por edad, con su propia pastilla), `aviso` (no bloquea: población llena, el pedido
+## espera lugar), `en_curso` (investigación ya pedida) y `en_cola` (cuántas de esa tropa hay en
+## la cola de lo elegido). Solo lee la simulación.
+func _marcar_estados(out: Array[Dictionary]) -> void:
+	var dd := sim.dp(local)
+	var p: Dictionary = sim.players[local]
+	var age: int = p["age"]
+	var sel := selected_entities()
+	for c in out:
+		match String(c.get("kind", "")):
+			"build":
+				var def: Dictionary = dd.edificios.get(c["id"], {})
+				if dd.is_hito(c["id"]):
+					c["edad"] = age + 1 if age < dd.edades.size() else 0
+				else:
+					c["edad"] = int(def.get("edad_min", 1))
+				if c["locked"] == "" and not sim.engine_room(c["id"], local):
+					c["locked"] = "Máximo en esta edad: %d" % _maximo_edad(def, c["id"])
+					c["tope"] = true
+			"train":
+				var udef: Dictionary = dd.unidades.get(c["id"], {})
+				c["edad"] = int(udef.get("edad_min", 1))
+				var n := 0
+				for e in sel:
+					if e.is_building() and e.owner == local:
+						n += e.queue.count(c["id"])
+				c["en_cola"] = n
+				if c["locked"] != "":
+					continue
+				if udef.has("maximo_por_edad"):
+					var have := 0
+					for e in sim.actives:
+						if e.alive and e.owner == local:
+							have += 1 if e.type == c["id"] else 0
+							if e.is_building():
+								have += e.queue.count(c["id"])
+					var cap := _maximo_edad(udef, c["id"])
+					if have >= cap:
+						c["locked"] = "Máximo en esta edad: %d" % cap
+						c["tope"] = true
+						continue
+				if int(p["pop"]) + int(udef.get("pob", 1)) > int(p["pop_cap"]):
+					c["aviso"] = "Población llena (%d/%d): entra a la cola y sale cuando haya lugar" % [int(p["pop"]), int(p["pop_cap"])]
+			"research":
+				c["edad"] = int(dd.tecnologias.get(c["id"], {}).get("edad_min", 1))
+				if c["locked"] == "En investigación":
+					c["en_curso"] = true
+
+
+func _maximo_edad(def: Dictionary, type: String) -> int:
+	var maxes: Array = def.get("maximo_por_edad", [])
+	if maxes.is_empty():
+		return 0
+	return int(maxes[clampi(int(sim.players[local]["age"]) - 1, 0, maxes.size() - 1)]) + int(sim.mods.engine_max_bonus(local, type))
+# --- fin iconos ---
 
 
 ## Comando de una casilla: el único lugar donde se resuelve qué hay en cada casilla. Lo usan el
