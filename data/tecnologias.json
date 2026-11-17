@@ -164,6 +164,13 @@
       }
     ]
   },
+  "_doc_paso4": "Paso 4 del juego tardío (docs/diseno/27, §1.1 y §4.2): niveles del asedio, que reemplazan al bono de ataque por edad que tenía (el +10 % de la II está en el ataque base del ariete), y las mejoras de defensa de la III y la IV (aspilleras, mampostería II, fortaleza reforzada, reparación rápida).",
+  "veterano_asedio": {"en": {"linea": "asedio"}, "nombre": "Asedio veterano", "edificio": "taller", "ranura": 8, "edad_min": 3, "nivel": 1, "linea": "asedio", "costo": {"madera": 150, "riqueza": 100}, "tiempo_ms": 45000, "icono": "ariete^1", "efectos": [{"tipo": "ataque_pct", "lineas": ["asedio"], "pct": 11}, {"tipo": "vida_pct", "lineas": ["asedio"], "pct": 5}]},
+  "elite_asedio": {"en": {"linea": "asedio"}, "nombre": "Asedio de élite", "edificio": "taller", "ranura": 8, "edad_min": 4, "requiere": "veterano_asedio", "nivel": 2, "linea": "asedio", "costo": {"madera": 300, "riqueza": 200}, "tiempo_ms": 60000, "icono": "ariete^2", "efectos": [{"tipo": "ataque_pct", "lineas": ["asedio"], "pct": 13}, {"tipo": "vida_pct", "lineas": ["asedio"], "pct": 5}]},
+  "aspilleras": {"en": {"tipo": "fortaleza"}, "nombre": "Aspilleras", "edificio": "fortaleza", "ranura": 0, "edad_min": 3, "costo": {"madera": 150, "piedra": 100}, "tiempo_ms": 40000, "icono": "torre", "desc": "Troneras en los muros: una flecha más por andanada.", "efectos": [{"tipo": "edificio_flechas", "n": 1}]},
+  "mamposteria_2": {"en": {"tipo": "centro"}, "nombre": "Mampostería II", "edificio": "centro", "ranura": 3, "edad_min": 3, "requiere": "mamposteria", "costo": {"madera": 200, "piedra": 150}, "tiempo_ms": 45000, "icono": "casa", "efectos": [{"tipo": "edificio_vida_pct", "pct": 20}]},
+  "fortaleza_reforzada": {"en": {"tipo": "fortaleza"}, "nombre": "Fortaleza reforzada", "edificio": "fortaleza", "ranura": 1, "edad_min": 4, "costo": {"piedra": 300, "riqueza": 200}, "tiempo_ms": 60000, "icono": "torre", "efectos": [{"tipo": "edificio_vida_pct", "tipos": ["fortaleza"], "pct": 30}, {"tipo": "edificio_flechas", "tipos": ["fortaleza"], "n": 2}]},
+  "reparacion_rapida": {"en": {"tipo": "fortaleza"}, "nombre": "Reparación rápida", "edificio": "fortaleza", "ranura": 2, "edad_min": 4, "costo": {"madera": 200, "riqueza": 150}, "tiempo_ms": 45000, "icono": "casa", "efectos": [{"tipo": "reparacion_pct", "pct": 100}]},
   "vigias": { "en": {"tipo": "centro"},
     "nombre": "Vigías",
     "edificio": "centro",

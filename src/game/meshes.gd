@@ -155,6 +155,16 @@ static func unit_mesh(type: String, team: Color) -> ArrayMesh:
 			p.append([box(0.97, 0.06, 1.42), xf(Vector3(0, 0.92, 0)), team])
 			p.append([cyl(0.1, 0.11, 1.5, 8), xf(Vector3(0, 0.62, 0.15), Vector3(90, 0, 0)), Palette.TRUNK])
 			p.append([cyl(0.0, 0.12, 0.25, 8), xf(Vector3(0, 0.62, 1.02), Vector3(90, 0, 0)), Palette.STONE_DARK])
+		"catapulta": # --- paso 4 --- asedio de área: armazón con brazo y cuchara
+			for z in [-0.4, 0.4]:
+				for x in [-0.38, 0.38]:
+					p.append([cyl(0.16, 0.16, 0.08, 12), xf(Vector3(x, 0.16, z), Vector3(0, 0, 90)), Palette.TRUNK])
+			p.append([box(0.75, 0.12, 1.2), xf(Vector3(0, 0.3, 0)), Palette.WOOD_BEAM])
+			for x in [-0.3, 0.3]:
+				p.append([box(0.08, 0.7, 0.08), xf(Vector3(x, 0.7, -0.1)), Palette.WOOD_BEAM])
+			p.append([box(0.7, 0.08, 0.08), xf(Vector3(0, 1.0, -0.1)), team])
+			p.append([cyl(0.04, 0.04, 1.2, 6), xf(Vector3(0, 0.75, 0.15), Vector3(-55, 0, 0)), Palette.WOOD_BEAM])
+			p.append([cyl(0.14, 0.1, 0.1, 8), xf(Vector3(0, 1.22, 0.5)), Palette.STONE_DARK])
 		"lancero":
 			p.append([capsule(0.2, 0.7), xf(Vector3(0, 0.37, 0)), clay])
 			p.append([sphere(0.125), xf(Vector3(0, 0.84, 0)), clay])
@@ -338,6 +348,15 @@ static func building_mesh(type: String, team: Color) -> ArrayMesh:
 			p.append([cyl(0.04, 0.04, 0.9, 6), xf(Vector3(0.6, 0.6, 0.6), Vector3(0, 0, 15)), Palette.WOOD_BEAM]) # poste de práctica
 			_banner(p, Vector3(-1.3, 0.15, 0.6), 2.0, team)
 			_banner(p, Vector3(1.3, 0.15, 0.6), 2.0, team)
+		"fortaleza": # --- paso 4 --- muros con almenas, torres en las esquinas y torreón
+			p.append([box(2.8, 0.2, 2.8), xf(Vector3(0, 0.1, 0)), dark])
+			for side in [Vector2(0, -1), Vector2(0, 1), Vector2(-1, 0), Vector2(1, 0)]:
+				var sz := Vector3(2.4, 1.1, 0.22) if side.x == 0 else Vector3(0.22, 1.1, 2.4)
+				p.append([box(sz.x, sz.y, sz.z), xf(Vector3(side.x * 1.1, 0.75, side.y * 1.1)), clay])
+			for c in [Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, 1)]:
+				p.append([box(0.6, 1.7, 0.6), xf(Vector3(c.x * 1.1, 1.05, c.y * 1.1)), shade])
+			p.append([box(1.0, 2.2, 1.0), xf(Vector3(0, 1.3, 0)), clay])
+			_banner(p, Vector3(0, 2.4, 0), 1.2, team)
 		"torre":
 			p.append([box(1.8, 0.2, 1.8), xf(Vector3(0, 0.1, 0)), dark])
 			p.append([cyl(0.62, 0.78, 2.6, 10), xf(Vector3(0, 1.5, 0)), clay])

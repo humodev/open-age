@@ -32,7 +32,7 @@
   "taller": {
     "nombre": "Taller de asedio", "edad_min": 2, "tam": [3, 3], "pv": 1000, "armadura": 2,
     "costo": { "madera": 200 }, "tiempo_ms": 40000, "vision": 6000,
-    "produce": ["ariete"],
+    "produce": ["ariete", "catapulta"],
     "desc": "Construye el asedio: lo único que derriba murallas y edificios grandes."
   },
   "almacen_alimento": {
@@ -69,6 +69,15 @@
     "costo": { "madera": 50, "piedra": 150 }, "tiempo_ms": 45000, "vision": 9000,
     "guarnicion": 5, "flechas": 1,
     "ataque": 9, "alcance": 7500, "cadencia_ms": 1500
+  },
+  "fortaleza": {
+    "nombre": "Fortaleza", "edad_min": 3, "tam": [3, 3], "pv": 3500, "armadura": 4,
+    "costo": { "madera": 200, "piedra": 450 }, "tiempo_ms": 90000, "vision": 10000,
+    "guarnicion": 12, "flechas": 3,
+    "ataque": 10, "alcance": 8000, "cadencia_ms": 2000,
+    "fortaleza": true, "material": "piedra",
+    "_doc": "La defensa que aguanta (paso 4 del juego tardío, docs/diseno/27, §4.2): una por pueblo, con su nombre (data/civs). Dispara como la torre, más fuerte, y aguanta al asedio. material: piedra o madera (los incendiarios mapuches pegan más contra la madera).",
+    "desc": "La defensa que aguanta, desde la edad III: dispara una andanada (más una flecha por cada unidad adentro) y resiste el asedio. Se refuerza con las mejoras de defensa."
   },
   "hito_economia": {
     "nombre": "Hito de la abundancia", "edad_min": 1, "tam": [4, 4], "pv": 3000, "armadura": 2,

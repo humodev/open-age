@@ -9,11 +9,15 @@ func _init() -> void:
 			return
 	var s := Sim.new(7)
 	var types := ["guerrero", "hondero", "lancero"]
+	# --- paso 4 --- `--asedio`: 10 de las 100 de cada lado son catapultas (daño de área), en la III.
+	var siege := OS.get_cmdline_user_args().has("--asedio")
 	for pid in 2:
+		if siege:
+			s.players[pid]["age"] = 3
 		for i in 100:
 			var x := (40 + (i % 10) * 1) * 1000 + 500 + pid * 14000
 			var y := (54 + i / 10) * 1000 + 500
-			s.spawn_unit(types[i % 3], pid, x, y)
+			s.spawn_unit("catapulta" if siege and i % 10 == 0 else types[i % 3], pid, x, y)
 	# Que se encuentren en el medio.
 	var ids0 := []
 	var ids1 := []
@@ -35,7 +39,7 @@ func _init() -> void:
 	for e in s.entities:
 		if e.is_unit():
 			alive += 1
-	print("200 unidades, %d ticks: promedio %.2f ms, peor %.2f ms, presupuesto %d ms; vivas al final: %d" % [n, total / 1000.0 / n, worst / 1000.0, s.tick_ms, alive])
+	print("200 unidades%s, %d ticks: promedio %.2f ms, peor %.2f ms, presupuesto %d ms; vivas al final: %d" % [" (20 catapultas)" if siege else "", n, total / 1000.0 / n, worst / 1000.0, s.tick_ms, alive])
 	quit()
 
 

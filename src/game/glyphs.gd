@@ -293,6 +293,22 @@ static func draw(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
 			_figure(ci, c + Vector2(-s * 0.08, 0), s * 0.9, col, 0.9)
 			ci.draw_string(ThemeDB.fallback_font, c + Vector2(s * 0.12, -s * 0.12), "z", HORIZONTAL_ALIGNMENT_LEFT, -1, int(s * 0.36), col)
 		# --- fin órdenes ---
+		# --- paso 4 ---
+		"catapulta":
+			ci.draw_circle(c + Vector2(-s * 0.22, s * 0.28), s * 0.11, col)
+			ci.draw_circle(c + Vector2(s * 0.22, s * 0.28), s * 0.11, col)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.36, s * 0.08), Vector2(s * 0.72, s * 0.1)), col)
+			ci.draw_line(c + Vector2(-s * 0.1, s * 0.1), c + Vector2(s * 0.3, -s * 0.32), col, w * 1.2)
+			ci.draw_circle(c + Vector2(s * 0.32, -s * 0.36), s * 0.1, col)
+			ci.draw_circle(c + Vector2(-s * 0.3, -s * 0.3), s * 0.05, col)
+			ci.draw_circle(c + Vector2(-s * 0.12, -s * 0.42), s * 0.05, col)
+		"fortaleza":
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.4, -s * 0.05), Vector2(s * 0.8, s * 0.42)), col)
+			for i in 4:
+				ci.draw_rect(Rect2(c + Vector2(-s * 0.4 + i * s * 0.21, -s * 0.15), Vector2(s * 0.12, s * 0.12)), col)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.14, -s * 0.42), Vector2(s * 0.28, s * 0.4)), col.lightened(0.15))
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.07, s * 0.17), Vector2(s * 0.14, s * 0.2)), col.darkened(0.5))
+		# --- fin paso 4 ---
 		"arbol", "arbusto", "roca":
 			draw(ci, {"arbol": "madera", "arbusto": "alimento", "roca": "piedra"}[kind], r, col)
 		_:
@@ -326,6 +342,8 @@ static func resolve(def: Dictionary, type: String) -> String:
 		return "hito_guerra" if Grilla.eje(def, type) == "militar" else "hito_economia"
 	# --- fin grilla ---
 	if def.has("funcion"):
+		if def.has("area_borde_pct"): # --- paso 4 ---
+			return "catapulta"
 		if def.get("elefante", false):
 			return "elefante"
 		if def.get("montado", false):
@@ -337,6 +355,8 @@ static func resolve(def: Dictionary, type: String) -> String:
 		return "hito_guerra" if def.has("produce") or def.has("flechas") else "hito_economia"
 	if def.get("camino", false):
 		return "camino"
+	if def.get("fortaleza", false): # --- paso 4 ---
+		return "fortaleza"
 	if (def.get("produce", []) as Array).has("aldeano") or def.get("cuenta_victoria", false):
 		return "centro"
 	if def.has("produce"):

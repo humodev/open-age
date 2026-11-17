@@ -660,7 +660,7 @@ func _building_state(c: Dictionary, e: SimEntity) -> void:
 		c["state"].append(["Sin nada en producción", Palette.UI_DIM])
 	var cap := sim.garrison_cap(e)
 	if cap > 0:
-		var shots: int = int(e.def.get("flechas", 1)) + e.garrison.size() if e.def.has("ataque") else 0
+		var shots: int = sim.volley_shots(e) if e.def.has("ataque") else 0 # --- paso 4 --- aspilleras
 		var txt := "Guarnición %d/%d" % [e.garrison.size(), cap]
 		if shots > 0:
 			txt += " · %d %s" % [shots, "flecha" if shots == 1 else "flechas"]

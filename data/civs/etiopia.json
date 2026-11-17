@@ -24,6 +24,7 @@
   "Gondar"
  ],
  "unidades": {
+  "catapulta": {"nombre": "Pieza ligera", "ataque": 18, "alcance": 7500, "desc": "Asedio de área: cañones livianos que llegaron con los portugueses de Cristóvão da Gama en 1541 (Castanhoso, 1564; Whiteway, 1902) [verificar el pasaje]. Pega a todos los enemigos cerca del blanco; le hace poco a los edificios."},
   "rebano": {"nombre": "Cabra", "color": "#3a3530"},
   "aldeano": {
    "nombre": "Gäbbar"
@@ -70,6 +71,7 @@
   }
  },
  "edificios": {
+  "fortaleza": {"nombre": "Fortaleza de amba", "desc": "Fortaleza sobre una amba, la meseta de paredes a pique que servía de fortaleza, prisión y tesoro (Amba Gəšän; Taddesse Tamrat, 1972). La defensa que aguanta de la edad III; suma la defensa en altura."},
   "almacen_mina": {"nombre": "Dängay bet", "desc": "Casa de la piedra: lo que se cava. La corte se lleva la arcilla de su entorno; la que juntan los aldeanos viene acá."},
   "establo": {"nombre": "Färäs bet", "edad_min": 1, "costo": {"madera": 150}, "desc": "Casa del caballo: el jinete noble desde la edad I."},
   "almacen_alimento": {"nombre": "Gotära"},
@@ -311,8 +313,8 @@
    "alianza"
   ]
  ],
- "construye": ["corte_nueva", "casa", "granja", "almacen_alimento", "almacen_madera", "almacen_mina", "cuartel", "establo", "taller", "torre", "centro", "gult", "empalizada", "puerta", "mercado"],
- "produce": {"cuartel": ["lancero", "hondero"], "establo": ["guerrero", "jinete"], "taller": ["ariete"]},
+ "construye": ["corte_nueva", "casa", "granja", "almacen_alimento", "almacen_madera", "almacen_mina", "cuartel", "establo", "taller", "torre", "fortaleza", "centro", "gult", "empalizada", "puerta", "mercado"],
+ "produce": {"cuartel": ["lancero", "hondero"], "establo": ["guerrero", "jinete"], "taller": ["ariete", "catapulta"]},
  "modulos": {
   "defensa_altura": {
    "pct": 25
