@@ -923,10 +923,12 @@ static func unit(type: String, def: Dictionary, team: Color, style: Dictionary, 
 	if def.get("elefante", false):
 		_elephant(p, team, pal)
 		rider_y = 1.55
-	elif def.get("montado", false):
+	elif def.get("montado", false) or def.get("a_caballo", false): # --- paso 6 --- el weichafe montado
 		_horse(p, team)
 		rider_y = 0.62
-	if def.has("despliega_en"):
+	if def.get("navega", false): # --- paso 6 --- la canoa guaraní (ygá)
+		_canoe(p, team, pal, forma, def)
+	elif def.has("despliega_en"):
 		_mobile_court(p, team, pal)
 	elif def.has("area_borde_pct") and not def.has("reemplaza"): # --- paso 4 --- pieza ligera, cañón de muralla
 		_field_gun(p, team, pal)
@@ -969,6 +971,14 @@ static func _person(p: Array, fn: String, at: Vector3, team: Color, pal: Array, 
 	if tropa.get("oro", false):
 		p.append([Meshes.cyl(0.075, 0.075, 0.02, 10), Meshes.xf(at + Vector3(0, 0.6, r + 0.005), Vector3(90, 0, 0)), Palette.WEALTH, 0.25])
 	var wood := Palette.WOOD_BEAM
+	if def.has("armadura_monte"): # --- paso 6 --- ka'aguygua: ramas del monte en la cabeza y los hombros
+		for i in 5:
+			var a := -1.2 + i * 0.6
+			p.append([Meshes.box(0.05, 0.16, 0.03), Meshes.xf(at + Vector3(sin(a) * 0.14, 0.92, cos(a) * 0.08), Vector3(0, rad_to_deg(a), 20)), Color("4f7a3a")])
+		p.append([Meshes.box(r * 2.4, 0.08, r * 1.6), Meshes.xf(at + Vector3(0, 0.62, 0)), Color("5c7a3a")])
+	if def.get("montado", false) and fn == "choque" and int(def.get("alcance", 0)) >= 600: # --- paso 6 --- jinete de lanza (misiones)
+		p.append([Meshes.cyl(0.018, 0.018, 2.0, 6), Meshes.xf(at + Vector3(0.24, 0.9, 0.2), Vector3(-20, 0, 0)), wood])
+		p.append([Meshes.box(0.02, 0.14, 0.22), Meshes.xf(at + Vector3(0.24, 1.7, -0.08)), team])
 	match fn:
 		"choque":
 			p.append([Meshes.cyl(0.025, 0.03, 0.5, 6), Meshes.xf(at + Vector3(0.27, 0.55, 0.12), Vector3(35, 0, 0)), wood])
@@ -1064,6 +1074,20 @@ static func _fortress(p: Array, forma: String, w: float, d: float, pal: Array, t
 		_hut(p, forma, Vector3(0, 0.0, -0.1), 1.0, 1.0, 1.0, pal, {})
 		Meshes._banner(p, Vector3(0.6, 0.0, 0.5), 2.0, team)
 # --- fin paso 4 ---
+
+
+# --- paso 6 ---
+## Canoa de maqueta (ygá): casco de un tronco ahuecado, con dos remeros y sus remos.
+static func _canoe(p: Array, team: Color, pal: Array, forma: String, def: Dictionary) -> void:
+	var wood := Palette.TRUNK
+	var y := 0.42 # flota: el piso de la unidad en el agua está en el fondo del cauce
+	p.append([Meshes.capsule(0.26, 2.1), Meshes.xf(Vector3(0, y, 0), Vector3(90, 0, 0), Vector3(1.0, 1.0, 0.55)), wood])
+	p.append([Meshes.box(0.34, 0.05, 1.5), Meshes.xf(Vector3(0, y + 0.1, 0)), wood.darkened(0.3)])
+	p.append([Meshes.box(0.38, 0.06, 0.14), Meshes.xf(Vector3(0, y + 0.12, 0.85)), team])
+	for z in [-0.45, 0.4]:
+		_person(p, "civil", Vector3(0, y - 0.2, z), team, pal, forma, {}, {})
+		p.append([Meshes.cyl(0.015, 0.015, 0.9, 5), Meshes.xf(Vector3(0.3, y + 0.2, z + 0.1), Vector3(30, 0, 25)), Palette.WOOD_BEAM])
+		p.append([Meshes.box(0.08, 0.02, 0.2), Meshes.xf(Vector3(0.44, y - 0.1, z + 0.32), Vector3(30, 0, 25)), Palette.WOOD_BEAM])
 
 
 static func _horse(p: Array, team: Color) -> void:

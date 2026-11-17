@@ -457,6 +457,52 @@ func _demo(kind: String) -> void:
 					if found:
 						break
 		sim.set_meta("demo_cam", Vector2(b.x + 1, b.y + 13))
+	elif kind == "saberes":
+		# --- paso 6 --- Las unidades propias del pueblo en fila (edad IV), la canoa en el agua más
+		# cercana y, para los mapuches, un corral y un hoyo con estacas. Los edificios de las mejoras
+		# (corral, tapyi, misión, monte, taller) para la captura de la grilla (--select=tipo
+		# --grilla=investigar). Cámara: la pone sola.
+		sim.players[0]["age"] = 4
+		var dd := sim.dp(0)
+		var row: Array = []
+		for t: String in dd.unidades:
+			var ud: Dictionary = dd.unidades[t]
+			if (ud.get("propia", false) and not ud.get("navega", false)) or (ud.get("funcion", "") == "asedio" and (ud.has("bono_material") or ud.has("reemplaza"))):
+				row.append(t)
+		for i in row.size():
+			for k in 2:
+				var tt := sim.map.nearest_free(b.x + 4 + i * 3, b.y + 8 + k * 2, 6, 0)
+				if tt.x >= 0:
+					sim.spawn_unit(row[i], 0, tt.x * 1000 + 500, tt.y * 1000 + 500)
+		for t: String in dd.unidades:
+			if dd.unidades[t].get("navega", false):
+				var wt := sim.map.nearest_water(b.x + 8, b.y + 8, 80)
+				if wt.x >= 0:
+					sim.spawn_unit(t, 0, wt.x * 1000 + 500, wt.y * 1000 + 500)
+					if _args.get("foco", "") == "canoa": # --foco=canoa: la cámara en la canoa, con gente esperando en la orilla
+						var shore := sim.map.nearest_free(wt.x, wt.y, 4, 0)
+						for k in 3:
+							var st := sim.map.nearest_free(shore.x + k, shore.y, 4, 0)
+							if st.x >= 0:
+								sim.spawn_unit("guerrero", 0, st.x * 1000 + 500, st.y * 1000 + 500)
+						sim.set_meta("demo_cam_fijo", Vector2(wt.x, wt.y))
+		for k: String in dd.tecnologias:
+			if dd.tecnologias[k].get("propia", false) and dd.edificios.has("hoyo") and k == String(dd.edificios["hoyo"].get("requiere_tec", "")):
+				sim._finish_tech(0, k)
+		var extra: Array = []
+		for k in ["corral", "hoyo", "almacen_madera", "taller", "mision", "monte"]:
+			if dd.edificios.has(k):
+				extra.append(k)
+		for i in extra.size():
+			var type: String = extra[i]
+			var done := false
+			for r in 8:
+				for dy in range(-r, r + 1):
+					for dx in range(-r, r + 1):
+						if not done and sim.can_place(type, b.x + 4 + i * 5 + dx, b.y + 14 + dy, 0):
+							sim.spawn_building(type, 0, b.x + 4 + i * 5 + dx, b.y + 14 + dy, true)
+							done = true
+		sim.set_meta("demo_cam", sim.get_meta("demo_cam_fijo") if sim.has_meta("demo_cam_fijo") else Vector2(b.x + 4 + row.size() * 1.5, b.y + 11))
 	elif kind == "maravilla":
 		# --- paso 7 --- La maravilla del pueblo terminada, con la cuenta corriendo, y un aldeano
 		# seleccionable al lado (los guaraníes, las dos: la de la misión y la del monte). Edad IV.
@@ -993,6 +1039,8 @@ func _maybe_shot() -> void:
 		ctrl.run_command({"kind": "build", "id": ptype, "cost": pcost, "locked": ""})
 		ctrl.mouse_override = Vector2(960, 430)
 		ctrl.enabled = true # solo para que siga al cursor fijo; la entrada real sigue apagada
+	if _args.has("grilla"): # --- paso 6 --- antes que la ayuda: así la ayuda puede ser la de un submenú (--grilla=investigar)
+		ctrl.open_submenu(_args["grilla"])
 	if _args.has("ayuda"):
 		await get_tree().process_frame
 		var slot := int(_args["ayuda"])
@@ -1001,8 +1049,6 @@ func _maybe_shot() -> void:
 			var card: Control = hud._card
 			hud.show_tip(c, card.get_global_rect()) # --- iconos --- anclada a la grilla, como con el mouse (no tapa la fila de arriba)
 	# --- fin veterano ---
-	if _args.has("grilla"): # --- grilla --- (--grilla=economia|militar abre ese submenú para la captura)
-		ctrl.open_submenu(_args["grilla"])
 	# --- paneles --- (--panel=economia,edad,pueblo,sucesos,puntaje,fin para las capturas)
 	if _args.has("panel") and hud.paneles != null:
 		for w in (_args["panel"] as String).split(","):

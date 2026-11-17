@@ -1,0 +1,83 @@
+OK    mapuches coseletes_cuero: saber y evidencia Documentado. Góngora Marmolejo
+OK    mapuches trigo_manzana: saber y evidencia Documentado. Bengoa, Historia 
+OK    mapuches hoyos_estacas: saber y evidencia Documentado. Hoyos encubiertos
+OK    mapuches lawen: saber y evidencia Documentado tardío: Mösbach, B
+OK    mapuches arreo_tropilla: saber y evidencia Documentado. León Solís, Maloq
+OK    mapuches makun: saber y evidencia Documentado. León Solís (1990/
+OK    mapuches kawellu: saber y evidencia Documentado. Boccara, Los venc
+OK    mapuches werken_pron: saber y evidencia Documentado. Boccara (2007); e
+OK    mapuches: 8 mejoras propias (2 · 3 · 3) { 2: 2, 3: 3, 4: 3 }
+OK    mapuches: la unidad infanteria_montada existe 
+OK    mapuches infanteria_montada: saber y evidencia 
+OK    mapuches infanteria_montada: glifo propio weichafe_montado
+OK    mapuches: la unidad incendiarios existe 
+OK    mapuches: la unidad kona_waiki existe 
+OK    mapuches kona_waiki: saber y evidencia 
+OK    mapuches kona_waiki: glifo propio kona_waiki
+OK    mapuches: unidades propias en la II, la III y la IV [2, 3, 4]
+OK    guaranies kokue: saber y evidencia Documentado y arqueológico. Mo
+OK    guaranies canoas_rio: saber y evidencia Documentado. Cartas anuas de l
+OK    guaranies poha_nana: saber y evidencia Documentado; la autoría, debat
+OK    guaranies oga_takuara: saber y evidencia Documentado. Montoya (1639); S
+OK    guaranies defensa_mborore: saber y evidencia Documentado. Cartas anuas; Fur
+OK    guaranies kaa_plantada: saber y evidencia Documentado; la técnica, debat
+OK    guaranies uy_hata: saber y evidencia Documentado. Schmidl (1567); M
+OK    guaranies imprenta: saber y evidencia Documentado. Furlong, Historia
+OK    guaranies: 8 mejoras propias (2 · 3 · 3) { 2: 2, 3: 3, 4: 3 }
+OK    guaranies: la unidad yga existe 
+OK    guaranies yga: saber y evidencia 
+OK    guaranies yga: glifo propio canoa
+OK    guaranies: la unidad catapulta existe 
+OK    guaranies: la unidad caballeria_mision existe 
+OK    guaranies caballeria_mision: saber y evidencia 
+OK    guaranies caballeria_mision: glifo propio jinete_lanza
+OK    guaranies: la unidad kaaguygua existe 
+OK    guaranies kaaguygua: saber y evidencia 
+OK    guaranies kaaguygua: glifo propio kaaguygua
+OK    guaranies: unidades propias en la II, la III y la IV [2, 3, 4]
+OK    coseletes: +1 contra cuerpo a cuerpo 1 -> 2
+OK    trigo y manzana: +15 % granjas 
+OK    hoyo: pide la mejora Requiere Hoyos y estacas
+OK    hoyo: con la mejora se cava 
+OK    hoyo: oculto al rival lejos 
+OK    hoyo: se ve a 2 casillas 
+OK    hoyo: daña y frena 120 -> 80
+OK    hoyo: se pierde 
+OK    hoyo: el doble al montado 80
+OK    lawen: el relevo cura más 6 -> 7 por segundo
+OK    arreo: el corral guarda más 6 -> 7
+OK    arreo: una cabeza más por minuto 
+OK    makuñ: 4 de riqueza por minuto por lof 1 lof, +39 en 10 minutos
+OK    makuñ: el mercado paga más 
+OK    kawellu: vida de los montados 170 -> 178
+OK    kawellu: el jinete cuesta menos { "alimento": 80, "riqueza": 55 } -> { "alimento": 72, "riqueza": 49 }
+OK    werken y pron: +10 % de velocidad 157 -> 173
+OK    weichafe montado: anda como jinete 207 > 173
+OK    weichafe montado: tarda en desmontar llega 14, pega 25
+OK    weichafe montado: la lanza no le hace el extra contra caballería 
+OK    kona de waiki: la carga pega más y derriba 34 contra 26
+OK    kona de waiki: +8 contra montados 
+OK    kokue: +15 % en las rozas 
+OK    kokue: la roza dura 25 % más 500 -> 625
+OK    ygá: más rápido en el vado 121 -> 157
+OK    ygá: carga junto al agua 
+OK    pohã ñana: sana junto al monte 20 -> 21
+OK    óga de takuára: casa con menos madera { "madera": 50 } -> { "madera": 40 }
+OK    óga de takuára: obra y potirõ 
+OK    Mbororé: cañón +25 % 18 -> 22
+OK    Mbororé: cañón +1 casilla 
+OK    Mbororé: arquero junto al agua +1 1, 0
+OK    u'y hatã: +1 de ataque 
+OK    imprenta: pide el hito de la misión Requiere el hito Pueblo de misión
+OK    imprenta: con la misión, en el taller 
+OK    ka'a plantada: en la misión 
+OK    imprenta: −15 % en las mejoras { "alimento": 200, "madera": 300 } -> { "alimento": 170, "madera": 255 }
+OK    ka'a plantada: +25 % yerba 
+OK    aty: emboscada +25 % 
+OK    ka'aguygua: +2 junto al monte 3, 1
+OK    canoa: hace falta agua cerca Hace falta agua a 5 casillas o menos
+OK    canoa: suben 2273 2273
+OK    canoa: llega por el agua a 1000 de (70, 13)
+OK    canoa: bajan en la orilla 69,12
+OK    canoa: si se hunde, nadan 
+SABERES: OK

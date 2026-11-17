@@ -20,6 +20,58 @@
  "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",
  "escuela": {"nombre": "Trawün de los weupife", "edificios": ["parlamento"], "desc": "Reunión civil donde los weupife, los oradores del parlamento, transmitían el saber de los linajes (Febrés, 1765 [verificar las entradas]; Bengoa, 2003). No es el ngillatun, que es ceremonia. Se investiga en el lof principal y en el parlamento."},
  "tecnologias": {"escuela_registros": {"nombre": "El pron", "desc": "La cuerda de nudos para contar los días hasta la junta [verificar la grafía]. No hay archivo escrito y no se inventa uno."}},
+ "_doc_saberes": "--- paso 6 --- Saberes propios (docs/diseno/27, §3.2): 8 mejoras (2 en la II, 3 en la III, 3 en la IV) y 3 unidades. Cada una lleva `desc` (qué hace y el saber) y `evidencia` (nivel y fuente), que la ficha muestra. Nada sagrado: ni machi, ni rewe, ni kultrun, ni foye. `propia`: la cuenta el modelo (tools/modelo_progreso.py) y la compra la IA según `ia_propias`.",
+ "tecnologias_nuevas": {
+  "coseletes_cuero": {"propia": true, "eje": "militar", "nombre": "Coseletes de cuero", "en": {"tipo": "cuartel"}, "edificio": "cuartel", "ranura": 0, "edad_min": 2, "costo": {"alimento": 75, "riqueza": 75}, "tiempo_ms": 30000, "icono": "coselete",
+   "efectos": [{"tipo": "armadura", "contra": "cuerpo", "funciones": ["choque"], "n": 1}],
+   "desc": "Corazas y cascos de cuero crudo, de lobo marino y después de vacuno, endurecidos al fuego: el weichafe y el jinete aguantan mejor el golpe.",
+   "evidencia": "Documentado. Góngora Marmolejo, Historia de Chile (1575); González de Nájera, Desengaño y reparo de la guerra del Reino de Chile (1614) [verificar el pasaje]. Ercilla, La Araucana (1569), detrás, porque es poesía épica."},
+  "trigo_manzana": {"propia": true, "eje": "economia", "nombre": "Trigo y manzana", "en": {"deposito": "alimento"}, "edificio": "lof", "ranura": 2, "edad_min": 2, "costo": {"alimento": 50, "madera": 125}, "tiempo_ms": 30000, "icono": "trigo",
+   "efectos": [{"tipo": "tasa", "recurso": "granja", "pct": 15}],
+   "desc": "Adopción propia y muy rápida del trigo, la manzana y el ganado que llegaron con la invasión. Que «no fue aculturación sino elección» es la lectura de Bengoa, Boccara y Pinto. Los manzanares del sur aparecen en Rosales.",
+   "evidencia": "Documentado. Bengoa, Historia de los antiguos mapuches del sur (2003); Pinto Rodríguez, La formación del Estado y la nación, y el pueblo mapuche (2000) [verificar el año]; Rosales (c. 1674)."},
+  "hoyos_estacas": {"propia": true, "eje": "mecanica", "nombre": "Hoyos y estacas", "en": {"tipo": "corral"}, "edificio": "corral", "ranura": 2, "edad_min": 3, "costo": {"madera": 150, "riqueza": 100}, "tiempo_ms": 35000, "icono": "estacas",
+   "efectos": [{"tipo": "habilita", "edificios": ["hoyo"]}],
+   "desc": "La gente cava hoyos tapados con ramas y estacas en el fondo: el que cae se lastima y se frena, el caballo más. El rival los ve recién a 2 casillas.",
+   "evidencia": "Documentado. Hoyos encubiertos contra la caballería en el fuerte de Lautaro en Peteroa y en Mataquito (1556–1557): Góngora Marmolejo (1575); Vivar, Crónica (1558) [verificar los pasajes]."},
+  "lawen": {"propia": true, "eje": "militar", "nombre": "Lawen (remedios)", "en": {"tipo": "cuartel"}, "edificio": "cuartel", "ranura": 2, "edad_min": 3, "costo": {"alimento": 150, "riqueza": 100}, "tiempo_ms": 40000, "icono": "lawen",
+   "efectos": [{"tipo": "relevo_pct", "pct": 25}],
+   "desc": "Herbolaria para las heridas: el matico (Buddleja globosa; pañil o palngiñ [verificar la grafía]) y otras plantas que cierran cortes. El relevo cura 25 % más. Solo el remedio: el límite entre remedio y ceremonia lo pone la comunidad (consulta). El sanador (ampive) llega con el resto del paso 4.",
+   "evidencia": "Documentado tardío: Mösbach, Botánica indígena de Chile (1992), recoge saber del siglo XX. Para la época, Ovalle (1646) y Rosales (c. 1674) sobre la cura de heridas [verificar]."},
+  "arreo_tropilla": {"propia": true, "eje": "mecanica", "nombre": "Arreo en tropilla", "en": {"tipo": "corral"}, "edificio": "corral", "ranura": 0, "edad_min": 3, "costo": {"alimento": 150, "madera": 150}, "tiempo_ms": 40000, "icono": "tropilla",
+   "efectos": [{"tipo": "arreo_extra", "n": 1}, {"tipo": "corral_pct", "pct": 25}],
+   "desc": "Manejo del ganado en tropilla y la ruta de arreo por la cordillera (las rastrilladas), la que se haría grande a fines del siglo XVII y en el XVIII. El malón arrea una cabeza más por minuto y el corral guarda 25 % más.",
+   "evidencia": "Documentado. León Solís, Maloqueros y conchavadores en Araucanía y las Pampas, 1700–1800 (1990/1991) [verificar el año]."},
+  "makun": {"propia": true, "eje": "economia", "nombre": "Makuñ (el poncho)", "en": {"tipo": "lof"}, "edificio": "lof", "ranura": 6, "edad_min": 4, "costo": {"alimento": 200, "madera": 200}, "tiempo_ms": 50000, "icono": "poncho",
+   "efectos": [{"tipo": "renta", "tipos": ["lof"], "recurso": "riqueza", "por_min": 4}, {"tipo": "mercado_venta_pct", "pct": 20}],
+   "desc": "El poncho de lana fue la gran mercancía mapuche de la frontera: miles por año hacia Chile y las pampas en el siglo XVIII, con raíz en el chilihueque. Lo tejían las mujeres. Cada lof da 4 de riqueza por minuto y lo que se vende en el mercado rinde 20 % más.",
+   "evidencia": "Documentado. León Solís (1990/1991); Villalobos, Vida fronteriza en la Araucanía (1995); Bengoa (2003)."},
+  "kawellu": {"propia": true, "eje": "militar", "nombre": "Kawellu (remonta propia)", "en": {"tipo": "corral"}, "edificio": "corral", "ranura": 1, "edad_min": 4, "costo": {"alimento": 300, "riqueza": 200}, "tiempo_ms": 50000, "icono": "remonta",
+   "efectos": [{"tipo": "vida_pct", "lineas": ["montados"], "pct": 5}, {"tipo": "costo_unidad_pct", "tipos": ["jinete", "kona_waiki", "infanteria_montada"], "pct": -10}],
+   "desc": "Cría propia de caballos desde fines del siglo XVI: el caballo dejó de ser botín para ser economía. +5 % de vida a los montados y la gente a caballo cuesta 10 % menos.",
+   "evidencia": "Documentado. Boccara, Los vencedores (2007); Villalobos (1995), cuya tesis de la «vida fronteriza» minimiza la guerra y está discutida."},
+  "werken_pron": {"propia": true, "eje": "mecanica", "nombre": "Werken y pron", "en": {"tipo": "lof"}, "edificio": "lof", "ranura": 7, "edad_min": 4, "costo": {"alimento": 250, "riqueza": 250}, "tiempo_ms": 50000, "icono": "pron",
+   "efectos": [{"tipo": "velocidad_pct", "funciones": ["choque", "distancia", "linea"], "pct": 10}],
+   "desc": "Mensajeros entre lof (werken) y alianzas por linaje: mando sin centro. El pron era la cuerda de nudos para contar los días hasta una junta o un malón. La gente llega a tiempo a la junta: la tropa va 10 % más rápido.",
+   "evidencia": "Documentado. Boccara (2007); el pron, Rosales (c. 1674) y Febrés (1765) [verificar el pasaje y la grafía: pron o prom]."}
+ },
+ "ia_propias": {"_doc": "Orden de compra de la IA (sim_ai.gd, _own_buys): la primera que sirve y alcanza; `tropa`: hace falta esa cantidad de tropa de esas líneas o tipos; `corrales`: tantos corrales; `trampas`: hoyos que cava después de comprar hoyos_estacas.",
+  "orden": [
+   {"tec": "coseletes_cuero", "tropa": {"lineas": ["choque", "montados"], "n": 4}},
+   {"tec": "trigo_manzana", "granjas": 4},
+   {"tec": "lawen", "tropa": {"n": 10}},
+   {"tec": "hoyos_estacas"},
+   {"tec": "arreo_tropilla", "corrales": 2},
+   {"tec": "kawellu", "tropa": {"lineas": ["montados"], "n": 4}},
+   {"tec": "werken_pron", "tropa": {"n": 15}},
+   {"tec": "makun"}
+  ],
+  "trampas": 6,
+  "unidades": [
+   {"tipo": "kona_waiki", "max_pct": 30},
+   {"tipo": "infanteria_montada", "max_pct": 25}
+  ]
+ },
  "edades": [
   "Lof",
   "Rewe",
@@ -251,6 +303,9 @@
     "riqueza": 100
    }
   },
+  "hoyo": {"nombre": "Hoyo con estacas", "edad_min": 3, "requiere_tec": "hoyos_estacas", "tam": [1, 1], "pv": 40, "armadura": 0, "costo": {"madera": 20}, "tiempo_ms": 6000, "vision": 1000, "transitable": true, "oculto": true, "deteccion": 2000, "sin_blanco_automatico": true, "no_cuenta": true,
+   "trampa": {"danio": 40, "montado_pct": 200, "frena_ms": 4000},
+   "desc": "Hoyo tapado con ramas y estacas en el fondo (Peteroa y Mataquito, 1556–1557). Al que cae le hace 40 de daño (el doble a los montados) y lo frena 4 s; después queda abierto y se pierde. El rival lo ve recién a 2 casillas."},
   "weichan": { "eje": "militar",
    "nombre": "Gran weichan",
    "edad_min": 1,
@@ -297,10 +352,17 @@
    "weichan"
   ]
  ],
- "construye": ["casa", "granja", "cuartel", "lof", "corral", "fortaleza", "empalizada", "puerta", "mercado", "maravilla"],
- "produce": {"cuartel": ["lancero", "hondero", "incendiarios"], "lof": ["aldeano", "explorador", "guerrero"], "corral": ["jinete"]},
+ "construye": ["casa", "granja", "cuartel", "lof", "corral", "fortaleza", "empalizada", "puerta", "mercado", "hoyo", "maravilla"],
+ "produce": {"cuartel": ["lancero", "hondero", "incendiarios"], "lof": ["aldeano", "explorador", "guerrero"], "corral": ["jinete", "infanteria_montada", "kona_waiki"]},
  "unidades_nuevas": {
   "incendiarios": {"nombre": "Incendiarios", "funcion": "asedio", "edad_min": 3, "pob": 1, "costo": {"alimento": 50, "madera": 40, "riqueza": 30}, "tiempo_ms": 20000, "pv": 90, "armadura": 0, "armadura_distancia": 0, "ataque": 12, "alcance": 450, "cadencia_ms": 2000, "velocidad": 1400, "vision": 7000, "radio": 240, "solo_edificios": true, "contadores": {"edificio": 150}, "bono_material": {"madera": 300, "piedra": 60}, "recibe": {"choque": 100, "distancia": 100, "linea": 100, "edificio": 100}, "desc": "Ocupan la ranura del asedio de área: antorchas y fuego contra los techos de paja y las empalizadas. Triple daño contra los edificios de madera y poco contra la piedra. Son gente a pie, no máquinas: la distancia los daña entero. La quema de las ciudades y fuertes del sur en el gran alzamiento (1598-1604): Rosales (c. 1674); González de Nájera (1614). Si aparece el pasaje de las flechas incendiarias, pasan a llamarse flecheros de fuego."},
+  "infanteria_montada": {"nombre": "Weichafe montado", "propia": true, "funcion": "choque", "edad_min": 2, "pob": 1, "costo": {"alimento": 75, "riqueza": 30}, "tiempo_ms": 20000, "pv": 120, "armadura": 1, "armadura_distancia": 0, "ataque": 11, "alcance": 450, "cadencia_ms": 1250, "velocidad": 2100, "vision": 8500, "radio": 260, "a_caballo": true, "desmonta_ms": 1000, "desmonta_tras_ms": 5000,
+   "desc": "Infantería montada: el weichafe va a caballo y se baja para pelear. Anda como jinete y pelea como guerrero a pie (la lanza contra caballería no le hace el daño extra); tarda 1 s en desmontar cuando llega a pelear (después de 5 s sin combate). Una adaptación propia de fines del siglo XVI y del XVII.",
+   "evidencia": "Documentado. González de Nájera (1614); Boccara, Los vencedores (2007)."},
+  "kona_waiki": {"nombre": "Kona de waiki", "propia": true, "elite": true, "funcion": "linea", "montado": true, "edad_min": 4, "pob": 2, "costo": {"alimento": 120, "riqueza": 90}, "tiempo_ms": 26000, "pv": 210, "armadura": 2, "armadura_distancia": 2, "ataque": 13, "alcance": 750, "cadencia_ms": 1500, "velocidad": 2000, "vision": 9000, "radio": 380, "bono": {"montado": 8},
+   "carga": {"extra": 8, "frena_ms": 1500, "espera_ms": 5000},
+   "desc": "Lancero montado pesado de la edad IV: la lanza larga de colihue (waiki; huaiqui en las crónicas) a caballo. +8 contra los montados; la carga (el primer golpe después de 5 s sin pelear) pega 8 más y derriba: frena 1,5 s. Kona es el mocetón, el guerrero joven.",
+   "evidencia": "Documentado. Ovalle (1646); Rosales (c. 1674) [verificar el largo de la lanza]."},
   "cabeza": { "nombre": "Cabeza de ganado", "funcion": "ganado", "edad_min": 1, "pob": 0, "costo": {}, "tiempo_ms": 0, "pv": 60, "armadura": 0, "ataque": 0, "alcance": 0, "cadencia_ms": 1000, "velocidad": 1100, "vision": 3000, "radio": 260, "no_seleccionable": true, "desc": "Ganado arreado en un malón: camina solo al corral propio más cercano. Se lo puede matar en el camino." } },
  "modulos": {
   "arreo": { "danio_por_cabeza": 150, "max_por_min": 3, "comida_si_lleno": 40, "cuenta_disputado": 16, "unidad": "cabeza" },

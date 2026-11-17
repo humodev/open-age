@@ -156,6 +156,8 @@ func think() -> void:
 	_buildings(p, vill, centro, by_type, saving)
 	var held_levels := _levels(p, army, by_type, saving, _threat(centro) != null)
 	var held_late := _late_buys(p, army, by_type, saving, _threat(centro) != null) # --- paso 3 ---
+	var held_own := _own_buys(p, army, by_type, saving, centro) if held_late.is_empty() else {} # --- paso 6 ---
+	_dig_traps(p, vill, centro, by_type, saving) # --- paso 6 ---
 	_production(p, vill, army, centro, by_type, saving)
 	var held_smith := _smith(p, army, by_type, saving) if held_levels.is_empty() else {}
 	_research(p, by_type, saving)
@@ -163,6 +165,7 @@ func think() -> void:
 	_engine(p, vill, centro, by_type, saving)
 	_reserve(p, -1, held_levels)
 	_reserve(p, -1, held_late) # --- paso 3 ---
+	_reserve(p, -1, held_own) # --- paso 6 ---
 	_reserve(p, -1, held_smith)
 	_reserve(p, -1, held) # --- equipos ronda 3 ---
 	_animals(centro)
@@ -349,7 +352,7 @@ func _research(p: Dictionary, by_type: Dictionary, saving: bool) -> void:
 	techs.sort_custom(func(a: String, b: String) -> bool: return bool(sim.dp(player).tecnologias[a].get("motor", false)) and not bool(sim.dp(player).tecnologias[b].get("motor", false)))
 	for tech: String in techs:
 		var t: Dictionary = sim.dp(player).tecnologias[tech]
-		if sim.research_block(player, tech) != "":
+		if sim.research_block(player, tech) != "" or t.get("propia", false): # --- paso 6 --- las propias, en _own_buys
 			continue
 		var surplus := true
 		for k in t["costo"]:
@@ -407,6 +410,124 @@ func _late_buys(p: Dictionary, army: Array[SimEntity], by_type: Dictionary, savi
 			p["res"][r] = int(p["res"][r]) - int(cost[r])
 		return held
 	return {}
+
+
+## --- paso 6 --- Saberes propios (docs/diseno/27, §3; data/civs → ia_propias.orden; reglas.ia_propias):
+## en el orden del pueblo, la primera que todavía no compró, que sirve (las condiciones de `_own_ok`),
+## que se puede investigar en un edificio suyo y que alcanza con el costo más la reserva (ahorrando
+## para el hito o la maravilla, además de lo que pide la meta). Si ninguna alcanza, desde la edad
+## `junta_desde_edad` aparta lo que ya tiene para la primera (salvo con la base atacada o ahorrando),
+## como los niveles. Una por turno; su costo queda apartado hasta el final del turno.
+func _own_buys(p: Dictionary, army: Array[SimEntity], by_type: Dictionary, saving: bool, centro: SimEntity) -> Dictionary:
+	var own: Dictionary = sim.dp(player).civ.get("ia_propias", {})
+	var cfg: Dictionary = sim.data.reglas.get("ia_propias", {})
+	if own.is_empty() or cfg.is_empty() or not level.get("investiga", false):
+		return {}
+	var techs: Dictionary = sim.dp(player).tecnologias
+	if saving and not own.get("ahorrando", true): # el pueblo no compra saberes mientras ahorra para el hito
+		return {}
+	var goal: Dictionary = _goal_cost(p) if saving else {}
+	var first: Dictionary = {}
+	for item: Dictionary in own.get("orden", []):
+		var tech: String = item["tec"]
+		if not techs.has(tech) or sim.players[player]["techs"].has(tech) or sim.players[player]["pending"].has(tech):
+			continue
+		if int(p["age"]) < int(techs[tech].get("edad_min", 1)) or not _own_ok(item, army, by_type, centro):
+			continue
+		var where: SimEntity = null
+		for k in by_type:
+			for b: SimEntity in by_type[k]:
+				if b.built and b.queue.size() < 2 and sim.tech_here(techs[tech], b) and where == null:
+					where = b
+		if where == null or sim.research_block(player, tech) != "":
+			continue
+		var cost := sim.tech_cost(player, tech)
+		if first.is_empty():
+			first = cost
+		var ok := true
+		for r in cost:
+			ok = ok and int(p["res"].get(r, 0)) >= int(cost[r]) + int(cfg.get("reserva", 0)) + int(goal.get(r, 0))
+		if not ok:
+			continue
+		sim.push_command({"t": "research", "player": player, "building": where.id, "tech": tech})
+		var held := {}
+		for r in cost:
+			held[r] = int(cost[r])
+			p["res"][r] = int(p["res"][r]) - int(cost[r])
+		return held
+	if first.is_empty() or saving or int(p["age"]) < int(cfg.get("junta_desde_edad", 99)) or _threat(centro) != null:
+		return {}
+	var held_j := {}
+	for r in first:
+		var take := mini(int(first[r]), int(p["res"].get(r, 0)))
+		held_j[r] = take
+		p["res"][r] = int(p["res"][r]) - take
+	return held_j
+
+
+## --- paso 6 --- Las condiciones de una compra propia: `tropa` ({lineas, tipos, n}: tanta tropa de
+## esas líneas o tipos; sin lista, toda), `granjas` y `corrales` (cuántas terminadas), `agua` (agua a
+## 10 casillas de la capital).
+func _own_ok(item: Dictionary, army: Array[SimEntity], by_type: Dictionary, centro: SimEntity) -> bool:
+	if item.has("tropa"):
+		var tr: Dictionary = item["tropa"]
+		var lines: Array = tr.get("lineas", [])
+		var types: Array = tr.get("tipos", [])
+		var n := 0
+		for u in army:
+			if (lines.is_empty() and types.is_empty()) or lines.has(SimData.line_of(u.def)) or types.has(u.type):
+				n += 1
+		if n < int(tr["n"]):
+			return false
+	for k in [["granjas", "granja"], ["corrales", "corral"]]:
+		if item.has(k[0]):
+			var built := 0
+			for b: SimEntity in by_type.get(k[1], []):
+				built += 1 if b.built else 0
+			if built < int(item[k[0]]):
+				return false
+	if item.get("agua", false) and not sim._near_water(centro.tx, centro.ty, centro.w, centro.h, 10):
+		return false
+	return true
+
+
+## --- paso 6 --- Hoyos con estacas (mapuches): con la mejora comprada, cava de a uno por turno
+## hasta `ia_propias.trampas` del pueblo, en un abanico delante del centro hacia el rival
+## (reglas.ia_propias: trampas_adelante, trampas_ancho). No mientras ahorra para el hito.
+func _dig_traps(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_type: Dictionary, saving: bool) -> void:
+	var own: Dictionary = sim.dp(player).civ.get("ia_propias", {})
+	var cfg: Dictionary = sim.data.reglas.get("ia_propias", {})
+	var want := int(own.get("trampas", 0))
+	if want <= 0 or saving or vill.is_empty() or not level.get("investiga", false):
+		return
+	var dd := sim.dp(player)
+	var trap := ""
+	for k in dd.edificios:
+		if dd.edificios[k].has("trampa"):
+			trap = k
+	if trap == "" or sim.build_block(player, trap) != "" or int(p["age"]) < int(dd.edificios[trap].get("edad_min", 1)):
+		return
+	var have: int = (by_type.get(trap, []) as Array).size()
+	if have >= want or not sim.can_afford(player, sim.build_cost(player, trap)):
+		return
+	var eb := Vector2i(centro.tx, centro.ty)
+	var best := 1 << 60
+	for j in mini(sim.players.size(), sim.bases.size()):
+		if sim.enemies(player, j):
+			var d := Sim.dist(sim.bases[j].x * P, sim.bases[j].y * P, centro.x, centro.y)
+			if d < best:
+				best = d
+				eb = sim.bases[j]
+	var c := Vector2i(centro.tx + centro.w / 2, centro.ty + centro.h / 2)
+	var dir := Vector2i(signi(eb.x - c.x), signi(eb.y - c.y))
+	var ahead := int(cfg.get("trampas_adelante", 8))
+	var spread := int(cfg.get("trampas_ancho", 6))
+	var side := Vector2i(-dir.y, dir.x)
+	var off := (have % maxi(1, spread)) - spread / 2
+	var at := c + dir * ahead + side * off * 2
+	var site := _site_near(trap, at, 0, 0)
+	if site.x >= 0:
+		_build_at(trap, site, vill, 1)
 
 
 ## --- paso 3 --- ¿Le sirve a este pueblo? La mejora de una línea que no entrena en ningún
@@ -1608,6 +1729,28 @@ func _counter_order(p: Dictionary) -> Array[String]:
 	if counts[top] == 0:
 		pick = ["hondero", "guerrero", "lancero"][(sim.tick / 160) % 3]
 	var out: Array[String] = []
+	# --- paso 6 --- Las unidades propias (ia_propias.unidades) primero, mientras no pasen su
+	# `max_pct` del ejército; `contra_montados`: solo si el rival tiene al menos tantos montados.
+	var own: Dictionary = sim.dp(player).civ.get("ia_propias", {})
+	if not own.is_empty():
+		var mine := {}
+		var army_n := 0
+		var foe_mounted := 0
+		for e in sim.actives:
+			if not e.alive or not e.is_unit() or not e.is_military():
+				continue
+			if e.owner == player:
+				army_n += 1
+				mine[e.type] = int(mine.get(e.type, 0)) + 1
+			elif e.owner >= 0 and sim.enemies(player, e.owner) and (e.def.get("montado", false) or e.def.get("elefante", false)):
+				foe_mounted += 1
+		for it: Dictionary in own.get("unidades", []):
+			var ty: String = it["tipo"]
+			if int(mine.get(ty, 0)) * 100 >= int(it.get("max_pct", 100)) * maxi(1, army_n):
+				continue
+			if foe_mounted < int(it.get("contra_montados", 0)):
+				continue
+			out.append(ty)
 	for t: String in sim.dp(player).civ.get("ia_unidades", []):
 		if (sim.tick / 50 + out.size()) % 3 == 0:
 			out.append(t)
