@@ -55,7 +55,11 @@ Contexto: hoy la edad IV no trae unidades nuevas, hay 18 mejoras compartidas y n
   - Todas entre 40 y 66 %: el paso 7 queda.
   - Palmares sube 6 puntos, dentro del ruido (±7), pero queda en el borde de la banda: en observación. Si en el torneo del par 1 del paso 6 sigue en 66 % o más, se diagnostica con `tools/civ_diag.gd`.
   - El torneo es de 30 minutos, así que no mide la maravilla. | [10-paso-7-maravilla-y-final.md](10-paso-7-maravilla-y-final.md) |
-| 11 | **Paso 6, par 1: en pausa por el límite de uso.** El agente estaba midiendo los dos pueblos contra todos los rivales. Lo implementado quedó sin commitear (29 archivos) en el worktree `agent-ac5d75c71d6dc49f5`, y se retoma desde ahí | en pausa |
+| 11 | **Paso 6, par 1 integrado (2d90842): mapuches y guaraníes**, con 8 mejoras y 3 unidades propias cada uno.
+  - **Mapuches:** hoyos con estacas, weichafe montado y kona de waiki.
+  - **Guaraníes:** canoa ygá, caballería de las misiones y ka'aguygua.
+  - **En `civ_diag`:** los mapuches pasan de 62 a 58 % y los guaraníes de 40 a 30 %, una caída sin explicar.
+  - **Pruebas:** mismo hash; saberes (82 comprobaciones), casillas, grilla, íconos, campañas y autotest OK. Torneo 38. | [11-paso-6-par-1.md](11-paso-6-par-1.md) |
 | 12 | Decisión: si un paso rompe el balance, queda diseñado como contenido y se retoma con más contenido (modelos, animaciones) | por hacer |
 
 ## Pedido del autor: saberes de los pueblos
