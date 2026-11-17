@@ -140,13 +140,15 @@ func think() -> void:
 	_economy(p, vill, centro, saving)
 	_buildings(p, vill, centro, by_type, saving)
 	var held_levels := _levels(p, army, by_type, saving, _threat(centro) != null)
-	var held_late := _late_buys(p, army, by_type, saving) # --- paso 3 ---
+	var held_late := _late_buys(p, army, by_type, saving, _threat(centro) != null) # --- paso 3 ---
 	_production(p, vill, army, centro, by_type, saving)
+	var held_smith := _smith(p, army, by_type, saving) if held_levels.is_empty() else {}
 	_research(p, by_type, saving)
 	_trade(p, by_type)
 	_engine(p, vill, centro, by_type, saving)
 	_reserve(p, -1, held_levels)
 	_reserve(p, -1, held_late) # --- paso 3 ---
+	_reserve(p, -1, held_smith)
 	_reserve(p, -1, held) # --- equipos ronda 3 ---
 	_animals(centro)
 	_alarm(p, vill, army, centro)
@@ -175,8 +177,9 @@ func _hito_type(p: Dictionary) -> String:
 
 
 ## Lo que reemplaza al bono de ataque por edad (docs/diseno/27, paso 1; reglas.ia_niveles), en
-## todas las dificultades y antes que la tropa: lo que tiene `ia_prioridad` (armas_1) y los
-## niveles veterano y élite de las líneas con más tropa. Una compra por turno; su costo queda
+## todas las dificultades y antes que la tropa: lo que tiene `ia_prioridad` (la herrería I de
+## ataque, cuerpo a cuerpo y distancia) y los niveles veterano y élite de las líneas con más
+## tropa. La herrería (paso 2) va después, en `_smith`. Una compra por turno; su costo queda
 ## apartado hasta el final del turno (la orden se paga en el tick siguiente), así la tropa no
 ## gasta la misma plata. Devuelve lo apartado.
 func _levels(p: Dictionary, army: Array[SimEntity], by_type: Dictionary, saving: bool, threatened: bool) -> Dictionary:
@@ -253,6 +256,63 @@ func _levels(p: Dictionary, army: Array[SimEntity], by_type: Dictionary, saving:
 	return {}
 
 
+## Herrería (docs/diseno/27, paso 2; reglas.ia_niveles.herreria), después de los niveles y de la
+## tropa, y antes de las demás investigaciones; no en un turno en que se compró o se juntó para
+## un nivel, ni mientras ahorra para el hito, ni en las dificultades que no investigan. El ataque
+## de la clase con más tropa propia (cuerpo a cuerpo o distancia) y la armadura contra la clase
+## con más tropa rival a la vista, la tanda que falte de cada uno. Las otras dos quedan para
+## `_research`, con lo que sobra. Sin juntar: compra si alcanza el costo más la reserva.
+## Devuelve lo apartado (la orden se paga en el tick siguiente).
+func _smith(p: Dictionary, army: Array[SimEntity], by_type: Dictionary, saving: bool) -> Dictionary:
+	var cfg: Dictionary = sim.data.reglas.get("ia_niveles", {}).get("herreria", {})
+	if cfg.is_empty() or saving or not level.get("investiga", false) or int(p["age"]) < 2:
+		return {}
+	var count := {}
+	for u in army:
+		var l := SimData.line_of(u.def)
+		if l != "":
+			count[l] = int(count.get(l, 0)) + 1
+	var ranged := int(count.get("distancia", 0)) + int(count.get("polvora", 0))
+	var melee := 0
+	for l in count:
+		melee += int(count[l])
+	melee -= ranged
+	var foe_ranged := 0
+	var foe_melee := 0
+	for e in sim.actives:
+		if e.alive and e.owner >= 0 and e.is_unit() and e.is_military() and sim.enemies(player, e.owner) and sim.fog.is_visible(player, e):
+			if sim.is_ranged(e):
+				foe_ranged += 1
+			else:
+				foe_melee += 1
+	var groups: Array[String] = ["ataque_distancia" if ranged > melee else "ataque_cuerpo", "armadura_distancia" if foe_ranged > foe_melee else "armadura_cuerpo"]
+	groups = groups.slice(0, int(cfg.get("grupos", 2)))
+	var reserve := int(cfg.get("reserva", 0))
+	var techs: Dictionary = sim.dp(player).tecnologias
+	for g in groups:
+		for tech: String in techs:
+			if techs[tech].get("herreria", "") != g or sim.research_block(player, tech) != "":
+				continue
+			var cost: Dictionary = techs[tech]["costo"]
+			var ok := true
+			for k in cost:
+				if int(p["res"].get(k, 0)) < int(cost[k]) + reserve:
+					ok = false
+			if not ok:
+				break
+			for k in by_type:
+				for b: SimEntity in by_type[k]:
+					if b.built and b.queue.size() < 2 and sim.tech_here(techs[tech], b):
+						sim.push_command({"t": "research", "player": player, "building": b.id, "tech": tech})
+						var held := {}
+						for r in cost:
+							held[r] = int(cost[r])
+							p["res"][r] = int(p["res"][r]) - int(cost[r])
+						return held
+			break
+	return {}
+
+
 func _research(p: Dictionary, by_type: Dictionary, saving: bool) -> void:
 	if saving or not level["investiga"]:
 		return
@@ -279,10 +339,10 @@ func _research(p: Dictionary, by_type: Dictionary, saving: bool) -> void:
 
 ## --- paso 3 --- Economía del final y escuela de la IV (docs/diseno/27, §1.1, §1.3 y §4.3;
 ## reglas.ia_compras_tardias): en el orden de los datos, una por turno, cuando alcanza el costo
-## (con el descuento de los registros) más la reserva. No junta: si la primera que sirve no
-## alcanza, espera a la próxima vuelta sin pasar a otra más cara. Su costo queda apartado hasta
+## (con el descuento de los registros) más la reserva. Si la primera que sirve no alcanza, no
+## pasa a otra: espera, y desde `junta_desde_edad` junta para ella. Su costo queda apartado hasta
 ## el final del turno, como el de los niveles.
-func _late_buys(p: Dictionary, army: Array[SimEntity], by_type: Dictionary, saving: bool) -> Dictionary:
+func _late_buys(p: Dictionary, army: Array[SimEntity], by_type: Dictionary, saving: bool, threatened: bool) -> Dictionary:
 	var cfg: Dictionary = sim.data.reglas.get("ia_compras_tardias", {})
 	if cfg.is_empty() or not level["investiga"] or (saving and not cfg.get("ahorrando", false)):
 		return {}
@@ -303,7 +363,16 @@ func _late_buys(p: Dictionary, army: Array[SimEntity], by_type: Dictionary, savi
 		var cost := sim.tech_cost(player, tech)
 		for r in cost:
 			if int(p["res"].get(r, 0)) < int(cost[r]) + reserve:
-				return {}
+				# En la IV junta, como los niveles: aparta lo que ya tiene de ese costo para que
+				# la tropa no lo gaste (salvo con la base atacada). Sin esto, en las partidas de
+				# prueba la IA llegaba a la IV y no compraba nada en diez minutos (proceso/26, 07).
+				var held_j := {}
+				if cfg.get("junta", false) and int(p["age"]) >= int(cfg.get("junta_desde_edad", 4)) and not threatened:
+					for rr in cost:
+						var take := mini(int(cost[rr]), int(p["res"].get(rr, 0)))
+						held_j[rr] = take
+						p["res"][rr] = int(p["res"][rr]) - take
+				return held_j
 		sim.push_command({"t": "research", "player": player, "building": where.id, "tech": tech})
 		var held := {}
 		for r in cost:

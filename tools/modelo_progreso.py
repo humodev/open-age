@@ -8,8 +8,12 @@ gasto típico de cada edad, en tres diseños:
     el mismo que hoy conservan los edificios: `edades.json → bono_ataque_edificio`), las mejoras
     sin los efectos `ataque_pct` (`tecnologias.json`) y el hito militar de cada edad (`eje: militar`).
   * PASO 1 (en el juego desde proceso/26, paso 5): sin bono por edad para las unidades; el +10 % de
-    la II está en la herrería I (`armas_1`) y los niveles veterano (III) y élite (IV) por línea
+    la II está en la herrería I de ataque y los niveles veterano (III) y élite (IV) por línea
     (`veterano_*`, `elite_*`), comprados; se leen de data/. Tabla 1: tiene que dar lo mismo que HOY.
+    Desde el paso 2 (proceso/26, paso 6) la herrería está separada en 12 (`herreria` en
+    tecnologias.json: ataque y armadura, cuerpo a cuerpo y distancia, tandas I a III); el gasto
+    típico compra las 4 de cada tanda, que suman lo que daban armas y escudos. Las armas y los
+    escudos de antes quedan congelados acá (HERRERIA_ANTES) para la columna HOY.
   * COMPLETO: lo anterior, más la herrería III de ataque a +1, la escuela de la IV (el
     equivalente de la universidad), los saberes militares propios (PROPIAS) y los hitos
     militares de la III y la IV con efecto en aura (no los suma). Tabla 2: el poder crece
@@ -75,6 +79,17 @@ REFERENCIA = [{"guerrero": 15, "hondero": 15},
               {"guerrero": 6, "hondero": 6, "lancero": 8, "jinete": 4, "arcabucero": 6},
               {"guerrero": 6, "hondero": 6, "lancero": 8, "jinete": 4, "arcabucero": 6}]
 
+# --- Armas y escudos de antes del paso 2 (tecnologias.json hasta proceso/26, paso 5), sin el
+#     ataque_pct que el paso 1 le sumó a armas_1: es la vara de HOY.
+HERRERIA_ANTES = {
+    "armas_1": [{"tipo": "ataque", "funciones": MILITARES, "n": 1}],
+    "armas_2": [{"tipo": "ataque", "funciones": MILITARES, "n": 1}],
+    "armas_3": [{"tipo": "ataque", "funciones": MILITARES, "n": 2}],
+    "escudos_1": [{"tipo": "armadura", "funciones": MILITARES, "n": 1}],
+    "escudos_2": [{"tipo": "armadura", "funciones": MILITARES, "n": 1}],
+    "escudos_3": [{"tipo": "armadura", "funciones": MILITARES, "n": 1}],
+}
+
 # --- Gasto típico de HOY (lo que compra la IA normal) por edad, acumulado.
 GASTO_HOY = [[], ["armas_1", "escudos_1"],
              ["armas_1", "escudos_1", "armas_2", "escudos_2", "adiestramiento"],
@@ -88,18 +103,17 @@ PROPUESTA = {
     # Paso 3 (proceso/26-juego-tardio/07): la escuela de la IV también está en data/
     # (escuela_choque y escuela_polvora son las dos de combate; las otras cuatro, de asedio,
     # defensa y costo, no suman al ejército). Se leen de ahí.
-    # Diseño completo: la herrería III de ataque da +1 (hoy +2), porque el élite ya sube el ataque.
-    "armas_3_completo": [{"tipo": "ataque", "funciones": MILITARES, "n": 1}],
 }
 # En el diseño completo los hitos militares desde esta edad dan su efecto de combate como aura
 # (radio del hito, como `aura_hito.militar`), no a todo el ejército: el modelo no lo suma al
 # ejército que ataca lejos de casa. 5 = todos globales (hoy); 3 = los de la III y la IV en aura.
 HITOS_AURA_DESDE = 3
-GASTO_PASO1 = [[], ["armas_1", "escudos_1"],
-               ["armas_1", "escudos_1", "armas_2", "escudos_2", "adiestramiento", "veterano"],
-               ["armas_1", "escudos_1", "armas_2", "escudos_2", "adiestramiento", "armas_3", "escudos_3",
-                "veterano", "elite"]]
-GASTO_COMPLETO = GASTO_PASO1[:3] + [[k if k != "armas_3" else "armas_3_completo" for k in GASTO_PASO1[3]] + [
+# "herreria_N": las cuatro de la tanda N (ataque y armadura, cuerpo a cuerpo y distancia).
+GASTO_PASO1 = [[], ["herreria_1"],
+               ["herreria_1", "herreria_2", "adiestramiento", "veterano"],
+               ["herreria_1", "herreria_2", "adiestramiento", "herreria_3", "veterano", "elite"]]
+# Diseño completo: la herrería III de ataque da +1 (hoy +2), porque el élite ya sube el ataque.
+GASTO_COMPLETO = GASTO_PASO1[:3] + [[k if k != "herreria_3" else "herreria_3_completo" for k in GASTO_PASO1[3]] + [
     "escuela_choque", "escuela_polvora"]]
 
 # Saberes militares propios por edad (§3 del documento), solo los que el modelo sabe sumar
@@ -173,6 +187,10 @@ def mods_de(efectos):
         if t == "vida_pct" and "lineas" in ef:
             for ln in ef["lineas"]:
                 m[("vida_pct_l", ln)] = m.get(("vida_pct_l", ln), 0) + ef["pct"]
+        elif t == "armadura" and ef.get("contra") in ("cuerpo", "distancia"):
+            kk = "armadura_c" if ef["contra"] == "cuerpo" else "armadura_d"
+            for fn in ef.get("funciones", []):
+                m[(kk, fn)] = m.get((kk, fn), 0) + ef["n"]
         elif t in ("ataque", "armadura", "vida_pct"):
             for fn in ef.get("funciones", []):
                 m[(t, fn)] = m.get((t, fn), 0) + ef.get("n", ef.get("pct", 0))
@@ -187,8 +205,8 @@ def stats(d, mods, bono_edad):
     atk = d["ataque"] + mods.get(("ataque", fn), 0)
     atk = atk * (100 + bono_edad + mods.get(("ataque_pct", ln), 0)) / 100
     hp = d["pv"] * (100 + mods.get(("vida_pct", fn), 0) + mods.get(("vida_pct_l", ln), 0)) / 100
-    arm = d.get("armadura", 0) + mods.get(("armadura", fn), 0)
-    arm_d = d.get("armadura_distancia", d.get("armadura", 0)) + mods.get(("armadura", fn), 0)
+    arm = d.get("armadura", 0) + mods.get(("armadura", fn), 0) + mods.get(("armadura_c", fn), 0)
+    arm_d = d.get("armadura_distancia", d.get("armadura", 0)) + mods.get(("armadura", fn), 0) + mods.get(("armadura_d", fn), 0)
     return {"fn": fn, "atk": atk, "hp": hp, "arm": arm, "arm_d": arm_d, "cad": d["cadencia_ms"] / 1000,
             "alc": d.get("alcance", 0), "bono": d.get("bono", {}), "montado": d.get("montado") or d.get("elefante")}
 
@@ -235,6 +253,14 @@ def efectos_de(tecs, lista):
     for k in lista:
         if k in PROPUESTA:
             efs += PROPUESTA[k]
+        elif k.startswith("herreria_"):
+            tanda = int(k.split("_")[1])
+            for t in tecs.values():
+                if isinstance(t, dict) and "herreria" in t and t["edad_min"] == tanda + 1:
+                    for ef in t["efectos"]:
+                        if k.endswith("_completo") and ef["tipo"] == "ataque":
+                            ef = dict(ef, n=1)
+                        efs.append(ef)
         elif k in ("veterano", "elite"):
             for kk, t in tecs.items():
                 if kk.startswith(k + "_") and isinstance(t, dict):
@@ -248,7 +274,7 @@ def efectos_hoy(tecs, lista):
     """Antes del paso 1: las mejoras sin el porcentaje que hoy reemplaza al bono por edad."""
     efs = []
     for k in lista:
-        efs += [ef for ef in tecs[k]["efectos"] if ef["tipo"] != "ataque_pct"]
+        efs += HERRERIA_ANTES[k] if k in HERRERIA_ANTES else [ef for ef in tecs[k]["efectos"] if ef["tipo"] != "ataque_pct"]
     return efs
 
 
@@ -289,9 +315,9 @@ def main():
     def p_completo(c, u, e, rival):
         return poder(reglas, ejercito(reglas, u, COMPOSICION[c][e], efs_completo(c, e), 0), rival)
 
-    print("### Tabla 1 · Paso 1: el poder no cambia (contra el rival de referencia de %s; edad I de hoy = 100)\n"
+    print("### Tabla 1 · Pasos 1 y 2: el poder no cambia (contra el rival de referencia de %s; edad I de hoy = 100)\n"
           % ("la II sin mejoras, en todas las edades" if args.vara_fija else "la misma edad, con las reglas de hoy"))
-    print("| Pueblo | I | II hoy | II paso 1 | III hoy | III paso 1 | IV hoy | IV paso 1 | Δ II | Δ III | Δ IV |")
+    print("| Pueblo | I | II hoy | II pasos 1-2 | III hoy | III pasos 1-2 | IV hoy | IV pasos 1-2 | Δ II | Δ III | Δ IV |")
     print("|---|---|---|---|---|---|---|---|---|---|---|")
     for c in CIVS:
         u = unidades_civ(base, civs[c])

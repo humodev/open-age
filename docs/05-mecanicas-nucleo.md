@@ -71,7 +71,7 @@ Sirve para que una economía sin ejército pueda sobrevivir a la presión tempra
 |---|---|---|
 | `tasa` | `recurso` (o `*`), `pct` | Recolección más rápida |
 | `carga` | `n` | Más carga por viaje |
-| `ataque` / `armadura` | `funciones`, `n` | Suma a unidades de esas funciones |
+| `ataque` / `armadura` | `funciones`, `n` | Suma a unidades de esas funciones. `armadura` acepta `contra` (`cuerpo` o `distancia`): sin él, suma a las dos armaduras |
 | `vida_pct` / `velocidad_pct` | `funciones`, `pct` | Porcentaje sobre la base. `vida_pct` también acepta `lineas` (los niveles) |
 | `ataque_pct` | `lineas`, `pct` | Porcentaje de ataque de esas líneas, después de sumar el `ataque` plano |
 | `edificio_vida_pct` | `pct` | Vida de todos los edificios |
@@ -83,16 +83,24 @@ Sirve para que una economía sin ejército pueda sobrevivir a la presión tempra
 `vida_pct` y `velocidad_pct` con `funciones: ["civil"]` son las del aldeano.
 
 - Los efectos son por jugador y se acumulan. Vida y velocidad se recalculan al instante; la vida actual conserva su proporción.
-- Dónde se investiga: `en` dice por capacidad (`deposito`, `tipo`, `militar`, `linea`); sin `en`, el tipo de `edificio`.
+- Dónde se investiga: `en` dice por capacidad (`deposito`, `tipo`, `militar`, `linea`); sin `en`, el tipo de `edificio`. `militar` con `sin_deposito`: en los edificios que entrenan tropa, salvo los que además son almacén o centro (el lof, el mocambo, la qollqa).
+
+### Herrería (paso 2 del juego tardío, docs/diseno/27 §1.1 y §6)
+- **12 mejoras** en lugar de armas y escudos: ataque cuerpo a cuerpo (`ataque_cc_N`), ataque a distancia (`ataque_dist_N`), armadura contra cuerpo a cuerpo (`armadura_cc_N`) y armadura contra distancia (`armadura_dist_N`), con las tandas I, II y III en las edades II, III y IV. Cada tanda requiere la anterior del mismo grupo.
+- **Cuerpo a cuerpo** son las funciones `choque` y `linea` (con los montados); **distancia**, la función `distancia` (con la pólvora). Las armaduras suben las tres funciones militares.
+- Efectos: el ataque, +1, +1 y +2; cada armadura, +1 por tanda. Comprar las 12 da lo mismo que daban armas y escudos.
+- Las dos de ataque I suman además **+10 % de ataque** a sus líneas (cuerpo a cuerpo: choque, línea y montados; distancia: distancia y pólvora): es el bono que antes daba gratis la edad II.
+- Se investigan en el cuartel y en los demás edificios que entrenan tropa (`"en": {"militar": true, "sin_deposito": true}`). No hay edificio nuevo: el diseño la pone en el cuartel.
+- El ícono es el arma (`atacar`) o el escudo, con la clase abajo (guerrero: cuerpo a cuerpo; hondero: distancia) y la tanda en palotes dorados (`atacar~guerrero~2`).
 
 ### Niveles por línea (paso 1 del juego tardío, docs/diseno/27 §1.1 y §1.2)
 - **Líneas:** `polvora` (marca `polvora`), `montados` (marca `montado` o `elefante`) y, si no, la función (`choque`, `distancia`, `linea`). El asedio y los civiles no tienen línea (`SimData.line_of`).
 - **Veterano** (edad III, `veterano_<línea>`) y **élite** (edad IV, `elite_<línea>`, requiere el veterano): +5 % de ataque y +5 % de vida, y +10 % de ataque y +5 % de vida más. Costo y tiempo en `tecnologias.json`.
 - Se investigan en **cualquier edificio que entrene esa línea** (`"en": {"linea": …}`): si un pueblo la entrena en dos (Etiopía, los montados en el establo y la remonta), está en los dos. Un pueblo sin la línea no tiene sus niveles (los guaraníes no tienen montados).
-- La **herrería I de ataque** (`armas_1`) suma, además de su +1, **+10 % de ataque a todas las líneas**: es el bono que antes daba gratis la edad II.
+- La **herrería I de ataque** (`ataque_cc_1` y `ataque_dist_1`) suma, además de su +1, **+10 % de ataque** a sus líneas: entre las dos, a todas. Es el bono que antes daba gratis la edad II.
 - El panel de la unidad y la ficha dicen el nivel («Choque · Veterano»); el ícono es el glifo de la línea con uno o dos galones.
-- La IA los compra en todas las dificultades antes que la tropa (`reglas.ia_niveles`): `armas_1` al llegar a la II; en la III, el veterano de las dos líneas con más tropa; en la IV, el élite de esas dos; el resto, con lo que sobra.
-- Quien empieza una misión en una edad avanzada recibe lo que antes le daba la edad (`armas_1` y los niveles hasta su edad; `Sim.grant_age_purchases`).
+- La IA los compra en todas las dificultades antes que la tropa (`reglas.ia_niveles`): las dos de ataque I al llegar a la II; en la III, el veterano de las dos líneas con más tropa; en la IV, el élite de esas dos; el resto, con lo que sobra. Después de la tropa (y sin ahorrar para el hito), las dificultades que investigan compran la herrería del ataque de su clase con más tropa y de la armadura contra la clase con más tropa rival a la vista, si sobra la reserva (`ia_niveles.herreria`); las otras dos, con lo que sobra.
+- Quien empieza una misión en una edad avanzada recibe lo que antes le daba la edad (las dos de ataque I y los niveles hasta su edad; `Sim.grant_age_purchases`).
 
 ### Economía del final y escuela de la IV (paso 3 del juego tardío, docs/diseno/27 §1.1, §1.3 y §4.3)
 - **Economía por edad** (las marca `paso: 3` en `tecnologias.json`): velocidad del aldeano en la II (`vel_aldeano`, en el centro), vida del aldeano en la III (`vida_aldeano`, después de la velocidad, en la misma casilla), la riqueza II en la III (`orfebreria_2`) y en la IV la tercera de la madera (`hachas_3`), la del alimento («la granja como sostén», `riego_3`) y la carga II (`cestas_2`).
