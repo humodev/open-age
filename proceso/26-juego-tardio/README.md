@@ -44,7 +44,15 @@ Contexto: hoy la edad IV no trae unidades nuevas, hay 18 mejoras compartidas y n
   - Los costos quedan: la riqueza se usa, que era el pedido.
   - Los mapuches vuelven a 70 %, con la herrería pagada en riqueza (su riqueza viene de la kona y del malón). Su diagnóstico (5f) se hace sobre esta base.
   - Las partidas por destrucción de hitos bajan a 53 y la IV aparece en 5 partidas. | [09-costos-por-recurso.md](09-costos-por-recurso.md) |
-| 10 | Decisión: si un paso rompe el balance, queda diseñado como contenido y se retoma con más contenido (modelos, animaciones) | por hacer |
+| 10 | **Paso 7 integrado (0dafcb7):** maravilla y final de partida.
+  - **Maravilla por pueblo en la IV:** Ollantaytambo, gran koyagtun, la tava o la aldea grande del monte, Fasil Gəbbi, la Cerca do Outeiro da Barriga (sitiada, no cae) y Krung Si Ayutthaya y Pom Phet.
+  - **Victoria por maravilla:** 15 minutos de cuenta, que ven todos; es opción de partida.
+  - **La IA sube a la IV** y ataca primero la maravilla rival.
+  - **Rendición** en todas las dificultades.
+  - **IA contra IA (45 min):** la IV en el **61 %** de las partidas (antes, 5 %), a los 26:42 de mediana. Ninguna partida se gana por maravilla, y el camino más rápido supera los 50 minutos.
+  - **Pruebas:** mismo hash; maravilla (45 comprobaciones), campañas y autotest OK.
+  - **No entró:** el comerciante que camina, que espera arte (C-80). Torneo de cierre: 37. | [10-paso-7-maravilla-y-final.md](10-paso-7-maravilla-y-final.md) |
+| 11 | Decisión: si un paso rompe el balance, queda diseñado como contenido y se retoma con más contenido (modelos, animaciones) | por hacer |
 
 ## Pedido del autor: saberes de los pueblos
 
