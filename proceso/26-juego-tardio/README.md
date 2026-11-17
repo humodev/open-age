@@ -65,7 +65,13 @@ Contexto: hoy la edad IV no trae unidades nuevas, hay 18 mejoras compartidas y n
   - **Palmares:** forja, sanguar, fojos e estrepes, hierro de Angola Janga; zagaieiro, guarnição da cerca y capitão de mocambo.
   - **En civ_diag (30 partidas):** Etiopía queda igual, 36 %. Palmares baja de 70 a 56 %, con la renta del mocambo de 6 a 4 y el zagaieiro a 20 de riqueza.
   - **Pruebas:** mismo hash; saberes (146), casillas (540), grilla, íconos, campañas, civ_smoke y autotest OK. bench: 9,74 ms. | [12-paso-6-par-2.md](12-paso-6-par-2.md) |
-| 13 | Decisión: si un paso rompe el balance, queda diseñado como contenido y se retoma con más contenido (modelos, animaciones) | por hacer |
+| 13 | **Paso 6, par 3 integrado (0722b2f): Tawantinsuyu y Ayutthaya.** Con esto, los seis pueblos tienen sus 8 mejoras propias.
+  - **Tawantinsuyu:** ch'uñu, khipukamayuq, trepanación (1 de cada 5 caídos cerca de la kallanka vuelve herido, sin azar), q'eswa chaka, wayrachina, chaski. Unidades: galgueros (la IA no los entrena) y jinete de Manco.
+  - **Ayutthaya:** recetario de Narai y nuat (la tropa se cura fuera de combate), Si Satchanalai, barrio chino, khlong lat, astilleros. Unidades: ngao y defensores de Suan Phlu.
+  - **Arte por civ (pedido del autor):** `tropas.por_civ` acepta tela, tocado y color. Cualquier unidad, también las compartidas, se ve distinta en cada pueblo.
+  - **civ_diag:** Ayutthaya, 50 % con y sin el paso; Tawantinsuyu, de 53 a 43 %.
+  - **Pruebas:** mismo hash; saberes, casillas, grilla, íconos y autotest OK. bench: 9,63 ms. Torneo del hito: 39. | [13-paso-6-par-3.md](13-paso-6-par-3.md) |
+| 14 | Decisión: si un paso rompe el balance, queda diseñado como contenido y se retoma con más contenido (modelos, animaciones) | por hacer |
 
 ## Pedido del autor: saberes de los pueblos
 
