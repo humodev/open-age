@@ -20,6 +20,72 @@
  "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",
  "escuela": {"nombre": "Oficinas do Macaco", "edificios": ["quilombo_central"], "desc": "Los oficios del Macaco: herreros (las ferrarias), alfareros (la cerámica de los mocambos, con formas indígenas, africanas y europeas) y tejedores de palma [verificar el pasaje] (Blaer, 1645; Funari, 1996; Orser y Funari, 2001). Se investiga en la cerca real y en el Macaco."},
  "tecnologias": {"escuela_registros": {"nombre": "La memoria de los mocambos", "desc": "No hay registros escritos propios de Palmares y no se inventan archivos: el saber pasa de boca en boca."}},
+ "_doc_saberes": "--- paso 6, par 2 --- Saberes propios (docs/diseno/27, §3.5): 8 mejoras (2 en la II, 3 en la III, 3 en la IV) y 3 unidades. Cada una lleva `desc` (qué hace y el saber) y `evidencia` (nivel y fuente), que la ficha muestra. Nada religioso (calundu, nganga, kimbanda, el rito de la fundición), nada de capoeira (H-28) y ningún texto que diga «esconderse» como esencia (H-35). `propia`: la cuenta el modelo y la compra la IA según `ia_propias`.",
+ "tecnologias_nuevas": {
+  "rocas_palmeiras": {"propia": true, "eje": "economia", "nombre": "Roças e palmeiras", "en": {"tipo": "almacen_alimento"}, "edificio": "almacen_alimento", "ranura": 6, "edad_min": 2, "costo": {"alimento": 50, "madera": 125}, "tiempo_ms": 30000, "icono": "palmera",
+   "efectos": [{"tipo": "tasa", "recurso": "granja", "pct": 15}, {"tipo": "renta", "tipos": ["mocambo"], "recurso": "riqueza", "por_min": 4}],
+   "desc": "Roças de maíz, porotos, mandioca, batata y caña al pie de la sierra, y el uso de las palmeras nativas (pindoba, catolé), que le dieron el nombre; no es el dendê. Quienes venían del Kongo y del Ndongo ya conocían el trabajo de la palmera, y el saber se juntó con el de los indígenas. Granjas +15 % y cada mocambo da 4 de riqueza por minuto (fibra, techo, fruto y vino de palma).",
+   "evidencia": "Documentado. Blaer, diario (1645; publicado en 1902); Relação das guerras feitas aos Palmares (1678) [verificar el pasaje sobre la palmera y el vino]; Carneiro, O Quilombo dos Palmares (1947). La continuidad con el saber centroafricano de la palmera: debatida."},
+  "aviso_mocambos": {"propia": true, "eje": "mecanica", "nombre": "Aviso de los mocambos", "en": {"tipo": "centro"}, "edificio": "centro", "ranura": 9, "edad_min": 2, "costo": {"alimento": 75, "madera": 100}, "tiempo_ms": 30000, "icono": "vigia_mocambo",
+   "efectos": [{"tipo": "vision_edificio", "tipos": ["mocambo"], "n": 3000}],
+   "desc": "Red de mocambos con vigías, sendas, aguadas y refugios escalonados en la sierra: los mocambos ven 3 casillas más lejos.",
+   "evidencia": "Documentado. Blaer (1645); Gomes, Palmares (2005); Lara, Palmares & Cucaú (2021)."},
+  "forja_mocambos": {"propia": true, "eje": "mecanica", "nombre": "Forja de los mocambos", "en": {"tipo": "mocambo"}, "edificio": "mocambo", "ranura": 10, "edad_min": 3, "costo": {"madera": 150, "riqueza": 100}, "tiempo_ms": 40000, "icono": "fuelle",
+   "efectos": [{"tipo": "oficios_pct", "pct": 25}, {"tipo": "espinas_pct", "pct": 50}],
+   "desc": "Herreros que trabajaban el hierro conseguido por trueque o en las correrías, con fuelles de cuenco con membrana de cuero, a la manera centroafricana. Forja, no fundición de mineral; el rito y la realeza del herrero no se usan. Los oficios rinden 25 % más y los estrepes de las cercas pegan 50 % más.",
+   "evidencia": "Arqueológico (la técnica centroafricana: Childs y Killick, «Indigenous African Metallurgy», Annual Review of Anthropology 22, 1993). Las forjas en Palmares: documentado (Relação, 1678 [verificar el pasaje]). La herencia directa: debatido."},
+  "sanguar": {"propia": true, "eje": "militar", "nombre": "Sanguar", "en": {"tipo": "cuartel"}, "edificio": "cuartel", "ranura": 6, "edad_min": 3, "costo": {"alimento": 150, "riqueza": 100}, "tiempo_ms": 40000, "icono": "sanguar",
+   "efectos": [{"tipo": "esquiva_pct", "tipos": ["guerrero", "zagaieiro"], "pct": 15}],
+   "desc": "La infantería centroafricana peleaba en orden abierto y se entrenaba para esquivar flechas y tiros (sanguar). No es capoeira ni su antecedente (H-28). La gente de guerra y los zagaieiros reciben 15 % menos de daño de la distancia mientras se mueven.",
+   "evidencia": "Documentado en Angola: Cavazzi (1687); Cadornega, História geral das guerras angolanas (1680); Thornton, «The Art of War in Angola, 1575–1680» (1988) y Warfare in Atlantic Africa (1999). En Palmares: debatido (consulta, §7)."},
+  "kilombo": {"propia": true, "eje": "mecanica", "nombre": "Kilombo", "en": {"tipo": "mocambo_guerra"}, "edificio": "mocambo_guerra", "ranura": 6, "edad_min": 3, "costo": {"alimento": 150, "madera": 100}, "tiempo_ms": 40000, "icono": "kilombo",
+   "efectos": [{"tipo": "kilombo", "cada": 4, "unidad": "guerrero"}],
+   "desc": "El kilombo angoleño: institución de guerra que integraba gente de cualquier origen (el juego no detalla el rito). La palabra quilombo para Palmares aparece en los papeles coloniales recién desde los años 1680: es palabra de los otros. Se investiga en el mocambo de guerra; de cada 4 personas que llegan por la fama, una entra como gente de guerra.",
+   "evidencia": "Debatido. Miller, Kings and Kinsmen (1976); Munanga, «Origem e histórico do quilombo na África», Revista USP 28 (1995–1996); Thornton, «Les États de l'Angola et la formation de Palmares», Annales HSS 63 (2008). Cuánto pasó a Palmares se discute."},
+  "trato_moradores": {"propia": true, "eje": "economia", "nombre": "Trato con los moradores", "en": {"tipo": "mercado"}, "edificio": "mercado", "ranura": 6, "edad_min": 4, "costo": {"alimento": 200, "madera": 200}, "tiempo_ms": 50000, "icono": "trato",
+   "efectos": [{"tipo": "mercado_venta_pct", "pct": 40}],
+   "desc": "Comercio a escondidas con los vecinos: productos de la sierra por herramientas, pólvora y sal. Palmares no estaba aislado. Lo vendido en el mercado rinde 40 % más: casi sin comisión.",
+   "evidencia": "Documentado. Gomes (2005); Lara (2021); Carneiro (1947)."},
+  "hierro_angola_janga": {"propia": true, "eje": "militar", "nombre": "Hierro de Angola Janga", "en": {"tipo": "mocambo"}, "edificio": "mocambo", "ranura": 6, "edad_min": 4, "costo": {"alimento": 200, "riqueza": 250}, "tiempo_ms": 50000, "icono": "hierro",
+   "efectos": [{"tipo": "ataque", "funciones": ["choque"], "n": 1}],
+   "desc": "Hojas y puntas de hierro de las forjas propias: lanzas, facones, flechas. No hay indicio de defensas de hierro en el cuerpo. «Angola Janga» está en las fuentes; su glosa («Angola pequeña») [verificar con lingüistas de kimbundu]. +1 de ataque al choque.",
+   "evidencia": "Documentado (las forjas) / debatido (el volumen). Lara (2021); Gomes (2005)."},
+  "fojos_estrepes": {"propia": true, "eje": "mecanica", "nombre": "Fojos e estrepes", "en": {"tipo": "mocambo"}, "edificio": "mocambo", "ranura": 8, "edad_min": 4, "costo": {"madera": 200, "riqueza": 150}, "tiempo_ms": 45000, "icono": "fojo",
+   "efectos": [{"tipo": "espinas_pct", "pct": 50}, {"tipo": "habilita", "edificios": ["hoyo"]}],
+   "desc": "Fosos camuflados y estrepes en los accesos de la cerca real, descritos en las campañas de 1692–1694. Las cercas pegan 50 % más de espinas y se pueden cavar fojos (pozos con estacas, tapados).",
+   "evidencia": "Documentado. Ennes, As guerras nos Palmares (1938), con las cartas de Domingos Jorge Velho; Lara (2021)."}
+ },
+ "ia_propias": {"_doc": "Orden de compra de la IA (sim_ai.gd, _own_buys), como el de los mapuches; `trampas`: fojos que cava después de comprar fojos_estrepes.",
+  "orden": [
+   {"tec": "rocas_palmeiras", "granjas": 3},
+   {"tec": "aviso_mocambos"},
+   {"tec": "sanguar", "tropa": {"tipos": ["guerrero", "zagaieiro"], "n": 6}},
+   {"tec": "forja_mocambos"},
+   {"tec": "kilombo"},
+   {"tec": "hierro_angola_janga", "tropa": {"lineas": ["choque"], "n": 6}},
+   {"tec": "fojos_estrepes", "tropa": {"n": 15}},
+   {"tec": "trato_moradores"}
+  ],
+  "trampas": 6,
+  "unidades": [
+   {"tipo": "capitao_mocambo", "max_pct": 10},
+   {"tipo": "guarnicao_cerca", "max_pct": 20},
+   {"tipo": "zagaieiro", "max_pct": 25}
+  ]
+ },
+ "unidades_nuevas": {
+  "zagaieiro": {"nombre": "Zagaieiro", "propia": true, "funcion": "distancia", "edad_min": 2, "pob": 1, "costo": {"alimento": 40, "madera": 30, "riqueza": 20}, "tiempo_ms": 15000, "pv": 85, "armadura": 0, "armadura_distancia": 1, "ataque": 9, "alcance": 3000, "cadencia_ms": 1800, "velocidad": 1300, "vision": 8000, "radio": 230, "bono": {"choque": 2}, "zagaia": true,
+   "desc": "Arroja la lanza a tiro corto (3 casillas, contra 5,5 del flecheiro) y pega más a la gente de choque (+2). Zagaia es como llamaban los portugueses a toda lanza arrojadiza africana (la palabra viene del beréber y el árabe). Las lanzas y las flechas de Palmares están en las fuentes.",
+   "evidencia": "Documentado (las lanzas); a verificar la azagaya y la palabra «zagaieiro» en un documento. Thornton, Warfare in Atlantic Africa (1999)."},
+  "guarnicao_cerca": {"nombre": "Guarnição da cerca", "propia": true, "funcion": "linea", "edad_min": 3, "pob": 1, "costo": {"alimento": 60, "madera": 30, "riqueza": 15}, "tiempo_ms": 17000, "pv": 150, "armadura": 3, "armadura_distancia": 0, "ataque": 9, "alcance": 650, "cadencia_ms": 1500, "velocidad": 1100, "vision": 7500, "radio": 280,
+   "armadura_cerca": {"n": 2, "radio": 3},
+   "desc": "La línea que defendía la cerca real: +2 de armadura a 3 casillas o menos de una cerca, una puerta o un baluarte propios.",
+   "evidencia": "Documentado. Lara (2021); Ennes (1938)."},
+  "capitao_mocambo": {"nombre": "Capitão de mocambo", "propia": true, "elite": true, "funcion": "choque", "edad_min": 4, "pob": 2, "costo": {"alimento": 120, "riqueza": 100}, "tiempo_ms": 26000, "pv": 200, "armadura": 2, "armadura_distancia": 2, "ataque": 14, "alcance": 450, "cadencia_ms": 1250, "velocidad": 1400, "vision": 9000, "radio": 280,
+   "mando": {"n": 1, "radio": 5000},
+   "desc": "Jefes de mocambo y de guerra que las fuentes nombran con títulos portugueses (mestre de campo, capitão); los títulos ngana, en el texto. Choque y mando: la tropa propia a 5 casillas pega 1 más. Sin glorificar a una persona (consulta a la CONAQ, §7).",
+   "evidencia": "Documentado. Relação das guerras feitas aos Palmares (1678); Lara y Fachin (2021)."}
+ },
  "edades": [
   "Mocambo",
   "Palmares",
@@ -69,6 +135,9 @@
  "sin_unidades": ["catapulta"],
  "sin_edificios": ["torre", "hito_economia", "hito_guerra", "deposito", "almacen_madera", "campo_tiro", "establo", "taller"],
  "edificios_nuevos": {
+  "hoyo": {"nombre": "Fojo con estrepes", "edad_min": 4, "requiere_tec": "fojos_estrepes", "tam": [1, 1], "pv": 40, "armadura": 0, "costo": {"madera": 20}, "tiempo_ms": 6000, "vision": 1000, "transitable": true, "oculto": true, "deteccion": 2000, "sin_blanco_automatico": true, "no_cuenta": true,
+   "trampa": {"danio": 40, "montado_pct": 200, "frena_ms": 4000},
+   "desc": "Fojo: pozo con estrepes (estacas aguzadas) en el fondo, tapado, en los accesos de la cerca (1692–1694). Al que cae le hace 40 de daño (el doble a los montados) y lo frena 4 s; después queda abierto y se pierde. El rival lo ve recién a 2 casillas."},
   "mocambo": {
    "nombre": "Mocambo",
    "edad_min": 1,
@@ -297,8 +366,8 @@
    "guerra_zumbi"
   ]
  ],
- "construye": ["casa", "granja", "almacen_alimento", "almacen_mina", "cuartel", "centro", "mocambo", "fortaleza", "empalizada", "puerta", "mercado", "maravilla"],
- "produce": {"centro": ["explorador"], "cuartel": ["guerrero", "lancero", "arcabucero"], "mocambo": ["hondero"]},
+ "construye": ["casa", "granja", "almacen_alimento", "almacen_mina", "cuartel", "centro", "mocambo", "fortaleza", "empalizada", "puerta", "mercado", "hoyo", "maravilla"],
+ "produce": {"centro": ["explorador"], "cuartel": ["guerrero", "lancero", "arcabucero", "zagaieiro", "guarnicao_cerca", "capitao_mocambo"], "mocambo": ["hondero"]},
  "modulos": {
     "oficios": { "puestos": { "mocambo": 3, "cerca_real": 2 }, "por_min": 20, "tope_por_edad": [5, 8, 10, 10], "para_pct": 2, "para_enemigos": 3, "para_radio": 6000 },
   "recurso_propio": {

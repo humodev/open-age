@@ -32,13 +32,19 @@
     "yga": "canoa",
     "caballeria_mision": "jinete_lanza",
     "kaaguygua": "kaaguygua",
-    "hoyo": "hoyo"
+    "hoyo": "hoyo",
+    "_doc_paso6_par2": "--- paso 6, par 2 --- Las unidades propias de Etiopía y Palmares (proceso/26-juego-tardio/12). El fojo de Palmares usa el tipo `hoyo`.",
+    "guerrero_gasa": "gasa", "farasanna": "farasanna", "caballeria_corte": "jinete_corte",
+    "zagaieiro": "zagaia", "guarnicao_cerca": "guarnicao", "capitao_mocambo": "capitao"
   },
   "tecnologias": {
     "_doc": "Ícono de cada investigación por lo que mejora; si una no está acá, vale el campo `icono` de data/tecnologias.json. «x#2»: el glifo x con dos palotes dorados (segunda tanda). «arma~clase~n»: herrería (arma, clase abajo a la derecha, tanda en palotes). «línea^n»: galones de nivel.",
     "_doc_paso6": "--- paso 6 --- Saberes propios de mapuches y guaraníes (data/civs → tecnologias_nuevas; glifos en src/game/ui/iconos_saberes.gd).",
     "coseletes_cuero": "coselete", "trigo_manzana": "trigo", "hoyos_estacas": "estacas", "lawen": "lawen", "arreo_tropilla": "tropilla", "makun": "poncho", "kawellu": "remonta", "werken_pron": "pron",
     "kokue": "mandioca", "canoas_rio": "remo", "poha_nana": "yuyo", "oga_takuara": "oga", "defensa_mborore": "mborore", "kaa_plantada": "yerba", "kaa_kaaguy": "yerba+madera", "uy_hata": "flecha_dura", "imprenta": "imprenta", "aty": "aty",
+    "_doc_paso6_par2": "--- paso 6, par 2 --- Saberes propios de Etiopía y Palmares.",
+    "maresha_tef": "arado", "actas_geez": "acta", "faws_kosso": "kosso", "cota_malla": "cota", "amba_fortaleza": "amba", "caravanas_amole": "amole", "polvora_massawa": "massawa", "orden_katama": "katama",
+    "rocas_palmeiras": "palmera", "aviso_mocambos": "vigia_mocambo", "forja_mocambos": "fuelle", "sanguar": "sanguar", "kilombo": "kilombo", "trato_moradores": "trato", "hierro_angola_janga": "hierro", "fojos_estrepes": "fojo",
     "hachas": "hacha",
     "hachas_2": "hacha#2",
     "canteria": "pico",

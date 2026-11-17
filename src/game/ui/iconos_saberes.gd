@@ -189,6 +189,132 @@ static func dibujar(ci: CanvasItem, kind: String, c: Vector2, s: float, w: float
 				ci.draw_line(c + Vector2(s * x, s * 0.04), c + Vector2(s * x, s * 0.4), col.darkened(0.4), w * 0.8)
 			Glyphs._figure(ci, c + Vector2(0, s * 0.06), s, col, 0.8)
 			ci.draw_line(c + Vector2(s * 0.06, s * 0.1), c + Vector2(s * 0.2, -s * 0.24), acc, w * 1.4)
+		# --- paso 6, par 2 --- Etiopía (§3.4) y Palmares (§3.5). Nada eclesiástico ni religioso.
+		"arado":
+			# Maresha y ṭef: la reja del arado y tres espigas finas de ṭef.
+			ci.draw_line(c + Vector2(-s * 0.42, -s * 0.1), c + Vector2(s * 0.2, s * 0.22), dark, w)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(s * 0.16, s * 0.16), c + Vector2(s * 0.42, s * 0.34), c + Vector2(s * 0.12, s * 0.3)]), col)
+			for i in 3:
+				var x := -s * 0.2 + i * s * 0.16
+				ci.draw_line(c + Vector2(x, -s * 0.06), c + Vector2(x + s * 0.06, -s * 0.44), acc, w * 0.5)
+		"acta":
+			# Actas de tierra: hoja suelta con renglones y un sello redondo (no un libro abierto).
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.3, -s * 0.4), Vector2(s * 0.6, s * 0.8)), col)
+			for i in 4:
+				ci.draw_line(c + Vector2(-s * 0.2, -s * 0.26 + i * s * 0.12), c + Vector2(s * 0.2, -s * 0.26 + i * s * 0.12), OSCURO, w * 0.4)
+			ci.draw_circle(c + Vector2(s * 0.14, s * 0.26), s * 0.1, acc)
+		"kosso":
+			# Kosso: racimo colgante de flores (Hagenia) sobre una hoja.
+			ci.draw_colored_polygon(_elipse(c + Vector2(-s * 0.16, s * 0.2), s * 0.26, s * 0.1, -0.5), dark)
+			for i in 6:
+				ci.draw_circle(c + Vector2(s * (0.04 + (i % 2) * 0.12), -s * 0.34 + i * s * 0.11), s * 0.08, col)
+		"cota":
+			# Cota de malla: peto con trama de anillos.
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.32, -s * 0.36), c + Vector2(s * 0.32, -s * 0.36), c + Vector2(s * 0.28, s * 0.42), c + Vector2(-s * 0.28, s * 0.42)]), col)
+			for yy in 4:
+				for xx in 4:
+					ci.draw_arc(c + Vector2(-s * 0.2 + xx * s * 0.13, -s * 0.22 + yy * s * 0.16), s * 0.05, 0, TAU, 8, OSCURO, w * 0.35)
+		"amba":
+			# Amba: meseta de paredes a pique con el tesoro arriba.
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.46, s * 0.4), c + Vector2(-s * 0.3, -s * 0.12), c + Vector2(s * 0.3, -s * 0.12), c + Vector2(s * 0.46, s * 0.4)]), col)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.1, -s * 0.32), Vector2(s * 0.2, s * 0.18)), acc)
+		"amole":
+			# Caravanas de amole: tres barras de sal apiladas.
+			for i in 3:
+				ci.draw_rect(Rect2(c + Vector2(-s * 0.36 + (i % 2) * s * 0.1, -s * 0.3 + i * s * 0.22), Vector2(s * 0.62, s * 0.16)), col.lightened(0.3) if i == 1 else col)
+		"massawa":
+			# Pólvora de Massawa: barril con la vela de la ruta por mar.
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.36, -s * 0.04), Vector2(s * 0.4, s * 0.44)), col)
+			ci.draw_line(c + Vector2(-s * 0.36, s * 0.18), c + Vector2(s * 0.04, s * 0.18), OSCURO, w * 0.5)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(s * 0.2, -s * 0.44), c + Vector2(s * 0.44, s * 0.08), c + Vector2(s * 0.2, s * 0.08)]), acc)
+		"katama":
+			# Orden del kätäma: la tienda del rey al centro y las demás en círculo.
+			for i in 6:
+				var a := TAU * i / 6.0
+				ci.draw_colored_polygon(PackedVector2Array([c + Vector2(cos(a), sin(a)) * s * 0.34 + Vector2(0, -s * 0.08), c + Vector2(cos(a), sin(a)) * s * 0.34 + Vector2(s * 0.08, s * 0.06), c + Vector2(cos(a), sin(a)) * s * 0.34 + Vector2(-s * 0.08, s * 0.06)]), col)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(0, -s * 0.18), c + Vector2(s * 0.14, s * 0.1), c + Vector2(-s * 0.14, s * 0.1)]), acc)
+		"palmera":
+			# Roças e palmeiras: palmera con sus hojas sobre un surco.
+			ci.draw_line(c + Vector2(0, s * 0.42), c + Vector2(s * 0.04, -s * 0.2), dark, w)
+			for a: float in [-2.6, -2.0, -1.2, -0.5]:
+				ci.draw_line(c + Vector2(s * 0.04, -s * 0.2), c + Vector2(s * 0.04, -s * 0.2) + Vector2(cos(a), sin(a) + 0.5) * s * 0.36, col, w * 0.8)
+			ci.draw_line(c + Vector2(-s * 0.44, s * 0.42), c + Vector2(s * 0.44, s * 0.42), acc, w * 0.7)
+		"vigia_mocambo":
+			# Aviso de los mocambos: dos chozas unidas por la senda con un ojo arriba.
+			for x: float in [-0.28, 0.28]:
+				ci.draw_colored_polygon(PackedVector2Array([c + Vector2(s * (x - 0.16), s * 0.4), c + Vector2(s * x, s * 0.1), c + Vector2(s * (x + 0.16), s * 0.4)]), col)
+			ci.draw_line(c + Vector2(-s * 0.12, s * 0.36), c + Vector2(s * 0.12, s * 0.36), dark, w * 0.6)
+			ci.draw_colored_polygon(_elipse(c + Vector2(0, -s * 0.22), s * 0.22, s * 0.1), acc)
+			ci.draw_circle(c + Vector2(0, -s * 0.22), s * 0.06, OSCURO)
+		"fuelle":
+			# Forja de los mocambos: dos fuelles de cuenco y el tubo hacia la brasa.
+			for x: float in [-0.24, 0.06]:
+				ci.draw_colored_polygon(_elipse(c + Vector2(s * x, -s * 0.1), s * 0.14, s * 0.12), col)
+			ci.draw_line(c + Vector2(-s * 0.1, s * 0.04), c + Vector2(s * 0.3, s * 0.3), dark, w)
+			ci.draw_circle(c + Vector2(s * 0.32, s * 0.32), s * 0.1, acc)
+		"sanguar":
+			# Sanguar: figura que se corre de lado y dos flechas que pasan.
+			Glyphs._figure(ci, c + Vector2(-s * 0.1, s * 0.08), s, col, 0.8)
+			for y: float in [-0.2, 0.1]:
+				ci.draw_line(c + Vector2(s * 0.08, s * y), c + Vector2(s * 0.46, s * (y - 0.08)), acc, w * 0.6)
+		"kilombo":
+			# Kilombo: tres figuras juntas, la del medio con lanza.
+			for i in 3:
+				Glyphs._figure(ci, c + Vector2(-s * 0.26 + i * s * 0.26, s * 0.1), s * 0.7, col if i != 1 else acc, 0.7)
+			ci.draw_line(c + Vector2(s * 0.08, s * 0.3), c + Vector2(s * 0.08, -s * 0.44), dark, w * 0.6)
+		"trato":
+			# Trato con los moradores: dos canastos que se cruzan con flechas.
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.42, s * 0.04), Vector2(s * 0.28, s * 0.28)), col)
+			ci.draw_rect(Rect2(c + Vector2(s * 0.14, -s * 0.32), Vector2(s * 0.28, s * 0.28)), acc)
+			ci.draw_line(c + Vector2(-s * 0.1, s * 0.1), c + Vector2(s * 0.1, -s * 0.1), dark, w * 0.7)
+		"hierro":
+			# Hierro de Angola Janga: punta de lanza de hierro y el yunque.
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(0, -s * 0.46), c + Vector2(s * 0.12, -s * 0.12), c + Vector2(-s * 0.12, -s * 0.12)]), col)
+			ci.draw_line(c + Vector2(0, -s * 0.12), c + Vector2(0, s * 0.14), dark, w * 0.8)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.32, s * 0.16), Vector2(s * 0.64, s * 0.14)), acc)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.12, s * 0.3), Vector2(s * 0.24, s * 0.12)), acc)
+		"fojo":
+			# Fojos e estrepes: pozo con estrepes y una cerca de palos detrás.
+			for i in 4:
+				ci.draw_line(c + Vector2(-s * 0.36 + i * s * 0.24, -s * 0.42), c + Vector2(-s * 0.36 + i * s * 0.24, -s * 0.06), dark, w * 0.8)
+			ci.draw_colored_polygon(_elipse(c + Vector2(0, s * 0.24), s * 0.42, s * 0.14), OSCURO)
+			for i in 3:
+				ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.22 + i * s * 0.22 - s * 0.05, s * 0.28), c + Vector2(-s * 0.22 + i * s * 0.22 + s * 0.05, s * 0.28), c + Vector2(-s * 0.22 + i * s * 0.22, s * 0.02)]), col)
+		"gasa":
+			# Guerrero de gaša: figura con el escudo redondo y dos jabalinas.
+			Glyphs._figure(ci, c + Vector2(s * 0.06, s * 0.06), s, col, 0.8)
+			ci.draw_circle(c + Vector2(-s * 0.18, s * 0.1), s * 0.18, acc)
+			ci.draw_circle(c + Vector2(-s * 0.18, s * 0.1), s * 0.05, OSCURO)
+			for x: float in [0.26, 0.36]:
+				ci.draw_line(c + Vector2(s * x, s * 0.4), c + Vector2(s * (x + 0.04), -s * 0.44), dark, w * 0.5)
+		"farasanna":
+			# Färäsäñña: el jinete con la cota (trama de anillos en el pecho).
+			Glyphs.draw(ci, "jinete", Rect2(r.position + Vector2(-s * 0.04, s * 0.06), r.size * 0.86), col)
+			for i in 3:
+				ci.draw_arc(c + Vector2(s * (0.0 + i * 0.08), -s * 0.18), s * 0.04, 0, TAU, 8, acc, w * 0.4)
+		"jinete_corte":
+			# Caballería de la corte: jinete al galope con las líneas de la velocidad.
+			Glyphs.draw(ci, "jinete", Rect2(r.position + Vector2(s * 0.06, s * 0.06), r.size * 0.86), col)
+			for i in 3:
+				ci.draw_line(c + Vector2(-s * 0.48, -s * 0.1 + i * s * 0.14), c + Vector2(-s * 0.3, -s * 0.1 + i * s * 0.14), acc, w * 0.5)
+		"zagaia":
+			# Zagaieiro: figura con el brazo atrás y la lanza arrojadiza en vuelo.
+			Glyphs._figure(ci, c + Vector2(-s * 0.16, s * 0.08), s, col, 0.8)
+			ci.draw_line(c + Vector2(-s * 0.02, -s * 0.06), c + Vector2(s * 0.46, -s * 0.36), acc, w * 0.7)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(s * 0.48, -s * 0.38), c + Vector2(s * 0.36, -s * 0.36), c + Vector2(s * 0.42, -s * 0.28)]), acc)
+		"guarnicao":
+			# Guarnição da cerca: figura con lanza delante de la cerca de palos.
+			for i in 5:
+				ci.draw_line(c + Vector2(-s * 0.44 + i * s * 0.22, s * 0.42), c + Vector2(-s * 0.44 + i * s * 0.22, -s * 0.12), dark, w * 0.7)
+			Glyphs._figure(ci, c + Vector2(0, s * 0.02), s * 0.9, col, 0.8)
+			ci.draw_line(c + Vector2(s * 0.18, s * 0.34), c + Vector2(s * 0.18, -s * 0.46), acc, w * 0.6)
+		"capitao":
+			# Capitão de mocambo: figura con lanza y un banderín liso, con dos más chicas detrás.
+			for x: float in [-0.32, 0.32]:
+				Glyphs._figure(ci, c + Vector2(s * x, s * 0.16), s * 0.6, col.darkened(0.3), 0.6)
+			Glyphs._figure(ci, c + Vector2(0, s * 0.06), s, col, 0.8)
+			ci.draw_line(c + Vector2(s * 0.16, s * 0.3), c + Vector2(s * 0.16, -s * 0.46), dark, w * 0.6)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(s * 0.16, -s * 0.46), c + Vector2(s * 0.4, -s * 0.38), c + Vector2(s * 0.16, -s * 0.3)]), acc)
 		_:
 			return false
 	return true

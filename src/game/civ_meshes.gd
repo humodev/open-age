@@ -979,6 +979,21 @@ static func _person(p: Array, fn: String, at: Vector3, team: Color, pal: Array, 
 	if def.get("montado", false) and fn == "choque" and int(def.get("alcance", 0)) >= 600: # --- paso 6 --- jinete de lanza (misiones)
 		p.append([Meshes.cyl(0.018, 0.018, 2.0, 6), Meshes.xf(at + Vector3(0.24, 0.9, 0.2), Vector3(-20, 0, 0)), wood])
 		p.append([Meshes.box(0.02, 0.14, 0.22), Meshes.xf(at + Vector3(0.24, 1.7, -0.08)), team])
+	# --- paso 6, par 2 --- maquetas de Etiopía y Palmares: el escudo de la gaša, la cota, las
+	# zagaias, la estaca de la guarnição y el banderín liso del capitão.
+	if def.get("gasa", false):
+		p.append([Meshes.cyl(0.2, 0.2, 0.04, 12), Meshes.xf(at + Vector3(-0.24, 0.5, 0.06), Vector3(0, 0, 90)), Color("6b4a2e")])
+		p.append([Meshes.sphere(0.05), Meshes.xf(at + Vector3(-0.27, 0.5, 0.06)), Palette.STONE_DARK])
+	if def.get("cota", false):
+		p.append([Meshes.capsule(r + 0.02, 0.42), Meshes.xf(at + Vector3(0, 0.5, 0)), Palette.STONE_DARK])
+	if def.get("zagaia", false):
+		for k in 2:
+			p.append([Meshes.cyl(0.012, 0.012, 1.1, 5), Meshes.xf(at + Vector3(-0.16 - k * 0.05, 0.6, -0.1), Vector3(-15, 0, 10)), wood])
+	if def.has("armadura_cerca"):
+		p.append([Meshes.box(0.5, 0.42, 0.05), Meshes.xf(at + Vector3(0, 0.3, 0.3)), wood.darkened(0.2)])
+	if def.has("mando"):
+		p.append([Meshes.cyl(0.016, 0.016, 1.5, 6), Meshes.xf(at + Vector3(-0.22, 0.75, -0.1)), wood])
+		p.append([Meshes.box(0.02, 0.22, 0.3), Meshes.xf(at + Vector3(-0.22, 1.36, -0.26)), team])
 	match fn:
 		"choque":
 			p.append([Meshes.cyl(0.025, 0.03, 0.5, 6), Meshes.xf(at + Vector3(0.27, 0.55, 0.12), Vector3(35, 0, 0)), wood])

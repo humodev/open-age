@@ -1,0 +1,8 @@
+ticks=3000 hash=2203695307
+DETERMINISMO: OK
+CASILLAS: 540 grillas revisadas, OK
+GRILLA: OK
+ICONOS: 656 grillas, 114 íconos distintos, OK
+AUTOTEST: OK
+autotest: --civ=palmares --terreno=llano
+campaign_smoke: 25 escenarios, sin errores

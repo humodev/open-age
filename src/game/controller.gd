@@ -1370,7 +1370,7 @@ func effects_text(efectos: Array) -> String:
 			"regen_monte":
 				parts.append("La tropa junto al monte sana %d de vida por segundo fuera de combate" % ef["n"])
 			"obra_pct":
-				parts.append("%d%% de tiempo de obra de casas y almacenes" % ef["pct"])
+				parts.append("%d%% de tiempo de obra de %s" % [ef["pct"], ", ".join((ef["tipos"] as Array).map(func(t: String) -> String: return String(sim.dp(local).edificios.get(t, {}).get("nombre", t))))])
 			"costo_edificio_pct":
 				parts.append("%d%% de %s en casas y almacenes" % [ef["pct"], RES_LABEL.get(ef.get("recurso", ""), "costo")])
 			"potiro_extra":
@@ -1381,6 +1381,23 @@ func effects_text(efectos: Array) -> String:
 				parts.append("+%d de armadura %s a %d casillas del agua" % [ef["n"], functions_text(ef.get("funciones", [])), ef.get("radio", 2)])
 			"emboscada_pct":
 				parts.append("+%d%% de daño de la emboscada" % ef["pct"])
+			# --- paso 6, par 2 --- Etiopía y Palmares
+			"renta_pct":
+				parts.append("+%d%% de renta de %s" % [ef["pct"], ", ".join((ef["tipos"] as Array).map(func(t: String) -> String: return String(sim.dp(local).edificios.get(t, {}).get("nombre", t))))])
+			"altura_pct":
+				parts.append("+%d%% de defensa en altura" % ef["pct"])
+			"ataque_ruta_pct":
+				parts.append("+%d%% de ataque a la pólvora mientras haya un mercado propio en pie" % ef["pct"])
+			"oficios_pct":
+				parts.append("+%d%% de riqueza de los oficios" % ef["pct"])
+			"espinas_pct":
+				parts.append("+%d%% de daño de las espinas de las cercas" % ef["pct"])
+			"esquiva_pct":
+				parts.append("-%d%% de daño de la distancia mientras se mueven (%s)" % [ef["pct"], ", ".join((ef["tipos"] as Array).map(func(t: String) -> String: return String(sim.dp(local).unidades.get(t, {}).get("nombre", t))))])
+			"kilombo":
+				parts.append("De cada %d que llegan por la fama, 1 entra como %s" % [ef["cada"], String(sim.dp(local).unidades.get(ef["unidad"], {}).get("nombre", ef["unidad"]))])
+			"vision_edificio":
+				parts.append("+%d casillas de visión de %s" % [int(ef["n"]) / 1000, ", ".join((ef["tipos"] as Array).map(func(t: String) -> String: return String(sim.dp(local).edificios.get(t, {}).get("nombre", t))))])
 			# --- fin paso 6 ---
 	return " · ".join(parts)
 

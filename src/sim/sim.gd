@@ -1076,6 +1076,22 @@ func _apply_effects(pid: int, efectos: Array) -> void:
 					_add_mod(pid, "armadura_rio:" + str(f), ef["n"])
 				players[pid]["armadura_rio_radio"] = int(ef.get("radio", 2))
 			# "habilita": no suma nada; el edificio pide la mejora (`requiere_tec`, build_block)
+			# --- paso 6, par 2 --- Etiopía y Palmares (docs/diseno/27, §3.4 y §3.5)
+			"oficios_pct", "espinas_pct", "altura_pct":
+				_add_mod(pid, ef["tipo"], ef["pct"])
+			"renta_pct", "esquiva_pct":
+				for ty in ef["tipos"]:
+					_add_mod(pid, ("renta_pct:" if ef["tipo"] == "renta_pct" else "esquiva:") + str(ty), ef["pct"])
+			"ataque_ruta_pct":
+				for l in ef["lineas"]:
+					_add_mod(pid, "atk_ruta:" + str(l), ef["pct"])
+				players[pid]["ruta_req"] = (ef.get("edificios", ["mercado"]) as Array)
+			"kilombo":
+				players[pid]["kilombo"] = {"cada": int(ef["cada"]), "tipo": String(ef["unidad"]), "n": 0}
+			"vision_edificio":
+				var vx: Dictionary = fog.vision_extra.get_or_add(pid, {})
+				for ty in ef["tipos"]:
+					vx[str(ty)] = int(vx.get(str(ty), 0)) + int(ef["n"])
 			# --- fin paso 6 ---
 	for e in actives:
 		if e.alive and e.owner == pid:
@@ -1937,6 +1953,8 @@ func effective_attack(a: SimEntity) -> int:
 		atk += mod(a.owner, "b_ataque")
 		return atk * (100 + attack_pct(a.owner, a.def, true)) / 100
 	atk += mod(a.owner, "ataque:" + a.fn) + aura_mod(a, "ataque:" + a.fn) # --- paso 4 --- aura
+	if not mods.mando.is_empty(): # --- paso 6, par 2 --- capitães de mocambo
+		atk += int(mods.mando.get(a.id, 0))
 	var line := SimData.line_of(a.def)
 	return atk * (100 + attack_pct(a.owner, a.def, false) + (aura_mod(a, "atk_pct:" + line) if line != "" else 0)) / 100
 
@@ -1951,7 +1969,10 @@ func attack_pct(pid: int, def: Dictionary, building: bool) -> int:
 	if building:
 		return int(dp(pid).edades[players[pid]["age"] - 1].get("bono_ataque_edificio", 0))
 	var line := SimData.line_of(def)
-	return mod(pid, "atk_pct:" + line) if line != "" else 0
+	if line == "":
+		return 0
+	# --- paso 6, par 2 --- pólvora de Massawa: solo con la ruta abierta (un mercado propio en pie)
+	return mod(pid, "atk_pct:" + line) + (mod(pid, "atk_ruta:" + line) if players[pid].get("ruta", false) else 0)
 
 
 ## Nivel de la línea de una unidad para `pid`: 0 común, 1 veterano, 2 élite (la interfaz).
@@ -1991,6 +2012,8 @@ func effective_armor(t: SimEntity, ranged: bool = false) -> int:
 	# --- paso 6 --- el ka'aguygua junto al monte; los arqueros guaraníes junto al río (Mbororé)
 	if t.def.has("armadura_monte") and mods.in_forest(t):
 		extra += int(t.def["armadura_monte"])
+	if t.def.has("armadura_cerca") and mods.near_wall(t, int(t.def["armadura_cerca"]["radio"])): # --- paso 6, par 2 --- guarnição da cerca
+		extra += int(t.def["armadura_cerca"]["n"])
 	if t.owner >= 0 and mod(t.owner, "armadura_rio:" + t.fn) > 0 and mods.near_water(t, int(players[t.owner].get("armadura_rio_radio", 2))):
 		extra += mod(t.owner, "armadura_rio:" + t.fn)
 	return base + armor_bonus(t.owner, t.fn, ranged) + aura_armor(t, ranged) + extra
@@ -2058,7 +2081,7 @@ func _hit(a: SimEntity, t: SimEntity) -> void:
 		t.hp = 1
 	# Espinas (cerca con estrepes de Palmares): devuelve daño al atacante cuerpo a cuerpo.
 	if t.def.has("espinas") and a.is_unit() and int(a.def.get("alcance", 0)) <= 1500:
-		a.hp -= int(t.def["espinas"])
+		a.hp -= int(t.def["espinas"]) * (100 + mod(t.owner, "espinas_pct")) / 100 # --- paso 6, par 2 --- forja y fojos
 		if a.hp <= 0:
 			mods.on_kill(a, t)
 			_kill(a)

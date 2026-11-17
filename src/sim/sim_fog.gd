@@ -35,6 +35,7 @@ func _circle(r: int) -> PackedInt32Array:
 
 var map: SimMap
 var vision_per_level := 0
+var vision_extra := {} # --- paso 6, par 2 --- dueño -> {tipo de edificio: visión extra} (aviso de los mocambos)
 
 
 func update(pid: int, sources: Array) -> void:
@@ -52,6 +53,8 @@ func update(pid: int, sources: Array) -> void:
 			r += map.h_at(cx, cy) * vision_per_level / P
 		if e.is_building():
 			r += maxi(e.w, e.h) / 2
+			if not vision_extra.is_empty():
+				r += int((vision_extra.get(e.owner, {}) as Dictionary).get(e.type, 0)) / P
 		var key := (cy * n + cx) * 64 + r
 		if done.has(key):
 			continue

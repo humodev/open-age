@@ -112,7 +112,10 @@ const DE_GLYPHS := ["aldeano", "alimento", "arbol", "arbusto", "arcabuz", "ariet
 const PROPIOS := ["diana", "establo", "taller_asedio", "ruka", "boleador", "incendiario", "awqa", "katana", "elefante_guerra", "hacha", "pico", "orfebre", "canasta", "riego", "muro", "martillo", "vigia", "aspillera", "engranaje", "investigar", "espada", "arco", "adiestramiento", "maravilla",
 	# --- paso 6 --- saberes propios (mapuches y guaraníes): mejoras, unidades y el hoyo
 	"coselete", "trigo", "estacas", "lawen", "tropilla", "poncho", "remonta", "pron", "mandioca", "remo", "yuyo", "oga", "mborore", "yerba", "flecha_dura", "imprenta", "aty",
-	"weichafe_montado", "kona_waiki", "canoa", "jinete_lanza", "kaaguygua", "hoyo"]
+	"weichafe_montado", "kona_waiki", "canoa", "jinete_lanza", "kaaguygua", "hoyo",
+	# --- paso 6, par 2 --- Etiopía y Palmares
+	"arado", "acta", "kosso", "cota", "amba", "amole", "massawa", "katama", "palmera", "vigia_mocambo", "fuelle", "sanguar", "kilombo", "trato", "hierro", "fojo",
+	"gasa", "farasanna", "jinete_corte", "zagaia", "guarnicao", "capitao"]
 const OSCURO := Color(0.06, 0.065, 0.075)
 const _SABERES := preload("res://src/game/ui/iconos_saberes.gd") # --- paso 6 --- glifos de los saberes propios
 

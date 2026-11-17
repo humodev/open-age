@@ -20,6 +20,58 @@
  "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",
  "escuela": {"nombre": "Talleres de Gondar", "edificios": ["gondar"], "desc": "Los artesanos de la corte de Fasilädäs: albañiles y herreros beta israel, despojados de la tierra y acusados de buda, y tejedores musulmanes del Islam Bet; ninguno podía tener tierra en rəst (Quirin, 1992; Kaplan, 1992; Pankhurst, 1982). Se investiga en el kätäma y en el recinto de Gondar."},
  "tecnologias": {"escuela_registros": {"nombre": "Ṣäḥafe tə'əzaz", "desc": "Los cronistas reales, «el que escribe las órdenes», con crónicas desde ʿAmdä Ṣəyon."}},
+ "_doc_saberes": "--- paso 6, par 2 --- Saberes propios (docs/diseno/27, §3.4): 8 mejoras (2 en la II, 3 en la III, 3 en la IV) y 3 unidades. Cada una lleva `desc` (qué hace y el saber) y `evidencia` (nivel y fuente), que la ficha muestra. Nada de lo eclesiástico da combate ni entra en una mecánica: ni Lalibela, ni el tabot, ni la iglesia, ni el kebero. `propia`: la cuenta el modelo (tools/modelo_progreso.py) y la compra la IA según `ia_propias`.",
+ "tecnologias_nuevas": {
+  "maresha_tef": {"propia": true, "eje": "economia", "nombre": "Maresha y ṭef", "en": {"tipo": "almacen_alimento"}, "edificio": "almacen_alimento", "ranura": 6, "edad_min": 2, "costo": {"alimento": 50, "madera": 125}, "tiempo_ms": 30000, "icono": "arado",
+   "efectos": [{"tipo": "tasa", "recurso": "granja", "pct": 15}],
+   "desc": "El arado de bueyes de tracción doble (maräša es la reja; vale por el arado): el par de bueyes era la unidad de la riqueza campesina. El ṭef, cereal domesticado en Etiopía, de grano diminuto que se guarda años en el gotära. Granjas +15 %.",
+   "evidencia": "Documentado y arqueológico. Álvares, Verdadeira informação das terras do Preste João (1540) [verificar el pasaje del arado]; Crummey, Land and Society in the Christian Kingdom of Ethiopia (2000); McCann, People of the Plow (1995). El ṭef: D'Andrea, Economic Botany 62 (2008) [verificar el título]; la fecha de los primeros restos, debatida."},
+  "actas_geez": {"propia": true, "eje": "economia", "nombre": "Actas de tierra en ge'ez", "en": {"tipo": "gult"}, "edificio": "gult", "ranura": 0, "edad_min": 2, "costo": {"alimento": 75, "riqueza": 100}, "tiempo_ms": 30000, "icono": "acta",
+   "efectos": [{"tipo": "renta_pct", "tipos": ["gult"], "pct": 15}],
+   "desc": "Las cesiones de tierra y de gult se copiaban en ge'ez en los folios en blanco de los evangeliarios. El ícono es una hoja suelta con sello, no un evangeliario abierto. La renta la pagan los gäbbar: el gult rinde 15 % más.",
+   "evidencia": "Documentado. Crummey (2000); Huntingford, The Land Charters of Northern Ethiopia (1965)."},
+  "faws_kosso": {"propia": true, "eje": "militar", "nombre": "Fäws y kosso (remedios)", "en": {"tipo": "cuartel"}, "edificio": "cuartel", "ranura": 6, "edad_min": 3, "costo": {"alimento": 150, "riqueza": 100}, "tiempo_ms": 40000, "icono": "kosso",
+   "efectos": [{"tipo": "relevo_pct", "pct": 25}],
+   "desc": "Solo la farmacopea: plantas como el kosso (Hagenia abyssinica, la flor contra la tenia), minerales, cauterio y cura de heridas y fracturas. Los tratados mezclaban recetas con oraciones y rollos protectores: el juego no usa esa parte. El relevo cura 25 % más; el sanador (wägešša) llega con el resto del paso 4.",
+   "evidencia": "Documentado para los siglos XVIII y XIX; debatido para 1500–1700. Strelcyn, Médecine et plantes d'Éthiopie (1968); Pankhurst, An Introduction to the Medical History of Ethiopia (1990). Desde cuándo describen los europeos el kosso, [verificar] (¿Ludolf, 1681?)."},
+  "cota_malla": {"propia": true, "eje": "militar", "nombre": "Cota de malla", "en": {"tipo": "establo"}, "edificio": "establo", "ranura": 6, "edad_min": 3, "costo": {"alimento": 100, "riqueza": 125}, "tiempo_ms": 35000, "icono": "cota",
+   "efectos": [{"tipo": "armadura", "contra": "cuerpo", "funciones": ["choque"], "n": 1}],
+   "desc": "Jinetes con cota de malla, importada de Egipto y del mundo otomano, y de pocos. +1 de armadura contra cuerpo a cuerpo al choque.",
+   "evidencia": "Documentado. Futūḥ al-Ḥabaša (trad. Stenhouse, notas de Pankhurst, 2003); Álvares (1540) [verificar los pasajes]."},
+  "amba_fortaleza": {"propia": true, "eje": "mecanica", "nombre": "Amba", "en": {"tipo": "centro"}, "edificio": "centro", "ranura": 8, "edad_min": 3, "costo": {"madera": 150, "piedra": 150}, "tiempo_ms": 40000, "icono": "amba",
+   "efectos": [{"tipo": "altura_pct", "pct": 10}],
+   "desc": "Mesetas de paredes a pique como fortaleza, prisión y tesoro: Amba Gəšän (tesoro real hasta que la tomó el imán Aḥmad, c. 1540) y Wähni, la de la época de Gondar. Debre Damo, monasterio vivo, no se usa. La defensa en altura sube de 25 % a 35 %.",
+   "evidencia": "Documentado. Taddesse Tamrat, Church and State in Ethiopia, 1270–1527 (1972); Álvares (1540); Futūḥ (la toma); Bruce, Travels (1790). Wähni, [verificar desde qué reinado]."},
+  "caravanas_amole": {"propia": true, "eje": "economia", "nombre": "Caravanas de amole", "en": {"tipo": "mercado"}, "edificio": "mercado", "ranura": 6, "edad_min": 4, "costo": {"alimento": 200, "madera": 200}, "tiempo_ms": 50000, "icono": "amole",
+   "efectos": [{"tipo": "mercado_venta_pct", "pct": 20}],
+   "desc": "Barras de sal como moneda (ya en la década de 1520), cortadas por trabajadores afar en la llanura de sal y llevadas por mercaderes musulmanes, los jabarti, en caravanas de mulas y camellos. Lo vendido en el mercado rinde 20 % más.",
+   "evidencia": "Documentado. Pankhurst, An Introduction to the Economic History of Ethiopia from Early Times to 1800 (1961); Álvares (1540)."},
+  "polvora_massawa": {"propia": true, "eje": "militar", "nombre": "Pólvora de Massawa", "en": {"tipo": "mercado"}, "edificio": "mercado", "ranura": 7, "edad_min": 4, "costo": {"alimento": 200, "riqueza": 250}, "tiempo_ms": 50000, "icono": "massawa",
+   "efectos": [{"tipo": "ataque_ruta_pct", "lineas": ["polvora"], "pct": 10, "edificios": ["mercado"]}],
+   "desc": "Casi todas las armas de fuego entraban por Massawa (otomana desde 1557); en la corte se reparaban, sin fabricación local de importancia. +10 % de ataque a la pólvora solo mientras haya un mercado propio en pie: la ruta abierta.",
+   "evidencia": "Documentado (la importación). Pankhurst, artículos sobre las armas de fuego en Etiopía antes del siglo XIX (Ethiopia Observer, Journal of Ethiopian Studies, décadas de 1960 y 1970) [verificar títulos y números]."},
+  "orden_katama": {"propia": true, "eje": "mecanica", "nombre": "Orden del kätäma", "en": {"tipo": "centro"}, "edificio": "centro", "ranura": 9, "edad_min": 4, "costo": {"alimento": 250, "madera": 250}, "tiempo_ms": 50000, "icono": "katama",
+   "efectos": [{"tipo": "obra_pct", "tipos": ["corte_nueva"], "pct": -50}],
+   "desc": "El campamento real se armaba siempre con el mismo plano: la tienda del rey al centro y cada dignatario y regimiento en un lugar fijo. Por eso se levantaba y se armaba rápido. La corte nueva se arma en la mitad del tiempo.",
+   "evidencia": "Documentado. Álvares (1540, lo vio en los años 1520); las crónicas reales; Horvath, «The Wandering Capitals of Ethiopia», Journal of African History 10 (1969); Pankhurst, History of Ethiopian Towns (1982)."}
+ },
+ "ia_propias": {"_doc": "Orden de compra de la IA (sim_ai.gd, _own_buys), como el de los mapuches.",
+  "orden": [
+   {"tec": "maresha_tef", "granjas": 4},
+   {"tec": "actas_geez"},
+   {"tec": "cota_malla", "tropa": {"lineas": ["montados"], "n": 4}},
+   {"tec": "faws_kosso", "tropa": {"n": 10}},
+   {"tec": "amba_fortaleza", "tropa": {"n": 12}},
+   {"tec": "polvora_massawa", "tropa": {"tipos": ["arcabucero"], "n": 4}},
+   {"tec": "caravanas_amole"},
+   {"tec": "orden_katama"}
+  ],
+  "unidades": [
+   {"tipo": "caballeria_corte", "max_pct": 25},
+   {"tipo": "farasanna", "max_pct": 25},
+   {"tipo": "guerrero_gasa", "max_pct": 25}
+  ]
+ },
  "edades": [
   "Kätäma",
   "Gult",
@@ -55,6 +107,16 @@
   }
  },
  "unidades_nuevas": {
+  "guerrero_gasa": {"nombre": "Guerrero de gaša", "propia": true, "funcion": "choque", "edad_min": 2, "pob": 1, "costo": {"alimento": 60, "madera": 15, "riqueza": 25}, "tiempo_ms": 17000, "pv": 120, "armadura": 1, "armadura_distancia": 1, "ataque": 11, "alcance": 450, "cadencia_ms": 1250, "velocidad": 1350, "vision": 8000, "radio": 260, "gasa": true,
+   "carga": {"extra": 6, "frena_ms": 0, "espera_ms": 5000},
+   "desc": "Infantería con lanza, jabalinas y escudo (gaša): arroja la jabalina al cerrar (el primer golpe después de 5 s sin pelear pega 6 más) y el escudo le da +1 de armadura a distancia. La espada curva, el šotäl, queda solo en la ficha: sus imágenes son de los siglos XVIII y XIX, y lo de que «pasa por encima del escudo» es de catálogos modernos (debatido).",
+   "evidencia": "Documentado (la infantería). Futūḥ al-Ḥabaša (Stenhouse, 2003); Álvares (1540). La iconografía del šotäl, [verificar] (Institute of Ethiopian Studies)."},
+  "farasanna": {"nombre": "Färäsäñña con cota", "propia": true, "funcion": "choque", "montado": true, "edad_min": 3, "pob": 2, "costo": {"alimento": 120, "riqueza": 90}, "tiempo_ms": 26000, "pv": 220, "armadura": 3, "armadura_distancia": 2, "ataque": 13, "alcance": 500, "cadencia_ms": 1300, "velocidad": 1950, "vision": 9000, "radio": 380, "cota": true,
+   "desc": "Färäsäñña es «jinete»: el montado pesado con cota de malla importada, de pocos. 220 de vida y armadura 3; más lento que el jinete noble.",
+   "evidencia": "Documentado. Futūḥ al-Ḥabaša (Stenhouse, 2003); Álvares (1540) [verificar los pasajes]."},
+  "caballeria_corte": {"nombre": "Caballería de la corte", "propia": true, "elite": true, "funcion": "choque", "montado": true, "edad_min": 4, "pob": 2, "costo": {"alimento": 110, "riqueza": 80}, "tiempo_ms": 22000, "pv": 180, "armadura": 1, "armadura_distancia": 3, "ataque": 12, "alcance": 500, "cadencia_ms": 1100, "velocidad": 2500, "vision": 9500, "radio": 380, "bono": {"distancia": 6},
+   "desc": "Montados rápidos de la edad IV: +6 contra la distancia. El diseño pide a los jinetes oromo aliados por tratado; hasta consultar a académicos y comunidades oromo (§7) entra con el nombre de reserva, «Caballería de la corte», y se entrena en el establo. La historia es de alianzas, de adopción (moggaasa) en las dos direcciones y de matrimonios: en Gondar, la guardia de Iyoas (1755–1769) era oromo. El gadaa se nombra como la institución que les dio su fuerza, no como mecánica.",
+   "evidencia": "Documentado. Mohammed Hassen, The Oromo and the Christian Kingdom of Ethiopia, 1300–1700 (2015); Bahrey, Zenahu lä Galla (1593), trad. en Beckingham y Huntingford (1954); Bruce (1790)."},
   "carpa_real": {
    "nombre": "Corte en marcha",
    "funcion": "explorador",
@@ -319,7 +381,7 @@
   ]
  ],
  "construye": ["corte_nueva", "casa", "granja", "almacen_alimento", "almacen_madera", "almacen_mina", "cuartel", "establo", "taller", "torre", "fortaleza", "centro", "gult", "empalizada", "puerta", "mercado", "maravilla"],
- "produce": {"cuartel": ["lancero", "hondero"], "establo": ["guerrero", "jinete"], "taller": ["ariete", "catapulta"]},
+ "produce": {"cuartel": ["lancero", "hondero", "guerrero_gasa"], "establo": ["guerrero", "jinete", "farasanna", "caballeria_corte"], "taller": ["ariete", "catapulta"]},
  "modulos": {
   "defensa_altura": {
    "pct": 25

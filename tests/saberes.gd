@@ -7,7 +7,8 @@ extends SceneTree
 
 var fallas: Array[String] = []
 const NIVELES := ["Documentado", "Arqueológico", "Debatido", "Tradición"]
-const SAGRADO := ["machi", "rewe", "kultrun", "foye", "canelo", "opy", "mbaraka", "takuapu", "karai", "ngillatun"]
+const SAGRADO := ["machi", "rewe", "kultrun", "foye", "canelo", "opy", "mbaraka", "takuapu", "karai", "ngillatun",
+	"tabot", "kebero", "lalibela", "iglesia", "calundu", "nganga", "kimbanda", "capoeira"] # --- paso 6, par 2 ---
 
 
 func _check(name: String, ok: bool, detail: String = "") -> void:
@@ -25,6 +26,15 @@ func _init() -> void:
 	_cantidades(s)
 	_mapuches(s)
 	_guaranies(s)
+	# --- paso 6, par 2 --- Etiopía y Palmares (proceso/26-juego-tardio/12)
+	var s2 := Sim.new(12, 2, null, {"civs": ["etiopia", "palmares"], "terreno": "llano"})
+	for pid in 2:
+		s2.players[pid]["age"] = 4
+		for k in ["alimento", "madera", "piedra", "riqueza"]:
+			s2.players[pid]["res"][k] = 20000
+	_cantidades(s2)
+	_etiopia(s2)
+	_palmares(s2)
 	print("SABERES: %s" % ("OK" if fallas.is_empty() else "FALLO (%d)" % fallas.size()))
 	quit(0 if fallas.is_empty() else 1)
 
@@ -32,7 +42,8 @@ func _init() -> void:
 ## 8 mejoras (2, 3 y 3 por edad; las de la vía guaraní cuentan una vez) y 3 unidades (II, III y IV),
 ## todas con su ficha: saber (desc) y evidencia con nivel; ningún nombre sagrado.
 func _cantidades(s: Sim) -> void:
-	var propias_u := {"mapuches": ["infanteria_montada", "incendiarios", "kona_waiki"], "guaranies": ["yga", "catapulta", "caballeria_mision", "kaaguygua"]}
+	var propias_u := {"mapuches": ["infanteria_montada", "incendiarios", "kona_waiki"], "guaranies": ["yga", "catapulta", "caballeria_mision", "kaaguygua"],
+		"etiopia": ["guerrero_gasa", "farasanna", "caballeria_corte"], "palmares": ["zagaieiro", "guarnicao_cerca", "capitao_mocambo"]}
 	for pid in 2:
 		var dd := s.dp(pid)
 		var civ := dd.clave
@@ -331,3 +342,113 @@ func _guaranies(s: Sim) -> void:
 	boat.hp = 0
 	s._kill(boat)
 	_check("canoa: si se hunde, nadan", p1.alive and p1.inside < 0)
+
+
+## --- paso 6, par 2 --- Etiopía (§3.4): cada mejora y unidad hace lo que dice.
+func _etiopia(s: Sim) -> void:
+	var home := _home(s, 0)
+	s._finish_tech(0, "maresha_tef")
+	_check("maresha y ṭef: +15 % granjas", s.mod(0, "tasa:granja") == 15)
+	s._finish_tech(0, "actas_geez")
+	_check("actas en ge'ez: gult +15 %", s.mod(0, "renta_pct:gult") == 15)
+	s._finish_tech(0, "faws_kosso")
+	_check("fäws y kosso: relevo +25 %", s.mod(0, "relevo_pct") == 25)
+	var j := s.spawn_unit("guerrero", 0, home.x + 6000, home.y)
+	var a0 := s.effective_armor(j, false)
+	s._finish_tech(0, "cota_malla")
+	_check("cota de malla: +1 cuerpo a cuerpo al choque", s.effective_armor(j, false) == a0 + 1)
+	s._finish_tech(0, "amba_fortaleza")
+	_check("amba: la altura defiende 35 %", int(s.mods.m(0, "defensa_altura")["pct"]) + s.mod(0, "altura_pct") == 35)
+	s._finish_tech(0, "caravanas_amole")
+	_check("amole: el mercado paga más", s.mod(0, "venta_pct") == 20)
+	# Pólvora de Massawa: solo con un mercado propio en pie.
+	var mq := s.spawn_unit("arcabucero", 0, home.x + 7000, home.y)
+	var atk0 := s.effective_attack(mq)
+	s._finish_tech(0, "polvora_massawa")
+	s.mods.tick_second()
+	_check("massawa: sin mercado no suma", s.effective_attack(mq) == atk0, "%d" % s.effective_attack(mq))
+	var spot := _land(s, home.tx + 9, home.ty, true)
+	var mk := s.spawn_building("mercado", 0, spot.x, spot.y, true)
+	s.mods.tick_second()
+	_check("massawa: con el mercado en pie, +10 %", s.effective_attack(mq) == atk0 * 110 / 100, "%d -> %d" % [atk0, s.effective_attack(mq)])
+	s._kill(mk)
+	s.mods.tick_second()
+	_check("massawa: cae el mercado, se corta", s.effective_attack(mq) == atk0)
+	s._finish_tech(0, "orden_katama")
+	_check("kätäma: la corte en la mitad del tiempo", s.mod(0, "obra_t:corte_nueva") == -50)
+	# Unidades: la jabalina al cerrar y el escudo; la cota; la caballería contra la distancia.
+	var g := s.spawn_unit("guerrero_gasa", 0, home.x + 6000, home.y + 2000)
+	_check("gaša: +1 de armadura a distancia", s.effective_armor(g, true) >= 1)
+	var foe := s.spawn_unit("lancero", 1, g.x + 400, g.y)
+	var hp0 := foe.hp
+	s.tick += 100
+	s._hit(g, foe)
+	var first := hp0 - foe.hp
+	var hp1 := foe.hp
+	s._hit(g, foe)
+	_check("gaša: la jabalina al cerrar pega más", first > hp1 - foe.hp, "%d contra %d" % [first, hp1 - foe.hp])
+	s._kill(foe)
+	var f := s.spawn_unit("farasanna", 0, home.x + 6000, home.y - 2000)
+	_check("färäsäñña: 220 de vida, armadura 3", f.hp_max == 220 and int(f.def["armadura"]) == 3, "%d" % f.hp_max)
+	var cc := s.spawn_unit("caballeria_corte", 0, home.x + 6000, home.y - 3000)
+	var ar := s.spawn_unit("hondero", 1, cc.x + 400, cc.y)
+	_check("caballería de la corte: +6 contra la distancia", s.attack_bonus(cc, ar) >= 6)
+	for e in [j, mq, g, f, cc, ar]:
+		s._kill(e)
+
+
+## --- paso 6, par 2 --- Palmares (§3.5).
+func _palmares(s: Sim) -> void:
+	var home := _home(s, 1)
+	s._finish_tech(1, "rocas_palmeiras")
+	_check("roças e palmeiras: +15 % granjas y renta del mocambo", s.mod(1, "tasa:granja") == 15 and int(s.players[1]["renta_tipos"]["mocambo"]["riqueza"]) == 4)
+	s._finish_tech(1, "aviso_mocambos")
+	_check("aviso: los mocambos ven 3 casillas más", int(s.fog.vision_extra[1]["mocambo"]) == 3000)
+	s._finish_tech(1, "forja_mocambos")
+	_check("forja: oficios +25 % y estrepes +50 %", s.mod(1, "oficios_pct") == 25 and s.mod(1, "espinas_pct") == 50)
+	# Sanguar: la gente de guerra que se mueve recibe menos de la distancia; quieta, igual.
+	var w := s.spawn_unit("guerrero", 1, home.x + 6000, home.y)
+	var arq := s.spawn_unit("hondero", 0, w.x + 4000, w.y)
+	var d0 := s.mods.damage(arq, w, 100)
+	s._finish_tech(1, "sanguar")
+	var d1 := s.mods.damage(arq, w, 100)
+	w.path.append(Vector2i(w.x / 1000 + 3, w.y / 1000))
+	var d2 := s.mods.damage(arq, w, 100)
+	_check("sanguar: -15 % de la distancia en movimiento", d1 == d0 and d2 == d0 * 85 / 100, "%d %d %d" % [d0, d1, d2])
+	w.path.clear()
+	# Kilombo: de cada 4 que llegan, uno es gente de guerra.
+	s._finish_tech(1, "kilombo")
+	s.players[1]["res"]["fama"] = 5000
+	s.players[1]["pop_cap"] = 500
+	var guerra0 := 0
+	for e in s.actives:
+		guerra0 += 1 if e.alive and e.owner == 1 and e.type == "guerrero" else 0
+	for i in 4:
+		s.mods._welcome(1, s.players[1])
+	var guerra1 := 0
+	for e in s.actives:
+		guerra1 += 1 if e.alive and e.owner == 1 and e.type == "guerrero" else 0
+	_check("kilombo: 1 de cada 4 llega como gente de guerra", guerra1 - guerra0 == 1, "%d" % (guerra1 - guerra0))
+	s._finish_tech(1, "trato_moradores")
+	_check("trato: el mercado casi sin comisión", s.mod(1, "venta_pct") == 40)
+	var atk0 := s.effective_attack(w)
+	s._finish_tech(1, "hierro_angola_janga")
+	_check("hierro de Angola Janga: +1 al choque", s.effective_attack(w) == atk0 + 1)
+	_check("fojo: pide la mejora", s.build_block(1, "hoyo") != "")
+	s._finish_tech(1, "fojos_estrepes")
+	_check("fojo: con la mejora se cava", s.build_block(1, "hoyo") == "", s.build_block(1, "hoyo"))
+	# Guarnição: +2 de armadura junto a una cerca propia.
+	var spot := _land(s, home.tx - 10, home.ty, true)
+	var gc := s.spawn_unit("guarnicao_cerca", 1, spot.x * 1000 + 500, spot.y * 1000 + 500)
+	var a0 := s.effective_armor(gc, false)
+	s.spawn_building("empalizada", 1, spot.x + 1, spot.y, true)
+	_check("guarnição: +2 junto a la cerca", s.effective_armor(gc, false) == a0 + 2, "%d -> %d" % [a0, s.effective_armor(gc, false)])
+	# Capitão: la tropa propia a 5 casillas pega 1 más; la lejana, no.
+	var cap := s.spawn_unit("capitao_mocambo", 1, w.x + 1000, w.y)
+	var far := s.spawn_unit("guerrero", 1, w.x + 20000, w.y + 20000)
+	var aw := s.effective_attack(w)
+	var af := s.effective_attack(far)
+	s.mods._command_aura()
+	_check("capitão: +1 a la tropa cerca", s.effective_attack(w) == aw + 1 and s.effective_attack(far) == af)
+	var z := s.spawn_unit("zagaieiro", 1, home.x + 5000, home.y + 3000)
+	_check("zagaieiro: tiro corto (3 casillas)", s.reach_of(z) == 3000)

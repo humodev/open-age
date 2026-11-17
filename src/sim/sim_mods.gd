@@ -22,6 +22,9 @@ var _protected: Array = [] # [dueño, x, y, radio] de los koyagtun sin enemigos 
 var traps: Array[SimEntity] = [] # --- paso 6 --- hoyos con estacas (mapuches), ver «Trampas»
 
 
+var mando := {} # --- paso 6, par 2 --- id de unidad -> ataque extra por un capitão de mocambo cerca (cada segundo)
+
+
 func _init(s: Sim) -> void:
 	sim = s
 	_roads.resize(s.map.n * s.map.n)
@@ -44,6 +47,8 @@ func tick_second() -> void:
 			continue
 		_own_resource(pid, p)
 		_rents(pid, p)
+		if p.has("ruta_req"): # --- paso 6, par 2 --- pólvora de Massawa: ¿la ruta sigue abierta?
+			p["ruta"] = _has_built(pid, p["ruta_req"])
 		_conversions(pid, p)
 		_crafts_yield(pid)
 		_herds(pid)
@@ -52,6 +57,7 @@ func tick_second() -> void:
 		if has(pid, "caminos") and sim.tick % 50 == 0:
 			_update_connection(pid)
 	_regen()
+	_command_aura() # --- paso 6, par 2 ---
 	_wonder_tick() # --- paso 7 --- antes de los sitios (koyagtun)
 	_sacred()
 	if not _respawns.is_empty():
@@ -183,6 +189,7 @@ func _rents(pid: int, _p: Dictionary) -> void:
 			# --- paso 7 --- Fasil Gəbbi en pie: los gult de todo el mapa rinden más.
 			var wr := wonder_fx(pid, "renta_pct")
 			var wpct := 100 + int(wr["pct"]) if not wr.is_empty() and (wr.get("tipos", []) as Array).has(e.type) else 100
+			wpct = wpct * (100 + sim.mod(pid, "renta_pct:" + e.type)) / 100 # --- paso 6, par 2 --- actas de tierra (gult)
 			for k in r:
 				_gain(pid, k, int(r[k]) * mult * P / 60 * (boost if k == "riqueza" else 100) / 100 * wpct / 100, origin)
 	# --- paso 6 --- Renta que dan las mejoras a un tipo de edificio (makuñ: cada lof da riqueza).
@@ -261,9 +268,16 @@ func _welcome(pid: int, p: Dictionary) -> void:
 	if home == null:
 		return
 	p["res"][key] -= cost
-	var u := sim.spawn_near(home, "aldeano")
-	sim.events.append({"t": "trained", "id": u.id, "player": pid, "type": "aldeano"})
-	if has(pid, "oficios"):
+	# --- paso 6, par 2 --- Kilombo: de cada `cada` que llegan, uno entra como gente de guerra.
+	var kind := "aldeano"
+	if p.has("kilombo"):
+		var kb: Dictionary = p["kilombo"]
+		kb["n"] = int(kb["n"]) + 1
+		if int(kb["n"]) % int(kb["cada"]) == 0:
+			kind = kb["tipo"]
+	var u := sim.spawn_near(home, kind)
+	sim.events.append({"t": "trained", "id": u.id, "player": pid, "type": kind})
+	if kind == "aldeano" and has(pid, "oficios"):
 		craft_assign(u)
 
 
@@ -418,7 +432,7 @@ func _crafts_yield(pid: int) -> void:
 	if not has(pid, "oficios"):
 		return
 	var cfg := m(pid, "oficios")
-	var boost := 100 + sim.mod(pid, "motor")
+	var boost := 100 + sim.mod(pid, "motor") + sim.mod(pid, "oficios_pct") # --- paso 6, par 2 --- forja de los mocambos
 	var per := int(cfg["por_min"])
 	var working := 0
 	for e in sim.actives:
@@ -474,6 +488,54 @@ func in_forest(e: SimEntity) -> bool:
 			if o != null and o.is_resource() and o.res_kind == "madera":
 				return true
 	return false
+
+
+## --- paso 6, par 2 --- Sanguar: la tropa que se mueve esquiva parte del daño de la distancia.
+func dodge(a: SimEntity, t: SimEntity, dmg: int) -> int:
+	if t.owner < 0 or not t.is_unit() or t.path.is_empty() or not sim.is_ranged(a):
+		return dmg
+	var pct := sim.mod(t.owner, "esquiva:" + t.type)
+	return dmg * (100 - pct) / 100 if pct > 0 else dmg
+
+
+## --- paso 6, par 2 --- ¿Hay una cerca, puerta o fortaleza propia a `r` casillas? (guarnição da cerca)
+func near_wall(e: SimEntity, r: int) -> bool:
+	var tx := e.x / P
+	var ty := e.y / P
+	for yy in range(ty - r, ty + r + 1):
+		for xx in range(tx - r, tx + r + 1):
+			var o: SimEntity = sim.by_id.get(sim.map.occupant(xx, yy))
+			if o != null and o.owner == e.owner and o.is_building() and o.built and (o.def.has("espinas") or o.type in ["empalizada", "puerta"]):
+				return true
+	return false
+
+
+## --- paso 6, par 2 --- ¿`pid` tiene en pie alguno de esos edificios terminado?
+func _has_built(pid: int, types: Array) -> bool:
+	for e in sim.actives:
+		if e.alive and e.owner == pid and e.is_building() and e.built and types.has(e.type):
+			return true
+	return false
+
+
+## --- paso 6, par 2 --- Mando de los capitães de mocambo: la tropa propia a `radio` pega `n` más.
+func _command_aura() -> void:
+	if not mando.is_empty():
+		mando.clear()
+	var caps: Array[SimEntity] = []
+	for e in sim.actives:
+		if e.alive and e.is_unit() and e.inside < 0 and e.def.has("mando"):
+			caps.append(e)
+	if caps.is_empty():
+		return
+	for u in sim.actives:
+		if not u.alive or not u.is_unit() or u.owner < 0 or not u.is_military():
+			continue
+		for c in caps:
+			var md: Dictionary = c.def["mando"]
+			if c != u and c.owner == u.owner and absi(c.x - u.x) <= int(md["radio"]) and absi(c.y - u.y) <= int(md["radio"]):
+				mando[u.id] = int(md["n"])
+				break
 
 
 ## --- paso 6 --- ¿Hay agua a `r` casillas o menos de la unidad? (Mbororé: los arqueros junto al río.)
@@ -673,9 +735,11 @@ func damage(a: SimEntity, t: SimEntity, dmg: int) -> int:
 	if t.owner >= 0 and has(t.owner, "defensa_altura") and t.is_unit():
 		var dh := sim.map.h_at(t.x / P, t.y / P) - sim.map.h_at(a.x / P, a.y / P)
 		if dh > 0:
-			dmg = dmg * (100 - int(m(t.owner, "defensa_altura")["pct"])) / 100
+			dmg = dmg * (100 - int(m(t.owner, "defensa_altura")["pct"]) - sim.mod(t.owner, "altura_pct")) / 100 # --- paso 6, par 2 --- amba
 	if a.is_unit() and has(a.owner, "sigilo") and a.last_combat < sim.tick - 50 and is_hidden_now(a):
 		dmg = dmg * (100 + int(m(a.owner, "sigilo").get("emboscada_pct", 0)) + sim.mod(a.owner, "emboscada")) / 100 # --- paso 6 --- aty
+	if t.owner >= 0 and has(t.owner, "oficios"): # --- paso 6, par 2 --- sanguar (solo Palmares tiene esquiva)
+		dmg = dodge(a, t, dmg)
 	return maxi(1, dmg)
 
 
