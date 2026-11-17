@@ -1,0 +1,56 @@
+  ronda 1: 13.7 fps · proceso 138.79 ms · vista 13.22 ms · actualizar 2.67 ms (avance 1.66 ms) por cuadro
+    play por cuadro 8.2 · malla por cuadro 0.3
+  ronda 2: 14.3 fps · proceso 193.04 ms · vista 11.89 ms · actualizar 2.48 ms (avance 1.46 ms) por cuadro
+    play por cuadro 9.1 · malla por cuadro 0.5
+  ronda 3: 14.4 fps · proceso 630.22 ms · vista 12.87 ms · actualizar 2.98 ms (avance 1.55 ms) por cuadro
+    play por cuadro 8.7 · malla por cuadro 0.4
+  ronda 4: 15.4 fps · proceso 141.47 ms · vista 12.69 ms · actualizar 2.37 ms (avance 1.43 ms) por cuadro
+    play por cuadro 8.5 · malla por cuadro 0.1
+  ronda 5: 19.1 fps · proceso 117.63 ms · vista 10.35 ms · actualizar 2.13 ms (avance 1.33 ms) por cuadro
+    play por cuadro 6.5 · malla por cuadro 0.1
+captura: /tmp/claude-1000/-mnt-games-01-Projects-open-age/481c6f08-db17-4268-bf0b-14788944cecc/scratchpad/shots/fps_anim.png
+vista (WorldView.render) ms por cuadro: mediana=12.69 [10.350972972973, 11.8903728813559, 12.6927538461538, 12.869220338983, 13.2222678571429] · GPU ms: [6.21500015258789, 11.8489999771118, 15.3610000610352, 5.92500019073486, 6.26200008392334]
+FPS animaciones=1 aldeanos animados=213 mediana=14.4 min=13.7 max=19.1 muestras=[13.6898496121128, 14.2725545066438, 14.3925712865276, 15.418495932838, 19.1067787494407]
+ 23:23:26 up 17 days, 23:42,  1 user,  load average: 30,85, 31,82, 30,90
+  ronda 1: 15.4 fps · proceso 120.85 ms · vista 9.66 ms · actualizar 0.00 ms (avance 0.00 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0
+  ronda 2: 12.4 fps · proceso 151.35 ms · vista 11.40 ms · actualizar 0.00 ms (avance 0.00 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0
+  ronda 3: 11.7 fps · proceso 148.45 ms · vista 12.87 ms · actualizar 0.00 ms (avance 0.00 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0
+  ronda 4: 16.5 fps · proceso 150.74 ms · vista 10.54 ms · actualizar 0.00 ms (avance 0.00 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0
+  ronda 5: 15.8 fps · proceso 137.75 ms · vista 11.02 ms · actualizar 0.00 ms (avance 0.00 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0
+captura: /tmp/claude-1000/-mnt-games-01-Projects-open-age/481c6f08-db17-4268-bf0b-14788944cecc/scratchpad/shots/fps_maqueta.png
+vista (WorldView.render) ms por cuadro: mediana=11.02 [9.66201666666667, 10.5351304347826, 11.0233492063492, 11.3989807692308, 12.8740625] · GPU ms: [7.08799982070923, 6.88800001144409, 11.4829998016357, 7.50299978256226, 7.32299995422363]
+FPS animaciones=0 aldeanos animados=0 mediana=15.4 min=11.7 max=16.5 muestras=[11.7320803471523, 12.3663453715742, 15.3977468990221, 15.8348311491739, 16.5443345005481]
+ 23:24:29 up 17 days, 23:43,  1 user,  load average: 30,06, 31,39, 30,81
+  ronda 1: 12.2 fps · proceso 146.13 ms · vista 14.58 ms · actualizar 3.05 ms (avance 1.99 ms) por cuadro
+    play por cuadro 9.1 · malla por cuadro 0.4
+  ronda 2: 13.6 fps · proceso 155.39 ms · vista 12.19 ms · actualizar 2.59 ms (avance 1.35 ms) por cuadro
+    play por cuadro 10.1 · malla por cuadro 0.6
+  ronda 3: 13.5 fps · proceso 139.42 ms · vista 13.99 ms · actualizar 2.52 ms (avance 1.36 ms) por cuadro
+    play por cuadro 9.1 · malla por cuadro 0.3
+  ronda 4: 15.1 fps · proceso 168.76 ms · vista 13.18 ms · actualizar 2.41 ms (avance 1.49 ms) por cuadro
+    play por cuadro 7.7 · malla por cuadro 0.1
+  ronda 5: 16.2 fps · proceso 118.67 ms · vista 11.68 ms · actualizar 2.45 ms (avance 1.34 ms) por cuadro
+    play por cuadro 8.0 · malla por cuadro 0.2
+captura: /tmp/claude-1000/-mnt-games-01-Projects-open-age/481c6f08-db17-4268-bf0b-14788944cecc/scratchpad/shots/fps_anim.png
+vista (WorldView.render) ms por cuadro: mediana=13.18 [11.6810454545455, 12.1868909090909, 13.1791875, 13.9927321428571, 14.5822941176471] · GPU ms: [5.92000007629395, 5.92999982833862, 6.01000022888184, 6.27099990844727, 5.90999984741211]
+FPS animaciones=1 aldeanos animados=213 mediana=13.6 min=12.2 max=16.2 muestras=[12.2490270429696, 13.4987476295838, 13.5563709644224, 15.0747140515178, 16.2262749119417]
+ 23:25:36 up 17 days, 23:44,  1 user,  load average: 29,49, 30,97, 30,71
+  ronda 1: 16.1 fps · proceso 101.50 ms · vista 10.00 ms · actualizar 0.00 ms (avance 0.00 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0
+  ronda 2: 15.4 fps · proceso 146.07 ms · vista 9.62 ms · actualizar 0.00 ms (avance 0.00 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0
+  ronda 3: 12.8 fps · proceso 143.33 ms · vista 12.08 ms · actualizar 0.00 ms (avance 0.00 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0
+  ronda 4: 10.4 fps · proceso 187.26 ms · vista 15.17 ms · actualizar 0.00 ms (avance 0.00 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0
+  ronda 5: 12.8 fps · proceso 145.57 ms · vista 12.11 ms · actualizar 0.00 ms (avance 0.00 ms) por cuadro
+    play por cuadro 0.0 · malla por cuadro 0.0
+captura: /tmp/claude-1000/-mnt-games-01-Projects-open-age/481c6f08-db17-4268-bf0b-14788944cecc/scratchpad/shots/fps_maqueta.png
+vista (WorldView.render) ms por cuadro: mediana=12.08 [9.620296875, 10.0027538461538, 12.0847692307692, 12.11128, 15.1658888888889] · GPU ms: [9.15100002288818, 6.93599987030029, 8.12600040435791, 8.31400012969971, 16.1919994354248]
+FPS animaciones=0 aldeanos animados=0 mediana=12.8 min=10.4 max=16.1 muestras=[10.3800122484145, 12.8076451789684, 12.8383152843738, 15.4063212617585, 16.1204640114361]
+ 23:26:53 up 17 days, 23:46,  1 user,  load average: 31,44, 31,14, 30,78

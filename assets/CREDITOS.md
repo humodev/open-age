@@ -136,3 +136,11 @@ Los mapas de las misiones con nombre se arman con `tools/relieve_real.py` a part
 - **Ríos, canales y lagos**: © colaboradores de OpenStreetMap, bajo licencia ODbL (https://www.openstreetmap.org/copyright). Las capas de agua de `data/relieve/*.json` derivan de OSM y se distribuyen bajo la misma licencia ODbL.
 
 Cada archivo guarda el centro del recorte, su lado en km y la fuente. En los lugares discutidos o estimados, la nota del lugar dice «aprox».
+
+## Animaciones (`animaciones/kaykit/`)
+
+| archivo | fuente (URL exacta) | autor | licencia |
+|---|---|---|---|
+| aldeano_kaykit.glb (y su textura `aldeano_kaykit_mannequin_texture.png`) | https://kaylousberg.itch.io/kaykit-character-animations (KayKit Character Animations 1.1, descarga gratuita «Free 1.1», `KayKit_Character_Animations_1.1.zip`): esqueleto `Rig_Medium` con el maniquí, y 13 de sus 161 animaciones (Idle_A, Walking_A, Running_A, Chopping, Pickaxing, Digging, Working_A, Hammering, Interact, PickUp, Hit_A, Death_A, Melee_1H_Attack_Chop), juntadas en un solo glTF con `tools/kaykit_extraer.py` | Kay Lousberg (www.kaylousberg.com) | CC0 1.0 (texto en `animaciones/kaykit/License.txt`; el crédito no es obligatorio) |
+
+El cuerpo del aldeano (ropa, tocados, herramientas) es obra propia, armado con código en `src/game/aldeano_animado.gd`; del paquete se usa el esqueleto y el movimiento. La orientación de la herramienta en la mano sigue la de las armas de KayKit Character Pack: Adventurers (https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0, CC0), que solo se miró y no se incluye.

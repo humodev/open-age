@@ -1,0 +1,34 @@
+{
+  "_doc": "Aldeanos animados con KayKit Character Animations (CC0; proceso/27-animaciones). Solo imagen: la simulación no lo lee y el hash no cambia. activo: false vuelve a la figura de antes (modelo generado o maqueta); también --animaciones=0 en la línea de comandos. archivo: el glTF con el esqueleto y las animaciones elegidas (tools/kaykit_extraer.py). acciones: qué animación y qué herramienta usa cada estado (talar, picar, juntar, cosechar, carnear, construir, pegar, quieto, caminar, correr, morir); vel_pct acelera o frena la animación de trabajo. por_recurso: acción de cada tipo de recurso del mapa (data/recursos.json); por_clase: acción por clase de recurso cuando el tipo no está; los edificios que dan recurso (granjas, corrales) usan 'granja'. correr_desde_pasos: pasos por segundo a partir de los cuales el paso se vuelve trote (con la velocidad de hoy el aldeano da unos 2,4 pasos por segundo); el paso sigue siempre a la distancia recorrida, no patina. mezcla_s: segundos de mezcla entre estados; cambio_s: cuánto tiene que durar un estado nuevo para cambiar de animación (en un montón, el moverse y el quedarse quieto titilan de un tick a otro). rendimiento: max_por_cuadro es cuántos aldeanos se animan por cuadro (con más en pantalla, cada uno se actualiza cada 2 o 3 cuadros); lejos_m: a más de esta distancia de la cámara (en casillas; la cámara normal está a 28), se anima a la mitad de cuadros; los que están fuera de la pantalla no se animan. vestimenta: por forma del pueblo (estilo.forma de data/civs): tela (color de la ropa; sin esto, la arcilla del pueblo aclarada, como la maqueta), piel, pelo, prenda (unku, poncho, tipoy, shamma, pano, ninguna) con prenda_color, tocado (vincha, plumas, turbante, ninguno) con tocado_color; los mismos colores que la maqueta de src/game/civ_meshes.gd. Afirmaciones históricas de la vestimenta con [verificar] en las fichas de cada pueblo (docs/00-indice.md, regla 5).",
+  "activo": true,
+  "archivo": "res://assets/animaciones/kaykit/aldeano_kaykit.glb",
+  "acciones": {
+    "quieto":    { "anim": "Idle_A" },
+    "caminar":   { "anim": "Walking_A" },
+    "correr":    { "anim": "Running_A" },
+    "talar":     { "anim": "Chopping",  "herramienta": "hacha" },
+    "picar":     { "anim": "Pickaxing", "herramienta": "pico", "vel_pct": 140 },
+    "juntar":    { "anim": "Working_A", "herramienta": "canasta" },
+    "cosechar":  { "anim": "Digging",   "herramienta": "azada" },
+    "carnear":   { "anim": "Working_A", "herramienta": "cuchillo" },
+    "construir": { "anim": "Hammering", "herramienta": "martillo" },
+    "pegar":     { "anim": "Melee_1H_Attack_Chop", "herramienta": "hacha" },
+    "morir":     { "anim": "Death_A" }
+  },
+  "por_recurso": { "arbol": "talar", "capuera": "talar", "roca": "picar", "riqueza": "picar", "arbusto": "juntar", "yerbal": "juntar", "carne": "carnear", "venado": "carnear", "rebano_salvaje": "carnear" },
+  "por_clase": { "madera": "talar", "piedra": "picar", "riqueza": "picar", "alimento": "juntar" },
+  "correr_desde_pasos": 3.2,
+  "mezcla_s": 0.18,
+  "cambio_s": 0.2,
+  "rendimiento": { "max_por_cuadro": 80, "lejos_m": 46 },
+  "vestimenta": {
+    "inca":      { "tela": "#a8774f", "prenda": "unku",   "prenda_color": "#e2b13c", "tocado": "vincha",   "tocado_color": "#a63a2a" },
+    "mapuche":   { "prenda": "poncho", "prenda_color": "#3b3a44", "tocado": "vincha",   "tocado_color": "#c9ccd2" },
+    "guarani":   { "prenda": "tipoy",  "prenda_color": "#efe6cf", "tocado": "plumas",   "tocado_color": "#d94a2a" },
+    "etiopia":   { "prenda": "shamma", "prenda_color": "#f2eee4", "tocado": "ninguno" },
+    "palmares":  { "prenda": "pano",   "prenda_color": "#8a5a3a", "tocado": "turbante", "tocado_color": "#c9a24a" },
+    "ayutthaya": { "prenda": "pano",   "prenda_color": "#7a3b5a", "tocado": "ninguno" },
+    "_otro":     { "prenda": "ninguna", "tocado": "ninguno" }
+  },
+  "colores": { "piel": "#c99c76", "pelo": "#2a221c", "madera": "#7a5a3a", "piedra": "#6c6a66", "fibra": "#b99a5a", "cuero": "#5a4030" }
+}
