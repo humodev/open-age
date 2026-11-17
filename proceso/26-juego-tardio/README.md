@@ -51,7 +51,10 @@ Contexto: hoy la edad IV no trae unidades nuevas, hay 18 mejoras compartidas y n
   - **Rendición** en todas las dificultades.
   - **IA contra IA (45 min):** la IV en el **61 %** de las partidas (antes, 5 %), a los 26:42 de mediana. Ninguna partida se gana por maravilla, y el camino más rápido supera los 50 minutos.
   - **Pruebas:** mismo hash; maravilla (45 comprobaciones), campañas y autotest OK.
-  - **No entró:** el comerciante que camina, que espera arte (C-80). Torneo de cierre: 37. | [10-paso-7-maravilla-y-final.md](10-paso-7-maravilla-y-final.md) |
+  - **No entró:** el comerciante que camina, que espera arte (C-80). **Torneo 37** ([resultados](pruebas/37-torneo-paso-7.txt)): Tawantinsuyu 46, mapuches 62, guaraníes 40, Etiopía 42, Palmares 66, Ayutthaya 44.
+  - Todas entre 40 y 66 %: el paso 7 queda.
+  - Palmares sube 6 puntos, dentro del ruido (±7), pero queda en el borde de la banda: en observación. Si en el torneo del par 1 del paso 6 sigue en 66 % o más, se diagnostica con `tools/civ_diag.gd`.
+  - El torneo es de 30 minutos, así que no mide la maravilla. | [10-paso-7-maravilla-y-final.md](10-paso-7-maravilla-y-final.md) |
 | 11 | Decisión: si un paso rompe el balance, queda diseñado como contenido y se retoma con más contenido (modelos, animaciones) | por hacer |
 
 ## Pedido del autor: saberes de los pueblos
