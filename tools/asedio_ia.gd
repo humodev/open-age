@@ -31,6 +31,10 @@ func _init() -> void:
 			"parte":
 				part = int(kv[1].split("/")[0])
 				parts = int(kv[1].split("/")[1])
+	if OS.get_cmdline_user_args().has("--caida"):
+		_falls()
+		quit()
+		return
 	var data := SimData.load_default()
 	var civs: Array = []
 	for k in data.civs:
@@ -46,6 +50,46 @@ func _init() -> void:
 					continue
 				_game(diff, sd, civs[i], civs[(i + 1 + sd) % civs.size()], 3000 + i * 17 + sd * 11, minutes)
 	quit()
+
+
+## --caida: cuánto tarda en caer una defensa sola (sin ejército que la defienda), en la edad III
+## con los niveles comprados, según el asedio que la ataca y la gente que tiene adentro.
+func _falls() -> void:
+	print("defensor | edificio | adentro | atacante | segundos hasta caer | atacantes perdidos")
+	var cases := [
+		["", "torre", 0, "ariete:3"], ["", "fortaleza", 0, "ariete:3"], ["", "fortaleza", 10, "ariete:3"],
+		["", "fortaleza", 10, "ariete:3+lancero:10"], ["", "fortaleza", 0, "catapulta:3"], ["", "fortaleza", 0, "guerrero:15"],
+		["mapuches", "fortaleza", 0, "incendiarios:6"], ["etiopia", "fortaleza", 0, "incendiarios:6"],
+		["palmares", "fortaleza", 0, "guerrero:15"], ["guaranies", "fortaleza", 0, "catapulta:3"]]
+	for c in cases:
+		var att := "mapuches" if String(c[3]).begins_with("incendiarios") else ("guaranies" if c[0] == "guaranies" else "")
+		var s := Sim.new(3, 2, null, {"civs": [c[0], att] if c[0] != "" or att != "" else [], "terreno": "llano", "sin_sitios": true})
+		for e in s.actives.duplicate():
+			if e.owner >= 0 and e.is_unit(): # las capitales quedan (sin ellas, la partida termina)
+				s.remove_quietly(e)
+		for pid in 2:
+			s.players[pid]["age"] = 3
+			s.grant_age_purchases(pid, 3)
+		var cx := s.map.n / 2
+		var t := s.map.nearest_free(cx - 6, cx, 10, 0) # como micro_matriz: la semilla 3 en llano deja el paso libre
+		var b := s.spawn_building(c[1], 0, t.x, t.y, true)
+		for i in int(c[2]):
+			b.garrison.append(s.spawn_unit("aldeano", 0, b.x, b.y).id)
+			s.by_id[b.garrison[-1]].inside = b.id
+		var ids := []
+		for part in String(c[3]).split("+"):
+			var kv := part.split(":")
+			for i in int(kv[1]):
+				var u := s.map.nearest_free(cx + 5 + i % 4, cx - 1 + i / 4, 8, 1)
+				ids.append(s.spawn_unit(kv[0], 1, u.x * 1000 + 500, u.y * 1000 + 500).id)
+		s.push_command({"t": "move", "player": 1, "ids": ids, "x": b.x, "y": b.y, "amove": true})
+		var lost := 0
+		while s.tick < 6000 and b.alive:
+			s.step()
+		for id in ids:
+			if not (s.by_id.has(id) and s.by_id[id].alive):
+				lost += 1
+		print("%s | %s | %d | %s | %s | %d de %d" % [c[0] if c[0] != "" else "común", b.def["nombre"], c[2], c[3], ("%d" % (s.tick / 10)) if not b.alive else "no cae en 600", lost, ids.size()])
 
 
 func _m(tick: int) -> String:

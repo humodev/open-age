@@ -286,6 +286,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--vara-fija", action="store_true",
                     help="tabla 1 contra el mismo rival en todas las edades (el genérico de la II sin mejoras)")
+    ap.add_argument("--hitos-globales", action="store_true",
+                    help="la columna de los datos con los hitos militares de la III y la IV globales (como antes del paso 4)")
     args = ap.parse_args()
     reglas, base, edades, tecs = cargar()
     # El bono que tenían las unidades antes del paso 1 es el que hoy conservan los edificios.
@@ -301,8 +303,14 @@ def main():
     def p_hoy(c, u, e, rival):
         return poder(reglas, ejercito(reglas, u, COMPOSICION[c][e], efectos_hoy(tecs, GASTO_HOY[e]) + hitos_militares(civs[c], e + 1), bonos[e]), rival)
 
+    # Paso 4 (proceso/26, 08): los hitos militares desde `aura_hito.militar.combate_desde_edad`
+    # dan su bono solo en su aura; la columna de los datos no los suma al ejército que ataca.
+    desde = reglas.get("aura_hito", {}).get("militar", {}).get("combate_desde_edad", 0) or 5
+    if args.hitos_globales:
+        desde = 5
+
     def p_paso1(c, u, e, rival):
-        return poder(reglas, ejercito(reglas, u, COMPOSICION[c][e], efectos_de(tecs, GASTO_PASO1[e]) + hitos_militares(civs[c], e + 1), 0), rival)
+        return poder(reglas, ejercito(reglas, u, COMPOSICION[c][e], efectos_de(tecs, GASTO_PASO1[e]) + hitos_militares(civs[c], min(e + 1, desde - 1)), 0), rival)
 
     def efs_completo(c, e):
         return efectos_de(tecs, GASTO_COMPLETO[e]) + hitos_completo(civs[c], e + 1) + propias(c, e + 1)

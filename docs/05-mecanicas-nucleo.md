@@ -76,6 +76,9 @@ Sirve para que una economía sin ejército pueda sobrevivir a la presión tempra
 | `ataque_pct` | `lineas`, `pct` | Porcentaje de ataque de esas líneas, después de sumar el `ataque` plano |
 | `edificio_vida_pct` | `pct` | Vida de todos los edificios |
 | `edificio_ataque` / `edificio_alcance` | `n` | Andanadas de centros, torres e hitos |
+| `edificio_flechas` | `n`, `tipos` opcional | Flechas de más por andanada (aspilleras); con `tipos`, solo esos edificios (paso 4) |
+| `edificio_vida_pct` con `tipos` | `tipos`, `pct` | Vida solo de esos edificios (fortaleza reforzada; paso 4) |
+| `reparacion_pct` | `pct` | Reparación más rápida (paso 4) |
 
 - Los efectos son por jugador y se acumulan. Vida y velocidad se recalculan al instante; la vida actual conserva su proporción.
 - Dónde se investiga: `en` dice por capacidad (`deposito`, `tipo`, `militar`, `linea`); sin `en`, el tipo de `edificio`. `militar` con `sin_deposito`: en los edificios que entrenan tropa, salvo los que además son almacén o centro (el lof, el mocambo, la qollqa).
@@ -113,7 +116,7 @@ daño = max(minimo, ataque × multiplicador[función atacante][función objetivo
 
 - El triángulo (choque > distancia > línea > choque) vive en `reglas.json` → `contadores`. Una función que no figura usa 100.
 - Los aldeanos tienen función `civil`; los edificios, `edificio`.
-- El ataque es `(ataque + mejoras planas) × (100 + porcentaje) / 100`. El porcentaje de la tropa sale de lo comprado por línea (`ataque_pct`); el de los edificios que disparan y el del asedio, de la edad (`edades.json` → `bono_ataque_edificio` y `bono_ataque_asedio`).
+- El ataque es `(ataque + mejoras planas) × (100 + porcentaje) / 100`. El porcentaje de la tropa sale de lo comprado por línea (`ataque_pct`); el de los edificios que disparan, de la edad (`edades.json` → `bono_ataque_edificio`). El asedio no sube con la edad desde el paso 4: tiene sus niveles (ver «Asedio y defensas»).
 
 ### Comportamiento
 - **Cuerpo a cuerpo**: se acerca hasta tocar el borde del objetivo.
@@ -128,6 +131,17 @@ daño = max(minimo, ataque × multiplicador[función atacante][función objetivo
 Fuera del triángulo (`02-alcance-y-epoca.md`). Reglas de la capa común:
 - Las unidades del triángulo hacen daño reducido a edificios (`contadores` → `edificio`).
 - **Ariete** (`asedio`, desde la edad II, en el cuartel): solo ataca edificios y con un multiplicador muy alto. Es vulnerable al choque y casi inmune a la distancia. Es el asedio genérico; cada civilización lo reemplaza por el suyo (`investigacion/` propone, por ejemplo, el cañón de tacuara guaraní o los proyectiles incendiarios incas).
+
+**Paso 4 del juego tardío** (docs/diseno/27, §2 y §4.2; proceso/26-juego-tardio/08):
+- **El asedio es una línea** (`SimData.line_of` → `asedio`) y ya no sube con la edad. El +10 % que daba la II está en el ataque base del ariete; la III y la IV tienen `veterano_asedio` y `elite_asedio`, en el edificio que entrena el asedio. La IA los compra apenas tiene asedio (`reglas.ia_asedio.asedio_para_nivel`).
+- **Asedio de área** (`catapulta`, edad III): pega al blanco y a cada enemigo a `area` o menos, con su armadura, entero en el centro y `area_borde_pct` en el borde (`Sim._splash`, por la grilla de enemigos). `contadores` propios: pega entero a la tropa y poco a los edificios. `recibe`: la distancia le pega el 40 % (al ariete, el 15 %). Cada pueblo le pone su nombre y su forma:
+  - incas, el **hondero de piedra caliente**, y guaraníes, el **cañón de tacuara**: `reemplaza` al ariete desde la III (el ariete deja de entrenarse; los que hay siguen) y conserva parte del daño contra edificios;
+  - Etiopía, la **pieza ligera**; Ayutthaya, el **cañón de muralla** (más radio, menos daño);
+  - mapuches, los **incendiarios** (sin área): solo edificios, triple daño contra los de madera (`bono_material`, `material` del edificio: piedra si cuesta piedra o es hito) y poco contra la piedra; la distancia los daña entero;
+  - Palmares no tiene: en su lugar, la defensa.
+- **Fortaleza** (`fortaleza`, edad III): la defensa que aguanta, con nombre y maqueta por pueblo (hatun pukara, pukara, trinchera de tacuara, fortaleza de amba, baluarte da cerca, pom). Dispara andanadas como la torre, más fuerte, y aloja guarnición. Las de madera (mapuches, guaraníes, Palmares) arden ante los incendiarios; la de Palmares tiene espinas, como la cerca.
+- **Mejoras de defensa:** aspilleras (III, +1 flecha a todo lo que dispara), mampostería II (III, vida de los edificios), fortaleza reforzada (IV, +30 % de vida y +2 flechas a la fortaleza) y reparación rápida (IV, el doble de rápido).
+- **Hitos militares con aura** (C-76 a): los hitos militares que llevan a la III o la IV (`reglas.aura_hito.militar.combate_desde_edad`) dan su bono de combate (ataque, armadura, vida, velocidad) solo a la tropa propia a `radio` o menos del hito (`Sim._aura_combat`, cada segundo). Los demás efectos y los hitos de la II siguen globales. Con `combate_desde_edad: 0`, todo vuelve a ser global.
 - **Empalizada**: cerco de troncos de una casilla, barato, que se coloca arrastrando una línea 4-conexa (sin huecos en diagonal).
 - **Puerta**: deja pasar solo a su dueño y se puede poner sobre una empalizada propia. Cada jugador tiene su propia grilla de caminos (`06`).
 
@@ -135,7 +149,7 @@ Fuera del triángulo (`02-alcance-y-epoca.md`). Reglas de la capa común:
 
 - Cuatro edades (`02-alcance-y-epoca.md`). En la capa común se avanza construyendo un **hito**: un edificio que, al terminarse, sube la edad del jugador. Cada civilización reemplaza el hito genérico por su mecánica de avance (obra estatal, asamblea, fundación de aldea, iglesia) usando el mismo módulo con otros parámetros.
 - Solo puede haber un hito en construcción a la vez. El costo y el tiempo dependen de la edad de destino (`edades.json`) y son iguales para todas las opciones.
-- Cada edad habilita unidades, edificios e investigaciones (`edad_min`). La tropa **no** sube sola con la edad (paso 1 del juego tardío): la II habilita la herrería, la III el nivel veterano y la IV el élite. Los edificios que disparan y el asedio sí suben su ataque con la edad (+10, +20 y +35 %).
+- Cada edad habilita unidades, edificios e investigaciones (`edad_min`). La tropa **no** sube sola con la edad (paso 1 del juego tardío): la II habilita la herrería, la III el nivel veterano y la IV el élite. Los edificios que disparan sí suben su ataque con la edad (+10, +20 y +35 %); el asedio, desde el paso 4, con sus niveles.
 - Regla de opciones (`01`, palancas): cada avance ofrece dos hitos. El hito queda en el mapa y su efecto es permanente (`efectos`, mismos tipos que las investigaciones):
 
 | Hito genérico | Qué da |

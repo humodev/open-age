@@ -1,0 +1,70 @@
+# Paso 4: python3 tools/modelo_progreso.py (hitos militares de la III y la IV en aura, como en data/)
+
+### Tabla 1 · Pasos 1 y 2: el poder no cambia (contra el rival de referencia de la misma edad, con las reglas de hoy; edad I de hoy = 100)
+
+| Pueblo | I | II hoy | II pasos 1-2 | III hoy | III pasos 1-2 | IV hoy | IV pasos 1-2 | Δ II | Δ III | Δ IV |
+|---|---|---|---|---|---|---|---|---|---|---|
+| tawantinsuyu | 100 | 93 | 93 | 173 | 142 | 198 | 141 | +0 % | -18 % | -29 % |
+| mapuches | 100 | 111 | 111 | 167 | 153 | 202 | 151 | +0 % | -8 % | -25 % |
+| guaranies | 100 | 108 | 108 | 124 | 113 | 153 | 113 | +0 % | -8 % | -26 % |
+| etiopia | 100 | 144 | 144 | 194 | 179 | 199 | 161 | +0 % | -8 % | -19 % |
+| palmares | 100 | 104 | 104 | 143 | 113 | 184 | 112 | +0 % | -21 % | -39 % |
+| ayutthaya | 100 | 191 | 191 | 206 | 205 | 230 | 199 | +0 % | -1 % | -14 % |
+
+### Tabla 2 · Diseño completo: el poder crece por compras (contra el mismo rival fijo, edad I = 100)
+
+| Pueblo | I | II | III | IV sin comprar nada | IV con el gasto típico | IV/III | IV hoy |
+|---|---|---|---|---|---|---|---|
+| tawantinsuyu | 100 | 135 | 300 | 300 | 444 | ×1.48 | 621 |
+| mapuches | 100 | 180 | 329 | 329 | 510 | ×1.55 | 578 |
+| guaranies | 100 | 163 | 218 | 218 | 323 | ×1.49 | 418 |
+| etiopia | 100 | 214 | 376 | 340 | 503 | ×1.34 | 575 |
+| palmares | 100 | 160 | 225 | 225 | 332 | ×1.48 | 574 |
+| ayutthaya | 100 | 311 | 443 | 443 | 664 | ×1.50 | 732 |
+
+### Tabla 3 · Valor de cada línea en la edad IV, en unidades comunes (regla del veterano: ≤ ×2)
+
+| Pueblo | Unidad | Línea | IV hoy | IV diseño completo |
+|---|---|---|---|---|
+| tawantinsuyu | Leva (awqa kamayuq [verificar]) | linea | ×2.45 | ×2.01 ⚠ |
+| tawantinsuyu | Boleador | distancia | ×2.41 | ×1.91 |
+| tawantinsuyu | Guerrero de porra | choque | ×2.12 | ×1.93 |
+| tawantinsuyu | Hondero | distancia | ×2.18 | ×1.79 |
+| tawantinsuyu | Lancero con escudo | linea | ×2.49 | ×2.06 ⚠ |
+| mapuches | Weichafe | choque | ×1.99 | ×1.86 |
+| mapuches | Arquero | distancia | ×1.95 | ×1.68 |
+| mapuches | Kona montado | montados | ×1.96 | ×1.94 |
+| mapuches | Lanza larga | linea | ×2.12 | ×1.83 |
+| guaranies | Milicia arcabucera | polvora | ×1.86 | ×1.75 |
+| guaranies | Guerrero de macana | choque | ×1.95 | ×1.73 |
+| guaranies | Arquero | distancia | ×2.17 | ×1.90 |
+| guaranies | Lancero | linea | ×2.21 | ×1.83 |
+| etiopia | Mosquetero | polvora | ×1.68 | ×1.69 |
+| etiopia | Jinete noble | montados | ×1.92 | ×1.84 |
+| etiopia | Jabalinero | distancia | ×1.81 | ×1.64 |
+| etiopia | Jinete | montados | ×1.95 | ×1.87 |
+| etiopia | Chewa | linea | ×2.05 | ×1.83 |
+| palmares | Espingardeiro | polvora | ×2.06 | ×1.67 |
+| palmares | Gente de guerra | choque | ×2.31 | ×1.84 |
+| palmares | Flecheiro | distancia | ×2.35 | ×1.73 |
+| palmares | Lanceiro | linea | ×2.76 | ×1.91 |
+| ayutthaya | Compañía portuguesa | polvora | ×1.68 | ×1.69 |
+| ayutthaya | Elefante de guerra (chang suek) | montados | ×1.89 | ×1.91 |
+| ayutthaya | Compañía japonesa | choque | ×1.95 | ×1.85 |
+| ayutthaya | Infantería de dap | choque | ×1.91 | ×1.81 |
+| ayutthaya | Arquero | distancia | ×1.89 | ×1.68 |
+| ayutthaya | Lancero | linea | ×2.05 | ×1.83 |
+
+# python3 tools/modelo_progreso.py --hitos-globales (la tabla 1 como antes del paso 4)
+
+### Tabla 1 · Pasos 1 y 2: el poder no cambia (contra el rival de referencia de la misma edad, con las reglas de hoy; edad I de hoy = 100)
+
+| Pueblo | I | II hoy | II pasos 1-2 | III hoy | III pasos 1-2 | IV hoy | IV pasos 1-2 | Δ II | Δ III | Δ IV |
+|---|---|---|---|---|---|---|---|---|---|---|
+| tawantinsuyu | 100 | 93 | 93 | 173 | 173 | 198 | 195 | +0 % | -0 % | -2 % |
+| mapuches | 100 | 111 | 111 | 167 | 166 | 202 | 201 | +0 % | -1 % | -1 % |
+| guaranies | 100 | 108 | 108 | 124 | 123 | 153 | 152 | +0 % | -1 % | -1 % |
+| etiopia | 100 | 144 | 144 | 194 | 193 | 199 | 197 | +0 % | -1 % | -1 % |
+| palmares | 100 | 104 | 104 | 143 | 142 | 184 | 182 | +0 % | -0 % | -1 % |
+| ayutthaya | 100 | 191 | 191 | 206 | 205 | 230 | 229 | +0 % | -1 % | -1 % |
+

@@ -1,0 +1,49 @@
+# Paso 4: tools/primera_victoria.gd -- --seeds=7,21,3 --min=30 --dif=facil
+
+## Paso 4
+semilla 7: GANA a las 28:41 (rendicion) · ataques 1 (13:00:22+2 contra 2) · tropa perdida 37
+  bajas propias por último golpe: hondero 44, guerrero 7, lancero 5, boleador 5, ? 1 · bajas que hice: militar 74, aldeano 21
+  golpes de mi tropa (sin asedio) por blanco: militar 743, edificio 403, aldeano 98
+  daño recibido por atacante: hondero 3772, guerrero 1249, lancero 534, boleador 353, centro 10
+  arietes: más cerca de la capital rival 7 casillas · perdidos 7 (hondero 3, lancero 2, ? 1, guerrero 1) · daño a edificios 3334 · a unidades 0
+  daño mío a edificios: almacen_madera 1822, cuartel 1134, almacen_mina 489, taller_tejido 326, casa 326 · tirados: almacen_madera 3, cuartel 2, almacen_mina 1, taller_tejido 1, casa 1 (primero al minuto 15) · capital rival mín 2400
+  IA: ejército máx 22 · edificios al final granja 6, almacen_madera 4, qollqa 3, casa 3, taller_tejido 2, campo_tiro 2, centro 1, ushnu 1, mercado 1, almacen_mina 1, cuartel 1
+semilla 21: sin terminar a las 30:00 () · ataques 2 (13:00:22+2 contra 5, 22:00:26+2 contra 2) · tropa perdida 32
+  bajas propias por último golpe: hondero 45, lancero 4, guerrero 4, ? 4, boleador 3 · bajas que hice: militar 43
+  golpes de mi tropa (sin asedio) por blanco: militar 426, edificio 16, aldeano 8
+  daño recibido por atacante: hondero 3372, guerrero 1084, lancero 445, boleador 190, centro 20, ariete 7
+  arietes: más cerca de la capital rival 10 casillas · perdidos 10 (hondero 8, guerrero 1, lancero 1) · daño a edificios 1630 · a unidades 0
+  daño mío a edificios: almacen_mina 994, almacen_madera 489, casa 163 · tirados: almacen_mina 2, almacen_madera 1 (primero al minuto 18) · capital rival mín 2400
+  IA: ejército máx 22 · edificios al final almacen_madera 7, granja 5, casa 4, qollqa 3, taller_tejido 2, campo_tiro 2, centro 1, ushnu 1, cuartel 1, mercado 1
+semilla 3: GANA a las 25:14 (rendicion) · ataques 1 (14:20:26+2 contra 6) · tropa perdida 21
+  bajas propias por último golpe: hondero 24, lancero 12, boleador 2, guerrero 2 · bajas que hice: militar 48, aldeano 2
+  golpes de mi tropa (sin asedio) por blanco: militar 503, edificio 197, aldeano 10
+  daño recibido por atacante: hondero 2526, lancero 1015, guerrero 223, centro+guarnición 135, boleador 49, ariete 1
+  arietes: más cerca de la capital rival 7 casillas · perdidos 3 (hondero 3) · daño a edificios 1793 · a unidades 5
+  daño mío a edificios: casa 652, taller_tejido 489, qollqa 385, granja 328, almacen_madera 137 · tirados: casa 4, granja 2, qollqa 1, taller_tejido 1 (primero al minuto 24) · capital rival mín 2400
+  IA: ejército máx 19 · edificios al final granja 7, almacen_madera 5, qollqa 3, casa 3, campo_tiro 2, centro 1, taller_tejido 1, almacen_mina 1, ushnu 1, cuartel 1, mercado 1
+RESUMEN dif=facil semillas=7,21,3: ganó 2 de 3
+
+## Antes (main bde3f6f)
+semilla 7: GANA a las 28:41 (rendicion) · ataques 1 (13:00:22+2 contra 2) · tropa perdida 37
+  bajas propias por último golpe: hondero 44, guerrero 7, lancero 5, boleador 5, ? 1 · bajas que hice: militar 74, aldeano 21
+  golpes de mi tropa (sin asedio) por blanco: militar 743, edificio 403, aldeano 98
+  daño recibido por atacante: hondero 3772, guerrero 1249, lancero 534, boleador 353, centro 10
+  arietes: más cerca de la capital rival 7 casillas · perdidos 7 (hondero 3, lancero 2, ? 1, guerrero 1) · daño a edificios 3334 · a unidades 0
+  daño mío a edificios: almacen_madera 1822, cuartel 1134, almacen_mina 489, taller_tejido 326, casa 326 · tirados: almacen_madera 3, cuartel 2, almacen_mina 1, taller_tejido 1, casa 1 (primero al minuto 15) · capital rival mín 2400
+  IA: ejército máx 22 · edificios al final granja 6, almacen_madera 4, qollqa 3, casa 3, taller_tejido 2, campo_tiro 2, centro 1, ushnu 1, mercado 1, almacen_mina 1, cuartel 1
+semilla 21: sin terminar a las 30:00 () · ataques 2 (13:00:22+2 contra 5, 22:00:26+2 contra 2) · tropa perdida 32
+  bajas propias por último golpe: hondero 45, lancero 4, guerrero 4, ? 4, boleador 3 · bajas que hice: militar 43
+  golpes de mi tropa (sin asedio) por blanco: militar 426, edificio 16, aldeano 8
+  daño recibido por atacante: hondero 3372, guerrero 1084, lancero 445, boleador 190, centro 20, ariete 7
+  arietes: más cerca de la capital rival 10 casillas · perdidos 10 (hondero 8, guerrero 1, lancero 1) · daño a edificios 1630 · a unidades 0
+  daño mío a edificios: almacen_mina 994, almacen_madera 489, casa 163 · tirados: almacen_mina 2, almacen_madera 1 (primero al minuto 18) · capital rival mín 2400
+  IA: ejército máx 22 · edificios al final almacen_madera 7, granja 5, casa 4, qollqa 3, taller_tejido 2, campo_tiro 2, centro 1, ushnu 1, cuartel 1, mercado 1
+semilla 3: GANA a las 25:14 (rendicion) · ataques 1 (14:20:26+2 contra 6) · tropa perdida 21
+  bajas propias por último golpe: hondero 24, lancero 12, boleador 2, guerrero 2 · bajas que hice: militar 48, aldeano 2
+  golpes de mi tropa (sin asedio) por blanco: militar 503, edificio 197, aldeano 10
+  daño recibido por atacante: hondero 2526, lancero 1015, guerrero 223, centro+guarnición 135, boleador 49, ariete 1
+  arietes: más cerca de la capital rival 7 casillas · perdidos 3 (hondero 3) · daño a edificios 1793 · a unidades 5
+  daño mío a edificios: casa 652, taller_tejido 489, qollqa 385, granja 328, almacen_madera 137 · tirados: casa 4, granja 2, qollqa 1, taller_tejido 1 (primero al minuto 24) · capital rival mín 2400
+  IA: ejército máx 19 · edificios al final granja 7, almacen_madera 5, qollqa 3, casa 3, campo_tiro 2, centro 1, taller_tejido 1, almacen_mina 1, ushnu 1, cuartel 1, mercado 1
+RESUMEN dif=facil semillas=7,21,3: ganó 2 de 3
