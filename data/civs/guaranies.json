@@ -17,6 +17,9 @@
    "casa": "guaranies_casa"
   }
  },
+ "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",
+ "escuela": {"nombre": "Escritura del cabildo y talleres", "edificios": ["tava", "aty_guasu"], "desc": "En las misiones, los cabildos guaraníes escribían cartas, actas y memorias en su lengua (las cartas de 1753 contra el Tratado de Madrid) y los talleres hacían grabados, instrumentos y herrería (Neumann, 2015; Wilde, 2009). Se investiga en el oga guasu, la tava y el aty guasu.", "variantes": {"monte": {"nombre": "Óga guasu", "desc": "En el monte, el saber se transmitía en la casa grande comunal (Montoya, 1639; Susnik).", "tecnologias": {"escuela_registros": {"nombre": "La memoria del óga guasu"}}}}},
+ "tecnologias": {"escuela_registros": {"nombre": "Actas del cabildo", "desc": "Actas, cartas y memorias del cabildo, escritas en guaraní (Neumann, Letra de índios, 2015)."}},
  "edades": [
   "Tekoha",
   "Amundá",

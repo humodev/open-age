@@ -475,7 +475,10 @@ func _sacred() -> void:
 			# Renta decreciente: 18 / 12 / 8 por el 1.º, 2.º y 3.º sitio del mismo jugador.
 			var rank := int(holds[site.holder]) - 1
 			var rents: Array = cfg.get("renta_por_cantidad", [cfg["renta_riqueza"]])
-			_gain(site.holder, "riqueza", int(rents[mini(rank, rents.size() - 1)]) * P / 60, "sitios")
+			# --- paso 3 --- En la IV los sitios rinden más (docs/diseno/27, §4.3).
+			var by_age: Array = cfg.get("renta_edad_pct", [])
+			var age_pct := int(by_age[mini(int(sim.players[site.holder]["age"]), by_age.size()) - 1]) if not by_age.is_empty() else 0
+			_gain(site.holder, "riqueza", int(rents[mini(rank, rents.size() - 1)]) * (100 + age_pct) / 100 * P / 60, "sitios")
 	# Victoria por sitios: cuenta el equipo, no el jugador.
 	var team_holds := {}
 	for pid2 in holds:

@@ -17,6 +17,9 @@
    "casa": "mapuches_casa"
   }
  },
+ "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",
+ "escuela": {"nombre": "Trawün de los weupife", "edificios": ["parlamento"], "desc": "Reunión civil donde los weupife, los oradores del parlamento, transmitían el saber de los linajes (Febrés, 1765 [verificar las entradas]; Bengoa, 2003). No es el ngillatun, que es ceremonia. Se investiga en el lof principal y en el parlamento."},
+ "tecnologias": {"escuela_registros": {"nombre": "El pron", "desc": "La cuerda de nudos para contar los días hasta la junta [verificar la grafía]. No hay archivo escrito y no se inventa uno."}},
  "edades": [
   "Lof",
   "Rewe",

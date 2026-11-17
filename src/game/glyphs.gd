@@ -100,6 +100,15 @@ static func draw(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
 			ci.draw_arc(c + Vector2(0, -s * 0.1), s * 0.22, PI, TAU, 10, col, w)
 			for i in 3:
 				ci.draw_line(c + Vector2(-s * 0.22 + i * s * 0.22, -s * 0.02), c + Vector2(-s * 0.18 + i * s * 0.18, s * 0.3), col.darkened(0.35), w * 0.6)
+		"escuela":
+			# --- paso 3 --- La escuela de la IV: una cuerda principal con cuerdas colgantes y
+			# nudos (registro y cuenta), sin ser el ícono de ningún pueblo en particular.
+			ci.draw_line(c + Vector2(-s * 0.38, -s * 0.3), c + Vector2(s * 0.38, -s * 0.3), col, w * 1.4)
+			for i in 4:
+				var x := -s * 0.27 + i * s * 0.18
+				ci.draw_line(c + Vector2(x, -s * 0.3), c + Vector2(x + s * 0.02, s * 0.36), col.darkened(0.15), w)
+				for j in (i % 3) + 1:
+					ci.draw_circle(c + Vector2(x + s * 0.01, -s * 0.12 + j * s * 0.15), w * 1.2, col.lightened(0.2))
 		"escudo":
 			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.3, -s * 0.36), c + Vector2(s * 0.3, -s * 0.36), c + Vector2(s * 0.3, 0), c + Vector2(0, s * 0.4), c + Vector2(-s * 0.3, 0)]), col)
 			ci.draw_line(c + Vector2(0, -s * 0.3), c + Vector2(0, s * 0.3), col.darkened(0.35), w)

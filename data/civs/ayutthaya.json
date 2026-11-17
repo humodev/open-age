@@ -17,6 +17,9 @@
    "casa": "ayutthaya_casa"
   }
  },
+ "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",
+ "escuela": {"nombre": "Phra Khlang", "edificios": [], "desc": "El tesoro y los puertos, con sus escribanos, contadores e intérpretes (lam): lenguas, cuentas, cartas náuticas y tratados (La Loubère, 1691; Van Vliet's Siam, 2005). Se investiga en el wang."},
+ "tecnologias": {"escuela_registros": {"nombre": "Chindamani", "desc": "El manual de lengua y versificación de la corte de Narai (autoría y fecha, debatidas)."}},
  "edades": [
   "Mueang",
   "Krung Si",

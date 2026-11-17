@@ -17,6 +17,9 @@
    "casa": "tawantinsuyu_casa"
   }
  },
+ "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",
+ "escuela": {"nombre": "Yachaywasi", "edificios": ["kallanka_real"], "desc": "La «casa del saber», donde los amawta enseñaban lengua, khipu e historia a los hijos de la nobleza. La fundación por Inka Roca es la versión de Garcilaso (1609) y su forma de escuela formal está debatida; lo mejor documentado es la formación de los khipukamayuq (Urton, 2003). Se investiga en la capital y en la kallanka real."},
+ "tecnologias": {"escuela_registros": {"nombre": "Khipu", "desc": "Las cuerdas anudadas de los khipukamayuq: cuentas y registros del Estado (Urton, 2003)."}},
  "edades": [
   "Ayllu",
   "Suyu",

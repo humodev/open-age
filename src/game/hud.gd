@@ -959,8 +959,8 @@ class CommandCard:
 		draw_style_box(Hud.panel_box(), Rect2(Vector2.ZERO, size))
 		var cmds := hud.ctrl.commands()
 		# --- grilla --- (pestaña con el submenú abierto, encima de la grilla)
-		if hud.ctrl.submenu != Grilla.RAIZ and (hud.ctrl.grilla_aldeano() or hud.ctrl.submenu == Controller.INVESTIGAR): # --- ronda 6 ---
-			var title := "ECONOMÍA" if hud.ctrl.submenu == Grilla.ECONOMIA else "INVESTIGACIONES" if hud.ctrl.submenu == Controller.INVESTIGAR else "MILITAR Y DEFENSA"
+		if hud.ctrl.submenu != Grilla.RAIZ and (hud.ctrl.grilla_aldeano() or hud.ctrl.submenu == Controller.INVESTIGAR or hud.ctrl.submenu == Controller.ESCUELA): # --- ronda 6 ---
+			var title := "ECONOMÍA" if hud.ctrl.submenu == Grilla.ECONOMIA else "INVESTIGACIONES" if hud.ctrl.submenu == Controller.INVESTIGAR else String(hud.ctrl.escuela_info()["nombre"]).to_upper() if hud.ctrl.submenu == Controller.ESCUELA else "MILITAR Y DEFENSA"
 			var tw := Hud.font_b.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x + 92
 			var tab := StyleBoxFlat.new()
 			tab.bg_color = Color(Palette.UI_BG, 0.95)

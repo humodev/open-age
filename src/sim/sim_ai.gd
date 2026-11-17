@@ -140,11 +140,13 @@ func think() -> void:
 	_economy(p, vill, centro, saving)
 	_buildings(p, vill, centro, by_type, saving)
 	var held_levels := _levels(p, army, by_type, saving, _threat(centro) != null)
+	var held_late := _late_buys(p, army, by_type, saving) # --- paso 3 ---
 	_production(p, vill, army, centro, by_type, saving)
 	_research(p, by_type, saving)
 	_trade(p, by_type)
 	_engine(p, vill, centro, by_type, saving)
 	_reserve(p, -1, held_levels)
+	_reserve(p, -1, held_late) # --- paso 3 ---
 	_reserve(p, -1, held) # --- equipos ronda 3 ---
 	_animals(centro)
 	_alarm(p, vill, army, centro)
@@ -273,6 +275,63 @@ func _research(p: Dictionary, by_type: Dictionary, saving: bool) -> void:
 				if b.built and b.queue.size() < 2 and sim.tech_here(t, b):
 					sim.push_command({"t": "research", "player": player, "building": b.id, "tech": tech})
 					return
+
+
+## --- paso 3 --- Economía del final y escuela de la IV (docs/diseno/27, §1.1, §1.3 y §4.3;
+## reglas.ia_compras_tardias): en el orden de los datos, una por turno, cuando alcanza el costo
+## (con el descuento de los registros) más la reserva. No junta: si la primera que sirve no
+## alcanza, espera a la próxima vuelta sin pasar a otra más cara. Su costo queda apartado hasta
+## el final del turno, como el de los niveles.
+func _late_buys(p: Dictionary, army: Array[SimEntity], by_type: Dictionary, saving: bool) -> Dictionary:
+	var cfg: Dictionary = sim.data.reglas.get("ia_compras_tardias", {})
+	if cfg.is_empty() or not level["investiga"] or (saving and not cfg.get("ahorrando", false)):
+		return {}
+	var techs: Dictionary = sim.dp(player).tecnologias
+	var reserve := int(cfg.get("reserva", 0))
+	for tech: String in cfg.get("orden", []):
+		if not techs.has(tech) or sim.research_block(player, tech) != "":
+			continue
+		if not _late_useful(techs[tech], army):
+			continue
+		var where: SimEntity = null
+		for k in by_type:
+			for b: SimEntity in by_type[k]:
+				if b.built and b.queue.size() < 2 and sim.tech_here(techs[tech], b) and where == null:
+					where = b
+		if where == null:
+			continue
+		var cost := sim.tech_cost(player, tech)
+		for r in cost:
+			if int(p["res"].get(r, 0)) < int(cost[r]) + reserve:
+				return {}
+		sim.push_command({"t": "research", "player": player, "building": where.id, "tech": tech})
+		var held := {}
+		for r in cost:
+			held[r] = int(cost[r])
+			p["res"][r] = int(p["res"][r]) - int(cost[r])
+		return held
+	return {}
+
+
+## --- paso 3 --- ¿Le sirve a este pueblo? La mejora de una línea que no entrena en ningún
+## edificio, no; las del asedio, solo si tiene asedio en el ejército.
+func _late_useful(t: Dictionary, army: Array[SimEntity]) -> bool:
+	for ef: Dictionary in t.get("efectos", []):
+		if ef.has("lineas"):
+			var dd := sim.dp(player)
+			var made := false
+			for b in dd.edificios:
+				for l in dd.lines_made_by(dd.edificios[b]):
+					made = made or (ef["lineas"] as Array).has(l)
+			if not made:
+				return false
+		if String(ef["tipo"]).begins_with("asedio"):
+			var siege := false
+			for u in army:
+				siege = siege or u.fn == "asedio"
+			if not siege:
+				return false
+	return true
 
 
 ## Campana si el enemigo llega a la base con más tropas que las propias; calma pasado el peligro.

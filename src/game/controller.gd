@@ -331,6 +331,7 @@ func commands() -> Array[Dictionary]:
 		# Investigaciones: de cada cadena (hachas → hachas_2), la primera que falta. Su casilla se
 		# reparte al final (_ubicar_investigaciones): no pisan lo que entrena el edificio.
 		var research: Array[Dictionary] = []
+		var school: Array[Dictionary] = [] # --- paso 3 ---
 		var used := {}
 		var techs: Dictionary = sim.dp(local).tecnologias
 		for tech: String in techs:
@@ -343,7 +344,23 @@ func commands() -> Array[Dictionary]:
 			used[root] = true
 			var why := sim.research_block(local, tech)
 			var pref := int(t["ranura"]) if produce.is_empty() else int((Grilla.cfg().get("investigaciones_con_tropa", {}) as Dictionary).get(tech if not t.has("requiere") else root, t["ranura"]))
-			research.append({"slot": pref, "id": tech, "icon": t["icono"], "kind": "research", "name": t["nombre"], "cost": t["costo"], "desc": effects_text(t["efectos"]), "locked": why, "tech": true, "building": first.id})
+			var rc := {"slot": pref, "id": tech, "icon": t["icono"], "kind": "research", "name": tech_name(tech), "cost": sim.tech_cost(local, tech), "desc": effects_text(t["efectos"]), "locked": why, "tech": true, "building": first.id}
+			# --- paso 3 --- La escuela de la IV va en su propio submenú, con el nombre del pueblo.
+			if t.get("escuela", false):
+				school.append(rc)
+			else:
+				research.append(rc)
+		if submenu == ESCUELA:
+			var inner: Array[Dictionary] = [{"slot": Grilla.fija("volver", 11), "id": "volver", "icon": "volver", "kind": "back", "name": "Volver", "cost": {}, "desc": "Vuelve a la grilla del edificio (también Esc o clic derecho sobre la grilla).", "locked": ""}]
+			_repartir(school, {Grilla.fija("volver", 11): "volver"})
+			for c in school:
+				if int(c["slot"]) >= 0:
+					inner.append(c)
+			return inner
+		var esc := escuela_info()
+		if not school.is_empty() and int(sim.players[local]["age"]) >= int(sim.dp(local).tecnologias[school[0]["id"]].get("edad_min", 1)):
+			out.append({"slot": Grilla.fija("escuela", 7), "id": ESCUELA, "icon": "escuela", "kind": "submenu", "menu": ESCUELA, "name": "%s (%d)" % [esc["nombre"], school.size()], "cost": {}, "desc": "%s\nMejoras: %s." % [esc["desc"], ", ".join(school.map(func(c: Dictionary) -> String: return c["name"]))], "locked": ""})
+		# --- fin paso 3 ---
 		if first.capital or first.type == "centro":
 			var on: bool = sim.players[local]["alarm"]
 			out.append({"slot": 8, "id": "calma" if on else "campana", "icon": "calma" if on else "campana", "kind": "alarm", "name": "Toque de calma" if on else "Campana", "cost": {}, "desc": DESCS["calma" if on else "campana"], "locked": "", "on": not on})
@@ -394,8 +411,8 @@ func commands() -> Array[Dictionary]:
 		if first.def.get("guarnicion", 0) > 0:
 			out.append({"slot": 11, "id": "expulsar", "icon": "expulsar", "kind": "ungarrison", "name": "Expulsar guarnición", "cost": {}, "desc": DESCS["expulsar"], "locked": "" if not first.garrison.is_empty() else "No hay unidades alojadas"})
 		# Las mejoras militares primero: quedan en A S D F como en el cuartel (también en el mocambo).
-		var mil_first: Array[Dictionary] = research.filter(func(c: Dictionary) -> bool: return techs[c["id"]].get("en", {}).get("militar", false))
-		mil_first.append_array(research.filter(func(c: Dictionary) -> bool: return not techs[c["id"]].get("en", {}).get("militar", false)))
+		var mil_first: Array[Dictionary] = research.filter(func(c: Dictionary) -> bool: return techs.get(c["id"], {}).get("en", {}).get("militar", false))
+		mil_first.append_array(research.filter(func(c: Dictionary) -> bool: return not techs.get(c["id"], {}).get("en", {}).get("militar", false)))
 		out = _ubicar_investigaciones(out, mil_first)
 	return out
 
@@ -438,13 +455,43 @@ func _ubicar_investigaciones(out: Array[Dictionary], research: Array[Dictionary]
 		return inner
 	for alt in [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]:
 		if not taken.has(alt):
-			out.append({"slot": alt, "id": INVESTIGAR, "icon": "carga", "kind": "submenu", "menu": INVESTIGAR, "name": "Investigaciones (%d)" % research.size(), "cost": {}, "desc": "Mejoras que se investigan en este edificio: " + ", ".join(research.map(func(c: Dictionary) -> String: return c["name"])) + ".", "locked": ""})
+			out.append({"slot": alt, "id": INVESTIGAR, "icon": "carga", "kind": "submenu", "menu": INVESTIGAR, "name": "Investigaciones (%d)" % research.filter(func(c: Dictionary) -> bool: return c["kind"] == "research").size(), "cost": {}, "desc": "Mejoras que se investigan en este edificio: " + ", ".join(research.map(func(c: Dictionary) -> String: return c["name"])) + ".", "locked": ""})
 			break
 	return out
 
 
 const INVESTIGAR := "investigar"
+const ESCUELA := "escuela" # --- paso 3 --- submenú de la escuela de la IV
 const _ORDEN_LIBRE: Array[int] = [4, 5, 6, 7, 8, 9, 10, 0, 1, 2, 3, 11]
+
+
+## --- paso 3 --- La escuela de la IV del jugador local (docs/diseno/27, §1.3): nombre y ficha de
+## data/civs/<pueblo>.json → escuela. Con una variante por hito (los guaraníes de la vía monte
+## tienen el óga guasu), vale la del hito que tiene en pie. Sin pueblo, «Escuela».
+func escuela_info() -> Dictionary:
+	var esc: Dictionary = sim.dp(local).civ.get("escuela", {})
+	var out := {"nombre": esc.get("nombre", "Escuela"), "desc": esc.get("desc", "Las mejoras de la edad IV."), "tecnologias": {}}
+	var variants: Dictionary = esc.get("variantes", {})
+	if variants.is_empty():
+		return out
+	for e in sim.actives:
+		if e.alive and e.owner == local and e.is_building() and e.built and variants.has(e.type):
+			var v: Dictionary = variants[e.type]
+			out["nombre"] = v.get("nombre", out["nombre"])
+			out["desc"] = v.get("desc", out["desc"])
+			out["tecnologias"] = v.get("tecnologias", {})
+			break
+	return out
+
+
+## --- paso 3 --- Nombre de una investigación para el jugador local (con la variante de su escuela).
+func tech_name(tech: String) -> String:
+	var t: Dictionary = sim.dp(local).tecnologias.get(tech, {})
+	if t.get("escuela", false):
+		var v: Dictionary = escuela_info()["tecnologias"].get(tech, {})
+		if v.has("nombre"):
+			return v["nombre"]
+	return t.get("nombre", tech)
 
 
 ## Primero, cada una a su ranura si está libre; después, las que quedan a la primera libre.
@@ -983,7 +1030,7 @@ func _key(k: InputEventKey) -> void:
 	if code == KEY_ESCAPE:
 		if mode != "":
 			cancel_mode()
-		elif submenu != Grilla.RAIZ and (grilla_aldeano() or submenu == INVESTIGAR): # --- grilla --- (--- ronda 6 ---)
+		elif submenu != Grilla.RAIZ and (grilla_aldeano() or submenu == INVESTIGAR or submenu == ESCUELA): # --- grilla --- (--- ronda 6 ---)
 			open_submenu(Grilla.RAIZ)
 		elif not selection.is_empty():
 			_set_selection([] as Array[int])
@@ -1164,12 +1211,24 @@ func effects_text(efectos: Array) -> String:
 			"vida_pct":
 				if ef.has("lineas"):
 					parts.append("+%d%% de vida de %s" % [ef["pct"], lines_text(ef["lineas"])])
+				elif ef.get("funciones", []) == ["civil"]:
+					parts.append("+%d%% de vida de los aldeanos" % ef["pct"]) # --- paso 3 ---
 				else:
 					parts.append("+%d%% de vida militar" % ef["pct"])
 			"ataque_pct":
 				parts.append("+%d%% de ataque de %s" % [ef["pct"], lines_text(ef["lineas"])])
 			"velocidad_pct":
-				parts.append("+%d%% de velocidad militar" % ef["pct"])
+				if ef.get("funciones", []) == ["civil"]:
+					parts.append("+%d%% de velocidad de los aldeanos" % ef["pct"]) # --- paso 3 ---
+				else:
+					parts.append("+%d%% de velocidad militar" % ef["pct"])
+			# --- paso 3 --- escuela de la IV
+			"asedio_pct":
+				parts.append("+%d%% de ataque del asedio contra edificios" % ef["pct"])
+			"asedio_reparable":
+				parts.append("Los aldeanos reparan el asedio en el campo")
+			"costo_tec_pct":
+				parts.append("−%d%% de costo de las mejoras de la edad %s" % [ef["pct"], Sim._roman(ef["edad_min"])])
 			"edificio_vida_pct":
 				parts.append("+%d%% de vida de los edificios" % ef["pct"])
 			"edificio_ataque":
@@ -1220,6 +1279,14 @@ func unlocks_text(age: int) -> String:
 			level = int(t["nivel"])
 	if level > 0:
 		txt += ". Nivel %s para cada línea, en el edificio que la entrena" % LEVEL_NAMES[level]
+	# --- paso 3 --- la escuela de la IV, con su nombre
+	var school := 0
+	for k in sim.dp(local).tecnologias:
+		var t: Dictionary = sim.dp(local).tecnologias[k]
+		if t.get("escuela", false) and int(t.get("edad_min", 1)) == age:
+			school += 1
+	if school > 0:
+		txt += ". Escuela: %s (%d mejoras, en la capital)" % [escuela_info()["nombre"], school]
 	if bonus > 0:
 		txt += ". Ataque de edificios y asedio +%d%%." % bonus
 	return txt

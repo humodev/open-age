@@ -477,6 +477,8 @@ func _cmd_target(pid: int, units: Array[SimEntity], target_id: int) -> void:
 				_order_gather(e, t)
 			else:
 				plain.append(e)
+		elif e.fn == "civil" and can_repair_unit(pid, t):
+			_order_build(e, t) # --- paso 3 --- el asedio se repara en el campo (escuela)
 		elif t.is_building() and t.owner == pid:
 			if e.fn == "civil" and (not t.built or t.hp < t.hp_max):
 				_order_build(e, t)
@@ -615,6 +617,10 @@ func tech_here(t: Dictionary, b: SimEntity) -> bool:
 	if en.has("linea"):
 		# Niveles por línea: en cualquier edificio que entrene esa línea (docs/diseno/27, §1.1).
 		return dp(b.owner).lines_made_by(b.def).has(en["linea"])
+	if en.get("escuela", false):
+		# --- paso 3 --- La escuela de la IV (docs/diseno/27, §1.3): en la capital y en los
+		# edificios que nombra el pueblo (la kallanka real, el parlamento, la tava, Gondar, el Macaco).
+		return b.capital or (dp(b.owner).civ.get("escuela", {}).get("edificios", []) as Array).has(b.type)
 	if en.get("militar", false):
 		# Mejoras militares: en cualquier edificio que entrene tropa (cuartel, campo de tiro, corral, taller…).
 		var units: Dictionary = dp(b.owner).unidades
@@ -639,13 +645,34 @@ func _cmd_research(pid: int, bid: int, tech: String) -> void:
 	if b.queue.size() >= data.reglas["cola_max"]:
 		_notify(pid, "Cola llena")
 		return
-	if not can_afford(pid, t["costo"]):
+	var cost := tech_cost(pid, tech) # --- paso 3 --- (con el descuento de los registros)
+	if not can_afford(pid, cost):
 		_notify(pid, "Recursos insuficientes")
 		return
-	_pay(pid, t["costo"])
+	_pay(pid, cost)
 	players[pid]["pending"][tech] = true
 	b.queue.append("@" + tech)
-	b.queue_paid.append((t["costo"] as Dictionary).duplicate())
+	b.queue_paid.append(cost)
+
+
+## --- paso 3 --- ¿Los aldeanos de `pid` pueden reparar la unidad `t`? Solo el asedio propio
+## dañado, con la reparación en el campo de la escuela (docs/diseno/27, §1.3).
+func can_repair_unit(pid: int, t: SimEntity) -> bool:
+	return t.is_unit() and t.owner == pid and t.fn == "asedio" and t.hp < t.hp_max and mod(pid, "asedio_rep") > 0
+
+
+## --- paso 3 --- Costo de una investigación para `pid`: el de los datos, menos el descuento de
+## los registros de la escuela (`costo_tec_pct`, para las de su edad o más; docs/diseno/27, §1.3).
+func tech_cost(pid: int, tech: String) -> Dictionary:
+	var base: Dictionary = dp(pid).tecnologias.get(tech, {}).get("costo", {})
+	var age := int(dp(pid).tecnologias.get(tech, {}).get("edad_min", 1))
+	var off := 0
+	for a in range(1, age + 1):
+		off += mod(pid, "tec_desc:%d" % a)
+	var out := {}
+	for k in base:
+		out[k] = int(base[k]) * (100 - mini(off, 100)) / 100
+	return out
 
 
 ## Mercado: compra o vende un lote por riqueza; el precio sube al comprar y baja al vender.
@@ -945,6 +972,14 @@ func _apply_effects(pid: int, efectos: Array) -> void:
 				_add_mod(pid, "b_ataque", ef["n"])
 			"edificio_alcance":
 				_add_mod(pid, "b_alcance", ef["n"])
+			# --- paso 3 --- escuela de la IV (docs/diseno/27, §1.3)
+			"asedio_pct":
+				_add_mod(pid, "asedio_pct", ef["pct"])
+			"asedio_reparable":
+				_add_mod(pid, "asedio_rep", 1)
+			"costo_tec_pct":
+				_add_mod(pid, "tec_desc:%d" % int(ef["edad_min"]), ef["pct"])
+			# --- fin paso 3 ---
 	for e in actives:
 		if e.alive and e.owner == pid:
 			_apply_stats(e)
@@ -1670,7 +1705,8 @@ func attack_pct(pid: int, def: Dictionary, building: bool) -> int:
 		return 0
 	var fn: String = def.get("funcion", "")
 	if building or fn == "asedio":
-		return int(dp(pid).edades[players[pid]["age"] - 1].get("bono_ataque_edificio" if building else "bono_ataque_asedio", 0))
+		var by_age := int(dp(pid).edades[players[pid]["age"] - 1].get("bono_ataque_edificio" if building else "bono_ataque_asedio", 0))
+		return by_age + (0 if building else mod(pid, "asedio_pct")) # --- paso 3 --- (escuela: oficio del asedio)
 	var line := SimData.line_of(def)
 	return mod(pid, "atk_pct:" + line) if line != "" else 0
 

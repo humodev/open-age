@@ -50,7 +50,7 @@ Desde la edad II. Vende o compra lotes de alimento, madera o piedra por riqueza 
 
 ## Reparación
 
-Un aldeano con orden sobre un edificio propio dañado lo repara a la velocidad de construcción. En H1 reparar no cuesta recursos; ver A-012.
+Un aldeano con orden sobre un edificio propio dañado lo repara a la velocidad de construcción. En H1 reparar no cuesta recursos; ver A-012. Con la reparación en el campo de la escuela de la IV, también repara el asedio propio (a la velocidad de su entrenamiento).
 
 ## Guarnición y defensa de la base
 
@@ -76,6 +76,11 @@ Sirve para que una economía sin ejército pueda sobrevivir a la presión tempra
 | `ataque_pct` | `lineas`, `pct` | Porcentaje de ataque de esas líneas, después de sumar el `ataque` plano |
 | `edificio_vida_pct` | `pct` | Vida de todos los edificios |
 | `edificio_ataque` / `edificio_alcance` | `n` | Andanadas de centros, torres e hitos |
+| `asedio_pct` | `pct` | Porcentaje de ataque del asedio (que solo pega a edificios), sumado al de la edad |
+| `asedio_reparable` | — | Los aldeanos reparan el asedio propio dañado, como a un edificio |
+| `costo_tec_pct` | `edad_min`, `pct` | Descuento en el costo de las investigaciones de esa edad o más (`Sim.tech_cost`) |
+
+`vida_pct` y `velocidad_pct` con `funciones: ["civil"]` son las del aldeano.
 
 - Los efectos son por jugador y se acumulan. Vida y velocidad se recalculan al instante; la vida actual conserva su proporción.
 - Dónde se investiga: `en` dice por capacidad (`deposito`, `tipo`, `militar`, `linea`); sin `en`, el tipo de `edificio`.
@@ -88,6 +93,17 @@ Sirve para que una economía sin ejército pueda sobrevivir a la presión tempra
 - El panel de la unidad y la ficha dicen el nivel («Choque · Veterano»); el ícono es el glifo de la línea con uno o dos galones.
 - La IA los compra en todas las dificultades antes que la tropa (`reglas.ia_niveles`): `armas_1` al llegar a la II; en la III, el veterano de las dos líneas con más tropa; en la IV, el élite de esas dos; el resto, con lo que sobra.
 - Quien empieza una misión en una edad avanzada recibe lo que antes le daba la edad (`armas_1` y los niveles hasta su edad; `Sim.grant_age_purchases`).
+
+### Economía del final y escuela de la IV (paso 3 del juego tardío, docs/diseno/27 §1.1, §1.3 y §4.3)
+- **Economía por edad** (las marca `paso: 3` en `tecnologias.json`): velocidad del aldeano en la II (`vel_aldeano`, en el centro), vida del aldeano en la III (`vida_aldeano`, después de la velocidad, en la misma casilla), la riqueza II en la III (`orfebreria_2`) y en la IV la tercera de la madera (`hachas_3`), la del alimento («la granja como sostén», `riego_3`) y la carga II (`cestas_2`).
+- **Los sitios rinden más en la IV:** `sitios.renta_edad_pct`, por la edad del dueño.
+- **La escuela de la IV** (el equivalente de la universidad): seis mejoras iguales para todos (`escuela_*`, con `en: {"escuela": true}`), que se investigan en la capital y en los edificios que nombra cada pueblo en `civs/<pueblo>.json → escuela.edificios` (la kallanka real, el parlamento, la tava y el aty guasu, Gondar, el Macaco). Cada pueblo le da su nombre y su ficha (`escuela.nombre`, `escuela.desc`, y una variante por hito si hace falta: los guaraníes de la vía monte tienen el óga guasu) y nombra los registros en su `tecnologias`.
+  - Dos de combate: vida del choque a pie y ataque de la pólvora (`vida_pct` y `ataque_pct` por línea).
+  - Asedio: más ataque contra edificios (`asedio_pct`) y reparación en el campo (`asedio_reparable`: clic derecho de un aldeano sobre la pieza dañada).
+  - Defensa: alcance de centros, torres e hitos (`edificio_alcance`).
+  - Registros: descuento en las mejoras de la IV (`costo_tec_pct`).
+- En la grilla, la escuela es un botón con su nombre (casilla `interfaz.json → grilla.fijas.escuela`) que abre su submenú; aparece desde la IV y mientras le queden mejoras.
+- **La IA** (normal, difícil y experta) las compra en el orden de `reglas.ia_compras_tardias`, una por turno, después de los niveles y antes de la tropa, cuando le alcanza con reserva y no junta para un hito. Salta la de una línea que su pueblo no entrena y las del asedio si no tiene asedio. Las misiones no las reciben con la edad: antes no las daba nada.
 
 ## Producción
 

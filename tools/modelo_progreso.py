@@ -31,6 +31,7 @@ Los números de la propuesta viven acá hasta que entren en data/ con su paso.
 Uso:
   python3 tools/modelo_progreso.py               # las tres tablas en markdown
   python3 tools/modelo_progreso.py --vara-fija   # la tabla 1 contra el rival fijo
+  python3 tools/modelo_progreso.py --economia    # tablas 4 y 5: la economía del final (paso 3)
 """
 import argparse
 import copy
@@ -84,9 +85,9 @@ GASTO_HOY = [[], ["armas_1", "escudos_1"],
 TODAS = ["choque", "distancia", "linea", "montados", "polvora"]
 PROPUESTA = {
     # Paso 1 (armas_1 con +10 %, veterano y élite por línea): ya está en data/tecnologias.json.
-    # Escuela de la edad IV (§1.6): las dos de combate; las otras cuatro son de asedio y economía.
-    "escuela_vida": [{"tipo": "vida_pct", "funciones": ["choque"], "pct": 10}],
-    "escuela_polvora": [{"tipo": "ataque_pct", "lineas": ["polvora"], "pct": 10}],
+    # Paso 3 (proceso/26-juego-tardio/07): la escuela de la IV también está en data/
+    # (escuela_choque y escuela_polvora son las dos de combate; las otras cuatro, de asedio,
+    # defensa y costo, no suman al ejército). Se leen de ahí.
     # Diseño completo: la herrería III de ataque da +1 (hoy +2), porque el élite ya sube el ataque.
     "armas_3_completo": [{"tipo": "ataque", "funciones": MILITARES, "n": 1}],
 }
@@ -99,7 +100,7 @@ GASTO_PASO1 = [[], ["armas_1", "escudos_1"],
                ["armas_1", "escudos_1", "armas_2", "escudos_2", "adiestramiento", "armas_3", "escudos_3",
                 "veterano", "elite"]]
 GASTO_COMPLETO = GASTO_PASO1[:3] + [[k if k != "armas_3" else "armas_3_completo" for k in GASTO_PASO1[3]] + [
-    "escuela_vida", "escuela_polvora"]]
+    "escuela_choque", "escuela_polvora"]]
 
 # Saberes militares propios por edad (§3 del documento), solo los que el modelo sabe sumar
 # (ataque, armadura, vida). Las de curación, velocidad, trampas o economía no entran.
@@ -260,8 +261,12 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--vara-fija", action="store_true",
                     help="tabla 1 contra el mismo rival en todas las edades (el genérico de la II sin mejoras)")
+    ap.add_argument("--economia", action="store_true", help="tablas 4 y 5: la economía del final (paso 3)")
     args = ap.parse_args()
     reglas, base, edades, tecs = cargar()
+    if args.economia:
+        tablas_economia(tecs, base)
+        return
     # El bono que tenían las unidades antes del paso 1 es el que hoy conservan los edificios.
     bonos = [e.get("bono_ataque_edificio", e.get("bono_ataque", 0)) for e in edades["edades"]]
     gen = unidades_civ(base, {})
@@ -321,6 +326,77 @@ def main():
             vh = valor_vs_base(reglas, dd, efectos_hoy(tecs, GASTO_HOY[3]) + hitos_militares(civs[c], 4), bonos[3], mezcla)
             vn = valor_vs_base(reglas, dd, efs_completo(c, 3), 0, mezcla)
             print("| %s | %s | %s | ×%.2f | ×%.2f%s |" % (c, dd.get("nombre", k), linea_de(dd), vh, vn, " ⚠" if vn > 2.0 else ""))
+
+
+# --- paso 3 --- Economía del final (docs/diseno/27, §1.1 y §4.3; proceso/26-juego-tardio/07).
+# Un aldeano común va y vuelve entre la fuente y el depósito: cada viaje es carga / tasa de
+# recolección más el camino de ida y vuelta (2 × distancia / velocidad). Distancias típicas
+# (casillas) de la fuente al depósito más cercano: supuestos del modelo, no datos del juego.
+DISTANCIA = {"madera": 4, "granja": 1.5, "piedra": 5, "riqueza": 5}
+ALDEANOS_POR_RECURSO = 15  # para el repago de cada mejora de la IV
+
+
+def eco_mods(tecs, edad):
+    """Mejoras de economía hasta `edad` (todas compradas): tasa por recurso, carga y aldeano."""
+    m = {"tasa": {}, "carga": 0, "vel": 0, "vida": 0}
+    for k, t in tecs.items():
+        if not isinstance(t, dict) or t.get("edad_min", 1) > edad or t.get("motor"):
+            continue
+        for ef in t.get("efectos", []):
+            if ef["tipo"] == "tasa":
+                for r in (["alimento", "granja", "madera", "piedra", "riqueza"] if ef["recurso"] == "*" else [ef["recurso"]]):
+                    m["tasa"][r] = m["tasa"].get(r, 0) + ef["pct"]
+            elif ef["tipo"] == "carga":
+                m["carga"] += ef["n"]
+            elif ef["tipo"] == "velocidad_pct" and ef.get("funciones") == ["civil"]:
+                m["vel"] += ef["pct"]
+            elif ef["tipo"] == "vida_pct" and ef.get("funciones") == ["civil"]:
+                m["vida"] += ef["pct"]
+    return m
+
+
+def por_minuto(ald, recurso, m):
+    """Lo que junta un aldeano por minuto en ese recurso con las mejoras `m`."""
+    tasa = ald["tasa"][recurso] / 1000 * (100 + m["tasa"].get(recurso, 0)) / 100
+    carga = ald["carga"] + m["carga"]
+    vel = ald["velocidad"] / 1000 * (100 + m["vel"]) / 100
+    viaje = carga / tasa + 2 * DISTANCIA[recurso] / vel
+    return 60 * carga / viaje
+
+
+def tablas_economia(tecs, unidades):
+    ald = unidades["aldeano"]
+    print("\n### Tabla 4 · Lo que junta un aldeano por minuto, con toda la economía de la edad comprada (paso 3)\n")
+    print("Supuestos: distancia de la fuente al depósito (casillas) %s. «Antes» = sin lo del paso 3." % ", ".join("%s %s" % kv for kv in DISTANCIA.items()))
+    print()
+    print("| Recurso | I | II | III | IV antes | IV | IV / III | Vida del aldeano (IV) |")
+    print("|---|---|---|---|---|---|---|---|")
+    sin = {k: t for k, t in tecs.items() if not (isinstance(t, dict) and t.get("paso") == 3)}
+    for r in DISTANCIA:
+        f = [por_minuto(ald, r, eco_mods(tecs, e)) for e in range(1, 5)]
+        antes = por_minuto(ald, r, eco_mods(sin, 4))
+        print("| %s | %.1f | %.1f | %.1f | %.1f | %.1f | ×%.2f | %d |" % (r, f[0], f[1], f[2], antes, f[3], f[3] / f[2], round(ald["pv"] * (100 + eco_mods(tecs, 4)["vida"]) / 100)))
+    print("\n### Tabla 5 · Repago de las mejoras de economía del paso 3 (%d aldeanos en el recurso; las de carga y velocidad, %d en cada uno de los cuatro) y de los registros\n" % (ALDEANOS_POR_RECURSO, ALDEANOS_POR_RECURSO))
+    print("| Mejora | Edad | Costo | Efecto | + por minuto | Se paga en (min) |")
+    print("|---|---|---|---|---|---|")
+    for k, t in tecs.items():
+        if not isinstance(t, dict) or t.get("paso") != 3 or t.get("escuela"):
+            continue
+        e = t["edad_min"]
+        sin_k = {kk: tt for kk, tt in tecs.items() if kk != k and (not isinstance(tt, dict) or tt.get("edad_min", 1) <= e)}
+        con_k = {kk: tt for kk, tt in tecs.items() if not isinstance(tt, dict) or tt.get("edad_min", 1) <= e}
+        recursos = [ef["recurso"] for ef in t["efectos"] if ef["tipo"] == "tasa"] or list(DISTANCIA)
+        gana = sum(ALDEANOS_POR_RECURSO * (por_minuto(ald, r, eco_mods(con_k, e)) - por_minuto(ald, r, eco_mods(sin_k, e))) for r in recursos)
+        costo = sum(t["costo"].values())
+        efecto = ", ".join("%s %s" % (ef["tipo"], ef.get("pct", ef.get("n", ""))) for ef in t["efectos"])
+        paga = "%.1f" % (costo / gana) if gana > 0 else "— (no junta más)"
+        print("| %s | %s | %d | %s | %.0f | %s |" % (t["nombre"], "I II III IV".split()[e - 1], costo, efecto, gana, paga))
+    iv = {k: t for k, t in tecs.items() if isinstance(t, dict) and t.get("edad_min", 1) >= 4}
+    reg = tecs.get("escuela_registros", {})
+    pct = sum(ef["pct"] for ef in reg.get("efectos", []) if ef["tipo"] == "costo_tec_pct")
+    total = sum(sum(t["costo"].values()) for k, t in iv.items() if k != "escuela_registros")
+    print("\nTodas las mejoras de la IV (sin los registros): %d recursos. Los registros (−%d %%) ahorran %d y cuestan %d: se pagan si se compra más de %.0f %% de lo demás de la IV." % (
+        total, pct, total * pct // 100, sum(reg.get("costo", {}).values()), 100 * sum(reg.get("costo", {}).values()) / max(1, total * pct / 100)))
 
 
 if __name__ == "__main__":

@@ -278,6 +278,8 @@ func _type_content(owner: int, type: String) -> Dictionary:
 		_counters(c, "edificio", def)
 	elif dd.tecnologias.has(type):
 		c["role"] = "Investigación · %s" % dd.edificios.get(def.get("edificio", ""), {}).get("nombre", "")
+		if def.get("escuela", false): # --- paso 3 ---
+			c["role"] = "Escuela de la edad IV · %s" % ctrl.escuela_info()["nombre"]
 		c["desc"] = def.get("desc", "")
 		c["effects"] = ctrl.effects_text(def.get("efectos", []))
 		c["cost"] = def.get("costo", {})
