@@ -68,3 +68,13 @@ Las simulaciones de los frentes 1, 2 y 5 se confirman en un solo torneo al final
 | 1 · Producción | **Integrado (c87c493)**, [01-produccion.md](01-produccion.md):<br>• **Repetición automática:** Ctrl + clic; es un comando de la simulación, con tope de aldeanos (80, ajustable con − y +).<br>• **Cola:** de 10, con «+n».<br>• **Sacar de la cola:** clic derecho saca una; con Mayús, cinco.<br>• **Edificios parados:** se ven grises y con pulso en la cola global.<br>• **Población:** aviso «sin lugar en ~N s».<br>• **Ingreso por minuto:** se ve en la barra.<br>Mismo hash. Autotest: 161 OK |
 | 4 · Avisos y equipo | En curso |
 | 2 · Constructor | **Integrado (8ee2edf)**, [02-constructor.md](02-constructor.md):<br>• Mayús + colocar levanta en el orden puesto, sin tope de distancia;<br>• muro con «n tramos · costo · alcanzan k», huecos marcados y puerta con G;<br>• granjas que se pegan, con «x de 8 libres»;<br>• colocación que informa recursos y distancia;<br>• reparar en cadena y por zona (D);<br>• huella fantasma de 3 minutos para reconstruir;<br>• rebusca lejana cerca de otro depósito propio.<br>**El hash cambia a 2903543624** por la rebusca (con `rebusca_lejos.max = 0` vuelve al anterior). Autotest OK |
+
+**La primera victoria del principiante bajó a 1 de 3** con el frente 2. Medido con `tools/primera_victoria.gd`, semillas 7, 21 y 3:
+
+| Rebusca lejana | Primera victoria |
+|---|---|
+| Apagada (`max` 0) | 3 de 3 |
+| A 40 casillas | 1 de 3 |
+| A 20 casillas | 2 de 3 |
+
+La rebusca lejana ayuda más a la economía de la fácil que al principiante. Queda en **20 casillas**, que mantiene la meta de 2 de 3 o más.
