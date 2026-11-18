@@ -613,7 +613,7 @@ func _sacred() -> void:
 	# Que se juegue el final (proceso/26-juego-tardio/14): la cuenta no corre antes de
 	# `cuenta_desde_ms` de partida ni con el equipo por debajo de la edad `cuenta_edad_min`
 	# (estilo AoE4, donde los sitios se toman desde la edad de los castillos).
-	var early: bool = sim.tick * sim.tick_ms < int(cfg.get("cuenta_desde_ms", 0))
+	var early: bool = sim.tick * sim.tick_ms <= int(cfg.get("cuenta_desde_ms", 0))
 	var age_min := int(cfg.get("cuenta_edad_min", 1))
 	for p in sim.players:
 		var pid: int = p["id"]
