@@ -1206,6 +1206,10 @@ func _cmd_rally(pid: int, bid: int, x: int, y: int, target_id: int) -> void:
 	b.rally_x = x
 	b.rally_y = y
 	b.rally_target = target_id
+	# --- fluidez 2 --- se recuerda qué recurso era, por si se agota antes de que salga el aldeano
+	var rt: SimEntity = by_id.get(target_id)
+	b.rally_res = rt.type if rt != null and rt.alive and rt.is_resource() else ""
+	b.rally_kind = rt.res_kind if rt != null and rt.alive and rt.is_resource() else ""
 
 
 ## Suelta una partida que ya no se usa: mods, grupos, IA y escenario guardan `sim` y forman
@@ -1676,6 +1680,8 @@ func _do_gather(e: SimEntity) -> void:
 			t = find_resource(e.owner, e.gather_kind, e.x, e.y, data.reglas["radio_rebusca"], -1, e.id, same)
 		if t == null:
 			t = find_resource(e.owner, e.gather_kind, e.x, e.y, data.reglas["radio_rebusca"], -1, e.id)
+		if t == null and e.carry == 0: # --- fluidez 2 --- más lejos, cerca de otro depósito propio
+			t = _rebusca_lejos(e.owner, e.x, e.y, e.gather_kind, same, e.id)
 		if t == null:
 			if e.carry > 0:
 				e.order = O.RETURN
@@ -2397,6 +2403,19 @@ func _spawn_from(b: SimEntity, type: String) -> void:
 		_order_gather(u, rt)
 	elif rt != null and rt.alive and u.fn == "civil" and rt.is_building() and rt.owner == b.owner and not rt.built:
 		_order_build(u, rt)
+	elif u.fn == "civil" and b.rally_kind != "" and (rt == null or not rt.alive or (rt.is_resource() and rt.amount <= 0)):
+		# --- fluidez 2 --- la reunión estaba en un recurso que se agotó: el más cercano del mismo
+		# tipo junto al punto, o lejos, cerca de otro depósito propio (reglas.rebusca_lejos).
+		var alt := find_resource(b.owner, b.rally_kind, b.rally_x, b.rally_y, data.reglas["radio_rebusca"], -1, u.id, b.rally_res)
+		if alt == null:
+			alt = find_resource(b.owner, b.rally_kind, b.rally_x, b.rally_y, data.reglas["radio_rebusca"], -1, u.id)
+		if alt == null:
+			alt = _rebusca_lejos(b.owner, b.rally_x, b.rally_y, b.rally_kind, b.rally_res, u.id)
+		if alt != null:
+			b.rally_target = alt.id # la reunión sigue en el recurso nuevo
+			_order_gather(u, alt)
+		else:
+			_cmd_move(b.owner, [u] as Array[SimEntity], b.rally_x, b.rally_y, false)
 	else:
 		_cmd_move(b.owner, [u] as Array[SimEntity], b.rally_x, b.rally_y, u.is_military())
 
@@ -2839,6 +2858,40 @@ func nearest_dropoff(owner: int, kind: String, x: int, y: int) -> SimEntity:
 			best = b
 			best_d = d
 	return best
+
+
+# --- fluidez 2 --- (proceso/30-fluidez/02-constructor.md)
+## Rebusca lejana: el recurso de `kind` (primero del tipo `only_type`) más cercano a (x, y) entre
+## los que están a reglas.rebusca_lejos.radio_deposito de un depósito propio terminado que lo
+## recibe, con ese depósito a rebusca_lejos.max o menos. null si no hay o si está apagada.
+func _rebusca_lejos(owner: int, x: int, y: int, kind: String, only_type: String, worker: int) -> SimEntity:
+	var cfg: Dictionary = data.reglas.get("rebusca_lejos", {})
+	var max_d := int(cfg.get("max", 0))
+	if max_d <= 0 or kind == "":
+		return null
+	var probe := SimEntity.new()
+	probe.x = x
+	probe.y = y
+	var tipos := [only_type, ""] if only_type != "" else [""]
+	for tipo: String in tipos:
+		var best: SimEntity = null
+		var best_d := 1 << 60
+		for b in actives:
+			if not b.alive or b.owner != owner or not b.is_building() or not b.built or not _accepts(b, kind):
+				continue
+			if dist_to(probe, b) > max_d:
+				continue
+			var r := find_resource(owner, kind, b.x, b.y, int(cfg["radio_deposito"]), -1, worker, tipo)
+			if r == null or (r.is_building() and tipo == ""):
+				continue # las granjas ya las busca la rebusca de siempre
+			var d := dist_to(probe, r)
+			if d < best_d or (d == best_d and r.id < best.id):
+				best = r
+				best_d = d
+		if best != null:
+			return best
+	return null
+# --- fin fluidez 2 ---
 
 
 func _nearest_unbuilt(owner: int, x: int, y: int, max_d: int) -> SimEntity:
