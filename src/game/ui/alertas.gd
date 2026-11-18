@@ -163,6 +163,9 @@ func _donde(b: SimEntity) -> String:
 func cubre_alert(ev: Dictionary) -> bool:
 	if not activo():
 		return false
+	# --- ronda 8 --- el «Atacan a tu aliado» de la simulación repetía las alertas por zona del aliado
+	if int(ev.get("player", -2)) != local and bool(cfg.get("avisar_aliado", true)):
+		return true
 	if _clock - _ultimo_ataque < float(cfg.get("alert_tapa_s", 3.0)):
 		return true
 	var a := _audio()
@@ -264,8 +267,9 @@ func _aviso_recurso(txt: String, s: Dictionary) -> void:
 	avisos_recurso.push_back(ultimo_recurso)
 	if avisos_recurso.size() > 16:
 		avisos_recurso.pop_front()
-	hud.notify(txt, -1.0, "decision", ultimo_recurso["lugar"])
-	_sonar("aviso_recurso", "ui/ui_aviso_recurso.ogg")
+	if Opciones.consejos: # --- ronda 8 --- de gestión: solo para aprender
+		hud.notify(txt, -1.0, "decision", ultimo_recurso["lugar"])
+		_sonar("aviso_recurso", "ui/ui_aviso_recurso.ogg")
 	_contar("recurso")
 
 
@@ -298,8 +302,9 @@ func _granjas() -> void:
 			_vacia_desde.erase(id)
 	if nuevas > 0 and vacias.size() > antes:
 		var f := vacias[-1]
-		hud.notify("Granja vacía" if vacias.size() == 1 else "%d granjas vacías" % vacias.size(), -1.0, "decision", WorldView.to_world(f.x, f.y))
-		_sonar("aviso_granja", "ui/ui_aviso_granja.ogg")
+		if Opciones.consejos: # --- ronda 8 --- la marca en el mundo y el botón quedan siempre
+			hud.notify("Granja vacía" if vacias.size() == 1 else "%d granjas vacías" % vacias.size(), -1.0, "decision", WorldView.to_world(f.x, f.y))
+			_sonar("aviso_granja", "ui/ui_aviso_granja.ogg")
 		_contar("granja")
 	boton.visible = not vacias.is_empty()
 	if boton.visible:

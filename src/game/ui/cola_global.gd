@@ -6,8 +6,12 @@ extends Control
 ## --- frente 1 --- (proceso/30) Los que repiten llevan el bucle; los edificios de producción
 ## parados (sin cola hace `parado_s`) van al final, grises y con pulso. Un consejo avisa si
 ## quedan parados; clic derecho en uno gris lo apaga (Opciones.aviso_parados).
+## --- ronda 8 --- (proceso/32-ronda-8/03) Siempre a la vista, como en AoE4: todos los edificios de
+## producción, más chicos. El que no puede seguir (población llena, o la repetición sin recursos)
+## queda rojo y «trabado», con el motivo al pasar el mouse; el quieto, gris. Reemplaza los avisos
+## de «Población llena» y de parados, que ahora son solo consejos de aprendizaje.
 
-const ICON := 44.0
+const ICON := 38.0
 const SEP := 4.0
 
 var hud: Hud
@@ -65,13 +69,51 @@ func items() -> Array[SimEntity]:
 		if not e.queue.is_empty():
 			if out.size() < cap:
 				out.append(e)
-		elif _de_produccion(e) and parado(e) and quietos.size() < cap_p:
+		elif _de_produccion(e) and quietos.size() < cap_p: # --- ronda 8 --- siempre, no solo los parados
 			quietos.append(e)
 	for e in quietos:
 		if out.size() >= cap:
 			break
 		out.append(e)
 	return out
+
+
+## --- ronda 8 --- Por qué no puede seguir: "pob" (población llena para lo que está primero en la
+## cola, o para lo que se repite) o "recursos" (la repetición no alcanza); "" si no está trabado.
+func trabada(b: SimEntity) -> String:
+	var p: Dictionary = hud.sim.players[b.owner]
+	if not b.queue.is_empty():
+		var item: String = b.queue[0]
+		if item.begins_with("@") or b.queue_progress > 0:
+			return ""
+		var pob := int(hud.sim.dp(b.owner).unidades.get(item, {}).get("pob", 1))
+		return "pob" if int(p["pop"]) + pob > int(p["pop_cap"]) else ""
+	if b.repeat != "":
+		var why := hud.sim.repeat_block(b)
+		if why == "pob" or why == "recursos":
+			return why
+	return ""
+
+
+## Texto del motivo para la ayuda (y el autotest).
+func motivo(b: SimEntity) -> String:
+	var why := trabada(b)
+	var p: Dictionary = hud.sim.players[b.owner]
+	var dd := hud.sim.dp(b.owner)
+	if why == "pob":
+		var casa: String = String(dd.edificios.get("casa", {}).get("nombre", "Casa"))
+		if int(p["pop_cap"]) >= int(hud.sim.data.reglas["pob_max"]):
+			return "Trabada: población llena (%d/%d), el máximo del juego." % [int(p["pop"]), int(p["pop_cap"])]
+		return "Trabada: población llena (%d/%d). Construí casas (%s)." % [int(p["pop"]), int(p["pop_cap"]), casa]
+	if why == "recursos":
+		var cost := hud.sim.train_cost(b.owner, b, b.repeat)
+		var falta: Array[String] = []
+		for k in cost:
+			var hay := int(p["res"].get(k, 0)) - int(p.get("reserva_" + k, 0))
+			if hay < int(cost[k]):
+				falta.append("%d de %s" % [int(cost[k]) - hay, Palette.RES_NAMES.get(k, k).to_lower()])
+		return "Trabada: no alcanza para otro %s (faltan %s)." % [str(dd.unidades.get(b.repeat, {}).get("nombre", b.repeat)), ", ".join(falta)]
+	return ""
 
 
 func _has_point(p: Vector2) -> bool:
@@ -123,17 +165,22 @@ func alternar_aviso() -> void:
 
 func _tip(b: SimEntity) -> Dictionary:
 	var dd := hud.sim.dp(b.owner)
+	var traba := motivo(b) # --- ronda 8 ---
+	if traba != "":
+		traba += "\n"
 	var rep := ""
 	if b.repeat != "":
 		rep = "\nSe repite: %s." % str(dd.unidades.get(b.repeat, {}).get("nombre", b.repeat))
-		var why := hud.sim.repeat_block(b) if b.queue.is_empty() else ""
+		var why := hud.sim.repeat_block(b) if b.queue.is_empty() and traba == "" else ""
 		rep += {"pob": " Frenada: población llena.", "recursos": " Frenada: no alcanza sin tocar lo apartado.", "tope": " Llegó al tope de aldeanos."}.get(why, "") as String
 	if b.queue.is_empty():
 		var s := (_ms() - int(_vacio_desde.get(b.id, _ms()))) / 1000
+		if traba != "":
+			return {"name": "%s · trabada" % b.def.get("nombre", b.type), "desc": "%s%s\nClic: ir al edificio. Mayús + clic: todos los de este tipo." % [traba, rep.strip_edges()], "cost": {}, "locked": ""}
 		return {"name": "%s · parado" % b.def.get("nombre", b.type), "desc": "Sin producir hace %d s.%s\nClic: ir al edificio. Mayús + clic: todos los de este tipo. Clic derecho: %s el consejo de parados." % [s, rep, "apagar" if Opciones.aviso_parados else "prender"], "cost": {}, "locked": ""}
 	var item: String = b.queue[0]
 	var what: String = dd.tecnologias.get(item.substr(1), {}).get("nombre", item) if item.begins_with("@") else dd.unidades.get(item, {}).get("nombre", item)
-	return {"name": "%s · %s" % [b.def.get("nombre", b.type), what], "desc": "%d en cola.%s\nClic: ir al edificio. Mayús + clic: todos los edificios de este tipo." % [b.queue.size(), rep], "cost": {}, "locked": ""}
+	return {"name": "%s · %s" % [b.def.get("nombre", b.type), what], "desc": traba + "%d en cola.%s\nClic: ir al edificio. Mayús + clic: todos los edificios de este tipo." % [b.queue.size(), rep], "cost": {}, "locked": ""}
 
 
 func _process(_d: float) -> void:
@@ -171,36 +218,56 @@ func _draw() -> void:
 	if list.is_empty():
 		return
 	var x := 0.0
-	var w := list.size() * (ICON + SEP) - SEP + 12.0
+	var w := list.size() * (ICON + SEP) - SEP + 10.0
 	var sb := Hud.panel_box(8)
 	sb.shadow_size = 4
-	draw_style_box(sb, Rect2(0, 0, w, ICON + 10))
-	x = 6.0
+	draw_style_box(sb, Rect2(0, 0, w, ICON + 8))
+	x = 5.0
 	# Pulso de los parados (reloj de la interfaz, no de la simulación).
 	var pulso := 0.5 + 0.5 * sin(Time.get_ticks_msec() / 1000.0 * TAU / float(cfg().get("pulso_s", 1.2)))
 	for i in list.size():
 		var b := list[i]
-		var r := Rect2(x, 5, ICON, ICON)
+		var r := Rect2(x, 4, ICON, ICON)
 		var cell := StyleBoxFlat.new()
 		cell.set_corner_radius_all(6)
-		if b.queue.is_empty():
-			# --- frente 1 --- parado: gris, con el borde que late
-			cell.bg_color = Color(0.5, 0.5, 0.5, 0.16 if i == _hover else 0.08)
-			cell.border_color = Color(Palette.UI_ACCENT, 0.25 + 0.6 * pulso)
+		var traba := trabada(b) # --- ronda 8 ---
+		if traba != "":
+			# --- ronda 8 --- trabada: roja, con lo que espera y un candado
+			cell.bg_color = Color(Palette.UI_BAD, 0.34 if i == _hover else 0.22)
+			cell.border_color = Color(Palette.UI_BAD, 0.95)
 			cell.set_border_width_all(2)
 			draw_style_box(cell, r)
-			Glyphs.draw(self, Glyphs.resolve(b.def, b.type), r.grow(-9), Color(Palette.UI_DIM, 0.55 + 0.35 * pulso))
+			var item: String = b.queue[0] if not b.queue.is_empty() else b.repeat
+			Glyphs.draw(self, hud.queue_icon(item), r.grow(-7), Color(Palette.UI_BAD.lightened(0.45), 0.95))
+			_candado(r.position + Vector2(r.size.x - 9, r.size.y - 9))
+			if b.queue.size() > 1:
+				draw_string(Hud.font_b, r.position + Vector2(0, 13), str(b.queue.size()), HORIZONTAL_ALIGNMENT_RIGHT, r.size.x - 4, 11, Palette.UI_TEXT)
+		elif b.queue.is_empty():
+			# --- frente 1 --- quieto: gris; el parado hace parado_s, con el borde que late
+			var late := parado(b)
+			cell.bg_color = Color(0.5, 0.5, 0.5, 0.16 if i == _hover else 0.08)
+			cell.border_color = Color(Palette.UI_ACCENT, 0.25 + 0.6 * pulso) if late else Color(1, 1, 1, 0.12)
+			cell.set_border_width_all(2 if late else 1)
+			draw_style_box(cell, r)
+			Glyphs.draw(self, Glyphs.resolve(b.def, b.type), r.grow(-8), Color(Palette.UI_DIM, (0.55 + 0.35 * pulso) if late else 0.6))
 		else:
 			cell.bg_color = Color(1, 1, 1, 0.14 if i == _hover else 0.06)
 			draw_style_box(cell, r)
 			var item: String = b.queue[0]
-			Glyphs.draw(self, hud.queue_icon(item), r.grow(-8), Palette.UI_ACCENT if item.begins_with("@") else Palette.UI_TEXT)
+			Glyphs.draw(self, hud.queue_icon(item), r.grow(-7), Palette.UI_ACCENT if item.begins_with("@") else Palette.UI_TEXT)
 			var k := float(b.queue_progress) / float(maxi(1, hud.sim.dp(b.owner).queue_time(item)))
-			draw_rect(Rect2(r.position.x + 3, r.end.y - 6, r.size.x - 6, 4), Color(0, 0, 0, 0.5))
-			draw_rect(Rect2(r.position.x + 3, r.end.y - 6, (r.size.x - 6) * clampf(k, 0, 1), 4), Palette.UI_ACCENT)
+			draw_rect(Rect2(r.position.x + 3, r.end.y - 5, r.size.x - 6, 3), Color(0, 0, 0, 0.5))
+			draw_rect(Rect2(r.position.x + 3, r.end.y - 5, (r.size.x - 6) * clampf(k, 0, 1), 3), Palette.UI_ACCENT)
 			if b.queue.size() > 1:
-				draw_string(Hud.font_b, r.position + Vector2(0, 14), str(b.queue.size()), HORIZONTAL_ALIGNMENT_RIGHT, r.size.x - 4, 12, Palette.UI_ACCENT)
+				draw_string(Hud.font_b, r.position + Vector2(0, 13), str(b.queue.size()), HORIZONTAL_ALIGNMENT_RIGHT, r.size.x - 4, 11, Palette.UI_ACCENT)
 		if b.repeat != "":
-			Hud.draw_bucle(self, r.position + Vector2(10, 11), 5.5, Palette.UI_ACCENT)
+			Hud.draw_bucle(self, r.position + Vector2(9, 10), 5.0, Palette.UI_ACCENT)
 		_hits.append([r, b])
 		x += ICON + SEP
+
+
+## --- ronda 8 --- Candado chico (trabada).
+func _candado(c: Vector2) -> void:
+	draw_circle(c, 8.0, Color(0, 0, 0, 0.7))
+	draw_arc(c + Vector2(0, -2), 3.2, PI, TAU, 10, Palette.UI_BAD.lightened(0.3), 1.6, true)
+	draw_rect(Rect2(c + Vector2(-4.5, -1.5), Vector2(9, 6.5)), Palette.UI_BAD.lightened(0.3))

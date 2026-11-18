@@ -187,6 +187,7 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 	consejos = CONSEJOS.new()
 	consejos.setup(self)
 	add_child(consejos)
+	Opciones.aplicar_aprendizaje(_aprendizaje_auto()) # --- ronda 8 ---
 	atajos_hoja = HOJA_ATAJOS.new() # --- atajos --- (4q)
 	add_child(atajos_hoja)
 	atajos_hoja.setup(self)
@@ -293,6 +294,11 @@ func blocks(m: Vector2) -> bool:
 ## Aviso del momento. `tipo`: "ataque", "decision", "hito" o "info"; `lugar` (Vector3) lo vuelve
 ## saltable con Espacio. `secs` < 0 usa la duración del tipo (data/interfaz.json → avisos).
 func notify(msg: String, secs: float = -1.0, tipo: String = "info", lugar: Variant = null) -> void:
+	if contar_avisos: # --- ronda 8 --- medición (main.gd, --contar-avisos)
+		var clave := msg.get_slice("\n", 0)
+		var re := RegEx.create_from_string("[0-9]+")
+		clave = re.sub(clave, "N", true)
+		conteo_avisos[clave] = int(conteo_avisos.get(clave, 0)) + 1
 	if avisos != null:
 		avisos.push(msg, tipo, secs, lugar)
 
@@ -394,7 +400,7 @@ func _place_groups() -> void:
 	_anchor(grupos, Vector2(0.5, 1), Rect2(-300, (-58.0 if vacio else -232.0), 600, 46))
 
 
-## Población: aviso único cuando se llena y explicación cuando se arranca por encima del tope (P9).
+## Población: (solo con los consejos de aprendizaje, ronda 8) aviso único cuando se llena y explicación cuando se arranca por encima del tope (P9).
 func _check_pop() -> void:
 	var p: Dictionary = sim.players[local]
 	var pop := int(p["pop"])
@@ -406,6 +412,8 @@ func _check_pop() -> void:
 	_pob_estado = estado
 	var casa: String = String(sim.dp(local).edificios.get("casa", {}).get("nombre", "Casa"))
 	var tope_juego := cap >= int(sim.data.reglas["pob_max"])
+	if not Opciones.consejos: # --- ronda 8 --- fuera del aprendizaje lo dicen la cola roja y el contador
+		return
 	if estado == "excedida" and antes != "excedida":
 		var porque := "\nNo se entrena nada hasta que la gente quepa: construí casas (%s) para subir el tope." % casa if not tope_juego else "\nEs el máximo del juego: no se entrena nada hasta bajar."
 		notify("Población %d/%d: hay más gente que lugar" % [pop, cap] + porque, 9.0, "decision")
@@ -428,6 +436,8 @@ func _check_pop_pronto() -> void:
 	var aviso := int(COLA_GLOBAL.cfg().get("aviso_pob_s", 40))
 	if pob_eta > 0 and pob_eta <= aviso and not _pob_pronto:
 		_pob_pronto = true
+		if not Opciones.consejos: # --- ronda 8 ---
+			return
 		var p: Dictionary = sim.players[local]
 		var casa: String = String(sim.dp(local).edificios.get("casa", {}).get("nombre", "Casa"))
 		if int(p["pop_cap"]) < int(sim.data.reglas["pob_max"]):
@@ -500,7 +510,11 @@ func on_events(events: Array) -> void:
 			# --- avisos --- (cada suceso con su tipo; los que tienen lugar se pueden saltar con Espacio)
 			"notify":
 				# En IA contra IA el jugador local también es una IA: sus rechazos no son para vos.
-				if pid == local and not _local_is_ai():
+				# --- ronda 8 --- «Población llena» de la simulación (cada edificio trabado, cada 10 s) no
+				# sale: la casilla de la cola global queda roja y el contador de población, también.
+				if ev["msg"] == "Población llena":
+					pass
+				elif pid == local and not _local_is_ai():
 					notify(ev["msg"], -1.0, "decision" if String(ev["msg"]).begins_with("No ") or String(ev["msg"]).contains("insuficientes") or String(ev["msg"]).begins_with("Requiere") else "info")
 			"notice":
 				# --- veterano ronda 4 --- en IA contra IA el local es una IA: «Rozas en espera…» no es para vos
@@ -580,7 +594,31 @@ func on_events(events: Array) -> void:
 				main.mission_over(ev["resultado"])
 
 
+## --- ronda 8 --- Medición de avisos (main.gd, --contar-avisos): en IA contra IA cuenta lo que
+## vería un humano en el lugar del jugador 0.
+var contar_avisos := false
+var conteo_avisos := {} # primer renglón (números como N) -> veces
+
+
+## --- ronda 8 --- ¿Partida de aprender? El tutorial, o todos los rivales con la IA fácil.
+func _aprendizaje_auto() -> bool:
+	if str(main._args.get("campana", "")) == "tutorial":
+		return true
+	if sim.scenario != null:
+		return false
+	var rivales := 0
+	for ai in sim.ais:
+		if ai.player == local or not sim.enemies(local, ai.player):
+			continue
+		rivales += 1
+		if ai.level != sim.data.reglas["dificultades"].get("facil", {}):
+			return false
+	return rivales > 0
+
+
 func _local_is_ai() -> bool:
+	if contar_avisos:
+		return false
 	for ai in sim.ais:
 		if ai.player == local:
 			return true
