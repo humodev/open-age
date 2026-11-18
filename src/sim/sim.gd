@@ -640,7 +640,7 @@ func villager_cap(pid: int) -> int:
 ## Aldeanos vivos y en cola del jugador (lo que mide el tope de la repetición).
 func villagers_and_queued(pid: int) -> int:
 	var n := 0
-	for e in actives:
+	for e in owned(pid):
 		if not e.alive or e.owner != pid:
 			continue
 		if e.fn == "civil" and e.is_unit():
@@ -924,19 +924,19 @@ func _cmd_ungarrison(pid: int, bid: int) -> void:
 func _cmd_alarm(pid: int, on: bool, max_n: int = -1) -> void:
 	players[pid]["alarm"] = on
 	if not on:
-		for e in actives:
+		for e in owned(pid):
 			if e.alive and e.owner == pid and e.fn == "civil" and e.order == O.GARRISON:
 				_set_idle(e)
 				var res := find_resource(pid, e.gather_kind, e.x, e.y, data.reglas["radio_retomar"], -1, e.id) if e.gather_kind != "" else null
 				if res != null:
 					_order_gather(e, res)
-		for b in actives:
+		for b in buildings_of(pid):
 			if b.alive and b.owner == pid and b.is_building() and not b.garrison.is_empty():
 				_eject(b)
 		return
 	var radius: int = data.reglas["radio_campana"]
 	var cands: Array[SimEntity] = []
-	for e in actives:
+	for e in owned(pid):
 		if e.alive and e.owner == pid and e.fn == "civil" and e.inside < 0:
 			cands.append(e)
 	if max_n >= 0 and cands.size() > max_n:
@@ -966,7 +966,7 @@ func garrison_cap(b: SimEntity) -> int:
 ## Edificio propio con lugar libre más cercano, contando a quienes ya van en camino.
 func nearest_shelter(pid: int, x: int, y: int, exclude_walker: int = -1) -> SimEntity:
 	var incoming := {}
-	for e in actives:
+	for e in owned(pid):
 		if e.alive and e.owner == pid and e.order == O.GARRISON and e.id != exclude_walker and e.target >= 0:
 			incoming[e.target] = incoming.get(e.target, 0) + 1
 	var best: SimEntity = null
@@ -974,7 +974,7 @@ func nearest_shelter(pid: int, x: int, y: int, exclude_walker: int = -1) -> SimE
 	var probe := SimEntity.new()
 	probe.x = x
 	probe.y = y
-	for b in actives:
+	for b in buildings_of(pid):
 		if not b.alive or b.owner != pid or not b.is_building():
 			continue
 		if b.garrison.size() + int(incoming.get(b.id, 0)) >= garrison_cap(b):
@@ -1185,7 +1185,7 @@ func _apply_effects(pid: int, efectos: Array) -> void:
 			"trepanacion":
 				players[pid]["trepanacion"] = {"pct": int(ef["pct"]), "radio": int(ef["radio"]), "vida_pct": int(ef["vida_pct"]), "tipos": ef["tipos"], "edificios": ef["edificios"], "n": 0}
 			# --- fin paso 6 ---
-	for e in actives:
+	for e in owned(pid):
 		if e.alive and e.owner == pid:
 			_apply_stats(e)
 
@@ -2060,7 +2060,7 @@ func _move_court(b: SimEntity) -> void:
 	var pid := b.owner
 	var fc: Dictionary = b.def["funda_corte"]
 	var old: SimEntity = null
-	for e in actives:
+	for e in buildings_of(pid):
 		if e.alive and e.owner == pid and e.is_building() and e.capital:
 			old = e
 			break
@@ -2384,6 +2384,9 @@ func _cleanup() -> void:
 		if e.alive:
 			keep_a.append(e)
 	actives = keep_a
+	for d: Dictionary in [_owned, _owned_b]:
+		for k in d:
+			d[k] = (d[k] as Array).filter(func(e: SimEntity) -> bool: return e.alive)
 
 
 # ---------------------------------------------------------------- Edificios
@@ -2864,7 +2867,7 @@ func find_resource(owner: int, kind: String, x: int, y: int, max_d: int, exclude
 	probe.x = x
 	probe.y = y
 	if kind == "alimento" and only_type == "":
-		for t in actives:
+		for t in buildings_of(owner):
 			if t.alive and t.is_building() and t.owner == owner and t.built and t.id != exclude and t.def.get("fuente", "") == kind and _farm_free(t, worker):
 				var d := dist_to(probe, t)
 				if d < best_d:
@@ -2904,7 +2907,7 @@ func nearest_dropoff(owner: int, kind: String, x: int, y: int) -> SimEntity:
 	var probe := SimEntity.new()
 	probe.x = x
 	probe.y = y
-	for b in actives:
+	for b in owned(owner):
 		if not b.alive or b.owner != owner:
 			continue
 		# Depósitos que caminan (elefante del rey de Ayutthaya): unidades con "deposito".
@@ -2936,7 +2939,7 @@ func _rebusca_lejos(owner: int, x: int, y: int, kind: String, only_type: String,
 	for tipo: String in tipos:
 		var best: SimEntity = null
 		var best_d := 1 << 60
-		for b in actives:
+		for b in buildings_of(owner):
 			if not b.alive or b.owner != owner or not b.is_building() or not b.built or not _accepts(b, kind):
 				continue
 			if dist_to(probe, b) > max_d:
@@ -2960,7 +2963,7 @@ func _nearest_unbuilt(owner: int, x: int, y: int, max_d: int) -> SimEntity:
 	var probe := SimEntity.new()
 	probe.x = x
 	probe.y = y
-	for b in actives:
+	for b in buildings_of(owner):
 		if b.alive and b.is_building() and b.owner == owner and not b.built:
 			var d := dist_to(probe, b)
 			if d < best_d:
@@ -3116,7 +3119,7 @@ func engine_room(type: String, pid: int) -> bool:
 	if maxes.is_empty():
 		return true
 	var count := 0
-	for e in actives:
+	for e in owned(pid):
 		if e.alive and e.owner == pid and e.type == type:
 			count += 1
 	var age := clampi(int(players[pid]["age"]) - 1, 0, maxes.size() - 1)
@@ -3129,7 +3132,7 @@ func _engine_slot_ok(type: String, def: Dictionary, tx: int, ty: int, pid: int) 
 	var maxes: Array = def.get("maximo_por_edad", [])
 	var sep := int(def.get("separacion", 0))
 	var count := 0
-	for e in actives:
+	for e in owned(pid):
 		if not e.alive or e.owner != pid or e.type != type:
 			continue
 		count += 1
@@ -3216,7 +3219,7 @@ func _cmd_build_line(pid: int, units: Array[SimEntity], type: String, tiles: Arr
 
 
 func hito_in_progress(pid: int) -> bool:
-	for b in actives:
+	for b in owned(pid):
 		if b.alive and b.owner == pid and b.def.get("avanza_edad", false) and not b.built:
 			return true
 	return false
@@ -3459,7 +3462,7 @@ func train_cost(pid: int, b: SimEntity, type: String) -> Dictionary:
 	if not udef.get("montado", false) or b == null:
 		return cost
 	var pct := 0
-	for g in actives:
+	for g in owned(pid):
 		if g.alive and g.owner == pid and g.mode == "regimiento" and g.built and g.def.has("regimiento"):
 			var rg: Dictionary = g.def["regimiento"]
 			if Sim.dist(g.x, g.y, b.x, b.y) <= int(rg["radio"]):
@@ -3578,7 +3581,7 @@ func _gather_origin(e: SimEntity) -> String:
 
 ## La maravilla de `pid` (en obra o terminada), o null: hay una por jugador (docs/diseno/27, §4.1).
 func wonder_of(pid: int) -> SimEntity:
-	for e in actives:
+	for e in buildings_of(pid):
 		if e.alive and e.owner == pid and e.is_building() and e.def.get("maravilla", false):
 			return e
 	return null
@@ -3588,7 +3591,7 @@ func wonder_of(pid: int) -> SimEntity:
 func has_done_hito(pid: int, type: String) -> bool:
 	if (players[pid].get("hitos_hechos", []) as Array).has(type):
 		return true
-	for e in actives:
+	for e in buildings_of(pid):
 		if e.alive and e.owner == pid and e.type == type and e.is_building() and e.built:
 			return true
 	return false
@@ -3702,8 +3705,31 @@ func _new_entity(cat: int, type: String, owner: int, def: Dictionary) -> SimEnti
 	entities.append(e)
 	if cat != SimEntity.Cat.RESOURCE:
 		actives.append(e)
+		_own_list(_owned, owner).append(e)
+		if cat == SimEntity.Cat.BUILDING:
+			_own_list(_owned_b, owner).append(e)
 	by_id[e.id] = e
 	return e
+
+
+## Rendimiento (proceso/32-ronda-8/04): lo activo de cada dueño, en el mismo orden que
+## `actives` (por id), para no recorrer las ~2000 entidades del mapa buscando las de uno.
+## Se agrega en `_new_entity` y se limpia en `_cleanup`, igual que `actives`; el dueño y la
+## categoría no cambian nunca. Recorrer `owned(pid)` es recorrer `actives` filtrado por dueño.
+var _owned := {} # dueño -> Array[SimEntity] (unidades y edificios)
+var _owned_b := {} # dueño -> Array[SimEntity] (solo edificios)
+func owned(pid: int) -> Array:
+	return _owned.get(pid, _NONE)
+
+
+func buildings_of(pid: int) -> Array:
+	return _owned_b.get(pid, _NONE)
+
+
+static func _own_list(d: Dictionary, pid: int) -> Array:
+	if not d.has(pid):
+		d[pid] = []
+	return d[pid]
 
 
 func spawn_unit(type: String, owner: int, x: int, y: int) -> SimEntity:

@@ -91,7 +91,7 @@ func think() -> void:
 	var by_type := {}
 	var centro: SimEntity = null
 	centers.clear()
-	for e in sim.actives:
+	for e in sim.owned(player):
 		if not e.alive or e.owner != player:
 			continue
 		if e.is_unit():
@@ -841,7 +841,7 @@ func _engine(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_type: 
 			# los centros de las otras civs. Cuentan también los guarecidos; los de los oficios
 			# no (son el motor, como los aldeanos virtuales de las otras civs).
 			var people := 0
-			for e in sim.actives:
+			for e in sim.owned(player):
 				if e.alive and e.owner == player:
 					if e.is_unit() and e.fn == "civil":
 						people += 1
@@ -910,7 +910,7 @@ func _elephants(p: Dictionary, vill: Array[SimEntity], centro: SimEntity) -> voi
 	if not dd.unidades.has("elefante_rey"):
 		return
 	var eles: Array[SimEntity] = []
-	for e in sim.actives:
+	for e in sim.owned(player):
 		if e.alive and e.owner == player and e.type == "elefante_rey":
 			eles.append(e)
 	var maxes: Array = dd.unidades["elefante_rey"]["maximo_por_edad"]
@@ -1295,7 +1295,7 @@ func _far_gatherers(vill: Array[SimEntity], kind: String) -> Array:
 	# aldeano recorría todas las entidades cien veces por pensada). Mismo filtro, mismo orden y
 	# mismo desempate que `Sim.nearest_dropoff`: el resultado no cambia.
 	var drops: Array[SimEntity] = []
-	for b in sim.actives:
+	for b in sim.owned(player):
 		if not b.alive or b.owner != player:
 			continue
 		if b.is_unit():
@@ -1587,7 +1587,7 @@ func _production(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], 
 	# pasaba por 10 (el de emergencia de 30 llegaba a 40).
 	var en_cola := 0
 	if level.has("ejercito_max"):
-		for b in sim.actives:
+		for b in sim.buildings_of(player):
 			if b.owner == player and b.is_building() and not b.queue.is_empty():
 				for q: String in b.queue:
 					var ud: Dictionary = sim.dp(player).unidades.get(q, {})
@@ -2154,7 +2154,7 @@ func _foes_hp_at(x: int, y: int, r: int) -> int:
 ## Vida de los militares propios a `r` del sitio.
 func _own_hp_near(st: SimEntity, r: int) -> int:
 	var hp := 0
-	for e in sim.actives:
+	for e in sim.owned(player):
 		if e.alive and e.owner == player and e.is_unit() and e.inside < 0 and e.is_military() and absi(e.x - st.x) <= r and absi(e.y - st.y) <= r:
 			hp += e.hp
 	return hp
@@ -2498,7 +2498,7 @@ func _hunt(army: Array[SimEntity]) -> bool:
 	if rival < 0:
 		return false
 	var rival_army := 0
-	for e in sim.actives:
+	for e in sim.owned(rival):
 		if e.alive and e.owner == rival and e.is_unit() and e.is_military():
 			rival_army += 1
 	# También cuando se le saca `ventaja_pct` de ventaja: si no, una guerra pareja de 40 minutos
@@ -2506,7 +2506,7 @@ func _hunt(army: Array[SimEntity]) -> bool:
 	if rival_army > int(cfg["ejercito_rival_max"]) and army.size() * 100 < rival_army * int(cfg["ventaja_pct"]):
 		return false
 	var targets := []
-	for e in sim.actives:
+	for e in sim.buildings_of(rival):
 		if e.alive and e.owner == rival and e.is_building() and sim.counts_for_victory(e):
 			targets.append([sim.dist_to(ref, e), e.id, e])
 	if targets.is_empty():
@@ -2540,7 +2540,7 @@ func _hunt(army: Array[SimEntity]) -> bool:
 func _own_animal(centro: SimEntity) -> SimEntity:
 	var best: SimEntity = null
 	var bd := 1 << 60
-	for e in sim.actives:
+	for e in sim.owned(player):
 		if e.alive and e.owner == player and e.def.get("animal", false):
 			var d := sim.dist_to(e, centro)
 			if d < bd:
@@ -2557,7 +2557,7 @@ func _animals(centro: SimEntity) -> void:
 		return
 	var scouts: Array = []
 	var far := []
-	for e in sim.actives:
+	for e in sim.owned(player):
 		if not e.alive or e.owner != player or not e.is_unit():
 			continue
 		if e.fn == "explorador" and e.order == O.IDLE:
@@ -2596,7 +2596,7 @@ func _pick_rival(ref: SimEntity) -> int:
 			continue
 		var v := 0
 		if how == "debil":
-			for e in sim.actives:
+			for e in sim.owned(j):
 				if e.alive and e.owner == j and e.is_military():
 					v += 1
 		else:

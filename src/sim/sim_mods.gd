@@ -76,7 +76,7 @@ func _own_resource(pid: int, p: Dictionary) -> void:
 	var per_min := 0
 	var cap: int = cfg.get("tope", 999999)
 	var vill := 0
-	for e in sim.actives:
+	for e in sim.owned(pid):
 		if not e.alive or e.owner != pid:
 			continue
 		if e.fn == "civil":
@@ -113,7 +113,7 @@ func _own_resource(pid: int, p: Dictionary) -> void:
 ## Tope extra de tributo por elefante (barrio chino, junco): el mayor, no se suman.
 func tribute_cap_bonus(pid: int) -> int:
 	var best := 0
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if e.alive and e.owner == pid and e.is_building() and e.built:
 			best = maxi(best, int(e.def.get("tributo_tope_extra", 0)))
 	return best
@@ -122,7 +122,7 @@ func tribute_cap_bonus(pid: int) -> int:
 ## Piezas extra de motor que dan los hitos ("maximo_extra": {"tipo": n} en el hito).
 func engine_max_bonus(pid: int, type: String) -> int:
 	var extra := 0
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if e.alive and e.owner == pid and e.is_building() and e.built and e.def.has("maximo_extra"):
 			extra += int(e.def["maximo_extra"].get(type, 0))
 	return extra
@@ -147,7 +147,7 @@ func _gain(pid: int, key: String, milli: int, origin: String = "propio") -> void
 ## La tecnología de motor suma su porcentaje (mod "motor"). Orden por id: determinista.
 func _conversions(pid: int, p: Dictionary) -> void:
 	var boost := 100 + sim.mod(pid, "motor")
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if not (e.alive and e.owner == pid and e.is_building() and e.built and e.def.has("conversion")):
 			continue
 		var cv: Dictionary = e.def["conversion"]
@@ -174,11 +174,11 @@ func _conversions(pid: int, p: Dictionary) -> void:
 ## Renta: edificios que producen sin aldeanos (gult etíope, barrios del puerto).
 func _rents(pid: int, _p: Dictionary) -> void:
 	var capital: SimEntity = null
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if e.alive and e.owner == pid and e.is_building() and e.capital:
 			capital = e
 			break
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if e.alive and e.owner == pid and e.is_building() and e.built and e.def.has("renta") and e.mode != "regimiento":
 			var r: Dictionary = e.def["renta"]
 			# Renta mejor cerca de la capital (gult etíope junto a la corte).
@@ -198,14 +198,14 @@ func _rents(pid: int, _p: Dictionary) -> void:
 	# --- paso 6 --- Renta que dan las mejoras a un tipo de edificio (makuñ: cada lof da riqueza).
 	var extra: Dictionary = sim.players[pid].get("renta_tipos", {})
 	if not extra.is_empty():
-		for e in sim.actives:
+		for e in sim.buildings_of(pid):
 			if e.alive and e.owner == pid and e.is_building() and e.built and extra.has(e.type):
 				var r2: Dictionary = extra[e.type]
 				for k in r2:
 					_gain(pid, k, int(r2[k]) * P / 60, "renta")
 	if has(pid, "corte_extrae") and capital != null:
 		var src := capital
-		for e in sim.actives:
+		for e in sim.buildings_of(pid):
 			if e.alive and e.owner == pid and e.is_building() and e.built and e.def.get("capital_fija", false):
 				src = e # Gondar extrae desde su lugar, con su propio radio y ritmo
 				break
@@ -292,10 +292,10 @@ func _herds(pid: int) -> void:
 	var boost := 100 + sim.mod(pid, "motor")
 	var heads_total := 0
 	var breed_bonus_ms := 0
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if e.alive and e.owner == pid and e.is_building() and e.built and e.def.has("cria_ms"):
 			breed_bonus_ms = int(e.def["cria_ms"])
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if not (e.alive and e.owner == pid and e.is_building() and e.def.has("ganado")):
 			continue
 		var g: Dictionary = e.def["ganado"]
@@ -313,7 +313,7 @@ func _herds(pid: int) -> void:
 		heads_total += e.heads
 	if heads_total > 0:
 		var per := 4
-		for e in sim.actives:
+		for e in sim.owned(pid):
 			if e.alive and e.owner == pid and e.def.has("ganado"):
 				per = int(e.def["ganado"]["riqueza_por_cabeza"])
 				break
@@ -321,7 +321,7 @@ func _herds(pid: int) -> void:
 	# Cabezas arreadas: al llegar a un corral propio entran, o dan alimento si no hay lugar.
 	if has(pid, "arreo"):
 		var cfg := m(pid, "arreo")
-		for u in sim.actives:
+		for u in sim.owned(pid):
 			if not (u.alive and u.owner == pid and u.type == cfg["unidad"]):
 				continue
 			var c := _nearest_corral(pid, u.x, u.y, false)
@@ -357,7 +357,7 @@ func corral_cap(e: SimEntity) -> int:
 func _nearest_corral(pid: int, x: int, y: int, with_room: bool) -> SimEntity:
 	var best: SimEntity = null
 	var best_d := 1 << 60
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if e.alive and e.owner == pid and e.is_building() and e.built and e.def.has("ganado"):
 			if with_room and e.heads >= corral_cap(e):
 				continue
@@ -398,7 +398,7 @@ func craft_assign(u: SimEntity) -> bool:
 	var cap := int(tops[clampi(int(sim.players[pid]["age"]) - 1, 0, tops.size() - 1)])
 	var total := 0
 	var cap_b: SimEntity = null
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if e.alive and e.owner == pid and e.is_building():
 			total += e.crafts.size()
 			if e.capital:
@@ -407,7 +407,7 @@ func craft_assign(u: SimEntity) -> bool:
 		return false
 	var best: SimEntity = null
 	var best_d := 1 << 60
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if not (e.alive and e.owner == pid and e.is_building() and e.built):
 			continue
 		var slots := int(cfg["puestos"].get(e.type, 0))
@@ -438,7 +438,7 @@ func _crafts_yield(pid: int) -> void:
 	var boost := 100 + sim.mod(pid, "motor") + sim.mod(pid, "oficios_pct") # --- paso 6, par 2 --- forja de los mocambos
 	var per := int(cfg["por_min"])
 	var working := 0
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if not (e.alive and e.owner == pid and e.is_building() and not e.crafts.is_empty()):
 			continue
 		if craft_stopped(e):
@@ -520,7 +520,7 @@ func near_wall(e: SimEntity, r: int, fuertes := false) -> bool:
 
 ## --- paso 6, par 2 --- ¿`pid` tiene en pie alguno de esos edificios terminado?
 func _has_built(pid: int, types: Array) -> bool:
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if e.alive and e.owner == pid and e.is_building() and e.built and types.has(e.type):
 			return true
 	return false
@@ -661,11 +661,11 @@ func on_road(e: SimEntity) -> bool:
 func _update_connection(pid: int) -> void:
 	var n := sim.map.n
 	var start: SimEntity = null
-	for e in sim.actives:
+	for e in sim.owned(pid):
 		if e.alive and e.owner == pid and e.capital:
 			start = e
 			break
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if e.owner == pid and e.is_building():
 			_connected.erase(e.id)
 	var linked := {}
