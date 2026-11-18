@@ -108,6 +108,20 @@ func _civ_music(civ: String, mood: String) -> Array:
 	return own
 # --- fin sonido por pueblo ---
 
+# --- fluidez 4 --- Con las alertas por zona (src/game/ui/alertas.gd) cada ataque suena con su
+## tipo; la alarma del suceso "alert" solo suena por ahí cuando ninguna alerta la tapó.
+func _alertas_por_zona() -> bool:
+	var path := "res://data/interfaz.json"
+	if not _alertas_cfg.has("activo") and FileAccess.file_exists(path):
+		var all: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+		_alertas_cfg = all.get("alertas", {"activo": false})
+	return bool(_alertas_cfg.get("activo", false))
+
+
+var _alertas_cfg := {}
+# --- fin fluidez 4 ---
+
+
 # --- fluidez 3 --- respuesta inmediata (data/respuesta.json; src/game/respuesta.gd)
 var _resp_next := {} # tipo -> reloj desde el que puede volver a sonar
 
@@ -336,7 +350,7 @@ func on_events(events: Array) -> void:
 					ui("tech")
 			"alert":
 				if pid == local:
-					if not civ_sfx("alarma"):
+					if not _alertas_por_zona() and not civ_sfx("alarma"): # --- fluidez 4 ---
 						ui("alerta", -8.0)
 					_combat_until = _clock + 20.0
 			"trained":

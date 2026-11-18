@@ -10,6 +10,7 @@
     "_doc_marcadores": "Marcadores de cámara (proceso/24, 4k): Alt + 1…N vuelve y Ctrl + Alt + 1…N guarda (Ctrl + número son los grupos de control). Las teclas de función de los primeros marcadores (F7…F9 de fábrica, Ctrl + F guarda) se reasignan en Opciones → Teclas: teclas.acciones, marcador_1… (veterano, ronda 4).",
     "cola_global_max": 14,
     "bengala_s": 8,
+    "rueda_px": 70, "rueda_min_px": 22, "_doc_rueda": "--- fluidez 4 --- Alt + arrastrar abre la rueda de la bengala: radio y arrastre mínimo en píxeles (menos: bengala automática).",
     "arrastre_rumbo_px": 24
   },
   "teclas": {
@@ -131,7 +132,41 @@
     "_doc": "Avisos del momento (src/game/ui/avisos.gd): cuántos se apilan a la vez, cuánto dura cada tipo en segundos y cuántos lugares recuerdan Espacio e Inicio.",
     "max_visibles": 4,
     "duracion_s": { "ataque": 5.0, "decision": 4.0, "hito": 5.0, "info": 2.6 },
-    "historial": 12
+    "historial": 12,
+    "fusion_casillas": 12,
+    "_doc_fusion": "--- fluidez 4 --- Dos avisos iguales se suman (×2) solo si sus lugares están a fusion_casillas o menos: un ataque en otra zona va aparte."
+  },
+  "alertas": {
+    "_doc": "--- fluidez 4 --- (src/game/ui/alertas.gd) Ataques por zona y tipo (aldeanos, tropa, edificio, aliado): una zona de zona_casillas (y sus vecinas) avisa una vez cada repetir_zona_s; otra zona, enseguida. cerca_casillas: hasta dónde se nombra el edificio propio más cercano. alert_tapa_s: el suceso 'alert' de la simulación no avisa si una alerta propia salió hace menos. Recursos: lo que trabajan tus aldeanos; avisa al bajar de umbral_recurso a radio_casillas y al acabarse; olvidar_s deja de seguir lo que ya nadie trabaja. Granjas: granja_espera_s sin granjero antes de marcarla.",
+    "activo": true,
+    "zona_casillas": 12,
+    "repetir_zona_s": 20.0,
+    "cerca_casillas": 14,
+    "alert_tapa_s": 3.0,
+    "avisar_aliado": true,
+    "revisar_s": 1.0,
+    "radio_casillas": 6,
+    "umbral_recurso": { "alimento": 150, "madera": 250, "piedra": 300, "riqueza": 300 },
+    "olvidar_s": 30.0,
+    "granja_espera_s": 4.0,
+    "marcar_granjas": true,
+    "llenar_prefiere_alimento": true
+  },
+  "minimapa": {
+    "_doc": "--- fluidez 4 --- (src/game/minimap.gd) Tamaños en píxeles que recorre el botón ± y el inicial (índice); filtros que arrancan prendidos.",
+    "tamanos": [200, 250, 320],
+    "inicial": 1,
+    "filtros": { "recursos": true, "militares": true, "edificios": true }
+  },
+  "equipo": {
+    "_doc": "--- fluidez 4 --- (src/game/ui/panel_puntaje.gd, F6) Fila de cada aliado: aldeanos, tropa e intención. Ataca si el centro de su tropa está a cerca_casillas o menos de un edificio rival.",
+    "cerca_casillas": 18
+  },
+  "tributo": {
+    "_doc": "--- fluidez 4 --- (src/game/ui/panel_puntaje.gd) Clic: un lote (reglas.equipos.tributo_lote); Mayús: ×mayus; Ctrl: ×ctrl. Clic derecho prende o apaga el tributo periódico de ese recurso a ese aliado: lo mismo cada periodo_s segundos de partida.",
+    "mayus": 5,
+    "ctrl": 10,
+    "periodo_s": 60
   },
   "cursores": {
     "_doc": "Cursores contextuales (src/game/ui/cursores.gd): lado en píxeles a escala 100 %.",

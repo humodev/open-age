@@ -17,6 +17,7 @@ var _flashes: Array[Dictionary] = []
 var _last_flash := {} # zona -> tiempo
 var _disputed: Array[SimEntity] = []
 var _scan := 0.0
+var filtros := {} # --- fluidez 4 --- los del minimapa (recursos apaga los disputados)
 
 
 func _init(s: Sim, local_player: int) -> void:
@@ -52,6 +53,8 @@ func draw(ci: CanvasItem, view: WorldView, px: float) -> void:
 	var pulse := 0.5 + 0.5 * sin(_t * 4.0)
 	# Recursos disputados: aro dorado que late.
 	for e in _disputed:
+		if not filtros.get("recursos", true): # --- fluidez 4 ---
+			break
 		if not e.alive or (view.fog_on and not sim.fog.is_explored(local, e)):
 			continue
 		var c := Vector2(e.x / P, e.y / P)

@@ -53,7 +53,7 @@ func push(texto: String, tipo: String = "info", secs: float = -1.0, lugar: Varia
 		tipo = "info"
 	var dur := secs if secs > 0.0 else float((cfg.get("duracion_s", {}) as Dictionary).get(tipo, 2.6))
 	for a in lista:
-		if a["texto"] == texto and a["tipo"] == tipo:
+		if a["texto"] == texto and a["tipo"] == tipo and _misma_zona(a.get("lugar"), lugar): # --- fluidez 4 ---
 			a["n"] = int(a["n"]) + 1
 			a["t"] = maxf(float(a["t"]), dur)
 			if lugar is Vector3:
@@ -70,6 +70,14 @@ func push(texto: String, tipo: String = "info", secs: float = -1.0, lugar: Varia
 	if lugar is Vector3:
 		_recordar(lugar, tipo, texto)
 	queue_redraw()
+
+
+# --- fluidez 4 --- Lo mismo en otra zona no se suma: es otro aviso, con su propio Espacio.
+func _misma_zona(a: Variant, b: Variant) -> bool:
+	if not (a is Vector3) or not (b is Vector3):
+		return true
+	var r := float(cfg.get("fusion_casillas", 12))
+	return Vector2(a.x, a.z).distance_to(Vector2(b.x, b.z)) <= r
 
 
 func _recordar(lugar: Vector3, tipo: String, texto: String) -> void:
