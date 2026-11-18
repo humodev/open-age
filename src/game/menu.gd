@@ -99,7 +99,7 @@ func _ready() -> void:
 	gap.custom_minimum_size = Vector2(0, 26)
 	box.add_child(gap)
 
-	var data := SimData.load_default()
+	var data := Textos.datos(SimData.load_default()) # --- ronda 7 --- sin «[verificar]»
 	# Las civs solo de IA (invasores y los rivales de campaña) no se eligen en el menú (D-018).
 	_keys = data.civs.keys().filter(func(k: String) -> bool: return not data.civs[k].civ.get("solo_ia", false))
 	_keys.sort()

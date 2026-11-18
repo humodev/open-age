@@ -353,6 +353,7 @@ static func match_opts(args: Dictionary) -> Dictionary:
 
 
 func _build_scene(aivai: bool) -> void:
+	Textos.limpiar_todo(sim.data) # --- ronda 7 --- sin las notas «[verificar]» en pantalla
 	if _args.has("demo"):
 		_demo(_args["demo"])
 
@@ -805,6 +806,7 @@ func _open_campaigns(layer: CanvasLayer) -> void:
 
 static func _mission_data(civ: String, idx: int) -> Dictionary:
 	var camp: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/campanas/%s.json" % civ))
+	Textos.limpiar_todo(camp) # --- ronda 7 ---
 	return camp["misiones"][idx]
 
 
