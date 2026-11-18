@@ -78,3 +78,5 @@ Las simulaciones de los frentes 1, 2 y 5 se confirman en un solo torneo al final
 | A 20 casillas | 2 de 3 |
 
 La rebusca lejana ayuda más a la economía de la fácil que al principiante. Queda en **20 casillas**, que mantiene la meta de 2 de 3 o más.
+
+**Autotest en los seis pueblos: OK (5fff26d)**, [05](05-autotest-seis-pueblos.md). Las fallas eran de las comprobaciones: cámara fija, esperas cortas, suelo a altura 0. Quedan anotados tres detalles del juego: el clic derecho en un arbusto con un aldeano encima, la empalizada de Ayutthaya aceptada por la simulación y la puerta sobre un camino.
