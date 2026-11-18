@@ -33,6 +33,8 @@ static var barras_pelea := false
 # --- aprender --- (proceso/23-como-aoe4/03-aprender-a-jugar.md)
 ## Avisos que enseñan (src/game/ui/consejos.gd).
 static var consejos := true
+## Consejo de edificios de producción parados (cola_global.gd; clic derecho en un ícono gris lo apaga).
+static var aviso_parados := true
 ## Nombre debajo del glifo en la grilla de órdenes. Prendido la primera vez: es lo que necesita
 ## alguien nuevo y estaba escondido en Opciones → Ayuda (jugador nuevo, ronda 4).
 static var nombres_grilla := true
@@ -69,6 +71,7 @@ static func cargar(ruta: String = RUTA) -> void:
 	velocidad_camara = float(cf.get_value("camara", "velocidad", velocidad_camara))
 	pantalla_completa = bool(cf.get_value("pantalla", "completa", pantalla_completa))
 	consejos = bool(cf.get_value("ayuda", "consejos", consejos)) # --- aprender ---
+	aviso_parados = bool(cf.get_value("ayuda", "aviso_parados", aviso_parados)) # --- frente 1 ---
 	nombres_grilla = bool(cf.get_value("ayuda", "nombres_grilla", nombres_grilla))
 	dificultad = str(cf.get_value("partida", "dificultad", dificultad))
 	var po: Variant = cf.get_value("partida", "opciones", partida)
@@ -97,6 +100,7 @@ static func guardar(ruta: String = RUTA) -> void:
 	cf.set_value("camara", "velocidad", velocidad_camara)
 	cf.set_value("pantalla", "completa", pantalla_completa)
 	cf.set_value("ayuda", "consejos", consejos) # --- aprender ---
+	cf.set_value("ayuda", "aviso_parados", aviso_parados) # --- frente 1 ---
 	cf.set_value("ayuda", "nombres_grilla", nombres_grilla)
 	cf.set_value("partida", "dificultad", dificultad)
 	cf.set_value("partida", "opciones", partida)
@@ -117,6 +121,7 @@ static func restablecer() -> void:
 	pantalla_completa = false
 	barras_siempre = false
 	barras_pelea = false # --- veterano ronda 5 ---
+	aviso_parados = true # --- frente 1 ---
 	consejos = true # --- aprender --- (la dificultad elegida no se restablece: no es una opción de este diálogo)
 	nombres_grilla = true
 	EstadoCasilla.nombres = true
