@@ -259,4 +259,212 @@ static func detalles(sim: Sim, pid: int, type: String, tx: int, ty: int) -> Arra
 			out.append(["Conectado a la capital: +%d%% de producción" % int(cfg.get("bono_conectado_pct", 0)), Palette.UI_GOOD])
 		else:
 			out.append(["Sin conexión: unilo a la capital con caminos", Palette.UI_ACCENT])
+	out.append_array(detalles_obra(sim, pid, type, tx, ty)) # --- fluidez 2 --- almacén y granja informan
 	return out
+
+
+# --- fluidez 2 --- (proceso/30-fluidez/02-constructor.md) granjas que se pegan, lugares libres,
+# almacén que informa, costo del muro y causa de los huecos. Solo lee la simulación.
+static var _cfg := {}
+
+static func cfg() -> Dictionary:
+	if _cfg.is_empty():
+		_cfg = JSON.parse_string(FileAccess.get_file_as_string("res://data/constructor.json")) as Dictionary
+	return _cfg
+
+
+static func es_granja(def: Dictionary) -> bool:
+	return String(def.get("fuente", "")) != ""
+
+
+## Depósito propio terminado que recibe alimento más cercano a (tx, ty), a `rad` casillas o menos.
+static func deposito_alimento(sim: Sim, pid: int, tx: int, ty: int, rad: int) -> SimEntity:
+	var best: SimEntity = null
+	var best_d := rad + 1
+	for b in sim.actives:
+		if b.alive and b.owner == pid and b.is_building() and b.built and (b.def.get("deposito", []) as Array).has("alimento"):
+			var d := hueco_rect(tx, ty, 1, 1, b.tx, b.ty, b.w, b.h)
+			if d < best_d:
+				best = b
+				best_d = d
+	return best
+
+
+## Las 8 posiciones de una pieza de w×h alrededor del rectángulo (bx, by, bw, bh): esquinas y lados.
+static func ocho_lugares(bx: int, by: int, bw: int, bh: int, w: int, h: int) -> Array:
+	var xs := [bx - w, bx + (bw - w) / 2, bx + bw]
+	var ys := [by - h, by + (bh - h) / 2, by + bh]
+	var out := []
+	for j in 3:
+		for i in 3:
+			if i != 1 or j != 1:
+				out.append(Vector2i(xs[i], ys[j]))
+	return out
+
+
+## Lugares libres para granjas alrededor del depósito de alimento más cercano:
+## {"dep": SimEntity, "libres": n, "total": 8} o {} si no hay depósito cerca.
+static func lugares_granja(sim: Sim, pid: int, type: String, tx: int, ty: int) -> Dictionary:
+	var def: Dictionary = sim.dp(pid).edificios.get(type, {})
+	var dep := deposito_alimento(sim, pid, tx, ty, int(cfg().get("granja_lugares_radio", 12)))
+	if dep == null:
+		return {}
+	var libres := 0
+	var lugares := ocho_lugares(dep.tx, dep.ty, dep.w, dep.h, int(def["tam"][0]), int(def["tam"][1]))
+	for l: Vector2i in lugares:
+		if sim.can_place(type, l.x, l.y, pid):
+			libres += 1
+	return {"dep": dep, "libres": libres, "total": lugares.size()}
+
+
+## La granja se corre hasta `granja_pegar` casillas para quedar pegada al depósito de alimento
+## o a otra granja propia, si ahí entra. Devuelve la casilla (la misma si no hay dónde pegarla).
+static func pegar_granja(sim: Sim, pid: int, type: String, tx: int, ty: int) -> Vector2i:
+	var def: Dictionary = sim.dp(pid).edificios.get(type, {})
+	if not es_granja(def):
+		return Vector2i(tx, ty)
+	var w := int(def["tam"][0])
+	var h := int(def["tam"][1])
+	var tope := int(cfg().get("granja_pegar", 1))
+	var best := Vector2i(tx, ty)
+	var best_d := tope + 1
+	for b in sim.actives:
+		if not (b.alive and b.owner == pid and b.is_building()):
+			continue
+		if not (es_granja(b.def) or (b.built and (b.def.get("deposito", []) as Array).has("alimento"))):
+			continue
+		if hueco_rect(tx, ty, w, h, b.tx, b.ty, b.w, b.h) > tope + 1:
+			continue
+		# Pegada a un lado, alineada con el vecino o donde quedó el cursor.
+		var cands := ocho_lugares(b.tx, b.ty, b.w, b.h, w, h)
+		cands.append_array([Vector2i(b.tx - w, ty), Vector2i(b.tx + b.w, ty), Vector2i(tx, b.ty - h), Vector2i(tx, b.ty + b.h)])
+		for c: Vector2i in cands:
+			var d := maxi(absi(c.x - tx), absi(c.y - ty))
+			if d < best_d and sim.can_place(type, c.x, c.y, pid):
+				best = c
+				best_d = d
+	return best
+
+
+## Casillas libres entre dos rectángulos (0 si se tocan o se pisan), en la medida de Chebyshev.
+static func hueco_rect(ax: int, ay: int, aw: int, ah: int, bx: int, by: int, bw: int, bh: int) -> int:
+	var gx := maxi(0, maxi(bx - (ax + aw), ax - (bx + bw)))
+	var gy := maxi(0, maxi(by - (ay + ah), ay - (by + bh)))
+	return maxi(gx, gy)
+
+
+## Depósito propio terminado más cercano que recibe alguno de `kinds`, con su distancia en
+## casillas desde el borde de la huella: [SimEntity, casillas] o [null, -1].
+static func deposito_cerca(sim: Sim, pid: int, kinds: Array, tx: int, ty: int, w: int, h: int) -> Array:
+	var best: SimEntity = null
+	var best_d := 1 << 30
+	for b in sim.actives:
+		if not (b.alive and b.owner == pid and b.is_building() and b.built):
+			continue
+		var dep: Array = b.def.get("deposito", [])
+		if not kinds.any(func(k: String) -> bool: return dep.has(k)):
+			continue
+		var d := hueco_rect(tx, ty, w, h, b.tx, b.ty, b.w, b.h)
+		if d < best_d:
+			best = b
+			best_d = d
+	return [best, best_d if best != null else -1]
+
+
+## Recursos de la naturaleza a `rad` casillas de la huella, por tipo: {kind: [cuántos, cantidad]}.
+## Se recorre la naturaleza una vez por casilla y por segundo de juego, no por cuadro.
+static var _info_cache := ["", {}]
+
+static func recursos_cerca(sim: Sim, kinds: Array, tx: int, ty: int, w: int, h: int, rad: int) -> Dictionary:
+	var key := "%s/%d/%d/%d/%d/%d" % [",".join(kinds), tx, ty, w, h, sim.tick * sim.tick_ms / 1000]
+	if _info_cache[0] == key:
+		return _info_cache[1]
+	var out := {}
+	for e in sim.entities:
+		if not e.alive or not e.is_resource() or e.amount <= 0 or not kinds.has(e.res_kind):
+			continue
+		var cx := clampi(e.x, tx * P, (tx + w) * P)
+		var cy := clampi(e.y, ty * P, (ty + h) * P)
+		if Sim.dist(e.x, e.y, cx, cy) > rad * P:
+			continue
+		var a: Array = out.get_or_add(e.res_kind, [0, 0])
+		a[0] += 1
+		a[1] += e.amount
+	_info_cache = [key, out]
+	return out
+
+
+## Renglones del almacén y de la granja: qué hay cerca y a cuánto queda el depósito.
+static func detalles_obra(sim: Sim, pid: int, type: String, tx: int, ty: int) -> Array:
+	var def: Dictionary = sim.dp(pid).edificios.get(type, {})
+	var out := []
+	var w := int(def["tam"][0])
+	var h := int(def["tam"][1])
+	if es_granja(def):
+		var lg := lugares_granja(sim, pid, type, tx, ty)
+		if not lg.is_empty():
+			var dn: String = String((lg["dep"] as SimEntity).def.get("nombre", "depósito"))
+			out.append(["%d de %d lugares libres junto a: %s" % [lg["libres"], lg["total"], dn], Palette.UI_GOOD if int(lg["libres"]) > 0 else Palette.UI_DIM])
+		var dc := deposito_cerca(sim, pid, ["alimento"], tx, ty, w, h)
+		if dc[0] == null:
+			out.append(["Sin depósito de alimento: los granjeros no tienen dónde dejar", Palette.UI_BAD])
+		elif int(dc[1]) == 0:
+			out.append(["Pegada al depósito de alimento", Palette.UI_GOOD])
+		else:
+			out.append(["Los granjeros caminan %d casillas hasta el depósito" % int(dc[1]), Palette.UI_ACCENT if int(dc[1]) > 4 else Palette.UI_TEXT])
+		return out
+	var kinds: Array = def.get("deposito", [])
+	if kinds.is_empty() or def.get("hito", false):
+		return out
+	var rad := int(cfg().get("info_radio", 6))
+	var cerca := recursos_cerca(sim, kinds, tx, ty, w, h, rad)
+	var nombres := {"alimento": ["fuente de alimento", "fuentes de alimento"], "madera": ["árbol", "árboles"], "piedra": ["veta de piedra", "vetas de piedra"], "riqueza": ["veta de riqueza", "vetas de riqueza"]}
+	var parts := []
+	for k in kinds:
+		if cerca.has(k):
+			var n := int(cerca[k][0])
+			parts.append("%d %s (≈%d de %s)" % [n, nombres.get(k, [k, k])[0 if n == 1 else 1], int(cerca[k][1]), _res_name(k)])
+	if parts.is_empty():
+		out.append(["A %d casillas: nada que recibir" % rad, Palette.UI_BAD])
+	else:
+		out.append(["A %d casillas: %s" % [rad, ", ".join(parts)], Palette.UI_GOOD])
+	var dc := deposito_cerca(sim, pid, kinds, tx, ty, w, h)
+	if dc[0] != null:
+		out.append(["El depósito más cercano está a %d casillas" % int(dc[1]), Palette.UI_DIM])
+	return out
+
+
+## "48 de madera + 10 de piedra".
+static func costo_texto(cost: Dictionary) -> String:
+	var parts := []
+	for k in cost:
+		if int(cost[k]) > 0:
+			parts.append("%d de %s" % [int(cost[k]), _res_name(k)])
+	return " + ".join(parts) if not parts.is_empty() else "gratis"
+
+
+## Por qué una casilla del trazo queda como hueco: "árboles", "recursos", "edificios", "agua",
+## "roca", "borde" o "pendiente".
+static func causa_hueco(sim: Sim, tx: int, ty: int) -> String:
+	if not sim.map.in_bounds(tx, ty):
+		return "borde"
+	if sim.map.is_water(tx, ty):
+		return "agua"
+	if sim.map.is_rock(tx, ty):
+		return "roca"
+	var occ := sim.map.occupant(tx, ty)
+	var o: SimEntity = sim.by_id.get(occ)
+	if o != null and o.is_resource():
+		return "árboles" if o.res_kind == "madera" else "recursos"
+	if occ != -1:
+		return "edificios"
+	return "pendiente"
+
+
+## Tipo de puerta del pueblo (el edificio con "puerta"), o "".
+static func tipo_puerta(sim: Sim, pid: int) -> String:
+	for k in sim.dp(pid).edificios:
+		if sim.dp(pid).edificios[k].get("puerta", false):
+			return k
+	return ""
+# --- fin fluidez 2 ---

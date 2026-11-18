@@ -1,0 +1,19 @@
+{
+  "_doc": "Frente 2 de fluidez (proceso/30-fluidez/02-constructor.md): comodidades para construir. Solo interfaz; la rebusca lejana de la simulación está en reglas.json → rebusca_lejos.",
+  "muro_tope": 80,
+  "_doc_muro_tope": "Casillas como mucho en un trazo de muro o empalizada arrastrado.",
+  "huecos_marca_s": 6,
+  "_doc_huecos_marca_s": "Segundos que quedan marcados en rojo los huecos de un muro recién puesto.",
+  "granja_pegar": 1,
+  "_doc_granja_pegar": "Casillas que se corre la granja para quedar pegada al depósito de alimento o a otra granja.",
+  "granja_lugares_radio": 12,
+  "_doc_granja_lugares_radio": "Casillas desde el cursor en que se busca el depósito de alimento para contar sus 8 lugares.",
+  "info_radio": 6,
+  "_doc_info_radio": "Al colocar un almacén: casillas alrededor de la huella en que se cuentan los recursos que recibe.",
+  "reparar_zona_radio": 12,
+  "_doc_reparar_zona_radio": "Botón «Reparar (zona)»: casillas desde los aldeanos en que se buscan edificios propios dañados.",
+  "reparar_cadena_radio": 10,
+  "_doc_reparar_cadena_radio": "Al terminar una reparación ordenada, el aldeano sigue con el edificio dañado más cercano a estas casillas.",
+  "huella_s": 180,
+  "_doc_huella_s": "Segundos de juego que queda la huella fantasma de un edificio propio que cayó (clic derecho de un aldeano: reconstruir)."
+}

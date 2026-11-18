@@ -89,6 +89,8 @@ func on_events(events: Array) -> void:
 				var dmg := int(ev.get("dmg", 0))
 				if dmg > 0 and float(dmg) >= float(b.hp_max) * DANIO_FUERTE and view.fog_state(b) == 2:
 					_float_damage(b, dmg)
+			"died": # --- fluidez 2 --- huella fantasma de lo que cayó
+				cola.on_died(ev)
 			"age":
 				if int(ev["player"]) == local:
 					_float_age(int(ev["age"]), String(ev.get("hito", "")))
@@ -218,6 +220,7 @@ func _draw() -> void:
 	_draw_ranges(info)
 	if ctrl.mode == "place" and ctrl.place_type != "":
 		_draw_placement()
+	_draw_obras() # --- fluidez 2 ---
 	_draw_orders()
 	funciones_dibujadas = 0
 	if info: # --- ronda 6 --- con Alt, la función de cada tropa reemplaza al «Zz» y al recurso
@@ -349,6 +352,7 @@ func _draw_placement() -> void:
 				var ec := _gp(e.x / P, e.y / P)
 				_draw_area(_shape(e.tx - sep + 1, e.ty - sep + 1, e.tx + sep - 1 + e.w, e.ty + sep - 1 + e.h, 0.0), ec, Color(Palette.UI_BAD, 0.6), 0.06, 1.5)
 	if ctrl._line_drag:
+		_tip_lines = ctrl.linea_info # --- fluidez 2 --- tramos, costo, cuántos alcanzan y huecos
 		return
 	# Casillas de la huella: verdes, doradas (ladera que rinde) o rojas (bloquean).
 	for c in Colocacion.casillas(sim, type, tile.x, tile.y, local):
@@ -357,6 +361,30 @@ func _draw_placement() -> void:
 		draw_colored_polygon(q, col)
 	# Renglones junto al cursor: van en una capa encima de los paneles.
 	_tip_lines = Colocacion.detalles(sim, local, type, tile.x, tile.y)
+
+
+# --- fluidez 2 --- (proceso/30-fluidez/02-constructor.md)
+## Huellas fantasma de lo que cayó (clic derecho de un aldeano: reconstruir) y huecos del último
+## muro, marcados en rojo unos segundos.
+func _draw_obras() -> void:
+	for h: Dictionary in cola.huellas:
+		if sim.tick > int(h["hasta"]):
+			continue
+		var tam: Array = sim.dp(local).edificios[h["type"]]["tam"]
+		var x0 := float(h["tx"])
+		var z0 := float(h["ty"])
+		if not _on_screen(Vector3(x0 + tam[0] / 2.0, 0, z0 + tam[1] / 2.0)):
+			continue
+		var q := PackedVector2Array([_gp(x0, z0), _gp(x0 + tam[0], z0), _gp(x0 + tam[0], z0 + tam[1]), _gp(x0, z0 + tam[1])])
+		var a := 0.5 + 0.2 * sin(_time * 3.0)
+		draw_colored_polygon(q, Color(0.75, 0.85, 1.0, 0.12))
+		q.append(q[0])
+		draw_polyline(q, Color(0.75, 0.85, 1.0, a), 2.0)
+	if Time.get_ticks_msec() < ctrl.huecos_hasta:
+		for c: Array in ctrl.huecos:
+			var q := PackedVector2Array([_gp(c[0] + 0.1, c[1] + 0.1), _gp(c[0] + 0.9, c[1] + 0.1), _gp(c[0] + 0.9, c[1] + 0.9), _gp(c[0] + 0.1, c[1] + 0.9)])
+			draw_colored_polygon(q, Color(1.0, 0.25, 0.2, 0.5))
+# --- fin fluidez 2 ---
 
 
 ## Recuadro de la vista previa junto al cursor (encima de la interfaz).
