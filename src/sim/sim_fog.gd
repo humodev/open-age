@@ -59,17 +59,35 @@ func update(pid: int, sources: Array) -> void:
 		if done.has(key):
 			continue
 		done[key] = true
-		var offs := _circle(r)
-		for k in range(0, offs.size(), 2):
-			var x := cx + offs[k]
-			var y := cy + offs[k + 1]
-			if x < 0 or y < 0 or x >= n or y >= n:
+		# Por renglones (proceso/32-ronda-8/04): las mismas casillas que `_circle(r)`, sin
+		# mirar el borde ni leer el desplazamiento de a una.
+		var half := _spans(r)
+		for dy in range(-r, r + 1):
+			var y := cy + dy
+			if y < 0 or y >= n:
 				continue
-			var idx := y * n + x
-			if g[idx] != 2:
-				g[idx] = 2
-				now.append(idx)
+			var w := half[dy + r]
+			var row := y * n
+			for idx in range(row + maxi(0, cx - w), row + mini(n - 1, cx + w) + 1):
+				if g[idx] != 2:
+					g[idx] = 2
+					now.append(idx)
 	_visible[pid] = now
+
+
+var _half := {} # radio -> ancho a cada lado de cada renglón del círculo de `_circle`
+func _spans(r: int) -> PackedInt32Array:
+	if _half.has(r):
+		return _half[r]
+	var out := PackedInt32Array()
+	for dy in range(-r, r + 1):
+		var w := -1
+		for dx in range(0, r + 1):
+			if dx * dx + dy * dy <= r * r + r:
+				w = dx
+		out.append(w)
+	_half[r] = out
+	return out
 
 
 ## Mismo estado de visión que un aliado (visión compartida, ya calculada en el tick).

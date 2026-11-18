@@ -12,7 +12,8 @@ extends SceneTree
 ##
 ## Uso:
 ##   godot --headless --path . -s tools/perfil_sim.gd -- [--partida=1v6|4v4|ambas] [--minutos=40]
-##         [--semilla=42] [--picos=12] [--plano]
+##         [--semilla=42] [--picos=12] [--plano] [--ia-detalle] [--detalle]
+## --ia-detalle: la IA por parte de think; --detalle: ayudantes (approach, try_move, …) por parte.
 ## --plano: sin envoltorios, solo el tiempo total de cada tick (para comparar con lo medido).
 
 const CIVS := ["guaranies", "mapuches", "etiopia", "palmares", "ayutthaya", "tawantinsuyu"]
@@ -42,6 +43,11 @@ class Prof:
 		var i := _t0.size() - 1
 		var el := Time.get_ticks_usec() - _t0[i]
 		var n: String = _name[i]
+		if n.begins_with("+"): # ayudante: se anota como detalle de quien lo llamó
+			var j := i - 1
+			while j >= 0 and _name[j].begins_with("+"):
+				j -= 1
+			n = (_name[j].get_slice(".", 0) if j >= 0 else "resto") + "." + n.substr(1)
 		cur[n] = int(cur.get(n, 0)) + el - _child[i]
 		_t0.resize(i)
 		_child.resize(i)
@@ -93,6 +99,68 @@ class PSim extends Sim:
 		Prof.enter("animales"); super(); Prof.leave()
 	func _check_victory() -> void:
 		Prof.enter("victoria"); super(); Prof.leave()
+
+
+## --detalle: ayudantes de la simulación, anotados dentro de la parte que los llamó.
+class PSimDet extends PSim:
+	func _approach(e: SimEntity, t: SimEntity, reach: int) -> bool:
+		Prof.enter("+approach"); var r = super(e, t, reach); Prof.leave(); return r
+	func _follow(e: SimEntity) -> bool:
+		Prof.enter("+follow"); var r = super(e); Prof.leave(); return r
+	func _try_move(e: SimEntity, nx: int, ny: int) -> int:
+		Prof.enter("+try_move"); var r = super(e, nx, ny); Prof.leave(); return r
+	func _set_goal(e: SimEntity, gx: int, gy: int, target_id: int = -1) -> void:
+		Prof.enter("+set_goal"); super(e, gx, gy, target_id); Prof.leave()
+	func _site_bonus(t: SimEntity) -> int:
+		Prof.enter("+site_bonus"); var r = super(t); Prof.leave(); return r
+	func _aura_gather(owner: int, t: SimEntity, kind: String) -> int:
+		Prof.enter("+aura_gather"); var r = super(owner, t, kind); Prof.leave(); return r
+	func _valid_source(e: SimEntity, t: SimEntity) -> bool:
+		Prof.enter("+valid_source"); var r = super(e, t); Prof.leave(); return r
+	func _side_tile(e: SimEntity, t: SimEntity) -> Vector2i:
+		Prof.enter("+side_tile"); var r = super(e, t); Prof.leave(); return r
+	func _do_idle(e: SimEntity) -> void:
+		Prof.enter("+do_idle"); super(e); Prof.leave()
+	func _hit(a: SimEntity, t: SimEntity) -> void:
+		Prof.enter("+hit"); super(a, t); Prof.leave()
+	func _kill(e: SimEntity, killer: SimEntity = null) -> void:
+		Prof.enter("+kill"); super(e, killer); Prof.leave()
+	func _exhaust(t: SimEntity) -> void:
+		Prof.enter("+exhaust"); super(t); Prof.leave()
+	func _rebusca_lejos(owner: int, x: int, y: int, kind: String, only_type: String, worker: int) -> SimEntity:
+		Prof.enter("+rebusca_lejos"); var r = super(owner, x, y, kind, only_type, worker); Prof.leave(); return r
+	func _spawn_from(b: SimEntity, type: String) -> void:
+		Prof.enter("+spawn_from"); super(b, type); Prof.leave()
+	func can_place(type: String, tx: int, ty: int, pid: int = -1) -> bool:
+		Prof.enter("+can_place"); var r = super(type, tx, ty, pid); Prof.leave(); return r
+
+
+class PMapDet extends PMap:
+	func nearest_free(tx: int, ty: int, max_r: int = 12, pid: int = -1) -> Vector2i:
+		Prof.enter("+nearest_free"); var r = super(tx, ty, max_r, pid); Prof.leave(); return r
+	func has_free_neighbor(tx: int, ty: int, w: int, h: int, pid: int = -1) -> bool:
+		Prof.enter("+free_neighbor"); var r = super(tx, ty, w, h, pid); Prof.leave(); return r
+
+
+class PModsDet extends PMods:
+	func _own_resource(pid: int, p: Dictionary) -> void:
+		Prof.enter("+own_resource"); super(pid, p); Prof.leave()
+	func _rents(pid: int, p: Dictionary) -> void:
+		Prof.enter("+rents"); super(pid, p); Prof.leave()
+	func _conversions(pid: int, p: Dictionary) -> void:
+		Prof.enter("+conversions"); super(pid, p); Prof.leave()
+	func _crafts_yield(pid: int) -> void:
+		Prof.enter("+crafts"); super(pid); Prof.leave()
+	func _herds(pid: int) -> void:
+		Prof.enter("+herds"); super(pid); Prof.leave()
+	func _regen() -> void:
+		Prof.enter("+regen"); super(); Prof.leave()
+	func _command_aura() -> void:
+		Prof.enter("+command_aura"); super(); Prof.leave()
+	func _wonder_tick() -> void:
+		Prof.enter("+wonder_tick"); super(); Prof.leave()
+	func _sacred() -> void:
+		Prof.enter("+sacred"); super(); Prof.leave()
 
 
 class PAI extends SimAI:
@@ -180,22 +248,22 @@ static func _copy(from: Object, to: Object) -> void:
 			to.set(p["name"], from.get(p["name"]))
 
 
-func _make(nombre: String, semilla: int, plano: bool, ia_det: bool) -> Sim:
+func _make(nombre: String, semilla: int, plano: bool, ia_det: bool, det: bool) -> Sim:
 	var lug: Array = PARTIDAS[nombre]
 	var opts := {"terreno": "llano", "civs": [], "equipos": [], "tiempo_limite_min": 60, "ubicacion_equipos": "juntos"}
 	for i in lug.size():
 		opts["civs"].append(CIVS[(i + semilla) % CIVS.size()])
 		opts["equipos"].append(lug[i][1])
-	var s: Sim = Sim.new(semilla, lug.size(), null, opts) if plano else PSim.new(semilla, lug.size(), null, opts)
+	var s: Sim = Sim.new(semilla, lug.size(), null, opts) if plano else (PSimDet.new(semilla, lug.size(), null, opts) if det else PSim.new(semilla, lug.size(), null, opts))
 	if not plano:
-		var m := PMap.new(8, 1)
+		var m: SimMap = PMapDet.new(8, 1) if det else PMap.new(8, 1)
 		_copy(s.map, m)
 		s.map = m
 		s.fog.map = m
 		var g := PGroups.new(s)
 		_copy(s.groups, g)
 		s.groups = g
-		var md := PMods.new(s)
+		var md: SimMods = PModsDet.new(s) if det else PMods.new(s)
 		_copy(s.mods, md)
 		s.mods = md
 		var t := PTele.new()
@@ -216,12 +284,12 @@ func _init() -> void:
 	var cual := str(args.get("partida", "ambas"))
 	var lista: Array = ["1v6", "4v4"] if cual == "ambas" else [cual]
 	for nombre in lista:
-		_run(nombre, int(args.get("semilla", "42")), int(args.get("minutos", "40")), int(args.get("picos", "12")), args.has("plano"), args.has("ia-detalle"))
+		_run(nombre, int(args.get("semilla", "42")), int(args.get("minutos", "40")), int(args.get("picos", "12")), args.has("plano"), args.has("ia-detalle"), args.has("detalle"))
 	quit()
 
 
-func _run(nombre: String, semilla: int, minutos: int, n_picos: int, plano: bool, ia_det: bool) -> void:
-	var s := _make(nombre, semilla, plano, ia_det)
+func _run(nombre: String, semilla: int, minutos: int, n_picos: int, plano: bool, ia_det: bool, det: bool) -> void:
+	var s := _make(nombre, semilla, plano, ia_det, det)
 	var ia_sub := {} # ia.* -> [µs total, peor µs en un tick]
 	var n_ticks := minutos * 60000 / s.tick_ms
 	var tpm := 60000 / s.tick_ms
@@ -249,9 +317,10 @@ func _run(nombre: String, semilla: int, minutos: int, n_picos: int, plano: bool,
 		var suma := 0
 		for k: String in Prof.cur:
 			var v := int(Prof.cur[k])
-			var si := SECCIONES.find(k)
-			if si < 0: # ia.*: va a la IA en la tabla y se detalla aparte
-				si = 0
+			var si := SECCIONES.find(k.get_slice(".", 0))
+			if si < 0:
+				si = NS - 1
+			if k.contains("."): # parte.detalle: va a su parte en la tabla y se detalla aparte
 				var acc: Array = ia_sub.get(k, [0, 0])
 				ia_sub[k] = [acc[0] + v, maxi(acc[1], v)]
 			plano_s[i * NS + si] += v
@@ -296,9 +365,9 @@ func _run(nombre: String, semilla: int, minutos: int, n_picos: int, plano: bool,
 		if not ia_sub.is_empty():
 			var ks := ia_sub.keys()
 			ks.sort_custom(func(a: String, b: String) -> bool: return ia_sub[a][0] > ia_sub[b][0])
-			var l := "IA por parte (prom ms/tick · peor ms):"
-			for k: String in ks:
-				l += " %s %.2f·%.1f" % [k.trim_prefix("ia."), ia_sub[k][0] / 1000.0 / hecho, ia_sub[k][1] / 1000.0]
+			var l := "Detalle (prom ms/tick · peor ms):"
+			for k: String in ks.slice(0, 30):
+				l += " %s %.2f·%.1f" % [k, ia_sub[k][0] / 1000.0 / hecho, ia_sub[k][1] / 1000.0]
 			print(l)
 		print("Picos (tick · min · total ms · sistema que más pesó · segundo):")
 		for j in mini(n_picos, idx.size()):
