@@ -6,7 +6,13 @@
     "elegir_ajeno": { "activo": true, "db": -18.0, "min_s": 0.12 },
     "error": { "activo": true, "db": -12.0, "min_s": 0.25, "_doc": "El clic no hace nada: clic derecho sin tropa propia elegida o cimiento en un lugar donde no entra." },
     "orden": { "activo": true, "_doc": "La orden por función usa el límite de audio.json → momentos.orden. Función: civil, a_pie, montado o asedio; a_pie es la orden de 4g." },
-    "cimiento": { "activo": true, "db": -8.0, "min_s": 0.15 }
+    "cimiento": { "activo": true, "db": -8.0, "min_s": 0.15 },
+    "alerta_aldeanos": { "activo": true, "db": -6.0, "min_s": 1.0, "_doc": "--- fluidez 4 --- Alertas de ataque por tipo (src/game/ui/alertas.gd; tools/audio/generar_avisos.py): aldeanos, dos notas que bajan; tropa, tres golpes; edificio, golpe grave con eco; aliado, dos notas lejanas." },
+    "alerta_tropa": { "activo": true, "db": -6.0, "min_s": 1.0 },
+    "alerta_edificio": { "activo": true, "db": -6.0, "min_s": 1.0 },
+    "alerta_aliado": { "activo": true, "db": -9.0, "min_s": 1.5 },
+    "aviso_recurso": { "activo": true, "db": -9.0, "min_s": 2.0 },
+    "aviso_granja": { "activo": true, "db": -10.0, "min_s": 3.0 }
   },
   "efectos": {
     "activo": true,

@@ -61,6 +61,7 @@ var guia: Control # registro de la Guía (G), solo en campañas
 var _guia_cfg := {}
 # --- fin aprender ---
 # --- fin avisos ---
+var alertas: Control # --- fluidez 4 --- ataques por zona y tipo, recursos y granjas (ui/alertas.gd)
 # --- cursores ---
 const CURSORES := preload("res://src/game/ui/cursores.gd")
 var cursores: Node
@@ -111,6 +112,7 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 	_mini = Minimap.new()
 	_mini.setup(sim, cam, ctrl, local)
 	_anchor(_mini, Vector2(0, 1), Rect2(12, -262, 250, 250))
+	_mini.aplicar_tamano() # --- fluidez 4 --- (tamaño elegido: data/interfaz.json → minimapa)
 	add_child(_mini)
 	_blockers.append(_mini)
 	# --- mundo ---
@@ -160,6 +162,11 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 	add_child(grupos)
 	_place_groups()
 	# --- fin avisos ---
+	# --- fluidez 4 ---
+	alertas = preload("res://src/game/ui/alertas.gd").new()
+	add_child(alertas)
+	alertas.setup(self)
+	# --- fin fluidez 4 ---
 	# --- órdenes ---
 	ordenes_capa = ORDENES_CAPA.new()
 	ordenes_capa.hud = self
@@ -486,6 +493,7 @@ func on_events(events: Array) -> void:
 	if consejos != null: # --- pelea --- (4q) qué mató a la tropa propia
 		consejos.on_events(events)
 	ordenes_capa.on_events(events) # --- órdenes ---
+	alertas.on_events(events) # --- fluidez 4 ---
 	for ev in events:
 		var pid: int = ev.get("player", -2)
 		match ev["t"]:
@@ -513,7 +521,9 @@ func on_events(events: Array) -> void:
 				if pid == local and not _local_is_ai(): # --- veterano ronda 4 ---
 					notify("¡Campana! Los aldeanos se refugian", -1.0, "decision")
 			"alert":
-				if pid == local:
+				if alertas.cubre_alert(ev): # --- fluidez 4 --- ya avisó la alerta por zona y tipo
+					pass
+				elif pid == local:
 					notify("¡Nos atacan!", -1.0, "ataque", _lugar_de(ev["x"], ev["y"]))
 					_mini.ping(ev["x"], ev["y"])
 				elif pid >= 0 and not sim.enemies(local, pid):

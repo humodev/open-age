@@ -1,0 +1,44 @@
+[
+ {
+  "archivo": "assets/audio/ui/ui_alerta_aldeanos.ogg",
+  "lufs": -16.0,
+  "pico_dbfs": -2.0,
+  "duracion_s": 1.24,
+  "bytes": 11784
+ },
+ {
+  "archivo": "assets/audio/ui/ui_alerta_aliado.ogg",
+  "lufs": -16.0,
+  "pico_dbfs": -2.0,
+  "duracion_s": 1.53,
+  "bytes": 12366
+ },
+ {
+  "archivo": "assets/audio/ui/ui_alerta_edificio.ogg",
+  "lufs": -17.3,
+  "pico_dbfs": -1.9,
+  "duracion_s": 1.28,
+  "bytes": 13978
+ },
+ {
+  "archivo": "assets/audio/ui/ui_alerta_tropa.ogg",
+  "lufs": -16.7,
+  "pico_dbfs": -1.7,
+  "duracion_s": 1.0,
+  "bytes": 12031
+ },
+ {
+  "archivo": "assets/audio/ui/ui_aviso_granja.ogg",
+  "lufs": -19.9,
+  "pico_dbfs": -4.9,
+  "duracion_s": 1.17,
+  "bytes": 11112
+ },
+ {
+  "archivo": "assets/audio/ui/ui_aviso_recurso.ogg",
+  "lufs": -20.2,
+  "pico_dbfs": -1.9,
+  "duracion_s": 1.05,
+  "bytes": 12024
+ }
+]

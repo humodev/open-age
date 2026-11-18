@@ -19,6 +19,12 @@ const MundoMinimapa := preload("res://src/game/ui/mundo_minimapa.gd")
 var _extra: RefCounted
 # --- fin mundo ---
 var ordenes: Control # --- órdenes --- capa con las bengalas (src/game/ui/ordenes_capa.gd)
+# --- fluidez 4 --- filtros (recursos, militares, edificios) y tamaño (data/interfaz.json → minimapa)
+const FILTROS := [["recursos", "R", "Recursos"], ["militares", "M", "Tropa"], ["edificios", "E", "Edificios"]]
+static var filtros := {}
+static var tam_i := -1
+var _chips: Array = [] # [Rect2, clave] en píxeles del control
+# --- fin fluidez 4 ---
 
 
 func setup(s: Sim, c: RtsCamera, controller: Controller, local_player: int) -> void:
@@ -27,12 +33,21 @@ func setup(s: Sim, c: RtsCamera, controller: Controller, local_player: int) -> v
 	ctrl = controller
 	local = local_player
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	tooltip_text = " " # --- fluidez 4 --- (sin texto Godot no pide `_get_tooltip`)
 	var n := sim.map.n
 	_img = Image.create(n, n, false, Image.FORMAT_RGBA8)
 	_tex = ImageTexture.create_from_image(_img)
 	_fog_img = Image.create(n, n, false, Image.FORMAT_LA8)
 	_fog_mini = ImageTexture.create_from_image(_fog_img)
 	_extra = MundoMinimapa.new(sim, local) # --- mundo ---
+	# --- fluidez 4 ---
+	var mc := cfg_minimapa()
+	if filtros.is_empty():
+		filtros = (mc.get("filtros", {"recursos": true, "militares": true, "edificios": true}) as Dictionary).duplicate()
+	if tam_i < 0:
+		tam_i = int(mc.get("inicial", 1))
+	_extra.set("filtros", filtros)
+	# --- fin fluidez 4 ---
 	_rebuild()
 
 
@@ -62,7 +77,7 @@ func _rebuild() -> void:
 				c = Color("4f7478")
 			_img.set_pixel(x, y, c)
 	for e in sim.entities:
-		if not e.alive or not e.is_resource():
+		if not e.alive or not e.is_resource() or not filtros.get("recursos", true): # --- fluidez 4 ---
 			continue
 		var col: Color
 		match e.res_kind:
@@ -142,13 +157,13 @@ func _draw() -> void:
 		if ctrl.view.fog_state(e) == 0 or (e.is_unit() and ctrl.view.fog_state(e) < 2) or e.inside >= 0:
 			continue
 		var col := Palette.team(e.owner)
-		if e.is_building():
+		if e.is_building() and filtros.get("edificios", true): # --- fluidez 4 ---
 			draw_rect(Rect2(e.tx, e.ty, e.w, e.h), col if e.built else Color(col, 0.55))
 			# Aliados (docs/11): sus edificios llevan borde claro, así se separan de los rivales.
 			if e.owner >= 0 and e.owner != local and not sim.enemies(local, e.owner):
 				draw_rect(Rect2(e.tx - 0.6, e.ty - 0.6, e.w + 1.2, e.h + 1.2), Color(1, 1, 1, 0.8), false, 0.8)
 	for e in sim.actives:
-		if e.is_unit() and e.inside < 0 and ctrl.view.fog_state(e) == 2:
+		if e.is_unit() and e.inside < 0 and ctrl.view.fog_state(e) == 2 and (filtros.get("militares", true) or not e.is_military()): # --- fluidez 4 ---
 			draw_rect(Rect2(e.x / 1000.0 - 0.9, e.y / 1000.0 - 0.9, 1.8, 1.8), Palette.team(e.owner).lightened(0.15))
 	_extra.draw(self, ctrl.view, 1.0 / xf.x.length()) # --- mundo ---
 	draw_set_transform_matrix(Transform2D.IDENTITY)
@@ -181,6 +196,72 @@ func _draw() -> void:
 			draw_arc(fp, 5.0 + fk * 18.0, 0, TAU, 24, Color(Palette.team(f["player"]), 1.0 - fk), 2.5, true)
 			draw_circle(fp, 3.5, Color.WHITE)
 	# --- fin órdenes ---
+	_draw_chips() # --- fluidez 4 ---
+
+
+# --- fluidez 4 ---
+static func cfg_minimapa() -> Dictionary:
+	var path := "res://data/interfaz.json"
+	var all: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else {}
+	return all.get("minimapa", {})
+
+
+## Lado en píxeles del tamaño elegido.
+func lado() -> float:
+	var t: Array = cfg_minimapa().get("tamanos", [250])
+	return float(t[clampi(tam_i, 0, t.size() - 1)])
+
+
+## Prende o apaga un filtro ("recursos", "militares", "edificios").
+func filtrar(clave: String, on: bool) -> void:
+	filtros[clave] = on
+	_rebuild()
+	queue_redraw()
+
+
+## Pasa al tamaño siguiente (vuelve al más chico después del más grande).
+func cambiar_tamano() -> void:
+	var t: Array = cfg_minimapa().get("tamanos", [250])
+	tam_i = (tam_i + 1) % t.size()
+	aplicar_tamano()
+
+
+func aplicar_tamano() -> void:
+	var s := lado()
+	offset_left = 12
+	offset_right = 12 + s
+	offset_top = -12 - s
+	offset_bottom = -12
+
+
+func _draw_chips() -> void:
+	_chips.clear()
+	var x := 8.0
+	for f in FILTROS:
+		var r := Rect2(x, 6, 20, 18)
+		var on: bool = filtros.get(f[0], true)
+		draw_rect(r, Color(0, 0, 0, 0.55 if on else 0.3))
+		draw_rect(r, Color(Palette.UI_ACCENT, 0.9) if on else Color(1, 1, 1, 0.25), false, 1.0)
+		draw_string(Hud.font_b, r.position + Vector2(0, 14), f[1], HORIZONTAL_ALIGNMENT_CENTER, r.size.x, 12, Palette.UI_TEXT if on else Palette.UI_DIM)
+		_chips.append([r, f[0]])
+		x += 23.0
+	var rt := Rect2(size.x - 28, 6, 20, 18)
+	draw_rect(rt, Color(0, 0, 0, 0.55))
+	draw_rect(rt, Color(1, 1, 1, 0.35), false, 1.0)
+	draw_string(Hud.font_b, rt.position + Vector2(0, 14), "±", HORIZONTAL_ALIGNMENT_CENTER, rt.size.x, 13, Palette.UI_TEXT)
+	_chips.append([rt, "tamano"])
+
+
+func _get_tooltip(at: Vector2) -> String:
+	for c in _chips:
+		if (c[0] as Rect2).has_point(at):
+			if c[1] == "tamano":
+				return "Tamaño del minimapa"
+			for f in FILTROS:
+				if f[0] == c[1]:
+					return "%s en el minimapa: %s" % [f[2], "se ven" if filtros.get(f[0], true) else "ocultos"]
+	return ""
+# --- fin fluidez 4 ---
 
 
 func _to_tile(local_pos: Vector2) -> Vector2:
@@ -190,6 +271,17 @@ func _to_tile(local_pos: Vector2) -> Vector2:
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
+		# --- fluidez 4 --- (botones de filtro y tamaño)
+		if mb.button_index == MOUSE_BUTTON_LEFT and mb.pressed:
+			for c in _chips:
+				if (c[0] as Rect2).has_point(mb.position):
+					if c[1] == "tamano":
+						cambiar_tamano()
+					else:
+						filtrar(c[1], not filtros.get(c[1], true))
+					accept_event()
+					return
+		# --- fin fluidez 4 ---
 		if mb.button_index == MOUSE_BUTTON_LEFT:
 			# --- órdenes --- (Alt + clic en el minimapa: bengala)
 			if mb.pressed and Input.is_key_pressed(KEY_ALT):
