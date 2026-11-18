@@ -2,7 +2,8 @@ extends SceneTree
 ## Notas de verificación fuera de la pantalla (proceso/28, ronda 7): las «[verificar…]» siguen en
 ## data/ pero ninguna llega al jugador. Revisa la tabla de la partida ya limpia (todas las fichas
 ## salen de ahí), las ayudas de todas las grillas de los seis pueblos en las cuatro edades y las
-## campañas como las carga el menú. Con `--ver`, cómo queda cada texto que tenía nota.
+## campañas como las carga el menú. También que los niveles por línea digan la tropa
+## («Lanceros veteranos»). Con `--ver`, cómo queda cada texto que tenía nota y cada nivel.
 ##   godot --headless --path . -s tests/verificar.gd [-- --ver]
 
 const CIVS := ["tawantinsuyu", "mapuches", "guaranies", "etiopia", "palmares", "ayutthaya"]
@@ -62,12 +63,28 @@ func _init() -> void:
 		camp += _cuenta(c, q)
 		for t in q:
 			fallas.append("campaña %s: «%s»" % [c["_clave"], str(t).substr(0, 90)])
+	# --- ronda 7 --- Los niveles por línea dicen la tropa y no se repiten dentro de un pueblo.
+	var nd := Textos.datos(SimData.load_default())
+	var niveles := 0
+	for civ in CIVS:
+		var vistos := {}
+		for tech: String in nd.civs[civ].tecnologias:
+			var t: Dictionary = nd.civs[civ].tecnologias[tech]
+			if not t.has("nivel") or str(t.get("linea", "")) == "asedio":
+				continue
+			niveles += 1
+			var nom := str(t["nombre"])
+			if nom == str(SimData.load_default().tecnologias.get(tech, {}).get("nombre", "")) or vistos.has(nom):
+				fallas.append("%s: el nivel «%s» se llama «%s»" % [civ, tech, nom])
+			vistos[nom] = true
+			if ver:
+				print("%s %s → %s" % [civ, tech, nom])
 	var unicas := {}
 	for f in fallas:
 		unicas[f] = true
 	for f in unicas:
 		print("FALLO ", f)
-	print("VERIFICAR: %d textos con nota en los datos; %d ayudas revisadas; %s" % [crudas, ayudas, "OK" if fallas.is_empty() and crudas > 0 else "FALLO (%d)" % unicas.size()])
+	print("VERIFICAR: %d textos con nota en los datos; %d ayudas y %d niveles revisados; %s" % [crudas, ayudas, niveles, "OK" if fallas.is_empty() and crudas > 0 else "FALLO (%d)" % unicas.size()])
 	quit(0 if fallas.is_empty() and crudas > 0 else 1)
 
 

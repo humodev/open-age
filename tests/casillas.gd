@@ -46,6 +46,39 @@ func _init() -> void:
 					if ver and age == 1:
 						print("%s e%d %s/investigaciones %s" % [civ, age, type, " ".join(inner.map(func(c: Dictionary) -> String: return "%s=%s" % [Controller.SLOT_LABELS[int(c["slot"])], c["id"]]))])
 					ctl.submenu = ""
+				# --- ronda 7 --- La herrería en su submenú cuando la grilla se llenaba: Volver en V,
+				# lo que anuncia es lo que muestra, y la grilla de afuera deja libres_min libres.
+				var herr: Array = cmds.filter(func(c: Dictionary) -> bool: return c.get("menu", "") == Controller.HERRERIA)
+				if not herr.is_empty():
+					ctl.submenu = Controller.HERRERIA
+					var inner_h := ctl.commands()
+					ctl.submenu = ""
+					_revisar(inner_h, "%s e%d %s/herreria" % [civ, age, type], fallas)
+					var nh := inner_h.filter(func(c: Dictionary) -> bool: return c["kind"] == "research").size()
+					if Controller.cmd_at(inner_h, 11).get("kind", "") != "back" or nh < 2 or not String(herr[0]["name"]).contains("(%d)" % nh):
+						fallas.append("%s e%d %s: la herrería anuncia «%s» y muestra %d" % [civ, age, type, herr[0]["name"], nh])
+					if 12 - cmds.size() < int(Grilla.cfg().get("libres_min", 0)):
+						fallas.append("%s e%d %s: con la herrería aparte, la grilla sigue llena (%d de 12)" % [civ, age, type, cmds.size()])
+					if ver and age == 3:
+						print("%s e%d %s: %d de 12 + herrería (%d)" % [civ, age, type, cmds.size(), nh])
+				# --- ronda 7 --- Una sola estrellita de «recomendado» por edificio, en algo que ya se
+				# puede pedir; la del cuartel desde la II (las armas de ia_prioridad).
+				var todas: Array = cmds.duplicate()
+				for c in cmds:
+					if c.get("kind", "") == "submenu":
+						ctl.submenu = c["menu"]
+						todas.append_array(ctl.commands())
+						ctl.submenu = ""
+				var rec := todas.filter(func(c: Dictionary) -> bool: return c.get("recomendado", false) and c["kind"] == "research")
+				if rec.size() > 1 or rec.any(func(c: Dictionary) -> bool: return str(c["locked"]) != ""):
+					fallas.append("%s e%d %s: recomendadas %s" % [civ, age, type, rec.map(func(c: Dictionary) -> String: return c["id"])])
+				if type == "cuartel" and age >= 2 and rec.is_empty():
+					fallas.append("%s e%d cuartel: sin recomendada" % [civ, age])
+				for c in cmds:
+					if c.get("kind", "") == "submenu" and c.get("recomendado", false) != todas.any(func(x: Dictionary) -> bool: return x.get("recomendado", false) and x["kind"] == "research" and not cmds.has(x) and _de_menu(ctl, c["menu"]).has(x["id"])):
+						fallas.append("%s e%d %s: el submenú «%s» no avisa bien su recomendada" % [civ, age, type, c["name"]])
+				if ver and not rec.is_empty():
+					print("%s e%d %s: ★ %s" % [civ, age, type, rec[0]["name"]])
 				# --- paso 3 --- La escuela de la IV: su submenú (en la grilla o dentro de
 				# «Investigaciones») tiene sus 6 mejoras, Volver en V y ningún choque de casillas.
 				var esc_found := cmds.filter(func(c: Dictionary) -> bool: return c.get("menu", "") == Controller.ESCUELA)
@@ -112,3 +145,12 @@ func _revisar(cmds: Array[Dictionary], donde: String, fallas: Array[String]) -> 
 ## Al salir se sueltan las partidas creadas (ciclos de referencias; proceso/24, paso 6e).
 func _finalize() -> void:
 	Sim.soltar_todas()
+
+
+## Claves de lo que muestra un submenú (ronda 7).
+func _de_menu(ctl: Controller, menu: String) -> Array:
+	var prev := ctl.submenu
+	ctl.submenu = menu
+	var ids := ctl.commands().map(func(c: Dictionary) -> String: return c["id"])
+	ctl.submenu = prev
+	return ids

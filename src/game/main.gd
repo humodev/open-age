@@ -353,7 +353,7 @@ static func match_opts(args: Dictionary) -> Dictionary:
 
 
 func _build_scene(aivai: bool) -> void:
-	Textos.limpiar_todo(sim.data) # --- ronda 7 --- sin las notas «[verificar]» en pantalla
+	Textos.datos(sim.data) # --- ronda 7 --- sin las notas «[verificar]» y con los niveles por tropa
 	if _args.has("demo"):
 		_demo(_args["demo"])
 

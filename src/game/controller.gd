@@ -370,6 +370,7 @@ func commands() -> Array[Dictionary]:
 				school.append(rc)
 			else:
 				research.append(rc)
+		_marcar_recomendado(research + school, first) # --- ronda 7 ---
 		if submenu == ESCUELA:
 			var inner: Array[Dictionary] = [{"slot": Grilla.fija("volver", 11), "id": "volver", "icon": "volver", "kind": "back", "name": "Volver", "cost": {}, "desc": "Vuelve a la grilla del edificio (también Esc o clic derecho sobre la grilla).", "locked": ""}]
 			_repartir(school, {Grilla.fija("volver", 11): "volver"})
@@ -379,7 +380,7 @@ func commands() -> Array[Dictionary]:
 			return inner
 		var esc := escuela_info()
 		if not school.is_empty() and int(sim.players[local]["age"]) >= int(sim.dp(local).tecnologias[school[0]["id"]].get("edad_min", 1)):
-			out.append({"slot": Grilla.fija("escuela", 7), "id": ESCUELA, "icon": "escuela", "kind": "submenu", "menu": ESCUELA, "name": "%s (%d)" % [esc["nombre"], school.size()], "cost": {}, "desc": "%s\nMejoras: %s." % [esc["desc"], ", ".join(school.map(func(c: Dictionary) -> String: return c["name"]))], "locked": ""})
+			out.append({"slot": Grilla.fija("escuela", 7), "id": ESCUELA, "icon": "escuela", "kind": "submenu", "menu": ESCUELA, "name": "%s (%d)" % [esc["nombre"], school.size()], "cost": {}, "desc": "%s\nMejoras: %s." % [esc["desc"], ", ".join(school.map(func(c: Dictionary) -> String: return c["name"]))], "locked": "", "recomendado": school.any(func(c: Dictionary) -> bool: return c.get("recomendado", false))})
 		# --- fin paso 3 ---
 		if first.capital or first.type == "centro":
 			var on: bool = sim.players[local]["alarm"]
@@ -462,6 +463,23 @@ func _ubicar_investigaciones(out: Array[Dictionary], research: Array[Dictionary]
 	var free := 0
 	for sl in 12:
 		free += 0 if taken.has(sl) else 1
+	# --- ronda 7 --- (veterano: el cuartel lleno en la III, 12 de 12) Si no quedan libres_min
+	# casillas libres, la herrería va a su submenú y deja lugar para lo de la IV.
+	var herr: Array[Dictionary] = research.filter(func(c: Dictionary) -> bool: return sim.dp(local).tecnologias.get(c["id"], {}).has("herreria"))
+	if research.size() > free - int(Grilla.cfg().get("libres_min", 0)) and herr.size() > 1 and research.size() - herr.size() + 1 <= free - int(Grilla.cfg().get("libres_min", 0)):
+		if submenu == HERRERIA:
+			var inner_h: Array[Dictionary] = [{"slot": Grilla.fija("volver", 11), "id": "volver", "icon": "volver", "kind": "back", "name": "Volver", "cost": {}, "desc": "Vuelve a la grilla del edificio (también Esc o clic derecho sobre la grilla).", "locked": ""}]
+			_repartir(herr, {Grilla.fija("volver", 11): "volver"})
+			for c in herr:
+				if int(c["slot"]) >= 0:
+					inner_h.append(c)
+			return inner_h
+		var rest: Array[Dictionary] = [{"slot": int(herr[0]["slot"]), "id": HERRERIA, "icon": "yunque", "kind": "submenu", "menu": HERRERIA, "name": "Herrería (%d)" % herr.size(), "cost": {}, "desc": "Ataque y armadura de la tropa: " + ", ".join(herr.map(func(c: Dictionary) -> String: return c["name"])) + ".", "locked": "", "recomendado": herr.any(func(c: Dictionary) -> bool: return c.get("recomendado", false))}]
+		rest.append_array(research.filter(func(c: Dictionary) -> bool: return not herr.has(c)))
+		_repartir(rest, taken)
+		out.append_array(rest)
+		return out
+	# --- fin ronda 7 ---
 	if research.size() <= free:
 		_repartir(research, taken)
 		out.append_array(research)
@@ -476,13 +494,72 @@ func _ubicar_investigaciones(out: Array[Dictionary], research: Array[Dictionary]
 		return inner
 	for alt in [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]:
 		if not taken.has(alt):
-			out.append({"slot": alt, "id": INVESTIGAR, "icon": "investigar", "kind": "submenu", "menu": INVESTIGAR, "name": "Investigaciones (%d)" % research.filter(func(c: Dictionary) -> bool: return c["kind"] == "research").size(), "cost": {}, "desc": "Mejoras que se investigan en este edificio: " + ", ".join(research.map(func(c: Dictionary) -> String: return c["name"])) + ".", "locked": ""})
+			out.append({"slot": alt, "id": INVESTIGAR, "icon": "investigar", "kind": "submenu", "menu": INVESTIGAR, "name": "Investigaciones (%d)" % research.filter(func(c: Dictionary) -> bool: return c["kind"] == "research").size(), "cost": {}, "desc": "Mejoras que se investigan en este edificio: " + ", ".join(research.map(func(c: Dictionary) -> String: return c["name"])) + ".", "locked": "", "recomendado": research.any(func(c: Dictionary) -> bool: return c.get("recomendado", false))})
 			break
 	return out
 
 
 const INVESTIGAR := "investigar"
 const ESCUELA := "escuela" # --- paso 3 --- submenú de la escuela de la IV
+const HERRERIA := "herreria" # --- ronda 7 --- submenú de la herrería cuando la grilla se llena
+
+
+## --- ronda 7 --- (jugador nuevo: «¿qué compro primero?») Marca con `recomendado` la mejora que
+## conviene comprar primero en este edificio, entre las que ya se pueden pedir, en el orden de
+## compra de la IA (data/interfaz.json → grilla._doc_recomendado). Solo lee la simulación.
+func _marcar_recomendado(cands: Array, b: SimEntity) -> void:
+	var dd := sim.dp(local)
+	var best: Dictionary = {}
+	var best_rank := 1 << 30
+	for c: Dictionary in cands:
+		if str(c.get("locked", "")) != "":
+			continue
+		var r := _rango_recomendado(String(c["id"]), dd.tecnologias.get(c["id"], {}), b)
+		if r < best_rank:
+			best_rank = r
+			best = c
+	if not best.is_empty():
+		best["recomendado"] = true
+		best["desc"] = "★ Recomendada: la que conviene comprar primero acá.\n" + str(best.get("desc", ""))
+
+
+## Menor es mejor; 1 << 30 si la IA no la tiene en ningún orden.
+func _rango_recomendado(tech: String, t: Dictionary, b: SimEntity) -> int:
+	if t.get("ia_prioridad", false):
+		return 0
+	var lin: String = t.get("linea", "")
+	if lin != "" and t.has("nivel"):
+		var n := int(_tropa_por_linea().get(lin, 0))
+		if n >= int(sim.data.reglas.get("ia_niveles", {}).get("tropa_minima", 1)):
+			return 1000 - mini(n, 999)
+	var tardias: Array = sim.data.reglas.get("ia_compras_tardias", {}).get("orden", [])
+	if tardias.has(tech):
+		return 2000 + tardias.find(tech)
+	var propias: Array = sim.dp(local).civ.get("ia_propias", {}).get("orden", [])
+	for i in propias.size():
+		if str((propias[i] as Dictionary).get("tec", "")) == tech:
+			return 3000 + i
+	if lin != "" and t.has("nivel") and sim.dp(local).lines_made_by(b.def).has(lin):
+		return 4000
+	return 1 << 30
+
+
+var _tropa_tick := -1
+var _tropa: Dictionary = {}
+
+
+## Tropa propia por línea (una vez por tick).
+func _tropa_por_linea() -> Dictionary:
+	if _tropa_tick == sim.tick:
+		return _tropa
+	_tropa_tick = sim.tick
+	_tropa = {}
+	for e in sim.actives:
+		if e.alive and e.owner == local and e.is_unit():
+			var l := SimData.line_of(e.def)
+			if l != "":
+				_tropa[l] = int(_tropa.get(l, 0)) + 1
+	return _tropa
 const _ORDEN_LIBRE: Array[int] = [4, 5, 6, 7, 8, 9, 10, 0, 1, 2, 3, 11]
 
 
@@ -1131,7 +1208,7 @@ func _key(k: InputEventKey) -> void:
 	if code == KEY_ESCAPE:
 		if mode != "":
 			cancel_mode()
-		elif submenu != Grilla.RAIZ and (grilla_aldeano() or submenu == INVESTIGAR or submenu == ESCUELA): # --- grilla --- (--- ronda 6 ---)
+		elif submenu != Grilla.RAIZ and (grilla_aldeano() or submenu == INVESTIGAR or submenu == ESCUELA or submenu == HERRERIA): # --- grilla --- (--- ronda 6 ---, ronda 7)
 			open_submenu(Grilla.RAIZ)
 		elif not selection.is_empty():
 			_set_selection([] as Array[int])

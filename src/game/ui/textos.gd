@@ -56,7 +56,24 @@ static func limpiar_todo(v: Variant) -> void:
 			limpiar_todo(d.civs[k])
 
 
-## La tabla de datos lista para mostrar.
+## La tabla de datos lista para mostrar: sin notas y con los niveles nombrados por la tropa.
 static func datos(d: SimData) -> SimData:
 	limpiar_todo(d)
+	nombres_niveles(d)
 	return d
+
+
+## Ronda 7 (jugador nuevo): «Choque veterano» y «Línea veterana» se confundían. Cada nivel por
+## línea dice la tropa del pueblo: «Lanceros veteranos», «Lanceros de élite»
+## (data/interfaz.json → grilla.niveles). Solo el nombre que se muestra.
+static func nombres_niveles(d: SimData) -> void:
+	var tabla: Dictionary = Grilla.cfg().get("niveles", {})
+	for k in d.civs:
+		var dd: SimData = d.civs[k]
+		var lineas: Dictionary = tabla.get(dd.clave, {})
+		for tech in dd.tecnologias:
+			var t: Dictionary = dd.tecnologias[tech]
+			var par: Array = lineas.get(str(t.get("linea", "")), [])
+			if par.size() < 2 or not t.has("nivel"):
+				continue
+			t["nombre"] = "%s %s" % [par[0], par[1]] if int(t["nivel"]) == 1 else "%s de élite" % par[0]

@@ -52,7 +52,10 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 	if locked:
 		col = GLIFO_BLOQUEO
 	elif not afford:
-		col = Palette.UI_DIM.lerp(Iconos.color_estado("falta", Palette.UI_ACCENT), 0.45)
+		# --- ronda 7 --- (jugador nuevo: «en ámbar, el texto queda muy apagado») el glifo en ámbar
+		# claro y el nombre en el color de siempre: lo que falta ya lo dicen el borde y la franja.
+		col = Palette.UI_TEXT.lerp(Iconos.color_estado("falta", Palette.UI_ACCENT), 0.6)
+	var tcol := Palette.UI_DIM.lightened(0.2) if locked else Palette.UI_TEXT
 	# --- fin iconos ---
 	# --- aprender ---
 	var nombre := str(c.get("name", "")).trim_prefix("Construir: ") if nombres else ""
@@ -77,43 +80,49 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 		var gs := minf(26.0, top - r.position.y - 3.0 - 13.0)
 		if gs >= 10.0:
 			Glyphs.draw(ci, c["icon"], Rect2(r.position.x + (r.size.x - gs) / 2.0 + 2, r.position.y + 3, gs, gs), col)
-			ci.draw_string(Hud.font_b, Vector2(r.position.x + 2, top - 2.0), label, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, _fit(Hud.font_b, label, 10, r.size.x - 4), Palette.UI_DIM.lightened(0.2))
+			var ajf := _ajuste(Hud.font_b, label, 10, r.size.x - 4, 1) # --- ronda 7 ---
+			ci.draw_string(Hud.font_b, Vector2(r.position.x + 2, top - 2.0), ajf[0], HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, ajf[1], tcol)
 		else:
 			Glyphs.draw(ci, c["icon"], _rect_glifo(r, locked, falta), col)
 	elif nombre != "" and dos.size() == 2:
 		# --- ronda 6 --- glifo más chico y dos renglones: «Hito» (tenue) y «Edad II»
 		Glyphs.draw(ci, c["icon"], Rect2(r.position.x + (r.size.x - 18) / 2.0 + 2, r.position.y + 3, 18, 18), col)
-		var tcol2 := Palette.UI_TEXT if col == Palette.UI_TEXT else Palette.UI_DIM.lightened(0.2)
+		var tcol2 := tcol
 		ci.draw_string(Hud.font_b, Vector2(r.position.x + 2, r.position.y + 30), str(dos[0]), HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, _fit(Hud.font_b, str(dos[0]), 10, r.size.x - 4), Palette.UI_DIM.lightened(0.2))
 		ci.draw_string(Hud.font_b, Vector2(r.position.x + 2, r.position.y + 40.5), str(dos[1]), HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, _fit(Hud.font_b, str(dos[1]), 11, r.size.x - 4), tcol2)
 	elif nombre != "":
 		var lines := 1 if (locked and (edad_pedida(str(c["locked"])) != "" or est == "tope")) or (not afford and not locked) else 2
 		# Compacto (jugador nuevo, ronda 4): sin común, un renglón no alcanza («Trabajo de la
 		# riqueza» con la edad abajo) → glifo chico y dos renglones arriba de la pastilla.
-		var compacto := comun == "" and lines == 1 and _fit_lineas(Hud.font, nombre, 10, r.size.x - 4, 1) < 9
+		# --- ronda 7 --- también el común («Taller de asedio» con la edad abajo se cortaba por la
+		# izquierda: «aller de asedio»): si no entra en un renglón, glifo chico y dos renglones.
+		var etq := comun if comun != "" else nombre
+		var fetq: Font = Hud.font_b if comun != "" else Hud.font
+		var compacto := lines == 1 and _fit_lineas(fetq, etq, 10, r.size.x - 4, 1) < 9
 		if compacto:
 			Glyphs.draw(ci, c["icon"], Rect2(r.position.x + (r.size.x - 18) / 2.0 + 2, r.position.y + 3, 18, 18), col)
-			var fsc := _fit_lineas(Hud.font, nombre, 9, r.size.x - 4, 2)
-			ci.draw_multiline_string(Hud.font, Vector2(r.position.x + 2, r.position.y + 31), nombre, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, fsc, 2, col if col == Palette.UI_TEXT else Palette.UI_DIM.lightened(0.2))
+			var ajc := _ajuste(fetq, etq, 9, r.size.x - 4, 2)
+			ci.draw_multiline_string(fetq, Vector2(r.position.x + 2, r.position.y + 31), ajc[0], HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, ajc[1], 2, tcol)
 		else:
 			Glyphs.draw(ci, c["icon"], Rect2(r.position.x + (r.size.x - 26) / 2.0 + 2, r.position.y + 3, 26, 26), col)
-		var tcol := Palette.UI_TEXT if col == Palette.UI_TEXT else Palette.UI_DIM.lightened(0.2)
 		if compacto:
 			pass
 		elif comun != "" and lines == 2 and _fit(Hud.font_b, comun, 11, r.size.x - 4) < 9:
 			# --- depósitos de comida --- (4m) común largo ("Granero y leñera"): en dos renglones
 			# y sin el propio, que queda en la ayuda; achicado hasta lo ilegible no sirve.
-			var fsb := _fit_lineas(Hud.font_b, comun, 10, r.size.x - 4, 2) # «Depósito de piedra y riqueza»
-			ci.draw_multiline_string(Hud.font_b, Vector2(r.position.x + 2, r.position.y + 39 - (10 - fsb) * 0.5), comun, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, fsb, 2, tcol)
+			var ajb := _ajuste(Hud.font_b, comun, 10, r.size.x - 4, 2) # «Depósito de piedra y riqueza»
+			ci.draw_multiline_string(Hud.font_b, Vector2(r.position.x + 2, r.position.y + 39 - (10 - ajb[1]) * 0.5), ajb[0], HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, ajb[1], 2, tcol)
 		elif comun != "":
-			ci.draw_string(Hud.font_b, Vector2(r.position.x + 2, r.position.y + 39), comun, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, _fit(Hud.font_b, comun, 11, r.size.x - 4), tcol)
+			var aj1 := _ajuste(Hud.font_b, comun, 11, r.size.x - 4, 1)
+			ci.draw_string(Hud.font_b, Vector2(r.position.x + 2, r.position.y + 39), aj1[0], HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, aj1[1], tcol)
 			if lines == 2:
-				ci.draw_string(Hud.font, Vector2(r.position.x + 2, r.position.y + 51), nombre, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, _fit(Hud.font, nombre, 10, r.size.x - 4), Palette.UI_DIM.lightened(0.2))
+				var aj2 := _ajuste(Hud.font, nombre, 10, r.size.x - 4, 1)
+				ci.draw_string(Hud.font, Vector2(r.position.x + 2, r.position.y + 51), aj2[0], HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, aj2[1], Palette.UI_DIM.lightened(0.2))
 		else:
 			# Achicado hasta que entre entero en sus renglones (jugador nuevo, ronda 4: «Mamposteri»,
 			# «Trabajo de»): una palabra larga no se corta por la mitad ni se pierde un renglón.
-			var fs := _fit_lineas(Hud.font, nombre, 10, r.size.x - 4, lines)
-			ci.draw_multiline_string(Hud.font, Vector2(r.position.x + 2, r.position.y + 39 - (10 - fs) * 0.5), nombre, HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, fs, lines, tcol)
+			var ajn := _ajuste(Hud.font, nombre, 10, r.size.x - 4, lines)
+			ci.draw_multiline_string(Hud.font, Vector2(r.position.x + 2, r.position.y + 39 - (10 - ajn[1]) * 0.5), ajn[0], HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, ajn[1], lines, tcol)
 	else:
 		Glyphs.draw(ci, c["icon"], _rect_glifo(r, locked, falta), col) # --- costo real ---
 	# --- fin aprender ---
@@ -155,6 +164,9 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 			# --- iconos --- el número en el color del recurso que falta (no en rojo: no es un error)
 			ci.draw_string(Hud.font_b, Vector2(p.x + gs + 5, p.y + rh - (4.0 if solo else 2.5)), items[i][1], HORIZONTAL_ALIGNMENT_LEFT, band.size.x - gs - 6, 13 if solo else 12, _texto_recurso(icol))
 		# --- fin costo real ---
+	# --- ronda 7 --- estrellita de «recomendado» (arriba a la derecha, si está libre)
+	if c.get("recomendado", false) and not locked and est != "en_curso" and est != "aviso" and int(c.get("en_cola", 0)) == 0:
+		_estrella(ci, Rect2(r.end.x - 18, r.position.y + 3, 15, 15), Iconos.color_estado("recomendado", Palette.WEALTH))
 	# --- iconos --- cuántas hay en la cola de lo elegido (arriba a la derecha)
 	var cola := int(c.get("en_cola", 0))
 	if cola > 0 and not locked:
@@ -313,6 +325,58 @@ static func _texto_recurso(c: Color) -> Color:
 		t = t.lightened(0.15)
 	return t
 # --- fin iconos ---
+
+
+## --- ronda 7 --- Estrella de cinco puntas con borde oscuro (se ve sobre cualquier fondo).
+static func _estrella(ci: CanvasItem, r: Rect2, col: Color) -> void:
+	var c := r.get_center()
+	var s := minf(r.size.x, r.size.y) * 0.5
+	var pts := PackedVector2Array()
+	for i in 10:
+		pts.append(c + Vector2.from_angle(-PI / 2.0 + PI * i / 5.0) * (s if i % 2 == 0 else s * 0.45))
+	var borde := pts.duplicate()
+	borde.append(pts[0])
+	ci.draw_colored_polygon(pts, col)
+	ci.draw_polyline(borde, Color(0.06, 0.065, 0.075, 0.9), 1.2, true)
+
+
+## Letra más chica que se acepta antes de abreviar (ronda 7).
+const MIN_LEGIBLE := 8
+
+
+## --- ronda 7 --- (jugador nuevo: «aller de asedio», «Pohã ñana (remedios del») [texto, tamaño]
+## con que `txt` entra entero en `lines` renglones de `w`: achica hasta MIN_LEGIBLE; si no
+## alcanza, deja afuera lo que va entre paréntesis (sigue en la ayuda) y, como último recurso,
+## saca palabras del final y pone «…». Nunca se corta una palabra por la mitad.
+static func _ajuste(f: Font, txt: String, size: int, w: float, lines: int) -> Array:
+	var t := txt
+	while true:
+		var fs := _fit_lineas(f, t, size, w, lines)
+		if fs >= MIN_LEGIBLE and _entra(f, t, fs, w, lines):
+			return [t, fs]
+		if t.contains(" ("):
+			t = t.get_slice(" (", 0).strip_edges()
+			continue
+		break
+	var fs7 := _fit_lineas(f, t, size, w, lines)
+	if _entra(f, t, fs7, w, lines):
+		return [t, fs7]
+	var words := t.split(" ", false)
+	while words.size() > 1:
+		words.resize(words.size() - 1)
+		var corto := " ".join(words).trim_suffix(",").trim_suffix(" de").trim_suffix(" del") + "…"
+		var fsc := _fit_lineas(f, corto, size, w, lines)
+		if _entra(f, corto, fsc, w, lines):
+			return [corto, fsc]
+	return [t, fs7]
+
+
+## ¿`txt` entra en `lines` renglones de `w` con letra `fs`, sin partir palabras?
+static func _entra(f: Font, txt: String, fs: int, w: float, lines: int) -> bool:
+	for word in txt.split(" ", false):
+		if f.get_string_size(word, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x > w:
+			return false
+	return f.get_multiline_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, w, fs).y <= f.get_height(fs) * lines + 0.5
 
 
 ## Tamaño de letra (de `size` para abajo, hasta 7) con el que `txt` entra en `w`.

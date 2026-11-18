@@ -37,10 +37,11 @@ func _init() -> void:
 				ctl.selection = [b.id] as Array[int]
 				var cmds := ctl.commands()
 				listas.append(["%s e%d %s" % [civ, age, type], cmds])
-				if cmds.any(func(c: Dictionary) -> bool: return c.get("menu", "") == Controller.INVESTIGAR):
-					ctl.submenu = Controller.INVESTIGAR
-					listas.append(["%s e%d %s/investigaciones" % [civ, age, type], ctl.commands()])
-					ctl.submenu = ""
+				for menu in [Controller.INVESTIGAR, Controller.HERRERIA]: # --- ronda 7 --- también la herrería
+					if cmds.any(func(c: Dictionary) -> bool: return c.get("menu", "") == menu):
+						ctl.submenu = menu
+						listas.append(["%s e%d %s/%s" % [civ, age, type, menu], ctl.commands()])
+						ctl.submenu = ""
 			for l: Array in listas:
 				grillas += 1
 				var vistos := {}
