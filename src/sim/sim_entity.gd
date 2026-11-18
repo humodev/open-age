@@ -71,6 +71,7 @@ var build_time: int = 0
 var queue: Array[String] = []
 var queue_paid: Array[Dictionary] = [] # lo que se pagó por cada elemento de la cola (se devuelve al cancelar)
 var queue_progress: int = 0
+var repeat: String = "" # unidad que se encola sola cuando la cola se vacía ("" = sin repetición; proceso/30, frente 1)
 var rally_set := false
 var rally_x: int
 var rally_y: int

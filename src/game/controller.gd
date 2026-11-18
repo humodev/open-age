@@ -637,10 +637,15 @@ func _marcar_estados(out: Array[Dictionary]) -> void:
 				var udef: Dictionary = dd.unidades.get(c["id"], {})
 				c["edad"] = int(udef.get("edad_min", 1))
 				var n := 0
+				var rep := false # --- frente 1 --- algún edificio elegido lo repite
 				for e in sel:
 					if e.is_building() and e.owner == local:
 						n += e.queue.count(c["id"])
+						rep = rep or e.repeat == c["id"]
 				c["en_cola"] = n
+				c["repite"] = rep
+				if c["locked"] == "":
+					c["desc"] = (str(c.get("desc", "")) + "\n" if str(c.get("desc", "")) != "" else "") + "Ctrl + clic: %s. Clic derecho: saca una de la cola (Mayús: 5)." % ("deja de repetir" if rep else "se repite sola (como AoE4)")
 				if c["locked"] != "":
 					continue
 				if udef.has("maximo_por_edad"):
@@ -737,6 +742,10 @@ func run_command(cmd: Dictionary) -> void:
 		"train":
 			# --- veterano ronda 4 --- como AoE4: cada pulsación entrena UNA unidad en el edificio
 			# de cola más corta (Mayús: 5 en total, no 5 por edificio).
+			# --- frente 1 --- Ctrl + clic (o Ctrl + tecla): prende o apaga la repetición.
+			if Input.is_key_pressed(KEY_CTRL):
+				alternar_repeticion(cmd)
+				return
 			var shift := Input.is_key_pressed(KEY_SHIFT)
 			for k in (5 if shift else 1):
 				var e := cola_mas_corta(cmd)
@@ -823,6 +832,66 @@ func cola_mas_corta(cmd: Dictionary) -> SimEntity:
 			mejor_n = n
 	return mejor
 # --- fin veterano ronda 4 ---
+
+
+# --- frente 1 --- (proceso/30) producción que se maneja sola
+## Edificios elegidos, propios y terminados, del tipo del edificio del comando.
+func _edificios_del_cmd(cmd: Dictionary) -> Array[SimEntity]:
+	var out: Array[SimEntity] = []
+	var tipo: String = sim.by_id[cmd["building"]].type if sim.by_id.has(cmd["building"]) else ""
+	for e in selected_entities():
+		if e.is_building() and e.built and e.type == tipo and e.owner == local:
+			out.append(e)
+	return out
+
+
+## Prende la repetición de la unidad del comando en los edificios elegidos de ese tipo; si
+## todos ya la repetían, la apaga. Va como comando de la simulación (repeticiones y red).
+## Devuelve si quedó prendida.
+func alternar_repeticion(cmd: Dictionary) -> bool:
+	var bs := _edificios_del_cmd(cmd)
+	var todos := not bs.is_empty()
+	for e in bs:
+		todos = todos and e.repeat == cmd["id"]
+	for e in bs:
+		sim.push_command({"t": "repetir", "player": local, "building": e.id, "type": cmd["id"], "on": not todos})
+	if not bs.is_empty():
+		var nombre := str(cmd.get("name", cmd["id"]))
+		hud_notify("%s: %s" % [nombre, "ya no se repite" if todos else "se repite sola (Ctrl + clic para cortarla)"], "info")
+	return not todos
+
+
+## Saca `n` unidades del tipo del comando de la cola, de la última hacia atrás y del edificio
+## elegido que tenga más de ese tipo (el reverso de cola_mas_corta). Devuelve cuántas sacó.
+func sacar_de_cola(cmd: Dictionary, n: int) -> int:
+	var colas := {} # id -> copia de la cola (los índices se corren al sacar en el mismo tick)
+	var bs := _edificios_del_cmd(cmd)
+	for e in bs:
+		colas[e.id] = e.queue.duplicate()
+	var hechas := 0
+	for k in n:
+		var mejor: SimEntity = null
+		var mejor_n := 0
+		for e in bs:
+			var c: int = (colas[e.id] as Array).count(cmd["id"])
+			if c > mejor_n:
+				mejor = e
+				mejor_n = c
+		if mejor == null:
+			break
+		var q: Array = colas[mejor.id]
+		var idx := q.rfind(cmd["id"])
+		q.remove_at(idx)
+		sim.push_command({"t": "cancel", "player": local, "building": mejor.id, "index": idx})
+		hechas += 1
+	return hechas
+
+
+## Tope de aldeanos de la repetición: sube o baja un paso (data/reglas.json → repeticion).
+func cambiar_tope_aldeanos(signo: int) -> void:
+	var rep: Dictionary = sim.data.reglas.get("repeticion", {})
+	sim.push_command({"t": "tope_aldeanos", "player": local, "n": sim.villager_cap(local) + signo * int(rep.get("paso", 5))})
+# --- fin frente 1 ---
 
 
 func cancel_mode() -> void:

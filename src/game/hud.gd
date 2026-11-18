@@ -407,6 +407,70 @@ func _check_pop() -> void:
 # --- fin avisos ---
 
 
+# --- frente 1 --- aviso anticipado de población (C4): con lo que hay en las colas y lo que se
+# repite, cuánto falta para quedarse sin lugar. Se mide cada medio segundo de juego.
+var pob_eta := -1 # segundos de juego hasta quedarse sin lugar (-1: no se llena)
+var _pob_pronto := false
+var _pob_tick := -1
+
+func _check_pop_pronto() -> void:
+	if sim.tick == _pob_tick or sim.tick % 5 != 0:
+		return
+	_pob_tick = sim.tick
+	pob_eta = segundos_sin_lugar()
+	var aviso := int(COLA_GLOBAL.cfg().get("aviso_pob_s", 40))
+	if pob_eta > 0 and pob_eta <= aviso and not _pob_pronto:
+		_pob_pronto = true
+		var p: Dictionary = sim.players[local]
+		var casa: String = String(sim.dp(local).edificios.get("casa", {}).get("nombre", "Casa"))
+		if int(p["pop_cap"]) < int(sim.data.reglas["pob_max"]):
+			notify("Población %d/%d: sin lugar en ~%d s\nConstruí casas (%s) para no frenar la producción." % [int(p["pop"]), int(p["pop_cap"]), pob_eta, casa], 8.0, "info")
+	elif pob_eta < 0 or pob_eta > aviso + 10:
+		_pob_pronto = false
+
+
+## Segundos de juego hasta llenar la población con las colas propias y las repeticiones
+## (-1 si no se llena; 0 si ya está llena). A ritmo normal: no cuenta bonificaciones.
+func segundos_sin_lugar() -> int:
+	var p: Dictionary = sim.players[local]
+	var libre := int(p["pop_cap"]) - int(p["pop"])
+	if libre <= 0:
+		return 0
+	var limite := (int(COLA_GLOBAL.cfg().get("aviso_pob_s", 40)) + 30) * 1000
+	var dd := sim.dp(local)
+	var fin: Array = [] # [ms, población]
+	for e in sim.actives:
+		if not (e.alive and e.owner == local and e.is_building() and e.built):
+			continue
+		var t := 0
+		for i in e.queue.size():
+			var q: String = e.queue[i]
+			t += dd.queue_time(q) - (e.queue_progress if i == 0 else 0)
+			if not q.begins_with("@"):
+				fin.append([t, int(dd.unidades.get(q, {}).get("pob", 1))])
+		if e.repeat != "" and dd.unidades.has(e.repeat) and (not e.queue.is_empty() or sim.repeat_block(e) != "tope"):
+			var qt := maxi(1000, dd.queue_time(e.repeat))
+			while t < limite:
+				t += qt
+				fin.append([t, int(dd.unidades[e.repeat].get("pob", 1))])
+	fin.sort_custom(func(a: Array, b: Array) -> bool: return int(a[0]) < int(b[0]))
+	var usado := 0
+	for f in fin:
+		usado += int(f[1])
+		if usado > libre:
+			return maxi(1, int(f[0]) / 1000)
+	return -1
+# --- fin frente 1 ---
+
+
+## Ícono de repetición (un bucle con su flecha): en la casilla, el panel y la cola global. --- frente 1 ---
+static func draw_bucle(ci: CanvasItem, c: Vector2, r: float, col: Color) -> void:
+	ci.draw_circle(c, r + 2.5, Color(0, 0, 0, 0.55))
+	ci.draw_arc(c, r, -PI * 0.35, PI * 1.45, 18, col, 2.0, true)
+	var tip := c + Vector2(cos(-PI * 0.35), sin(-PI * 0.35)) * r
+	ci.draw_colored_polygon(PackedVector2Array([tip + Vector2(-4, -3), tip + Vector2(3, -4), tip + Vector2(1, 3)]), col)
+
+
 func queue_icon(item: String) -> String:
 	if item.begins_with("@"):
 		return Iconos.de_tecnologia(item.substr(1), sim.dp(local).tecnologias[item.substr(1)]) # --- iconos ---
@@ -638,6 +702,7 @@ func _process(delta: float) -> void:
 	if _sel.visible == ctrl.selection.is_empty():
 		_place_groups()
 	_check_pop()
+	_check_pop_pronto() # --- frente 1 ---
 	if _dialog != null and _dialog.visible:
 		_dialog.offset_top = maxf(140.0, 74.0 + avisos.alto_usado() + 10.0)
 		_dialog.offset_bottom = _dialog.offset_top + 10.0
@@ -849,6 +914,13 @@ class TopBar:
 			name = "%s · %s" % [civ["riqueza_nombre"], name]
 			desc = str(civ.get("riqueza_desc", desc))
 		desc += "\nDebajo: aldeanos que lo recolectan (clic: seleccionarlos)." # --- órdenes ---
+		# --- frente 1 --- (V16) ingreso por minuto, como AoE4: el del panel de economía (F2)
+		if hud.paneles != null and hud.paneles.get("datos") != null:
+			var dat = hud.paneles.datos
+			var rate: int = dat.rate(hud.local, k)
+			var nv: int = int((dat.villagers(hud.local) as Dictionary).get(k, 0))
+			desc = "Ingreso: %s por minuto (últimos %d s)%s\n%s" % [("+%d" % rate) if rate >= 0 else str(rate), int(dat.window_s), (" · %d aldeano%s" % [nv, "" if nv == 1 else "s"]) if nv > 0 else "", desc]
+		# --- fin frente 1 ---
 		hud.show_tip({"name": name, "desc": desc, "cost": {}, "locked": ""}, Rect2(global_position + Vector2(14 + i * 120, 0), Vector2(110, size.y)))
 
 	## Ancho que necesita la barra (con recurso propio y botones de ociosos). --- órdenes ---
@@ -890,8 +962,14 @@ class TopBar:
 			x += 130
 		draw_line(Vector2(x - 6, 10), Vector2(x - 6, size.y - 10), Palette.UI_LINE, 1)
 		var full: bool = p["pop"] >= p["pop_cap"]
-		Glyphs.draw(self, "pob", Rect2(x + 6, 13, 26, 28), Palette.UI_BAD if full else Palette.UI_TEXT)
-		draw_string(Hud.font_b, Vector2(x + 38, 34), "%d/%d" % [p["pop"], p["pop_cap"]], HORIZONTAL_ALIGNMENT_LEFT, -1, 19, Palette.UI_BAD if full else Palette.UI_TEXT)
+		# --- frente 1 --- ámbar antes de llenarse (aviso anticipado), rojo lleno
+		var pronto: bool = not full and hud.pob_eta > 0 and hud.pob_eta <= int(COLA_GLOBAL.cfg().get("aviso_pob_s", 40))
+		var pcol: Color = Palette.UI_BAD if full else (Palette.UI_ACCENT if pronto else Palette.UI_TEXT)
+		Glyphs.draw(self, "pob", Rect2(x + 6, 13, 26, 28), pcol)
+		draw_string(Hud.font_b, Vector2(x + 38, 34), "%d/%d" % [p["pop"], p["pop_cap"]], HORIZONTAL_ALIGNMENT_LEFT, -1, 19, pcol)
+		var ptxt := "Llena: no sale nada nuevo hasta que haya lugar." if full else ("Sin lugar en ~%d s, con lo que hay en cola y lo que se repite." % hud.pob_eta if hud.pob_eta > 0 else "Con lo que hay en cola, alcanza el lugar.")
+		_hits.append([Rect2(x, 7, 100, size.y - 14), func(_all: bool) -> void: pass, "Población %d/%d" % [p["pop"], p["pop_cap"]], ptxt + "\nLas casas suben el tope."])
+		# --- fin frente 1 ---
 		x += 110
 		# --- órdenes --- (botones de ociosos con número: clic el siguiente, Mayús + clic todos)
 		var at: RefCounted = hud.ctrl.atajos
@@ -1007,6 +1085,15 @@ class CommandCard:
 			accept_event()
 		# --- grilla --- (clic derecho sobre la grilla: vuelve a la raíz del aldeano)
 		elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+			# --- frente 1 --- sobre una unidad que se entrena: saca una de la cola (Mayús: 5)
+			for i in 12:
+				if _slot_rect(i).has_point(event.position):
+					var c := _cmd_at(i)
+					if c.get("kind", "") == "train":
+						hud.ctrl.sacar_de_cola(c, 5 if event.shift_pressed else 1)
+						accept_event()
+						return
+			# --- fin frente 1 ---
 			hud.ctrl.open_submenu(Grilla.RAIZ)
 			accept_event()
 		# --- fin grilla ---
@@ -1067,6 +1154,9 @@ class CommandCard:
 			# legibles a 4,5:1 y sin depender del color (src/game/ui/estado_casilla.gd)
 			EstadoCasilla.dibujar(self, r, c, res, i == _hover, active, Controller.etiqueta(i), hud.sim.dp(hud.local).mod("recurso_propio"))
 			# --- fin contraste ---
+			if c.get("repite", false): # --- frente 1 --- se repite sola: borde y bucle
+				Hud.draw_bucle(self, r.position + Vector2(r.size.x - 10, 29), 5.0, Palette.UI_ACCENT)
+				draw_rect(r.grow(-1), Color(Palette.UI_ACCENT, 0.8), false, 2.0)
 		# Progreso de la cola en la ranura del producto actual.
 		var sel := hud.ctrl.selected_entities()
 		if sel.size() >= 1 and sel[0].is_building() and not sel[0].queue.is_empty():
@@ -1309,13 +1399,22 @@ class SelectionPanel:
 			hints.append(["La gente llega sola: %d/%d de fama para la próxima persona" % [mini(have, ac["costo"]), ac["costo"]], Hud.font, 13, Palette.UI_ACCENT])
 		if not e.queue.is_empty() or e.def.has("produce"):
 			var qx := x
-			for i in sim.data.reglas["cola_max"]:
+			# --- frente 1 --- la cola llega a 10: se ven 5 casillas y la quinta dice «+n»
+			var vis := mini(int(sim.data.reglas["cola_max"]), 5)
+			for i in vis:
 				var r := Rect2(qx, 78, 52, 52)
 				var sb := StyleBoxFlat.new()
 				sb.set_corner_radius_all(6)
 				sb.bg_color = Color(1, 1, 1, 0.08 if i < e.queue.size() else 0.03)
 				draw_style_box(sb, r)
-				if i < e.queue.size():
+				var resto := e.queue.size() - (vis - 1)
+				if i == vis - 1 and resto > 1:
+					# Las que no entran: «+n»; el clic saca la última.
+					Glyphs.draw(self, hud.queue_icon(e.queue[e.queue.size() - 1]), r.grow(-12), Color(Palette.UI_TEXT, 0.35))
+					draw_string(Hud.font_b, r.position + Vector2(0, 34), "+%d" % resto, HORIZONTAL_ALIGNMENT_CENTER, r.size.x, 18, Palette.UI_ACCENT)
+					var bid_l := e.id
+					_hits.append([r, func() -> void: sim.push_command({"t": "cancel", "player": hud.local, "building": bid_l, "index": -1})])
+				elif i < e.queue.size():
 					hud.ficha.zone(self, r, {"type": e.queue[i].trim_prefix("@"), "owner": e.owner}) # --- ficha ---
 					Glyphs.draw(self, hud.queue_icon(e.queue[i]), r.grow(-9), Palette.UI_ACCENT if e.queue[i].begins_with("@") else Palette.UI_TEXT)
 					if i == 0:
@@ -1325,10 +1424,30 @@ class SelectionPanel:
 					var bid := e.id
 					_hits.append([r, func() -> void: sim.push_command({"t": "cancel", "player": hud.local, "building": bid, "index": idx})])
 				qx += 58
+			if e.repeat != "" and e.owner == hud.local:
+				# Repetición: qué se repite, por qué está frenada y, con aldeanos, el tope (− / +).
+				var ud: Dictionary = sim.dp(e.owner).unidades.get(e.repeat, {})
+				var why := sim.repeat_block(e) if e.queue.is_empty() else ""
+				var frena := {"pob": " · frenada: población llena", "recursos": " · frenada: no alcanza (sin tocar lo apartado)", "tope": " · llegó al tope"}.get(why, "") as String
+				var civil := str(ud.get("funcion", "")) == "civil"
+				var txt := "Repite: %s%s%s" % [str(ud.get("nombre", e.repeat)), " · hasta %d aldeanos" % sim.villager_cap(e.owner) if civil else "", frena]
+				Hud.draw_bucle(self, Vector2(x + 6, 142), 5.5, Palette.UI_ACCENT)
+				hints.insert(0, ["     " + txt, Hud.font, 13, Palette.UI_ACCENT if why == "" else Palette.UI_DIM])
+				if civil:
+					for j in 2:
+						var br := Rect2(size.x - 70 + j * 28, 133, 24, 20)
+						var bsb := StyleBoxFlat.new()
+						bsb.set_corner_radius_all(4)
+						bsb.bg_color = Color(1, 1, 1, 0.08)
+						draw_style_box(bsb, br)
+						draw_string(Hud.font_b, br.position + Vector2(0, 15), "−" if j == 0 else "+", HORIZONTAL_ALIGNMENT_CENTER, br.size.x, 15, Palette.UI_TEXT)
+						var sg := -1 if j == 0 else 1
+						_hits.append([br, func() -> void: hud.ctrl.cambiar_tope_aldeanos(sg)])
+			# --- fin frente 1 ---
 			var p: Dictionary = sim.players[e.owner]
 			if not e.queue.is_empty() and e.queue_progress == 0 and p["pop"] >= p["pop_cap"]:
 				hints.append(["Población llena: construí casas", Hud.font_b, 14, Palette.UI_BAD])
-			elif e.queue.is_empty():
+			elif e.queue.is_empty() and e.repeat == "":
 				hints.append(["Clic derecho en el mapa: punto de reunión", Hud.font, 13, Palette.UI_DIM])
 		var hy := 148.0 if hints.size() < 2 else 146.0
 		for h in hints:
