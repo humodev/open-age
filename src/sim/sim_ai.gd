@@ -2724,6 +2724,8 @@ func _flares(army: Array[SimEntity], centro: SimEntity) -> void:
 		if _flares_done.has(fid) or from == player or sim.enemies(player, from) or sim.team_of(from) != sim.team_of(player):
 			continue
 		_flares_done[fid] = true
+		if f["tipo"] == "mirar": # --- fluidez 4 --- «mirá acá» es solo para que lo vean
+			continue
 		if Sim.dist(centro.x, centro.y, int(f["x"]), int(f["y"])) > int(cfg["ia_radio"]):
 			continue
 		var free: Array[SimEntity] = []

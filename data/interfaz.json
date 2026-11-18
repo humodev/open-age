@@ -10,6 +10,7 @@
     "_doc_marcadores": "Marcadores de cámara (proceso/24, 4k): Alt + 1…N vuelve y Ctrl + Alt + 1…N guarda (Ctrl + número son los grupos de control). Las teclas de función de los primeros marcadores (F7…F9 de fábrica, Ctrl + F guarda) se reasignan en Opciones → Teclas: teclas.acciones, marcador_1… (veterano, ronda 4).",
     "cola_global_max": 14,
     "bengala_s": 8,
+    "rueda_px": 70, "rueda_min_px": 22, "_doc_rueda": "--- fluidez 4 --- Alt + arrastrar abre la rueda de la bengala: radio y arrastre mínimo en píxeles (menos: bengala automática).",
     "arrastre_rumbo_px": 24
   },
   "teclas": {

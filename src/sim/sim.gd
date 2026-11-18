@@ -215,7 +215,7 @@ func _apply(c: Dictionary) -> void:
 		"patrullar":
 			_cmd_patrol(pid, _own_units(pid, c.get("ids", [])), int(c["x"]), int(c["y"]))
 		"bengala":
-			_cmd_flare(pid, int(c["x"]), int(c["y"]))
+			_cmd_flare(pid, int(c["x"]), int(c["y"]), str(c.get("tipo", ""))) # --- fluidez 4 --- (intención elegida en la rueda)
 		"pedir":
 			_cmd_ask(pid, int(c["a"]), str(c["recurso"]))
 		"target":
@@ -379,12 +379,20 @@ func _cmd_patrol(pid: int, units: Array[SimEntity], x: int, y: int) -> void:
 
 ## Bengala (Alt + clic): "atacá acá", o "defendé acá" si cae cerca de lo propio o de un aliado.
 ## Es estado de la partida: la IA aliada la lee y responde (SimAI._flares).
-func _cmd_flare(pid: int, x: int, y: int) -> void:
+func _cmd_flare(pid: int, x: int, y: int, elegido: String = "") -> void:
 	var cfg: Dictionary = data.reglas["equipos"]["bengala"]
 	x = clampi(x, 0, map.n * P - 1)
 	y = clampi(y, 0, map.n * P - 1)
 	var kind := "atacar"
+	# --- fluidez 4 --- Con la rueda (Alt + arrastrar) la intención viene elegida: atacar, defender,
+	# juntarse o mirar (reglas.equipos.bengala.tipos). Sin elegir, se deduce como siempre.
+	var auto := not (elegido in (cfg.get("tipos", []) as Array))
+	if not auto:
+		kind = elegido
 	for e in actives:
+		if not auto:
+			break
+		# --- fin fluidez 4 ---
 		if e.alive and e.is_building() and e.owner >= 0 and not enemies(pid, e.owner) and dist(e.x, e.y, x, y) <= int(cfg["defender_radio"]):
 			kind = "defender"
 			break

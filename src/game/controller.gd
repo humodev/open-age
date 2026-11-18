@@ -1035,6 +1035,14 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _input(event: InputEvent) -> void:
+	# --- fluidez 4 --- (suelta del Alt + clic: bengala con la intención de la rueda)
+	if event is InputEventMouseButton and not event.pressed and event.button_index == MOUSE_BUTTON_LEFT \
+			and hud != null and hud.get("ordenes_capa") != null and not hud.ordenes_capa.rueda.is_empty():
+		var r: Array = hud.ordenes_capa.cerrar_rueda(event.position)
+		flare(r[0], r[1])
+		get_viewport().set_input_as_handled()
+		return
+	# --- fin fluidez 4 ---
 	# --- órdenes --- (suelta del clic derecho: orden, con rumbo si se arrastró)
 	if event is InputEventMouseButton and not event.pressed and event.button_index == MOUSE_BUTTON_RIGHT and rpressing:
 		rpressing = false
@@ -1086,7 +1094,12 @@ func _mouse_button(mb: InputEventMouseButton) -> void:
 			cancel_mode()
 			return
 		if Input.is_key_pressed(KEY_ALT):
-			flare(cam.ground_at(mb.position))
+			# --- fluidez 4 --- Alt + clic: bengala automática; Alt + arrastrar: rueda de intención
+			if hud != null and hud.get("ordenes_capa") != null:
+				hud.ordenes_capa.abrir_rueda(mb.position, cam.ground_at(mb.position))
+			else:
+				flare(cam.ground_at(mb.position))
+			# --- fin fluidez 4 ---
 			return
 		# --- fin órdenes ---
 		_pressing = true
@@ -1201,14 +1214,17 @@ func drag_rumbo(pos: Vector2) -> int:
 
 
 ## Bengala (Alt + clic en el mapa o el minimapa): atacá o defendé acá. Solo con aliados.
-func flare(g: Vector3) -> void:
+func flare(g: Vector3, tipo: String = "") -> void: # --- fluidez 4 --- (tipo: intención de la rueda)
 	var ally := false
 	for p in sim.players:
 		ally = ally or (p["id"] != local and not sim.enemies(local, p["id"]) and not p["defeated"])
 	if not ally:
 		hud_notify("Las bengalas son para avisarle a un aliado", "info")
 		return
-	sim.push_command({"t": "bengala", "player": local, "x": int(g.x * P), "y": int(g.z * P)})
+	var cmd := {"t": "bengala", "player": local, "x": int(g.x * P), "y": int(g.z * P)}
+	if tipo != "": # --- fluidez 4 ---
+		cmd["tipo"] = tipo
+	sim.push_command(cmd)
 # --- fin órdenes ---
 
 
