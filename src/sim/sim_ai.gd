@@ -9,6 +9,8 @@ var sim: Sim
 var player: int
 var wave := 0
 var last_attack := -100000
+var eta := -100000 # tick estimado de llegada de la última oleada (`_team_turn`)
+var last_target := -1 # edificio al que fue la última oleada (`_attack`, para no repetir frente con las aliadas)
 var last_raid := 0 # incursiones y control del mapa: por tiempo transcurrido, no por tick exacto
 var last_spot := 0
 var last_road := 0
@@ -58,6 +60,9 @@ var _seen_tick := -100000
 var _goal := "" # lo que se ahorra este turno: el hito de la edad siguiente o la maravilla
 var _age4_tick := -1 # cuándo llegó a la IV
 var last_wonder_hit := -100000 # último envío contra una maravilla rival
+var last_trade := -100000
+var mercado_compra := {} # lotes comprados por recurso (para las mediciones; no es estado de la partida)
+var mercado_venta := {} # lotes vendidos por recurso
 var _wonder_on := false # ya decidió levantar la maravilla: sigue juntando aunque baje un poco la tropa
 
 # Reparto de aldeanos por recurso: reglas.json → ia_economia.
@@ -1877,9 +1882,10 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 		return
 	if attacks and _hit_hito(army):
 		return
-	if attacks and army.size() >= need and sim.tick - last_attack > gap:
+	if attacks and army.size() >= need and sim.tick - last_attack > gap and _team_turn(army):
 		wave += 1
 		last_attack = sim.tick
+		eta = _eta(army)
 		_attack(army)
 		return
 	if attacks and _hunt(army):
@@ -2441,6 +2447,14 @@ func _attack(army: Array[SimEntity]) -> void:
 	var best_d := 1 << 60
 	var ref := army[0]
 	focus = _pick_rival(ref)
+	# Ronda 8: lo que las aliadas atacaron hace poco no se repite (otro frente), si hay otro blanco.
+	var taken := {}
+	var esc := _escalon()
+	for ai in sim.ais:
+		if ai != self and ai.player != player and not sim.enemies(player, ai.player) and ai.last_target >= 0 and sim.tick - ai.eta < esc:
+			taken[ai.last_target] = true
+	var alt: SimEntity = null
+	var best_alt := 1 << 60
 	for e in sim.actives:
 		# También lo que cuenta para la victoria (mocambos, lofs): si no, un rival sin ejército
 		# seguía vivo para siempre (todos contra todos abierto a los 60 minutos, proceso/22).
@@ -2452,8 +2466,14 @@ func _attack(army: Array[SimEntity]) -> void:
 			if d < best_d:
 				target = e
 				best_d = d
+			if d < best_alt and not e.id in taken:
+				alt = e
+				best_alt = d
 	if target == null:
 		return
+	if alt != null:
+		target = alt
+	last_target = target.id
 	_say("ataco", {"a": target.owner})
 	var ids := []
 	for u in army:
@@ -2464,6 +2484,44 @@ func _attack(army: Array[SimEntity]) -> void:
 	var dy := ref.y - target.y
 	var l := maxi(1, Sim.isqrt(dx * dx + dy * dy))
 	sim.push_command({"t": "move", "player": player, "ids": ids, "x": target.x + dx * 3000 / l, "y": target.y + dy * 3000 / l, "amove": true})
+
+
+## Desfase entre las oleadas de un mismo equipo (reglas.json → equipos.ia_escalon; la
+## dificultad puede traer su `escalon_ticks`).
+func _escalon() -> int:
+	return int(level.get("escalon_ticks", sim.data.reglas["equipos"].get("ia_escalon", {}).get("desfase_ticks", 0)))
+
+
+## Ronda 8: ¿le toca a esta IA largar su oleada? No, si llegaría a menos del desfase de la
+## oleada de una IA aliada que todavía no llegó o llegó hace poco. Se estima la llegada en
+## línea recta desde el punto de reunión hasta la base rival, al paso del más lento. Antes, en
+## el 1 contra 6, las seis fáciles salían en el mismo minuto y llegaban 90 soldados juntos;
+## ahora llegan de a una, como un equipo que se turna (proceso/32-ronda-8).
+func _team_turn(army: Array[SimEntity]) -> bool:
+	var d := _escalon()
+	if d <= 0:
+		return true
+	var mine := _eta(army)
+	for ai in sim.ais:
+		if ai != self and ai.player != player and not sim.enemies(player, ai.player) and not sim.players[ai.player]["defeated"]:
+			if ai.eta > sim.tick - d and absi(mine - ai.eta) < d:
+				return false
+	return true
+
+
+## Tick estimado en que llegaría a la base del rival elegido la oleada que sale ahora.
+func _eta(army: Array[SimEntity]) -> int:
+	var f := _pick_rival(army[0])
+	if f < 0 or f >= sim.bases.size():
+		return sim.tick
+	var slow := 1 << 30
+	for u in army:
+		if u.speed > 0:
+			slow = mini(slow, u.speed)
+	if slow == 1 << 30:
+		return sim.tick
+	var b := sim.bases[f]
+	return sim.tick + Sim.dist(rally.x, rally.y, b.x * P, b.y * P) / slow
 
 
 ## Cacería (sin victoria por hitos, opciones de partida): cuando el rival elegido ya casi no
@@ -2900,42 +2958,66 @@ func _makes_military(b: SimEntity) -> bool:
 	return false
 
 
-## Mercado: vende excedentes cuando falta riqueza y compra lo que falta cuando sobra riqueza.
+## Mercado (reglas.json → ia_mercado; ronda 8): vende lo que le sobra y compra lo que le falta,
+## primero para la meta (el hito o la maravilla) y después para el día a día. Antes solo
+## vendía para la meta desde la III, así que en la II juntaba riqueza hasta `riqueza_baja` y se
+## quedaba quieta: el inca pasó 34 minutos en la II con 10 000 de madera esperando 200 de
+## piedra (proceso/22-testers/ronda-8). Con `mercado: "poco"` en la dificultad (la fácil) no
+## comercia para la meta; solo lo general.
 func _trade(p: Dictionary, by_type: Dictionary) -> void:
 	var markets: Array = by_type.get("mercado", [])
 	if markets.is_empty() or not (markets[0] as SimEntity).built:
 		return
+	var cfg: Dictionary = sim.data.reglas.get("ia_mercado", {})
+	if cfg.is_empty() or sim.tick - last_trade < int(cfg["cada_ticks"]):
+		return
 	var m: SimEntity = markets[0]
 	var res: Dictionary = p["res"]
-	# Lo que falta para el hito se compra con la riqueza que sobra por encima de lo que pide el hito.
-	if p["age"] < sim.dp(player).edades.size() or _goal != _hito_type(p):
-		var hc: Dictionary = _goal_cost(p)
+	var lot := int(sim.data.reglas["mercado"]["lote"])
+	var hc := {}
+	var up: bool = int(p["age"]) < sim.dp(player).edades.size() and int(p["age"]) < int(level.get("edad_max", 99))
+	if str(level.get("mercado", "meta")) == "meta" and not sim.hito_in_progress(player) and (_goal_is_wonder() or up):
+		hc = _goal_cost(p)
+	if not hc.is_empty():
+		var short := int(res["riqueza"]) < int(hc.get("riqueza", 0))
 		var spare := int(res["riqueza"]) - int(hc.get("riqueza", 0))
 		for k in ["piedra", "alimento", "madera"]:
-			if int(res[k]) < int(hc.get(k, 0)) and spare >= sim.trade_price(player, k) + 50:
-				sim.push_command({"t": "trade", "player": player, "building": m.id, "recurso": k, "op": "comprar"})
+			if int(res[k]) < int(hc.get(k, 0)):
+				short = true
+				if spare >= sim.trade_price(player, k) + int(cfg["riqueza_reserva"]):
+					last_trade = sim.tick
+					_market(m, k, "comprar")
+					return
+		# Falta algo y la riqueza no alcanza: se vende lo que más sobra por encima de la meta.
+		if short:
+			var best := ""
+			var best_x := 0
+			for k in ["alimento", "madera", "piedra"]:
+				var x := int(res[k]) - int(hc.get(k, 0)) - int(cfg["vende_sobra"])
+				if x >= lot and x > best_x:
+					best = k
+					best_x = x
+			if best != "":
+				last_trade = sim.tick
+				_market(m, best, "vender")
 				return
-		# --- paso 7 --- Hacia la IV y la maravilla: si falta algo y no alcanza la riqueza, se vende
-		# lo que sobra por encima de lo que pide la meta (`ia_edad_iv.vende_sobra`). Sin esto la IA
-		# esperaba en la III con 1800 de madera y alimento y la piedra quieta en 245 (proceso/26, 10).
-		var cfg4: Dictionary = sim.data.reglas.get("ia_edad_iv", {})
-		if level.get("sube_a_la_iv", false) and int(p["age"]) >= int(cfg4.get("desde_edad", 99)):
-			var short := false
-			for k: String in hc:
-				short = short or int(res.get(k, 0)) < int(hc[k])
-			if short:
-				for k in ["alimento", "madera", "piedra"]:
-					if int(res[k]) > int(hc.get(k, 0)) + int(cfg4["vende_sobra"]):
-						sim.push_command({"t": "trade", "player": player, "building": m.id, "recurso": k, "op": "vender"})
-						return
 	for k in ["alimento", "madera", "piedra"]:
-		if int(res[k]) > 900 and int(res["riqueza"]) < 400:
-			sim.push_command({"t": "trade", "player": player, "building": m.id, "recurso": k, "op": "vender"})
+		if int(res[k]) - int(hc.get(k, 0)) > int(cfg["sobra"]) and int(res["riqueza"]) < int(cfg["riqueza_baja"]):
+			last_trade = sim.tick
+			_market(m, k, "vender")
 			return
 	for k in ["alimento", "madera"]:
-		if int(res[k]) < 100 and int(res["riqueza"]) > 700:
-			sim.push_command({"t": "trade", "player": player, "building": m.id, "recurso": k, "op": "comprar"})
+		if int(res[k]) < int(cfg["falta"]) and int(res["riqueza"]) - int(hc.get("riqueza", 0)) > int(cfg["riqueza_alta"]):
+			last_trade = sim.tick
+			_market(m, k, "comprar")
 			return
+
+
+## Una operación en el mercado; se cuenta para las mediciones (tools/ataques_equipo.gd).
+func _market(m: SimEntity, k: String, op: String) -> void:
+	sim.push_command({"t": "trade", "player": player, "building": m.id, "recurso": k, "op": op})
+	var book: Dictionary = mercado_compra if op == "comprar" else mercado_venta
+	book[k] = int(book.get(k, 0)) + 1
 
 
 ## La IA que no toma sitios (la fácil) no los captura al pasar (jugador nuevo, ronda 3;
