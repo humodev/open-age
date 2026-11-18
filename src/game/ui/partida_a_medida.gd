@@ -46,6 +46,9 @@ func _ready() -> void:
 	_map_keys = _data.reglas["terrenos"].keys()
 	_tiempos = _data.reglas["opciones_partida"]["tiempo_limite_min"]
 	cfg = PartidaConfig.cargar()
+	for a in OS.get_cmdline_user_args(): # --preset=1v3 preelige (capturas)
+		if a.begins_with("--preset="):
+			PartidaConfig.aplicar_preset(cfg, a.split("=")[1])
 
 	var dim := ColorRect.new()
 	dim.color = Color(0.02, 0.025, 0.03, 0.82)
@@ -289,7 +292,7 @@ func _refrescar() -> void:
 		_estado.add_theme_color_override("font_color", Palette.UI_BAD)
 	else:
 		var a := PartidaConfig.a_args(cfg)
-		var txt := "%d jugadores · %s" % [abiertos, "todos contra todos" if equipos.size() == abiertos else "%d equipos" % equipos.size()]
+		var txt := "%d jugadores · %s" % [abiertos, "uno contra uno" if abiertos == 2 else ("todos contra todos" if equipos.size() == abiertos else "%d equipos" % equipos.size())]
 		if a.has("aivai"):
 			txt += " · sin «Vos»: mirás IA contra IA"
 		_estado.text = txt + "."

@@ -225,7 +225,7 @@ static func a_args(cfg: Dictionary) -> Dictionary:
 ## La última configuración de la pantalla (no la de las pruebas: Opciones.solo_lectura).
 static func cargar() -> Dictionary:
 	var cfg := defecto()
-	if not FileAccess.file_exists(RUTA):
+	if Opciones.solo_lectura or not FileAccess.file_exists(RUTA): # las capturas, siempre igual
 		return cfg
 	var f := FileAccess.open(RUTA, FileAccess.READ)
 	if f == null:

@@ -186,10 +186,20 @@ func _ready() -> void:
 	_data = data
 	_build_slots() # --- lugares ---
 	_describe(data)
-	box.add_child(_button("Campañas", func() -> void: campaigns.emit()))
+	# --- partida a medida --- "Campañas" y "Partida personalizada" comparten renglón (entra a 1366×768)
+	var crow := HBoxContainer.new()
+	crow.add_theme_constant_override("separation", 10)
+	box.add_child(crow)
+	var cb := _button("Campañas", func() -> void: campaigns.emit())
+	cb.custom_minimum_size.x = 185
+	crow.add_child(cb)
+	var pb := _button("A medida", open_custom)
+	pb.custom_minimum_size.x = 185
+	pb.tooltip_text = "Partida personalizada: mapa, jugadores, equipos, colores y opciones (1 contra 3, 1 contra 6…)."
+	crow.add_child(pb)
+	# --- fin partida a medida ---
 	box.add_child(_button("Escaramuza contra la IA", func() -> void: play.emit(_seed(), _pick(_civ), _pick(_rival))))
 	box.add_child(_button("Mirar IA contra IA", func() -> void: watch.emit(_seed(), _pick(_civ), _pick(_rival))))
-	box.add_child(_button("Partida personalizada", open_custom)) # --- partida a medida ---
 
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 10)

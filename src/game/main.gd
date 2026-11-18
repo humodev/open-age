@@ -419,7 +419,7 @@ func _salir_a() -> void:
 	var vivos: Array = []
 	for p in sim.players:
 		vivos.append("%d:%s%s pob %d edad %d" % [int(p["id"]), p["civ"], " (derrotado)" if p["defeated"] else "", int(p["pop"]), int(p["age"])])
-	print("PARTIDA A MEDIDA: %d:%02d de juego · %s" % [sim.tick * sim.tick_ms / 60000, (sim.tick * sim.tick_ms / 1000) % 60, " · ".join(vivos)])
+	print("PARTIDA A MEDIDA: %d:%02d de juego · %s · mapa %s de %d" % [sim.tick * sim.tick_ms / 60000, (sim.tick * sim.tick_ms / 1000) % 60, " · ".join(vivos), sim.terrain, sim.map.n])
 	salir(0)
 # --- fin partida a medida ---
 
