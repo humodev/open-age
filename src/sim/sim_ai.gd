@@ -310,7 +310,7 @@ func _smith(p: Dictionary, army: Array[SimEntity], by_type: Dictionary, saving: 
 	melee -= ranged
 	var foe_ranged := 0
 	var foe_melee := 0
-	for e in sim.actives:
+	for e in sim.military():
 		if e.alive and e.owner >= 0 and e.is_unit() and e.is_military() and sim.enemies(player, e.owner) and sim.fog.is_visible(player, e):
 			if sim.is_ranged(e):
 				foe_ranged += 1
@@ -571,7 +571,7 @@ func _alarm(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], centr
 				watch.append(c)
 	for c in watch:
 		var en := 0
-		for e in sim.actives:
+		for e in sim.military():
 			if e.alive and e.owner >= 0 and sim.enemies(player, e.owner) and e.is_military() and sim.dist_to(e, c) < 16000:
 				en += 1
 		var de := 0
@@ -1189,7 +1189,7 @@ func _watch_rival_army() -> void:
 	if cfg.is_empty():
 		return
 	var n := 0
-	for e in sim.actives:
+	for e in sim.military():
 		if e.alive and e.owner >= 0 and e.is_unit() and e.is_military() and sim.enemies(player, e.owner) and sim.fog.is_visible(player, e):
 			n += 1
 	if n >= _seen or sim.tick - _seen_tick > int(cfg["memoria_ticks"]):
@@ -1680,7 +1680,7 @@ func _wants_area_siege(army: Array[SimEntity], type: String) -> bool:
 	if _count(army, type) >= mini(int(cfg["tope"]), 1 + wave / maxi(1, int(cfg["oleadas_por_unidad"]))):
 		return false
 	var foes := 0
-	for e in sim.actives:
+	for e in sim.military():
 		if e.alive and e.owner >= 0 and e.is_unit() and e.is_military() and sim.enemies(player, e.owner):
 			foes += 1
 			if foes >= int(cfg["enemigos_min"]):
@@ -1730,7 +1730,7 @@ func _spend(budget: Dictionary, cost: Dictionary) -> bool:
 
 func _counter_order(p: Dictionary) -> Array[String]:
 	var counts := {"choque": 0, "distancia": 0, "linea": 0}
-	for e in sim.actives:
+	for e in sim.military():
 		if e.alive and e.owner >= 0 and sim.enemies(player, e.owner) and e.is_military() and counts.has(e.fn):
 			counts[e.fn] += 1
 	var top := "choque"
@@ -1748,7 +1748,7 @@ func _counter_order(p: Dictionary) -> Array[String]:
 		var mine := {}
 		var army_n := 0
 		var foe_mounted := 0
-		for e in sim.actives:
+		for e in sim.military():
 			if not e.alive or not e.is_unit() or not e.is_military():
 				continue
 			if e.owner == player:
@@ -2145,7 +2145,7 @@ func _foes_hp(st: SimEntity, r: int) -> int:
 ## Vida de los militares enemigos a `r` de un punto (cuadro, como la captura de los sitios).
 func _foes_hp_at(x: int, y: int, r: int) -> int:
 	var hp := 0
-	for e in sim.actives:
+	for e in sim.military():
 		if e.alive and e.owner >= 0 and e.is_unit() and e.inside < 0 and e.is_military() and sim.enemies(player, e.owner) and absi(e.x - x) <= r and absi(e.y - y) <= r:
 			hp += e.hp
 	return hp
@@ -2638,7 +2638,7 @@ func _ally_threat(centro: SimEntity) -> SimEntity:
 			continue
 		if Sim.dist(e.x, e.y, centro.x, centro.y) > radius:
 			continue
-		for t in sim.actives:
+		for t in sim.military():
 			if t.alive and t.owner >= 0 and sim.enemies(player, t.owner) and t.is_military() and sim.dist_to(t, e) < near:
 				return t
 	return null

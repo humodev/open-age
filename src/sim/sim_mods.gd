@@ -459,7 +459,7 @@ func craft_stopped(e: SimEntity) -> bool:
 		return true
 	var r := int(cfg.get("para_radio", 6000))
 	var n := 0
-	for o in sim.actives:
+	for o in sim.military():
 		if o.alive and o.owner >= 0 and sim.enemies(e.owner, o.owner) and o.is_military() and o.inside < 0 and absi(o.x - e.x) <= r and absi(o.y - e.y) <= r:
 			n += 1
 	return n >= int(cfg.get("para_enemigos", 3))
@@ -536,7 +536,7 @@ func _command_aura() -> void:
 			caps.append(e)
 	if caps.is_empty():
 		return
-	for u in sim.actives:
+	for u in sim.military():
 		if not u.alive or not u.is_unit() or u.owner < 0 or not u.is_military():
 			continue
 		for c in caps:
@@ -1129,7 +1129,7 @@ func _flood(w: SimEntity, cfg: Dictionary) -> void:
 		if sim.tick < int(p.get("inundacion_lista", 0)):
 			return
 		var n := 0
-		for u in sim.actives:
+		for u in sim.military():
 			if u.alive and u.is_unit() and u.inside < 0 and u.owner >= 0 and u.is_military() and sim.enemies(w.owner, u.owner) and tiles.has(u.y / P * sim.map.n + u.x / P):
 				n += 1
 		if n < int(cfg["enemigos_min"]):

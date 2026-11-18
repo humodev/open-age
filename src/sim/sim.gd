@@ -944,7 +944,7 @@ func _cmd_alarm(pid: int, on: bool, max_n: int = -1) -> void:
 		var danger := {}
 		for e in cands:
 			var best := 1 << 60
-			for o in actives:
+			for o in military():
 				if o.alive and o.owner >= 0 and enemies(pid, o.owner) and o.is_military():
 					best = mini(best, Sim.dist(e.x, e.y, o.x, o.y))
 			danger[e.id] = best
@@ -1418,7 +1418,7 @@ func _aura_heal() -> void:
 			if not a.has("cura_por_s"):
 				continue
 			var r := int(a["radio"])
-			for u in actives:
+			for u in military():
 				if u.alive and u.is_unit() and u.inside < 0 and u.owner >= 0 and u.is_military() and u.hp < u.hp_max and not enemies(pid, u.owner) and dist_to(u, h) <= r:
 					u.hp = mini(u.hp_max, u.hp + int(a["cura_por_s"]))
 
@@ -2384,6 +2384,11 @@ func _cleanup() -> void:
 		if e.alive:
 			keep_a.append(e)
 	actives = keep_a
+	var keep_m: Array[SimEntity] = []
+	for e in _military:
+		if e.alive:
+			keep_m.append(e)
+	_military = keep_m
 	for d: Dictionary in [_owned, _owned_b]:
 		for k in d:
 			d[k] = (d[k] as Array).filter(func(e: SimEntity) -> bool: return e.alive)
@@ -3653,7 +3658,7 @@ func wonder_left_s(pid: int) -> int:
 
 ## ¿Hay tropa enemiga de `b.owner` a `r` casillas o menos del borde de `b`?
 func _enemy_troops_near(b: SimEntity, r: int) -> bool:
-	for u in actives:
+	for u in military():
 		if u.alive and u.is_unit() and u.inside < 0 and u.owner >= 0 and u.is_military() and enemies(b.owner, u.owner):
 			var tx := u.x / P
 			var ty := u.y / P
@@ -3708,6 +3713,8 @@ func _new_entity(cat: int, type: String, owner: int, def: Dictionary) -> SimEnti
 		_own_list(_owned, owner).append(e)
 		if cat == SimEntity.Cat.BUILDING:
 			_own_list(_owned_b, owner).append(e)
+		elif cat == SimEntity.Cat.UNIT and SimEntity.MILITARY_FNS.has(String(def.get("funcion", ""))):
+			_military.append(e)
 	by_id[e.id] = e
 	return e
 
@@ -3718,6 +3725,11 @@ func _new_entity(cat: int, type: String, owner: int, def: Dictionary) -> SimEnti
 ## categoría no cambian nunca. Recorrer `owned(pid)` es recorrer `actives` filtrado por dueño.
 var _owned := {} # dueño -> Array[SimEntity] (unidades y edificios)
 var _owned_b := {} # dueño -> Array[SimEntity] (solo edificios)
+var _military: Array[SimEntity] = [] # unidades militares (is_military), en orden de id
+func military() -> Array[SimEntity]:
+	return _military
+
+
 func owned(pid: int) -> Array:
 	return _owned.get(pid, _NONE)
 
