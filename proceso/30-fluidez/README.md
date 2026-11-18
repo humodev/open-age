@@ -59,3 +59,11 @@ Las simulaciones de los frentes 1, 2 y 5 se confirman en un solo torneo al final
 
 - **C-100:** ¿reparar cuesta, como en AoE4 (una fracción del costo), o sigue gratis? Por defecto, cuesta el 50 % del costo, proporcional a lo reparado.
 - **C-101:** ¿muralla de piedra con torres encima y una empalizada que se refuerza (C19), y planos sin pagar (C20)? Son grandes y cambian el juego. Por defecto, la muralla de piedra sí, en la edad II, con la propuesta de `04-decisiones.md`; los planos, después.
+
+## Avance
+
+| Frente | Estado |
+|---|---|
+| 3 · Respuesta inmediata | **Integrado (ff8c166)** · [03-respuesta.md](03-respuesta.md):<br>• sonido al elegir, por categoría y por pueblo;<br>• error con clic sin efecto;<br>• golpe y polvo al apoyar un cimiento;<br>• destello del blanco y pulso al saltar;<br>• estela de flechas y piedras;<br>• orden por función.<br>40 sonidos sintetizados (227 KB), sin instrumentos sagrados. Todo se apaga en `data/respuesta.json`. Mismo hash |
+| 1 · Producción | En curso |
+| 2 · Constructor | Espera que termine el agente del juego tardío |
