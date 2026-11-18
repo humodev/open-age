@@ -34,7 +34,7 @@ Jugaron el veterano de AoE4 y el jugador nuevo sobre main en `da4d074`, con el j
    - la victoria por sitios con un mínimo según la edad;
    - medir la IV con más semillas;
    - que la IA compre lo propio antes.
-3. **Usabilidad:**
+3. **Usabilidad: hecho (eada91b, [nota](../../28-iconos-y-estados/02-ronda-7.md)).** Las notas «[verificar]» ya no le llegan al jugador (siguen en data/); estrellita de recomendado con el orden de la IA; niveles con el nombre de la tropa («Lanceros veteranos»); herrería en submenú cuando la grilla se llena; nombres que se achican o se abrevian. Lo pedido era:
    - quitar del texto que ve el jugador los «[verificar]», que quedan solo en los documentos;
    - «recomendado» en la grilla;
    - nombres sin cortar.
