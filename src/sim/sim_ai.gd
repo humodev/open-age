@@ -50,6 +50,7 @@ var _stores := {} # almacenes propios (id -> casilla), para ver cuáles se perdi
 var _stores_lost: Array = [] # [casilla, tick] de los almacenes perdidos hace poco
 var _built_ids := {} # edificios propios terminados en la pensada anterior (`rendicion`)
 var _lost_buildings := 0 # cuántos de esos se perdieron en la partida (`rendicion`)
+var _peak_built := 0 # lo más que tuvo terminado a la vez (`rendicion.quedan_pct`)
 var _army_n := 0 # ejército propio en la pensada (para `_min_army`)
 var _seen := 0 # mayor ejército rival visto hace poco (`ejercito_segun_rival`)
 var _seen_tick := -100000
@@ -424,13 +425,19 @@ func _own_buys(p: Dictionary, army: Array[SimEntity], by_type: Dictionary, savin
 	if own.is_empty() or cfg.is_empty() or not level.get("investiga", false):
 		return {}
 	var techs: Dictionary = sim.dp(player).tecnologias
-	if saving and not own.get("ahorrando", true): # el pueblo no compra saberes mientras ahorra para el hito
-		return {}
+	# Que se juegue el final (proceso/26-juego-tardio/14): desde `temprana_desde_ms`, las propias de
+	# hasta la edad `temprana_edad_max` se compran aunque ahorre para el hito (sin apartar la meta):
+	# son baratas y así el rival ve lo propio del pueblo entre el minuto 10 y el 15.
+	var early_on: bool = sim.tick * sim.tick_ms >= int(cfg.get("temprana_desde_ms", 1 << 40))
+	var no_saving_buys: bool = saving and not own.get("ahorrando", true) # el pueblo no compra saberes mientras ahorra para el hito
 	var goal: Dictionary = _goal_cost(p) if saving else {}
 	var first: Dictionary = {}
 	for item: Dictionary in own.get("orden", []):
 		var tech: String = item["tec"]
 		if not techs.has(tech) or sim.players[player]["techs"].has(tech) or sim.players[player]["pending"].has(tech):
+			continue
+		var early: bool = early_on and int(techs[tech].get("edad_min", 1)) <= int(cfg.get("temprana_edad_max", 0))
+		if no_saving_buys and not early:
 			continue
 		if int(p["age"]) < int(techs[tech].get("edad_min", 1)) or not _own_ok(item, army, by_type, centro):
 			continue
@@ -446,7 +453,7 @@ func _own_buys(p: Dictionary, army: Array[SimEntity], by_type: Dictionary, savin
 			first = cost
 		var ok := true
 		for r in cost:
-			ok = ok and int(p["res"].get(r, 0)) >= int(cost[r]) + int(cfg.get("reserva", 0)) + int(goal.get(r, 0))
+			ok = ok and int(p["res"].get(r, 0)) >= int(cost[r]) + int(cfg.get("reserva", 0)) + (0 if early else int(goal.get(r, 0)))
 		if not ok:
 			continue
 		sim.push_command({"t": "research", "player": player, "building": where.id, "tech": tech})
@@ -602,8 +609,13 @@ func _surrenders(by_type: Dictionary, centro: SimEntity) -> bool:
 			if b == null or not b.alive:
 				_lost_buildings += 1
 	_built_ids = now
+	_peak_built = maxi(_peak_built, now.size())
 	var threat := _threat(centro)
 	var beaten: bool = _lost_buildings >= int(cfg["edificios_perdidos"]) and threat != null
+	# Que se juegue el final (proceso/26-juego-tardio/14): perder casas sueltas en incursiones no
+	# alcanza; además le quedan como mucho `quedan_pct` % de los edificios que llegó a tener.
+	if beaten and cfg.has("quedan_pct"):
+		beaten = now.size() * 100 <= _peak_built * int(cfg["quedan_pct"])
 	var capital: SimEntity = null
 	for k in by_type:
 		for b: SimEntity in by_type[k]:

@@ -610,9 +610,18 @@ func _sacred() -> void:
 		team_holds[sim.team_of(pid2)] = int(team_holds.get(sim.team_of(pid2), 0)) + int(holds[pid2])
 	# Misiones que enseñan los sitios sin que ganen la partida (el tutorial): sin cuenta.
 	var no_win: bool = sim._opts.get("sitios_sin_victoria", false)
+	# Que se juegue el final (proceso/26-juego-tardio/14): la cuenta no corre antes de
+	# `cuenta_desde_ms` de partida ni con el equipo por debajo de la edad `cuenta_edad_min`
+	# (estilo AoE4, donde los sitios se toman desde la edad de los castillos).
+	var early: bool = sim.tick * sim.tick_ms < int(cfg.get("cuenta_desde_ms", 0))
+	var age_min := int(cfg.get("cuenta_edad_min", 1))
 	for p in sim.players:
 		var pid: int = p["id"]
-		if int(team_holds.get(sim.team_of(pid), 0)) == sites.size() and not p["defeated"] and not no_win:
+		var team_age := 0
+		for q in sim.players:
+			if sim.team_of(int(q["id"])) == sim.team_of(pid) and not q["defeated"]:
+				team_age = maxi(team_age, int(q["age"]))
+		if int(team_holds.get(sim.team_of(pid), 0)) == sites.size() and not p["defeated"] and not no_win and not early and team_age >= age_min:
 			p["sitios_ms"] = int(p.get("sitios_ms", 0)) + 1000
 			if p["sitios_ms"] >= int(cfg["victoria_ms"]) and not sim.game_over:
 				sim.win(pid)

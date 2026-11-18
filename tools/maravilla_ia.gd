@@ -62,6 +62,9 @@ func _init() -> void:
 			var ages := [{}, {}]
 			var wonders := [] # [jugador, puesta, terminada, cayó, restante al terminar la partida]
 			var by_id := {}
+			# Lo propio de cada pueblo: [minuto de cada mejora propia], {unidad propia: entrenadas}.
+			var own_t := [[], []]
+			var own_u := [{}, {}]
 			while s.tick < minutes * 600 and not s.game_over:
 				s.step()
 				for ev in s.events:
@@ -74,6 +77,12 @@ func _init() -> void:
 						"maravilla":
 							if by_id.has(ev["id"]):
 								wonders[by_id[ev["id"]]][2] = s.tick
+						"tech":
+							if s.dp(ev["player"]).tecnologias.get(ev["tech"], {}).get("propia", false):
+								own_t[ev["player"]].append(s.tick)
+						"trained":
+							if ev["player"] >= 0 and s.dp(ev["player"]).unidades.get(ev["type"], {}).get("propia", false):
+								own_u[ev["player"]][ev["type"]] = int(own_u[ev["player"]].get(ev["type"], 0)) + 1
 						"maravilla_cae":
 							if by_id.has(ev["id"]):
 								wonders[by_id[ev["id"]]][3] = s.tick
@@ -83,6 +92,11 @@ func _init() -> void:
 				wt.append("J%d puesta %s terminada %s cae %s%s" % [w[0], _m(w[1]), _m(w[2]), _m(w[3]), (" (le faltaban %d:%02d)" % [left / 60, left % 60]) if left >= 0 else ""])
 			var reason := s.end_reason if s.game_over else "abierta"
 			print("%s | %d | %s | %s | %s | %s | %s | %s | %s | %s | %s | %d | %s | %s" % ["sin" if off else "con", sd, pair[0], pair[1], _m(ages[0].get(2, -1)), _m(ages[0].get(3, -1)), _m(ages[0].get(4, -1)), _m(ages[1].get(2, -1)), _m(ages[1].get(3, -1)), _m(ages[1].get(4, -1)), "; ".join(wt) if not wt.is_empty() else "-", s.winner, reason, _m(s.tick)])
+			for pj in 2:
+				var t15 := 0
+				for t: int in own_t[pj]:
+					t15 += 1 if t <= 9000 else 0
+				print("   propias J%d %s: mejoras %d (hasta el 15: %d; primera %s) · unidades %s" % [pj, pair[pj], own_t[pj].size(), t15, _m(own_t[pj][0]) if not own_t[pj].is_empty() else "-", own_u[pj] if not own_u[pj].is_empty() else "-"])
 	quit()
 
 
