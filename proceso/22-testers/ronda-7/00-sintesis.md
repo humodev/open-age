@@ -38,3 +38,28 @@ Jugaron el veterano de AoE4 y el jugador nuevo sobre main en `da4d074`, con el j
    - quitar del texto que ve el jugador los «[verificar]», que quedan solo en los documentos;
    - «recomendado» en la grilla;
    - nombres sin cortar.
+
+## Análisis de fluidez del veterano (pedido del autor)
+
+[Informe completo](03-veterano-fluidez.md).
+
+**La base ya está a la altura de AoE4:** grupos, cola con Mayús, formaciones, cola global, cursores, Alt y marcadores. El autotest da 147 de 147 y la batalla de 60 tropas corre a 59–92 fps.
+
+**Lo que más pesa:**
+1. **Cimientos encadenados:** se construye solo el último, y los que quedan a más de 10 casillas no los levanta nadie.
+2. **Sonidos:** no hay sonido al elegir ni al apoyar un cimiento.
+3. **Producción parada:** no hay aviso cuando un edificio deja de producir.
+4. **«¡Nos atacan!»:** el aviso es genérico, uno cada 15 s.
+5. **La cola de producción:** se sacan unidades con clic derecho y el tope pasa de 5 a 10.
+6. **El muro arrastrado:** muestra tramos y costo.
+7. **Granjas:** se pegan al depósito.
+
+**Paquetes propuestos:**
+- **A · Respuesta inmediata:** sonidos y destellos.
+- **B · Producción.**
+- **C · Constructor.**
+- **D · Avisos por zona.**
+- **E · Órdenes finas.**
+- **F · Pulido de lectura.**
+
+A y B no tocan la simulación y son los que más cambian la sensación.
