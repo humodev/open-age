@@ -96,7 +96,7 @@ static func people_name(sim: Sim, pid: int) -> String:
 
 static func player_name(sim: Sim, pid: int, local: int) -> String:
 	var civ := people_name(sim, pid)
-	var who := "Vos" if pid == local else Palette.TEAM_NAMES[pid % Palette.TEAM_NAMES.size()]
+	var who := "Vos" if pid == local else Palette.TEAM_NAMES[Palette.color_idx(pid) % Palette.TEAM_NAMES.size()]
 	return "%s · %s" % [who, civ] if civ != "" else who
 
 

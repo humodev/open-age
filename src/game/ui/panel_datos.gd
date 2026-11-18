@@ -211,7 +211,7 @@ func on_events(events: Array) -> void:
 				for e in sim.actives:
 					if e.alive and e.owner == pid and e.type == ev.get("hito", "") and e.built:
 						b2 = e
-				var who := "Llegaste" if pid == local else "%s llegó" % Palette.TEAM_NAMES[pid % Palette.TEAM_NAMES.size()]
+				var who := "Llegaste" if pid == local else "%s llegó" % Palette.TEAM_NAMES[Palette.color_idx(pid) % Palette.TEAM_NAMES.size()]
 				var where := b2 != null and (pid == local or sim.fog.is_explored(local, b2))
 				add_log("%s a la edad %s con %s (%s)" % [who, Sim._roman(ev["age"]), hdef.get("nombre", "un hito"), C.EJE_NAMES.get(eje, eje).to_lower()], Palette.UI_ACCENT if pid == local else Palette.team(pid), b2.x if where else -1, b2.y if where else -1, "edad")
 			"alert":
@@ -219,11 +219,11 @@ func on_events(events: Array) -> void:
 					add_log("¡Nos atacan!", Palette.UI_BAD, ev["x"], ev["y"], "ataque")
 			"sitio":
 				var site: SimEntity = sim.by_id.get(ev.get("id", -1))
-				add_log("Sitio sagrado tomado por %s" % ("tu pueblo" if pid == local else Palette.TEAM_NAMES[pid % Palette.TEAM_NAMES.size()]), Palette.UI_GOOD if pid == local else Palette.UI_BAD, site.x if site != null else -1, site.y if site != null else -1, "sitio")
+				add_log("Sitio sagrado tomado por %s" % ("tu pueblo" if pid == local else Palette.TEAM_NAMES[Palette.color_idx(pid) % Palette.TEAM_NAMES.size()]), Palette.UI_GOOD if pid == local else Palette.UI_BAD, site.x if site != null else -1, site.y if site != null else -1, "sitio")
 			"died":
 				_on_died(ev)
 			"defeat":
-				add_log("%s fue derrotado" % ("Tu pueblo" if pid == local else Palette.TEAM_NAMES[pid % Palette.TEAM_NAMES.size()]), Palette.UI_BAD if pid == local else Palette.UI_GOOD, -1, -1, "fin")
+				add_log("%s fue derrotado" % ("Tu pueblo" if pid == local else Palette.TEAM_NAMES[Palette.color_idx(pid) % Palette.TEAM_NAMES.size()]), Palette.UI_BAD if pid == local else Palette.UI_GOOD, -1, -1, "fin")
 	if sim.tick % maxi(1, 1000 / sim.tick_ms) == 0:
 		_photo()
 	if sim.tick % maxi(1, sample_s * 1000 / sim.tick_ms) == 0:

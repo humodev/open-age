@@ -74,6 +74,10 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null,
 	var size: int = data.reglas["mapa_tam"]
 	if num_players > 2 and not opts.get("sin_sitios", false):
 		size = int(data.reglas.get("mapa_tam_por_jugadores", {}).get(str(num_players), size))
+		# --- partida a medida --- tamaño chico/normal/grande (reglas.opciones_partida.tamano_mapa_pct)
+		var pct := int(data.reglas["opciones_partida"].get("tamano_mapa_pct", {}).get(str(opts.get("tamano", "normal")), 100))
+		if pct != 100:
+			size = size * pct / 100 / 8 * 8
 	map = SimMap.new(size, num_players)
 	fog = SimFog.new(size, num_players)
 	fog.map = map

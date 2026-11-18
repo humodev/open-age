@@ -194,7 +194,7 @@ func _draw() -> void:
 			sb.border_color = Color(owner_col, 0.6)
 			sb.set_border_width_all(1)
 			draw_style_box(sb, Rect2(sx, y, sw - 8, 40))
-			var who := "Libre" if s.holder < 0 else ("Tuyo" if s.holder == pid else Palette.TEAM_NAMES[s.holder % Palette.TEAM_NAMES.size()])
+			var who := "Libre" if s.holder < 0 else ("Tuyo" if s.holder == pid else Palette.TEAM_NAMES[Palette.color_idx(s.holder) % Palette.TEAM_NAMES.size()])
 			C.text(self, Vector2(sx + 10, y + 17), who, 13, Palette.UI_TEXT, true)
 			if s.capture > 0 and s.aux >= 0:
 				C.bar(self, Rect2(sx + 10, y + 26, sw - 28, 5), float(s.capture) / cap_ms, Palette.team(s.aux))

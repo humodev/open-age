@@ -6,6 +6,7 @@ signal play(seed_value: int, civ: String, rival: String)
 signal watch(seed_value: int, civ: String, rival: String)
 signal campaigns
 signal replay
+signal play_custom(args: Dictionary) # --- partida a medida ---
 
 var _seed_edit: LineEdit
 var _civ: OptionButton
@@ -188,6 +189,7 @@ func _ready() -> void:
 	box.add_child(_button("Campañas", func() -> void: campaigns.emit()))
 	box.add_child(_button("Escaramuza contra la IA", func() -> void: play.emit(_seed(), _pick(_civ), _pick(_rival))))
 	box.add_child(_button("Mirar IA contra IA", func() -> void: watch.emit(_seed(), _pick(_civ), _pick(_rival))))
+	box.add_child(_button("Partida personalizada", open_custom)) # --- partida a medida ---
 
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 10)
@@ -250,6 +252,21 @@ func _ready() -> void:
 	hint.offset_left = -24
 	hint.offset_top = -12
 	add_child(hint)
+
+
+# --- partida a medida ---
+var _custom: PartidaAMedida
+
+
+## Abre la pantalla «Partida personalizada» encima del menú (también --abrir=partida).
+func open_custom() -> void:
+	if _custom != null and is_instance_valid(_custom):
+		return
+	_custom = PartidaAMedida.new()
+	add_child(_custom)
+	_custom.volver.connect(func() -> void: _custom.queue_free())
+	_custom.empezar.connect(func(a: Dictionary) -> void: play_custom.emit(a))
+# --- fin partida a medida ---
 
 
 # --- opciones ---

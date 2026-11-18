@@ -264,6 +264,7 @@ func _apply_ambiente(terrain: String) -> void:
 
 
 func _new_game() -> void:
+	Palette.colores = [] # --- partida a medida ---
 	if _args.has("campana"):
 		_new_mission()
 		return
@@ -289,10 +290,12 @@ func _new_game() -> void:
 			rai.personality = cfg.get("estilo", r.get("estilo", "normal"))
 			sim.ais.append(rai)
 		sim.schedule(Sim.intify(r["comandos"]))
+		Palette.colores = Array(r.get("colores", [])).map(func(c: Variant) -> int: return int(c)) # --- partida a medida ---
 		_build_scene(true)
 		ctrl.enabled = false
 		hud.notify("Repetición de la última partida", 4.0)
 		return
+	_partida_a_medida() # --- partida a medida --- --jugadores, --partida=archivo.json, --preset
 	# Lugares (docs/11, paso 5): del menú, de --civs/--equipos o los dos de siempre.
 	var slots: Array = _args.get("lugares", [])
 	if slots.is_empty():
@@ -329,7 +332,8 @@ func _new_game() -> void:
 			ai_ids.append(pid)
 			ai_cfg[str(pid)] = {"dificultad": sl.get("dificultad", "normal"), "estilo": ai.personality}
 	opts["terreno"] = sim.terrain
-	_replay_meta = {"semilla": _seed, "opciones": opts, "ias": ai_ids, "ia_cfg": ai_cfg, "dificultad": _args.get("dificultad", "normal"), "estilo": _args.get("estilo", "normal")}
+	Palette.colores = Array(_args.get("colores", [])) # --- partida a medida ---
+	_replay_meta = {"semilla": _seed, "opciones": opts, "ias": ai_ids, "ia_cfg": ai_cfg, "dificultad": _args.get("dificultad", "normal"), "estilo": _args.get("estilo", "normal"), "colores": Palette.colores}
 	_build_scene(aivai)
 
 
@@ -349,7 +353,75 @@ static func match_opts(args: Dictionary) -> Dictionary:
 		out["recursos"] = str(args["recursos"])
 	if args.has("ubicacion"):
 		out["ubicacion_equipos"] = str(args["ubicacion"])
+	if str(args.get("tamano", "normal")) != "normal": # --- partida a medida ---
+		out["tamano"] = str(args["tamano"])
 	return out
+
+
+# --- partida a medida ---
+## La partida a medida desde la línea de comandos (proceso/31):
+## --jugadores="vos:guaranies:1:azul,ia:mapuches:dificil:2:rojo,…", --partida=archivo.json o
+## --preset=1v3 (con --jugadores o el archivo encima). Se traduce a lugares, colores y opciones;
+## lo que se pase aparte (--seed, --terreno, --tiempo…) gana sobre el archivo.
+func _partida_a_medida() -> void:
+	var file := str(_args.get("partida", ""))
+	if file.is_valid_int(): # --partida=N: tipo de partida del menú viejo (capturas)
+		file = ""
+	if not (_args.has("jugadores") or file != "" or _args.has("preset")) or _args.has("lugares"):
+		Palette.colores = []
+		return
+	var data := SimData.load_default()
+	var cfg := PartidaConfig.defecto()
+	if file != "":
+		var txt := FileAccess.get_file_as_string(file)
+		if txt == "":
+			push_error("--partida: no se pudo leer %s" % file)
+		else:
+			var c := PartidaConfig.desde_json(txt, data)
+			if not c.is_empty():
+				cfg = c
+	elif _args.has("preset"):
+		PartidaConfig.aplicar_preset(cfg, str(_args["preset"]))
+		for i in PartidaConfig.MAX: # los demás, con la dificultad pedida
+			cfg["jugadores"][i]["dificultad"] = str(_args.get("dificultad", "normal"))
+			cfg["jugadores"][i]["estilo"] = str(_args.get("estilo", "normal"))
+		if _args.has("civ"):
+			cfg["jugadores"][0]["civ"] = str(_args["civ"])
+	if _args.has("jugadores"):
+		var keep := cfg.duplicate(true)
+		cfg = PartidaConfig.con_jugadores(PartidaConfig.parse_jugadores(str(_args["jugadores"]), data))
+		for k in keep:
+			if k != "jugadores":
+				cfg[k] = keep[k]
+	var err := PartidaConfig.problema(cfg)
+	if err != "":
+		push_error("partida a medida: " + err)
+	var a := PartidaConfig.a_args(cfg)
+	if a.has("seed") and not _args.has("seed"):
+		_seed = int(a["seed"])
+	if a["terreno"] == "":
+		a.erase("terreno")
+	_args.merge(a, false)
+	var desc: Array = []
+	for i in (a["lugares"] as Array).size():
+		var sl: Dictionary = a["lugares"][i]
+		desc.append("%s:%s:%s:eq%d:%s" % ["ia" if sl["ia"] else "vos", sl["civ"], sl["dificultad"], int(sl["equipo"]), Palette.TEAM_NAMES[int(a["colores"][i]) % Palette.TEAM_NAMES.size()]])
+	print("PARTIDA A MEDIDA: semilla %d · %s" % [_seed, ", ".join(desc)])
+
+
+## --salir-a=MIN: a los MIN minutos de partida imprime un resumen y sale (guiones de prueba,
+## también con --headless).
+func _salir_a() -> void:
+	if not _args.has("salir-a") or sim == null or _saliendo:
+		return
+	if sim.tick * sim.tick_ms < int(float(_args["salir-a"]) * 60000.0):
+		return
+	var vivos: Array = []
+	for p in sim.players:
+		vivos.append("%d:%s%s pob %d edad %d" % [int(p["id"]), p["civ"], " (derrotado)" if p["defeated"] else "", int(p["pop"]), int(p["age"])])
+	print("PARTIDA A MEDIDA: %d:%02d de juego · %s" % [sim.tick * sim.tick_ms / 60000, (sim.tick * sim.tick_ms / 1000) % 60, " · ".join(vivos)])
+	salir(0)
+# --- fin partida a medida ---
 
 
 func _build_scene(aivai: bool) -> void:
@@ -422,6 +494,9 @@ func _build_scene(aivai: bool) -> void:
 		_menu.watch.connect(func(sd: int, civ: String, rival: String) -> void: _start(_menu.match_args().merged({"aivai": "1", "seed": str(sd), "civ": civ, "rival": rival, "estilo": _menu.style(), "dificultad": _menu.difficulty(), "terreno": _menu.terrain(), "lugares": _menu.slots()})))
 		_menu.campaigns.connect(_open_campaigns.bind(layer))
 		_menu.replay.connect(func() -> void: _start({"replay": "1"}))
+		_menu.play_custom.connect(func(a: Dictionary) -> void: _start(a)) # --- partida a medida ---
+		if _args.get("abrir", "") == "partida":
+			_menu.open_custom.call_deferred()
 		if _args.get("abrir", "") == "campanas":
 			_open_campaigns.call_deferred(layer)
 		elif _args.get("abrir", "") == "intro":
@@ -1019,6 +1094,7 @@ func _process(delta: float) -> void:
 	else:
 		view.render(1.0, 0.0)
 	_maybe_shot()
+	_salir_a() # --- partida a medida ---
 	if _args.has("perf"):
 		_perf_t += delta
 		if _perf_t >= 5.0:
