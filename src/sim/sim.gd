@@ -1270,7 +1270,7 @@ func step() -> void:
 	groups.tick()
 	_rebuild_hashes()
 	_update_players()
-	for b in actives:
+	for b in all_buildings():
 		if b.is_building() and not b.built:
 			b.workers_prev = b.workers_now
 			b.workers_now = 0
@@ -2389,9 +2389,18 @@ func _cleanup() -> void:
 		if e.alive:
 			keep_m.append(e)
 	_military = keep_m
+	var keep_b: Array[SimEntity] = []
+	for e in _buildings:
+		if e.alive:
+			keep_b.append(e)
+	_buildings = keep_b
 	for d: Dictionary in [_owned, _owned_b]:
 		for k in d:
-			d[k] = (d[k] as Array).filter(func(e: SimEntity) -> bool: return e.alive)
+			var keep_o: Array[SimEntity] = []
+			for e: SimEntity in d[k]:
+				if e.alive:
+					keep_o.append(e)
+			d[k] = keep_o
 
 
 # ---------------------------------------------------------------- Edificios
@@ -3329,7 +3338,7 @@ func _check_victory() -> void:
 	var has_hito := []
 	has_hito.resize(players.size())
 	has_hito.fill(false)
-	for b in actives:
+	for b in all_buildings():
 		if b.alive and b.owner >= 0 and b.is_building() and b.built and counts_for_victory(b):
 			has_hito[b.owner] = true
 	for p in players:
@@ -3713,6 +3722,7 @@ func _new_entity(cat: int, type: String, owner: int, def: Dictionary) -> SimEnti
 		_own_list(_owned, owner).append(e)
 		if cat == SimEntity.Cat.BUILDING:
 			_own_list(_owned_b, owner).append(e)
+			_buildings.append(e)
 		elif cat == SimEntity.Cat.UNIT and SimEntity.MILITARY_FNS.has(String(def.get("funcion", ""))):
 			_military.append(e)
 	by_id[e.id] = e
@@ -3725,22 +3735,29 @@ func _new_entity(cat: int, type: String, owner: int, def: Dictionary) -> SimEnti
 ## categoría no cambian nunca. Recorrer `owned(pid)` es recorrer `actives` filtrado por dueño.
 var _owned := {} # dueño -> Array[SimEntity] (unidades y edificios)
 var _owned_b := {} # dueño -> Array[SimEntity] (solo edificios)
+var _buildings: Array[SimEntity] = [] # todos los edificios, en orden de id
+func all_buildings() -> Array[SimEntity]:
+	return _buildings
+
+
 var _military: Array[SimEntity] = [] # unidades militares (is_military), en orden de id
 func military() -> Array[SimEntity]:
 	return _military
 
 
-func owned(pid: int) -> Array:
-	return _owned.get(pid, _NONE)
+var _no_ent: Array[SimEntity] = [] # vacía: no se le agrega nada
+func owned(pid: int) -> Array[SimEntity]:
+	return _owned.get(pid, _no_ent)
 
 
-func buildings_of(pid: int) -> Array:
-	return _owned_b.get(pid, _NONE)
+func buildings_of(pid: int) -> Array[SimEntity]:
+	return _owned_b.get(pid, _no_ent)
 
 
-static func _own_list(d: Dictionary, pid: int) -> Array:
+static func _own_list(d: Dictionary, pid: int) -> Array[SimEntity]:
 	if not d.has(pid):
-		d[pid] = []
+		var a: Array[SimEntity] = []
+		d[pid] = a
 	return d[pid]
 
 

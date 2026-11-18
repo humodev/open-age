@@ -823,7 +823,7 @@ func cumbi_target(pid: int) -> SimEntity:
 		return null
 	var cap: SimEntity = null
 	var rivals: Array[SimEntity] = []
-	for e in sim.actives:
+	for e in sim.all_buildings():
 		if e.alive and e.is_building() and e.capital:
 			if e.owner == pid:
 				cap = e
@@ -942,7 +942,7 @@ func on_kill(e: SimEntity, killer: SimEntity) -> void:
 		var n: int = lib.get("por_edificio", {}).get(e.type, int(lib.get("aldeanos", 1)))
 		var kp: Dictionary = sim.players[killer.owner]
 		var home: SimEntity = null
-		for b in sim.actives:
+		for b in sim.all_buildings():
 			if b.alive and b.owner == killer.owner and b.is_building() and b.capital:
 				home = b
 				break
@@ -1065,7 +1065,7 @@ func _wonder_tick() -> void:
 	_wfx.clear()
 	_slow.clear()
 	_protected.clear()
-	for w in sim.actives:
+	for w in sim.all_buildings():
 		if not (w.alive and w.owner >= 0 and w.is_building() and w.built and w.def.get("maravilla", false)):
 			continue
 		var fx := {}
@@ -1145,7 +1145,7 @@ func _flood(w: SimEntity, cfg: Dictionary) -> void:
 ## salvo a `torre_radio` casillas de una torre o un fuerte suyo (la respuesta de 1766).
 func _rising(w: SimEntity, cfg: Dictionary) -> void:
 	var cap: SimEntity = null
-	for e in sim.actives:
+	for e in sim.all_buildings():
 		if e.alive and e.owner == w.owner and e.is_building() and e.capital:
 			cap = e
 			break
@@ -1179,7 +1179,7 @@ func trepan(a: SimEntity, t: SimEntity) -> void:
 		return
 	var r := int(cfg["radio"]) * P
 	var home: SimEntity = null
-	for b in sim.actives:
+	for b in sim.all_buildings():
 		if b.alive and b.owner == t.owner and b.is_building() and b.built and (cfg["edificios"] as Array).has(b.type) and absi(b.x - t.x) <= r and absi(b.y - t.y) <= r:
 			home = b
 			break

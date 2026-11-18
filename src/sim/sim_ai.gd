@@ -1806,7 +1806,7 @@ func _threat_calc(centro: SimEntity) -> SimEntity:
 	var near_cells := {}
 	# El hito propio en obra también se defiende (`ataca_hito_en_obra`: quien ataca el ajeno cuida el suyo).
 	var guard_hito: bool = level.get("ataca_hito_en_obra", false)
-	for b in sim.actives:
+	for b in sim.buildings_of(player):
 		if b.alive and b.owner == player and b.is_building() and (b.built or guard_hito and (b.def.get("hito", false) or b.def.get("maravilla", false))) and b != centro and b.def.get("fuente", "") == "":
 			var bx := b.x / cell
 			var by := b.y / cell
@@ -2264,7 +2264,7 @@ func _hit_hito(army: Array[SimEntity]) -> bool:
 	var ref := army[0]
 	var target: SimEntity = null
 	var best_d := 1 << 60
-	for e in sim.actives:
+	for e in sim.all_buildings():
 		if e.alive and e.is_building() and not e.built and e.owner >= 0 and sim.enemies(player, e.owner) and e.def.get("hito", false):
 			var d := sim.dist_to(ref, e)
 			if d < best_d:
@@ -2364,7 +2364,7 @@ func _goal_builders() -> int:
 func _rival_wonder() -> SimEntity:
 	var best: SimEntity = null
 	var best_d := 1 << 60
-	for e in sim.actives:
+	for e in sim.all_buildings():
 		if e.alive and e.is_building() and e.owner >= 0 and sim.enemies(player, e.owner) and e.def.get("maravilla", false):
 			var d := Sim.dist(e.x, e.y, rally.x, rally.y)
 			if d < best_d:
@@ -2617,7 +2617,7 @@ func _at_flare(u: SimEntity) -> bool:
 func _ally_under(t: SimEntity) -> int:
 	var best := -1
 	var best_d := 1 << 60
-	for e in sim.actives:
+	for e in sim.all_buildings():
 		if e.alive and e.is_building() and e.owner >= 0 and e.owner != player and not sim.enemies(player, e.owner):
 			var d := sim.dist_to(t, e)
 			if d < best_d:
@@ -2633,7 +2633,7 @@ func _ally_threat(centro: SimEntity) -> SimEntity:
 	var near := int(eq.get("ia_ayuda_amenaza", 22000))
 	if radius <= 0:
 		return null
-	for e in sim.actives:
+	for e in sim.all_buildings():
 		if not e.alive or not e.is_building() or not e.capital or e.owner == player or e.owner < 0 or sim.enemies(player, e.owner):
 			continue
 		if Sim.dist(e.x, e.y, centro.x, centro.y) > radius:
