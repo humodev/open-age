@@ -102,13 +102,10 @@ static func correr(m: Node, check: Callable) -> void:
 		var poco := int(al.conteo.get("recurso", 0))
 		check.call("fluidez 4: la veta chica avisa que se agota (%d)" % poco, poco == 1)
 		veta.amount = 1
-		await _hasta(m, func() -> bool: return not veta.alive or veta.amount <= 0, 900)
+		var agotada := await _hasta(m, func() -> bool: return not veta.alive or veta.amount <= 0, 1200)
 		al.revisar()
-		var txt := ""
-		for a in hud.avisos.lista:
-			if String(a["texto"]).begins_with("Se acabó"):
-				txt = a["texto"]
-		check.call("fluidez 4: cuando se acaba, avisa con lugar («%s»)" % txt, txt != "" and int(al.conteo.get("recurso", 0)) == 2)
+		var txt: String = al.ultimo_recurso.get("texto", "")
+		check.call("fluidez 4: cuando se acaba, avisa con lugar («%s», agotada %s)" % [txt, agotada], txt.begins_with("Se acabó") and al.ultimo_recurso.get("lugar") is Vector3 and int(al.conteo.get("recurso", 0)) == 2)
 
 	# --- granja vacía ---
 	var granja := ""

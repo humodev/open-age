@@ -1,0 +1,16 @@
+FALLO hay un centro que entrena aldeanos
+OK    fluidez 4: dos ataques en zonas distintas avisan los dos (2 avisos, 2 con lugar)
+OK    fluidez 4: la misma zona no repite enseguida
+OK    fluidez 4: golpe a un edificio avisa como edificio
+OK    fluidez 4: Espacio va al último ataque
+OK    fluidez 4: la veta chica avisa que se agota (1)
+OK    fluidez 4: cuando se acaba, avisa con lugar («Se acabó la veta de piedra acá: buscá otra», agotada true)
+OK    fluidez 4: la granja vacía se marca (1) y aparece el botón
+OK    fluidez 4: «Llenar granjas» manda un aldeano (1)
+OK    fluidez 4: tributo ×5 con Mayús y ×10 con Ctrl
+OK    fluidez 4: el clic con Mayús manda 500
+OK    fluidez 4: el tributo periódico se prende y se apaga
+OK    fluidez 4: la rueda elige atacar, defender, juntarse, mirar o automática (["atacar", "defender", "juntarse", "mirar", ""])
+OK    fluidez 4: el filtro de recursos los saca del minimapa (0)
+OK    fluidez 4: el minimapa cambia de tamaño (250 → 320)
+AUTOTEST: FALLO

@@ -36,6 +36,7 @@ var _avisado_veta := {} # "kind:zx:zy" -> {"nivel": "poco"|"agotado", "t"}
 var _vacia_desde := {} # id de granja -> reloj desde que está sin granjero
 var vacias: Array[SimEntity] = [] # granjas marcadas (más de granja_espera_s sin granjero)
 var conteo := {} # para el autotest: clave del aviso -> veces
+var ultimo_recurso := {} # el último aviso de recurso: {texto, lugar} (autotest)
 
 
 func setup(h: Hud) -> void:
@@ -258,7 +259,8 @@ func _queda(kind: String, x: int, y: int) -> int:
 
 
 func _aviso_recurso(txt: String, s: Dictionary) -> void:
-	hud.notify(txt, -1.0, "decision", WorldView.to_world(int(s["x"]), int(s["y"])))
+	ultimo_recurso = {"texto": txt, "lugar": WorldView.to_world(int(s["x"]), int(s["y"]))}
+	hud.notify(txt, -1.0, "decision", ultimo_recurso["lugar"])
 	_sonar("aviso_recurso", "ui/ui_aviso_recurso.ogg")
 	_contar("recurso")
 
@@ -361,4 +363,4 @@ func _draw() -> void:
 		draw_circle(sp, 17.0, Color(0, 0, 0, 0.55))
 		draw_arc(sp, 17.0 + pulso * 3.0, 0, TAU, 24, Color(Palette.UI_ACCENT, 0.5 + 0.5 * pulso), 2.5, true)
 		Glyphs.draw(self, "granja", Rect2(sp - Vector2(11, 11), Vector2(22, 22)), Palette.UI_ACCENT)
-		draw_string(Hud.font_b, sp + Vector2(-30, 32), "vacía", HORIZONTAL_ALIGNMENT_CENTER, 60, 12, Palette.UI_TEXT)
+		draw_string(Hud.font_b, sp + Vector2(-30, -24), "vacía", HORIZONTAL_ALIGNMENT_CENTER, 60, 12, Palette.UI_TEXT)
