@@ -76,6 +76,8 @@ var rally_set := false
 var rally_x: int
 var rally_y: int
 var rally_target: int = -1
+var rally_res: String = "" # --- fluidez 2 --- tipo del recurso de la reunión ("arbol", "veta_piedra"…), para seguir si se agota
+var rally_kind: String = "" # y su recurso ("madera"…)
 var farmer: int = -1
 var garrison: Array[int] = [] # unidades alojadas
 var carry_src: String = "" # de dónde salió la carga: tipo de recurso, o "granja"
