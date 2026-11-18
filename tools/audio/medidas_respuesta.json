@@ -1,0 +1,282 @@
+[
+ {
+  "archivo": "assets/audio/civ/ayutthaya/ayutthaya_elegir_aldeano.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.7,
+  "duracion_s": 0.22,
+  "bytes": 4699
+ },
+ {
+  "archivo": "assets/audio/civ/ayutthaya/ayutthaya_elegir_edificio.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.4,
+  "duracion_s": 0.4,
+  "bytes": 5314
+ },
+ {
+  "archivo": "assets/audio/civ/ayutthaya/ayutthaya_elegir_tropa.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.4,
+  "duracion_s": 0.16,
+  "bytes": 4522
+ },
+ {
+  "archivo": "assets/audio/civ/ayutthaya/ayutthaya_orden_asedio.ogg",
+  "lufs": -19.9,
+  "pico_dbfs": -8.5,
+  "duracion_s": 0.45,
+  "bytes": 5129
+ },
+ {
+  "archivo": "assets/audio/civ/ayutthaya/ayutthaya_orden_civil.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.6,
+  "duracion_s": 0.31,
+  "bytes": 5351
+ },
+ {
+  "archivo": "assets/audio/civ/ayutthaya/ayutthaya_orden_montado.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.6,
+  "duracion_s": 0.24,
+  "bytes": 5042
+ },
+ {
+  "archivo": "assets/audio/civ/etiopia/etiopia_elegir_aldeano.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -3.8,
+  "duracion_s": 0.25,
+  "bytes": 5849
+ },
+ {
+  "archivo": "assets/audio/civ/etiopia/etiopia_elegir_edificio.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.4,
+  "duracion_s": 0.29,
+  "bytes": 6329
+ },
+ {
+  "archivo": "assets/audio/civ/etiopia/etiopia_elegir_tropa.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -5.3,
+  "duracion_s": 0.18,
+  "bytes": 5127
+ },
+ {
+  "archivo": "assets/audio/civ/etiopia/etiopia_orden_asedio.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.7,
+  "duracion_s": 0.34,
+  "bytes": 6751
+ },
+ {
+  "archivo": "assets/audio/civ/etiopia/etiopia_orden_civil.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.0,
+  "duracion_s": 0.34,
+  "bytes": 6454
+ },
+ {
+  "archivo": "assets/audio/civ/etiopia/etiopia_orden_montado.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.7,
+  "duracion_s": 0.27,
+  "bytes": 5902
+ },
+ {
+  "archivo": "assets/audio/civ/guaranies/guaranies_elegir_aldeano.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.4,
+  "duracion_s": 0.15,
+  "bytes": 5195
+ },
+ {
+  "archivo": "assets/audio/civ/guaranies/guaranies_elegir_edificio.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.5,
+  "duracion_s": 0.35,
+  "bytes": 4772
+ },
+ {
+  "archivo": "assets/audio/civ/guaranies/guaranies_elegir_tropa.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -5.0,
+  "duracion_s": 0.17,
+  "bytes": 4971
+ },
+ {
+  "archivo": "assets/audio/civ/guaranies/guaranies_orden_asedio.ogg",
+  "lufs": -20.0,
+  "pico_dbfs": -7.5,
+  "duracion_s": 0.45,
+  "bytes": 6443
+ },
+ {
+  "archivo": "assets/audio/civ/guaranies/guaranies_orden_civil.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.4,
+  "duracion_s": 0.24,
+  "bytes": 6158
+ },
+ {
+  "archivo": "assets/audio/civ/guaranies/guaranies_orden_montado.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.6,
+  "duracion_s": 0.27,
+  "bytes": 5884
+ },
+ {
+  "archivo": "assets/audio/civ/mapuches/mapuches_elegir_aldeano.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.6,
+  "duracion_s": 0.22,
+  "bytes": 4774
+ },
+ {
+  "archivo": "assets/audio/civ/mapuches/mapuches_elegir_edificio.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.6,
+  "duracion_s": 0.34,
+  "bytes": 5078
+ },
+ {
+  "archivo": "assets/audio/civ/mapuches/mapuches_elegir_tropa.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.0,
+  "duracion_s": 0.1,
+  "bytes": 4853
+ },
+ {
+  "archivo": "assets/audio/civ/mapuches/mapuches_orden_asedio.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.5,
+  "duracion_s": 0.4,
+  "bytes": 7335
+ },
+ {
+  "archivo": "assets/audio/civ/mapuches/mapuches_orden_civil.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.1,
+  "duracion_s": 0.25,
+  "bytes": 6315
+ },
+ {
+  "archivo": "assets/audio/civ/mapuches/mapuches_orden_montado.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -3.1,
+  "duracion_s": 0.23,
+  "bytes": 6618
+ },
+ {
+  "archivo": "assets/audio/civ/palmares/palmares_elegir_aldeano.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.4,
+  "duracion_s": 0.25,
+  "bytes": 5617
+ },
+ {
+  "archivo": "assets/audio/civ/palmares/palmares_elegir_edificio.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.5,
+  "duracion_s": 0.35,
+  "bytes": 4661
+ },
+ {
+  "archivo": "assets/audio/civ/palmares/palmares_elegir_tropa.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.8,
+  "duracion_s": 0.18,
+  "bytes": 4657
+ },
+ {
+  "archivo": "assets/audio/civ/palmares/palmares_orden_asedio.ogg",
+  "lufs": -20.0,
+  "pico_dbfs": -8.5,
+  "duracion_s": 0.45,
+  "bytes": 5959
+ },
+ {
+  "archivo": "assets/audio/civ/palmares/palmares_orden_civil.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.4,
+  "duracion_s": 0.39,
+  "bytes": 6199
+ },
+ {
+  "archivo": "assets/audio/civ/palmares/palmares_orden_montado.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.3,
+  "duracion_s": 0.27,
+  "bytes": 5386
+ },
+ {
+  "archivo": "assets/audio/civ/tawantinsuyu/tawantinsuyu_elegir_aldeano.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.5,
+  "duracion_s": 0.17,
+  "bytes": 5488
+ },
+ {
+  "archivo": "assets/audio/civ/tawantinsuyu/tawantinsuyu_elegir_edificio.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.5,
+  "duracion_s": 0.35,
+  "bytes": 4742
+ },
+ {
+  "archivo": "assets/audio/civ/tawantinsuyu/tawantinsuyu_elegir_tropa.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.6,
+  "duracion_s": 0.14,
+  "bytes": 5048
+ },
+ {
+  "archivo": "assets/audio/civ/tawantinsuyu/tawantinsuyu_orden_asedio.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.5,
+  "duracion_s": 0.4,
+  "bytes": 6936
+ },
+ {
+  "archivo": "assets/audio/civ/tawantinsuyu/tawantinsuyu_orden_civil.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -5.0,
+  "duracion_s": 0.3,
+  "bytes": 6671
+ },
+ {
+  "archivo": "assets/audio/civ/tawantinsuyu/tawantinsuyu_orden_montado.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.4,
+  "duracion_s": 0.24,
+  "bytes": 6104
+ },
+ {
+  "archivo": "assets/audio/ui/ui_cimiento.ogg",
+  "lufs": -19.6,
+  "pico_dbfs": -1.9,
+  "duracion_s": 0.72,
+  "bytes": 9690
+ },
+ {
+  "archivo": "assets/audio/ui/ui_elegir_aldeano.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.1,
+  "duracion_s": 0.17,
+  "bytes": 4701
+ },
+ {
+  "archivo": "assets/audio/ui/ui_elegir_edificio.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.5,
+  "duracion_s": 0.24,
+  "bytes": 5039
+ },
+ {
+  "archivo": "assets/audio/ui/ui_elegir_tropa.ogg",
+  "lufs": -70.0,
+  "pico_dbfs": -4.6,
+  "duracion_s": 0.21,
+  "bytes": 5217
+ }
+]

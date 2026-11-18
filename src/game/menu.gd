@@ -6,6 +6,7 @@ signal play(seed_value: int, civ: String, rival: String)
 signal watch(seed_value: int, civ: String, rival: String)
 signal campaigns
 signal replay
+signal play_custom(args: Dictionary) # --- partida a medida ---
 
 var _seed_edit: LineEdit
 var _civ: OptionButton
@@ -99,7 +100,7 @@ func _ready() -> void:
 	gap.custom_minimum_size = Vector2(0, 26)
 	box.add_child(gap)
 
-	var data := SimData.load_default()
+	var data := Textos.datos(SimData.load_default()) # --- ronda 7 --- sin «[verificar]»
 	# Las civs solo de IA (invasores y los rivales de campaña) no se eligen en el menú (D-018).
 	_keys = data.civs.keys().filter(func(k: String) -> bool: return not data.civs[k].civ.get("solo_ia", false))
 	_keys.sort()
@@ -185,7 +186,18 @@ func _ready() -> void:
 	_data = data
 	_build_slots() # --- lugares ---
 	_describe(data)
-	box.add_child(_button("Campañas", func() -> void: campaigns.emit()))
+	# --- partida a medida --- "Campañas" y "Partida personalizada" comparten renglón (entra a 1366×768)
+	var crow := HBoxContainer.new()
+	crow.add_theme_constant_override("separation", 10)
+	box.add_child(crow)
+	var cb := _button("Campañas", func() -> void: campaigns.emit())
+	cb.custom_minimum_size.x = 185
+	crow.add_child(cb)
+	var pb := _button("A medida", open_custom)
+	pb.custom_minimum_size.x = 185
+	pb.tooltip_text = "Partida personalizada: mapa, jugadores, equipos, colores y opciones (1 contra 3, 1 contra 6…)."
+	crow.add_child(pb)
+	# --- fin partida a medida ---
 	box.add_child(_button("Escaramuza contra la IA", func() -> void: play.emit(_seed(), _pick(_civ), _pick(_rival))))
 	box.add_child(_button("Mirar IA contra IA", func() -> void: watch.emit(_seed(), _pick(_civ), _pick(_rival))))
 
@@ -250,6 +262,21 @@ func _ready() -> void:
 	hint.offset_left = -24
 	hint.offset_top = -12
 	add_child(hint)
+
+
+# --- partida a medida ---
+var _custom: PartidaAMedida
+
+
+## Abre la pantalla «Partida personalizada» encima del menú (también --abrir=partida).
+func open_custom() -> void:
+	if _custom != null and is_instance_valid(_custom):
+		return
+	_custom = PartidaAMedida.new()
+	add_child(_custom)
+	_custom.volver.connect(func() -> void: _custom.queue_free())
+	_custom.empezar.connect(func(a: Dictionary) -> void: play_custom.emit(a))
+# --- fin partida a medida ---
 
 
 # --- opciones ---

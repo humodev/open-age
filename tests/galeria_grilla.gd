@@ -63,6 +63,7 @@ class Lienzo:
 
 	func _armar(civ: String) -> void:
 		var s := Sim.new(7, 2, null, {"civs": [civ, "mapuches" if civ != "mapuches" else "guaranies"]})
+		Textos.datos(s.data) # --- ronda 7 --- como en la partida: sin notas y con los niveles por tropa
 		var dd: SimData = s.dp(0)
 		s.players[0]["age"] = edad
 		# Banco a medias: alcanza para lo barato y no para lo caro.
@@ -96,10 +97,11 @@ class Lienzo:
 			ctl.selection = [b.id] as Array[int]
 			var cmds := ctl.commands()
 			_grillas.append(["%s · %s" % [civ, dd.edificios[t]["nombre"]], cmds, banco, rp])
-			if cmds.any(func(c: Dictionary) -> bool: return c.get("menu", "") == Controller.INVESTIGAR):
-				ctl.submenu = Controller.INVESTIGAR
-				_grillas.append(["%s · %s · investigaciones" % [civ, dd.edificios[t]["nombre"]], ctl.commands(), banco, rp])
-				ctl.submenu = ""
+			for menu in [Controller.INVESTIGAR, Controller.HERRERIA]: # --- ronda 7 --- también la herrería
+				if cmds.any(func(c: Dictionary) -> bool: return c.get("menu", "") == menu):
+					ctl.submenu = menu
+					_grillas.append(["%s · %s · %s" % [civ, dd.edificios[t]["nombre"], "investigaciones" if menu == Controller.INVESTIGAR else "herrería"], ctl.commands(), banco, rp])
+					ctl.submenu = ""
 		ctl.free()
 
 	## Una casilla en cada estado: disponible, en la cola, falta recurso, bloqueado por edad, tope,

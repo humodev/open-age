@@ -34,7 +34,32 @@ Jugaron el veterano de AoE4 y el jugador nuevo sobre main en `da4d074`, con el j
    - la victoria por sitios con un mínimo según la edad;
    - medir la IV con más semillas;
    - que la IA compre lo propio antes.
-3. **Usabilidad:**
+3. **Usabilidad: hecho (eada91b, [nota](../../28-iconos-y-estados/02-ronda-7.md)).** Las notas «[verificar]» ya no le llegan al jugador (siguen en data/); estrellita de recomendado con el orden de la IA; niveles con el nombre de la tropa («Lanceros veteranos»); herrería en submenú cuando la grilla se llena; nombres que se achican o se abrevian. Lo pedido era:
    - quitar del texto que ve el jugador los «[verificar]», que quedan solo en los documentos;
    - «recomendado» en la grilla;
    - nombres sin cortar.
+
+## Análisis de fluidez del veterano (pedido del autor)
+
+[Informe completo](03-veterano-fluidez.md).
+
+**La base ya está a la altura de AoE4:** grupos, cola con Mayús, formaciones, cola global, cursores, Alt y marcadores. El autotest da 147 de 147 y la batalla de 60 tropas corre a 59–92 fps.
+
+**Lo que más pesa:**
+1. **Cimientos encadenados:** se construye solo el último, y los que quedan a más de 10 casillas no los levanta nadie.
+2. **Sonidos:** no hay sonido al elegir ni al apoyar un cimiento.
+3. **Producción parada:** no hay aviso cuando un edificio deja de producir.
+4. **«¡Nos atacan!»:** el aviso es genérico, uno cada 15 s.
+5. **La cola de producción:** se sacan unidades con clic derecho y el tope pasa de 5 a 10.
+6. **El muro arrastrado:** muestra tramos y costo.
+7. **Granjas:** se pegan al depósito.
+
+**Paquetes propuestos:**
+- **A · Respuesta inmediata:** sonidos y destellos.
+- **B · Producción.**
+- **C · Constructor.**
+- **D · Avisos por zona.**
+- **E · Órdenes finas.**
+- **F · Pulido de lectura.**
+
+A y B no tocan la simulación y son los que más cambian la sensación.

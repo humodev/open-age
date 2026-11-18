@@ -1,0 +1,17 @@
+{
+  "preset": "1v6",
+  "terreno": "llano",
+  "tamano": "normal",
+  "semilla": 42,
+  "tiempo": 60,
+  "ubicacion": "juntos",
+  "jugadores": [
+    {"tipo": "vos", "civ": "guaranies", "equipo": 1, "color": 0},
+    {"tipo": "ia", "civ": "azar", "dificultad": "experta", "equipo": 2, "color": 1},
+    {"tipo": "ia", "civ": "azar", "dificultad": "experta", "equipo": 2},
+    {"tipo": "ia", "civ": "azar", "dificultad": "dificil", "equipo": 2},
+    {"tipo": "ia", "civ": "azar", "dificultad": "dificil", "equipo": 2},
+    {"tipo": "ia", "civ": "azar", "dificultad": "normal", "equipo": 2},
+    {"tipo": "ia", "civ": "azar", "dificultad": "normal", "equipo": 2}
+  ]
+}

@@ -74,6 +74,10 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null,
 	var size: int = data.reglas["mapa_tam"]
 	if num_players > 2 and not opts.get("sin_sitios", false):
 		size = int(data.reglas.get("mapa_tam_por_jugadores", {}).get(str(num_players), size))
+		# --- partida a medida --- tamaño chico/normal/grande (reglas.opciones_partida.tamano_mapa_pct)
+		var pct := int(data.reglas["opciones_partida"].get("tamano_mapa_pct", {}).get(str(opts.get("tamano", "normal")), 100))
+		if pct != 100:
+			size = size * pct / 100 / 8 * 8
 	map = SimMap.new(size, num_players)
 	fog = SimFog.new(size, num_players)
 	fog.map = map
@@ -239,6 +243,11 @@ func _apply(c: Dictionary) -> void:
 			_cmd_train(pid, c["building"], c["type"])
 		"cancel":
 			_cmd_cancel(pid, c["building"], c.get("index", -1))
+		"repetir":
+			_cmd_repeat(pid, int(c["building"]), str(c.get("type", "")), bool(c.get("on", true)))
+		"tope_aldeanos":
+			var rep: Dictionary = data.reglas.get("repeticion", {})
+			players[pid]["tope_aldeanos"] = clampi(int(c["n"]), int(rep.get("tope_min", 10)), int(rep.get("tope_max", 200)))
 		"rally":
 			_cmd_rally(pid, c["building"], c["x"], c["y"], c.get("target", -1))
 		"research":
@@ -546,12 +555,12 @@ func _cmd_build(pid: int, units: Array[SimEntity], type: String, tx: int, ty: in
 			_order_build(e, b)
 
 
-func _cmd_train(pid: int, bid: int, type: String) -> void:
+func _cmd_train(pid: int, bid: int, type: String, quiet := false) -> bool:
 	var b: SimEntity = by_id.get(bid)
 	if b == null or not b.alive or b.owner != pid or not b.built:
-		return
+		return false
 	if not (b.def.get("produce", []) as Array).has(type):
-		return
+		return false
 	var p := players[pid]
 	var udef: Dictionary = dp(pid).unidades.get(type, {})
 	if udef.has("maximo_por_edad"):
@@ -565,31 +574,98 @@ func _cmd_train(pid: int, bid: int, type: String) -> void:
 					if q == type:
 						have += 1
 		if have >= int(maxes[clampi(int(p["age"]) - 1, 0, maxes.size() - 1)]) + mods.engine_max_bonus(pid, type):
-			_notify(pid, "Máximo de %s en esta edad" % str(udef.get("nombre", type)))
-			return
+			if not quiet:
+				_notify(pid, "Máximo de %s en esta edad" % str(udef.get("nombre", type)))
+			return false
 	if p["age"] < dp(pid).unidades[type].get("edad_min", 1):
-		_notify(pid, "Requiere edad %s" % _roman(dp(pid).unidades[type]["edad_min"]))
-		return
+		if not quiet:
+			_notify(pid, "Requiere edad %s" % _roman(dp(pid).unidades[type]["edad_min"]))
+		return false
 	# --- paso 4 --- reemplazada desde esta edad (el ariete inca y el guaraní pasan al asedio de área)
 	var rep := dp(pid).replaced_by(type, int(p["age"]))
 	if rep != "":
-		_notify(pid, "Ahora se entrena %s" % str(dp(pid).unidades[rep].get("nombre", rep)))
-		return
+		if not quiet:
+			_notify(pid, "Ahora se entrena %s" % str(dp(pid).unidades[rep].get("nombre", rep)))
+		return false
 	# --- fin paso 4 ---
 	if b.queue.size() >= data.reglas["cola_max"]:
-		_notify(pid, "Cola llena")
-		return
+		if not quiet:
+			_notify(pid, "Cola llena")
+		return false
 	var why_t := train_block(pid, b, type)
 	if why_t != "":
-		_notify(pid, why_t)
-		return
+		if not quiet:
+			_notify(pid, why_t)
+		return false
 	var cost := train_cost(pid, b, type)
 	if not can_afford(pid, cost):
-		_notify(pid, "Recursos insuficientes")
-		return
+		if not quiet:
+			_notify(pid, "Recursos insuficientes")
+		return false
 	_pay(pid, cost)
 	b.queue.append(type)
 	b.queue_paid.append(cost.duplicate())
+	return true
+
+
+# --- frente 1 --- (proceso/30) producción que se repite sola, como la «auto-queue» de AoE4.
+## Prende o apaga la repetición de `type` en el edificio. Es estado del edificio: entra en las
+## repeticiones de partidas y en la red, porque llega como comando.
+func _cmd_repeat(pid: int, bid: int, type: String, on: bool) -> void:
+	var b: SimEntity = by_id.get(bid)
+	if b == null or not b.alive or b.owner != pid or not b.is_building():
+		return
+	if not on:
+		if type == "" or b.repeat == type:
+			b.repeat = ""
+		return
+	if type.begins_with("@") or not (b.def.get("produce", []) as Array).has(type):
+		return
+	b.repeat = type
+
+
+## Tope de aldeanos del jugador para la repetición (la regla y el comando tope_aldeanos).
+func villager_cap(pid: int) -> int:
+	return int(players[pid].get("tope_aldeanos", int(data.reglas.get("repeticion", {}).get("tope_aldeanos", 80))))
+
+
+## Aldeanos vivos y en cola del jugador (lo que mide el tope de la repetición).
+func villagers_and_queued(pid: int) -> int:
+	var n := 0
+	for e in actives:
+		if not e.alive or e.owner != pid:
+			continue
+		if e.fn == "civil" and e.is_unit():
+			n += 1
+		elif e.is_building():
+			for q in e.queue:
+				if not q.begins_with("@") and str(dp(pid).unidades.get(q, {}).get("funcion", "")) == "civil":
+					n += 1
+	return n
+
+
+## ¿Por qué no se repite ahora? "" si entra otra. No toca lo apartado (reserva_<recurso>),
+## necesita lugar de población y, con aldeanos, no pasa el tope.
+func repeat_block(b: SimEntity) -> String:
+	var pid := b.owner
+	var type := b.repeat
+	var p := players[pid]
+	var udef: Dictionary = dp(pid).unidades.get(type, {})
+	if int(p["pop"]) + int(udef.get("pob", 1)) > int(p["pop_cap"]):
+		return "pob"
+	var cost := train_cost(pid, b, type)
+	for k in cost:
+		if int(p["res"].get(k, 0)) - int(p.get("reserva_" + k, 0)) < int(cost[k]):
+			return "recursos"
+	if str(udef.get("funcion", "")) == "civil" and villagers_and_queued(pid) >= villager_cap(pid):
+		return "tope"
+	return ""
+
+
+func _repeat_try(b: SimEntity) -> void:
+	if repeat_block(b) == "":
+		_cmd_train(b.owner, b.id, b.repeat, true)
+# --- fin frente 1 ---
 
 
 func _cmd_cancel(pid: int, bid: int, index: int) -> void:
@@ -1130,6 +1206,10 @@ func _cmd_rally(pid: int, bid: int, x: int, y: int, target_id: int) -> void:
 	b.rally_x = x
 	b.rally_y = y
 	b.rally_target = target_id
+	# --- fluidez 2 --- se recuerda qué recurso era, por si se agota antes de que salga el aldeano
+	var rt: SimEntity = by_id.get(target_id)
+	b.rally_res = rt.type if rt != null and rt.alive and rt.is_resource() else ""
+	b.rally_kind = rt.res_kind if rt != null and rt.alive and rt.is_resource() else ""
 
 
 ## Suelta una partida que ya no se usa: mods, grupos, IA y escenario guardan `sim` y forman
@@ -1600,6 +1680,8 @@ func _do_gather(e: SimEntity) -> void:
 			t = find_resource(e.owner, e.gather_kind, e.x, e.y, data.reglas["radio_rebusca"], -1, e.id, same)
 		if t == null:
 			t = find_resource(e.owner, e.gather_kind, e.x, e.y, data.reglas["radio_rebusca"], -1, e.id)
+		if t == null and e.carry == 0: # --- fluidez 2 --- más lejos, cerca de otro depósito propio
+			t = _rebusca_lejos(e.owner, e.x, e.y, e.gather_kind, same, e.id)
 		if t == null:
 			if e.carry > 0:
 				e.order = O.RETURN
@@ -2255,6 +2337,8 @@ func _update_building(b: SimEntity) -> void:
 			if b.progress >= b.build_time:
 				_complete(b)
 		return
+	if b.repeat != "" and b.queue.is_empty(): # --- frente 1 ---
+		_repeat_try(b)
 	if not b.queue.is_empty():
 		var item: String = b.queue[0]
 		var p := players[b.owner]
@@ -2319,6 +2403,19 @@ func _spawn_from(b: SimEntity, type: String) -> void:
 		_order_gather(u, rt)
 	elif rt != null and rt.alive and u.fn == "civil" and rt.is_building() and rt.owner == b.owner and not rt.built:
 		_order_build(u, rt)
+	elif u.fn == "civil" and b.rally_kind != "" and (rt == null or not rt.alive or (rt.is_resource() and rt.amount <= 0)):
+		# --- fluidez 2 --- la reunión estaba en un recurso que se agotó: el más cercano del mismo
+		# tipo junto al punto, o lejos, cerca de otro depósito propio (reglas.rebusca_lejos).
+		var alt := find_resource(b.owner, b.rally_kind, b.rally_x, b.rally_y, data.reglas["radio_rebusca"], -1, u.id, b.rally_res)
+		if alt == null:
+			alt = find_resource(b.owner, b.rally_kind, b.rally_x, b.rally_y, data.reglas["radio_rebusca"], -1, u.id)
+		if alt == null:
+			alt = _rebusca_lejos(b.owner, b.rally_x, b.rally_y, b.rally_kind, b.rally_res, u.id)
+		if alt != null:
+			b.rally_target = alt.id # la reunión sigue en el recurso nuevo
+			_order_gather(u, alt)
+		else:
+			_cmd_move(b.owner, [u] as Array[SimEntity], b.rally_x, b.rally_y, false)
 	else:
 		_cmd_move(b.owner, [u] as Array[SimEntity], b.rally_x, b.rally_y, u.is_military())
 
@@ -2761,6 +2858,40 @@ func nearest_dropoff(owner: int, kind: String, x: int, y: int) -> SimEntity:
 			best = b
 			best_d = d
 	return best
+
+
+# --- fluidez 2 --- (proceso/30-fluidez/02-constructor.md)
+## Rebusca lejana: el recurso de `kind` (primero del tipo `only_type`) más cercano a (x, y) entre
+## los que están a reglas.rebusca_lejos.radio_deposito de un depósito propio terminado que lo
+## recibe, con ese depósito a rebusca_lejos.max o menos. null si no hay o si está apagada.
+func _rebusca_lejos(owner: int, x: int, y: int, kind: String, only_type: String, worker: int) -> SimEntity:
+	var cfg: Dictionary = data.reglas.get("rebusca_lejos", {})
+	var max_d := int(cfg.get("max", 0))
+	if max_d <= 0 or kind == "":
+		return null
+	var probe := SimEntity.new()
+	probe.x = x
+	probe.y = y
+	var tipos := [only_type, ""] if only_type != "" else [""]
+	for tipo: String in tipos:
+		var best: SimEntity = null
+		var best_d := 1 << 60
+		for b in actives:
+			if not b.alive or b.owner != owner or not b.is_building() or not b.built or not _accepts(b, kind):
+				continue
+			if dist_to(probe, b) > max_d:
+				continue
+			var r := find_resource(owner, kind, b.x, b.y, int(cfg["radio_deposito"]), -1, worker, tipo)
+			if r == null or (r.is_building() and tipo == ""):
+				continue # las granjas ya las busca la rebusca de siempre
+			var d := dist_to(probe, r)
+			if d < best_d or (d == best_d and r.id < best.id):
+				best = r
+				best_d = d
+		if best != null:
+			return best
+	return null
+# --- fin fluidez 2 ---
 
 
 func _nearest_unbuilt(owner: int, x: int, y: int, max_d: int) -> SimEntity:

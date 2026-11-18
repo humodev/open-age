@@ -1405,6 +1405,7 @@ func _projectile(from: Vector3, to: Vector3, arrow: bool) -> void:
 		mi.material_override = Meshes.mat(Palette.STONE_DARK)
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(mi)
+	_estela(mi, arrow) # --- fluidez 3 ---
 	mi.position = from
 	var dur := clampf(from.distance_to(to) / 16.0, 0.12, 0.6)
 	_fx.append({"kind": "proj", "node": mi, "t": 0.0, "dur": dur, "from": from, "to": to, "arc": from.distance_to(to) * 0.18})
@@ -1435,6 +1436,106 @@ func add_marker(pos: Vector3, color: Color) -> void:
 	mi.position = pos + Vector3(0, 0.04, 0)
 	add_child(mi)
 	_fx.append({"kind": "marker", "node": mi, "t": 0.0, "dur": 0.55, "mat": m, "color": color})
+
+
+# --- fluidez 3 --- respuesta inmediata (data/respuesta.json → efectos; src/game/respuesta.gd)
+static var _estela_mat := {}
+
+
+## Estela corta detrás de la flecha o de la piedra: dice de dónde viene el tiro. Va pegada al
+## proyectil, que mira hacia adelante con -Z: la estela queda en +Z.
+func _estela(proj: MeshInstance3D, flecha: bool) -> void:
+	var d: Dictionary = Respuesta.de("efectos", "estela")
+	if d.is_empty():
+		return
+	var largo := float(d.get("largo_flecha" if flecha else "largo_piedra", 0.8))
+	if not _estela_mat.has(flecha):
+		var m := StandardMaterial3D.new()
+		m.albedo_color = Color(Palette.UI_TEXT if flecha else Palette.DIRT, float(d.get("alfa", 0.45)))
+		m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		_estela_mat[flecha] = m
+	var t := MeshInstance3D.new()
+	t.mesh = Meshes.box(0.025 if flecha else 0.05, 0.025 if flecha else 0.05, largo)
+	t.material_override = _estela_mat[flecha]
+	t.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	t.position = Vector3(0, 0, largo * 0.5 + (0.2 if flecha else 0.05))
+	proj.add_child(t)
+
+
+## El blanco de la orden parpadea un instante: rojo si es un enemigo, acento si es un recurso o un
+## edificio propio. Sigue a la unidad si se mueve.
+func destello(e: SimEntity, color: Color) -> bool:
+	var d: Dictionary = Respuesta.de("efectos", "destello")
+	if d.is_empty() or e == null:
+		return false
+	var margen := float(d.get("margen", 1.25))
+	var mi: MeshInstance3D
+	if e.is_unit():
+		var rr := maxf(0.85, e.radius / 500.0 + 0.3) * margen
+		mi = _ring(0, Vector2(rr, rr))
+	else:
+		mi = _ring(1, Vector2(maxf(1.0, e.w) * margen, maxf(1.0, e.h) * margen))
+	mi.visible = true
+	var m: ShaderMaterial = mi.material_override
+	m.set_shader_parameter("color", color)
+	m.set_shader_parameter("thickness", float(d.get("grosor", 0.16)))
+	mi.position = to_world(e.x, e.y, 0.06)
+	add_child(mi)
+	_fx.append({"kind": "destello", "node": mi, "t": 0.0, "dur": float(d.get("dur_s", 0.45)), "mat": m,
+		"color": color, "id": e.id, "n": int(d.get("parpadeos", 2))})
+	return true
+
+
+## Aro que se abre donde cae la cámara al saltar (Espacio, grupo, aldeano inactivo).
+func pulso(pos: Vector3) -> bool:
+	var d: Dictionary = Respuesta.de("efectos", "pulso")
+	if d.is_empty():
+		return false
+	var tam := float(d.get("tam", 2.2))
+	var mi := _ring(0, Vector2(tam, tam))
+	mi.visible = true
+	var m: ShaderMaterial = mi.material_override
+	m.set_shader_parameter("thickness", 0.08)
+	mi.position = Vector3(pos.x, height_at(pos.x, pos.z) + 0.08, pos.z)
+	add_child(mi)
+	_fx.append({"kind": "pulso", "node": mi, "t": 0.0, "dur": float(d.get("dur_s", 0.45)), "mat": m,
+		"color": Palette.UI_ACCENT, "crece": float(d.get("crece", 3.0))})
+	return true
+
+
+## Nubecitas de polvo alrededor del cimiento recién apoyado (`lado`: casillas del edificio).
+func polvo_cimiento(pos: Vector3, lado: float) -> bool:
+	var d: Dictionary = Respuesta.de("efectos", "polvo_cimiento")
+	if d.is_empty():
+		return false
+	var n := int(d.get("nubes", 5))
+	var r := lado * float(d.get("radio_pct", 45)) / 100.0
+	for i in n:
+		var a := TAU * float(i) / float(n) + randf() * 0.5
+		var p := pos + Vector3(cos(a) * r, 0.15, sin(a) * r)
+		_dust(p, float(d.get("tam", 0.55)))
+		_polvo_claro()
+	_dust(pos + Vector3(0, 0.1, 0), float(d.get("tam", 0.55)) * 1.3)
+	_polvo_claro()
+	return true
+
+
+## El polvo del cimiento sale ya abierto y más claro que el de los golpes: se lee sobre la tierra.
+func _polvo_claro() -> void:
+	var f: Dictionary = _fx[_fx.size() - 1]
+	f["t"] = 0.15
+	(f["mat"] as StandardMaterial3D).albedo_color = Color(Palette.DIRT.lerp(Color.WHITE, 0.45), 0.7)
+
+
+## Cuántos efectos de un tipo hay vivos (el autotest lo lee).
+func fx_vivos(kind: String) -> int:
+	var n := 0
+	for f in _fx:
+		if f["kind"] == kind:
+			n += 1
+	return n
+# --- fin fluidez 3 ---
 
 
 # ---------------------------------------------------------------- Imagen
@@ -1734,6 +1835,23 @@ func _render_fx(delta: float) -> void:
 			"die_building":
 				node.position.y = -k * k * 3.2
 				node.rotation.z = sin(f["t"] * 30.0) * 0.015 * (1.0 - k)
+			# --- fluidez 3 ---
+			"destello":
+				var e: SimEntity = sim.by_id.get(f["id"])
+				var vd: Dictionary = visuals.get(f["id"], {})
+				if not vd.is_empty() and is_instance_valid(vd["node"]):
+					node.position = (vd["node"] as Node3D).position + Vector3(0, 0.06, 0)
+				elif e != null:
+					node.position = to_world(e.x, e.y, 0.06)
+				var on := fmod(k * float(f["n"]) * 2.0, 2.0) < 1.2
+				var cd: Color = f["color"]
+				(f["mat"] as ShaderMaterial).set_shader_parameter("color", Color(cd, (1.0 - k * 0.5) if on else 0.15))
+				node.scale = Vector3.ONE * (1.0 + 0.12 * sin(k * PI))
+			"pulso":
+				node.scale = Vector3.ONE * (1.0 + k * float(f["crece"]))
+				var cp: Color = f["color"]
+				(f["mat"] as ShaderMaterial).set_shader_parameter("color", Color(cp, (1.0 - k) * 0.9))
+			# --- fin fluidez 3 ---
 			"dust":
 				var s: float = f["size"]
 				node.scale = Vector3.ONE * (0.2 + k * s * 1.6)

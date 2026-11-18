@@ -70,7 +70,20 @@ static func team(pid: int) -> Color:
 			return RELATIVA["aliado"]
 		return RELATIVA["rival"]
 	# --- fin paleta ---
-	return TEAM[pid % TEAM.size()]
+	return TEAM[color_idx(pid) % TEAM.size()]
+
+
+# --- partida a medida --- color elegido por jugador (índice de TEAM); vacío = el de siempre.
+## Lo fija main.gd al armar la partida; no es estado de la simulación.
+static var colores: Array = []
+
+
+## Índice de color de un jugador: el elegido en la partida a medida o su número.
+static func color_idx(pid: int) -> int:
+	if pid >= 0 and pid < colores.size() and int(colores[pid]) >= 0:
+		return int(colores[pid])
+	return pid
+# --- fin partida a medida ---
 
 
 # --- paleta ---
@@ -140,5 +153,5 @@ static func team_name(pid: int) -> String:
 		return "Naturaleza"
 	if modo == "relativa":
 		return "Vos" if pid == local else ("Aliado" if es_aliado.is_valid() and es_aliado.call(local, pid) else "Rival")
-	return TEAM_NAMES[pid % TEAM_NAMES.size()]
+	return TEAM_NAMES[color_idx(pid) % TEAM_NAMES.size()] # --- partida a medida ---
 # --- fin paleta ---

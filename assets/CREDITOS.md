@@ -19,6 +19,7 @@ Los archivos fueron recortados, mezclados, normalizados y convertidos a Ogg Vorb
 | ui_alerta_ataque.ogg | https://opengameart.org/content/their-coming-generic-horn-sound (`theircoming3.ogg`) | StumpyStrust | CC0 |
 | ui_campana.ogg | https://opengameart.org/content/100-cc0-sfx (`bell_03.ogg`) | rubberduck | CC0 |
 | ui_campana_suave.ogg | https://opengameart.org/content/bell-dingschimes (`bell_ding1.wav`) | PWL | CC0 |
+| ui_elegir_{aldeano,tropa,edificio}.ogg, ui_cimiento.ogg | obra propia, sintetizada con `tools/audio/generar_respuesta.py` (golpes de madera; etapa 30, frente 3) | Raíces | CC0 |
 
 ## Audio: mundo (`audio/mundo/`)
 

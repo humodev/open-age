@@ -66,6 +66,14 @@ var _line_drag := false
 var _line_start := Vector2i.ZERO
 var _line_ghosts: Array[MeshInstance3D] = []
 var _ghost_mat: StandardMaterial3D
+# --- fluidez 2 --- muro: encadenar desde el extremo, puerta en el trazo, cifras y huecos
+var _line_chain := Vector2i(-1, -1) # extremo del último trazo puesto con Mayús
+var _line_skip := false # el trazo arranca en el extremo anterior: esa casilla ya tiene muro
+var _line_gate := Vector2i(-1, -1) # casilla del trazo marcada como puerta (G mientras se arrastra)
+var linea_info: Array = [] # renglones [texto, color] junto al cursor mientras se arrastra
+var huecos: Array = [] # casillas [x, y] de los huecos del último muro (se marcan unos segundos)
+var huecos_hasta := 0 # Time.get_ticks_msec() hasta el que se marcan
+# --- fin fluidez 2 ---
 var press_pos := Vector2.ZERO
 var _pressing := false
 var dragging := false
@@ -141,6 +149,7 @@ func _set_selection(ids: Array[int], keep_menu: bool = false) -> void:
 	if mode == "place" and not _has_villager():
 		cancel_mode()
 	selection_changed.emit()
+	if not keep_menu: Respuesta.al_elegir(self, ids)  # --- fluidez 3 ---
 
 
 # --- ronda 6 ---
@@ -269,6 +278,10 @@ func commands() -> Array[Dictionary]:
 			out.append({"slot": Grilla.fija("militar", 1), "id": "militar", "icon": "menu_militar", "kind": "submenu", "menu": Grilla.MILITAR, "name": "Construir: militar y defensa", "cost": {}, "desc": DESCS["menu_militar"], "locked": ""})
 			out.append({"slot": Grilla.fija("detener", 5), "id": "detener", "icon": "detener", "kind": "stop", "name": "Detener", "cost": {}, "desc": DESCS["detener"], "locked": ""})
 			out.append({"slot": Grilla.fija("refugio", 7), "id": "refugio", "icon": "refugio", "kind": "garrison", "name": "Refugiarse", "cost": {}, "desc": DESCS["refugio"], "locked": ""})
+			# --- fluidez 2 --- reparar lo dañado de la zona, repartidos y en cadena
+			var rz := int(MundoColocacion.cfg().get("reparar_zona_radio", 12))
+			out.append({"slot": Grilla.fija("reparar_zona", 6), "id": "reparar_zona", "icon": "vida", "kind": "reparar_zona", "name": "Reparar (zona)", "cost": {}, "desc": "Los aldeanos elegidos se reparten entre los edificios propios dañados a %d casillas, del más cercano al más lejano, y siguen en cadena hasta que no quede nada." % rz, "locked": "" if _danados_zona() > 0 else "No hay edificios dañados a %d casillas" % rz})
+			# --- fin fluidez 2 ---
 		else:
 			out.append({"slot": Grilla.fija("volver", 11), "id": "volver", "icon": "volver", "kind": "back", "name": "Volver", "cost": {}, "desc": DESCS["volver"], "locked": ""})
 		# --- fin grilla ---
@@ -362,7 +375,7 @@ func commands() -> Array[Dictionary]:
 			used[root] = true
 			var why := sim.research_block(local, tech)
 			var pref := int(t["ranura"]) if produce.is_empty() else int((Grilla.cfg().get("investigaciones_con_tropa", {}) as Dictionary).get(tech if not t.has("requiere") else root, t["ranura"]))
-			var rc := {"slot": pref, "id": tech, "icon": Iconos.de_tecnologia(tech, t), "kind": "research", "name": tech_name(tech), "cost": sim.tech_cost(local, tech), "desc": effects_text(t["efectos"]), "locked": why, "tech": true, "building": first.id}
+			var rc := {"slot": pref, "id": tech, "icon": Iconos.de_tecnologia(tech, t), "kind": "research", "name": tech_name(tech), "corto": str(t.get("nombre_corto", "")), "cost": sim.tech_cost(local, tech), "desc": effects_text(t["efectos"]), "locked": why, "tech": true, "building": first.id}
 			if t.get("propia", false): # --- paso 6 --- el saber y su evidencia
 				rc["desc"] = "%s\n%s\nEvidencia: %s" % [rc["desc"], t.get("desc", ""), t.get("evidencia", "")]
 			# --- paso 3 --- La escuela de la IV va en su propio submenú, con el nombre del pueblo.
@@ -370,6 +383,7 @@ func commands() -> Array[Dictionary]:
 				school.append(rc)
 			else:
 				research.append(rc)
+		_marcar_recomendado(research + school, first) # --- ronda 7 ---
 		if submenu == ESCUELA:
 			var inner: Array[Dictionary] = [{"slot": Grilla.fija("volver", 11), "id": "volver", "icon": "volver", "kind": "back", "name": "Volver", "cost": {}, "desc": "Vuelve a la grilla del edificio (también Esc o clic derecho sobre la grilla).", "locked": ""}]
 			_repartir(school, {Grilla.fija("volver", 11): "volver"})
@@ -379,7 +393,7 @@ func commands() -> Array[Dictionary]:
 			return inner
 		var esc := escuela_info()
 		if not school.is_empty() and int(sim.players[local]["age"]) >= int(sim.dp(local).tecnologias[school[0]["id"]].get("edad_min", 1)):
-			out.append({"slot": Grilla.fija("escuela", 7), "id": ESCUELA, "icon": "escuela", "kind": "submenu", "menu": ESCUELA, "name": "%s (%d)" % [esc["nombre"], school.size()], "cost": {}, "desc": "%s\nMejoras: %s." % [esc["desc"], ", ".join(school.map(func(c: Dictionary) -> String: return c["name"]))], "locked": ""})
+			out.append({"slot": Grilla.fija("escuela", 7), "id": ESCUELA, "icon": "escuela", "kind": "submenu", "menu": ESCUELA, "name": "%s (%d)" % [esc["nombre"], school.size()], "cost": {}, "desc": "%s\nMejoras: %s." % [esc["desc"], ", ".join(school.map(func(c: Dictionary) -> String: return c["name"]))], "locked": "", "recomendado": school.any(func(c: Dictionary) -> bool: return c.get("recomendado", false))})
 		# --- fin paso 3 ---
 		if first.capital or first.type == "centro":
 			var on: bool = sim.players[local]["alarm"]
@@ -462,6 +476,23 @@ func _ubicar_investigaciones(out: Array[Dictionary], research: Array[Dictionary]
 	var free := 0
 	for sl in 12:
 		free += 0 if taken.has(sl) else 1
+	# --- ronda 7 --- (veterano: el cuartel lleno en la III, 12 de 12) Si no quedan libres_min
+	# casillas libres, la herrería va a su submenú y deja lugar para lo de la IV.
+	var herr: Array[Dictionary] = research.filter(func(c: Dictionary) -> bool: return sim.dp(local).tecnologias.get(c["id"], {}).has("herreria"))
+	if research.size() > free - int(Grilla.cfg().get("libres_min", 0)) and herr.size() > 1 and research.size() - herr.size() + 1 <= free - int(Grilla.cfg().get("libres_min", 0)):
+		if submenu == HERRERIA:
+			var inner_h: Array[Dictionary] = [{"slot": Grilla.fija("volver", 11), "id": "volver", "icon": "volver", "kind": "back", "name": "Volver", "cost": {}, "desc": "Vuelve a la grilla del edificio (también Esc o clic derecho sobre la grilla).", "locked": ""}]
+			_repartir(herr, {Grilla.fija("volver", 11): "volver"})
+			for c in herr:
+				if int(c["slot"]) >= 0:
+					inner_h.append(c)
+			return inner_h
+		var rest: Array[Dictionary] = [{"slot": int(herr[0]["slot"]), "id": HERRERIA, "icon": "yunque", "kind": "submenu", "menu": HERRERIA, "name": "Herrería (%d)" % herr.size(), "cost": {}, "desc": "Ataque y armadura de la tropa: " + ", ".join(herr.map(func(c: Dictionary) -> String: return c["name"])) + ".", "locked": "", "recomendado": herr.any(func(c: Dictionary) -> bool: return c.get("recomendado", false))}]
+		rest.append_array(research.filter(func(c: Dictionary) -> bool: return not herr.has(c)))
+		_repartir(rest, taken)
+		out.append_array(rest)
+		return out
+	# --- fin ronda 7 ---
 	if research.size() <= free:
 		_repartir(research, taken)
 		out.append_array(research)
@@ -476,13 +507,72 @@ func _ubicar_investigaciones(out: Array[Dictionary], research: Array[Dictionary]
 		return inner
 	for alt in [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]:
 		if not taken.has(alt):
-			out.append({"slot": alt, "id": INVESTIGAR, "icon": "investigar", "kind": "submenu", "menu": INVESTIGAR, "name": "Investigaciones (%d)" % research.filter(func(c: Dictionary) -> bool: return c["kind"] == "research").size(), "cost": {}, "desc": "Mejoras que se investigan en este edificio: " + ", ".join(research.map(func(c: Dictionary) -> String: return c["name"])) + ".", "locked": ""})
+			out.append({"slot": alt, "id": INVESTIGAR, "icon": "investigar", "kind": "submenu", "menu": INVESTIGAR, "name": "Investigaciones (%d)" % research.filter(func(c: Dictionary) -> bool: return c["kind"] == "research").size(), "cost": {}, "desc": "Mejoras que se investigan en este edificio: " + ", ".join(research.map(func(c: Dictionary) -> String: return c["name"])) + ".", "locked": "", "recomendado": research.any(func(c: Dictionary) -> bool: return c.get("recomendado", false))})
 			break
 	return out
 
 
 const INVESTIGAR := "investigar"
 const ESCUELA := "escuela" # --- paso 3 --- submenú de la escuela de la IV
+const HERRERIA := "herreria" # --- ronda 7 --- submenú de la herrería cuando la grilla se llena
+
+
+## --- ronda 7 --- (jugador nuevo: «¿qué compro primero?») Marca con `recomendado` la mejora que
+## conviene comprar primero en este edificio, entre las que ya se pueden pedir, en el orden de
+## compra de la IA (data/interfaz.json → grilla._doc_recomendado). Solo lee la simulación.
+func _marcar_recomendado(cands: Array, b: SimEntity) -> void:
+	var dd := sim.dp(local)
+	var best: Dictionary = {}
+	var best_rank := 1 << 30
+	for c: Dictionary in cands:
+		if str(c.get("locked", "")) != "":
+			continue
+		var r := _rango_recomendado(String(c["id"]), dd.tecnologias.get(c["id"], {}), b)
+		if r < best_rank:
+			best_rank = r
+			best = c
+	if not best.is_empty():
+		best["recomendado"] = true
+		best["desc"] = "★ Recomendada: la que conviene comprar primero acá.\n" + str(best.get("desc", ""))
+
+
+## Menor es mejor; 1 << 30 si la IA no la tiene en ningún orden.
+func _rango_recomendado(tech: String, t: Dictionary, b: SimEntity) -> int:
+	if t.get("ia_prioridad", false):
+		return 0
+	var lin: String = t.get("linea", "")
+	if lin != "" and t.has("nivel"):
+		var n := int(_tropa_por_linea().get(lin, 0))
+		if n >= int(sim.data.reglas.get("ia_niveles", {}).get("tropa_minima", 1)):
+			return 1000 - mini(n, 999)
+	var tardias: Array = sim.data.reglas.get("ia_compras_tardias", {}).get("orden", [])
+	if tardias.has(tech):
+		return 2000 + tardias.find(tech)
+	var propias: Array = sim.dp(local).civ.get("ia_propias", {}).get("orden", [])
+	for i in propias.size():
+		if str((propias[i] as Dictionary).get("tec", "")) == tech:
+			return 3000 + i
+	if lin != "" and t.has("nivel") and sim.dp(local).lines_made_by(b.def).has(lin):
+		return 4000
+	return 1 << 30
+
+
+var _tropa_tick := -1
+var _tropa: Dictionary = {}
+
+
+## Tropa propia por línea (una vez por tick).
+func _tropa_por_linea() -> Dictionary:
+	if _tropa_tick == sim.tick:
+		return _tropa
+	_tropa_tick = sim.tick
+	_tropa = {}
+	for e in sim.actives:
+		if e.alive and e.owner == local and e.is_unit():
+			var l := SimData.line_of(e.def)
+			if l != "":
+				_tropa[l] = int(_tropa.get(l, 0)) + 1
+	return _tropa
 const _ORDEN_LIBRE: Array[int] = [4, 5, 6, 7, 8, 9, 10, 0, 1, 2, 3, 11]
 
 
@@ -559,10 +649,15 @@ func _marcar_estados(out: Array[Dictionary]) -> void:
 				var udef: Dictionary = dd.unidades.get(c["id"], {})
 				c["edad"] = int(udef.get("edad_min", 1))
 				var n := 0
+				var rep := false # --- frente 1 --- algún edificio elegido lo repite
 				for e in sel:
 					if e.is_building() and e.owner == local:
 						n += e.queue.count(c["id"])
+						rep = rep or e.repeat == c["id"]
 				c["en_cola"] = n
+				c["repite"] = rep
+				if c["locked"] == "":
+					c["desc"] = (str(c.get("desc", "")) + "\n" if str(c.get("desc", "")) != "" else "") + "Ctrl + clic: %s. Clic derecho: saca una de la cola (Mayús: 5)." % ("deja de repetir" if rep else "se repite sola (como AoE4)")
 				if c["locked"] != "":
 					continue
 				if udef.has("maximo_por_edad"):
@@ -659,6 +754,10 @@ func run_command(cmd: Dictionary) -> void:
 		"train":
 			# --- veterano ronda 4 --- como AoE4: cada pulsación entrena UNA unidad en el edificio
 			# de cola más corta (Mayús: 5 en total, no 5 por edificio).
+			# --- frente 1 --- Ctrl + clic (o Ctrl + tecla): prende o apaga la repetición.
+			if Input.is_key_pressed(KEY_CTRL):
+				alternar_repeticion(cmd)
+				return
 			var shift := Input.is_key_pressed(KEY_SHIFT)
 			for k in (5 if shift else 1):
 				var e := cola_mas_corta(cmd)
@@ -673,6 +772,11 @@ func run_command(cmd: Dictionary) -> void:
 				cola.limpiar(_own_unit_ids())
 			# --- fin mundo ---
 			sim.push_command({"t": "stop", "player": local, "ids": _own_unit_ids()})
+		# --- fluidez 2 ---
+		"reparar_zona":
+			if cola != null and cola.reparar_zona(_own_unit_ids()) == 0:
+				hud_notify("No hay edificios dañados cerca")
+		# --- fin fluidez 2 ---
 		"research":
 			sim.push_command({"t": "research", "player": local, "building": cmd["building"], "tech": cmd["id"]})
 		"garrison":
@@ -747,12 +851,73 @@ func cola_mas_corta(cmd: Dictionary) -> SimEntity:
 # --- fin veterano ronda 4 ---
 
 
+# --- frente 1 --- (proceso/30) producción que se maneja sola
+## Edificios elegidos, propios y terminados, del tipo del edificio del comando.
+func _edificios_del_cmd(cmd: Dictionary) -> Array[SimEntity]:
+	var out: Array[SimEntity] = []
+	var tipo: String = sim.by_id[cmd["building"]].type if sim.by_id.has(cmd["building"]) else ""
+	for e in selected_entities():
+		if e.is_building() and e.built and e.type == tipo and e.owner == local:
+			out.append(e)
+	return out
+
+
+## Prende la repetición de la unidad del comando en los edificios elegidos de ese tipo; si
+## todos ya la repetían, la apaga. Va como comando de la simulación (repeticiones y red).
+## Devuelve si quedó prendida.
+func alternar_repeticion(cmd: Dictionary) -> bool:
+	var bs := _edificios_del_cmd(cmd)
+	var todos := not bs.is_empty()
+	for e in bs:
+		todos = todos and e.repeat == cmd["id"]
+	for e in bs:
+		sim.push_command({"t": "repetir", "player": local, "building": e.id, "type": cmd["id"], "on": not todos})
+	if not bs.is_empty():
+		var nombre := str(cmd.get("name", cmd["id"]))
+		hud_notify("%s: %s" % [nombre, "ya no se repite" if todos else "se repite sola (Ctrl + clic para cortarla)"], "info")
+	return not todos
+
+
+## Saca `n` unidades del tipo del comando de la cola, de la última hacia atrás y del edificio
+## elegido que tenga más de ese tipo (el reverso de cola_mas_corta). Devuelve cuántas sacó.
+func sacar_de_cola(cmd: Dictionary, n: int) -> int:
+	var colas := {} # id -> copia de la cola (los índices se corren al sacar en el mismo tick)
+	var bs := _edificios_del_cmd(cmd)
+	for e in bs:
+		colas[e.id] = e.queue.duplicate()
+	var hechas := 0
+	for k in n:
+		var mejor: SimEntity = null
+		var mejor_n := 0
+		for e in bs:
+			var c: int = (colas[e.id] as Array).count(cmd["id"])
+			if c > mejor_n:
+				mejor = e
+				mejor_n = c
+		if mejor == null:
+			break
+		var q: Array = colas[mejor.id]
+		var idx := q.rfind(cmd["id"])
+		q.remove_at(idx)
+		sim.push_command({"t": "cancel", "player": local, "building": mejor.id, "index": idx})
+		hechas += 1
+	return hechas
+
+
+## Tope de aldeanos de la repetición: sube o baja un paso (data/reglas.json → repeticion).
+func cambiar_tope_aldeanos(signo: int) -> void:
+	var rep: Dictionary = sim.data.reglas.get("repeticion", {})
+	sim.push_command({"t": "tope_aldeanos", "player": local, "n": sim.villager_cap(local) + signo * int(rep.get("paso", 5))})
+# --- fin frente 1 ---
+
+
 func cancel_mode() -> void:
 	mode = ""
 	place_type = ""
 	_ghost.visible = false
 	_line_drag = false
 	_show_line([])
+	_line_chain = Vector2i(-1, -1) # --- fluidez 2 ---
 	view.set_grid(false)
 	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 
@@ -796,13 +961,18 @@ func _process(_delta: float) -> void:
 		var g := cam.ground_at(m)
 		var tx := int(floor(g.x - tam[0] / 2.0 + 0.5))
 		var ty := int(floor(g.z - tam[1] / 2.0 + 0.5))
+		# --- fluidez 2 --- la granja se pega al depósito de alimento o a la granja vecina
+		var pegada := MundoColocacion.pegar_granja(sim, local, place_type, tx, ty)
+		tx = pegada.x
+		ty = pegada.y
+		# --- fin fluidez 2 ---
 		_ghost.position = Vector3(tx + tam[0] / 2.0, 0.02, ty + tam[1] / 2.0)
 		var ok := sim.can_place(place_type, tx, ty, local) and sim.can_afford(local, sim.dp(local).cost_of(place_type, sim.players[local]["age"]))
 		_ghost_mat.albedo_color = Color(0.5, 1.0, 0.6, 0.55) if ok else Color(1.0, 0.35, 0.3, 0.55)
 		_ghost.set_meta("tile", Vector2i(tx, ty))
 		if _line_drag:
 			_ghost.visible = false
-			_show_line(line_tiles(_line_start, Vector2i(tx, ty)))
+			_show_line(trazo(Vector2i(tx, ty))) # --- fluidez 2 ---
 		else:
 			_ghost.visible = true
 
@@ -834,6 +1004,12 @@ func cursor_action(m: Vector2) -> String:
 	# El mismo blanco que tomaría el clic derecho (_right_click), calculado en este punto: no el
 	# `hovered` del cuadro anterior, que podía ser otro (el autotest lo veía de a ratos).
 	var t: SimEntity = sim.by_id.get(pick(m, true))
+	# --- fluidez 2 --- sobre una huella fantasma, el aldeano reconstruye
+	if (t == null or not t.alive) and cola != null and units.any(func(e: SimEntity) -> bool: return e.fn == "civil"):
+		var gp := cam.ground_at(m)
+		if not cola.huella_en(int(gp.x * P), int(gp.z * P)).is_empty():
+			return "construir"
+	# --- fin fluidez 2 ---
 	if t == null or not t.alive or units.has(t):
 		return "mover"
 	var civil := false
@@ -895,6 +1071,12 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 	# --- fin órdenes ---
+	# --- fluidez 2 --- G mientras se arrastra el muro: la casilla bajo el cursor va de puerta
+	if _line_drag and event is InputEventKey and event.pressed and not event.echo and (event as InputEventKey).physical_keycode == KEY_G:
+		marcar_puerta()
+		get_viewport().set_input_as_handled()
+		return
+	# --- fin fluidez 2 ---
 	if event is InputEventMouseButton and not event.pressed and event.button_index == MOUSE_BUTTON_LEFT and _line_drag:
 		_finish_line()
 		get_viewport().set_input_as_handled()
@@ -912,6 +1094,12 @@ func _mouse_button(mb: InputEventMouseButton) -> void:
 		if mode == "place" and sim.dp(local).edificios[place_type].get("linea", false):
 			_line_drag = true
 			_line_start = _ghost.get_meta("tile", Vector2i.ZERO)
+			# --- fluidez 2 --- con Mayús, el trazo sigue desde el extremo del anterior
+			_line_gate = Vector2i(-1, -1)
+			_line_skip = Input.is_key_pressed(KEY_SHIFT) and _line_chain.x >= 0
+			if _line_skip:
+				_line_start = _line_chain
+			# --- fin fluidez 2 ---
 			return
 		if mode == "place":
 			_place()
@@ -1068,6 +1256,7 @@ func flare(g: Vector3) -> void:
 func _right_click(pos: Vector2, rumbo: int = -1) -> void:
 	var sel := selected_entities()
 	if sel.is_empty() or sel[0].owner != local:
+		Respuesta.error(self)  # --- fluidez 3 ---
 		return
 	var g := cam.ground_at(pos)
 	var target := pick(pos, true)
@@ -1075,6 +1264,18 @@ func _right_click(pos: Vector2, rumbo: int = -1) -> void:
 	if not ids.is_empty():
 		var t: SimEntity = sim.by_id.get(target)
 		_orden_ack()
+		# --- fluidez 2 --- clic derecho de los aldeanos en una huella fantasma: reconstruir
+		if t == null and cola != null and _has_villager():
+			var h: Dictionary = cola.huella_en(int(g.x * P), int(g.z * P))
+			if not h.is_empty():
+				var civiles := ids.filter(func(id: int) -> bool: return (sim.by_id[id] as SimEntity).fn == "civil")
+				var why: String = cola.reconstruir(civiles, h, Input.is_key_pressed(KEY_SHIFT))
+				if why != "":
+					hud_notify(why)
+				else:
+					view.add_marker(g, Palette.UI_ACCENT)
+				return
+		# --- fin fluidez 2 ---
 		# --- mundo ---
 		if cola != null and cola.orden_derecha(ids, t, g, Input.is_key_pressed(KEY_SHIFT)):
 			view.add_marker(g, Color(Palette.UI_GOOD, 0.6))
@@ -1088,6 +1289,7 @@ func _right_click(pos: Vector2, rumbo: int = -1) -> void:
 			sim.push_command({"t": "target", "player": local, "ids": ids, "target": t.id, "suelto": loose})
 			var col := Palette.UI_BAD if t.owner >= 0 and t.owner != local else Palette.UI_ACCENT
 			view.add_marker(WorldView.to_world(t.x, t.y), col)
+			Respuesta.blanco(self, t, col)  # --- fluidez 3 ---
 		else:
 			sim.push_command({"t": "move", "player": local, "ids": ids, "x": int(g.x * P), "y": int(g.z * P), "suelto": loose, "form": formacion, "rumbo": rumbo}) # --- órdenes ---
 			view.add_marker(g, Palette.UI_BAD if loose else Palette.UI_GOOD)
@@ -1102,13 +1304,14 @@ func _right_click(pos: Vector2, rumbo: int = -1) -> void:
 ## Sonido corto del pueblo al dar una orden a las tropas (data/audio.json; con su propio límite).
 func _orden_ack() -> void:
 	if hud != null and hud.main.get("audio") != null:
-		hud.main.audio.civ_sfx("orden")
+		Respuesta.orden(self)  # --- fluidez 3 ---
 
 
 func _place() -> void:
 	var tile: Vector2i = _ghost.get_meta("tile", Vector2i(-1, -1))
 	var cost := sim.dp(local).cost_of(place_type, sim.players[local]["age"])
 	if not sim.can_place(place_type, tile.x, tile.y, local):
+		Respuesta.error(self)  # --- fluidez 3 ---
 		hud_notify(MundoColocacion.motivo(sim, local, place_type, tile.x, tile.y)) # --- mundo ---
 		return
 	if not sim.can_afford(local, cost):
@@ -1119,8 +1322,14 @@ func _place() -> void:
 	for e in selected_entities():
 		if e.owner == local and e.fn == "civil":
 			ids.append(e.id)
-	sim.push_command({"t": "build", "player": local, "ids": ids, "type": place_type, "tx": tile.x, "ty": tile.y})
+	# --- fluidez 2 --- con Mayús, los cimientos se levantan en el orden en que se pusieron
+	if cola != null:
+		cola.colocar(ids, place_type, tile.x, tile.y, Input.is_key_pressed(KEY_SHIFT))
+	else:
+		sim.push_command({"t": "build", "player": local, "ids": ids, "type": place_type, "tx": tile.x, "ty": tile.y})
+	# --- fin fluidez 2 ---
 	view.add_marker(_ghost.position, Palette.UI_ACCENT)
+	Respuesta.cimiento(self, _ghost.position, place_type)  # --- fluidez 3 ---
 	if not Input.is_key_pressed(KEY_SHIFT) or sim.dp(local).is_hito(place_type):
 		cancel_mode()
 		submenu = Grilla.RAIZ # --- grilla --- (colocado el edificio, la grilla vuelve a la raíz)
@@ -1131,7 +1340,7 @@ func _key(k: InputEventKey) -> void:
 	if code == KEY_ESCAPE:
 		if mode != "":
 			cancel_mode()
-		elif submenu != Grilla.RAIZ and (grilla_aldeano() or submenu == INVESTIGAR or submenu == ESCUELA): # --- grilla --- (--- ronda 6 ---)
+		elif submenu != Grilla.RAIZ and (grilla_aldeano() or submenu == INVESTIGAR or submenu == ESCUELA or submenu == HERRERIA): # --- grilla --- (--- ronda 6 ---, ronda 7)
 			open_submenu(Grilla.RAIZ)
 		elif not selection.is_empty():
 			_set_selection([] as Array[int])
@@ -1183,6 +1392,7 @@ func _key(k: InputEventKey) -> void:
 				var at: Variant = hud.avisos.saltar(acc == "avisos_atras")
 				if at is Vector3:
 					cam.look_at_point(at)
+					Respuesta.pulso(self, at)  # --- fluidez 3 ---
 				else:
 					hud_notify("No hay avisos con lugar para ir", "info")
 			return
@@ -1282,6 +1492,7 @@ func center_on_selection() -> void:
 	for e in sel:
 		c += WorldView.to_world(e.x, e.y)
 	cam.look_at_point(c / sel.size())
+	Respuesta.pulso(self, c / sel.size())  # --- fluidez 3 ---
 
 
 func select_ids(ids: Array[int]) -> void:
@@ -1529,7 +1740,7 @@ func unlocks_text(age: int) -> String:
 
 
 ## Casillas de una línea 4-conexa (sin huecos en diagonal por donde colarse).
-static func line_tiles(a: Vector2i, b: Vector2i) -> Array:
+static func line_tiles(a: Vector2i, b: Vector2i, tope: int = 80) -> Array:
 	var out := [[a.x, a.y]]
 	var x := a.x
 	var y := a.y
@@ -1538,7 +1749,7 @@ static func line_tiles(a: Vector2i, b: Vector2i) -> Array:
 	var sx := 1 if a.x < b.x else -1
 	var sy := 1 if a.y < b.y else -1
 	var err := dx + dy
-	while (x != b.x or y != b.y) and out.size() < 80:
+	while (x != b.x or y != b.y) and out.size() < tope:
 		var e2 := 2 * err
 		if e2 - dy > dx - e2:
 			err += dy
@@ -1558,8 +1769,9 @@ func _show_line(tiles: Array) -> void:
 		g.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		view.add_child(g)
 		_line_ghosts.append(g)
-	var cost := sim.dp(local).cost_of(place_type, sim.players[local]["age"]) if place_type != "" else {}
-	var budget: int = sim.players[local]["res"].get("madera", 0)
+	# --- fluidez 2 --- presupuesto con todos los recursos, cifras junto al cursor y huecos
+	var plan := plan_linea(tiles)
+	var estados: Array = plan["estados"]
 	for i in _line_ghosts.size():
 		var g := _line_ghosts[i]
 		g.visible = i < tiles.size()
@@ -1567,21 +1779,150 @@ func _show_line(tiles: Array) -> void:
 			continue
 		var t: Array = tiles[i]
 		g.position = Vector3(t[0] + 0.5, 0.02, t[1] + 0.5)
-		budget -= int(cost.get("madera", 0))
-		var ok := sim.can_place(place_type, t[0], t[1], local) and budget >= 0
-		(g.material_override as StandardMaterial3D).albedo_color = Color(0.5, 1.0, 0.6, 0.55) if ok else Color(1.0, 0.35, 0.3, 0.55)
+		var col := Color(0.5, 1.0, 0.6, 0.55)
+		if estados[i] == "puerta":
+			col = Color(Palette.UI_ACCENT, 0.7)
+		elif estados[i] != "ok":
+			col = Color(1.0, 0.35, 0.3, 0.55)
+		(g.material_override as StandardMaterial3D).albedo_color = col
+	linea_info = plan["info"]
+	# --- fin fluidez 2 ---
+
+
+# --- fluidez 2 --- (proceso/30-fluidez/02-constructor.md)
+## Casillas del trazo hasta `end`: con el tope de data/constructor.json y sin la casilla del
+## extremo anterior cuando se encadena con Mayús.
+func trazo(end: Vector2i) -> Array:
+	var tiles := line_tiles(_line_start, end, int(MundoColocacion.cfg().get("muro_tope", 80)) + (1 if _line_skip else 0))
+	if _line_skip and not tiles.is_empty():
+		tiles.pop_front()
+	return tiles
+
+
+## Qué pasa con cada casilla del trazo: "ok", "puerta", "hueco" o "falta" (no alcanza), con los
+## renglones «n tramos · costo · alcanzan k» y los huecos por causa. Cuenta todos los recursos.
+func plan_linea(tiles: Array) -> Dictionary:
+	var age: int = sim.players[local]["age"]
+	var cost := sim.dp(local).cost_of(place_type, age) if place_type != "" else {}
+	var gate := MundoColocacion.tipo_puerta(sim, local)
+	var res: Dictionary = (sim.players[local]["res"] as Dictionary).duplicate()
+	var total := {}
+	var estados := []
+	var tramos := 0
+	var alcanzan := 0
+	var causas := {}
+	var lista_huecos := []
+	for t: Array in tiles:
+		var tipo := place_type
+		if gate != "" and Vector2i(t[0], t[1]) == _line_gate:
+			tipo = gate
+		if not sim.can_place(tipo, t[0], t[1], local):
+			estados.append("hueco")
+			lista_huecos.append(t)
+			var c := MundoColocacion.causa_hueco(sim, t[0], t[1])
+			causas[c] = int(causas.get(c, 0)) + 1
+			continue
+		tramos += 1
+		var c2: Dictionary = cost if tipo == place_type else sim.dp(local).cost_of(tipo, age)
+		for k in c2:
+			total[k] = int(total.get(k, 0)) + int(c2[k])
+		var ok := true
+		for k in c2:
+			ok = ok and int(res.get(k, 0)) >= int(c2[k])
+		if ok:
+			for k in c2:
+				res[k] = int(res.get(k, 0)) - int(c2[k])
+			alcanzan += 1
+			estados.append("puerta" if tipo != place_type else "ok")
+		else:
+			estados.append("falta")
+	var info := []
+	if not tiles.is_empty():
+		info.append(["%d %s · %s · alcanzan %d" % [tramos, "tramo" if tramos == 1 else "tramos", MundoColocacion.costo_texto(total), alcanzan], Palette.UI_TEXT if alcanzan == tramos else Palette.UI_BAD])
+		if not causas.is_empty():
+			var parts := []
+			for c in causas:
+				parts.append(c if causas.size() == 1 else "%d por %s" % [causas[c], c])
+			var nh := lista_huecos.size()
+			info.append(["%d %s: %s" % [nh, "hueco" if nh == 1 else "huecos", ", ".join(parts)], Palette.UI_BAD])
+		if gate != "":
+			info.append(["G: puerta en la casilla del cursor" if _line_gate.x < 0 else "Puerta en el trazo (G la mueve)", Palette.UI_DIM])
+		if tiles.size() >= int(MundoColocacion.cfg().get("muro_tope", 80)):
+			info.append(["Tope de %d casillas por trazo" % int(MundoColocacion.cfg().get("muro_tope", 80)), Palette.UI_ACCENT])
+		info.append(["Mayús: seguir desde el extremo", Palette.UI_DIM])
+	return {"estados": estados, "info": info, "huecos": lista_huecos, "causas": causas, "tramos": tramos, "alcanzan": alcanzan, "total": total}
+
+
+## G mientras se arrastra: la casilla del trazo más cercana al cursor va de puerta.
+func marcar_puerta() -> void:
+	var tile: Vector2i = _ghost.get_meta("tile", _line_start)
+	var tiles := trazo(tile)
+	if tiles.is_empty() or MundoColocacion.tipo_puerta(sim, local) == "":
+		return
+	var g := cam.ground_at(mouse_pos())
+	var best: Array = tiles[0]
+	for t: Array in tiles:
+		if Vector2(t[0] + 0.5, t[1] + 0.5).distance_to(Vector2(g.x, g.z)) < Vector2(best[0] + 0.5, best[1] + 0.5).distance_to(Vector2(g.x, g.z)):
+			best = t
+	_line_gate = Vector2i(best[0], best[1])
+# --- fin fluidez 2 ---
 
 
 func _finish_line() -> void:
 	_line_drag = false
 	var tile: Vector2i = _ghost.get_meta("tile", _line_start)
-	var tiles := line_tiles(_line_start, tile)
+	var tiles := trazo(tile) # --- fluidez 2 ---
 	var ids := []
 	for e in selected_entities():
 		if e.owner == local and e.fn == "civil":
 			ids.append(e.id)
-	sim.push_command({"t": "build_line", "player": local, "ids": ids, "type": place_type, "tiles": tiles})
+	# --- fluidez 2 --- la puerta va aparte; los huecos se avisan y quedan marcados
+	var plan := plan_linea(tiles)
+	var gate := MundoColocacion.tipo_puerta(sim, local)
+	var muro := []
+	for t: Array in tiles:
+		if gate == "" or Vector2i(t[0], t[1]) != _line_gate:
+			muro.append(t)
+	if not muro.is_empty():
+		sim.push_command({"t": "build_line", "player": local, "ids": ids, "type": place_type, "tiles": muro})
+	if gate != "" and _line_gate.x >= 0 and tiles.any(func(t: Array) -> bool: return Vector2i(t[0], t[1]) == _line_gate):
+		sim.push_command({"t": "build", "player": local, "ids": [] if not muro.is_empty() else ids, "type": gate, "tx": _line_gate.x, "ty": _line_gate.y})
+	huecos = plan["huecos"]
+	if not huecos.is_empty():
+		huecos_hasta = Time.get_ticks_msec() + int(MundoColocacion.cfg().get("huecos_marca_s", 6)) * 1000
+		var parts := []
+		for c in plan["causas"]:
+			parts.append(c)
+		var nombre := String(sim.dp(local).edificios[place_type].get("nombre", "El muro"))
+		if hud != null: # con lugar: Espacio lleva al primer hueco
+			hud.notify("%s quedó con %d %s (%s)" % [nombre, huecos.size(), "hueco" if huecos.size() == 1 else "huecos", ", ".join(parts)], -1.0, "info", Vector3(huecos[0][0] + 0.5, 0, huecos[0][1] + 0.5))
+	linea_info = []
+	_line_gate = Vector2i(-1, -1)
+	_line_chain = Vector2i(-1, -1)
+	if Input.is_key_pressed(KEY_SHIFT):
+		_line_chain = Vector2i(tiles[-1][0], tiles[-1][1]) if not tiles.is_empty() else _line_start
+	_line_skip = false
+	# --- fin fluidez 2 ---
 	_show_line([])
 	if not Input.is_key_pressed(KEY_SHIFT):
 		cancel_mode()
 		submenu = Grilla.RAIZ # --- grilla ---
+
+
+# --- fluidez 2 ---
+## Edificios propios dañados cerca de los aldeanos elegidos (para el candado de «Reparar (zona)»).
+func _danados_zona() -> int:
+	if cola == null:
+		return 0
+	var n := 0
+	var cx := 0
+	var cy := 0
+	for e in selected_entities():
+		if e.owner == local and e.fn == "civil":
+			cx += e.x
+			cy += e.y
+			n += 1
+	if n == 0:
+		return 0
+	return 1 if cola.danado_cerca(cx / n, cy / n, int(MundoColocacion.cfg().get("reparar_zona_radio", 12)) * P) != null else 0
+# --- fin fluidez 2 ---

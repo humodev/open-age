@@ -71,10 +71,13 @@ var build_time: int = 0
 var queue: Array[String] = []
 var queue_paid: Array[Dictionary] = [] # lo que se pagó por cada elemento de la cola (se devuelve al cancelar)
 var queue_progress: int = 0
+var repeat: String = "" # unidad que se encola sola cuando la cola se vacía ("" = sin repetición; proceso/30, frente 1)
 var rally_set := false
 var rally_x: int
 var rally_y: int
 var rally_target: int = -1
+var rally_res: String = "" # --- fluidez 2 --- tipo del recurso de la reunión ("arbol", "veta_piedra"…), para seguir si se agota
+var rally_kind: String = "" # y su recurso ("madera"…)
 var farmer: int = -1
 var garrison: Array[int] = [] # unidades alojadas
 var carry_src: String = "" # de dónde salió la carga: tipo de recurso, o "granja"
