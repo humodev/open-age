@@ -239,6 +239,11 @@ func _apply(c: Dictionary) -> void:
 			_cmd_train(pid, c["building"], c["type"])
 		"cancel":
 			_cmd_cancel(pid, c["building"], c.get("index", -1))
+		"repetir":
+			_cmd_repeat(pid, int(c["building"]), str(c.get("type", "")), bool(c.get("on", true)))
+		"tope_aldeanos":
+			var rep: Dictionary = data.reglas.get("repeticion", {})
+			players[pid]["tope_aldeanos"] = clampi(int(c["n"]), int(rep.get("tope_min", 10)), int(rep.get("tope_max", 200)))
 		"rally":
 			_cmd_rally(pid, c["building"], c["x"], c["y"], c.get("target", -1))
 		"research":
@@ -546,12 +551,12 @@ func _cmd_build(pid: int, units: Array[SimEntity], type: String, tx: int, ty: in
 			_order_build(e, b)
 
 
-func _cmd_train(pid: int, bid: int, type: String) -> void:
+func _cmd_train(pid: int, bid: int, type: String, quiet := false) -> bool:
 	var b: SimEntity = by_id.get(bid)
 	if b == null or not b.alive or b.owner != pid or not b.built:
-		return
+		return false
 	if not (b.def.get("produce", []) as Array).has(type):
-		return
+		return false
 	var p := players[pid]
 	var udef: Dictionary = dp(pid).unidades.get(type, {})
 	if udef.has("maximo_por_edad"):
@@ -565,31 +570,98 @@ func _cmd_train(pid: int, bid: int, type: String) -> void:
 					if q == type:
 						have += 1
 		if have >= int(maxes[clampi(int(p["age"]) - 1, 0, maxes.size() - 1)]) + mods.engine_max_bonus(pid, type):
-			_notify(pid, "Máximo de %s en esta edad" % str(udef.get("nombre", type)))
-			return
+			if not quiet:
+				_notify(pid, "Máximo de %s en esta edad" % str(udef.get("nombre", type)))
+			return false
 	if p["age"] < dp(pid).unidades[type].get("edad_min", 1):
-		_notify(pid, "Requiere edad %s" % _roman(dp(pid).unidades[type]["edad_min"]))
-		return
+		if not quiet:
+			_notify(pid, "Requiere edad %s" % _roman(dp(pid).unidades[type]["edad_min"]))
+		return false
 	# --- paso 4 --- reemplazada desde esta edad (el ariete inca y el guaraní pasan al asedio de área)
 	var rep := dp(pid).replaced_by(type, int(p["age"]))
 	if rep != "":
-		_notify(pid, "Ahora se entrena %s" % str(dp(pid).unidades[rep].get("nombre", rep)))
-		return
+		if not quiet:
+			_notify(pid, "Ahora se entrena %s" % str(dp(pid).unidades[rep].get("nombre", rep)))
+		return false
 	# --- fin paso 4 ---
 	if b.queue.size() >= data.reglas["cola_max"]:
-		_notify(pid, "Cola llena")
-		return
+		if not quiet:
+			_notify(pid, "Cola llena")
+		return false
 	var why_t := train_block(pid, b, type)
 	if why_t != "":
-		_notify(pid, why_t)
-		return
+		if not quiet:
+			_notify(pid, why_t)
+		return false
 	var cost := train_cost(pid, b, type)
 	if not can_afford(pid, cost):
-		_notify(pid, "Recursos insuficientes")
-		return
+		if not quiet:
+			_notify(pid, "Recursos insuficientes")
+		return false
 	_pay(pid, cost)
 	b.queue.append(type)
 	b.queue_paid.append(cost.duplicate())
+	return true
+
+
+# --- frente 1 --- (proceso/30) producción que se repite sola, como la «auto-queue» de AoE4.
+## Prende o apaga la repetición de `type` en el edificio. Es estado del edificio: entra en las
+## repeticiones de partidas y en la red, porque llega como comando.
+func _cmd_repeat(pid: int, bid: int, type: String, on: bool) -> void:
+	var b: SimEntity = by_id.get(bid)
+	if b == null or not b.alive or b.owner != pid or not b.is_building():
+		return
+	if not on:
+		if type == "" or b.repeat == type:
+			b.repeat = ""
+		return
+	if type.begins_with("@") or not (b.def.get("produce", []) as Array).has(type):
+		return
+	b.repeat = type
+
+
+## Tope de aldeanos del jugador para la repetición (la regla y el comando tope_aldeanos).
+func villager_cap(pid: int) -> int:
+	return int(players[pid].get("tope_aldeanos", int(data.reglas.get("repeticion", {}).get("tope_aldeanos", 80))))
+
+
+## Aldeanos vivos y en cola del jugador (lo que mide el tope de la repetición).
+func villagers_and_queued(pid: int) -> int:
+	var n := 0
+	for e in actives:
+		if not e.alive or e.owner != pid:
+			continue
+		if e.fn == "civil" and e.is_unit():
+			n += 1
+		elif e.is_building():
+			for q in e.queue:
+				if not q.begins_with("@") and str(dp(pid).unidades.get(q, {}).get("funcion", "")) == "civil":
+					n += 1
+	return n
+
+
+## ¿Por qué no se repite ahora? "" si entra otra. No toca lo apartado (reserva_<recurso>),
+## necesita lugar de población y, con aldeanos, no pasa el tope.
+func repeat_block(b: SimEntity) -> String:
+	var pid := b.owner
+	var type := b.repeat
+	var p := players[pid]
+	var udef: Dictionary = dp(pid).unidades.get(type, {})
+	if int(p["pop"]) + int(udef.get("pob", 1)) > int(p["pop_cap"]):
+		return "pob"
+	var cost := train_cost(pid, b, type)
+	for k in cost:
+		if int(p["res"].get(k, 0)) - int(p.get("reserva_" + k, 0)) < int(cost[k]):
+			return "recursos"
+	if str(udef.get("funcion", "")) == "civil" and villagers_and_queued(pid) >= villager_cap(pid):
+		return "tope"
+	return ""
+
+
+func _repeat_try(b: SimEntity) -> void:
+	if repeat_block(b) == "":
+		_cmd_train(b.owner, b.id, b.repeat, true)
+# --- fin frente 1 ---
 
 
 func _cmd_cancel(pid: int, bid: int, index: int) -> void:
@@ -2255,6 +2327,8 @@ func _update_building(b: SimEntity) -> void:
 			if b.progress >= b.build_time:
 				_complete(b)
 		return
+	if b.repeat != "" and b.queue.is_empty(): # --- frente 1 ---
+		_repeat_try(b)
 	if not b.queue.is_empty():
 		var item: String = b.queue[0]
 		var p := players[b.owner]
