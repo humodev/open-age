@@ -8,7 +8,8 @@ extends Node
 ##   - aldeanos que caminan lejos para dejar lo que juntan: levantá el almacén del pueblo ahí.
 ##   - un ataque perdido lejos de casa: cuántos cayeron, qué los mató y qué llevar (4q).
 ##
-## Solo mira la simulación y llama a `hud.notify`. Se apagan en Opciones ("Avisos que enseñan").
+## Solo mira la simulación y llama a `hud.notify`. --- ronda 8 --- Son "Consejos de aprendizaje"
+## (Opciones): de fábrica, solo en el tutorial y contra la IA fácil. La cuenta de sitios sale siempre.
 ## Los tiempos son de juego, no de reloj: con la partida a ×4 se revisa cuatro veces más seguido.
 ## Umbrales en data/interfaz.json → consejos.
 
@@ -48,9 +49,12 @@ func _process(_d: float) -> void:
 		return
 	var dt := 0 if _last_check < 0 else (sim.tick - _last_check) * sim.tick_ms / 1000
 	_last_check = sim.tick
-	if not Opciones.consejos or sim.game_over or hud._local_is_ai() or sim.players[hud.local]["defeated"]:
+	if sim.game_over or hud._local_is_ai() or sim.players[hud.local]["defeated"]:
 		return
-	check(dt)
+	if Opciones.consejos:
+		check(dt)
+	else:
+		_sites() # --- ronda 8 --- la cuenta de sitios no es un consejo: es una amenaza (AoE4 la avisa)
 
 
 ## Una revisión: `dt` son los segundos de juego desde la anterior.

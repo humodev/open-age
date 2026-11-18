@@ -27,6 +27,8 @@ extends Node3D
 ##   --campana=clave --mision=N  juega una misión de campaña (N desde 0)
 ##   --dificultad=facil|normal|dificil|experta  (en el menú, la preelige)
 ##   --nofog            sin niebla de guerra (automático en --aivai)
+##   --aprendizaje=auto|si|no  consejos de aprendizaje (Opciones; auto: tutorial y IA fácil)
+##   --contar-avisos=MIN  (con --aivai) cuenta los avisos que vería un humano en el lugar del 0 y sale
 ##   --autotest         prueba de punta a punta con eventos reales de mouse y teclado
 ##   --animaciones=0|1  gente animada (KayKit) o la figura de antes; pisa data/arte_animaciones.json
 ##   --compartir=0|1    esqueletos compartidos entre la gente animada que hace lo mismo
@@ -93,6 +95,8 @@ func _ready() -> void:
 	audio.name = "Audio"
 	add_child(audio)
 	_opciones_al_arrancar() # --- opciones ---
+	if _args.has("aprendizaje"): # --- ronda 8 --- consejos de aprendizaje (auto|si|no); no se guarda
+		Opciones.aprendizaje = str(_args["aprendizaje"])
 	# En el menú, --dificultad preelige la dificultad (capturas); no se guarda en las opciones.
 	if _menu_mode and _args.has("dificultad"):
 		Opciones.dificultad = str(_args["dificultad"])
@@ -1094,12 +1098,35 @@ func _process(delta: float) -> void:
 	else:
 		view.render(1.0, 0.0)
 	_maybe_shot()
+	_contar_avisos() # --- ronda 8 ---
 	_salir_a() # --- partida a medida ---
 	if _args.has("perf"):
 		_perf_t += delta
 		if _perf_t >= 5.0:
 			_perf_t = 0.0
 			print("perf: %d fps · tick %d · %d entidades activas · %d objetos dibujados" % [Engine.get_frames_per_second(), sim.tick, sim.actives.size(), RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME)])
+
+
+## --- ronda 8 --- --contar-avisos=MIN (con --aivai): cuenta los avisos que vería el jugador 0
+## como si fuera humano y, a los MIN minutos de juego, los imprime y sale.
+func _contar_avisos() -> void:
+	if not _args.has("contar-avisos") or hud == null:
+		return
+	if not hud.contar_avisos:
+		hud.contar_avisos = true
+		Opciones.aplicar_aprendizaje() # los de la línea de comandos (--aprendizaje), no los del usuario
+	if sim.tick * sim.tick_ms < int(_args["contar-avisos"]) * 60000:
+		return
+	var total := 0
+	var filas: Array = []
+	for k in hud.conteo_avisos:
+		total += int(hud.conteo_avisos[k])
+		filas.append([int(hud.conteo_avisos[k]), k])
+	filas.sort_custom(func(a: Array, b: Array) -> bool: return a[0] > b[0])
+	print("AVISOS total %d en %s min (pob %d/%d)" % [total, _args["contar-avisos"], int(sim.players[local]["pop"]), int(sim.players[local]["pop_cap"])])
+	for f in filas:
+		print("AVISOS %4d  %s" % f)
+	get_tree().quit(0)
 
 
 func _maybe_shot() -> void:
