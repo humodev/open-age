@@ -6,3 +6,4 @@ export/
 .secrets/
 .cache/
 .claude/
+__pycache__/
