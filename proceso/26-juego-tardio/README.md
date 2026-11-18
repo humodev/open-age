@@ -74,7 +74,18 @@ Contexto: hoy la edad IV no trae unidades nuevas, hay 18 mejoras compartidas y n
   - Tawantinsuyu 44, mapuches 62, guaraníes 34, Etiopía 44, Palmares 64, Ayutthaya 52.
   - Todas entre 34 y 64 %: **el paso 6 queda**.
   - En observación: guaraníes (en el borde de abajo) y Palmares (arriba). | [13-paso-6-par-3.md](13-paso-6-par-3.md) |
-| 14 | Decisión: si un paso rompe el balance, queda diseñado como contenido y se retoma con más contenido (modelos, animaciones) | por hacer |
+| 14 | **Que se juegue el final (ae48c48, de la ronda 7)** · [14-que-se-juegue-el-final.md](14-que-se-juegue-el-final.md)
+• **Sitios:** la cuenta empieza en el minuto 15, así que nadie gana antes del 25.
+• **Rendición:** normal, difícil y experta piden además haber perdido el 60 % (`quedan_pct`).
+• **Propias:** las de la II se compran desde el minuto 10 aunque la IA ahorre.
+
+**Resultados** (45 min, 24 partidas):
+• la IV aparece en el **83 %** de las partidas (antes, 62 %) y llega el 52 % de los jugadores;
+• las partidas que terminan antes del 25 bajan de 9 a 4, y las rendiciones de 6 a 1;
+• los jugadores con alguna mejora propia antes del minuto 15 pasan de 21 a 32 de 48.
+
+**La experta** sigue llegando a la III cerca del 17. | hecho |
+| 15 | Decisión: si un paso rompe el balance, queda diseñado como contenido y se retoma con más contenido (modelos, animaciones) | por hacer |
 
 ## Pedido del autor: saberes de los pueblos
 
