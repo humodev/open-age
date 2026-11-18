@@ -1,0 +1,10 @@
+equipos [0, 1, 0, 1] llano normal experta semilla 7, mapa 176 (7744 casillas por jugador). En el mapa al empezar: { "alimento": 16800, "piedra": 17600, "riqueza": 22000 }
+15 min | j0 e2 a26 m36 p83 r527 | j1 e3 a200 m160 p545 r357 | j2 e2 a257 m32 p527 r614 | j3 e2 a17 m156 p292 r468 |
+30 min | j0 e4 a1179 m172 p1196 r727 | j1 e4 a34 m169 p1350 r641 | j2 e3 a1897 m150 p1594 r1221 | j3 e4 a874 m857 p807 r83 |
+45 min | j0 e4 a10310 m260 p567 r417 | j1 e4 a4670 m1488 p1070 r922 | j2 e4 a1108 m184 p175 r403 | j3 e4 a264 m18 p231 r8 |
+Fin a los 45 min. Vetas nuevas: 12
+j0 tawantinsuyu eq0 edad 4 (II 7, III 16, IV 27) en pie maravilla sí | min sin alcanzar por recurso { "alimento": 25, "riqueza": 25, "piedra": 12, "madera": 5 } | juntó { "mita": 10895, "riqueza": 18731, "alimento": 63881, "madera": 34245, "piedra": 6237 } | tiene { "alimento": 10310, "madera": 260, "piedra": 567, "riqueza": 417, "mita": 256 }
+j1 mapuches     eq1 edad 4 (II 8, III 13, IV 21) en pie maravilla no | min sin alcanzar por recurso { "alimento": 20, "riqueza": 44, "piedra": 27, "madera": 25 } | juntó { "alimento": 52616, "madera": 21723, "riqueza": 16923, "piedra": 5000, "cabezas": 14 } | tiene { "alimento": 4670, "madera": 1488, "piedra": 1070, "riqueza": 922 }
+j2 guaranies    eq0 edad 4 (II 8, III 20, IV 32) en pie maravilla sí | min sin alcanzar por recurso { "alimento": 25, "riqueza": 30, "piedra": 11, "madera": 6 } | juntó { "alimento": 43849, "madera": 33744, "riqueza": 18847, "piedra": 6760 } | tiene { "alimento": 1108, "madera": 184, "piedra": 175, "riqueza": 403 }
+j3 etiopia      eq1 edad 4 (II 6, III 21, IV 25) en pie maravilla no | min sin alcanzar por recurso { "alimento": 22, "riqueza": 45, "piedra": 31, "madera": 21 } | juntó { "riqueza": 15043, "alimento": 49369, "madera": 27748, "piedra": 4441 } | tiene { "alimento": 264, "madera": 18, "piedra": 231, "riqueza": 8 }
+En el mapa al final: { "riqueza": 6007, "piedra": 2911 }

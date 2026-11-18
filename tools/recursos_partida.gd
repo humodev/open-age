@@ -42,7 +42,7 @@ func _init() -> void:
 		ages.append([0, 0, 0, 0])
 	var veins := 0
 	var map0 := _map_left(s)
-	print("1v%d %s %s %s semilla %d, mapa %d (%d casillas por jugador). En el mapa al empezar: %s" % [np - 1, terr, tam, dif, sd, s.map.n, s.map.n * s.map.n / np, str(map0)])
+	print("equipos %s %s %s %s semilla %d, mapa %d (%d casillas por jugador). En el mapa al empezar: %s" % [str(teams), terr, tam, dif, sd, s.map.n, s.map.n * s.map.n / np, str(map0)])
 	while s.tick < minutes * 600 and not s.game_over:
 		s.step()
 		for ev in s.events:

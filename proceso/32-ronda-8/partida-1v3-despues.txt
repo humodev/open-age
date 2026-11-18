@@ -1,0 +1,17 @@
+1v3 llano normal experta semilla 7, mapa 176 (7744 casillas por jugador). En el mapa al empezar: { "alimento": 16800, "piedra": 17600, "riqueza": 22000 }
+  12 min: veta nueva roca 800 en 148,42
+15 min | j0 e2 a27 m130 p156 r417 | j1 e3 a1184 m121 p470 r713 | j2 e2 a44 m16 p419 r680 | j3 e2 a57 m207 p313 r449 |
+  15 min: veta nueva roca 800 en 149,133
+  17 min: veta nueva roca 1000 en 132,58
+  17 min: veta nueva riqueza 1000 en 116,42
+  18 min: veta nueva roca 800 en 56,120
+  20 min: veta nueva roca 1000 en 152,133
+  20 min: veta nueva riqueza 1000 en 133,152
+  21 min: veta nueva roca 1000 en 62,133
+  21 min: veta nueva riqueza 1000 en 43,152
+Fin a los 21 min (terminó). Vetas nuevas: 9
+j0 tawantinsuyu eq0 edad 2 (II 7, III 0, IV 0) derrotado maravilla no | min sin alcanzar por recurso { "alimento": 19, "riqueza": 14, "piedra": 9 } | juntó { "mita": 1758, "riqueza": 2000, "alimento": 5587, "madera": 5142, "piedra": 861 } | tiene { "alimento": 27, "madera": 377, "piedra": 156, "riqueza": 720, "mita": 164 }
+j1 mapuches     eq1 edad 4 (II 7, III 13, IV 18) en pie maravilla no | min sin alcanzar por recurso { "alimento": 16, "riqueza": 18, "piedra": 9, "madera": 4 } | juntó { "alimento": 16938, "madera": 9123, "riqueza": 6551, "piedra": 1555, "cabezas": 23 } | tiene { "alimento": 123, "madera": 693, "piedra": 765, "riqueza": 1620 }
+j2 guaranies    eq1 edad 4 (II 8, III 16, IV 21) en pie maravilla no | min sin alcanzar por recurso { "alimento": 19, "riqueza": 16, "piedra": 7, "madera": 1 } | juntó { "alimento": 11647, "madera": 11105, "riqueza": 5425, "piedra": 1834 } | tiene { "alimento": 452, "madera": 85, "piedra": 749, "riqueza": 146 }
+j3 etiopia      eq1 edad 4 (II 6, III 19, IV 0) en pie maravilla no | min sin alcanzar por recurso { "alimento": 20, "riqueza": 19, "piedra": 7 } | juntó { "riqueza": 6204, "alimento": 15169, "madera": 11531, "piedra": 2319 } | tiene { "alimento": 439, "madera": 146, "piedra": 334, "riqueza": 105 }
+En el mapa al final: { "alimento": 4540, "piedra": 16201, "riqueza": 15087 }
