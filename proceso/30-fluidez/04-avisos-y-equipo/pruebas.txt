@@ -14,3 +14,5 @@ OK    fluidez 4: la rueda elige atacar, defender, juntarse, mirar o automática 
 OK    fluidez 4: el filtro de recursos los saca del minimapa (0)
 OK    fluidez 4: el minimapa cambia de tamaño (250 → 320)
 AUTOTEST: FALLO
+DETERMINISMO: OK, hash 2903543624 (igual a main tras el merge)
+EQUIPOS: OK
