@@ -362,7 +362,7 @@ func commands() -> Array[Dictionary]:
 			used[root] = true
 			var why := sim.research_block(local, tech)
 			var pref := int(t["ranura"]) if produce.is_empty() else int((Grilla.cfg().get("investigaciones_con_tropa", {}) as Dictionary).get(tech if not t.has("requiere") else root, t["ranura"]))
-			var rc := {"slot": pref, "id": tech, "icon": Iconos.de_tecnologia(tech, t), "kind": "research", "name": tech_name(tech), "cost": sim.tech_cost(local, tech), "desc": effects_text(t["efectos"]), "locked": why, "tech": true, "building": first.id}
+			var rc := {"slot": pref, "id": tech, "icon": Iconos.de_tecnologia(tech, t), "kind": "research", "name": tech_name(tech), "corto": str(t.get("nombre_corto", "")), "cost": sim.tech_cost(local, tech), "desc": effects_text(t["efectos"]), "locked": why, "tech": true, "building": first.id}
 			if t.get("propia", false): # --- paso 6 --- el saber y su evidencia
 				rc["desc"] = "%s\n%s\nEvidencia: %s" % [rc["desc"], t.get("desc", ""), t.get("evidencia", "")]
 			# --- paso 3 --- La escuela de la IV va en su propio submenú, con el nombre del pueblo.

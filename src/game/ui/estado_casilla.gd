@@ -80,7 +80,7 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 		var gs := minf(26.0, top - r.position.y - 3.0 - 13.0)
 		if gs >= 10.0:
 			Glyphs.draw(ci, c["icon"], Rect2(r.position.x + (r.size.x - gs) / 2.0 + 2, r.position.y + 3, gs, gs), col)
-			var ajf := _ajuste(Hud.font_b, label, 10, r.size.x - 4, 1) # --- ronda 7 ---
+			var ajf := _ajuste(Hud.font_b, label, 10, r.size.x - 4, 1, str(c.get("corto", "")) if comun == "" else "") # --- ronda 7 ---
 			ci.draw_string(Hud.font_b, Vector2(r.position.x + 2, top - 2.0), ajf[0], HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, ajf[1], tcol)
 		else:
 			Glyphs.draw(ci, c["icon"], _rect_glifo(r, locked, falta), col)
@@ -101,7 +101,7 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 		var compacto := lines == 1 and _fit_lineas(fetq, etq, 10, r.size.x - 4, 1) < 9
 		if compacto:
 			Glyphs.draw(ci, c["icon"], Rect2(r.position.x + (r.size.x - 18) / 2.0 + 2, r.position.y + 3, 18, 18), col)
-			var ajc := _ajuste(fetq, etq, 9, r.size.x - 4, 2)
+			var ajc := _ajuste(fetq, etq, 9, r.size.x - 4, 2, str(c.get("corto", "")) if comun == "" else "")
 			ci.draw_multiline_string(fetq, Vector2(r.position.x + 2, r.position.y + 31), ajc[0], HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, ajc[1], 2, tcol)
 		else:
 			Glyphs.draw(ci, c["icon"], Rect2(r.position.x + (r.size.x - 26) / 2.0 + 2, r.position.y + 3, 26, 26), col)
@@ -121,7 +121,7 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 		else:
 			# Achicado hasta que entre entero en sus renglones (jugador nuevo, ronda 4: «Mamposteri»,
 			# «Trabajo de»): una palabra larga no se corta por la mitad ni se pierde un renglón.
-			var ajn := _ajuste(Hud.font, nombre, 10, r.size.x - 4, lines)
+			var ajn := _ajuste(Hud.font, nombre, 10, r.size.x - 4, lines, str(c.get("corto", "")))
 			ci.draw_multiline_string(Hud.font, Vector2(r.position.x + 2, r.position.y + 39 - (10 - ajn[1]) * 0.5), ajn[0], HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, ajn[1], lines, tcol)
 	else:
 		Glyphs.draw(ci, c["icon"], _rect_glifo(r, locked, falta), col) # --- costo real ---
@@ -346,14 +346,18 @@ const MIN_LEGIBLE := 8
 
 ## --- ronda 7 --- (jugador nuevo: «aller de asedio», «Pohã ñana (remedios del») [texto, tamaño]
 ## con que `txt` entra entero en `lines` renglones de `w`: achica hasta MIN_LEGIBLE; si no
-## alcanza, deja afuera lo que va entre paréntesis (sigue en la ayuda) y, como último recurso,
-## saca palabras del final y pone «…». Nunca se corta una palabra por la mitad.
-static func _ajuste(f: Font, txt: String, size: int, w: float, lines: int) -> Array:
+## alcanza, usa el nombre corto del comando si tiene («Lanceros vet.»), deja afuera lo que va
+## entre paréntesis (sigue en la ayuda) y, como último recurso, saca palabras del final y pone «…».
+## Nunca se corta una palabra por la mitad.
+static func _ajuste(f: Font, txt: String, size: int, w: float, lines: int, corto: String = "") -> Array:
 	var t := txt
 	while true:
 		var fs := _fit_lineas(f, t, size, w, lines)
 		if fs >= MIN_LEGIBLE and _entra(f, t, fs, w, lines):
 			return [t, fs]
+		if corto != "" and t != corto:
+			t = corto
+			continue
 		if t.contains(" ("):
 			t = t.get_slice(" (", 0).strip_edges()
 			continue
@@ -364,10 +368,10 @@ static func _ajuste(f: Font, txt: String, size: int, w: float, lines: int) -> Ar
 	var words := t.split(" ", false)
 	while words.size() > 1:
 		words.resize(words.size() - 1)
-		var corto := " ".join(words).trim_suffix(",").trim_suffix(" de").trim_suffix(" del") + "…"
-		var fsc := _fit_lineas(f, corto, size, w, lines)
-		if _entra(f, corto, fsc, w, lines):
-			return [corto, fsc]
+		var recorte := " ".join(words).trim_suffix(",").trim_suffix(" de").trim_suffix(" del") + "…"
+		var fsc := _fit_lineas(f, recorte, size, w, lines)
+		if _entra(f, recorte, fsc, w, lines):
+			return [recorte, fsc]
 	return [t, fs7]
 
 

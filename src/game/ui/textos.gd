@@ -77,3 +77,5 @@ static func nombres_niveles(d: SimData) -> void:
 			if par.size() < 2 or not t.has("nivel"):
 				continue
 			t["nombre"] = "%s %s" % [par[0], par[1]] if int(t["nivel"]) == 1 else "%s de élite" % par[0]
+			# Para la casilla con la franja de lo que falta (un solo renglón): «Lanceros vet.».
+			t["nombre_corto"] = "%s %s" % [par[2] if par.size() > 2 else par[0], tabla.get("_corto", ["vet.", "élite"])[mini(int(t["nivel"]), 2) - 1]]
