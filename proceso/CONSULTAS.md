@@ -643,3 +643,4 @@ a) Así *(por defecto)* · b) Otra
 - **Arte de las unidades compartidas, por civ:** "Las unidades compartidas, a nivel de arte, también deben ser independientes, para poder hacer el aspecto específico de cada civ." Cada unidad (guerrero, lancero, hondero o arquero, asedio, las del paso 5) tiene su aspecto propio por pueblo: colores, tocado, arma y, cuando haya modelos de Meshy, uno por pueblo. Va en el paso 5 y en las animaciones (`tropas.por_civ` en `data/arte_animaciones.json`).
 - **C-100 · (fluidez) ¿Reparar cuesta?** En AoE4 cuesta una parte del edificio; acá hoy es gratis. Por defecto: el 50 % del costo, proporcional a lo reparado.
 - **C-101 · (fluidez) Muralla de piedra y planos.** ¿Una muralla de piedra en la II con torres encima, y la empalizada que se refuerza? ¿Planos para dibujar la base sin pagar? Por defecto: la muralla sí; los planos, después.
+- **C-101 respondida (2026-11-18):** muralla de piedra sí, en la edad II.

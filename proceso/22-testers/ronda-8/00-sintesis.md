@@ -57,3 +57,20 @@ Parte de las derrotas tempranas vienen de los guiones, que suben de edad más ta
 3. **Avisos** (en la interfaz): prioridad y agrupación, aviso de aldeanos encerrados, y que la ficha de la maravilla diga qué hito pide.
 4. **Rendimiento con 7 jugadores:** perfilar los picos del 1v6 y la caché de caminos (es el frente 6 de fluidez).
 5. Muralla de piedra, si se confirma C-101.
+
+## Decisiones del autor (2026-11-18)
+
+| Propuesta | Decisión |
+|---|---|
+| IA de un equipo que escalona sus ataques | **Sí** |
+| Ventaja para el que juega solo en 1vN | **No.** "¿Age lo tiene? Hay que ser muy, muy bueno para ganar un mapa así." Antes de cualquier ventaja hay que revisar el mapa: recursos, tamaño, etc. |
+| Piedra según el mapa y renovable | **Analizar los recursos en general:** dónde están y en qué cantidad. "Siento que estamos bastante por debajo de Age en un mapa normal", aunque Age tiene mapas más escasos o más abundantes a propósito |
+| La IA usa el mercado | **Sí** |
+| Sumidero en la IV: escuelas excluyentes y élite cara | **Sí.** Sumidero = algo valioso en qué gastar lo que sobra |
+| Contrajuego a la maravilla: alerta, marca en el minimapa, que la IA la ataque, obra más corta | **Sí** |
+| Frenar la cuenta de sitios con una maravilla en obra | **No**, no está relacionado |
+| Avisos con prioridad y agrupados | **No. Hacia AoE:** la cola de producción siempre a la vista, y en rojo, trabada, cuando la población está al máximo. "El juego tiene demasiados mensajes de que no estás gastando; el usuario debería darse cuenta solo." Hay que sacar mensajes |
+| Aviso de aldeanos encerrados por la propia empalizada | **No** ("skill issue") |
+| Muralla de piedra (C-101) | **Sí**, en la edad II, como se propuso |
+| Rendimiento con 7 jugadores | **Sí:** probar y hacerlo bien |
+| Nueva pregunta a los jugadores | ¿Qué tan lejos está el juego de algo que se pueda jugar profesionalmente, estilo esports? |
