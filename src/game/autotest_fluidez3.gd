@@ -39,7 +39,7 @@ static func correr(m: Node, check: Callable) -> void:
 	# 2. El clic derecho sin nada propio elegido no hace nada: suena el error.
 	ctrl.select_ids([] as Array[int])
 	await m._frames(2)
-	var empty_sp: Vector2 = m._screen(base.x - 6.0, base.y + 10.0)
+	var empty_sp: Vector2 = m._suelo_libre(base.x - 6.0, base.y + 10.0)
 	m._mouse(empty_sp, MOUSE_BUTTON_RIGHT, true)
 	m._mouse(empty_sp, MOUSE_BUTTON_RIGHT, false)
 	await m._frames(4)
@@ -49,16 +49,21 @@ static func correr(m: Node, check: Callable) -> void:
 	ctrl.select_ids(vs)
 	await m._frames(12)
 	check.call("fluidez 3: función de la orden de los aldeanos (%s)" % Respuesta.funcion(ctrl), Respuesta.funcion(ctrl) == "civil")
+	# El arbusto más cercano que el cursor tome a él (no a un aldeano parado encima ni a un árbol).
+	var arbustos: Array = sim.entities.filter(func(e: SimEntity) -> bool: return e.alive and e.type == "arbusto")
+	arbustos.sort_custom(func(p: SimEntity, q: SimEntity) -> bool: return Sim.dist(p.x, p.y, base.x * 1000, base.y * 1000) < Sim.dist(q.x, q.y, base.x * 1000, base.y * 1000))
 	var bush: SimEntity = null
-	for e in sim.entities:
-		if e.alive and e.type == "arbusto" and (bush == null or Sim.dist(e.x, e.y, base.x * 1000, base.y * 1000) < Sim.dist(bush.x, bush.y, base.x * 1000, base.y * 1000)):
+	var bush_sp := Vector2.ZERO
+	for e: SimEntity in arbustos.slice(0, 12):
+		cam.look_at_point(WorldView.to_world(e.x, e.y))
+		await m._frames(1)
+		bush_sp = cam.cam.unproject_position(WorldView.to_world(e.x, e.y, 0.2))
+		if ctrl.pick(bush_sp, true) == e.id:
 			bush = e
+			break
 	if bush == null:
 		check.call("fluidez 3: hay un arbusto para el destello", false)
 		return
-	cam.look_at_point(WorldView.to_world(bush.x, bush.y))
-	await m._frames(3)
-	var bush_sp := cam.cam.unproject_position(WorldView.to_world(bush.x, bush.y, 0.2))
 	var antes := int(Respuesta.cuenta.get("orden", 0))
 	m._mouse(bush_sp, MOUSE_BUTTON_RIGHT, true)
 	m._mouse(bush_sp, MOUSE_BUTTON_RIGHT, false)

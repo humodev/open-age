@@ -38,60 +38,11 @@ static func _hasta(m: Node, cond: Callable, max: int = 240) -> bool:
 	return cond.call()
 
 
-static func correr(m: Node, check: Callable) -> void:
+## 3. El tope de aldeanos: con 10 de tope y 8 aldeanos, para en 10.
+static func _tope(m: Node, check: Callable, capital: SimEntity, rep: Dictionary) -> void:
 	var sim: Sim = m.sim
-	var ctrl: Controller = m.ctrl
-	var hud: Hud = m.hud
 	var local: int = m.local
-	var p: Dictionary = sim.players[local]
-	var saved_res: Dictionary = (p["res"] as Dictionary).duplicate()
-	var saved_extra: int = int(p.get("pob_extra", 0))
-	var capital: SimEntity = null
-	for e in sim.actives:
-		if e.alive and e.owner == local and e.is_building() and e.built and e.capital and (e.def.get("produce", []) as Array).has("aldeano"):
-			capital = e
-			break
-	if capital == null:
-		check.call("hay un centro que entrena aldeanos", false)
-		return
 	var b := sim.bases[local]
-	m.cam.look_at_point(Vector3(b.x + 2, 0, b.y + 2))
-	ctrl.open_submenu(Grilla.RAIZ)
-	ctrl.select_ids([capital.id] as Array[int])
-	for k in sim.RES_KINDS:
-		p["res"][k] = 5000
-	p["pob_extra"] = saved_extra + 60
-	await m._frames(4)
-	var cmd := {}
-	for c in ctrl.commands():
-		if c.get("kind", "") == "train" and c["id"] == "aldeano":
-			cmd = c
-	var slot_c: Vector2 = hud._card.global_position + hud._card._slot_rect(int(cmd.get("slot", 0))).get_center()
-
-	# 1. Ctrl + clic en la casilla: se repite (comando de la simulación, queda grabado).
-	var n_rec := sim.recording.size()
-	_tecla(KEY_CTRL, true)
-	await m._click(slot_c)
-	_tecla(KEY_CTRL, false)
-	await _hasta(m, func() -> bool: return capital.repeat == "aldeano", 60)
-	check.call("Ctrl + clic en la casilla prende la repetición (comando grabado)", capital.repeat == "aldeano" and sim.recording.size() > n_rec)
-	var c2 := Controller.cmd_at(ctrl.commands(), int(cmd.get("slot", 0)))
-	check.call("la casilla dice que se repite", c2.get("repite", false))
-	await m._frames(4)
-	m.get_viewport().get_texture().get_image().save_png("screenshots/produccion_repite.png")
-	await _hasta(m, func() -> bool: return not capital.queue.is_empty(), 60)
-	check.call("con la cola vacía, la repetición encola sola", not capital.queue.is_empty())
-
-	# 2. Lo apartado no se toca.
-	var cola_antes := capital.queue.size()
-	sim.push_command({"t": "cancel", "player": local, "building": capital.id, "index": -1})
-	await _hasta(m, func() -> bool: return capital.queue.size() < cola_antes, 60)
-	p["reserva_alimento"] = int(p["res"]["alimento"])
-	check.call("con todo el alimento apartado, la repetición se frena (%s)" % sim.repeat_block(capital), sim.repeat_block(capital) == "recursos")
-	p["reserva_alimento"] = 0
-
-	# 3. El tope de aldeanos: con 10 de tope y 8 aldeanos, para en 10.
-	var rep: Dictionary = sim.data.reglas["repeticion"]
 	var ald := sim.villagers_and_queued(local)
 	var tope := maxi(int(rep["tope_min"]), ald + 2)
 	sim.push_command({"t": "tope_aldeanos", "player": local, "n": tope})
@@ -104,6 +55,74 @@ static func correr(m: Node, check: Callable) -> void:
 	m.speed = 1.0
 	check.call("la repetición llega al tope y no lo pasa (%d de %d)" % [n_ald, tope], llego and n_ald == tope and sim.villager_cap(local) == tope and capital.queue.is_empty() and sim.repeat_block(capital) == "tope")
 
+
+static func correr(m: Node, check: Callable) -> void:
+	var sim: Sim = m.sim
+	var ctrl: Controller = m.ctrl
+	var hud: Hud = m.hud
+	var local: int = m.local
+	var p: Dictionary = sim.players[local]
+	var saved_res: Dictionary = (p["res"] as Dictionary).duplicate()
+	var saved_extra: int = int(p.get("pob_extra", 0))
+	# El centro entrena aldeanos, salvo en los pueblos que no (Palmares): ahí se usa lo primero
+	# que entrena su centro, y el tope de aldeanos no corresponde.
+	var capital: SimEntity = null
+	var unidad := ""
+	for e in sim.actives:
+		if e.alive and e.owner == local and e.is_building() and e.built and e.capital and not (e.def.get("produce", []) as Array).is_empty():
+			capital = e
+			var prod: Array = e.def["produce"]
+			unidad = "aldeano" if prod.has("aldeano") else String(prod[0])
+			break
+	if capital == null:
+		check.call("hay un centro que entrena algo", false)
+		return
+	var civil := str(sim.dp(local).unidades.get(unidad, {}).get("funcion", "")) == "civil"
+	var b := sim.bases[local]
+	m.cam.look_at_point(Vector3(b.x + 2, 0, b.y + 2))
+	ctrl.open_submenu(Grilla.RAIZ)
+	ctrl.select_ids([capital.id] as Array[int])
+	for k in sim.RES_KINDS:
+		p["res"][k] = 5000
+	p["pob_extra"] = saved_extra + 60
+	await m._frames(4)
+	var cmd := {}
+	for c in ctrl.commands():
+		if c.get("kind", "") == "train" and c["id"] == unidad:
+			cmd = c
+	var slot_c: Vector2 = hud._card.global_position + hud._card._slot_rect(int(cmd.get("slot", 0))).get_center()
+
+	# 1. Ctrl + clic en la casilla: se repite (comando de la simulación, queda grabado).
+	var n_rec := sim.recording.size()
+	_tecla(KEY_CTRL, true)
+	await m._click(slot_c)
+	_tecla(KEY_CTRL, false)
+	await _hasta(m, func() -> bool: return capital.repeat == unidad, 60)
+	check.call("Ctrl + clic en la casilla prende la repetición de %s (comando grabado)" % unidad, capital.repeat == unidad and sim.recording.size() > n_rec)
+	var c2 := Controller.cmd_at(ctrl.commands(), int(cmd.get("slot", 0)))
+	check.call("la casilla dice que se repite", c2.get("repite", false))
+	await m._frames(4)
+	m.get_viewport().get_texture().get_image().save_png("screenshots/produccion_repite.png")
+	await _hasta(m, func() -> bool: return not capital.queue.is_empty(), 60)
+	check.call("con la cola vacía, la repetición encola sola", not capital.queue.is_empty())
+
+	# 2. Lo apartado no se toca.
+	var cola_antes := capital.queue.size()
+	sim.push_command({"t": "cancel", "player": local, "building": capital.id, "index": -1})
+	await _hasta(m, func() -> bool: return capital.queue.size() < cola_antes, 60)
+	var apartado: String = (sim.train_cost(local, capital, unidad).keys() + ["alimento"])[0]
+	p["reserva_" + apartado] = int(p["res"][apartado])
+	check.call("con todo el %s apartado, la repetición se frena (%s)" % [apartado, sim.repeat_block(capital)], sim.repeat_block(capital) == "recursos")
+	p["reserva_" + apartado] = 0
+
+	# 3. El tope de aldeanos: con 10 de tope y 8 aldeanos, para en 10.
+	var rep: Dictionary = sim.data.reglas["repeticion"]
+	if civil:
+		await _tope(m, check, capital, rep)
+	else:
+		print("(sin tope de aldeanos: el centro de este pueblo entrena %s)" % unidad)
+
+	# 4. Ctrl + clic otra vez: se apaga.
 	# 4. Ctrl + clic otra vez: se apaga.
 	_tecla(KEY_CTRL, true)
 	await m._click(slot_c)
@@ -114,7 +133,7 @@ static func correr(m: Node, check: Callable) -> void:
 
 	# 5. Cola de 10.
 	for i in 12:
-		sim.push_command({"t": "train", "player": local, "building": capital.id, "type": "aldeano"})
+		sim.push_command({"t": "train", "player": local, "building": capital.id, "type": unidad})
 	await _hasta(m, func() -> bool: return capital.queue.size() >= 10, 60)
 	await m._frames(3)
 	check.call("la cola llega a 10 y no pasa (%d)" % capital.queue.size(), capital.queue.size() == 10 and int(sim.data.reglas["cola_max"]) == 10)
@@ -132,11 +151,17 @@ static func correr(m: Node, check: Callable) -> void:
 	check.call("el clic derecho sobre una unidad no cambia de submenú", ctrl.submenu == Grilla.RAIZ)
 
 	# 7. Aviso anticipado de población: un lugar libre y cuatro en cola.
-	var base_cap := int(p["pop_cap"]) - int(p["pob_extra"])
+	# El lugar sin el extra se suma de los edificios: restar el extra del tope no sirve si el tope
+	# estaba recortado por `pob_max`.
+	var base_cap := 0
+	for e in sim.actives:
+		if e.alive and e.owner == local and e.is_building() and e.built:
+			base_cap += int(e.def.get("pob", 0))
 	p["pob_extra"] = int(p["pop"]) + 1 - base_cap
-	await _hasta(m, func() -> bool: return hud.pob_eta > 0, 30)
+	# La HUD recalcula cada 5 pasos de la simulación: 30 cuadros quedaban justo en el límite.
+	await _hasta(m, func() -> bool: return hud.pob_eta > 0, 120)
 	var aviso := int(hud.COLA_GLOBAL.cfg()["aviso_pob_s"])
-	check.call("aviso anticipado de población: sin lugar en ~%d s" % hud.pob_eta, hud.pob_eta > 0 and hud.pob_eta <= aviso)
+	check.call("aviso anticipado de población: sin lugar en ~%d s (%d/%d, cola %d)" % [hud.pob_eta, int(p["pop"]), int(p["pop_cap"]), capital.queue.size()], hud.pob_eta > 0 and hud.pob_eta <= aviso)
 	p["pob_extra"] = saved_extra + 60
 
 	# 8. Parado en gris: sin cola durante parado_s, el centro va gris a la cola global.

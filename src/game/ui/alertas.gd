@@ -37,6 +37,7 @@ var _vacia_desde := {} # id de granja -> reloj desde que está sin granjero
 var vacias: Array[SimEntity] = [] # granjas marcadas (más de granja_espera_s sin granjero)
 var conteo := {} # para el autotest: clave del aviso -> veces
 var ultimo_recurso := {} # el último aviso de recurso: {texto, lugar} (autotest)
+var avisos_recurso: Array[Dictionary] = [] # los últimos, para revisar a cuál se refiere cada uno
 
 
 func setup(h: Hud) -> void:
@@ -260,6 +261,9 @@ func _queda(kind: String, x: int, y: int) -> int:
 
 func _aviso_recurso(txt: String, s: Dictionary) -> void:
 	ultimo_recurso = {"texto": txt, "lugar": WorldView.to_world(int(s["x"]), int(s["y"]))}
+	avisos_recurso.push_back(ultimo_recurso)
+	if avisos_recurso.size() > 16:
+		avisos_recurso.pop_front()
 	hud.notify(txt, -1.0, "decision", ultimo_recurso["lugar"])
 	_sonar("aviso_recurso", "ui/ui_aviso_recurso.ogg")
 	_contar("recurso")

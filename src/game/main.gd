@@ -1237,8 +1237,26 @@ func _key_tap(code: int) -> void:
 		Input.parse_input_event(k)
 
 
+## Punto de pantalla de suelo libre cerca de la casilla (cx, cy): sin edificio ni recurso en la
+## casilla y sin nada que el cursor tome (en algunos mapas, el lugar fijo caía en un árbol).
+func _suelo_libre(cx: float, cy: float) -> Vector2:
+	for r in range(0, 6):
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				if maxi(absi(dx), absi(dy)) != r:
+					continue
+				var tx := int(cx) + dx
+				var ty := int(cy) + dy
+				var sp := _screen(tx + 0.5, ty + 0.5)
+				if sim.map.is_free_rect(tx - 1, ty - 1, 3, 3) and ctrl.pick(sp) < 0:
+					return sp
+	return _screen(cx, cy)
+
+
+## Punto de pantalla de una casilla, sobre el relieve: el cursor busca el suelo a su altura
+## (RtsCamera.ground_at), y con la altura en 0 un trazo de muro caía una fila corrido.
 func _screen(x_tiles: float, z_tiles: float) -> Vector2:
-	return cam.cam.unproject_position(Vector3(x_tiles, 0, z_tiles))
+	return cam.cam.unproject_position(Vector3(x_tiles, WorldView.height_at(x_tiles, z_tiles), z_tiles))
 
 
 # --- órdenes ---
@@ -2156,7 +2174,7 @@ func _autotest() -> void:
 	_mouse(bush_sp, 0, false)
 	await _frames(3)
 	check.call("cursor de recolectar alimento sobre el arbusto (%s)" % ctrl.cursor_action(bush_sp), ctrl.cursor_action(bush_sp) == "recolectar_alimento")
-	var empty_sp := _screen(base.x - 6.0, base.y + 10.0)
+	var empty_sp := _suelo_libre(base.x - 6.0, base.y + 10.0)
 	_mouse(empty_sp, 0, false)
 	await _frames(3)
 	check.call("cursor de mover sobre el suelo (%s)" % ctrl.cursor_action(empty_sp), ctrl.cursor_action(empty_sp) in ["mover", ""])
@@ -2454,8 +2472,14 @@ func _autotest() -> void:
 	var cs = hud.consejos
 	Opciones.consejos = true
 	hud.avisos.lista.clear()
-	sim.push_command({"t": "stop", "player": local, "ids": vill_ids})
-	await _frames(6)
+	var civiles := _vill_ids() # todos los de ahora, no solo los del principio
+	sim.push_command({"t": "stop", "player": local, "ids": civiles})
+	# Que la orden llegue: 6 cuadros a veces no alcanzan para un paso de la simulación.
+	var t_stop: int = sim.tick
+	for i in 60:
+		if sim.tick >= t_stop + 2:
+			break
+		await _frames(1)
 	cs._said.clear() # el aviso real pudo haber salido antes (los aldeanos estuvieron quietos)
 	cs._since.clear()
 	cs.check(0)
@@ -2465,7 +2489,9 @@ func _autotest() -> void:
 			if String(a["texto"]).contains(part):
 				return true
 		return false
-	check.call("aviso de aldeanos sin trabajo", said.call("sin trabajo"))
+	var ociosos: int = civiles.filter(func(id: int) -> bool: return sim.by_id.has(id) and sim.by_id[id].alive and sim.by_id[id].order == SimEntity.Order.IDLE and sim.by_id[id].inside < 0).size()
+	var textos: Array = hud.avisos.lista.map(func(a: Dictionary) -> String: return String(a["texto"]).get_slice("\n", 0))
+	check.call("aviso de aldeanos sin trabajo (%d de %d quietos; %s)" % [ociosos, civiles.size(), " / ".join(textos)], said.call("sin trabajo"))
 	hud.avisos.lista.clear()
 	Opciones.consejos = false
 	cs._said.clear()

@@ -30,6 +30,16 @@ static func _lugar_libre(sim: Sim, cx: int, cy: int, w: int, h: int) -> Vector2i
 	return Vector2i(-1, -1)
 
 
+## Avisos de recurso que empiezan con `prefijo` y llevan la cámara a `veta`.
+static func _avisos_en(al, veta: SimEntity, prefijo: String) -> int:
+	var aca := WorldView.to_world(veta.x, veta.y)
+	var n := 0
+	for a in al.avisos_recurso:
+		if String(a.get("texto", "")).begins_with(prefijo) and a.get("lugar") is Vector3 and (a["lugar"] as Vector3).distance_to(aca) < 0.01:
+			n += 1
+	return n
+
+
 static func correr(m: Node, check: Callable) -> void:
 	var sim: Sim = m.sim
 	var hud: Hud = m.hud
@@ -92,20 +102,26 @@ static func correr(m: Node, check: Callable) -> void:
 		var veta := sim.spawn_resource(roca, pos.x, pos.y)
 		# Lejos de otras: lo que queda cerca es solo esta.
 		veta.amount = int((al.cfg.get("umbral_recurso", {}) as Dictionary).get("piedra", 300)) / 2
-		hud.avisos.lista.clear()
-		al.conteo.clear()
 		al._avisado_veta.clear()
 		al._seguidos.clear()
+		# Los otros aldeanos siguen juntando y lo que se agota cerca de ellos también avisa
+		# (en guaraníes, el monte se raleaba). Esa revisión va antes, y se cuentan solo los avisos
+		# con lugar en la veta.
+		al.revisar()
+		hud.avisos.lista.clear()
+		al.avisos_recurso.clear()
+		al.conteo.clear()
 		sim.push_command({"t": "target", "player": local, "ids": [vill.id], "target": veta.id})
 		await _hasta(m, func() -> bool: return vill.target == veta.id and vill.order == SimEntity.Order.GATHER, 120)
 		al.revisar()
-		var poco := int(al.conteo.get("recurso", 0))
-		check.call("fluidez 4: la veta chica avisa que se agota (%d)" % poco, poco == 1)
+		var poco := _avisos_en(al, veta, "Se agota")
+		check.call("fluidez 4: la veta chica avisa que se agota (%d de %d)" % [poco, int(al.conteo.get("recurso", 0))], poco == 1)
 		veta.amount = 1
 		var agotada := await _hasta(m, func() -> bool: return not veta.alive or veta.amount <= 0, 1200)
 		al.revisar()
+		var fin := _avisos_en(al, veta, "Se acabó")
 		var txt: String = al.ultimo_recurso.get("texto", "")
-		check.call("fluidez 4: cuando se acaba, avisa con lugar («%s», agotada %s)" % [txt, agotada], txt.begins_with("Se acabó") and al.ultimo_recurso.get("lugar") is Vector3 and int(al.conteo.get("recurso", 0)) == 2)
+		check.call("fluidez 4: cuando se acaba, avisa con lugar («%s», %d, agotada %s)" % [txt, fin, agotada], agotada and fin == 1 and _avisos_en(al, veta, "Se agota") == 1)
 
 	# --- granja vacía ---
 	var granja := ""

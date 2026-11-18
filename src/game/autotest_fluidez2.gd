@@ -29,75 +29,14 @@ static func _libre(sim: Sim, local: int, type: String, cx: int, cy: int, usadas:
 	return Vector2i(-1, -1)
 
 
-static func correr(m: Node, check: Callable) -> void:
+## 2. El muro (los pueblos sin muros, como el Tawantinsuyu, no la corren).
+static func _muro(m: Node, check: Callable, muro: String) -> SimEntity:
 	var sim: Sim = m.sim
 	var ctrl: Controller = m.ctrl
 	var cam: RtsCamera = m.cam
 	var local: int = m.local
 	var base = sim.bases[local]
-	var res: Dictionary = sim.players[local]["res"]
-	for k in ["madera", "piedra", "alimento", "riqueza"]:
-		res[k] = int(res.get(k, 0)) + 2000
 	var vs: Array[int] = m._vill_ids()
-	var dd := sim.dp(local)
-
-	# 1. Tres casas con Mayús: se terminan en el orden en que se pusieron (y la lejana no queda sola).
-	var casa := ""
-	for k in dd.unidades["aldeano"].get("construye", []):
-		var d: Dictionary = dd.edificios.get(k, {})
-		if d.has("pob") and int(d.get("edad_min", 1)) <= 1 and not d.has("deposito") and not d.has("produce"):
-			casa = k
-			break
-	var tam: Array = dd.edificios[casa]["tam"]
-	var lugares: Array = []
-	for off: Vector2i in [Vector2i(11, 2), Vector2i(2, 8), Vector2i(-9, 1)]:
-		var t := _libre(sim, local, casa, int(base.x) + off.x, int(base.y) + off.y, lugares)
-		lugares.append(t)
-	check.call("fluidez 2: hay lugar para tres casas (%s)" % str(lugares), lugares.all(func(t: Vector2i) -> bool: return t.x >= 0))
-	var tres: Array[int] = [vs[0], vs[1], vs[2]]
-	ctrl.select_ids(tres)
-	ctrl.open_submenu(Grilla.ECONOMIA)
-	await m._frames(2)
-	ctrl.run_command({"kind": "build", "id": casa, "cost": sim.build_cost(local, casa)})
-	cam.look_at_point(Vector3(base.x + 1, 0, base.y + 4))
-	await m._frames(3)
-	_shift(m, true)
-	for t: Vector2i in lugares:
-		var sp: Vector2 = m._screen(t.x + tam[0] / 2.0, t.y + tam[1] / 2.0)
-		m._mouse(sp, 0, false)
-		await m._frames(2)
-		m._mouse(sp, MOUSE_BUTTON_LEFT, true)
-		m._mouse(sp, MOUSE_BUTTON_LEFT, false)
-		await m._frames(2)
-	_shift(m, false)
-	ctrl.cancel_mode()
-	await m._frames(4)
-	var casas: Array = []
-	for t: Vector2i in lugares:
-		casas.append(sim.by_id.get(sim.map.occupant(t.x, t.y)))
-	check.call("fluidez 2: los tres cimientos están puestos", casas.all(func(b) -> bool: return b != null and b.type == casa))
-	var en_cola: int = (ctrl.cola.colas.get(vs[0], []) as Array).size()
-	check.call("fluidez 2: dos obras en la cola del aldeano (%d)" % en_cola, en_cola == 2)
-	var orden: Array = []
-	m.speed = 8.0
-	for i in 2400:
-		await m._frames(1)
-		for b in casas:
-			if b != null and b.built and not orden.has(b.id):
-				orden.append(b.id)
-		if orden.size() == 3:
-			break
-	m.speed = 1.0
-	var puesto: Array = casas.map(func(b) -> int: return b.id if b != null else -1)
-	check.call("fluidez 2: las tres casas se terminan en el orden puesto (%s, puestas %s)" % [str(orden), str(puesto)], orden == puesto)
-
-	# 2. Empalizada arrastrada con un árbol en el medio: cifras junto al cursor, puerta con G y
-	#    el hueco avisado y marcado.
-	var muro := ""
-	for k in dd.edificios:
-		if dd.edificios[k].get("linea", false) and int(dd.edificios[k].get("edad_min", 1)) <= int(sim.players[local]["age"]):
-			muro = k
-			break
 	var arbol: SimEntity = null
 	var best := 1 << 60
 	for e in sim.entities:
@@ -112,7 +51,7 @@ static func correr(m: Node, check: Callable) -> void:
 			best = d
 	check.call("fluidez 2: hay un árbol suelto para el muro", arbol != null)
 	if arbol == null:
-		return
+		return null
 	ctrl.select_ids([vs[3]] as Array[int])
 	await m._frames(2)
 	ctrl.run_command({"kind": "build", "id": muro, "cost": sim.build_cost(local, muro)})
@@ -152,6 +91,99 @@ static func correr(m: Node, check: Callable) -> void:
 	var pm: SimEntity = sim.by_id.get(sim.map.occupant(arbol.tx - 3, arbol.ty))
 	check.call("fluidez 2: el resto del muro quedó puesto", pm != null and pm.type == muro)
 	ctrl.cancel_mode()
+	return arbol
+
+
+static func correr(m: Node, check: Callable) -> void:
+	var sim: Sim = m.sim
+	var ctrl: Controller = m.ctrl
+	var cam: RtsCamera = m.cam
+	var local: int = m.local
+	var base = sim.bases[local]
+	var res: Dictionary = sim.players[local]["res"]
+	for k in ["madera", "piedra", "alimento", "riqueza"]:
+		res[k] = int(res.get(k, 0)) + 2000
+	var vs: Array[int] = m._vill_ids()
+	var dd := sim.dp(local)
+
+	# 1. Tres casas con Mayús: se terminan en el orden en que se pusieron (y la lejana no queda sola).
+	var casa := ""
+	for k in dd.unidades["aldeano"].get("construye", []):
+		var d: Dictionary = dd.edificios.get(k, {})
+		if d.has("pob") and int(d.get("edad_min", 1)) <= 1 and not d.has("deposito") and not d.has("produce"):
+			casa = k
+			break
+	var tam: Array = dd.edificios[casa]["tam"]
+	var lugares: Array = []
+	for off: Vector2i in [Vector2i(11, 2), Vector2i(2, 8), Vector2i(-9, 1)]:
+		var t := _libre(sim, local, casa, int(base.x) + off.x, int(base.y) + off.y, lugares)
+		lugares.append(t)
+	check.call("fluidez 2: hay lugar para tres casas (%s)" % str(lugares), lugares.all(func(t: Vector2i) -> bool: return t.x >= 0))
+	var tres: Array[int] = [vs[0], vs[1], vs[2]]
+	ctrl.select_ids(tres)
+	ctrl.open_submenu(Grilla.ECONOMIA)
+	await m._frames(2)
+	ctrl.run_command({"kind": "build", "id": casa, "cost": sim.build_cost(local, casa)})
+	cam.look_at_point(Vector3(base.x + 1, 0, base.y + 4))
+	await m._frames(3)
+	_shift(m, true)
+	for t: Vector2i in lugares:
+		# La cámara sobre cada lugar, como haría el jugador: con el giro que dejan las pruebas de
+		# antes, una casa caía en el borde de la pantalla, debajo del panel, y el clic no llegaba.
+		cam.look_at_point(Vector3(t.x + tam[0] / 2.0, 0, t.y + tam[1] / 2.0))
+		await m._frames(2)
+		var sp: Vector2 = m._screen(t.x + tam[0] / 2.0, t.y + tam[1] / 2.0)
+		m._mouse(sp, 0, false)
+		await m._frames(2)
+		m._mouse(sp, MOUSE_BUTTON_LEFT, true)
+		m._mouse(sp, MOUSE_BUTTON_LEFT, false)
+		await m._frames(2)
+	_shift(m, false)
+	ctrl.cancel_mode()
+	# El último cimiento sale en el próximo paso de la simulación, que no siempre cae dentro de
+	# unos pocos cuadros: se esperan dos pasos.
+	var t_casas: int = sim.tick
+	for i in 60:
+		if sim.tick >= t_casas + 2:
+			break
+		await m._frames(1)
+	var casas: Array = []
+	for t: Vector2i in lugares:
+		casas.append(sim.by_id.get(sim.map.occupant(t.x, t.y)))
+	check.call("fluidez 2: los tres cimientos están puestos", casas.all(func(b) -> bool: return b != null and b.type == casa))
+	var en_cola: int = (ctrl.cola.colas.get(vs[0], []) as Array).size()
+	check.call("fluidez 2: dos obras en la cola del aldeano (%d)" % en_cola, en_cola == 2)
+	var orden: Array = []
+	m.speed = 8.0
+	for i in 2400:
+		await m._frames(1)
+		for b in casas:
+			if b != null and b.built and not orden.has(b.id):
+				orden.append(b.id)
+		if orden.size() == 3:
+			break
+	m.speed = 1.0
+	var puesto: Array = casas.map(func(b) -> int: return b.id if b != null else -1)
+	check.call("fluidez 2: las tres casas se terminan en el orden puesto (%s, puestas %s)" % [str(orden), str(puesto)], orden == puesto)
+
+	# 2. Empalizada arrastrada con un árbol en el medio: cifras junto al cursor, puerta con G y
+	#    el hueco avisado y marcado.
+	var muro := ""
+	for k in dd.edificios:
+		# Un muro: el camino del Tawantinsuyu también es `linea`, pero no lleva puerta.
+		if dd.edificios[k].get("linea", false) and not dd.edificios[k].get("transitable", false) and (dd.unidades["aldeano"].get("construye", []) as Array).has(k) and int(dd.edificios[k].get("edad_min", 1)) <= int(sim.players[local]["age"]):
+			muro = k
+			break
+	var arbol: SimEntity = null
+	if muro != "":
+		arbol = await _muro(m, check, muro)
+	else:
+		print("(fluidez 2: este pueblo no levanta muros; sin la prueba del muro)")
+		var best := 1 << 60
+		for e in sim.entities:
+			if e.alive and e.is_resource() and e.res_kind == "madera" and Sim.dist(e.x, e.y, int(base.x) * 1000, int(base.y) * 1000) < best:
+				arbol = e
+				best = Sim.dist(e.x, e.y, int(base.x) * 1000, int(base.y) * 1000)
 
 	# 3. Granja que se pega al depósito de alimento, con «x de 8 libres».
 	var granja := ""
@@ -196,7 +228,7 @@ static func correr(m: Node, check: Callable) -> void:
 		if (d2.get("deposito", []) as Array).has("madera") and not d2.get("hito", false) and not d2.has("produce"):
 			almacen = k
 			break
-	if almacen != "":
+	if almacen != "" and arbol != null:
 		var al := ""
 		for l in MundoColocacion.detalles(sim, local, almacen, arbol.tx + 1, arbol.ty + 2):
 			al += String(l[0]) + " / "
