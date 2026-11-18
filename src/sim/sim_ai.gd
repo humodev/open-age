@@ -1762,6 +1762,8 @@ func _counter_order(p: Dictionary) -> Array[String]:
 				continue
 			if foe_mounted < int(it.get("contra_montados", 0)):
 				continue
+			if int(p["age"]) < int(it.get("desde_edad", 1)):
+				continue # `desde_edad`: antes no entra al orden (y no corre el turno de ia_unidades)
 			out.append(ty)
 	for t: String in sim.dp(player).civ.get("ia_unidades", []):
 		if (sim.tick / 50 + out.size()) % 3 == 0:
