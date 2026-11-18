@@ -141,6 +141,7 @@ func _set_selection(ids: Array[int], keep_menu: bool = false) -> void:
 	if mode == "place" and not _has_villager():
 		cancel_mode()
 	selection_changed.emit()
+	if not keep_menu: Respuesta.al_elegir(self, ids)  # --- fluidez 3 ---
 
 
 # --- ronda 6 ---
@@ -1145,6 +1146,7 @@ func flare(g: Vector3) -> void:
 func _right_click(pos: Vector2, rumbo: int = -1) -> void:
 	var sel := selected_entities()
 	if sel.is_empty() or sel[0].owner != local:
+		Respuesta.error(self)  # --- fluidez 3 ---
 		return
 	var g := cam.ground_at(pos)
 	var target := pick(pos, true)
@@ -1165,6 +1167,7 @@ func _right_click(pos: Vector2, rumbo: int = -1) -> void:
 			sim.push_command({"t": "target", "player": local, "ids": ids, "target": t.id, "suelto": loose})
 			var col := Palette.UI_BAD if t.owner >= 0 and t.owner != local else Palette.UI_ACCENT
 			view.add_marker(WorldView.to_world(t.x, t.y), col)
+			Respuesta.blanco(self, t, col)  # --- fluidez 3 ---
 		else:
 			sim.push_command({"t": "move", "player": local, "ids": ids, "x": int(g.x * P), "y": int(g.z * P), "suelto": loose, "form": formacion, "rumbo": rumbo}) # --- órdenes ---
 			view.add_marker(g, Palette.UI_BAD if loose else Palette.UI_GOOD)
@@ -1179,13 +1182,14 @@ func _right_click(pos: Vector2, rumbo: int = -1) -> void:
 ## Sonido corto del pueblo al dar una orden a las tropas (data/audio.json; con su propio límite).
 func _orden_ack() -> void:
 	if hud != null and hud.main.get("audio") != null:
-		hud.main.audio.civ_sfx("orden")
+		Respuesta.orden(self)  # --- fluidez 3 ---
 
 
 func _place() -> void:
 	var tile: Vector2i = _ghost.get_meta("tile", Vector2i(-1, -1))
 	var cost := sim.dp(local).cost_of(place_type, sim.players[local]["age"])
 	if not sim.can_place(place_type, tile.x, tile.y, local):
+		Respuesta.error(self)  # --- fluidez 3 ---
 		hud_notify(MundoColocacion.motivo(sim, local, place_type, tile.x, tile.y)) # --- mundo ---
 		return
 	if not sim.can_afford(local, cost):
@@ -1198,6 +1202,7 @@ func _place() -> void:
 			ids.append(e.id)
 	sim.push_command({"t": "build", "player": local, "ids": ids, "type": place_type, "tx": tile.x, "ty": tile.y})
 	view.add_marker(_ghost.position, Palette.UI_ACCENT)
+	Respuesta.cimiento(self, _ghost.position, place_type)  # --- fluidez 3 ---
 	if not Input.is_key_pressed(KEY_SHIFT) or sim.dp(local).is_hito(place_type):
 		cancel_mode()
 		submenu = Grilla.RAIZ # --- grilla --- (colocado el edificio, la grilla vuelve a la raíz)
@@ -1260,6 +1265,7 @@ func _key(k: InputEventKey) -> void:
 				var at: Variant = hud.avisos.saltar(acc == "avisos_atras")
 				if at is Vector3:
 					cam.look_at_point(at)
+					Respuesta.pulso(self, at)  # --- fluidez 3 ---
 				else:
 					hud_notify("No hay avisos con lugar para ir", "info")
 			return
@@ -1359,6 +1365,7 @@ func center_on_selection() -> void:
 	for e in sel:
 		c += WorldView.to_world(e.x, e.y)
 	cam.look_at_point(c / sel.size())
+	Respuesta.pulso(self, c / sel.size())  # --- fluidez 3 ---
 
 
 func select_ids(ids: Array[int]) -> void:

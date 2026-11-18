@@ -108,6 +108,61 @@ func _civ_music(civ: String, mood: String) -> Array:
 	return own
 # --- fin sonido por pueblo ---
 
+# --- fluidez 3 --- respuesta inmediata (data/respuesta.json; src/game/respuesta.gd)
+var _resp_next := {} # tipo -> reloj desde el que puede volver a sonar
+
+
+## Archivo del pueblo local para `nombre` (civ/<civ>/<civ>_<nombre>.ogg), o "" si no lo tiene.
+func _civ_path(nombre: String) -> String:
+	var civ := _local_civ()
+	if civ == "":
+		return ""
+	var path := "civ/%s/%s_%s.ogg" % [civ, civ, nombre]
+	return path if _stream(path) != null else ""
+
+
+## Suena `path` con el volumen y el mínimo entre dos de la entrada `tipo` de respuesta.json → sonido.
+## Devuelve true si sonó.
+func _respuesta(tipo: String, path: String) -> bool:
+	var d: Dictionary = Respuesta.de("sonido", tipo)
+	if d.is_empty() or path == "" or _stream(path) == null:
+		return false
+	if _clock < float(_resp_next.get(tipo, -1.0)):
+		return false
+	_resp_next[tipo] = _clock + float(d.get("min_s", 0.12))
+	_play(path, float(d.get("db", -12.0)))
+	return true
+
+
+## Sonido corto de la interfaz (error, cimiento) con su entrada de respuesta.json.
+func respuesta_ui(tipo: String, path: String) -> bool:
+	return _respuesta(tipo, path)
+
+
+## Al elegir: aldeano, tropa o edificio, del pueblo local si lo tiene; lo ajeno, el clic bajo.
+func elegir(cat: String) -> bool:
+	if cat == "ajeno":
+		return _respuesta("elegir_ajeno", "ui/ui_clic.ogg")
+	var path := _civ_path("elegir_" + cat)
+	return _respuesta("elegir", path if path != "" else "ui/ui_elegir_%s.ogg" % cat)
+
+
+## La orden por función (civil, a_pie, montado, asedio). A pie es la orden de 4g; las otras salen de
+## generar_respuesta.py. Comparten el límite de momentos.orden de audio.json.
+func orden(fn: String) -> bool:
+	if Respuesta.de("sonido", "orden").is_empty():
+		return false
+	var path := _civ_path("orden_" + fn) if fn != "a_pie" else ""
+	if path == "":
+		return civ_sfx("orden")
+	var m: Dictionary = (cfg().get("momentos", {}) as Dictionary).get("orden", {})
+	if _clock < float(_civ_next.get("orden", -1.0)):
+		return false
+	_civ_next["orden"] = _clock + float(m.get("min_s", 0.35))
+	_play(path, float(m.get("db", -14.0)))
+	return true
+# --- fin fluidez 3 ---
+
 
 func _ready() -> void:
 	for i in 20:

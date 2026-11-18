@@ -1,0 +1,18 @@
+{
+  "_doc": "Respuesta inmediata (etapa 30, frente 3; src/game/respuesta.gd, audio.gd y world_view.gd). Solo la vista: nada de esto entra en la simulación. Cada sonido y cada efecto se apaga con su `activo` (o todos con el `activo` de su bloque). db: volumen como en audio.ui; min_s: segundos mínimos entre dos del mismo. Los sonidos salen de tools/audio/generar_respuesta.py; un pueblo sin archivo propio usa el genérico de assets/audio/ui/.",
+  "sonido": {
+    "activo": true,
+    "elegir": { "activo": true, "db": -12.0, "min_s": 0.12, "_doc": "Al elegir con el ratón, con un grupo o con un atajo. Por categoría: aldeano, tropa o edificio; lo ajeno (rival, recurso) suena con el clic genérico más bajo." },
+    "elegir_ajeno": { "activo": true, "db": -18.0, "min_s": 0.12 },
+    "error": { "activo": true, "db": -12.0, "min_s": 0.25, "_doc": "El clic no hace nada: clic derecho sin tropa propia elegida o cimiento en un lugar donde no entra." },
+    "orden": { "activo": true, "_doc": "La orden por función usa el límite de audio.json → momentos.orden. Función: civil, a_pie, montado o asedio; a_pie es la orden de 4g." },
+    "cimiento": { "activo": true, "db": -8.0, "min_s": 0.15 }
+  },
+  "efectos": {
+    "activo": true,
+    "destello": { "activo": true, "dur_s": 0.45, "parpadeos": 2, "grosor": 0.16, "margen": 1.25, "_doc": "Aro del tamaño del blanco que parpadea al ordenar atacar (rojo) o juntar y trabajar (acento)." },
+    "polvo_cimiento": { "activo": true, "nubes": 6, "tam": 0.8, "radio_pct": 45 },
+    "pulso": { "activo": true, "dur_s": 0.45, "tam": 2.2, "crece": 3.0, "_doc": "Aro que se abre donde cae la cámara al saltar con Espacio o al centrar un grupo." },
+    "estela": { "activo": true, "largo_flecha": 0.9, "largo_piedra": 0.6, "alfa": 0.45 }
+  }
+}
