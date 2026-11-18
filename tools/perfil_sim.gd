@@ -21,7 +21,7 @@ const PARTIDAS := {
 	"1v6": [["experta", 0], ["experta", 1], ["experta", 1], ["dificil", 1], ["dificil", 1], ["normal", 1], ["normal", 1]],
 	"4v4": [["experta", 0], ["dificil", 0], ["dificil", 0], ["normal", 0], ["experta", 1], ["dificil", 1], ["dificil", 1], ["normal", 1]],
 }
-const SECCIONES := ["ia", "caminos", "grupos", "movimiento", "blancos", "combate", "recoleccion", "find_resource", "edificios", "separacion", "tablas", "jugadores", "niebla", "telemetria", "resto"]
+const SECCIONES := ["ia", "caminos", "grupos", "movimiento", "blancos", "combate", "recoleccion", "find_resource", "edificios", "separacion", "tablas", "jugadores", "niebla", "telemetria", "ordenes", "segundo", "animales", "victoria", "resto"]
 
 
 ## Reloj con pila: cada sección se lleva su tiempo propio (lo de adentro va a la sección de adentro).
@@ -83,6 +83,16 @@ class PSim extends Sim:
 		Prof.enter("jugadores"); super(); Prof.leave()
 	func _update_fog(pid: int) -> void:
 		Prof.enter("niebla"); super(pid); Prof.leave()
+	func _apply(c: Dictionary) -> void:
+		Prof.enter("ordenes"); super(c); Prof.leave()
+	func _aura_heal() -> void:
+		Prof.enter("segundo"); super(); Prof.leave()
+	func _wonders() -> void:
+		Prof.enter("segundo"); super(); Prof.leave()
+	func _claim_animals() -> void:
+		Prof.enter("animales"); super(); Prof.leave()
+	func _check_victory() -> void:
+		Prof.enter("victoria"); super(); Prof.leave()
 
 
 class PAI extends SimAI:
@@ -91,6 +101,54 @@ class PAI extends SimAI:
 		Prof.enter("ia"); super(); Prof.leave()
 		if Prof.ai_us.size() > player:
 			Prof.ai_us[player] += Time.get_ticks_usec() - t
+
+
+## --ia-detalle: el tiempo de la IA repartido por parte de `think` (secciones ia.*).
+class PAIDet extends PAI:
+	func _levels(p: Dictionary, army: Array[SimEntity], by_type: Dictionary, saving: bool, threatened: bool) -> Dictionary:
+		Prof.enter("ia._levels"); var r = super(p, army, by_type, saving, threatened); Prof.leave(); return r
+	func _smith(p: Dictionary, army: Array[SimEntity], by_type: Dictionary, saving: bool) -> Dictionary:
+		Prof.enter("ia._smith"); var r = super(p, army, by_type, saving); Prof.leave(); return r
+	func _research(p: Dictionary, by_type: Dictionary, saving: bool) -> void:
+		Prof.enter("ia._research"); super(p, by_type, saving); Prof.leave()
+	func _late_buys(p: Dictionary, army: Array[SimEntity], by_type: Dictionary, saving: bool, threatened: bool) -> Dictionary:
+		Prof.enter("ia._late_buys"); var r = super(p, army, by_type, saving, threatened); Prof.leave(); return r
+	func _own_buys(p: Dictionary, army: Array[SimEntity], by_type: Dictionary, saving: bool, centro: SimEntity) -> Dictionary:
+		Prof.enter("ia._own_buys"); var r = super(p, army, by_type, saving, centro); Prof.leave(); return r
+	func _dig_traps(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_type: Dictionary, saving: bool) -> void:
+		Prof.enter("ia._dig_traps"); super(p, vill, centro, by_type, saving); Prof.leave()
+	func _alarm(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], centro: SimEntity) -> void:
+		Prof.enter("ia._alarm"); super(p, vill, army, centro); Prof.leave()
+	func _surrenders(by_type: Dictionary, centro: SimEntity) -> bool:
+		Prof.enter("ia._surrenders"); var r = super(by_type, centro); Prof.leave(); return r
+	func _economy(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, saving: bool) -> void:
+		Prof.enter("ia._economy"); super(p, vill, centro, saving); Prof.leave()
+	func _engine(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_type: Dictionary, saving: bool) -> void:
+		Prof.enter("ia._engine"); super(p, vill, centro, by_type, saving); Prof.leave()
+	func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_type: Dictionary, saving: bool) -> void:
+		Prof.enter("ia._buildings"); super(p, vill, centro, by_type, saving); Prof.leave()
+	func _watch_rival_army() -> void:
+		Prof.enter("ia._watch_rival_army"); super(); Prof.leave()
+	func _production(p: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], centro: SimEntity, by_type: Dictionary, saving: bool) -> void:
+		Prof.enter("ia._production"); super(p, vill, army, centro, by_type, saving); Prof.leave()
+	func _threat(centro: SimEntity) -> SimEntity:
+		Prof.enter("ia._threat"); var r = super(centro); Prof.leave(); return r
+	func _military(army: Array[SimEntity], centro: SimEntity) -> void:
+		Prof.enter("ia._military"); super(army, centro); Prof.leave()
+	func _attack(army: Array[SimEntity]) -> void:
+		Prof.enter("ia._attack"); super(army); Prof.leave()
+	func _animals(centro: SimEntity) -> void:
+		Prof.enter("ia._animals"); super(centro); Prof.leave()
+	func _tribute(p: Dictionary, saving: bool) -> void:
+		Prof.enter("ia._tribute"); super(p, saving); Prof.leave()
+	func _requests(p: Dictionary) -> void:
+		Prof.enter("ia._requests"); super(p); Prof.leave()
+	func _flares(army: Array[SimEntity], centro: SimEntity) -> void:
+		Prof.enter("ia._flares"); super(army, centro); Prof.leave()
+	func _trade(p: Dictionary, by_type: Dictionary) -> void:
+		Prof.enter("ia._trade"); super(p, by_type); Prof.leave()
+	func _avoid_sites(army: Array[SimEntity]) -> void:
+		Prof.enter("ia._avoid_sites"); super(army); Prof.leave()
 
 
 class PMap extends SimMap:
@@ -105,6 +163,11 @@ class PGroups extends SimGroups:
 		Prof.enter("grupos"); super(); Prof.leave()
 
 
+class PMods extends SimMods:
+	func tick_second() -> void:
+		Prof.enter("segundo"); super(); Prof.leave()
+
+
 class PTele extends SimTelemetry:
 	func check_idle(sim: Sim) -> void:
 		Prof.enter("telemetria"); super(sim); Prof.leave()
@@ -117,7 +180,7 @@ static func _copy(from: Object, to: Object) -> void:
 			to.set(p["name"], from.get(p["name"]))
 
 
-func _make(nombre: String, semilla: int, plano: bool) -> Sim:
+func _make(nombre: String, semilla: int, plano: bool, ia_det: bool) -> Sim:
 	var lug: Array = PARTIDAS[nombre]
 	var opts := {"terreno": "llano", "civs": [], "equipos": [], "tiempo_limite_min": 60, "ubicacion_equipos": "juntos"}
 	for i in lug.size():
@@ -132,12 +195,15 @@ func _make(nombre: String, semilla: int, plano: bool) -> Sim:
 		var g := PGroups.new(s)
 		_copy(s.groups, g)
 		s.groups = g
+		var md := PMods.new(s)
+		_copy(s.mods, md)
+		s.mods = md
 		var t := PTele.new()
 		_copy(s.tele, t)
 		s.tele = t
 	s.ais = []
 	for pid in lug.size():
-		var ai: SimAI = SimAI.new(s, pid, lug[pid][0]) if plano else PAI.new(s, pid, lug[pid][0])
+		var ai: SimAI = SimAI.new(s, pid, lug[pid][0]) if plano else (PAIDet.new(s, pid, lug[pid][0]) if ia_det else PAI.new(s, pid, lug[pid][0]))
 		s.ais.append(ai)
 	return s
 
@@ -150,12 +216,13 @@ func _init() -> void:
 	var cual := str(args.get("partida", "ambas"))
 	var lista: Array = ["1v6", "4v4"] if cual == "ambas" else [cual]
 	for nombre in lista:
-		_run(nombre, int(args.get("semilla", "42")), int(args.get("minutos", "40")), int(args.get("picos", "12")), args.has("plano"))
+		_run(nombre, int(args.get("semilla", "42")), int(args.get("minutos", "40")), int(args.get("picos", "12")), args.has("plano"), args.has("ia-detalle"))
 	quit()
 
 
-func _run(nombre: String, semilla: int, minutos: int, n_picos: int, plano: bool) -> void:
-	var s := _make(nombre, semilla, plano)
+func _run(nombre: String, semilla: int, minutos: int, n_picos: int, plano: bool, ia_det: bool) -> void:
+	var s := _make(nombre, semilla, plano, ia_det)
+	var ia_sub := {} # ia.* -> [µs total, peor µs en un tick]
 	var n_ticks := minutos * 60000 / s.tick_ms
 	var tpm := 60000 / s.tick_ms
 	var np := s.players.size()
@@ -180,9 +247,15 @@ func _run(nombre: String, semilla: int, minutos: int, n_picos: int, plano: bool)
 		var dt := Time.get_ticks_usec() - t0
 		total[i] = dt
 		var suma := 0
-		for k in Prof.cur:
-			plano_s[i * NS + SECCIONES.find(k)] = int(Prof.cur[k])
-			suma += int(Prof.cur[k])
+		for k: String in Prof.cur:
+			var v := int(Prof.cur[k])
+			var si := SECCIONES.find(k)
+			if si < 0: # ia.*: va a la IA en la tabla y se detalla aparte
+				si = 0
+				var acc: Array = ia_sub.get(k, [0, 0])
+				ia_sub[k] = [acc[0] + v, maxi(acc[1], v)]
+			plano_s[i * NS + si] += v
+			suma += v
 		plano_s[i * NS + NS - 1] = maxi(0, dt - suma)
 		var best := 0
 		for pid in np:
@@ -220,6 +293,13 @@ func _run(nombre: String, semilla: int, minutos: int, n_picos: int, plano: bool)
 		# Picos: los n peores ticks, con el sistema que más pesó.
 		var idx := range(hecho)
 		idx.sort_custom(func(a: int, b: int) -> bool: return total[a] > total[b])
+		if not ia_sub.is_empty():
+			var ks := ia_sub.keys()
+			ks.sort_custom(func(a: String, b: String) -> bool: return ia_sub[a][0] > ia_sub[b][0])
+			var l := "IA por parte (prom ms/tick · peor ms):"
+			for k: String in ks:
+				l += " %s %.2f·%.1f" % [k.trim_prefix("ia."), ia_sub[k][0] / 1000.0 / hecho, ia_sub[k][1] / 1000.0]
+			print(l)
 		print("Picos (tick · min · total ms · sistema que más pesó · segundo):")
 		for j in mini(n_picos, idx.size()):
 			var i: int = idx[j]

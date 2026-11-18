@@ -1261,8 +1261,11 @@ func step() -> void:
 	_cur_cmd = "en_marcha" # lo que se rechace después no viene de una orden de este tick
 	if not flares.is_empty() or not requests.is_empty():
 		_expire_calls()
-	for ai in ais:
-		if ai.thinks_now() and not players[ai.player]["defeated"]:
+	if _ai_of != ais:
+		_spread_ai()
+	for k in ais.size():
+		var ai = ais[k]
+		if (tick + _ai_phase[k]) % _ai_every[k] == 0 and not players[ai.player]["defeated"]:
 			ai.think()
 	groups.tick()
 	_rebuild_hashes()
@@ -1305,6 +1308,55 @@ func step() -> void:
 		scenario.on_step()
 	tick += 1
 	_in_step = false
+
+
+## Turnos de la IA (proceso/32-ronda-8/04, rendimiento): cada IA piensa cada
+## `piensa_cada_ticks`, en la fase de siempre (`SimAI.thinks_now`: jugador × 5). Con 7 u 8
+## jugadores esas fases caían todas en el mismo tick (5 y 10 ticks, fase múltiplo de 5) y ese
+## tick sumaba el `think` de todas. Si la fase de siempre ya está ocupada por otra IA, se le da
+## la menos cargada: en 1 contra 1 nada cambia; con muchas, como mucho dos por tick.
+var _ai_of: Array = []
+var _ai_phase := PackedInt32Array()
+var _ai_every := PackedInt32Array()
+func _spread_ai() -> void:
+	_ai_of = ais.duplicate()
+	_ai_phase.resize(ais.size())
+	_ai_every.resize(ais.size())
+	var span := 1
+	for k in ais.size():
+		var ev := maxi(1, int(ais[k].level["piensa_cada_ticks"]))
+		_ai_every[k] = ev
+		var a := span
+		var b := ev
+		while b != 0:
+			var r := a % b
+			a = b
+			b = r
+		span = span / a * ev
+	var carga := PackedInt32Array()
+	carga.resize(span)
+	for k in ais.size():
+		var ev := _ai_every[k]
+		var want := (int(ais[k].player) * 5) % ev
+		var best := want
+		var best_max := _phase_load(carga, want, ev)
+		if best_max > 0:
+			for ph in ev:
+				var m := _phase_load(carga, ph, ev)
+				if m < best_max:
+					best = ph
+					best_max = m
+		_ai_phase[k] = best
+		for t in range((ev - best) % ev, span, ev):
+			carga[t] += 1
+
+
+## Carga máxima de los ticks (dentro del ciclo) en los que piensa una IA con esa fase.
+func _phase_load(carga: PackedInt32Array, phase: int, every: int) -> int:
+	var m := 0
+	for t in range((every - phase) % every, carga.size(), every):
+		m = maxi(m, carga[t])
+	return m
 
 
 ## Bengalas y pedidos vencidos se borran (reglas.equipos.bengala.dura_ticks, pedido.dura_ticks).

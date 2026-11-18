@@ -1781,7 +1781,21 @@ func _counter_order(p: Dictionary) -> Array[String]:
 ## Amenaza: un enemigo cerca de la capital o de cualquier edificio propio. La capital
 ## etíope es una corte que se muda: mirar solo la capital dejaba la base atacada sin ver
 ## (y la IA seguía ahorrando para el hito sin entrenar, proceso/21, paso 16).
+## Rendimiento (proceso/32-ronda-8/04): `think` la pide hasta 11 veces y cada vez recorría
+## todo dos veces. El estado no cambia dentro de un tick de la IA (las órdenes van al siguiente):
+## se calcula una vez por tick y centro.
+var _threat_tick := -1
+var _threat_centro: SimEntity = null
+var _threat_res: SimEntity = null
 func _threat(centro: SimEntity) -> SimEntity:
+	if _threat_tick != sim.tick or _threat_centro != centro:
+		_threat_tick = sim.tick
+		_threat_centro = centro
+		_threat_res = _threat_calc(centro)
+	return _threat_res
+
+
+func _threat_calc(centro: SimEntity) -> SimEntity:
 	var eco: Dictionary = sim.data.reglas["ia_economia"]
 	var near_cap := int(eco["amenaza_capital"])
 	var near_b := int(eco["amenaza_edificio"])
