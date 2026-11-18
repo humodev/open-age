@@ -1,0 +1,158 @@
+# tools/maravilla_ia.gd --minutes=45 --seeds=4 (semillas 0-3, 24 partidas, normal, mapa al azar), --parte=0/2 y 1/2. Con la línea «propias» nueva: minuto de las mejoras propias y unidades propias entrenadas, por jugador.
+## ANTES (ab3c853)
+con | 0 | ayutthaya | etiopia | 6:35 | - | - | 5:52 | 16:39 | 23:58 | - | -1 | abierta | 45:00
+   propias J0 ayutthaya: mejoras 2 (hasta el 15: 0; primera 27:10) · unidades -
+   propias J1 etiopia: mejoras 4 (hasta el 15: 1; primera 11:10) · unidades { "guerrero_gasa": 23, "farasanna": 3, "caballeria_corte": 12 }
+con | 0 | guaranies | mapuches | 7:51 | - | - | 8:05 | - | - | - | 1 | sitios | 21:11
+   propias J0 guaranies: mejoras 0 (hasta el 15: 0; primera -) · unidades -
+   propias J1 mapuches: mejoras 1 (hasta el 15: 0; primera 15:10) · unidades { "infanteria_montada": 4 }
+con | 0 | palmares | tawantinsuyu | 9:21 | - | - | 12:43 | 15:03 | - | - | 1 | sitios | 26:10
+   propias J0 palmares: mejoras 1 (hasta el 15: 1; primera 10:22) · unidades { "zagaieiro": 8 }
+   propias J1 tawantinsuyu: mejoras 2 (hasta el 15: 2; primera 13:42) · unidades { "boleador": 4 }
+con | 1 | ayutthaya | guaranies | 6:41 | 25:46 | - | 8:08 | 16:11 | 23:18 | - | 0 | rendicion | 28:35
+   propias J0 ayutthaya: mejoras 1 (hasta el 15: 0; primera 15:10) · unidades { "ngao": 1 }
+   propias J1 guaranies: mejoras 2 (hasta el 15: 0; primera 20:48) · unidades { "kaaguygua": 6 }
+con | 1 | guaranies | palmares | 10:31 | 16:17 | 22:59 | 9:22 | - | - | J0 puesta 38:13 terminada - cae - | -1 | abierta | 45:00
+   propias J0 guaranies: mejoras 4 (hasta el 15: 0; primera 20:26) · unidades { "kaaguygua": 13 }
+   propias J1 palmares: mejoras 0 (hasta el 15: 0; primera -) · unidades -
+con | 1 | palmares | ayutthaya | 9:32 | - | - | 9:00 | 26:54 | 32:13 | - | 1 | conquista | 40:27
+   propias J0 palmares: mejoras 0 (hasta el 15: 0; primera -) · unidades { "zagaieiro": 17 }
+   propias J1 ayutthaya: mejoras 4 (hasta el 15: 0; primera 15:20) · unidades { "ngao": 3, "defensores_suan_phlu": 1 }
+con | 2 | ayutthaya | mapuches | 6:53 | - | - | 7:37 | 18:30 | 23:33 | J1 puesta 34:30 terminada - cae - | -1 | abierta | 45:00
+   propias J0 ayutthaya: mejoras 1 (hasta el 15: 0; primera 23:10) · unidades -
+   propias J1 mapuches: mejoras 4 (hasta el 15: 0; primera 22:10) · unidades { "infanteria_montada": 20, "kona_waiki": 1 }
+con | 2 | guaranies | tawantinsuyu | 7:51 | 20:07 | 27:11 | 6:19 | 16:52 | - | - | 1 | rendicion | 27:36
+   propias J0 guaranies: mejoras 2 (hasta el 15: 0; primera 24:24) · unidades -
+   propias J1 tawantinsuyu: mejoras 3 (hasta el 15: 2; primera 6:45) · unidades { "boleador": 25 }
+con | 2 | palmares | etiopia | 9:30 | - | - | 9:55 | 18:23 | - | - | 1 | sitios | 24:41
+   propias J0 palmares: mejoras 0 (hasta el 15: 0; primera -) · unidades { "zagaieiro": 14 }
+   propias J1 etiopia: mejoras 2 (hasta el 15: 0; primera 15:10) · unidades { "guerrero_gasa": 10, "farasanna": 1 }
+con | 3 | ayutthaya | palmares | 7:55 | - | - | 10:46 | 21:13 | 25:39 | - | 1 | sitios | 40:07
+   propias J0 ayutthaya: mejoras 2 (hasta el 15: 1; primera 14:32) · unidades -
+   propias J1 palmares: mejoras 4 (hasta el 15: 0; primera 23:35) · unidades { "zagaieiro": 19, "guarnicao_cerca": 14, "capitao_mocambo": 14 }
+con | 3 | guaranies | ayutthaya | 8:15 | - | - | 7:26 | 18:54 | - | - | 1 | sitios | 22:24
+   propias J0 guaranies: mejoras 0 (hasta el 15: 0; primera -) · unidades -
+   propias J1 ayutthaya: mejoras 1 (hasta el 15: 0; primera 16:11) · unidades -
+con | 3 | palmares | guaranies | 8:42 | 16:05 | 21:12 | 8:37 | - | - | - | 0 | rendicion | 40:25
+   propias J0 palmares: mejoras 4 (hasta el 15: 0; primera 19:30) · unidades { "zagaieiro": 13, "guarnicao_cerca": 31, "capitao_mocambo": 3 }
+   propias J1 guaranies: mejoras 0 (hasta el 15: 0; primera -) · unidades -
+con | 0 | etiopia | guaranies | 5:26 | - | - | 8:23 | 16:20 | - | - | 0 | rendicion | 22:02
+   propias J0 etiopia: mejoras 2 (hasta el 15: 2; primera 9:10) · unidades { "guerrero_gasa": 14 }
+   propias J1 guaranies: mejoras 1 (hasta el 15: 0; primera 20:54) · unidades -
+con | 0 | mapuches | palmares | 9:11 | - | - | - | - | - | - | 0 | conquista | 18:41
+   propias J0 mapuches: mejoras 2 (hasta el 15: 1; primera 13:10) · unidades { "infanteria_montada": 6 }
+   propias J1 palmares: mejoras 0 (hasta el 15: 0; primera -) · unidades -
+con | 0 | tawantinsuyu | ayutthaya | 6:10 | 16:11 | - | 6:54 | - | - | - | 0 | rendicion | 16:15
+   propias J0 tawantinsuyu: mejoras 2 (hasta el 15: 2; primera 6:36) · unidades { "boleador": 19 }
+   propias J1 ayutthaya: mejoras 0 (hasta el 15: 0; primera -) · unidades -
+con | 1 | etiopia | mapuches | 5:39 | - | - | 8:14 | 18:42 | 24:20 | - | 1 | sitios | 25:06
+   propias J0 etiopia: mejoras 1 (hasta el 15: 1; primera 14:07) · unidades { "guerrero_gasa": 14 }
+   propias J1 mapuches: mejoras 3 (hasta el 15: 1; primera 11:10) · unidades { "infanteria_montada": 5 }
+con | 1 | mapuches | tawantinsuyu | 7:37 | 18:49 | 38:03 | 6:09 | 22:26 | 29:54 | J1 puesta 42:18 terminada - cae - | -1 | abierta | 45:00
+   propias J0 mapuches: mejoras 4 (hasta el 15: 0; primera 15:10) · unidades { "infanteria_montada": 35 }
+   propias J1 tawantinsuyu: mejoras 2 (hasta el 15: 1; primera 6:42) · unidades { "boleador": 59 }
+con | 1 | tawantinsuyu | etiopia | 5:35 | 26:52 | 33:41 | 6:00 | - | - | J0 puesta 41:21 terminada - cae - | -1 | abierta | 45:00
+   propias J0 tawantinsuyu: mejoras 2 (hasta el 15: 1; primera 6:22) · unidades { "boleador": 50 }
+   propias J1 etiopia: mejoras 2 (hasta el 15: 2; primera 9:10) · unidades { "guerrero_gasa": 18 }
+con | 2 | etiopia | palmares | 8:33 | - | - | 12:46 | 19:29 | - | - | 1 | rendicion | 21:01
+   propias J0 etiopia: mejoras 2 (hasta el 15: 1; primera 11:10) · unidades { "guerrero_gasa": 9 }
+   propias J1 palmares: mejoras 0 (hasta el 15: 0; primera -) · unidades { "zagaieiro": 6 }
+con | 2 | mapuches | ayutthaya | 7:39 | 16:53 | 21:51 | 7:02 | - | - | - | 0 | sitios | 23:24
+   propias J0 mapuches: mejoras 2 (hasta el 15: 1; primera 13:10) · unidades { "infanteria_montada": 3 }
+   propias J1 ayutthaya: mejoras 0 (hasta el 15: 0; primera -) · unidades -
+con | 2 | tawantinsuyu | guaranies | 5:53 | 27:22 | 39:36 | 8:26 | 14:24 | 20:51 | J1 puesta 38:00 terminada - cae 39:53 | -1 | abierta | 45:00
+   propias J0 tawantinsuyu: mejoras 3 (hasta el 15: 2; primera 6:19) · unidades { "boleador": 59 }
+   propias J1 guaranies: mejoras 3 (hasta el 15: 0; primera 18:21) · unidades { "kaaguygua": 18 }
+con | 3 | etiopia | tawantinsuyu | 5:44 | 19:16 | 27:12 | 5:32 | 18:22 | - | J0 puesta 43:11 terminada - cae - | -1 | abierta | 45:00
+   propias J0 etiopia: mejoras 6 (hasta el 15: 1; primera 12:29) · unidades { "guerrero_gasa": 30, "farasanna": 9, "caballeria_corte": 4 }
+   propias J1 tawantinsuyu: mejoras 4 (hasta el 15: 2; primera 5:58) · unidades { "boleador": 25 }
+con | 3 | mapuches | etiopia | 7:41 | 16:59 | 36:34 | 5:43 | 20:49 | 34:19 | - | -1 | abierta | 45:00
+   propias J0 mapuches: mejoras 5 (hasta el 15: 0; primera 19:20) · unidades { "infanteria_montada": 41 }
+   propias J1 etiopia: mejoras 4 (hasta el 15: 1; primera 13:10) · unidades { "guerrero_gasa": 22, "farasanna": 2, "caballeria_corte": 1 }
+con | 3 | tawantinsuyu | mapuches | 5:41 | - | - | 7:19 | 18:51 | - | - | 1 | sitios | 20:08
+   propias J0 tawantinsuyu: mejoras 1 (hasta el 15: 1; primera 6:07) · unidades { "boleador": 6 }
+   propias J1 mapuches: mejoras 2 (hasta el 15: 1; primera 11:10) · unidades { "infanteria_montada": 3 }
+
+partidas 24; con la IV 15 (62 %); jugadores en la III 28/48 (mediana 18.6); en la IV 18/48 (mediana 26.4)
+motivos: {'abierta': 8, 'sitios': 8, 'rendicion': 6, 'conquista': 2} ; terminan antes del 25: 9 [('sitios', '21:11'), ('sitios', '24:41'), ('sitios', '22:24'), ('rendicion', '22:02'), ('conquista', '18:41'), ('rendicion', '16:15'), ('rendicion', '21:01'), ('sitios', '23:24'), ('sitios', '20:08')]
+sitios a los: ['21:11', '26:10', '24:41', '40:07', '22:24', '25:06', '23:24', '20:08'] ; rendición a los: ['28:35', '27:36', '40:25', '22:02', '16:15', '21:01']
+jugadores con alguna propia hasta el 15: 21/48; unidades propias (en cuántas partidas): {'guerrero_gasa': 8, 'farasanna': 4, 'caballeria_corte': 3, 'infanteria_montada': 8, 'zagaieiro': 6, 'boleador': 8, 'ngao': 2, 'kaaguygua': 3, 'defensores_suan_phlu': 1, 'kona_waiki': 1, 'guarnicao_cerca': 2, 'capitao_mocambo': 2}
+
+## DESPUÉS (a81d2bc, antes del merge de main)
+con | 0 | ayutthaya | etiopia | 6:35 | - | - | 5:52 | 16:43 | 21:54 | - | 1 | sitios | 25:00
+   propias J0 ayutthaya: mejoras 0 (hasta el 15: 0; primera -) · unidades -
+   propias J1 etiopia: mejoras 4 (hasta el 15: 2; primera 10:43) · unidades { "guerrero_gasa": 7, "farasanna": 2 }
+con | 0 | guaranies | mapuches | 7:51 | - | - | 8:05 | - | - | - | 1 | sitios | 25:00
+   propias J0 guaranies: mejoras 0 (hasta el 15: 0; primera -) · unidades -
+   propias J1 mapuches: mejoras 1 (hasta el 15: 1; primera 14:34) · unidades { "infanteria_montada": 5 }
+con | 0 | palmares | tawantinsuyu | 9:20 | 15:37 | 30:55 | 10:28 | 16:24 | 21:43 | - | -1 | abierta | 45:00
+   propias J0 palmares: mejoras 2 (hasta el 15: 1; primera 10:21) · unidades { "zagaieiro": 9, "guarnicao_cerca": 34, "capitao_mocambo": 4 }
+   propias J1 tawantinsuyu: mejoras 5 (hasta el 15: 2; primera 10:53) · unidades { "boleador": 21 }
+con | 1 | ayutthaya | guaranies | 6:41 | 30:52 | - | 8:08 | 16:23 | 23:24 | - | -1 | abierta | 45:00
+   propias J0 ayutthaya: mejoras 4 (hasta el 15: 1; primera 14:39) · unidades { "ngao": 7 }
+   propias J1 guaranies: mejoras 2 (hasta el 15: 1; primera 13:04) · unidades { "kaaguygua": 29 }
+con | 1 | guaranies | palmares | 10:25 | 16:23 | 25:36 | 9:22 | 22:36 | 38:30 | - | -1 | abierta | 45:00
+   propias J0 guaranies: mejoras 5 (hasta el 15: 0; primera 18:30) · unidades { "kaaguygua": 13 }
+   propias J1 palmares: mejoras 4 (hasta el 15: 0; primera 23:54) · unidades { "zagaieiro": 4, "guarnicao_cerca": 21, "capitao_mocambo": 1 }
+con | 1 | palmares | ayutthaya | 9:32 | 25:20 | 30:03 | 8:54 | 19:28 | 25:09 | - | 0 | sitios | 39:40
+   propias J0 palmares: mejoras 3 (hasta el 15: 0; primera 27:38) · unidades { "zagaieiro": 25, "guarnicao_cerca": 11, "capitao_mocambo": 12 }
+   propias J1 ayutthaya: mejoras 3 (hasta el 15: 0; primera 15:39) · unidades { "ngao": 4 }
+con | 2 | ayutthaya | mapuches | 6:53 | 38:39 | - | 7:37 | 18:49 | 24:11 | J1 puesta 37:52 terminada - cae - | -1 | abierta | 45:00
+   propias J0 ayutthaya: mejoras 4 (hasta el 15: 1; primera 12:38) · unidades { "ngao": 8 }
+   propias J1 mapuches: mejoras 4 (hasta el 15: 1; primera 14:55) · unidades { "infanteria_montada": 13, "kona_waiki": 4 }
+con | 2 | guaranies | tawantinsuyu | 7:51 | - | - | 6:19 | 18:31 | - | - | 1 | conquista | 21:54
+   propias J0 guaranies: mejoras 1 (hasta el 15: 0; primera 17:29) · unidades -
+   propias J1 tawantinsuyu: mejoras 2 (hasta el 15: 2; primera 6:45) · unidades { "boleador": 16 }
+con | 2 | palmares | etiopia | 9:30 | 22:28 | 27:04 | 9:55 | 18:38 | - | - | -1 | abierta | 45:00
+   propias J0 palmares: mejoras 4 (hasta el 15: 0; primera 23:46) · unidades { "zagaieiro": 18, "guarnicao_cerca": 24, "capitao_mocambo": 5 }
+   propias J1 etiopia: mejoras 3 (hasta el 15: 2; primera 11:03) · unidades { "guerrero_gasa": 37, "farasanna": 12 }
+con | 3 | ayutthaya | palmares | 7:55 | - | - | 10:46 | 21:19 | 25:52 | - | 1 | sitios | 44:31
+   propias J0 ayutthaya: mejoras 1 (hasta el 15: 1; primera 14:32) · unidades -
+   propias J1 palmares: mejoras 3 (hasta el 15: 0; primera 19:44) · unidades { "zagaieiro": 21, "guarnicao_cerca": 19, "capitao_mocambo": 19 }
+con | 3 | guaranies | ayutthaya | 8:15 | - | - | 7:26 | 18:54 | 24:05 | - | 1 | sitios | 25:00
+   propias J0 guaranies: mejoras 0 (hasta el 15: 0; primera -) · unidades -
+   propias J1 ayutthaya: mejoras 3 (hasta el 15: 0; primera 16:11) · unidades { "ngao": 3 }
+con | 3 | palmares | guaranies | 8:42 | 16:28 | 21:36 | 8:37 | - | - | - | -1 | abierta | 45:00
+   propias J0 palmares: mejoras 4 (hasta el 15: 1; primera 14:16) · unidades { "zagaieiro": 4, "guarnicao_cerca": 55, "capitao_mocambo": 10 }
+   propias J1 guaranies: mejoras 0 (hasta el 15: 0; primera -) · unidades -
+con | 0 | etiopia | guaranies | 5:26 | 24:35 | 29:29 | 8:23 | 18:31 | 41:35 | J0 puesta 38:30 terminada - cae - | -1 | abierta | 45:00
+   propias J0 etiopia: mejoras 6 (hasta el 15: 2; primera 9:10) · unidades { "guerrero_gasa": 24, "farasanna": 1, "caballeria_corte": 8 }
+   propias J1 guaranies: mejoras 3 (hasta el 15: 1; primera 13:57) · unidades -
+con | 0 | mapuches | palmares | 9:11 | 18:38 | 23:54 | - | - | - | - | 0 | conquista | 24:14
+   propias J0 mapuches: mejoras 4 (hasta el 15: 2; primera 10:49) · unidades { "infanteria_montada": 5 }
+   propias J1 palmares: mejoras 0 (hasta el 15: 0; primera -) · unidades -
+con | 0 | tawantinsuyu | ayutthaya | 6:10 | - | - | 6:54 | - | - | - | 0 | conquista | 14:08
+   propias J0 tawantinsuyu: mejoras 2 (hasta el 15: 2; primera 6:36) · unidades { "boleador": 10 }
+   propias J1 ayutthaya: mejoras 0 (hasta el 15: 0; primera -) · unidades -
+con | 1 | etiopia | mapuches | 5:39 | 22:18 | - | 8:14 | 18:41 | 25:47 | J1 puesta 34:42 terminada - cae - | 1 | sitios | 36:34
+   propias J0 etiopia: mejoras 3 (hasta el 15: 2; primera 12:46) · unidades { "guerrero_gasa": 12 }
+   propias J1 mapuches: mejoras 4 (hasta el 15: 2; primera 10:57) · unidades { "infanteria_montada": 7 }
+con | 1 | mapuches | tawantinsuyu | 7:37 | 18:52 | - | 6:09 | 18:50 | 27:15 | J1 puesta 37:23 terminada - cae - | -1 | abierta | 45:00
+   propias J0 mapuches: mejoras 4 (hasta el 15: 1; primera 14:48) · unidades { "infanteria_montada": 37 }
+   propias J1 tawantinsuyu: mejoras 4 (hasta el 15: 2; primera 6:42) · unidades { "boleador": 26, "galgueros": 1 }
+con | 1 | tawantinsuyu | etiopia | 5:35 | 12:14 | - | 6:00 | 42:01 | - | - | -1 | abierta | 45:00
+   propias J0 tawantinsuyu: mejoras 5 (hasta el 15: 1; primera 6:22) · unidades { "boleador": 8, "galgueros": 1 }
+   propias J1 etiopia: mejoras 2 (hasta el 15: 2; primera 9:10) · unidades { "guerrero_gasa": 58, "farasanna": 5 }
+con | 2 | etiopia | palmares | 8:33 | 26:43 | 41:21 | 9:53 | 22:42 | - | - | -1 | abierta | 45:00
+   propias J0 etiopia: mejoras 4 (hasta el 15: 2; primera 10:23) · unidades { "guerrero_gasa": 30, "farasanna": 5, "caballeria_corte": 1 }
+   propias J1 palmares: mejoras 4 (hasta el 15: 0; primera 25:21) · unidades { "zagaieiro": 23, "guarnicao_cerca": 21 }
+con | 2 | mapuches | ayutthaya | 7:39 | 16:45 | 21:37 | 7:02 | - | - | - | 0 | sitios | 25:00
+   propias J0 mapuches: mejoras 2 (hasta el 15: 1; primera 12:46) · unidades { "infanteria_montada": 4 }
+   propias J1 ayutthaya: mejoras 0 (hasta el 15: 0; primera -) · unidades -
+con | 2 | tawantinsuyu | guaranies | 5:53 | 17:54 | 24:14 | 8:26 | 14:52 | - | - | 0 | rendicion | 24:21
+   propias J0 tawantinsuyu: mejoras 3 (hasta el 15: 2; primera 6:19) · unidades { "boleador": 22 }
+   propias J1 guaranies: mejoras 1 (hasta el 15: 1; primera 11:04) · unidades -
+con | 3 | etiopia | tawantinsuyu | 5:44 | 19:10 | 34:24 | 5:32 | 18:27 | 25:35 | J0 puesta 44:16 terminada - cae - | -1 | abierta | 45:00
+   propias J0 etiopia: mejoras 5 (hasta el 15: 1; primera 10:50) · unidades { "guerrero_gasa": 29, "farasanna": 21, "caballeria_corte": 3 }
+   propias J1 tawantinsuyu: mejoras 3 (hasta el 15: 2; primera 5:58) · unidades { "boleador": 40, "galgueros": 2 }
+con | 3 | mapuches | etiopia | 7:41 | 17:00 | 32:10 | 5:43 | 29:56 | - | - | -1 | abierta | 45:00
+   propias J0 mapuches: mejoras 5 (hasta el 15: 1; primera 12:57) · unidades { "infanteria_montada": 23, "kona_waiki": 2 }
+   propias J1 etiopia: mejoras 4 (hasta el 15: 1; primera 12:52) · unidades { "guerrero_gasa": 37, "farasanna": 11 }
+con | 3 | tawantinsuyu | mapuches | 5:41 | - | - | 7:19 | 17:04 | 23:02 | - | 1 | sitios | 25:00
+   propias J0 tawantinsuyu: mejoras 1 (hasta el 15: 1; primera 6:07) · unidades { "boleador": 3 }
+   propias J1 mapuches: mejoras 3 (hasta el 15: 1; primera 10:50) · unidades { "infanteria_montada": 3 }
+
+partidas 24; con la IV 20 (83 %); jugadores en la III 36/48 (mediana 18.8); en la IV 25/48 (mediana 25.6)
+motivos: {'sitios': 8, 'abierta': 12, 'conquista': 3, 'rendicion': 1} ; terminan antes del 25: 4 [('conquista', '21:54'), ('conquista', '24:14'), ('conquista', '14:08'), ('rendicion', '24:21')]
+sitios a los: ['25:00', '25:00', '39:40', '44:31', '25:00', '36:34', '25:00', '25:00'] ; rendición a los: ['24:21']
+jugadores con alguna propia hasta el 15: 32/48; unidades propias (en cuántas partidas): {'guerrero_gasa': 8, 'farasanna': 7, 'infanteria_montada': 8, 'zagaieiro': 7, 'guarnicao_cerca': 7, 'capitao_mocambo': 6, 'boleador': 8, 'ngao': 4, 'kaaguygua': 2, 'kona_waiki': 2, 'caballeria_corte': 3, 'galgueros': 3}

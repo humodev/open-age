@@ -1,0 +1,30 @@
+# Pruebas de la etapa 14, después del merge de main (e542fb2)
+## tests/test_determinism.gd
+ticks=3000 hash=2903543624 (el mismo de main)
+DETERMINISMO: OK
+## tests/bench.gd
+200 unidades, 600 ticks: promedio 9.67 ms, peor 97.86 ms, presupuesto 100 ms; vivas al final: 125
+## tests/opciones_partida.gd
+Victoria por sitios
+  ok    con sitios: no gana antes del minuto 25 (25:00)
+  ok    con sitios: gana el 0 a los 25:00
+  ok    sin sitios: 3 sitios de 0 durante 25 min, sigue la partida (y rinden 379 de riqueza)
+OPCIONES DE PARTIDA: OK
+## tests/maravilla.gd
+maravilla: OK
+## tests/facil_sitios.gd
+semilla  7  30:00  sitios tomados por la fácil: 0  ociosa en un sitio (unidad·s): 0  sigue
+semilla 21  30:00  sitios tomados por la fácil: 0  ociosa en un sitio (unidad·s): 0  sigue
+semilla  3  30:00  sitios tomados por la fácil: 0  ociosa en un sitio (unidad·s): 0  sigue
+FACIL_SITIOS: OK (0 sitios tomados)
+## tools/primera_victoria.gd --seeds=7,21,3 --min=30 --dif=facil
+# la rama antes del merge (a81d2bc): 3 de 3 (27:59, 26:26, 28:08, por rendición), igual que ab3c853
+# (con los galgueros primeros en el orden de Tawantinsuyu había bajado a 1 de 3: se corrió el turno de ia_unidades de la fácil; arreglado con desde_edad)
+# después del merge:
+semilla 7: sin terminar a las 30:00 () · ataques 2 (13:00:22+2 contra 5, 20:20:18+2 contra 7) · tropa perdida 40
+semilla 21: sin terminar a las 30:00 () · ataques 1 (13:00:22+2 contra 2) · tropa perdida 34
+semilla 3: GANA a las 25:56 (rendicion) · ataques 1 (14:20:26+2 contra 3) · tropa perdida 13
+RESUMEN dif=facil semillas=7,21,3: ganó 1 de 3
+# main solo (51bdda1): las mismas líneas (7 y 21 sin terminar, 3 gana a las 25:56). La baja viene de main, no de esta etapa.
+## tools/experta_edades.gd (experta contra experta, 20 min, después del merge)
+experta: 12 jugadores · edad II antes de 6:00: 4 (promedio 7:26) · edad III antes de 15:00: 2 · edad III en 20': 9 ["14:31", "16:03", "18:40", "15:00", "17:45", "16:21", "17:47", "19:41", "15:39"]
