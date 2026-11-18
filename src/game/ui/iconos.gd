@@ -109,7 +109,7 @@ static func dibujar_imagen(ci: CanvasItem, kind: String, r: Rect2, col: Color) -
 ## Nombres que dibuja Glyphs.draw (los de antes) más los de acá. Los compuestos se revisan por
 ## partes. tests/iconos.gd lo usa para que ningún comando caiga en el círculo de reserva.
 const DE_GLYPHS := ["aldeano", "alimento", "arbol", "arbusto", "arcabuz", "ariete", "atacar", "barrio_japones", "barrio_portugues", "bengala", "calma", "camino", "campana", "carga", "carpa", "casa", "catapulta", "centro", "corral", "cuartel", "decision", "deposito", "detener", "elefante", "empalizada", "escudo", "explorador", "expulsar", "form_abierta", "form_bloque", "form_columna", "form_linea", "fortaleza", "granja", "guerrero", "gult", "hito", "hito_economia", "hito_guerra", "hito_logro", "hondero", "info", "jinete", "kraal", "lancero", "madera", "mantener", "menu_economia", "menu_militar", "mercado", "mocambo", "ocioso", "patrullar", "piedra", "pob", "puerta", "qollqa", "refugio", "riqueza", "roca", "telar", "terraza", "torre", "velocidad", "vida", "volver"]
-const PROPIOS := ["diana", "establo", "taller_asedio", "ruka", "boleador", "incendiario", "awqa", "katana", "elefante_guerra", "hacha", "pico", "orfebre", "canasta", "riego", "muro", "martillo", "vigia", "aspillera", "engranaje", "investigar", "espada", "arco", "adiestramiento", "maravilla",
+const PROPIOS := ["diana", "establo", "taller_asedio", "ruka", "boleador", "incendiario", "awqa", "katana", "elefante_guerra", "hacha", "pico", "orfebre", "canasta", "riego", "muro", "martillo", "vigia", "aspillera", "engranaje", "investigar", "yunque", "espada", "arco", "adiestramiento", "maravilla",
 	# --- paso 6 --- saberes propios (mapuches y guaraníes): mejoras, unidades y el hoyo
 	"coselete", "trigo", "estacas", "lawen", "tropilla", "poncho", "remonta", "pron", "mandioca", "remo", "yuyo", "oga", "mborore", "yerba", "flecha_dura", "imprenta", "aty",
 	"weichafe_montado", "kona_waiki", "canoa", "jinete_lanza", "kaaguygua", "hoyo",
@@ -321,6 +321,12 @@ static func dibujar(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> bool:
 			ci.draw_colored_polygon(g, col)
 			ci.draw_circle(c, s * 0.18, OSCURO)
 			ci.draw_circle(c, s * 0.11, Palette.WEALTH if claro else col)
+		"yunque":
+			# --- ronda 7 --- Submenú de la herrería: yunque con su pie.
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.44, -s * 0.2), c + Vector2(s * 0.3, -s * 0.2), c + Vector2(s * 0.44, -s * 0.1), c + Vector2(s * 0.2, s * 0.02), c + Vector2(-s * 0.22, s * 0.02), c + Vector2(-s * 0.3, -s * 0.08)]), col)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.1, s * 0.02), c + Vector2(s * 0.08, s * 0.02), c + Vector2(s * 0.14, s * 0.26), c + Vector2(-s * 0.16, s * 0.26)]), col)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.28, s * 0.26), Vector2(s * 0.52, s * 0.1)), col)
+			ci.draw_line(c + Vector2(s * 0.06, -s * 0.44), c + Vector2(s * 0.22, -s * 0.28), col, w * 1.4)
 		"investigar":
 			# Submenú de investigaciones: pergamino con renglones.
 			ci.draw_rect(Rect2(c + Vector2(-s * 0.3, -s * 0.36), Vector2(s * 0.6, s * 0.7)), col)

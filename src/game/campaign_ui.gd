@@ -25,6 +25,7 @@ static func load_campaigns() -> Array[Dictionary]:
 		var path := "res://data/campanas/%s.json" % k
 		if FileAccess.file_exists(path):
 			var c: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+			Textos.limpiar_todo(c) # --- ronda 7 --- sin «[verificar]»
 			c["_clave"] = k
 			out.append(c)
 	return out
@@ -90,7 +91,7 @@ func _ready() -> void:
 	var prog := progress()
 	for i in _campaigns.size():
 		var c := _campaigns[i]
-		var data := SimData.load_default().for_civ(c["civ"])
+		var data := Textos.datos(SimData.load_default()).for_civ(c["civ"])
 		var won: int = int(prog.get(c["_clave"], 0))
 		var name: String = "Tutorial" if c["_clave"] == "tutorial" else data.civ.get("nombre", c["civ"])
 		var idx := i
