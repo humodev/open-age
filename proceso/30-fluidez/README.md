@@ -65,5 +65,5 @@ Las simulaciones de los frentes 1, 2 y 5 se confirman en un solo torneo al final
 | Frente | Estado |
 |---|---|
 | 3 · Respuesta inmediata | **Integrado (ff8c166)** · [03-respuesta.md](03-respuesta.md):<br>• sonido al elegir, por categoría y por pueblo;<br>• error con clic sin efecto;<br>• golpe y polvo al apoyar un cimiento;<br>• destello del blanco y pulso al saltar;<br>• estela de flechas y piedras;<br>• orden por función.<br>40 sonidos sintetizados (227 KB), sin instrumentos sagrados. Todo se apaga en `data/respuesta.json`. Mismo hash |
-| 1 · Producción | En curso |
-| 2 · Constructor | Espera que termine el agente del juego tardío |
+| 1 · Producción | **Integrado (c87c493)**, [01-produccion.md](01-produccion.md):<br>• **Repetición automática:** Ctrl + clic; es un comando de la simulación, con tope de aldeanos (80, ajustable con − y +).<br>• **Cola:** de 10, con «+n».<br>• **Sacar de la cola:** clic derecho saca una; con Mayús, cinco.<br>• **Edificios parados:** se ven grises y con pulso en la cola global.<br>• **Población:** aviso «sin lugar en ~N s».<br>• **Ingreso por minuto:** se ve en la barra.<br>Mismo hash. Autotest: 161 OK |
+| 2 · Constructor | En curso |
