@@ -1314,7 +1314,8 @@ func step() -> void:
 ## `piensa_cada_ticks`, en la fase de siempre (`SimAI.thinks_now`: jugador × 5). Con 7 u 8
 ## jugadores esas fases caían todas en el mismo tick (5 y 10 ticks, fase múltiplo de 5) y ese
 ## tick sumaba el `think` de todas. Si la fase de siempre ya está ocupada por otra IA, se le da
-## la menos cargada: en 1 contra 1 nada cambia; con muchas, como mucho dos por tick.
+## la menos cargada: en 1 contra 1 nada cambia; con muchas, como mucho dos por tick. Al elegir,
+## el tick de «cada segundo» (tick % 10 == 0: mods, auras, maravillas) cuenta como media IA.
 var _ai_of: Array = []
 var _ai_phase := PackedInt32Array()
 var _ai_every := PackedInt32Array()
@@ -1322,7 +1323,7 @@ func _spread_ai() -> void:
 	_ai_of = ais.duplicate()
 	_ai_phase.resize(ais.size())
 	_ai_every.resize(ais.size())
-	var span := 1
+	var span := 10 # el ciclo de «cada segundo»
 	for k in ais.size():
 		var ev := maxi(1, int(ais[k].level["piensa_cada_ticks"]))
 		_ai_every[k] = ev
@@ -1333,14 +1334,18 @@ func _spread_ai() -> void:
 			a = b
 			b = r
 		span = span / a * ev
-	var carga := PackedInt32Array()
+	var solo_ia := PackedInt32Array() # IA que piensan en cada tick del ciclo
+	solo_ia.resize(span)
+	var carga := PackedInt32Array() # en medias IA: cada IA 2, el tick de cada segundo 1
 	carga.resize(span)
+	for t in range(0, span, 10):
+		carga[t] = 1
 	for k in ais.size():
 		var ev := _ai_every[k]
 		var want := (int(ais[k].player) * 5) % ev
 		var best := want
-		var best_max := _phase_load(carga, want, ev)
-		if best_max > 0:
+		if _phase_load(solo_ia, want, ev) > 0:
+			var best_max := 1 << 30
 			for ph in ev:
 				var m := _phase_load(carga, ph, ev)
 				if m < best_max:
@@ -1348,7 +1353,8 @@ func _spread_ai() -> void:
 					best_max = m
 		_ai_phase[k] = best
 		for t in range((ev - best) % ev, span, ev):
-			carga[t] += 1
+			solo_ia[t] += 1
+			carga[t] += 2
 
 
 ## Carga máxima de los ticks (dentro del ciclo) en los que piensa una IA con esa fase.
