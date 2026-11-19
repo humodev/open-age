@@ -4,7 +4,7 @@ Trabajo que decidió el autor a partir de la [síntesis de la ronda 8](../22-tes
 
 | Frente | Qué | Estado |
 |---|---|---|
-| 1 | IA de equipo con ataques escalonados; la IA usa el mercado | En curso |
+| 1 | IA de equipo con ataques escalonados; la IA usa el mercado | **Integrado (afd6474)** · [01](01-ia-equipo-y-mercado.md)<br>**Turnos de ataque:** una IA no sale mientras dura la oleada de una aliada, ni 45 s después de que llegó; si una aliada ya va a un edificio, va a otro frente. Bengala, defensa, hito y maravilla no esperan.<br>**Mercado:** compra lo que le falta para el hito o la maravilla, desde la II.<br>**Resultados:**<br>• 1v3: el pico de enemigos junto a la capital baja de 55 a 39, y llegan cada 1–3 min (antes, tres en 11 s).<br>• 1v6: salen una por minuto.<br>• Con el mercado, la etíope llega a la III a los 18:41 (antes se quedaba en la II).<br>• Mismo hash. Primera victoria: 2 de 3. |
 | 2 | Recursos del mapa: cantidad y lugar, comparados con AoE4 y AoE2, y que escalen con el tamaño | **Integrado (34bed45)** · [02](02-recursos-del-mapa.md)
 
 **Antes**
