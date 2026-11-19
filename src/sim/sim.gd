@@ -843,7 +843,12 @@ func tech_cost(pid: int, tech: String) -> Dictionary:
 	for a in range(1, age + 1):
 		off += mod(pid, "tec_desc:%d" % a)
 	# --- ronda 8, 05 --- la que se repite cuesta `crece_pct` % más del base por cada vez comprada.
-	var grow := 100 + int(dp(pid).tecnologias.get(tech, {}).get("repite", {}).get("crece_pct", 0)) * times_done(pid, tech)
+	var rep: Dictionary = dp(pid).tecnologias.get(tech, {}).get("repite", {})
+	var grow := 100 + int(rep.get("crece_pct", 0)) * times_done(pid, tech)
+	if rep.get("compuesto", false): # --- esport 2a --- cada vez, `crece_pct` % más que la anterior
+		grow = 100
+		for i in times_done(pid, tech):
+			grow = grow * (100 + int(rep["crece_pct"])) / 100
 	var out := {}
 	for k in base:
 		out[k] = int(base[k]) * grow / 100 * (100 - mini(off, 100)) / 100
@@ -906,7 +911,7 @@ func trade_price(pid: int, kind: String) -> int:
 		var start: int = data.reglas["mercado"]["precio_inicial"]
 		p["precios"] = {"alimento": start, "madera": start, "piedra": start}
 		p["precios_tick"] = tick
-	# Los precios vuelven de a poco al inicial (piso 40, paso 3, regreso de 1 cada 10 s).
+	# Los precios vuelven de a poco al inicial (reglas.mercado: piso, paso y regreso).
 	var cfg: Dictionary = data.reglas["mercado"]
 	var every := int(cfg.get("regreso_cada_ticks", 0))
 	if every > 0:
@@ -2306,9 +2311,9 @@ func _hit(a: SimEntity, t: SimEntity) -> void:
 	# --- fin esport 1a ---
 	var atk := effective_attack(a) + attack_bonus(a, t)
 	# --- paso 6 --- Carga (kona de waiki): el primer golpe después de un rato sin pelear pega más y derriba.
-	if a.def.has("carga") and t.is_unit() and tick - a.last_combat >= int(a.def["carga"]["espera_ms"]) / tick_ms:
-		atk += int(a.def["carga"]["extra"])
-		t.slow_until = maxi(t.slow_until, tick + int(a.def["carga"]["frena_ms"]) / tick_ms)
+	if a.def.has("carga_golpe") and t.is_unit() and tick - a.last_combat >= int(a.def["carga_golpe"]["espera_ms"]) / tick_ms:
+		atk += int(a.def["carga_golpe"]["extra"])
+		t.slow_until = maxi(t.slow_until, tick + int(a.def["carga_golpe"]["frena_ms"]) / tick_ms)
 	if a.fn == "asedio" and t.is_building():
 		atk = atk * (100 + mod(a.owner, "asedio_pct")) / 100 # --- paso 3 --- escuela: oficio del asedio
 	var mult := counter_mult(a, t) # --- paso 4 ---
@@ -2694,7 +2699,7 @@ func _finish_tech(pid: int, tech: String) -> void:
 		# --- ronda 8, 05 --- la que se repite: queda abierta hasta la última vez.
 		var done: Dictionary = p.get_or_add("repetidas", {})
 		done[tech] = int(done.get(tech, 0)) + 1
-		if int(done[tech]) >= int(rep.get("max", 1)):
+		if rep.has("max") and int(done[tech]) >= int(rep["max"]): # --- esport 2a --- sin `max`, sin tope
 			p["techs"][tech] = true
 	_apply_effects(pid, dp(pid).tecnologias[tech]["efectos"])
 	events.append({"t": "tech", "player": pid, "tech": tech})

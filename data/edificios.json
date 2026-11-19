@@ -105,7 +105,7 @@
   },
   "empalizada": {
     "nombre": "Empalizada", "edad_min": 1, "tam": [1, 1], "pv": 300, "armadura": 0,
-    "costo": { "madera": 4 }, "tiempo_ms": 3000, "vision": 1000, "linea": true
+    "costo": { "madera": 8 }, "tiempo_ms": 3000, "vision": 1000, "linea": true
   },
   "puerta": {
     "nombre": "Puerta", "edad_min": 1, "tam": [1, 1], "pv": 500, "armadura": 0,

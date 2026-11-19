@@ -1,0 +1,9 @@
+semilla 7: GANA a las 18:20 (rendicion) · ataques 1 (13:00:24+2 contra 3) · tropa perdida 16
+semilla 21: sin terminar a las 30:00 () · ataques 1 (13:00:24+2 contra 2) · tropa perdida 35
+semilla 3: sin terminar a las 30:00 () · ataques 1 (14:20:26+2 contra 4) · tropa perdida 25
+semilla 1: GANA a las 27:26 (rendicion) · ataques 1 (14:20:26+2 contra 3) · tropa perdida 40
+semilla 2: sin terminar a las 30:00 () · ataques 1 (14:20:26+2 contra 4) · tropa perdida 25
+semilla 4: sin terminar a las 30:00 () · ataques 2 (13:00:24+2 contra 4, 23:20:19+2 contra 13) · tropa perdida 43
+semilla 5: sin terminar a las 30:00 () · ataques 2 (13:00:24+2 contra 4, 23:20:19+2 contra 13) · tropa perdida 43
+semilla 6: GANA a las 18:20 (rendicion) · ataques 1 (13:00:24+2 contra 3) · tropa perdida 16
+RESUMEN dif=facil semillas=7,21,3,1,2,4,5,6: ganó 3 de 8

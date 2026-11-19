@@ -109,7 +109,7 @@
  },
  "unidades_nuevas": {
   "guerrero_gasa": {"nombre": "Guerrero de gaša", "propia": true, "funcion": "choque", "edad_min": 2, "pob": 1, "costo": {"alimento": 60, "madera": 15, "riqueza": 25}, "tiempo_ms": 17000, "pv": 120, "armadura": 1, "armadura_distancia": 1, "ataque": 11, "alcance": 450, "cadencia_ms": 1250, "velocidad": 1350, "vision": 8000, "radio": 260, "gasa": true,
-   "carga": {"extra": 6, "frena_ms": 0, "espera_ms": 5000},
+   "carga_golpe": {"extra": 6, "frena_ms": 0, "espera_ms": 5000},
    "desc": "Infantería con lanza, jabalinas y escudo (gaša): arroja la jabalina al cerrar (el primer golpe después de 5 s sin pelear pega 6 más) y el escudo le da +1 de armadura a distancia. La espada curva, el šotäl, queda solo en la ficha: sus imágenes son de los siglos XVIII y XIX, y lo de que «pasa por encima del escudo» es de catálogos modernos (debatido).",
    "evidencia": "Documentado (la infantería). Futūḥ al-Ḥabaša (Stenhouse, 2003); Álvares (1540). La iconografía del šotäl, [verificar] (Institute of Ethiopian Studies)."},
   "farasanna": {"nombre": "Färäsäñña con cota", "propia": true, "funcion": "choque", "montado": true, "edad_min": 3, "pob": 2, "costo": {"alimento": 120, "riqueza": 90}, "tiempo_ms": 26000, "pv": 220, "armadura": 3, "armadura_distancia": 2, "ataque": 13, "alcance": 500, "cadencia_ms": 1300, "velocidad": 1950, "vision": 9000, "radio": 380, "cota": true,

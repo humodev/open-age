@@ -294,7 +294,7 @@
     "icono": "escuela",
     "efectos": [{ "tipo": "costo_tec_pct", "edad_min": 4, "pct": 10 }]
   },
-  "_doc_caminos": "--- ronda 8, 05 --- Caminos de la escuela de la IV (proceso/32-ronda-8/05; docs/diseno/27, §1.3): como las elecciones de AoE4, el primero que se elige cierra los otros. Cada camino (`camino_de`) abre sus mejoras de la escuela (`camino`) y una mejora que se repite (`repite`: hasta `max` veces; cada vez cuesta `crece_pct` % más del costo base). Los registros quedan para todos. `requiere_linea`: el camino no está si el pueblo no entrena esa línea (el asedio, en Palmares y los pueblos sin taller). Las elecciones se ven solo antes de elegir; después, solo lo del camino elegido. Costos y efectos, tentativos: el sumidero de lo que sobra en la IV (alimento y madera).",
+  "_doc_caminos": "--- ronda 8, 05 --- Caminos de la escuela de la IV (proceso/32-ronda-8/05; docs/diseno/27, §1.3): como las elecciones de AoE4, el primero que se elige cierra los otros. Cada camino (`camino_de`) abre sus mejoras de la escuela (`camino`) y una mejora que se repite (`repite`: hasta `max` veces, o sin tope si no tiene `max`; cada vez cuesta `crece_pct` % más del costo base, o más que la anterior con `compuesto`; esport 2a: sin tope y +50 % compuesto). Los registros quedan para todos. `requiere_linea`: el camino no está si el pueblo no entrena esa línea (el asedio, en Palmares y los pueblos sin taller). Las elecciones se ven solo antes de elegir; después, solo lo del camino elegido. Costos y efectos, tentativos: el sumidero de lo que sobra en la IV (alimento y madera).",
   "camino_guerra": { "en": {"escuela": true}, "escuela": true, "camino_de": "guerra",
     "nombre": "Camino de la guerra", "edificio": "centro", "ranura": 0, "edad_min": 4,
     "costo": { "alimento": 300, "madera": 100 }, "tiempo_ms": 30000, "icono": "menu_militar",
@@ -318,17 +318,17 @@
     "costo": { "madera": 400, "alimento": 200 }, "tiempo_ms": 60000, "icono": "muro",
     "efectos": [{ "tipo": "edificio_vida_pct", "pct": 15 }, { "tipo": "edificio_ataque", "n": 2 }]
   },
-  "guerra_rep": { "en": {"escuela": true}, "escuela": true, "camino": "guerra", "repite": {"max": 5, "crece_pct": 100},
+  "guerra_rep": { "en": {"escuela": true}, "escuela": true, "camino": "guerra", "repite": {"crece_pct": 50, "compuesto": true},
     "nombre": "Adiestramiento continuo", "edificio": "centro", "ranura": 6, "edad_min": 4,
     "costo": { "alimento": 400, "madera": 100 }, "tiempo_ms": 45000, "icono": "adiestramiento",
     "efectos": [{ "tipo": "ataque_pct", "lineas": ["choque", "distancia", "linea", "montados", "polvora"], "pct": 2 }, { "tipo": "vida_pct", "lineas": ["choque", "distancia", "linea", "montados", "polvora"], "pct": 2 }]
   },
-  "asedio_rep": { "en": {"escuela": true}, "escuela": true, "camino": "asedio", "repite": {"max": 5, "crece_pct": 100},
+  "asedio_rep": { "en": {"escuela": true}, "escuela": true, "camino": "asedio", "repite": {"crece_pct": 50, "compuesto": true},
     "nombre": "Oficio de las máquinas", "edificio": "centro", "ranura": 6, "edad_min": 4,
     "costo": { "alimento": 400, "madera": 100 }, "tiempo_ms": 45000, "icono": "catapulta",
     "efectos": [{ "tipo": "asedio_pct", "pct": 8 }, { "tipo": "vida_pct", "lineas": ["asedio"], "pct": 4 }]
   },
-  "defensa_rep": { "en": {"escuela": true}, "escuela": true, "camino": "defensa", "repite": {"max": 5, "crece_pct": 100},
+  "defensa_rep": { "en": {"escuela": true}, "escuela": true, "camino": "defensa", "repite": {"crece_pct": 50, "compuesto": true},
     "nombre": "Muros y guarniciones", "edificio": "centro", "ranura": 6, "edad_min": 4,
     "costo": { "alimento": 300, "madera": 200 }, "tiempo_ms": 45000, "icono": "aspillera",
     "efectos": [{ "tipo": "edificio_vida_pct", "pct": 6 }, { "tipo": "edificio_ataque", "n": 1 }]

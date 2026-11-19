@@ -71,6 +71,14 @@
     "velocidad": 1250, "vision": 8000, "radio": 300,
     "desc": "Tropa de élite de la edad IV: cara, sin riqueza, y fuerte por casilla de población. Gasta el alimento y la madera que sobran en el final."
   },
+  "guardia_distancia": {
+    "_doc": "--- esport 2a --- Guardia de distancia: el par de la guardia para la línea de tiro (proceso/34-hacia-esport/03a). Común a todos los pueblos en la IV, se entrena junto al hondero (el campo de tiro, el cuartel mapuche y etíope, el mocambo). Como la guardia: cara, sin riqueza, fuerte por casilla de población. Cada pueblo le pone arma y tela en data/arte_animaciones.json → tropas.por_civ. Números tentativos.",
+    "nombre": "Guardia de distancia", "funcion": "distancia", "edad_min": 4, "pob": 2, "junto_a": "hondero",
+    "costo": { "alimento": 350, "madera": 100 }, "tiempo_ms": 30000,
+    "pv": 190, "armadura": 1, "armadura_distancia": 3, "ataque": 17, "alcance": 6000, "cadencia_ms": 1750,
+    "velocidad": 1200, "vision": 9000, "radio": 240,
+    "desc": "Tiradores de élite de la edad IV: caros, sin riqueza, y fuertes por casilla de población. Gastan el alimento y la madera que sobran en el final."
+  },
   "comerciante": {
     "nombre": "Comerciante", "funcion": "comercio", "edad_min": 3, "pob": 1,
     "costo": { "alimento": 60, "madera": 100 }, "tiempo_ms": 25000,

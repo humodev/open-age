@@ -62,7 +62,7 @@ func _init() -> void:
 						wonders[int(ev["id"])]["cae"] = s.tick
 					print("  %s j%d pierde la maravilla (%s)" % [_t(s.tick), ev["player"], "terminada" if ev.get("terminada", false) else "en obra"])
 				"trained":
-					if String(ev.get("type", "")) == "guardia":
+					if String(ev.get("type", "")).begins_with("guardia"): # esport 2a: también la de distancia
 						guard[int(ev["player"])] += 1
 				"tech":
 					var tk := String(ev.get("tech", ""))

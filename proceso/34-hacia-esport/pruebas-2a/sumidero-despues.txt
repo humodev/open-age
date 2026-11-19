@@ -1,0 +1,16 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+2v2 [0, 1, 0, 1] ["tawantinsuyu", "mapuches", "guaranies", "etiopia"] llano experta semilla 11, mapa 176
+  25:09 j0 elige camino_asedio
+  28:02 j0 empieza la maravilla
+  30:37 j2 empieza la maravilla
+  34:05 j0 termina la maravilla
+  34:24 j2 elige camino_defensa
+  41:22 j2 termina la maravilla
+Fin a los 45:00
+j0 tawantinsuyu eq0 edad 4 en pie | min en la IV 22 | sin gastar en la IV: alimento prom 2158 máx 8287, madera prom 1579 máx 4528 | al final { "alimento": 1977, "madera": 2499, "piedra": 1765, "riqueza": 15436, "mita": 647 } | camino camino_asedio | repetidas { "asedio_rep": 8 } | guardia 6 | pob 211/200
+j1 mapuches     eq1 edad 3 en pie | min en la IV 0 | sin gastar en la IV: alimento prom 0 máx 0, madera prom 0 máx 0 | al final { "alimento": 2141, "madera": 20, "piedra": 743, "riqueza": 21 } | camino - | repetidas {  } | guardia 0 | pob 91/174
+j2 guaranies    eq0 edad 4 en pie | min en la IV 20 | sin gastar en la IV: alimento prom 1317 máx 3633, madera prom 285 máx 890 | al final { "alimento": 3633, "madera": 890, "piedra": 932, "riqueza": 3891 } | camino camino_defensa | repetidas { "defensa_rep": 5 } | guardia 0 | pob 198/200
+j3 etiopia      eq1 edad 3 en pie | min en la IV 0 | sin gastar en la IV: alimento prom 0 máx 0, madera prom 0 máx 0 | al final { "alimento": 1958, "madera": 194, "piedra": 528, "riqueza": 15 } | camino - | repetidas {  } | guardia 0 | pob 59/150
+maravilla j0: empieza 28:02, obra 6:02, daño máximo terminada 0 %
+maravilla j2: empieza 30:37, obra 10:44, daño máximo terminada 1 %

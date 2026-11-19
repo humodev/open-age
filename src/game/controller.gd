@@ -399,7 +399,8 @@ func commands() -> Array[Dictionary]:
 				rc["desc"] = str(t.get("desc", ""))
 			elif t.has("repite"):
 				var rp: Dictionary = t["repite"]
-				rc["desc"] = "%s\nSe repite: %d de %d. Cada vez cuesta %d %% más del costo base." % [rc["desc"], sim.times_done(local, tech), int(rp.get("max", 1)), int(rp.get("crece_pct", 0))]
+				var hechas := ("%d de %d" % [sim.times_done(local, tech), int(rp["max"])]) if rp.has("max") else ("%d veces, sin tope" % sim.times_done(local, tech))
+				rc["desc"] = "%s\nSe repite: %s. Cada vez cuesta %d %% más %s." % [rc["desc"], hechas, int(rp.get("crece_pct", 0)), "que la anterior" if rp.get("compuesto", false) else "del costo base"]
 			# --- paso 3 --- La escuela de la IV va en su propio submenú, con el nombre del pueblo.
 			if t.get("escuela", false):
 				school.append(rc)
@@ -625,7 +626,9 @@ func tech_name(tech: String) -> String:
 		if v.has("nombre"):
 			return v["nombre"]
 	if t.has("repite"): # --- ronda 8, 05 --- la que se repite dice qué vez es
-		return "%s %d/%d" % [t.get("nombre", tech), sim.times_done(local, tech) + 1, int(t["repite"].get("max", 1))]
+		if not t["repite"].has("max"): # --- esport 2a --- sin tope
+			return "%s %d" % [t.get("nombre", tech), sim.times_done(local, tech) + 1]
+		return "%s %d/%d" % [t.get("nombre", tech), sim.times_done(local, tech) + 1, int(t["repite"]["max"])]
 	return t.get("nombre", tech)
 
 
