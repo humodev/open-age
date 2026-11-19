@@ -134,6 +134,8 @@ func _send(ids: Array, cmd: Dictionary) -> void:
 	if cmd["t"] == "target":
 		_marcar_obra(ids, sim.by_id.get(cmd["target"])) # --- fluidez 2 ---
 		sim.push_command({"t": "target", "player": local, "ids": ids, "target": cmd["target"]})
+	elif cmd["t"] == "mantener": # --- fluidez 5 --- Mayús + mantener posición
+		sim.push_command({"t": "mantener", "player": local, "ids": ids})
 	else:
 		sim.push_command({"t": "move", "player": local, "ids": ids, "x": cmd["x"], "y": cmd["y"], "amove": cmd["amove"]})
 
@@ -148,6 +150,8 @@ func puntos(id: int) -> Array:
 			out.append([int(cmd["tx"]) * P + int(tam[0]) * P / 2, int(cmd["ty"]) * P + int(tam[1]) * P / 2, true])
 			continue
 		# --- fin fluidez 2 ---
+		if cmd["t"] == "mantener": # --- fluidez 5 --- sin lugar propio: se queda donde termine
+			continue
 		var x: int = cmd["x"]
 		var y: int = cmd["y"]
 		if cmd["t"] == "target":
