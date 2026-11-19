@@ -3051,7 +3051,7 @@ func _site_box(sites: Array[SimEntity], x: int, y: int, r: int) -> SimEntity:
 
 
 func _rivals_in(site: SimEntity, r: int) -> bool:
-	for e in sim.actives:
+	for e in sim.all_units():
 		if e.alive and e.is_unit() and e.owner >= 0 and e.inside < 0 and sim.enemies(player, e.owner) and absi(e.x - site.x) <= r and absi(e.y - site.y) <= r:
 			return true
 	return false

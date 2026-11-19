@@ -468,7 +468,7 @@ func craft_stopped(e: SimEntity) -> bool:
 ## Relevo: las unidades fuera de combate se curan. --- paso 6 --- El lawen mapuche cura más
 ## (`relevo_pct`); los remedios del monte guaraníes (`regen_monte`) curan a la tropa junto al monte.
 func _regen() -> void:
-	for e in sim.actives:
+	for e in sim.all_units():
 		if not e.alive or not e.is_unit() or e.hp >= e.hp_max or e.owner < 0:
 			continue
 		if has(e.owner, "relevo"):
@@ -531,7 +531,7 @@ func _command_aura() -> void:
 	if not mando.is_empty():
 		mando.clear()
 	var caps: Array[SimEntity] = []
-	for e in sim.actives:
+	for e in sim.all_units():
 		if e.alive and e.is_unit() and e.inside < 0 and e.def.has("mando"):
 			caps.append(e)
 	if caps.is_empty():
@@ -571,8 +571,8 @@ func _sacred() -> void:
 		# Presencia por equipo: los aliados no se disputan un sitio. Lo toma el jugador
 		# de menor id del equipo presente.
 		var present := {}
-		for u in sim.actives:
-			if u.alive and u.is_unit() and u.owner >= 0 and u.inside < 0 and absi(u.x - site.x) <= r and absi(u.y - site.y) <= r:
+		for u in sim.all_units(): # mismas unidades que actives, en el mismo orden; la caja primero
+			if absi(u.x - site.x) <= r and absi(u.y - site.y) <= r and u.alive and u.owner >= 0 and u.inside < 0:
 				var tm := sim.team_of(u.owner)
 				present[tm] = mini(int(present.get(tm, u.owner)), u.owner)
 		if present.size() != 1:
@@ -880,7 +880,7 @@ func _respawn_neutrals() -> void:
 			continue
 		var c := Vector2i(int(r[1]) * P + P, int(r[2]) * P + P)
 		var busy := false
-		for u in sim.actives:
+		for u in sim.all_units():
 			if u.alive and u.is_unit() and u.owner >= 0 and absi(u.x - c.x) <= 12 * P and absi(u.y - c.y) <= 12 * P:
 				busy = true
 				break

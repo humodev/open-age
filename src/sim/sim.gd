@@ -1383,9 +1383,15 @@ func _update_players() -> void:
 	_auras.resize(players.size())
 	for pid in players.size():
 		_auras[pid] = []
+	_aura_g.resize(players.size())
+	for pid in players.size():
+		_aura_g[pid] = []
 	for e in actives:
 		if e.alive and e.owner >= 0 and e.built and e.def.get("hito", false) and not aura_of(e).is_empty():
 			_auras[e.owner].append(e)
+			var a := aura_of(e)
+			if a.has("recoleccion_pct"):
+				_aura_g[e.owner].append([e, int(a["recoleccion_pct"]), a.get("recursos", null), int(a["radio"])])
 
 
 ## Aura de un hito según el lugar (C-33, como AoE4): la propia del hito o la de su eje en
@@ -1397,16 +1403,17 @@ func aura_of(b: SimEntity) -> Dictionary:
 
 
 ## Recolección extra (%) de un recurso junto a un hito propio con aura de recolección.
+## Corre por cada aldeano que junta: lee `_aura_g` (de `_update_players`, una vez por tick).
+var _aura_g: Array = [] # por jugador: [hito, recoleccion_pct, recursos o null, radio]
 func _aura_gather(owner: int, t: SimEntity, kind: String) -> int:
-	if owner >= _auras.size():
+	if owner < 0 or owner >= _aura_g.size():
 		return 0
 	var best := 0
-	for h: SimEntity in _auras[owner]:
-		var a := aura_of(h)
-		if not a.has("recoleccion_pct") or not (a.get("recursos", [kind]) as Array).has(kind):
+	for g: Array in _aura_g[owner]:
+		if g[2] != null and not (g[2] as Array).has(kind):
 			continue
-		if dist_to(t, h) <= int(a["radio"]):
-			best = maxi(best, int(a["recoleccion_pct"]))
+		if dist_to(t, g[0]) <= g[3]:
+			best = maxi(best, g[1])
 	return best
 
 
@@ -1490,7 +1497,7 @@ func _aura_combat() -> void:
 		any = any or not (lists[-1] as Array).is_empty()
 	if not any:
 		return # nadie tiene hitos militares con aura: no hay bits que limpiar
-	for u in actives:
+	for u in all_units():
 		if not u.alive or not u.is_unit() or u.owner < 0:
 			continue
 		var list: Array = lists[u.owner]
@@ -2241,7 +2248,7 @@ func _hit(a: SimEntity, t: SimEntity) -> void:
 	# Daño en área (elefantes): una fracción a los enemigos cercanos al objetivo.
 	if a.def.has("area") and t.is_unit() and not a.def.has("area_borde_pct"): # --- paso 4 --- el asedio de área va por _splash
 		var r: int = a.def["area"]
-		for o in actives:
+		for o in all_units():
 			if o != t and o.alive and o.is_unit() and o.inside < 0 and o.owner >= 0 and enemies(a.owner, o.owner) and absi(o.x - t.x) <= r and absi(o.y - t.y) <= r:
 				o.hp -= maxi(1, dmg * int(a.def.get("area_pct", 50)) / 100)
 				if o.hp <= 0:
@@ -2394,6 +2401,11 @@ func _cleanup() -> void:
 		if e.alive:
 			keep_b.append(e)
 	_buildings = keep_b
+	var keep_u: Array[SimEntity] = []
+	for e in _units:
+		if e.alive:
+			keep_u.append(e)
+	_units = keep_u
 	for d: Dictionary in [_owned, _owned_b]:
 		for k in d:
 			var keep_o: Array[SimEntity] = []
@@ -2752,7 +2764,7 @@ func _separate() -> void:
 	# la misma velocidad de separación por la mitad del trabajo (docs/11, paso 6).
 	var every := maxi(1, int(data.reglas.get("separacion_cada_ticks", 1)))
 	var cap := 160 * every
-	for e in actives:
+	for e in all_units():
 		if not e.alive or not e.is_unit() or e.inside >= 0:
 			continue
 		if (e.id + tick) % every != 0:
@@ -3723,8 +3735,10 @@ func _new_entity(cat: int, type: String, owner: int, def: Dictionary) -> SimEnti
 		if cat == SimEntity.Cat.BUILDING:
 			_own_list(_owned_b, owner).append(e)
 			_buildings.append(e)
-		elif cat == SimEntity.Cat.UNIT and SimEntity.MILITARY_FNS.has(String(def.get("funcion", ""))):
-			_military.append(e)
+		elif cat == SimEntity.Cat.UNIT:
+			_units.append(e)
+			if SimEntity.MILITARY_FNS.has(String(def.get("funcion", ""))):
+				_military.append(e)
 	by_id[e.id] = e
 	return e
 
@@ -3735,6 +3749,11 @@ func _new_entity(cat: int, type: String, owner: int, def: Dictionary) -> SimEnti
 ## categoría no cambian nunca. Recorrer `owned(pid)` es recorrer `actives` filtrado por dueño.
 var _owned := {} # dueño -> Array[SimEntity] (unidades y edificios)
 var _owned_b := {} # dueño -> Array[SimEntity] (solo edificios)
+var _units: Array[SimEntity] = [] # todas las unidades, en orden de id
+func all_units() -> Array[SimEntity]:
+	return _units
+
+
 var _buildings: Array[SimEntity] = [] # todos los edificios, en orden de id
 func all_buildings() -> Array[SimEntity]:
 	return _buildings

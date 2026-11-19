@@ -66,7 +66,7 @@ func check_idle(sim: Sim) -> void:
 	if not on or sim.tick % IDLE_CHECK_TICKS != 0:
 		return
 	var now := {}
-	for e in sim.actives:
+	for e in sim.all_units():
 		if e.alive and e.is_unit() and e.owner >= 0 and e.fn == "civil" and e.inside < 0 and e.order == SimEntity.Order.IDLE:
 			now[e.id] = true
 			if _idle_prev.has(e.id):
@@ -92,7 +92,7 @@ func _check_economy(sim: Sim) -> void:
 	_float_prev = fl
 	var idle := {}
 	var count := {}
-	for b in sim.actives:
+	for b in sim.all_buildings():
 		if not (b.alive and b.owner >= 0 and b.is_building() and b.built and b.queue.is_empty() and not b.capital):
 			continue
 		var military := false
