@@ -55,7 +55,7 @@
     "arco_curva": 0.07,
     "escudo_z": 0.06,
     "funciones": ["choque", "linea", "distancia", "explorador", "asedio"],
-    "tipos": {
+    "tipos": { "comerciante": {"carga": "fardo", "_doc": "--- comercio --- (proceso/33-comercio, §8) la figura del aldeano con la carga a la espalda, solo a la vuelta: fardo, cantaro, barras, cesto o vara (por_civ.<civ>.comerciante)."},
       "guerrero":   { "arma": "maza", "golpe": "golpe_1m" },
       "lancero":    { "arma": "lanza", "escudo": "redondo", "golpe": "estocada" },
       "awqa":       { "arma": "lanza", "escudo": "cuadrado", "golpe": "estocada" }, "guardia": {"arma": "lanza", "escudo": "cuadrado", "golpe": "estocada", "largo_pct": 120},
@@ -78,15 +78,15 @@
       "etiopia":   { "hondero": { "arma": "jabalina", "golpe": "lanzar" } },
       "fuerte":    { "guerrero": { "arma": "espada", "escudo": "redondo" }, "lancero": { "escudo": "ninguno", "golpe": "estocada_2m", "largo_pct": 170 }, "hondero": { "arma": "ballesta", "golpe": "fuego", "quieto": "quieto_fuego" } }
     },
-    "por_civ": { "palmares": {"guardia": {"arma": "lanza", "escudo": "redondo", "tela": "#4a5a2a"}}, "etiopia": {"guardia": {"arma": "espada", "golpe": "golpe_1m", "escudo": "redondo", "tela": "#e8e0c8"}}, "guaranies": {"guardia": {"arma": "macana", "golpe": "golpe_2m", "quieto": "quieto_2m", "escudo": "ninguno", "tela": "#6a4a2a"}}, "mapuches": {"guardia": {"arma": "lanza", "golpe": "estocada_2m", "largo_pct": 140, "escudo": "ninguno", "tela": "#2a3a5a"}},
+    "por_civ": { "palmares": { "comerciante": {"carga": "cesto"},"guardia": {"arma": "lanza", "escudo": "redondo", "tela": "#4a5a2a"}}, "etiopia": { "comerciante": {"carga": "barras"},"guardia": {"arma": "espada", "golpe": "golpe_1m", "escudo": "redondo", "tela": "#e8e0c8"}}, "guaranies": { "comerciante": {"carga": "fardo"},"guardia": {"arma": "macana", "golpe": "golpe_2m", "quieto": "quieto_2m", "escudo": "ninguno", "tela": "#6a4a2a"}}, "mapuches": { "comerciante": {"carga": "fardo"},"guardia": {"arma": "lanza", "golpe": "estocada_2m", "largo_pct": 140, "escudo": "ninguno", "tela": "#2a3a5a"}},
       "canaris":   { "guerrero": { "arma": "hacha" } },
       "caranquis": { "hondero": { "arma": "estolica", "golpe": "lanzar" } },
       "tupies":    { "guerrero": { "arma": "macana", "golpe": "golpe_2m", "quieto": "quieto_2m" } },
       "adal":      { "guerrero": { "arma": "espada", "escudo": "redondo" }, "hondero": { "arma": "arco", "golpe": "arco", "quieto": "quieto_arco", "carcaj": true } },
       "birmanos":  { "guerrero": { "arma": "espada", "golpe": "golpe_1m" } },
       "_doc_ronda8_guardia": "--- ronda 8, 05 --- La guardia de la IV (común): lanza larga y escudo cuadrado; cada pueblo le pone tela, arma y tocado con lo que ya usa su tropa (llawtu, lomphok, macana, guja).", "_doc_paso6_par3": "--- paso 6, par 3 --- Las unidades nuevas de Tawantinsuyu y Ayutthaya con color (tela), tocado (llawtu, lomphok, pano; tocado_color) y arma propios. También valen en la maqueta fija (civ_meshes.gd).",
-      "tawantinsuyu": {"guardia": {"arma": "maza", "golpe": "golpe_1m", "escudo": "cuadrado", "tela": "#5a2a2a", "tocado": "llawtu", "tocado_color": "#e2b13c"}, "galgueros": {"arma": "galga", "golpe": "lanzar", "tela": "#7a4a2a", "tocado": "llawtu", "tocado_color": "#a63a2a"}, "jinete_manco": {"tela": "#4a2424", "tocado": "llawtu", "tocado_color": "#e2b13c"}},
-      "ayutthaya": {"guardia": {"arma": "guja", "golpe": "estocada_2m", "largo_pct": 125, "escudo": "ninguno", "tela": "#5a1f1f", "tocado": "lomphok", "tocado_color": "#c9a24a"}, "ngao": {"arma": "guja", "golpe": "estocada_2m", "largo_pct": 125, "tela": "#2f4a6a", "tocado": "lomphok", "tocado_color": "#c9a24a"}, "defensores_suan_phlu": {"arma": "lanza", "golpe": "estocada", "escudo": "redondo", "largo_pct": 130, "tela": "#1f2a3a", "tocado": "pano", "tocado_color": "#2a2a2a"}}
+      "tawantinsuyu": { "comerciante": {"carga": "cantaro"},"guardia": {"arma": "maza", "golpe": "golpe_1m", "escudo": "cuadrado", "tela": "#5a2a2a", "tocado": "llawtu", "tocado_color": "#e2b13c"}, "galgueros": {"arma": "galga", "golpe": "lanzar", "tela": "#7a4a2a", "tocado": "llawtu", "tocado_color": "#a63a2a"}, "jinete_manco": {"tela": "#4a2424", "tocado": "llawtu", "tocado_color": "#e2b13c"}},
+      "ayutthaya": { "comerciante": {"carga": "vara"},"guardia": {"arma": "guja", "golpe": "estocada_2m", "largo_pct": 125, "escudo": "ninguno", "tela": "#5a1f1f", "tocado": "lomphok", "tocado_color": "#c9a24a"}, "ngao": {"arma": "guja", "golpe": "estocada_2m", "largo_pct": 125, "tela": "#2f4a6a", "tocado": "lomphok", "tocado_color": "#c9a24a"}, "defensores_suan_phlu": {"arma": "lanza", "golpe": "estocada", "escudo": "redondo", "largo_pct": 130, "tela": "#1f2a3a", "tocado": "pano", "tocado_color": "#2a2a2a"}}
     }
   }
 }

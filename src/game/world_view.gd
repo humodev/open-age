@@ -1241,6 +1241,8 @@ func unit_mesh_for(e: SimEntity) -> Mesh:
 ## eligen forma por opción y edad de destino. `lev`: cómo levantarla (Meshes.levante); sin
 ## darlo, el de su categoría, así la vista previa al colocar mide lo mismo que el edificio.
 func building_mesh_for(owner: int, type: String, def: Dictionary, age: int = -1, lev: Variant = null) -> Mesh:
+	if def.get("mercado_neutral", false): # --- comercio --- el neutral se ve según el terreno, con banderín ocre
+		return Meshes.building_mesh("mercado_neutral_" + str((sim.terrain_def().get("neutral", {}) as Dictionary).get("estilo", "feria")), Palette.WEALTH.darkened(0.15))
 	var dd := sim.dp(owner)
 	var style: Dictionary = dd.civ.get("estilo", {})
 	if style.is_empty():

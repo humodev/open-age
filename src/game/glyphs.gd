@@ -172,6 +172,17 @@ static func draw(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
 			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.42, -s * 0.05), c + Vector2(0, -s * 0.36), c + Vector2(s * 0.42, -s * 0.05)]), col.darkened(0.15))
 			for i in 3:
 				ci.draw_rect(Rect2(c + Vector2(-s * 0.36 + i * s * 0.26, -s * 0.05), Vector2(s * 0.2, s * 0.36)), col if i != 1 else Palette.WEALTH)
+		# --- comercio --- el comerciante con el fardo a la espalda y la riqueza; el neutral, puesto con banderín ocre
+		"comerciante":
+			_figure(ci, c + Vector2(s * 0.08, 0), s, col, 0.85)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.38, -s * 0.2), Vector2(s * 0.26, s * 0.3)), col.darkened(0.25))
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.25, -s * 0.42), c + Vector2(-s * 0.12, -s * 0.3), c + Vector2(-s * 0.25, -s * 0.18), c + Vector2(-s * 0.38, -s * 0.3)]), Palette.WEALTH)
+		"mercado_neutral":
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.42, -s * 0.02), c + Vector2(-s * 0.1, -s * 0.3), c + Vector2(s * 0.22, -s * 0.02)]), col.darkened(0.15))
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.36, -s * 0.02), Vector2(s * 0.52, s * 0.36)), col)
+			ci.draw_line(c + Vector2(s * 0.34, s * 0.34), c + Vector2(s * 0.34, -s * 0.42), col, w)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(s * 0.34, -s * 0.42), c + Vector2(s * 0.5, -s * 0.33), c + Vector2(s * 0.34, -s * 0.24)]), Palette.WEALTH)
+		# --- fin comercio ---
 		"detener":
 			ci.draw_rect(Rect2(c - Vector2(s * 0.24, s * 0.24), Vector2(s * 0.48, s * 0.48)), col)
 		"atacar":

@@ -45,11 +45,13 @@ static func correr(m: Node, check: Callable) -> void:
 	# Mercado propio y dos comerciantes, hacia el neutral.
 	var home: SimEntity = null
 	var dir := Vector2i(signi(neu.tx - base.x), signi(neu.ty - base.y))
-	for r in range(6, 20):
-		var t := base + dir * r
-		if sim.map.is_free_rect(t.x - 1, t.y - 1, 5, 5):
-			home = sim.spawn_building("mercado", local, t.x, t.y, true)
-			break
+	var c0 := base + Vector2i(2, 2) + dir * 9
+	for r in 14:
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				var t := c0 + Vector2i(dx, dy)
+				if home == null and maxi(absi(dx), absi(dy)) == r and sim.map.is_free_rect(t.x - 1, t.y - 1, 5, 5) and not sim.map.is_water(t.x, t.y):
+					home = sim.spawn_building("mercado", local, t.x, t.y, true)
 	check.call("mercado propio puesto", home != null)
 	if home == null:
 		return
@@ -95,7 +97,7 @@ static func correr(m: Node, check: Callable) -> void:
 	if chip.size.x > 0:
 		await m._click(mini.global_position + chip.get_center())
 		check.call("clic en «Rutas»: se ven todas las rutas", bool(mini.filtros.get("rutas", false)))
-	# Que avance y la captura con la ruta seleccionada.
+	# Que avance y las capturas con la ruta seleccionada: en el punto de paso y en el neutral.
 	m.speed = 8.0
 	await _hasta(m, func() -> bool: return u.trade_wpd or not u.alive, 600)
 	m.speed = 1.0
@@ -103,6 +105,14 @@ static func correr(m: Node, check: Callable) -> void:
 	m.cam.look_at_point(Vector3(mid.x, 0, mid.y))
 	await m._frames(8)
 	m.get_viewport().get_texture().get_image().save_png("screenshots/comercio_ruta.png")
+	m.speed = 16.0
+	var cargo := await _hasta(m, func() -> bool: return u.trade_gain > 0 or not u.alive, 1500)
+	m.speed = 1.0
+	check.call("el comerciante carga en el neutral (%d de riqueza)" % u.trade_gain, cargo and u.trade_gain > 0)
+	ctrl.select_ids(ids)
+	m.cam.look_at_point(Vector3(neu.x / float(P), 0, neu.y / float(P)))
+	await m._frames(10)
+	m.get_viewport().get_texture().get_image().save_png("screenshots/comercio_neutral.png")
 	# Aviso: uno por ruta cada 30 s.
 	var al = m.hud.alertas
 	var a1: bool = al.atacado("comerciantes", u)

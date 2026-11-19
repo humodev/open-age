@@ -383,6 +383,43 @@ static func building_mesh(type: String, team: Color) -> ArrayMesh:
 			p.append([box(1.0, 0.12, 0.16), xf(Vector3(0, 1.3, 0)), Palette.WOOD_BEAM])
 			p.append([box(0.7, 0.9, 0.08), xf(Vector3(0, 0.5, 0)), Palette.TRUNK])
 			p.append([box(0.3, 0.25, 0.04), xf(Vector3(0, 1.1, 0.1)), team])
+		# --- comercio --- mercado neutral por terreno (proceso/33-comercio, §1 y §8), maqueta
+		# procedural: banderín ocre (sin color de jugador). `team` llega ocre.
+		"mercado_neutral_feria":
+			# Feria: ramada con toldos, bultos y cántaros.
+			p.append([box(2.8, 0.08, 2.8), xf(Vector3(0, 0.04, 0)), Palette.DIRT.darkened(0.08)])
+			for x in [-1.1, 1.1]:
+				for z in [-1.1, 1.1]:
+					p.append([cyl(0.06, 0.07, 1.4, 6), xf(Vector3(x, 0.7, z)), Palette.WOOD_BEAM])
+			p.append([box(2.5, 0.05, 1.2), xf(Vector3(0, 1.42, -0.55), Vector3(10, 0, 0)), Color("c8a46a")])
+			p.append([box(2.5, 0.05, 1.2), xf(Vector3(0, 1.42, 0.55), Vector3(-10, 0, 0)), Color("b5562f")])
+			for i in 3:
+				p.append([box(0.4, 0.3, 0.3), xf(Vector3(-0.7 + i * 0.7, 0.15, 0.2)), Color("8a6a44").lightened(i * 0.08)])
+				p.append([cyl(0.12, 0.16, 0.36, 8), xf(Vector3(-0.8 + i * 0.75, 0.18, -0.6)), Color("b0603a")])
+			_banner(p, Vector3(1.3, 0.0, 1.3), 2.4, team)
+		"mercado_neutral_puerto":
+			# Puerto de río: muelle con pilotes y canoas amarradas.
+			p.append([box(2.8, 0.12, 1.6), xf(Vector3(0, 0.45, -0.5)), Palette.WOOD_BEAM])
+			for x in [-1.2, -0.4, 0.4, 1.2]:
+				for z in [-1.2, 0.2]:
+					p.append([cyl(0.07, 0.07, 0.6, 6), xf(Vector3(x, 0.2, z)), Palette.TRUNK])
+			for i in 2:
+				p.append([box(0.35, 0.18, 2.0), xf(Vector3(-0.6 + i * 1.2, 0.1, 0.9), Vector3(0, 8 - i * 16, 0)), Color("6e4a2c")])
+			for i in 3:
+				p.append([box(0.35, 0.28, 0.3), xf(Vector3(-0.8 + i * 0.8, 0.65, -0.7)), Color("8a6a44").lightened(i * 0.07)])
+			_banner(p, Vector3(1.3, 0.4, -1.2), 2.2, team)
+		"mercado_neutral_altura":
+			# Feria de altura: corral de pirca, mantas y llamas echadas.
+			for i in 14:
+				var a := TAU * i / 14.0
+				p.append([box(0.42, 0.42, 0.22), xf(Vector3(cos(a) * 1.25, 0.21, sin(a) * 1.25), Vector3(0, -rad_to_deg(a), 0)), Palette.STONE.darkened(0.05 * (i % 3))])
+			for i in 3:
+				p.append([box(0.6, 0.04, 0.45), xf(Vector3(-0.55 + i * 0.55, 0.03, -0.3)), [Color("b5562f"), Color("2f6b5a"), Color("d8b24a")][i]])
+			for i in 2:
+				p.append([box(0.25, 0.25, 0.55), xf(Vector3(-0.4 + i * 0.8, 0.13, 0.5)), Color("e8dcc4")])
+				p.append([box(0.1, 0.35, 0.1), xf(Vector3(-0.4 + i * 0.8, 0.35, 0.75)), Color("e8dcc4")])
+			_banner(p, Vector3(1.0, 0.0, 1.0), 2.2, team)
+		# --- fin comercio ---
 		"sitio_sagrado":
 			p.append([cyl(1.0, 1.05, 0.08, 20), xf(Vector3(0, 0.04, 0)), Palette.DIRT.darkened(0.1)])
 			for i in 9:

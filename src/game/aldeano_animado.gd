@@ -94,7 +94,7 @@ static func usa(def: Dictionary, type := "") -> bool:
 	if not on or def.get("animal", false) or def.get("montado", false) or def.get("elefante", false) or def.has("despliega_en"):
 		return false
 	var fn: String = def.get("funcion", "")
-	if fn != "civil":
+	if fn != "civil" and fn != "comercio": # --- comercio --- el comerciante es la figura del aldeano con su carga
 		var tr: Dictionary = cfg().get("tropas", {})
 		if not tr.get("activo", false) or not fn in tr.get("funciones", []) or def.has("area_borde_pct"):
 			return false
@@ -389,10 +389,12 @@ static func colores(style: Dictionary) -> Dictionary:
 
 
 ## Malla con piel (una pieza rígida por hueso) del aldeano de un pueblo, con su herramienta y,
-## si lleva carga, el atado a la espalda del color del recurso.
-static func malla(style: Dictionary, team: Color, tool: String, carga: Color) -> ArrayMesh:
+## si lleva carga, el atado a la espalda del color del recurso. `forma_carga` (comerciante):
+## fardo, cantaro, barras, cesto o vara.
+const CARGAS := {"fardo": "8a6a44", "cantaro": "b0603a", "barras": "e8e2d0", "cesto": "a8843e", "vara": "7a5a32"} # --- comercio ---
+static func malla(style: Dictionary, team: Color, tool: String, carga: Color, forma_carga := "") -> ArrayMesh:
 	var forma: String = style.get("forma", "")
-	var key := "%s_%s_%s_%s_%s" % [forma, style.get("arcilla", ""), team.to_html(), tool, carga.to_html()]
+	var key := "%s_%s_%s_%s_%s_%s" % [forma, style.get("arcilla", ""), team.to_html(), tool, carga.to_html(), forma_carga]
 	if _meshes.has(key):
 		return _meshes[key]
 	var sk: Skeleton3D = _template()["sk"]
@@ -400,7 +402,9 @@ static func malla(style: Dictionary, team: Color, tool: String, carga: Color) ->
 	var parts: Array = [] # [malla, transform en el modelo, color, hueso, Pieza]
 	cuerpo(parts, sk, c, team, c["tela"], str(c["vest"].get("prenda", "ninguna")), Color(c["vest"].get("prenda_color", (c["tela"] as Color).to_html())), true)
 	_herramienta(parts, tool, sk, c["madera"], c["piedra"], c["fibra"])
-	if carga.a > 0.0:
+	if carga.a > 0.0 and forma_carga != "":
+		_carga_comercio(parts, sk, forma_carga, carga, c)
+	elif carga.a > 0.0:
 		var ch: Vector3 = _P(sk, "chest")
 		var bc := sk.find_bone("chest")
 		parts.append([_box(Vector3(0.15, 0.13, 0.1)), Transform3D(Basis.IDENTITY, ch + Vector3(0, 0.08, -0.11)), carga.darkened(0.15), bc])
@@ -408,6 +412,31 @@ static func malla(style: Dictionary, team: Color, tool: String, carga: Color) ->
 	var mesh := _skinned(parts)
 	_meshes[key] = mesh
 	return mesh
+
+
+## --- comercio --- La carga del comerciante, a la espalda o al hombro (maqueta procedural, C-80 «b»).
+static func _carga_comercio(parts: Array, sk: Skeleton3D, forma: String, col: Color, c: Dictionary) -> void:
+	var ch: Vector3 = _P(sk, "chest")
+	var bc := sk.find_bone("chest")
+	var back := ch + Vector3(0, 0.06, -0.14)
+	match forma:
+		"cantaro":
+			parts.append([_box(Vector3(0.16, 0.16, 0.14)), Transform3D(Basis.IDENTITY, back), col, bc])
+			parts.append([_box(Vector3(0.07, 0.08, 0.07)), Transform3D(Basis.IDENTITY, back + Vector3(0, 0.12, 0)), col.darkened(0.2), bc])
+		"barras":
+			for i in 3:
+				parts.append([_box(Vector3(0.2, 0.045, 0.08)), Transform3D(Basis.IDENTITY, back + Vector3(0, -0.05 + i * 0.05, 0)), col.darkened(i * 0.06), bc])
+		"cesto":
+			parts.append([_box(Vector3(0.2, 0.17, 0.15)), Transform3D(Basis.IDENTITY, back), col, bc])
+			parts.append([_box(Vector3(0.22, 0.03, 0.17)), Transform3D(Basis.IDENTITY, back + Vector3(0, 0.09, 0)), col.lightened(0.2), bc])
+		"vara":
+			var sh := ch + Vector3(0, 0.16, 0)
+			parts.append([_box(Vector3(0.7, 0.025, 0.025)), Transform3D(Basis.IDENTITY, sh), col, bc, Pieza.MADERA])
+			for x in [-0.33, 0.33]:
+				parts.append([_box(Vector3(0.11, 0.13, 0.11)), Transform3D(Basis.IDENTITY, sh + Vector3(x, -0.1, 0)), Color("c9a86a"), bc])
+		_:
+			parts.append([_box(Vector3(0.22, 0.2, 0.15)), Transform3D(Basis.IDENTITY, back), col, bc])
+			parts.append([_box(Vector3(0.012, 0.2, 0.17)), Transform3D(Basis.IDENTITY, back + Vector3(0.06, 0, 0.04)), c["cuero"], bc, Pieza.MADERA])
 
 
 static func _P(sk: Skeleton3D, bone: String) -> Vector3:
@@ -857,7 +886,10 @@ static func crear(style: Dictionary, team: Color, k: float, civ := "", type := "
 	st.style = style
 	st.team = team
 	var fn: String = def.get("funcion", "civil")
-	if fn != "civil":
+	if fn == "comercio": # --- comercio --- la carga de su pueblo (tropas.por_civ.<civ>.comerciante.carga)
+		st.eq = TropaAnimada.equipo(civ, str(style.get("forma", "")), type, fn)
+		st.mi.mesh = malla(style, team, "", Color(0, 0, 0, 0))
+	elif fn != "civil":
 		st.tropa = true
 		st.eq = TropaAnimada.equipo(civ, str(style.get("forma", "")), type, fn)
 		st.golpe_act = str(st.eq.get("golpe", "golpe_1m"))
@@ -1082,10 +1114,15 @@ static func _herramienta_y_carga(st: Estado, e: SimEntity, sim: Sim, act: String
 	var carga := Color(0, 0, 0, 0)
 	if e.carry > 0:
 		carga = Palette.RES.get(e.carry_res, Color.WHITE)
+	var forma := ""
+	if e.def.get("comerciante", false): # --- comercio --- vacío a la ida, cargado a la vuelta
+		tool = ""
+		forma = str(st.eq.get("carga", "fardo"))
+		carga = Color(str(CARGAS.get(forma, "8a6a44"))) if e.trade_gain > 0 else Color(0, 0, 0, 0)
 	if tool != st.tool or carga != st.carga:
 		st.tool = tool
 		st.carga = carga
-		st.mi.mesh = malla(st.style, st.team, tool, carga)
+		st.mi.mesh = malla(st.style, st.team, tool, carga, forma)
 		n_malla += 1
 
 
