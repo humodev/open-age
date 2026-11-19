@@ -105,12 +105,15 @@ func think() -> void:
 	var army: Array[SimEntity] = []
 	var by_type := {}
 	var centro: SimEntity = null
+	var inside_civ := 0 # --- esport 3b --- aldeanos adentro (los oficios de Palmares, la campana)
 	centers.clear()
 	for e in sim.owned(player):
 		if not e.alive or e.owner != player:
 			continue
 		if e.is_unit():
 			if e.inside >= 0:
+				if e.fn == "civil":
+					inside_civ += 1
 				continue
 			if e.fn == "civil":
 				vill.append(e)
@@ -161,7 +164,9 @@ func think() -> void:
 	if int(p["age"]) >= 4 and _age4_tick < 0:
 		_age4_tick = sim.tick
 	_goal = _hito_type(p)
-	var saving := _wants_hito(p, vill.size(), by_type)
+	# --- esport 3b --- Los aldeanos de los oficios (Palmares) cuentan para empezar a ahorrar: sin
+	# ellos, Palmares empezaba a guardar la fama del hito II dos minutos tarde (II a las 8:44–11:59).
+	var saving := _wants_hito(p, vill.size() + inside_civ, by_type)
 	if not saving and (_wonder_on and _keeps_wonder() or _wants_wonder(p, vill.size(), _threat(centro) != null)):
 		saving = true
 		_wonder_on = true

@@ -1,0 +1,27 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+edades · experta contra experta · llano · 12 minutos · semillas [7, 11, 3] · ajustes []
+palmares      etiopia       s7   P0 experta hito→edad II/III/IV: 7:48→8:41 --:--→--:-- --:--→--:-- |  5' 14a8m0c0tE1 10' 19a14m0c0tE2
+palmares      etiopia       s7   P1 experta hito→edad II/III/IV: 7:31→8:24 --:--→--:-- --:--→--:-- |  5' 22a4m1c0tE1 10' 37a1m1c0tE2
+palmares      etiopia       s11  P0 experta hito→edad II/III/IV: 8:16→--:-- --:--→--:-- --:--→--:-- |  5' 14a6m0c0tE1 10' 19a8m0c0tE1
+palmares      etiopia       s11  P1 experta hito→edad II/III/IV: 8:42→9:38 --:--→--:-- --:--→--:-- |  5' 22a2m1c0tE1 10' 37a2m1c0tE2
+palmares      etiopia       s3   P0 experta hito→edad II/III/IV: 7:42→8:44 --:--→--:-- --:--→--:-- |  5' 14a8m0c0tE1 10' 19a10m0c0tE2
+palmares      etiopia       s3   P1 experta hito→edad II/III/IV: 7:58→8:49 --:--→--:-- --:--→--:-- |  5' 22a1m1c0tE1 10' 36a1m1c0tE2
+palmares      mapuches      s7   P0 experta hito→edad II/III/IV: 7:49→8:49 --:--→--:-- --:--→--:-- |  5' 14a8m0c0tE1 10' 19a15m0c0tE2
+palmares      mapuches      s7   P1 experta hito→edad II/III/IV: 9:12→10:05 --:--→--:-- --:--→--:-- |  5' 26a2m2c0tE1 10' 46a3m3c0tE1
+palmares      mapuches      s11  P0 experta hito→edad II/III/IV: 11:53→--:-- --:--→--:-- --:--→--:-- |  5' 14a6m0c0tE1 10' 18a1m0c0tE1
+palmares      mapuches      s11  P1 experta hito→edad II/III/IV: 8:32→9:25 --:--→--:-- --:--→--:-- |  5' 26a2m3c0tE1 10' 50a11m3c0tE2
+palmares      mapuches      s3   P0 experta hito→edad II/III/IV: 7:42→8:44 --:--→--:-- --:--→--:-- |  5' 14a6m0c0tE1 10' 19a13m0c0tE2
+palmares      mapuches      s3   P1 experta hito→edad II/III/IV: 8:15→9:06 --:--→--:-- --:--→--:-- |  5' 27a3m3c0tE1 10' 59a10m3c0tE2
+guaranies     mapuches      s7   P0 experta hito→edad II/III/IV: 5:47→7:37 --:--→--:-- --:--→--:-- |  5' 22a0m1c0tE1 10' 37a3m1c0tE2
+guaranies     mapuches      s7   P1 experta hito→edad II/III/IV: 8:14→9:10 --:--→--:-- --:--→--:-- |  5' 28a1m2c0tE1 10' 59a14m3c0tE2
+guaranies     mapuches      s11  P0 experta hito→edad II/III/IV: 5:20→6:55 --:--→--:-- --:--→--:-- |  5' 22a0m1c0tE1 10' 32a3m1c0tE2
+guaranies     mapuches      s11  P1 experta hito→edad II/III/IV: 8:03→8:52 --:--→--:-- --:--→--:-- |  5' 28a2m3c0tE1 10' 59a11m3c0tE2
+guaranies     mapuches      s3   P0 experta hito→edad II/III/IV: 6:00→7:47 --:--→--:-- --:--→--:-- |  5' 22a0m1c0tE1 10' 36a2m1c0tE2
+guaranies     mapuches      s3   P1 experta hito→edad II/III/IV: 7:54→8:41 11:46→--:-- --:--→--:-- |  5' 28a2m3c0tE1 10' 57a21m3c0tE2
+
+experta: 18 jugadores · edad II antes de 6:00: 0 (promedio 9:04) · edad III antes de 15:00: 0 · edad III en 12': 0 []
+WARNING: 23648 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 11 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
