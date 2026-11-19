@@ -43,12 +43,12 @@
    "desc": "Mesetas de paredes a pique como fortaleza, prisión y tesoro: Amba Gəšän (tesoro real hasta que la tomó el imán Aḥmad, c. 1540) y Wähni, la de la época de Gondar. Debre Damo, monasterio vivo, no se usa. La defensa en altura sube de 25 % a 35 %.",
    "evidencia": "Documentado. Taddesse Tamrat, Church and State in Ethiopia, 1270–1527 (1972); Álvares (1540); Futūḥ (la toma); Bruce, Travels (1790). Wähni, [verificar desde qué reinado]."},
   "caravanas_amole": {"propia": true, "eje": "economia", "nombre": "Caravanas de amole", "en": {"tipo": "mercado"}, "edificio": "mercado", "ranura": 6, "edad_min": 4, "costo": {"alimento": 200, "madera": 200}, "tiempo_ms": 50000, "icono": "amole",
-   "efectos": [{"tipo": "mercado_venta_pct", "pct": 20}],
-   "desc": "Barras de sal como moneda (ya en la década de 1520), cortadas por trabajadores afar en la llanura de sal y llevadas por mercaderes musulmanes, los jabarti, en caravanas de mulas y camellos. Lo vendido en el mercado rinde 20 % más.",
+   "efectos": [{"tipo": "comercio_pct", "pct": 20}],
+   "desc": "Barras de sal como moneda (ya en la década de 1520), cortadas por trabajadores afar en la llanura de sal y llevadas por mercaderes musulmanes, los jabarti, en caravanas de mulas y camellos. El comerciante rinde 20 % más por viaje.",
    "evidencia": "Documentado. Pankhurst, An Introduction to the Economic History of Ethiopia from Early Times to 1800 (1961); Álvares (1540)."},
   "polvora_massawa": {"propia": true, "eje": "militar", "nombre": "Pólvora de Massawa", "en": {"tipo": "mercado"}, "edificio": "mercado", "ranura": 7, "edad_min": 4, "costo": {"alimento": 200, "riqueza": 250}, "tiempo_ms": 50000, "icono": "massawa",
-   "efectos": [{"tipo": "ataque_ruta_pct", "lineas": ["polvora"], "pct": 10, "edificios": ["mercado"]}],
-   "desc": "Casi todas las armas de fuego entraban por Massawa (otomana desde 1557); en la corte se reparaban, sin fabricación local de importancia. +10 % de ataque a la pólvora solo mientras haya un mercado propio en pie: la ruta abierta.",
+   "efectos": [{"tipo": "ataque_ruta_pct", "lineas": ["polvora"], "pct": 10, "comercio": true}],
+   "desc": "Casi todas las armas de fuego entraban por Massawa (otomana desde 1557); en la corte se reparaban, sin fabricación local de importancia. +10 % de ataque a la pólvora solo con una ruta abierta: un viaje de comercio cobrado en los últimos 3 minutos.",
    "evidencia": "Documentado (la importación). Pankhurst, artículos sobre las armas de fuego en Etiopía antes del siglo XIX (Ethiopia Observer, Journal of Ethiopian Studies, décadas de 1960 y 1970) [verificar títulos y números]."},
   "orden_katama": {"propia": true, "eje": "mecanica", "nombre": "Orden del kätäma", "en": {"tipo": "centro"}, "edificio": "centro", "ranura": 9, "edad_min": 4, "costo": {"alimento": 250, "madera": 250}, "tiempo_ms": 50000, "icono": "katama",
    "efectos": [{"tipo": "obra_pct", "tipos": ["corte_nueva"], "pct": -50}],
@@ -79,6 +79,7 @@
   "Gondar"
  ],
  "unidades": {
+  "comerciante": {"nombre": "Mercader jabarti", "desc": "Mercaderes musulmanes, los jabarti, con caravanas de mulas cargadas de amole (Pankhurst, 1961). Va del mercado propio a otro mercado y vuelve con riqueza: cuanto más lejos, más gana."},
   "catapulta": {"nombre": "Pieza ligera", "ataque": 18, "alcance": 7500, "desc": "Asedio de área: cañones livianos que llegaron con los portugueses de Cristóvão da Gama en 1541 (Castanhoso, 1564; Whiteway, 1902) [verificar el pasaje]. Pega a todos los enemigos cerca del blanco; le hace poco a los edificios."},
   "rebano": {"nombre": "Cabra", "color": "#3a3530"},
   "aldeano": {

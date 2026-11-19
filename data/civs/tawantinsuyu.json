@@ -39,6 +39,7 @@
   "Inkarri"
  ],
  "unidades": {
+  "comerciante": {"nombre": "Caravana de llamas", "desc": "Caravana de llamas cargadas, de intercambio entre pisos ecológicos más que de mercado (Murra, 1975). Si el inca comerciaba con mercados ajenos queda para los historiadores [verificar]. Va del mercado propio a otro mercado y vuelve con riqueza: cuanto más lejos, más gana."},
   "catapulta": {"nombre": "Hondero de piedra caliente", "reemplaza": "ariete", "pv": 110, "armadura": 0, "armadura_distancia": 1, "ataque": 16, "alcance": 6500, "cadencia_ms": 4500, "velocidad": 1200, "radio": 240, "pob": 2, "area": 1000, "contadores": {"choque": 100, "distancia": 100, "linea": 100, "civil": 100, "explorador": 100, "asedio": 100, "edificio": 700}, "costo": {"madera": 100, "riqueza": 60, "mita": 30}, "desc": "Desde la edad III el hondero de piedra caliente pasa a la ranura del asedio de área: piedras al rojo envueltas en algodón que caen sobre la tropa y encienden los techos de paja (Cusco, 1536: Titu Cusi Yupanqui, 1570; Pedro Pizarro, 1571). Pega a todos los enemigos cerca del blanco y sigue sirviendo contra los edificios."},
   "rebano": {"nombre": "Llama", "color": "#e8dcc4", "desc": "Llama de los rebaños del ayllu: se arrea y se carnea."},
   "aldeano": {

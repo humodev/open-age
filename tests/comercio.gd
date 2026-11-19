@@ -21,6 +21,7 @@ func _init() -> void:
 	_ally()
 	_blocked()
 	_walled()
+	_peoples()
 	print("COMERCIO: ", "OK" if fails == 0 else "%d fallas" % fails)
 	quit(0 if fails == 0 else 1)
 
@@ -202,6 +203,33 @@ func _walled() -> void:
 				cut.append(ev)
 		return not cut.is_empty(), 6000)
 	_check(got_cut and cut[0]["motivo"] == "cerrado", "aviso «Ruta cortada» por el camino cerrado (%s)" % [str(cut[0]) if got_cut else "nada"])
+
+
+# ------------------------------------------------------------------ pueblos
+
+func _peoples() -> void:
+	print("Pueblos: amole +20 %, astilleros −20 % de costo y +10 %, Massawa con una ruta abierta, nombres:")
+	var s := _sim(2, {"civs": ["etiopia", "ayutthaya"]})
+	var home := _put(s, "mercado", 0, s.bases[0].x + 6, s.bases[0].y + 6)
+	var neu: SimEntity = s.comercio.neutrals[0]
+	var g0 := s.comercio.gain(0, home, neu)
+	s._finish_tech(0, "caravanas_amole")
+	_check(s.comercio.gain(0, home, neu) == g0 * 120 / 100, "amole: %d → %d" % [g0, s.comercio.gain(0, home, neu)])
+	var c0: Dictionary = s.dp(1).cost_of("comerciante", 4)
+	s._finish_tech(1, "astilleros_juncos")
+	var hb := _put(s, "mercado", 1, s.bases[1].x - 6, s.bases[1].y - 6)
+	var c1 := s.train_cost(1, hb, "comerciante")
+	_check(int(c1.get("madera", 0)) == int(c0.get("madera", 0)) * 80 / 100, "astilleros: madera %d → %d" % [int(c0.get("madera", 0)), int(c1.get("madera", 0))])
+	_check(s.mod(1, "comercio_pct") == 10, "astilleros: +10 %")
+	s._finish_tech(0, "polvora_massawa")
+	s.mods.tick_second()
+	_check(not bool(s.players[0].get("ruta", false)), "Massawa sin viaje cobrado: sin ruta abierta")
+	var u := _trader(s, 0, home)
+	s.push_command({"t": "target", "player": 0, "ids": [u.id], "target": neu.id})
+	_step_until(s, func() -> bool: return s.players[0].has("ruta_tick"), 5000)
+	s.mods.tick_second()
+	_check(bool(s.players[0].get("ruta", false)), "Massawa con un viaje cobrado: ruta abierta")
+	_check(String(s.dp(0).unidades["comerciante"]["nombre"]) == "Mercader jabarti", "nombre etíope: %s" % s.dp(0).unidades["comerciante"]["nombre"])
 
 
 func _finalize() -> void:

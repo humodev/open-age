@@ -81,6 +81,7 @@
  "inicio_edificio": "lof",
  "explorador": "explorador",
  "unidades": {
+  "comerciante": {"nombre": "Conchavador", "desc": "Conchavo de ganado y ponchos en la frontera, en el siglo XVIII [verificar la fecha con los historiadores]. Va del mercado propio a otro mercado y vuelve con riqueza: cuanto más lejos, más gana."},
   "rebano": {"nombre": "Chilihueque", "color": "#8a6a4a", "desc": "Chilihueque (hueque): el camélido que criaban los mapuches antes de la oveja [verificar]."},
   "aldeano": {
    "nombre": "Che"

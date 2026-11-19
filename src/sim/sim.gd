@@ -1218,6 +1218,10 @@ func _apply_effects(pid: int, efectos: Array) -> void:
 				for l in ef["lineas"]:
 					_add_mod(pid, "atk_ruta:" + str(l), ef["pct"])
 				players[pid]["ruta_req"] = (ef.get("edificios", ["mercado"]) as Array)
+				if ef.get("comercio", false): # --- comercio --- la ruta abierta es un viaje cobrado hace poco
+					players[pid]["ruta_comercio"] = true
+			"comercio_pct": # --- comercio --- el comerciante rinde más (amole, moradores, astilleros)
+				_add_mod(pid, "comercio_pct", ef["pct"])
 			"kilombo":
 				players[pid]["kilombo"] = {"cada": int(ef["cada"]), "tipo": String(ef["unidad"]), "n": 0}
 			"vision_edificio":

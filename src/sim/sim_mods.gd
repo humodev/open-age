@@ -51,7 +51,7 @@ func tick_second() -> void:
 		_own_resource(pid, p)
 		_rents(pid, p)
 		if p.has("ruta_req"): # --- paso 6, par 2 --- pólvora de Massawa: ¿la ruta sigue abierta?
-			p["ruta"] = _has_built(pid, p["ruta_req"])
+			p["ruta"] = sim.comercio.route_open(pid) if p.get("ruta_comercio", false) else _has_built(pid, p["ruta_req"]) # --- comercio ---
 		_conversions(pid, p)
 		_crafts_yield(pid)
 		_herds(pid)

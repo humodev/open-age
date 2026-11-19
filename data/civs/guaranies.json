@@ -89,6 +89,7 @@
   "Tava"
  ],
  "unidades": {
+  "comerciante": {"nombre": "Tropa de yerba", "desc": "La yerba bajaba en balsas y tropas hasta Santa Fe [verificar: nombre a revisar por los historiadores]. Va del mercado propio a otro mercado y vuelve con riqueza: cuanto más lejos, más gana."},
   "catapulta": {"nombre": "Cañón de tacuara", "reemplaza": "ariete", "pv": 140, "armadura": 0, "armadura_distancia": 1, "ataque": 18, "alcance": 7000, "cadencia_ms": 4500, "velocidad": 1000, "radio": 300, "pob": 2, "municion": 8, "contadores": {"choque": 100, "distancia": 100, "linea": 100, "civil": 100, "explorador": 100, "asedio": 100, "edificio": 600}, "costo": {"madera": 130, "riqueza": 60}, "desc": "Desde la edad III el cañón de tacuara pasa a la ranura del asedio de área: tacuara reforzada con cuero que tira metralla sobre la tropa (Mbororé, 1641: cartas anuas; Furlong, 1962). Pega a todos los enemigos cerca del blanco; le hace poco a la piedra y se rompe después de 8 disparos."},
   "aldeano": {
    "nombre": "Ava",

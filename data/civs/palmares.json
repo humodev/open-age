@@ -43,8 +43,8 @@
    "desc": "El kilombo angoleño: institución de guerra que integraba gente de cualquier origen (el juego no detalla el rito). La palabra quilombo para Palmares aparece en los papeles coloniales recién desde los años 1680: es palabra de los otros. Se investiga en el mocambo de guerra; de cada 4 personas que llegan por la fama, una entra como gente de guerra.",
    "evidencia": "Debatido. Miller, Kings and Kinsmen (1976); Munanga, «Origem e histórico do quilombo na África», Revista USP 28 (1995–1996); Thornton, «Les États de l'Angola et la formation de Palmares», Annales HSS 63 (2008). Cuánto pasó a Palmares se discute."},
   "trato_moradores": {"propia": true, "eje": "economia", "nombre": "Trato con los moradores", "en": {"tipo": "mercado"}, "edificio": "mercado", "ranura": 6, "edad_min": 4, "costo": {"alimento": 200, "madera": 200}, "tiempo_ms": 50000, "icono": "trato",
-   "efectos": [{"tipo": "mercado_venta_pct", "pct": 40}],
-   "desc": "Comercio a escondidas con los vecinos: productos de la sierra por herramientas, pólvora y sal. Palmares no estaba aislado. Lo vendido en el mercado rinde 40 % más: casi sin comisión.",
+   "efectos": [{"tipo": "mercado_venta_pct", "pct": 40}, {"tipo": "comercio_pct", "pct": 15}],
+   "desc": "Comercio a escondidas con los vecinos: productos de la sierra por herramientas, pólvora y sal. Palmares no estaba aislado. Lo vendido en el mercado rinde 40 % más (casi sin comisión) y el comerciante, 15 % más por viaje.",
    "evidencia": "Documentado. Gomes (2005); Lara (2021); Carneiro (1947)."},
   "hierro_angola_janga": {"propia": true, "eje": "militar", "nombre": "Hierro de Angola Janga", "en": {"tipo": "mocambo"}, "edificio": "mocambo", "ranura": 6, "edad_min": 4, "costo": {"alimento": 200, "riqueza": 250}, "tiempo_ms": 50000, "icono": "hierro",
    "efectos": [{"tipo": "ataque", "funciones": ["choque"], "n": 1}],
@@ -93,6 +93,7 @@
   "Cucaú o Quilombo"
  ],
  "unidades": {
+  "comerciante": {"nombre": "Mascate", "desc": "Vendedor ambulante que iba y venía entre los mocambos y las villas de los moradores [verificar: nombre a revisar por los historiadores]. Va del mercado propio a otro mercado y vuelve con riqueza: cuanto más lejos, más gana."},
   "rebano": {"nombre": "Cerdo", "color": "#9a6a62", "desc": "Cerdos criados en los mocambos [verificar]."},
   "aldeano": {
    "nombre": "Palmarista"
