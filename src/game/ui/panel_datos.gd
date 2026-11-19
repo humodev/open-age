@@ -185,7 +185,7 @@ func _name_of(type: String, pid: int) -> String:
 
 func _minor(type: String, pid: int) -> bool:
 	var d: Dictionary = sim.dp(pid).edificios.get(type, {})
-	return d.get("linea", false) or d.get("camino", false) or type in ["empalizada", "puerta"]
+	return d.get("linea", false) or d.get("camino", false) or d.get("puerta", false) or d.get("solo_sobre", false) or type in ["empalizada", "puerta"]
 
 
 # ---------------------------------------------------------------- Cada tick

@@ -56,5 +56,5 @@
   "hondero"
  ],
  "ia_edificios": [],
- "sin_edificios": ["campo_tiro", "establo", "taller"]
+ "sin_edificios": ["campo_tiro", "establo", "taller", "muralla", "puerta_piedra", "torre_muralla"]
 }

@@ -374,6 +374,8 @@ static func building_mesh(type: String, team: Color) -> ArrayMesh:
 					var hgt := 1.05 + float((ix + iz) % 2) * 0.12
 					p.append([cyl(0.12, 0.13, hgt, 7), xf(o + Vector3(0, hgt / 2.0, 0)), Palette.WOOD_BEAM])
 					p.append([cyl(0.0, 0.12, 0.2, 7), xf(o + Vector3(0, hgt + 0.1, 0)), Palette.TRUNK])
+		"muralla", "puerta_piedra", "torre_muralla": # --- muralla --- sin estilo del pueblo: sillares
+			CivMeshes.muro(p, {"muralla": "tramo", "puerta_piedra": "puerta", "torre_muralla": "torre"}[type], "sillar", team)
 		"puerta":
 			for x in [-0.42, 0.42]:
 				p.append([cyl(0.13, 0.14, 1.5, 8), xf(Vector3(x, 0.75, 0)), Palette.WOOD_BEAM])

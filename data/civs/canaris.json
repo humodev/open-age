@@ -34,6 +34,9 @@
  },
  "sin_unidades": ["jinete", "arcabucero", "ariete"],
  "edificios": {
+  "muralla": {"nombre": "Pirca", "arte": "pirca", "glifo": "pirca"},
+  "puerta_piedra": {"nombre": "Portada de pirca", "arte": "pirca", "glifo": "punku"},
+  "torre_muralla": {"nombre": "Torreón de pirca", "arte": "pirca"},
   "centro": {
    "nombre": "Guapondélig",
    "desc": "La capital cañari, donde los incas levantaron Tumipampa."

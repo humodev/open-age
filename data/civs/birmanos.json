@@ -54,6 +54,9 @@
   }
  },
  "edificios": {
+  "muralla": {"nombre": "Muralla de ladrillo", "costo": {"piedra": 12, "madera": 10}, "arte": "ladrillo", "glifo": "kamphaeng"},
+  "puerta_piedra": {"nombre": "Puerta de ladrillo", "arte": "ladrillo"},
+  "torre_muralla": {"nombre": "Atalaya de ladrillo", "arte": "ladrillo"},
   "centro": {
    "nombre": "Myo",
    "desc": "Myo: ciudad o plaza amurallada, cabecera de la leva.",

@@ -8,6 +8,8 @@ extends SceneTree
 ## 4. El hito militar de la III da su bono de combate solo en su aura.
 ## 5. Aspilleras y fortaleza reforzada suman flechas y vida a la fortaleza.
 ## 6. Los incendiarios mapuches pegan más contra la madera que contra la piedra.
+## 7. Muralla de piedra (proceso/32-ronda-8/06): reforzar la empalizada arrastrando encima, la
+##    torre solo sobre un tramo, la puerta de piedra; la tropa le saca el mínimo y el asedio no.
 
 const P := 1000
 var fails := 0
@@ -128,8 +130,76 @@ func _init() -> void:
 	var m_stone := s6.counter_mult(inc, torre)
 	check("incendiarios: madera ×%d %%, piedra ×%d %%" % [m_wood, m_stone], m_wood > 3 * m_stone)
 
+	_muralla()
+
 	print("ASEDIO: %s" % ("OK" if fails == 0 else "%d FALLAS" % fails))
 	quit(1 if fails > 0 else 0)
+
+
+## Golpe de `a` a `t` sin la altura ni los efectos propios: como Sim._hit.
+func _golpe(s: Sim, a: SimEntity, t: SimEntity) -> int:
+	var atk := s.effective_attack(a) + s.attack_bonus(a, t)
+	if a.fn == "asedio" and t.is_building():
+		atk = atk * (100 + s.mod(a.owner, "asedio_pct")) / 100
+	return maxi(int(s.data.reglas["danio_minimo"]), atk * s.counter_mult(a, t) / 100 - s.effective_armor(t, s.is_ranged(a)))
+
+
+func _muralla() -> void:
+	var s := _sim(["etiopia", "mapuches"])
+	var c := _free_spot(s)
+	s.players[0]["age"] = 2
+	s.players[0]["res"]["piedra"] = 5000
+	var tiles := []
+	for i in 6:
+		s.spawn_building("empalizada", 0, c.x + i, c.y, true)
+		tiles.append([c.x + i, c.y])
+	tiles.append([c.x + 6, c.y])
+	var none: Array[SimEntity] = []
+	var piedra0 := int(s.players[0]["res"]["piedra"])
+	s._cmd_build_line(0, none, "muralla", tiles)
+	var reforzados := 0
+	for t: Array in tiles:
+		var b: SimEntity = s.by_id.get(s.map.occupant(t[0], t[1]))
+		if b != null and b.alive and b.type == "muralla":
+			reforzados += 1
+	var costo := int(s.dp(0).cost_of("muralla", 2)["piedra"])
+	check("muralla: arrastrada encima de la empalizada la refuerza", reforzados == 7, "(%d de 7)" % reforzados)
+	check("muralla: cobra la piedra de cada tramo", piedra0 - int(s.players[0]["res"]["piedra"]) == 7 * costo, "(%d)" % (piedra0 - int(s.players[0]["res"]["piedra"])))
+	check("torre de muralla: no va en el suelo", not s.can_place("torre_muralla", c.x, c.y + 3, 0))
+	check("torre de muralla: va sobre un tramo propio", s.can_place("torre_muralla", c.x + 2, c.y, 0))
+	check("torre de muralla: no sobre el tramo de otro", not s.can_place("torre_muralla", c.x + 2, c.y, 1))
+	check("puerta de piedra: va sobre un tramo propio", s.can_place("puerta_piedra", c.x + 4, c.y, 0))
+	var pm := s.spawn_building("puerta", 0, c.x, c.y + 6, true)
+	check("puerta de piedra: refuerza la de madera", s.can_place("puerta_piedra", pm.tx, pm.ty, 0))
+	s.players[0]["age"] = 1
+	var antes := int(s.players[0]["res"]["piedra"])
+	s._cmd_build_line(0, none, "muralla", [[c.x, c.y + 12], [c.x + 1, c.y + 12]])
+	check("muralla: en la edad I no se traza", s.map.occupant(c.x, c.y + 12) == -1 and int(s.players[0]["res"]["piedra"]) == antes)
+	s.players[0]["age"] = 2
+	var tramo: SimEntity = s.by_id.get(s.map.occupant(c.x + 1, c.y))
+	s.players[1]["age"] = 3
+	var u := c + Vector2i(0, 2)
+	var guerrero := s.spawn_unit("guerrero", 1, u.x * P, u.y * P)
+	var arquero := s.spawn_unit("hondero", 1, u.x * P, u.y * P)
+	var inc := s.spawn_unit("incendiarios", 1, u.x * P, u.y * P)
+	var emp := s.spawn_building("empalizada", 0, c.x, c.y + 9, true)
+	var ar := s.spawn_unit("ariete", 0, u.x * P, u.y * P)
+	var g_m := _golpe(s, guerrero, tramo)
+	var h_m := _golpe(s, arquero, tramo)
+	var i_m := _golpe(s, inc, tramo)
+	var i_e := _golpe(s, inc, emp)
+	var a_m := _golpe(s, ar, tramo)
+	var a_e := _golpe(s, ar, emp)
+	print("      golpes contra la muralla (%d de vida): choque %d, distancia %d, incendiarios %d (empalizada %d), ariete %d (empalizada %d)" % [tramo.hp_max, g_m, h_m, i_m, i_e, a_m, a_e])
+	check("muralla: la tropa le saca el daño mínimo", g_m <= 2 and h_m <= 2)
+	check("muralla: el ariete la rompe en menos de 15 golpes", a_m * 15 >= tramo.hp_max)
+	check("muralla: los incendiarios le pegan poco a la piedra", i_m * 4 < i_e)
+	check("muralla: vale más vida por piedra que la empalizada por madera, y mucha más obra",
+		tramo.hp_max > 5 * emp.hp_max and s.dp(0).build_time_of("muralla", 2) >= 4 * s.dp(0).build_time_of("empalizada", 2))
+	var s2 := _sim(["tawantinsuyu", "ayutthaya"])
+	check("Tawantinsuyu: la pirca es su muro, sin empalizada", s2.dp(0).edificios["muralla"]["nombre"] == "Pirca" and not s2.dp(0).edificios.has("empalizada") and (s2.dp(0).unidades["aldeano"]["construye"] as Array).has("muralla"))
+	check("Ayutthaya: el kamphaeng de ladrillo pide madera", int(s2.dp(1).cost_of("muralla", 2).get("madera", 0)) > 0 and (s2.dp(1).unidades["aldeano"]["construye"] as Array).has("muralla"))
+	check("mapuches, guaraníes y Palmares: sin muralla de piedra", not s.dp(1).edificios.has("muralla") and not s.data.for_civ("guaranies").edificios.has("muralla") and not s.data.for_civ("palmares").edificios.has("muralla"))
 
 
 ## Al salir se sueltan las partidas creadas (ciclos de referencias; proceso/24, paso 6e).

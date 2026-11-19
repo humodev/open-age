@@ -461,8 +461,12 @@ static func causa_hueco(sim: Sim, tx: int, ty: int) -> String:
 	return "pendiente"
 
 
-## Tipo de puerta del pueblo (el edificio con "puerta"), o "".
-static func tipo_puerta(sim: Sim, pid: int) -> String:
+## Tipo de puerta del pueblo (el edificio con "puerta"), o "". Con el muro que se traza, la suya
+## (`su_puerta`: la muralla de piedra lleva la puerta de piedra; proceso/32-ronda-8/06).
+static func tipo_puerta(sim: Sim, pid: int, muro := "") -> String:
+	var suya: String = sim.dp(pid).edificios.get(muro, {}).get("su_puerta", "")
+	if suya != "" and sim.dp(pid).edificios.has(suya):
+		return suya
 	for k in sim.dp(pid).edificios:
 		if sim.dp(pid).edificios[k].get("puerta", false):
 			return k

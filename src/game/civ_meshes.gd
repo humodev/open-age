@@ -109,6 +109,8 @@ static func building(type: String, def: Dictionary, team: Color, style: Dictiona
 			p.append([Meshes.box(0.42, 0.06, 0.42), Meshes.xf(Vector3(-0.22 + (i % 2) * 0.44, 0.04, -0.22 + (i / 2) * 0.44), Vector3(0, i * 9, 0)), pal[2]])
 	elif def.has("fuente"):
 		_field(p, type, w, d, pal, team, def)
+	elif def.has("arte") and (arte().get("muros", {}) as Dictionary).has(def["arte"]) and (def.get("linea", false) or def.get("puerta", false) or def.get("solo_sobre", false)):
+		muro(p, pieza_muro(def), String(def["arte"]), team) # --- muralla ---
 	elif def.get("linea", false) or def.get("puerta", false):
 		return Meshes.building_mesh(type, team)
 	elif def.has("renta") and def.get("transitable", false):
@@ -1152,3 +1154,97 @@ static func _mobile_court(p: Array, team: Color, pal: Array) -> void:
 	p.append([Meshes.cyl(0.0, 0.75, 1.0, 12), Meshes.xf(Vector3(0, 1.05, 0)), Color("e8dcc6")])
 	p.append([Meshes.cyl(0.45, 0.6, 0.3, 12), Meshes.xf(Vector3(0, 0.7, 0)), pal[1]])
 	Meshes._banner(p, Vector3(0, 0.5, -0.6), 1.6, team)
+
+
+# --- muralla --- (proceso/32-ronda-8/06)
+## Pieza de la muralla según el dato: "puerta", "torre" (la que dispara) o "tramo".
+static func pieza_muro(def: Dictionary) -> String:
+	if def.get("puerta", false):
+		return "puerta"
+	if def.has("ataque"):
+		return "torre"
+	return "tramo"
+
+
+## Muralla de piedra, su puerta o su torre, con el estilo de data/arte_edades.json → muros.
+## El tramo llena la casilla para que los vecinos se lean como un lienzo continuo, sin mirar
+## hacia dónde va el trazo: almenas en las cuatro esquinas y en el medio de cada lado.
+static func muro(p: Array, pieza: String, estilo: String, team: Color) -> void:
+	var st: Dictionary = (arte().get("muros", {}) as Dictionary).get(estilo, {})
+	var col := Color(String(st.get("piedra", "#a39c8f")))
+	var junta := Color(String(st.get("junta", "#7d776c")))
+	var alto := float(st.get("alto_cm", 150)) / 100.0
+	var almena: String = st.get("almena", "cuadrada")
+	var talud: bool = st.get("talud", false)
+	var piedras: bool = st.get("piedras", false)
+	var ancho := 0.98
+	match pieza:
+		"tramo":
+			_lienzo(p, ancho, alto, col, junta, talud, piedras)
+			_almenas(p, almena, ancho, alto, col)
+		"puerta":
+			var lado := 0.3
+			for sx: float in [-1.0, 1.0]:
+				var x := sx * (ancho - lado) / 2.0
+				p.append([Meshes.box(lado, alto + 0.3, ancho), Meshes.xf(Vector3(x, (alto + 0.3) / 2.0, 0), Vector3(0, 0, (-sx * 5.0) if talud else 0.0)), col])
+				p.append([Meshes.box(lado + 0.02, 0.05, ancho + 0.02), Meshes.xf(Vector3(x, alto * 0.5, 0)), junta])
+			p.append([Meshes.box(ancho, 0.34, ancho), Meshes.xf(Vector3(0, alto + 0.13, 0)), col.lightened(0.05)])
+			_almenas(p, almena, ancho, alto + 0.3, col)
+			p.append([Meshes.box(ancho - 2.0 * lado, alto - 0.04, 0.1), Meshes.xf(Vector3(0, (alto - 0.04) / 2.0, 0)), Palette.WOOD_BEAM.darkened(0.25)])
+			p.append([Meshes.box(0.22, 0.2, 0.04), Meshes.xf(Vector3(0, alto * 0.62, 0.07)), team])
+		"torre":
+			_lienzo(p, ancho, alto, col, junta, talud, piedras)
+			var th := alto + 1.25
+			if almena == "redonda" or estilo == "amba":
+				p.append([Meshes.cyl(0.36, 0.42, th, 12), Meshes.xf(Vector3(0, th / 2.0, 0)), col.lightened(0.06)])
+			else:
+				p.append([Meshes.box(0.72, th, 0.72), Meshes.xf(Vector3(0, th / 2.0, 0)), col.lightened(0.06)])
+			p.append([Meshes.box(0.82, 0.12, 0.82), Meshes.xf(Vector3(0, th + 0.02, 0)), junta])
+			_almenas(p, almena if almena != "ninguna" else "cuadrada", 0.8, th + 0.08, col)
+			p.append([Meshes.box(0.1, 0.32, 0.04), Meshes.xf(Vector3(0, th * 0.62, 0.38)), Color(0.08, 0.07, 0.06)])
+			Meshes._banner(p, Vector3(0, th + 0.08, 0), 0.9, team)
+
+
+## El lienzo de una casilla: sillares en hiladas (con la junta marcada) o piedras de campo en talud.
+static func _lienzo(p: Array, ancho: float, alto: float, col: Color, junta: Color, talud: bool, piedras: bool) -> void:
+	if piedras:
+		var filas := 4
+		var fh := alto / filas
+		for f in filas:
+			var w := ancho * (1.0 - (0.08 * f if talud else 0.0))
+			p.append([Meshes.box(w, fh, w), Meshes.xf(Vector3(0, fh * (f + 0.5), 0)), junta])
+			for i in 3:
+				var o := -w / 3.0 + i * w / 3.0 + (0.06 if f % 2 == 1 else 0.0)
+				var sz := w / 3.0 * (0.92 - 0.06 * float((f + i) % 3))
+				p.append([Meshes.box(sz, fh * 0.94, w + 0.03), Meshes.xf(Vector3(clampf(o, -w / 2.0 + sz / 2.0, w / 2.0 - sz / 2.0), fh * (f + 0.5), 0), Vector3(0, 0, float((f * 3 + i) % 5 - 2) * 2.0)), col.darkened(0.06 * float((f + i) % 3))])
+				p.append([Meshes.box(w + 0.03, fh * 0.94, sz), Meshes.xf(Vector3(0, fh * (f + 0.5), clampf(o, -w / 2.0 + sz / 2.0, w / 2.0 - sz / 2.0))), col.darkened(0.05 * float((f + i + 1) % 3))])
+		return
+	if talud:
+		p.append([Meshes.box(ancho, alto * 0.4, ancho), Meshes.xf(Vector3(0, alto * 0.2, 0)), col.darkened(0.08)])
+		p.append([Meshes.box(ancho * 0.9, alto * 0.62, ancho * 0.9), Meshes.xf(Vector3(0, alto * 0.69, 0)), col])
+	else:
+		p.append([Meshes.box(ancho, alto, ancho), Meshes.xf(Vector3(0, alto / 2.0, 0)), col])
+	for f in range(1, 4):
+		var y := alto * f / 4.0
+		var w := ancho * (0.9 if talud and y > alto * 0.4 else 1.0) + 0.02
+		p.append([Meshes.box(w, 0.03, w), Meshes.xf(Vector3(0, y, 0)), junta])
+
+
+## Almenas en las esquinas y en el medio de cada lado: se ven igual con el trazo en cualquier dirección.
+static func _almenas(p: Array, almena: String, ancho: float, alto: float, col: Color) -> void:
+	if almena == "ninguna":
+		p.append([Meshes.box(ancho * 0.92, 0.08, ancho * 0.92), Meshes.xf(Vector3(0, alto + 0.04, 0)), col.lightened(0.05)])
+		return
+	var e := ancho / 2.0 - 0.1
+	for c: Vector2 in [Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, 1), Vector2(0, -1), Vector2(0, 1), Vector2(-1, 0), Vector2(1, 0)]:
+		var at := Vector3(c.x * e, alto, c.y * e)
+		match almena:
+			"hoja":
+				p.append([Meshes.box(0.18, 0.14, 0.18), Meshes.xf(at + Vector3(0, 0.07, 0)), col])
+				p.append([Meshes.cyl(0.0, 0.11, 0.22, 4), Meshes.xf(at + Vector3(0, 0.25, 0), Vector3(0, 45, 0)), col])
+			"redonda":
+				p.append([Meshes.cyl(0.08, 0.09, 0.2, 8), Meshes.xf(at + Vector3(0, 0.1, 0)), col])
+				p.append([Meshes.cyl(0.0, 0.08, 0.1, 8), Meshes.xf(at + Vector3(0, 0.25, 0)), col.lightened(0.08)])
+			_:
+				p.append([Meshes.box(0.2, 0.22, 0.2), Meshes.xf(at + Vector3(0, 0.11, 0)), col])
+# --- fin muralla ---

@@ -336,6 +336,8 @@ const KNOWN := ["mercado", "aldeano", "guerrero", "hondero", "lancero", "explora
 static func resolve(def: Dictionary, type: String) -> String:
 	if type in KNOWN:
 		return type
+	if def.has("glifo"): # --- muralla --- glifo propio del dato (el muro de cada pueblo)
+		return String(def["glifo"])
 	# --- grilla --- (ícono propio de la tabla de la interfaz; hitos por su eje: Z economía, X militar)
 	var own := Grilla.icono(type)
 	# --- depósitos de comida --- (proceso/24, 4m) el ícono de un almacén dice qué recibe: el

@@ -124,7 +124,7 @@
   }
  },
  "sin_unidades": ["catapulta"],
- "sin_edificios": ["centro", "torre", "hito_economia", "hito_guerra", "deposito", "almacen_alimento", "almacen_madera", "almacen_mina", "campo_tiro", "establo", "taller"],
+ "sin_edificios": ["centro", "torre", "hito_economia", "hito_guerra", "deposito", "almacen_alimento", "almacen_madera", "almacen_mina", "campo_tiro", "establo", "taller", "muralla", "puerta_piedra", "torre_muralla"],
  "edificios_nuevos": {
   "lof": { "lento_fuera_de_capital_pct": 50,
    "nombre": "Lof",

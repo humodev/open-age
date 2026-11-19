@@ -26,6 +26,9 @@ const DESCS := {
 	"expulsar": "Saca a todas las unidades alojadas.",
 	"empalizada": "Cerco barato de troncos. Arrastrá para trazar una línea.",
 	"puerta": "Deja pasar solo a tus unidades. Se puede poner sobre una empalizada propia.",
+	"muralla": "Muro de piedra: mucha vida y armadura; solo el asedio lo rompe. Caro y de obra lenta. Arrastrá para trazar; encima de la empalizada, la refuerza.",
+	"puerta_piedra": "Puerta de piedra: deja pasar solo a tus unidades. Va sobre un tramo propio o sobre la puerta de madera.",
+	"torre_muralla": "Torre de piedra que dispara. Se levanta solo encima de un tramo propio de muralla.",
 	"ariete": "Asedio: derriba edificios. No ataca unidades; vulnerable al choque.",
 	"aldeano": "Recolecta, construye y repara la economía.",
 	"explorador": "Rápido y de visión amplia. Descubre el mapa; pelea mal.",
@@ -1838,7 +1841,7 @@ func trazo(end: Vector2i) -> Array:
 func plan_linea(tiles: Array) -> Dictionary:
 	var age: int = sim.players[local]["age"]
 	var cost := sim.dp(local).cost_of(place_type, age) if place_type != "" else {}
-	var gate := MundoColocacion.tipo_puerta(sim, local)
+	var gate := MundoColocacion.tipo_puerta(sim, local, place_type)
 	var res: Dictionary = (sim.players[local]["res"] as Dictionary).duplicate()
 	var total := {}
 	var estados := []
@@ -1846,6 +1849,7 @@ func plan_linea(tiles: Array) -> Dictionary:
 	var alcanzan := 0
 	var causas := {}
 	var lista_huecos := []
+	var refuerza := 0
 	for t: Array in tiles:
 		var tipo := place_type
 		if gate != "" and Vector2i(t[0], t[1]) == _line_gate:
@@ -1857,6 +1861,8 @@ func plan_linea(tiles: Array) -> Dictionary:
 			causas[c] = int(causas.get(c, 0)) + 1
 			continue
 		tramos += 1
+		if sim._own_piece_under(tipo, t[0], t[1], local) != null: # --- muralla --- reforzar
+			refuerza += 1
 		var c2: Dictionary = cost if tipo == place_type else sim.dp(local).cost_of(tipo, age)
 		for k in c2:
 			total[k] = int(total.get(k, 0)) + int(c2[k])
@@ -1879,19 +1885,21 @@ func plan_linea(tiles: Array) -> Dictionary:
 				parts.append(c if causas.size() == 1 else "%d por %s" % [causas[c], c])
 			var nh := lista_huecos.size()
 			info.append(["%d %s: %s" % [nh, "hueco" if nh == 1 else "huecos", ", ".join(parts)], Palette.UI_BAD])
+		if refuerza > 0:
+			info.append(["Refuerza %d %s" % [refuerza, "tramo" if refuerza == 1 else "tramos"], Palette.UI_DIM])
 		if gate != "":
 			info.append(["G: puerta en la casilla del cursor" if _line_gate.x < 0 else "Puerta en el trazo (G la mueve)", Palette.UI_DIM])
 		if tiles.size() >= int(MundoColocacion.cfg().get("muro_tope", 80)):
 			info.append(["Tope de %d casillas por trazo" % int(MundoColocacion.cfg().get("muro_tope", 80)), Palette.UI_ACCENT])
 		info.append(["Mayús: seguir desde el extremo", Palette.UI_DIM])
-	return {"estados": estados, "info": info, "huecos": lista_huecos, "causas": causas, "tramos": tramos, "alcanzan": alcanzan, "total": total}
+	return {"estados": estados, "info": info, "huecos": lista_huecos, "causas": causas, "tramos": tramos, "alcanzan": alcanzan, "total": total, "refuerza": refuerza}
 
 
 ## G mientras se arrastra: la casilla del trazo más cercana al cursor va de puerta.
 func marcar_puerta() -> void:
 	var tile: Vector2i = _ghost.get_meta("tile", _line_start)
 	var tiles := trazo(tile)
-	if tiles.is_empty() or MundoColocacion.tipo_puerta(sim, local) == "":
+	if tiles.is_empty() or MundoColocacion.tipo_puerta(sim, local, place_type) == "":
 		return
 	var g := cam.ground_at(mouse_pos())
 	var best: Array = tiles[0]
@@ -1912,7 +1920,7 @@ func _finish_line() -> void:
 			ids.append(e.id)
 	# --- fluidez 2 --- la puerta va aparte; los huecos se avisan y quedan marcados
 	var plan := plan_linea(tiles)
-	var gate := MundoColocacion.tipo_puerta(sim, local)
+	var gate := MundoColocacion.tipo_puerta(sim, local, place_type)
 	var muro := []
 	for t: Array in tiles:
 		if gate == "" or Vector2i(t[0], t[1]) != _line_gate:

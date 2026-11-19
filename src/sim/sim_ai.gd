@@ -68,6 +68,10 @@ var last_trade := -100000
 var mercado_compra := {} # lotes comprados por recurso (para las mediciones; no es estado de la partida)
 var mercado_venta := {} # lotes vendidos por recurso
 var _wonder_on := false # ya decidió levantar la maravilla: sigue juntando aunque baje un poco la tropa
+# --- muralla --- (reglas.ia_muralla; proceso/32-ronda-8/06)
+var _wall_alert := false # el rival vino con tropa a la base antes de la III: amuralla en la II
+var _wall_tiles: Array = [] # casillas del lienzo trazado ([] si todavía no)
+var _wall_check := -100000 # última mirada de la tropa rival cerca
 
 # Reparto de aldeanos por recurso: reglas.json → ia_economia.
 var ratio_early := {}
@@ -1133,6 +1137,7 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 					sim.tele.add(sim.tick, "ia_sin_ruta", player, bb.tx, bb.ty, {"tipo": bb.type}, "isr:%d" % bb.id, 1200)
 	if not saving:
 		_fortress(p, vill, centro, by_type, unbuilt) # --- paso 4 --- (ahorrando para el hito, no)
+	_wall(p, vill, centro, by_type, saving) # --- muralla ---
 	# Torre (la fácil, ninguna: `torres_max`; proceso/24, 4q).
 	if p["age"] >= 2 and sim.dp(player).edificios.has("torre") and by_type.get("torre", []).size() < int(level.get("torres_max", 1)) and p["res"]["piedra"] >= 250 and not (saving and _goal_is_wonder()): # --- paso 7 --- la piedra de la maravilla
 		_try_build("torre", p, vill, centro, 1)
@@ -1727,6 +1732,140 @@ func _fortress(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_type
 	if site.x >= 0:
 		_build_at("fortaleza", site, vill, int(cfg["constructores"]))
 # --- fin paso 4 ---
+
+
+# --- muralla --- (reglas.ia_muralla; proceso/32-ronda-8/06)
+## Muralla de piedra (dificultades con `muralla`: la difícil y la experta). Un lienzo recto del
+## lado del rival, a uno de los `radios` del centro (el más libre), con la puerta en el medio: en la II si el rival
+## ya vino con tropa a la base (`_wall_alert`), si no en la III; después, `torres` torres encima.
+## No con el hito o la maravilla en ahorro, salvo amenazada. Un solo lienzo por partida.
+func _wall(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_type: Dictionary, saving: bool) -> void:
+	var cfg: Dictionary = sim.data.reglas.get("ia_muralla", {})
+	if cfg.is_empty() or not level.get("muralla", false):
+		return
+	var age := int(p["age"])
+	if age <= 2 and not _wall_alert and sim.tick - _wall_check >= int(cfg["mira_cada_ticks"]):
+		_wall_check = sim.tick
+		var t := _threat(centro)
+		_wall_alert = t != null and t.is_military()
+	var dd := sim.dp(player)
+	var wall := _wall_type(dd)
+	if wall == "" or age < int(dd.edificios[wall].get("edad_min", 1)):
+		return
+	if age < (int(cfg["edad_temprana"]) if _wall_alert else int(cfg["edad"])):
+		return
+	# Ahorrando para el hito de la II a la III no, salvo con la alerta; desde la III la muralla
+	# va aunque ahorre (la experta ahorra siempre), salvo para la maravilla.
+	if vill.size() < int(cfg["aldeanos_min"]) or saving and (age < int(cfg["edad"]) and not _wall_alert or _goal_is_wonder()):
+		return
+	if _wall_tiles.is_empty():
+		# El radio con más casillas libres (la base de la III ya está llena de granjas y edificios).
+		var tiles := []
+		for r in cfg["radios"]:
+			var cand := _wall_line(centro, int(r), int(cfg["tramos"]))
+			if cand.size() > tiles.size():
+				tiles = cand
+		var cost: Dictionary = dd.cost_of(wall, age)
+		var need := {}
+		for k in cost:
+			need[k] = int(cost[k]) * tiles.size() + int(cfg["reserva"].get(k, 0))
+		if tiles.size() < int(cfg["tramos"]) / 2 or not sim.can_afford(player, need):
+			return
+		var ids := []
+		for v in vill:
+			if v.order != O.BUILD and v.carry <= 4 and ids.size() < int(cfg["constructores"]):
+				ids.append(v.id)
+		if ids.is_empty():
+			return
+		_wall_tiles = tiles
+		var mid: Array = tiles[tiles.size() / 2]
+		var gate: String = dd.edificios[wall].get("su_puerta", "")
+		var rest := tiles.filter(func(t: Array) -> bool: return t != mid)
+		sim.push_command({"t": "build_line", "player": player, "ids": ids, "type": wall, "tiles": rest})
+		if gate != "" and dd.edificios.has(gate):
+			sim.push_command({"t": "build", "player": player, "ids": [], "type": gate, "tx": mid[0], "ty": mid[1]})
+		sim.tele.add(sim.tick, "ia_muralla", player, mid[0], mid[1], {"tramos": tiles.size(), "edad": age, "alerta": _wall_alert}, "imu:%d" % player, 1)
+		return
+	# Torres encima del lienzo terminado, desde la edad siguiente a la del lienzo o la III.
+	var tower := _wall_tower_type(dd, wall)
+	if tower == "" or age < int(cfg["torres_edad"]) or saving and _goal_is_wonder() or (by_type.get(tower, []) as Array).size() >= int(cfg["torres"]):
+		return
+	for b: SimEntity in by_type.get(tower, []):
+		if not b.built:
+			return
+	if not sim.can_afford(player, dd.cost_of(tower, age)):
+		return
+	var n := _wall_tiles.size()
+	for i in int(cfg["torres"]):
+		var t: Array = _wall_tiles[n * (1 + 2 * i) / (2 * int(cfg["torres"]))]
+		var w: SimEntity = sim.by_id.get(sim.map.occupant(t[0], t[1]))
+		if w != null and w.alive and w.owner == player and w.type == wall and w.built:
+			_build_at(tower, Vector2i(t[0], t[1]), vill, 2)
+			return
+
+
+## La muralla del pueblo: lo que levanta el aldeano en línea, de piedra y que no se camina.
+func _wall_type(dd: SimData) -> String:
+	for k: String in dd.unidades["aldeano"].get("construye", []):
+		var d: Dictionary = dd.edificios.get(k, {})
+		if d.get("linea", false) and not d.get("transitable", false) and Sim.material_of(d) == "piedra":
+			return k
+	return ""
+
+
+## La torre que va encima de `wall` (`solo_sobre`), o "".
+func _wall_tower_type(dd: SimData, wall: String) -> String:
+	for k: String in dd.unidades["aldeano"].get("construye", []):
+		var d: Dictionary = dd.edificios.get(k, {})
+		if d.get("solo_sobre", false) and (d.get("sobre", []) as Array).has(wall):
+			return k
+	return ""
+
+
+## Casillas del lienzo: recto, perpendicular a la línea entre el centro y la base rival más
+## cercana, a `radio` casillas del centro y de `n` casillas (paso a paso en cuatro direcciones,
+## sin diagonales por donde se cuele la tropa). Solo las que se pueden construir ahora.
+func _wall_line(centro: SimEntity, radio: int, n: int) -> Array:
+	var c := Vector2i(centro.tx + centro.w / 2, centro.ty + centro.h / 2)
+	var eb := c
+	var best := 1 << 60
+	for j in mini(sim.players.size(), sim.bases.size()):
+		if sim.enemies(player, j):
+			var d := Sim.dist(sim.bases[j].x, sim.bases[j].y, c.x, c.y)
+			if d < best:
+				best = d
+				eb = sim.bases[j]
+	var dx := eb.x - c.x
+	var dy := eb.y - c.y
+	var l := maxi(1, Sim.dist(0, 0, dx, dy))
+	var mid := Vector2i(c.x + dx * radio / l, c.y + dy * radio / l)
+	var half := n / 2
+	var a := Vector2i(mid.x - dy * half / l, mid.y + dx * half / l)
+	var b := Vector2i(mid.x + dy * half / l, mid.y - dx * half / l)
+	var out := []
+	var x := a.x
+	var y := a.y
+	var ddx := absi(b.x - a.x)
+	var ddy := -absi(b.y - a.y)
+	var sx := 1 if a.x < b.x else -1
+	var sy := 1 if a.y < b.y else -1
+	var err := ddx + ddy
+	var all := [[x, y]]
+	while (x != b.x or y != b.y) and all.size() < n * 2:
+		var e2 := 2 * err
+		if e2 - ddy > ddx - e2:
+			err += ddy
+			x += sx
+		else:
+			err += ddx
+			y += sy
+		all.append([x, y])
+	var wall := _wall_type(sim.dp(player))
+	for t: Array in all:
+		if sim.can_place(wall, t[0], t[1], player):
+			out.append(t)
+	return out
+# --- fin muralla ---
 
 
 ## Unidades en orden de preferencia: primero la que vence a la función enemiga más numerosa (triángulo, docs/05).

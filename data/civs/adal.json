@@ -53,6 +53,9 @@
   }
  },
  "edificios": {
+  "muralla": {"nombre": "Jugol", "arte": "jugol", "glifo": "muralla", "desc": "El Jugol: la muralla de Harar, levantada por el emir Nur ibn Mujahid a mediados del siglo XVI [verificar fecha]."},
+  "puerta_piedra": {"nombre": "Puerta del Jugol", "arte": "jugol"},
+  "torre_muralla": {"nombre": "Torre del Jugol", "arte": "jugol"},
   "centro": {
    "nombre": "Campamento del imán",
    "desc": "El ejército de Adal hacía la guerra desde campamentos móviles en las tierras altas.",

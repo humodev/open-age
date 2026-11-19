@@ -2244,7 +2244,8 @@ func counter_mult(a: SimEntity, t: SimEntity) -> int:
 	if a.def.has("contadores"):
 		mult = int((a.def["contadores"] as Dictionary).get(t.fn, mult))
 	if t.def.has("recibe"):
-		mult = int((t.def["recibe"] as Dictionary).get(a.fn, mult))
+		# --- muralla --- por tipo antes que por función (los incendiarios, contra la piedra)
+		mult = int((t.def["recibe"] as Dictionary).get(a.type, (t.def["recibe"] as Dictionary).get(a.fn, mult)))
 	if t.is_building() and a.def.has("bono_material"):
 		mult = mult * int((a.def["bono_material"] as Dictionary).get(material_of(t.def), 100)) / 100
 	return mult
@@ -2998,6 +2999,13 @@ func can_place(type: String, tx: int, ty: int, pid: int = -1) -> bool:
 		return false
 	if dp(pid).edificios[type].get("puerta", false) and _own_wall_at(tx, ty, pid) != null:
 		return true
+	# --- muralla --- (proceso/32-ronda-8/06) encima de una pieza propia: reforzar la empalizada,
+	# la puerta de piedra sobre la de madera, la torre sobre un tramo de muralla.
+	if _own_piece_under(type, tx, ty, pid) != null:
+		return true
+	if dp(pid).edificios[type].get("solo_sobre", false):
+		return false
+	# --- fin muralla ---
 	var def: Dictionary = dp(pid).edificios.get(type, data.edificios.get(type, {}))
 	if not map.is_free_rect(tx, ty, tam[0], tam[1]):
 		return false
@@ -3130,6 +3138,10 @@ func _own_wall_at(tx: int, ty: int, pid: int) -> SimEntity:
 
 
 func _replace_wall(type: String, tx: int, ty: int, pid: int) -> void:
+	var under := _own_piece_under(type, tx, ty, pid) # --- muralla ---
+	if under != null:
+		_kill(under)
+		return
 	if not dp(pid).edificios[type].get("puerta", false):
 		return
 	var w := _own_wall_at(tx, ty, pid)
@@ -3137,10 +3149,25 @@ func _replace_wall(type: String, tx: int, ty: int, pid: int) -> void:
 		_kill(w)
 
 
+## --- muralla --- La pieza propia de 1×1 que `type` reemplaza en la casilla (su lista `sobre`:
+## la empalizada bajo la muralla, la puerta de madera bajo la de piedra, el tramo bajo la torre).
+func _own_piece_under(type: String, tx: int, ty: int, pid: int) -> SimEntity:
+	var over: Array = dp(pid).edificios[type].get("sobre", [])
+	if over.is_empty() or pid < 0:
+		return null
+	var w: SimEntity = by_id.get(map.occupant(tx, ty))
+	if w != null and w.alive and w.owner == pid and w.w == 1 and w.h == 1 and over.has(w.type):
+		return w
+	return null
+
+
 ## Construcción en línea (empalizadas): un cimiento por casilla; los aldeanos siguen de uno al siguiente.
 func _cmd_build_line(pid: int, units: Array[SimEntity], type: String, tiles: Array) -> void:
 	var def: Dictionary = dp(pid).edificios.get(type, {})
 	if not def.get("linea", false):
+		return
+	if int(players[pid]["age"]) < int(def.get("edad_min", 1)): # --- muralla --- la de piedra, desde la II
+		_notify(pid, "Requiere edad %s" % _roman(def.get("edad_min", 1)))
 		return
 	var cost := dp(pid).cost_of(type, players[pid]["age"])
 	var first: SimEntity = null
@@ -3151,6 +3178,7 @@ func _cmd_build_line(pid: int, units: Array[SimEntity], type: String, tiles: Arr
 			break
 		if not can_place(type, t[0], t[1], pid):
 			continue
+		_replace_wall(type, t[0], t[1], pid) # --- muralla --- reforzar la empalizada
 		_pay(pid, cost)
 		var b := spawn_building(type, pid, t[0], t[1], false)
 		placed += 1
