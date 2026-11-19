@@ -84,4 +84,5 @@ godot --path . -- --menu --abrir=red --red-unirse=127.0.0.1:47800 --red-civ=mapu
 
 - `7222b93` lockstep por ENet (src/net), sesión con reconexión y tests/red.gd
 - `79bec12` sala «Red» en el menú y lockstep en el bucle de main
-- siguiente: cierre de ENet fuera de poll, argumentos `red-`, capturas, caso de pausa y este documento
+- `ec6472f` cierre de ENet fuera de poll, argumentos `red-`, capturas
+- `734836f` caso de pausa en tests/red.gd, este documento y docs/06
