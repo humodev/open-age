@@ -330,12 +330,14 @@ func is_water(tx: int, ty: int) -> bool:
 
 
 ## Agua: la profunda es sólida para todos; el vado se camina pero no se edifica.
+var water_ver := 0 # --- rendimiento 3 --- cambia con cada set_water (cachés de bonos por sitio)
 func set_water(tx: int, ty: int, kind: int) -> void:
 	if not in_bounds(tx, ty):
 		return
 	var idx := ty * n + tx
 	water[idx] = kind
 	height[idx] = 0
+	water_ver += 1 # --- rendimiento 3 ---
 	occupied[idx] = -3
 	var cell := Vector2i(tx, ty)
 	var block := kind == 1

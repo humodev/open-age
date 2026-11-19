@@ -1903,7 +1903,12 @@ func _do_gather(e: SimEntity) -> void:
 		t.farmer = e.id
 	var rate_key: String = String(t.def.get("tasa_clave", "granja")) if t.is_building() else String(t.def.get("tasa_clave", kind))
 	var clay := mods.clay_bonus(e.owner, t) if t.is_resource() and t.type == "riqueza" else 0
-	var rate: int = int(e.def["tasa"].get(rate_key, e.def["tasa"].get("granja", 0))) * (100 + mod(e.owner, "tasa:" + rate_key) + _site_bonus(t) + clay + _aura_gather(e.owner, t, kind)) / 100
+	# --- rendimiento 3 --- la clave «tasa:…» sin armar el texto en cada tick
+	var tkey: String = _tasa_keys.get(rate_key, "")
+	if tkey == "":
+		tkey = "tasa:" + rate_key
+		_tasa_keys[rate_key] = tkey
+	var rate: int = int(e.def["tasa"].get(rate_key, e.def["tasa"].get("granja", 0))) * (100 + mod(e.owner, tkey) + _site_bonus(t) + clay + _aura_gather(e.owner, t, kind)) / 100
 	e.carry_res = kind
 	e.carry_src = "granja" if t.is_building() else t.type
 	# Arcilla ajena o del centro: con el techo de lo disputado lleno, no se extrae.
@@ -1929,10 +1934,26 @@ func _path_reaches(e: SimEntity, t: SimEntity) -> bool:
 	return end.x >= t.tx - 1 and end.x <= t.tx + t.w and end.y >= t.ty - 1 and end.y <= t.ty + t.h
 
 
+var _tasa_keys := {} # --- rendimiento 3 --- clave de tasa -> "tasa:" + clave
+
+
 ## Bonificación por sitio de una granja: ladera (andenes) o agua cercana (arrozales).
+## --- rendimiento 3 --- Se guarda por granja; el agua del mapa cambia → `map.water_ver`.
+var _site_cache := {} # id de granja -> [water_ver, bono]
 func _site_bonus(t: SimEntity) -> int:
 	if not t.is_building():
 		return 0
+	if not t.def.has("bono_ladera_pct") and not t.def.has("bono_agua_pct"):
+		return 0
+	var c: Array = _site_cache.get(t.id, _NONE)
+	if not c.is_empty() and int(c[0]) == map.water_ver:
+		return int(c[1])
+	var v := _site_bonus_calc(t)
+	_site_cache[t.id] = [map.water_ver, v]
+	return v
+
+
+func _site_bonus_calc(t: SimEntity) -> int:
 	var bonus := 0
 	if t.def.has("bono_ladera_pct"):
 		for yy in range(t.ty, t.ty + t.h):
@@ -3138,16 +3159,15 @@ func find_enemy(e: SimEntity, radius: int, units_only: bool) -> SimEntity:
 	return best
 
 
+# --- rendimiento 3 --- (proceso/32-ronda-8/08): sin crear una entidad de sonda por consulta,
+# celdas vacías sin arreglo nuevo y el techo de lo disputado una sola vez. Mismo resultado.
 func find_resource(owner: int, kind: String, x: int, y: int, max_d: int, exclude: int = -1, worker: int = -1, only_type: String = "") -> SimEntity:
 	var best: SimEntity = null
 	var best_d := max_d + 1
-	var probe := SimEntity.new()
-	probe.x = x
-	probe.y = y
 	if kind == "alimento" and only_type == "":
 		for t in buildings_of(owner):
 			if t.alive and t.is_building() and t.owner == owner and t.built and t.id != exclude and t.def.get("fuente", "") == kind and _farm_free(t, worker):
-				var d := dist_to(probe, t)
+				var d := _dist_pt(x, y, t)
 				if d < best_d:
 					best = t
 					best_d = d
@@ -3156,28 +3176,42 @@ func find_resource(owner: int, kind: String, x: int, y: int, max_d: int, exclude
 	var cy := y / P / RC
 	var max_r := max_d / P / RC + 1
 	var skip := not _unreach_res.is_empty() and owner >= 0
+	var room := -1 # disputed_room(owner), al primer uso (no cambia dentro de la consulta)
 	for r in range(0, max_r + 1):
 		if best != null and (r - 1) * RC * P > best_d:
 			break
 		for dy in range(-r, r + 1):
-			for dx in range(-r, r + 1):
-				if absi(dx) != r and absi(dy) != r:
-					continue
-				var cell: Array = _res_cells.get((cx + dx) * 1024 + cy + dy, [])
+			var full := absi(dy) == r
+			var dx := -r
+			while dx <= r:
+				var cell: Array = _res_cells.get((cx + dx) * 1024 + cy + dy, _NONE)
 				for t: SimEntity in cell:
 					if not t.alive or t.id == exclude or t.res_kind != kind or t.amount <= 0 or (only_type != "" and t.type != only_type):
 						continue
-					if kind == "riqueza" and t.res_owner != owner and disputed_room(owner) <= 0:
-						continue # techo de lo disputado lleno: no sirve ir a esa arcilla
+					if kind == "riqueza" and t.res_owner != owner:
+						if room < 0:
+							room = maxi(0, disputed_room(owner))
+						if room <= 0:
+							continue # techo de lo disputado lleno: no sirve ir a esa arcilla
 					if skip and tick < int(_unreach_res.get(t.id * 64 + owner, -1)):
 						continue # no se llega (paso 6c)
-					var d := dist_to(probe, t)
+					var d := _dist_pt(x, y, t)
 					if d < best_d or (d == best_d and best != null and t.id < best.id):
 						if not map.has_free_neighbor(t.tx, t.ty, t.w, t.h):
 							continue
 						best = t
 						best_d = d
+				# En los renglones del medio del anillo, solo las dos puntas.
+				dx = dx + 1 if full or dx == r else r
 	return best
+
+
+## dist_to(sonda en (x, y), t) sin crear la sonda.
+func _dist_pt(x: int, y: int, t: SimEntity) -> int:
+	if t.is_unit():
+		return maxi(0, dist(x, y, t.x, t.y) - t.radius)
+	return dist(x, y, clampi(x, t.tx * P, (t.tx + t.w) * P), clampi(y, t.ty * P, (t.ty + t.h) * P))
+# --- fin rendimiento 3 ---
 
 func nearest_dropoff(owner: int, kind: String, x: int, y: int) -> SimEntity:
 	var best: SimEntity = null
