@@ -228,7 +228,7 @@ func _apply(c: Dictionary) -> void:
 			var tu := _own_units(pid, c.get("ids", []))
 			var tt: SimEntity = by_id.get(c["target"])
 			# Lejos y sin pelea: marchan en grupo y al llegar cada uno hace lo pedido (proceso/21).
-			if tt != null and tt.alive and not hostile(pid, tt) and not c.get("suelto", false):
+			if tt != null and tt.alive and not hostile(pid, tt) and not c.get("suelto", false) and not comercio.all_traders_to(pid, tu, tt): # --- comercio --- la ruta no va en grupo
 				tu = groups.form(pid, tu, tt.x, tt.y, false, {"target": tt.id})
 			_cmd_target(pid, tu, c["target"])
 		"build":
@@ -293,6 +293,12 @@ func _apply(c: Dictionary) -> void:
 			players[pid]["reserva_" + str(c["res"])] = clampi(int(c["n"]), 0, 1000)
 		"trade":
 			_cmd_trade(pid, c["building"], c["recurso"], c["op"])
+		# --- comercio --- ruta a un mercado (con punto de paso opcional) y punto de paso nuevo
+		"ruta":
+			var rm: SimEntity = by_id.get(int(c.get("mercado", -1)))
+			comercio.order_route(pid, _own_units(pid, c.get("ids", [])), rm, Vector2i(int(c.get("x", -1)), int(c.get("y", -1))))
+		"ruta_paso":
+			comercio.set_waypoint(pid, _own_units(pid, c.get("ids", [])), int(c["x"]), int(c["y"]))
 		"tributo":
 			_cmd_tribute(pid, int(c["a"]), str(c["recurso"]), int(c["n"]))
 		"pack":
@@ -478,6 +484,20 @@ func _cmd_target(pid: int, units: Array[SimEntity], target_id: int) -> void:
 		return
 	var plain: Array[SimEntity] = []
 	var meat: SimEntity = null
+	# --- comercio --- comerciantes sobre un mercado: ruta (el resto sigue con lo de siempre)
+	if comercio.dest_kind(pid, t) != "":
+		var traders: Array[SimEntity] = []
+		var rest: Array[SimEntity] = []
+		for e in units:
+			if e.def.get("comerciante", false):
+				traders.append(e)
+			else:
+				rest.append(e)
+		if not traders.is_empty() and comercio.order_route(pid, traders, t) < traders.size():
+			for e in traders:
+				if e.order != O.TRADE:
+					plain.append(e)
+		units = rest
 	for e in units:
 		if t.is_unit() and t.def.get("animal", false) and t.owner == pid:
 			# Aldeano sobre un animal propio: lo carnea; el resto lo junta (proceso/23, C-32).
@@ -1640,6 +1660,8 @@ func _update_unit(e: SimEntity) -> void:
 			_do_build(e)
 		O.GARRISON:
 			_do_garrison(e)
+		O.TRADE:
+			comercio.update(e) # --- comercio ---
 
 
 ## Patrulla: llegó a una punta, da la vuelta hacia la otra.
@@ -2396,6 +2418,8 @@ func _kill(e: SimEntity, killer: SimEntity = null) -> void:
 	e.alive = false
 	e.hp = 0
 	_dirty = true
+	if e.is_unit() and e.def.get("comerciante", false):
+		comercio.on_died(e) # --- comercio --- (mediciones)
 	if e.is_unit() and e.def.has("carne"):
 		_leave_meat(e) # un animal muerto (también uno robado al rival) deja su carne
 	if e.is_unit() and not e.garrison.is_empty(): # --- paso 6 --- la canoa se hunde: nadan a la orilla
@@ -2534,6 +2558,11 @@ func _spawn_from(b: SimEntity, type: String) -> void:
 	if not b.rally_set:
 		return
 	var rt: SimEntity = by_id.get(b.rally_target)
+	if u.def.get("comerciante", false) and comercio.dest_kind(b.owner, rt) != "" and rt != b: # --- comercio --- reunión en un mercado: sale a la ruta
+		u.trade_home = b.id
+		comercio.order_route(b.owner, [u], rt)
+		if u.order == O.TRADE:
+			return
 	if rt != null and rt.alive and u.fn == "civil" and (rt.is_resource() or (rt.is_building() and rt.owner == b.owner and rt.def.get("fuente", "") != "")):
 		_order_gather(u, rt)
 	elif rt != null and rt.alive and u.fn == "civil" and rt.is_building() and rt.owner == b.owner and not rt.built:
@@ -2902,6 +2931,8 @@ func find_enemy(e: SimEntity, radius: int, units_only: bool) -> SimEntity:
 					continue # aliado
 				# Neutrales: solo los hostiles, y nunca entre neutrales.
 				if o.owner < 0 and (e.owner < 0 or not bool(o.def.get("hostil", false))):
+					continue
+				if e.owner < 0 and o.type == "comerciante": # --- comercio --- el ingenio no le tira al comerciante
 					continue
 				if units_only and not o.is_unit():
 					continue

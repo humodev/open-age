@@ -274,13 +274,18 @@ func dest_kind(pid: int, t: SimEntity) -> String:
 	return ""
 
 
+## G = d·(d·A/L + B)/100: riqueza de un viaje a `d` casillas en un mapa de lado `l`, antes de
+## la edad, el tipo de destino, el pueblo y la saturación.
+func formula(d: int, l: int) -> int:
+	return d * (d * int(cfg.get("A", 220)) / maxi(1, l) + int(cfg.get("B", 10))) / 100
+
+
 ## Ganancia de un viaje sin la saturación (la ayuda y la medición la usan).
 func gain(pid: int, home: SimEntity, dest: SimEntity, age: int = -1) -> int:
 	var kind := dest_kind(pid, dest)
 	if kind == "" or home == null:
 		return 0
-	var d := octil(home, dest)
-	var g := d * (d * int(cfg.get("A", 220)) / maxi(1, sim.map.n) + int(cfg.get("B", 10))) / 100
+	var g := formula(octil(home, dest), sim.map.n)
 	var ap: Array = cfg.get("edad_pct", [0, 0, 70, 100])
 	var a := int(sim.players[pid]["age"]) if age < 0 else age
 	g = g * int(ap[clampi(a - 1, 0, ap.size() - 1)]) / 100
@@ -358,6 +363,16 @@ func order_route(pid: int, units: Array, dest: SimEntity, wp := Vector2i(-1, -1)
 	return n
 
 
+## ¿Son todos comerciantes y `t` un destino de comercio? (la orden de ruta no arma grupo)
+func all_traders_to(pid: int, units: Array, t: SimEntity) -> bool:
+	if units.is_empty() or dest_kind(pid, t) == "":
+		return false
+	for e: SimEntity in units:
+		if not e.def.get("comerciante", false):
+			return false
+	return true
+
+
 ## Punto de paso nuevo para comerciantes que ya tienen ruta.
 func set_waypoint(pid: int, units: Array, x: int, y: int) -> void:
 	for e: SimEntity in units:
@@ -393,7 +408,7 @@ func update(e: SimEntity) -> void:
 					e.path_target = -1
 				return
 			if not sim._approach(e, dest, e.radius + Sim.INTERACT):
-				if e.stuck > 25:
+				if e.stuck > 25 or (e.path_tick == sim.tick and e.path_target == dest.id and _short(e, dest)):
 					_cut(e, dest, "cerrado")
 					_turn_back(e, false)
 				return
@@ -434,6 +449,14 @@ func update(e: SimEntity) -> void:
 			e.trade_leg = Leg.IDA
 			e.trade_wpd = e.trade_wx < 0
 			e.path_target = -1
+
+
+## El camino recién buscado no llega al lado del mercado (muralla que lo cierra del todo).
+func _short(e: SimEntity, t: SimEntity) -> bool:
+	if e.path.is_empty():
+		return true
+	var last: Vector2i = e.path[e.path.size() - 1]
+	return last.x < t.tx - 2 or last.x > t.tx + t.w + 1 or last.y < t.ty - 2 or last.y > t.ty + t.h + 1
 
 
 func _turn_back(e: SimEntity, loaded: bool, g: int = 0) -> void:
