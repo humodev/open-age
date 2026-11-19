@@ -9,7 +9,11 @@ var sim: Sim
 var player: int
 var wave := 0
 var last_attack := -100000
-var eta := -100000 # tick estimado de llegada de la última oleada (`_team_turn`)
+var eta := -100000 # cuándo llegó la última oleada (mientras marcha, cuándo se estima que llega: `_track_wave`)
+var ready_since := -1 # desde cuándo espera su turno con la oleada lista (`_team_turn`)
+var ready_seen := -100000 # última pensada en que estaba lista
+var _wave_ids: Array = [] # la oleada que todavía no llegó
+var _wave_pt := Vector2i(-1, -1) # adónde va
 var last_target := -1 # edificio al que fue la última oleada (`_attack`, para no repetir frente con las aliadas)
 var last_raid := 0 # incursiones y control del mapa: por tiempo transcurrido, no por tick exacto
 var last_spot := 0
@@ -167,12 +171,15 @@ func think() -> void:
 	_production(p, vill, army, centro, by_type, saving)
 	var held_smith := _smith(p, army, by_type, saving) if held_levels.is_empty() else {}
 	_research(p, by_type, saving)
-	_trade(p, by_type)
 	_engine(p, vill, centro, by_type, saving)
 	_reserve(p, -1, held_levels)
 	_reserve(p, -1, held_late) # --- paso 3 ---
 	_reserve(p, -1, held_own) # --- paso 6 ---
 	_reserve(p, -1, held_smith)
+	# Ronda 8: el mercado mira lo que hay de verdad (sin lo apartado para niveles y mejoras que
+	# todavía no alcanzan): apartado, la etíope trabada por 85 de piedra veía todo en cero.
+	# Lo pedido por un aliado sigue apartado.
+	_trade(p, by_type)
 	_reserve(p, -1, held) # --- equipos ronda 3 ---
 	_animals(centro)
 	_alarm(p, vill, army, centro)
@@ -1818,6 +1825,7 @@ func _threat(centro: SimEntity) -> SimEntity:
 
 
 func _military(army: Array[SimEntity], centro: SimEntity) -> void:
+	_track_wave()
 	if army.is_empty():
 		return
 	var threat := _threat(centro)
@@ -1882,10 +1890,17 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 		return
 	if attacks and _hit_hito(army):
 		return
-	if attacks and army.size() >= need and sim.tick - last_attack > gap and _team_turn(army):
+	var ready: bool = attacks and army.size() >= need and sim.tick - last_attack > gap
+	if ready and ready_since < 0:
+		ready_since = sim.tick
+	if ready:
+		ready_seen = sim.tick
+	else:
+		ready_since = -1
+	if ready and _team_turn():
 		wave += 1
 		last_attack = sim.tick
-		eta = _eta(army)
+		ready_since = -1
 		_attack(army)
 		return
 	if attacks and _hunt(army):
@@ -2484,6 +2499,9 @@ func _attack(army: Array[SimEntity]) -> void:
 	var dy := ref.y - target.y
 	var l := maxi(1, Sim.isqrt(dx * dx + dy * dy))
 	sim.push_command({"t": "move", "player": player, "ids": ids, "x": target.x + dx * 3000 / l, "y": target.y + dy * 3000 / l, "amove": true})
+	_wave_ids = ids
+	_wave_pt = Vector2i(target.x, target.y)
+	_track_wave(true) # recién salen: todavía no están en marcha
 
 
 ## Desfase entre las oleadas de un mismo equipo (reglas.json → equipos.ia_escalon; la
@@ -2492,36 +2510,62 @@ func _escalon() -> int:
 	return int(level.get("escalon_ticks", sim.data.reglas["equipos"].get("ia_escalon", {}).get("desfase_ticks", 0)))
 
 
-## Ronda 8: ¿le toca a esta IA largar su oleada? No, si llegaría a menos del desfase de la
-## oleada de una IA aliada que todavía no llegó o llegó hace poco. Se estima la llegada en
-## línea recta desde el punto de reunión hasta la base rival, al paso del más lento. Antes, en
+## Ronda 8: ¿le toca a esta IA largar su oleada? No, si una IA aliada largó la suya hace menos
+## del desfase, ni mientras esa oleada siga en marcha (hasta `marcha_max_ticks` desde que
+## salió): así llegan de a una aunque el camino de una sea más largo. Estimar la llegada no
+## alcanzaba: un río o un bosque alargan el camino y las oleadas se juntaban igual. Antes, en
 ## el 1 contra 6, las seis fáciles salían en el mismo minuto y llegaban 90 soldados juntos;
-## ahora llegan de a una, como un equipo que se turna (proceso/32-ronda-8).
-func _team_turn(army: Array[SimEntity]) -> bool:
+## ahora llegan de a una, como un equipo que se turna: entre las que esperan, va primero la
+## que espera desde antes (proceso/32-ronda-8).
+func _team_turn() -> bool:
+	var cfg: Dictionary = sim.data.reglas["equipos"].get("ia_escalon", {})
 	var d := _escalon()
 	if d <= 0:
 		return true
-	var mine := _eta(army)
 	for ai in sim.ais:
 		if ai != self and ai.player != player and not sim.enemies(player, ai.player) and not sim.players[ai.player]["defeated"]:
-			if ai.eta > sim.tick - d and absi(mine - ai.eta) < d:
+			var since: int = sim.tick - ai.last_attack
+			if since < d or not ai._wave_ids.is_empty() and since < int(cfg.get("marcha_max_ticks", 0)):
 				return false
+			# Por turno: la aliada que espera desde antes va primero (si no, la que repetía
+			# oleadas cada 50 s no dejaba salir nunca a otra).
+			if ai.ready_since >= 0 and sim.tick - ai.ready_seen <= int(cfg.get("lista_vigente_ticks", 0)):
+				if ai.ready_since < ready_since or ai.ready_since == ready_since and ai.player < player:
+					return false
 	return true
 
 
-## Tick estimado en que llegaría a la base del rival elegido la oleada que sale ahora.
-func _eta(army: Array[SimEntity]) -> int:
-	var f := _pick_rival(army[0])
-	if f < 0 or f >= sim.bases.size():
-		return sim.tick
-	var slow := 1 << 30
-	for u in army:
-		if u.speed > 0:
-			slow = mini(slow, u.speed)
-	if slow == 1 << 30:
-		return sim.tick
-	var b := sim.bases[f]
-	return sim.tick + Sim.dist(rally.x, rally.y, b.x * P, b.y * P) / slow
+## Corrige la llegada estimada de la oleada en marcha: desde el centro de los que siguen vivos,
+## en línea recta y al paso medio. Si el camino es más largo que la recta, la estimación se
+## corre sola. Llegó cuando el centro está a `equipos.ia_escalon.llegada` del blanco, cuando
+## menos de la mitad sigue en marcha (pelea en el camino o ya volvió) o pasado `marcha_max_ticks`.
+func _track_wave(leaving: bool = false) -> void:
+	if _wave_ids.is_empty():
+		return
+	var cfg: Dictionary = sim.data.reglas["equipos"].get("ia_escalon", {})
+	var going := 0
+	var sx := 0
+	var sy := 0
+	var sp := 0
+	var n := 0
+	for id in _wave_ids:
+		var u: SimEntity = sim.by_id.get(id)
+		if u != null and u.alive and u.speed > 0:
+			sx += u.x
+			sy += u.y
+			sp += u.speed
+			n += 1
+			if u.order == O.ATTACK_MOVE or u.order == O.MOVE:
+				going += 1
+	if n == 0:
+		_wave_ids = []
+		return
+	var d := Sim.dist(sx / n, sy / n, _wave_pt.x, _wave_pt.y)
+	if d <= int(cfg.get("llegada", 0)) or not leaving and going * 2 < n or sim.tick - last_attack > int(cfg.get("marcha_max_ticks", 0)):
+		_wave_ids = []
+		eta = sim.tick
+		return
+	eta = sim.tick + d / maxi(1, sp / n)
 
 
 ## Cacería (sin victoria por hitos, opciones de partida): cuando el rival elegido ya casi no
