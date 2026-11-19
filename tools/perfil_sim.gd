@@ -11,7 +11,7 @@ extends SceneTree
 ## envuelven los métodos. No cambian el resultado: el hash final es el mismo que con --plano.
 ##
 ## Uso:
-##   godot --headless --path . -s tools/perfil_sim.gd -- [--partida=1v6|4v4|ambas] [--minutos=40]
+##   godot --headless --path . -s tools/perfil_sim.gd -- [--partida=1v6|4v4|tct7|ambas|todas] [--minutos=40]
 ##         [--semilla=42] [--picos=12] [--plano] [--ia-detalle] [--detalle]
 ## --ia-detalle: la IA por parte de think; --detalle: ayudantes (approach, try_move, …) por parte.
 ## --plano: sin envoltorios, solo el tiempo total de cada tick (para comparar con lo medido).
@@ -20,6 +20,9 @@ const CIVS := ["guaranies", "mapuches", "etiopia", "palmares", "ayutthaya", "taw
 ## [dificultad, equipo] por lugar. El 0 es la IA que ocupa el lugar de «vos» (experta).
 const PARTIDAS := {
 	"1v6": [["experta", 0], ["experta", 1], ["experta", 1], ["dificil", 1], ["dificil", 1], ["normal", 1], ["normal", 1]],
+	# 7 contra todos: en IA contra IA el 1 contra 6 termina por conquista a los 12–14 minutos; este
+	# mide 7 jugadores hasta el final.
+	"tct7": [["experta", 0], ["experta", 1], ["experta", 2], ["dificil", 3], ["dificil", 4], ["normal", 5], ["normal", 6]],
 	"4v4": [["experta", 0], ["dificil", 0], ["dificil", 0], ["normal", 0], ["experta", 1], ["dificil", 1], ["dificil", 1], ["normal", 1]],
 }
 const SECCIONES := ["ia", "caminos", "grupos", "movimiento", "blancos", "combate", "recoleccion", "find_resource", "edificios", "separacion", "tablas", "jugadores", "niebla", "telemetria", "ordenes", "segundo", "animales", "victoria", "resto"]
@@ -299,7 +302,7 @@ func _init() -> void:
 		args[kv[0]] = kv[1] if kv.size() > 1 else "1"
 	PMap.lentos_us = int(args.get("lentos", "0")) * 1000
 	var cual := str(args.get("partida", "ambas"))
-	var lista: Array = ["1v6", "4v4"] if cual == "ambas" else [cual]
+	var lista: Array = ["1v6", "4v4"] if cual == "ambas" else (["1v6", "tct7", "4v4"] if cual == "todas" else [cual])
 	for nombre in lista:
 		_run(nombre, int(args.get("semilla", "42")), int(args.get("minutos", "40")), int(args.get("picos", "12")), args.has("plano"), args.has("ia-detalle"), args.has("detalle"))
 	quit()
