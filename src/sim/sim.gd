@@ -1397,6 +1397,8 @@ func soltar() -> void:
 		groups.sim = null
 	if scenario != null:
 		scenario.sim = null
+	if comercio != null: # --- soltar --- comercio guarda la partida: sin esto la campaña quedaba viva al salir
+		comercio.sim = null
 
 
 ## Las partidas creadas desde que arrancó el programa (referencias débiles: no las retienen).

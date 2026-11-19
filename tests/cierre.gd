@@ -5,6 +5,9 @@ extends SceneTree
 ##   godot --headless --path . -s tests/cierre.gd                            menú y cerrar
 ##   godot --headless --path . -s tests/cierre.gd -- --menu --partidas=3     del menú a 3 partidas seguidas y cerrar
 ##   godot --headless --path . -s tests/cierre.gd -- --menu --boton          menú y botón «Salir» en vez de la ventana
+##   godot --headless --path . -s tests/cierre.gd -- --menu --partidas=3 --campana=guaranies
+##       las partidas son misiones de esa campaña (0, 1, 2…). Al salir no tiene que quedar
+##       nada vivo: ni «ObjectDB instances leaked» ni «resources still in use» (proceso/37-red/03).
 ## (main.gd lee los mismos argumentos: sin --menu arranca directo en una partida.)
 
 var _main: Node
@@ -13,6 +16,7 @@ var _partidas := 0
 var _reinicios := 0
 var _pedido := false
 var _boton := false
+var _campana := ""
 
 
 func _init() -> void:
@@ -21,6 +25,8 @@ func _init() -> void:
 			_boton = true
 		elif a.begins_with("--partidas="):
 			_partidas = maxi(1, int(a.get_slice("=", 1)))
+		elif a.begins_with("--campana="):
+			_campana = a.get_slice("=", 1)
 	_main = (load("res://src/game/main.tscn") as PackedScene).instantiate()
 	_poner.call_deferred()
 	process_frame.connect(_cuadro)
@@ -41,7 +47,10 @@ func _cuadro() -> void:
 	if _frames % 40 == 0 and _reinicios < _partidas:
 		_reinicios += 1
 		print("cierre: partida %d" % _reinicios)
-		_main.call("_start", {"civ": "guaranies", "rival": "mapuches", "terreno": "llano", "seed": str(_reinicios), "mute": "1"})
+		if _campana != "":
+			_main.call("_start", {"campana": _campana, "mision": str(_reinicios - 1), "mute": "1"})
+		else:
+			_main.call("_start", {"civ": "guaranies", "rival": "mapuches", "terreno": "llano", "seed": str(_reinicios), "mute": "1"})
 		return
 	if _frames >= 40 * (_partidas + 1) + 20:
 		_pedido = true
