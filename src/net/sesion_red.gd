@@ -85,12 +85,13 @@ func unirse(ip: String, puerto: int) -> Error:
 	var err := transporte.unirse(ip, puerto)
 	if err == OK:
 		estado = "conectando"
-		_reintento = Time.get_ticks_msec() + 5000
+		_reintento = Time.get_ticks_msec() + int(cfg.get("espera_conexion_s", 15)) * 1000
 		_decir("Conectando con %s:%d…" % [ip, puerto])
 	return err
 
 
 func cerrar() -> void:
+	_resumen()
 	transporte.cerrar()
 	if sim is SimRed:
 		(sim as SimRed).red = null
@@ -100,6 +101,22 @@ func cerrar() -> void:
 	if activa == self:
 		activa = null
 	queue_free()
+
+
+## Al cerrar: hasta dónde los dos estuvieron de acuerdo (para las pruebas a mano).
+func _resumen() -> void:
+	if lock == null or sim == null:
+		return
+	var ult := -1
+	for t in lock.hashes[0]:
+		if lock.hashes[1].has(t) and lock.hashes[1][t] == lock.hashes[0][t]:
+			ult = maxi(ult, int(t))
+	print("RED: jugador %d · tick %d · hashes iguales hasta el tick %d · desincronización %s · pausas %s" % [local, sim.tick, ult, "en %d" % lock.desync_tick if lock.desync_tick >= 0 else "no", lock.pausas_usadas])
+
+
+func _exit_tree() -> void:
+	_resumen()
+	lock = null
 
 
 func es_anfitrion() -> bool:
@@ -144,7 +161,7 @@ func puede_empezar() -> String:
 
 ## El anfitrión arranca: arma los argumentos con la partida a medida y los manda.
 func empezar_partida() -> void:
-	if not es_anfitrion() or puede_empezar() != "":
+	if not es_anfitrion() or estado != "sala" or puede_empezar() != "":
 		return
 	var data := SimData.load_default()
 	var civ_keys: Array = data.civs.keys().filter(func(k: String) -> bool: return not data.civs[k].civ.get("solo_ia", false))

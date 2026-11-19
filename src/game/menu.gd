@@ -198,6 +198,13 @@ func _ready() -> void:
 	pb.tooltip_text = "Partida personalizada: mapa, jugadores, equipos, colores y opciones (1 contra 3, 1 contra 6…)."
 	crow.add_child(pb)
 	# --- fin partida a medida ---
+	# --- red --- «Red» en el mismo renglón: los tres más angostos, el renglón no crece
+	var rb := _button("Red", open_red)
+	rb.tooltip_text = "1 contra 1 en red local o por IP (proceso/37)."
+	crow.add_child(rb)
+	for b: Control in crow.get_children():
+		b.custom_minimum_size.x = 120
+	# --- fin red ---
 	box.add_child(_button("Escaramuza contra la IA", func() -> void: play.emit(_seed(), _pick(_civ), _pick(_rival))))
 	box.add_child(_button("Mirar IA contra IA", func() -> void: watch.emit(_seed(), _pick(_civ), _pick(_rival))))
 
@@ -277,6 +284,21 @@ func open_custom() -> void:
 	_custom.volver.connect(func() -> void: _custom.queue_free())
 	_custom.empezar.connect(func(a: Dictionary) -> void: play_custom.emit(a))
 # --- fin partida a medida ---
+
+
+# --- red ---
+var _red: SalaRed
+
+
+## Abre la sala «Red» encima del menú (también --abrir=red). Arranca como la partida a medida.
+func open_red() -> void:
+	if _red != null and is_instance_valid(_red):
+		return
+	_red = SalaRed.new()
+	add_child(_red)
+	_red.volver.connect(func() -> void: _red.queue_free())
+	_red.empezar.connect(func(a: Dictionary) -> void: play_custom.emit(a))
+# --- fin red ---
 
 
 # --- opciones ---

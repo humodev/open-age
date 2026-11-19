@@ -1,5 +1,5 @@
 {
-  "_doc": "Multijugador en red por lockstep (H5, proceso/37). Un turno son ticks_por_turno ticks de la simulación; los comandos de un jugador se programan para el turno actual + retardo_turnos (retardo de entrada). Cada hash_cada_ticks ticks los jugadores comparan Sim.state_hash(). Pausas: pausas_por_jugador de pausa_s segundos. Si un jugador se cae, el otro espera reconexion_s segundos; el cliente reintenta cada reintento_s. ENet corta a un par mudo entre timeout_min_ms y timeout_max_ms. Al volver, se re-simula a pasos_por_cuadro_al_alcanzar por cuadro mientras el atraso pase de atraso_para_alcanzar_turnos.",
+  "_doc": "Multijugador en red por lockstep (H5, proceso/37). Un turno son ticks_por_turno ticks de la simulación; los comandos de un jugador se programan para el turno actual + retardo_turnos (retardo de entrada). Cada hash_cada_ticks ticks los jugadores comparan Sim.state_hash(). Pausas: pausas_por_jugador de pausa_s segundos. Si un jugador se cae, el otro espera reconexion_s segundos; el cliente reintenta cada reintento_s. Al unirse desde la sala se espera la conexión espera_conexion_s. ENet corta a un par mudo entre timeout_min_ms y timeout_max_ms. Al volver, se re-simula a pasos_por_cuadro_al_alcanzar por cuadro mientras el atraso pase de atraso_para_alcanzar_turnos.",
   "puerto": 47800,
   "ticks_por_turno": 1,
   "retardo_turnos": 3,
@@ -8,6 +8,7 @@
   "pausa_s": 60,
   "reconexion_s": 60,
   "reintento_s": 2,
+  "espera_conexion_s": 15,
   "timeout_min_ms": 3000,
   "timeout_max_ms": 8000,
   "pasos_por_cuadro_al_alcanzar": 120,
