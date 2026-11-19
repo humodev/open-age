@@ -450,7 +450,7 @@ func _run(nombre: String, semilla: int, minutos: int, n_picos: int, plano: bool,
 		for k in PMap.por_orden:
 			lo += " [%s] %d · %d · %.0f;" % [k, PMap.por_orden[k][0], PMap.por_orden[k][1], PMap.por_orden[k][2] / 1000.0]
 		print(lo)
-		print("caché de caminos: %d aciertos, %d búsquedas" % [s.map.cache_hits, s.map.cache_miss])
+		print("caché de caminos: %s aciertos, %s búsquedas" % [s.map.get("cache_hits"), s.map.get("cache_miss")])
 		PMap.por_clase = {}
 		PMap.por_orden = {}
 	s.soltar()

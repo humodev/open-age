@@ -30,6 +30,9 @@ static func create(m: Dictionary, civ_key: String) -> Sim:
 	# Sitios sagrados propios de la misión (el tutorial los enseña): no ganan la partida si así se pide.
 	if mapa.has("sitios") and not bool(mapa["sitios"].get("victoria", true)):
 		opts["sitios_sin_victoria"] = true
+	# --- esport 1a --- la misión puede dejar tomar sus sitios antes de la II (el tutorial, en la I)
+	if mapa.has("sitios") and mapa["sitios"].has("captura_edad_min"):
+		opts["sitios_captura_edad_min"] = int(mapa["sitios"]["captura_edad_min"])
 	# Relieve real del lugar (tools/relieve_real.py, docs/10), si la misión lo tiene.
 	var rpath := "res://data/relieve/%s.json" % m.get("id", "")
 	if mapa.get("relieve_real", true) and FileAccess.file_exists(rpath):

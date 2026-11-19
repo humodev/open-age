@@ -194,6 +194,7 @@ func think() -> void:
 		return
 	_military(army, centro)
 	_flares(army, centro)
+	_aim_ground(army) # --- esport 1a ---
 	_no_resend()
 	# Al final: mira también las órdenes que el resto de la IA acaba de dar en este turno.
 	# Sin victoria por sitios (opción de partida, tutorial) no hace falta: tomarlos no gana.
@@ -1794,6 +1795,47 @@ func _siege_units(makes: Array, age: int) -> Array:
 	return [ram, area]
 
 
+# --- esport 1a ---
+## Ataque al suelo (reglas.ia_asedio.suelo): cada `cada_ticks`, cada asedio de área que pelea
+## tira al punto de la tropa rival más amontonada a su alcance (+ `margen`): el enemigo con más
+## enemigos a `area` o menos, si son `grupo_min` o más. Sin montón a tiro, vuelve a atacar en
+## movimiento hacia donde tiraba. Apunta adonde están: la tropa que se mueve a tiempo lo esquiva.
+var _last_aim := -1000
+func _aim_ground(army: Array[SimEntity]) -> void:
+	var cfg: Dictionary = sim.data.reglas.get("ia_asedio", {}).get("suelo", {})
+	if cfg.is_empty() or sim.tick - _last_aim < int(cfg["cada_ticks"]):
+		return
+	_last_aim = sim.tick
+	var need := int(cfg["grupo_min"])
+	for u in army:
+		if not Sim.can_ground(u) or not u.alive or not (u.order in [O.ATTACK, O.ATTACK_MOVE, O.GROUND]):
+			continue
+		var reach := sim.reach_of(u) + int(cfg["margen"])
+		var r := int(u.def["area"])
+		var near: Array[SimEntity] = []
+		for gx in range(maxi(0, (u.x - reach) / Sim.EC), (u.x + reach) / Sim.EC + 1):
+			for gy in range(maxi(0, (u.y - reach) / Sim.EC), (u.y + reach) / Sim.EC + 1):
+				for o: SimEntity in sim._ehash.get(gx * 1024 + gy, Sim._NONE):
+					if o.alive and o.is_unit() and o.inside < 0 and o.owner >= 0 and sim.enemies(player, o.owner) and Sim.dist(u.x, u.y, o.x, o.y) <= reach:
+						near.append(o)
+		var best: SimEntity = null
+		var best_n := 0
+		for o in near:
+			var n := 0
+			for q in near:
+				if absi(q.x - o.x) <= r and absi(q.y - o.y) <= r and Sim.dist(q.x, q.y, o.x, o.y) <= r:
+					n += 1
+			if n > best_n:
+				best_n = n
+				best = o
+		if best != null and best_n >= need:
+			if u.order != O.GROUND or Sim.dist(u.gnd_x, u.gnd_y, best.x, best.y) > r / 2:
+				sim.push_command({"t": "suelo", "player": player, "ids": [u.id], "x": best.x, "y": best.y})
+		elif u.order == O.GROUND:
+			sim.push_command({"t": "move", "player": player, "ids": [u.id], "x": u.gnd_x, "y": u.gnd_y, "amove": true, "suelto": true})
+# --- fin esport 1a ---
+
+
 ## Asedio de área (reglas.ia_asedio): con ejército propio y tropa rival que valga la pena, hasta
 ## 1 + oleada / oleadas_por_unidad (tope).
 func _wants_area_siege(army: Array[SimEntity], type: String) -> bool:
@@ -2229,7 +2271,7 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 			if ids.size() >= 6:
 				sim.push_command({"t": "move", "player": player, "ids": ids, "x": mill.x, "y": mill.y, "amove": true})
 	# Sitios sagrados: un grupo chico va a tomar el más cercano que no controla.
-	if sim.tick - last_site >= 300 and army.size() >= 6 and level.get("toma_sitios", true):
+	if sim.tick - last_site >= 300 and army.size() >= 6 and level.get("toma_sitios", true) and sim.can_take_sites(player): # --- esport 1a --- desde la II
 		last_site = sim.tick
 		var site: SimEntity = null
 		var best := 1 << 60
@@ -2706,7 +2748,7 @@ func _map_spot(radius: int) -> Vector2i:
 	var cores := _enemy_cores()
 	var options: Array[Vector2i] = []
 	for e in sim.sacred_sites():
-		if e.alive and (e.holder < 0 or sim.enemies(player, e.holder)) and level.get("toma_sitios", true):
+		if e.alive and (e.holder < 0 or sim.enemies(player, e.holder)) and level.get("toma_sitios", true) and sim.can_take_sites(player): # --- esport 1a ---
 			options.append(Vector2i(e.x, e.y))
 	# El centro también tiene un sitio en 1 contra 1: la IA que no toma sitios (la fácil) no
 	# va ahí, se queda en su punto de reunión (jugadores de prueba, ronda 2).

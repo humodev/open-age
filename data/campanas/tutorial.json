@@ -28,6 +28,7 @@
       ]
      ],
      "victoria": false,
+     "captura_edad_min": 1,
      "_doc": "Un sitio sagrado para enseñarlo: desplazamiento en casillas desde la capital, hacia el centro del mapa. No gana la partida."
     }
    },

@@ -22,7 +22,7 @@
     "velocidad": 1250, "vision": 8500, "radio": 220
   },
   "lancero": {
-    "nombre": "Lancero con escudo", "funcion": "linea", "edad_min": 2, "pob": 1,
+    "nombre": "Lancero con escudo", "funcion": "linea", "edad_min": 1, "pob": 1,
     "costo": { "alimento": 60, "madera": 25, "riqueza": 10 }, "tiempo_ms": 16000,
     "pv": 140, "armadura": 3, "armadura_distancia": 0, "ataque": 8, "alcance": 650, "cadencia_ms": 1500,
     "velocidad": 1100, "vision": 7500, "radio": 280

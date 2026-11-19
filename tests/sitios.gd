@@ -18,7 +18,25 @@ func _init() -> void:
 			if worst < np:
 				fails += 1
 				print("  FALLA %s con %d jugadores: %d sitios" % [t, np, worst])
-	print("SITIOS: ", "OK" if fails == 0 else "%d mapas con pocos sitios" % fails)
+	# --- esport 1a --- se toman desde la II (reglas.sitios.captura_edad_min): en la I no
+	var sc := Sim.new(11, 2, null, {"civs": ["guaranies", "mapuches"], "terreno": "llano"})
+	var site: SimEntity = null
+	for e in sc.entities:
+		if e.alive and e.def.get("sagrado", false) and site == null:
+			site = e
+	var cap_ticks := int(sc.data.reglas["sitios"]["captura_ms"]) / sc.tick_ms + 30
+	sc.spawn_unit("guerrero", 0, site.x + 1500, site.y)
+	for k in cap_ticks:
+		sc.step()
+	var in_i := site.holder
+	sc.players[0]["age"] = 2
+	for k in cap_ticks:
+		sc.step()
+	var ok_age := in_i < 0 and site.holder == 0
+	print("%s sitios: en la I no se toman (dueño %d) y en la II sí (dueño %d)" % ["OK  " if ok_age else "FALLA", in_i, site.holder])
+	if not ok_age:
+		fails += 1
+	print("SITIOS: ", "OK" if fails == 0 else "%d fallas" % fails)
 	quit()
 
 

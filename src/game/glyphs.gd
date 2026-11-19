@@ -280,6 +280,13 @@ static func draw(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> void:
 			ci.draw_circle(c + Vector2(0, -s * 0.2), s * 0.06, col)
 		# --- fin grilla ---
 		# --- órdenes --- (proceso/23, parte B)
+		"suelo": # --- esport 1a --- atacar el suelo: mira sobre una mancha en el suelo
+			ci.draw_arc(c + Vector2(0, s * 0.04), s * 0.3, 0.0, TAU, 20, col, w)
+			ci.draw_line(c + Vector2(-s * 0.42, s * 0.04), c + Vector2(-s * 0.14, s * 0.04), col, w)
+			ci.draw_line(c + Vector2(s * 0.14, s * 0.04), c + Vector2(s * 0.42, s * 0.04), col, w)
+			ci.draw_line(c + Vector2(0, -s * 0.38), c + Vector2(0, -s * 0.1), col, w)
+			ci.draw_line(c + Vector2(0, s * 0.18), c + Vector2(0, s * 0.46), col, w)
+			ci.draw_circle(c + Vector2(0, s * 0.04), s * 0.07, col)
 		"mantener":
 			# Escudo con una estaca: no se mueve.
 			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.3, -s * 0.34), c + Vector2(s * 0.3, -s * 0.34), c + Vector2(s * 0.3, s * 0.05), c + Vector2(0, s * 0.4), c + Vector2(-s * 0.3, s * 0.05)]), col)

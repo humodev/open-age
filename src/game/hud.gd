@@ -1197,7 +1197,7 @@ class CommandCard:
 				draw_style_box(sb, r)
 				continue
 			var active: bool = hud.ctrl.mode == "place" and hud.ctrl.place_type == c["id"] or hud.ctrl.mode == "amove" and c["kind"] == "amove"
-			active = active or (hud.ctrl.mode == "patrol" and c["kind"] == "patrol") or (c["kind"] == "form" and c["form"] == hud.ctrl.formacion) # --- órdenes ---
+			active = active or (hud.ctrl.mode == "patrol" and c["kind"] == "patrol") or (hud.ctrl.mode == "ground" and c["kind"] == "ground") or (c["kind"] == "form" and c["form"] == hud.ctrl.formacion) # --- órdenes ---
 			# --- contraste --- disponible, no alcanza (qué falta) y bloqueado (candado y edad),
 			# legibles a 4,5:1 y sin depender del color (src/game/ui/estado_casilla.gd)
 			EstadoCasilla.dibujar(self, r, c, res, i == _hover, active, Controller.etiqueta(i), hud.sim.dp(hud.local).mod("recurso_propio"))

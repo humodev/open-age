@@ -65,6 +65,13 @@ func _init() -> void:
 	var mine := s2.spawn_unit("hondero", 0, c2.x * P + 300, c2.y * P + 300)
 	s2._rebuild_hashes()
 	s2._hit(cat, foes[4])
+	# --- esport 1a --- el tiro vuela (D-031): no pega al salir, pega en el punto al llegar
+	var hurt0 := 0
+	for f in foes:
+		hurt0 += 1 if f.hp < f.hp_max else 0
+	check("el tiro de área no pega al salir (vuela %d ticks)" % s2.shell_ticks(cat), hurt0 == 0 and s2.shells.size() == 1)
+	s2.tick += s2.shell_ticks(cat)
+	s2._land_shells()
 	var hurt := 0
 	var center_loss := foes[4].hp_max - foes[4].hp
 	var corner_loss := foes[0].hp_max - foes[0].hp
@@ -74,6 +81,39 @@ func _init() -> void:
 	check("el área daña a los 9 honderos del bloque", hurt == 9, "(%d dañados)" % hurt)
 	check("pega más en el centro que en el borde", center_loss > corner_loss and corner_loss > 0, "(centro %d, esquina %d)" % [center_loss, corner_loss])
 	check("no daña a los propios", mine.hp == mine.hp_max)
+	# --- esport 1a --- esquivar: el bloque se corre 2 casillas mientras vuela y el tiro no le pega
+	var s2b := _sim([])
+	var c2b := _free_spot(s2b)
+	var cat_b := s2b.spawn_unit("catapulta", 0, c2b.x * P, (c2b.y + 6) * P)
+	var foes_b: Array[SimEntity] = []
+	for i in 9:
+		foes_b.append(s2b.spawn_unit("hondero", 1, c2b.x * P + (i % 3 - 1) * 500, c2b.y * P + (i / 3 - 1) * 500))
+	s2b._rebuild_hashes()
+	s2b._hit(cat_b, foes_b[4])
+	for f in foes_b:
+		f.x -= 2500
+	s2b._rebuild_hashes()
+	s2b.tick += s2b.shell_ticks(cat_b)
+	s2b._land_shells()
+	var hurt_b := 0
+	for f in foes_b:
+		hurt_b += 1 if f.hp < f.hp_max else 0
+	check("esquivar: el bloque que se corrió 2,5 casillas no recibe el tiro", hurt_b == 0, "(%d dañados)" % hurt_b)
+	# --- esport 1a --- atacar el suelo: tira al punto aunque no haya nadie, y el ariete no puede
+	var s2c := _sim([])
+	var c2c := _free_spot(s2c)
+	s2c.players[0]["age"] = 3
+	var cat_c := s2c.spawn_unit("catapulta", 0, c2c.x * P, c2c.y * P)
+	var ram_c := s2c.spawn_unit("ariete", 0, c2c.x * P + 1000, c2c.y * P)
+	s2c.push_command({"t": "suelo", "player": 0, "ids": [cat_c.id, ram_c.id], "x": c2c.x * P + 9000, "y": c2c.y * P})
+	var fired := 0
+	for k in 120:
+		s2c.step()
+		for ev in s2c.events:
+			if ev["t"] == "tiro" and int(ev["a"]) == cat_c.id:
+				fired += 1
+	check("atacar el suelo: la catapulta se acerca y tira al punto (%d tiros en 12 s)" % fired, fired >= 1 and cat_c.order == SimEntity.Order.GROUND)
+	check("atacar el suelo: el ariete no lo hace", ram_c.order != SimEntity.Order.GROUND)
 
 	# 3. Reemplazo del ariete inca y guaraní en la III.
 	for civ in ["tawantinsuyu", "guaranies"]:

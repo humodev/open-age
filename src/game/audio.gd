@@ -320,7 +320,9 @@ func on_events(events: Array) -> void:
 				var b: SimEntity = sim.by_id.get(ev["b"])
 				if a == null or b == null:
 					continue
-				if ev["ranged"]:
+				if ev.get("area", false): # --- esport 1a --- golpe del tiro que llegó
+					world("impacto", b.x, b.y, -12.0)
+				elif ev["ranged"]:
 					world("arco" if a.is_building() or a.def.get("funcion", "") == "distancia" and not a.type.contains("hond") else "honda", a.x, a.y, -14.0)
 					world("impacto", b.x, b.y, -16.0)
 				elif a.def.get("solo_edificios", false):
@@ -331,6 +333,10 @@ func on_events(events: Array) -> void:
 					world("dano_edificio", b.x, b.y, -14.0)
 				if a.owner == local or b.owner == local:
 					_combat_until = _clock + 12.0
+			"tiro": # --- esport 1a --- sale el tiro del asedio de área
+				var sa: SimEntity = sim.by_id.get(ev["a"])
+				if sa != null:
+					world("honda", sa.x, sa.y, -10.0)
 			"died":
 				if ev.get("cat", -1) == SimEntity.Cat.BUILDING:
 					world("derrumbe", ev["x"], ev["y"], -2.0)
