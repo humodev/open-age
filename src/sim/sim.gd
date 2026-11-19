@@ -2250,11 +2250,12 @@ func is_ranged(a: SimEntity) -> bool:
 func attack_bonus(a: SimEntity, t: SimEntity) -> int:
 	if not t.is_unit():
 		return 0
-	var b := int((data.reglas.get("bonos", {}) as Dictionary).get(a.fn, {}).get(t.fn, 0))
+	var rb: Dictionary = (data.reglas.get("bonos", {}) as Dictionary).get(a.fn, {})
+	var b := int(rb.get(t.fn, 0))
 	var own: Dictionary = a.def.get("bono", {})
 	b += int(own.get(t.fn, 0))
 	if t.def.get("montado", false) or t.def.get("elefante", false):
-		b += int(own.get("montado", 0))
+		b += int(own.get("montado", 0)) + int(rb.get("montado", 0)) # --- esport 1a --- reglas.bonos también contra «montado»
 	return b
 
 
