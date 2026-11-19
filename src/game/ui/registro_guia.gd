@@ -160,6 +160,10 @@ func setup(h) -> void:
 	vb.add_child(cb)
 	_panel.visible = false
 	add_child(_panel)
+	# Para capturas: `-- --leccion=id` abre esa lección al empezar.
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--leccion="):
+			abrir_leccion.call_deferred(a.substr(10))
 
 
 func _tab_button(txt: String, tab: String) -> Button:
@@ -313,7 +317,7 @@ static func lecciones_de(sim: Sim, e: SimEntity) -> Array:
 			var fn := String(ud.get("funcion", ud.get("fn", "")))
 			if u == "aldeano" or fn == "civil":
 				flags["produce_aldeano"] = true
-			elif u != "comerciante":
+			elif SimEntity.MILITARY_FNS.has(fn):
 				flags["produce_tropa"] = true
 		if def.get("mercado", false):
 			flags["mercado"] = true
@@ -326,8 +330,16 @@ static func lecciones_de(sim: Sim, e: SimEntity) -> Array:
 	elif e.is_unit():
 		if def.has("area"):
 			flags["area"] = true
-		if e.fn == "civil":
-			flags["aldeano"] = true
+		if e.fn == "civil" and e.owner >= 0:
+			# Solo lo que su pueblo puede levantar (los guaraníes no tienen muralla de piedra).
+			for k in sim.dp(e.owner).edificios:
+				var bd: Dictionary = sim.dp(e.owner).edificios[k]
+				if bd.get("mercado", false) and k != "mercado_neutral":
+					flags["aldeano_mercado"] = true
+				if bd.get("linea", false) and bd.has("sobre"):
+					flags["aldeano_muro"] = true
+				if bd.get("maravilla", false):
+					flags["aldeano_maravilla"] = true
 		elif e.fn in ["choque", "distancia", "linea"]:
 			flags["tropa"] = true
 	var out := []

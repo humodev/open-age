@@ -1,5 +1,5 @@
 {
-  "_doc": "Lecciones cortas de la Guía (G), una por mecánica (proceso/36-aprendizaje). Cada una: titulo, que (qué es), cuando (cuándo conviene) y consejo. Se abren desde la Guía o con «¿Cómo se usa?» en el panel de la selección. para: qué selección la ofrece (tipos de entidad, o banderas: produce_aldeano, produce_tropa, mercado, sagrado, maravilla, area, comerciante, aldeano, tropa, muro). Marcadores en el texto: {reglas:camino.al.valor}, {casillas:…} (milésimas a casillas), {min:…} (ms a minutos) y {edad:…} (número a I, II, III, IV): salen de data/reglas.json, así el texto no queda viejo cuando cambia el balance.",
+  "_doc": "Lecciones cortas de la Guía (G), una por mecánica (proceso/36-aprendizaje). Cada una: titulo, que (qué es), cuando (cuándo conviene) y consejo. Se abren desde la Guía o con «¿Cómo se usa?» en el panel de la selección. para: qué selección la ofrece (tipos de entidad, o banderas: produce_aldeano, produce_tropa, mercado, sagrado, maravilla, area, tropa, muro, y aldeano_mercado, aldeano_muro y aldeano_maravilla, que el aldeano tiene solo si su pueblo puede levantar eso). Marcadores en el texto: {reglas:camino.al.valor}, {casillas:…} (milésimas a casillas), {min:…} (ms a minutos) y {edad:…} (número a I, II, III, IV): salen de data/reglas.json, así el texto no queda viejo cuando cambia el balance.",
   "consejos": {
     "_doc": "Consejos de aprendizaje de las mecánicas nuevas (src/game/ui/consejos.gd → _mecanicas; solo con los consejos prendidos: tutorial y fácil de fábrica). Cada uno sale una vez por partida salvo que tenga repetir_s. durante_s: cuánto tiene que durar la situación. Los textos aceptan los marcadores de las lecciones; leccion: la que se nombra al final («G: …»).",
     "sitio_sin_guardia": { "durante_s": 45, "repetir_s": 240, "leccion": "sitios", "texto": "Tu sitio sagrado no rinde: le falta guardia\nCon {reglas:sitios.guarnicion_pob} de población militar tuya cerca vuelve a dar riqueza." },
@@ -56,7 +56,7 @@
       "que": "Compra y vende alimento, madera y piedra por riqueza, de a {reglas:mercado.lote}. Cada venta baja el precio y cada compra lo sube; con el tiempo vuelve solo.",
       "cuando": "Cuando se te junta un recurso que no vas a usar, o te falta poco de otro para algo urgente (un hito, una tanda de tropa).",
       "consejo": "Si sobra riqueza, comprá lo que te falta; si sobra madera o alimento, vendelo. Vender de a mucho junto sale caro: el precio cae con cada lote.",
-      "para": ["mercado", "aldeano"]
+      "para": ["mercado", "aldeano_mercado"]
     },
     "comercio": {
       "titulo": "Comercio y rutas",
@@ -70,7 +70,7 @@
       "que": "Desde la edad II, tramos de piedra que se arrastran como la empalizada, con su puerta y torres encima. Aguanta mucho más: solo el asedio la rompe bien.",
       "cuando": "Para cerrar el lado por donde viene el rival, sobre todo si te atacan seguido. Es cara: no amurallés todo.",
       "consejo": "Con aldeanos, en Militar (W), elegí la muralla y arrastrala sobre tu empalizada: la refuerza. G pone una puerta y Mayús encadena tramos.",
-      "para": ["muro", "aldeano"]
+      "para": ["muro", "aldeano_muro"]
     },
     "asedio_area": {
       "titulo": "Asedio de área y ataque al suelo",
@@ -91,7 +91,7 @@
       "que": "La obra de la edad IV, una por pueblo, muy cara. Todos la ven en el mapa. Cuando termina, corre una cuenta de {min:maravilla.victoria_ms} minutos: si llega a cero, su dueño gana. Si cae, la cuenta se pierde.",
       "cuando": "Si la tuya puede terminarse y defenderse. Mientras está en obra, el rival la ve y va a venir.",
       "consejo": "Para frenar la de otro: llevá asedio (arietes, catapultas) con escolta y derribala. Matar a los aldeanos que la construyen también la para: la cuenta de arriba dice «PARADA».",
-      "para": ["maravilla", "aldeano"]
+      "para": ["maravilla", "aldeano_maravilla"]
     }
   }
 }

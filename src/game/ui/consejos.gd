@@ -715,5 +715,9 @@ func _mecanicas(dt: int) -> void:
 			merc = true
 			break
 	_mec_say("comercio", age >= 3 and merc and not _vio_comerciante, dt)
-	_mec_say("muralla", age >= 2 and not muralla and empalizadas >= int(_mec("muralla").get("empalizadas_min", 6)), dt)
+	var tiene_muro := false # los guaraníes, Palmares y otros no tienen muralla de piedra
+	for k in sim.dp(me).edificios:
+		if sim.dp(me).edificios[k].get("linea", false) and sim.dp(me).edificios[k].has("sobre"):
+			tiene_muro = true
+	_mec_say("muralla", tiene_muro and age >= 2 and not muralla and empalizadas >= int(_mec("muralla").get("empalizadas_min", 6)), dt)
 	_mec_say("asedio_area", area, dt)
