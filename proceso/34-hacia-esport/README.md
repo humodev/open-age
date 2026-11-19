@@ -29,5 +29,11 @@ Al final de cada iteración se mide el balance con un torneo.
 - Ataque al suelo en R, que también usa la IA (D-031).
 - La micro C2 queda intacta. |
 | 1b | Comercio: mercados neutrales, comerciante, rutas y bloqueo ([diseño](../33-comercio/README.md)) | **Integrado (c9b6c97)**, [implementación](../33-comercio/02-implementacion.md). Hash 916860075.<br>• Los 8 pasos hechos: siempre 2 o más mercados neutrales (equidad: 3 % en el peor caso); comerciante con ganancia por distancia, cobrada al volver; bloqueo y avisos; ruta con línea y punto de paso; bonos de cada pueblo; IA que comercia, protege y corta rutas; maquetas.<br>• Metas: en 1v1, 13–14 % de la riqueza antes del minuto 25 (se cumple); en 2v2, 28 % después del 30 (la meta era 30–45 %; en una semilla le mataron 40 comerciantes).<br>• La primera victoria del principiante había bajado a 3 de 8 semillas (antes, 6 de 8): los dos neutrales corrían en 2 los ids de todo lo demás y con eso la fase de los `(tick + id) % k`. Con ids aparte vuelve a 6 de 8; hash 289763931 ([01d](01d-primera-victoria-mercados.md)). |
-| 1c | Rendimiento, paso 2: caminos de grupo y caché | En curso |
+| 1c | Rendimiento, paso 2: caminos de grupo y caché | **Integrado (f480427)**, [07](../32-ronda-8/07-rendimiento-caminos.md)
+- **Caché de caminos:** por región, y la IA no vuelve a mandar a quien ya iba al mismo lugar.
+- **4v4:** promedio de 46,9 a 40,6 ms, p95 de 100 a 77 ms; los ticks de más de 100 ms bajan de 1232 a 22.
+- **1v6:** p95 de 60 a 33 ms.
+- **Caminos:** ya son el 1 % del tick. Lo que pesa ahora es el costo por entidad (IA, recolección, movimiento).
+- **Pendiente:** la meta de p95 < 40 ms con 8 jugadores. El bench de 6 IA empeora su peor tick por `_expansion_site`.
+- **Al fusionar todo:** hash **1417676642**; comercio, equidad y jugabilidad OK. |
 | — | Revisión de los expertos y torneo | Después de 1a y 1b |
