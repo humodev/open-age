@@ -6,6 +6,14 @@
   "etapas_pct": [33, 66],
   "corte_pct": [14, 50, 82]
  },
+ "_doc_muros": "--- muralla --- (proceso/32-ronda-8/06) Maqueta de la muralla de piedra, su puerta y su torre según el `arte` del dato (data/edificios.json y data/civs). piedra: color del lienzo; junta: color de las hiladas; alto_cm: alto del tramo; almena: cuadrada, hoja (bai sema), redonda o ninguna; talud: más ancho abajo (pirca); piedras: lienzo de piedras sueltas en vez de sillares.",
+ "muros": {
+  "sillar": {"piedra": "#a39c8f", "junta": "#7d776c", "alto_cm": 160, "almena": "cuadrada"},
+  "amba": {"piedra": "#7d6650", "junta": "#5c4a3a", "alto_cm": 150, "almena": "cuadrada", "talud": true},
+  "pirca": {"piedra": "#9b8c74", "junta": "#6f6352", "alto_cm": 135, "almena": "ninguna", "talud": true, "piedras": true},
+  "ladrillo": {"piedra": "#a8553a", "junta": "#d9c6a8", "alto_cm": 170, "almena": "hoja"},
+  "jugol": {"piedra": "#d8c9a8", "junta": "#b5a27e", "alto_cm": 160, "almena": "redonda"}
+ },
  "torres_bajas": ["fortin_rio"],
  "torres_por_forma": {
   "inca": "pukara", "redonda": "cresta", "guarani": "mangrullo", "mapuche": "mangrullo", "palmares": "mangrullo",

@@ -133,7 +133,7 @@
   }
  },
  "sin_unidades": ["catapulta"],
- "sin_edificios": ["torre", "hito_economia", "hito_guerra", "deposito", "almacen_madera", "campo_tiro", "establo", "taller"],
+ "sin_edificios": ["torre", "hito_economia", "hito_guerra", "deposito", "almacen_madera", "campo_tiro", "establo", "taller", "muralla", "puerta_piedra", "torre_muralla"],
  "edificios_nuevos": {
   "hoyo": {"nombre": "Fojo con estrepes", "edad_min": 4, "requiere_tec": "fojos_estrepes", "tam": [1, 1], "pv": 40, "armadura": 0, "costo": {"madera": 20}, "tiempo_ms": 6000, "vision": 1000, "transitable": true, "oculto": true, "deteccion": 2000, "sin_blanco_automatico": true, "no_cuenta": true,
    "trampa": {"danio": 40, "montado_pct": 200, "frena_ms": 4000},

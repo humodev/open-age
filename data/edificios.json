@@ -111,6 +111,23 @@
     "nombre": "Puerta", "edad_min": 1, "tam": [1, 1], "pv": 500, "armadura": 0,
     "costo": { "madera": 20 }, "tiempo_ms": 8000, "vision": 2000, "puerta": true
   },
+  "_doc_muralla": "Muralla de piedra de la edad II (C-101; proceso/32-ronda-8/06-muralla-de-piedra.md). Como en AoE4: mucha vida y armadura que solo el asedio atraviesa (la tropa le saca el daño mínimo), costo en piedra y obra lenta; la empalizada sigue siendo el cerco barato. recibe.asedio: el multiplicador de todo el asedio contra la muralla (el ariete, el de área y los incendiarios, que con su bono_material le pegan poco a la piedra). sobre: tipos propios que la pieza reemplaza en su casilla (reforzar la empalizada arrastrando la muralla encima; la puerta de piedra sobre la de madera). solo_sobre: la torre de muralla solo va encima de un tramo propio. su_puerta: la puerta que G pone en el trazo. arte y glifo: maqueta (data/arte_edades.json → muros) y glifo de cada pueblo.",
+  "muralla": {
+    "nombre": "Muralla de piedra", "edad_min": 2, "tam": [1, 1], "pv": 1800, "armadura": 6, "recibe": { "asedio": 400 },
+    "costo": { "piedra": 20 }, "tiempo_ms": 12000, "vision": 1000, "linea": true,
+    "sobre": ["empalizada"], "su_puerta": "puerta_piedra", "arte": "sillar", "glifo": "muralla"
+  },
+  "puerta_piedra": {
+    "nombre": "Puerta de piedra", "edad_min": 2, "tam": [1, 1], "pv": 2400, "armadura": 6, "recibe": { "asedio": 400 },
+    "costo": { "piedra": 60 }, "tiempo_ms": 25000, "vision": 2000, "puerta": true,
+    "sobre": ["puerta"], "arte": "sillar", "glifo": "puerta_piedra"
+  },
+  "torre_muralla": {
+    "nombre": "Torre de muralla", "edad_min": 2, "tam": [1, 1], "pv": 1500, "armadura": 6, "recibe": { "asedio": 400 },
+    "costo": { "piedra": 100 }, "tiempo_ms": 30000, "vision": 8000,
+    "sobre": ["muralla"], "solo_sobre": true, "flechas": 1, "ataque": 8, "alcance": 7000, "cadencia_ms": 1500,
+    "arte": "sillar", "glifo": "torre_muralla"
+  },
   "mercado": {
     "nombre": "Mercado", "edad_min": 2, "tam": [3, 3], "pv": 1500, "armadura": 1,
     "costo": { "madera": 175 }, "tiempo_ms": 35000, "vision": 6000, "mercado": true, "ranura": 5,

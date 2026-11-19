@@ -118,7 +118,9 @@ const PROPIOS := ["diana", "establo", "taller_asedio", "ruka", "boleador", "ince
 	"gasa", "farasanna", "jinete_corte", "zagaia", "guarnicao", "capitao",
 	# --- paso 6, par 3 --- Tawantinsuyu y Ayutthaya
 	"chunu", "khipu", "tumi", "puente_soga", "champi", "wayrachina", "waraka", "chaski", "cornaca", "vasija", "recetario", "arroz_crecida", "junco", "canal", "fundicion", "astillero",
-	"galga", "jinete_manco", "ngao", "suan_phlu"]
+	"galga", "jinete_manco", "ngao", "suan_phlu",
+	# --- muralla --- (proceso/32-ronda-8/06) muro de piedra, puerta y torre, y el de cada pueblo
+	"muralla", "puerta_piedra", "torre_muralla", "pirca", "punku", "kamphaeng", "muro_amba"]
 const OSCURO := Color(0.06, 0.065, 0.075)
 const _SABERES := preload("res://src/game/ui/iconos_saberes.gd") # --- paso 6 --- glifos de los saberes propios
 
@@ -272,6 +274,60 @@ static func dibujar(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> bool:
 			var gota := Palette.UI_NEUTRAL if claro else col
 			ci.draw_circle(c + Vector2(0, -s * 0.16), s * 0.17, gota)
 			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.15, -s * 0.22), c + Vector2(0, -s * 0.48), c + Vector2(s * 0.15, -s * 0.22)]), gota)
+		# --- muralla --- (proceso/32-ronda-8/06)
+		"muralla":
+			# Muralla de sillares: lienzo con almenas cuadradas y la junta trabada.
+			var top := c.y - s * 0.12
+			ci.draw_rect(Rect2(Vector2(c.x - s * 0.44, top), Vector2(s * 0.88, s * 0.52)), col)
+			for i in 4:
+				ci.draw_rect(Rect2(Vector2(c.x - s * 0.44 + i * s * 0.25, top - s * 0.2), Vector2(s * 0.13, s * 0.2)), col)
+			for row in 2:
+				var y := top + s * (0.16 + row * 0.18)
+				ci.draw_line(Vector2(c.x - s * 0.44, y), Vector2(c.x + s * 0.44, y), OSCURO, w * 0.6)
+				for i in 3:
+					var x := c.x - s * 0.3 + i * s * 0.3 + (row % 2) * s * 0.14
+					ci.draw_line(Vector2(x, y - s * 0.16), Vector2(x, y), OSCURO, w * 0.6)
+		"muro_amba":
+			# Muro de la amba: piedra parda sobre el risco, con la torre redonda en la punta.
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.48, s * 0.44), c + Vector2(-s * 0.3, s * 0.18), c + Vector2(s * 0.3, s * 0.18), c + Vector2(s * 0.48, s * 0.44)]), col.darkened(0.3))
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.36, -s * 0.12), Vector2(s * 0.6, s * 0.32)), col)
+			for i in 3:
+				ci.draw_rect(Rect2(c + Vector2(-s * 0.36 + i * s * 0.2, -s * 0.24), Vector2(s * 0.1, s * 0.12)), col)
+			ci.draw_rect(Rect2(c + Vector2(s * 0.2, -s * 0.36), Vector2(s * 0.22, s * 0.56)), col.lightened(0.08))
+			ci.draw_arc(c + Vector2(s * 0.31, -s * 0.36), s * 0.11, PI, TAU, 8, col.lightened(0.08), w * 1.4)
+		"pirca":
+			# Pirca: piedras de campo de varios tamaños, asentadas sin argamasa, en talud.
+			var piedras := [[-0.3, 0.3, 0.16], [0.0, 0.32, 0.15], [0.3, 0.3, 0.16], [-0.16, 0.04, 0.15], [0.15, 0.05, 0.16], [0.0, -0.22, 0.14]]
+			for pp: Array in piedras:
+				ci.draw_colored_polygon(Glyphs._ngon(c + Vector2(s * pp[0], s * pp[1]), s * pp[2], 6, 0.3 + pp[0]), col.darkened(0.12 * (int(pp[1] * 10) % 2)))
+		"kamphaeng":
+			# Kamphaeng: muro de ladrillo con almenas en hoja (bai sema).
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.44, -s * 0.04), Vector2(s * 0.88, s * 0.44)), col)
+			for i in 4:
+				var x := c.x - s * 0.33 + i * s * 0.22
+				ci.draw_colored_polygon(PackedVector2Array([Vector2(x - s * 0.08, c.y - s * 0.04), Vector2(x - s * 0.08, c.y - s * 0.2), Vector2(x, c.y - s * 0.38), Vector2(x + s * 0.08, c.y - s * 0.2), Vector2(x + s * 0.08, c.y - s * 0.04)]), col)
+			for row in 3:
+				ci.draw_line(Vector2(c.x - s * 0.44, c.y + s * (0.1 + row * 0.12)), Vector2(c.x + s * 0.44, c.y + s * (0.1 + row * 0.12)), OSCURO, w * 0.5)
+		"puerta_piedra":
+			# Puerta de piedra: dos torreones y el arco.
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.44, -s * 0.3), Vector2(s * 0.88, s * 0.72)), col)
+			for x: float in [-0.44, 0.26]:
+				ci.draw_rect(Rect2(c + Vector2(s * x, -s * 0.44), Vector2(s * 0.18, s * 0.14)), col)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.18, -s * 0.02), Vector2(s * 0.36, s * 0.44)), OSCURO)
+			ci.draw_circle(c + Vector2(0, -s * 0.02), s * 0.18, OSCURO)
+		"punku":
+			# Punku: portada trapezoidal inca, más angosta arriba.
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.44, -s * 0.4), Vector2(s * 0.88, s * 0.82)), col)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.22, s * 0.42), c + Vector2(-s * 0.13, -s * 0.2), c + Vector2(s * 0.13, -s * 0.2), c + Vector2(s * 0.22, s * 0.42)]), OSCURO)
+			ci.draw_line(c + Vector2(-s * 0.2, -s * 0.26), c + Vector2(s * 0.2, -s * 0.26), col.darkened(0.3), w)
+		"torre_muralla":
+			# Torre sobre la muralla: el lienzo bajo y la torre alta almenada en el medio.
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.46, s * 0.12), Vector2(s * 0.92, s * 0.3)), col.darkened(0.2))
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.18, -s * 0.3), Vector2(s * 0.36, s * 0.72)), col)
+			for i in 3:
+				ci.draw_rect(Rect2(c + Vector2(-s * 0.24 + i * s * 0.18, -s * 0.44), Vector2(s * 0.12, s * 0.14)), col)
+			ci.draw_rect(Rect2(c + Vector2(-s * 0.04, -s * 0.14), Vector2(s * 0.08, s * 0.18)), OSCURO)
+		# --- fin muralla ---
 		"muro":
 			# Mampostería: muro de piedra labrada (hiladas trabadas).
 			for row in 3:

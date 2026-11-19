@@ -72,6 +72,9 @@
   "compania_japonesa": {"nombre": "Compañía japonesa", "funcion": "choque", "edad_min": 2, "pob": 1, "costo": {"riqueza": 85}, "tiempo_ms": 12000, "pv": 140, "armadura": 2, "armadura_distancia": 2, "ataque": 13, "alcance": 450, "cadencia_ms": 1150, "velocidad": 1550, "vision": 8000, "radio": 260}
  },
  "edificios": {
+  "muralla": {"nombre": "Kamphaeng", "pv": 1700, "costo": {"piedra": 12, "madera": 10}, "arte": "ladrillo", "glifo": "kamphaeng", "desc": "Kamphaeng (กำแพง): la muralla de ladrillo cocido de la ciudad isla, con almenas en hoja (bai sema). Menos piedra y algo de madera para los hornos del ladrillo; un poco menos de vida que la de sillares."},
+  "puerta_piedra": {"nombre": "Pratu", "arte": "ladrillo", "desc": "Pratu (ประตู): puerta de la muralla de ladrillo."},
+  "torre_muralla": {"nombre": "Atalaya de la muralla", "arte": "ladrillo", "desc": "Atalaya de ladrillo sobre la muralla, más chica que un pom."},
   "_doc_maravilla": "--- paso 7 --- docs/diseno/27, §3 y §4.1; lo común en data/edificios.json → maravilla",
   "maravilla": {"nombre": "Krung Si Ayutthaya y Pom Phet", "arte": "maravilla_krung", "desc": "La ciudad isla, con el fuerte de Pom Phet (ป้อมเพชร) en la esquina sureste, en la confluencia con el Pa Sak: ríos, canal (el Khu Khue Na [verificar fecha y rey]) y foso, murallas de ladrillo de mediados del siglo XVI y fuertes en las esquinas. Mientras está en pie rige la crecida como muralla: el agua baja cerca de la capital frena a la tropa enemiga, salvo junto a una torre o un fuerte suyo. La crecida echaba a los sitiadores (1548, 1586–1587, 1760)… hasta que en 1766 los birmanos se quedaron durante las lluvias, con campamentos en alto, barcos y cultivos propios. Documentado y arqueológico (Baker y Pasuk, 2017; Wyatt, 2003; Lieberman, 2003). No es sagrada: el Wat Phra Si Sanphet queda descartado (C-79 a).", "efectos_maravilla": [{"tipo": "crecida", "radio": 15, "agua_radio": 2, "altura_max": 1, "frenado_pct": 30, "torre_radio": 4}]},
   "fortaleza": {"nombre": "Pom", "desc": "Pom (ป้อม): fuerte de ladrillo en la muralla o en la orilla, como Pom Phet en la esquina sureste de la isla (Baker y Pasuk, 2017). La defensa que aguanta de la edad III."},
@@ -329,7 +332,7 @@
    "guardia_extranjera"
   ]
  ],
- "construye": ["casa", "granja", "cuartel", "campo_tiro", "taller", "torre", "fortaleza", "centro", "kraal", "barrio_japones", "barrio_portugues", "mercado", "almacen_mina", "maravilla"],
+ "construye": ["casa", "granja", "cuartel", "campo_tiro", "taller", "torre", "fortaleza", "muralla", "puerta_piedra", "torre_muralla", "centro", "kraal", "barrio_japones", "barrio_portugues", "mercado", "almacen_mina", "maravilla"],
  "produce": {"centro": ["aldeano", "explorador", "elefante_rey"], "cuartel": ["guerrero", "lancero", "ngao", "defensores_suan_phlu"], "campo_tiro": ["hondero"], "taller": ["ariete", "catapulta"]},
  "modulos": {"khlong": {"_doc": "Canal de agua baja junto a la base (proceso/24): el arrozal rinde +35 % a 2 casillas del agua. distancia: casillas del centro; largo y ancho del canal", "distancia": 8, "largo": 9, "ancho": 2}},
  "ia_unidades": [
