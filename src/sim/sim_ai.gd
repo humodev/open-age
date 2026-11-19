@@ -185,6 +185,7 @@ func think() -> void:
 	# todavía no alcanzan): apartado, la etíope trabada por 85 de piedra veía todo en cero.
 	# Lo pedido por un aliado sigue apartado.
 	_trade(p, by_type)
+	sim.comercio.ai_think(self, p, by_type, vill, army, centro, saving) # --- comercio --- (proceso/33, §6)
 	_reserve(p, -1, held) # --- equipos ronda 3 ---
 	_animals(centro)
 	_alarm(p, vill, army, centro)

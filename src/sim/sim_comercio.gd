@@ -100,6 +100,10 @@ func _spawn(t: Vector2i, fill := false) -> void:
 		for xx in range(t.x, t.x + 3):
 			sim.map.height[yy * sim.map.n + xx] = h0
 	var b := sim.spawn_building("mercado_neutral", -1, t.x, t.y, true)
+	var tn := str((sim.terrain_def().get("neutral", {}) as Dictionary).get("nombre", ""))
+	if tn != "": # el nombre del terreno: feria, puerto de río, feria de altura
+		b.def = b.def.duplicate()
+		b.def["nombre"] = tn
 	neutrals.append(b)
 	# Todos saben dónde están (como los puestos de AoE4): explorados desde el principio.
 	for g in sim.fog.grids:
@@ -548,3 +552,193 @@ func on_died(e: SimEntity) -> void:
 		return
 	var st: Dictionary = stats.get_or_add(e.owner, {"viajes": 0, "cobrado": 0, "cortes": 0, "muertos": 0, "aliado": 0})
 	st["muertos"] = int(st["muertos"]) + 1
+
+
+# ---------------------------------------------------------------- IA (§6)
+
+var _ai := {} # jugador -> {"torres": {destino: true}, "def": tick, "corte": tick, "torre_tick": tick}
+
+
+## La IA comercia, protege la ruta y corta la del rival (reglas.ia_comercio y
+## dificultades.<n>.comercio). La llama SimAI.think después del mercado.
+func ai_think(ai: SimAI, p: Dictionary, by_type: Dictionary, vill: Array[SimEntity], army: Array[SimEntity], centro: SimEntity, saving: bool) -> void:
+	var ic: Dictionary = sim.data.reglas.get("ia_comercio", {})
+	var lc: Dictionary = ai.level.get("comercio", {})
+	var pid := ai.player
+	if ic.is_empty() or lc.is_empty() or (sim.tick / maxi(1, int(ai.level["piensa_cada_ticks"]))) % maxi(1, int(ic.get("cada_ticks", 50)) / maxi(1, int(ai.level["piensa_cada_ticks"]))) != 0:
+		return
+	var st: Dictionary = _ai.get_or_add(pid, {"torres": {}, "def": -100000, "corte": -100000, "torre_tick": -100000})
+	_ai_cut_rival(ai, ic, lc, army, centro, st)
+	var age := int(p["age"])
+	if age < 3:
+		return
+	var home: SimEntity = null
+	for m in by_type.get("mercado", []):
+		if m.alive and m.built:
+			home = m
+			break
+	if home == null:
+		return
+	var traders: Array[SimEntity] = []
+	var queued := 0
+	for e in sim.owned(pid):
+		if e.alive and e.is_unit() and e.def.get("comerciante", false):
+			traders.append(e)
+	for m in by_type.get("mercado", []):
+		queued += (m.queue as Array).count("comerciante")
+	# Destinos: neutrales y mercados aliados.
+	var dests: Array[SimEntity] = []
+	var far := false
+	for t in neutrals:
+		dests.append(t)
+	for q in sim.players.size():
+		if q != pid and not sim.enemies(pid, q) and not sim.players[q]["defeated"]:
+			for b in sim.buildings_of(q):
+				if b.alive and b.built and b.def.get("mercado", false):
+					dests.append(b)
+	for t in dests:
+		if octil(home, t) >= int(ic.get("dist_min", 60)):
+			far = true
+	var clay := 0
+	for r in sim.resources_near(centro.tx, centro.ty, int(ic.get("radio_arcilla", 30))):
+		if r.res_kind == "riqueza":
+			clay += r.amount
+	if not far and clay >= int(ic.get("arcilla_baja", 1500)):
+		return
+	var pe: Array = ic.get("por_edad", [0, 0, 4, 10])
+	var want := int(pe[clampi(age - 1, 0, pe.size() - 1)])
+	if clay == 0:
+		want = maxi(want, int(ic.get("sin_arcilla", 16)))
+	want = mini(want, int(lc.get("max", 16)))
+	if not saving and traders.size() + queued < want and queued == 0:
+		var cost := sim.dp(pid).cost_of("comerciante", age)
+		if sim.can_afford(pid, cost) and (sim.dp(pid).edificios.get("mercado", {}).get("produce", []) as Array).has("comerciante"):
+			sim.push_command({"t": "train", "player": pid, "building": home.id, "type": "comerciante"})
+	# Los que no tienen ruta (o la tienen cortada dos veces seguidas): a la mejor, con la saturación.
+	var load := {}
+	for e in traders:
+		if e.order == O.TRADE:
+			load[e.trade_dest] = int(load.get(e.trade_dest, 0)) + 1
+	for e in traders:
+		var bad := e.order == O.TRADE and int(cuts_in_row.get(pid * 1000000 + e.trade_dest, 0)) >= 2
+		if (e.order == O.TRADE and not bad) or e.inside >= 0:
+			continue
+		if e.order == O.TRADE:
+			load[e.trade_dest] = int(load.get(e.trade_dest, 0)) - 1
+		var best: SimEntity = null
+		var bv := 0
+		for t in dests:
+			if t == home or int(cuts_in_row.get(pid * 1000000 + t.id, 0)) >= 2:
+				continue
+			var v := gain(pid, home, t, 4) * saturation(int(load.get(t.id, 0)) + 1) * 1000 / maxi(1, trip_ms(pid, home, t))
+			if v > bv:
+				bv = v
+				best = t
+		if best == null:
+			continue
+		load[best.id] = int(load.get(best.id, 0)) + 1
+		if bad:
+			cuts_in_row.erase(pid * 1000000 + e.trade_dest)
+		sim.push_command({"t": "ruta", "player": pid, "ids": [e.id], "mercado": best.id})
+	_ai_tower(ai, ic, lc, vill, home, traders, load, st)
+	_ai_defend(ic, army, traders, st)
+
+
+## Una torre a mitad de la ruta más usada (una por ruta).
+func _ai_tower(ai: SimAI, ic: Dictionary, lc: Dictionary, vill: Array[SimEntity], home: SimEntity, traders: Array[SimEntity], load: Dictionary, st: Dictionary) -> void:
+	if not bool(lc.get("torre", false)) or traders.size() < int(ic.get("torre_desde", 4)):
+		return
+	if sim.tick - int(st["torre_tick"]) < int(ic.get("torre_cada_ticks", 1800)):
+		return
+	var top := -1
+	var tn := 0
+	for k in load:
+		if int(load[k]) > tn:
+			tn = int(load[k])
+			top = int(k)
+	var dest: SimEntity = sim.by_id.get(top)
+	if dest == null or (st["torres"] as Dictionary).has(top) or not sim.dp(ai.player).edificios.has("torre"):
+		return
+	if not sim.can_afford(ai.player, sim.dp(ai.player).cost_of("torre", int(sim.players[ai.player]["age"]))):
+		return
+	st["torre_tick"] = sim.tick
+	var mid := Vector2i((home.x + dest.x) / 2 / P, (home.y + dest.y) / 2 / P)
+	var site: Vector2i = ai._site_near("torre", mid, 1, 2)
+	if site.x < 0:
+		return
+	st["torres"][top] = true
+	ai._build_at("torre", site, vill, 2)
+
+
+## Golpean a un comerciante: hasta defensa_n tropas ociosas al lugar.
+func _ai_defend(ic: Dictionary, army: Array[SimEntity], traders: Array[SimEntity], st: Dictionary) -> void:
+	if sim.tick - int(st["def"]) < int(ic.get("defensa_cada_ticks", 300)):
+		return
+	var hit: SimEntity = null
+	for e in traders:
+		if sim.tick - e.last_combat < 30:
+			hit = e
+			break
+	if hit == null:
+		return
+	var ids := []
+	for u in army:
+		if u.order == O.IDLE and ids.size() < int(ic.get("defensa_n", 4)):
+			ids.append(u.id)
+	if ids.is_empty():
+		return
+	st["def"] = sim.tick
+	sim.push_command({"t": "move", "player": hit.owner, "ids": ids, "x": hit.x, "y": hit.y, "amove": true})
+
+
+## Corta la ruta rival: con `corta` = si, a la mitad de una ruta con `ver` o más comerciantes
+## enemigos a la vista; con `cerca`, solo los que pasan cerca de su capital.
+func _ai_cut_rival(ai: SimAI, ic: Dictionary, lc: Dictionary, army: Array[SimEntity], centro: SimEntity, st: Dictionary) -> void:
+	var mode := str(lc.get("corta", "no"))
+	var cc: Dictionary = ic.get("corte", {})
+	if mode == "no" or army.is_empty() or sim.tick - int(st["corte"]) < int(cc.get("cada_ticks", 1200)):
+		return
+	var pid := ai.player
+	# No mientras un aliado está en una oleada (los turnos de ataque de la etapa 32).
+	for other in sim.ais:
+		if other != null and other != ai and not sim.enemies(pid, other.player) and not (other._wave_ids as Array).is_empty():
+			return
+	var routes := {} # [dueño, casa, destino] -> [n, x, y]
+	var near_r := int(cc.get("cerca_casillas", 40)) * P
+	for e in sim.actives:
+		if not e.is_unit() or e.order != O.TRADE or e.owner < 0 or not sim.enemies(pid, e.owner):
+			continue
+		if not sim.fog.is_visible(pid, e):
+			continue
+		if mode == "cerca" and Sim.dist(e.x, e.y, centro.x, centro.y) > near_r:
+			continue
+		var k := [e.owner, e.trade_home, e.trade_dest]
+		var r: Array = routes.get_or_add(k, [0, e.x, e.y])
+		r[0] = int(r[0]) + 1
+	var best: Array = []
+	var bn := 0
+	for k in routes:
+		if int(routes[k][0]) > bn:
+			bn = int(routes[k][0])
+			best = k
+	if best.is_empty() or (mode == "si" and bn < int(cc.get("ver", 6))):
+		return
+	var x: int = routes[best][1]
+	var y: int = routes[best][2]
+	if mode == "si":
+		var h: SimEntity = sim.by_id.get(best[1])
+		var d: SimEntity = sim.by_id.get(best[2])
+		if h != null and d != null:
+			x = (h.x + d.x) / 2
+			y = (h.y + d.y) / 2
+	var ids := []
+	var fast := int(cc.get("montado_vel", 1800))
+	for u in army:
+		if ids.size() >= int(cc.get("grupo_max", 6)):
+			break
+		if int(u.def.get("velocidad", 0)) >= fast and u.order == O.IDLE:
+			ids.append(u.id)
+	if ids.size() < (int(cc.get("grupo_min", 3)) if mode == "si" else 1):
+		return
+	st["corte"] = sim.tick
+	sim.push_command({"t": "move", "player": pid, "ids": ids, "x": x, "y": y, "amove": true})
