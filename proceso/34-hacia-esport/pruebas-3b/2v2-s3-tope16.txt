@@ -1,0 +1,20 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+Partida [0, 0, 1, 1], llano, experta, semilla 3, mapa 176, 2 neutrales, 45 min
+   5 min:  J0 e1 riq 226 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J1 e1 riq 120 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J2 e1 riq 180 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J3 e1 riq 267 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)
+  10 min:  J0 e2 riq 999 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J1 e2 riq 1228 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J2 e2 riq 1165 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J3 e2 riq 1042 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)
+  15 min:  J0 e2 riq 1712 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J1 e3 riq 2532 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J2 e2 riq 2240 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J3 e2 riq 2597 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)
+  20 min:  J0 e3 riq 3374 com 0 (3 vivos, 0 muertos, 0 esperas, 0 cortes)  J1 e4 riq 5038 com 0 (2 vivos, 0 muertos, 0 esperas, 0 cortes)  J2 e2 riq 3534 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J3 e2 riq 4786 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)
+  25 min:  J0 e4 riq 6292 com 312 (6 vivos, 0 muertos, 0 esperas, 0 cortes)  J1 e4 riq 8114 com 229 (9 vivos, 0 muertos, 4 esperas, 1 cortes)  J2 e3 riq 5538 com 0 (1 vivos, 0 muertos, 0 esperas, 0 cortes)  J3 e3 riq 7532 com 0 (1 vivos, 0 muertos, 0 esperas, 0 cortes)
+  30 min:  J0 e4 riq 11083 com 1179 (10 vivos, 0 muertos, 0 esperas, 0 cortes)  J1 e4 riq 12794 com 2321 (11 vivos, 0 muertos, 6 esperas, 2 cortes)  J2 e3 riq 7528 com 441 (7 vivos, 0 muertos, 2 esperas, 1 cortes)  J3 e3 riq 9992 com 412 (4 vivos, 1 muertos, 2 esperas, 1 cortes)
+  35 min:  J0 e4 riq 14923 com 2837 (14 vivos, 0 muertos, 0 esperas, 0 cortes)  J1 e4 riq 17152 com 5126 (16 vivos, 0 muertos, 9 esperas, 3 cortes)  J2 e3 riq 8805 com 661 (7 vivos, 2 muertos, 2 esperas, 1 cortes)  J3 e3 riq 11947 com 691 (3 vivos, 6 muertos, 16 esperas, 7 cortes)
+  40 min:  J0 e4 riq 20015 com 5942 (16 vivos, 0 muertos, 0 esperas, 0 cortes)  J1 e4 riq 22764 com 8987 (16 vivos, 0 muertos, 9 esperas, 3 cortes)  J2 e3 riq 9156 com 661 (7 vivos, 2 muertos, 2 esperas, 1 cortes)  J3 e3 riq 14935 com 716 (2 vivos, 15 muertos, 36 esperas, 14 cortes)
+Primer cobro (min): [23, 24, 28, 28]; fin al min 44 (terminó: gana el equipo 0)
+META 1 (antes del min 25): comercio 541 de 27476 de riqueza = 1 % (meta ≤ 15 %)
+META 2 (del min 30 al 44): comercio 18590 de 36979 de riqueza = 50 % (meta 30–45 %)
+Comerciantes muertos en total: 24 (meta: alguna ruta atacada, > 10 en el 2v2)
+CORTES: 20 rutas cortadas (avisos), 52 esperas de comerciantes
+WARNING: 4352 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 11 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
