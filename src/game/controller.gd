@@ -297,6 +297,9 @@ func commands() -> Array[Dictionary]:
 			if def.get("maravilla", false):
 				cmd["common"] = "Maravilla · edad IV"
 				cmd["desc"] = "%s\n%s" % [def.get("desc", ""), wonder_text(def)]
+				var pide := wonder_hito_text(def) # --- ronda 8 --- qué hito pide (o impide), arriba de todo
+				if pide != "":
+					cmd["desc"] = pide + "\n" + cmd["desc"]
 			if sim.dp(local).is_hito(type):
 				if age >= sim.dp(local).edades.size():
 					cmd["locked"] = "Edad máxima alcanzada"
@@ -1636,6 +1639,21 @@ func effects_text(efectos: Array) -> String:
 				parts.append("%d%% de %s que caen a golpes a %d casillas de %s no mueren: vuelven con el %d%% de la vida" % [ef["pct"], ", ".join((ef["tipos"] as Array).map(func(t: String) -> String: return String(sim.dp(local).unidades.get(t, {}).get("nombre", t)))), ef["radio"], ", ".join((ef["edificios"] as Array).map(func(t: String) -> String: return String(sim.dp(local).edificios.get(t, {}).get("nombre", t)))), ef["vida_pct"]])
 			# --- fin paso 6 ---
 	return " · ".join(parts)
+
+
+## --- ronda 8 --- Qué hito pide la maravilla (la vía guaraní) o cuál la impide (el Pacto de
+## Cucaú), y si ya está hecho: el veterano llegó a la IV sin saberlo (proceso/22-testers/ronda-8).
+func wonder_hito_text(def: Dictionary) -> String:
+	var dd := sim.dp(local)
+	if def.has("requiere_hito"):
+		var h: String = def["requiere_hito"]
+		var n: String = dd.edificios.get(h, {}).get("nombre", h)
+		return "Pide el hito %s: hay que haberlo elegido al subir de edad. %s" % [n, "Ya lo tenés." if sim.has_done_hito(local, h) else "Todavía no lo levantaste."]
+	if def.has("impide_hito"):
+		var h: String = def["impide_hito"]
+		var n: String = dd.edificios.get(h, {}).get("nombre", h)
+		return "Con el hito %s no se puede levantar. %s" % [n, "Lo levantaste: esta maravilla quedó cerrada." if sim.has_done_hito(local, h) else "No lo levantaste: sigue abierta."]
+	return ""
 
 
 ## --- paso 7 --- Qué da la maravilla mientras está en pie y cómo gana (docs/diseno/27, §4.1), con

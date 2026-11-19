@@ -117,7 +117,17 @@ static func correr(m: Node, check: Callable) -> void:
 		var poco := _avisos_en(al, veta, "Se agota")
 		check.call("fluidez 4: la veta chica avisa que se agota (%d de %d)" % [poco, int(al.conteo.get("recurso", 0))], poco == 1)
 		veta.amount = 1
-		var agotada := await _hasta(m, func() -> bool: return not veta.alive or veta.amount <= 0, 1200)
+		# --- ronda 8 --- el aldeano a veces se iba (lleno, a dejar, o asustado) y la veta no se
+		# acababa en 1200 cuadros: se lo vuelve a mandar y se acelera.
+		var agotada := false
+		m.speed = 4.0
+		for intento in 10:
+			if vill.alive and veta.alive and vill.target != veta.id:
+				sim.push_command({"t": "target", "player": local, "ids": [vill.id], "target": veta.id})
+			agotada = await _hasta(m, func() -> bool: return not veta.alive or veta.amount <= 0, 240)
+			if agotada:
+				break
+		m.speed = 1.0
 		al.revisar()
 		var fin := _avisos_en(al, veta, "Se acabó")
 		var txt: String = al.ultimo_recurso.get("texto", "")

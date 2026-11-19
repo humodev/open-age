@@ -2047,6 +2047,7 @@ func _complete(b: SimEntity) -> void:
 		var p := players[b.owner]
 		(p.get_or_add("hitos_hechos", []) as Array).append(b.type) # --- paso 7 --- (requiere_hito, impide_hito)
 		p["age"] = mini(dp(b.owner).edades.size(), p["age"] + 1)
+		_age_veins(b.owner, int(p["age"])) # vetas nuevas en la III y la IV (proceso/32-ronda-8/02)
 		# --- paso 4 --- C-76 a): desde la III, el bono de combate de los hitos militares vale
 		# en su aura, no en todo el mapa (docs/diseno/27, §4.2).
 		var efs: Array = b.def.get("efectos", [])
@@ -3910,12 +3911,16 @@ func _generate_map() -> void:
 
 	_cluster_sym("arbusto", c0 + _scale_dir(picks[0], 7), int(data.reglas["animales"]["arbustos_base"]))
 	_blob_sym(c0 + _scale_dir(picks[1], 13), 4, 85)
-	_res_sym("roca", c0 + _scale_dir(picks[2], 10))
-	_res_sym("roca", c0 + _scale_dir(picks[2], 10) + Vector2i(2, -1))
+	# Piedra de casa: dos vetas y una más a media distancia, del mismo lado (proceso/32-ronda-8/02).
+	# La segunda iba a (2, -1) de la primera y casi nunca entraba: el 1 contra 1 tenía una sola.
+	var rm: Dictionary = data.reglas.get("recursos_mapa", {})
+	_res_sym_near("roca", c0 + _scale_dir(picks[2], 10), _min_amt("roca", int(rm.get("roca_cerca", -1))), false)
+	_res_sym_near("roca", c0 + _scale_dir(picks[2], 10) + Vector2i(3, -1), _min_amt("roca", int(rm.get("roca_cerca", -1))), false)
+	_res_sym_near("roca", c0 + _scale_dir(picks[2], int(rm.get("roca_media_dist", 22))), _min_amt("roca", int(rm.get("roca_media", -1))), false)
 	# Arcilla de casa (2 pozos) y de flanco: del jugador (docs/diseno/revision-economia/v3/04, §2.2).
 	var cl: Dictionary = data.reglas.get("arcilla", {})
-	_res_sym("riqueza", c0 + _scale_dir(picks[3], 10), int(cl.get("base", -1)), true)
-	_res_sym("riqueza", c0 + _scale_dir(picks[3], 10) + Vector2i(-1, 2), int(cl.get("base", -1)), true)
+	_res_sym("riqueza", c0 + _scale_dir(picks[3], 10), _min_amt("riqueza", int(cl.get("base", -1))), true)
+	_res_sym("riqueza", c0 + _scale_dir(picks[3], 10) + Vector2i(-1, 2), _min_amt("riqueza", int(cl.get("base", -1))), true)
 	_blob_sym(c0 + _scale_dir(picks[4], 15), 3, 80)
 	# Animales (como AoE4, proceso/23, C-32): el kit de la base 0 y su espejo para la 1,
 	# cada uno con las cantidades de su civ.
@@ -3964,9 +3969,11 @@ func _generate_map() -> void:
 	# Recursos disputados en el centro.
 	var mid := n / 2
 	# Arcilla del centro (disputada) y de flanco (propia).
-	_res_sym("riqueza", Vector2i(mid - 9, mid + 5), int(cl.get("centro_por_jugador", -1)))
-	_res_sym("riqueza", c0 + _scale_dir(picks[5], int(cl.get("flanco_dist", 18))), int(cl.get("flanco", -1)), true)
-	_res_sym("roca", Vector2i(mid + 8, mid - 16))
+	_res_sym_near("riqueza", Vector2i(mid - 9, mid + 5), _min_amt("riqueza", int(cl.get("centro_por_jugador", -1))), false)
+	_res_sym("riqueza", c0 + _scale_dir(picks[5], int(cl.get("flanco_dist", 18))), _min_amt("riqueza", int(cl.get("flanco", -1))), true)
+	# Lejos y disputado: escala con las casillas por jugador (proceso/32-ronda-8/02).
+	_res_sym_near("roca", Vector2i(mid + 8, mid - 16), _far_amt("roca", "roca_lejos"), false)
+	_res_sym_near("riqueza", Vector2i(mid + 14, mid + 6), _far_amt("riqueza", "riqueza_lejos"), false)
 	_cluster_sym("arbusto", Vector2i(mid - 18, mid + 2), 6)
 
 	# Bosques.
@@ -4087,11 +4094,15 @@ func _generate_map_n() -> void:
 			_animal_kit(pid, [c + _local(pid, 4, 4), c + _local(pid, 14, 6), c + _local(pid, 18, -6), c + _local(pid, 20, 8)])
 		_blob_fixed(c + _local(pid, -3, 13), 4)
 		_blob_fixed(c + _local(pid, -3, -13), 3)
-		_res_at("roca", c + _local(pid, 1, -10), -1, -1)
-		_res_at("roca", c + _local(pid, 3, -11), -1, -1)
-		_res_at("riqueza", c + _local(pid, 2, 10), int(cl.get("base", 900)), pid)
-		_res_at("riqueza", c + _local(pid, 4, 11), int(cl.get("base", 900)), pid)
-		_res_at("riqueza", c + _local(pid, 11, -15), int(cl.get("flanco", 1500)), pid)
+		var rm: Dictionary = data.reglas.get("recursos_mapa", {})
+		_res_at("roca", c + _local(pid, 1, -10), _min_amt("roca", int(rm.get("roca_cerca", -1))), -1)
+		_res_at("roca", c + _local(pid, 3, -11), _min_amt("roca", int(rm.get("roca_cerca", -1))), -1)
+		# Veta de media distancia, atrás y del lado de la piedra (proceso/32-ronda-8/02).
+		var md := int(rm.get("roca_media_dist", 22))
+		_res_at("roca", c + _local(pid, -md * 2 / 5, -md * 9 / 10), _min_amt("roca", int(rm.get("roca_media", -1))), -1)
+		_res_at("riqueza", c + _local(pid, 2, 10), _min_amt("riqueza", int(cl.get("base", 900))), pid)
+		_res_at("riqueza", c + _local(pid, 4, 11), _min_amt("riqueza", int(cl.get("base", 900))), pid)
+		_res_at("riqueza", c + _local(pid, 11, -15), _min_amt("riqueza", int(cl.get("flanco", 1500))), pid)
 		if data.edificios.has("ingenio"):
 			var ig := c + _local(pid, 30, 14)
 			var t := map.nearest_free(ig.x, ig.y, 8)
@@ -4127,7 +4138,16 @@ func _generate_map_n() -> void:
 	# Arcilla del centro: 1000 por jugador, en anillo.
 	for i in np:
 		var d: Vector2i = _base_dirs[i]
-		_res_at("riqueza", Vector2i(n / 2, n / 2) - Vector2i(d.x * 9 / 1000, d.y * 9 / 1000), int(cl.get("centro_por_jugador", 1000)), -1)
+		_res_at("riqueza", Vector2i(n / 2, n / 2) - Vector2i(d.x * 9 / 1000, d.y * 9 / 1000), _min_amt("riqueza", int(cl.get("centro_por_jugador", 1000))), -1)
+	# Lejos y disputado (proceso/32-ronda-8/02): entre cada par de bases vecinas, una veta de
+	# piedra un poco hacia afuera y una de riqueza un poco hacia el centro (el sitio queda a 1/3).
+	# Cada par la comparte: por jugador toca lo de una veta de cada una; escala con las casillas.
+	for i in np:
+		var a: Vector2i = ring_bases[i] + Vector2i(2, 2)
+		var b: Vector2i = ring_bases[(i + 1) % np] + Vector2i(2, 2)
+		var mb := (a + b) / 2
+		_res_at("roca", mb - (mid - mb) / 8, _far_amt("roca", "roca_lejos"), -1)
+		_res_at("riqueza", mb + (mid - mb) / 6, _far_amt("riqueza", "riqueza_lejos"), -1)
 	# Bosques y bordes.
 	var made := 0
 	var tries := 0
@@ -4511,6 +4531,87 @@ func _res_sym(type: String, t: Vector2i, amount: int = -1, owner_pair: bool = fa
 	if owner_pair:
 		a.res_owner = 0
 		b.res_owner = 1
+
+
+## Cantidad de una veta según el carácter del terreno (terrenos.<t>.minerales_pct). Con
+## `amount` <= 0 parte de la de recursos.json.
+func _min_amt(type: String, amount: int) -> int:
+	var base := amount if amount > 0 else int(data.recursos[type]["cantidad"])
+	var pct := int((terrain_def().get("minerales_pct", {}) as Dictionary).get(str(data.recursos[type]["recurso"]), 100))
+	return maxi(1, base * pct / 100)
+
+
+## Veta lejana por jugador: reglas.recursos_mapa.<clave> con lejos_ref_casillas casillas por
+## jugador, en proporción a las de este mapa (proceso/32-ronda-8/02).
+func _far_amt(type: String, key: String) -> int:
+	var rm: Dictionary = data.reglas.get("recursos_mapa", {})
+	var per := map.n * map.n / maxi(2, players.size())
+	var amount := int(rm.get(key, -1))
+	if amount <= 0:
+		return _min_amt(type, -1)
+	return _min_amt(type, maxi(100, amount * per / maxi(1, int(rm.get("lejos_ref_casillas", per))) / 100 * 100))
+
+
+## Como `_res_sym`, pero si el lugar no sirve (agua, árboles, otra veta) prueba en espiral hasta
+## 6 casillas: con un río la piedra de casa o la del centro se perdían en silencio.
+func _res_sym_near(type: String, t: Vector2i, amount: int, owner_pair: bool) -> void:
+	var tam: Array = data.recursos[type]["tam"]
+	for rr in 7:
+		for dy in range(-rr, rr + 1):
+			for dx in range(-rr, rr + 1):
+				if maxi(absi(dx), absi(dy)) != rr:
+					continue
+				var c := t + Vector2i(dx, dy)
+				var m := _mirror(c, tam[0], tam[1])
+				if c.x < 1 or c.y < 1 or c.x + tam[0] > map.n - 1 or c.y + tam[1] > map.n - 1:
+					continue
+				if not map.is_free_rect(c.x - 1, c.y - 1, tam[0] + 2, tam[1] + 2) or not map.is_free_rect(m.x - 1, m.y - 1, tam[0] + 2, tam[1] + 2):
+					continue
+				var wet := false
+				for yy in range(c.y, c.y + tam[1]):
+					for xx in range(c.x, c.x + tam[0]):
+						if map.is_water(xx, yy) or map.is_water(m.x + xx - c.x, m.y + yy - c.y):
+							wet = true
+				if wet:
+					continue
+				_res_sym(type, c, amount, owner_pair)
+				return
+
+
+## Vetas nuevas al llegar a una edad (reglas.recursos_mapa.vetas_por_edad): propias, a veta_dist
+## casillas de la capital, en el primer rumbo libre de ocho (orden fijo). Solo en escaramuza.
+func _age_veins(pid: int, age: int) -> void:
+	var rm: Dictionary = data.reglas.get("recursos_mapa", {})
+	var list: Array = (rm.get("vetas_por_edad", {}) as Dictionary).get(str(age), [])
+	if list.is_empty() or _opts.get("sin_sitios", false) or pid >= bases.size():
+		return
+	var c := bases[pid] + Vector2i(2, 2)
+	for capital in actives:
+		if capital.alive and capital.owner == pid and capital.capital:
+			c = Vector2i(capital.tx + capital.w / 2, capital.ty + capital.h / 2)
+			break
+	var dist0 := int(rm.get("veta_dist", 16))
+	var dirs: Array[Vector2i] = [Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0), Vector2i(0, -1), Vector2i(1, 1), Vector2i(-1, 1), Vector2i(-1, -1), Vector2i(1, -1)]
+	var k := (pid + age) % dirs.size()
+	for v: Dictionary in list:
+		var type: String = v["tipo"]
+		var tam: Array = data.recursos[type]["tam"]
+		var placed := false
+		for dd in range(0, 12, 3):
+			for j in dirs.size():
+				var s := c + _scale_dir(dirs[(k + j) % dirs.size()], dist0 + dd)
+				if s.x < 2 or s.y < 2 or s.x + tam[0] > map.n - 2 or s.y + tam[1] > map.n - 2:
+					continue
+				if not map.is_free_rect(s.x - 1, s.y - 1, tam[0] + 2, tam[1] + 2) or map.is_water(s.x, s.y) or map.is_water(s.x + tam[0] - 1, s.y + tam[1] - 1):
+					continue
+				var e := spawn_resource(type, s.x, s.y)
+				e.amount = _min_amt(type, int(v.get("cantidad", -1)))
+				e.res_owner = pid if type == "riqueza" else -1
+				k = (k + j + 1) % dirs.size()
+				placed = true
+				break
+			if placed:
+				break
 
 
 func _tree_sym(t: Vector2i) -> void:

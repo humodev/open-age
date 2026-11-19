@@ -1,0 +1,8 @@
+1v3 llano normal experta semilla 7, mapa 176 (7744 casillas por jugador). En el mapa al empezar: { "alimento": 16800, "piedra": 6400, "riqueza": 17200 }
+15 min | j0 e2 a10 m39 p152 r449 | j1 e3 a1345 m195 p470 r764 | j2 e2 a8 m18 p380 r507 | j3 e2 a47 m144 p284 r494 |
+Fin a los 21 min (terminó). Vetas nuevas: 0
+j0 tawantinsuyu eq0 edad 2 (II 7, III 0, IV 0) derrotado maravilla no | min sin alcanzar por recurso { "alimento": 20, "riqueza": 15, "piedra": 10 } | juntó { "mita": 1685, "riqueza": 2046, "alimento": 5770, "madera": 5551, "piedra": 817 } | tiene { "alimento": 10, "madera": 741, "piedra": 152, "riqueza": 766, "mita": 96 }
+j1 mapuches     eq1 edad 4 (II 7, III 13, IV 18) en pie maravilla no | min sin alcanzar por recurso { "alimento": 17, "riqueza": 20, "piedra": 11, "madera": 4 } | juntó { "alimento": 16215, "madera": 9559, "riqueza": 5950, "piedra": 1600, "cabezas": 21 } | tiene { "alimento": 185, "madera": 729, "piedra": 915, "riqueza": 1457 }
+j2 guaranies    eq1 edad 4 (II 8, III 16, IV 21) en pie maravilla no | min sin alcanzar por recurso { "alimento": 19, "riqueza": 18, "piedra": 7, "madera": 1 } | juntó { "alimento": 11786, "madera": 10825, "riqueza": 4765, "piedra": 1600 } | tiene { "alimento": 581, "madera": 110, "piedra": 515, "riqueza": 38 }
+j3 etiopia      eq1 edad 3 (II 6, III 19, IV 0) en pie maravilla no | min sin alcanzar por recurso { "alimento": 20, "riqueza": 20, "piedra": 10 } | juntó { "riqueza": 6076, "alimento": 15160, "madera": 10891, "piedra": 1900 } | tiene { "alimento": 300, "madera": 161, "piedra": 15, "riqueza": 21 }
+En el mapa al final: { "alimento": 3501, "piedra": 719, "riqueza": 7678 }

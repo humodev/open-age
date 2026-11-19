@@ -162,6 +162,29 @@ static func correr(m: Node, check: Callable) -> void:
 	await _hasta(m, func() -> bool: return hud.pob_eta > 0, 120)
 	var aviso := int(hud.COLA_GLOBAL.cfg()["aviso_pob_s"])
 	check.call("aviso anticipado de población: sin lugar en ~%d s (%d/%d, cola %d)" % [hud.pob_eta, int(p["pop"]), int(p["pop_cap"]), capital.queue.size()], hud.pob_eta > 0 and hud.pob_eta <= aviso)
+	# --- ronda 8 --- con la población llena, la casilla del centro queda roja («trabada») en la
+	# cola global, con el motivo en la ayuda, y no sale ningún «Población llena» (sin aprendizaje).
+	var consejos_antes := Opciones.consejos
+	Opciones.consejos = false
+	hud.avisos.lista.clear()
+	m.speed = 4.0
+	var trabada := await _hasta(m, func() -> bool: return hud.cola_global.trabada(capital) == "pob", 600)
+	m.speed = 1.0
+	await m._frames(20)
+	var mot: String = hud.cola_global.motivo(capital)
+	check.call("con la población llena, el centro queda trabado en la cola global («%s»)" % mot, trabada and hud.cola_global.items().has(capital) and mot.contains("población llena"))
+	var pob_dice := false
+	for av in hud.avisos.lista:
+		pob_dice = pob_dice or String(av["texto"]).begins_with("Población")
+	check.call("sin consejos de aprendizaje no sale «Población llena»", not pob_dice)
+	var gq: Control = hud.cola_global
+	for h in gq._hits:
+		if h[1] == capital:
+			m._mouse(gq.global_position + (h[0] as Rect2).get_center(), 0, false)
+	await m._frames(6)
+	m.get_viewport().get_texture().get_image().save_png("screenshots/cola_trabada.png")
+	m._mouse(Vector2(960, 540), 0, false)
+	Opciones.consejos = consejos_antes
 	p["pob_extra"] = saved_extra + 60
 
 	# 8. Parado en gris: sin cola durante parado_s, el centro va gris a la cola global.
@@ -201,6 +224,13 @@ static func correr(m: Node, check: Callable) -> void:
 	var apagado := Opciones.aviso_parados != antes_op
 	hud.cola_global.alternar_aviso()
 	check.call("el consejo de parados se apaga y se prende", apagado and Opciones.aviso_parados == antes_op)
+
+	# --- ronda 8 --- la ficha de la maravilla dice qué hito pide (guaraníes) o impide (Palmares)
+	var wdef: Dictionary = sim.dp(local).edificios.get(ctrl.wonder_build_type(), {})
+	var whito: String = str(wdef.get("requiere_hito", wdef.get("impide_hito", "")))
+	if whito != "":
+		var wtxt: String = ctrl.wonder_hito_text(wdef)
+		check.call("la ficha de la maravilla nombra el hito («%s»)" % wtxt.get_slice(".", 0), wtxt.contains(str(sim.dp(local).edificios.get(whito, {}).get("nombre", "?"))))
 
 	# 9. Ingreso por minuto al pasar por un recurso de la barra.
 	m._mouse(hud._top.global_position + Vector2(40, 12), 0, false)
