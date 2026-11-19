@@ -1,0 +1,9 @@
+CASO directo: OK · 1800 ticks · 19.6 s
+CASO latencia: OK · 600 ticks · 28.4 s
+CASO reconexion: OK · 900 ticks · 14.4 s
+CASO desincronizacion: OK · 300 ticks · 9.4 s
+CASO ping: OK · 600 ticks · 43.6 s
+CASO basura: OK · 600 ticks · 10.1 s
+CASO anfitrion_vuelve: OK · 900 ticks · 14.7 s
+CASO anfitrion_no_vuelve: OK · 900 ticks · 14.2 s
+RED: OK
