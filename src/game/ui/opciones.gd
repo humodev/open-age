@@ -30,6 +30,9 @@ static var pantalla_completa := false
 static var barras_siempre := false
 ## --- veterano ronda 5 --- barras de las unidades sanas que pelean (antes, siempre; ahora se elige).
 static var barras_pelea := false
+## --- fluidez 7 --- Estandartes: "" (el de data/arte_base.json), importantes, todas o ninguna.
+static var banderas := ""
+const BANDERAS := ["importantes", "todas", "ninguna"]
 # --- aprender --- (proceso/23-como-aoe4/03-aprender-a-jugar.md)
 ## --- ronda 8 --- Consejos de aprendizaje (src/game/ui/consejos.gd y los de gestión: población,
 ## parados, recursos que se agotan, granjas vacías). Como en AoE4, la partida común no reta al
@@ -77,6 +80,7 @@ static func cargar(ruta: String = RUTA) -> void:
 	paleta = str(cf.get_value("interfaz", "paleta", paleta))
 	barras_siempre = bool(cf.get_value("interfaz", "barras_siempre", barras_siempre))
 	barras_pelea = bool(cf.get_value("interfaz", "barras_pelea", barras_pelea)) # --- veterano ronda 5 ---
+	banderas = str(cf.get_value("interfaz", "banderas", banderas)) # --- fluidez 7 ---
 	general = float(cf.get_value("sonido", "general", general))
 	musica = float(cf.get_value("sonido", "musica", musica))
 	efectos = float(cf.get_value("sonido", "efectos", efectos))
@@ -109,6 +113,7 @@ static func guardar(ruta: String = RUTA) -> void:
 	cf.set_value("interfaz", "paleta", paleta)
 	cf.set_value("interfaz", "barras_siempre", barras_siempre)
 	cf.set_value("interfaz", "barras_pelea", barras_pelea) # --- veterano ronda 5 ---
+	cf.set_value("interfaz", "banderas", banderas) # --- fluidez 7 ---
 	cf.set_value("sonido", "general", general)
 	cf.set_value("sonido", "musica", musica)
 	cf.set_value("sonido", "efectos", efectos)
@@ -138,6 +143,7 @@ static func restablecer() -> void:
 	pantalla_completa = false
 	barras_siempre = false
 	barras_pelea = false # --- veterano ronda 5 ---
+	banderas = "" # --- fluidez 7 ---
 	aviso_parados = true # --- frente 1 ---
 	aprendizaje = "auto" # --- ronda 8 --- (la dificultad elegida no se restablece: no es una opción de este diálogo)
 	aplicar_aprendizaje()
@@ -294,6 +300,14 @@ static func dialogo(host: Control, main: Node) -> PanelContainer:
 	pelea.button_pressed = barras_pelea
 	pelea.toggled.connect(func(on: bool) -> void: barras_pelea = on)
 	_fila(izq, "Barras de las tropas sanas al pelear", pelea)
+	# --- fluidez 7 --- estandartes con menos ruido (la vista rehace los edificios al cambiar)
+	var ban := OptionButton.new()
+	ban.name = "Estandartes"
+	for t in ["Centros, hitos y cuarteles", "En todos los edificios", "Ocultos"]:
+		ban.add_item(t)
+	ban.selected = maxi(0, BANDERAS.find(CivMeshes.banderas_modo()))
+	ban.item_selected.connect(func(i: int) -> void: banderas = BANDERAS[i])
+	_fila(izq, "Estandartes de los edificios", ban)
 
 	# --- aprender --- Ayuda para aprender a jugar
 	_seccion(izq, "Ayuda")

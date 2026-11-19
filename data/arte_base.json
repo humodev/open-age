@@ -1,0 +1,42 @@
+{
+	"_doc": "La base linda (frente 7 de fluidez, proceso/30-fluidez/08-base-linda.md). Solo vista: nada de esto toca la simulación.",
+	"banderas": {
+		"_doc": "Estandartes del color del equipo en los edificios. modo_defecto: importantes (centros, hitos, maravillas, fortalezas y edificios de producción militar), todas o ninguna; Opciones → Interfaz lo pisa. escala_pct: alto y paño del estandarte. tipos_maqueta: con qué tipos lo lleva la maqueta común (Meshes.building_mesh, sin estilo de pueblo).",
+		"modo_defecto": "importantes",
+		"escala_pct": 70,
+		"tipos_maqueta": ["centro", "cuartel", "establo", "campo_tiro", "taller", "fortaleza", "hito_economia", "hito_guerra", "mercado_neutral_feria", "mercado_neutral_puerto", "mercado_neutral_altura"]
+	},
+	"pisada": {
+		"_doc": "Tierra pisada por donde caminan los aldeanos (mapa de tránsito de la vista, en píxeles de mezcla del suelo: SPLAT_RES por casilla). Cada muestreo_ms suma por_paso en el píxel de cada aldeano que se mueve y vecino_pct de eso en los cuatro vecinos. Debajo de umbral no se ve; en lleno llega a fuerza_pct de tierra. La textura se sube cada subir_ms si cambió algo. Solo cuentan los aldeanos que el jugador ve.",
+		"muestreo_ms": 250,
+		"por_paso": 4,
+		"vecino_pct": 50,
+		"umbral": 60,
+		"lleno": 700,
+		"fuerza_pct": 72,
+		"subir_ms": 2000
+	},
+	"pilas": {
+		"_doc": "Pilas de recurso junto a lo que recibe depósitos, según lo guardado ahí: cada depósito suma lo que trae el aldeano y se gasta consumo_pct_min por minuto de juego. niveles: cuánto guardado hace falta para cada tamaño de pila (0 = sin pila). escala_pct por nivel. En los centros, centro_pct del tamaño. Se revisa cada revisar_ms.",
+		"niveles": [40, 150, 400, 900],
+		"escala_pct": [55, 75, 92, 110],
+		"consumo_pct_min": 20,
+		"centro_pct": 80,
+		"revisar_ms": 1000
+	},
+	"granjas": {
+		"_doc": "Cultivo que cambia: trabajada, la granja recorre el ciclo (ciclo_s segundos de juego trabajados) de brote a maduro y vuelve a brote al cosechar; sin trabajar, queda en barbecho (rastrojo seco). alto_pct y color por etapa, en orden: brote, verde, espiga, maduro. barbecho: alto y color del rastrojo.",
+		"ciclo_s": 90,
+		"alto_pct": [25, 60, 90, 100],
+		"color": ["8fbf5a", "5f9a3a", "a7a845", "d1a948"],
+		"barbecho_alto_pct": 18,
+		"barbecho_color": "9a8a5a",
+		"revisar_ms": 500
+	},
+	"tocones": {
+		"_doc": "Árbol talado: queda un tocón. radio y alto en metros; cuantos_max: tope de tocones dibujados (los más viejos se reusan).",
+		"radio": 0.16,
+		"alto": 0.22,
+		"cuantos_max": 3000
+	}
+}

@@ -44,6 +44,10 @@ var _anim_total_prev := 0
 var _anim_div_comp := 1
 var _anim_cam: Camera3D
 var render_us := 0 # tiempo acumulado en render (tools/aldeanos_animados.gd lo lee para medir)
+# --- fluidez 7 --- la base linda: tierra pisada, pilas, granjas, tocones, estandartes y modo foto
+var base_linda := BaseLinda.new()
+var _arboles := {} # id -> true (los que dejan tocón)
+# --- fin fluidez 7 ---
 
 
 func setup(s: Sim, local_player: int) -> void:
@@ -65,6 +69,7 @@ func setup(s: Sim, local_player: int) -> void:
 	_rally_flag = _make_flag()
 	_rally_flag.visible = false
 	add_child(_rally_flag)
+	base_linda.setup(self) # --- fluidez 7 ---
 	on_tick([])
 	for v in visuals.values():
 		v["prev"] = v["cur"]
@@ -695,6 +700,7 @@ func _build_resources() -> void:
 		match e.type:
 			"arbol":
 				trees[_hash(e.id) % trees.size()].append(e)
+				_arboles[e.id] = true # --- fluidez 7 ---
 			"arbusto":
 				bushes.append(e)
 			_:
@@ -1147,7 +1153,10 @@ func _build_struct(e: SimEntity, v: Dictionary, look: String) -> void:
 			# El estandarte va aparte: no se estira con el modelo (media vuelta, como el modelo).
 			var flag_at := Node3D.new()
 			flag_at.rotation.y = GLB_FRENTE_YAW
-			Meshes.team_banner(flag_at, Vector3(e.w * 0.42, 0, -e.h * 0.42), team)
+			if CivMeshes.bandera_para(e.type, e.def): # --- fluidez 7 --- solo donde importa y más chico
+				Meshes.bandera_k = CivMeshes.bandera_escala()
+				Meshes.team_banner(flag_at, Vector3(e.w * 0.42, 0, -e.h * 0.42), team)
+				Meshes.bandera_k = 1.0
 			outer.add_child(flag_at)
 			var dm := CivMeshes.decor(e.type, e.def, team, cfg, e.w, e.h, top * k * alto, body * esc)
 			if dm != null:
@@ -1341,7 +1350,7 @@ func on_tick(events: Array) -> void:
 				if not v.is_empty():
 					v["pop"] = 1.0
 			"deposit":
-				pass
+				base_linda.deposito(ev) # --- fluidez 7 ---
 
 
 func _on_died(id: int) -> void:
@@ -1350,7 +1359,11 @@ func _on_died(id: int) -> void:
 		var mm: MultiMesh = slot[0]
 		mm.set_instance_transform(slot[1], Transform3D(Basis().scaled(Vector3.ZERO), Vector3.ZERO))
 		_res_slot.erase(id)
+		if _arboles.has(id): # --- fluidez 7 --- el árbol talado deja el tocón
+			_arboles.erase(id)
+			base_linda.tocon(slot[2])
 		return
+	base_linda.olvidar(id) # --- fluidez 7 ---
 	var v: Dictionary = visuals.get(id, {})
 	if v.is_empty():
 		return
@@ -1620,7 +1633,19 @@ func render(alpha: float, delta: float) -> void:
 	_render_rally()
 	_render_fx(delta)
 	_render_fog(delta)
+	base_linda.render(delta) # --- fluidez 7 ---
 	render_us += Time.get_ticks_usec() - t0
+
+
+# --- fluidez 7 --- Modo foto: la tecla de Opciones → Teclas («modo_foto», O de fábrica).
+func _unhandled_key_input(event: InputEvent) -> void:
+	var k := event as InputEventKey
+	if k == null or not k.pressed or k.echo or sim == null:
+		return
+	if Teclas.es(k.physical_keycode, "modo_foto"):
+		base_linda.alternar_foto()
+		get_viewport().set_input_as_handled()
+# --- fin fluidez 7 ---
 
 
 func tick_counter() -> int:

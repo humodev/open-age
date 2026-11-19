@@ -68,7 +68,8 @@
       ["puntaje", "Puntaje y tributos", "Paneles", "F6"],
       ["pausa", "Pausa", "Paneles", "F10"],
       ["guia", "Registro de la Guía (campañas)", "Paneles", "G"],
-      ["atajos", "Hoja de atajos", "Paneles", "F12"]
+      ["atajos", "Hoja de atajos", "Paneles", "F12"],
+      ["modo_foto", "Modo foto: oculta la interfaz", "Paneles", "O"]
     ],
     "perfiles": {
       "fabrica": { "nombre": "De fábrica", "teclas": {}, "grupos_exclusivos": false },

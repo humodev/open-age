@@ -75,9 +75,68 @@ static func _is_center(type: String, def: Dictionary) -> bool:
 ## `lev`: cómo levantar muros y techos hasta el alto de la categoría (Meshes.levante; proceso/24,
 ## 4p). Se calcula con el alto de la edad I (alto_cuerpo), así lo que crece con la edad se conserva.
 static func building(type: String, def: Dictionary, team: Color, style: Dictionary, variant: int, tier: int, cfg: Dictionary = {}, lev: Dictionary = {}) -> ArrayMesh:
+	# --- fluidez 7 --- el estandarte, solo donde importa y más chico (data/arte_base.json → banderas)
+	Meshes.bandera_fijada = true
+	Meshes.bandera_on = bandera_para(type, def)
+	Meshes.bandera_k = bandera_escala()
+	var m := _building(type, def, team, style, variant, tier, cfg, lev)
+	Meshes.bandera_on = true
+	Meshes.bandera_k = 1.0
+	Meshes.bandera_fijada = false
+	return m
+
+
+# --- fluidez 7 --- La base linda (proceso/30-fluidez/08-base-linda.md).
+static var _base := {}
+
+
+## data/arte_base.json: estandartes, tierra pisada, pilas, granjas y tocones.
+static func base_cfg() -> Dictionary:
+	if _base.is_empty():
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/arte_base.json"))
+		_base = raw if raw is Dictionary else {"_vacio": true}
+	return _base
+
+
+## Modo de los estandartes: importantes, todas o ninguna (Opciones → Interfaz; si no, el de data).
+static func banderas_modo() -> String:
+	var m := Opciones.banderas
+	if m == "":
+		m = str((base_cfg().get("banderas", {}) as Dictionary).get("modo_defecto", "importantes"))
+	return m
+
+
+static func bandera_escala() -> float:
+	return float((base_cfg().get("banderas", {}) as Dictionary).get("escala_pct", 100)) / 100.0
+
+
+## ¿Lleva estandarte? Con "importantes": centros, hitos, maravillas, fortalezas y producción militar.
+static func bandera_para(type: String, def: Dictionary) -> bool:
+	match banderas_modo():
+		"todas":
+			return true
+		"ninguna":
+			return false
+	if _is_center(type, def) or def.get("avanza_edad", false) or def.get("maravilla", false) or def.get("fortaleza", false):
+		return true
+	return def.has("produce") and not def.has("fuente") and not def.has("renta") and not def.get("mercado", false)
+
+
+## Lo mismo para la maqueta común, que solo sabe el tipo.
+static func bandera_maqueta(type: String) -> bool:
+	match banderas_modo():
+		"todas":
+			return true
+		"ninguna":
+			return false
+	return ((base_cfg().get("banderas", {}) as Dictionary).get("tipos_maqueta", []) as Array).has(type)
+# --- fin fluidez 7 ---
+
+
+static func _building(type: String, def: Dictionary, team: Color, style: Dictionary, variant: int, tier: int, cfg: Dictionary = {}, lev: Dictionary = {}) -> ArrayMesh:
 	var forma: String = style.get("forma", "")
 	# La paleta entra en la clave: dos civs con la misma forma (Ayutthaya y Birmania) se ven distintas.
-	var key := "%s_%s_%s_%s_%s_%d_%d_%d_%d_%s" % [forma, style.get("arcilla", ""), style.get("techo", ""), type, team.to_html(), variant, tier, str(cfg).hash(), str(lev).hash(), def.get("arte", "")]
+	var key := "%s_%s_%s_%s_%s_%d_%d_%d_%d_%s_%s" % [forma, style.get("arcilla", ""), style.get("techo", ""), type, team.to_html(), variant, tier, str(cfg).hash(), str(lev).hash(), def.get("arte", ""), Meshes.bandera_firma()]
 	if _cache.has(key):
 		return _cache[key]
 	var pal := _pal(style, cfg)
@@ -1248,3 +1307,87 @@ static func _almenas(p: Array, almena: String, ancho: float, alto: float, col: C
 			_:
 				p.append([Meshes.box(0.2, 0.22, 0.2), Meshes.xf(at + Vector3(0, 0.11, 0)), col])
 # --- fin muralla ---
+
+
+# --- fluidez 7 --- Pilas de recurso, cultivo y tocón (proceso/30-fluidez/08-base-linda.md).
+# Mallas de tamaño 1 que la vista escala; se arman una vez y quedan en el caché.
+
+## Pila de lo guardado junto a un depósito: leña apilada, piedras, cántaros de riqueza o
+## canastos y bolsas de comida. Vacía si el recurso no tiene pila.
+static func pila(res: String) -> ArrayMesh:
+	var key := "pila_" + res
+	if _cache.has(key):
+		return _cache[key]
+	var p: Array = []
+	match res:
+		"madera":
+			# Troncos acostados en tres capas (4, 3, 2), con las puntas claras.
+			var y := 0.07
+			for capa in 3:
+				var n := 4 - capa
+				for i in n:
+					var x := (i - (n - 1) / 2.0) * 0.15
+					p.append([Meshes.cyl(0.07, 0.07, 0.62, 7), Meshes.xf(Vector3(x, y, 0), Vector3(90, 0, (i * 7 + capa * 11) % 9 - 4)), Palette.TRUNK])
+					p.append([Meshes.cyl(0.06, 0.06, 0.64, 7), Meshes.xf(Vector3(x, y, 0), Vector3(90, 0, 0)), Color("c9a77a")])
+				y += 0.125
+		"piedra":
+			var rocas := [Vector3(-0.16, 0.09, 0.05), Vector3(0.12, 0.09, -0.08), Vector3(0.05, 0.08, 0.17), Vector3(-0.02, 0.24, 0.0), Vector3(0.2, 0.07, 0.15), Vector3(-0.2, 0.07, -0.16)]
+			for i in rocas.size():
+				var s := 0.2 - (i % 3) * 0.03
+				p.append([Meshes.box(s, s * 0.85, s * 1.1), Meshes.xf(rocas[i], Vector3(i * 13 % 25, i * 37, i * 17 % 20)), Palette.STONE if i % 2 == 0 else Palette.STONE_DARK])
+		"riqueza":
+			for i in 4:
+				var a := Vector3(-0.15 + (i % 2) * 0.3, 0.0, -0.12 + (i / 2) * 0.26)
+				p.append([Meshes.sphere(0.13, 8), Meshes.xf(a + Vector3(0, 0.13, 0), Vector3.ZERO, Vector3(1, 1.1, 1)), Palette.CLAY_DARK.darkened(0.15)])
+				p.append([Meshes.cyl(0.06, 0.08, 0.06, 8), Meshes.xf(a + Vector3(0, 0.28, 0)), Palette.CLAY_DARK.darkened(0.25)])
+			p.append([Meshes.box(0.16, 0.08, 0.16), Meshes.xf(Vector3(0.0, 0.31, 0.0), Vector3(0, 25, 0)), Palette.WEALTH])
+		"alimento":
+			for i in 3:
+				var a := Vector3(-0.18 + i * 0.18, 0.11, (i % 2) * 0.14 - 0.05)
+				p.append([Meshes.sphere(0.12, 8), Meshes.xf(a, Vector3(0, i * 40, 0), Vector3(1, 0.9, 0.8)), Color("cdb98a")])
+			p.append([Meshes.cyl(0.16, 0.12, 0.14, 10), Meshes.xf(Vector3(0.05, 0.07, -0.2)), Color("9a7a4a")])
+			p.append([Meshes.sphere(0.13, 8), Meshes.xf(Vector3(0.05, 0.15, -0.2), Vector3.ZERO, Vector3(1, 0.5, 1)), Color("e0b84a")])
+		_:
+			_cache[key] = null
+			return null
+	var m := Meshes.merge(p)
+	_cache[key] = m
+	return m
+
+
+## Cultivo de una granja de w × d casillas: matas en las mismas hileras del campo, alto 1 (la
+## vista lo escala con la etapa y le pone el color).
+static func cultivo(w: float, d: float) -> ArrayMesh:
+	var key := "cultivo_%d_%d" % [roundi(w * 10.0), roundi(d * 10.0)]
+	if _cache.has(key):
+		return _cache[key]
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var n := maxi(4, int((w - 0.4) / 0.28))
+	for row in 6:
+		var z := -d * 0.38 + row * d * 0.153
+		for i in n:
+			var x := -(w - 0.5) / 2.0 + (w - 0.5) * (i + 0.5) / n + float((i * 7 + row * 3) % 5 - 2) * 0.02
+			var tuft := Meshes.prism(0.2, 1.0, 0.16)
+			st.append_from(tuft, 0, Meshes.xf(Vector3(x, 0.5, z), Vector3(0, (i * 23 + row * 11) % 40 - 20, 0)))
+	st.generate_normals()
+	var m := st.commit()
+	_cache[key] = m
+	return m
+
+
+## Tocón de un árbol talado (radio y alto de data/arte_base.json → tocones).
+static func tocon() -> ArrayMesh:
+	if _cache.has("tocon"):
+		return _cache["tocon"]
+	var c: Dictionary = base_cfg().get("tocones", {})
+	var r := float(c.get("radio", 0.16))
+	var h := float(c.get("alto", 0.22))
+	var p: Array = []
+	p.append([Meshes.cyl(r * 0.9, r * 1.2, h, 7), Meshes.xf(Vector3(0, h / 2.0, 0)), Palette.TRUNK])
+	p.append([Meshes.cyl(r * 0.82, r * 0.82, 0.02, 7), Meshes.xf(Vector3(0, h + 0.005, 0)), Color("c9a77a")])
+	p.append([Meshes.box(r * 1.6, 0.05, 0.07), Meshes.xf(Vector3(r * 0.9, 0.03, 0.05), Vector3(0, 30, 0)), Palette.TRUNK.darkened(0.15)])
+	var m := Meshes.merge(p)
+	_cache["tocon"] = m
+	return m
+# --- fin fluidez 7 ---

@@ -215,7 +215,21 @@ static func team_disc(team: Color, r: float) -> MeshInstance3D:
 # ---------------------------------------------------------------- Edificios
 
 static func building_mesh(type: String, team: Color) -> ArrayMesh:
-	var key := "b_%s_%s" % [type, team.to_html()]
+	# --- fluidez 7 --- la maqueta común decide su estandarte por el tipo (si no viene de CivMeshes)
+	if bandera_fijada:
+		return _building_mesh(type, team)
+	bandera_fijada = true
+	bandera_on = CivMeshes.bandera_maqueta(type)
+	bandera_k = CivMeshes.bandera_escala()
+	var m := _building_mesh(type, team)
+	bandera_on = true
+	bandera_k = 1.0
+	bandera_fijada = false
+	return m
+
+
+static func _building_mesh(type: String, team: Color) -> ArrayMesh:
+	var key := "b_%s_%s_%s" % [type, team.to_html(), bandera_firma()]
 	if _cache.has(key):
 		return _cache[key]
 	var p: Array = []
@@ -468,9 +482,27 @@ static func building_mesh(type: String, team: Color) -> ArrayMesh:
 	return mesh
 
 
+# --- fluidez 7 --- Estandartes con menos ruido: CivMeshes.building y building_mesh deciden si el
+# edificio lleva estandarte (bandera_on) y a qué escala (bandera_k; data/arte_base.json → banderas).
+# Fuera de un edificio (unidades) valen los de fábrica.
+static var bandera_on := true
+static var bandera_k := 1.0
+static var bandera_fijada := false
+
+
+## Firma del estandarte para las claves del caché.
+static func bandera_firma() -> String:
+	return "%d_%d" % [int(bandera_on), roundi(bandera_k * 100.0)]
+# --- fin fluidez 7 ---
+
+
 static func _banner(p: Array, base: Vector3, hgt: float, team: Color) -> void:
-	p.append([cyl(0.03, 0.035, hgt, 6), xf(base + Vector3(0, hgt / 2.0, 0)), Palette.WOOD_BEAM, 0.0, FIJO])
-	p.append([box(0.04, 0.45, 0.4), xf(base + Vector3(0, hgt - 0.3, 0.22)), team, 0.0, FIJO])
+	if not bandera_on: # --- fluidez 7 ---
+		return
+	var k := bandera_k
+	hgt *= k
+	p.append([cyl(0.03 * k, 0.035 * k, hgt, 6), xf(base + Vector3(0, hgt / 2.0, 0)), Palette.WOOD_BEAM, 0.0, FIJO])
+	p.append([box(0.04, 0.45 * k, 0.4 * k), xf(base + Vector3(0, hgt - 0.3 * k, 0.22 * k)), team, 0.0, FIJO])
 
 
 ## Marca (quinto elemento de una parte) de lo que no se estira al levantar un edificio:
