@@ -88,8 +88,12 @@ func poll() -> Array:
 	var ahora := Time.get_ticks_msec()
 	while not _cola.is_empty() and int(_cola[0][0]) <= ahora:
 		_poner(_cola.pop_front()[1])
+	_en_poll = true
 	peer.poll()
-	if peer == null: # una señal pudo cerrar
+	_en_poll = false
+	if _cerrar_pend: # una señal pidió cerrar: recién ahora, fuera de poll() (cerrar adentro rompe ENet)
+		_cerrar_pend = false
+		cerrar()
 		return out
 	while peer.get_available_packet_count() > 0:
 		var v = bytes_to_var(peer.get_packet())
@@ -105,7 +109,14 @@ func _poner(b: PackedByteArray) -> void:
 	peer.put_packet(b)
 
 
+var _en_poll := false
+var _cerrar_pend := false
+
+
 func cerrar() -> void:
+	if _en_poll:
+		_cerrar_pend = true
+		return
 	if peer != null:
 		peer.close()
 	peer = null

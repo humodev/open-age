@@ -146,14 +146,15 @@ func _ready() -> void:
 ## Para probar sin tocar nada (proceso/37, «Cómo probarlo»):
 ##   --red-crear=PUERTO | --red-unirse=IP:PUERTO, --red-civ=clave, --red-color=N,
 ##   --red-terreno=clave, --red-semilla=N, --red-listo=1 (el anfitrión empieza solo).
-## --salir-a, --shot y --shot-at pasan a la partida.
+## --red-salir-a, --red-shot y --red-shot-at pasan a la partida como --salir-a, --shot y --shot-at
+## (sin el prefijo valdrían ya para la partida de fondo del menú).
 var _auto := {}
 
 
 func _automatico() -> void:
 	for x in OS.get_cmdline_user_args():
 		var kv := x.trim_prefix("--").split("=", true, 1)
-		if kv[0].begins_with("red-") or kv[0] in ["salir-a", "shot", "shot-at"]:
+		if kv[0].begins_with("red-"):
 			_auto[kv[0]] = kv[1] if kv.size() > 1 else "1"
 	if _auto.has("red-civ"):
 		(_filas[0][0] as OptionButton).select(_civ_keys.find(_auto["red-civ"]) + 1)
@@ -193,8 +194,8 @@ func _sesion() -> SesionRed:
 	_s.aviso.connect(func(t: String) -> void: _estado.text = t)
 	_s.empezar.connect(func(a: Dictionary) -> void:
 		for k in ["salir-a", "shot", "shot-at"]:
-			if _auto.has(k):
-				a[k] = _auto[k]
+			if _auto.has("red-" + k):
+				a[k] = _auto["red-" + k]
 		empezar.emit(a))
 	return _s
 
