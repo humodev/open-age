@@ -66,7 +66,7 @@
   "guardia": {
     "_doc": "--- ronda 8, 05 --- Guardia: la élite cara de la IV, común a todos los pueblos (proceso/32-ronda-8/05). Gasta lo que sobra en la IV (alimento y madera, sin riqueza) y vale por la población: casi el doble de vida y de ataque por casilla de población que dos guerreros, con armadura. junto_a: se entrena en cada edificio que entrena al guerrero (el cuartel, el lof mapuche, el establo etíope, los hitos de guerra). Cada pueblo le pone color y tocado en data/arte_animaciones.json → tropas.por_civ. Números tentativos.",
     "nombre": "Guardia", "funcion": "choque", "edad_min": 4, "pob": 2, "junto_a": "guerrero",
-    "costo": { "alimento": 300, "madera": 200 }, "tiempo_ms": 30000,
+    "costo": { "alimento": 400, "madera": 50 }, "tiempo_ms": 30000,
     "pv": 420, "armadura": 3, "armadura_distancia": 3, "ataque": 24, "alcance": 500, "cadencia_ms": 1400,
     "velocidad": 1250, "vision": 8000, "radio": 300,
     "desc": "Tropa de élite de la edad IV: cara, sin riqueza, y fuerte por casilla de población. Gasta el alimento y la madera que sobran en el final."

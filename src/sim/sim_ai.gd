@@ -456,22 +456,33 @@ func _pick_path() -> String:
 ## de población). Va después de la tropa común y de las mejoras: gasta lo que nadie más usa.
 func _sink(p: Dictionary, by_type: Dictionary, saving: bool) -> void:
 	var cfg: Dictionary = sim.data.reglas.get("ia_sumidero", {})
-	if cfg.is_empty() or saving or not level["investiga"] or int(p["age"]) < int(cfg.get("desde_edad", 4)):
+	if cfg.is_empty() or not level["investiga"] or int(p["age"]) < int(cfg.get("desde_edad", 4)):
 		return
+	# Juntando para la maravilla, no toca lo que ella pide: gasta solo lo que la meta no usa
+	# (en la medición, 14 000 de alimento quietos mientras juntaba madera, piedra y riqueza).
+	var keep: Dictionary = (cfg.get("reserva", {}) as Dictionary).duplicate()
+	if saving:
+		var gc := _goal_cost(p)
+		for r in gc:
+			keep[r] = int(keep.get(r, 0)) + int(gc[r])
 	var held := {} # lo pedido en este turno: se descuenta de la vista y se devuelve al final
-	_sink_buys(p, by_type, cfg, held)
+	_sink_buys(p, by_type, cfg, keep, held)
 	_reserve(p, -1, held)
 
 
-func _sink_buys(p: Dictionary, by_type: Dictionary, cfg: Dictionary, held: Dictionary) -> void:
-	var keep: Dictionary = cfg.get("reserva", {})
+func _sink_buys(p: Dictionary, by_type: Dictionary, cfg: Dictionary, keep: Dictionary, held: Dictionary) -> void:
 	var techs: Dictionary = sim.dp(player).tecnologias
 	var path := sim.school_path(player)
 	var rep := ""
-	for tech: String in techs:
-		if techs[tech].has("repite") and path != "" and String(techs[tech].get("camino", "")) == path and sim.research_block(player, tech) == "":
-			rep = tech
-			break
+	if path == "": # sin camino todavía (juntando para la maravilla no pasa por _late_buys)
+		rep = _pick_path()
+	else:
+		for tech: String in techs:
+			if techs[tech].has("repite") and String(techs[tech].get("camino", "")) == path and sim.research_block(player, tech) == "":
+				rep = tech
+				break
+	if rep != "" and sim.research_block(player, rep) != "":
+		rep = ""
 	if rep != "" and _sink_affords(p, sim.tech_cost(player, rep), keep):
 		var where: SimEntity = null
 		for k in by_type:

@@ -68,6 +68,12 @@ func _init() -> void:
 					var tk := String(ev.get("tech", ""))
 					if tk.begins_with("camino_"):
 						print("  %s j%d elige %s" % [_t(s.tick), ev["player"], tk])
+		if s.tick % 100 == 0:
+			for id in wonders:
+				var we: SimEntity = s.by_id.get(id)
+				if we != null and we.alive and we.built:
+					var lost := we.hp_max - we.hp
+					wonders[id]["dano"] = maxi(int(wonders[id].get("dano", 0)), lost * 100 / maxi(1, we.hp_max))
 		if s.tick % 600 != 0:
 			continue
 		for pid in np:
@@ -89,11 +95,11 @@ func _init() -> void:
 		for tk in p.get("repetidas", {}):
 			reps[tk] = p["repetidas"][tk]
 		var n := maxi(1, int(iv_min[pid]))
-		print("j%d %-12s eq%d edad %d %s | min en la IV %d | sin gastar en la IV: alimento prom %d máx %d, madera prom %d máx %d | al final %s | camino %s | repetidas %s | guardia %d" % [pid, civs[pid], teams[pid], p["age"], "derrotado" if p["defeated"] else "en pie", iv_min[pid], int(iv_sum[pid]["alimento"]) / n, iv_max[pid]["alimento"], int(iv_sum[pid]["madera"]) / n, iv_max[pid]["madera"], str(p["res"]), cam, str(reps), guard[pid]])
+		print("j%d %-12s eq%d edad %d %s | min en la IV %d | sin gastar en la IV: alimento prom %d máx %d, madera prom %d máx %d | al final %s | camino %s | repetidas %s | guardia %d | pob %d/%d" % [pid, civs[pid], teams[pid], p["age"], "derrotado" if p["defeated"] else "en pie", iv_min[pid], int(iv_sum[pid]["alimento"]) / n, iv_max[pid]["alimento"], int(iv_sum[pid]["madera"]) / n, iv_max[pid]["madera"], str(p["res"]), cam, str(reps), guard[pid], int(p["pop"]), int(p["pop_cap"])])
 	for id in wonders:
 		var w: Dictionary = wonders[id]
 		var dur := "obra %s" % (_t(int(w["fin"]) - int(w["obra"])) if w.has("fin") else "sin terminar")
-		print("maravilla j%d: empieza %s, %s%s" % [w["player"], _t(int(w["obra"])), dur, ", cae %s" % _t(int(w["cae"])) if w.has("cae") else ""])
+		print("maravilla j%d: empieza %s, %s%s, daño máximo terminada %d %%" % [w["player"], _t(int(w["obra"])), dur, ", cae %s" % _t(int(w["cae"])) if w.has("cae") else "", int(w.get("dano", 0))])
 	s.soltar()
 	quit()
 
