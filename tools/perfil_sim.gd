@@ -68,7 +68,12 @@ class PSim extends Sim:
 	func _update_building(b: SimEntity) -> void:
 		Prof.enter("edificios"); super(b); Prof.leave()
 	func _path_for(e: SimEntity, from: Vector2i, to: Vector2i) -> Array[Vector2i]:
-		Prof.enter("caminos"); var r = super(e, from, to); Prof.leave(); return r
+		var t := Time.get_ticks_usec()
+		Prof.enter("caminos"); var r = super(e, from, to); Prof.leave()
+		var us := Time.get_ticks_usec() - t
+		if PMap.lentos_us > 0 and us > PMap.lentos_us:
+			print("  camino lento (_path_for): tick %d · %.1f ms · %s j%d %s -> %s (%d casillas) · %s" % [tick, us / 1000.0, e.type, e.owner, from, to, r.size(), Prof.pila()])
+		return r
 	func find_enemy(e: SimEntity, radius: int, units_only: bool) -> SimEntity:
 		Prof.enter("blancos"); var r = super(e, radius, units_only); Prof.leave(); return r
 	func _do_attack(e: SimEntity) -> void:
@@ -228,11 +233,14 @@ class PAIDet extends PAI:
 class PMap extends SimMap:
 	static var lentos_us := 0 # --lentos=MS: anota cada find_path más lento, con quién lo pidió
 	static var tick := 0
+	static var llamadas: Array = [] # [µs, jugador, desde, hasta, largo, pila] de este tick (--lentos)
 	func find_path(from: Vector2i, to: Vector2i, pid: int = -1) -> Array[Vector2i]:
 		var t := Time.get_ticks_usec()
 		var pila := Prof.pila()
 		Prof.enter("caminos"); var r = super(from, to, pid); Prof.leave()
 		var us := Time.get_ticks_usec() - t
+		if lentos_us > 0:
+			llamadas.append([us, pid, from, to, r.size(), pila])
 		if lentos_us > 0 and us > lentos_us:
 			print("  camino lento: tick %d · %.1f ms · j%d %s -> %s (%d casillas, llega: %s) · %s" % [tick, us / 1000.0, pid, from, to, r.size(), str(not r.is_empty() and r[r.size() - 1] == to), pila])
 		return r
@@ -331,10 +339,13 @@ func _run(nombre: String, semilla: int, minutos: int, n_picos: int, plano: bool,
 		Prof.ai_us.resize(np)
 		Prof.ai_us.fill(0)
 		PMap.tick = s.tick
+		PMap.llamadas = []
 		var t0 := Time.get_ticks_usec()
 		s.step()
 		var dt := Time.get_ticks_usec() - t0
 		total[i] = dt
+		if PMap.lentos_us > 0 and int(Prof.cur.get("caminos", 0)) > PMap.lentos_us:
+			_caminos_del_tick(i)
 		var suma := 0
 		for k: String in Prof.cur:
 			var v := int(Prof.cur[k])
@@ -413,6 +424,20 @@ func _run(nombre: String, semilla: int, minutos: int, n_picos: int, plano: bool,
 	print(linea)
 	print("×4 alcanza (promedio del minuto < 25 ms) hasta el minuto %d de %d" % [hasta + 1, ceili(hecho / float(tpm))])
 	s.soltar()
+
+
+## --lentos: un tick con muchos caminos; cuántos, a cuántos destinos y quién los pidió.
+static func _caminos_del_tick(i: int) -> void:
+	var dest := {}
+	var par := {}
+	var pilas := {}
+	var us := 0
+	for c: Array in PMap.llamadas:
+		us += int(c[0])
+		dest[[c[1], c[3]]] = true
+		par[[c[1], c[2], c[3]]] = true
+		pilas[c[5]] = int(pilas.get(c[5], 0)) + 1
+	print("  tick %d con muchos caminos: %d llamadas, %.1f ms, %d destinos distintos, %d pares distintos, pilas %s, ejemplo %s" % [i, PMap.llamadas.size(), us / 1000.0, dest.size(), par.size(), pilas, PMap.llamadas[0].slice(1, 5) if not PMap.llamadas.is_empty() else []])
 
 
 static func _avg(a: PackedInt32Array) -> float:

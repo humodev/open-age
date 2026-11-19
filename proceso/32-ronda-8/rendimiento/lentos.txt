@@ -1,0 +1,57 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+  tick 12010 con muchos caminos: 65 llamadas, 87.7 ms, 39 destinos distintos, 62 pares distintos, pilas { "ordenes/caminos": 60, "movimiento/recoleccion/caminos": 3, "movimiento/combate/caminos": 2 }, ejemplo [5, (177, 165), (185, 159), 16]
+  tick 13800 con muchos caminos: 36 llamadas, 186.9 ms, 16 destinos distintos, 25 pares distintos, pilas { "ordenes/caminos": 1, "grupos/caminos": 26, "movimiento/recoleccion/caminos": 5, "edificios/caminos": 1, "movimiento/combate/caminos": 2, "segundo/caminos": 1 }, ejemplo [1, (123, 21), (63, 71), 63]
+  tick 14087 con muchos caminos: 13 llamadas, 66.1 ms, 9 destinos distintos, 13 pares distintos, pilas { "ordenes/caminos": 7, "movimiento/recoleccion/caminos": 3, "movimiento/combate/caminos": 3 }, ejemplo [4, (172, 88), (119, 119), 68]
+  tick 14687 con muchos caminos: 11 llamadas, 68.6 ms, 8 destinos distintos, 11 pares distintos, pilas { "ordenes/caminos": 7, "movimiento/recoleccion/caminos": 3, "movimiento/combate/caminos": 1 }, ejemplo [4, (141, 64), (119, 119), 45]
+  tick 16953 con muchos caminos: 11 llamadas, 80.1 ms, 7 destinos distintos, 7 pares distintos, pilas { "ordenes/caminos": 8, "ordenes": 1, "movimiento/combate/caminos": 2 }, ejemplo [7, (54, 124), (119, 119), 54]
+  tick 17537 con muchos caminos: 16 llamadas, 77.1 ms, 12 destinos distintos, 16 pares distintos, pilas { "ordenes": 1, "ordenes/caminos": 8, "movimiento/recoleccion/caminos": 4, "movimiento/combate/caminos": 3 }, ejemplo [4, (193, 185), (202, 198), 20]
+  tick 18854 con muchos caminos: 71 llamadas, 106.9 ms, 41 destinos distintos, 69 pares distintos, pilas { "ordenes": 2, "ordenes/caminos": 62, "movimiento/recoleccion/caminos": 2, "movimiento/combate/caminos": 5 }, ejemplo [2, (184, 63), (120, 50), 65]
+  tick 18859 con muchos caminos: 67 llamadas, 124.5 ms, 30 destinos distintos, 63 pares distintos, pilas { "ordenes": 2, "ordenes/caminos": 61, "movimiento/recoleccion/caminos": 4 }, ejemplo [2, (184, 63), (120, 50), 65]
+  tick 18864 con muchos caminos: 64 llamadas, 127.6 ms, 32 destinos distintos, 62 pares distintos, pilas { "ordenes": 2, "ordenes/caminos": 58, "movimiento/recoleccion/caminos": 2, "movimiento/combate/caminos": 2 }, ejemplo [2, (184, 63), (120, 50), 65]
+  tick 18869 con muchos caminos: 66 llamadas, 163.2 ms, 31 destinos distintos, 62 pares distintos, pilas { "ordenes": 2, "ordenes/caminos": 57, "edificios/caminos": 2, "movimiento/recoleccion/caminos": 4, "movimiento/combate/caminos": 1 }, ejemplo [2, (184, 63), (121, 49), 64]
+  tick 18874 con muchos caminos: 64 llamadas, 178.8 ms, 32 destinos distintos, 61 pares distintos, pilas { "ordenes": 2, "ordenes/caminos": 57, "movimiento/recoleccion/caminos": 5 }, ejemplo [2, (184, 63), (121, 49), 64]
+  tick 18879 con muchos caminos: 70 llamadas, 150.2 ms, 43 destinos distintos, 68 pares distintos, pilas { "ordenes": 2, "ordenes/caminos": 57, "movimiento/recoleccion/caminos": 8, "movimiento/combate/caminos": 3 }, ejemplo [2, (184, 63), (121, 49), 64]
+  tick 18884 con muchos caminos: 63 llamadas, 83.4 ms, 42 destinos distintos, 62 pares distintos, pilas { "ordenes": 2, "ordenes/caminos": 57, "movimiento/recoleccion/caminos": 4 }, ejemplo [2, (184, 63), (122, 48), 63]
+  tick 18889 con muchos caminos: 63 llamadas, 60.0 ms, 46 destinos distintos, 62 pares distintos, pilas { "ordenes": 2, "ordenes/caminos": 57, "movimiento/recoleccion/caminos": 4 }, ejemplo [2, (184, 63), (122, 48), 63]
+  tick 18959 con muchos caminos: 75 llamadas, 82.5 ms, 34 destinos distintos, 71 pares distintos, pilas { "ordenes": 2, "ordenes/caminos": 68, "movimiento/recoleccion/caminos": 1, "movimiento/combate/caminos": 4 }, ejemplo [2, (183, 62), (123, 46), 61]
+  tick 18964 con muchos caminos: 71 llamadas, 81.6 ms, 35 destinos distintos, 70 pares distintos, pilas { "ordenes": 2, "ordenes/caminos": 68, "movimiento/combate/caminos": 1 }, ejemplo [2, (182, 62), (123, 46), 60]
+
+=== 4v4 · semilla 42 · 19200 ticks (32.0 min de juego) en 651 s de reloj ===
+hash final 2816396738 · unidades vivas 796 · fin: sigue (ganador equipo -1)
+TICK      promedio  33.85 ms · p95  67.80 · peor  265.45 (tick 13800, min 23.0) · >25 ms: 12164 · >40: 7480 · >100: 38
+sistema         prom ms   p95 ms  peor ms  % total
+ia                 8.29    21.70    74.71    24.5%
+recoleccion        5.86     9.20    14.81    17.3%
+movimiento         2.90     5.51     9.68     8.6%
+resto              2.56     8.24    13.66     7.6%
+niebla             2.30    10.91    18.69     6.8%
+tablas             2.12     3.71     7.44     6.3%
+separacion         1.72     3.15     6.35     5.1%
+blancos            1.67     5.65    39.63     4.9%
+jugadores          1.28     2.23     5.46     3.8%
+segundo            1.12    10.57    35.36     3.3%
+caminos            0.95     4.40   187.12     2.8%
+combate            0.90     2.26     6.80     2.7%
+edificios          0.89     1.45     4.56     2.6%
+find_resource      0.83     2.28    13.61     2.5%
+grupos             0.26     0.78     2.55     0.8%
+ordenes            0.14     0.63    44.50     0.4%
+victoria           0.06     0.59     1.99     0.2%
+animales           0.01     0.01     0.68     0.0%
+telemetria         0.01     0.00     2.84     0.0%
+Picos (tick · min · total ms · sistema que más pesó · segundo):
+   13800   23.0   265.45  caminos          187.12 · segundo 21.28
+   18874   31.5   248.65  caminos          179.01 · ia 25.56
+   18869   31.4   233.54  caminos          163.46 · ia 25.02
+   18879   31.5   229.97  caminos          150.46 · ia 26.89
+   18864   31.4   195.72  caminos          127.80 · ia 25.44
+   18859   31.4   194.18  caminos          124.75 · ia 24.92
+   18854   31.4   182.85  caminos          107.11 · ia 29.90
+   18959   31.6   163.29  caminos           82.68 · ia 35.41
+   18884   31.5   162.40  caminos           83.67 · ia 26.50
+   18964   31.6   155.59  caminos           81.78 · ia 31.06
+   12010   20.0   143.48  caminos           87.96 · segundo 12.85
+   18889   31.5   132.16  caminos           60.16 · ia 26.74
+por minuto (prom/peor ms): m5 9.5/23 m10 20.4/45 m15 32.3/56 m20 45.5/93 m25 61.6/120 m30 51.7/118 m32 56.7/249
+×4 alcanza (promedio del minuto < 25 ms) hasta el minuto 11 de 32
