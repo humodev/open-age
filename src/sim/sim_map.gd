@@ -15,6 +15,17 @@ var rock := PackedByteArray() # 1 peñasco o barranco: no se pasa ni se edifica 
 var astar: AStarGrid2D # puertas cerradas para todos
 var astars: Array[AStarGrid2D] = [] # una por jugador
 var teams := PackedInt32Array() # equipo de cada jugador: las puertas dejan pasar a los aliados
+# Caché de caminos (proceso/32-ronda-8/07, reglas.caminos). Sim carga `path_cfg` y pone `now` (el
+# tick) antes de cada paso. Es estado de la simulación: dos partidas con la misma historia piden
+# los mismos caminos y la caché responde lo mismo.
+var path_cfg := {}
+var now := 0
+var _ver_block := 0 # sube cuando alguna casilla se tapa (construir, puertas, pesos)
+var _ver_open := 0 # sube cuando alguna casilla se abre (destruir, talar)
+var _unreach := {} # (jugador, región origen, región destino) -> [casilla más cercana alcanzable, ver_block, ver_open, tick]
+var _pcache := {} # clave (jugador, región origen, región destino) -> [camino, destino, ver_block, ver_open, tick, llega]
+var cache_hits := 0 # contadores para el perfilador (no cambian nada)
+var cache_miss := 0
 
 
 func _init(size: int, num_players: int = 2) -> void:
@@ -52,6 +63,7 @@ func _grid(pid: int) -> AStarGrid2D:
 ## no toma sitios para rodearlos (SimAI._avoid_sites); las demás grillas no cambian.
 func set_weight(pid: int, tx: int, ty: int, w: int) -> void:
 	if in_bounds(tx, ty) and pid >= 0 and pid < astars.size():
+		_ver_block += 1
 		astars[pid].set_point_weight_scale(Vector2i(tx, ty), float(w))
 
 
@@ -100,6 +112,8 @@ func mark(tx: int, ty: int, w: int, h: int, id: int, blocks: bool, gate_pid: int
 			var idx := yy * n + xx
 			var cell := Vector2i(xx, yy)
 			occupied[idx] = id
+			if gate_pid >= 0 or blocks:
+				_ver_block += 1
 			if gate_pid >= 0:
 				gate_owner[idx] = gate_pid
 				astar.set_point_solid(cell, true)
@@ -112,13 +126,17 @@ func mark(tx: int, ty: int, w: int, h: int, id: int, blocks: bool, gate_pid: int
 					a.set_point_solid(cell, true)
 
 
-func clear(tx: int, ty: int, w: int, h: int) -> void:
+## `res`: era un recurso (árbol, piedra): abrirlo no invalida los destinos encerrados de la caché
+## de caminos (se talan todo el tiempo; esos vencen solos a los `vence_ticks`).
+func clear(tx: int, ty: int, w: int, h: int, res: bool = false) -> void:
 	for yy in range(ty, ty + h):
 		for xx in range(tx, tx + w):
 			if not in_bounds(xx, yy):
 				continue
 			var idx := yy * n + xx
 			var cell := Vector2i(xx, yy)
+			if not res and (solid[idx] != 0 or gate_owner[idx] >= 0):
+				_ver_open += 1
 			occupied[idx] = -1
 			solid[idx] = 0
 			gate_owner[idx] = -1
@@ -134,6 +152,7 @@ func open_tile(tx: int, ty: int) -> void:
 		return
 	var idx := ty * n + tx
 	var cell := Vector2i(tx, ty)
+	_ver_open += 1
 	solid[idx] = 0
 	astar.set_point_solid(cell, false)
 	for a in astars:
@@ -169,7 +188,106 @@ func find_path(from: Vector2i, to: Vector2i, pid: int = -1) -> Array[Vector2i]:
 	if is_solid(from.x, from.y, pid):
 		return [] as Array[Vector2i]
 	to = Vector2i(clampi(to.x, 0, n - 1), clampi(to.y, 0, n - 1))
-	return _grid(pid).get_id_path(from, to, true)
+	if path_cfg.is_empty():
+		return _grid(pid).get_id_path(from, to, true)
+	# Caché por regiones: quien sale de la misma región hacia la misma región del destino usa el
+	# camino de otro, enganchándose en línea recta y libre (ver _splice). Antes cada soldado de una
+	# orden recalculaba su A* de punta a punta del mapa (proceso/32-ronda-8/04 y 07).
+	var rs := int(path_cfg["region"])
+	# Cerca no: el enganche podía dar la vuelta por la punta de otro camino (el kiteo retrocede unas
+	# casillas y salía para adelante). Un A* corto es barato.
+	if maxi(absi(to.x - from.x), absi(to.y - from.y)) <= 2 * rs:
+		return _grid(pid).get_id_path(from, to, true)
+	var key := (((pid + 1) * 128 + from.x / rs) * 128 + from.y / rs) * 16384 + (to.x / rs) * 128 + to.y / rs
+	var ent: Array = _pcache.get(key, [])
+	if not ent.is_empty() and int(ent[2]) == _ver_block and now - int(ent[4]) <= int(path_cfg["vence_ticks"]) and (ent[5] or int(ent[3]) == _ver_open):
+		var sp := _splice(ent[0], ent[1], ent[5], from, to, pid)
+		if not sp.is_empty():
+			cache_hits += 1
+			return sp
+	cache_miss += 1
+	# Destino encerrado (muralla, edificios): el A* parcial recorre toda la zona alcanzable (7–9 ms
+	# en un mapa de 240). Si otro de la misma región ya buscó hacia esa región y no llegó, se va directo a la casilla
+	# más cercana que él encontró, y al destino si de ahí se ve en línea recta.
+	var ukey := key # misma región de origen: si no, el origen puede estar en otra zona y el A* hacia esa casilla también recorre todo
+	var u: Array = _unreach.get(ukey, [])
+	var r: Array[Vector2i]
+	if not u.is_empty() and int(u[1]) == _ver_block and int(u[2]) == _ver_open and now - int(u[3]) <= int(path_cfg["vence_ticks"]) and not is_solid(u[0].x, u[0].y, pid):
+		r = _grid(pid).get_id_path(from, u[0], true)
+		if not r.is_empty() and r[r.size() - 1] == u[0] and r[r.size() - 1] != to and _clear_line(u[0], to, pid):
+			r.append(to)
+		return r
+	r = _grid(pid).get_id_path(from, to, true)
+	if not r.is_empty() and r[r.size() - 1] != to:
+		_unreach[ukey] = [r[r.size() - 1], _ver_block, _ver_open, now]
+	if r.size() >= 2:
+		if _pcache.size() >= int(path_cfg["max_entradas"]):
+			_pcache.clear()
+			_unreach.clear()
+		_pcache[key] = [r, to, _ver_block, _ver_open, now, r[r.size() - 1] == to]
+	return r
+
+
+## Arma un camino de `from` a `to` con el camino guardado `p` (que iba a `pto`): entra en línea
+## recta y libre a la casilla más avanzada de las primeras `enganche` de `p`, lo sigue y sale en
+## línea recta a `to` desde la primera de las últimas `enganche` que lo vea. Un camino que no
+## llegaba (destino encerrado) solo sirve para el mismo destino. Vacío si no engancha.
+func _splice(p: Array[Vector2i], pto: Vector2i, reached: bool, from: Vector2i, to: Vector2i, pid: int) -> Array[Vector2i]:
+	var none: Array[Vector2i] = []
+	if not reached and to != pto:
+		return none
+	var en := int(path_cfg["enganche"])
+	var last := p.size() - 1
+	var j := -1
+	for i in range(mini(en, last), -1, -1):
+		if _clear_line(from, p[i], pid):
+			j = i
+			break
+	if j < 0:
+		return none
+	var k := last
+	if reached:
+		k = -1
+		for i in range(maxi(j, last - en), last + 1):
+			if _clear_line(p[i], to, pid):
+				k = i
+				break
+		if k < 0:
+			return none
+	var out: Array[Vector2i] = [from]
+	for i in range(j, k + 1):
+		if p[i] != out[out.size() - 1]:
+			out.append(p[i])
+	if reached and out[out.size() - 1] != to:
+		out.append(to)
+	return out
+
+
+## ¿Se va en línea recta de `a` a `b` por casillas libres para `pid`? En diagonal pide libres
+## las dos vecinas, como la grilla de caminos (DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES).
+func _clear_line(a: Vector2i, b: Vector2i, pid: int) -> bool:
+	var x := a.x
+	var y := a.y
+	var dx := absi(b.x - a.x)
+	var dy := -absi(b.y - a.y)
+	var sx := 1 if b.x > a.x else -1
+	var sy := 1 if b.y > a.y else -1
+	var err := dx + dy
+	while x != b.x or y != b.y:
+		var e2 := 2 * err
+		var mx := e2 >= dy
+		var my := e2 <= dx
+		if mx and my and (is_solid(x + sx, y, pid) or is_solid(x, y + sy, pid)):
+			return false
+		if mx:
+			err += dy
+			x += sx
+		if my:
+			err += dx
+			y += sy
+		if is_solid(x, y, pid):
+			return false
+	return true
 
 
 # --- paso 6 --- Canoas: grilla propia donde solo el agua (honda o vado) se navega. Se arma la
@@ -221,6 +339,7 @@ func set_water(tx: int, ty: int, kind: int) -> void:
 	occupied[idx] = -3
 	var cell := Vector2i(tx, ty)
 	var block := kind == 1
+	_ver_block += 1
 	solid[idx] = 1 if block else 0
 	astar.set_point_solid(cell, block)
 	for a in astars:
@@ -235,6 +354,7 @@ func set_rock(tx: int, ty: int) -> void:
 	rock[idx] = 1
 	occupied[idx] = -3
 	solid[idx] = 1
+	_ver_block += 1
 	var cell := Vector2i(tx, ty)
 	astar.set_point_solid(cell, true)
 	for a in astars:

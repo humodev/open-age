@@ -27,6 +27,8 @@ var _eng_rate := 0
 var _no_route := {} # edificio -> tick desde el que se vuelve a intentar el camino
 var last_site := 0
 var _detour := {} # sin tomar sitios: unidad -> {"exit": Vector2i, "goal": Vector2i, "amove": bool} (sale de un sitio ajeno)
+var _court_retry := 0 # tick desde el que vuelve a buscar lugar para la corte nueva (_found_court)
+var _sent := {} # unidad -> [x, y, amove, suelto, tick]: última orden de marcha que le dio la IA (_no_resend)
 var _weighted := false # sin tomar sitios: ya se cargó el peso de los sitios en la grilla de caminos
 var last_tribute := 0
 var _flares_done := {} # bengalas aliadas ya atendidas (id -> true)
@@ -195,6 +197,7 @@ func think() -> void:
 	_military(army, centro)
 	_flares(army, centro)
 	_aim_ground(army) # --- esport 1a ---
+	_no_resend()
 	# Al final: mira también las órdenes que el resto de la IA acaba de dar en este turno.
 	# Sin victoria por sitios (opción de partida, tutorial) no hace falta: tomarlos no gana.
 	if not level.get("toma_sitios", true) and not sim._opts.get("sitios_sin_victoria", false):
@@ -997,7 +1000,7 @@ func _found_court(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_t
 	var dd := sim.dp(player)
 	if not dd.edificios.has("corte_nueva") or by_type.has("corte_nueva") or by_type.has("gondar") or vill.is_empty():
 		return
-	if not sim.can_afford(player, dd.cost_of("corte_nueva", p["age"])):
+	if not sim.can_afford(player, dd.cost_of("corte_nueva", p["age"])) or sim.tick < _court_retry:
 		return
 	var near_left := 0
 	var best: SimEntity = null
@@ -1023,6 +1026,8 @@ func _found_court(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_t
 					var v := _nearest_villager(vill, tx * P, ty * P)
 					sim.push_command({"t": "build", "player": player, "ids": [v.id], "type": "corte_nueva", "tx": tx, "ty": ty})
 					return
+	# Sin lugar: esperar antes de volver a probar las ~200 casillas (reglas.ia_economia).
+	_court_retry = sim.tick + int(sim.data.reglas["ia_economia"]["corte_reintento_ticks"])
 
 
 ## Elefantes del rey (§9.3): entrenar hasta el máximo de la edad y llevar cada uno
@@ -2113,14 +2118,16 @@ func _threat_calc(centro: SimEntity) -> SimEntity:
 					near_cells[(bx + dx) * 4096 + by + dy] = true
 	var best: SimEntity = null
 	var best_d := 1 << 60
-	for e in sim.actives:
-		if not (e.alive and e.owner >= 0 and e.is_unit() and sim.enemies(player, e.owner) and (e.is_military() or e.fn == "explorador")):
-			continue
-		var d := sim.dist_to(e, centro)
-		var hit := d < near_cap or near_cells.has((e.x / cell) * 4096 + e.y / cell)
-		if hit and d < best_d:
-			best = e
-			best_d = d
+	# Por dueño enemigo (Sim.fighters_of); a igual distancia gana el de menor id, como al recorrer actives.
+	for pid in _enemy_pids():
+		for e in sim.fighters_of(pid):
+			if not e.alive:
+				continue
+			var d := sim.dist_to(e, centro)
+			var hit := d < near_cap or near_cells.has((e.x / cell) * 4096 + e.y / cell)
+			if hit and (d < best_d or d == best_d and e.id < best.id):
+				best = e
+				best_d = d
 	return best
 
 
@@ -2220,12 +2227,13 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 		last_raid = sim.tick
 		var prey: SimEntity = null
 		var best_d := 1 << 60
-		for e in sim.actives:
-			if e.alive and e.owner >= 0 and sim.enemies(player, e.owner) and e.inside < 0 and (e.fn == "civil" or e.def.has("fuente") or e.def.has("deposito")):
-				var d := Sim.dist(e.x, e.y, rally.x, rally.y)
-				if d < best_d:
-					best_d = d
-					prey = e
+		for pid in _enemy_pids():
+			for e in sim.owned(pid):
+				if e.alive and e.inside < 0 and (e.fn == "civil" or e.def.has("fuente") or e.def.has("deposito")):
+					var d := Sim.dist(e.x, e.y, rally.x, rally.y)
+					if d < best_d or d == best_d and e.id < prey.id:
+						best_d = d
+						prey = e
 		if prey != null:
 			var fast := army.duplicate()
 			fast.sort_custom(func(a: SimEntity, b: SimEntity) -> bool: return a.speed > b.speed)
@@ -2253,8 +2261,8 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 		last_mill = sim.tick
 		var mill: SimEntity = null
 		var best_m := 1 << 60
-		for e in sim.actives:
-			if e.alive and e.owner < 0 and e.def.has("botin_por_edad"):
+		for e in sim.buildings_of(-1):
+			if e.alive and e.def.has("botin_por_edad"):
 				var d := Sim.dist(e.x, e.y, rally.x, rally.y)
 				if d < best_m:
 					best_m = d
@@ -2274,8 +2282,8 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 		# Quien disputa sitios no manda el grupo chico a un sitio con enemigos (era goteo): eso lo
 		# decide `_contest_sites`, con fuerza proporcional.
 		var guard := _contest_cfg()
-		for e in sim.actives:
-			if e.alive and e.def.get("sagrado", false) and (e.holder < 0 or sim.enemies(player, e.holder)) and (guard.is_empty() or _foes_hp(e, int(guard["radio"])) == 0):
+		for e in sim.sacred_sites():
+			if e.alive and (e.holder < 0 or sim.enemies(player, e.holder)) and (guard.is_empty() or _foes_hp(e, int(guard["radio"])) == 0):
 				var d := Sim.dist(e.x, e.y, rally.x, rally.y)
 				if d < best:
 					best = d
@@ -2305,9 +2313,10 @@ func _regroup(army: Array[SimEntity]) -> void:
 func _defend_some(army: Array[SimEntity], threat: SimEntity, cfg: Dictionary) -> Array[SimEntity]:
 	var r := int(cfg["radio"])
 	var enemies := 0
-	for e in sim.actives:
-		if e.alive and e.owner >= 0 and e.is_unit() and sim.enemies(player, e.owner) and (e.is_military() or e.fn == "explorador") and Sim.dist(e.x, e.y, threat.x, threat.y) <= r:
-			enemies += 1
+	for pid in _enemy_pids():
+		for e in sim.fighters_of(pid):
+			if e.alive and Sim.dist(e.x, e.y, threat.x, threat.y) <= r:
+				enemies += 1
 	var need := maxi(int(cfg["minimo"]), enemies * int(cfg["factor_pct"]) / 100)
 	var rest: Array[SimEntity] = []
 	var cand := []
@@ -2359,8 +2368,8 @@ func _contest_sites(army: Array[SimEntity], left: int) -> Array[SimEntity]:
 	_contest_held = false
 	var sites: Array[SimEntity] = []
 	var theirs := 0
-	for e in sim.actives:
-		if e.alive and e.def.get("sagrado", false):
+	for e in sim.sacred_sites():
+		if e.alive:
 			sites.append(e)
 	if sites.is_empty():
 		return rest
@@ -2715,8 +2724,8 @@ func _hit_wonder(army: Array[SimEntity]) -> bool:
 ## Base rival: sus edificios principales (capital, centros e hitos).
 func _enemy_cores() -> Array[SimEntity]:
 	var out: Array[SimEntity] = []
-	for e in sim.actives:
-		if e.alive and e.is_building() and e.owner >= 0 and sim.enemies(player, e.owner) and (e.capital or e.def.get("hito", false) or e.def.has("produce") and e.def.get("deposito", []).size() > 2):
+	for e in sim.all_buildings():
+		if e.alive and e.owner >= 0 and sim.enemies(player, e.owner) and (e.capital or e.def.get("hito", false) or e.def.has("produce") and e.def.get("deposito", []).size() > 2):
 			out.append(e)
 	return out
 
@@ -2742,8 +2751,8 @@ func _leash(army: Array[SimEntity], radius: int, idle_only: bool = false) -> voi
 func _map_spot(radius: int) -> Vector2i:
 	var cores := _enemy_cores()
 	var options: Array[Vector2i] = []
-	for e in sim.actives:
-		if e.alive and e.def.get("sagrado", false) and (e.holder < 0 or sim.enemies(player, e.holder)) and level.get("toma_sitios", true) and sim.can_take_sites(player): # --- esport 1a ---
+	for e in sim.sacred_sites():
+		if e.alive and (e.holder < 0 or sim.enemies(player, e.holder)) and level.get("toma_sitios", true) and sim.can_take_sites(player): # --- esport 1a ---
 			options.append(Vector2i(e.x, e.y))
 	# El centro también tiene un sitio en 1 contra 1: la IA que no toma sitios (la fácil) no
 	# va ahí, se queda en su punto de reunión (jugadores de prueba, ronda 2).
@@ -2773,11 +2782,11 @@ func _attack(army: Array[SimEntity]) -> void:
 			taken[ai.last_target] = true
 	var alt: SimEntity = null
 	var best_alt := 1 << 60
-	for e in sim.actives:
+	for e in sim.all_buildings():
 		# También lo que cuenta para la victoria (mocambos, lofs): si no, un rival sin ejército
 		# seguía vivo para siempre (todos contra todos abierto a los 60 minutos, proceso/22).
 		# Sin victoria por hitos (opciones de partida), cualquier edificio que cuente: Sim.counts_for_victory.
-		if e.alive and e.is_building() and e.owner >= 0 and sim.enemies(player, e.owner) and sim.counts_for_victory(e):
+		if e.alive and e.owner >= 0 and sim.enemies(player, e.owner) and sim.counts_for_victory(e):
 			if focus >= 0 and e.owner != focus:
 				continue
 			var d := sim.dist_to(ref, e)
@@ -3383,8 +3392,8 @@ func _avoid_sites(army: Array[SimEntity]) -> void:
 	var inner: int = r + int(cfg["margen_destino"])
 	var outer: int = r + int(cfg["margen_salida"])
 	var sites: Array[SimEntity] = []
-	for e in sim.actives:
-		if e.alive and e.def.get("sagrado", false):
+	for e in sim.sacred_sites():
+		if e.alive:
 			if not _weighted:
 				var lo := Vector2i((e.x - inner) / P, (e.y - inner) / P)
 				var hi := Vector2i((e.x + inner) / P, (e.y + inner) / P)
@@ -3508,9 +3517,56 @@ func _outside(sites: Array[SimEntity], goal: Vector2i, inner: int, outer: int) -
 	return _box_exit(st, outer, goal)
 
 
+## Rendimiento (proceso/32-ronda-8/07, reglas.ia_reenvio): de las órdenes de marcha que esta IA
+## acaba de dar, saca a quien ya va al mismo lugar con la misma orden. Antes cada pensada volvía a
+## mandar a todo el ejército hacia la amenaza (que casi no se movió) y cada soldado recalculaba su
+## camino y rearmaba su grupo: 60–70 búsquedas A* en un tick.
+func _no_resend() -> void:
+	var cfg: Dictionary = sim.data.reglas["ia_reenvio"]
+	var tol := int(cfg["tolerancia"])
+	var max_t := int(cfg["max_ticks"])
+	var cmds: Array = sim._pending.get(sim.tick + 1, [])
+	var drop := []
+	for c: Dictionary in cmds:
+		if c.get("t", "") != "move" or int(c.get("player", -1)) != player:
+			continue
+		var x := int(c["x"])
+		var y := int(c["y"])
+		var am: bool = c.get("amove", false)
+		var su: bool = c.get("suelto", false)
+		var want := O.ATTACK_MOVE if am else O.MOVE
+		var keep := []
+		for id in c.get("ids", []):
+			var u: SimEntity = sim.by_id.get(int(id))
+			var m: Array = _sent.get(int(id), [])
+			if u != null and u.alive and u.order == want and not m.is_empty() and m[2] == am and m[3] == su \
+					and sim.tick - int(m[4]) <= max_t and Sim.dist(x, y, int(m[0]), int(m[1])) <= tol:
+				continue
+			keep.append(id)
+			_sent[int(id)] = [x, y, am, su, sim.tick]
+		if keep.is_empty():
+			drop.append(c)
+		elif keep.size() < c["ids"].size():
+			c["ids"] = keep
+	for c in drop:
+		cmds.erase(c)
+	for id in _sent.keys(): # que no crezca con los muertos
+		if not sim.by_id.has(int(id)):
+			_sent.erase(id)
+
+
+## Jugadores enemigos de este, en orden (para recorrer sus listas en Sim en lugar de actives).
+func _enemy_pids() -> Array[int]:
+	var out: Array[int] = []
+	for pid in sim.players.size():
+		if sim.enemies(player, pid):
+			out.append(pid)
+	return out
+
+
 func _near_site(u: SimEntity) -> bool:
-	for e in sim.actives:
-		if e.def.get("sagrado", false) and absi(e.x - u.x) < 5000 and absi(e.y - u.y) < 5000:
+	for e in sim.sacred_sites():
+		if absi(e.x - u.x) < 5000 and absi(e.y - u.y) < 5000:
 			return true
 	return false
 

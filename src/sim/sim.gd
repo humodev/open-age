@@ -89,6 +89,7 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null,
 		if pct != 100:
 			size = size * pct / 100 / 8 * 8
 	map = SimMap.new(size, num_players)
+	map.path_cfg = data.reglas.get("caminos", {})
 	fog = SimFog.new(size, num_players)
 	fog.map = map
 	fog.vision_per_level = data.reglas["vision_por_nivel"]
@@ -1316,6 +1317,7 @@ static func soltar_todas() -> void:
 
 func step() -> void:
 	_in_step = true
+	map.now = tick
 	events.clear()
 	var cmds: Array = _pending.get(tick, [])
 	_pending.erase(tick)
@@ -2572,7 +2574,7 @@ func _kill(e: SimEntity, killer: SimEntity = null) -> void:
 	if e.is_unit() and not e.garrison.is_empty(): # --- paso 6 --- la canoa se hunde: nadan a la orilla
 		_unload(e, int(data.reglas.get("canoa", {}).get("nado_casillas", 3)), true)
 	if e.is_building() or e.is_resource():
-		map.clear(e.tx, e.ty, e.w, e.h)
+		map.clear(e.tx, e.ty, e.w, e.h, e.is_resource())
 	if e.is_building():
 		_close_corridors_of(e.tx, e.ty, e.w, e.h, e.id)
 		mods.on_building_removed(e)
@@ -2615,7 +2617,12 @@ func _cleanup() -> void:
 		if e.alive:
 			keep_u.append(e)
 	_units = keep_u
-	for d: Dictionary in [_owned, _owned_b]:
+	var keep_s: Array[SimEntity] = []
+	for e in _sacred:
+		if e.alive:
+			keep_s.append(e)
+	_sacred = keep_s
+	for d: Dictionary in [_owned, _owned_b, _fighters]:
 		for k in d:
 			var keep_o: Array[SimEntity] = []
 			for e: SimEntity in d[k]:
@@ -3411,16 +3418,19 @@ func _court_site_ok(fc: Dictionary, tx: int, ty: int, pid: int) -> bool:
 	var cy := ty * P + 2 * P
 	var far := int(fc.get("lejos_de", 20)) * P
 	var fight := int(fc.get("sin_combate", 15)) * P
-	for e in actives:
-		if not e.alive:
-			continue
-		if e.owner == pid and e.is_building() and (e.def.has("funda_corte") or e.def.get("capital_fija", false)):
+	# Por listas (proceso/32-ronda-8/07): la IA etíope prueba ~200 casillas seguidas y recorrer
+	# actives en cada una costaba 320 ms. Es la misma pregunta (sí o no), sin depender del orden.
+	for e in buildings_of(pid):
+		if e.alive and (e.def.has("funda_corte") or e.def.get("capital_fija", false)):
 			return false
-		if e.owner >= 0 and enemies(pid, e.owner):
-			var d := Sim.dist(e.x, e.y, cx, cy)
-			if e.is_building() and d < far and (e.capital or e.type in ["torre", "cuartel", "centro"] or _cost_total(e.def.get("costo", {})) >= 150):
+	for q in players.size():
+		if not enemies(pid, q):
+			continue
+		for e in buildings_of(q):
+			if e.alive and Sim.dist(e.x, e.y, cx, cy) < far and (e.capital or e.type in ["torre", "cuartel", "centro"] or _cost_total(e.def.get("costo", {})) >= 150):
 				return false
-			if e.is_unit() and e.is_military() and d < fight and tick - e.last_combat < 100:
+		for e in fighters_of(q):
+			if e.alive and e.is_military() and tick - e.last_combat < 100 and Sim.dist(e.x, e.y, cx, cy) < fight:
 				return false
 	return true
 
@@ -3995,10 +4005,14 @@ func _new_entity(cat: int, type: String, owner: int, def: Dictionary) -> SimEnti
 		if cat == SimEntity.Cat.BUILDING:
 			_own_list(_owned_b, owner).append(e)
 			_buildings.append(e)
+			if def.get("sagrado", false):
+				_sacred.append(e)
 		elif cat == SimEntity.Cat.UNIT:
 			_units.append(e)
 			if SimEntity.MILITARY_FNS.has(String(def.get("funcion", ""))):
 				_military.append(e)
+			if SimEntity.MILITARY_FNS.has(String(def.get("funcion", ""))) or String(def.get("funcion", "")) == "explorador":
+				_own_list(_fighters, owner).append(e)
 	by_id[e.id] = e
 	return e
 
@@ -4031,6 +4045,17 @@ func owned(pid: int) -> Array[SimEntity]:
 
 func buildings_of(pid: int) -> Array[SimEntity]:
 	return _owned_b.get(pid, _no_ent)
+
+
+var _sacred: Array[SimEntity] = [] # sitios sagrados, en orden de id
+func sacred_sites() -> Array[SimEntity]:
+	return _sacred
+
+
+## Militares y exploradores de un dueño (lo que la IA cuenta como amenaza), en orden de id.
+var _fighters := {} # dueño -> Array[SimEntity]
+func fighters_of(pid: int) -> Array[SimEntity]:
+	return _fighters.get(pid, _no_ent)
 
 
 static func _own_list(d: Dictionary, pid: int) -> Array[SimEntity]:

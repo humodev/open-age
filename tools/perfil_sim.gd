@@ -12,7 +12,7 @@ extends SceneTree
 ##
 ## Uso:
 ##   godot --headless --path . -s tools/perfil_sim.gd -- [--partida=1v6|4v4|tct7|ambas|todas] [--minutos=40]
-##         [--semilla=42] [--picos=12] [--plano] [--ia-detalle] [--detalle]
+##         [--semilla=42] [--picos=12] [--plano] [--ia-detalle] [--detalle] [--sin-cache] [--sin-reenvio]
 ## --ia-detalle: la IA por parte de think; --detalle: ayudantes (approach, try_move, …) por parte.
 ## --plano: sin envoltorios, solo el tiempo total de cada tick (para comparar con lo medido).
 
@@ -101,7 +101,14 @@ class PSim extends Sim:
 	func _update_fog(pid: int) -> void:
 		Prof.enter("niebla"); super(pid); Prof.leave()
 	func _apply(c: Dictionary) -> void:
+		var n0 := PMap.n_total
+		var t := Time.get_ticks_usec()
 		Prof.enter("ordenes"); super(c); Prof.leave()
+		var k := PMap.n_total - n0
+		if k > 0: # caminos por orden: qué orden los pide (resumen al final)
+			var key := "%s%s%s" % [c.get("t", ""), " suelto" if c.get("suelto", false) else "", " amove" if c.get("amove", false) else ""]
+			var acc: Array = PMap.por_orden.get(key, [0, 0, 0])
+			PMap.por_orden[key] = [acc[0] + 1, acc[1] + k, acc[2] + Time.get_ticks_usec() - t]
 	func _aura_heal() -> void:
 		Prof.enter("segundo"); super(); Prof.leave()
 	func _wonders() -> void:
@@ -233,12 +240,19 @@ class PAIDet extends PAI:
 class PMap extends SimMap:
 	static var lentos_us := 0 # --lentos=MS: anota cada find_path más lento, con quién lo pidió
 	static var tick := 0
+	static var n_total := 0
+	static var por_clase := {} # llega/parcial/a_solido/vacio -> [llamadas, µs]
+	static var por_orden := {} # tipo de orden -> [órdenes, caminos, µs]
 	static var llamadas: Array = [] # [µs, jugador, desde, hasta, largo, pila] de este tick (--lentos)
 	func find_path(from: Vector2i, to: Vector2i, pid: int = -1) -> Array[Vector2i]:
 		var t := Time.get_ticks_usec()
 		var pila := Prof.pila()
 		Prof.enter("caminos"); var r = super(from, to, pid); Prof.leave()
 		var us := Time.get_ticks_usec() - t
+		n_total += 1
+		var clase := "llega" if not r.is_empty() and r[r.size() - 1] == to else ("vacio" if r.is_empty() else ("a_solido" if is_solid(to.x, to.y, pid) else "parcial"))
+		var ac: Array = por_clase.get(clase, [0, 0])
+		por_clase[clase] = [ac[0] + 1, ac[1] + us]
 		if lentos_us > 0:
 			llamadas.append([us, pid, from, to, r.size(), pila])
 		if lentos_us > 0 and us > lentos_us:
@@ -296,6 +310,10 @@ func _make(nombre: String, semilla: int, plano: bool, ia_det: bool, det: bool) -
 		var t := PTele.new()
 		_copy(s.tele, t)
 		s.tele = t
+	if OS.get_cmdline_user_args().has("--sin-cache"): # comparar: sin la caché de caminos (proceso/32-ronda-8/07)
+		s.map.path_cfg = {}
+	if OS.get_cmdline_user_args().has("--sin-reenvio"): # comparar: la IA vuelve a mandar a todos
+		s.data.reglas["ia_reenvio"]["tolerancia"] = -1
 	s.ais = []
 	for pid in lug.size():
 		var ai: SimAI = SimAI.new(s, pid, lug[pid][0]) if plano else (PAIDet.new(s, pid, lug[pid][0]) if ia_det else PAI.new(s, pid, lug[pid][0]))
@@ -423,6 +441,18 @@ func _run(nombre: String, semilla: int, minutos: int, n_picos: int, plano: bool,
 			linea += " m%d %.1f/%.0f" % [m + 1, _avg(sl), _max(sl) / 1000.0]
 	print(linea)
 	print("×4 alcanza (promedio del minuto < 25 ms) hasta el minuto %d de %d" % [hasta + 1, ceili(hecho / float(tpm))])
+	if not plano:
+		var lc := "caminos por resultado (llamadas · ms):"
+		for k in PMap.por_clase:
+			lc += " %s %d · %.0f;" % [k, PMap.por_clase[k][0], PMap.por_clase[k][1] / 1000.0]
+		print(lc)
+		var lo := "caminos por orden (órdenes · caminos · ms):"
+		for k in PMap.por_orden:
+			lo += " [%s] %d · %d · %.0f;" % [k, PMap.por_orden[k][0], PMap.por_orden[k][1], PMap.por_orden[k][2] / 1000.0]
+		print(lo)
+		print("caché de caminos: %s aciertos, %s búsquedas" % [s.map.get("cache_hits"), s.map.get("cache_miss")])
+		PMap.por_clase = {}
+		PMap.por_orden = {}
 	s.soltar()
 
 
