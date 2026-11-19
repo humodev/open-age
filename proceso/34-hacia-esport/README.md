@@ -107,3 +107,9 @@ Tres iteraciones en 5,5 dicen que el límite está en cómo medimos, no solo en 
 1. **El torneo puntúa la edad** (edad × 1000 en los empates por tiempo). Ahí «gana el de más edad en 93 de 95» sale en parte de la vara, no solo del juego.
 2. **La IA no juega como un rival competitivo.** No rushea, no amuralla, no busca superioridad local y llega tarde al hito en obra. Las estrategias que dan diversidad, contrajuego y ritmo nunca aparecen en las partidas que medimos.
 3. **Los lotes de 12 son ruido.** Hacen falta 24 o más.
+
+**Combate (07a, integrado):**
+- **Jinete:** armadura de distancia 4. 30 honderos contra 13 jinetes en la II: de 5/5 a 0/5.
+- **Guardia de distancia:** +18 contra la línea.
+- **Sin cambios:** el triángulo y la micro C2.
+- **Pendiente:** en la IV con compras, los honderos siguen ganando 4/5.

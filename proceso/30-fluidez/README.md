@@ -80,3 +80,12 @@ Las simulaciones de los frentes 1, 2 y 5 se confirman en un solo torneo al final
 La rebusca lejana ayuda más a la economía de la fácil que al principiante. Queda en **20 casillas**, que mantiene la meta de 2 de 3 o más.
 
 **Autotest en los seis pueblos: OK (5fff26d)**, [05](05-autotest-seis-pueblos.md). Las fallas eran de las comprobaciones: cámara fija, esperas cortas, suelo a altura 0. Quedan anotados tres detalles del juego: el clic derecho en un arbusto con un aldeano encima, la empalizada de Ayutthaya aceptada por la simulación y la puerta sobre un camino.
+
+**Segunda tanda de fluidez (2026-11-19):**
+- **Frente 5:** selección y órdenes. Ctrl+clic, patrulla de varios puntos, escolta, ficha compacta, retratos por función y números de daño apagables. [06](06-seleccion-y-ordenes.md)
+- **Frente 6:** guardar y cargar, con autoguardado, repeticiones con línea de tiempo y el panel «Mi base». [07](07-guardar-y-repeticiones.md)
+- **Frente 7:** base linda. Estandartes más chicos, modo foto (O), tierra pisada, pilas de recursos, granjas con ciclo y tocones. [08](08-base-linda.md)
+
+**Al integrar** se encontró que menu.gd no compilaba: la red y las repeticiones declaraban la misma variable. Se arregló antes del push. También se ajustó una comprobación del autotest que dependía de la carga de la máquina.
+
+**Resultado:** autotest OK, y también determinismo, órdenes, lecciones, guardado, red, casillas y tutorial.
