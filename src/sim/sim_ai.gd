@@ -501,27 +501,26 @@ func _sink_buys(p: Dictionary, by_type: Dictionary, cfg: Dictionary, keep: Dicti
 		if where != null:
 			sim.push_command({"t": "research", "player": player, "building": where.id, "tech": rep})
 			_hold(p, sim.tech_cost(player, rep), held)
-	var unit: String = cfg.get("unidad", "")
-	var udef: Dictionary = sim.dp(player).unidades.get(unit, {})
-	if udef.is_empty() or int(p["age"]) < int(udef.get("edad_min", 1)):
-		return
-	var n := int(cfg.get("guardia_por_turno", 1))
+	# --- esport 2a --- la guardia y la guardia de distancia (`unidades`), cada una en sus edificios.
 	var pop := int(p["pop"])
-	for k in by_type:
-		for b: SimEntity in by_type[k]:
-			if n <= 0:
-				return
-			if not b.built or b.queue.size() >= 2 or not (b.def.get("produce", []) as Array).has(unit):
-				continue
-			pop += int(udef.get("pob", 1))
-			if pop > int(p["pop_cap"]):
-				return
-			var cost := sim.train_cost(player, b, unit)
-			if not _sink_affords(p, cost, keep):
-				return
-			sim.push_command({"t": "train", "player": player, "building": b.id, "type": unit})
-			_hold(p, cost, held)
-			n -= 1
+	for unit: String in cfg.get("unidades", [cfg.get("unidad", "")]):
+		var udef: Dictionary = sim.dp(player).unidades.get(unit, {})
+		if udef.is_empty() or int(p["age"]) < int(udef.get("edad_min", 1)):
+			continue
+		var n := int(cfg.get("guardia_por_turno", 1))
+		for k in by_type:
+			for b: SimEntity in by_type[k]:
+				if n <= 0 or not b.built or b.queue.size() >= 2 or not (b.def.get("produce", []) as Array).has(unit):
+					continue
+				if pop + int(udef.get("pob", 1)) > int(p["pop_cap"]):
+					return
+				var cost := sim.train_cost(player, b, unit)
+				if not _sink_affords(p, cost, keep):
+					continue
+				pop += int(udef.get("pob", 1))
+				sim.push_command({"t": "train", "player": player, "building": b.id, "type": unit})
+				_hold(p, cost, held)
+				n -= 1
 
 
 func _sink_affords(p: Dictionary, cost: Dictionary, keep: Dictionary) -> bool:
@@ -3359,6 +3358,16 @@ func _trade(p: Dictionary, by_type: Dictionary) -> void:
 			if best != "":
 				last_trade = sim.tick
 				_market(m, best, "vender")
+				return
+	# --- esport 2a --- El sumidero de la IV (reglas.ia_sumidero.vende_sobre): lo que pasa de ese
+	# tope por encima de la meta se vende aunque sobre riqueza; el precio ya no tiene piso alto.
+	var sk: Dictionary = sim.data.reglas.get("ia_sumidero", {})
+	if level["investiga"] and int(p["age"]) >= int(sk.get("desde_edad", 4)):
+		var over: Dictionary = sk.get("vende_sobre", {})
+		for k: String in over:
+			if int(res[k]) - int(hc.get(k, 0)) > int(over[k]):
+				last_trade = sim.tick
+				_market(m, k, "vender")
 				return
 	for k in ["alimento", "madera", "piedra"]:
 		if int(res[k]) - int(hc.get(k, 0)) > int(cfg["sobra"]) and int(res["riqueza"]) < int(cfg["riqueza_baja"]):

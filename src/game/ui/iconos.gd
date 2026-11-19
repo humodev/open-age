@@ -122,7 +122,9 @@ const PROPIOS := ["diana", "establo", "taller_asedio", "ruka", "boleador", "ince
 	# --- muralla --- (proceso/32-ronda-8/06) muro de piedra, puerta y torre, y el de cada pueblo
 	"muralla", "puerta_piedra", "torre_muralla", "pirca", "punku", "kamphaeng", "muro_amba",
 	# --- ronda 8, 05 --- la guardia de la IV
-	"guardia"]
+	"guardia",
+	# --- esport 2a --- la guardia de distancia
+	"guardia_distancia"]
 const OSCURO := Color(0.06, 0.065, 0.075)
 const _SABERES := preload("res://src/game/ui/iconos_saberes.gd") # --- paso 6 --- glifos de los saberes propios
 
@@ -182,6 +184,15 @@ static func dibujar(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> bool:
 			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.2, -s * 0.06), c + Vector2(-s * 0.06, s * 0.06), c + Vector2(s * 0.08, -s * 0.06), c + Vector2(s * 0.08, s * 0.04), c + Vector2(-s * 0.06, s * 0.16), c + Vector2(-s * 0.2, s * 0.04)]), OSCURO)
 			for x: float in [-0.2, -0.06, 0.08]:
 				ci.draw_colored_polygon(PackedVector2Array([c + Vector2(s * (x - 0.05), -s * 0.3), c + Vector2(s * x, -s * 0.44), c + Vector2(s * (x + 0.05), -s * 0.3)]), Palette.UI_ACCENT if claro else col)
+		"guardia_distancia":
+			# --- esport 2a --- Guardia de distancia: un arco tenso con la flecha puesta y las tres
+			# puntas de la élite arriba, como la guardia; sin emblemas de ningún pueblo.
+			ci.draw_arc(c + Vector2(-s * 0.3, s * 0.08), s * 0.36, -PI * 0.42, PI * 0.42, 14, col, w)
+			ci.draw_line(c + Vector2(-s * 0.3 + s * 0.36 * cos(PI * 0.42), s * 0.08 - s * 0.36 * sin(PI * 0.42)), c + Vector2(-s * 0.3 + s * 0.36 * cos(PI * 0.42), s * 0.08 + s * 0.36 * sin(PI * 0.42)), col, maxf(1.0, w * 0.5))
+			ci.draw_line(c + Vector2(-s * 0.22, s * 0.08), c + Vector2(s * 0.34, s * 0.08), col, w)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(s * 0.46, s * 0.08), c + Vector2(s * 0.32, -s * 0.02), c + Vector2(s * 0.32, s * 0.18)]), col)
+			for x: float in [-0.14, 0.02, 0.18]:
+				ci.draw_colored_polygon(PackedVector2Array([c + Vector2(s * (x - 0.05), -s * 0.3), c + Vector2(s * x, -s * 0.46), c + Vector2(s * (x + 0.05), -s * 0.3)]), Palette.UI_ACCENT if claro else col)
 		"diana":
 			# Campo de tiro: blanco de anillos con una flecha clavada.
 			var dc := c + Vector2(-s * 0.06, s * 0.06)
