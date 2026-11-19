@@ -5,7 +5,7 @@ extends SceneTree
 ## red: los del rival se descartan y llegan por la red. Al final se comparan los hashes.
 ##
 ## Casos:
-##   directo     3 minutos de juego (1800 ticks) sin demora
+##   directo     3 minutos de juego (1800 ticks) sin demora; el anfitrión pausa en el tick 300 y sigue a 1,5 s
 ##   latencia    1 minuto con 80 ms de demora por mensaje más hasta 40 de vaivén
 ##   reconexion  1,5 minutos; el cliente se cae en el tick 300, vuelve de cero y re-simula
 ##   desincronizacion  el cliente se suma madera en el tick 120: los dos ven la desincronización en el 150
@@ -14,7 +14,7 @@ extends SceneTree
 
 const PUERTO := 47911
 const CASOS := [
-	{"nombre": "directo", "ticks": 1800, "lat": 0, "vaiven": 0, "caida": 0},
+	{"nombre": "directo", "ticks": 1800, "lat": 0, "vaiven": 0, "caida": 0, "pausa": 300},
 	{"nombre": "latencia", "ticks": 600, "lat": 80, "vaiven": 40, "caida": 0},
 	{"nombre": "reconexion", "ticks": 900, "lat": 0, "vaiven": 0, "caida": 300},
 	{"nombre": "desincronizacion", "ticks": 300, "lat": 0, "vaiven": 0, "caida": -120}, # trampa: el cliente toca su estado en el tick 120
@@ -92,15 +92,25 @@ func _anfitrion(puerto: int, c: Dictionary) -> bool:
 	s.empezar_partida()
 	var fin := int(c["ticks"])
 	var ok := false
+	var pausa := int(c.get("pausa", 0))
+	var pausa_t := -1
 	while Time.get_ticks_msec() - t0 < ESPERA_MS:
 		await process_frame
 		_avanzar(fin)
+		if pausa > 0 and sim != null and sim.tick >= pausa and pausa_t < 0:
+			pausa_t = Time.get_ticks_msec()
+			s.pausa_local(true)
+		if pausa_t > 0 and Time.get_ticks_msec() - pausa_t > 1500:
+			print("anfitrión: pausa en el tick %d (de %d), sigo" % [sim.tick, s.lock.pausa_de])
+			ok = s.lock.pausa_de == 0 # la pausa tiene que estar en curso
+			pausa_t = 0
+			s.pausa_local(false)
 		if sim != null and s.lock != null:
 			if s.lock.desync_tick >= 0:
 				break
 			var hs: Dictionary = s.lock.hashes
 			if hs[0].has(fin) and hs[1].has(fin):
-				ok = hs[0][fin] == hs[1][fin]
+				ok = hs[0][fin] == hs[1][fin] and (pausa == 0 or (ok and int(s.lock.pausas_usadas[0]) == 1))
 				var por := [0, 0]
 				for cm: Dictionary in sim.recording:
 					por[int(cm["player"])] += 1
