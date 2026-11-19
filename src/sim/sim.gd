@@ -1126,7 +1126,9 @@ func mod(pid: int, key: String) -> int:
 	return players[pid]["mods"].get(key, 0)
 
 
+var _rate_epoch := 0 # --- rendimiento 3 --- sube con cada cambio de modificadores o de auras
 func _add_mod(pid: int, key: String, v: int) -> void:
+	_rate_epoch += 1
 	players[pid]["mods"][key] = mod(pid, key) + v
 
 
@@ -1484,6 +1486,7 @@ func _update_players() -> void:
 	if sig != _aura_sig:
 		_aura_sig = sig
 		_aura_cache.clear()
+		_rate_epoch += 1
 
 
 ## Aura de un hito según el lugar (C-33, como AoE4): la propia del hito o la de su eje en
@@ -1659,12 +1662,15 @@ func _rebuild_hashes() -> void:
 			(ec as Array).append(e)
 			_emask[ek] = int(_emask.get(ek, 0)) | (1 << (e.owner + 1))
 		elif e.is_building():
-			var keys: PackedInt32Array = _bcells.get(e.id, PackedInt32Array())
-			if keys.is_empty():
+			var kk = _bcells.get(e.id)
+			if kk == null:
+				var nk := PackedInt32Array()
 				for cx in range(e.tx * P / EC, ((e.tx + e.w) * P - 1) / EC + 1):
 					for cy in range(e.ty * P / EC, ((e.ty + e.h) * P - 1) / EC + 1):
-						keys.append(cx * 1024 + cy)
-				_bcells[e.id] = keys
+						nk.append(cx * 1024 + cy)
+				_bcells[e.id] = nk
+				kk = nk
+			var keys: PackedInt32Array = kk
 			var bit := 1 << (e.owner + 1)
 			for ek in keys:
 				var ec = _ehash.get(ek)
@@ -1963,14 +1969,27 @@ func _do_gather(e: SimEntity) -> void:
 	e.anchored = true
 	if t.is_building():
 		t.farmer = e.id
-	var rate_key: String = String(t.def.get("tasa_clave", "granja")) if t.is_building() else String(t.def.get("tasa_clave", kind))
-	var clay := mods.clay_bonus(e.owner, t) if t.is_resource() and t.type == "riqueza" else 0
-	# --- rendimiento 3 --- la clave «tasa:…» sin armar el texto en cada tick
-	var tkey: String = _tasa_keys.get(rate_key, "")
-	if tkey == "":
-		tkey = "tasa:" + rate_key
-		_tasa_keys[rate_key] = tkey
-	var rate: int = int(e.def["tasa"].get(rate_key, e.def["tasa"].get("granja", 0))) * (100 + mod(e.owner, tkey) + _site_bonus(t) + clay + _aura_gather(e.owner, t, kind)) / 100
+	# --- rendimiento 3 --- La tasa se guarda en el aldeano mientras no cambie nada de lo que la
+	# arma: la fuente, los modificadores (`_add_mod`), las auras (`_update_players`) y el agua del
+	# mapa (bono por sitio). La arcilla (bono por caminos) se calcula siempre.
+	var rate: int
+	var ep := _rate_epoch + (map.water_ver << 32)
+	if e.rate_t == t.id and e.rate_ep == ep:
+		rate = e.rate_v
+	else:
+		var rate_key: String = String(t.def.get("tasa_clave", "granja")) if t.is_building() else String(t.def.get("tasa_clave", kind))
+		var clay := mods.clay_bonus(e.owner, t) if t.is_resource() and t.type == "riqueza" else 0
+		var tkey: String = _tasa_keys.get(rate_key, "")
+		if tkey == "":
+			tkey = "tasa:" + rate_key
+			_tasa_keys[rate_key] = tkey
+		rate = int(e.def["tasa"].get(rate_key, e.def["tasa"].get("granja", 0))) * (100 + mod(e.owner, tkey) + _site_bonus(t) + clay + _aura_gather(e.owner, t, kind)) / 100
+		if t.is_resource() and t.type == "riqueza":
+			e.rate_t = -1
+		else:
+			e.rate_t = t.id
+			e.rate_ep = ep
+			e.rate_v = rate
 	e.carry_res = kind
 	e.carry_src = "granja" if t.is_building() else t.type
 	# Arcilla ajena o del centro: con el techo de lo disputado lleno, no se extrae.

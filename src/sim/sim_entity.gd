@@ -54,6 +54,10 @@ var rumbo := -1 # último rumbo de su formación (0..15); "formar" lo usa para c
 var cooldown: int = 0
 var gather_kind: String = ""
 var gather_acc: int = 0
+# --- rendimiento 3 --- tasa de recolección guardada (Sim._do_gather): fuente, época y valor
+var rate_t: int = -1
+var rate_ep: int = -1
+var rate_v: int = 0
 var carry_res: String = ""
 var carry: int = 0
 var anchored := false # trabajando quieto: la separación lo empuja menos
