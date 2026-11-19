@@ -200,9 +200,9 @@ func _ready() -> void:
 	crow.add_child(pb)
 	# --- fin partida a medida ---
 	# --- red --- «Red» en el mismo renglón: los tres más angostos, el renglón no crece
-	var rb := _button("Red", open_red)
-	rb.tooltip_text = "1 contra 1 en red local o por IP (proceso/37)."
-	crow.add_child(rb)
+	var red_btn := _button("Red", open_red)
+	red_btn.tooltip_text = "1 contra 1 en red local o por IP (proceso/37)."
+	crow.add_child(red_btn)
 	for b: Control in crow.get_children():
 		b.custom_minimum_size.x = 120
 	# --- fin red ---
