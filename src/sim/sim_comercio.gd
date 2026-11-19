@@ -10,7 +10,7 @@ extends RefCounted
 
 const P := 1000
 const O := SimEntity.Order
-enum Leg { IDA, CARGA, VUELTA, DESCARGA }
+enum Leg { IDA, CARGA, VUELTA, DESCARGA, ESPERA }
 
 var sim: Sim
 var cfg: Dictionary
@@ -299,12 +299,25 @@ func gain(pid: int, home: SimEntity, dest: SimEntity, age: int = -1) -> int:
 	if kind == "" or home == null:
 		return 0
 	var g := formula(octil(home, dest), sim.map.n)
-	var ap: Array = cfg.get("edad_pct", [0, 0, 70, 100])
+	var ap: Array = (cfg.get("uno_contra_uno", {}) as Dictionary).get("edad_pct", cfg.get("edad_pct")) if duel() else cfg.get("edad_pct", [0, 0, 70, 100])
 	var a := int(sim.players[pid]["age"]) if age < 0 else age
 	g = g * int(ap[clampi(a - 1, 0, ap.size() - 1)]) / 100
 	g = g * int((cfg.get("tipo_pct", {}) as Dictionary).get(kind, 100)) / 100
 	g = g * (100 + sim.mod(pid, "comercio_pct")) / 100
 	return g
+
+
+## --- esport 2b --- ¿Uno contra uno? (comerciante desde la II: reglas.comercio.uno_contra_uno)
+func duel() -> bool:
+	return sim.players.size() == 2
+
+
+## Edad desde la que `pid` entrena `type`: el comerciante, en el 1v1, desde uno_contra_uno.edad_min.
+func unit_age_min(pid: int, type: String) -> int:
+	var a := int(sim.dp(pid).unidades.get(type, {}).get("edad_min", 1))
+	if duel() and sim.dp(pid).unidades.get(type, {}).get("comerciante", false):
+		a = int((cfg.get("uno_contra_uno", {}) as Dictionary).get("edad_min", a))
+	return a
 
 
 ## Rendimiento por saturación de la ruta de `pid` a `dest` con `n` comerciantes.
@@ -415,6 +428,9 @@ func update(e: SimEntity) -> void:
 			if not dest_ok:
 				_turn_back(e, false)
 				return
+			# --- esport 2b --- tropa enemiga en el camino o en el destino: espera a distancia.
+			if (sim.tick + e.id) % maxi(1, int(_bc().get("chequeo_ticks", 10))) == 0 and _threat(e, dest, home):
+				return
 			if not e.trade_wpd:
 				if _go_point(e, e.trade_wx, e.trade_wy):
 					e.trade_wpd = true
@@ -422,12 +438,11 @@ func update(e: SimEntity) -> void:
 				return
 			if not sim._approach(e, dest, e.radius + Sim.INTERACT):
 				if e.stuck > 25 or (e.path_tick == sim.tick and e.path_target == dest.id and _short(e, dest)):
-					_cut(e, dest, "cerrado")
+					_cut(e, dest, "cerrado", dest.x, dest.y)
 					_turn_back(e, false)
 				return
 			if blocked(pid, dest):
-				_cut(e, dest, "tomado")
-				_turn_back(e, false)
+				_wait(e, dest, home, "tomado", dest.x, dest.y, int(_bc().get("radio", 8000)) + P * 3 / 2)
 				return
 			e.trade_leg = Leg.CARGA
 			e.cooldown = int(cfg.get("carga_ms", 2000))
@@ -462,6 +477,8 @@ func update(e: SimEntity) -> void:
 			e.trade_leg = Leg.IDA
 			e.trade_wpd = e.trade_wx < 0
 			e.path_target = -1
+		Leg.ESPERA:
+			_waiting(e, dest, home, dest_ok)
 
 
 ## El camino recién buscado no llega al lado del mercado (muralla que lo cierra del todo).
@@ -513,17 +530,25 @@ func _pay(e: SimEntity, dest: SimEntity) -> void:
 			sa["aliado"] = int(sa["aliado"]) + x
 
 
+func _bc() -> Dictionary:
+	return cfg.get("bloqueo", {})
+
+
 ## Mercado tomado por presencia: `pob_min` o más de población militar enemiga a `radio` del
-## destino y ninguna tropa propia o aliada.
+## destino (+1,5 casillas por la huella) y ninguna tropa propia o aliada.
 func blocked(pid: int, dest: SimEntity) -> bool:
-	var bc: Dictionary = cfg.get("bloqueo", {})
-	var r := int(bc.get("radio", 6000)) + P * 3 / 2
-	var need := int(bc.get("pob_min", 6))
+	return blocked_at(pid, dest.x, dest.y, int(_bc().get("radio", 8000)) + P * 3 / 2)
+
+
+## ¿Corta la ruta de `pid` la tropa a `r` de (x, y)? `pob_min` o más de población militar
+## enemiga y ninguna tropa propia o aliada.
+func blocked_at(pid: int, x: int, y: int, r: int) -> bool:
+	var need := int(_bc().get("pob_min", 3))
 	var foes := 0
 	for u in sim.military():
 		if not u.alive or u.inside >= 0 or u.owner < 0:
 			continue
-		if Sim.dist(u.x, u.y, dest.x, dest.y) > r:
+		if absi(u.x - x) > r or absi(u.y - y) > r or Sim.dist(u.x, u.y, x, y) > r:
 			continue
 		if sim.enemies(pid, u.owner):
 			foes += int(u.def.get("pob", 1))
@@ -532,15 +557,102 @@ func blocked(pid: int, dest: SimEntity) -> bool:
 	return foes >= need
 
 
-func _cut(e: SimEntity, dest: SimEntity, why: String) -> void:
+## De ida: ¿hay tropa que corta la ruta cerca del comerciante, o el destino está tomado y ya
+## está a la vista (a `radio` + `aviso_casillas`)? Entonces espera y devuelve true.
+func _threat(e: SimEntity, dest: SimEntity, home: SimEntity) -> bool:
+	var bc := _bc()
+	var rr := int(bc.get("ruta_radio", 8000))
+	if blocked_at(e.owner, e.x, e.y, rr):
+		_wait(e, dest, home, "ruta", e.x, e.y, rr)
+		return true
+	var rd := int(bc.get("radio", 8000)) + P * 3 / 2
+	if Sim.dist(e.x, e.y, dest.x, dest.y) <= rd + int(bc.get("aviso_casillas", 6)) * P and blocked(e.owner, dest):
+		_wait(e, dest, home, "tomado", dest.x, dest.y, rd)
+		return true
+	return false
+
+
+## Empieza a esperar: el corte en (bx, by) con radio `r`; espera a `espera_casillas` más allá,
+## hacia su mercado (o donde está, si ya está fuera).
+func _wait(e: SimEntity, dest: SimEntity, home: SimEntity, why: String, bx: int, by: int, r: int) -> void:
+	_cut(e, dest, why, bx, by)
+	e.trade_leg = Leg.ESPERA
+	e.trade_bx = bx
+	e.trade_by = by
+	e.trade_since = sim.tick
+	_wait_point(e, home, r)
+
+
+## Punto de espera: sobre la línea del corte a su mercado, a r + espera_casillas del corte.
+func _wait_point(e: SimEntity, home: SimEntity, r: int) -> void:
+	var d := r + int(_bc().get("espera_casillas", 5)) * P
+	var vx := home.x - e.trade_bx
+	var vy := home.y - e.trade_by
+	var l := Sim.isqrt(vx * vx + vy * vy)
+	if Sim.dist(e.x, e.y, e.trade_bx, e.trade_by) >= d:
+		e.trade_px = e.x
+		e.trade_py = e.y
+	elif l > d:
+		e.trade_px = e.trade_bx + vx * d / l
+		e.trade_py = e.trade_by + vy * d / l
+	else: # el mercado propio queda más cerca: espera a su lado
+		var k := maxi(0, l - 3 * P)
+		e.trade_px = e.trade_bx + vx * k / maxi(1, l)
+		e.trade_py = e.trade_by + vy * k / maxi(1, l)
+	e.path_target = -1
+	e.stuck = 0
+
+
+## Esperando: va al punto y mira cada `chequeo_ticks`. Retoma cuando el corte se libera; si
+## la tropa se le viene encima, se aleja más; pasados `espera_max_ms`, vuelve vacío.
+func _waiting(e: SimEntity, dest: SimEntity, home: SimEntity, dest_ok: bool) -> void:
+	if not dest_ok:
+		_turn_back(e, false)
+		return
+	if Sim.dist(e.x, e.y, e.trade_px, e.trade_py) > 600 and e.stuck <= 25:
+		e.anchored = false
+		_go_point(e, e.trade_px, e.trade_py)
+	else:
+		e.anchored = true
+	var bc := _bc()
+	if (sim.tick + e.id) % maxi(1, int(bc.get("chequeo_ticks", 10))) != 0:
+		return
+	var rr := int(bc.get("ruta_radio", 8000))
+	var rd := int(bc.get("radio", 8000)) + P * 3 / 2
+	var at_dest := e.trade_bx == dest.x and e.trade_by == dest.y
+	var still := blocked(e.owner, dest) if at_dest else blocked_at(e.owner, e.trade_bx, e.trade_by, rr)
+	if not still:
+		e.trade_leg = Leg.IDA
+		e.anchored = false
+		e.path_target = -1
+		e.stuck = 0
+		cut.erase(e.owner * 1000000 + dest.id) # reabierta: un corte nuevo vuelve a avisar
+		return
+	if sim.tick - e.trade_since >= int(bc.get("espera_max_ms", 120000)) / sim.tick_ms:
+		_turn_back(e, false)
+		e.anchored = false
+		return
+	if blocked_at(e.owner, e.x, e.y, rr): # se le vinieron encima: más atrás
+		e.trade_bx = e.x
+		e.trade_by = e.y
+		_wait_point(e, home, rr)
+	elif not at_dest and blocked(e.owner, dest):
+		e.trade_bx = dest.x
+		e.trade_by = dest.y
+		_wait_point(e, home, rd)
+
+
+func _cut(e: SimEntity, dest: SimEntity, why: String, x: int, y: int) -> void:
 	var k := e.owner * 1000000 + dest.id
-	cuts_in_row[k] = int(cuts_in_row.get(k, 0)) + 1
 	var st: Dictionary = stats.get_or_add(e.owner, {"viajes": 0, "cobrado": 0, "cortes": 0, "muertos": 0, "aliado": 0})
 	st["cortes"] = int(st["cortes"]) + 1
+	if why == "cerrado" or not cut.has(k): # el camino cerrado cuenta cada vez (la IA cambia de destino)
+		cuts_in_row[k] = int(cuts_in_row.get(k, 0)) + 1
 	if cut.has(k):
 		return
 	cut[k] = true
-	sim.events.append({"t": "ruta_cortada", "player": e.owner, "dest": dest.id, "x": dest.x, "y": dest.y, "motivo": why})
+	st["episodios"] = int(st.get("episodios", 0)) + 1
+	sim.events.append({"t": "ruta_cortada", "player": e.owner, "dest": dest.id, "x": x, "y": y, "motivo": why})
 
 
 ## ¿Tiene `pid` una ruta abierta (un viaje cobrado hace poco)? Pólvora de Massawa.
@@ -573,7 +685,7 @@ func ai_think(ai: SimAI, p: Dictionary, by_type: Dictionary, vill: Array[SimEnti
 	var st: Dictionary = _ai.get_or_add(pid, {"torres": {}, "def": -100000, "corte": -100000, "torre_tick": -100000})
 	_ai_cut_rival(ai, ic, lc, army, centro, st)
 	var age := int(p["age"])
-	if age < 3:
+	if age < unit_age_min(pid, "comerciante"):
 		return
 	var home: SimEntity = null
 	for m in by_type.get("mercado", []):
@@ -608,7 +720,7 @@ func ai_think(ai: SimAI, p: Dictionary, by_type: Dictionary, vill: Array[SimEnti
 			clay += r.amount
 	if not far and clay >= int(ic.get("arcilla_baja", 1500)):
 		return
-	var pe: Array = ic.get("por_edad", [0, 0, 4, 10])
+	var pe: Array = ic.get("por_edad_1v1", ic.get("por_edad")) if duel() else ic.get("por_edad", [0, 0, 4, 10])
 	var want := int(pe[clampi(age - 1, 0, pe.size() - 1)])
 	if clay == 0:
 		want = maxi(want, int(ic.get("sin_arcilla", 16)))
@@ -645,6 +757,7 @@ func ai_think(ai: SimAI, p: Dictionary, by_type: Dictionary, vill: Array[SimEnti
 		sim.push_command({"t": "ruta", "player": pid, "ids": [e.id], "mercado": best.id})
 	_ai_tower(ai, ic, lc, vill, home, traders, load, st)
 	_ai_defend(ic, army, traders, st)
+	_ai_clear(ai, ic, army, traders, st)
 
 
 ## Una torre a mitad de la ruta más usada (una por ruta).
@@ -694,6 +807,32 @@ func _ai_defend(ic: Dictionary, army: Array[SimEntity], traders: Array[SimEntity
 	sim.push_command({"t": "move", "player": hit.owner, "ids": ids, "x": hit.x, "y": hit.y, "amove": true})
 
 
+## --- esport 2b --- Despeja la ruta: comerciantes esperando un corte → hasta despeja.n tropas
+## (ociosas o yendo a ningún ataque) al lugar del corte, en ataque en movimiento.
+func _ai_clear(ai: SimAI, ic: Dictionary, army: Array[SimEntity], traders: Array[SimEntity], st: Dictionary) -> void:
+	var dc: Dictionary = ic.get("despeja", {})
+	if dc.is_empty() or sim.tick - int(st.get("despeja", -100000)) < int(dc.get("cada_ticks", 300)):
+		return
+	var w: SimEntity = null
+	for e in traders:
+		if e.order == O.TRADE and e.trade_leg == Leg.ESPERA:
+			w = e
+			break
+	if w == null:
+		return
+	var wave: Array = ai._wave_ids
+	var ids := []
+	for u in army:
+		if ids.size() >= int(dc.get("n", 8)):
+			break
+		if u.order == O.IDLE and not wave.has(u.id):
+			ids.append(u.id)
+	if ids.size() < int(dc.get("min", 3)):
+		return
+	st["despeja"] = sim.tick
+	sim.push_command({"t": "move", "player": ai.player, "ids": ids, "x": w.trade_bx, "y": w.trade_by, "amove": true})
+
+
 ## Corta la ruta rival: con `corta` = si, a la mitad de una ruta con `ver` o más comerciantes
 ## enemigos a la vista; con `cerca`, solo los que pasan cerca de su capital.
 func _ai_cut_rival(ai: SimAI, ic: Dictionary, lc: Dictionary, army: Array[SimEntity], centro: SimEntity, st: Dictionary) -> void:
@@ -729,9 +868,14 @@ func _ai_cut_rival(ai: SimAI, ic: Dictionary, lc: Dictionary, army: Array[SimEnt
 	var x: int = routes[best][1]
 	var y: int = routes[best][2]
 	if mode == "si":
+		# --- esport 2b --- al mercado destino de esa ruta (lo toma por presencia: el rival espera);
+		# si es el mercado de un aliado del rival, a la mitad de la ruta.
 		var h: SimEntity = sim.by_id.get(best[1])
 		var d: SimEntity = sim.by_id.get(best[2])
-		if h != null and d != null:
+		if d != null and d.owner < 0:
+			x = d.x
+			y = d.y
+		elif h != null and d != null:
 			x = (h.x + d.x) / 2
 			y = (h.y + d.y) / 2
 	var ids := []

@@ -143,12 +143,22 @@ func ruta_cortada(ev: Dictionary) -> void:
 	if int(ev.get("player", -1)) != local:
 		return
 	var dest: SimEntity = sim.by_id.get(int(ev.get("dest", -1)))
-	var why := "mercado tomado" if str(ev.get("motivo", "")) == "tomado" else "camino cerrado"
-	var txt := "Ruta cortada en %s (%s)" % [_nombre_mercado(dest), why]
+	# --- esport 2b --- uno por ruta cada reglas.comercio.aviso_ms, aunque se corte y se libere seguido
+	var rep := float(int(sim.comercio.cfg.get("aviso_ms", 30000))) / 1000.0
+	var key := "corte:%d" % int(ev.get("dest", -1))
+	if _clock - float(_rutas.get(key, -1000.0)) < rep:
+		return
+	_rutas[key] = _clock
+	var mot := str(ev.get("motivo", ""))
+	var why := "mercado tomado" if mot == "tomado" else ("tropa enemiga en el camino; tus comerciantes esperan" if mot == "ruta" else "camino cerrado")
+	if mot == "tomado":
+		why += "; tus comerciantes esperan"
+	var txt := "Ruta a %s cortada (%s)" % [_nombre_mercado(dest), why]
 	hud.notify(txt, -1.0, "ataque", WorldView.to_world(int(ev["x"]), int(ev["y"])))
 	if hud._mini != null:
 		hud._mini.ping(int(ev["x"]), int(ev["y"]))
 	_sonar("alerta_edificio", "ui/ui_alerta_edificio.ogg")
+	_ultimo_ataque = _clock
 	_contar("ruta_cortada")
 
 

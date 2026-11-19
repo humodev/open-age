@@ -73,6 +73,11 @@ var trade_gain: int = 0 # riqueza que trae (se cobra al volver)
 var trade_wx: int = -1 # punto de paso (milésimas); -1 sin punto
 var trade_wy: int = -1
 var trade_wpd := true # ya pasó por el punto en este tramo
+var trade_bx: int = 0 # esperando (Leg.ESPERA): lugar del corte (milésimas)
+var trade_by: int = 0
+var trade_px: int = 0 # esperando: punto donde espera (milésimas)
+var trade_py: int = 0
+var trade_since: int = 0 # esperando: tick en que empezó
 # --- fin comercio ---
 var aura_bits: int = 0 # --- paso 4 --- hitos militares de su dueño en cuya aura está (Sim._aura_combat)
 

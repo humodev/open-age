@@ -364,8 +364,8 @@ func commands() -> Array[Dictionary]:
 			var cmd := {"slot": slot, "id": type, "icon": Glyphs.resolve(udef, type), "kind": "train", "name": udef["nombre"], "common": common_name(type), "cost": sim.train_cost(local, first, type), "desc": DESCS.get(type, str(udef.get("desc", ""))), "locked": "", "building": first.id}
 			if udef.get("propia", false): # --- paso 6 --- el saber y su evidencia
 				cmd["desc"] = "%s\nEvidencia: %s" % [udef.get("desc", ""), udef.get("evidencia", "")]
-			if age < udef.get("edad_min", 1):
-				cmd["locked"] = "Requiere edad %s" % Sim._roman(udef["edad_min"])
+			if age < sim.comercio.unit_age_min(local, type): # --- esport 2b --- el comerciante del 1v1
+				cmd["locked"] = "Requiere edad %s" % Sim._roman(sim.comercio.unit_age_min(local, type))
 			elif sim.train_block(local, first, type) != "":
 				cmd["locked"] = sim.train_block(local, first, type)
 			out.append(cmd)
@@ -671,7 +671,7 @@ func _marcar_estados(out: Array[Dictionary]) -> void:
 					c["tope"] = true
 			"train":
 				var udef: Dictionary = dd.unidades.get(c["id"], {})
-				c["edad"] = int(udef.get("edad_min", 1))
+				c["edad"] = sim.comercio.unit_age_min(local, c["id"])
 				var n := 0
 				var rep := false # --- frente 1 --- algún edificio elegido lo repite
 				for e in sel:

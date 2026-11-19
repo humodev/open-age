@@ -87,7 +87,21 @@ func _formula() -> void:
 	_check(c.gain(0, home, neu, 4) == c.formula(dn, s.map.n), "neutral al 100 %% en la IV: %d (d %d)" % [c.gain(0, home, neu, 4), dn])
 	var p3 := int((c.cfg.get("edad_pct", [0, 0, 70, 100]) as Array)[2])
 	_check(c.gain(0, home, neu, 3) == c.formula(dn, s.map.n) * p3 / 100, "neutral al %d %% en la III: %d" % [p3, c.gain(0, home, neu, 3)])
-	_check(c.gain(0, home, neu, 2) == 0, "en la II, nada")
+	var p2 := int(((c.cfg.get("uno_contra_uno", {}) as Dictionary).get("edad_pct", [0, 0, 0, 0]) as Array)[1])
+	_check(p2 > 0 and c.gain(0, home, neu, 2) == c.formula(dn, s.map.n) * p2 / 100, "1v1: neutral al %d %% en la II: %d" % [p2, c.gain(0, home, neu, 2)])
+	_check(c.unit_age_min(0, "comerciante") == 2, "1v1: comerciante desde la II (%d)" % c.unit_age_min(0, "comerciante"))
+	var s4 := _sim(4, {"equipos": [0, 0, 1, 1]})
+	var h4 := _put(s4, "mercado", 0, s4.bases[0].x + 8, s4.bases[0].y)
+	_check(s4.comercio.gain(0, h4, s4.comercio.neutrals[0], 2) == 0, "2v2: en la II, nada")
+	_check(s4.comercio.unit_age_min(0, "comerciante") == 3, "2v2: comerciante desde la III (%d)" % s4.comercio.unit_age_min(0, "comerciante"))
+	s4.players[0]["age"] = 2
+	for k in s4.players[0]["res"]:
+		s4.players[0]["res"][k] = 5000
+	_check(not s4._cmd_train(0, h4.id, "comerciante", true), "2v2: no se entrena en la II")
+	s.players[0]["age"] = 2
+	for k in s.players[0]["res"]:
+		s.players[0]["res"][k] = 5000
+	_check(s._cmd_train(0, home.id, "comerciante", true), "1v1: se entrena en la II")
 	var enemy := _put(s, "mercado", 1, s.bases[1].x - 6, s.bases[1].y)
 	_check(c.dest_kind(0, enemy) == "", "con el mercado enemigo no se comercia")
 	_check(s.comercio.neutrals.size() >= 2, "hay %d neutrales" % s.comercio.neutrals.size())
@@ -158,14 +172,18 @@ func _ally() -> void:
 # ------------------------------------------------------------------ bloqueo
 
 func _blocked() -> void:
-	print("Mercado tomado: 6 de población enemiga y nadie propio: vuelve vacío con «Ruta cortada»:")
+	print("Mercado tomado: pob_min de población enemiga y nadie propio: espera, avisa con lugar y retoma al liberarse:")
 	var s := _sim()
+	var bc: Dictionary = s.comercio.cfg["bloqueo"]
+	var need := int(bc["pob_min"])
 	var home := _put(s, "mercado", 0, s.bases[0].x + 6, s.bases[0].y + 6)
 	var neu: SimEntity = s.comercio.neutrals[0]
-	for i in 6:
+	var foes: Array[SimEntity] = []
+	for i in need:
 		var t := s.map.nearest_free(neu.tx + 1 + i % 3, neu.ty + 4 + i / 3, 4, 1)
 		var w := s.spawn_unit("guerrero", 1, t.x * P + P / 2, t.y * P + P / 2)
 		w.order = SimEntity.Order.HOLD
+		foes.append(w)
 	var u := _trader(s, 0, home)
 	var r0: int = s.players[0]["res"]["riqueza"]
 	s.push_command({"t": "target", "player": 0, "ids": [u.id], "target": neu.id})
@@ -175,19 +193,74 @@ func _blocked() -> void:
 			if ev["t"] == "ruta_cortada":
 				cut.append(ev)
 		return not cut.is_empty(), 4000)
-	_check(got_cut and int(cut[0]["player"]) == 0 and cut[0]["motivo"] == "tomado", "aviso «Ruta cortada» con lugar (%s)" % [str(cut[0]) if got_cut else "nada"])
-	_check(u.trade_gain == 0 and u.trade_leg == SimComercio.Leg.VUELTA, "vuelve vacío")
-	_step_until(s, func() -> bool: return u.trade_leg == SimComercio.Leg.IDA, 4000)
-	_check(s.players[0]["res"]["riqueza"] == r0, "no cobró nada")
-	# Un solo aviso por ruta hasta que se reabra.
+	_check(got_cut and int(cut[0]["player"]) == 0 and cut[0]["motivo"] == "tomado" and int(cut[0]["x"]) == neu.x, "con %d de población: aviso «Ruta cortada» con lugar (%s)" % [need, str(cut[0]) if got_cut else "nada"])
+	_check(u.trade_gain == 0 and u.trade_leg == SimComercio.Leg.ESPERA, "no vuelve: espera (tramo %d)" % u.trade_leg)
+	for i in 300:
+		s.step()
+	var dd := Sim.dist(u.x, u.y, neu.x, neu.y) / P
+	var safe := (int(bc["radio"]) + P * 3 / 2) / P
+	_check(u.trade_leg == SimComercio.Leg.ESPERA and dd > safe, "espera a distancia segura: %d casillas (corta a %d)" % [dd, safe])
+	_check(s.players[0]["res"]["riqueza"] == r0 and u.alive, "vivo y sin cobrar")
 	var again := 0
-	for i in 3000:
+	for i in 300:
 		s.step()
 		for ev in s.events:
 			if ev["t"] == "ruta_cortada":
 				again += 1
-	_check(again == 0, "el aviso no se repite (otro viaje cortado: %d avisos)" % again)
-	_check(int(s.comercio.stats.get(0, {}).get("cortes", 0)) >= 2, "cortes contados: %d" % int(s.comercio.stats.get(0, {}).get("cortes", 0)))
+	_check(again == 0, "el aviso no se repite mientras sigue cortada (%d)" % again)
+	# Se libera: retoma la ruta y carga, sin volver a casa.
+	for w in foes:
+		s._kill(w)
+	var loaded := _step_until(s, func() -> bool: return u.trade_gain > 0, 3000)
+	_check(loaded and s.players[0]["res"]["riqueza"] == r0, "liberada: retoma y carga en el neutral (%d) sin volver vacío" % u.trade_gain)
+	# Una tropa menos que pob_min no corta.
+	var s2 := _sim()
+	var neu2: SimEntity = s2.comercio.neutrals[0]
+	for i in need - 1:
+		var t := s2.map.nearest_free(neu2.tx + 1 + i, neu2.ty + 4, 4, 1)
+		s2.spawn_unit("guerrero", 1, t.x * P + P / 2, t.y * P + P / 2).order = SimEntity.Order.HOLD
+	_check(not s2.comercio.blocked(0, neu2), "con %d de población no se corta" % (need - 1))
+	# Con tropa propia al lado tampoco.
+	var t2 := s2.map.nearest_free(neu2.tx + 4, neu2.ty + 4, 4, 0)
+	var t3 := s2.map.nearest_free(neu2.tx + 5, neu2.ty + 5, 4, 1)
+	s2.spawn_unit("guerrero", 1, t3.x * P + P / 2, t3.y * P + P / 2).order = SimEntity.Order.HOLD
+	_check(s2.comercio.blocked(0, neu2), "con %d sí" % need)
+	s2.spawn_unit("guerrero", 0, t2.x * P + P / 2, t2.y * P + P / 2).order = SimEntity.Order.HOLD
+	_check(not s2.comercio.blocked(0, neu2), "con una tropa propia, no")
+	_on_route()
+
+
+## Tropa enemiga sobre la ruta, cerca del comerciante de ida: espera atrás y retoma cuando
+## llega tropa propia.
+func _on_route() -> void:
+	print("Tropa en el camino: espera atrás; con tropa propia, retoma:")
+	var s := _sim()
+	var bc: Dictionary = s.comercio.cfg["bloqueo"]
+	var home := _put(s, "mercado", 0, s.bases[0].x + 6, s.bases[0].y + 6)
+	var neu: SimEntity = s.comercio.neutrals[0]
+	var mx := (home.x + neu.x) / 2 / P
+	var my := (home.y + neu.y) / 2 / P
+	for i in int(bc["pob_min"]):
+		var t := s.map.nearest_free(mx + i, my, 4, 1)
+		s.spawn_unit("guerrero", 1, t.x * P + P / 2, t.y * P + P / 2).order = SimEntity.Order.HOLD
+	var u := _trader(s, 0, home)
+	s.push_command({"t": "target", "player": 0, "ids": [u.id], "target": neu.id})
+	var cut := []
+	var got := _step_until(s, func() -> bool:
+		for ev in s.events:
+			if ev["t"] == "ruta_cortada":
+				cut.append(ev)
+		return not cut.is_empty(), 4000)
+	_check(got and cut[0]["motivo"] == "ruta" and u.trade_leg == SimComercio.Leg.ESPERA, "aviso «ruta» con lugar (%s)" % [str(cut[0]) if got else "nada"])
+	for i in 200:
+		s.step()
+	var dd := Sim.dist(u.x, u.y, mx * P, my * P) / P
+	_check(u.alive and u.trade_leg == SimComercio.Leg.ESPERA and dd > int(bc["ruta_radio"]) / P, "espera a %d casillas del corte" % dd)
+	var t := s.map.nearest_free(u.trade_bx / P, u.trade_by / P, 4, 0)
+	s.spawn_unit("guerrero", 0, t.x * P + P / 2, t.y * P + P / 2).order = SimEntity.Order.HOLD
+	var back := _step_until(s, func() -> bool: return u.trade_leg != SimComercio.Leg.ESPERA, 100)
+	_check(back and u.trade_leg == SimComercio.Leg.IDA, "con tropa propia en el corte: retoma la ida")
+	_check(int(s.comercio.stats.get(0, {}).get("episodios", 0)) == 1, "un corte contado (%d)" % int(s.comercio.stats.get(0, {}).get("episodios", 0)))
 
 
 func _walled() -> void:

@@ -619,9 +619,9 @@ func _cmd_train(pid: int, bid: int, type: String, quiet := false) -> bool:
 			if not quiet:
 				_notify(pid, "Máximo de %s en esta edad" % str(udef.get("nombre", type)))
 			return false
-	if p["age"] < dp(pid).unidades[type].get("edad_min", 1):
+	if p["age"] < comercio.unit_age_min(pid, type): # --- esport 2b --- el comerciante del 1v1
 		if not quiet:
-			_notify(pid, "Requiere edad %s" % _roman(dp(pid).unidades[type]["edad_min"]))
+			_notify(pid, "Requiere edad %s" % _roman(comercio.unit_age_min(pid, type)))
 		return false
 	# --- paso 4 --- reemplazada desde esta edad (el ariete inca y el guaraní pasan al asedio de área)
 	var rep := dp(pid).replaced_by(type, int(p["age"]))
