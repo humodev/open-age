@@ -222,6 +222,7 @@ func _draw() -> void:
 		_draw_placement()
 	_draw_obras() # --- fluidez 2 ---
 	_draw_orders()
+	_draw_rutas() # --- comercio ---
 	funciones_dibujadas = 0
 	if info: # --- ronda 6 --- con Alt, la función de cada tropa reemplaza al «Zz» y al recurso
 		funciones_dibujadas = _draw_unit_icons()
@@ -363,6 +364,98 @@ func _draw_placement() -> void:
 	_tip_lines = Colocacion.detalles(sim, local, type, tile.x, tile.y)
 
 
+# --- comercio --- (proceso/33-comercio, §3 y §4)
+var _tip_ruta := false
+
+
+## Rutas de los comerciantes o mercados seleccionados: línea punteada del color del jugador del
+## mercado propio al punto de paso y al destino, con flechas hacia el mercado propio (el sentido
+## de la carga). El neutral seleccionado muestra el radio de bloqueo (rojo si está tomado). Con
+## comerciantes seleccionados y el cursor sobre un mercado, la ganancia esperada junto al cursor.
+func _draw_rutas() -> void:
+	_tip_ruta = false
+	var sel := ctrl.selected_entities()
+	if sel.is_empty():
+		return
+	var rutas := {}
+	var traders: Array[SimEntity] = []
+	for e in sel:
+		if e.is_unit() and e.def.get("comerciante", false) and e.owner == local:
+			traders.append(e)
+			if e.order == O.TRADE:
+				rutas[[e.trade_home, e.trade_dest, e.trade_wx, e.trade_wy]] = true
+		elif e.is_building() and e.owner == local and e.def.get("mercado", false):
+			for u in sim.owned(local):
+				if u.alive and u.is_unit() and u.order == O.TRADE and u.trade_home == e.id:
+					rutas[[u.trade_home, u.trade_dest, u.trade_wx, u.trade_wy]] = true
+		elif e.is_building() and e.def.get("mercado_neutral", false):
+			var r := float(int(sim.comercio.cfg.get("bloqueo", {}).get("radio", 6000))) / P + 1.5
+			var tomado := sim.comercio.blocked(local, e)
+			_draw_area(_shape(e.tx + 1.5, e.ty + 1.5, e.tx + 1.5, e.ty + 1.5, r), _gp(e.x / P, e.y / P), Color(Palette.UI_BAD, 0.7) if tomado else Color(Palette.WEALTH, 0.55), 0.05, 1.5)
+	var dashes := {}
+	var col := Palette.team(local)
+	for k: Array in rutas:
+		var home: SimEntity = sim.by_id.get(k[0])
+		var dest: SimEntity = sim.by_id.get(k[1])
+		if home == null or dest == null:
+			continue
+		var pts: Array[Vector2] = [_gp(home.x / P, home.y / P, 0.1)]
+		if int(k[2]) >= 0:
+			pts.append(_gp(float(k[2]) / P, float(k[3]) / P, 0.1))
+		pts.append(_gp(dest.x / P, dest.y / P, 0.1))
+		for i in range(1, pts.size()):
+			_dash(dashes, pts[i - 1], pts[i], Color(col, 0.9), 8.0)
+			_arrow(pts[i], pts[i - 1], Color(col, 0.95))
+		draw_circle(pts[pts.size() - 1], 5.0, Color(0, 0, 0, 0.55))
+		draw_circle(pts[pts.size() - 1], 3.5, Palette.WEALTH)
+	for c in dashes:
+		var segs := PackedVector2Array(dashes[c])
+		draw_multiline(segs, Color(0, 0, 0, 0.35), 3.5)
+		draw_multiline(segs, c, 2.0)
+	# Ganancia esperada: comerciantes seleccionados y el cursor sobre un mercado.
+	if traders.is_empty():
+		return
+	var hid := ctrl.pick(ctrl.mouse_pos(), true)
+	var t: SimEntity = sim.by_id.get(hid)
+	if t == null or sim.comercio.dest_kind(local, t) == "":
+		return
+	var u := traders[0]
+	var home: SimEntity = sim.by_id.get(u.trade_home)
+	if home == null or not home.alive or home == t:
+		home = sim.comercio.nearest_own_market(local, u.x, u.y, t.id)
+	if home == null:
+		_tip_lines = [["Sin mercado propio: no hay ruta", Palette.UI_BAD]]
+		_tip_ruta = true
+		return
+	var g := sim.comercio.gain(local, home, t)
+	var n := sim.comercio.traders_on(local, t.id) + traders.size()
+	var gs := g * sim.comercio.saturation(n) / 100
+	var ms := maxi(1, sim.comercio.trip_ms(local, home, t))
+	var kind := sim.comercio.dest_kind(local, t)
+	var tipo: String = {"neutral": "mercado neutral", "aliado": "mercado aliado (+%d %% para el aliado)" % int(sim.comercio.cfg.get("aliado_extra_pct", 20)), "propio": "mercado propio (al %d %%)" % int(sim.comercio.cfg.get("tipo_pct", {}).get("propio", 50))}[kind]
+	_tip_lines = [
+		["Ruta a %s · %d casillas" % [tipo, SimComercio.octil(home, t)], Palette.UI_TEXT],
+		["~%d de riqueza por viaje, ~%d por minuto cada uno" % [gs, gs * 60000 / ms], Palette.WEALTH],
+	]
+	if gs < g:
+		_tip_lines.append(["Ruta cargada: %d comerciantes rinden %d %%" % [n, sim.comercio.saturation(n)], Palette.UI_DIM])
+	if int(sim.players[local]["age"]) < 4:
+		_tip_lines.append(["En la edad III rinde %d %%" % int((sim.comercio.cfg.get("edad_pct", [0, 0, 70, 100]) as Array)[2]), Palette.UI_DIM])
+	_tip_ruta = true
+
+
+## Punta de flecha en el medio del tramo a→b, apuntando a b.
+func _arrow(a: Vector2, b: Vector2, col: Color) -> void:
+	var d := b - a
+	if d.length() < 24.0:
+		return
+	var m := a + d * 0.5
+	var u := d.normalized() * 8.0
+	var w := Vector2(-u.y, u.x) * 0.7
+	draw_colored_polygon(PackedVector2Array([m + u, m - u * 0.4 + w, m - u * 0.4 - w]), col)
+# --- fin comercio ---
+
+
 # --- fluidez 2 --- (proceso/30-fluidez/02-constructor.md)
 ## Huellas fantasma de lo que cayó (clic derecho de un aldeano: reconstruir) y huecos del último
 ## muro, marcados en rojo unos segundos.
@@ -390,7 +483,7 @@ func _draw_obras() -> void:
 ## Recuadro de la vista previa junto al cursor (encima de la interfaz).
 func _draw_tip() -> void:
 	var lines := _tip_lines
-	if lines.is_empty() or ctrl.mode != "place":
+	if lines.is_empty() or (ctrl.mode != "place" and not _tip_ruta): # --- comercio --- (la ganancia esperada)
 		return
 	var m := ctrl.mouse_pos() + Vector2(22, 18)
 	var fs := 14
@@ -431,7 +524,7 @@ func _draw_orders() -> void:
 				_dash(dashes, a, b, Color(Palette.UI_ACCENT, 0.95), 9.0)
 				dots[Vector2i(to / P)] = [b, Palette.UI_ACCENT, 4.5, ""]
 			continue
-		if not e.is_unit() or e.inside >= 0:
+		if not e.is_unit() or e.inside >= 0 or e.order == O.TRADE: # --- comercio --- la ruta la dibuja _draw_rutas
 			continue
 		var v: Dictionary = view.visuals.get(e.id, {})
 		var np: Vector3 = (v["node"] as Node3D).position if not v.is_empty() else WorldView.to_world(e.x, e.y)

@@ -20,7 +20,7 @@ var _extra: RefCounted
 # --- fin mundo ---
 var ordenes: Control # --- órdenes --- capa con las bengalas (src/game/ui/ordenes_capa.gd)
 # --- fluidez 4 --- filtros (recursos, militares, edificios) y tamaño (data/interfaz.json → minimapa)
-const FILTROS := [["recursos", "R", "Recursos"], ["militares", "M", "Tropa"], ["edificios", "E", "Edificios"]]
+const FILTROS := [["recursos", "R", "Recursos"], ["militares", "M", "Tropa"], ["edificios", "E", "Edificios"], ["rutas", "$", "Rutas de comercio"]] # --- comercio --- (el último)
 static var filtros := {}
 static var tam_i := -1
 var _chips: Array = [] # [Rect2, clave] en píxeles del control
@@ -166,6 +166,7 @@ func _draw() -> void:
 		if e.is_unit() and e.inside < 0 and ctrl.view.fog_state(e) == 2 and (filtros.get("militares", true) or not e.is_military()): # --- fluidez 4 ---
 			draw_rect(Rect2(e.x / 1000.0 - 0.9, e.y / 1000.0 - 0.9, 1.8, 1.8), Palette.team(e.owner).lightened(0.15))
 	_extra.draw(self, ctrl.view, 1.0 / xf.x.length()) # --- mundo ---
+	_draw_rutas(1.0 / xf.x.length()) # --- comercio ---
 	draw_set_transform_matrix(Transform2D.IDENTITY)
 	# Borde del mapa.
 	var corners := PackedVector2Array([xf * Vector2(0, 0), xf * Vector2(n, 0), xf * Vector2(n, n), xf * Vector2(0, n), xf * Vector2(0, 0)])
@@ -282,6 +283,46 @@ func _get_tooltip(at: Vector2) -> String:
 					return "%s en el minimapa: %s" % [f[2], "se ven" if filtros.get(f[0], true) else "ocultos"]
 	return ""
 # --- fin fluidez 4 ---
+
+
+# --- comercio --- (proceso/33-comercio, §3) rutas en el minimapa: las de lo seleccionado
+# siempre; con el botón «Rutas», todas las propias y aliadas, y las enemigas donde hay visión.
+func _draw_rutas(px: float) -> void:
+	var todas: bool = filtros.get("rutas", false)
+	var sel := {}
+	for e in ctrl.selected_entities():
+		sel[e.id] = true
+	var rutas := {}
+	for e in sim.actives:
+		if not e.is_unit() or e.order != SimEntity.Order.TRADE or e.owner < 0:
+			continue
+		var mine := sel.has(e.id) or sel.has(e.trade_home)
+		if not mine:
+			if not todas:
+				continue
+			if sim.enemies(local, e.owner) and ctrl.view.fog_state(e) < 2:
+				continue
+		rutas[[e.owner, e.trade_home, e.trade_dest, e.trade_wx, e.trade_wy]] = true
+	for k: Array in rutas:
+		var home: SimEntity = sim.by_id.get(k[1])
+		var dest: SimEntity = sim.by_id.get(k[2])
+		if home == null or dest == null:
+			continue
+		var pts := PackedVector2Array([Vector2(home.x, home.y) / 1000.0])
+		if int(k[3]) >= 0:
+			pts.append(Vector2(k[3], k[4]) / 1000.0)
+		pts.append(Vector2(dest.x, dest.y) / 1000.0)
+		var col := Palette.team(int(k[0]))
+		for i in range(1, pts.size()):
+			var a := pts[i - 1]
+			var b := pts[i]
+			var n := int(a.distance_to(b) / 3.0)
+			for j in n:
+				if j % 2 == 0:
+					draw_line(a.lerp(b, float(j) / n), a.lerp(b, float(j + 1) / n), col, px * 1.6)
+	for m in sim.comercio.neutrals:
+		draw_rect(Rect2(m.tx - 0.5, m.ty - 0.5, 4, 4), Palette.WEALTH, false, px * 1.5)
+# --- fin comercio ---
 
 
 func _to_tile(local_pos: Vector2) -> Vector2:

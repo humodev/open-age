@@ -1310,6 +1310,8 @@ func _right_click(pos: Vector2, rumbo: int = -1) -> void:
 					view.add_marker(g, Palette.UI_ACCENT)
 				return
 		# --- fin fluidez 2 ---
+		if _comercio_orden(ids, t, g): # --- comercio ---
+			return
 		# --- mundo ---
 		if cola != null and cola.orden_derecha(ids, t, g, Input.is_key_pressed(KEY_SHIFT)):
 			view.add_marker(g, Color(Palette.UI_GOOD, 0.6))
@@ -1328,11 +1330,51 @@ func _right_click(pos: Vector2, rumbo: int = -1) -> void:
 			sim.push_command({"t": "move", "player": local, "ids": ids, "x": int(g.x * P), "y": int(g.z * P), "suelto": loose, "form": formacion, "rumbo": rumbo}) # --- órdenes ---
 			view.add_marker(g, Palette.UI_BAD if loose else Palette.UI_GOOD)
 		return
+	# --- comercio --- mercado propio + Mayús + clic derecho: punto de paso de sus comerciantes
+	if Input.is_key_pressed(KEY_SHIFT) and sel[0].is_building() and sel[0].def.get("mercado", false):
+		var de := []
+		for u in sim.owned(local):
+			if u.alive and u.is_unit() and u.order == SimEntity.Order.TRADE and u.trade_home == sel[0].id:
+				de.append(u.id)
+		if not de.is_empty():
+			sim.push_command({"t": "ruta_paso", "player": local, "ids": de, "x": int(g.x * P), "y": int(g.z * P)})
+			view.add_marker(g, Palette.WEALTH)
+			return
 	# Edificios: punto de reunión.
 	for e in sel:
 		if e.is_building() and e.def.has("produce"):
 			sim.push_command({"t": "rally", "player": local, "building": e.id, "x": int(g.x * P), "y": int(g.z * P), "target": target})
 	view.add_marker(g, Palette.UI_ACCENT)
+
+
+# --- comercio --- (proceso/33-comercio, §3) órdenes de ruta de los comerciantes
+var ruta_paso := Vector2i(-1, -1) # punto de paso marcado con Mayús antes de elegir el mercado
+
+
+## Solo comerciantes seleccionados: clic derecho en un mercado (neutral, aliado o propio) abre
+## la ruta (con el punto de paso marcado antes, si hay); Mayús + clic derecho en el suelo pone el
+## punto de paso (a los que ya tienen ruta, y queda para la próxima orden).
+func _comercio_orden(ids: Array, t: SimEntity, g: Vector3) -> bool:
+	for id in ids:
+		if not (sim.by_id[id] as SimEntity).def.get("comerciante", false):
+			return false
+	if t != null and sim.comercio.dest_kind(local, t) != "":
+		var c := {"t": "ruta", "player": local, "ids": ids, "mercado": t.id}
+		if ruta_paso.x >= 0:
+			c["x"] = ruta_paso.x
+			c["y"] = ruta_paso.y
+		sim.push_command(c)
+		ruta_paso = Vector2i(-1, -1)
+		view.add_marker(WorldView.to_world(t.x, t.y), Palette.WEALTH)
+		Respuesta.blanco(self, t, Palette.WEALTH)
+		return true
+	if Input.is_key_pressed(KEY_SHIFT) and t == null:
+		ruta_paso = Vector2i(int(g.x * P), int(g.z * P))
+		sim.push_command({"t": "ruta_paso", "player": local, "ids": ids, "x": ruta_paso.x, "y": ruta_paso.y})
+		view.add_marker(g, Palette.WEALTH)
+		return true
+	return false
+# --- fin comercio ---
 
 
 ## Sonido corto del pueblo al dar una orden a las tropas (data/audio.json; con su propio límite).

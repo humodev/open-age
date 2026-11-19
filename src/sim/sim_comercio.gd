@@ -101,6 +101,12 @@ func _spawn(t: Vector2i, fill := false) -> void:
 			sim.map.height[yy * sim.map.n + xx] = h0
 	var b := sim.spawn_building("mercado_neutral", -1, t.x, t.y, true)
 	neutrals.append(b)
+	# Todos saben dónde están (como los puestos de AoE4): explorados desde el principio.
+	for g in sim.fog.grids:
+		for yy in range(t.y - 1, t.y + 4):
+			for xx in range(t.x - 1, t.x + 4):
+				if sim.map.in_bounds(xx, yy) and g[yy * sim.map.n + xx] == 0:
+					g[yy * sim.map.n + xx] = 1
 
 
 ## 1 contra 1: dos neutrales sobre la mediatriz entre las bases (la antidiagonal), a `borde`

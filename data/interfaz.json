@@ -153,10 +153,10 @@
     "llenar_prefiere_alimento": true
   },
   "minimapa": {
-    "_doc": "--- fluidez 4 --- (src/game/minimap.gd) Tamaños en píxeles que recorre el botón ± y el inicial (índice); filtros que arrancan prendidos.",
+    "_doc": "--- fluidez 4 --- (src/game/minimap.gd) Tamaños en píxeles que recorre el botón ± y el inicial (índice); filtros que arrancan prendidos. rutas (comercio, proceso/33): con el botón, todas las rutas propias y aliadas, y las enemigas donde hay visión; apagado, solo las de lo seleccionado.",
     "tamanos": [200, 250, 320],
     "inicial": 1,
-    "filtros": { "recursos": true, "militares": true, "edificios": true }
+    "filtros": { "recursos": true, "militares": true, "edificios": true, "rutas": false }
   },
   "equipo": {
     "_doc": "--- fluidez 4 --- (src/game/ui/panel_puntaje.gd, F6) Fila de cada aliado: aldeanos, tropa e intención. Ataca si el centro de su tropa está a cerca_casillas o menos de un edificio rival.",
