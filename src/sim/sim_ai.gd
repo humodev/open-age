@@ -26,6 +26,7 @@ var _eng_mark_val := 0
 var _eng_rate := 0
 var _no_route := {} # edificio -> tick desde el que se vuelve a intentar el camino
 var last_site := 0
+var _garrison := {} # --- esport 3a --- sitio propio -> ids de su guarnición (reglas.ia_guarnicion)
 var _detour := {} # sin tomar sitios: unidad -> {"exit": Vector2i, "goal": Vector2i, "amove": bool} (sale de un sitio ajeno)
 var _court_retry := 0 # tick desde el que vuelve a buscar lugar para la corte nueva (_found_court)
 var _sent := {} # unidad -> [x, y, amove, suelto, tick]: última orden de marcha que le dio la IA (_no_resend)
@@ -2148,6 +2149,9 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 			_squad_step(ccfg, left >= 0 and left <= int(ccfg["desesperado_ms"]))
 	if not _squad.is_empty():
 		army = _without(army, _squad["ids"])
+	army = _garrison_step(army) # --- esport 3a --- la guarnición de los sitios no sale en oleadas
+	if army.is_empty():
+		return
 	# Experta (`defensa_proporcional`): a la amenaza va lo que hace falta y el resto sigue con lo
 	# suyo. Antes un explorador o un grupito rival cerca de un almacén retenía a todo el ejército
 	# en la base, y la difícil ganaba por sitios con la experta mirando (proceso/24, paso 4f).
@@ -2295,6 +2299,80 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 			if not ids.is_empty():
 				sim.push_command({"t": "move", "player": player, "ids": ids, "x": site.x, "y": site.y, "amove": true})
 	_regroup(army)
+
+
+## --- esport 3a --- Guarnición de los sitios propios (reglas.sitios.guarnicion_pob: sin ella no
+## rinden). Cada sitio del jugador se queda con `pob` de población militar o más (la más cercana,
+## nunca más de `max_pct` % del ejército entre todos); quien se aleja vuelve. Devuelve el resto.
+func _garrison_step(army: Array[SimEntity]) -> Array[SimEntity]:
+	var need_rule := int(sim.data.reglas["sitios"].get("guarnicion_pob", 0))
+	var cfg: Dictionary = sim.data.reglas.get("ia_guarnicion", {})
+	if need_rule <= 0 or cfg.is_empty() or not level.get("toma_sitios", true):
+		return army
+	var keep := {}
+	var used := 0
+	var all_ids := {}
+	for u in army:
+		all_ids[u.id] = true
+	var r := int(sim.data.reglas["sitios"].get("guarnicion_radio", 4000))
+	for e in sim.sacred_sites():
+		if not e.alive or e.holder != player:
+			_garrison.erase(e.id)
+			continue
+		var ids: Array = []
+		var pob := 0
+		for id in _garrison.get(e.id, []):
+			var u: SimEntity = sim.by_id.get(int(id), null)
+			if u != null and u.alive and u.owner == player and all_ids.has(u.id):
+				ids.append(u.id)
+				pob += int(u.def.get("pob", 1))
+		_garrison[e.id] = ids
+	var cap := army.size() * int(cfg["max_pct"]) / 100
+	for k in _garrison:
+		used += (_garrison[k] as Array).size()
+	for e in sim.sacred_sites():
+		if not _garrison.has(e.id):
+			continue
+		var ids: Array = _garrison[e.id]
+		var pob := 0
+		for id in ids:
+			pob += int((sim.by_id[id] as SimEntity).def.get("pob", 1))
+		if pob < int(cfg["pob"]) and used < cap:
+			var cand := []
+			for u in army:
+				if u.order != O.ATTACK and not _at_flare(u) and not keep.has(u.id) and not _in_garrison(u.id) and u.fn != "asedio":
+					cand.append([Sim.dist(u.x, u.y, e.x, e.y), u.id, u])
+			cand.sort_custom(func(a, b): return a[0] < b[0] or a[0] == b[0] and a[1] < b[1])
+			var sent := []
+			for c in cand:
+				if pob >= int(cfg["pob"]) or used >= cap:
+					break
+				var u: SimEntity = c[2]
+				ids.append(u.id)
+				sent.append(u.id)
+				pob += int(u.def.get("pob", 1))
+				used += 1
+			if not sent.is_empty():
+				sim.push_command({"t": "move", "player": player, "ids": sent, "x": e.x, "y": e.y, "amove": true})
+		# Quien quedó ocioso lejos del sitio vuelve a su lugar.
+		var back := []
+		for id in ids:
+			var u: SimEntity = sim.by_id[id]
+			keep[id] = true
+			if u.order == O.IDLE and (absi(u.x - e.x) > r * int(cfg["vuelve_pct"]) / 100 or absi(u.y - e.y) > r * int(cfg["vuelve_pct"]) / 100):
+				back.append(id)
+		if not back.is_empty():
+			sim.push_command({"t": "move", "player": player, "ids": back, "x": e.x, "y": e.y, "amove": true})
+	if keep.is_empty():
+		return army
+	return _without(army, keep.keys())
+
+
+func _in_garrison(id: int) -> bool:
+	for k in _garrison:
+		if (_garrison[k] as Array).has(id):
+			return true
+	return false
 
 
 ## Reagrupar a las unidades inactivas en el punto de reunión.

@@ -130,14 +130,29 @@ func _sitios() -> void:
 	# La cuenta no corre antes de cuenta_desde_ms ni por debajo de la edad cuenta_edad_min
 	# (proceso/26-juego-tardio/14): el 0 está en esa edad y se mide desde ese minuto.
 	var from_ticks := int(cfg.get("cuenta_desde_ms", 0)) / 100
-	for off in [false, true]:
+	# --- esport 3a --- Sin guarnición (guarnicion_pob de población militar a 4 casillas) el sitio
+	# no rinde ni corre la cuenta; con ella, sí.
+	for mode in ["sin_guarnicion", "con", "sin_victoria"]:
+		var off: bool = mode == "sin_victoria"
 		var s := Sim.new(9, 2, null, {"civs": ["etiopia", "palmares"], "terreno": "llano", "sitios_sin_victoria": off})
 		s.players[0]["age"] = maxi(int(s.players[0]["age"]), int(cfg.get("cuenta_edad_min", 1)))
 		var n := 0
+		var sites: Array = []
 		for e in s.actives:
 			if e.alive and e.def.get("sagrado", false):
-				e.holder = 0
-				n += 1
+				sites.append(e)
+		for e in sites:
+			e.holder = 0
+			n += 1
+			if mode != "sin_guarnicion":
+				for i in int(cfg.get("guarnicion_pob", 0)):
+					s.spawn_unit("guerrero", 0, e.x + 1000 * i, e.y + 1000)
+		if mode == "sin_guarnicion":
+			while s.tick < from_ticks + win_ticks + 60 and not s.game_over:
+				s.step()
+			var rent0 := int(s.players[0]["stats"].get("origen", {}).get("sitios", {}).get("riqueza", 0))
+			_check(not s.game_over and rent0 == 0, "sin guarnición: %d sitios de 0 durante %d min no ganan ni rinden (%d de riqueza)" % [n, s.tick / 600, rent0])
+			continue
 		while s.tick < from_ticks + win_ticks + 60 and not s.game_over:
 			s.step()
 			if not off and s.game_over:

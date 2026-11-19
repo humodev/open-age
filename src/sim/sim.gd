@@ -93,6 +93,7 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null,
 	fog = SimFog.new(size, num_players)
 	fog.map = map
 	fog.vision_per_level = data.reglas["vision_por_nivel"]
+	fog.site_vision = int(data.reglas["sitios"].get("vision_publica", 0))
 	mods = SimMods.new(self)
 	groups = SimGroups.new(self)
 	comercio = SimComercio.new(self) # --- comercio ---
@@ -1633,6 +1634,11 @@ func _update_fog(pid: int) -> void:
 	for e in actives:
 		if e.alive and e.inside < 0 and e.owner >= 0 and (e.owner == pid or (shared and not enemies(pid, e.owner) and team_of(e.owner) == team_of(pid))):
 			sources.append(e)
+	# --- esport 3a --- La guarnición de los sitios la ven todos (reglas.sitios.vision_publica).
+	if fog.site_vision > 0:
+		for e in _sacred:
+			if e.alive:
+				sources.append(e)
 	fog.update(pid, sources)
 
 
@@ -2107,12 +2113,22 @@ func _do_build(e: SimEntity) -> void:
 	# Rendimiento decreciente (P-006): con n constructores la obra tarda tiempo × 3/(n+2).
 	b.workers_now += 1
 	var step_ms := mods.build_step(b, maxi(1, b.workers_prev))
-	var before := (b.hp_max - 1) * b.progress / b.build_time
+	var top := _obra_top(b)
+	var before := (top - 1) * b.progress / b.build_time
 	b.progress = mini(b.build_time, b.progress + step_ms)
-	var after := (b.hp_max - 1) * b.progress / b.build_time
-	b.hp = mini(b.hp_max, b.hp + after - before)
+	var after := (top - 1) * b.progress / b.build_time
+	b.hp = mini(top, b.hp + after - before)
 	if b.progress >= b.build_time:
+		b.hp = mini(b.hp_max, b.hp + b.hp_max - top) # --- esport 3a --- el hito suma lo que no tuvo en obra
 		_complete(b)
+
+
+## --- esport 3a --- Vida máxima mientras está en obra: el hito, reglas.hito_en_obra_pv_pct de la
+## suya (más vulnerable en obra); el resto, toda.
+func _obra_top(b: SimEntity) -> int:
+	if b.def.get("hito", false):
+		return maxi(1, b.hp_max * int(data.reglas.get("hito_en_obra_pv_pct", 100)) / 100)
+	return b.hp_max
 
 
 func _complete(b: SimEntity) -> void:
@@ -4055,6 +4071,16 @@ func buildings_of(pid: int) -> Array[SimEntity]:
 var _sacred: Array[SimEntity] = [] # sitios sagrados, en orden de id
 func sacred_sites() -> Array[SimEntity]:
 	return _sacred
+
+
+## --- esport 3a --- Población militar del equipo dueño junto al sitio (la del último segundo).
+func site_garrison(e: SimEntity) -> int:
+	return int(mods.site_guard.get(e.id, 0))
+
+
+## --- esport 3a --- ¿El sitio rinde? Tiene dueño y guarnición (reglas.sitios.guarnicion_pob).
+func site_guarded(e: SimEntity) -> bool:
+	return e.holder >= 0 and site_garrison(e) >= int(data.reglas["sitios"].get("guarnicion_pob", 0))
 
 
 ## Militares y exploradores de un dueño (lo que la IA cuenta como amenaza), en orden de id.
