@@ -131,10 +131,135 @@ def render(nombre, d):
     return img
 
 
+# ---------------------------------------------------------------- Cursores
+# Celda de 64 px (src/game/ui/cursores.gd la achica a data/interfaz.json → cursores.px por la
+# escala de la interfaz). Flecha propia + una insignia abajo a la derecha con la silueta de la
+# acción (las mismas de los íconos). Punto activo: cursores.punta en data/interfaz.json.
+CURSORES = os.path.join(RAIZ, "assets", "ui", "cursores")
+VERDE, ROJO, DORADO, ACERO = _hex("85f2c4"), _hex("ff5a26"), _hex("e3b23c"), _hex("d9dee6")
+FLECHA = [(4, 4), (4, 46), (14, 37), (21, 53), (30, 49), (23, 33.5), (36, 33.5)]
+INSIGNIA = {  # tipo: (color del aro, ícono del catálogo, color del ícono o None = su material)
+    "mover": (VERDE, None, VERDE),
+    "atacar": (ROJO, "atacar", ACERO),
+    "construir": (DORADO, "martillo", None),
+    "reparar": (VERDE, "martillo", VERDE),
+    "recolectar_alimento": (_hex(RES["alimento"]), "alimento", None),
+    "recolectar_madera": (_hex(RES["madera"]), "madera", None),
+    "recolectar_piedra": (_hex(RES["piedra"]), "piedra", None),
+    "recolectar_riqueza": (_hex(RES["riqueza"]), "riqueza", None),
+    "refugio": (DORADO, "escudo", None),
+    "depositar": (DORADO, "carga", None),
+}
+
+
+def _capa(lado):
+    return Image.new("RGBA", (lado, lado), (0, 0, 0, 0))
+
+
+def _con_sombra(img, k):
+    """Sombra blanda abajo a la derecha: se lee sobre pasto claro y sobre la niebla."""
+    a = img.getchannel("A").filter(ImageFilter.GaussianBlur(2 * k))
+    sombra = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    sombra.paste(Image.new("RGBA", img.size, (0, 0, 0, 110)), (2 * k, 3 * k), a)
+    return Image.alpha_composite(sombra, img)
+
+
+def _poligono(lado, k, pts, relleno, borde):
+    m = Image.new("L", (lado, lado), 0)
+    ImageDraw.Draw(m).polygon([(x * k, y * k) for x, y in pts], fill=255)
+    out = _capa(lado)
+    out.paste(Image.new("RGBA", (lado, lado), OSCURO + (255,)), (0, 0), m.filter(ImageFilter.MaxFilter(2 * borde * k + 1)))
+    out.paste(relleno, (0, 0), m)
+    return out
+
+
+def cursor(tipo, cat):
+    k = ESCALA
+    lado = BASE * k
+    img = _capa(lado)
+    dr = ImageDraw.Draw(img)
+    if tipo == "no":
+        c, r = 32 * k, 20 * k
+        dr.ellipse((c - r - 6 * k, c - r - 6 * k, c + r + 6 * k, c + r + 6 * k), outline=OSCURO + (255,), width=16 * k)
+        dr.ellipse((c - r - 3 * k, c - r - 3 * k, c + r + 3 * k, c + r + 3 * k), outline=ROJO + (255,), width=7 * k)
+        dr.line((17 * k, 17 * k, 47 * k, 47 * k), fill=OSCURO + (255,), width=13 * k)
+        dr.line((18 * k, 18 * k, 46 * k, 46 * k), fill=ROJO + (255,), width=7 * k)
+        return _con_sombra(img, k)
+    if tipo == "reunion":
+        dr.line((10 * k, 4 * k, 10 * k, 58 * k), fill=OSCURO + (255,), width=8 * k)
+        dr.line((10 * k, 5 * k, 10 * k, 57 * k), fill=(0x9A, 0x73, 0x50, 255), width=4 * k)
+        tela = _poligono(lado, k, [(12, 5), (52, 15), (12, 28)], degradado(lado, _mezcla(DORADO, (255, 255, 255), 0.3), DORADO), 2)
+        img = Image.alpha_composite(img, tela)
+        ImageDraw.Draw(img).ellipse((6 * k, 54 * k, 14 * k, 62 * k), fill=(0xEC, 0xE8, 0xE1, 255), outline=OSCURO + (255,), width=2 * k)
+        return _con_sombra(img, k)
+    # Atacar: la flecha entera en rojo, para distinguirla de un vistazo en medio de la pelea.
+    piel = (_mezcla(ROJO, (255, 255, 255), 0.35), _mezcla(ROJO, (0, 0, 0), 0.2)) if tipo == "atacar" else NEUTRO
+    img = _poligono(lado, k, FLECHA, degradado(lado, *piel), 3)
+    aro, icono, color = INSIGNIA[tipo]
+    cx, cy, r = 46 * k, 46 * k, 17 * k
+    dr = ImageDraw.Draw(img)
+    dr.ellipse((cx - r, cy - r, cx + r, cy + r), fill=(22, 24, 28, 255), outline=OSCURO + (255,), width=k)
+    dr.ellipse((cx - r + 2 * k, cy - r + 2 * k, cx + r - 2 * k, cy + r - 2 * k), outline=aro + (255,), width=int(2.5 * k))
+    if icono is None:  # mover: cuatro puntas
+        for dx, dy in ((0, -1), (0, 1), (-1, 0), (1, 0)):
+            sx, sy = -dy, dx
+            pts = [(46 + dx * 12, 46 + dy * 12), (46 + dx * 4 + sx * 6, 46 + dy * 4 + sy * 6), (46 + dx * 4 - sx * 6, 46 + dy * 4 - sy * 6)]
+            dr.polygon([(x * k, y * k) for x, y in pts], fill=color + (255,))
+    else:
+        a = silueta(ruta_svg(cat[icono]["fuente"]), 22 * k)
+        luz, sombra = (_mezcla(color, (255, 255, 255), 0.3), color) if color else material(icono)
+        pinta = degradado(22 * k, luz, sombra)
+        img.paste(pinta, (cx - 11 * k, cy - 11 * k), a)
+    return _con_sombra(img, k)
+
+
+def cursores(cat):
+    os.makedirs(CURSORES, exist_ok=True)
+    tipos = list(INSIGNIA) + ["reunion", "no"]
+    for t in tipos:
+        cursor(t, cat).resize((BASE, BASE), Image.LANCZOS).save(os.path.join(CURSORES, t + ".png"))
+    print(len(tipos), "cursores en", os.path.relpath(CURSORES, RAIZ))
+
+
+# ---------------------------------------------------------------- Marco del HUD
+# Textura de 9 cortes (data/interfaz.json → marco; Hud.dibujar_marco) que se dibuja encima del
+# fondo de los paneles: canto oscuro, filete de bronce (el dorado de la interfaz apagado), un
+# brillo arriba y un rombo en cada esquina. El centro es transparente: el fondo sigue siendo el
+# de Hud.panel_box, así que el color y la transparencia del panel no cambian.
+MARCOS = os.path.join(RAIZ, "assets", "ui", "marcos")
+LADO_MARCO, RADIO_MARCO = 32, 8
+
+
+def marco():
+    k = 8
+    L, R = LADO_MARCO * k, RADIO_MARCO * k
+    img = _capa(L)
+    dr = ImageDraw.Draw(img)
+    bronce = _mezcla(DORADO, (40, 30, 20), 0.45)
+    dr.rounded_rectangle((0, 0, L - 1, L - 1), R, outline=(8, 9, 11, 235), width=k)
+    dr.rounded_rectangle((k, k, L - 1 - k, L - 1 - k), R - k, outline=bronce + (230,), width=k)
+    brillo = _capa(L)
+    ImageDraw.Draw(brillo).rounded_rectangle((2 * k, 2 * k, L - 1 - 2 * k, L - 1 - 2 * k), R - 2 * k, outline=(255, 255, 255, 34), width=k)
+    corte = Image.new("L", (L, L), 0)
+    ImageDraw.Draw(corte).rectangle((0, 0, L, L // 2), fill=255)  # el brillo, solo en la mitad de arriba
+    img = Image.alpha_composite(img, Image.composite(brillo, _capa(L), corte))
+    dr = ImageDraw.Draw(img)
+    for cx, cy in ((5, 5), (LADO_MARCO - 5, 5), (5, LADO_MARCO - 5), (LADO_MARCO - 5, LADO_MARCO - 5)):
+        d = 1.6
+        dr.polygon([((cx) * k, (cy - d) * k), ((cx + d) * k, cy * k), (cx * k, (cy + d) * k), ((cx - d) * k, cy * k)], fill=DORADO + (190,))
+    os.makedirs(MARCOS, exist_ok=True)
+    img.resize((LADO_MARCO, LADO_MARCO), Image.LANCZOS).save(os.path.join(MARCOS, "marco.png"))
+    print("marco en", os.path.relpath(MARCOS, RAIZ))
+
+
 def main():
     cat = json.load(open(CATALOGO, encoding="utf-8"))
+    if "--marcos" in sys.argv:
+        marco()
     if "--bajar" in sys.argv:
         bajar(cat)
+    if "--cursores" in sys.argv:
+        cursores(cat)
     hechos = []
     for nombre, d in cat.items():
         if nombre.startswith("_"):

@@ -145,3 +145,31 @@ Cada archivo guarda el centro del recorte, su lado en km y la fuente. En los lug
 | personas_kaykit.glb | https://kaylousberg.itch.io/kaykit-character-animations (KayKit Character Animations 1.1, descarga gratuita «Free 1.1», `KayKit_Character_Animations_1.1.zip`): esqueleto `Rig_Medium` con el maniquí, y 29 de sus 161 animaciones (las 13 de los aldeanos: Idle_A, Walking_A, Running_A, Chopping, Pickaxing, Digging, Working_A, Hammering, Interact, PickUp, Hit_A, Death_A, Melee_1H_Attack_Chop; y las de los soldados: Death_B, Hit_B, Throw, Melee_1H_Attack_Stab, Melee_2H_Attack_Chop, Melee_2H_Attack_Stab, Melee_2H_Idle, Melee_Dualwield_Attack_Slice, Melee_Block_Hit, Melee_Blocking, Ranged_Bow_Draw, Ranged_Bow_Release, Ranged_Bow_Idle, Ranged_2H_Shoot, Ranged_2H_Reload, Ranged_2H_Aiming), juntadas en un solo glTF con `tools/kaykit_extraer.py` (antes `aldeano_kaykit.glb`, proceso/27-animaciones) | Kay Lousberg (www.kaylousberg.com) | CC0 1.0 (texto en `animaciones/kaykit/License.txt`; el crédito no es obligatorio) |
 
 El cuerpo del aldeano (ropa, tocados, herramientas) es obra propia, armado con código en `src/game/aldeano_animado.gd`; del paquete se usa el esqueleto y el movimiento. La orientación de la herramienta en la mano sigue la de las armas de KayKit Character Pack: Adventurers (https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0, CC0), que solo se miró y no se incluye.
+
+## Íconos de la interfaz (`ui/iconos/`)
+
+Siluetas de [game-icons.net](https://game-icons.net), con licencia **CC BY 3.0** (https://creativecommons.org/licenses/by/3.0/). **Cambios:** se recolorearon con la paleta del juego (material neutro, o el color natural del recurso), se encuadraron en un marco fijo, se les agregó un contorno oscuro y una luz desde arriba a la izquierda, y se exportaron a PNG de 32 y 64 px con `tools/iconos_render.py`. Las siluetas originales están en `ui/iconos/fuentes/` y el pedido en `ui/iconos/catalogo.json`. La atribución que pide la licencia: «Ícono de <autor>, game-icons.net, CC BY 3.0».
+
+| archivo | fuente (URL exacta) | autor | licencia |
+|---|---|---|---|
+| alimento_32.png, alimento_64.png | https://game-icons.net/1x1/delapouite/corn.html | Delapouite | CC BY 3.0 |
+| madera_32.png, madera_64.png | https://game-icons.net/1x1/delapouite/wood-pile.html | Delapouite | CC BY 3.0 |
+| piedra_32.png, piedra_64.png | https://game-icons.net/1x1/delapouite/stone-pile.html | Delapouite | CC BY 3.0 |
+| riqueza_32.png, riqueza_64.png | https://game-icons.net/1x1/lorc/cut-diamond.html | Lorc | CC BY 3.0 |
+| atacar_32.png, atacar_64.png | https://game-icons.net/1x1/lorc/crossed-swords.html | Lorc | CC BY 3.0 |
+| patrullar_32.png, patrullar_64.png | https://game-icons.net/1x1/lorc/cycle.html | Lorc | CC BY 3.0 |
+| campana_32.png, campana_64.png | https://game-icons.net/1x1/lorc/ringing-bell.html | Lorc | CC BY 3.0 |
+| investigar_32.png, investigar_64.png | https://game-icons.net/1x1/lorc/magnifying-glass.html | Lorc | CC BY 3.0 |
+| vida_32.png, vida_64.png | https://game-icons.net/1x1/zeromancer/heart-plus.html | Zeromancer | CC BY 3.0 |
+| velocidad_32.png, velocidad_64.png | https://game-icons.net/1x1/lorc/run.html | Lorc | CC BY 3.0 |
+| escudo_32.png, escudo_64.png | https://game-icons.net/1x1/sbed/shield.html | Sbed | CC BY 3.0 |
+| carga_32.png, carga_64.png | https://game-icons.net/1x1/lorc/swap-bag.html | Lorc | CC BY 3.0 |
+| hacha_32.png, hacha_64.png | https://game-icons.net/1x1/lorc/wood-axe.html | Lorc | CC BY 3.0 |
+| pico_32.png, pico_64.png | https://game-icons.net/1x1/lorc/mining.html | Lorc | CC BY 3.0 |
+| canasta_32.png, canasta_64.png | https://game-icons.net/1x1/delapouite/basket.html | Delapouite | CC BY 3.0 |
+| martillo_32.png, martillo_64.png | https://game-icons.net/1x1/lorc/claw-hammer.html | Lorc | CC BY 3.0 |
+| yunque_32.png, yunque_64.png | https://game-icons.net/1x1/lorc/anvil.html | Lorc | CC BY 3.0 |
+| engranaje_32.png, engranaje_64.png | https://game-icons.net/1x1/lorc/cog.html | Lorc | CC BY 3.0 |
+| riego_32.png, riego_64.png | https://game-icons.net/1x1/delapouite/watering-can.html | Delapouite | CC BY 3.0 |
+| arco_32.png, arco_64.png | https://game-icons.net/1x1/lorc/pocket-bow.html | Lorc | CC BY 3.0 |
+| vigia_32.png, vigia_64.png | https://game-icons.net/1x1/lorc/semi-closed-eye.html | Lorc | CC BY 3.0 |

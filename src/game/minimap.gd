@@ -147,6 +147,7 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	draw_style_box(Hud.panel_box(10), Rect2(Vector2.ZERO, size))
+	Hud.dibujar_marco(self, Rect2(Vector2.ZERO, size)) # --- arte de interfaz ---
 	var xf := _xf()
 	var n := float(sim.map.n)
 	draw_set_transform_matrix(xf)

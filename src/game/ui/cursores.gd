@@ -16,6 +16,7 @@ const TIPOS := ["mover", "atacar", "recolectar_alimento", "recolectar_madera", "
 const PUNTA := {"mover": Vector2(4, 4), "atacar": Vector2(4, 4), "construir": Vector2(8, 8), "reparar": Vector2(8, 8), "reunion": Vector2(10, 58), "no": Vector2(32, 32)}
 
 var texturas := {} # tipo -> ImageTexture
+var _puntas := {} # tipo -> punto activo en la celda de 64 (los que vienen de un PNG)
 var actual := "-"
 var listo := false
 var _imagen: Image
@@ -39,6 +40,7 @@ func _ready() -> void:
 	await RenderingServer.frame_post_draw
 	_imagen = vp.get_texture().get_image()
 	vp.queue_free()
+	_cargar_png()
 	var px := _px()
 	for i in TIPOS.size():
 		var img := _imagen.get_region(Rect2i(i * CELDA, 0, CELDA, CELDA))
@@ -50,10 +52,39 @@ func _ready() -> void:
 	usar(pedido)
 
 
-func _px() -> int:
+## Los cursores en PNG (data/interfaz.json → cursores.carpeta, proceso/39-arte-interfaz) pisan a
+## los dibujados en la hoja; el que no tenga PNG queda dibujado con código.
+func _cargar_png() -> void:
+	var cfg := _cfg()
+	var carpeta := String(cfg.get("carpeta", ""))
+	if carpeta == "":
+		return
+	var puntas: Dictionary = cfg.get("punta", {})
+	for i in TIPOS.size():
+		var ruta := carpeta + String(TIPOS[i]) + ".png"
+		if not ResourceLoader.exists(ruta):
+			continue
+		var tex := load(ruta) as Texture2D
+		if tex == null:
+			continue
+		var img := tex.get_image()
+		img.convert(_imagen.get_format())
+		if img.get_size() != Vector2i(CELDA, CELDA):
+			img.resize(CELDA, CELDA, Image.INTERPOLATE_LANCZOS)
+		_imagen.fill_rect(Rect2i(i * CELDA, 0, CELDA, CELDA), Color(0, 0, 0, 0))
+		_imagen.blit_rect(img, Rect2i(0, 0, CELDA, CELDA), Vector2i(i * CELDA, 0))
+		var p: Array = puntas.get(TIPOS[i], [4, 4])
+		_puntas[TIPOS[i]] = Vector2(float(p[0]), float(p[1]))
+
+
+func _cfg() -> Dictionary:
 	var path := "res://data/interfaz.json"
 	var all: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else {}
-	var base := int((all.get("cursores", {}) as Dictionary).get("px", 32))
+	return all.get("cursores", {})
+
+
+func _px() -> int:
+	var base := int(_cfg().get("px", 32))
 	var esc := get_tree().root.content_scale_factor if get_tree() != null else 1.0
 	return clampi(int(round(base * esc)), 16, 128)
 
@@ -70,7 +101,7 @@ func usar(tipo: String) -> void:
 		Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 		return
 	var k := float(_px()) / CELDA
-	Input.set_custom_mouse_cursor(texturas[tipo], Input.CURSOR_ARROW, PUNTA.get(tipo, Vector2(4, 4)) * k)
+	Input.set_custom_mouse_cursor(texturas[tipo], Input.CURSOR_ARROW, _puntas.get(tipo, PUNTA.get(tipo, Vector2(4, 4))) * k)
 
 
 ## Hoja con todos los cursores en tamaño de dibujo, para la documentación (o null en modo sin ventana).

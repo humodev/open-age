@@ -171,9 +171,16 @@
     "ctrl": 10,
     "periodo_s": 60
   },
+  "marco": {
+    "_doc": "Marco de 9 cortes encima del fondo de los paneles del HUD (barra de recursos, reloj, grilla, selección y minimapa; Hud.dibujar_marco). Sale de tools/iconos_render.py --marcos. margen: píxeles de cada borde que no se estiran. Sin textura, los paneles quedan como antes.",
+    "textura": "res://assets/ui/marcos/marco.png",
+    "margen": 10
+  },
   "cursores": {
-    "_doc": "Cursores contextuales (src/game/ui/cursores.gd): lado en píxeles a escala 100 %.",
-    "px": 32
+    "_doc": "Cursores contextuales (src/game/ui/cursores.gd): lado en píxeles a escala 100 %. carpeta: PNG de 64 px por tipo (<tipo>.png, tools/iconos_render.py --cursores); el que falte se dibuja con código. punta: punto activo de cada uno en la celda de 64 (el que falte, 4,4).",
+    "px": 32,
+    "carpeta": "res://assets/ui/cursores/",
+    "punta": {"reunion": [10, 58], "no": [32, 32]}
   },
   "consejos": {
     "_doc": "Avisos que enseñan (src/game/ui/consejos.gd), apagables en Opciones. Segundos: cada cuánto se revisa, cuánto tiene que durar una situación antes de avisar y cada cuánto puede repetirse el mismo aviso. Radios en casillas. flotando: banco por recurso a partir del cual se avisa que no se gasta. empujon: el aviso de atacar o subir de edad.",

@@ -827,6 +827,37 @@ static func panel_box(radius: int = 8) -> StyleBoxFlat:
 	return sb
 
 
+## --- arte de interfaz --- (proceso/39-arte-interfaz) Marco de 9 cortes encima del fondo de los
+## paneles del HUD: data/interfaz.json → marco {textura, margen}. Sin textura, no dibuja nada.
+static var _marco: StyleBox = null
+static var _marco_listo := false
+
+
+static func marco_box() -> StyleBox:
+	if _marco_listo:
+		return _marco
+	_marco_listo = true
+	var path := "res://data/interfaz.json"
+	var all: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else {}
+	var cfg: Dictionary = all.get("marco", {})
+	var ruta := String(cfg.get("textura", ""))
+	if ruta == "" or not ResourceLoader.exists(ruta):
+		return null
+	var sb := StyleBoxTexture.new()
+	sb.texture = load(ruta) as Texture2D
+	sb.set_texture_margin_all(float(cfg.get("margen", 10)))
+	sb.draw_center = false
+	_marco = sb
+	return _marco
+
+
+static func dibujar_marco(ci: CanvasItem, r: Rect2) -> void:
+	var sb := marco_box()
+	if sb != null:
+		ci.draw_style_box(sb, r)
+# --- fin arte de interfaz ---
+
+
 func _make_dialog(title: String, body: String, buttons: Array) -> PanelContainer:
 	var dim := ColorRect.new()
 	dim.color = Color(0, 0, 0, 0.45)
@@ -1001,6 +1032,7 @@ class TopBar:
 
 	func _draw() -> void:
 		draw_style_box(Hud.panel_box(), Rect2(Vector2.ZERO, size))
+		Hud.dibujar_marco(self, Rect2(Vector2.ZERO, size)) # --- arte de interfaz ---
 		_hits.clear()
 		var sim := hud.sim
 		var p: Dictionary = sim.players[hud.local]
@@ -1070,6 +1102,7 @@ class ClockBar:
 
 	func _draw() -> void:
 		draw_style_box(Hud.panel_box(), Rect2(Vector2.ZERO, size))
+		Hud.dibujar_marco(self, Rect2(Vector2.ZERO, size)) # --- arte de interfaz ---
 		var sim := hud.sim
 		var age: int = sim.players[hud.local]["age"]
 		var name: String = sim.dp(hud.local).edades[age - 1]["nombre"]
@@ -1169,6 +1202,7 @@ class CommandCard:
 
 	func _draw() -> void:
 		draw_style_box(Hud.panel_box(), Rect2(Vector2.ZERO, size))
+		Hud.dibujar_marco(self, Rect2(Vector2.ZERO, size)) # --- arte de interfaz ---
 		var cmds := hud.ctrl.commands()
 		# --- grilla --- (pestaña con el submenú abierto, encima de la grilla)
 		if hud.ctrl.submenu != Grilla.RAIZ and (hud.ctrl.grilla_aldeano() or hud.ctrl.submenu == Controller.INVESTIGAR or hud.ctrl.submenu == Controller.ESCUELA or hud.ctrl.submenu == Controller.HERRERIA): # --- ronda 6 --- (herrería: ronda 7)
@@ -1359,6 +1393,7 @@ class SelectionPanel:
 		_hits.clear()
 		hud.ficha.zones_begin(self) # --- ficha ---
 		draw_style_box(Hud.panel_box(), Rect2(Vector2.ZERO, size))
+		Hud.dibujar_marco(self, Rect2(Vector2.ZERO, size)) # --- arte de interfaz ---
 		var sel := hud.ctrl.selected_entities()
 		if sel.is_empty():
 			draw_string(Hud.font, Vector2(0, size.y / 2 + 6), "Nada seleccionado", HORIZONTAL_ALIGNMENT_CENTER, size.x, 15, Palette.UI_DIM) # --- contraste --- (antes al 60 %: 3:1)
