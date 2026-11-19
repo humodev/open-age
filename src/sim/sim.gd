@@ -3373,16 +3373,19 @@ func _court_site_ok(fc: Dictionary, tx: int, ty: int, pid: int) -> bool:
 	var cy := ty * P + 2 * P
 	var far := int(fc.get("lejos_de", 20)) * P
 	var fight := int(fc.get("sin_combate", 15)) * P
-	for e in actives:
-		if not e.alive:
-			continue
-		if e.owner == pid and e.is_building() and (e.def.has("funda_corte") or e.def.get("capital_fija", false)):
+	# Por listas (proceso/32-ronda-8/07): la IA etíope prueba ~200 casillas seguidas y recorrer
+	# actives en cada una costaba 320 ms. Es la misma pregunta (sí o no), sin depender del orden.
+	for e in buildings_of(pid):
+		if e.alive and (e.def.has("funda_corte") or e.def.get("capital_fija", false)):
 			return false
-		if e.owner >= 0 and enemies(pid, e.owner):
-			var d := Sim.dist(e.x, e.y, cx, cy)
-			if e.is_building() and d < far and (e.capital or e.type in ["torre", "cuartel", "centro"] or _cost_total(e.def.get("costo", {})) >= 150):
+	for q in players.size():
+		if not enemies(pid, q):
+			continue
+		for e in buildings_of(q):
+			if e.alive and Sim.dist(e.x, e.y, cx, cy) < far and (e.capital or e.type in ["torre", "cuartel", "centro"] or _cost_total(e.def.get("costo", {})) >= 150):
 				return false
-			if e.is_unit() and e.is_military() and d < fight and tick - e.last_combat < 100:
+		for e in fighters_of(q):
+			if e.alive and e.is_military() and tick - e.last_combat < 100 and Sim.dist(e.x, e.y, cx, cy) < fight:
 				return false
 	return true
 
