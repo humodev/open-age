@@ -22,8 +22,10 @@ static func correr(m: Node, check: Callable) -> void:
 	if wall == "":
 		print("(muralla: este pueblo no levanta muralla de piedra; sin la prueba)")
 		return
-	sim.players[local]["age"] = maxi(2, int(sim.players[local]["age"]))
+	var age0 := int(sim.players[local]["age"])
+	sim.players[local]["age"] = maxi(2, age0)
 	var res: Dictionary = sim.players[local]["res"]
+	var res0 := res.duplicate()
 	res["piedra"] = int(res.get("piedra", 0)) + 1000
 	res["madera"] = int(res.get("madera", 0)) + 500
 	# Una fila de 9 casillas libres cerca de la base; las 3 del medio, de empalizada propia.
@@ -126,3 +128,14 @@ static func correr(m: Node, check: Callable) -> void:
 	cam.look_at_point(Vector3(fila.x + 4.5, 0, fila.y + 2.5))
 	await m._frames(8)
 	m.get_viewport().get_texture().get_image().save_png("screenshots/muralla.png")
+	# Se saca lo puesto: las pruebas que siguen buscan lugar y caminos cerca de la base.
+	for dy: int in [0, 4]:
+		for i in 9:
+			var e: SimEntity = sim.by_id.get(sim.map.occupant(fila.x + i, fila.y + dy))
+			if e != null and e.alive and e.owner == local and e.is_building():
+				sim.remove_quietly(e)
+	sim.players[local]["age"] = age0
+	for k in res0:
+		res[k] = res0[k]
+	ctrl.select_ids([] as Array[int])
+	await m._frames(2)

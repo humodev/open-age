@@ -1,0 +1,50 @@
+
+semilla 1 etiopia(experta) vs mapuches(experta) ganador=-1
+  (casillas libres para el lienzo: 7, alerta true)
+  etiopia: edad 2, lienzo [12, 2, true], piezas { "muralla": 3 }, piedra 376
+  (casillas libres para el lienzo: -1, alerta true)
+  mapuches: edad 4, lienzo no, piezas {  }, piedra 215
+
+semilla 1 tawantinsuyu(dificil) vs palmares(experta) ganador=0
+  (casillas libres para el lienzo: 7, alerta true)
+  tawantinsuyu: edad 4, lienzo [14, 2, true], piezas { "muralla": 7, "muralla*": 3, "puerta_piedra*": 1, "torre_muralla": 2 }, piedra 293
+  (casillas libres para el lienzo: -1, alerta true)
+  palmares: edad 2, lienzo no, piezas {  }, piedra 790
+
+semilla 1 ayutthaya(experta) vs guaranies(dificil) ganador=-1
+  (casillas libres para el lienzo: 7, alerta true)
+  ayutthaya: edad 2, lienzo no, piezas {  }, piedra 588
+  (casillas libres para el lienzo: -1, alerta true)
+  guaranies: edad 3, lienzo no, piezas {  }, piedra 612
+
+semilla 1 etiopia(experta) vs tawantinsuyu(experta) ganador=-1
+  (casillas libres para el lienzo: 3, alerta false)
+  etiopia: edad 4, lienzo [17, 3, false], piezas { "muralla": 5, "torre_muralla": 2 }, piedra 549
+  (casillas libres para el lienzo: 6, alerta true)
+  tawantinsuyu: edad 2, lienzo no, piezas {  }, piedra 230
+
+semilla 2 etiopia(experta) vs mapuches(experta) ganador=-1
+  (casillas libres para el lienzo: 9, alerta true)
+  etiopia: edad 2, lienzo [14, 2, true], piezas { "muralla": 9, "puerta_piedra": 1 }, piedra 212
+  (casillas libres para el lienzo: -1, alerta true)
+  mapuches: edad 4, lienzo no, piezas {  }, piedra 282
+
+semilla 2 tawantinsuyu(dificil) vs palmares(experta) ganador=-1
+  (casillas libres para el lienzo: 14, alerta true)
+  tawantinsuyu: edad 2, lienzo no, piezas {  }, piedra 20
+  (casillas libres para el lienzo: -1, alerta false)
+  palmares: edad 3, lienzo no, piezas {  }, piedra 247
+
+semilla 2 ayutthaya(experta) vs guaranies(dificil) ganador=-1
+  (casillas libres para el lienzo: 12, alerta true)
+  ayutthaya: edad 3, lienzo [14, 2, true], piezas { "muralla": 9, "puerta_piedra": 1 }, piedra 547
+  (casillas libres para el lienzo: -1, alerta true)
+  guaranies: edad 3, lienzo no, piezas {  }, piedra 659
+
+semilla 2 etiopia(experta) vs tawantinsuyu(experta) ganador=-1
+  (casillas libres para el lienzo: -1, alerta true)
+  etiopia: edad 3, lienzo [17, 3, true], piezas {  }, piedra 364
+  (casillas libres para el lienzo: 7, alerta true)
+  tawantinsuyu: edad 4, lienzo [13, 2, true], piezas { "muralla": 3 }, piedra 107
+
+MURALLA_IA: 6 de 16 jugadores con muralla
