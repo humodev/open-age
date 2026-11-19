@@ -1,7 +1,7 @@
 {
  "civ": "guaranies",
  "titulo": "Primeros pasos",
- "resumen": "Aprendé a mirar el mapa, juntar los cuatro recursos, construir, explorar, tomar un sitio sagrado, defenderte y avanzar de edad.",
+ "resumen": "Aprendé a mirar el mapa, juntar los cuatro recursos, construir, explorar, tomar y cuidar un sitio sagrado, defenderte, avanzar de edad y mejorar a tu tropa.",
  "misiones": [
   {
    "id": "tutorial-1",
@@ -11,7 +11,7 @@
    "intro": [
     "Antes de las grandes historias, lo básico: un pueblo vive de lo que junta, de lo que construye y de quienes lo defienden.",
     "La cámara se mueve con las flechas o llevando el mouse al borde; la rueda acerca y aleja. Seleccioná con clic izquierdo (arrastrá para elegir varios) y da órdenes con clic derecho. La grilla de abajo a la derecha construye y entrena: cada botón tiene su tecla (Q, W, E, R…).",
-    "Los objetivos aparecen de a uno, arriba a la izquierda. Lo que dice la Guía se puede releer con F7."
+    "Los objetivos aparecen de a uno, arriba a la izquierda. Con G se abre la Guía: relee lo que dijo y trae lecciones cortas de cada cosa del juego."
    ],
    "epilogo": [
     "Ya sabés lo necesario. Cada pueblo juega distinto: elegí uno en las campañas o en una escaramuza y descubrí su forma."
@@ -186,6 +186,26 @@
      "oculto": true
     },
     {
+     "id": "o13",
+     "texto": "Poné guardia en el sitio sagrado: mandá 2 guerreros a pararse al lado (si no te quedan, entrená más). Sin guardia, el sitio no da riqueza.",
+     "tipo": "guardia",
+     "params": {
+      "n": 1
+     },
+     "secundario": false,
+     "oculto": true
+    },
+    {
+     "id": "o14",
+     "texto": "Mejorá a tu tropa: con el cuartel seleccionado, comprá Armas templadas (herrería).",
+     "tipo": "investigar",
+     "params": {
+      "herreria": true
+     },
+     "secundario": false,
+     "oculto": true
+    },
+    {
      "id": "pr",
      "texto": "Cuidá a tus aldeanos: si caen todos, la misión se pierde.",
      "tipo": "proteger",
@@ -270,7 +290,7 @@
       "tipo": "dialogo",
       "params": {
        "quien": "Guía",
-       "texto": "Más manos, más recursos. Seleccioná el centro con H y entrená aldeanos con Q. Si un aldeano se queda sin trabajo, la tecla punto (.) lo encuentra."
+       "texto": "Más manos, más recursos. Seleccioná el centro con H y entrená aldeanos con Q. Arriba, al lado de los recursos, está la cola: una casilla por edificio que entrena. Si se pone roja, está trabado (casi siempre faltan casas); pasá el mouse y te dice por qué."
       }
      }
     },
@@ -345,7 +365,7 @@
       "tipo": "dialogo",
       "params": {
        "quien": "Guía",
-       "texto": "Eso es un sitio sagrado. Se toma dejando una unidad al lado, sin enemigos cerca, y da riqueza mientras sea tuyo. En una escaramuza, el que tiene todos los sitios gana si los mantiene un rato: aparece una cuenta regresiva grande arriba al centro. Para cortarla, llevá tropas a pararse en uno."
+       "texto": "Eso es un sitio sagrado. Se toma dejando una unidad al lado, sin enemigos cerca. Da riqueza mientras sea tuyo y tenga guardia: soldados tuyos parados cerca. En una escaramuza, el que tiene todos los sitios gana si los mantiene un rato: aparece una cuenta regresiva grande arriba al centro. Para cortarla, llevá tropas a pararse en uno."
       }
      }
     },
@@ -395,7 +415,7 @@
       "tipo": "dialogo",
       "params": {
        "quien": "Guía",
-       "texto": "Choque vence a distancia, distancia vence a línea, línea vence a choque. El guerrero es de choque: entrená cinco con el cuartel seleccionado."
+       "texto": "Choque vence a distancia, distancia vence a línea, línea vence a choque. El guerrero es de choque: entrená cinco con el cuartel seleccionado. Truco: Ctrl + clic en el botón del guerrero lo deja entrenando solo, sin parar; otro Ctrl + clic lo corta."
       }
      }
     },
@@ -492,6 +512,70 @@
       "params": {
        "quien": "Guía",
        "texto": "Cada edad se gana con un hito, y cada pueblo tiene los suyos. El hito pide alimento y riqueza: el panel de Edad (F4) muestra cuánto falta. Elegí: economía (Z) o guerra (X)."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o9"
+     },
+     "accion": {
+      "tipo": "objetivo_nuevo",
+      "params": {
+       "id": "o13"
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o9"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "El sitio sagrado es tuyo, pero solo da riqueza con guardia. Elegí dos guerreros (si no te quedan, entrená más) y mandalos con clic derecho al lado del sitio: mientras estén ahí, rinde."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o10"
+     },
+     "accion": {
+      "tipo": "objetivo_nuevo",
+      "params": {
+       "id": "o14"
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o10"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "¡Edad II! Se abre la herrería: mejoras de ataque y armadura para toda tu tropa, también la que ya tenés. Elegí el cuartel y comprá Armas templadas; la estrellita marca la que conviene primero."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o10",
+      "espera": 15
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Listo. Lo demás (el mercado, el comercio, las murallas, la maravilla…) está en las lecciones de la Guía: apretá G cuando quieras, o «¿Cómo se usa?» con algo seleccionado."
       }
      }
     },

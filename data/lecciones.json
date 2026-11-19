@@ -1,0 +1,97 @@
+{
+  "_doc": "Lecciones cortas de la Guía (G), una por mecánica (proceso/36-aprendizaje). Cada una: titulo, que (qué es), cuando (cuándo conviene) y consejo. Se abren desde la Guía o con «¿Cómo se usa?» en el panel de la selección. para: qué selección la ofrece (tipos de entidad, o banderas: produce_aldeano, produce_tropa, mercado, sagrado, maravilla, area, tropa, muro, y aldeano_mercado, aldeano_muro y aldeano_maravilla, que el aldeano tiene solo si su pueblo puede levantar eso). Marcadores en el texto: {reglas:camino.al.valor}, {casillas:…} (milésimas a casillas), {min:…} (ms a minutos) y {edad:…} (número a I, II, III, IV): salen de data/reglas.json, así el texto no queda viejo cuando cambia el balance.",
+  "consejos": {
+    "_doc": "Consejos de aprendizaje de las mecánicas nuevas (src/game/ui/consejos.gd → _mecanicas; solo con los consejos prendidos: tutorial y fácil de fábrica). Cada uno sale una vez por partida salvo que tenga repetir_s. durante_s: cuánto tiene que durar la situación. Los textos aceptan los marcadores de las lecciones; leccion: la que se nombra al final («G: …»).",
+    "sitio_sin_guardia": { "durante_s": 45, "repetir_s": 240, "leccion": "sitios", "texto": "Tu sitio sagrado no rinde: le falta guardia\nCon {reglas:sitios.guarnicion_pob} de población militar tuya cerca vuelve a dar riqueza." },
+    "cola_trabada": { "durante_s": 10, "leccion": "cola", "texto": "Una casilla de la cola se puso roja: ese edificio se trabó\nPasá el mouse sobre ella y te dice qué falta." },
+    "repeticion": { "desde_s": 300, "leccion": "repeticion", "texto": "Truco: Ctrl + clic en una unidad la entrena sola, sin parar\nOtro Ctrl + clic la corta. Sirve mucho con los aldeanos." },
+    "herreria": { "durante_s": 90, "leccion": "herreria", "texto": "Ya podés mejorar a tu tropa\nEn el cuartel (o en su botón Herrería) están el ataque y la armadura: valen para toda la tropa." },
+    "niveles": { "durante_s": 60, "tropa_min": 5, "leccion": "niveles", "texto": "En la III tu tropa puede subir a veterana\nEn el edificio que la entrena, el nivel le da vida y ataque a toda esa línea." },
+    "escuela": { "durante_s": 30, "leccion": "escuela", "texto": "Tu capital tiene la escuela de la IV (F)\nAdentro hay caminos: el primero que elegís cierra los otros." },
+    "maravilla_rival": { "leccion": "maravilla", "texto": "Una maravilla se frena derribándola\nLlevá asedio con escolta; sin constructores, la obra se para." },
+    "comercio": { "durante_s": 120, "leccion": "comercio", "texto": "El mercado también da riqueza que no se agota\nEntrená un comerciante y mandalo con clic derecho a un mercado lejano." },
+    "muralla": { "empalizadas_min": 6, "leccion": "muralla", "texto": "La empalizada se puede reforzar con piedra\nCon aldeanos, en Militar (W), arrastrá la muralla por encima." },
+    "asedio_area": { "leccion": "asedio_area", "texto": "La catapulta pega en área\nCon R y clic en el suelo tira a ese punto. Llevala detrás de tu tropa." },
+    "mercado": { "_doc": "Se suma al consejo de recurso sin gastar desde la edad del mercado.", "texto": "En el mercado lo cambiás por lo que te falte." }
+  },
+  "orden": ["cola", "repeticion", "herreria", "sitios", "niveles", "mercado", "comercio", "muralla", "asedio_area", "escuela", "maravilla"],
+  "lecciones": {
+    "cola": {
+      "titulo": "La cola de producción",
+      "que": "Arriba, a la derecha de los recursos, hay una casilla por cada edificio que entrena: muestra qué hace y cuántos esperan. Si está gris, el edificio está quieto. Si está roja con candado, está trabado: no puede seguir.",
+      "cuando": "Mirala de reojo todo el tiempo. Un edificio gris es tiempo perdido; uno rojo casi siempre es población llena o falta de recursos.",
+      "consejo": "Pasá el mouse sobre la casilla roja: dice el motivo («Construí casas», «faltan 40 de madera»). Un clic lleva la cámara al edificio.",
+      "para": ["produce_aldeano", "produce_tropa"]
+    },
+    "repeticion": {
+      "titulo": "Producción que se repite",
+      "que": "Un edificio puede entrenar la misma unidad sin parar: cuando se vacía la cola, encola otra sola, si alcanza y hay lugar de población.",
+      "cuando": "Con aldeanos desde el principio (para en {reglas:repeticion.tope_aldeanos}) y con la tropa que más usás. Te deja las manos libres para mirar el mapa.",
+      "consejo": "Ctrl + clic en la casilla de la unidad (o Ctrl + su tecla) la prende; otra vez Ctrl + clic la corta. Si se traba, la cola de arriba se pone roja.",
+      "para": ["produce_aldeano", "produce_tropa"]
+    },
+    "herreria": {
+      "titulo": "Herrería: ataque y armadura",
+      "que": "Mejoras de ataque y de armadura, cuerpo a cuerpo y a distancia, para toda tu tropa, también la que ya tenés. Están en los edificios que entrenan tropa, a veces juntas en el botón «Herrería».",
+      "cuando": "Desde la edad II. La primera de ataque es barata y se nota enseguida: comprala apenas tengas un ejército.",
+      "consejo": "Mejorá lo que más usás: si tenés guerreros, cuerpo a cuerpo; si tenés arqueros u honderos, distancia. La estrellita marca la que conviene primero.",
+      "para": ["produce_tropa"]
+    },
+    "sitios": {
+      "titulo": "Sitios sagrados con guardia",
+      "que": "Un sitio se toma dejando una unidad al lado, sin enemigos cerca. Pero solo da riqueza si lo cuidás: necesita {reglas:sitios.guarnicion_pob} de población militar tuya a {casillas:sitios.guarnicion_radio} casillas o menos. Sin guardia, la renta se congela.",
+      "cuando": "Desde la edad {edad:sitios.captura_edad_min} se pueden tomar. Conviene uno cerca de tu base primero: es fácil de cuidar.",
+      "consejo": "Dejá un par de soldados parados junto al sitio (D los mantiene en el lugar). Quien tiene todos los sitios y los cuida {min:sitios.victoria_ms} minutos gana: con pisar uno se corta la cuenta.",
+      "para": ["sagrado"]
+    },
+    "niveles": {
+      "titulo": "Veterano y élite",
+      "que": "Cada línea de tropa (choque, distancia, línea, montados, pólvora) sube de nivel en el edificio que la entrena: veterano en la III y élite en la IV. Más vida y más ataque para todas las de esa línea.",
+      "cuando": "Cuando una línea es el centro de tu ejército. No hace falta subir todas: subí la que tenés.",
+      "consejo": "Los niveles reemplazan al bono de ataque por edad: si llegás a la III y no subís a tu tropa principal, pega igual que en la II.",
+      "para": ["produce_tropa", "tropa"]
+    },
+    "mercado": {
+      "titulo": "El mercado: lo que sobra",
+      "que": "Compra y vende alimento, madera y piedra por riqueza, de a {reglas:mercado.lote}. Cada venta baja el precio y cada compra lo sube; con el tiempo vuelve solo.",
+      "cuando": "Cuando se te junta un recurso que no vas a usar, o te falta poco de otro para algo urgente (un hito, una tanda de tropa).",
+      "consejo": "Si sobra riqueza, comprá lo que te falta; si sobra madera o alimento, vendelo. Vender de a mucho junto sale caro: el precio cae con cada lote.",
+      "para": ["mercado", "aldeano_mercado"]
+    },
+    "comercio": {
+      "titulo": "Comercio y rutas",
+      "que": "El comerciante sale de tu mercado, va a otro (neutral, de un aliado o tuyo) y vuelve con riqueza. Cuanto más lejos el destino, más gana por viaje.",
+      "cuando": "Desde la edad III, cuando la riqueza del mapa se empieza a acabar. Es riqueza que no se agota mientras la ruta siga abierta.",
+      "consejo": "Clic derecho en el mercado de destino abre la ruta. Si hay tropa enemiga junto al destino y ninguna tuya, la ruta se corta: cuidala, y cortá la del rival.",
+      "para": ["mercado", "comerciante", "mercado_neutral"]
+    },
+    "muralla": {
+      "titulo": "Muralla de piedra",
+      "que": "Desde la edad II, tramos de piedra que se arrastran como la empalizada, con su puerta y torres encima. Aguanta mucho más: solo el asedio la rompe bien.",
+      "cuando": "Para cerrar el lado por donde viene el rival, sobre todo si te atacan seguido. Es cara: no amurallés todo.",
+      "consejo": "Con aldeanos, en Militar (W), elegí la muralla y arrastrala sobre tu empalizada: la refuerza. G pone una puerta y Mayús encadena tramos.",
+      "para": ["muro", "aldeano_muro"]
+    },
+    "asedio_area": {
+      "titulo": "Asedio de área y ataque al suelo",
+      "que": "La catapulta pega a todos los enemigos cerca del blanco. Su tiro tarda en llegar: la tropa que se mueve a tiempo lo esquiva. A los edificios les hace poco.",
+      "cuando": "Contra ejércitos amontonados, detrás de tu propia tropa. Sola, muere: la tropa de choque la rompe enseguida.",
+      "consejo": "Con la catapulta elegida, R y clic en el suelo: tira a ese punto hasta otra orden. Sirve para cerrar un paso o pegarle a la tropa que va a pasar por ahí.",
+      "para": ["area", "taller"]
+    },
+    "escuela": {
+      "titulo": "La escuela de la edad IV",
+      "que": "En la IV, la capital (y algunos edificios de cada pueblo) tiene el botón de la escuela (F). Adentro hay caminos: guerra, asedio o defensa. Elegir uno cierra los otros para toda la partida.",
+      "cuando": "Apenas llegás a la IV, pensando en cómo vas a ganar: con tropa, rompiendo la base rival o aguantando.",
+      "consejo": "No hay camino malo, pero no se deshace. Si no sabés, elegí el que acompaña a tu ejército de ahora.",
+      "para": ["produce_aldeano"]
+    },
+    "maravilla": {
+      "titulo": "La maravilla y cómo frenarla",
+      "que": "La obra de la edad IV, una por pueblo, muy cara. Todos la ven en el mapa. Cuando termina, corre una cuenta de {min:maravilla.victoria_ms} minutos: si llega a cero, su dueño gana. Si cae, la cuenta se pierde.",
+      "cuando": "Si la tuya puede terminarse y defenderse. Mientras está en obra, el rival la ve y va a venir.",
+      "consejo": "Para frenar la de otro: llevá asedio (arietes, catapultas) con escolta y derribala. Matar a los aldeanos que la construyen también la para: la cuenta de arriba dice «PARADA».",
+      "para": ["maravilla", "aldeano_maravilla"]
+    }
+  }
+}

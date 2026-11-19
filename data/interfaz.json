@@ -67,7 +67,7 @@
       ["sucesos", "Registro de sucesos", "Paneles", "F5"],
       ["puntaje", "Puntaje y tributos", "Paneles", "F6"],
       ["pausa", "Pausa", "Paneles", "F10"],
-      ["guia", "Registro de la Guía (campañas)", "Paneles", "G"],
+      ["guia", "La Guía: lecciones y lo que dijo en las campañas", "Paneles", "G"],
       ["atajos", "Hoja de atajos", "Paneles", "F12"],
       ["mi_base", "Panel «Mi base»", "Paneles", "F11"]
     ],
@@ -189,7 +189,7 @@
     "pelea": { "_doc": "Resumen de una pelea perdida (proceso/24, 4q): cuenta las bajas propias a más de `lejos_casillas` de la capital; cuando pasan `calma_s` segundos sin bajas, si fueron `bajas_min` o más, avisa en un título y tres renglones cortos (ronda 6): qué las mató (los `nombres_max` atacantes que más mataron), qué llevar (asedio si los edificios que disparan hicieron `edificios_pct` % o más; la tropa con bono contra la unidad que más mató) y cómo mandarlos: si `ocupados_pct` % o más le pegaban a un edificio cuando cayeron, que con A y clic van primero a los soldados (la elección de blancos, proceso/24, 5d)", "lejos_casillas": 25, "calma_s": 12, "bajas_min": 10, "nombres_max": 3, "edificios_pct": 25, "ocupados_pct": 30, "repetir_s": 60 }
   },
   "guia": {
-    "_doc": "Mensajes de la Guía en campañas (src/game/hud.gd y src/game/ui/registro_guia.gd): cuánto quedan en pantalla según el largo (letras por segundo, mínimo y máximo) y cuántos guarda el registro que se relee con F7.",
+    "_doc": "Mensajes de la Guía en campañas (src/game/hud.gd y src/game/ui/registro_guia.gd): cuánto quedan en pantalla según el largo (letras por segundo, mínimo y máximo) y cuántos guarda el registro que se relee con G.",
     "letras_por_s": 11,
     "min_s": 7.0,
     "max_s": 22.0,
