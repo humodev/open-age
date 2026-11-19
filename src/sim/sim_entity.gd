@@ -3,7 +3,7 @@ extends RefCounted
 ## Una entidad de la simulación. Las capacidades salen de `def` (datos), no de subclases.
 
 enum Cat { UNIT, BUILDING, RESOURCE }
-enum Order { IDLE, MOVE, ATTACK_MOVE, ATTACK, GATHER, RETURN, BUILD, GARRISON, HOLD }
+enum Order { IDLE, MOVE, ATTACK_MOVE, ATTACK, GATHER, RETURN, BUILD, GARRISON, HOLD, TRADE }
 
 var id: int
 var owner: int = -1 # -1 = naturaleza
@@ -62,6 +62,15 @@ var inside: int = -1 # id del edificio que la aloja
 var last_combat: int = -100000 # último tick en que pegó o recibió un golpe
 var slow_until: int = -1 # frenada (boleadoras) hasta este tick
 var shots: int = 0 # disparos hechos (munición limitada)
+# --- comercio --- (SimComercio): ruta del comerciante
+var trade_home: int = -1 # mercado propio
+var trade_dest: int = -1 # mercado destino (neutral, aliado o propio)
+var trade_leg: int = 0 # SimComercio.Leg
+var trade_gain: int = 0 # riqueza que trae (se cobra al volver)
+var trade_wx: int = -1 # punto de paso (milésimas); -1 sin punto
+var trade_wy: int = -1
+var trade_wpd := true # ya pasó por el punto en este tramo
+# --- fin comercio ---
 var aura_bits: int = 0 # --- paso 4 --- hitos militares de su dueño en cuya aura está (Sim._aura_combat)
 
 # --- Edificios ---

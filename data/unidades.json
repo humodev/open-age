@@ -71,6 +71,13 @@
     "velocidad": 1250, "vision": 8000, "radio": 300,
     "desc": "Tropa de élite de la edad IV: cara, sin riqueza, y fuerte por casilla de población. Gasta el alimento y la madera que sobran en el final."
   },
+  "comerciante": {
+    "nombre": "Comerciante", "funcion": "comercio", "edad_min": 3, "pob": 1,
+    "costo": { "alimento": 60, "madera": 100 }, "tiempo_ms": 25000,
+    "pv": 100, "armadura": 0, "armadura_distancia": 1, "ataque": 0, "alcance": 0, "cadencia_ms": 1500,
+    "velocidad": 1400, "vision": 6000, "radio": 240, "comerciante": true,
+    "desc": "Va del mercado propio a otro mercado y vuelve con riqueza: cuanto más lejos, más gana. Clic derecho en un mercado neutral, aliado o propio para abrir la ruta; Mayús para un punto de paso."
+  },
   "rebano": {
     "nombre": "Animal del rebaño", "funcion": "ganado", "edad_min": 1, "pob": 0, "costo": {}, "tiempo_ms": 1000,
     "pv": 30, "armadura": 0, "armadura_distancia": 0, "ataque": 0, "alcance": 0, "cadencia_ms": 1500,

@@ -130,8 +130,13 @@
   },
   "mercado": {
     "nombre": "Mercado", "edad_min": 2, "tam": [3, 3], "pv": 1500, "armadura": 1,
-    "costo": { "madera": 175 }, "tiempo_ms": 35000, "vision": 6000, "mercado": true, "ranura": 5,
+    "costo": { "madera": 175 }, "tiempo_ms": 35000, "vision": 6000, "mercado": true, "ranura": 5, "produce": ["comerciante"],
     "desc": "Compra y vende alimento, madera y piedra por riqueza. Los precios se mueven con cada operación."
+  },
+  "mercado_neutral": {
+    "nombre": "Feria", "edad_min": 1, "tam": [3, 3], "pv": 1, "armadura": 0,
+    "costo": {}, "tiempo_ms": 0, "vision": 0, "mercado_neutral": true, "indestructible": true,
+    "desc": "Mercado de nadie (proceso/33-comercio): no se rompe ni se captura. Los comerciantes de todos van y vuelven; si hay tropa enemiga al lado y ninguna propia, la ruta queda cortada."
   },
   "ingenio": {
     "nombre": "Ingenio (neutral)", "edad_min": 1, "tam": [3, 3], "pv": 1500, "armadura": 2,

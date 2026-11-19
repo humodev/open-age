@@ -15,6 +15,7 @@ var map: SimMap
 var fog: SimFog
 var mods: SimMods
 var groups: SimGroups # movimiento en grupo (proceso/21)
+var comercio: SimComercio # --- comercio --- mercados neutrales y rutas (proceso/33)
 var tele := SimTelemetry.new() # proceso/20: solo mira, no es estado
 var _cur_cmd := "" # orden que se está aplicando (solo para la telemetría)
 var rng: SimRng
@@ -84,6 +85,7 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null,
 	fog.vision_per_level = data.reglas["vision_por_nivel"]
 	mods = SimMods.new(self)
 	groups = SimGroups.new(self)
+	comercio = SimComercio.new(self) # --- comercio ---
 	for i in num_players:
 		players.append({
 			"id": i,
@@ -2250,6 +2252,8 @@ func attack_bonus(a: SimEntity, t: SimEntity) -> int:
 
 
 func _hit(a: SimEntity, t: SimEntity) -> void:
+	if t.def.get("indestructible", false): # --- comercio --- el mercado neutral no se rompe
+		return
 	var atk := effective_attack(a) + attack_bonus(a, t)
 	# --- paso 6 --- Carga (kona de waiki): el primer golpe después de un rato sin pelear pega más y derriba.
 	if a.def.has("carga") and t.is_unit() and tick - a.last_combat >= int(a.def["carga"]["espera_ms"]) / tick_ms:
@@ -4044,6 +4048,10 @@ func _generate_map() -> void:
 	_res_sym_near("riqueza", Vector2i(mid + 14, mid + 6), _far_amt("riqueza", "riqueza_lejos"), false)
 	_cluster_sym("arbusto", Vector2i(mid - 18, mid + 2), 6)
 
+	# --- comercio --- dos mercados neutrales sobre la mediatriz (proceso/33-comercio, §1), antes
+	# de los bosques: los bosques no se les ponen encima.
+	if players.size() == 2 and not _opts.get("sin_sitios", false) and not _opts.get("sin_mercados", false):
+		comercio.place_1v1()
 	# Bosques.
 	var tries := 0
 	var made := 0
@@ -4052,7 +4060,7 @@ func _generate_map() -> void:
 	while made < forests and tries < 300:
 		tries += 1
 		var c := Vector2i(rng.range_i(5, n - 6), rng.range_i(5, n - 6))
-		if _near_base(c, 17) or absi(c.x - c.y) < 6 and absi(c.x + c.y - n) < 20:
+		if _near_base(c, 17) or absi(c.x - c.y) < 6 and absi(c.x + c.y - n) < 20 or comercio.near_neutral(c, 11):
 			continue
 		_blob_sym(c, rng.range_i(3, 6), 78)
 		made += 1
@@ -4216,6 +4224,10 @@ func _generate_map_n() -> void:
 		var mb := (a + b) / 2
 		_res_at("roca", mb - (mid - mb) / 8, _far_amt("roca", "roca_lejos"), -1)
 		_res_at("riqueza", mb + (mid - mb) / 6, _far_amt("riqueza", "riqueza_lejos"), -1)
+	# --- comercio --- mercados neutrales entre equipos o entre bases vecinas (proceso/33, §1),
+	# antes de los bosques: los bosques no se les ponen encima.
+	if not _opts.get("sin_mercados", false):
+		comercio.place_n(ring_bases, slot)
 	# Bosques y bordes.
 	var made := 0
 	var tries := 0
@@ -4223,7 +4235,7 @@ func _generate_map_n() -> void:
 	while made < forests and tries < forests * 25:
 		tries += 1
 		var fc := Vector2i(rng.range_i(5, n - 6), rng.range_i(5, n - 6))
-		if _near_base(fc, 27) or absi(fc.x - n / 2) + absi(fc.y - n / 2) < 14:
+		if _near_base(fc, 27) or absi(fc.x - n / 2) + absi(fc.y - n / 2) < 14 or comercio.near_neutral(fc, 11):
 			continue
 		_blob_at(fc, rng.range_i(3, 6), 78)
 		made += 1
