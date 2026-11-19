@@ -24,7 +24,27 @@ Trabajo que decidió el autor a partir de la [síntesis de la ronda 8](../22-tes
 - Hash nuevo: 718068252.
 - Primera victoria: 2 de 3. |
 | 3 | Cola de producción siempre a la vista, en rojo cuando está trabada; menos mensajes | **Integrado (44db138)**, [03](03-menos-mensajes-cola-visible.md):<br>• **Cola global:** siempre visible; en rojo y con candado cuando está trabada (el motivo, en la ayuda); en gris cuando está quieta.<br>• **Avisos:** los de gestión pasan a «Consejos de aprendizaje» (tutorial y fácil). Quedan los de AoE4 (ataque, edad, investigación, aliado, maravilla).<br>• **Mensajes en 15 min:** de 96 a 38 en el 1v3, de 130 a 62 en el 2v2. Desaparecen los 292 «Población llena».<br>• **Maravilla:** la ficha dice qué hito pide.<br>Mismo hash; autotest OK |
-| 4 | Rendimiento con 7 u 8 jugadores: perfilado y arreglo | En curso |
+| 4 | Rendimiento con 7 u 8 jugadores: perfilado y arreglo | **Integrado (2504148)**, [04](04-rendimiento.md)
+
+**Qué pesaba:** la IA, el 40–44 % del tiempo. Todas las IA pensaban en el mismo tick y recorrían el mapa entero unas 36 veces cada vez.
+
+**Cambios:**
+- Las IA piensan en ticks repartidos. Solo cambia el resultado con 3 o más IA.
+- Listas de entidades por dueño y por tipo.
+- La amenaza y el aura se calculan una vez por tick.
+
+**Resultados** (promedio / p95 en ms):
+
+| Partida | Antes | Después |
+|---|---|---|
+| 1v6 | 20,6 / 80 | 12,1 / 25 |
+| 4v4 | 62,9 / 273 | 35,7 / 67 |
+
+- 1v6: los ticks de más de 100 ms bajan de 142 a 0, y el ×4 alcanza en toda la partida.
+- 4v4: quedan picos por los caminos. Cada 5 ticks una IA vuelve a mandar a todo su ejército, y cada soldado recalcula su camino.
+- La meta del p95 por debajo de 40 ms con 8 jugadores no se cumple.
+
+**Pruebas:** mismo hash en 1v1 (718068252); el bench mejora; el autotest da OK. |
 | 5 | Sumidero en la IV (escuelas excluyentes, élite cara) y contrajuego a la maravilla | **Integrado (d8f2cac)**, [05](05-sumidero-iv-y-maravilla.md)
 
 **Sumidero en la IV**
