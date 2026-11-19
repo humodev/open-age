@@ -12,7 +12,7 @@ extends SceneTree
 ##
 ## Uso:
 ##   godot --headless --path . -s tools/perfil_sim.gd -- [--partida=1v6|4v4|tct7|ambas|todas] [--minutos=40]
-##         [--semilla=42] [--picos=12] [--plano] [--ia-detalle] [--detalle]
+##         [--semilla=42] [--picos=12] [--plano] [--ia-detalle] [--detalle] [--sin-cache] [--sin-reenvio]
 ## --ia-detalle: la IA por parte de think; --detalle: ayudantes (approach, try_move, …) por parte.
 ## --plano: sin envoltorios, solo el tiempo total de cada tick (para comparar con lo medido).
 
@@ -310,6 +310,10 @@ func _make(nombre: String, semilla: int, plano: bool, ia_det: bool, det: bool) -
 		var t := PTele.new()
 		_copy(s.tele, t)
 		s.tele = t
+	if OS.get_cmdline_user_args().has("--sin-cache"): # comparar: sin la caché de caminos (proceso/32-ronda-8/07)
+		s.map.path_cfg = {}
+	if OS.get_cmdline_user_args().has("--sin-reenvio"): # comparar: la IA vuelve a mandar a todos
+		s.data.reglas["ia_reenvio"]["tolerancia"] = -1
 	s.ais = []
 	for pid in lug.size():
 		var ai: SimAI = SimAI.new(s, pid, lug[pid][0]) if plano else (PAIDet.new(s, pid, lug[pid][0]) if ia_det else PAI.new(s, pid, lug[pid][0]))
@@ -446,6 +450,7 @@ func _run(nombre: String, semilla: int, minutos: int, n_picos: int, plano: bool,
 		for k in PMap.por_orden:
 			lo += " [%s] %d · %d · %.0f;" % [k, PMap.por_orden[k][0], PMap.por_orden[k][1], PMap.por_orden[k][2] / 1000.0]
 		print(lo)
+		print("caché de caminos: %d aciertos, %d búsquedas" % [s.map.cache_hits, s.map.cache_miss])
 		PMap.por_clase = {}
 		PMap.por_orden = {}
 	s.soltar()

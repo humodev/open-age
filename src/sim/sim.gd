@@ -79,6 +79,7 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null,
 		if pct != 100:
 			size = size * pct / 100 / 8 * 8
 	map = SimMap.new(size, num_players)
+	map.path_cfg = data.reglas.get("caminos", {})
 	fog = SimFog.new(size, num_players)
 	fog.map = map
 	fog.vision_per_level = data.reglas["vision_por_nivel"]
@@ -1279,6 +1280,7 @@ static func soltar_todas() -> void:
 
 func step() -> void:
 	_in_step = true
+	map.now = tick
 	events.clear()
 	var cmds: Array = _pending.get(tick, [])
 	_pending.erase(tick)

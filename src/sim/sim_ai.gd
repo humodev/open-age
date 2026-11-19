@@ -27,6 +27,7 @@ var _eng_rate := 0
 var _no_route := {} # edificio -> tick desde el que se vuelve a intentar el camino
 var last_site := 0
 var _detour := {} # sin tomar sitios: unidad -> {"exit": Vector2i, "goal": Vector2i, "amove": bool} (sale de un sitio ajeno)
+var _sent := {} # unidad -> [x, y, amove, suelto, tick]: última orden de marcha que le dio la IA (_no_resend)
 var _weighted := false # sin tomar sitios: ya se cargó el peso de los sitios en la grilla de caminos
 var last_tribute := 0
 var _flares_done := {} # bengalas aliadas ya atendidas (id -> true)
@@ -193,6 +194,7 @@ func think() -> void:
 		return
 	_military(army, centro)
 	_flares(army, centro)
+	_no_resend()
 	# Al final: mira también las órdenes que el resto de la IA acaba de dar en este turno.
 	# Sin victoria por sitios (opción de partida, tutorial) no hace falta: tomarlos no gana.
 	if not level.get("toma_sitios", true) and not sim._opts.get("sitios_sin_victoria", false):
@@ -3467,6 +3469,44 @@ func _outside(sites: Array[SimEntity], goal: Vector2i, inner: int, outer: int) -
 	if st == null:
 		return goal
 	return _box_exit(st, outer, goal)
+
+
+## Rendimiento (proceso/32-ronda-8/07, reglas.ia_reenvio): de las órdenes de marcha que esta IA
+## acaba de dar, saca a quien ya va al mismo lugar con la misma orden. Antes cada pensada volvía a
+## mandar a todo el ejército hacia la amenaza (que casi no se movió) y cada soldado recalculaba su
+## camino y rearmaba su grupo: 60–70 búsquedas A* en un tick.
+func _no_resend() -> void:
+	var cfg: Dictionary = sim.data.reglas["ia_reenvio"]
+	var tol := int(cfg["tolerancia"])
+	var max_t := int(cfg["max_ticks"])
+	var cmds: Array = sim._pending.get(sim.tick + 1, [])
+	var drop := []
+	for c: Dictionary in cmds:
+		if c.get("t", "") != "move" or int(c.get("player", -1)) != player:
+			continue
+		var x := int(c["x"])
+		var y := int(c["y"])
+		var am: bool = c.get("amove", false)
+		var su: bool = c.get("suelto", false)
+		var want := O.ATTACK_MOVE if am else O.MOVE
+		var keep := []
+		for id in c.get("ids", []):
+			var u: SimEntity = sim.by_id.get(int(id))
+			var m: Array = _sent.get(int(id), [])
+			if u != null and u.alive and u.order == want and not m.is_empty() and m[2] == am and m[3] == su \
+					and sim.tick - int(m[4]) <= max_t and Sim.dist(x, y, int(m[0]), int(m[1])) <= tol:
+				continue
+			keep.append(id)
+			_sent[int(id)] = [x, y, am, su, sim.tick]
+		if keep.is_empty():
+			drop.append(c)
+		elif keep.size() < c["ids"].size():
+			c["ids"] = keep
+	for c in drop:
+		cmds.erase(c)
+	for id in _sent.keys(): # que no crezca con los muertos
+		if not sim.by_id.has(int(id)):
+			_sent.erase(id)
 
 
 ## Jugadores enemigos de este, en orden (para recorrer sus listas en Sim en lugar de actives).
