@@ -11,7 +11,6 @@
 | **La IA y la guarnición.** Deja 3 de población en cada sitio suyo, como mucho el 40 % del ejército. Esas tropas no salen en oleadas. Si persiguen a más de 10 casillas, vuelven sin pelear. Los sitios ajenos con tropa los desafía `_contest_sites`, con fuerza proporcional. Si están vacíos, va el grupo chico, y los que tienen enemigos los evita. | `reglas.ia_guarnicion`; `SimAI._garrison_step` |
 | **Hito en obra al 50 %.** En obra llega como mucho a la mitad de sus PV. Al terminar suma el resto y conserva el daño recibido. | `reglas.hito_en_obra_pv_pct`; `Sim._obra_top` |
 | **La III cuesta 800 A / 500 R / 100 P.** Los `costo_extra` de cada pueblo se suman igual (`SimData.cost_of`). | `data/edades.json` |
-| **Tawantinsuyu.** El taller de tejido convierte la mit'a en 28 de riqueza, no en 22. | `data/civs/tawantinsuyu.json` |
 
 La victoria por sitios sigue contando desde el minuto 15 (`cuenta_desde_ms` 900 000), y con 10 minutos de cuenta gana a los 25:00. `tests/opciones_partida.gd` suma un caso: con 3 sitios sin guarnición durante 25 minutos, no se gana y la renta es 0.
 
@@ -29,9 +28,9 @@ El método es el de la revisión: [partidas.gd](pruebas-3a/partidas.gd.txt), con
 | Guarnición 3, sin correa ([lote](pruebas-3a/lote-guarnicion3.txt)) | 5,0 % | **6 de 12** | **14:40** | 0 |
 | Con `sitios_rival_min` 1 ([lote](pruebas-3a/lote-rival-min1.txt)) | 4,9 % | 8 de 12 | 15:19 | 0 |
 | Con guarnición de 2 y `sitios_rival_min` 1 ([lote](pruebas-3a/lote-guarnicion2-rival-min1.txt)) | 2,7 % | 5 de 12 | 15:31 | 1 |
-| **Final**: guarnición de 3 con correa ([lote](pruebas-3a/lote-final.txt)) | LOTE_ATRAS | LOTE_III | LOTE_MED | LOTE_SIT |
+| **Final**: guarnición de 3 con correa ([lote](pruebas-3a/lote-final.txt)) | **8,8 %** | **6 de 12** | **14:29** | 0 |
 
-**Lo que no se cumple: la renta del que va atrás.** Una traza de mapuches contra guaraníes con la semilla 7 lo muestra:
+**El lote final cumple** la III (6 de 12 y mediana de 14:29, metas de ≤ 7 y ≤ 14:30), pero **no la renta del que va atrás:** 8,8 % (antes, 4,5 %; la meta es 20 %). Una traza de mapuches contra guaraníes con la semilla 7 lo muestra:
 - el que va adelante en edad también lleva de 2 a 3 veces más ejército (de 24 a 45 contra 5 a 15);
 - con 3 de guarnición por sitio, le alcanza para tener los tres;
 - el que va atrás toma un sitio y lo pierde, porque no gana la pelea chica.
@@ -45,15 +44,15 @@ Con `tools/civ_diag.gd` (30 partidas, 30 minutos, las semillas y los terrenos de
 | Pueblo | Torneo 41 | Con las reglas de 3a | Final |
 |---|---|---|---|
 | Mapuches | 70 % | **46 %** ([diag](pruebas-3a/diag-mapuches.txt)) | 46 % (no cambia nada mapuche) |
-| Tawantinsuyu | 34 % | 30 % ([diag](pruebas-3a/diag-tawantinsuyu.txt)) | TAWA_FINAL ([diag](pruebas-3a/diag-tawantinsuyu-cumbi28.txt)) |
+| Tawantinsuyu | 34 % | **30 %** ([diag](pruebas-3a/diag-tawantinsuyu.txt)) | 30 % (sin cambios: el cumbi a 28 dio 23 %, [diag](pruebas-3a/diag-tawantinsuyu-cumbi28.txt), y se volvió a 22) |
 
 - **Mapuches.** Con las reglas nuevas ya quedan en la banda, sin tocar sus datos. La sospecha de la empalizada no aplica a la IA: no la levanta nunca (la IA solo amuralla con piedra y los mapuches no tienen muralla). Sus hitos tardan 77, 92 y 106 s, contra 84, 115 y 134 s de los rivales, porque llegan con la misma cantidad de constructores y antes. Lo que los bajó fueron la III más barata, que también ayuda al rival, y la guarnición.
-- **Tawantinsuyu.** Pierde 0 de 6 contra Etiopía y 1 de 6 contra Palmares. Con Palmares, 4 veces lo destruyen después de un apuro a los 3:30–4:40, cuando tiene 1 o 2 soldados. Su II es la más rápida (6:03), pero la III llega a las 16:26 (en 24 de 30 partidas) y la IV solo en 6 de 30. Junta lo mismo que los mapuches (32 206 contra 32 175), pero tiene menos riqueza (5789 contra 7119). El ajuste mínimo es en esa riqueza: el cumbi pasa de 22 a 28.
+- **Tawantinsuyu.** Pierde 0 de 6 contra Etiopía y 1 de 6 contra Palmares. Con Palmares, 4 veces lo destruyen después de un apuro a los 3:30–4:40, cuando tiene 1 o 2 soldados. Su II es la más rápida (6:03), pero la III llega a las 16:26 (en 24 de 30 partidas) y la IV solo en 6 de 30. Junta lo mismo que los mapuches (32 206 contra 32 175), pero tiene menos riqueza (5789 contra 7119). Se probó el ajuste mínimo en esa riqueza: el cumbi pasó de 22 a 28. Dio 23 % (7 de 30), con la IV en 5 de 30, así que se volvió atrás. **El Tawantinsuyu queda fuera de la banda (30 %).** Lo que falta no es riqueza, sino aguantar el apuro temprano: a los 5 minutos tiene 1 o 2 soldados, con 24 aldeanos. La próxima prueba es la defensa temprana de su IA (ejército mínimo en la edad I) o una pukara más barata. Una sola prueba cuesta 50 minutos, y queda para el frente que siga.
 
 ## Otras medidas
 
 - **Primera victoria** (`tools/primera_victoria.gd`, 8 semillas): **8 de 8** ([salida](pruebas-3a/primera-victoria.txt)).
-- **Determinismo:** OK, hash **HASH_FINAL** (antes, 366120853). **Bench:** promedio de 9,17 ms y peor de 58 ms (el presupuesto es 100).
+- **Determinismo:** OK, hash **3059812827** (antes, 366120853). **Bench:** promedio de 9,17 ms y peor de 58 ms (el presupuesto es 100).
 - `tests/sitios.gd`, `opciones_partida.gd`, `facil_sitios.gd`, `jugabilidad.gd` y `civ_smoke.gd`: OK. El autotest con mapuches da OK ([captura](pruebas-3a/autotest-mapuches.jpg)).
 
 ## Tropiezos
