@@ -3364,8 +3364,16 @@ func _trade(p: Dictionary, by_type: Dictionary) -> void:
 	var sk: Dictionary = sim.data.reglas.get("ia_sumidero", {})
 	if level["investiga"] and int(p["age"]) >= int(sk.get("desde_edad", 4)):
 		var over: Dictionary = sk.get("vende_sobre", {})
+		# Sin vender lo que pide la próxima repetible de su camino (si no, nunca junta para ella).
+		var rep_cost := {}
+		var path := sim.school_path(player)
+		var techs: Dictionary = sim.dp(player).tecnologias
+		for tech: String in techs:
+			if path != "" and techs[tech].has("repite") and String(techs[tech].get("camino", "")) == path and sim.research_block(player, tech) == "":
+				rep_cost = sim.tech_cost(player, tech)
+				break
 		for k: String in over:
-			if int(res[k]) - int(hc.get(k, 0)) > int(over[k]):
+			if int(res[k]) - int(hc.get(k, 0)) > int(over[k]) + int(rep_cost.get(k, 0)):
 				last_trade = sim.tick
 				_market(m, k, "vender")
 				return
