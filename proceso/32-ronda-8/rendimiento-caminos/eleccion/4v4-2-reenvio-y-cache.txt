@@ -1,0 +1,44 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+
+=== 4v4 · semilla 42 · 24000 ticks (40.0 min de juego) en 932 s de reloj ===
+hash final 1339215390 · unidades vivas 958 · fin: sigue (ganador equipo -1)
+TICK      promedio  38.79 ms · p95  75.23 · peor  237.81 (tick 23231, min 38.7) · >25 ms: 16762 · >40: 11530 · >100: 74
+sistema         prom ms   p95 ms  peor ms  % total
+ia                 9.81    23.87    55.84    25.3%
+recoleccion        6.84    10.68    16.90    17.6%
+movimiento         3.09     6.28    10.79     8.0%
+resto              3.04     9.18    14.83     7.8%
+niebla             2.75    11.15    20.17     7.1%
+tablas             2.60     4.54     9.41     6.7%
+separacion         1.96     3.28     5.69     5.1%
+blancos            1.65     5.25    36.68     4.2%
+jugadores          1.59     2.85     6.02     4.1%
+segundo            1.26    13.08    36.82     3.2%
+combate            1.23     3.22     6.34     3.2%
+edificios          1.10     1.84     3.92     2.8%
+find_resource      0.97     2.76    29.47     2.5%
+caminos            0.46     1.26   179.97     1.2%
+grupos             0.28     0.76     2.48     0.7%
+victoria           0.08     0.81     2.27     0.2%
+ordenes            0.07     0.28    55.67     0.2%
+telemetria         0.01     0.00     2.75     0.0%
+animales           0.01     0.01     0.78     0.0%
+Picos (tick · min · total ms · sistema que más pesó · segundo):
+   23231   38.7   237.81  caminos          179.97 · ia 14.58
+   23470   39.1   229.28  caminos          143.75 · segundo 17.66
+   16543   27.6   210.47  caminos          166.22 · ia 14.78
+   23100   38.5   146.03  segundo           33.69 · ia 23.04
+   22650   37.8   135.08  caminos           31.85 · segundo 25.30
+   23740   39.6   130.66  segundo           26.65 · ia 21.60
+   23374   39.0   129.26  ia (j5)           43.38 · recoleccion 16.90
+   23654   39.4   128.66  ia (j5)           43.02 · niebla 16.41
+   23170   38.6   127.91  segundo           26.49 · niebla 19.31
+   22738   37.9   122.45  caminos           56.14 · ia 23.99
+   23844   39.7   121.53  ia (j5)           45.28 · niebla 17.09
+   23205   38.7   120.11  caminos           40.24 · niebla 15.46
+por minuto (prom/peor ms): m5 9.6/21 m10 20.9/34 m15 32.1/83 m20 42.5/99 m25 57.4/106 m30 52.5/104 m35 56.2/89 m40 70.6/229
+×4 alcanza (promedio del minuto < 25 ms) hasta el minuto 12 de 40
+caminos por resultado (llamadas · ms): llega 139816 · 6320; parcial 564 · 3958; a_solido 8 · 52;
+caminos por orden (órdenes · caminos · ms): [move] 319 · 325 · 64; [move suelto] 55 · 377 · 47; [move amove] 5745 · 20111 · 5370; [build] 4 · 4 · 2;
+caché de caminos: 68582 aciertos, 71806 búsquedas

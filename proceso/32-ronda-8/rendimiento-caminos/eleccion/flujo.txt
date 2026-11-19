@@ -1,0 +1,5 @@
+Campo de flujo contra A* (4v4 semilla 42 al minuto 15, grilla del jugador 0; script aparte, no queda en el repo)
+mapa 240 x 240
+campo de flujo (BFS de 8 vecinos en GDScript): 159.7 ms, 49913 casillas
+60 A* de puntos repartidos hacia el centro: 600.2 ms en total (10.00 ms cada uno, 75 casillas de largo medio; incluye destinos u orígenes encerrados)
+En partida, el A* que llega cuesta 0,04-0,1 ms de promedio (perfil-antes.txt: llega 198964 llamadas, 14901 ms en el 4v4)

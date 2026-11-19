@@ -1,0 +1,44 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+
+=== 4v4 · semilla 42 · 24000 ticks (40.0 min de juego) en 1074 s de reloj ===
+hash final 3112773480 · unidades vivas 1015 · fin: sigue (ganador equipo -1)
+TICK      promedio  44.71 ms · p95  92.21 · peor  539.27 (tick 21026, min 35.0) · >25 ms: 16851 · >40: 12650 · >100: 638
+sistema         prom ms   p95 ms  peor ms  % total
+ia                10.85    26.19    61.56    24.3%
+recoleccion        7.41    11.94    21.61    16.6%
+movimiento         3.46     7.45    12.70     7.7%
+resto              3.36     9.94    27.21     7.5%
+blancos            2.93    15.23    38.39     6.5%
+niebla             2.91    11.61    21.51     6.5%
+tablas             2.82     5.16     9.49     6.3%
+separacion         2.41     4.88     9.89     5.4%
+combate            1.78     4.43     8.37     4.0%
+jugadores          1.72     3.29     7.01     3.9%
+segundo            1.35    13.24    43.53     3.0%
+find_resource      1.19     3.33    25.47     2.7%
+edificios          1.16     1.97     4.51     2.6%
+caminos            0.86     2.67   481.15     1.9%
+grupos             0.30     0.87     3.60     0.7%
+ordenes            0.10     0.37    43.33     0.2%
+victoria           0.08     0.81     2.35     0.2%
+telemetria         0.01     0.00     3.25     0.0%
+animales           0.01     0.01     0.82     0.0%
+Picos (tick · min · total ms · sistema que más pesó · segundo):
+   21026   35.0   539.27  caminos          481.15 · ia 14.94
+   19274   32.1   342.60  caminos          258.93 · ia 19.74
+   21326   35.5   288.98  caminos          228.75 · ia 16.51
+   19175   32.0   231.84  caminos          146.97 · blancos 17.84
+   20230   33.7   221.08  caminos          129.33 · segundo 17.60
+   18074   30.1   218.22  caminos          129.00 · blancos 19.49
+   20040   33.4   207.23  caminos          121.82 · segundo 17.51
+   21194   35.3   200.33  caminos           98.96 · ia 31.52
+   21209   35.3   198.38  caminos           98.23 · ia 36.11
+   20335   33.9   197.62  caminos          125.58 · ia 15.08
+   23080   38.5   196.25  caminos           33.52 · segundo 27.85
+   20255   33.8   194.69  caminos           82.65 · ia 22.49
+por minuto (prom/peor ms): m5 9.4/23 m10 20.4/37 m15 30.9/56 m20 43.9/72 m25 54.3/91 m30 81.1/146 m35 73.1/123 m40 79.2/166
+×4 alcanza (promedio del minuto < 25 ms) hasta el minuto 11 de 40
+caminos por resultado (llamadas · ms): llega 169675 · 11047; parcial 1051 · 8725;
+caminos por orden (órdenes · caminos · ms): [move] 221 · 232 · 93; [move suelto] 51 · 338 · 59; [move amove] 8292 · 32290 · 10725; [build] 2 · 2 · 1;
+caché de caminos: 0 aciertos, 0 búsquedas

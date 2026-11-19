@@ -1,0 +1,123 @@
+=== 1v6 · semilla 42 · 13666 ticks (22.8 min de juego) en 346 s de reloj ===
+hash final 1746799387 · unidades vivas 848 · fin: conquista (ganador equipo 1)
+TICK      promedio  25.27 ms · p95  60.33 · peor  171.47 (tick 13189, min 22.0) · >25 ms: 5904 · >40: 3009 · >100: 10
+sistema         prom ms   p95 ms  peor ms  % total
+ia                 5.99    15.71    65.28    23.7%
+recoleccion        4.24     7.17    12.10    16.8%
+movimiento         2.58     5.53     7.93    10.2%
+niebla             1.84    12.05    18.28     7.3%
+blancos            1.79     9.36    32.08     7.1%
+resto              1.73     4.86    10.28     6.8%
+separacion         1.47     3.51     5.20     5.8%
+tablas             1.42     3.00     5.31     5.6%
+jugadores          0.92     1.85     3.19     3.6%
+segundo            0.79     6.57    21.99     3.1%
+edificios          0.60     1.14     2.99     2.4%
+combate            0.57     2.23     9.80     2.3%
+find_resource      0.56     1.73     7.81     2.2%
+caminos            0.45     1.19   107.06     1.8%
+grupos             0.21     0.78     1.56     0.8%
+ordenes            0.06     0.24    27.80     0.2%
+victoria           0.03     0.31     1.24     0.1%
+animales           0.01     0.00     0.48     0.0%
+telemetria         0.01     0.00     1.50     0.0%
+Picos (tick · min · total ms · sistema que más pesó · segundo):
+   13189   22.0   171.47  caminos          101.13 · ia 19.13
+    9770   16.3   146.44  caminos          107.06 · segundo 9.12
+    6779   11.3   134.18  caminos          100.36 · ia 12.39
+   12310   20.5   119.24  caminos           59.73 · segundo 12.32
+    9479   15.8   117.82  caminos           65.60 · ia 16.32
+   11709   19.5   115.72  ia (j5)           29.85 · caminos 26.07
+   12905   21.5   113.62  caminos           69.89 · ia 9.21
+   11419   19.0   106.31  ia (j5)           60.81 · niebla 12.85
+   13359   22.3   101.68  ia (j5)           43.08 · niebla 15.99
+    6879   11.5   101.62  caminos           66.62 · ia 12.55
+   13509   22.5    97.73  ia (j5)           28.88 · niebla 16.93
+    9632   16.1    96.23  caminos           65.80 · ia 8.52
+por minuto (prom/peor ms): m5 8.7/17 m10 20.1/61 m15 31.2/64 m20 54.1/116 m23 57.7/102
+×4 alcanza (promedio del minuto < 25 ms) hasta el minuto 13 de 23
+caminos por resultado (llamadas · ms): llega 61679 · 3451; parcial 335 · 2433; a_solido 6 · 44;
+caminos por orden (órdenes · caminos · ms): [move] 453 · 572 · 135; [move amove] 1927 · 19894 · 5365; [move suelto] 6 · 37 · 1;
+caché de caminos: <null> aciertos, <null> búsquedas
+=== tct7 · semilla 42 · 24000 ticks (40.0 min de juego) en 832 s de reloj ===
+hash final 59290309 · unidades vivas 703 · fin: sigue (ganador equipo -1)
+TICK      promedio  34.65 ms · p95  66.67 · peor  156.04 (tick 17344, min 28.9) · >25 ms: 16099 · >40: 10180 · >100: 12
+sistema         prom ms   p95 ms  peor ms  % total
+ia                 9.12    23.69    54.90    26.3%
+recoleccion        5.96     9.00    14.14    17.2%
+resto              2.75     7.95    10.38     7.9%
+niebla             2.70     6.01     9.37     7.8%
+movimiento         2.66     5.54     7.69     7.7%
+tablas             2.18     3.59     6.25     6.3%
+separacion         1.87     3.17     4.65     5.4%
+combate            1.40     3.42     8.91     4.0%
+jugadores          1.37     2.22     4.60     3.9%
+segundo            1.08    10.11    23.67     3.1%
+edificios          0.97     1.55     2.92     2.8%
+find_resource      0.94     2.57    24.14     2.7%
+blancos            0.89     2.76    28.96     2.6%
+caminos            0.28     0.71   100.51     0.8%
+grupos             0.25     0.72     2.13     0.7%
+ordenes            0.16     0.72    55.11     0.5%
+victoria           0.06     0.66     1.64     0.2%
+telemetria         0.01     0.00     1.97     0.0%
+animales           0.01     0.00     0.60     0.0%
+Picos (tick · min · total ms · sistema que más pesó · segundo):
+   17344   28.9   156.04  caminos          100.51 · ia 18.01
+   21318   35.5   121.29  caminos           47.79 · ia 28.93
+   18019   30.0   115.13  ordenes           50.01 · ia 25.92
+   17918   29.9   115.11  caminos           41.05 · ia 27.99
+   14950   24.9   109.64  caminos           36.14 · segundo 18.37
+   18108   30.2   108.06  caminos           41.67 · ia 23.61
+   22120   36.9   107.52  caminos           29.13 · ia 16.06
+   22010   36.7   106.01  caminos           33.01 · ia 15.99
+   21691   36.2   104.16  ordenes           55.11 · ia 12.09
+   18383   30.6   102.07  caminos           40.91 · ia 12.33
+   22080   36.8   100.75  blancos           28.96 · ia 15.43
+   17189   28.6   100.74  ordenes           40.56 · ia 23.24
+por minuto (prom/peor ms): m5 8.9/18 m10 18.1/40 m15 27.7/51 m20 34.2/62 m25 47.4/110 m30 54.4/115 m35 56.4/98 m40 51.0/88
+×4 alcanza (promedio del minuto < 25 ms) hasta el minuto 12 de 40
+caminos por resultado (llamadas · ms): llega 136106 · 5246; a_solido 9 · 62; parcial 100 · 666;
+caminos por orden (órdenes · caminos · ms): [move] 81 · 102 · 12; [move amove] 9858 · 27143 · 5675; [move suelto] 64 · 382 · 32; [move suelto amove] 22 · 22 · 1;
+caché de caminos: <null> aciertos, <null> búsquedas
+=== 4v4 · semilla 42 · 24000 ticks (40.0 min de juego) en 1126 s de reloj ===
+hash final 288569801 · unidades vivas 1090 · fin: sigue (ganador equipo -1)
+TICK      promedio  46.88 ms · p95 100.45 · peor  473.55 (tick 22785, min 38.0) · >25 ms: 17471 · >40: 13276 · >100: 1232
+sistema         prom ms   p95 ms  peor ms  % total
+ia                12.94    31.76    84.35    27.6%
+recoleccion        7.07    10.93    20.98    15.1%
+movimiento         4.18     9.61    12.63     8.9%
+resto              3.41     9.77    13.97     7.3%
+niebla             2.94    13.02    19.83     6.3%
+tablas             2.88     5.23     7.84     6.1%
+separacion         2.55     5.09     7.84     5.4%
+blancos            2.21     6.84    26.05     4.7%
+jugadores          1.79     3.38     5.90     3.8%
+segundo            1.42    13.17    34.64     3.0%
+combate            1.39     3.89    11.22     3.0%
+edificios          1.20     1.96     4.38     2.6%
+find_resource      1.12     3.02    20.84     2.4%
+caminos            0.93     3.72   390.14     2.0%
+grupos             0.44     1.33     3.94     0.9%
+ordenes            0.32     1.30    45.21     0.7%
+victoria           0.09     0.95     2.12     0.2%
+telemetria         0.01     0.00     2.96     0.0%
+animales           0.01     0.01     0.65     0.0%
+Picos (tick · min · total ms · sistema que más pesó · segundo):
+   22785   38.0   473.55  caminos          390.14 · ia 19.48
+   20985   35.0   298.30  caminos          215.58 · ia 20.08
+   17065   28.4   241.66  caminos          174.53 · ia 16.80
+   22185   37.0   233.07  caminos          149.13 · ia 19.48
+   22209   37.0   229.22  caminos          127.95 · ia 37.39
+   17070   28.4   226.16  caminos          141.38 · segundo 17.03
+   17060   28.4   220.75  caminos          133.86 · segundo 17.29
+   21885   36.5   201.44  caminos          115.27 · ia 19.20
+   20385   34.0   198.89  caminos          120.03 · ia 18.60
+   22839   38.1   196.36  caminos           85.75 · ia 38.92
+   19215   32.0   193.24  caminos          109.33 · ia 18.11
+   22213   37.0   190.89  caminos          117.16 · ia 24.57
+por minuto (prom/peor ms): m5 10.2/25 m10 22.7/47 m15 36.1/63 m20 45.6/76 m25 50.1/82 m30 69.2/168 m35 83.3/298 m40 86.1/166
+×4 alcanza (promedio del minuto < 25 ms) hasta el minuto 10 de 40
+caminos por resultado (llamadas · ms): llega 198964 · 14901; parcial 1121 · 6572;
+caminos por orden (órdenes · caminos · ms): [move] 199 · 203 · 49; [move suelto] 44 · 293 · 56; [move amove] 18716 · 81059 · 22761; [move suelto amove] 17 · 17 · 1; [build] 2 · 2 · 1;
+caché de caminos: <null> aciertos, <null> búsquedas

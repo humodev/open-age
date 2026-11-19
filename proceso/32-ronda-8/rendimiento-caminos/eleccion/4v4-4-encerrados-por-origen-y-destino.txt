@@ -1,0 +1,44 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+
+=== 4v4 · semilla 42 · 24000 ticks (40.0 min de juego) en 947 s de reloj ===
+hash final 2286859908 · unidades vivas 807 · fin: sigue (ganador equipo -1)
+TICK      promedio  39.42 ms · p95  77.72 · peor  229.44 (tick 20139, min 33.6) · >25 ms: 16641 · >40: 11982 · >100: 58
+sistema         prom ms   p95 ms  peor ms  % total
+ia                 9.85    24.70    61.48    25.0%
+recoleccion        6.93    11.03    20.95    17.6%
+resto              3.12     9.46    14.13     7.9%
+movimiento         2.94     5.11     7.54     7.5%
+niebla             2.76    10.87    17.40     7.0%
+tablas             2.65     4.54     7.46     6.7%
+separacion         2.07     3.58     5.93     5.2%
+blancos            1.76     5.66    70.05     4.5%
+jugadores          1.58     2.82     5.81     4.0%
+combate            1.46     3.74     8.24     3.7%
+segundo            1.27    12.50    33.27     3.2%
+edificios          1.10     1.82     3.27     2.8%
+find_resource      1.04     2.92    31.43     2.6%
+caminos            0.48     1.29   158.43     1.2%
+grupos             0.25     0.66     1.72     0.6%
+ordenes            0.09     0.32    45.83     0.2%
+victoria           0.08     0.80     2.23     0.2%
+telemetria         0.01     0.00     3.19     0.0%
+animales           0.01     0.01     0.64     0.0%
+Picos (tick · min · total ms · sistema que más pesó · segundo):
+   20139   33.6   229.44  caminos          131.77 · ia 36.32
+   21943   36.6   214.35  caminos          158.43 · ia 19.59
+   20140   33.6   150.46  caminos           55.40 · segundo 17.86
+   18459   30.8   142.09  blancos           50.66 · ia 37.62
+   17968   29.9   129.35  caminos           61.14 · ia 22.46
+   22470   37.5   128.68  blancos           56.18 · segundo 16.73
+   22613   37.7   126.70  blancos           69.04 · ia 19.14
+   15320   25.5   125.97  caminos           55.94 · segundo 15.26
+   21041   35.1   116.11  caminos           67.80 · ia 10.48
+   22616   37.7   114.86  blancos           70.05 · resto 9.19
+   20100   33.5   113.74  segundo           27.25 · ia 19.19
+   22650   37.8   111.92  blancos           28.41 · segundo 23.79
+por minuto (prom/peor ms): m5 9.6/28 m10 19.7/32 m15 33.0/67 m20 42.6/79 m25 48.5/99 m30 63.3/129 m35 63.4/104 m40 61.8/107
+×4 alcanza (promedio del minuto < 25 ms) hasta el minuto 12 de 40
+caminos por resultado (llamadas · ms): llega 145132 · 7168; parcial 1063 · 3476; a_solido 22 · 38;
+caminos por orden (órdenes · caminos · ms): [move] 133 · 164 · 70; [move suelto] 69 · 395 · 57; [move amove] 7710 · 23749 · 5923; [build] 3 · 3 · 11;
+caché de caminos: 69025 aciertos, 77192 búsquedas
