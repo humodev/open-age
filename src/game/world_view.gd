@@ -1850,7 +1850,7 @@ func _update_ring(e: SimEntity, v: Dictionary) -> void:
 	var ring: MeshInstance3D = v["ring"]
 	var sel := selected.has(e.id)
 	var hov := hovered == e.id
-	ring.visible = sel or hov
+	ring.visible = (sel or hov) and not base_linda.foto() # --- fluidez 7 --- (modo foto: sin anillos)
 	if ring.visible:
 		var c := Color(1, 1, 1, 0.95)
 		if e.owner != local:

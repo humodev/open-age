@@ -441,6 +441,7 @@ func _fps(sim: Sim, b: Vector2i) -> void:
 		var t1 := Time.get_ticks_usec()
 		var f0 := Engine.get_process_frames()
 		main.view.render_us = 0
+		main.view.base_linda.us = 0 # --- fluidez 7 ---
 		AldeanoAnimado.us_actualizar = 0
 		AldeanoAnimado.us_avance = 0
 		AldeanoAnimado.us_coros = 0
@@ -457,6 +458,7 @@ func _fps(sim: Sim, b: Vector2i) -> void:
 			times.append(fr / secs)
 			view_ms.append(main.view.render_us / 1000.0 / fr)
 			print("  ronda %d: %.1f fps · proceso %.2f ms · vista %.2f ms · actualizar %.2f ms (avance %.2f ms, compartidos %.2f ms) por cuadro" % [round, fr / secs, proc * 1000.0 / fr, main.view.render_us / 1000.0 / fr, AldeanoAnimado.us_actualizar / 1000.0 / fr, AldeanoAnimado.us_avance / 1000.0 / fr, AldeanoAnimado.us_coros / 1000.0 / fr])
+			print("    base linda (tierra pisada, pilas, granjas) %.3f ms por cuadro" % (main.view.base_linda.us / 1000.0 / fr)) # --- fluidez 7 ---
 			print("    play por cuadro %.1f · malla por cuadro %.1f · esqueletos propios %d · compartidos activos %d" % [AldeanoAnimado.n_play / float(fr), AldeanoAnimado.n_malla / float(fr), AldeanoAnimado.n_propios, AldeanoAnimado.n_coros_activos])
 			gpu_ms.append(RenderingServer.viewport_get_measured_render_time_gpu(root.get_viewport_rid()))
 	var vis := 0

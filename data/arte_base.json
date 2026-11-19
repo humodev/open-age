@@ -8,8 +8,8 @@
 	},
 	"pisada": {
 		"_doc": "Tierra pisada por donde caminan los aldeanos (mapa de tránsito de la vista, en píxeles de mezcla del suelo: SPLAT_RES por casilla). Cada muestreo_ms suma por_paso en el píxel de cada aldeano que se mueve y vecino_pct de eso en los cuatro vecinos. Debajo de umbral no se ve; en lleno llega a fuerza_pct de tierra. La textura se sube cada subir_ms si cambió algo. Solo cuentan los aldeanos que el jugador ve.",
-		"muestreo_ms": 250,
-		"por_paso": 4,
+		"muestreo_ms": 400,
+		"por_paso": 6,
 		"vecino_pct": 50,
 		"umbral": 60,
 		"lleno": 700,
@@ -35,7 +35,7 @@
 	},
 	"tocones": {
 		"_doc": "Árbol talado: queda un tocón. radio y alto en metros; cuantos_max: tope de tocones dibujados (los más viejos se reusan).",
-		"radio": 0.16,
+		"radio": 0.13,
 		"alto": 0.22,
 		"cuantos_max": 3000
 	}

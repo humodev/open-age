@@ -16,8 +16,9 @@ var us := 0 # tiempo acumulado (µs) en render, para medir
 
 # Tierra pisada
 var _transito := PackedInt32Array()
+var _pintado := PackedByteArray() # escalón de tierra ya pintado (de 0 a 32)
 var _res := 0
-var _ultimo := {} # id -> Vector2i (píxel del último muestreo)
+var _ultimo := {} # id -> índice del píxel del último muestreo
 var _t_pisada := 0
 var _t_subir := 0.0
 var _sucio := false
@@ -31,6 +32,8 @@ var _t_pilas := 0
 # Granjas
 var _cultivo := {} # id -> [MeshInstance3D, ms trabajados, etapa dibujada]
 var _t_granjas := 0
+var _granjas: Array[int] = []
+var _t_lista := 0
 var _mats := {} # color -> material
 
 # Tocones
@@ -49,6 +52,7 @@ func setup(v: WorldView) -> void:
 	cfg = CivMeshes.base_cfg()
 	_res = sim.map.n * WorldView.SPLAT_RES
 	_transito.resize(_res * _res)
+	_pintado.resize(_res * _res)
 	_modo_banderas = CivMeshes.banderas_modo()
 	var tc: Dictionary = cfg.get("tocones", {})
 	_tocones = MultiMesh.new()
@@ -139,6 +143,8 @@ func render(delta: float) -> void:
 
 ## Suma tránsito en el píxel de cada aldeano visible que se movió desde el muestreo anterior.
 ## `k`: cuántos muestreos representa (con el juego rápido pasan varios entre cuadro y cuadro).
+## Barato: todo en arreglos empaquetados; la imagen se toca solo cuando un píxel sube un escalón
+## (1/32 de tierra), y se sube a la placa cada subir_ms.
 func _pisar(k: float, pc: Dictionary) -> void:
 	var img: Image = view._splat_img
 	if img == null:
@@ -147,30 +153,38 @@ func _pisar(k: float, pc: Dictionary) -> void:
 	var vec := suma * int(pc.get("vecino_pct", 50)) / 100
 	var umbral := int(pc.get("umbral", 60))
 	var lleno := maxi(umbral + 1, int(pc.get("lleno", 700)))
-	var fuerza := float(pc.get("fuerza_pct", 72)) / 100.0
-	var sr := float(WorldView.SPLAT_RES) / WorldView.P
+	var tope := int(float(pc.get("fuerza_pct", 72)) * 32.0 / 100.0) # en escalones de 1/32
+	var sr := WorldView.SPLAT_RES
+	var res := _res
 	for e in sim.actives:
 		if not e.is_unit() or not e.def.has("tasa"):
 			continue
-		var px := Vector2i(int(e.x * sr), int(e.y * sr))
-		var prev: Variant = _ultimo.get(e.id)
-		_ultimo[e.id] = px
-		if prev == null or prev == px or view.fog_state(e) != 2 or sim.map.is_water(e.x / 1000, e.y / 1000):
+		var px := e.x * sr / 1000
+		var py := e.y * sr / 1000
+		var i := py * res + px
+		var prev: int = _ultimo.get(e.id, -1)
+		if prev == i:
 			continue
-		for d in [Vector2i.ZERO, Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
-			var q: Vector2i = px + d
-			if q.x < 0 or q.y < 0 or q.x >= _res or q.y >= _res:
-				continue
-			var i := q.y * _res + q.x
-			var t := _transito[i] + (suma if d == Vector2i.ZERO else vec)
-			_transito[i] = t
+		_ultimo[e.id] = i
+		if prev < 0 or px <= 0 or py <= 0 or px >= res - 1 or py >= res - 1:
+			continue
+		if (e.owner != view.local and view.fog_state(e) != 2) or sim.map.is_water(e.x / 1000, e.y / 1000):
+			continue
+		for j in 5:
+			var q := i + (0 if j == 0 else (1 if j == 1 else (-1 if j == 2 else (res if j == 3 else -res))))
+			var t := _transito[q] + (suma if j == 0 else vec)
+			_transito[q] = t
 			if t <= umbral:
 				continue
-			var s := fuerza * minf(1.0, float(t - umbral) / float(lleno - umbral))
-			var c := img.get_pixel(q.x, q.y)
-			if s > c.r + 0.02:
-				c.r = s
-				img.set_pixel(q.x, q.y, c)
+			var lv := mini(tope, tope * (t - umbral) / (lleno - umbral))
+			if lv <= _pintado[q]:
+				continue
+			_pintado[q] = lv
+			var c := img.get_pixel(q % res, q / res)
+			var r := float(lv) / 32.0
+			if r > c.r:
+				c.r = r
+				img.set_pixel(q % res, q / res, c)
 				_sucio = true
 
 
@@ -239,12 +253,18 @@ func _revisar_granjas(dt: int, gr: Dictionary) -> void:
 	var ciclo := maxi(1, int(gr.get("ciclo_s", 90)) * 1000)
 	var altos: Array = gr.get("alto_pct", [25, 60, 90, 100])
 	var colores: Array = gr.get("color", ["8fbf5a", "5f9a3a", "a7a845", "d1a948"])
-	for id: int in view.visuals:
-		var v: Dictionary = view.visuals[id]
-		if v["kind"] != "building":
-			continue
+	# La lista de granjas se rehace cada tanto (recorrer todo lo dibujado es lo caro).
+	_t_lista -= dt
+	if _t_lista <= 0:
+		_t_lista = 5000
+		_granjas.clear()
+		for e in sim.actives:
+			if e.is_building() and e.def.has("fuente") and not e.def.get("permite_ladera", false):
+				_granjas.append(e.id)
+	for id: int in _granjas:
+		var v: Dictionary = view.visuals.get(id, {})
 		var e: SimEntity = sim.by_id.get(id)
-		if e == null or not e.def.has("fuente") or e.def.get("permite_ladera", false):
+		if v.is_empty() or e == null or not e.alive:
 			continue
 		var c: Array = _cultivo.get(id, [])
 		if c.is_empty():
@@ -296,4 +316,8 @@ func alternar_foto() -> bool:
 		return false
 	_foto = not _foto
 	hud.visible = not _foto
+	return _foto
+
+
+func foto() -> bool:
 	return _foto

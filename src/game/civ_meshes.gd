@@ -1368,8 +1368,10 @@ static func cultivo(w: float, d: float) -> ArrayMesh:
 		var z := -d * 0.38 + row * d * 0.153
 		for i in n:
 			var x := -(w - 0.5) / 2.0 + (w - 0.5) * (i + 0.5) / n + float((i * 7 + row * 3) % 5 - 2) * 0.02
-			var tuft := Meshes.prism(0.2, 1.0, 0.16)
-			st.append_from(tuft, 0, Meshes.xf(Vector3(x, 0.5, z), Vector3(0, (i * 23 + row * 11) % 40 - 20, 0)))
+			var tuft := Meshes.prism(0.15, 1.0, 0.08)
+			var yaw := (i * 23 + row * 11) % 40 - 20
+			st.append_from(tuft, 0, Meshes.xf(Vector3(x, 0.5, z), Vector3(0, yaw, 0)))
+			st.append_from(tuft, 0, Meshes.xf(Vector3(x, 0.45, z), Vector3(0, yaw + 90, 0), Vector3(1, 0.9, 1)))
 	st.generate_normals()
 	var m := st.commit()
 	_cache[key] = m
@@ -1385,7 +1387,7 @@ static func tocon() -> ArrayMesh:
 	var h := float(c.get("alto", 0.22))
 	var p: Array = []
 	p.append([Meshes.cyl(r * 0.9, r * 1.2, h, 7), Meshes.xf(Vector3(0, h / 2.0, 0)), Palette.TRUNK])
-	p.append([Meshes.cyl(r * 0.82, r * 0.82, 0.02, 7), Meshes.xf(Vector3(0, h + 0.005, 0)), Color("c9a77a")])
+	p.append([Meshes.cyl(r * 0.82, r * 0.82, 0.02, 7), Meshes.xf(Vector3(0, h + 0.005, 0)), Color("a88a62")])
 	p.append([Meshes.box(r * 1.6, 0.05, 0.07), Meshes.xf(Vector3(r * 0.9, 0.03, 0.05), Vector3(0, 30, 0)), Palette.TRUNK.darkened(0.15)])
 	var m := Meshes.merge(p)
 	_cache["tocon"] = m
