@@ -39,6 +39,30 @@ func _init() -> void:
 	var despues := s.tech_cost(0, "hachas_3")
 	_check("registros: descuento en la IV", int(despues["alimento"]) == int(antes["alimento"]) * 90 / 100, "%s -> %s" % [antes, despues])
 	_check("registros: nada en la II", s.tech_cost(0, "vel_aldeano") == antes_ii)
+	# --- ronda 8, 05 --- Caminos de la escuela: sin camino, sus mejoras no se investigan; el
+	# primero cierra los otros.
+	_check("sin camino no hay puntería", s.research_block(0, "escuela_alcance") != "", s.research_block(0, "escuela_alcance"))
+	s._finish_tech(0, "camino_defensa")
+	_check("camino elegido", s.school_path(0) == "defensa", s.school_path(0))
+	_check("cierra los otros caminos", s.research_block(0, "camino_guerra").begins_with("Ya elegiste"), s.research_block(0, "camino_guerra"))
+	_check("cierra las mejoras de otro camino", s.research_block(0, "escuela_choque") != "")
+	_check("abre las del suyo", s.research_block(0, "escuela_obras") == "", s.research_block(0, "escuela_obras"))
+	# La que se repite: cada vez más cara, hasta el máximo.
+	var r0 := s.tech_cost(0, "defensa_rep")
+	s._finish_tech(0, "defensa_rep")
+	var r1 := s.tech_cost(0, "defensa_rep")
+	var grow := int(t["defensa_rep"]["repite"]["crece_pct"])
+	_check("repetible: sube el costo", int(r1["madera"]) == int(t["defensa_rep"]["costo"]["madera"]) * (100 + grow) / 100 * 90 / 100, "%s -> %s" % [r0, r1])
+	_check("repetible: sigue abierta", s.research_block(0, "defensa_rep") == "", s.research_block(0, "defensa_rep"))
+	for i in int(t["defensa_rep"]["repite"]["max"]) - 1:
+		s._finish_tech(0, "defensa_rep")
+	_check("repetible: se cierra en el máximo", s.research_block(0, "defensa_rep") == "Ya investigada", s.research_block(0, "defensa_rep"))
+	# Sin la línea del asedio no está ese camino (Palmares); la guardia, junto al guerrero.
+	var d := s.data
+	_check("Palmares sin camino del asedio", not d.civs["palmares"].tecnologias.has("camino_asedio") and not d.civs["palmares"].tecnologias.has("escuela_asedio"))
+	_check("guaraníes con los tres caminos", d.civs["guaranies"].tecnologias.has("camino_asedio") and d.civs["guaranies"].tecnologias.has("camino_guerra"))
+	_check("guardia en el cuartel guaraní", (d.civs["guaranies"].edificios["cuartel"]["produce"] as Array).has("guardia"))
+	_check("guardia en el lof mapuche", (d.civs["mapuches"].edificios["lof"]["produce"] as Array).has("guardia"))
 	var res_antes := int(p["res"]["madera"])
 	s.push_command({"t": "research", "player": 0, "building": capital.id, "tech": "escuela_alcance"})
 	s.step()

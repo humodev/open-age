@@ -175,6 +175,7 @@ func think() -> void:
 	_production(p, vill, army, centro, by_type, saving)
 	var held_smith := _smith(p, army, by_type, saving) if held_levels.is_empty() else {}
 	_research(p, by_type, saving)
+	_sink(p, by_type, saving) # --- ronda 8, 05 ---
 	_engine(p, vill, centro, by_type, saving)
 	_reserve(p, -1, held_levels)
 	_reserve(p, -1, held_late) # --- paso 3 ---
@@ -371,6 +372,8 @@ func _research(p: Dictionary, by_type: Dictionary, saving: bool) -> void:
 		var t: Dictionary = sim.dp(player).tecnologias[tech]
 		if sim.research_block(player, tech) != "" or t.get("propia", false): # --- paso 6 --- las propias, en _own_buys
 			continue
+		if t.has("camino_de") or t.has("repite"): # --- ronda 8, 05 --- el camino y el sumidero, en _late_buys y _sink
+			continue
 		var surplus := true
 		for k in t["costo"]:
 			if p["res"][k] < t["costo"][k] + reserve:
@@ -395,7 +398,8 @@ func _late_buys(p: Dictionary, army: Array[SimEntity], by_type: Dictionary, savi
 		return {}
 	var techs: Dictionary = sim.dp(player).tecnologias
 	var reserve := int(cfg.get("reserva", 0))
-	for tech: String in cfg.get("orden", []):
+	for tech0: String in cfg.get("orden", []):
+		var tech := _pick_path() if tech0 == "@camino" else tech0 # --- ronda 8, 05 ---
 		if not techs.has(tech) or sim.research_block(player, tech) != "":
 			continue
 		if not _late_useful(techs[tech], army):
@@ -427,6 +431,106 @@ func _late_buys(p: Dictionary, army: Array[SimEntity], by_type: Dictionary, savi
 			p["res"][r] = int(p["res"][r]) - int(cost[r])
 		return held
 	return {}
+
+
+## --- ronda 8, 05 --- Camino de la escuela que elige la IA (proceso/32-ronda-8/05;
+## reglas.ia_sumidero): con una maravilla rival en pie, el del asedio si lo tiene; si no, el
+## primero que tenga de los que prefiere su pueblo (civs/<pueblo>.json → escuela.ia_caminos) o,
+## sin preferencia, de `caminos`. Devuelve la mejora del camino ("camino_guerra"), o "".
+func _pick_path() -> String:
+	var cfg: Dictionary = sim.data.reglas.get("ia_sumidero", {})
+	var techs: Dictionary = sim.dp(player).tecnologias
+	var chosen := sim.school_path(player)
+	if chosen != "":
+		return "camino_" + chosen
+	var order: Array = []
+	if _rival_wonder() != null:
+		order.append(String(cfg.get("camino_contra_maravilla", "asedio")))
+	order.append_array(sim.dp(player).civ.get("escuela", {}).get("ia_caminos", []))
+	order.append_array(cfg.get("caminos", []))
+	for c in order:
+		if techs.has("camino_" + str(c)):
+			return "camino_" + str(c)
+	return ""
+
+
+## --- ronda 8, 05 --- El sumidero de la IV (reglas.ia_sumidero): con lo que pasa de la reserva,
+## sin estar juntando para la maravilla, compra otra vez la mejora que se repite de su camino y
+## entrena la guardia, la élite cara (hasta `guardia_por_turno` por pensada y mientras haya lugar
+## de población). Va después de la tropa común y de las mejoras: gasta lo que nadie más usa.
+func _sink(p: Dictionary, by_type: Dictionary, saving: bool) -> void:
+	var cfg: Dictionary = sim.data.reglas.get("ia_sumidero", {})
+	if cfg.is_empty() or not level["investiga"] or int(p["age"]) < int(cfg.get("desde_edad", 4)):
+		return
+	# Juntando para la maravilla, no toca lo que ella pide: gasta solo lo que la meta no usa
+	# (en la medición, 14 000 de alimento quietos mientras juntaba madera, piedra y riqueza).
+	var keep: Dictionary = (cfg.get("reserva", {}) as Dictionary).duplicate()
+	if saving:
+		var gc := _goal_cost(p)
+		for r in gc:
+			keep[r] = int(keep.get(r, 0)) + int(gc[r])
+	var held := {} # lo pedido en este turno: se descuenta de la vista y se devuelve al final
+	_sink_buys(p, by_type, cfg, keep, held)
+	_reserve(p, -1, held)
+
+
+func _sink_buys(p: Dictionary, by_type: Dictionary, cfg: Dictionary, keep: Dictionary, held: Dictionary) -> void:
+	var techs: Dictionary = sim.dp(player).tecnologias
+	var path := sim.school_path(player)
+	var rep := ""
+	if path == "": # sin camino todavía (juntando para la maravilla no pasa por _late_buys)
+		rep = _pick_path()
+	else:
+		for tech: String in techs:
+			if techs[tech].has("repite") and String(techs[tech].get("camino", "")) == path and sim.research_block(player, tech) == "":
+				rep = tech
+				break
+	if rep != "" and sim.research_block(player, rep) != "":
+		rep = ""
+	if rep != "" and _sink_affords(p, sim.tech_cost(player, rep), keep):
+		var where: SimEntity = null
+		for k in by_type:
+			for b: SimEntity in by_type[k]:
+				if where == null and b.built and b.queue.size() < 2 and sim.tech_here(techs[rep], b):
+					where = b
+		if where != null:
+			sim.push_command({"t": "research", "player": player, "building": where.id, "tech": rep})
+			_hold(p, sim.tech_cost(player, rep), held)
+	var unit: String = cfg.get("unidad", "")
+	var udef: Dictionary = sim.dp(player).unidades.get(unit, {})
+	if udef.is_empty() or int(p["age"]) < int(udef.get("edad_min", 1)):
+		return
+	var n := int(cfg.get("guardia_por_turno", 1))
+	var pop := int(p["pop"])
+	for k in by_type:
+		for b: SimEntity in by_type[k]:
+			if n <= 0:
+				return
+			if not b.built or b.queue.size() >= 2 or not (b.def.get("produce", []) as Array).has(unit):
+				continue
+			pop += int(udef.get("pob", 1))
+			if pop > int(p["pop_cap"]):
+				return
+			var cost := sim.train_cost(player, b, unit)
+			if not _sink_affords(p, cost, keep):
+				return
+			sim.push_command({"t": "train", "player": player, "building": b.id, "type": unit})
+			_hold(p, cost, held)
+			n -= 1
+
+
+func _sink_affords(p: Dictionary, cost: Dictionary, keep: Dictionary) -> bool:
+	for r in cost:
+		if int(p["res"].get(r, 0)) < int(cost[r]) + int(keep.get(r, 0)):
+			return false
+	return true
+
+
+## Descuenta `cost` de la vista de este turno y lo anota en `held` (se devuelve con `_reserve`).
+func _hold(p: Dictionary, cost: Dictionary, held: Dictionary) -> void:
+	for r in cost:
+		p["res"][r] = int(p["res"][r]) - int(cost[r])
+		held[r] = int(held.get(r, 0)) + int(cost[r])
 
 
 ## --- paso 6 --- Saberes propios (docs/diseno/27, §3; data/civs → ia_propias.orden; reglas.ia_propias):
@@ -2020,6 +2124,9 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 	var gap: int = int(st.get("ataque_espera_ticks", level["ataque_espera_ticks"]))
 	var attacks: bool = st.get("ataca_base", personality != "pasiva") and sim.tick >= int(level.get("primer_ataque_ticks", 0))
 	var home := army
+	# --- ronda 8, 05 --- La maravilla rival va antes que los sitios: si se la deja, gana.
+	if attacks and _hit_wonder(army):
+		return
 	army = _contest_sites(army, left)
 	if army.is_empty():
 		if _contest_held:

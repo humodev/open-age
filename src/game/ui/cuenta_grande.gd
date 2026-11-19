@@ -65,6 +65,28 @@ static func wonder_holder(s: Sim) -> int:
 	return best
 
 
+## --- ronda 8, 05 --- La maravilla en obra más adelantada (de cualquiera), o null.
+static func wonder_in_works(s: Sim) -> SimEntity:
+	var best: SimEntity = null
+	for p in s.players:
+		var w := s.wonder_of(int(p["id"]))
+		if w != null and not w.built and (best == null or w.progress * 1000 / maxi(1, w.build_time) > best.progress * 1000 / maxi(1, best.build_time)):
+			best = w
+	return best
+
+
+## --- ronda 8, 05 --- Segundos que le faltan a la obra al ritmo de ahora (los constructores del
+## último tick, con la obra decreciente); -1 si nadie la construye.
+static func works_left_s(s: Sim, w: SimEntity) -> int:
+	var n := w.workers_prev
+	if n <= 0:
+		return -1
+	var per_tick := s.mods.build_step(w, n) * n
+	if per_tick <= 0:
+		return -1
+	return (w.build_time - w.progress) / per_tick * s.tick_ms / 1000
+
+
 static func sites_left_s(s: Sim, pid: int) -> int:
 	return maxi(0, (int(s.data.reglas["sitios"]["victoria_ms"]) - int(s.players[pid].get("sitios_ms", 0))) / 1000)
 
@@ -79,6 +101,7 @@ func _draw() -> void:
 	var title := ""
 	var secs := -1
 	var col := Palette.UI_BAD
+	var paused := false
 	var holder := sites_holder(sim)
 	var wonder := wonder_holder(sim) # --- paso 7 --- la que gana antes manda
 	if wonder >= 0 and (holder < 0 or sim.wonder_left_s(wonder) <= sites_left_s(sim, holder)):
@@ -100,6 +123,21 @@ func _draw() -> void:
 			title = "TU EQUIPO TIENE TODOS LOS SITIOS"
 		else:
 			title = "%s TIENE TODOS LOS SITIOS SAGRADOS" % Palette.team_name(holder).to_upper()
+	elif wonder_in_works(sim) != null:
+		# --- ronda 8, 05 --- La maravilla en obra: todos ven de quién es, cuánto lleva y, si
+		# alguien la construye, cuánto falta al ritmo de ahora (como en AoE4).
+		var wb := wonder_in_works(sim)
+		col = Palette.team(wb.owner)
+		var pct := wb.progress * 100 / maxi(1, wb.build_time)
+		var wn := String(wb.def.get("nombre", "la maravilla")).to_upper()
+		secs = works_left_s(sim, wb)
+		paused = secs < 0
+		if wb.owner == local:
+			title = "%s EN OBRA · %d %%" % [wn, pct]
+		elif not sim.enemies(local, wb.owner):
+			title = "TU EQUIPO LEVANTA %s · %d %%" % [wn, pct]
+		else:
+			title = "%s LEVANTA %s · %d %% · FRENALA" % [Palette.team_name(wb.owner).to_upper(), wn, pct]
 	elif sim.scenario != null and sim.scenario.cuenta_s() >= 0:
 		secs = sim.scenario.cuenta_s()
 		title = String(sim.scenario.cuenta.get("texto", "")).to_upper()
@@ -114,7 +152,7 @@ func _draw() -> void:
 			title = "TIEMPO LÍMITE · VA GANANDO TU EQUIPO"
 		else:
 			title = "TIEMPO LÍMITE · VA GANANDO %s" % Palette.team_name(lead).to_upper()
-	if secs < 0:
+	if secs < 0 and not paused:
 		return
 	var r := Rect2((size.x - ANCHO) / 2.0, 0, ANCHO, ALTO)
 	var sb := StyleBoxFlat.new()
@@ -131,4 +169,4 @@ func _draw() -> void:
 	if secs <= 60:
 		big = big.lerp(Color.WHITE, 0.35 + 0.35 * sin(Time.get_ticks_msec() / 160.0))
 	draw_string(Hud.font_b, Vector2(r.position.x, r.position.y + 20), title, HORIZONTAL_ALIGNMENT_CENTER, r.size.x, 12, Palette.UI_TEXT)
-	draw_string(Hud.font_b, Vector2(r.position.x, r.position.y + 55), Hud._fmt_time(secs), HORIZONTAL_ALIGNMENT_CENTER, r.size.x, 34, big)
+	draw_string(Hud.font_b, Vector2(r.position.x, r.position.y + 55), "PARADA" if paused else Hud._fmt_time(secs), HORIZONTAL_ALIGNMENT_CENTER, r.size.x, 34, big)

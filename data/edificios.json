@@ -81,9 +81,9 @@
   },
   "maravilla": {
     "nombre": "Maravilla", "edad_min": 4, "tam": [6, 6], "pv": 9000, "armadura": 4,
-    "costo": { "madera": 1500, "piedra": 1500, "riqueza": 1500 }, "tiempo_ms": 2400000, "vision": 9000,
+    "costo": { "madera": 1500, "piedra": 1500, "riqueza": 1500 }, "tiempo_ms": 1440000, "vision": 9000,
     "maravilla": true, "material": "piedra",
-    "_doc": "--- paso 7 --- La maravilla de la edad IV (docs/diseno/27, §4.1; C-78 a): una por jugador, con nombre, forma y efecto propios por pueblo (data/civs/<pueblo>.json → edificios.maravilla). tiempo_ms es el de un constructor: con 10, por la obra decreciente (×3/12), son 600 s como pide el diseño. La cuenta para ganar está en reglas.maravilla. requiere_hito: solo con ese hito hecho (la vía de los guaraníes); impide_hito: ese hito la impide (el Pacto de Cucaú). sitiada: no cae; la cuenta se corta mientras haya tropa enemiga adentro (Palmares, C-97 a). efectos_maravilla: lo que da mientras está en pie (src/sim/sim_mods.gd, «Maravillas»). arte: la forma de data/arte_hitos.json.",
+    "_doc": "--- paso 7 --- La maravilla de la edad IV (docs/diseno/27, §4.1; C-78 a): una por jugador, con nombre, forma y efecto propios por pueblo (data/civs/<pueblo>.json → edificios.maravilla). tiempo_ms es el de un constructor: con 10, por la obra decreciente (×3/12), son 360 s (ronda 8, 05: antes 600 s, que en la partida de la IA fueron 10:20 y con el tester 21 minutos). La cuenta para ganar está en reglas.maravilla. requiere_hito: solo con ese hito hecho (la vía de los guaraníes); impide_hito: ese hito la impide (el Pacto de Cucaú). sitiada: no cae; la cuenta se corta mientras haya tropa enemiga adentro (Palmares, C-97 a). efectos_maravilla: lo que da mientras está en pie (src/sim/sim_mods.gd, «Maravillas»). arte: la forma de data/arte_hitos.json.",
     "desc": "La obra de la edad IV, una por pueblo. Mientras está en pie, todos la ven y corre una cuenta: si llega a cero, su dueño gana. Si cae, la cuenta se pierde."
   },
   "hito_economia": {

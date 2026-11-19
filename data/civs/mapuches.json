@@ -18,7 +18,7 @@
   }
  },
  "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",
- "escuela": {"nombre": "Trawün de los weupife", "edificios": ["parlamento"], "desc": "Reunión civil donde los weupife, los oradores del parlamento, transmitían el saber de los linajes (Febrés, 1765 [verificar las entradas]; Bengoa, 2003). No es el ngillatun, que es ceremonia. Se investiga en el lof principal y en el parlamento."},
+ "escuela": {"ia_caminos": ["guerra"], "nombre": "Trawün de los weupife", "edificios": ["parlamento"], "desc": "Reunión civil donde los weupife, los oradores del parlamento, transmitían el saber de los linajes (Febrés, 1765 [verificar las entradas]; Bengoa, 2003). No es el ngillatun, que es ceremonia. Se investiga en el lof principal y en el parlamento."},
  "tecnologias": {"escuela_registros": {"nombre": "El pron", "desc": "La cuerda de nudos para contar los días hasta la junta [verificar la grafía]. No hay archivo escrito y no se inventa uno."}},
  "_doc_saberes": "--- paso 6 --- Saberes propios (docs/diseno/27, §3.2): 8 mejoras (2 en la II, 3 en la III, 3 en la IV) y 3 unidades. Cada una lleva `desc` (qué hace y el saber) y `evidencia` (nivel y fuente), que la ficha muestra. Nada sagrado: ni machi, ni rewe, ni kultrun, ni foye. `propia`: la cuenta el modelo (tools/modelo_progreso.py) y la compra la IA según `ia_propias`.",
  "tecnologias_nuevas": {
