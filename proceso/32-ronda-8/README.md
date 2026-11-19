@@ -25,6 +25,13 @@ Trabajo que decidió el autor a partir de la [síntesis de la ronda 8](../22-tes
 - Primera victoria: 2 de 3. |
 | 3 | Cola de producción siempre a la vista, en rojo cuando está trabada; menos mensajes | **Integrado (44db138)**, [03](03-menos-mensajes-cola-visible.md):<br>• **Cola global:** siempre visible; en rojo y con candado cuando está trabada (el motivo, en la ayuda); en gris cuando está quieta.<br>• **Avisos:** los de gestión pasan a «Consejos de aprendizaje» (tutorial y fácil). Quedan los de AoE4 (ataque, edad, investigación, aliado, maravilla).<br>• **Mensajes en 15 min:** de 96 a 38 en el 1v3, de 130 a 62 en el 2v2. Desaparecen los 292 «Población llena».<br>• **Maravilla:** la ficha dice qué hito pide.<br>Mismo hash; autotest OK |
 | 4 | Rendimiento con 7 u 8 jugadores: perfilado y arreglo | En curso |
-| 5 | Sumidero en la IV (escuelas excluyentes, élite cara) y contrajuego a la maravilla | Segunda tanda |
-| 6 | Muralla de piedra en la edad II (C-101) | Segunda tanda |
+| 5 | Sumidero en la IV (escuelas excluyentes, élite cara) y contrajuego a la maravilla | En curso |
+| 6 | Muralla de piedra en la edad II (C-101) | **Integrado (7d20c11)**, [06](06-muralla-de-piedra.md)
+- **Muralla de piedra:** tramo con 1800 de vida y armadura 6, 20 de piedra y 12 s de obra. Puerta y torre encima.
+- **Arrastre:** igual que la empalizada.
+- **Refuerzo:** arrastrar sobre la empalizada la refuerza.
+- **Daño:** el ariete y la catapulta le pegan al 400 %; la tropa, 1 por golpe; los incendiarios, poco.
+- **Por pueblo:** muro de la amba (Etiopía), pirca y punku (Tawantinsuyu), kamphaeng de ladrillo (Ayutthaya). Mapuches, guaraníes y Palmares quedan sin muralla, como en su diseño.
+- **IA:** solo la difícil y la experta; amurallaron 6 de 16 jugadores, no «todos».
+- **Pruebas:** mismo hash; asedio, casillas y autotest OK. Primera victoria: 2 de 3. |
 | — | Pregunta a los jugadores: ¿qué tan lejos está de jugarse como esports? | **Hecho** ([informe](../22-testers/ronda-8/03-esports.md)):<br>• **Nota:** veterano 3/10, constructor 3,5/10. Falta infraestructura más que contenido.<br>• **Requisitos duros:** juego en red (H5), lobby con salas, repeticiones compartibles.<br>• **Desacuerdo:** 1v1 corto sin maravilla, o formato largo tipo Arena. |
