@@ -51,7 +51,7 @@ Al final de cada iteración se mide el balance con un torneo.
 
 | Frente | Qué | Estado |
 |---|---|---|
-| 2a | Golpe del aldeano. Hitos de 150/180/210 s y la III con 100 de piedra. Empalizada a 8 de madera (mapuches a 4). Sumidero que no se agote: repetibles sin tope a +50 %, venta en el mercado sin piso y una guardia de distancia | En curso |
+| 2a | Golpe del aldeano. Hitos de 150/180/210 s y la III con 100 de piedra. Empalizada a 8 de madera (mapuches a 4). Sumidero que no se agote: repetibles sin tope a +50 %, venta en el mercado sin piso y una guardia de distancia | **Integrado (d7e1062)**, [03a](03a-iteracion-2.md)<br>• **Golpe del aldeano:** sin SCRIPT ERROR (`carga_golpe`).<br>• **Hitos:** 150/180/210 s; la III pide 100 de piedra.<br>• **Empalizada:** 8 de madera (la mapuche, 4).<br>• **Sumidero de la IV:** repetibles sin tope a +50 %, mercado con piso 10, guardia de distancia; la IA vende lo que pasa de 2500. El alimento que queda en la IV baja de 8715 a 2158 de promedio, pero ahora sobra riqueza (15 436).<br>• **Primera victoria:** con los hitos nuevos daba 3 de 8, porque la fácil defendía antes. Con la fácil en 3 constructores, 7 de 8.<br>• **Al fusionar con 2b:** conflicto en reglas.json, resuelto con las dos cosas. Hash **366120853**; comercio, jugabilidad y juego tardío OK. |
 | 2b | Bloqueo de rutas que funcione: 3 de población a 8 casillas; el comerciante espera. Comerciante desde la II al 40 % en el 1v1 | En curso |
 | — | Sitios con +50 % de renta para el que va atrás en edad | **Consulta al autor:** es una ayuda al que va perdiendo y el autor no quiso ventajas para el 1vN |
 
