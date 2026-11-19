@@ -13,6 +13,8 @@ var latencia_ms := 0
 var vaiven_ms := 0
 var timeout_min_ms := 3000
 var timeout_max_ms := 8000
+var max_bytes := 16777216 # --- instantaneas --- paquetes más grandes se descartan (data/red.json)
+var rechazados := 0 # paquetes descartados (grandes o que no son un diccionario)
 var _cola: Array = [] # [ms de salida, bytes]
 var _ultima_salida := 0
 var _rng := RandomNumberGenerator.new()
@@ -96,9 +98,15 @@ func poll() -> Array:
 		cerrar()
 		return out
 	while peer.get_available_packet_count() > 0:
-		var v = bytes_to_var(peer.get_packet())
+		var pk := peer.get_packet()
+		if pk.size() > max_bytes or pk.size() < 4: # --- instantaneas ---
+			rechazados += 1
+			continue
+		var v = bytes_to_var(pk) # sin objetos: no se decodifican
 		if v is Dictionary:
 			out.append(v)
+		else:
+			rechazados += 1
 	return out
 
 

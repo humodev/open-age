@@ -1,0 +1,48 @@
+RED: ping 9 ms · retardo de entrada 3 → 2 turnos
+RED: ping 99 ms · retardo de entrada 3 → 2 turnos
+anfitrión: tick 1800 hash 765117115 · cliente 765117115 · comandos por la red [34, 36] · edades 1/1
+anfitrión: retardo de entrada 2 turnos (ping 36 ms) · descartados 0 mensajes y 0 paquetes
+cliente: tick 1800 hash 765117115 · anfitrión 765117115 · retardo 2 turnos · recuperada por foto en el tick -1
+CASO directo: OK · 1800 ticks · 18.5 s
+RED: ping 1553 ms · retardo de entrada 3 → 9 turnos
+RED: ping 204 ms · retardo de entrada 3 → 2 turnos
+RED: ping 1051 ms · retardo de entrada 9 → 6 turnos
+RED: ping 226 ms · retardo de entrada 6 → 2 turnos
+cliente: tick 600 hash 2158571532 · anfitrión 2158571532 · retardo 2 turnos · recuperada por foto en el tick -1
+anfitrión: tick 600 hash 2158571532 · cliente 2158571532 · comandos por la red [17, 17] · edades 1/1
+anfitrión: retardo de entrada 2 turnos (ping 242 ms) · descartados 0 mensajes y 0 paquetes
+CASO latencia: OK · 600 ticks · 28.6 s
+RED: ping 9 ms · retardo de entrada 3 → 2 turnos
+RED: ping 1183 ms · retardo de entrada 3 → 7 turnos
+RED: ping 291 ms · retardo de entrada 7 → 3 turnos
+RED: Partida recuperada en el tick 302 (foto en 232 ms)
+RED: ping 241 ms · retardo de entrada 3 → 2 turnos
+RED: ping 50 ms · retardo de entrada 3 → 2 turnos
+anfitrión: tick 900 hash 3742161501 · cliente 3742161501 · comandos por la red [21, 20] · edades 1/1
+anfitrión: retardo de entrada 2 turnos (ping 50 ms) · descartados 0 mensajes y 0 paquetes
+cliente: tick 900 hash 3742161501 · anfitrión 3742161501 · retardo 2 turnos · recuperada por foto en el tick 302
+CASO reconexion: OK · 900 ticks · 13.5 s
+RED: ping 8 ms · retardo de entrada 3 → 2 turnos
+RED: ping 1301 ms · retardo de entrada 3 → 8 turnos
+CASO desincronizacion: OK · 300 ticks · 8.5 s
+RED: ping 1687 ms · retardo de entrada 3 → 10 turnos
+RED: ping 568 ms · retardo de entrada 3 → 4 turnos
+RED: ping 1201 ms · retardo de entrada 10 → 7 turnos
+RED: ping 594 ms · retardo de entrada 7 → 4 turnos
+cliente: tick 600 hash 436951959 · anfitrión 436951959 · retardo 4 turnos · recuperada por foto en el tick -1
+anfitrión: tick 600 hash 436951959 · cliente 436951959 · comandos por la red [17, 17] · edades 1/1
+anfitrión: retardo de entrada 4 turnos (ping 588 ms) · descartados 0 mensajes y 0 paquetes
+CASO ping: OK · 600 ticks · 42.1 s
+RED: ping 9 ms · retardo de entrada 3 → 2 turnos
+RED: ping 2064 ms · retardo de entrada 3 → 10 turnos
+WARNING: RED: mensaje descartado: turno a nombre de otro jugador
+WARNING: RED: mensaje descartado: turno.n con otro tipo
+WARNING: RED: mensaje descartado: comando move: x no es entero
+WARNING: RED: mensaje descartado: demasiados comandos en un turno
+WARNING: RED: mensaje descartado: hash.h con otro tipo
+anfitrión: tick 600 hash 3246635685 · cliente 3246635685 · comandos por la red [22, 18] · edades 1/1
+anfitrión: retardo de entrada 10 turnos (ping 2064 ms) · descartados 6 mensajes y 2 paquetes
+cliente: tick 600 hash 3246635685 · anfitrión 3246635685 · retardo 2 turnos · recuperada por foto en el tick -1
+RED: ping 1560 ms · retardo de entrada 10 → 9 turnos
+CASO basura: OK · 600 ticks · 11.0 s
+RED: OK

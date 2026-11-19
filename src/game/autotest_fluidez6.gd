@@ -19,8 +19,15 @@ static func correr(m: Node, check: Callable) -> void:
 		Guardado.avanzar(b, int(d["tick"]))
 		igual = b.state_hash() == int(d["hash"])
 		b.soltar()
-		DirAccess.remove_absolute(path)
 	check.call("guardar en el tick %d (%d órdenes con clics) y cargar llega al mismo hash" % [int(d.get("tick", -1)), (d.get("comandos", []) as Array).size()], ok and igual)
+	# --- instantaneas --- (proceso/37-red/02) y con la foto: sin re-simular, al mismo hash
+	var con_foto := false
+	if ok:
+		var f := Guardado.armar(d, int(d["tick"]))
+		con_foto = f.tick == int(d["tick"]) and f.state_hash() == int(d["hash"])
+		f.soltar()
+		Guardado.borrar(path)
+	check.call("cargar con la foto (.foto) llega al mismo tick y hash sin re-simular", con_foto)
 	var hud: Hud = m.hud
 	var tiene := false
 	for b in hud._menu.find_children("*", "Button", true, false):

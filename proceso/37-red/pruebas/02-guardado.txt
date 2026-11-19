@@ -1,0 +1,9 @@
+1v1 en el minuto 3                 comandos=6 · hash en T 3608266146 / cargada 3608266146 · carga 2381 ms · en T2 2925621365 / 2925621365 → OK
+2v2 en el minuto 5                 comandos=9 · hash en T 1141372411 / cargada 1141372411 · carga 16026 ms · en T2 2638450983 / 2638450983 → OK
+campaña etiopía 1 en el minuto 2   comandos=5 · hash en T 1443708818 / cargada 1443708818 · carga 2364 ms · en T2 2587103740 / 2587103740 → OK
+foto 1v1 en el minuto 3                2273 entidades · foto 57 KB en 165 ms · carga 550 ms (armar 208) · T+600 2929995681 / 2929995681 · foto igual true → OK
+foto 2v2 en el minuto 5                3173 entidades · foto 94 KB en 331 ms · carga 913 ms (armar 435) · T+600 4225005266 / 4225005266 · foto igual true → OK
+foto 4v4 en el minuto 4                5148 entidades · foto 144 KB en 439 ms · carga 1129 ms (armar 501) · T+600 1710253985 / 1710253985 · foto igual true → OK
+foto campaña etiopía 1 en el minuto 2  1824 entidades · foto 69 KB en 152 ms · carga 373 ms (armar 177) · T+600 2142075218 / 2142075218 · foto igual true → OK
+archivo 1v1 de 7 min, salto al 6       fotos [3000.0] · carga 557 ms · salto desde 3000 en 1760 ms · OK
+GUARDADO: OK

@@ -335,6 +335,8 @@ func _new_game() -> void:
 	Palette.colores = Array(_args.get("colores", [])) # --- partida a medida ---
 	_replay_meta = {"semilla": _seed, "opciones": opts, "ias": ai_ids, "ia_cfg": ai_cfg, "dificultad": _args.get("dificultad", "normal"), "estilo": _args.get("estilo", "normal"), "colores": Palette.colores}
 	_replay_meta["args"] = Guardado.args_limpios(_args) # --- fluidez 6 --- (para «Nueva partida» después de cargar)
+	if SesionRed.activa != null: # --- instantaneas --- el invitado que vuelve de cero sigue desde la foto
+		SesionRed.activa.volcar_foto()
 	_build_scene(aivai)
 
 
@@ -904,10 +906,13 @@ func _cargar() -> void:
 		_args["campana"] = str(d["campana"])
 		_args["mision"] = str(int(d.get("mision", 0)))
 	Palette.colores = Array(d.get("colores", [])).map(func(c: Variant) -> int: return int(c))
-	sim = Guardado.armar(d)
 	var hasta: int = clampi(int(_args.get("desde", "0")), 0, int(d["tick"])) if repe else int(d["tick"])
+	var t_foto := Time.get_ticks_msec() # --- instantaneas ---
+	sim = Guardado.armar(d, hasta) # --- instantaneas --- vuelca la foto más cercana a `hasta`
+	if sim.tick > 0:
+		print("CARGA: foto del tick %d en %d ms" % [sim.tick, Time.get_ticks_msec() - t_foto])
 	_guardado_hash = -1 if repe else int(d.get("hash", -1))
-	if hasta > 0:
+	if hasta > sim.tick: # --- instantaneas --- (antes: hasta > 0)
 		_cargando = true
 		var capa := CanvasLayer.new()
 		add_child(capa)
@@ -1250,6 +1255,8 @@ func _process(delta: float) -> void:
 	else:
 		view.render(1.0, 0.0)
 	_maybe_shot()
+	if sim != null and not _menu_mode and not _cargando and not _args.has("replay"): # --- instantaneas --- (antes del autoguardado: la usa)
+		Guardado.foto_periodica(sim)
 	_autoguardar() # --- fluidez 6 ---
 	_contar_avisos() # --- ronda 8 ---
 	_salir_a() # --- partida a medida ---

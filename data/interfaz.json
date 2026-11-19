@@ -77,7 +77,7 @@
       "aoe4": { "nombre": "AoE4", "teclas": { "marcador_1": "F1", "marcador_2": "F2", "marcador_3": "F3", "marcador_4": "F4", "ayuda": "F9", "economia": "F5", "velocidad": "F11", "mi_base": "", "edad": "F6", "sucesos": "F7", "puntaje": "F8" }, "grupos_exclusivos": true, "numeros_danio": false }
     }
   },
-  "guardado": { "_doc": "--- fluidez 6 --- Guardar, cargar y repeticiones (proceso/30-fluidez/07). autoguardado_min: cada cuántos minutos de juego se guarda solo (0 = nunca; también al salir); repeticiones_max y autoguardados: cuántos archivos se conservan; carga_ms_por_cuadro: cuánto re-simula la carga por cuadro antes de dibujar la barra; velocidades: las de la línea de tiempo.", "autoguardado_min": 5, "autoguardados": 3, "repeticiones_max": 20, "carga_ms_por_cuadro": 40, "velocidades": [1, 2, 4, 8] },
+  "guardado": { "_doc": "--- fluidez 6 --- Guardar, cargar y repeticiones (proceso/30-fluidez/07). autoguardado_min: cada cuántos minutos de juego se guarda solo (0 = nunca; también al salir); repeticiones_max y autoguardados: cuántos archivos se conservan; carga_ms_por_cuadro: cuánto re-simula la carga por cuadro antes de dibujar la barra; velocidades: las de la línea de tiempo. fotos_cada_min (proceso/37-red/02): cada cuántos minutos de juego se saca una foto del estado para saltar en la repetición (0 = nunca); conviene que coincida con autoguardado_min, así el autoguardado usa la misma.", "fotos_cada_min": 5, "autoguardado_min": 5, "autoguardados": 3, "repeticiones_max": 20, "carga_ms_por_cuadro": 40, "velocidades": [1, 2, 4, 8] },
   "demos": {
     "_doc": "Escenas de muestra (--demo, src/game/main.gd): población extra por encima de lo que ya hay, para que no arranquen trabadas en el tope.",
     "pob_margen": 10,

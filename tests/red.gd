@@ -7,8 +7,13 @@ extends SceneTree
 ## Casos:
 ##   directo     3 minutos de juego (1800 ticks) sin demora; el anfitrión pausa en el tick 300 y sigue a 1,5 s
 ##   latencia    1 minuto con 80 ms de demora por mensaje más hasta 40 de vaivén
-##   reconexion  1,5 minutos; el cliente se cae en el tick 300, vuelve de cero y re-simula
+##   reconexion  1,5 minutos; el cliente se cae en el tick 300, vuelve de cero y sigue desde la
+##               foto del anfitrión (proceso/37-red/02), sin re-simular
 ##   desincronizacion  el cliente se suma madera en el tick 120: los dos ven la desincronización en el 150
+##   ping        1 minuto con 250 ms de demora más hasta 50 de vaivén: el retardo de entrada sube solo
+##   basura      el cliente manda mensajes rotos en el tick 100 (paquete que no es un diccionario,
+##               turno a nombre del anfitrión, tipos cambiados, demasiados comandos): el anfitrión los
+##               descarta y la partida sigue igual
 ##
 ##   godot --headless --path . -s tests/red.gd [-- --caso=directo]
 
@@ -18,6 +23,8 @@ const CASOS := [
 	{"nombre": "latencia", "ticks": 600, "lat": 80, "vaiven": 40, "caida": 0},
 	{"nombre": "reconexion", "ticks": 900, "lat": 0, "vaiven": 0, "caida": 300},
 	{"nombre": "desincronizacion", "ticks": 300, "lat": 0, "vaiven": 0, "caida": -120}, # trampa: el cliente toca su estado en el tick 120
+	{"nombre": "ping", "ticks": 600, "lat": 250, "vaiven": 50, "caida": 0, "retardo_min": 4},
+	{"nombre": "basura", "ticks": 600, "lat": 0, "vaiven": 0, "caida": 0, "basura": 100},
 ]
 const PASOS_POR_CUADRO := 200
 const ESPERA_MS := 240000
@@ -36,7 +43,7 @@ func _init() -> void:
 
 func _correr() -> void:
 	if _a.get("rol", "") == "cliente":
-		var ok := await _cliente(int(_a["puerto"]), int(_a["ticks"]), int(_a["lat"]), int(_a["vaiven"]), int(_a["caida"]))
+		var ok := await _cliente(int(_a["puerto"]), int(_a["ticks"]), int(_a["lat"]), int(_a["vaiven"]), int(_a["caida"]), int(_a.get("basura", "0")))
 		quit(0 if ok else 1)
 		return
 	var todo_ok := true
@@ -81,7 +88,7 @@ func _anfitrion(puerto: int, c: Dictionary) -> bool:
 	s.empezar.connect(_arrancar)
 	var exe := OS.get_executable_path()
 	var pid := OS.create_process(exe, ["--headless", "--path", ProjectSettings.globalize_path("res://"), "-s", "res://tests/red.gd", "--",
-		"--rol=cliente", "--puerto=%d" % puerto, "--ticks=%d" % int(c["ticks"]), "--lat=%d" % int(c["lat"]), "--vaiven=%d" % int(c["vaiven"]), "--caida=%d" % int(c["caida"])])
+		"--rol=cliente", "--puerto=%d" % puerto, "--ticks=%d" % int(c["ticks"]), "--lat=%d" % int(c["lat"]), "--vaiven=%d" % int(c["vaiven"]), "--caida=%d" % int(c["caida"]), "--basura=%d" % int(c.get("basura", 0))])
 	var t0 := Time.get_ticks_msec()
 	while s.puede_empezar() != "":
 		await process_frame
@@ -116,6 +123,12 @@ func _anfitrion(puerto: int, c: Dictionary) -> bool:
 					por[int(cm["player"])] += 1
 				print("anfitrión: tick %d hash %d · cliente %d · comandos por la red %s · edades %d/%d" % [fin, hs[0][fin], hs[1][fin], por, int(sim.players[0]["age"]), int(sim.players[1]["age"])])
 				ok = ok and por[0] > 0 and por[1] > 0
+				# --- instantaneas --- retardo adaptable y validación
+				print("anfitrión: retardo de entrada %d turnos (ping %d ms) · descartados %d mensajes y %d paquetes" % [s.lock.D, s.ping_ms, s.rechazados, s.transporte.rechazados])
+				if c.has("retardo_min"):
+					ok = ok and s.lock.D >= int(c["retardo_min"])
+				if c.has("basura"):
+					ok = ok and s.rechazados >= 4 and s.transporte.rechazados >= 1
 				break
 	if sim != null and s.lock != null and s.lock.desync_tick >= 0:
 		print("anfitrión: desincronización en el tick %d" % s.lock.desync_tick)
@@ -138,7 +151,7 @@ func _anfitrion(puerto: int, c: Dictionary) -> bool:
 	return ok
 
 
-func _cliente(puerto: int, fin: int, lat: int, vaiven: int, caida: int) -> bool:
+func _cliente(puerto: int, fin: int, lat: int, vaiven: int, caida: int, basura := 0) -> bool:
 	await _conectar(puerto, lat, vaiven, "mapuches")
 	var t0 := Time.get_ticks_msec()
 	var cayo := false
@@ -147,6 +160,9 @@ func _cliente(puerto: int, fin: int, lat: int, vaiven: int, caida: int) -> bool:
 		_avanzar(caida if caida > 0 and not cayo else fin)
 		if sim == null or s.lock == null:
 			continue
+		if basura > 0 and sim.tick >= basura:
+			basura = 0
+			_basura()
 		if caida < 0 and not cayo and sim.tick >= -caida:
 			cayo = true # trampa: un cambio de estado que el anfitrión no tiene
 			sim.players[1]["res"]["madera"] = int(sim.players[1]["res"]["madera"]) + 7
@@ -170,14 +186,31 @@ func _cliente(puerto: int, fin: int, lat: int, vaiven: int, caida: int) -> bool:
 			return caida < 0 and s.lock.desync_tick == _primer_hash(-caida)
 		var hs: Dictionary = s.lock.hashes
 		if hs[0].has(fin) and hs[1].has(fin):
-			print("cliente: tick %d hash %d · anfitrión %d" % [fin, hs[1][fin], hs[0][fin]])
+			print("cliente: tick %d hash %d · anfitrión %d · retardo %d turnos · recuperada por foto en el tick %d" % [fin, hs[1][fin], hs[0][fin], s.lock.D, s.recuperada_en])
 			# Se queda un momento para que salga lo último (con demora simulada).
 			var t3 := Time.get_ticks_msec()
 			while Time.get_ticks_msec() - t3 < 500 + lat + vaiven:
 				await process_frame
-			return hs[0][fin] == hs[1][fin]
+			return hs[0][fin] == hs[1][fin] and (caida <= 0 or s.recuperada_en >= caida)
 	print("cliente: no llegó al tick %d" % fin)
 	return false
+
+
+## Mensajes rotos al anfitrión (caso basura): ninguno tiene que entrar ni romper nada.
+func _basura() -> void:
+	print("cliente: mando basura en el tick %d" % sim.tick)
+	s.transporte.peer.put_packet(PackedByteArray([1, 2, 3, 4, 5, 6, 7, 8])) # no es un diccionario
+	s.transporte.peer.put_packet(var_to_bytes([1, 2, 3])) # tampoco
+	var n := s.lock.turno() + 50
+	s.transporte.enviar({"tipo": "turno", "j": 0, "n": n, "c": []}) # a nombre del anfitrión
+	s.transporte.enviar({"tipo": "turno", "j": 1, "n": "x", "c": []}) # tipo cambiado
+	s.transporte.enviar({"tipo": "turno", "j": 1, "n": n, "c": [{"t": "move", "player": 1, "ids": [1], "x": "lejos", "y": 3}]})
+	var muchos: Array = []
+	for i in 500:
+		muchos.append({"t": "stop", "player": 1, "ids": [i]})
+	s.transporte.enviar({"tipo": "turno", "j": 1, "n": n, "c": muchos})
+	s.transporte.enviar({"tipo": "hash", "j": 1, "t": 50, "h": 1.5}) # hash que no es entero
+	s.transporte.enviar({"tipo": "lo_que_sea"})
 
 
 ## Primer tick con hash después de `t` (cada hash_cada_ticks de data/red.json).
