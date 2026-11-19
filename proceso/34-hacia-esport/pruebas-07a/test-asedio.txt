@@ -1,0 +1,48 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+OK   ariete común edad 2: 49 (antes 49) 
+OK   ariete común edad 3: 54 (antes 54) 
+OK   ariete común edad 4: 60 (antes 60) 
+OK   ariete tawantinsuyu edad 2: 35 (antes 35) 
+OK   ariete tawantinsuyu edad 3: 38 (antes 38) 
+OK   ariete tawantinsuyu edad 4: 43 (antes 43) 
+OK   ariete guaranies edad 2: 41 (antes 41) 
+OK   ariete guaranies edad 3: 45 (antes 45) 
+OK   ariete guaranies edad 4: 50 (antes 51) 
+OK   el tiro de área no pega al salir (vuela 8 ticks) 
+OK   el área daña a los 9 honderos del bloque (9 dañados)
+OK   pega más en el centro que en el borde (centro 16, esquina 9)
+OK   no daña a los propios 
+OK   esquivar: el bloque que se corrió 2,5 casillas no recibe el tiro (0 dañados)
+OK   atacar el suelo: la catapulta se acerca y tira al punto (2 tiros en 12 s) 
+OK   atacar el suelo: el ariete no lo hace 
+OK   tawantinsuyu: el ariete se entrena en la II 
+OK   tawantinsuyu: desde la III lo reemplaza Hondero de piedra caliente 
+OK   guaranies: el ariete se entrena en la II 
+OK   guaranies: desde la III lo reemplaza Cañón de tacuara 
+OK   mapuches: incendiarios en la III, sin catapulta 
+OK   Palmares: sin asedio de área ni niveles de asedio 
+OK   la kallanka real llevó a la III 
+OK   cerca del hito, +2 de ataque (cerca 13, lejos 11)
+OK   al entrar al aura, lo gana 
+OK   el hito militar de la II sigue global 
+OK   aspilleras y reforzada: +3 flechas (3 → 6)
+OK   reforzada: +30 % de vida (3500 → 4550)
+OK   incendiarios: madera ×450 %, piedra ×90 % 
+OK   muralla: arrastrada encima de la empalizada la refuerza (7 de 7)
+OK   muralla: cobra la piedra de cada tramo (140)
+OK   torre de muralla: no va en el suelo 
+OK   torre de muralla: va sobre un tramo propio 
+OK   torre de muralla: no sobre el tramo de otro 
+OK   puerta de piedra: va sobre un tramo propio 
+OK   puerta de piedra: refuerza la de madera 
+OK   muralla: en la edad I no se traza 
+      golpes contra la muralla (1800 de vida): choque 1, distancia 1, incendiarios 4 (empalizada 54), ariete 190 (empalizada 196)
+OK   muralla: la tropa le saca el daño mínimo 
+OK   muralla: el ariete la rompe en menos de 15 golpes 
+OK   muralla: los incendiarios le pegan poco a la piedra 
+OK   muralla: vale más vida por piedra que la empalizada por madera, y mucha más obra 
+OK   Tawantinsuyu: la pirca es su muro, sin empalizada 
+OK   Ayutthaya: el kamphaeng de ladrillo pide madera 
+OK   mapuches, guaraníes y Palmares: sin muralla de piedra 
+ASEDIO: OK
