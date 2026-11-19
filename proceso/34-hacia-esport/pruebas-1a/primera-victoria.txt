@@ -65,7 +65,3 @@ semilla 6: GANA a las 25:32 (rendicion) · ataques 1 (13:00:22+2 contra 0) · tr
   daño mío a edificios: almacen_madera 1048, almacen_mina 580, taller_tejido 481, granja 410, mercado 163, casa 33 · tirados: almacen_madera 2, granja 2, almacen_mina 1, taller_tejido 1 (primero al minuto 15) · capital rival mín 2400
   IA: ejército máx 22 · edificios al final granja 6, casa 4, almacen_madera 3, taller_tejido 2, campo_tiro 2, centro 1, qollqa 1, ushnu 1, cuartel 1, mercado 1, almacen_mina 1
 RESUMEN dif=facil semillas=7,21,3,1,2,4,5,6: ganó 6 de 8
-WARNING: 20381 ObjectDB instances were leaked at exit (run with `--verbose` for details).
-   at: cleanup (core/object/object.cpp:2536)
-ERROR: 10 resources still in use at exit (run with --verbose for details).
-   at: clear (core/io/resource.cpp:822)

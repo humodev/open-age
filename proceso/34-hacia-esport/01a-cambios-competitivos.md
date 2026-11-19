@@ -56,7 +56,14 @@ Completas: [antes](pruebas-1a/matriz-antes.txt) y [después](pruebas-1a/matriz-d
 
 ## civ_diag
 
-CIV_DIAG_PENDIENTE
+Partidas del torneo (30 min, 5 rivales × 6 semillas). Como referencia, del torneo 39 (más viejo, con otros cambios en el medio): guaraníes 34 %, Etiopía 44 %.
+
+| Pueblo | Gana | Cómo | Edad al final |
+|---|---|---|---|
+| Guaraníes | **15 de 30 (50 %)** | todas por puntos (12 con más edad) | 17 en la IV; los rivales, 9 |
+| Etiopía | **11 de 30 (36 %)** | 4 por destrucción, 7 por puntos | 24 en la III, 1 en la IV; los rivales, 12 en la IV |
+
+Guaraníes sube y Etiopía baja. A Etiopía la frena el tiempo de edad (sube poco a la IV) más que el combate. Queda para la revisión de los expertos y el torneo de la iteración. Detalle: [guaraníes](pruebas-1a/civ-diag-guaranies.txt), [Etiopía](pruebas-1a/civ-diag-etiopia.txt).
 
 ## Commits
 
