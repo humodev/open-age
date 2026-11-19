@@ -161,7 +161,7 @@
  "sin_edificios": ["empalizada", "puerta", "hito_economia", "hito_guerra", "deposito", "almacen_alimento", "establo", "taller"],
  "edificios_nuevos": {
   "tambo": { "nombre": "Tambo", "edad_min": 3, "tam": [3, 3], "pv": 800, "armadura": 1, "costo": {}, "tiempo_ms": 0, "vision": 6000, "pob": 0, "desc": "Un señorío vecino que el Inka ganó con regalos de cumbi: ahora es un tambo del camino real. Si lo destruyen, el ingenio vuelve a los 6 minutos." },
-    "taller_tejido": { "nombre": "Taller de tejido", "edad_min": 1, "tam": [2, 2], "pv": 600, "armadura": 1, "costo": { "madera": 120, "mita": 20 }, "tiempo_ms": 20000, "vision": 3000, "maximo_por_edad": [2, 3, 4, 5], "conversion": { "de": "mita", "consume_min": 30, "da": { "riqueza": 22 }, "piso_pct": 33 }, "motor": true, "desc": "Los turnos de mit'a que sobran se vuelven tela (awasqa y cumbi), que es riqueza: consume 30 de mit'a por minuto y da 22 de riqueza. Si falta mit'a, rinde un tercio." },
+    "taller_tejido": { "nombre": "Taller de tejido", "edad_min": 1, "tam": [2, 2], "pv": 600, "armadura": 1, "costo": { "madera": 120, "mita": 20 }, "tiempo_ms": 20000, "vision": 3000, "maximo_por_edad": [2, 3, 4, 5], "conversion": { "de": "mita", "consume_min": 30, "da": { "riqueza": 28 }, "piso_pct": 33 }, "_doc_3a": "--- esport 3a --- da 22 → 28: el Tawantinsuyu ganaba 30 % (tools/civ_diag.gd, 30 partidas) y llegaba tarde a la III y a la IV con menos riqueza que el resto (proceso/34-hacia-esport/05a)", "motor": true, "desc": "Los turnos de mit'a que sobran se vuelven tela (awasqa y cumbi), que es riqueza: consume 30 de mit'a por minuto y da 28 de riqueza. Si falta mit'a, rinde un tercio." },
   "camino": {
    "nombre": "Qhapaq Ñan (camino)",
    "edad_min": 1,

@@ -2354,15 +2354,24 @@ func _garrison_step(army: Array[SimEntity]) -> Array[SimEntity]:
 				used += 1
 			if not sent.is_empty():
 				sim.push_command({"t": "move", "player": player, "ids": sent, "x": e.x, "y": e.y, "amove": true})
-		# Quien quedó ocioso lejos del sitio vuelve a su lugar.
+		# Quien quedó ocioso lejos del sitio vuelve a su lugar; quien persigue más allá de la
+		# correa (correa_pct % del radio) suelta y vuelve sin pelear en el camino.
 		var back := []
+		var leash := []
+		var far := r * int(cfg["vuelve_pct"]) / 100
+		var rope := r * int(cfg["correa_pct"]) / 100
 		for id in ids:
 			var u: SimEntity = sim.by_id[id]
 			keep[id] = true
-			if u.order == O.IDLE and (absi(u.x - e.x) > r * int(cfg["vuelve_pct"]) / 100 or absi(u.y - e.y) > r * int(cfg["vuelve_pct"]) / 100):
+			var d := maxi(absi(u.x - e.x), absi(u.y - e.y))
+			if u.order == O.IDLE and d > far:
 				back.append(id)
+			elif u.order != O.IDLE and d > rope and u.order != O.MOVE:
+				leash.append(id)
 		if not back.is_empty():
 			sim.push_command({"t": "move", "player": player, "ids": back, "x": e.x, "y": e.y, "amove": true})
+		if not leash.is_empty():
+			sim.push_command({"t": "move", "player": player, "ids": leash, "x": e.x, "y": e.y})
 	if keep.is_empty():
 		return army
 	return _without(army, keep.keys())
