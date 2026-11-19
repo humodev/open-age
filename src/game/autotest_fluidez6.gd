@@ -7,11 +7,12 @@ extends RefCounted
 
 static func correr(m: Node, check: Callable) -> void:
 	var sim: Sim = m.sim
-	# 1. Guardar y cargar: mismo estado en el tick guardado.
+	# 1. Guardar y cargar: mismo estado en el tick guardado. El guardado se hizo al principio,
+	# después de las órdenes con clics y antes de que el autotest toque la partida a mano.
 	check.call("se puede guardar la escaramuza", m.puede_guardar())
-	var path: String = m.guardar_partida("partida")
+	var path: String = m.get_meta("guardado_autotest", "")
 	var d := Guardado.leer(path)
-	var ok := not d.is_empty()
+	var ok := not d.is_empty() and (d["comandos"] as Array).size() > 0
 	var igual := false
 	if ok:
 		var b := Guardado.armar(d)
@@ -19,7 +20,7 @@ static func correr(m: Node, check: Callable) -> void:
 		igual = b.state_hash() == int(d["hash"])
 		b.soltar()
 		DirAccess.remove_absolute(path)
-	check.call("guardar en el tick %d y cargar llega al mismo hash" % int(d.get("tick", -1)), ok and igual)
+	check.call("guardar en el tick %d (%d órdenes con clics) y cargar llega al mismo hash" % [int(d.get("tick", -1)), (d.get("comandos", []) as Array).size()], ok and igual)
 	var hud: Hud = m.hud
 	var tiene := false
 	for b in hud._menu.find_children("*", "Button", true, false):

@@ -890,7 +890,7 @@ func _cargar() -> void:
 	_replay_meta = Guardado.meta_de(d)
 	# Los argumentos de la partida original: «Nueva partida», revancha y fin de misión.
 	var keep := {}
-	for k in ["replay", "desde", "velocidad", "autotest", "shot", "shot-at", "mute"]:
+	for k in ["replay", "desde", "velocidad", "autotest", "shot", "shot-at", "mute", "salir-a"]:
 		if _args.has(k):
 			keep[k] = _args[k]
 	_args = (d.get("args", {}) as Dictionary).duplicate(true)
@@ -952,7 +952,7 @@ func puede_guardar() -> bool:
 ## Guarda la partida en user://partidas/. `tipo`: "partida" (a mano, un archivo por vez),
 ## "auto" (autoguardado, se conservan los últimos) o "salida" (al salir, uno solo).
 func guardar_partida(tipo := "partida") -> String:
-	if not puede_guardar() or sim.tick == 0:
+	if not puede_guardar() or sim.tick == 0 or (tipo != "partida" and _args.has("autotest")):
 		return ""
 	var nombre := "salida.json"
 	if tipo == "auto":
@@ -1063,7 +1063,7 @@ func save_telemetry() -> void:
 
 func save_replay() -> void:
 	save_telemetry()
-	if _replay_meta.is_empty() or _menu_mode or _args.has("aivai") or _args.has("replay") or sim == null or sim.recording.is_empty():
+	if _replay_meta.is_empty() or _menu_mode or _args.has("aivai") or _args.has("replay") or sim == null or sim.tick == 0: # --- fluidez 6 --- (también sin órdenes)
 		return
 	# --- fluidez 6 --- la última (como antes) y una por partida en user://repeticiones/
 	var r := Guardado.datos(_replay_meta, sim)
@@ -1093,8 +1093,6 @@ func _exit_tree() -> void:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
-		guardar_partida("salida") # --- fluidez 6 ---
-		save_replay()
 		salir()
 
 
@@ -1107,6 +1105,8 @@ func salir(codigo := 0) -> void:
 	if _saliendo:
 		return
 	_saliendo = true
+	guardar_partida("salida") # --- fluidez 6 --- (la ventana, «Salir» y --salir-a pasan por acá)
+	save_replay()
 	paused = true
 	if audio != null:
 		audio.callar()
@@ -2375,6 +2375,8 @@ func _autotest() -> void:
 				if libre:
 					beast_at = Vector2i(tx, ty)
 					hallado = true
+	# --- fluidez 6 --- guardado antes de que el autotest toque la partida a mano (autotest_fluidez6)
+	set_meta("guardado_autotest", guardar_partida("partida"))
 	var beast := sim.spawn_unit("rebano", local, beast_at.x * 1000 + 500, beast_at.y * 1000 + 500)
 	var butcher: SimEntity = null
 	for e in sim.actives:
