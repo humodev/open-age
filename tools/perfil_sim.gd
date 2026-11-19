@@ -34,6 +34,9 @@ class Prof:
 	static var _name: Array[String] = []
 	static var ai_us := PackedInt64Array() # µs de think por jugador en este tick
 
+	static func pila() -> String:
+		return "/".join(_name)
+
 	static func enter(n: String) -> void:
 		_t0.append(Time.get_ticks_usec())
 		_child.append(0)
@@ -220,10 +223,23 @@ class PAIDet extends PAI:
 
 
 class PMap extends SimMap:
+	static var lentos_us := 0 # --lentos=MS: anota cada find_path más lento, con quién lo pidió
+	static var tick := 0
 	func find_path(from: Vector2i, to: Vector2i, pid: int = -1) -> Array[Vector2i]:
-		Prof.enter("caminos"); var r = super(from, to, pid); Prof.leave(); return r
+		var t := Time.get_ticks_usec()
+		var pila := Prof.pila()
+		Prof.enter("caminos"); var r = super(from, to, pid); Prof.leave()
+		var us := Time.get_ticks_usec() - t
+		if lentos_us > 0 and us > lentos_us:
+			print("  camino lento: tick %d · %.1f ms · j%d %s -> %s (%d casillas, llega: %s) · %s" % [tick, us / 1000.0, pid, from, to, r.size(), str(not r.is_empty() and r[r.size() - 1] == to), pila])
+		return r
 	func find_boat_path(from: Vector2i, to: Vector2i) -> Array[Vector2i]:
-		Prof.enter("caminos"); var r = super(from, to); Prof.leave(); return r
+		var t := Time.get_ticks_usec()
+		Prof.enter("caminos"); var r = super(from, to); Prof.leave()
+		var us := Time.get_ticks_usec() - t
+		if lentos_us > 0 and us > lentos_us:
+			print("  camino lento (canoa): tick %d · %.1f ms · %s -> %s (%d casillas) · %s" % [tick, us / 1000.0, from, to, r.size(), Prof.pila()])
+		return r
 
 
 class PGroups extends SimGroups:
@@ -281,6 +297,7 @@ func _init() -> void:
 	for a in OS.get_cmdline_user_args():
 		var kv := a.trim_prefix("--").split("=", true, 1)
 		args[kv[0]] = kv[1] if kv.size() > 1 else "1"
+	PMap.lentos_us = int(args.get("lentos", "0")) * 1000
 	var cual := str(args.get("partida", "ambas"))
 	var lista: Array = ["1v6", "4v4"] if cual == "ambas" else [cual]
 	for nombre in lista:
@@ -310,6 +327,7 @@ func _run(nombre: String, semilla: int, minutos: int, n_picos: int, plano: bool,
 		Prof.ai_us = PackedInt64Array()
 		Prof.ai_us.resize(np)
 		Prof.ai_us.fill(0)
+		PMap.tick = s.tick
 		var t0 := Time.get_ticks_usec()
 		s.step()
 		var dt := Time.get_ticks_usec() - t0
