@@ -214,6 +214,19 @@ func _eval(o: Dictionary) -> String:
 			return "hecho" if held >= int(pr.get("n", 1)) else ""
 		"edad":
 			return "hecho" if int(p0["age"]) >= int(pr.get("n", 2)) else ""
+		"guardia":
+			# --- aprendizaje 36 --- n sitios sagrados propios con guarnición (los que rinden).
+			var guarded := 0
+			for e in sim.actives:
+				if e.alive and e.def.get("sagrado", false) and e.holder == 0 and sim.site_guarded(e):
+					guarded += 1
+			return "hecho" if guarded >= int(pr.get("n", 1)) else ""
+		"investigar":
+			# --- aprendizaje 36 --- una tecnología (tecnologia) o cualquiera de la herrería (herreria: true).
+			for k in p0["techs"]:
+				if k == pr.get("tecnologia", "") or (pr.get("herreria", false) and sim.data.tecnologias.get(k, {}).has("herreria")):
+					return "hecho"
+			return ""
 		"sobrevivir":
 			return "hecho" if (sim.tick - int(o["desde"])) * sim.tick_ms / 1000 >= int(pr.get("segundos", 60)) else ""
 		"destruir_hitos":

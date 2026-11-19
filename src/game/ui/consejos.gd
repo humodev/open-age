@@ -7,6 +7,8 @@ extends Node
 ##   - ejército grande en casa y recursos de sobra durante un rato: atacá o subí de edad.
 ##   - aldeanos que caminan lejos para dejar lo que juntan: levantá el almacén del pueblo ahí.
 ##   - un ataque perdido lejos de casa: cuántos cayeron, qué los mató y qué llevar (4q).
+##   - las mecánicas nuevas (proceso/36-aprendizaje): guardia de los sitios, cola trabada,
+##     repetición, herrería, niveles, escuela, maravilla rival, comercio, muralla y asedio de área.
 ##
 ## Solo mira la simulación y llama a `hud.notify`. --- ronda 8 --- Son "Consejos de aprendizaje"
 ## (Opciones): de fábrica, solo en el tutorial y contra la IA fácil. La cuenta de sitios sale siempre.
@@ -66,6 +68,7 @@ func check(dt: int) -> void:
 	_push(dt)
 	_far(dt)
 	_fight()
+	_mecanicas(dt)
 
 
 func _now() -> int:
@@ -140,7 +143,12 @@ func _floating(dt: int) -> void:
 		if int(_since[key]) < int(cfg.get("flotando_s", 60)):
 			continue
 		var name: String = Palette.RES_NAMES.get(k, str(k)).to_lower()
-		if _say(key, "Estás juntando %s que no gastás (%d)\n%s" % [name, have, HINTS.get(k, "")], "decision", int(cfg.get("repetir_s", 90))):
+		var hint: String = HINTS.get(k, "")
+		# --- aprendizaje 36 --- el mercado como salida de lo que sobra, desde su edad.
+		var merc_edad := int(hud.sim.dp(hud.local).edificios.get("mercado", {}).get("edad_min", 99))
+		if int(p["age"]) >= merc_edad:
+			hint += " " + String(_mec("mercado").get("texto", ""))
+		if _say(key, "Estás juntando %s que no gastás (%d)\n%s" % [name, have, hint.strip_edges()], "decision", int(cfg.get("repetir_s", 90))):
 			_since[key] = 0
 			return # de a un recurso por revisión
 
@@ -601,3 +609,111 @@ func _siege_name() -> String:
 				if (dd.edificios[b].get("produce", []) as Array).has(u) and not dd.is_hito(b):
 					return "%s (%s)" % [dd.unidades[u].get("nombre", u), dd.edificios[b].get("nombre", b)]
 	return ""
+
+
+# ---------------------------------------------------------------- Mecánicas nuevas
+
+## --- aprendizaje 36 --- (proceso/36-aprendizaje) Un consejo corto por mecánica nueva: guardia
+## de los sitios, cola trabada, repetición, herrería, niveles, escuela, maravilla rival, comercio,
+## muralla y asedio de área. Textos y tiempos en data/lecciones.json → consejos; cada uno nombra
+## su lección de la Guía (G).
+const GUIA := preload("res://src/game/ui/registro_guia.gd")
+var _mec_hecho := {} # clave -> true: ya no vuelve a salir (los que no tienen repetir_s)
+var _vio_repeticion := false
+var _vio_comerciante := false
+
+
+func _mec(key: String) -> Dictionary:
+	return (GUIA.data().get("consejos", {}) as Dictionary).get(key, {})
+
+
+## Cuenta `dt` mientras `cond` y avisa cuando pasa `durante_s`. Devuelve si avisó.
+func _mec_say(key: String, cond: bool, dt: int, lugar: Variant = null) -> bool:
+	var c := _mec(key)
+	if c.is_empty() or _mec_hecho.has(key):
+		return false
+	var k := "mec_" + key
+	if not cond:
+		_since[k] = 0
+		return false
+	_since[k] = int(_since.get(k, 0)) + dt
+	if int(_since[k]) < int(c.get("durante_s", 0)):
+		return false
+	var txt := GUIA.texto(String(c.get("texto", "")), hud.sim.data.reglas)
+	var lec: Dictionary = GUIA.data().get("lecciones", {}).get(c.get("leccion", ""), {})
+	if not lec.is_empty():
+		txt += "\nG: lección «%s»." % lec.get("titulo", "")
+	var rep := int(c.get("repetir_s", 0))
+	if not _say(k, txt, "decision", rep if rep > 0 else 1 << 30, lugar):
+		return false
+	_since[k] = 0
+	if rep <= 0:
+		_mec_hecho[key] = true
+	return true
+
+
+func _mecanicas(dt: int) -> void:
+	var sim: Sim = hud.sim
+	var me: int = hud.local
+	var p: Dictionary = sim.players[me]
+	var age := int(p["age"])
+	var techs: Dictionary = p["techs"]
+	var tropa := 0
+	var area := false
+	var empalizadas := 0
+	var muralla := false
+	var trabado := false
+	var militar_listo := false
+	var mi_sitio: SimEntity = null
+	var maravilla_rival: SimEntity = null
+	for e in sim.actives:
+		if not e.alive:
+			continue
+		if e.def.get("sagrado", false) and e.holder == me and not sim.site_guarded(e):
+			mi_sitio = e
+		if e.def.get("maravilla", false) and e.owner >= 0 and sim.enemies(me, e.owner):
+			maravilla_rival = e
+		if e.owner != me:
+			continue
+		if e.is_unit():
+			if e.inside < 0 and e.is_military():
+				tropa += int(e.def.get("pob", 1))
+			if e.def.has("area"):
+				area = true
+			if e.type == "comerciante":
+				_vio_comerciante = true
+		elif e.built:
+			if e.repeat != "":
+				_vio_repeticion = true
+				if e.queue.is_empty() and sim.repeat_block(e) in ["pob", "recursos"]:
+					trabado = true
+			if e.def.get("linea", false):
+				if e.def.has("sobre"):
+					muralla = true
+				else:
+					empalizadas += 1
+			if e.def.has("produce") and not e.capital and not sim.dp(me).is_hito(e.type) and not e.def.get("mercado", false):
+				militar_listo = true
+	var tiene := func(campo: String) -> bool:
+		for k in techs:
+			if (sim.data.tecnologias.get(k, {}) as Dictionary).has(campo):
+				return true
+		return false
+	# Sitio propio sin guardia, con tropa para cuidarlo (si no hay tropa, no hay nada que hacer).
+	var pob_guardia := int(sim.data.reglas["sitios"].get("guarnicion_pob", 0))
+	_mec_say("sitio_sin_guardia", mi_sitio != null and pob_guardia > 0 and tropa >= pob_guardia, dt, hud._lugar_de(mi_sitio.x, mi_sitio.y) if mi_sitio != null else null)
+	_mec_say("cola_trabada", trabado, dt)
+	_mec_say("repeticion", not _vio_repeticion and _now() >= int(_mec("repeticion").get("desde_s", 300)), dt)
+	# La herrería: en las campañas la pide el objetivo (el tutorial).
+	_mec_say("herreria", sim.scenario == null and age >= 2 and militar_listo and not tiene.call("herreria"), dt)
+	_mec_say("niveles", age >= 3 and tropa >= int(_mec("niveles").get("tropa_min", 5)) and not tiene.call("nivel"), dt)
+	_mec_say("escuela", age >= 4 and not tiene.call("camino_de"), dt)
+	_mec_say("maravilla_rival", maravilla_rival != null, dt, hud._lugar_de(maravilla_rival.x, maravilla_rival.y) if maravilla_rival != null else null)
+	var merc := false
+	for e in sim.actives:
+		if e.alive and e.owner == me and e.built and e.def.get("mercado", false):
+			merc = true
+			break
+	_mec_say("comercio", age >= 3 and merc and not _vio_comerciante, dt)
+	_mec_say("muralla", age >= 2 and not muralla and empalizadas >= int(_mec("muralla").get("empalizadas_min", 6)), dt)
+	_mec_say("asedio_area", area, dt)

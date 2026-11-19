@@ -57,7 +57,7 @@ const HOJA_ATAJOS := preload("res://src/game/ui/hoja_atajos.gd") # --- atajos --
 var consejos: Node # avisos que enseñan
 var atajos_hoja: Control # --- atajos --- (4q) hoja de atajos de una pantalla
 var cuenta: Control # cuenta regresiva grande (sitios sagrados y misiones)
-var guia: Control # registro de la Guía (G), solo en campañas
+var guia: Control # la Guía (G): lecciones en toda partida y registro en campañas
 var _guia_cfg := {}
 # --- fin aprender ---
 # --- fin avisos ---
@@ -192,11 +192,12 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 	add_child(atajos_hoja)
 	atajos_hoja.setup(self)
 	_blockers.append_array(atajos_hoja.blockers())
+	# --- aprendizaje 36 --- la Guía (G) está en toda partida: lecciones siempre, registro en campañas
+	guia = REGISTRO_GUIA.new()
+	add_child(guia)
+	guia.setup(self)
+	_blockers.append_array(guia.blockers())
 	if sim.scenario != null:
-		guia = REGISTRO_GUIA.new()
-		add_child(guia)
-		guia.setup(self)
-		_blockers.append_array(guia.blockers())
 		_guia_cfg = (JSON.parse_string(FileAccess.get_file_as_string("res://data/interfaz.json")) as Dictionary).get("guia", {})
 	# --- fin aprender ---
 	# --- cursores ---

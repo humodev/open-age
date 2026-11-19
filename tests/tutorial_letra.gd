@@ -7,6 +7,7 @@ extends SceneTree
 ##   --modo=letra   sigue el texto: tres a la madera y tres a los frutos, aldeanos nuevos a la
 ##                  riqueza, explorador al sitio, guerreros y campana si no alcanzan. Debe ganar.
 ##                  Cuando se acaban los frutos cerca, la Guía pide una granja (o12): la levanta.
+##                  Pone 2 guerreros de guardia en el sitio (o13) y compra la herrería (o14).
 ##   --modo=indefenso  hace todo menos defenderse: no entrena guerreros hasta que pasa el
 ##                  ataque y no toca la campana. No puede quedar trabada: o gana o pierde con
 ##                  un motivo (antes, sin aldeanos, la misión seguía abierta para siempre).
@@ -205,6 +206,26 @@ func _init() -> void:
 				step["hito"] = true
 				hito_tick = s.tick
 				print(t(), " construyo el hito ", hito, " con ", r)
+		# "Poné guardia en el sitio sagrado: mandá 2 guerreros a pararse al lado (si no te quedan,
+		# entrená más)" (o13, proceso/36).
+		if objs.get("o13") == "activo" and not step.has("guardia") and mine("guerrero").size() < 2:
+			for cu in mine("cuartel"):
+				if cu.built and cu.queue.is_empty():
+					s.push_command({"t": "train", "player": 0, "building": cu.id, "type": "guerrero"})
+		if objs.get("o13") == "activo" and not step.has("guardia") and mine("guerrero").size() >= 2:
+			for e in s.actives:
+				if e.alive and e.def.get("sagrado", false):
+					s.push_command({"t": "move", "player": 0, "ids": ids(mine("guerrero").slice(0, 2)), "x": e.x + 1500, "y": e.y})
+			step["guardia"] = true
+			print(t(), " mando 2 guerreros de guardia al sitio")
+		# "Con el cuartel seleccionado, comprá Armas templadas (herrería)" (o14, proceso/36).
+		if objs.get("o14") == "activo" and not step.has("herreria") and s.can_afford(0, s.tech_cost(0, "ataque_cc_1")):
+			for cu in mine("cuartel"):
+				if cu.built:
+					s.push_command({"t": "research", "player": 0, "building": cu.id, "tech": "ataque_cc_1"})
+					step["herreria"] = true
+					print(t(), " compro Armas templadas en el cuartel")
+					break
 		if s.tick % 1800 == 0:
 			print(t(), " recursos ", r, " · aldeanos ", v.size(), " · guerreros ", mine("guerrero").size())
 	var res: String = s.scenario.result
@@ -228,6 +249,15 @@ func _init() -> void:
 		print("mensajes de la Guía mientras sube el hito: %d" % dialogs_hito)
 		if dialogs_hito < 2:
 			print("FALLA: la obra del hito pasa sin mensajes de la Guía")
+			ok = false
+	# La guardia del sitio (o13) pide tantos guerreros como la regla (reglas.sitios.guarnicion_pob).
+	var pob := int(s.data.reglas["sitios"].get("guarnicion_pob", 0))
+	for o in s.scenario.objectives:
+		if o["id"] == "o13" and not String(o["texto"]).contains("%d guerreros" % pob):
+			print("FALLA: el texto de o13 no pide %d guerreros (reglas.sitios.guarnicion_pob)" % pob)
+			ok = false
+		if modo == "letra" and o["id"] in ["o13", "o14"] and o["estado"] != "hecho":
+			print("FALLA: %s quedó %s" % [o["id"], o["estado"]])
 			ok = false
 	print("OK" if ok else "FALLA")
 	quit(0 if ok else 1)
