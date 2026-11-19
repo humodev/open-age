@@ -1326,6 +1326,8 @@ func on_tick(events: Array) -> void:
 					selected.erase(ev["id"])
 			"hit":
 				_on_hit(ev)
+			"tiro": # --- esport 1a --- asedio de área: el tiro vuela al punto y marca dónde cae
+				_on_shell(ev)
 			# --- paso 4 --- asedio de área: polvo en el círculo del golpe
 			"area":
 				var c := to_world(int(ev["x"]), int(ev["y"]), 0.2)
@@ -1372,6 +1374,11 @@ func _on_hit(ev: Dictionary) -> void:
 	var va: Dictionary = visuals.get(ev["a"], {})
 	if a != null and b != null and fog_state(a) < 2 and fog_state(b) < 2:
 		return
+	if ev.get("area", false): # --- esport 1a --- el golpe de un tiro que llegó: solo la reacción
+		var vh: Dictionary = visuals.get(ev["b"], {})
+		if not vh.is_empty() and vh.has("anim"):
+			vh["recibe"] = true
+		return
 	if ev["ranged"] and a != null:
 		var from := to_world(a.x, a.y, 0.85 if a.is_unit() else 3.0)
 		var to := to_world(b.x, b.y, 0.45) if b != null else from
@@ -1393,6 +1400,39 @@ func _on_hit(ev: Dictionary) -> void:
 		var vb: Dictionary = visuals.get(ev["b"], {})
 		if not vb.is_empty() and randf() < 0.35:
 			_dust(to_world(b.x, b.y, 0.3) + Vector3(randf_range(-0.8, 0.8), 0.2, randf_range(-0.8, 0.8)), 0.35)
+
+
+# --- esport 1a ---
+## Tiro del asedio de área: la piedra vuela al punto en el tiempo de la simulación y un anillo
+## en el suelo muestra dónde va a caer (se ve si se ve al que tira o el punto).
+func _on_shell(ev: Dictionary) -> void:
+	var a: SimEntity = sim.by_id.get(ev["a"])
+	var x := int(ev["x"])
+	var y := int(ev["y"])
+	var seen := not fog_on or (a != null and fog_state(a) == 2) or sim.fog.state(local, x / 1000, y / 1000) == 2
+	if not seen:
+		return
+	var to := to_world(x, y, 0.2)
+	var dur := float(int(ev["ticks"]) * sim.tick_ms) / 1000.0
+	if a != null:
+		var from := to_world(a.x, a.y, 1.0)
+		_projectile(from, to, false)
+		var f: Dictionary = _fx[_fx.size() - 1]
+		f["dur"] = dur
+		f["arc"] = maxf(1.5, from.distance_to(to) * 0.35)
+		(f["node"] as Node3D).scale = Vector3.ONE * 2.2
+	var r := 1.0
+	if a != null:
+		r = float(a.def.get("area", 1000)) / 1000.0
+	var mi := _ring(0, Vector2(r * 2.0, r * 2.0))
+	mi.visible = true
+	var m: ShaderMaterial = mi.material_override
+	m.set_shader_parameter("color", Color(Palette.UI_BAD, 0.8))
+	m.set_shader_parameter("thickness", 0.06)
+	mi.position = to + Vector3(0, -0.14, 0)
+	add_child(mi)
+	_fx.append({"kind": "marker", "node": mi, "t": 0.0, "dur": dur, "mat": m, "color": Color(Palette.UI_BAD, 0.8)})
+# --- fin esport 1a ---
 
 
 func _projectile(from: Vector3, to: Vector3, arrow: bool) -> void:

@@ -120,3 +120,5 @@ func _draw() -> void:
 			draw_string(Hud.font_b, ctrl.rpress_pos + Vector2(-80, 26), "Formación: %s" % ctrl.formacion, HORIZONTAL_ALIGNMENT_CENTER, 160, 13, Color.WHITE)
 	if ctrl.mode == "patrol":
 		draw_string(Hud.font_b, ctrl.mouse_pos() + Vector2(18, 30), "Patrullar hasta acá", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+	if ctrl.mode == "ground": # --- esport 1a ---
+		draw_string(Hud.font_b, ctrl.mouse_pos() + Vector2(18, 30), "Tirar acá", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)

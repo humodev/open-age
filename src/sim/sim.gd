@@ -43,6 +43,9 @@ var _opts: Dictionary = {}
 var _pending := {} # tick -> Array[Dictionary]
 var flares: Array[Dictionary] = [] # bengalas vivas: {id, player, x, y, tipo, tick} (proceso/23, parte B)
 var _next_flare := 1
+# --- esport 1a --- Tiros del asedio de área en vuelo: {tick (de llegada), x, y, a (el que tira), atk}.
+# Pegan al llegar en el punto, no en el blanco: quien se mueve lo esquiva (D-031).
+var shells: Array[Dictionary] = []
 var requests: Array[Dictionary] = [] # pedidos de recursos entre aliados: {de, a, recurso, n, tick}
 var recording: Array = [] # comandos externos (humanos) para repeticiones
 var _in_step := false
@@ -218,6 +221,8 @@ func _apply(c: Dictionary) -> void:
 					e.order = O.HOLD
 		"patrullar":
 			_cmd_patrol(pid, _own_units(pid, c.get("ids", [])), int(c["x"]), int(c["y"]))
+		"suelo": # --- esport 1a --- atacar el suelo (solo el asedio de área)
+			_cmd_ground(pid, _own_units(pid, c.get("ids", [])), int(c["x"]), int(c["y"]))
 		"bengala":
 			_cmd_flare(pid, int(c["x"]), int(c["y"]), str(c.get("tipo", ""))) # --- fluidez 4 --- (intención elegida en la rueda)
 		"pedir":
@@ -1295,6 +1300,8 @@ func step() -> void:
 			ai.think()
 	groups.tick()
 	_rebuild_hashes()
+	if not shells.is_empty(): # --- esport 1a ---
+		_land_shells()
 	_update_players()
 	for b in all_buildings():
 		if b.is_building() and not b.built:
@@ -1630,6 +1637,8 @@ func _update_unit(e: SimEntity) -> void:
 			_do_attack(e)
 		O.HOLD:
 			_do_hold(e)
+		O.GROUND: # --- esport 1a ---
+			_do_ground(e)
 		O.GATHER:
 			_do_gather(e)
 		O.RETURN:
@@ -2250,6 +2259,12 @@ func attack_bonus(a: SimEntity, t: SimEntity) -> int:
 
 
 func _hit(a: SimEntity, t: SimEntity) -> void:
+	# --- esport 1a --- El asedio de área contra tropa tira al punto donde está el blanco y pega al
+	# llegar (D-031, reemplaza a D-021 solo para él): quien se mueve a tiempo lo esquiva.
+	if a.def.has("area_borde_pct") and t.is_unit():
+		_fire_shell(a, t.x, t.y)
+		return
+	# --- fin esport 1a ---
 	var atk := effective_attack(a) + attack_bonus(a, t)
 	# --- paso 6 --- Carga (kona de waiki): el primer golpe después de un rato sin pelear pega más y derriba.
 	if a.def.has("carga") and t.is_unit() and tick - a.last_combat >= int(a.def["carga"]["espera_ms"]) / tick_ms:
@@ -2378,6 +2393,127 @@ func _splash(a: SimEntity, t: SimEntity) -> void:
 					mods.on_kill(o, a)
 					_kill(o, a)
 	events.append({"t": "area", "a": a.id, "x": cx, "y": cy, "r": r})
+
+
+# --- esport 1a --- Asedio de área esquivable y ataque al suelo (D-031).
+## Ticks de vuelo del tiro de `a`: el suyo (`vuelo_ticks`) o el de reglas.asedio_area.
+func shell_ticks(a: SimEntity) -> int:
+	return maxi(1, int(a.def.get("vuelo_ticks", int((data.reglas.get("asedio_area", {}) as Dictionary).get("vuelo_ticks", 1)))))
+
+
+## Tira al punto (x, y): el golpe sale ahora (con la altura de ahora) y llega en shell_ticks.
+func _fire_shell(a: SimEntity, x: int, y: int) -> void:
+	var atk := effective_attack(a)
+	if int(a.def.get("alcance", 0)) > 1500:
+		var dh := map.h_at(a.x / P, a.y / P) - map.h_at(clampi(x / P, 0, map.n - 1), clampi(y / P, 0, map.n - 1))
+		if dh > 0:
+			atk = atk * (100 + dh * int(data.reglas["bono_altura_pct"])) / 100
+	var fly := shell_ticks(a)
+	shells.append({"tick": tick + fly, "x": x, "y": y, "a": a, "atk": atk})
+	a.last_combat = tick
+	events.append({"t": "tiro", "a": a.id, "x": x, "y": y, "ticks": fly})
+	# Munición limitada (cañón de tacuara): se rompe tras n disparos.
+	if a.def.has("municion"):
+		a.shots += 1
+		if a.shots >= int(a.def["municion"]):
+			a.hp = 0
+			_kill(a)
+
+
+## Los tiros que llegan en este tick pegan en su punto, en el orden en que salieron.
+func _land_shells() -> void:
+	var keep: Array[Dictionary] = []
+	for sh in shells:
+		if int(sh["tick"]) <= tick:
+			_shell_hit(sh)
+		else:
+			keep.append(sh)
+	shells = keep
+
+
+## Golpe de área en el punto: a cada enemigo a `area` o menos, entero en el centro y
+## `area_borde_pct` en el borde, con su armadura (como _splash, pero sin blanco: pega a quien
+## esté ahí cuando llega). El tiro llega aunque el que tiró haya muerto.
+func _shell_hit(sh: Dictionary) -> void:
+	var a: SimEntity = sh["a"]
+	if a.owner < 0 or players[a.owner]["defeated"]:
+		return
+	var r := int(a.def["area"])
+	var edge := int(a.def["area_borde_pct"])
+	var base := int(sh["atk"])
+	var ranged := is_ranged(a)
+	var cx := int(sh["x"])
+	var cy := int(sh["y"])
+	var alerted := {}
+	for gx in range(maxi(0, (cx - r) / EC), (cx + r) / EC + 1):
+		for gy in range(maxi(0, (cy - r) / EC), (cy + r) / EC + 1):
+			var cell: Array = _ehash.get(gx * 1024 + gy, _NONE)
+			for o: SimEntity in cell:
+				if not o.alive or not o.is_unit() or o.inside >= 0 or o.owner < 0 or not enemies(a.owner, o.owner):
+					continue
+				var d := Sim.dist(cx, cy, o.x, o.y)
+				if d > r:
+					continue
+				var full := maxi(int(data.reglas["danio_minimo"]), (base + attack_bonus(a, o)) * counter_mult(a, o) / 100 - effective_armor(o, ranged))
+				var dmg := maxi(1, mods.damage(a, o, full * (100 - (100 - edge) * d / r) / 100))
+				o.hp -= dmg
+				mods.on_hit(a, o, dmg)
+				events.append({"t": "hit", "a": a.id, "b": o.id, "ranged": false, "dmg": dmg, "area": true})
+				if o.hp <= 0:
+					players[o.owner]["stats"]["muertes"] += 1
+					players[a.owner]["stats"]["bajas"] += 1
+					mods.on_kill(o, a)
+					_kill(o, a)
+					continue
+				# La tropa quieta que recibe el golpe sale a buscar al que tiró, y el dueño recibe el aviso.
+				if o.is_military() and o.order == O.IDLE and a.alive:
+					_order_attack(o, a, true)
+				if not alerted.has(o.owner) and tick - int(players[o.owner]["alert_tick"]) > 150:
+					alerted[o.owner] = true
+					players[o.owner]["alert_tick"] = tick
+					events.append({"t": "alert", "player": o.owner, "x": o.x, "y": o.y})
+	events.append({"t": "area", "a": a.id, "x": cx, "y": cy, "r": r})
+
+
+## ¿Puede atacar el suelo? El asedio de área (el que tiene `area_borde_pct`).
+static func can_ground(e: SimEntity) -> bool:
+	return e.is_unit() and e.def.has("area_borde_pct")
+
+
+## Orden de atacar el suelo: va hasta tener el punto a su alcance y tira ahí hasta otra orden.
+func _cmd_ground(_pid: int, units: Array[SimEntity], x: int, y: int) -> void:
+	x = clampi(x, 100, map.n * P - 100)
+	y = clampi(y, 100, map.n * P - 100)
+	for e in units:
+		if not can_ground(e):
+			continue
+		_set_idle(e)
+		e.group = -1
+		e.patrol = false
+		e.order = O.GROUND
+		e.gnd_x = x
+		e.gnd_y = y
+
+
+func _do_ground(e: SimEntity) -> void:
+	if dist(e.x, e.y, e.gnd_x, e.gnd_y) > reach_of(e):
+		e.anchored = false
+		if e.path.is_empty() or e.goal_x != e.gnd_x or e.goal_y != e.gnd_y:
+			if e.stuck > 25:
+				_set_idle(e)
+				return
+			_set_goal(e, e.gnd_x, e.gnd_y)
+		if _follow(e):
+			_set_idle(e)
+		return
+	e.path.clear()
+	e.path_i = 0
+	e.stuck = 0
+	e.anchored = true
+	if e.cooldown <= 0:
+		_fire_shell(e, e.gnd_x, e.gnd_y)
+		e.cooldown = e.def["cadencia_ms"]
+# --- fin esport 1a ---
 
 
 ## Flechas de una andanada: las propias, las de las mejoras (aspilleras) y una por unidad adentro.
@@ -3607,6 +3743,11 @@ func hito_extra_need(pid: int, key: String) -> int:
 	for h: String in dd.hitos[age - 1]:
 		need = maxi(need, int(dd.edificios.get(h, {}).get("costo_extra", {}).get(key, 0)))
 	return need
+
+
+## --- esport 1a --- ¿Puede tomar sitios sagrados? Desde reglas.sitios.captura_edad_min (la II).
+func can_take_sites(pid: int) -> bool:
+	return pid >= 0 and int(players[pid]["age"]) >= int(_opts.get("sitios_captura_edad_min", data.reglas["sitios"].get("captura_edad_min", 1)))
 
 
 ## Lo disputado: riqueza de lugares que se pelean (arcilla del centro, sitios,
@@ -5296,6 +5437,9 @@ func state_hash() -> int:
 	for e in entities:
 		for v in [e.id, e.x, e.y, e.hp, e.order, e.target, e.carry, e.amount, e.progress, e.queue.size(), e.queue_progress, e.inside, e.group]:
 			h = ((h ^ (v & 0xffffffff)) * 16777619) & 0xffffffff
+		if e.order == O.GROUND: # --- esport 1a ---
+			for v in [e.gnd_x, e.gnd_y]:
+				h = ((h ^ (v & 0xffffffff)) * 16777619) & 0xffffffff
 		if e.patrol or e.rumbo >= 0:
 			for v in [int(e.patrol), e.pat_x, e.pat_y, e.rumbo]:
 				h = ((h ^ (v & 0xffffffff)) * 16777619) & 0xffffffff
@@ -5304,6 +5448,9 @@ func state_hash() -> int:
 			h = ((h ^ (int(v) & 0xffffffff)) * 16777619) & 0xffffffff
 	for r in requests:
 		for v in [r["de"], r["a"], r["n"], r["tick"]]:
+			h = ((h ^ (int(v) & 0xffffffff)) * 16777619) & 0xffffffff
+	for sh in shells: # --- esport 1a ---
+		for v in [sh["tick"], sh["x"], sh["y"], (sh["a"] as SimEntity).id, sh["atk"]]:
 			h = ((h ^ (int(v) & 0xffffffff)) * 16777619) & 0xffffffff
 	h = groups.hash_into(h)
 	for p in players:

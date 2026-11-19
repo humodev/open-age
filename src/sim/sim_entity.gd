@@ -3,7 +3,7 @@ extends RefCounted
 ## Una entidad de la simulación. Las capacidades salen de `def` (datos), no de subclases.
 
 enum Cat { UNIT, BUILDING, RESOURCE }
-enum Order { IDLE, MOVE, ATTACK_MOVE, ATTACK, GATHER, RETURN, BUILD, GARRISON, HOLD }
+enum Order { IDLE, MOVE, ATTACK_MOVE, ATTACK, GATHER, RETURN, BUILD, GARRISON, HOLD, GROUND } # --- esport 1a --- GROUND: atacar el suelo
 
 var id: int
 var owner: int = -1 # -1 = naturaleza
@@ -47,6 +47,9 @@ var amove_y: int
 var patrol := false
 var pat_x: int
 var pat_y: int
+# --- esport 1a --- Atacar el suelo: el punto donde tira el asedio de área (orden GROUND).
+var gnd_x: int
+var gnd_y: int
 var rumbo := -1 # último rumbo de su formación (0..15); "formar" lo usa para cambiar de forma en el lugar
 var cooldown: int = 0
 var gather_kind: String = ""
