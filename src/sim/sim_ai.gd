@@ -2512,7 +2512,9 @@ func _escalon() -> int:
 
 ## Ronda 8: ¿le toca a esta IA largar su oleada? No, si una IA aliada largó la suya hace menos
 ## del desfase, ni mientras esa oleada siga en marcha (hasta `marcha_max_ticks` desde que
-## salió): así llegan de a una aunque el camino de una sea más largo. Estimar la llegada no
+## salió) o haya llegado hace menos del desfase: así llegan de a una aunque el camino de una
+## sea más largo. Con `escalon_marcha: false` (la fácil, que tiene poca tropa y el mapa grande
+## la dejaba casi sin atacar) cuenta solo el desfase entre salidas. Estimar la llegada no
 ## alcanzaba: un río o un bosque alargan el camino y las oleadas se juntaban igual. Antes, en
 ## el 1 contra 6, las seis fáciles salían en el mismo minuto y llegaban 90 soldados juntos;
 ## ahora llegan de a una, como un equipo que se turna: entre las que esperan, va primero la
@@ -2522,10 +2524,11 @@ func _team_turn() -> bool:
 	var d := _escalon()
 	if d <= 0:
 		return true
+	var march: bool = level.get("escalon_marcha", true) # la fácil: solo el desfase entre salidas
 	for ai in sim.ais:
 		if ai != self and ai.player != player and not sim.enemies(player, ai.player) and not sim.players[ai.player]["defeated"]:
 			var since: int = sim.tick - ai.last_attack
-			if since < d or not ai._wave_ids.is_empty() and since < int(cfg.get("marcha_max_ticks", 0)):
+			if since < d or march and (ai.eta > sim.tick - d or not ai._wave_ids.is_empty() and since < int(cfg.get("marcha_max_ticks", 0))):
 				return false
 			# Por turno: la aliada que espera desde antes va primero (si no, la que repetía
 			# oleadas cada 50 s no dejaba salir nunca a otra).
