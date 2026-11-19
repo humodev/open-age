@@ -367,7 +367,9 @@ func _process(_d: float) -> void:
 	if boton_como.visible:
 		var r := sp.get_global_rect()
 		boton_como.size = Vector2(124, 26)
-		boton_como.position = Vector2(r.end.x - 132, r.end.y - 34)
+		# Arriba a la derecha del panel, en la fila de los grupos (que se llenan desde la izquierda):
+		# adentro tapaba las ayudas de la selección múltiple.
+		boton_como.position = Vector2(r.end.x - 124, r.position.y - 30)
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
