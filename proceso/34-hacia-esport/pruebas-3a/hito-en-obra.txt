@@ -1,0 +1,8 @@
+
+hito en obra · experta contra experta · llano · 20 minutos
+mapuches:guaranies       s7    enemigo cerca del hito en obra (s): 0 / 60 · hitos perdidos en obra: 0 / 0 · edades ["6:07", "12:08"] / ["7:20", "14:24"]
+mapuches:guaranies       s11   enemigo cerca del hito en obra (s): 0 / 231 · hitos perdidos en obra: 0 / 0 · edades ["6:14", "11:53"] / ["7:22", "18:03"]
+ayutthaya:tawantinsuyu   s7    enemigo cerca del hito en obra (s): 0 / 1 · hitos perdidos en obra: 0 / 0 · edades ["5:48", "12:26"] / ["5:02", "13:24"]
+ayutthaya:tawantinsuyu   s11   enemigo cerca del hito en obra (s): 0 / 0 · hitos perdidos en obra: 0 / 0 · edades ["5:43", "14:13"] / ["5:17", "19:45"]
+etiopia:palmares         s7    enemigo cerca del hito en obra (s): 4 / 46 · hitos perdidos en obra: 0 / 0 · edades ["5:50", "19:35"] / ["9:53", "16:12"]
+etiopia:palmares         s11   enemigo cerca del hito en obra (s): 0 / 48 · hitos perdidos en obra: 0 / 0 · edades ["4:36", "17:15"] / ["13:17"]
