@@ -12,5 +12,13 @@
   "timeout_min_ms": 3000,
   "timeout_max_ms": 8000,
   "pasos_por_cuadro_al_alcanzar": 120,
-  "atraso_para_alcanzar_turnos": 6
+  "atraso_para_alcanzar_turnos": 6,
+  "_doc_instantaneas": "proceso/37-red/02. Retardo de entrada adaptable: cada ping_cada_ms se mide la ida y vuelta; cada retardo_ajuste_cada_ms el retardo pasa a ceil((peor de las últimas ping_muestras / 2 + retardo_margen_ms) / ms por turno), entre retardo_min_turnos y retardo_max_turnos (retardo_turnos es el de arranque). validacion: topes de lo que llega (bytes por paquete, comandos por turno, claves por comando, largo de los textos y de las listas); lo que se pasa se descarta.",
+  "ping_cada_ms": 500,
+  "ping_muestras": 8,
+  "retardo_ajuste_cada_ms": 2000,
+  "retardo_margen_ms": 60,
+  "retardo_min_turnos": 2,
+  "retardo_max_turnos": 10,
+  "validacion": { "max_bytes": 16777216, "max_comandos_por_turno": 100, "max_claves_comando": 24, "max_texto": 64, "max_lista": 2000 }
 }

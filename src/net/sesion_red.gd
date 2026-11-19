@@ -4,11 +4,15 @@ extends Node
 ## la pausa limitada y la reconexión. Vive bajo /root, así sobrevive a los reinicios de main.
 ##
 ## Mensajes (diccionarios con "tipo"):
-##   hola {civ, color, listo}      cliente → anfitrión, al conectarse (también al volver)
+##   hola {civ, color, listo, inyectado}  cliente → anfitrión, al conectarse (también al volver;
+##                                 inyectado: hasta qué turno tiene la partida, -1 si volvió de cero)
 ##   elijo {civ, color, listo}     cliente → anfitrión, al cambiar algo en la sala
 ##   sala {sala}                   anfitrión → cliente, el estado de la sala
 ##   empezar {args}                anfitrión → cliente, la partida (args de main.gd)
-##   retomar {args, log, hashes, reanudado}  anfitrión → cliente que vuelve en plena partida
+##   retomar {args, log, hashes, reanudado, foto, inyectado, pausas}  anfitrión → cliente que vuelve
+##                                 en plena partida: si volvió de cero, la foto del estado (SimEstado)
+##                                 y solo los turnos de después; si no, los turnos que le faltan
+##   ping {t}, pong {t}            ida y vuelta para medir el ping y ajustar el retardo de entrada
 ##   turnos {log}                  cliente → anfitrión al volver: lo propio, por si se perdió algo
 ##   turno, hash, reanudar         del lockstep (lockstep.gd)
 
@@ -36,12 +40,22 @@ var _parado_desde := -1 # sin poder avanzar (falta el turno del otro)
 var _texto := ""
 var _capa: CanvasLayer
 var _rotulo: Label
+# --- instantaneas ---
+var _foto := PackedByteArray() # la foto que mandó el anfitrión, hasta volcarla
+var _foto_info := {} # inyectado y pausas de la foto
+var _rtts: Array = [] # últimos pings (ms)
+var _prox_ping := 0
+var _prox_ajuste := 0
+var rechazados := 0 # mensajes descartados por la validación
+var ping_ms := -1
+var recuperada_en := -1 # tick en que se volcó la foto del anfitrión (-1: no hizo falta)
 
 
 func _init() -> void:
 	cfg = JSON.parse_string(FileAccess.get_file_as_string("res://data/red.json"))
 	transporte.timeout_min_ms = int(cfg.get("timeout_min_ms", 3000))
 	transporte.timeout_max_ms = int(cfg.get("timeout_max_ms", 8000))
+	transporte.max_bytes = int((cfg.get("validacion", {}) as Dictionary).get("max_bytes", 16777216)) # --- instantaneas ---
 	transporte.conectado.connect(_al_conectar)
 	transporte.desconectado.connect(_al_desconectar)
 	sala = {
@@ -211,14 +225,69 @@ func adjuntar(s: Sim) -> void:
 		_decir("Desincronización en el tick %d" % t))
 	(s as SimRed).red = lock
 	lock.reanudado_hasta = _reanudado
+	if not _foto.is_empty():
+		return # --- instantaneas --- se importa al volcar la foto (volcar_foto)
 	lock.importar(_pendiente)
 	_pendiente = []
+
+
+# --- instantaneas ---
+## Vuelve de cero con la foto del anfitrión: la vuelca en la simulación recién armada (con sus
+## IA) y sigue desde ese tick, sin re-simular. main.gd la llama antes de armar la vista; si
+## no, la primera vez que se pregunta si se puede avanzar.
+func volcar_foto() -> void:
+	if _foto.is_empty() or sim == null or lock == null:
+		return
+	var t0 := Time.get_ticks_msec()
+	var ok := SimEstado.cargar(sim, _foto)
+	_foto = PackedByteArray()
+	if not ok:
+		estado = "fin"
+		transporte.cerrar()
+		_decir("No se pudo recuperar la partida (¿otra versión del juego?)")
+		return
+	lock.desde_foto(int(_foto_info.get("inyectado", -1)), _foto_info.get("pausas", {}))
+	recuperada_en = sim.tick
+	lock.importar(_pendiente)
+	_pendiente = []
+	_decir("Partida recuperada en el tick %d (foto en %d ms)" % [sim.tick, Time.get_ticks_msec() - t0])
+
+
+## Retardo de entrada según el ping: lo que tarda en llegar un turno (la mitad del peor ping
+## reciente) más un margen, en turnos, dentro de [retardo_min_turnos, retardo_max_turnos].
+func retardo_para(rtt_ms: int, tick_ms: int) -> int:
+	var turno_ms := maxi(1, int(cfg.get("ticks_por_turno", 1)) * tick_ms)
+	var d := (rtt_ms / 2 + int(cfg.get("retardo_margen_ms", 60)) + turno_ms - 1) / turno_ms
+	return clampi(d, int(cfg.get("retardo_min_turnos", 2)), int(cfg.get("retardo_max_turnos", 10)))
+
+
+func _medir_ping(ahora: int) -> void:
+	if estado != "partida" or lock == null or not transporte.conectado_ahora():
+		return
+	if ahora >= _prox_ping:
+		_prox_ping = ahora + int(cfg.get("ping_cada_ms", 500))
+		transporte.enviar({"tipo": "ping", "t": ahora})
+	if ahora >= _prox_ajuste and not _rtts.is_empty():
+		_prox_ajuste = ahora + int(cfg.get("retardo_ajuste_cada_ms", 2000))
+		var peor := 0
+		for r: int in _rtts:
+			peor = maxi(peor, r)
+		ping_ms = peor
+		var d := retardo_para(peor, sim.tick_ms if sim != null else 100)
+		if d != lock.D:
+			print("RED: ping %d ms · retardo de entrada %d → %d turnos" % [peor, lock.D, d])
+			lock.ajustar_retardo(d)
+# --- fin instantaneas ---
 
 
 ## Antes de sim.step(): ¿se puede avanzar un tick?
 func antes_del_paso() -> bool:
 	if lock == null:
 		return false
+	if not _foto.is_empty(): # --- instantaneas ---
+		volcar_foto()
+		if lock == null or estado != "partida":
+			return false
 	var ok := lock.listo()
 	_enviar_salida()
 	if ok:
@@ -267,6 +336,7 @@ func _process(_delta: float) -> void:
 	for m: Dictionary in transporte.poll():
 		_recibir(m)
 	var ahora := Time.get_ticks_msec()
+	_medir_ping(ahora) # --- instantaneas ---
 	if estado == "conectando" and not transporte.conectado_ahora() and ahora >= _reintento:
 		transporte.cerrar()
 		estado = "nada"
@@ -289,7 +359,7 @@ func _al_conectar(_id: int) -> void:
 		if estado == "conectando":
 			estado = "sala"
 		var yo: Dictionary = sala["jugadores"][local]
-		transporte.enviar({"tipo": "hola", "civ": yo["civ"], "color": yo["color"], "listo": yo["listo"]})
+		transporte.enviar({"tipo": "hola", "civ": yo["civ"], "color": yo["color"], "listo": yo["listo"], "inyectado": lock.inyectado_hasta if lock != null else -1})
 		if estado == "partida":
 			_decir("Conexión recuperada")
 
@@ -313,7 +383,20 @@ func _al_desconectar(_id: int) -> void:
 
 
 func _recibir(m: Dictionary) -> void:
+	# --- instantaneas --- lo que no pasa la validación se descarta (y se cuenta)
+	var por := RedValidar.motivo(m, local, cfg.get("validacion", {}))
+	if por != "":
+		rechazados += 1
+		if rechazados <= 5:
+			push_warning("RED: mensaje descartado: %s" % por)
+		return
 	match str(m.get("tipo", "")):
+		"ping":
+			transporte.enviar({"tipo": "pong", "t": m["t"]})
+		"pong":
+			_rtts.append(maxi(0, Time.get_ticks_msec() - int(m["t"])))
+			if _rtts.size() > int(cfg.get("ping_muestras", 8)):
+				_rtts.pop_front()
 		"hola":
 			if not es_anfitrion():
 				return
@@ -327,7 +410,18 @@ func _recibir(m: Dictionary) -> void:
 				var rean := -1
 				if lock != null:
 					rean = lock.pausa_turno - 1 if lock.pausa_de >= 0 else lock.inyectado_hasta
-				transporte.enviar({"tipo": "retomar", "args": args, "log": lock.registro() if lock != null else [], "hashes": lock.hashes_de(local) if lock != null else [], "reanudado": rean})
+				# --- instantaneas --- si volvió de cero, la foto y lo de después; si no, lo que le falta
+				var r := {"tipo": "retomar", "args": args, "log": [], "hashes": [], "reanudado": rean}
+				if lock != null and sim != null:
+					var tiene := int(m.get("inyectado", -1))
+					if tiene < 0:
+						r["foto"] = SimEstado.tomar(sim)
+						r["inyectado"] = lock.inyectado_hasta
+						r["pausas"] = lock.pausas_usadas.duplicate()
+						tiene = lock.inyectado_hasta
+					r["log"] = lock.registro(false, tiene + 1)
+					r["hashes"] = lock.hashes_de(local, (tiene + 1) * lock.T)
+				transporte.enviar(r)
 				_decir("El rival volvió")
 		"elijo":
 			if es_anfitrion() and estado == "sala":
@@ -351,8 +445,10 @@ func _recibir(m: Dictionary) -> void:
 				lock.reanudado_hasta = maxi(lock.reanudado_hasta, _reanudado)
 				lock.importar(todo)
 				transporte.enviar({"tipo": "turnos", "log": lock.registro(true) + lock.hashes_de(local)})
-			else: # volvió de cero: partida nueva y re-simulación hasta el turno actual
+			else: # volvió de cero: partida nueva y la foto (o re-simulación hasta el turno actual)
 				_pendiente = todo
+				_foto = m.get("foto", PackedByteArray()) # --- instantaneas ---
+				_foto_info = {"inyectado": int(m.get("inyectado", -1)), "pausas": m.get("pausas", {})}
 				_decir("Recuperando la partida…")
 				_arrancar(m["args"])
 		"turnos":

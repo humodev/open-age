@@ -36,6 +36,7 @@ var pausa_turno := -1
 var pausa_desde := 0
 var reanudado_hasta := -1 # pausas de turnos <= esto ya se levantaron (llegó «reanudar»)
 var _pedir_pausa := false
+var _propios_importados_hasta := -1 # --- instantaneas --- último turno propio que vino de afuera (re-simulación)
 var salida: Array = []
 
 
@@ -132,6 +133,25 @@ func recibir(msg: Dictionary) -> void:
 				pausa_de = -1
 
 
+# --- instantaneas ---
+## Retardo de entrada nuevo (turnos). Subirlo llena los turnos del medio con mensajes vacíos;
+## bajarlo deja lo juntado para el primer turno que todavía no se mandó. Cada jugador tiene
+## el suyo: los turnos llevan su número, así que las dos máquinas inyectan lo mismo.
+func ajustar_retardo(nuevo: int) -> void:
+	D = maxi(1, nuevo)
+
+
+## Después de volcar una foto en el tick de la simulación: lo inyectado hasta `inyectado` ya
+## está en la foto (también los comandos pendientes), y las pausas usadas vienen aparte.
+func desde_foto(inyectado: int, pausas: Dictionary) -> void:
+	inyectado_hasta = inyectado
+	enviados_hasta = maxi(enviados_hasta, inyectado)
+	for p in pausas:
+		if pausas_usadas.has(int(p)):
+			pausas_usadas[int(p)] = int(pausas[p])
+# --- fin instantaneas ---
+
+
 func pedir_pausa() -> bool:
 	if pausa_de >= 0 or _pedir_pausa or int(pausas_usadas.get(local, 0)) >= pausas_max:
 		return false
@@ -152,26 +172,32 @@ func pausa_restante_s() -> int:
 
 
 ## Todo lo jugado: los mensajes de turno de todos (para el que vuelve) o solo los propios.
-func registro(solo_local := false) -> Array:
+func registro(solo_local := false, desde := 0) -> Array:
 	var out: Array = []
 	var ks := turnos.keys()
 	ks.sort()
 	for n in ks:
+		if n < desde: # --- instantaneas --- lo anterior va en la foto
+			continue
 		for p in jugadores:
 			if turnos[n].has(p) and (not solo_local or p == local):
 				out.append(turnos[n][p])
 	return out
 
 
-func hashes_de(pid: int) -> Array:
+func hashes_de(pid: int, desde_tick := 0) -> Array:
 	var out: Array = []
 	for t in hashes.get(pid, {}):
+		if t < desde_tick: # --- instantaneas ---
+			continue
 		out.append({"tipo": "hash", "j": pid, "t": t, "h": hashes[pid][t]})
 	return out
 
 
 func importar(msgs: Array) -> void:
 	for m: Dictionary in msgs:
+		if str(m.get("tipo", "")) == "turno" and int(m.get("j", -1)) == local:
+			_propios_importados_hasta = maxi(_propios_importados_hasta, int(m.get("n", -1)))
 		recibir(m)
 	# Lo propio que ya estaba jugado no se vuelve a mandar ni a cerrar.
 	var n := enviados_hasta
@@ -194,7 +220,10 @@ func _guardar(msg: Dictionary) -> void:
 func _cerrar(n: int) -> void:
 	var meta := n + D
 	if turnos.has(meta) and (turnos[meta] as Dictionary).has(local):
-		buffer.clear() # re-simulación: el turno ya estaba jugado y registrado
+		# --- instantaneas --- re-simulación: el turno ya estaba jugado y registrado, y lo
+		# juntado ahora ya está en él. Si no (el retardo bajó), lo juntado espera al próximo.
+		if meta <= _propios_importados_hasta:
+			buffer.clear()
 		enviados_hasta = maxi(enviados_hasta, meta)
 		return
 	while enviados_hasta < meta:

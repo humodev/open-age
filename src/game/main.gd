@@ -335,6 +335,8 @@ func _new_game() -> void:
 	Palette.colores = Array(_args.get("colores", [])) # --- partida a medida ---
 	_replay_meta = {"semilla": _seed, "opciones": opts, "ias": ai_ids, "ia_cfg": ai_cfg, "dificultad": _args.get("dificultad", "normal"), "estilo": _args.get("estilo", "normal"), "colores": Palette.colores}
 	_replay_meta["args"] = Guardado.args_limpios(_args) # --- fluidez 6 --- (para «Nueva partida» después de cargar)
+	if SesionRed.activa != null: # --- instantaneas --- el invitado que vuelve de cero sigue desde la foto
+		SesionRed.activa.volcar_foto()
 	_build_scene(aivai)
 
 
