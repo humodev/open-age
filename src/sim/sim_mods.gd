@@ -1053,7 +1053,12 @@ func tick_traps() -> void:
 		var victim: SimEntity = null
 		for ox in range(b.tx - 1, b.tx + 2):
 			for oy in range(b.ty - 1, b.ty + 2):
-				for o: SimEntity in sim._grid.get(ox * 4096 + oy, []):
+				if ox < 0 or oy < 0 or ox >= sim.map.n or oy >= sim.map.n:
+					continue
+				var slot := sim._cell_head[ox * sim.map.n + oy] # --- rendimiento 4 --- grilla plana
+				while slot >= 0:
+					var o: SimEntity = sim._cell_ent[slot]
+					slot = sim._cell_next[slot]
 					if victim == null and o.alive and o.owner >= 0 and sim.enemies(b.owner, o.owner) and (o.is_military() or o.fn == "civil") \
 							and absi(o.x - b.x) <= 600 and absi(o.y - b.y) <= 600:
 						victim = o

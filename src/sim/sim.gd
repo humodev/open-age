@@ -56,7 +56,13 @@ var shells: Array[Dictionary] = []
 var requests: Array[Dictionary] = [] # pedidos de recursos entre aliados: {de, a, recurso, n, tick}
 var recording: Array = [] # comandos externos (humanos) para repeticiones
 var _in_step := false
-var _grid := {} # celda de 1 casilla -> unidades (separación)
+# --- rendimiento 4 --- Celda de 1 casilla -> unidades (separación, trampas, reclamo de animales),
+# en una grilla plana: `_cell_head[x * n + y]` es la primera ranura de la celda (-1: vacía),
+# `_cell_next` la siguiente de la misma celda, `_cell_ent` la unidad. Mismo orden que `actives`.
+var _cell_head := PackedInt32Array()
+var _cell_tail := PackedInt32Array()
+var _cell_next := PackedInt32Array()
+var _cell_ent: Array[SimEntity] = []
 var _ehash := {} # celda de EC -> unidades y edificios (búsqueda)
 var _res_cells := {} # celda de RC casillas -> recursos
 var _wild: Array[SimEntity] = [] # animales sueltos que se pueden reclamar (proceso/23)
@@ -1717,17 +1723,29 @@ func _aura_combat() -> void:
 
 
 func _rebuild_hashes() -> void:
-	_grid.clear()
+	# --- rendimiento 4 ---
+	var nn := map.n
+	if _cell_head.size() != nn * nn:
+		_cell_head.resize(nn * nn)
+		_cell_tail.resize(nn * nn)
+	_cell_head.fill(-1)
+	_cell_next.resize(0)
+	_cell_ent.clear()
 	_ehash.clear()
 	_emask.clear()
 	for e in actives:
 		if not e.alive or e.inside >= 0:
 			continue
 		if e.is_unit():
-			var k := (e.x / P) * 4096 + e.y / P
-			if not _grid.has(k):
-				_grid[k] = []
-			_grid[k].append(e)
+			var k := (e.x / P) * nn + e.y / P
+			var slot := _cell_ent.size()
+			_cell_ent.append(e)
+			_cell_next.append(-1)
+			if _cell_head[k] < 0:
+				_cell_head[k] = slot
+			else:
+				_cell_next[_cell_tail[k]] = slot
+			_cell_tail[k] = slot
 			var ek := (e.x / EC) * 1024 + e.y / EC
 			if not _ehash.has(ek):
 				_ehash[ek] = []
@@ -3217,6 +3235,7 @@ func _separate() -> void:
 	# la misma velocidad de separación por la mitad del trabajo (docs/11, paso 6).
 	var every := maxi(1, int(data.reglas.get("separacion_cada_ticks", 1)))
 	var cap := 160 * every
+	var nn := map.n
 	for e in all_units():
 		if not e.alive or not e.is_unit() or e.inside >= 0:
 			continue
@@ -3225,9 +3244,16 @@ func _separate() -> void:
 		var cx := e.x / P
 		var cy := e.y / P
 		for ox in range(cx - 1, cx + 2):
+			if ox < 0 or ox >= nn:
+				continue
 			for oy in range(cy - 1, cy + 2):
-				var cell: Array = _grid.get(ox * 4096 + oy, _NONE)
-				for o: SimEntity in cell:
+				if oy < 0 or oy >= nn:
+					continue
+				# --- rendimiento 4 --- la grilla plana en lugar del diccionario de celdas
+				var slot := _cell_head[ox * nn + oy]
+				while slot >= 0:
+					var o: SimEntity = _cell_ent[slot]
+					slot = _cell_next[slot]
 					if o.id <= e.id or not o.alive:
 						continue
 					var rr := e.radius + o.radius
@@ -3798,7 +3824,14 @@ func _claim_animals() -> void:
 		var bd := r + 1
 		for dy in range(-rt, rt + 1):
 			for dx in range(-rt, rt + 1):
-				for u: SimEntity in _grid.get((w.tx + dx) * 4096 + w.ty + dy, _NONE):
+				var ux := w.tx + dx
+				var uy := w.ty + dy
+				if ux < 0 or uy < 0 or ux >= map.n or uy >= map.n:
+					continue
+				var slot := _cell_head[ux * map.n + uy] # --- rendimiento 4 ---
+				while slot >= 0:
+					var u: SimEntity = _cell_ent[slot]
+					slot = _cell_next[slot]
 					if not u.alive or u.owner < 0 or u.def.get("animal", false) or u.inside >= 0:
 						continue
 					var d := dist(u.x, u.y, w.x, w.y)
