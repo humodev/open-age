@@ -31,8 +31,14 @@ static var barras_siempre := false
 ## --- veterano ronda 5 --- barras de las unidades sanas que pelean (antes, siempre; ahora se elige).
 static var barras_pelea := false
 # --- aprender --- (proceso/23-como-aoe4/03-aprender-a-jugar.md)
-## Avisos que enseñan (src/game/ui/consejos.gd).
-static var consejos := true
+## --- ronda 8 --- Consejos de aprendizaje (src/game/ui/consejos.gd y los de gestión: población,
+## parados, recursos que se agotan, granjas vacías). Como en AoE4, la partida común no reta al
+## jugador por cómo gasta: "auto" los prende solo en el tutorial y contra la IA fácil; "si" y
+## "no" los fuerzan. `consejos` es lo que vale en la partida en curso (aplicar_aprendizaje).
+static var aprendizaje := "auto"
+static var consejos := false
+static var _aprendizaje_auto := false
+const APRENDIZAJE := ["auto", "si", "no"]
 ## Consejo de edificios de producción parados (cola_global.gd; clic derecho en un ícono gris lo apaga).
 static var aviso_parados := true
 ## Nombre debajo del glifo en la grilla de órdenes. Prendido la primera vez: es lo que necesita
@@ -55,6 +61,14 @@ static var solo_lectura := false
 
 # ---------------------------------------------------------------- Archivo
 
+
+## --- ronda 8 --- Recalcula `consejos` para la partida. `auto_on` (tutorial o IA fácil) lo fija
+## el HUD al empezar; sin él, se usa el último.
+static func aplicar_aprendizaje(auto_on: Variant = null) -> void:
+	if auto_on != null:
+		_aprendizaje_auto = bool(auto_on)
+	consejos = aprendizaje == "si" or (aprendizaje == "auto" and _aprendizaje_auto)
+
 static func cargar(ruta: String = RUTA) -> void:
 	var cf := ConfigFile.new()
 	if cf.load(ruta) != OK:
@@ -70,7 +84,10 @@ static func cargar(ruta: String = RUTA) -> void:
 	bordes = bool(cf.get_value("camara", "bordes", bordes))
 	velocidad_camara = float(cf.get_value("camara", "velocidad", velocidad_camara))
 	pantalla_completa = bool(cf.get_value("pantalla", "completa", pantalla_completa))
-	consejos = bool(cf.get_value("ayuda", "consejos", consejos)) # --- aprender ---
+	aprendizaje = str(cf.get_value("ayuda", "aprendizaje", aprendizaje)) # --- ronda 8 ---
+	if not APRENDIZAJE.has(aprendizaje):
+		aprendizaje = "auto"
+	aplicar_aprendizaje()
 	aviso_parados = bool(cf.get_value("ayuda", "aviso_parados", aviso_parados)) # --- frente 1 ---
 	nombres_grilla = bool(cf.get_value("ayuda", "nombres_grilla", nombres_grilla))
 	dificultad = str(cf.get_value("partida", "dificultad", dificultad))
@@ -99,7 +116,7 @@ static func guardar(ruta: String = RUTA) -> void:
 	cf.set_value("camara", "bordes", bordes)
 	cf.set_value("camara", "velocidad", velocidad_camara)
 	cf.set_value("pantalla", "completa", pantalla_completa)
-	cf.set_value("ayuda", "consejos", consejos) # --- aprender ---
+	cf.set_value("ayuda", "aprendizaje", aprendizaje) # --- ronda 8 ---
 	cf.set_value("ayuda", "aviso_parados", aviso_parados) # --- frente 1 ---
 	cf.set_value("ayuda", "nombres_grilla", nombres_grilla)
 	cf.set_value("partida", "dificultad", dificultad)
@@ -122,7 +139,8 @@ static func restablecer() -> void:
 	barras_siempre = false
 	barras_pelea = false # --- veterano ronda 5 ---
 	aviso_parados = true # --- frente 1 ---
-	consejos = true # --- aprender --- (la dificultad elegida no se restablece: no es una opción de este diálogo)
+	aprendizaje = "auto" # --- ronda 8 --- (la dificultad elegida no se restablece: no es una opción de este diálogo)
+	aplicar_aprendizaje()
 	nombres_grilla = true
 	EstadoCasilla.nombres = true
 
@@ -279,10 +297,16 @@ static func dialogo(host: Control, main: Node) -> PanelContainer:
 
 	# --- aprender --- Ayuda para aprender a jugar
 	_seccion(izq, "Ayuda")
-	var cons := _interruptor()
-	cons.button_pressed = consejos
-	cons.toggled.connect(func(on: bool) -> void: consejos = on)
-	_fila(izq, "Avisos que enseñan", cons)
+	var cons := OptionButton.new() # --- ronda 8 ---
+	cons.name = "Aprendizaje"
+	for t in ["Tutorial y fácil", "Siempre", "Nunca"]:
+		cons.add_item(t)
+	cons.selected = maxi(0, APRENDIZAJE.find(aprendizaje))
+	cons.tooltip_text = "Avisos que enseñan: población que se llena, edificios parados, recursos que se agotan, granjas vacías, ataques perdidos.\nDe fábrica salen solo en el tutorial y contra la IA fácil."
+	cons.item_selected.connect(func(i: int) -> void:
+		aprendizaje = APRENDIZAJE[i]
+		aplicar_aprendizaje())
+	_fila(izq, "Consejos de aprendizaje", cons)
 	var nom := _interruptor()
 	nom.button_pressed = nombres_grilla
 	nom.toggled.connect(func(on: bool) -> void:
