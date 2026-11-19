@@ -33,6 +33,9 @@ extends SceneTree
 ##   mantener+escalonar  la línea mantiene y la distancia escalona detrás de ella
 ##   esquivar    --- esport 1a --- cada unidad que está donde va a caer un tiro de asedio de área
 ##               (Sim.shells) se corre fuera del área y vuelve al ataque cuando cae (200 ms de reacción)
+##   --reaccion=MS  --- esport 3b --- las órdenes de micro del bando A (kitear, escalonar, foco,
+##                 esquivar) salen MS milisegundos después de decidirse, como un jugador que
+##                 reacciona; mientras una unidad tiene una orden en camino, no decide otra
 ## Formación (opcional): bloque, linea, abierta, columna (la del grupo de AoE4, data/reglas.json).
 
 const O := SimEntity.Order
@@ -45,6 +48,9 @@ var civs: Array = ["", ""]
 var age := 2
 var variants := 1
 var purchases := false
+var reaction_ms := 0 # --- esport 3b ---
+var _pending := {} # id -> [tick en que sale, orden]
+var _seq := 0
 const SHIFTS := [0, -1, 1, -2, 2, 0, -1, 1, -2, 2]
 
 
@@ -67,12 +73,16 @@ func _init() -> void:
 			cases_arg = a.substr(8)
 		elif a.begins_with("--set="):
 			only_set = a.substr(6)
+		elif a.begins_with("--reaccion="):
+			reaction_ms = maxi(0, int(a.substr(11)))
 		elif a.begins_with("--variantes="):
 			variants = clampi(int(a.substr(12)), 1, SHIFTS.size())
 	data = SimData.load_default()
 	if patch_path != "":
 		_apply_patch(patch_path)
 	print("# micro_matriz · civs %s / %s · edad %d%s · parche %s" % [civs[0] if civs[0] != "" else "capa común", civs[1] if civs[1] != "" else "capa común", age, " con compras" if purchases else "", patch_path if patch_path != "" else "ninguno"])
+	if reaction_ms > 0:
+		print("# reacción del micro de A: %d ms" % reaction_ms)
 	print("# bonos %s" % JSON.stringify(data.reglas.get("bonos", {})))
 	for t in ["guerrero", "hondero", "lancero", "jinete", "catapulta"]:
 		var d: Dictionary = data.for_civ(civs[0]).unidades.get(t, {})
@@ -276,6 +286,7 @@ func _fight(c: Array, v: int) -> Dictionary:
 	var hp0 := [_hp(s, a), _hp(s, b)]
 	var dodging := {} # --- esport 1a --- id -> tick en que cae el tiro que esquiva
 	var t := 0
+	_pending.clear()
 	while t < MAX_TICKS and _alive(s, a) > 0 and _alive(s, b) > 0:
 		if mode.begins_with("mantener") and t == 40:
 			s.push_command({"t": "mantener", "player": 0, "ids": melee_a if mode == "mantener+escalonar" else a})
@@ -295,6 +306,7 @@ func _fight(c: Array, v: int) -> Dictionary:
 			"esquivar":
 				if t % 2 == 0 and t > 0:
 					_dodge(s, a, goal_a, dodging)
+		_flush(s)
 		s.step()
 		t += 1
 	return {"t": t, "va": _alive(s, a), "na": a.size(), "hpa": _hp(s, a) * 100 / maxi(1, hp0[0]), "vb": _alive(s, b), "nb": b.size(), "hpb": _hp(s, b) * 100 / maxi(1, hp0[1]), "ca": _cost(s, 0, sa), "cb": _cost(s, 1, sb)}
@@ -310,7 +322,7 @@ func _kite_veteran(s: Sim, ids: Array, goal: Vector2i) -> void:
 		if foe != null:
 			_away(s, u, foe, 3000)
 		elif u.order == O.IDLE or u.order == O.MOVE and u.group < 0:
-			s.push_command({"t": "move", "player": 0, "ids": [id], "x": goal.x, "y": goal.y, "amove": true, "suelto": true})
+			_cmd(s, {"t": "move", "player": 0, "ids": [id], "x": goal.x, "y": goal.y, "amove": true, "suelto": true})
 
 
 ## Escalonar (stutter step): tirar con la carga lista, alejarse mientras recarga.
@@ -323,7 +335,7 @@ func _kite_stutter(s: Sim, ids: Array, goal: Vector2i, behind_line: bool) -> voi
 		var foe := _nearest_foe(s, u, int(u.def["vision"]))
 		if foe == null:
 			if u.order == O.IDLE or u.order == O.MOVE and u.group < 0:
-				s.push_command({"t": "move", "player": 0, "ids": [id], "x": goal.x, "y": goal.y, "amove": true, "suelto": true})
+				_cmd(s, {"t": "move", "player": 0, "ids": [id], "x": goal.x, "y": goal.y, "amove": true, "suelto": true})
 			continue
 		var d := s.dist_to(u, foe)
 		var melee := not s.is_ranged(foe)
@@ -331,11 +343,11 @@ func _kite_stutter(s: Sim, ids: Array, goal: Vector2i, behind_line: bool) -> voi
 			_away(s, u, foe, 2000)
 		elif u.cooldown <= 0 and d <= reach:
 			if u.order != O.ATTACK or u.target != foe.id:
-				s.push_command({"t": "target", "player": 0, "ids": [id], "target": foe.id, "suelto": true})
+				_cmd(s, {"t": "target", "player": 0, "ids": [id], "target": foe.id, "suelto": true})
 		elif not behind_line and u.order != O.ATTACK and u.order != O.MOVE:
-			s.push_command({"t": "target", "player": 0, "ids": [id], "target": foe.id, "suelto": true})
+			_cmd(s, {"t": "target", "player": 0, "ids": [id], "target": foe.id, "suelto": true})
 		elif behind_line and u.order == O.MOVE and u.path.is_empty():
-			s.push_command({"t": "mantener", "player": 0, "ids": [id]})
+			_cmd(s, {"t": "mantener", "player": 0, "ids": [id]})
 
 
 func _nearest_foe(s: Sim, u: SimEntity, radius: int) -> SimEntity:
@@ -354,7 +366,7 @@ func _away(s: Sim, u: SimEntity, foe: SimEntity, how_far: int) -> void:
 	var dx := u.x - foe.x
 	var dy := u.y - foe.y
 	var l := maxi(1, int(sqrt(float(dx * dx + dy * dy))))
-	s.push_command({"t": "move", "player": 0, "ids": [u.id], "x": u.x + dx * how_far / l, "y": u.y + dy * how_far / l, "suelto": true})
+	_cmd(s, {"t": "move", "player": 0, "ids": [u.id], "x": u.x + dx * how_far / l, "y": u.y + dy * how_far / l, "suelto": true})
 
 
 # --- esport 1a ---
@@ -368,7 +380,7 @@ func _dodge(s: Sim, ids: Array, goal: Vector2i, dodging: Dictionary) -> void:
 		if dodging.has(id):
 			if s.tick > int(dodging[id]):
 				dodging.erase(id)
-				s.push_command({"t": "move", "player": 0, "ids": [id], "x": goal.x, "y": goal.y, "amove": true, "suelto": true})
+				_cmd(s, {"t": "move", "player": 0, "ids": [id], "x": goal.x, "y": goal.y, "amove": true, "suelto": true})
 			continue
 		for sh in s.shells:
 			var src: SimEntity = sh["a"]
@@ -384,7 +396,7 @@ func _dodge(s: Sim, ids: Array, goal: Vector2i, dodging: Dictionary) -> void:
 					dy = 1
 				var l := maxi(1, int(sqrt(float(dx * dx + dy * dy))))
 				var go := r + 600
-				s.push_command({"t": "move", "player": 0, "ids": [id], "x": px + dx * go / l, "y": py + dy * go / l, "suelto": true})
+				_cmd(s, {"t": "move", "player": 0, "ids": [id], "x": px + dx * go / l, "y": py + dy * go / l, "suelto": true})
 				dodging[id] = int(sh["tick"])
 				break
 # --- fin esport 1a ---
@@ -407,4 +419,24 @@ func _focus(s: Sim, ids: Array, foes: Array) -> void:
 		if tgt >= 0 and (u.order != O.ATTACK or u.target != tgt):
 			by_target.get_or_add(tgt, []).append(id)
 	for tgt in by_target:
-		s.push_command({"t": "target", "player": 0, "ids": by_target[tgt], "target": tgt, "suelto": true})
+		_cmd(s, {"t": "target", "player": 0, "ids": by_target[tgt], "target": tgt, "suelto": true})
+
+
+# --- esport 3b ---
+## Una orden de micro de A: sale ya, o a `reaction_ms` si hay reacción (una por unidad a la vez).
+func _cmd(s: Sim, cmd: Dictionary) -> void:
+	if reaction_ms <= 0:
+		s.push_command(cmd)
+		return
+	var key: int = cmd["ids"][0] if cmd["ids"].size() == 1 else -1
+	if key >= 0 and _pending.has(key):
+		return
+	_seq += 1
+	_pending[key if key >= 0 else -_seq] = [s.tick + maxi(1, reaction_ms / s.tick_ms), cmd]
+
+
+func _flush(s: Sim) -> void:
+	for k in _pending.keys():
+		if s.tick >= int(_pending[k][0]):
+			s.push_command(_pending[k][1])
+			_pending.erase(k)
