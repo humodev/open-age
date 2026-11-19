@@ -2502,6 +2502,7 @@ func _autotest() -> void:
 	await preload("res://src/game/autotest_fluidez2.gd").correr(self, check) # --- fluidez 2 ---
 	await preload("res://src/game/autotest_muralla.gd").correr(self, check) # --- muralla --- (proceso/32-ronda-8/06)
 	await preload("res://src/game/autotest_avisos.gd").correr(self, check) # --- fluidez 4 --- (proceso/30)
+	await preload("res://src/game/autotest_fluidez5.gd").correr(self, check) # --- fluidez 5 --- (proceso/30)
 	# --- aprender --- (avisos que enseñan, cuenta de sitios, nombres en la grilla, registro de la Guía y fin)
 	var cs = hud.consejos
 	Opciones.consejos = true

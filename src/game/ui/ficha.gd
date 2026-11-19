@@ -16,6 +16,7 @@ extends Control
 
 const O := SimEntity.Order
 const W := 392.0
+const W_COMPACTA := 320.0 # --- fluidez 5 --- nombre, costo y una línea; el resto con Mayús o Alt
 const PAD := 14.0
 const PORTRAIT := 104.0
 const DELAY_WORLD := 0.45
@@ -54,6 +55,9 @@ var _payload: Dictionary = {}
 var _wait := 0.0
 var _alpha := 0.0
 var _pin := ""
+var _w := W # --- fluidez 5 --- ancho de este cuadro (compacta o completa)
+## --- fluidez 5 --- Ficha compacta por defecto (veterano, ronda 7, §8): mantener Mayús o Alt la abre entera.
+static var compacta := true
 
 
 func setup(h: Hud) -> void:
@@ -121,7 +125,8 @@ func _process(delta: float) -> void:
 	_alpha = minf(1.0, _alpha + delta / 0.12)
 	modulate.a = _alpha
 	visible = true
-	size = Vector2(W, _paint(false))
+	_w = W_COMPACTA if _compacta_ahora() else W # --- fluidez 5 ---
+	size = Vector2(_w, _paint(false))
 	_place()
 	queue_redraw()
 
@@ -236,6 +241,34 @@ func _draw() -> void:
 
 ## Arma la ficha del pedido actual: un diccionario con todo lo que se dibuja.
 func _content() -> Dictionary:
+	var c := _content_full()
+	return _compactar(c) if _compacta_ahora() and not c.is_empty() else c # --- fluidez 5 ---
+
+
+# --- fluidez 5 ---
+func _compacta_ahora() -> bool:
+	return compacta and _pin == "" and not (Input.is_key_pressed(KEY_SHIFT) or Input.is_key_pressed(KEY_ALT))
+
+
+## Ficha compacta: nombre, función (la línea), lo que impide el clic, la barra, el costo y lo
+## más urgente de «Ahora». La descripción, las estadísticas y fuerte/débil quedan para Mayús o Alt.
+func _compactar(c: Dictionary) -> Dictionary:
+	c["desc"] = ""
+	c["alt"] = ""
+	c["stats"] = []
+	c["strong"] = ""
+	c["weak"] = ""
+	if c.get("effects", "") != "" and not (c.get("def", {}) as Dictionary).has("efectos"):
+		c["effects"] = ""
+	c["state"] = (c["state"] as Array).slice(0, 2)
+	var pie: Array = (c["foot"] as Array).filter(func(f: Array) -> bool: return f[1] == Palette.UI_BAD)
+	pie.append(["Mayús o Alt: ficha completa", Color(Palette.UI_DIM, 0.8)])
+	c["foot"] = pie
+	return c
+# --- fin fluidez 5 ---
+
+
+func _content_full() -> Dictionary:
 	if _payload.has("cmd"):
 		return _cmd_content(_payload["cmd"])
 	if _payload.has("id"):
@@ -838,14 +871,14 @@ func _paint(paint: bool) -> float:
 	var team := Palette.team(owner)
 	var x0 := PAD
 	var y := PAD
-	var tw := W - PAD * 2
+	var tw := _w - PAD * 2
 	# Retrato.
 	var pr := Rect2(x0, y, PORTRAIT, PORTRAIT)
 	if paint:
 		_draw_portrait(pr, c, team)
 	# Encabezado a la derecha del retrato.
 	var hx := x0 + PORTRAIT + 12
-	var hw := W - hx - PAD
+	var hw := _w - hx - PAD
 	var hy := y + 20
 	if paint:
 		draw_string(Hud.font_b, Vector2(hx, hy), c["name"], HORIZONTAL_ALIGNMENT_LEFT, hw - (28 if c.has("hotkey") else 0), 19, Palette.UI_TEXT)
@@ -970,7 +1003,7 @@ func _people_line(c: Dictionary) -> String:
 
 func _rule(y: float, paint: bool) -> float:
 	if paint:
-		draw_line(Vector2(PAD, y + 2), Vector2(W - PAD, y + 2), Color(1, 1, 1, 0.07), 1)
+		draw_line(Vector2(PAD, y + 2), Vector2(_w - PAD, y + 2), Color(1, 1, 1, 0.07), 1)
 	return y + 8
 
 
@@ -1026,4 +1059,4 @@ func _draw_cost(at: Vector2, cost: Dictionary, time_ms: int, check: bool, owner:
 		draw_string(Hud.font_b, Vector2(x + 22, at.y + 17), str(cost[k]), HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Palette.UI_TEXT if ok else Iconos.color_estado("falta", Palette.UI_ACCENT)) # --- iconos --- ámbar: falta juntar
 		x += 70
 	if time_ms > 0:
-		draw_string(Hud.font, Vector2(at.x, at.y + 17), "Tiempo %d s" % (time_ms / 1000), HORIZONTAL_ALIGNMENT_RIGHT, W - PAD * 2, 14, Palette.UI_DIM)
+		draw_string(Hud.font, Vector2(at.x, at.y + 17), "Tiempo %d s" % (time_ms / 1000), HORIZONTAL_ALIGNMENT_RIGHT, _w - PAD * 2, 14, Palette.UI_DIM)
