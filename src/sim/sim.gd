@@ -2306,9 +2306,9 @@ func _hit(a: SimEntity, t: SimEntity) -> void:
 	# --- fin esport 1a ---
 	var atk := effective_attack(a) + attack_bonus(a, t)
 	# --- paso 6 --- Carga (kona de waiki): el primer golpe después de un rato sin pelear pega más y derriba.
-	if a.def.has("carga") and t.is_unit() and tick - a.last_combat >= int(a.def["carga"]["espera_ms"]) / tick_ms:
-		atk += int(a.def["carga"]["extra"])
-		t.slow_until = maxi(t.slow_until, tick + int(a.def["carga"]["frena_ms"]) / tick_ms)
+	if a.def.has("carga_golpe") and t.is_unit() and tick - a.last_combat >= int(a.def["carga_golpe"]["espera_ms"]) / tick_ms:
+		atk += int(a.def["carga_golpe"]["extra"])
+		t.slow_until = maxi(t.slow_until, tick + int(a.def["carga_golpe"]["frena_ms"]) / tick_ms)
 	if a.fn == "asedio" and t.is_building():
 		atk = atk * (100 + mod(a.owner, "asedio_pct")) / 100 # --- paso 3 --- escuela: oficio del asedio
 	var mult := counter_mult(a, t) # --- paso 4 ---

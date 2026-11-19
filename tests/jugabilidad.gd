@@ -16,6 +16,7 @@ func _init() -> void:
 	_depositar_por_cualquier_lado()
 	_paso_entre_edificios()
 	_carne_encerrada()
+	_aldeano_pega()
 	print("JUGABILIDAD: ", "OK" if fails == 0 else "%d fallas" % fails)
 	quit()
 
@@ -435,5 +436,22 @@ func _carne_encerrada() -> void:
 
 
 ## Al salir se sueltan las partidas creadas (ciclos de referencias; proceso/24, paso 6e).
+## Revisión 34/02 §4: el aldeano pega. Su `carga` (capacidad) chocaba con la carga de la
+## kona en Sim._hit (ahora `carga_golpe`) y cada golpe tiraba un error sin hacer daño.
+func _aldeano_pega() -> void:
+	var s := Sim.new(5, 2, null, {"civs": ["guaranies", "etiopia"], "terreno": "llano"})
+	var vill: SimEntity = null
+	for e in s.entities:
+		if e.alive and e.owner == 0 and e.type == "aldeano":
+			vill = e
+			break
+	var foe := s.spawn_unit("explorador", 1, vill.x + 600, vill.y)
+	var hp0 := foe.hp
+	s.push_command({"t": "target", "player": 0, "ids": [vill.id], "target": foe.id})
+	for i in 100:
+		s.step()
+	_check(foe.hp < hp0, "el aldeano le pega a un enemigo: vida de %d a %d" % [hp0, foe.hp])
+
+
 func _finalize() -> void:
 	Sim.soltar_todas()

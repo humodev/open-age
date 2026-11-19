@@ -361,7 +361,7 @@
    "desc": "Infantería montada: el weichafe va a caballo y se baja para pelear. Anda como jinete y pelea como guerrero a pie (la lanza contra caballería no le hace el daño extra); tarda 1 s en desmontar cuando llega a pelear (después de 5 s sin combate). Una adaptación propia de fines del siglo XVI y del XVII.",
    "evidencia": "Documentado. González de Nájera (1614); Boccara, Los vencedores (2007)."},
   "kona_waiki": {"nombre": "Kona de waiki", "propia": true, "elite": true, "funcion": "linea", "montado": true, "edad_min": 4, "pob": 2, "costo": {"alimento": 120, "riqueza": 90}, "tiempo_ms": 26000, "pv": 210, "armadura": 2, "armadura_distancia": 2, "ataque": 13, "alcance": 750, "cadencia_ms": 1500, "velocidad": 2000, "vision": 9000, "radio": 380, "bono": {"montado": 8},
-   "carga": {"extra": 8, "frena_ms": 1500, "espera_ms": 5000},
+   "carga_golpe": {"extra": 8, "frena_ms": 1500, "espera_ms": 5000},
    "desc": "Lancero montado pesado de la edad IV: la lanza larga de colihue (waiki; huaiqui en las crónicas) a caballo. +8 contra los montados; la carga (el primer golpe después de 5 s sin pelear) pega 8 más y derriba: frena 1,5 s. Kona es el mocetón, el guerrero joven.",
    "evidencia": "Documentado. Ovalle (1646); Rosales (c. 1674) [verificar el largo de la lanza]."},
   "cabeza": { "nombre": "Cabeza de ganado", "funcion": "ganado", "edad_min": 1, "pob": 0, "costo": {}, "tiempo_ms": 0, "pv": 60, "armadura": 0, "ataque": 0, "alcance": 0, "cadencia_ms": 1000, "velocidad": 1100, "vision": 3000, "radio": 260, "no_seleccionable": true, "desc": "Ganado arreado en un malón: camina solo al corral propio más cercano. Se lo puede matar en el camino." } },
