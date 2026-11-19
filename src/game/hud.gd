@@ -40,6 +40,7 @@ var ficha: Ficha
 const PANELES := preload("res://src/game/ui/panel_partida.gd")
 var paneles: Control
 # --- fin paneles ---
+var panel_base: Control # --- fluidez 6 ---
 # --- mundo ---
 const MundoCapa := preload("res://src/game/ui/mundo_capa.gd")
 var _mundo: Control # información sobre el mundo 3D (src/game/ui/mundo_capa.gd)
@@ -205,7 +206,13 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 	ctrl.cursores = cursores
 	# --- fin cursores ---
 
-	_menu = _make_dialog("Pausa", "", [["Reanudar", func() -> void: toggle_menu()], ["Cómo se juega (%s)" % Teclas.texto("ayuda"), func() -> void: _toggle_help()], ["Atajos de teclado (%s)" % Teclas.texto("atajos"), func() -> void: _abrir_atajos()], ["Opciones", func() -> void: _options.visible = true], ["Nueva partida", func() -> void: main.restart()], ["Menú principal", func() -> void: main.to_menu()], ["Salir", func() -> void: main.salir()]])
+	# --- fluidez 6 --- «Guardar partida» y «Cargar partida» en la pausa (src/game/guardado.gd)
+	var pausa: Array = [["Reanudar", func() -> void: toggle_menu()], ["Cómo se juega (%s)" % Teclas.texto("ayuda"), func() -> void: _toggle_help()], ["Atajos de teclado (%s)" % Teclas.texto("atajos"), func() -> void: _abrir_atajos()], ["Opciones", func() -> void: _options.visible = true], ["Nueva partida", func() -> void: main.restart()], ["Menú principal", func() -> void: main.to_menu()], ["Salir", func() -> void: main.salir()]]
+	if main.puede_guardar():
+		pausa.insert(1, ["Guardar partida", func() -> void: _guardar()])
+		pausa.insert(2, ["Cargar partida", func() -> void: Guardado.dialogo(self, "Cargar partida", Guardado.DIR_PARTIDAS, func(p: String) -> void: main._start({"cargar": p}))])
+	_menu = _make_dialog("Pausa", "", pausa)
+	# --- fin fluidez 6 ---
 	_build_options()
 	_build_help()
 	_end = _make_dialog("", "", [["Seguir mirando", func() -> void: _end.visible = false], ["Nueva partida", func() -> void: main.restart()], ["Menú principal", func() -> void: main.to_menu()], ["Salir", func() -> void: main.salir()]])
@@ -219,6 +226,19 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 		if d != null and d.get_parent() == self:
 			move_child(d, -1)
 	# --- fin paneles ---
+	# --- fluidez 6 --- panel «Mi base» (src/game/panel_base.gd)
+	panel_base = PanelBase.new()
+	panel_base.setup(self)
+	move_child(panel_base, paneles.get_index() + 1)
+	# --- fin fluidez 6 ---
+
+
+# --- fluidez 6 ---
+func _guardar() -> void:
+	var path: String = main.guardar_partida("partida")
+	toggle_menu()
+	notify("Partida guardada" if path != "" else "No se pudo guardar la partida", 3.0)
+# --- fin fluidez 6 ---
 
 
 ## Ancla un control a un punto relativo de la pantalla con márgenes fijos.
