@@ -37,4 +37,21 @@ Al final de cada iteración se mide el balance con un torneo.
 - **Pendiente:** la meta de p95 < 40 ms con 8 jugadores. El bench de 6 IA empeora su peor tick por `_expansion_site`.
 - **Al fusionar todo:** hash **1417676642**; comercio, equidad y jugabilidad OK. |
 | — | **Torneo 40** ([resultados](pruebas-it1/40-torneo-iteracion-1.txt)), con todo junto | Tawantinsuyu 42, mapuches 54, guaraníes 58, Etiopía 56, Palmares 48, Ayutthaya 42 %.<br>• **Banda:** todas entre 42 y 58 %, la más pareja de todo el proyecto (el torneo 39 daba 34–64).<br>• **Edad IV:** aparece en 86 de 150 partidas de 30 minutos (antes, 5 a 16).<br>• **Por destrucción:** bajan de 60–80 a 39; se juega más tiempo y gana más el que lleva ventaja en puntos. |
-| — | Revisión de los expertos | En curso |
+| — | Revisión de los expertos | **Hecha** ([02](02-revision-iteracion-1.md)).
+
+**Notas, antes → ahora:** diversidad 4→5, contrajuego 5→7, información 5→5, control del mapa 3→6, techo 4→6, ritmo 3→4, asimetría 6→6 y varianza 6→6. Promedio de 4,5 a 5,6.
+
+**Lo que falla:**
+- Los sitios y el comercio quedan en manos del que va adelante.
+- El bloqueo de rutas no se activó en ninguna de 20 partidas.
+- El sumidero de la IV deja 17 643 de alimento sin gastar.
+- El aldeano no le pega a nada: SCRIPT ERROR por la clave `carga` repetida. |
+
+## Iteración 2
+
+| Frente | Qué | Estado |
+|---|---|---|
+| 2a | Golpe del aldeano. Hitos de 150/180/210 s y la III con 100 de piedra. Empalizada a 8 de madera (mapuches a 4). Sumidero que no se agote: repetibles sin tope a +50 %, venta en el mercado sin piso y una guardia de distancia | En curso |
+| 2b | Bloqueo de rutas que funcione: 3 de población a 8 casillas; el comerciante espera. Comerciante desde la II al 40 % en el 1v1 | En curso |
+| — | Sitios con +50 % de renta para el que va atrás en edad | **Consulta al autor:** es una ayuda al que va perdiendo y el autor no quiso ventajas para el 1vN |
+

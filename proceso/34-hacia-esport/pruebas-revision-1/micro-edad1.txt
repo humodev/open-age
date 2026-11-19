@@ -1,0 +1,18 @@
+# micro_matriz · civs capa común / capa común · edad 1 · parche ninguno
+# bonos {"choque":{"distancia":8},"distancia":{"linea":6},"linea":{"choque":6,"montado":6}}
+# guerrero: pv 120, ataque 11, armadura 1/0, alcance 450, cadencia 1250, velocidad 1350, costo {"alimento":60,"riqueza":25}
+# hondero: pv 65, ataque 7, armadura 0/0, alcance 5500, cadencia 1750, velocidad 1250, costo {"alimento":30,"madera":45}
+# lancero: pv 140, ataque 8, armadura 3/0, alcance 650, cadencia 1500, velocidad 1100, costo {"alimento":60,"madera":25,"riqueza":10}
+# jinete: pv 170, ataque 13, armadura 1/2, alcance 500, cadencia 1250, velocidad 2200, costo {"alimento":100,"riqueza":70}
+# catapulta: pv 150, ataque 16, armadura 0/1, alcance 7000, cadencia 5000, velocidad 750, costo {"madera":150,"riqueza":100}
+# 5 variantes por pelea (semilla 3..7, B corrido 0, -1, 1, -2, 2 casillas)
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+custom | lancero:5 | guerrero:5 | nada | - | 56.7 s | 4/5 | 4.0/5 | 0.4/5 | 475 / 425
+custom | lancero:5 | guerrero:6 | nada | - | 43.0 s | 5/5 | 3.0/5 | 0.0/6 | 475 / 510
+custom | guerrero:5 | lancero:5 | nada | - | 54.5 s | 0/5 | 0.4/5 | 2.8/5 | 425 / 475
+custom | hondero:6 | lancero:5 | escalonar | - | 25.3 s | 5/5 | 6.0/6 | 0.0/5 | 450 / 475
+custom | hondero:6 | lancero:5 | nada | - | 24.3 s | 5/5 | 5.4/6 | 0.0/5 | 450 / 475
+custom | guerrero:6 | hondero:7 | nada | - | 32.1 s | 4/5 | 3.4/6 | 0.4/7 | 510 / 525
+custom | hondero:7 | guerrero:6 | escalonar | - | 57.7 s | 5/5 | 5.0/7 | 0.0/6 | 525 / 510
+custom | lancero:3+hondero:3 | guerrero:6 | mantener+escalonar | - | 109.8 s | 2/5 | 1.8/6 | 1.4/6 | 510 / 510
+custom | guerrero:5 | explorador:3+aldeano:6 | nada | - | 48.8 s | 4/5 | 5.0/5 | 0.8/9 | 425 / 540

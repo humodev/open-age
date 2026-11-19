@@ -1,0 +1,23 @@
+# micro_matriz · civs guaranies / etiopia · edad 1 · parche ninguno
+# bonos {"choque":{"distancia":8},"distancia":{"linea":6},"linea":{"choque":6,"montado":6}}
+# guerrero: pv 120, ataque 11, armadura 1/0, alcance 450, cadencia 1250, velocidad 1350, costo {"alimento":60,"riqueza":25}
+# hondero: pv 70, ataque 7, armadura 0/0, alcance 5500, cadencia 1750, velocidad 1250, costo {"alimento":30,"madera":45}
+# lancero: pv 115, ataque 8, armadura 3/0, alcance 650, cadencia 1500, velocidad 1100, costo {"alimento":60,"madera":25,"riqueza":10}
+# jinete: pv 170, ataque 13, armadura 1/2, alcance 500, cadencia 1250, velocidad 2200, costo {"alimento":100,"riqueza":70}
+# catapulta: pv 140, ataque 18, armadura 0/1, alcance 7000, cadencia 4500, velocidad 1000, costo {"madera":130,"riqueza":60}
+# 5 variantes por pelea (semilla 3..7, B corrido 0, -1, 1, -2, 2 casillas)
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+custom | lancero:5 | guerrero:5 | nada | - | 56.5 s | 3/5 | 2.6/5 | 0.6/5 | 475 / 600
+custom | lancero:6 | guerrero:5 | nada | - | 50.9 s | 4/5 | 4.4/6 | 0.4/5 | 570 / 600
+custom | hondero:6 | guerrero:5 | escalonar | - | 33.2 s | 0/5 | 0.0/6 | 4.0/5 | 450 / 600
+# micro_matriz · civs guaranies / mapuches · edad 1 · parche ninguno
+# bonos {"choque":{"distancia":8},"distancia":{"linea":6},"linea":{"choque":6,"montado":6}}
+# guerrero: pv 120, ataque 11, armadura 1/0, alcance 450, cadencia 1250, velocidad 1350, costo {"alimento":60,"riqueza":25}
+# hondero: pv 70, ataque 7, armadura 0/0, alcance 5500, cadencia 1750, velocidad 1250, costo {"alimento":30,"madera":45}
+# lancero: pv 115, ataque 8, armadura 3/0, alcance 650, cadencia 1500, velocidad 1100, costo {"alimento":60,"madera":25,"riqueza":10}
+# jinete: pv 170, ataque 13, armadura 1/2, alcance 500, cadencia 1250, velocidad 2200, costo {"alimento":100,"riqueza":70}
+# catapulta: pv 140, ataque 18, armadura 0/1, alcance 7000, cadencia 4500, velocidad 1000, costo {"madera":130,"riqueza":60}
+# 5 variantes por pelea (semilla 3..7, B corrido 0, -1, 1, -2, 2 casillas)
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+custom | lancero:5 | guerrero:5 | nada | - | 31.9 s | 5/5 | 3.4/5 | 0.0/5 | 475 / 425
+custom | lancero:6 | guerrero:5 | nada | - | 29.0 s | 5/5 | 4.6/6 | 0.0/5 | 570 / 425
