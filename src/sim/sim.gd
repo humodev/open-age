@@ -4225,10 +4225,6 @@ func _generate_map() -> void:
 	_res_sym_near("riqueza", Vector2i(mid + 14, mid + 6), _far_amt("riqueza", "riqueza_lejos"), false)
 	_cluster_sym("arbusto", Vector2i(mid - 18, mid + 2), 6)
 
-	# --- comercio --- dos mercados neutrales sobre la mediatriz (proceso/33-comercio, §1), antes
-	# de los bosques: los bosques no se les ponen encima.
-	if players.size() == 2 and not _opts.get("sin_sitios", false) and not _opts.get("sin_mercados", false):
-		comercio.place_1v1()
 	# Bosques.
 	var tries := 0
 	var made := 0
@@ -4254,6 +4250,11 @@ func _generate_map() -> void:
 				_tree_sym(Vector2i(i, depth))
 			if rng.range_i(0, 99) < chance:
 				_tree_sym(Vector2i(depth, i))
+	# --- comercio --- dos mercados neutrales sobre la mediatriz (proceso/33-comercio, §1). Al final,
+	# talando alrededor: los bosques y el resto del mapa quedan como sin ellos (la primera victoria
+	# del principiante bajaba de 2 de 3 a 0 de 3 con los bosques corridos).
+	if players.size() == 2 and not _opts.get("sin_sitios", false) and not _opts.get("sin_mercados", false):
+		comercio.place_1v1()
 
 
 ## ¿Mapa para muchos jugadores? Escaramuza de 3 o más (las campañas usan sus bases fijas).

@@ -29,7 +29,7 @@ func _init(s: Sim) -> void:
 
 ## ¿Sirve la casilla `t` (esquina de la huella de 3×3) para un mercado neutral? Tierra (se
 ## empareja al ponerlo), sin nada encima salvo árboles (se talan), con una casilla libre alrededor.
-func _spot_ok(t: Vector2i) -> bool:
+func _spot_ok(t: Vector2i, trees := true) -> bool:
 	var m := sim.map
 	if t.x < 3 or t.y < 3 or t.x + 6 > m.n or t.y + 6 > m.n:
 		return false
@@ -42,7 +42,7 @@ func _spot_ok(t: Vector2i) -> bool:
 				return false
 			if occ >= 0:
 				var o: SimEntity = sim.by_id.get(occ)
-				if o == null or not o.is_resource() or o.res_kind != "madera":
+				if o == null or not o.is_resource() or o.res_kind != "madera" or not trees:
 					return false
 	return true
 
@@ -123,7 +123,8 @@ func place_1v1() -> void:
 	for k in n / 2 - b - 4:
 		var t := Vector2i(b + k, n - b - 3 - k)
 		var mt := sim._mirror(t, 3, 3)
-		if _spot_ok(t) and _spot_ok(mt) and _reachable(t, 0) and _reachable(mt, 1):
+		# Sin talar (se pone después de los bosques): el mapa queda como sin mercados.
+		if _spot_ok(t, false) and _spot_ok(mt, false) and _reachable(t, 0) and _reachable(mt, 1):
 			_spawn(t)
 			_spawn(mt)
 			return

@@ -69,9 +69,13 @@ func _formula() -> void:
 	print("Fórmula G = d·(d·A/L + B)/100 (A 220, B 10) y la tabla del diseño (§2):")
 	var s := _sim()
 	var c: SimComercio = s.comercio
+	# La tabla del diseño es con A 220; con otro A (paso 8) se compara contra la cuenta exacta.
+	var a := int(c.cfg.get("A", 220))
+	var b := int(c.cfg.get("B", 10))
 	for row in [[30, 128, 18], [60, 128, 68], [90, 128, 148], [120, 176, 192], [170, 240, 282]]:
 		var g := c.formula(row[0], row[1])
-		_check(absi(g - int(row[2])) <= 2, "d %d, L %d: %d (diseño ~%d)" % [row[0], row[1], g, row[2]])
+		var exact: int = row[0] * (row[0] * a / row[1] + b) / 100
+		_check(g == exact and (a != 220 or absi(g - int(row[2])) <= 2), "d %d, L %d: %d (A %d; con A 220 el diseño da ~%d)" % [row[0], row[1], g, a, row[2]])
 	# Propio al 50 % y edad III al 70 %: dos mercados propios y un neutral.
 	var home := _put(s, "mercado", 0, s.bases[0].x + 8, s.bases[0].y)
 	var other := _put(s, "mercado", 0, s.bases[0].x, s.bases[0].y + 30)
@@ -81,7 +85,8 @@ func _formula() -> void:
 	var neu: SimEntity = c.neutrals[0]
 	var dn := SimComercio.octil(home, neu)
 	_check(c.gain(0, home, neu, 4) == c.formula(dn, s.map.n), "neutral al 100 %% en la IV: %d (d %d)" % [c.gain(0, home, neu, 4), dn])
-	_check(c.gain(0, home, neu, 3) == c.formula(dn, s.map.n) * 70 / 100, "neutral al 70 %% en la III: %d" % c.gain(0, home, neu, 3))
+	var p3 := int((c.cfg.get("edad_pct", [0, 0, 70, 100]) as Array)[2])
+	_check(c.gain(0, home, neu, 3) == c.formula(dn, s.map.n) * p3 / 100, "neutral al %d %% en la III: %d" % [p3, c.gain(0, home, neu, 3)])
 	_check(c.gain(0, home, neu, 2) == 0, "en la II, nada")
 	var enemy := _put(s, "mercado", 1, s.bases[1].x - 6, s.bases[1].y)
 	_check(c.dest_kind(0, enemy) == "", "con el mercado enemigo no se comercia")

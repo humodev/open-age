@@ -1,0 +1,11 @@
+
+Partida [0, 1], llano, experta, semilla 11, mapa 128, 2 neutrales, 30 min
+   5 min:  J0 e1 riq 291 com 0 (0 vivos, 0 muertos, 0 cortes)  J1 e1 riq 163 com 0 (0 vivos, 0 muertos, 0 cortes)
+  10 min:  J0 e2 riq 1073 com 0 (0 vivos, 0 muertos, 0 cortes)  J1 e2 riq 699 com 0 (0 vivos, 0 muertos, 0 cortes)
+  15 min:  J0 e2 riq 2111 com 0 (0 vivos, 0 muertos, 0 cortes)  J1 e3 riq 2485 com 0 (1 vivos, 0 muertos, 0 cortes)
+  20 min:  J0 e3 riq 3352 com 0 (4 vivos, 0 muertos, 0 cortes)  J1 e4 riq 4969 com 424 (3 vivos, 0 muertos, 0 cortes)
+  25 min:  J0 e3 riq 4892 com 444 (4 vivos, 0 muertos, 0 cortes)  J1 e4 riq 9239 com 1670 (7 vivos, 0 muertos, 0 cortes)
+  30 min:  J0 e3 riq 6920 com 1110 (3 vivos, 1 muertos, 0 cortes)  J1 e4 riq 13621 com 3984 (11 vivos, 0 muertos, 0 cortes)
+Primer cobro (min): [21, 18]; fin al min 30
+META 1 (antes del min 25): comercio 2114 de 14131 de riqueza = 14 % (meta ≤ 15 %)
+Comerciantes muertos en total: 1 (meta: alguna ruta atacada, > 10 en el 2v2)
