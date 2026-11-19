@@ -87,7 +87,7 @@ func on_events(events: Array) -> void:
 				if b.owner == local and mini != null:
 					mini.flash(b.x, b.y)
 				var dmg := int(ev.get("dmg", 0))
-				if dmg > 0 and float(dmg) >= float(b.hp_max) * DANIO_FUERTE and view.fog_state(b) == 2:
+				if dmg > 0 and Teclas.numeros_danio and float(dmg) >= float(b.hp_max) * DANIO_FUERTE and view.fog_state(b) == 2:
 					_float_damage(b, dmg)
 			"died": # --- fluidez 2 --- huella fantasma de lo que cayó
 				cola.on_died(ev)
