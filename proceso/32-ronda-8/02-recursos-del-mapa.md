@@ -92,7 +92,7 @@ jugador estamos como AoE2.
 
 1. **Piedra de casa**: dos vetas de 1 000 (antes 800), y en el 1 contra 1 la segunda entra
    (estaba pegada a la primera).
-2. **Piedra a media distancia**: una veta propia de 1 200 a 22 casillas, del lado de la piedra.
+2. **Piedra a media distancia**: una veta propia de 1 200 a 25 casillas, del lado de la piedra.
 3. **Lejos y disputado, escalado con el mapa**: `roca_lejos` y `riqueza_lejos` son 1 200 por
    jugador con 7 500 casillas por jugador y cambian en proporción (un 4 chico da 60 %, un 4
    grande 155 %). Con 3 o más, entre cada par de bases vecinas hay una veta de piedra y una de
@@ -111,16 +111,66 @@ No cambió: madera, alimento natural, tamaños de mapa, costos de edades y de la
 
 ## 5. Después
 
-RESUMEN_DESPUES
+Promedio de los 13 terrenos, por jugador (`--resumen=1`; detalle en `recursos-despues.txt`).
+Cerca/media/lejos en cientos.
+
+| Mapa | Casillas/j | Piedra antes | Piedra después (c/m/l) | Riqueza antes | Riqueza después (c/m/l) |
+|---|---|---|---|---|---|
+| 1v1 | 8 192 | 1 400 | **4 600** (20/25/0) | 3 000 | **4 700** (24/0/22) |
+| 4 chico | 4 624 | 1 600 | **4 000** (21/18/0) | 4 300 | **5 000** |
+| 4 normal | 7 744 | 1 600 | **4 500** (20/12/12) | 4 300 | **5 400** |
+| 4 grande | 11 664 | 1 600 | **5 100** (20/12/18) | 4 300 | **6 000** |
+| 8 chico | 4 608 | 1 600 | **4 000** | 4 200 | **5 000** |
+| 8 normal | 7 200 | 1 600 | **4 400** | 4 200 | **5 300** |
+| 8 grande | 10 952 | 1 600 | **5 000** | 4 200 | **5 900** |
+
+Más las vetas de la III y la IV: 1 800 de piedra y 1 000 de riqueza por jugador que llega.
+Por terreno, en un 4 normal: selva 3 000 de piedra, montaña 6 100, llano 4 400. En islas la
+riqueza lejana cae al agua y no entra (4 300): queda como mapa pobre en riqueza.
 
 ### Partidas IA contra IA (experta, llano normal, semilla 7, 45 minutos)
 
-PARTIDAS_DESPUES
+`tools/recursos_partida.gd`. «Min sin alcanzar»: minutos en que no le alcanzaba ese recurso para
+el próximo hito o la maravilla (cuenta también el ahorro normal; sirve para comparar).
+
+| | Antes | Después |
+|---|---|---|
+| **1v3** (el solo cae a los 21 min en las dos) | piedra en el mapa 6 400 → 719 a los 21 min | 17 600 → 15 165; 7 vetas nuevas |
+| 1v3, edades del equipo de 3 | IV a los 18 y 21, III a los 19 | igual (IV 18 y 21, III 19) |
+| **2v2, 45 min** | piedra del mapa **agotada** (6 400 → 0); 3 de 4 con 25–28 min sin piedra para lo próximo | quedan **2 911** de 17 600; los que ganan, 11–12 min sin piedra |
+| 2v2, piedra juntada por jugador | 2 200–3 700 | 4 400–6 800 |
+| 2v2, maravillas | 1 | **2** (el equipo ganador, las dos) |
+| 2v2, riqueza en el mapa al final | 3 764 | 6 007 |
+
+¿Alguien se traba? **Antes sí, por piedra**: en el 2v2 el mapa se quedaba sin piedra antes de
+los 45 minutos y solo una maravilla salió. **Después, no por piedra**: sobra en el mapa y salen
+las dos maravillas del equipo que gana. Lo que más falta ahora es riqueza (los dos que pierden
+pasan 44–45 min cortos de riqueza, con la base atacada), pero queda riqueza en el mapa: es
+pelea, no escasez. La madera sobra en las dos. El 1v3 no llega a la economía tardía: la experta
+sola cae a los 21 minutos con o sin el cambio (eso es la IA y el 1vN, no el mapa).
+
+Nota: el 2v2 «después» se jugó con la veta de media distancia a 22 casillas; después pasó a 25
+por la prueba de equidad con 8 (no cambia la cantidad).
 
 ## Pruebas
 
-PRUEBAS
+- `tests/test_determinism.gd`: DETERMINISMO OK, **hash nuevo 718068252** (ticks 3000).
+- `tests/equidad.gd`: OK (con la veta media a 22, con 8 bases quedaba en el borde de la medida de
+  22 casillas: 37 % de diferencia de roca; a 25, 0 %).
+- `tests/bench.gd`: promedio 9.41 ms, peor 62.85 ms (presupuesto 100).
+- `tools/primera_victoria.gd --seeds=7,21,3 --min=30`: gana 2 de 3 (21 y 3; la 7 sin terminar).
+- `tests/equipos.gd` (30 min): EQUIPOS OK, sin fuego amigo; fortines con 4 y 6 sin encerrados.
 
 ## Commits
 
-COMMITS
+- `496d638` Recursos del mapa: herramientas de medida, piedra y riqueza por jugador según tamaño y terreno, vetas nuevas en la III y la IV.
+- Veta de media distancia a 25 casillas (equidad con 8), mediciones antes y después.
+- Documento y resultados de las pruebas (este commit).
+
+## Para el autor
+
+- Los costos de las edades no se tocaron. Si se quiere, el paso siguiente que proponen los
+  expertos es que la III pida menos piedra (hoy 200; la IV 400).
+- La riqueza quedó en 5 000–6 000 por jugador, por debajo del oro de AoE2 (~12 000, aprox.); si
+  en las partidas largas falta riqueza, el número a subir es `recursos_mapa.riqueza_lejos`.
+- Las vetas nuevas aparecen sin aviso (para no sumar mensajes); se ven en el mapa.
