@@ -24,7 +24,9 @@ Los números de la simulación están en `data/reglas.json` → `ordenes`: `patr
 - `tests/test_determinism.gd`: **OK, mismo hash (3059812827)**. La partida de prueba no usa estas órdenes. El hash solo suma `pat_pts` cuando hay más de dos puntos y `esc` cuando hay escolta.
 - `tests/ordenes.gd`: OK, con tres comprobaciones nuevas: patrulla de 3 puntos (pasa por todos y vuelve a la salida), escolta (sigue hasta el destino, pelea con el que se acerca y vuelve a seguir) y «detener» corta la escolta.
 - `tests/casillas.gd`: OK (600 grillas).
-- Autotest guaraníes en llano (`autotest_fluidez5.gd`, con clics y teclas de verdad): Ctrl + clic, patrulla de 3 puntos con Mayús, escolta con clic derecho, Mayús + mantener en la cola, perfil «aoe4» sin números de daño, ficha compacta, hoja sin «girar» y retratos por función. Capturas en `screenshots/fluidez5_escolta.png` y `screenshots/fluidez5_retratos.png`.
+- Autotest guaraníes en llano (`autotest_fluidez5.gd`, con clics y teclas de verdad): Ctrl + clic, patrulla de 3 puntos con Mayús, escolta con clic derecho, Mayús + mantener en la cola, perfil «aoe4» sin números de daño, ficha compacta, hoja sin «girar» y retratos por función. Los 9 pasos dan OK. Capturas: [retratos por función](capturas/06-retratos.jpg) y [escolta con la patrulla](capturas/06-escolta.jpg).
+- `tests/bench.gd`: promedio de 25,6 ms y peor de 186 ms, con la máquina cargada (carga 33, seis Godot de otros agentes). La corrida de referencia daba 9,2 y 58. El bench no usa estas órdenes, así que hay que repetirlo con la máquina libre.
+- Al principio, una corrida del autotest completo falló en `autotest_fluidez2` (`vs[3]`) y en el empujón de `main.gd` (sin capital), por la carga. Las corridas siguientes no lo repitieron.
 
 ## Pendiente
 

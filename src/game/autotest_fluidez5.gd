@@ -45,7 +45,10 @@ static func _tipo(sim: Sim, local: int, fn: String) -> String:
 	return ""
 
 
-static func correr(m: Node, check: Callable) -> void:
+static func correr(m: Node, check0: Callable) -> void:
+	var check := func(n: String, c: bool) -> void:
+		print(("OK    " if c else "FALLO ") + n)
+		check0.call(n, c)
 	var sim: Sim = m.sim
 	var ctrl: Controller = m.ctrl
 	var cam: RtsCamera = m.cam
@@ -126,8 +129,9 @@ static func correr(m: Node, check: Callable) -> void:
 	await m._frames(2)
 	var dest := WorldView.to_world(g3.x, g3.y) + Vector3(3, 0, 0)
 	sim.push_command({"t": "move", "player": local, "ids": [g3.id], "x": int(dest.x * P), "y": int(dest.z * P)})
-	await m._frames(2)
+	await _hasta(m, func() -> bool: return g3.order == SimEntity.Order.MOVE, 60) # la orden ya llegó
 	_tecla(KEY_SHIFT, true)
+	await m._frames(1) # el evento de la tecla se procesa en el cuadro siguiente
 	ctrl.run_command({"kind": "hold"})
 	_tecla(KEY_SHIFT, false)
 	await m._frames(2)
