@@ -194,6 +194,10 @@ func find_path(from: Vector2i, to: Vector2i, pid: int = -1) -> Array[Vector2i]:
 	# camino de otro, enganchándose en línea recta y libre (ver _splice). Antes cada soldado de una
 	# orden recalculaba su A* de punta a punta del mapa (proceso/32-ronda-8/04 y 07).
 	var rs := int(path_cfg["region"])
+	# Cerca no: el enganche podía dar la vuelta por la punta de otro camino (el kiteo retrocede unas
+	# casillas y salía para adelante). Un A* corto es barato.
+	if maxi(absi(to.x - from.x), absi(to.y - from.y)) <= 2 * rs:
+		return _grid(pid).get_id_path(from, to, true)
 	var key := (((pid + 1) * 128 + from.x / rs) * 128 + from.y / rs) * 16384 + (to.x / rs) * 128 + to.y / rs
 	var ent: Array = _pcache.get(key, [])
 	if not ent.is_empty() and int(ent[2]) == _ver_block and now - int(ent[4]) <= int(path_cfg["vence_ticks"]) and (ent[5] or int(ent[3]) == _ver_open):
