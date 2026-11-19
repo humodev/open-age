@@ -118,7 +118,9 @@ const PROPIOS := ["diana", "establo", "taller_asedio", "ruka", "boleador", "ince
 	"gasa", "farasanna", "jinete_corte", "zagaia", "guarnicao", "capitao",
 	# --- paso 6, par 3 --- Tawantinsuyu y Ayutthaya
 	"chunu", "khipu", "tumi", "puente_soga", "champi", "wayrachina", "waraka", "chaski", "cornaca", "vasija", "recetario", "arroz_crecida", "junco", "canal", "fundicion", "astillero",
-	"galga", "jinete_manco", "ngao", "suan_phlu"]
+	"galga", "jinete_manco", "ngao", "suan_phlu",
+	# --- ronda 8, 05 --- la guardia de la IV
+	"guardia"]
 const OSCURO := Color(0.06, 0.065, 0.075)
 const _SABERES := preload("res://src/game/ui/iconos_saberes.gd") # --- paso 6 --- glifos de los saberes propios
 
@@ -168,6 +170,16 @@ static func dibujar(ci: CanvasItem, kind: String, r: Rect2, col: Color) -> bool:
 				ci.draw_rect(Rect2(c + Vector2(s * (x - 0.03), -s * 0.12), Vector2(s * 0.06, s * 0.1)), OSCURO)
 			ci.draw_line(c + Vector2(0, -s * 0.2), c + Vector2(0, -s * 0.48), col, w)
 			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(0, -s * 0.48), c + Vector2(s * 0.26, -s * 0.42), c + Vector2(0, -s * 0.35)]), Palette.UI_ACCENT if claro else col)
+		"guardia":
+			# --- ronda 8, 05 --- Guardia de la IV: escudo alto con un galón de élite, la lanza
+			# larga detrás y tres puntas arriba (la élite), sin emblemas de ningún pueblo.
+			ci.draw_line(c + Vector2(s * 0.3, s * 0.46), c + Vector2(s * 0.3, -s * 0.4), col, w)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(s * 0.3, -s * 0.5), c + Vector2(s * 0.38, -s * 0.36), c + Vector2(s * 0.22, -s * 0.36)]), col)
+			var sh := PackedVector2Array([c + Vector2(-s * 0.3, -s * 0.26), c + Vector2(s * 0.18, -s * 0.26), c + Vector2(s * 0.18, s * 0.14), c + Vector2(-s * 0.06, s * 0.42), c + Vector2(-s * 0.3, s * 0.14)])
+			ci.draw_colored_polygon(sh, col)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.2, -s * 0.06), c + Vector2(-s * 0.06, s * 0.06), c + Vector2(s * 0.08, -s * 0.06), c + Vector2(s * 0.08, s * 0.04), c + Vector2(-s * 0.06, s * 0.16), c + Vector2(-s * 0.2, s * 0.04)]), OSCURO)
+			for x: float in [-0.2, -0.06, 0.08]:
+				ci.draw_colored_polygon(PackedVector2Array([c + Vector2(s * (x - 0.05), -s * 0.3), c + Vector2(s * x, -s * 0.44), c + Vector2(s * (x + 0.05), -s * 0.3)]), Palette.UI_ACCENT if claro else col)
 		"diana":
 			# Campo de tiro: blanco de anillos con una flecha clavada.
 			var dc := c + Vector2(-s * 0.06, s * 0.06)

@@ -178,6 +178,7 @@ func _draw() -> void:
 		quad.append(xf * Vector2(g.x, g.z))
 	draw_polyline(quad, Color(0, 0, 0, 0.5), 3.5, true) # --- mundo --- contorno para que se lea sobre el pasto claro
 	draw_polyline(quad, Color(1, 1, 1, 0.85), 1.5, true)
+	_draw_wonders(xf) # --- ronda 8, 05 ---
 	for p in _pings:
 		var k: float = fmod(p["t"], 1.0)
 		draw_arc(xf * (p["p"] as Vector2), 4.0 + k * 16.0, 0, TAU, 24, Color(Palette.UI_BAD, 1.0 - k), 2.0, true)
@@ -200,6 +201,25 @@ func _draw() -> void:
 
 
 # --- fluidez 4 ---
+## --- ronda 8, 05 --- Marca fija de cada maravilla, en obra o terminada, aun con la niebla (la
+## ven todos, como en AoE4): un rombo con el color del dueño y, si es rival, un anillo que late.
+func _draw_wonders(xf: Transform2D) -> void:
+	var beat := 0.5 + 0.5 * sin(Time.get_ticks_msec() / 220.0)
+	for p in sim.players:
+		var w := sim.wonder_of(int(p["id"]))
+		if w == null:
+			continue
+		var c: Vector2 = xf * Vector2(w.tx + w.w / 2.0, w.ty + w.h / 2.0)
+		var col := Palette.team(w.owner)
+		var r := 6.0
+		var dia := PackedVector2Array([c + Vector2(0, -r), c + Vector2(r, 0), c + Vector2(0, r), c + Vector2(-r, 0)])
+		draw_colored_polygon(dia, Color(0, 0, 0, 0.75))
+		var r2 := r - 1.8
+		draw_colored_polygon(PackedVector2Array([c + Vector2(0, -r2), c + Vector2(r2, 0), c + Vector2(0, r2), c + Vector2(-r2, 0)]), col if w.built else Color(col, 0.6))
+		if sim.enemies(local, w.owner):
+			draw_arc(c, 9.0 + beat * 3.0, 0, TAU, 24, Color(Palette.UI_BAD, 0.5 + 0.5 * beat), 2.0, true)
+
+
 static func cfg_minimapa() -> Dictionary:
 	var path := "res://data/interfaz.json"
 	var all: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else {}

@@ -26,6 +26,7 @@ static func load_default() -> SimData:
 	d.edades = _load("res://data/edades.json")["edades"]
 	d.tecnologias = _load("res://data/tecnologias.json")
 	d.hitos = [["hito_economia", "hito_guerra"], ["hito_economia", "hito_guerra"], ["hito_economia", "hito_guerra"]]
+	d._junto_a() # --- ronda 8, 05 ---
 	for f in DirAccess.get_files_at("res://data/civs"):
 		if f.ends_with(".json"):
 			var c: Dictionary = _load("res://data/civs/" + f)
@@ -33,6 +34,23 @@ static func load_default() -> SimData:
 			c["clave"] = key
 			d.civs[key] = d._merge(c)
 	return d
+
+
+## --- ronda 8, 05 --- `junto_a`: la unidad se entrena en cada edificio que entrena a esa otra
+## (la guardia de la IV, junto al guerrero). Orden fijo: el de las claves, ordenadas.
+func _junto_a() -> void:
+	var ukeys: Array = unidades.keys()
+	ukeys.sort()
+	for u in ukeys:
+		var with: String = unidades[u].get("junto_a", "")
+		if with == "":
+			continue
+		for b in edificios:
+			var pr: Array = edificios[b].get("produce", [])
+			if pr.has(with) and not pr.has(u):
+				var npr := pr.duplicate()
+				npr.append(u)
+				edificios[b]["produce"] = npr
 
 
 ## Tabla completa de una civilización: la capa común con sus reemplazos y agregados.
@@ -48,6 +66,7 @@ func _merge(c: Dictionary) -> SimData:
 	for b in c.get("produce", {}):
 		if m.edificios.has(b):
 			m.edificios[b]["produce"] = c["produce"][b]
+	m._junto_a() # --- ronda 8, 05 ---
 	# Niveles por línea (veterano, élite): solo los de las líneas que el pueblo entrena en
 	# algún edificio (los guaraníes no tienen montados; los incas, solo desde Vilcabamba).
 	var made := {}
@@ -57,6 +76,22 @@ func _merge(c: Dictionary) -> SimData:
 	for k in m.tecnologias.keys():
 		var lin: String = m.tecnologias[k].get("en", {}).get("linea", "")
 		if lin != "" and not made.has(lin):
+			m.tecnologias.erase(k)
+	# --- ronda 8, 05 --- Caminos de la escuela: sin la línea que piden (`requiere_linea`) o fuera de
+	# los del pueblo (`escuela.caminos`), no están; con ellos se van sus mejoras (`camino`).
+	var allowed: Array = c.get("escuela", {}).get("caminos", [])
+	var gone := {}
+	for k in m.tecnologias.keys():
+		var t: Dictionary = m.tecnologias[k] if m.tecnologias[k] is Dictionary else {}
+		var cd: String = t.get("camino_de", "")
+		if cd == "":
+			continue
+		var rl: String = t.get("requiere_linea", "")
+		if (rl != "" and not made.has(rl)) or (not allowed.is_empty() and not allowed.has(cd)):
+			gone[cd] = true
+			m.tecnologias.erase(k)
+	for k in m.tecnologias.keys():
+		if m.tecnologias[k] is Dictionary and gone.has(String(m.tecnologias[k].get("camino", ""))):
 			m.tecnologias.erase(k)
 	# --- paso 4 --- Una unidad que `reemplaza` a otra desde su edad (el hondero de piedra
 	# caliente y el cañón de tacuara pasan a la ranura del asedio de área en la III).

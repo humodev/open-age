@@ -1,0 +1,13 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+2v2 [0, 1, 0, 1] ["tawantinsuyu", "mapuches", "guaranies", "etiopia"] llano experta semilla 7, mapa 176
+  31:01 j0 empieza la maravilla
+  34:16 j2 empieza la maravilla
+  41:21 j0 termina la maravilla
+Fin a los 45:00
+j0 tawantinsuyu eq0 edad 4 en pie | min en la IV 22 | sin gastar en la IV: alimento prom 7388 máx 25654, madera prom 315 máx 1536 | al final { "alimento": 25654, "madera": 1099, "piedra": 1380, "riqueza": 572, "mita": 440 } | camino - | repetidas {  } | guardia 0
+j1 mapuches     eq1 edad 4 en pie | min en la IV 20 | sin gastar en la IV: alimento prom 398 máx 885, madera prom 119 máx 1220 | al final { "alimento": 580, "madera": 10, "piedra": 821, "riqueza": 20 } | camino - | repetidas {  } | guardia 0
+j2 guaranies    eq0 edad 4 en pie | min en la IV 18 | sin gastar en la IV: alimento prom 730 máx 1508, madera prom 145 máx 1060 | al final { "alimento": 1372, "madera": 259, "piedra": 720, "riqueza": 611 } | camino - | repetidas {  } | guardia 0
+j3 etiopia      eq1 edad 3 en pie | min en la IV 0 | sin gastar en la IV: alimento prom 0 máx 0, madera prom 0 máx 0 | al final { "alimento": 2009, "madera": 270, "piedra": 771, "riqueza": 18 } | camino - | repetidas {  } | guardia 0
+maravilla j0: empieza 31:01, obra 10:20
+maravilla j2: empieza 34:16, obra sin terminar

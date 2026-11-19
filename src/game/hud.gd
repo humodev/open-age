@@ -340,7 +340,7 @@ func _wonder_notice(ev: Dictionary) -> void:
 	var tipo := "hito"
 	match String(ev["t"]):
 		"maravilla_obra":
-			txt = "%s empezó %s" % [who, name] if mine else "%s empezó su maravilla: %s" % [who, name]
+			txt = "%s empezó %s" % [who, name] if mine else ("%s empezó su maravilla: %s. Frenala antes de que termine" % [who, name] if foe else "%s empezó su maravilla: %s" % [who, name])
 			tipo = "decision" if foe else "hito"
 		"maravilla":
 			if no_win:

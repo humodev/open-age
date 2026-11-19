@@ -352,7 +352,7 @@ func commands() -> Array[Dictionary]:
 					i += 1
 				slot = i
 				i += 1
-			var cmd := {"slot": slot, "id": type, "icon": Glyphs.resolve(udef, type), "kind": "train", "name": udef["nombre"], "common": common_name(type), "cost": sim.train_cost(local, first, type), "desc": DESCS.get(type, ""), "locked": "", "building": first.id}
+			var cmd := {"slot": slot, "id": type, "icon": Glyphs.resolve(udef, type), "kind": "train", "name": udef["nombre"], "common": common_name(type), "cost": sim.train_cost(local, first, type), "desc": DESCS.get(type, str(udef.get("desc", ""))), "locked": "", "building": first.id}
 			if udef.get("propia", false): # --- paso 6 --- el saber y su evidencia
 				cmd["desc"] = "%s\nEvidencia: %s" % [udef.get("desc", ""), udef.get("evidencia", "")]
 			if age < udef.get("edad_min", 1):
@@ -375,12 +375,22 @@ func commands() -> Array[Dictionary]:
 				continue
 			if t.has("requiere_hito") and not sim.has_done_hito(local, t["requiere_hito"]):
 				continue # --- paso 6 --- la mejora de la otra vía (guaraníes) no se muestra
+			# --- ronda 8, 05 --- caminos de la escuela: antes de elegir, solo los caminos; después,
+			# solo lo del camino elegido.
+			var path := sim.school_path(local)
+			if (t.has("camino_de") and path != "") or (t.has("camino") and String(t["camino"]) != path):
+				continue
 			used[root] = true
 			var why := sim.research_block(local, tech)
 			var pref := int(t["ranura"]) if produce.is_empty() else int((Grilla.cfg().get("investigaciones_con_tropa", {}) as Dictionary).get(tech if not t.has("requiere") else root, t["ranura"]))
 			var rc := {"slot": pref, "id": tech, "icon": Iconos.de_tecnologia(tech, t), "kind": "research", "name": tech_name(tech), "corto": str(t.get("nombre_corto", "")), "cost": sim.tech_cost(local, tech), "desc": effects_text(t["efectos"]), "locked": why, "tech": true, "building": first.id}
 			if t.get("propia", false): # --- paso 6 --- el saber y su evidencia
 				rc["desc"] = "%s\n%s\nEvidencia: %s" % [rc["desc"], t.get("desc", ""), t.get("evidencia", "")]
+			elif t.has("camino_de"): # --- ronda 8, 05 ---
+				rc["desc"] = str(t.get("desc", ""))
+			elif t.has("repite"):
+				var rp: Dictionary = t["repite"]
+				rc["desc"] = "%s\nSe repite: %d de %d. Cada vez cuesta %d %% más del costo base." % [rc["desc"], sim.times_done(local, tech), int(rp.get("max", 1)), int(rp.get("crece_pct", 0))]
 			# --- paso 3 --- La escuela de la IV va en su propio submenú, con el nombre del pueblo.
 			if t.get("escuela", false):
 				school.append(rc)
@@ -605,6 +615,8 @@ func tech_name(tech: String) -> String:
 		var v: Dictionary = escuela_info()["tecnologias"].get(tech, {})
 		if v.has("nombre"):
 			return v["nombre"]
+	if t.has("repite"): # --- ronda 8, 05 --- la que se repite dice qué vez es
+		return "%s %d/%d" % [t.get("nombre", tech), sim.times_done(local, tech) + 1, int(t["repite"].get("max", 1))]
 	return t.get("nombre", tech)
 
 

@@ -18,7 +18,7 @@
   }
  },
  "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",
- "escuela": {"nombre": "Talleres de Gondar", "edificios": ["gondar"], "desc": "Los artesanos de la corte de Fasilädäs: albañiles y herreros beta israel, despojados de la tierra y acusados de buda, y tejedores musulmanes del Islam Bet; ninguno podía tener tierra en rəst (Quirin, 1992; Kaplan, 1992; Pankhurst, 1982). Se investiga en el kätäma y en el recinto de Gondar."},
+ "escuela": {"ia_caminos": ["guerra"], "nombre": "Talleres de Gondar", "edificios": ["gondar"], "desc": "Los artesanos de la corte de Fasilädäs: albañiles y herreros beta israel, despojados de la tierra y acusados de buda, y tejedores musulmanes del Islam Bet; ninguno podía tener tierra en rəst (Quirin, 1992; Kaplan, 1992; Pankhurst, 1982). Se investiga en el kätäma y en el recinto de Gondar."},
  "tecnologias": {"escuela_registros": {"nombre": "Ṣäḥafe tə'əzaz", "desc": "Los cronistas reales, «el que escribe las órdenes», con crónicas desde ʿAmdä Ṣəyon."}},
  "_doc_saberes": "--- paso 6, par 2 --- Saberes propios (docs/diseno/27, §3.4): 8 mejoras (2 en la II, 3 en la III, 3 en la IV) y 3 unidades. Cada una lleva `desc` (qué hace y el saber) y `evidencia` (nivel y fuente), que la ficha muestra. Nada de lo eclesiástico da combate ni entra en una mecánica: ni Lalibela, ni el tabot, ni la iglesia, ni el kebero. `propia`: la cuenta el modelo (tools/modelo_progreso.py) y la compra la IA según `ia_propias`.",
  "tecnologias_nuevas": {

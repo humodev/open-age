@@ -77,7 +77,7 @@ func _init() -> void:
 	_check("en la IV se pone", w != null and not w.built)
 	_check("pagó el costo", int(s.players[0]["res"]["piedra"]) == 50000 - int(s.dp(0).edificios["maravilla"]["costo"]["piedra"]))
 	_check("una por jugador", s.build_block(0, "maravilla") == "Ya hay una maravilla", s.build_block(0, "maravilla"))
-	_check("obra: 600 s con 10 constructores", s.dp(0).build_time_of("maravilla", 4) * 3 / 12 == 600000, str(s.dp(0).build_time_of("maravilla", 4)))
+	_check("obra: 360 s con 10 constructores (ronda 8, 05)", s.dp(0).build_time_of("maravilla", 4) * 3 / 12 == 360000, str(s.dp(0).build_time_of("maravilla", 4)))
 	_check("sin cuenta en obra", s.wonder_left_s(0) < 0)
 	s._complete(w)
 	for i in 20:

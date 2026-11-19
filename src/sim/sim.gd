@@ -712,7 +712,31 @@ func research_block(pid: int, tech: String) -> String:
 		return "Requiere edad %s" % _roman(t["edad_min"])
 	if t.has("requiere_hito") and not has_done_hito(pid, t["requiere_hito"]): # --- paso 6 --- la vía guaraní
 		return "Requiere el hito %s" % dp(pid).edificios.get(t["requiere_hito"], {}).get("nombre", t["requiere_hito"])
+	# --- ronda 8, 05 --- caminos de la escuela: el primero que se elige cierra los otros.
+	var chosen := school_path(pid)
+	if t.has("camino_de") and chosen != "":
+		return "Ya elegiste el %s" % String(dp(pid).tecnologias.get("camino_" + chosen, {}).get("nombre", chosen)).to_lower()
+	if t.has("camino") and chosen != String(t["camino"]):
+		return "Requiere el %s" % String(dp(pid).tecnologias.get("camino_" + String(t["camino"]), {}).get("nombre", t["camino"])).to_lower()
 	return ""
+
+
+## --- ronda 8, 05 --- Camino de la escuela que eligió `pid` ("guerra", "asedio", "defensa"),
+## también si está en investigación; "" si ninguno.
+func school_path(pid: int) -> String:
+	var p := players[pid]
+	var techs: Dictionary = dp(pid).tecnologias
+	for d: Dictionary in [p["techs"], p["pending"]]:
+		for k in d:
+			var cd: String = techs.get(k, {}).get("camino_de", "")
+			if cd != "":
+				return cd
+	return ""
+
+
+## --- ronda 8, 05 --- Veces que `pid` compró la mejora que se repite `tech`.
+func times_done(pid: int, tech: String) -> int:
+	return int(players[pid].get("repetidas", {}).get(tech, 0))
 
 
 ## ¿Se puede investigar `t` en el edificio `b`? Por capacidad, no por tipo
@@ -784,9 +808,11 @@ func tech_cost(pid: int, tech: String) -> Dictionary:
 	var off := 0
 	for a in range(1, age + 1):
 		off += mod(pid, "tec_desc:%d" % a)
+	# --- ronda 8, 05 --- la que se repite cuesta `crece_pct` % más del base por cada vez comprada.
+	var grow := 100 + int(dp(pid).tecnologias.get(tech, {}).get("repite", {}).get("crece_pct", 0)) * times_done(pid, tech)
 	var out := {}
 	for k in base:
-		out[k] = int(base[k]) * (100 - mini(off, 100)) / 100
+		out[k] = int(base[k]) * grow / 100 * (100 - mini(off, 100)) / 100
 	return out
 
 
@@ -2391,7 +2417,15 @@ func _update_building(b: SimEntity) -> void:
 func _finish_tech(pid: int, tech: String) -> void:
 	var p := players[pid]
 	p["pending"].erase(tech)
-	p["techs"][tech] = true
+	var rep: Dictionary = dp(pid).tecnologias[tech].get("repite", {})
+	if rep.is_empty():
+		p["techs"][tech] = true
+	else:
+		# --- ronda 8, 05 --- la que se repite: queda abierta hasta la última vez.
+		var done: Dictionary = p.get_or_add("repetidas", {})
+		done[tech] = int(done.get(tech, 0)) + 1
+		if int(done[tech]) >= int(rep.get("max", 1)):
+			p["techs"][tech] = true
 	_apply_effects(pid, dp(pid).tecnologias[tech]["efectos"])
 	events.append({"t": "tech", "player": pid, "tech": tech})
 

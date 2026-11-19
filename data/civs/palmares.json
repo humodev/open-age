@@ -18,7 +18,7 @@
   }
  },
  "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",
- "escuela": {"nombre": "Oficinas do Macaco", "edificios": ["quilombo_central"], "desc": "Los oficios del Macaco: herreros (las ferrarias), alfareros (la cerámica de los mocambos, con formas indígenas, africanas y europeas) y tejedores de palma [verificar el pasaje] (Blaer, 1645; Funari, 1996; Orser y Funari, 2001). Se investiga en la cerca real y en el Macaco."},
+ "escuela": {"ia_caminos": ["defensa"], "nombre": "Oficinas do Macaco", "edificios": ["quilombo_central"], "desc": "Los oficios del Macaco: herreros (las ferrarias), alfareros (la cerámica de los mocambos, con formas indígenas, africanas y europeas) y tejedores de palma [verificar el pasaje] (Blaer, 1645; Funari, 1996; Orser y Funari, 2001). Se investiga en la cerca real y en el Macaco."},
  "tecnologias": {"escuela_registros": {"nombre": "La memoria de los mocambos", "desc": "No hay registros escritos propios de Palmares y no se inventan archivos: el saber pasa de boca en boca."}},
  "_doc_saberes": "--- paso 6, par 2 --- Saberes propios (docs/diseno/27, §3.5): 8 mejoras (2 en la II, 3 en la III, 3 en la IV) y 3 unidades. Cada una lleva `desc` (qué hace y el saber) y `evidencia` (nivel y fuente), que la ficha muestra. Nada religioso (calundu, nganga, kimbanda, el rito de la fundición), nada de capoeira (H-28) y ningún texto que diga «esconderse» como esencia (H-35). `propia`: la cuenta el modelo y la compra la IA según `ia_propias`.",
  "tecnologias_nuevas": {
