@@ -61,7 +61,7 @@ static func motivo(m: Variant, local: int, cfg: Dictionary) -> String:
 					var r := comando(cmd, cfg)
 					if r != "":
 						return r
-		"turnos":
+		"turnos", "retomar": # --- caida anfitrion --- el anfitrión que vuelve recibe «retomar» del invitado
 			for x in (d["log"] as Array):
 				var r := motivo(x, local, cfg)
 				if r != "":

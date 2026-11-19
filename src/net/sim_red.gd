@@ -20,3 +20,12 @@ func push_command(cmd: Dictionary, delay: int = 0) -> void:
 		super.push_command(cmd, delay)
 		return
 	red.comando(cmd)
+
+
+## --- soltar --- SimRed y su Lockstep se apuntan entre sí: sin cortar `red`, la partida de
+## red quedaba viva al salir (proceso/37-red/03).
+func soltar() -> void:
+	if red != null:
+		red.sim = null
+	red = null
+	super.soltar()

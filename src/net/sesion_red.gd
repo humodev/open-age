@@ -15,10 +15,17 @@ extends Node
 ##   ping {t}, pong {t}            ida y vuelta para medir el ping y ajustar el retardo de entrada
 ##   turnos {log}                  cliente → anfitrión al volver: lo propio, por si se perdió algo
 ##   turno, hash, reanudar         del lockstep (lockstep.gd)
+##
+## --- caida anfitrion --- (proceso/37-red/03) Si se cae el anfitrión, el invitado reintenta
+## y a los caida_anfitrion_s segundos puede seguir contra la IA (seguir_con_ia) o guardar y
+## salir (guardar_y_salir); mientras tanto sigue reintentando. Si el anfitrión vuelve de cero
+## (sala nueva en el mismo puerto), el invitado le manda «retomar» con su foto y el anfitrión
+## sigue desde ella: la partida del invitado es la que vale.
 
 signal sala_cambio
 signal empezar(args: Dictionary)
 signal aviso(texto: String)
+signal anfitrion_caido_cambio(caido: bool) # --- caida anfitrion ---
 
 static var activa: SesionRed = null
 
@@ -49,6 +56,9 @@ var _prox_ajuste := 0
 var rechazados := 0 # mensajes descartados por la validación
 var ping_ms := -1
 var recuperada_en := -1 # tick en que se volcó la foto del anfitrión (-1: no hizo falta)
+var anfitrion_caido := false # --- caida anfitrion --- el invitado ya puede elegir qué hacer
+var foto_mandada_en := -1 # --- caida anfitrion --- tick de la foto que el invitado le mandó al anfitrión que volvió
+var _botones: HBoxContainer = null
 
 
 func _init() -> void:
@@ -130,7 +140,11 @@ func _resumen() -> void:
 
 func _exit_tree() -> void:
 	_resumen()
+	transporte.cerrar() # --- soltar --- el par ENet y sus señales apuntan al transporte
+	if sim is SimRed:
+		(sim as SimRed).soltar()
 	lock = null
+	sim = null
 
 
 func es_anfitrion() -> bool:
@@ -343,7 +357,12 @@ func _process(_delta: float) -> void:
 		estado = "nada"
 		_decir("No se pudo conectar con %s:%d" % [_ip, _puerto])
 	if estado == "partida" and _espera_desde >= 0:
-		if ahora - _espera_desde > int(cfg.get("reconexion_s", 60)) * 1000:
+		# --- caida anfitrion --- el invitado no da la partida por terminada: elige
+		if not es_anfitrion() and not anfitrion_caido and lock != null and ahora - _espera_desde > int(cfg.get("caida_anfitrion_s", 20)) * 1000:
+			anfitrion_caido = true
+			_decir("El anfitrión no vuelve: seguí contra la IA o guardá y salí")
+			anfitrion_caido_cambio.emit(true)
+		if es_anfitrion() and ahora - _espera_desde > int(cfg.get("reconexion_s", 60)) * 1000:
 			estado = "fin"
 			_espera_desde = -1
 			transporte.cerrar()
@@ -431,6 +450,9 @@ func _recibir(m: Dictionary) -> void:
 				_mandar_sala()
 				sala_cambio.emit()
 		"sala":
+			if not es_anfitrion() and estado == "partida" and lock != null: # --- caida anfitrion ---
+				_mandar_foto() # el anfitrión volvió de cero: abrió una sala nueva
+				return
 			if not es_anfitrion():
 				sala = m["sala"]
 				sala_cambio.emit()
@@ -439,6 +461,8 @@ func _recibir(m: Dictionary) -> void:
 				_arrancar(m["args"])
 		"retomar":
 			if es_anfitrion():
+				if estado == "sala" and m.has("foto"): # --- caida anfitrion --- vuelvo de cero
+					_retomar_de_invitado(m)
 				return
 			_espera_desde = -1
 			_reanudado = int(m.get("reanudado", -1))
@@ -461,6 +485,136 @@ func _recibir(m: Dictionary) -> void:
 				lock.recibir(m)
 			else:
 				_pendiente.append(m)
+
+
+# --- caida anfitrion ---
+## Invitado: el anfitrión volvió sin la partida. Le manda la foto de su simulación (parada en
+## el último turno completo, el mismo estado en las dos máquinas hasta ahí) y lo suyo de después.
+func _mandar_foto() -> void:
+	var iny := lock.inyectado_hasta
+	transporte.enviar({"tipo": "retomar", "args": args, "log": lock.registro(false, iny + 1), "hashes": lock.hashes_de(local, (iny + 1) * lock.T),
+		"reanudado": lock.reanudado_hasta, "foto": SimEstado.tomar(sim), "inyectado": iny, "pausas": lock.pausas_usadas.duplicate()})
+	foto_mandada_en = sim.tick
+	_espera_desde = -1
+	if anfitrion_caido:
+		anfitrion_caido = false
+		anfitrion_caido_cambio.emit(false)
+	_decir("El anfitrión volvió: sigue desde mi foto (tick %d)" % sim.tick)
+
+
+## Anfitrión que volvió de cero: arma la partida con la foto del invitado (como el invitado
+## que vuelve de cero con la del anfitrión, en adjuntar y volcar_foto).
+func _retomar_de_invitado(m: Dictionary) -> void:
+	sala["jugadores"][1]["conectado"] = true
+	_reanudado = int(m.get("reanudado", -1))
+	_pendiente = (m.get("log", []) as Array) + (m.get("hashes", []) as Array)
+	_foto = m["foto"]
+	_foto_info = {"inyectado": int(m.get("inyectado", -1)), "pausas": m.get("pausas", {})}
+	_decir("El invitado tenía la partida: sigo desde su foto")
+	_arrancar(m["args"])
+
+
+## Invitado con el anfitrión caído: la IA toma al jugador caído desde donde quedó la partida
+## (el último turno que los dos jugaron) y la partida sigue sin red. Lo propio que ya se había
+## mandado y no llegó a jugarse entra en su turno; lo juntado, ahora.
+func seguir_con_ia() -> void:
+	if sim == null or lock == null:
+		return
+	var s := sim
+	var ks := lock.turnos.keys()
+	ks.sort()
+	for n: int in ks:
+		var msg: Dictionary = (lock.turnos[n] as Dictionary).get(local, {})
+		if n <= lock.inyectado_hasta or msg.is_empty():
+			continue
+		for c: Dictionary in msg.get("c", []):
+			var cc := c.duplicate(true)
+			cc["player"] = local
+			cc["tick"] = maxi(n * lock.T, s.tick)
+			s.recording.append(cc.duplicate(true))
+			s.schedule([cc])
+	var juntado := lock.buffer.duplicate(true)
+	var dif := str(cfg.get("ia_toma_dificultad", "normal"))
+	for p: int in lock.jugadores:
+		if p == local:
+			continue
+		var tiene := false
+		for ai in s.ais:
+			tiene = tiene or ai.player == p
+		if not tiene:
+			s.ais.append(SimAI.new(s, p, dif))
+	anfitrion_caido = false
+	cerrar() # suelta el lockstep: SimRed vuelve a dejar pasar los comandos
+	for c: Dictionary in juntado:
+		s.push_command(c)
+	print("RED: la IA toma al jugador caído en el tick %d" % s.tick)
+
+
+## Invitado con el anfitrión caído: guarda la partida en user://partidas/ (al cargarla, la
+## IA toma al jugador caído) y, si `salir`, vuelve al menú. Devuelve la ruta ("" si falló).
+func guardar_y_salir(ruta := "", salir := true) -> String:
+	if sim == null or lock == null:
+		return ""
+	if ruta == "":
+		ruta = Guardado.DIR_PARTIDAS + "red-%s.json" % Time.get_datetime_string_from_system().replace(":", "-")
+	var suelta := _partida_suelta()
+	if suelta == null:
+		_decir("No se pudo guardar la partida")
+		return ""
+	var a := Guardado.args_limpios(args)
+	a.erase("red")
+	a["red_jugador"] = str(local)
+	var ias: Array = []
+	var cfg_ia := {}
+	for ai in suelta.ais:
+		ias.append(int(ai.player))
+		cfg_ia[str(ai.player)] = {"dificultad": str(cfg.get("ia_toma_dificultad", "normal")), "estilo": str(ai.personality)}
+	var meta := {"semilla": int(args.get("seed", 0)), "opciones": opts_de(args), "ias": ias, "ia_cfg": cfg_ia,
+		"dificultad": str(cfg.get("ia_toma_dificultad", "normal")), "estilo": "normal", "colores": Palette.colores, "args": a}
+	var ok := Guardado.escribir(ruta, Guardado.datos(meta, suelta))
+	suelta.soltar()
+	if not ok:
+		_decir("No se pudo guardar la partida")
+		return ""
+	_decir("Partida guardada: %s" % ruta)
+	if salir:
+		cerrar()
+		var m := get_tree().current_scene if is_inside_tree() else null
+		if m != null and m.has_method("to_menu"):
+			m.call_deferred("to_menu")
+	return ruta
+
+
+## La partida de esta máquina como una partida suelta (Sim, sin red) con una IA más por cada
+## jugador caído: es lo que Guardado.armar sabe cargar (la foto tiene que tener las mismas IA
+## que la partida que se arma al cargar). null si la copia no da el mismo hash.
+func _partida_suelta() -> Sim:
+	var sr := sim as SimRed
+	var red_antes: Lockstep = sr.red if sr != null else null
+	if sr != null:
+		sr.red = null # la red no va en la foto
+	var f := SimEstado.foto(sim)
+	if sr != null:
+		sr.red = red_antes
+	for g: Array in f["guiones"]:
+		if str(g[0]) == "res://src/net/sim_red.gd":
+			g[0] = "res://src/sim/sim.gd"
+	var t := Sim.new(int(args.get("seed", 0)), sim.players.size(), null, opts_de(args))
+	t.ais = []
+	for ai in sim.ais:
+		t.ais.append(SimAI.new(t, int(ai.player)))
+	if not SimEstado.restaurar(t, f) or t.state_hash() != sim.state_hash():
+		push_error("RED: la copia de la partida no dio el mismo estado")
+		t.soltar()
+		return null
+	for p: int in lock.jugadores:
+		var tiene := false
+		for ai in t.ais:
+			tiene = tiene or int(ai.player) == p
+		if p != local and not tiene:
+			t.ais.append(SimAI.new(t, p, str(cfg.get("ia_toma_dificultad", "normal"))))
+	return t
+# --- fin caida anfitrion ---
 
 
 func _decir(t: String) -> void:
@@ -499,8 +653,10 @@ func _rotular() -> void:
 			t = "Desincronización en el tick %d" % lock.desync_tick
 		elif estado == "fin":
 			t = _texto
+		elif anfitrion_caido: # --- caida anfitrion ---
+			t = "El anfitrión no vuelve (se sigue esperando)"
 		elif _espera_desde >= 0:
-			t = "Se cortó la conexión: esperando %d s" % maxi(0, int(cfg.get("reconexion_s", 60)) - (Time.get_ticks_msec() - _espera_desde) / 1000)
+			t = "Se cortó la conexión: esperando %d s" % maxi(0, int(cfg.get("reconexion_s" if es_anfitrion() else "caida_anfitrion_s", 60)) - (Time.get_ticks_msec() - _espera_desde) / 1000)
 		elif lock.pausa_de >= 0:
 			var quien := nombres[Palette.color_idx(lock.pausa_de) % nombres.size()]
 			t = "Pausa de %s: %d s · te quedan %d pausas (Esc para seguir)" % [quien, lock.pausa_restante_s(), lock.pausas_max - int(lock.pausas_usadas[local])]
@@ -510,6 +666,21 @@ func _rotular() -> void:
 			t = "Esperando al rival…"
 	_rotulo.text = t
 	_rotulo.visible = t != ""
+	# --- caida anfitrion --- las dos salidas del invitado
+	if anfitrion_caido and _botones == null:
+		_botones = HBoxContainer.new()
+		_botones.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
+		_botones.offset_top = 110
+		_botones.grow_horizontal = Control.GROW_DIRECTION_BOTH
+		_botones.add_theme_constant_override("separation", 16)
+		for par in [["Seguir contra la IA", seguir_con_ia], ["Guardar y salir", guardar_y_salir]]:
+			var b := Button.new()
+			b.text = par[0]
+			b.pressed.connect(par[1] as Callable)
+			_botones.add_child(b)
+		_capa.add_child(_botones)
+	if _botones != null:
+		_botones.visible = anfitrion_caido
 
 
 ## Las opciones de Sim.new para estos argumentos, como las arma main._new_game (para las pruebas).

@@ -90,6 +90,8 @@ func poll() -> Array:
 	var ahora := Time.get_ticks_msec()
 	while not _cola.is_empty() and int(_cola[0][0]) <= ahora:
 		_poner(_cola.pop_front()[1])
+	if peer.get_connection_status() == MultiplayerPeer.CONNECTION_DISCONNECTED:
+		return out # --- caida anfitrion --- el anfitrión cortó: ENet ya avisó y no se atiende más
 	_en_poll = true
 	peer.poll()
 	_en_poll = false

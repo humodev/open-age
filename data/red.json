@@ -20,5 +20,8 @@
   "retardo_margen_ms": 60,
   "retardo_min_turnos": 2,
   "retardo_max_turnos": 10,
+  "_doc_caida_anfitrion": "proceso/37-red/03. Si se cae el anfitrión, el invitado reintenta y a los caida_anfitrion_s segundos puede seguir contra la IA (que toma al caído con ia_toma_dificultad) o guardar y salir. Si el anfitrión vuelve de cero, sigue desde la foto del invitado.",
+  "caida_anfitrion_s": 20,
+  "ia_toma_dificultad": "normal",
   "validacion": { "max_bytes": 16777216, "max_comandos_por_turno": 100, "max_claves_comando": 24, "max_texto": 64, "max_lista": 2000 }
 }

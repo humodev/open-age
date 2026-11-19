@@ -14,6 +14,11 @@ extends SceneTree
 ##   basura      el cliente manda mensajes rotos en el tick 100 (paquete que no es un diccionario,
 ##               turno a nombre del anfitrión, tipos cambiados, demasiados comandos): el anfitrión los
 ##               descarta y la partida sigue igual
+##   anfitrion_vuelve     el anfitrión se cae en el tick 300 (pierde todo) y abre una sala nueva:
+##               el invitado le manda su foto y siguen desde ahí (proceso/37-red/03)
+##   anfitrion_no_vuelve  el anfitrión se cae en el tick 300 y no vuelve: a los 3 s el invitado
+##               guarda (el guardado se carga con el mismo hash) y sigue contra la IA, que
+##               toma al anfitrión y entrena aldeanos
 ##
 ##   godot --headless --path . -s tests/red.gd [-- --caso=directo]
 
@@ -25,6 +30,8 @@ const CASOS := [
 	{"nombre": "desincronizacion", "ticks": 300, "lat": 0, "vaiven": 0, "caida": -120}, # trampa: el cliente toca su estado en el tick 120
 	{"nombre": "ping", "ticks": 600, "lat": 250, "vaiven": 50, "caida": 0, "retardo_min": 4},
 	{"nombre": "basura", "ticks": 600, "lat": 0, "vaiven": 0, "caida": 0, "basura": 100},
+	{"nombre": "anfitrion_vuelve", "ticks": 900, "lat": 0, "vaiven": 0, "caida": 0, "anfitrion": 300, "vuelve": true},
+	{"nombre": "anfitrion_no_vuelve", "ticks": 900, "lat": 0, "vaiven": 0, "caida": 0, "anfitrion": 300},
 ]
 const PASOS_POR_CUADRO := 200
 const ESPERA_MS := 240000
@@ -88,7 +95,8 @@ func _anfitrion(puerto: int, c: Dictionary) -> bool:
 	s.empezar.connect(_arrancar)
 	var exe := OS.get_executable_path()
 	var pid := OS.create_process(exe, ["--headless", "--path", ProjectSettings.globalize_path("res://"), "-s", "res://tests/red.gd", "--",
-		"--rol=cliente", "--puerto=%d" % puerto, "--ticks=%d" % int(c["ticks"]), "--lat=%d" % int(c["lat"]), "--vaiven=%d" % int(c["vaiven"]), "--caida=%d" % int(c["caida"]), "--basura=%d" % int(c.get("basura", 0))])
+		"--rol=cliente", "--puerto=%d" % puerto, "--ticks=%d" % int(c["ticks"]), "--lat=%d" % int(c["lat"]), "--vaiven=%d" % int(c["vaiven"]), "--caida=%d" % int(c["caida"]), "--basura=%d" % int(c.get("basura", 0)),
+		"--anfitrion=%s" % ("" if not c.has("anfitrion") else ("vuelve" if c.get("vuelve", false) else "no_vuelve"))])
 	var t0 := Time.get_ticks_msec()
 	while s.puede_empezar() != "":
 		await process_frame
@@ -101,9 +109,29 @@ func _anfitrion(puerto: int, c: Dictionary) -> bool:
 	var ok := false
 	var pausa := int(c.get("pausa", 0))
 	var pausa_t := -1
+	var cae := int(c.get("anfitrion", 0)) # --- caida anfitrion ---
+	var espera_cliente := 15000
 	while Time.get_ticks_msec() - t0 < ESPERA_MS:
 		await process_frame
-		_avanzar(fin)
+		_avanzar(cae if cae > 0 else fin)
+		if cae > 0 and sim != null and sim.tick >= cae:
+			# Se cae el anfitrión: pierde la sesión y la partida.
+			print("anfitrión: me caigo en el tick %d" % sim.tick)
+			cae = 0
+			s.cerrar()
+			sim.soltar()
+			sim = null
+			if not c.get("vuelve", false):
+				ok = true # lo comprueba el invitado (sale con 0 si guardó y la IA siguió)
+				espera_cliente = 90000
+				break
+			var t2 := Time.get_ticks_msec()
+			while Time.get_ticks_msec() - t2 < 1500:
+				await process_frame
+			s = SesionRed.nueva(self)
+			s.crear(puerto)
+			s.empezar.connect(_arrancar)
+			continue
 		if pausa > 0 and sim != null and sim.tick >= pausa and pausa_t < 0:
 			pausa_t = Time.get_ticks_msec()
 			s.pausa_local(true)
@@ -129,13 +157,16 @@ func _anfitrion(puerto: int, c: Dictionary) -> bool:
 					ok = ok and s.lock.D >= int(c["retardo_min"])
 				if c.has("basura"):
 					ok = ok and s.rechazados >= 4 and s.transporte.rechazados >= 1
+				if c.has("anfitrion"): # --- caida anfitrion --- siguió desde la foto del invitado
+					print("anfitrión: volví de cero y seguí desde la foto del invitado en el tick %d" % s.recuperada_en)
+					ok = ok and s.recuperada_en >= int(c["anfitrion"])
 				break
 	if sim != null and s.lock != null and s.lock.desync_tick >= 0:
 		print("anfitrión: desincronización en el tick %d" % s.lock.desync_tick)
 		ok = int(c["caida"]) < 0 and s.lock.desync_tick == _primer_hash(-int(c["caida"]))
 	# El cliente termina solo; se le da un rato y si no, se lo corta.
 	var t1 := Time.get_ticks_msec()
-	while OS.is_process_running(pid) and Time.get_ticks_msec() - t1 < 15000:
+	while OS.is_process_running(pid) and Time.get_ticks_msec() - t1 < espera_cliente:
 		await process_frame
 	if OS.is_process_running(pid):
 		OS.kill(pid)
@@ -143,7 +174,8 @@ func _anfitrion(puerto: int, c: Dictionary) -> bool:
 	elif OS.get_process_exit_code(pid) != 0:
 		print("anfitrión: el cliente salió con %d" % OS.get_process_exit_code(pid))
 		ok = false
-	s.cerrar()
+	if s != null:
+		s.cerrar()
 	s = null
 	if sim != null:
 		sim.soltar()
@@ -153,10 +185,15 @@ func _anfitrion(puerto: int, c: Dictionary) -> bool:
 
 func _cliente(puerto: int, fin: int, lat: int, vaiven: int, caida: int, basura := 0) -> bool:
 	await _conectar(puerto, lat, vaiven, "mapuches")
+	var anf := str(_a.get("anfitrion", "")) # --- caida anfitrion ---
+	if anf == "no_vuelve":
+		s.cfg["caida_anfitrion_s"] = 3
 	var t0 := Time.get_ticks_msec()
 	var cayo := false
 	while Time.get_ticks_msec() - t0 < ESPERA_MS:
 		await process_frame
+		if anf == "no_vuelve" and s != null and s.anfitrion_caido:
+			return await _sin_anfitrion(fin)
 		_avanzar(caida if caida > 0 and not cayo else fin)
 		if sim == null or s.lock == null:
 			continue
@@ -191,9 +228,42 @@ func _cliente(puerto: int, fin: int, lat: int, vaiven: int, caida: int, basura :
 			var t3 := Time.get_ticks_msec()
 			while Time.get_ticks_msec() - t3 < 500 + lat + vaiven:
 				await process_frame
-			return hs[0][fin] == hs[1][fin] and (caida <= 0 or s.recuperada_en >= caida)
+			if anf == "vuelve":
+				print("cliente: le mandé la foto al anfitrión en el tick %d" % s.foto_mandada_en)
+			return hs[0][fin] == hs[1][fin] and (caida <= 0 or s.recuperada_en >= caida) and (anf != "vuelve" or s.foto_mandada_en > 0)
 	print("cliente: no llegó al tick %d" % fin)
 	return false
+
+
+# --- caida anfitrion ---
+## El anfitrión no volvió: guarda (y comprueba que el guardado se carga igual), sigue contra
+## la IA hasta `fin` y comprueba que la IA maneja al anfitrión (entrena).
+func _sin_anfitrion(fin: int) -> bool:
+	var ruta := "user://red_prueba_caida.json"
+	var r := s.guardar_y_salir(ruta, false)
+	var d := Guardado.leer(r) if r != "" else {}
+	var ok_g := false
+	if not d.is_empty():
+		var s2 := Guardado.armar(d, int(d["tick"]))
+		# (acá el invitado ya corría las dos IA: en el juego, solo la del caído)
+		ok_g = s2.tick == sim.tick and s2.state_hash() == sim.state_hash() and s2.ais.any(func(ai: SimAI) -> bool: return ai.player == 0)
+		print("cliente: cargado tick %d/%d hash %d/%d ias %s" % [s2.tick, sim.tick, s2.state_hash(), sim.state_hash(), d["ias"]])
+		s2.soltar()
+		Guardado.borrar(r)
+	print("cliente: anfitrión caído en el tick %d · guardado %s · se carga igual %s" % [sim.tick, r, ok_g])
+	var antes := int(sim.players[0]["stats"]["entrenadas"])
+	var t_toma := sim.tick
+	s.seguir_con_ia()
+	s = null
+	while sim.tick < fin:
+		for i in PASOS_POR_CUADRO:
+			if sim.tick >= fin:
+				break
+			sim.step()
+		await process_frame
+	var despues := int(sim.players[0]["stats"]["entrenadas"])
+	print("cliente: la IA tomó al anfitrión en el tick %d · entrenó %d unidades hasta el tick %d" % [t_toma, despues - antes, sim.tick])
+	return ok_g and despues > antes and SesionRed.activa == null
 
 
 ## Mensajes rotos al anfitrión (caso basura): ninguno tiene que entrar ni romper nada.
