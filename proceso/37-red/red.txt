@@ -1,0 +1,10 @@
+anfitrión: pausa en el tick 307 (de 0), sigo
+anfitrión: tick 1800 hash 2982043249 · cliente 2982043249 · comandos por la red [33, 36] · edades 1/1
+CASO directo: OK · 1800 ticks · 32.9 s
+anfitrión: tick 600 hash 1426406523 · cliente 1426406523 · comandos por la red [17, 17] · edades 1/1
+CASO latencia: OK · 600 ticks · 32.3 s
+anfitrión: tick 900 hash 4208062880 · cliente 4208062880 · comandos por la red [21, 19] · edades 1/1
+CASO reconexion: OK · 900 ticks · 20.4 s
+anfitrión: desincronización en el tick 150
+CASO desincronizacion: OK · 300 ticks · 13.3 s
+RED: OK

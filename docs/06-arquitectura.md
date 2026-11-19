@@ -101,6 +101,8 @@ JSON en `data/`, legible por agentes y por diffs de git. Convenciones:
 
 Lockstep con retardo de entrada: los comandos locales se programan para `tick_actual + retardo`. La simulación ya recibe los comandos con número de tick, así que agregar red no cambia `src/sim/`. Detección de desincronización comparando `state_hash()` periódicamente.
 
+Prototipo en `src/net/` (proceso/37): `SimRed` (subclase de `Sim` que solo pisa `push_command`), `Lockstep` (turnos, inyección en orden de jugador, hashes, pausas), `RedTransporte` (ENet) y `SesionRed` (sala, reconexión con re-simulación). Parámetros en `data/red.json`. Prueba: `tests/red.gd`.
+
 ## Pruebas
 
 Se corren sin ventana:

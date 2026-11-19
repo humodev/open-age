@@ -274,6 +274,7 @@ func _apply_ambiente(terrain: String) -> void:
 
 func _new_game() -> void:
 	Palette.colores = [] # --- partida a medida ---
+	local = int(_args.get("red_jugador", "0")) # --- red --- en red el invitado es el jugador 1
 	# --- fluidez 6 ---
 	_replay_meta = {}
 	_nombre_repe = ""
@@ -317,13 +318,13 @@ func _new_game() -> void:
 	# --- fin veterano ronda 4 ---
 	var opts := {"terreno": terreno, "civs": slots.map(func(sl: Dictionary) -> String: return sl["civ"]), "equipos": slots.map(func(sl: Dictionary) -> int: return int(sl["equipo"]))}
 	opts.merge(match_opts(_args))
-	sim = Sim.new(_seed, slots.size(), null, opts)
+	sim = SimRed.new(_seed, slots.size(), null, opts) if _args.has("red") else Sim.new(_seed, slots.size(), null, opts) # --- red ---
 	var aivai := _args.has("aivai") or _menu_mode
 	sim.ais = []
 	var ai_ids := []
 	var ai_cfg := {}
 	for pid in sim.players.size():
-		if pid != local or aivai:
+		if (pid != local or aivai) and not (_args.has("red") and not slots[pid].get("ia", true)): # --- red --- el rival humano no es IA
 			var sl: Dictionary = slots[pid]
 			var ai := SimAI.new(sim, pid, sl.get("dificultad", "normal"))
 			ai.personality = sl.get("estilo", "normal")
@@ -498,6 +499,8 @@ func _build_scene(aivai: bool) -> void:
 		_menu.play_custom.connect(func(a: Dictionary) -> void: _start(a)) # --- partida a medida ---
 		if _args.get("abrir", "") == "partida":
 			_menu.open_custom.call_deferred()
+		if _args.get("abrir", "") == "red": # --- red ---
+			_menu.open_red.call_deferred()
 		if _args.get("abrir", "") == "campanas":
 			_open_campaigns.call_deferred(layer)
 		elif _args.get("abrir", "") == "intro":
@@ -1122,6 +1125,8 @@ func salir(codigo := 0) -> void:
 
 func to_menu() -> void:
 	guardar_partida("salida") # --- fluidez 6 ---
+	if SesionRed.activa != null: # --- red --- salir de la partida corta la sesión
+		SesionRed.activa.cerrar()
 	_args = {}
 	_menu_mode = true
 	restart()
@@ -1183,6 +1188,9 @@ func jugar_revancha(dif: String) -> void:
 
 
 func set_paused(p: bool) -> void:
+	if SesionRed.activa != null and SesionRed.activa.lock != null: # --- red --- pausas limitadas y compartidas
+		SesionRed.activa.pausa_local(p)
+		return
 	paused = p
 
 
@@ -1193,7 +1201,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	# --- veterano ronda 4 --- teclas de Opciones → Teclas (Pausa del teclado, siempre)
 	if Teclas.es(k.physical_keycode, "ayuda"):
 		hud._toggle_help()
-	elif Teclas.es(k.physical_keycode, "velocidad"):
+	elif Teclas.es(k.physical_keycode, "velocidad") and SesionRed.activa == null: # --- red --- sin velocidad en red
 		speed = 2.0 if speed == 1.0 else (4.0 if speed == 2.0 else 1.0)
 	elif k.physical_keycode == KEY_PAUSE or Teclas.es(k.physical_keycode, "pausa"):
 		hud.toggle_menu()
@@ -1207,9 +1215,20 @@ func _process(delta: float) -> void:
 		_acc += delta * speed
 		var tick_s := sim.tick_ms / 1000.0
 		var steps := 0
-		while _acc >= tick_s and steps < MAX_STEPS_PER_FRAME:
+		var tope := MAX_STEPS_PER_FRAME
+		var red: SesionRed = SesionRed.activa if SesionRed.activa != null and SesionRed.activa.lock != null else null # --- red ---
+		if red != null:
+			tope = red.pasos_por_cuadro(MAX_STEPS_PER_FRAME)
+			if tope > MAX_STEPS_PER_FRAME:
+				_acc = tick_s * tope
+		while _acc >= tick_s and steps < tope:
+			if red != null and not red.antes_del_paso(): # --- red --- falta el turno del rival, pausa o desincronización
+				_acc = minf(_acc, tick_s * MAX_STEPS_PER_FRAME)
+				break
 			var t0 := Time.get_ticks_usec()
 			sim.step()
+			if red != null:
+				red.despues_del_paso() # --- red ---
 			# Telemetría: un tick que no entra en su parte del cuadro a la velocidad actual.
 			var us := Time.get_ticks_usec() - t0
 			if us > int(sim.tick_ms * 1000 / maxf(1.0, speed)):
@@ -1219,7 +1238,7 @@ func _process(delta: float) -> void:
 			audio.on_events(sim.events)
 			_acc -= tick_s
 			steps += 1
-		if steps == MAX_STEPS_PER_FRAME:
+		if steps >= tope: # --- red --- (tope: MAX_STEPS_PER_FRAME fuera de la red)
 			_acc = 0.0
 		view.velocidad = speed
 		view.render(_acc / tick_s, delta)
