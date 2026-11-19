@@ -1625,63 +1625,31 @@ func _aura_combat() -> void:
 # --- fin paso 4 ---
 
 
-# --- rendimiento 3 --- Las celdas no se borran y se vuelven a crear en cada tick: se vacían las
-# que se usaron y se vuelven a llenar en el mismo orden (`actives`). Mismo contenido, sin crear
-# un arreglo por celda ocupada en cada tick. Las celdas vacías quedan en el diccionario (todos
-# los que leen usan `get` y recorren). Los edificios guardan sus celdas (no se mueven).
-var _grid_used := PackedInt32Array()
-var _eh_used := PackedInt32Array()
-var _bcells := {} # id de edificio -> PackedInt32Array de claves de `_ehash`
 func _rebuild_hashes() -> void:
-	for k in _grid_used:
-		(_grid[k] as Array).clear()
-	_grid_used.clear()
-	for k in _eh_used:
-		(_ehash[k] as Array).clear()
-	_eh_used.clear()
+	_grid.clear()
+	_ehash.clear()
 	_emask.clear()
 	for e in actives:
 		if not e.alive or e.inside >= 0:
 			continue
 		if e.is_unit():
 			var k := (e.x / P) * 4096 + e.y / P
-			var cell = _grid.get(k)
-			if cell == null:
-				cell = []
-				_grid[k] = cell
-			if (cell as Array).is_empty():
-				_grid_used.append(k)
-			(cell as Array).append(e)
+			if not _grid.has(k):
+				_grid[k] = []
+			_grid[k].append(e)
 			var ek := (e.x / EC) * 1024 + e.y / EC
-			var ec = _ehash.get(ek)
-			if ec == null:
-				ec = []
-				_ehash[ek] = ec
-			if (ec as Array).is_empty():
-				_eh_used.append(ek)
-			(ec as Array).append(e)
+			if not _ehash.has(ek):
+				_ehash[ek] = []
+			_ehash[ek].append(e)
 			_emask[ek] = int(_emask.get(ek, 0)) | (1 << (e.owner + 1))
 		elif e.is_building():
-			var kk = _bcells.get(e.id)
-			if kk == null:
-				var nk := PackedInt32Array()
-				for cx in range(e.tx * P / EC, ((e.tx + e.w) * P - 1) / EC + 1):
-					for cy in range(e.ty * P / EC, ((e.ty + e.h) * P - 1) / EC + 1):
-						nk.append(cx * 1024 + cy)
-				_bcells[e.id] = nk
-				kk = nk
-			var keys: PackedInt32Array = kk
-			var bit := 1 << (e.owner + 1)
-			for ek in keys:
-				var ec = _ehash.get(ek)
-				if ec == null:
-					ec = []
-					_ehash[ek] = ec
-				if (ec as Array).is_empty():
-					_eh_used.append(ek)
-				(ec as Array).append(e)
-				_emask[ek] = int(_emask.get(ek, 0)) | bit
-# --- fin rendimiento 3 ---
+			for cx in range(e.tx * P / EC, ((e.tx + e.w) * P - 1) / EC + 1):
+				for cy in range(e.ty * P / EC, ((e.ty + e.h) * P - 1) / EC + 1):
+					var ek := cx * 1024 + cy
+					if not _ehash.has(ek):
+						_ehash[ek] = []
+					_ehash[ek].append(e)
+					_emask[ek] = int(_emask.get(ek, 0)) | (1 << (e.owner + 1))
 
 
 func _update_fog(pid: int) -> void:
