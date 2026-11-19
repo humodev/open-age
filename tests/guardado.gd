@@ -31,6 +31,19 @@ func _init() -> void:
 	_ordenes(c, 1200)
 	_comparar("campaña etiopía 1 en el minuto 2", c, 1200, metac, 2400)
 
+	# 4. Instantáneas (proceso/37-red/02): el mismo hash en T+600 con y sin pasar por la foto en T.
+	_foto("foto 1v1 en el minuto 3", meta, 1800)
+	_foto("foto 2v2 en el minuto 5", meta4, 3000)
+	var opts8 := {"civs": ["mapuches", "etiopia", "palmares", "ayutthaya", "guaranies", "tawantinsuyu", "adal", "tupies"], "terreno": "llano", "equipos": [0, 1, 0, 1, 0, 1, 0, 1]}
+	var ia8 := {}
+	for p in range(1, 8):
+		ia8[str(p)] = {"dificultad": "dificil", "estilo": "normal"}
+	_foto("foto 4v4 en el minuto 4", {"semilla": 9, "opciones": opts8, "ias": [1, 2, 3, 4, 5, 6, 7], "ia_cfg": ia8}, 2400)
+	_foto("foto campaña etiopía 1 en el minuto 2", metac, 1200)
+	# 5. Por archivo (.json + .foto): cargar en el tick del guardado sin re-simular, y saltar
+	# en la repetición desde la foto periódica más cercana.
+	_archivo("archivo 1v1 de 7 min, salto al 6", meta, 4200, 3600)
+
 	print("GUARDADO: %s" % ("OK" if _fallas == 0 else "FALLO (%d)" % _fallas))
 	quit(0 if _fallas == 0 else 1)
 
@@ -78,6 +91,76 @@ func _comparar(nombre: String, a: Sim, t: int, meta: Dictionary, t2: int) -> voi
 	print("%-34s comandos=%d · hash en T %d / cargada %d · carga %d ms · en T2 %d / %d → %s" % [nombre, (back["comandos"] as Array).size(), int(back["hash"]), hb, ms, a.state_hash(), b.state_hash(), "OK" if ok and ok2 else "FALLO"])
 	if not (ok and ok2):
 		_fallas += 1
+
+
+## Juega hasta T, saca la foto, la vuelca en la partida armada de nuevo y sigue las dos
+## con las mismas órdenes hasta T+600: mismo hash y la misma foto byte a byte.
+func _foto(nombre: String, meta: Dictionary, t: int) -> void:
+	var a := Guardado.armar(meta.merged({"comandos": []}))
+	_ordenes(a, t)
+	var t0 := Time.get_ticks_msec()
+	var bytes := SimEstado.tomar(a)
+	var ms_tomar := Time.get_ticks_msec() - t0
+	t0 = Time.get_ticks_msec()
+	var b := Guardado.armar(meta.merged({"comandos": []}))
+	var ms_armar := Time.get_ticks_msec() - t0
+	var ok := SimEstado.cargar(b, bytes)
+	var ms_cargar := Time.get_ticks_msec() - t0
+	ok = ok and b.tick == t and b.state_hash() == a.state_hash()
+	for s in [a, b]:
+		_ordenes_desde(s, t + 600)
+	var ha := a.state_hash()
+	var hb := b.state_hash()
+	var igual := SimEstado.tomar(a) == SimEstado.tomar(b)
+	var bien := ok and ha == hb and igual
+	print("%-38s %d entidades · foto %d KB en %d ms · carga %d ms (armar %d) · T+600 %d / %d · foto igual %s → %s" % [nombre, a.entities.size(), bytes.size() / 1024, ms_tomar, ms_cargar, ms_armar, ha, hb, igual, "OK" if bien else "FALLO"])
+	if not bien:
+		_fallas += 1
+
+
+func _archivo(nombre: String, meta: Dictionary, t: int, salto: int) -> void:
+	var a := Guardado.armar(meta.merged({"comandos": []}))
+	var h_salto := -1
+	while a.tick < t:
+		if a.tick % 300 == 150:
+			for e in a.actives:
+				if e.owner == 0 and e.capital:
+					a.push_command({"t": "train", "player": 0, "building": e.id, "type": "aldeano"})
+					break
+		a.step()
+		Guardado.foto_periodica(a)
+		if a.tick == salto:
+			h_salto = a.state_hash()
+	var path := "user://pruebas/guardado-foto.json"
+	Guardado.escribir(path, Guardado.datos(meta, a))
+	var d := Guardado.leer(path)
+	var t0 := Time.get_ticks_msec()
+	var b := Guardado.armar(d, int(d["tick"]))
+	var ms := Time.get_ticks_msec() - t0
+	var ok := b.tick == t and b.state_hash() == a.state_hash()
+	t0 = Time.get_ticks_msec()
+	var c := Guardado.armar(d, salto)
+	var desde := c.tick
+	Guardado.avanzar(c, salto)
+	var ms2 := Time.get_ticks_msec() - t0
+	var ok2 := desde > 0 and desde < salto and c.state_hash() == h_salto
+	Guardado.avanzar(c, t)
+	var ok3 := c.state_hash() == a.state_hash()
+	print("%-38s fotos %s · carga %d ms · salto desde %d en %d ms · %s" % [nombre, d.get("fotos_ticks", []), ms, desde, ms2, "OK" if ok and ok2 and ok3 else "FALLO (%s %s %s)" % [ok, ok2, ok3]])
+	Guardado.borrar(path)
+	if not (ok and ok2 and ok3):
+		_fallas += 1
+
+
+## Las mismas órdenes en las dos: entrenar aldeanos en la capital.
+func _ordenes_desde(s: Sim, hasta: int) -> void:
+	while s.tick < hasta:
+		if s.tick % 200 == 100:
+			for e in s.actives:
+				if e.owner == 0 and e.capital:
+					s.push_command({"t": "train", "player": 0, "building": e.id, "type": "aldeano"})
+					break
+		s.step()
 
 
 func _finalize() -> void:

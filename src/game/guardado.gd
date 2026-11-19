@@ -4,10 +4,15 @@ extends RefCounted
 ## determinista y por comandos: una partida es «cómo se armó (semilla, opciones, IA o misión)
 ## + los comandos de los humanos hasta el tick T». Cargar es armarla igual y re-simular hasta
 ## T sin dibujo. Una repetición es lo mismo, guardado al terminar, y se mira desde un tick.
+##
+## --- instantaneas --- (proceso/37-red/02) Junto al .json va un .foto (binario, zstd) con la
+## foto del estado en el tick del guardado (SimEstado) y, en las repeticiones, una foto cada
+## `fotos_cada_min` minutos. Cargar arma la partida en el tick 0, vuelca la foto más cercana
+## que no se pase y re-simula solo lo que falta. Sin .foto (guardados viejos), como antes.
 
 const DIR_PARTIDAS := "user://partidas/"
 const DIR_REPES := "user://repeticiones/"
-const VERSION := 1
+const VERSION := 2 # 2: con .foto al lado
 ## Lo que no tiene que volver a pasar al cargar (capturas, pruebas, la carga misma).
 const ARGS_FUERA := ["autotest", "shot", "shot-at", "panel", "select", "cam", "abrir", "ayuda", "grilla", "cargar", "replay", "desde", "velocidad", "salir-a", "perf", "contar-avisos", "menu"]
 
@@ -39,6 +44,11 @@ static func datos(meta: Dictionary, sim: Sim) -> Dictionary:
 	d["hash"] = sim.state_hash()
 	d["ms"] = sim.tick * sim.tick_ms
 	d["comandos"] = sim.recording.duplicate(true)
+	# --- instantaneas --- la foto de este tick (la periódica si ya se sacó) y las periódicas
+	var fotos: Dictionary = sim.get_meta("fotos", {})
+	d["foto"] = fotos[sim.tick] if fotos.has(sim.tick) else SimEstado.tomar(sim)
+	if not fotos.is_empty():
+		d["fotos"] = fotos.duplicate()
 	var civs: Array = []
 	for p in sim.players:
 		civs.append(str(p["civ"]))
@@ -49,11 +59,26 @@ static func datos(meta: Dictionary, sim: Sim) -> Dictionary:
 
 static func escribir(path: String, d: Dictionary) -> bool:
 	DirAccess.make_dir_recursive_absolute(path.get_base_dir())
+	# --- instantaneas --- las fotos van al .foto; el .json queda chico (la lista lo lee entero)
+	var j := d.duplicate()
+	for k in ["foto", "fotos", "_ruta"]:
+		j.erase(k)
+	if d.has("foto"):
+		var fotos: Dictionary = d.get("fotos", {})
+		j["fotos_ticks"] = fotos.keys()
+		var fb := FileAccess.open(ruta_foto(path), FileAccess.WRITE)
+		if fb == null:
+			push_error("guardado: no se pudo escribir %s" % ruta_foto(path))
+			return false
+		fb.store_buffer(var_to_bytes({"tick": int(d["tick"]), "foto": d["foto"], "fotos": fotos}))
+		fb.close()
+	elif FileAccess.file_exists(ruta_foto(path)):
+		DirAccess.remove_absolute(ruta_foto(path))
 	var f := FileAccess.open(path, FileAccess.WRITE)
 	if f == null:
 		push_error("guardado: no se pudo escribir %s" % path)
 		return false
-	f.store_string(JSON.stringify(d))
+	f.store_string(JSON.stringify(j))
 	f.close()
 	return true
 
@@ -62,12 +87,91 @@ static func leer(path: String) -> Dictionary:
 	if not FileAccess.file_exists(path):
 		return {}
 	var v: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
-	return v if v is Dictionary and (v as Dictionary).has("comandos") else {}
+	if not (v is Dictionary and (v as Dictionary).has("comandos")):
+		return {}
+	(v as Dictionary)["_ruta"] = path # --- instantaneas --- para encontrar el .foto
+	return v
+
+
+# --- instantaneas ---
+static func ruta_foto(path: String) -> String:
+	return path.get_basename() + ".foto"
+
+
+## Borra un guardado con su .foto.
+static func borrar(path: String) -> void:
+	DirAccess.remove_absolute(path)
+	if FileAccess.file_exists(ruta_foto(path)):
+		DirAccess.remove_absolute(ruta_foto(path))
+
+
+## Las fotos de un guardado: {tick: bytes} (la del tick del guardado y las periódicas).
+## Vienen en `d` si se acaba de armar en memoria, o del .foto al lado del .json.
+static func fotos_de(d: Dictionary) -> Dictionary:
+	var out := {}
+	if d.has("foto"):
+		out = (d.get("fotos", {}) as Dictionary).duplicate()
+		out[int(d["tick"])] = d["foto"]
+		return out
+	var ruta := ruta_foto(str(d.get("_ruta", "")))
+	if d.has("_ruta") and FileAccess.file_exists(ruta):
+		var v: Variant = bytes_to_var(FileAccess.get_file_as_bytes(ruta))
+		if v is Dictionary and int((v as Dictionary).get("tick", -1)) == int(d.get("tick", -2)):
+			out = ((v as Dictionary).get("fotos", {}) as Dictionary).duplicate()
+			out[int(v["tick"])] = v["foto"]
+	return out
+
+
+## Foto periódica para saltar en la repetición: pasados `fotos_cada_min` minutos de juego
+## desde la última, se guarda una en la partida (meta "fotos"). La toma main.gd entre dos
+## pasos, una vez por cuadro, antes del autoguardado (que con el mismo intervalo la reusa).
+static func foto_periodica(sim: Sim) -> void:
+	var cada := int(cfg().get("fotos_cada_min", 5)) * 60000 / maxi(1, sim.tick_ms)
+	if cada <= 0 or sim.tick < cada:
+		return
+	var fotos: Dictionary = sim.get_meta("fotos", {})
+	var ultima := 0
+	for t: int in fotos:
+		ultima = maxi(ultima, t)
+	if sim.tick - ultima >= cada:
+		fotos[sim.tick] = SimEstado.tomar(sim)
+		sim.set_meta("fotos", fotos)
+# --- fin instantaneas ---
 
 
 ## Arma la simulación de un guardado o una repetición en el tick 0, con los comandos
 ## programados y ya grabados (si se vuelve a guardar, siguen ahí).
-static func armar(d: Dictionary) -> Sim:
+## --- instantaneas --- con `hasta` > 0, vuelca la foto más cercana a `hasta` que no se pase
+## (la simulación queda en ese tick; falta re-simular de ahí a `hasta` con avanzar()).
+static func armar(d: Dictionary, hasta := -1) -> Sim:
+	var s := _armar0(d)
+	if hasta <= 0:
+		return s
+	var fotos := fotos_de(d)
+	var mejor := -1
+	for t: int in fotos:
+		if t <= hasta and t > mejor:
+			mejor = t
+	if mejor <= 0:
+		return s
+	if not SimEstado.cargar(s, fotos[mejor]):
+		push_warning("guardado: la foto del tick %d no sirve; se re-simula desde el principio" % mejor)
+		return _armar0(d)
+	# La foto trae lo grabado hasta su tick; lo grabado después se vuelve a programar.
+	var cmds: Array = Sim.intify(d["comandos"])
+	var resto := cmds.slice(s.recording.size())
+	s.recording = cmds.duplicate(true)
+	s.schedule(resto)
+	# Las fotos siguen con la partida (si se vuelve a guardar, no se pierden).
+	var guardar := {}
+	for t: int in fotos:
+		if t <= s.tick:
+			guardar[t] = fotos[t]
+	s.set_meta("fotos", guardar)
+	return s
+
+
+static func _armar0(d: Dictionary) -> Sim:
 	var s: Sim
 	if d.has("campana"):
 		var camp: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/campanas/%s.json" % d["campana"]))
@@ -100,7 +204,7 @@ static func avanzar(s: Sim, hasta: int, ms: int = -1) -> bool:
 ## Lo que identifica la partida dentro del guardado (sin comandos ni estado).
 static func meta_de(d: Dictionary) -> Dictionary:
 	var m := d.duplicate(true)
-	for k in ["comandos", "tick", "hash", "ms", "version", "civs", "terreno"]:
+	for k in ["comandos", "tick", "hash", "ms", "version", "civs", "terreno", "foto", "fotos", "fotos_ticks", "_ruta"]:
 		m.erase(k)
 	return m
 
@@ -127,7 +231,7 @@ static func lista(dir: String) -> Array:
 static func podar(dir: String, prefijo: String, n: int) -> void:
 	var l := lista(dir).filter(func(it: Array) -> bool: return (it[0] as String).get_file().begins_with(prefijo))
 	for i in range(n, l.size()):
-		DirAccess.remove_absolute(l[i][0])
+		borrar(l[i][0])
 
 
 ## Una línea para la lista: «2026-11-19 21:40 · Autoguardado · guaranies contra mapuches · llano · 12:30».
@@ -195,7 +299,7 @@ static func dialogo(padre: Node, titulo: String, dir: String, al_elegir: Callabl
 		x.text = "Borrar"
 		x.tooltip_text = "Borra este archivo"
 		x.pressed.connect(func() -> void:
-			DirAccess.remove_absolute(path)
+			borrar(path)
 			row.queue_free())
 		row.add_child(x)
 		items.add_child(row)
