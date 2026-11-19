@@ -751,22 +751,37 @@ func production_pct(b: SimEntity) -> int:
 
 # ---------------------------------------------------------------- Movimiento y combate
 
+# --- rendimiento 4 --- `speed` corre una vez por paso de cada unidad que camina. Los dos
+# porcentajes de reglas.movimiento se leen una vez (los datos no cambian en la partida), la
+# casilla se calcula una vez, y el agua y el camino se miran antes que los modificadores del
+# dueño: el mismo resultado, con las búsquedas de diccionario solo donde hacen falta.
+var _mv_frenado := -1
+var _mv_camino := 0
+
+
 func speed(e: SimEntity) -> int:
+	if _mv_frenado < 0:
+		var mv: Dictionary = sim.data.reglas["movimiento"]
+		_mv_frenado = int(mv["frenado_pct"])
+		_mv_camino = int(mv["camino_pct"])
 	var s := e.speed
-	var mv: Dictionary = sim.data.reglas["movimiento"]
 	if e.slow_until > sim.tick:
-		s = s * int(mv["frenado_pct"]) / 100
+		s = s * _mv_frenado / 100
+	var n := sim.map.n
+	var tx := e.x / P
+	var ty := e.y / P
+	var idx := clampi(ty, 0, n - 1) * n + clampi(tx, 0, n - 1)
 	if not _slow.is_empty() and e.owner >= 0: # --- paso 7 --- inundación de Ollantaytambo, crecida de Ayutthaya
-		var sl: Array = _slow.get(clampi(e.y / P, 0, sim.map.n - 1) * sim.map.n + clampi(e.x / P, 0, sim.map.n - 1), [])
+		var sl: Array = _slow.get(idx, [])
 		if not sl.is_empty() and sim.enemies(int(sl[0]), e.owner):
 			s = s * (100 - int(sl[1])) / 100
 	# --- paso 6 --- Ygá: las tropas propias cruzan los vados más rápido (guaraníes).
-	if e.owner >= 0:
+	if e.owner >= 0 and tx >= 0 and ty >= 0 and tx < n and ty < n and sim.map.water[idx] == 2:
 		var vv := sim.mod(e.owner, "vel_vado")
-		if vv > 0 and sim.map.in_bounds(e.x / P, e.y / P) and sim.map.water[(e.y / P) * sim.map.n + e.x / P] == 2:
+		if vv > 0:
 			s = s * (100 + vv) / 100
-	if _roads[clampi(e.y / P, 0, sim.map.n - 1) * sim.map.n + clampi(e.x / P, 0, sim.map.n - 1)] != 0:
-		var pct := int(mv["camino_pct"])
+	if _roads[idx] != 0:
+		var pct := _mv_camino
 		for p in sim.players:
 			if has(p["id"], "caminos"):
 				pct = int(m(p["id"], "caminos")["velocidad_pct"])
