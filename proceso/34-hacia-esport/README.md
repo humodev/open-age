@@ -36,4 +36,5 @@ Al final de cada iteración se mide el balance con un torneo.
 - **Caminos:** ya son el 1 % del tick. Lo que pesa ahora es el costo por entidad (IA, recolección, movimiento).
 - **Pendiente:** la meta de p95 < 40 ms con 8 jugadores. El bench de 6 IA empeora su peor tick por `_expansion_site`.
 - **Al fusionar todo:** hash **1417676642**; comercio, equidad y jugabilidad OK. |
-| — | Revisión de los expertos y torneo | Después de 1a y 1b |
+| — | **Torneo 40** ([resultados](pruebas-it1/40-torneo-iteracion-1.txt)), con todo junto | Tawantinsuyu 42, mapuches 54, guaraníes 58, Etiopía 56, Palmares 48, Ayutthaya 42 %.<br>• **Banda:** todas entre 42 y 58 %, la más pareja de todo el proyecto (el torneo 39 daba 34–64).<br>• **Edad IV:** aparece en 86 de 150 partidas de 30 minutos (antes, 5 a 16).<br>• **Por destrucción:** bajan de 60–80 a 39; se juega más tiempo y gana más el que lleva ventaja en puntos. |
+| — | Revisión de los expertos | En curso |
