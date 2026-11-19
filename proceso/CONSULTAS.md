@@ -644,3 +644,19 @@ a) Así *(por defecto)* · b) Otra
 - **C-100 · (fluidez) ¿Reparar cuesta?** En AoE4 cuesta una parte del edificio; acá hoy es gratis. Por defecto: el 50 % del costo, proporcional a lo reparado.
 - **C-101 · (fluidez) Muralla de piedra y planos.** ¿Una muralla de piedra en la II con torres encima, y la empalizada que se refuerza? ¿Planos para dibujar la base sin pagar? Por defecto: la muralla sí; los planos, después.
 - **C-101 respondida (2026-11-18):** muralla de piedra sí, en la edad II.
+
+## Decisiones del 2026-11-19
+
+- **Comercio (etapa 33):** «sí». Se aprueba el diseño de los expertos con lo que propone por defecto:
+  - desde la edad III, al 70 %;
+  - entre mercados propios, al 50 %;
+  - arte con maqueta procedural (destraba C-80);
+  - los nombres (*qhatu*, «tropa de yerba», «mascate») pasan a los historiadores.
+- **Cambios competitivos (ronda 8, 04):** «sí». Entran:
+  - un triángulo de contadores más marcado;
+  - el lancero en la edad I;
+  - sitios que paguen;
+  - asedio de área esquivable, con ataque al suelo.
+
+  Los hitos más cortos y la empalizada se deciden en las iteraciones, con medidas.
+- **Pedido:** «Iterá al menos dos veces, hasta que estemos cerca de un esport en cuanto a diseño». Ciclo: implementar, que los expertos revisen la competitividad, ajustar, y otra vez.
