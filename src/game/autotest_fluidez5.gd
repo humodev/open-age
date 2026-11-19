@@ -118,7 +118,8 @@ static func correr(m: Node, check0: Callable) -> void:
 	await _clic(m, spl, MOUSE_BUTTON_RIGHT)
 	var sigue_lider := await _hasta(m, func() -> bool: return escolta.order == SimEntity.Order.FOLLOW and escolta.esc == lider.id, 60)
 	check.call("fluidez 5: clic derecho en una unidad propia la escolta (orden %d, sigue a %d)" % [escolta.order, escolta.esc], sigue_lider)
-	await m._frames(90)
+	# Espera en ticks de la simulación, no en cuadros: con la máquina cargada 90 cuadros no alcanzan.
+	await _hasta(m, func() -> bool: return Sim.dist(escolta.x, escolta.y, lider.x, lider.y) <= 4000, 600)
 	var d := Sim.dist(escolta.x, escolta.y, lider.x, lider.y)
 	check.call("fluidez 5: el escolta va con la patrulla (a %d)" % d, d <= 4000 and escolta.order == SimEntity.Order.FOLLOW)
 	m.get_viewport().get_texture().get_image().save_png("screenshots/fluidez5_escolta.png")
