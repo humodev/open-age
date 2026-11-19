@@ -731,7 +731,11 @@ func ai_think(ai: SimAI, p: Dictionary, by_type: Dictionary, vill: Array[SimEnti
 		want = maxi(want, int(ic.get("sin_arcilla", 16)))
 	want = mini(want, int(lc.get("max", 16)))
 	# --- esport 2b --- en el 1v1, unos pocos aunque ahorre para el hito (el que va atrás también comercia)
-	var while_saving := int(ic.get("ahorrando_1v1", 0)) if duel() else 0
+	var while_saving := 0
+	if duel():
+		for q in sim.players.size():
+			if sim.enemies(pid, q) and int(sim.players[q]["age"]) > age:
+				while_saving = int(ic.get("ahorrando_1v1", 0)) # solo el que va atrás en edad
 	if (not saving or traders.size() + queued < while_saving) and traders.size() + queued < want and queued == 0:
 		var cost := sim.dp(pid).cost_of("comerciante", age)
 		if sim.can_afford(pid, cost) and (sim.dp(pid).edificios.get("mercado", {}).get("produce", []) as Array).has("comerciante"):
