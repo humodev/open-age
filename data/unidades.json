@@ -52,9 +52,10 @@
     "desc": "Asedio de área: pega a todos los enemigos cerca del blanco (menos en el borde). Le hace poco a los edificios. Sin escolta muere: el choque la rompe y la distancia la daña de a poco."
   },
   "jinete": {
+    "_doc": "--- esport 4a --- Armadura de distancia 2 → 4 (proceso/34-hacia-esport/07a): el hondero le hace 3 y no 5, y 13 jinetes le ganan a 30 honderos a igual costo en la II (antes perdían 5 de 5 sin micro). Como el jinete con armadura alta contra el arquero en masa de AoE4.",
     "nombre": "Jinete", "funcion": "choque", "edad_min": 2, "pob": 2,
     "costo": { "alimento": 100, "riqueza": 70 }, "tiempo_ms": 22000,
-    "pv": 170, "armadura": 1, "armadura_distancia": 2, "ataque": 13, "alcance": 500, "cadencia_ms": 1250,
+    "pv": 170, "armadura": 1, "armadura_distancia": 4, "ataque": 13, "alcance": 500, "cadencia_ms": 1250,
     "velocidad": 2200, "vision": 9000, "radio": 380, "montado": true
   },
   "arcabucero": {
@@ -72,8 +73,8 @@
     "desc": "Tropa de élite de la edad IV: cara, sin riqueza, y fuerte por casilla de población. Gasta el alimento y la madera que sobran en el final."
   },
   "guardia_distancia": {
-    "_doc": "--- esport 2a --- Guardia de distancia: el par de la guardia para la línea de tiro (proceso/34-hacia-esport/03a). Común a todos los pueblos en la IV, se entrena junto al hondero (el campo de tiro, el cuartel mapuche y etíope, el mocambo). Como la guardia: cara, sin riqueza, fuerte por casilla de población. Cada pueblo le pone arma y tela en data/arte_animaciones.json → tropas.por_civ. Números tentativos. Esport 3b (proceso/34-hacia-esport/05b): alcance 6000 → 5000 y velocidad 1200 → 1100, para que no le gane escalonando a su contador.",
-    "nombre": "Guardia de distancia", "funcion": "distancia", "edad_min": 4, "pob": 2, "junto_a": "hondero",
+    "_doc": "--- esport 2a --- Guardia de distancia: el par de la guardia para la línea de tiro (proceso/34-hacia-esport/03a). Común a todos los pueblos en la IV, se entrena junto al hondero (el campo de tiro, el cuartel mapuche y etíope, el mocambo). Como la guardia: cara, sin riqueza, fuerte por casilla de población. Cada pueblo le pone arma y tela en data/arte_animaciones.json → tropas.por_civ. Números tentativos. Esport 3b (proceso/34-hacia-esport/05b): alcance 6000 → 5000 y velocidad 1200 → 1100, para que no le gane escalonando a su contador. Esport 4a (proceso/34-hacia-esport/07a): bono propio +12 contra la línea (+18 en total con el +6 de reglas.bonos), para que le gane a su presa: con +12 en total, 5 contra 22 lanceros sin micro ganaba 1 de 5; con +18, 4 de 5.",
+    "nombre": "Guardia de distancia", "funcion": "distancia", "bono": { "linea": 12 }, "edad_min": 4, "pob": 2, "junto_a": "hondero",
     "costo": { "alimento": 350, "madera": 100 }, "tiempo_ms": 30000,
     "pv": 190, "armadura": 1, "armadura_distancia": 3, "ataque": 17, "alcance": 5000, "cadencia_ms": 1750,
     "velocidad": 1100, "vision": 9000, "radio": 240,

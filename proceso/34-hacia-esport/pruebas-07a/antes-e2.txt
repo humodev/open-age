@@ -1,0 +1,24 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+# micro_matriz · civs capa común / capa común · edad 2 · parche ninguno
+# reacción del micro de A: 400 ms
+# bonos {"choque":{"distancia":8},"distancia":{"linea":6},"linea":{"choque":6,"montado":6}}
+# guerrero: pv 120, ataque 11, armadura 1/0, alcance 450, cadencia 1250, velocidad 1350, costo {"alimento":60,"riqueza":25}
+# hondero: pv 65, ataque 7, armadura 0/0, alcance 5500, cadencia 1750, velocidad 1250, costo {"alimento":30,"madera":45}
+# lancero: pv 140, ataque 8, armadura 3/0, alcance 650, cadencia 1500, velocidad 1100, costo {"alimento":60,"madera":25,"riqueza":10}
+# jinete: pv 170, ataque 13, armadura 1/2, alcance 500, cadencia 1250, velocidad 2200, costo {"alimento":100,"riqueza":70}
+# catapulta: pv 150, ataque 16, armadura 0/1, alcance 7000, cadencia 5000, velocidad 750, costo {"madera":150,"riqueza":100}
+# 5 variantes por pelea (semilla 3..7, B corrido 0, -1, 1, -2, 2 casillas)
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+custom | hondero:30 | jinete:13 | nada | - | 71.5 s | 5/5 | 12.6/30 | 0.0/13 | 2250 / 2210
+custom | hondero:30 | jinete:13 | escalonar | - | 79.2 s | 3/5 | 11.8/30 | 1.2/13 | 2250 / 2210
+custom | hondero:10 | jinete:5 | nada | - | 36.8 s | 1/5 | 0.4/10 | 3.4/5 | 750 / 850
+custom | hondero:10 | jinete:5 | escalonar | - | 34.8 s | 0/5 | 0.0/10 | 4.2/5 | 750 / 850
+custom | hondero:30 | guerrero:26 | escalonar | - | 66.1 s | 5/5 | 19.2/30 | 0.0/26 | 2250 / 2210
+custom | hondero:30 | guerrero:26 | nada | - | 106.2 s | 1/5 | 3.8/30 | 4.0/26 | 2250 / 2210
+custom | hondero:30 | lancero:22 | nada | - | 31.9 s | 5/5 | 30.0/30 | 0.0/22 | 2250 / 2090
+custom | hondero:10 | guerrero:9 | escalonar | - | 55.7 s | 1/5 | 0.8/10 | 4.2/9 | 750 / 765
+WARNING: 97555 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 10 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

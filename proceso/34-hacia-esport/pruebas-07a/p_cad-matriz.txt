@@ -1,0 +1,52 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+# micro_matriz · civs capa común / capa común · edad 2 · parche proceso/34-hacia-esport/pruebas-07a/p_cad.json
+# reacción del micro de A: 400 ms
+# bonos {"choque":{"distancia":8},"distancia":{"linea":6},"linea":{"choque":6,"montado":6}}
+# guerrero: pv 120, ataque 11, armadura 1/0, alcance 450, cadencia 1250, velocidad 1350, costo {"alimento":60,"riqueza":25}
+# hondero: pv 65, ataque 7, armadura 0/0, alcance 5500, cadencia 2000, velocidad 1250, costo {"alimento":30,"madera":45}
+# lancero: pv 140, ataque 8, armadura 3/0, alcance 650, cadencia 1500, velocidad 1100, costo {"alimento":60,"madera":25,"riqueza":10}
+# jinete: pv 170, ataque 13, armadura 1/2, alcance 500, cadencia 1250, velocidad 2200, costo {"alimento":100,"riqueza":70}
+# catapulta: pv 150, ataque 16, armadura 0/1, alcance 7000, cadencia 5000, velocidad 750, costo {"madera":150,"riqueza":100}
+# 5 variantes por pelea (semilla 3..7, B corrido 0, -1, 1, -2, 2 casillas)
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+base | guerrero:10 | guerrero:10 | nada | - | 58.2 s | 3/5 | 3.2/10 | 1.4/10 | 850 / 850
+base | hondero:10 | hondero:10 | nada | - | 41.5 s | 2/5 | 2.0/10 | 1.4/10 | 750 / 750
+base | lancero:10 | lancero:10 | nada | - | 96.9 s | 3/5 | 2.8/10 | 1.4/10 | 950 / 950
+base | hondero:10 | guerrero:10 | nada | - | 19.2 s | 0/5 | 0.0/10 | 8.0/10 | 750 / 850
+base | hondero:10 | guerrero:10 | foco | - | 19.5 s | 0/5 | 0.0/10 | 7.4/10 | 750 / 850
+base | hondero:10 | lancero:10 | nada | - | 34.6 s | 5/5 | 6.8/10 | 0.0/10 | 750 / 950
+base | guerrero:10 | lancero:10 | nada | - | 31.9 s | 0/5 | 0.0/10 | 6.4/10 | 850 / 950
+base | jinete:5 | hondero:10 | nada | - | 43.3 s | 4/5 | 3.2/5 | 0.4/10 | 850 / 750
+base | lancero:10 | jinete:5 | nada | - | 30.7 s | 5/5 | 9.0/10 | 0.0/5 | 950 / 850
+base | guerrero:10 | jinete:5 | nada | - | 52.1 s | 4/5 | 7.6/10 | 0.4/5 | 850 / 850
+kiteo | hondero:10 | guerrero:10 | kitear | - | 70.5 s | 0/5 | 0.0/10 | 9.2/10 | 750 / 850
+kiteo | hondero:10 | guerrero:10 | escalonar | - | 70.7 s | 1/5 | 0.6/10 | 4.8/10 | 750 / 850
+kiteo | hondero:10 | lancero:10 | kitear | - | 67.9 s | 5/5 | 10.0/10 | 0.0/10 | 750 / 950
+kiteo | hondero:10 | lancero:10 | escalonar | - | 40.7 s | 5/5 | 10.0/10 | 0.0/10 | 750 / 950
+kiteo | hondero:10 | jinete:5 | escalonar | - | 29.2 s | 0/5 | 0.0/10 | 4.8/5 | 750 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | nada | - | 39.5 s | 5/5 | 7.2/10 | 0.0/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | mantener | - | 106.2 s | 3/5 | 6.2/10 | 0.8/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | foco | - | 60.6 s | 4/5 | 6.8/10 | 0.4/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | mantener+escalonar | - | 82.4 s | 5/5 | 7.0/10 | 0.0/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | guerrero:10 | nada | linea | 39.5 s | 5/5 | 7.2/10 | 0.0/10 | 850 / 850
+mezcla | lancero:5+hondero:5 | jinete:5 | nada | - | 30.2 s | 5/5 | 9.4/10 | 0.0/5 | 850 / 850
+mezcla | lancero:5+hondero:5 | hondero:10 | nada | - | 51.6 s | 2/5 | 1.2/10 | 1.8/10 | 850 / 750
+mezcla | lancero:5+hondero:5 | lancero:10 | nada | - | 62.5 s | 4/5 | 8.8/10 | 0.4/10 | 850 / 950
+mezcla | guerrero:5+hondero:5 | lancero:5+hondero:5 | nada | - | 46.1 s | 5/5 | 4.2/10 | 0.0/10 | 800 / 850
+triangulo | lancero:9 | jinete:5 | nada | - | 23.1 s | 5/5 | 8.4/9 | 0.0/5 | 855 / 850
+triangulo | lancero:5 | jinete:5 | nada | - | 53.6 s | 3/5 | 2.8/5 | 0.6/5 | 475 / 850
+triangulo | lancero:1 | jinete:1 | nada | - | 43.5 s | 4/5 | 1.0/1 | 0.2/1 | 95 / 170
+triangulo | guerrero:9 | hondero:10 | nada | - | 40.0 s | 4/5 | 5.4/9 | 0.4/10 | 765 / 750
+triangulo | hondero:10 | lancero:8 | nada | - | 26.3 s | 5/5 | 8.2/10 | 0.0/8 | 750 / 760
+triangulo | guerrero:1 | hondero:1 | nada | - | 18.3 s | 4/5 | 0.8/1 | 0.2/1 | 85 / 75
+triangulo | hondero:1 | lancero:1 | nada | - | 22.9 s | 1/5 | 0.2/1 | 0.8/1 | 75 / 95
+area | hondero:10 | catapulta:2+lancero:4 | nada | - | 35.3 s | 0/5 | 0.0/10 | 2.2/6 | 750 / 880
+area | hondero:10 | catapulta:2+lancero:4 | esquivar | - | 86.9 s | 0/5 | 0.0/10 | 1.8/6 | 750 / 880
+area | hondero:10 | catapulta:2+lancero:4 | nada | abierta | 48.0 s | 0/5 | 0.0/10 | 2.6/6 | 750 / 880
+area | lancero:10 | catapulta:2+hondero:6 | nada | - | 46.0 s | 3/5 | 2.2/10 | 1.0/8 | 950 / 950
+area | lancero:10 | catapulta:2+hondero:6 | esquivar | - | 52.3 s | 2/5 | 1.2/10 | 1.8/8 | 950 / 950
+WARNING: 437792 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 10 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
