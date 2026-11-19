@@ -113,3 +113,5 @@ Tres iteraciones en 5,5 dicen que el límite está en cómo medimos, no solo en 
 - **Guardia de distancia:** +18 contra la línea.
 - **Sin cambios:** el triángulo y la micro C2.
 - **Pendiente:** en la IV con compras, los honderos siguen ganando 4/5.
+
+**Combate en la IV (07b, integrado):** la élite de montados suma +1 de armadura contra distancia. Con compras en la IV, 30 honderos contra 13 jinetes pasan de 4/5 a 1/5; la II y el triángulo quedan igual.
