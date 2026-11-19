@@ -1,0 +1,88 @@
+1v3 semilla 7, dificil contra normal, 23:24  ganó el equipo 1
+llegadas a la base del 0 (s entre una y la siguiente): [14, 59, 31, 128, 11, 76, 37, 37, 87, 13, 100, 28, 42, 136, 7, 4, 71, 22]
+soldados rivales junto a la capital del 0, lo más en cada minuto: [0, 0, 0, 0, 0, 0, 7, 10, 15, 11, 9, 8, 12, 11, 13, 15, 14, 10, 15, 15, 18, 52, 55]
+pico junto a la capital del 0: 55 soldados a los 22:15
+J0 guaranies    edades ["8:36"]  sale ["10:22>3~0:00", "17:04>3~0:00", "17:40>3~0:00", "18:16>1~0:00"]
+    trabada por piedra 0 s
+    mercado compra {  } vende {  }  recursos a/m/p/r 223/19/970/657
+J1 tawantinsuyu edades ["5:45", "17:19"]  sale ["5:25>0~0:00", "9:55>0~0:00", "11:15>0~0:00", "12:06>0~0:00", "13:22>0~0:00", "14:13>0~0:00", "17:16>0~0:00", "20:55>0~0:00"]
+    llega ["6:47(7)", "10:50(10)", "12:06(12)", "12:43(15)", "14:47(19)", "17:08(18)", "17:50(23)", "21:28(36)"]
+    trabada por piedra 0 s
+    mercado compra { "alimento": 6, "madera": 2 } vende { "piedra": 2, "madera": 19 }  recursos a/m/p/r 1821/115/568/1393
+J2 mapuches     edades ["7:10", "16:59"]  sale ["6:41>0~0:00", "7:55>0~0:00", "11:44>0~0:00", "13:12>0~0:00", "14:13>0~0:00", "16:36>0~0:00", "17:27>0~0:00", "19:57>0~0:00"]
+    llega ["7:01(7)", "8:31(8)", "13:20(14)", "20:06(31)", "20:13(32)", "20:17(26)"]
+    trabada por piedra 0 s
+    mercado compra { "alimento": 4, "madera": 1 } vende { "madera": 14, "piedra": 2 }  recursos a/m/p/r 330/190/410/158
+J3 etiopia      edades ["6:06"]  sale ["7:44>0~0:00", "9:59>0~0:00", "11:55>0~0:00", "14:22>0~0:00", "15:14>0~0:00", "18:08>0~0:00", "21:31>0~0:00", "22:22>0~0:00", "23:13>0~0:00"]
+    llega ["8:00(7)", "10:39(11)", "15:00(19)", "16:40(17)", "21:50(31)"]
+    trabada por piedra 0 s
+    mercado compra { "madera": 1, "alimento": 3 } vende { "piedra": 3 }  recursos a/m/p/r 54/118/668/156
+1v6 semilla 7, dificil contra facil, 30:00
+llegadas a la base del 0 (s entre una y la siguiente): [82, 17, 82, 0, 17, 14, 11, 114]
+soldados rivales junto a la capital del 0, lo más en cada minuto: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 17, 44, 34, 47, 45, 39, 40, 39, 31, 28, 26, 24, 10, 8, 8]
+pico junto a la capital del 0: 47 soldados a los 19:49
+J0 guaranies    edades ["8:37", "13:09"]  sale ["7:45>1~0:00", "8:30>1~0:00", "10:05>4~0:00", "12:06>4~0:00", "12:42>6~0:00", "13:17>6~0:00", "13:53>6~0:00", "14:28>6~0:00"]
+    trabada por piedra 2 s
+    mercado compra { "madera": 6, "alimento": 4 } vende { "piedra": 7, "madera": 6, "alimento": 1 }  recursos a/m/p/r 11/46/560/657
+J1 tawantinsuyu edades ["6:42"]  sale ["16:36>0~0:00"]
+    llega ["19:45(14)"]
+    trabada por piedra 3 s
+    mercado compra { "piedra": 1 } vende {  }  recursos a/m/p/r 3760/4855/2810/3510
+J2 mapuches     edades ["8:27"]  sale ["15:03>0~0:00", "18:09>0~0:00"]
+    llega ["16:02(18)", "19:34(16)"]
+    trabada por piedra 0 s
+    mercado compra { "alimento": 1 } vende {  }  recursos a/m/p/r 1585/2405/2160/2000
+J3 etiopia      edades ["5:45"]  sale ["15:02>0~0:00"]
+    llega ["19:20(16)"]
+    trabada por piedra 0 s
+    mercado compra { "alimento": 1 } vende {  }  recursos a/m/p/r 1756/6230/3100/2246
+J4 palmares     edades ["9:26"]  sale ["16:38>0~0:00", "18:50>0~0:00"]
+    llega ["17:24(23)", "21:39(10)"]
+    trabada por piedra 0 s
+    mercado compra {  } vende {  }  recursos a/m/p/r 6220/3329/2890/3740
+J5 ayutthaya    edades ["6:42"]  sale ["16:37>0~0:00", "19:01>0~0:00"]
+    llega ["19:03(17)", "19:03(17)"]
+    trabada por piedra 0 s
+    mercado compra { "alimento": 1 } vende {  }  recursos a/m/p/r 3010/3920/2250/2559
+J6 tupies       edades ["6:45"]  sale ["16:37>0~0:00"]
+    llega ["17:41(14)"]
+    trabada por piedra 0 s
+    mercado compra { "alimento": 7 } vende {  }  recursos a/m/p/r 4361/2455/1987/1369
+2v2 semilla 7, normal contra normal, 45:00
+llegadas a la base del 0 (s entre una y la siguiente): [5, 138, 0, 0]
+soldados rivales junto a la capital del 0, lo más en cada minuto: [0, 0, 0, 0, 0, 0, 0, 0, 8, 6, 0, 11, 12, 5, 20, 12, 18, 13, 8, 1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1, 31, 25, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+pico junto a la capital del 0: 31 soldados a los 31:16
+J0 guaranies    edades ["8:26", "16:10", "23:37"]  sale ["7:46>1~0:00", "9:17>1~0:00", "10:46>1~0:00", "15:15>1~0:00", "18:05>1~0:00", "18:56>1~0:00", "19:48>3~0:00", "20:39>3~0:00", "21:30>1~0:00"]
+    trabada por piedra 0 s
+    mercado compra { "alimento": 11, "piedra": 5, "madera": 10 } vende { "madera": 3, "piedra": 12, "alimento": 60 }  recursos a/m/p/r 27/7/1290/462
+J1 tawantinsuyu edades ["5:45", "22:37"]  sale ["5:25>2~0:00", "11:44>0~0:00", "12:35>0~0:00", "13:32>0~0:00", "24:25>0~0:00", "25:16>0~0:00", "26:40>2~0:00", "40:10>0~0:00", "41:22>0~0:00"]
+    llega ["14:06(14)", "14:06(16)", "14:06(18)"]
+    trabada por piedra 0 s
+    mercado compra { "alimento": 8, "madera": 9 } vende { "piedra": 6, "madera": 36, "alimento": 1 }  recursos a/m/p/r 78/0/575/246
+J2 mapuches     edades ["7:29", "20:33", "26:03"]  sale ["6:09>1~0:00", "8:05>1~0:00", "10:02>1~0:00", "11:27>1~0:00", "15:15>1~0:00", "17:34>1~0:00", "18:25>1~0:00", "19:16>3~0:00", "20:08>3~0:00", "20:59>3~0:00", "28:05>1~0:00", "28:58>1~0:00", "29:55>1~0:00"]
+    llega []
+    trabada por piedra 0 s
+    mercado compra { "madera": 7, "alimento": 13, "piedra": 2 } vende { "piedra": 3, "madera": 10, "alimento": 58 }  recursos a/m/p/r 292/180/265/83
+J3 etiopia      edades ["6:06"]  sale ["7:33>2~0:00", "9:47>0~0:00", "11:24>0~0:00", "28:57>2~0:00", "29:56>2~0:00"]
+    llega ["11:43(17)", "11:48(11)"]
+    trabada por piedra 0 s
+    mercado compra { "alimento": 7 } vende { "madera": 1, "piedra": 3 }  recursos a/m/p/r 12/5/915/496
+2v2 semilla 11, normal contra normal, 45:00
+llegadas a la base del 0 (s entre una y la siguiente): [0, 21, 0, 4, 72, 397, 41, 1151, 1, 68, 92, 1, 0, 66, 0]
+soldados rivales junto a la capital del 0, lo más en cada minuto: [0, 0, 0, 0, 0, 0, 0, 4, 8, 8, 0, 0, 31, 22, 13, 9, 0, 0, 0, 0, 17, 16, 5, 1, 0, 23, 26, 0, 4, 4, 0, 20, 8, 0, 0, 0, 0, 0, 0, 14, 79, 70, 48, 50, 49, 17]
+pico junto a la capital del 0: 79 soldados a los 40:23
+J0 guaranies    edades ["8:26", "14:36", "33:58"]  sale ["7:46>1~0:00", "9:34>1~0:00", "15:44>1~0:00", "16:35>1~0:00", "17:26>1~0:00", "18:17>1~0:00", "32:06>1~0:00"]
+    trabada por piedra 0 s
+    mercado compra { "alimento": 5, "madera": 11 } vende { "piedra": 15, "madera": 21, "alimento": 6 }  recursos a/m/p/r 412/25/726/11
+J1 tawantinsuyu edades ["5:45", "25:41", "36:35"]  sale ["5:25>2~0:00", "10:17>0~0:00", "11:27>0~0:00", "21:13>0~0:00", "22:33>2~0:00", "23:24>2~0:00", "25:24>0~0:00", "28:09>0~0:00", "39:40>0~0:00", "40:31>0~0:00", "41:22>0~0:00", "42:13>0~0:00", "43:04>0~0:00", "43:55>0~0:00"]
+    llega ["12:22(11)", "12:22(15)", "42:48(52)", "42:49(98)", "42:49(83)", "43:55(129)", "43:55(49)"]
+    trabada por piedra 0 s
+    mercado compra { "alimento": 12, "madera": 9, "piedra": 3 } vende { "piedra": 11, "alimento": 33, "madera": 10 }  recursos a/m/p/r 992/226/409/222
+J2 mapuches     edades ["7:10", "22:56"]  sale ["6:09>1~0:00", "7:11>1~0:00", "9:34>1~0:00", "10:25>1~0:00", "11:16>1~0:00", "14:39>1~0:00", "15:44>1~0:00", "16:35>1~0:00", "17:26>1~0:00"]
+    llega []
+    trabada por piedra 0 s
+    mercado compra { "alimento": 4, "madera": 1 } vende { "piedra": 10, "madera": 16, "alimento": 10 }  recursos a/m/p/r 541/10/575/8
+J3 etiopia      edades ["6:06", "39:00"]  sale ["7:33>2~0:00", "10:24>0~0:00", "11:27>0~0:00", "12:18>0~0:00", "13:15>0~0:00", "19:30>0~0:00", "20:21>0~0:00", "22:18>0~0:00", "35:27>0~0:00", "39:40>0~0:00", "40:31>0~0:00"]
+    llega ["12:01(11)", "12:01(15)", "12:26(14)", "13:38(8)", "20:15(28)", "20:56(18)", "40:07(90)", "40:08(63)", "41:16(50)"]
+    trabada por piedra 0 s
+    mercado compra { "madera": 1, "alimento": 3 } vende { "piedra": 12, "madera": 12, "alimento": 13 }  recursos a/m/p/r 316/171/540/313
