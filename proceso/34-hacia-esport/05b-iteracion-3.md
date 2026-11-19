@@ -43,7 +43,8 @@
 - `comercio.gd`: OK, con los casos nuevos: saturación 7/8/10/20 y «con una propia, 4 enemigos sí cortan».
 - `equidad.gd`: OK.
 - `micro.gd`: corre entera.
-- `equipos.gd`, `civ_smoke.gd` y el autotest con guaraníes: ver el commit.
+- `equipos.gd`: OK. `civ_smoke.gd`: corre entera.
+- Autotest con guaraníes: [captura](capturas-3b/autotest-guaranies.png) en orden (HUD, hitos de la II, panel).
 
 ## Commits
 
