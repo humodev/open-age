@@ -51,9 +51,16 @@ Edad II, 400 ms, 5 variantes. De 36 peleas cambian **dos**, y solo en vivos: 5 j
 - **En la IV con compras, 30 honderos le siguen ganando a 13 jinetes** (4/5 sin micro, 3/5 escalonando; antes 5/5 y 5/5). Las mejoras de ataque del hondero (veterano y élite) se comen la armadura de más. Lo arregla una mejora de armadura de distancia para el choque, o subir la del jinete élite: está en las tecnologías, fuera de este frente.
 - El 10 contra 5 en la II se movió un poco a favor del jinete (1/5 → 0/5 sin micro); ya lo ganaba.
 
-## Balance (`tools/civ_diag.gd --seeds=3`, 30 partidas)
+## Balance (`tools/civ_diag.gd --seeds=3 --breve`, 30 partidas: 15 por pueblo)
 
-BALANCE_AQUI
+Los dos pueblos que más tocan el cambio: mapuches (el Kona montado es un jinete más barato) y guaraníes (el arquero en masa es su ejército). La referencia es el [torneo 42](pruebas-it3/42-torneo-iteracion-3.txt), con los datos de antes.
+
+| Pueblo | Torneo 42 (antes, 50) | Ahora (15) | Por rival |
+|---|---|---|---|
+| Mapuches ([salida](pruebas-07a/diag-mapuches.txt)) | 64 % | 73 % (11; 6 por destrucción) | ayutthaya 2/3, etiopía 2/3, guaraníes 1/3, Palmares 3/3, Tawantinsuyu 3/3 |
+| Guaraníes ([salida](pruebas-07a/diag-guaranies.txt)) | 52 % | 46 % (7; todas por puntos) | ayutthaya 3/3, etiopía 1/3, mapuches 2/3, Palmares 1/3, Tawantinsuyu 0/3 |
+
+Las dos diferencias están dentro del ruido de 15 partidas (±12 puntos). Y la IA casi no entrena jinetes: los mapuches, 12 en 15 partidas (0 por partida; su caballería es la infantería montada), los guaraníes, 80 honderos por partida contra rivales sin jinetes. El cambio pesa en el jugador humano, no en el torneo de IA; para medirlo ahí hace falta que la IA lea la masa de honderos y responda con jinetes.
 
 ## Pruebas
 
