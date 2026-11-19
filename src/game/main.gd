@@ -68,6 +68,11 @@ var audio: GameAudio
 var _replay_meta := {}
 var _perf_t := 0.0
 const REPLAY := "user://ultima_partida.json"
+# --- fluidez 6 --- guardar, cargar y repeticiones (src/game/guardado.gd, proceso/30-fluidez/07)
+var _cargando := false # re-simulando una carga: no se dibuja ni se atienden teclas
+var _prox_autoguardado := 0 # tick del próximo autoguardado
+var _nombre_repe := "" # archivo de la repetición de esta partida en user://repeticiones/
+var _guardado_hash := -1 # hash esperado al terminar una carga (-1: no se comprueba)
 
 
 func _ready() -> void:
@@ -269,6 +274,13 @@ func _apply_ambiente(terrain: String) -> void:
 
 func _new_game() -> void:
 	Palette.colores = [] # --- partida a medida ---
+	# --- fluidez 6 ---
+	_replay_meta = {}
+	_nombre_repe = ""
+	if _args.has("cargar") or _args.has("replay"):
+		_cargar()
+		return
+	# --- fin fluidez 6 ---
 	if _args.has("campana"):
 		_new_mission()
 		return
@@ -282,23 +294,6 @@ func _new_game() -> void:
 		mine = civ_keys[rng.randi() % civ_keys.size()]
 	if rival == "" or rival == "azar":
 		rival = civ_keys[rng.randi() % civ_keys.size()]
-	if _args.has("replay") and FileAccess.file_exists(REPLAY):
-		var r: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(REPLAY))
-		_seed = int(r["semilla"])
-		var ropts: Dictionary = Sim.intify(r["opciones"])
-		sim = Sim.new(_seed, (ropts.get("civs", [0, 0]) as Array).size(), null, ropts)
-		sim.ais = []
-		for pid in r["ias"]:
-			var cfg: Dictionary = r.get("ia_cfg", {}).get(str(int(pid)), {})
-			var rai := SimAI.new(sim, int(pid), cfg.get("dificultad", r.get("dificultad", "normal")))
-			rai.personality = cfg.get("estilo", r.get("estilo", "normal"))
-			sim.ais.append(rai)
-		sim.schedule(Sim.intify(r["comandos"]))
-		Palette.colores = Array(r.get("colores", [])).map(func(c: Variant) -> int: return int(c)) # --- partida a medida ---
-		_build_scene(true)
-		ctrl.enabled = false
-		hud.notify("Repetición de la última partida", 4.0)
-		return
 	_partida_a_medida() # --- partida a medida --- --jugadores, --partida=archivo.json, --preset
 	# Lugares (docs/11, paso 5): del menú, de --civs/--equipos o los dos de siempre.
 	var slots: Array = _args.get("lugares", [])
@@ -338,6 +333,7 @@ func _new_game() -> void:
 	opts["terreno"] = sim.terrain
 	Palette.colores = Array(_args.get("colores", [])) # --- partida a medida ---
 	_replay_meta = {"semilla": _seed, "opciones": opts, "ias": ai_ids, "ia_cfg": ai_cfg, "dificultad": _args.get("dificultad", "normal"), "estilo": _args.get("estilo", "normal"), "colores": Palette.colores}
+	_replay_meta["args"] = Guardado.args_limpios(_args) # --- fluidez 6 --- (para «Nueva partida» después de cargar)
 	_build_scene(aivai)
 
 
@@ -498,6 +494,7 @@ func _build_scene(aivai: bool) -> void:
 		_menu.watch.connect(func(sd: int, civ: String, rival: String) -> void: _start(_menu.match_args().merged({"aivai": "1", "seed": str(sd), "civ": civ, "rival": rival, "estilo": _menu.style(), "dificultad": _menu.difficulty(), "terreno": _menu.terrain(), "lugares": _menu.slots()})))
 		_menu.campaigns.connect(_open_campaigns.bind(layer))
 		_menu.replay.connect(func() -> void: _start({"replay": "1"}))
+		_menu.cargar.connect(func(a: Dictionary) -> void: _start(a)) # --- fluidez 6 ---
 		_menu.play_custom.connect(func(a: Dictionary) -> void: _start(a)) # --- partida a medida ---
 		if _args.get("abrir", "") == "partida":
 			_menu.open_custom.call_deferred()
@@ -873,6 +870,127 @@ func _start(args: Dictionary) -> void:
 	restart(int(args.get("seed", str(randi() % 100000))))
 
 
+# --- fluidez 6 ---
+## Carga una partida guardada (--cargar=ruta) o abre una repetición (--replay=ruta, o =1 para
+## la última; --desde=tick para empezar más adelante). Arma la simulación igual que la original
+## y la re-simula sin dibujo, unos milisegundos por cuadro, con una barra de avance.
+func _cargar() -> void:
+	var repe := _args.has("replay")
+	var path := str(_args.get("replay", "")) if repe else str(_args["cargar"])
+	if path == "1" or path == "":
+		path = REPLAY
+	var d := Guardado.leer(path)
+	if d.is_empty():
+		push_error("No se pudo leer %s" % path)
+		_args = {}
+		_menu_mode = true
+		_new_game()
+		return
+	_seed = int(d.get("semilla", 0))
+	_replay_meta = Guardado.meta_de(d)
+	# Los argumentos de la partida original: «Nueva partida», revancha y fin de misión.
+	var keep := {}
+	for k in ["replay", "desde", "velocidad", "autotest", "shot", "shot-at", "mute", "salir-a"]:
+		if _args.has(k):
+			keep[k] = _args[k]
+	_args = (d.get("args", {}) as Dictionary).duplicate(true)
+	_args.merge(keep, true)
+	if repe:
+		_args["replay"] = path
+	elif d.has("campana"):
+		_args["campana"] = str(d["campana"])
+		_args["mision"] = str(int(d.get("mision", 0)))
+	Palette.colores = Array(d.get("colores", [])).map(func(c: Variant) -> int: return int(c))
+	sim = Guardado.armar(d)
+	var hasta: int = clampi(int(_args.get("desde", "0")), 0, int(d["tick"])) if repe else int(d["tick"])
+	_guardado_hash = -1 if repe else int(d.get("hash", -1))
+	if hasta > 0:
+		_cargando = true
+		var capa := CanvasLayer.new()
+		add_child(capa)
+		var fondo := ColorRect.new()
+		fondo.color = Palette.UI_BG
+		fondo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		capa.add_child(fondo)
+		var lbl := Label.new()
+		lbl.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+		lbl.grow_horizontal = Control.GROW_DIRECTION_BOTH
+		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		lbl.add_theme_font_size_override("font_size", 26)
+		capa.add_child(lbl)
+		var ms_cuadro := int(Guardado.cfg().get("carga_ms_por_cuadro", 40))
+		var t0 := Time.get_ticks_msec()
+		while not Guardado.avanzar(sim, hasta, ms_cuadro):
+			lbl.text = "%s… %d %%" % ["Preparando la repetición" if repe else "Cargando la partida", sim.tick * 100 / hasta]
+			await get_tree().process_frame
+		print("CARGA: %d ticks en %d ms (%s)" % [hasta, Time.get_ticks_msec() - t0, path.get_file()])
+		capa.queue_free()
+		_cargando = false
+	_build_scene(repe)
+	var tms := sim.tick * sim.tick_ms
+	if repe:
+		ctrl.enabled = false
+		speed = float(_args.get("velocidad", "1"))
+		var barra := BarraRepeticion.new()
+		hud.get_parent().add_child(barra)
+		barra.setup(self, int(d["tick"]))
+		hud.notify("Repetición · %d:%02d" % [tms / 60000, (tms / 1000) % 60], 3.0)
+	else:
+		_prox_autoguardado = sim.tick + _autoguardado_ticks()
+		var igual := _guardado_hash < 0 or sim.state_hash() == _guardado_hash
+		print("CARGA: hash %d · esperado %d · %s" % [sim.state_hash(), _guardado_hash, "igual" if igual else "DISTINTO"])
+		hud.notify("Partida cargada · %d:%02d" % [tms / 60000, (tms / 1000) % 60] if igual else "La partida cargada no llegó al mismo estado (¿otra versión del juego?)", 4.0)
+
+
+## Se puede guardar: una partida en juego (escaramuza, a medida o campaña), no el menú, una
+## repetición, una demo ni una captura.
+func puede_guardar() -> bool:
+	return sim != null and not _menu_mode and not _cargando and not _replay_meta.is_empty() \
+		and not (_args.has("replay") or _args.has("demo") or _args.has("shot"))
+
+
+## Guarda la partida en user://partidas/. `tipo`: "partida" (a mano, un archivo por vez),
+## "auto" (autoguardado, se conservan los últimos) o "salida" (al salir, uno solo).
+func guardar_partida(tipo := "partida") -> String:
+	if not puede_guardar() or sim.tick == 0 or (tipo != "partida" and _args.has("autotest")):
+		return ""
+	var nombre := "salida.json"
+	if tipo == "auto":
+		nombre = "auto-%s.json" % Time.get_datetime_string_from_system().replace(":", "-")
+	elif tipo == "partida":
+		nombre = "partida-%s.json" % Time.get_datetime_string_from_system().replace(":", "-")
+	var path := Guardado.DIR_PARTIDAS + nombre
+	if not Guardado.escribir(path, Guardado.datos(_replay_meta, sim)):
+		return ""
+	if tipo == "auto":
+		Guardado.podar(Guardado.DIR_PARTIDAS, "auto-", int(Guardado.cfg().get("autoguardados", 3)))
+	return path
+
+
+func _autoguardado_ticks() -> int:
+	return int(Guardado.cfg().get("autoguardado_min", 5)) * 60000 / maxi(1, sim.tick_ms)
+
+
+func _autoguardar() -> void:
+	if _autoguardado_ticks() <= 0 or _args.has("autotest") or not puede_guardar():
+		return
+	if _prox_autoguardado <= 0:
+		_prox_autoguardado = _autoguardado_ticks()
+	if sim.tick >= _prox_autoguardado:
+		_prox_autoguardado = sim.tick + _autoguardado_ticks()
+		if guardar_partida("auto") != "":
+			hud.notify("Autoguardado", 2.0)
+
+
+## Saltar a otro momento de la repetición: se arma de nuevo y se re-simula hasta `tick`.
+func saltar_repeticion(tick: int) -> void:
+	var a := _args.duplicate(true)
+	a["desde"] = str(tick)
+	a["velocidad"] = str(speed)
+	_start(a)
+# --- fin fluidez 6 ---
+
+
 # ---------------------------------------------------------------- Campañas
 
 func _open_campaigns(layer: CanvasLayer) -> void:
@@ -905,6 +1023,7 @@ func _new_mission() -> void:
 	var idx := int(_args.get("mision", "0"))
 	var camp: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/campanas/%s.json" % key))
 	sim = SimScenario.create(camp["misiones"][idx], camp["civ"])
+	_replay_meta = {"campana": key, "mision": idx, "args": Guardado.args_limpios(_args)} # --- fluidez 6 ---
 	_build_scene(false)
 
 
@@ -944,13 +1063,17 @@ func save_telemetry() -> void:
 
 func save_replay() -> void:
 	save_telemetry()
-	if _replay_meta.is_empty() or _menu_mode or _args.has("aivai") or _args.has("replay") or sim == null or sim.recording.is_empty():
+	if _replay_meta.is_empty() or _menu_mode or _args.has("aivai") or _args.has("replay") or sim == null or sim.tick == 0: # --- fluidez 6 --- (también sin órdenes)
 		return
-	var r := _replay_meta.duplicate()
-	r["comandos"] = sim.recording
-	var f := FileAccess.open(REPLAY, FileAccess.WRITE)
-	if f != null:
-		f.store_string(JSON.stringify(r))
+	# --- fluidez 6 --- la última (como antes) y una por partida en user://repeticiones/
+	var r := Guardado.datos(_replay_meta, sim)
+	Guardado.escribir(REPLAY, r)
+	if _args.has("autotest") or _args.has("shot"):
+		return # las pruebas no llenan la lista de repeticiones
+	if _nombre_repe == "":
+		_nombre_repe = "%s-%d.json" % [Time.get_datetime_string_from_system().replace(":", "-"), _seed]
+	Guardado.escribir(Guardado.DIR_REPES + _nombre_repe, r)
+	Guardado.podar(Guardado.DIR_REPES, "", int(Guardado.cfg().get("repeticiones_max", 20)))
 
 
 ## Para Palette.es_aliado (modo de colores relativo y nombres "Aliado"/"Rival").
@@ -972,7 +1095,6 @@ func _exit_tree() -> void:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
-		save_replay()
 		salir()
 
 
@@ -985,6 +1107,8 @@ func salir(codigo := 0) -> void:
 	if _saliendo:
 		return
 	_saliendo = true
+	guardar_partida("salida") # --- fluidez 6 --- (la ventana, «Salir» y --salir-a pasan por acá)
+	save_replay()
 	paused = true
 	if audio != null:
 		audio.callar()
@@ -997,12 +1121,14 @@ func salir(codigo := 0) -> void:
 
 
 func to_menu() -> void:
+	guardar_partida("salida") # --- fluidez 6 ---
 	_args = {}
 	_menu_mode = true
 	restart()
 
 
 func restart(seed_value: int = -1) -> void:
+	guardar_partida("salida") # --- fluidez 6 ---
 	save_replay()
 	for n in [view, cam, ctrl, hud.get_parent()]:
 		n.queue_free()
@@ -1062,7 +1188,7 @@ func set_paused(p: bool) -> void:
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	var k := event as InputEventKey
-	if not k.pressed or k.echo or _menu_mode:
+	if not k.pressed or k.echo or _menu_mode or _cargando: # --- fluidez 6 ---
 		return
 	# --- veterano ronda 4 --- teclas de Opciones → Teclas (Pausa del teclado, siempre)
 	if Teclas.es(k.physical_keycode, "ayuda"):
@@ -1074,6 +1200,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 
 
 func _process(delta: float) -> void:
+	if _cargando: # --- fluidez 6 ---
+		return
 	_errores.flush(sim)
 	if not paused:
 		_acc += delta * speed
@@ -1103,6 +1231,7 @@ func _process(delta: float) -> void:
 	else:
 		view.render(1.0, 0.0)
 	_maybe_shot()
+	_autoguardar() # --- fluidez 6 ---
 	_contar_avisos() # --- ronda 8 ---
 	_salir_a() # --- partida a medida ---
 	if _args.has("perf"):
@@ -2248,6 +2377,8 @@ func _autotest() -> void:
 				if libre:
 					beast_at = Vector2i(tx, ty)
 					hallado = true
+	# --- fluidez 6 --- guardado antes de que el autotest toque la partida a mano (autotest_fluidez6)
+	set_meta("guardado_autotest", guardar_partida("partida"))
 	var beast := sim.spawn_unit("rebano", local, beast_at.x * 1000 + 500, beast_at.y * 1000 + 500)
 	var butcher: SimEntity = null
 	for e in sim.actives:
@@ -2502,6 +2633,7 @@ func _autotest() -> void:
 	await preload("res://src/game/autotest_fluidez2.gd").correr(self, check) # --- fluidez 2 ---
 	await preload("res://src/game/autotest_muralla.gd").correr(self, check) # --- muralla --- (proceso/32-ronda-8/06)
 	await preload("res://src/game/autotest_avisos.gd").correr(self, check) # --- fluidez 4 --- (proceso/30)
+	await preload("res://src/game/autotest_fluidez6.gd").correr(self, check) # --- fluidez 6 --- (proceso/30)
 	# --- aprender --- (avisos que enseñan, cuenta de sitios, nombres en la grilla, registro de la Guía y fin)
 	var cs = hud.consejos
 	Opciones.consejos = true

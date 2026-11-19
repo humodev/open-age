@@ -1,0 +1,13 @@
+tests/guardado.gd (máquina cargada, 7 agentes en paralelo)
+1v1 en el minuto 3                 comandos=6 · hash en T 3608266146 / cargada 3608266146 · carga 4430 ms · en T2 2925621365 / 2925621365 → OK
+2v2 en el minuto 5                 comandos=9 · hash en T 1141372411 / cargada 1141372411 · carga 20781 ms · en T2 2638450983 / 2638450983 → OK
+campaña etiopía 1 en el minuto 2   comandos=5 · hash en T 1096924478 / cargada 1096924478 · carga 4105 ms · en T2 4273544648 / 4273544648 → OK
+GUARDADO: OK
+
+En el juego (--salir-a guarda al salir, --cargar re-simula):
+escaramuza etiopía, semilla 5, guardada en 2:00 → CARGA: 1200 ticks en 3433 ms · hash 3021453938 · esperado 3021453938 · igual
+cargada y seguida hasta 2:30 → hash 2669539229; la misma partida sin carga hasta 2:30 → 2669539229
+campaña etiopía, misión 1, guardada en 1:00 → CARGA: 600 ticks en 2988 ms · hash 4187335559 · igual
+
+tests/test_determinism.gd: ticks=3000 hash=3059812827 · DETERMINISMO: OK (sin cambios en src/sim)
+tests/test_replay.gd: REPETICIÓN: OK

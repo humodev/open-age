@@ -7,6 +7,7 @@ signal watch(seed_value: int, civ: String, rival: String)
 signal campaigns
 signal replay
 signal play_custom(args: Dictionary) # --- partida a medida ---
+signal cargar(args: Dictionary) # --- fluidez 6 --- {"cargar": ruta} o {"replay": ruta}
 
 var _seed_edit: LineEdit
 var _civ: OptionButton
@@ -215,8 +216,19 @@ func _ready() -> void:
 	row.add_child(_seed_edit)
 	box.add_child(row)
 
-	if FileAccess.file_exists("user://ultima_partida.json"):
-		box.add_child(_button("Ver la última partida", func() -> void: replay.emit()))
+	# --- fluidez 6 --- «Cargar» y «Repeticiones» comparten renglón (src/game/guardado.gd)
+	var grow := HBoxContainer.new()
+	grow.add_theme_constant_override("separation", 10)
+	box.add_child(grow)
+	var gb := _button("Cargar", func() -> void: Guardado.dialogo(self, "Cargar partida", Guardado.DIR_PARTIDAS, func(p: String) -> void: cargar.emit({"cargar": p})))
+	gb.custom_minimum_size.x = 185
+	gb.tooltip_text = "Partidas guardadas, autoguardados y la de la última vez que saliste."
+	grow.add_child(gb)
+	var rb := _button("Repeticiones", func() -> void: Guardado.dialogo(self, "Repeticiones", Guardado.DIR_REPES, func(p: String) -> void: cargar.emit({"replay": p})))
+	rb.custom_minimum_size.x = 185
+	rb.tooltip_text = "Las partidas terminadas: línea de tiempo, saltar a un minuto y velocidad ×2, ×4 u ×8."
+	grow.add_child(rb)
+	# --- fin fluidez 6 ---
 	var gap2 := Control.new()
 	gap2.custom_minimum_size = Vector2(0, 10)
 	box.add_child(gap2)
