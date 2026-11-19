@@ -27,6 +27,7 @@ var _eng_rate := 0
 var _no_route := {} # edificio -> tick desde el que se vuelve a intentar el camino
 var last_site := 0
 var _detour := {} # sin tomar sitios: unidad -> {"exit": Vector2i, "goal": Vector2i, "amove": bool} (sale de un sitio ajeno)
+var _court_retry := 0 # tick desde el que vuelve a buscar lugar para la corte nueva (_found_court)
 var _sent := {} # unidad -> [x, y, amove, suelto, tick]: última orden de marcha que le dio la IA (_no_resend)
 var _weighted := false # sin tomar sitios: ya se cargó el peso de los sitios en la grilla de caminos
 var last_tribute := 0
@@ -998,7 +999,7 @@ func _found_court(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_t
 	var dd := sim.dp(player)
 	if not dd.edificios.has("corte_nueva") or by_type.has("corte_nueva") or by_type.has("gondar") or vill.is_empty():
 		return
-	if not sim.can_afford(player, dd.cost_of("corte_nueva", p["age"])):
+	if not sim.can_afford(player, dd.cost_of("corte_nueva", p["age"])) or sim.tick < _court_retry:
 		return
 	var near_left := 0
 	var best: SimEntity = null
@@ -1024,6 +1025,8 @@ func _found_court(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_t
 					var v := _nearest_villager(vill, tx * P, ty * P)
 					sim.push_command({"t": "build", "player": player, "ids": [v.id], "type": "corte_nueva", "tx": tx, "ty": ty})
 					return
+	# Sin lugar: esperar antes de volver a probar las ~200 casillas (reglas.ia_economia).
+	_court_retry = sim.tick + int(sim.data.reglas["ia_economia"]["corte_reintento_ticks"])
 
 
 ## Elefantes del rey (§9.3): entrenar hasta el máximo de la edad y llevar cada uno
