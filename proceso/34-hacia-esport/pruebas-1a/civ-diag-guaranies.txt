@@ -1,0 +1,7 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+ayutthaya    vs guaranies    bosque_templado 30:00  ganador guaranies (puntos)  edades 2-4  criterio 2609-4838  puntaje 3610-5840
+guaranies    vs ayutthaya    bosque_templado 30:00  ganador guaranies (puntos)  edades 3-2  criterio 3964-2717  puntaje 4934-3783
+ayutthaya    vs guaranies    bosque          30:00  ganador guaranies (puntos)  edades 3-4  criterio 3605-4703  puntaje 4007-5384
+guaranies    vs ayutthaya    bosque          30:00  ganador guaranies (puntos)  edades 4-3  criterio 4903-3767  puntaje 5036-4630
+ayutthaya    vs guaranies    mesetas         21:23  ganador ayutthaya (destrucción)  edades 3-2  criterio 4102-2218  puntaje 3422-1520

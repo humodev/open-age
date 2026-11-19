@@ -227,7 +227,7 @@ En el prototipo gris todas las facciones usan las mismas unidades genéricas, un
 | `explorador` | explorador | Descubre el mapa; fuera del triángulo |
 | `guerrero` | choque | Rápido, cuerpo a cuerpo |
 | `hondero` | distancia | Frágil, alcance largo |
-| `lancero` | línea | Lento, armadura alta; desde edad II |
+| `lancero` | línea | Lento, armadura alta; desde edad I (esport 1a) |
 | `ariete` | asedio | Solo edificios; desde edad II |
 
 ## Edificios comunes de H1

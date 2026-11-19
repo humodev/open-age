@@ -26,7 +26,7 @@ Las decisiones cerradas no se reabren sin una entrada "Propuesta" aprobada. Form
 | D-018 | 2026-11-13 | Las potencias coloniales y otros rivales históricos son facciones solo de IA y de campaña, bajo la clave `invasores` (cierra A-003) | Delegada; alcance y tono |
 | D-019 | 2026-11-13 | Los guaraníes tienen la bifurcación misión o monte, acotada a las dos opciones del avance a la edad III (cierra A-004) | Recomendación de `investigacion/guaranies.md` |
 | D-020 | 2026-11-13 | Sin combate naval; las canoas son transporte fluvial rápido (cierra A-006) | Alcance de una persona |
-| D-021 | 2026-11-13 | Impacto inmediato de proyectiles (cierra A-007) | Determinismo y rendimiento |
+| D-021 | 2026-11-13 | Impacto inmediato de proyectiles (cierra A-007). Desde D-031, salvo el asedio de área contra tropa | Determinismo y rendimiento |
 | D-022 | 2026-11-13 | Los andenes son la fuente de alimento inca, no su ranura económica (cierra A-010) | Coincide la ficha con la investigación |
 | D-023 | 2026-11-13 | Los lof mapuches cuentan como centros y el rewe como hito; quien se queda sin hitos ve revelados sus centros al rival (cierra A-011) | Propuesta de `investigacion/mapuches.md` |
 | D-024 | 2026-11-13 | Reparar es gratis (cierra A-012) | Favorece la defensa económica pedida por el autor |
@@ -36,6 +36,7 @@ Las decisiones cerradas no se reabren sin una entrada "Propuesta" aprobada. Form
 | D-029 | 2026-11-13 | El juego se llama **Raíces** (cierra A-005) | Respuesta del autor a C-01 |
 | D-030 | 2026-11-13 | Se usa Meshy para arte generado, gastando lo necesario de forma eficiente (los créditos se renuevan cada mes) | Respuesta del autor a C-05 |
 | D-028 | 2026-11-13 | Cada civilización tiene una campaña de 4 misiones, narrada desde adentro | Pedido del autor |
+| D-031 | 2026-11-19 | El asedio de área (`area_borde_pct`) tira contra la tropa al **punto** donde está el blanco y pega ahí al llegar, `reglas.asedio_area.vuelo_ticks` (8) ticks después: entero, determinista y esquivable. Contra edificios y para todo lo demás sigue D-021. Se suma la orden de **atacar el suelo** (`suelo`, tecla R), que usa también la IA (`ia_asedio.suelo`) | Aprobado por el autor (2026-11-19, ronda 8 · 04, propuesta 6); `proceso/34-hacia-esport/01a-cambios-competitivos.md` |
 
 ## Abiertas
 

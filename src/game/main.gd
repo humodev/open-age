@@ -817,6 +817,11 @@ func _demo(kind: String) -> void:
 				var y := (cy - 4 + i / 5) * 1000 + 500
 				var u := sim.spawn_unit(types[i % 3], pid, x, y)
 				ids[pid].append(u.id)
+			# --- esport 1a --- dos de asedio de área atrás, si el pueblo lo tiene: se ve el tiro y dónde cae
+			if sim.dp(pid).unidades.has("catapulta") and sim.dp(pid).unidades["catapulta"].has("area_borde_pct"):
+				for k in 2:
+					var sx := (c - 12 + pid * 24) * 1000 + 500
+					ids[pid].append(sim.spawn_unit("catapulta", pid, sx, (cy - 1 + k * 3) * 1000 + 500).id)
 		sim.push_command({"t": "move", "player": 0, "ids": ids[0], "x": (c + 6) * 1000, "y": cy * 1000, "amove": true})
 		sim.push_command({"t": "move", "player": 1, "ids": ids[1], "x": (c - 6) * 1000, "y": cy * 1000, "amove": true})
 		sim.set_meta("demo_cam", Vector2(c, cy)) # --- veterano ronda 4 ---
