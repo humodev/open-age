@@ -1,0 +1,7 @@
+
+partida: 18000 ticks en 992692 ms · 5913 entidades (1626 activas)
+guardar (con la foto): 32 ms · .foto 2520 KB
+DESPUÉS (foto): 1601 ms · hash igual
+salto al minuto 15: desde la foto del tick 9000, 16600 ms
+ANTES (re-simular): 805678 ms (22 ticks/s) · hash igual
+CARGA 4v4 minuto 30: OK · 805.7 s → 1.6 s

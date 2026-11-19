@@ -67,7 +67,7 @@ godot --path . -- --menu --abrir=red --red-unirse=127.0.0.1:47800 --red-civ=mapu
 - **Servidor de partidas**: un lugar donde publicar salas y encontrarlas (hoy se pasa la IP a mano), con identidad de jugador y versión del juego. Debe rechazar a quien tenga otro commit o otros `data/`. Hoy eso no se verifica: una versión distinta termina en «Desincronización».
 - **Latencia variable**: el retardo de entrada es fijo (300 ms). Por internet conviene ajustarlo según el ping medido y sincronizar el reloj de los dos, para que el más rápido no quede esperando a tirones.
 - **Caída del anfitrión**: solo se recupera la del invitado. Si se cae el anfitrión, se pierde la partida. Hay que guardar el registro en disco y dejar que cualquiera retome.
-- **Re-simulación larga**: volver a una partida de 30 min re-simula unos 18 000 ticks a 120 por cuadro (decenas de segundos). Faltan instantáneas del estado, que dependen del guardado que otro agente está agregando.
+- ~~**Re-simulación larga**~~: resuelto en [02-instantaneas.md](02-instantaneas.md). El invitado que vuelve recibe la foto del estado. En el mismo paso entraron el retardo de entrada según el ping y la validación de los mensajes.
 - **Seguridad**: los mensajes no se validan (un cliente modificado puede mandar comandos de más) ni se cifran. El comando lleva el jugador que lo envía, y `Lockstep` lo pisa con el emisor, pero no hay más control.
 - **Interfaz**: la pausa usa el menú de Esc (abrir el menú gasta una pausa). Faltan chat, rendición, aviso de que el otro se fue y el ping en pantalla.
 - **Más jugadores**: el lockstep ya acepta N jugadores, pero la sala y la sesión son de dos.

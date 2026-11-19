@@ -269,9 +269,10 @@ func _medir_ping(ahora: int) -> void:
 		transporte.enviar({"tipo": "ping", "t": ahora})
 	if ahora >= _prox_ajuste and not _rtts.is_empty():
 		_prox_ajuste = ahora + int(cfg.get("retardo_ajuste_cada_ms", 2000))
-		var peor := 0
-		for r: int in _rtts:
-			peor = maxi(peor, r)
+		# El peor ping reciente sin el pico más alto (un tirón al cargar no fija el retardo).
+		var orden := _rtts.duplicate()
+		orden.sort()
+		var peor: int = orden[-2] if orden.size() >= 4 else orden[-1]
 		ping_ms = peor
 		var d := retardo_para(peor, sim.tick_ms if sim != null else 100)
 		if d != lock.D:
@@ -355,6 +356,7 @@ func _process(_delta: float) -> void:
 
 
 func _al_conectar(_id: int) -> void:
+	_rtts.clear() # --- instantaneas ---
 	if not es_anfitrion():
 		if estado == "conectando":
 			estado = "sala"

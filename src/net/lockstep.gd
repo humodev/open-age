@@ -20,6 +20,7 @@ var local := 0
 var jugadores: Array = [] # los de la red, en orden
 var T := 1
 var D := 3
+var D0 := 3 # --- instantaneas --- el retardo de arranque: los turnos 0..D0-1 están vacíos (D cambia con el ping)
 var M := 50
 var pausas_max := 3
 var pausa_ms := 60000
@@ -47,10 +48,11 @@ func _init(s: Sim, pid_local: int, pids: Array, cfg: Dictionary) -> void:
 	jugadores.sort()
 	T = maxi(1, int(cfg.get("ticks_por_turno", 1)))
 	D = maxi(1, int(cfg.get("retardo_turnos", 3)))
+	D0 = D
 	M = maxi(1, int(cfg.get("hash_cada_ticks", 50)))
 	pausas_max = int(cfg.get("pausas_por_jugador", 3))
 	pausa_ms = int(cfg.get("pausa_s", 60)) * 1000
-	enviados_hasta = D - 1
+	enviados_hasta = D0 - 1
 	for p in jugadores:
 		hashes[p] = {}
 		pausas_usadas[p] = 0
@@ -99,7 +101,7 @@ func despues() -> void:
 
 
 func completo(n: int) -> bool:
-	if n < D:
+	if n < D0:
 		return true
 	if not turnos.has(n):
 		return false

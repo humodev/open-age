@@ -1,0 +1,4 @@
+FALLO fluidez 4: la veta chica avisa que se agota (0 de 0)
+FALLO fluidez 4: cuando se acaba, avisa con lugar («Se agota el alimento (quedan 63)», 0, agotada true)
+OK    cargar con la foto (.foto) llega al mismo tick y hash sin re-simular
+AUTOTEST: FALLO
