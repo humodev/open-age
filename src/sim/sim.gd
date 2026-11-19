@@ -2440,7 +2440,12 @@ func _cleanup() -> void:
 		if e.alive:
 			keep_u.append(e)
 	_units = keep_u
-	for d: Dictionary in [_owned, _owned_b]:
+	var keep_s: Array[SimEntity] = []
+	for e in _sacred:
+		if e.alive:
+			keep_s.append(e)
+	_sacred = keep_s
+	for d: Dictionary in [_owned, _owned_b, _fighters]:
 		for k in d:
 			var keep_o: Array[SimEntity] = []
 			for e: SimEntity in d[k]:
@@ -3804,10 +3809,14 @@ func _new_entity(cat: int, type: String, owner: int, def: Dictionary) -> SimEnti
 		if cat == SimEntity.Cat.BUILDING:
 			_own_list(_owned_b, owner).append(e)
 			_buildings.append(e)
+			if def.get("sagrado", false):
+				_sacred.append(e)
 		elif cat == SimEntity.Cat.UNIT:
 			_units.append(e)
 			if SimEntity.MILITARY_FNS.has(String(def.get("funcion", ""))):
 				_military.append(e)
+			if SimEntity.MILITARY_FNS.has(String(def.get("funcion", ""))) or String(def.get("funcion", "")) == "explorador":
+				_own_list(_fighters, owner).append(e)
 	by_id[e.id] = e
 	return e
 
@@ -3840,6 +3849,17 @@ func owned(pid: int) -> Array[SimEntity]:
 
 func buildings_of(pid: int) -> Array[SimEntity]:
 	return _owned_b.get(pid, _no_ent)
+
+
+var _sacred: Array[SimEntity] = [] # sitios sagrados, en orden de id
+func sacred_sites() -> Array[SimEntity]:
+	return _sacred
+
+
+## Militares y exploradores de un dueño (lo que la IA cuenta como amenaza), en orden de id.
+var _fighters := {} # dueño -> Array[SimEntity]
+func fighters_of(pid: int) -> Array[SimEntity]:
+	return _fighters.get(pid, _no_ent)
 
 
 static func _own_list(d: Dictionary, pid: int) -> Array[SimEntity]:
