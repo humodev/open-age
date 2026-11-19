@@ -25,7 +25,24 @@ Trabajo que decidió el autor a partir de la [síntesis de la ronda 8](../22-tes
 - Primera victoria: 2 de 3. |
 | 3 | Cola de producción siempre a la vista, en rojo cuando está trabada; menos mensajes | **Integrado (44db138)**, [03](03-menos-mensajes-cola-visible.md):<br>• **Cola global:** siempre visible; en rojo y con candado cuando está trabada (el motivo, en la ayuda); en gris cuando está quieta.<br>• **Avisos:** los de gestión pasan a «Consejos de aprendizaje» (tutorial y fácil). Quedan los de AoE4 (ataque, edad, investigación, aliado, maravilla).<br>• **Mensajes en 15 min:** de 96 a 38 en el 1v3, de 130 a 62 en el 2v2. Desaparecen los 292 «Población llena».<br>• **Maravilla:** la ficha dice qué hito pide.<br>Mismo hash; autotest OK |
 | 4 | Rendimiento con 7 u 8 jugadores: perfilado y arreglo | En curso |
-| 5 | Sumidero en la IV (escuelas excluyentes, élite cara) y contrajuego a la maravilla | En curso |
+| 5 | Sumidero en la IV (escuelas excluyentes, élite cara) y contrajuego a la maravilla | **Integrado (d8f2cac)**, [05](05-sumidero-iv-y-maravilla.md)
+
+**Sumidero en la IV**
+- Escuela con caminos excluyentes (guerra, asedio, obras).
+- Cada camino tiene una mejora repetible 5 veces, a costo creciente.
+- Guardia: élite común de 400 de alimento.
+- La IA elige un camino y gasta en el sumidero.
+
+**Contrajuego a la maravilla**
+- Marca en el minimapa para todos y cuenta con «FRENALA».
+- La IA la ataca antes que a los sitios.
+- La obra con 10 constructores baja de 10 a 6 minutos.
+
+**Medido** (2v2, una semilla)
+- El alimento sin gastar en la IV baja de 7 388 a 5 545 en promedio.
+- La IA no entrenó guardias porque estaba al tope de población. Falta que venda lo que le sobra en ese caso.
+
+**Al fusionar:** conflicto en `iconos.gd` con la muralla; quedaron las dos. Mismo hash, íconos (143 distintos) y autotest OK. |
 | 6 | Muralla de piedra en la edad II (C-101) | **Integrado (7d20c11)**, [06](06-muralla-de-piedra.md)
 - **Muralla de piedra:** tramo con 1800 de vida y armadura 6, 20 de piedra y 12 s de obra. Puerta y torre encima.
 - **Arrastre:** igual que la empalizada.
