@@ -1217,7 +1217,9 @@ func mod(pid: int, key: String) -> int:
 	return players[pid]["mods"].get(key, 0)
 
 
+var _rate_epoch := 0 # --- rendimiento 3 --- sube con cada cambio de modificadores o de auras
 func _add_mod(pid: int, key: String, v: int) -> void:
+	_rate_epoch += 1
 	players[pid]["mods"][key] = mod(pid, key) + v
 
 
@@ -1562,6 +1564,20 @@ func _update_players() -> void:
 			var a := aura_of(e)
 			if a.has("recoleccion_pct"):
 				_aura_g[e.owner].append([e, int(a["recoleccion_pct"]), a.get("recursos", null), int(a["radio"])])
+	# --- rendimiento 3 --- Los hitos no se mueven: si las auras son las mismas que en el tick
+	# anterior, valen los valores guardados por fuente (`_aura_cache`).
+	var sig := []
+	for pid in _aura_g.size():
+		sig.append(-1 - pid)
+		for g: Array in _aura_g[pid]:
+			sig.append((g[0] as SimEntity).id)
+			sig.append(g[1])
+			sig.append(g[2])
+			sig.append(g[3])
+	if sig != _aura_sig:
+		_aura_sig = sig
+		_aura_cache.clear()
+		_rate_epoch += 1
 
 
 ## Aura de un hito según el lugar (C-33, como AoE4): la propia del hito o la de su eje en
@@ -1575,9 +1591,24 @@ func aura_of(b: SimEntity) -> Dictionary:
 ## Recolección extra (%) de un recurso junto a un hito propio con aura de recolección.
 ## Corre por cada aldeano que junta: lee `_aura_g` (de `_update_players`, una vez por tick).
 var _aura_g: Array = [] # por jugador: [hito, recoleccion_pct, recursos o null, radio]
+var _aura_sig := []
+var _aura_cache := {} # (id de la fuente × 64 + dueño) × 8 + clase de recurso -> %
+const _KIND_CODE := {"alimento": 1, "madera": 2, "piedra": 3, "riqueza": 4}
 func _aura_gather(owner: int, t: SimEntity, kind: String) -> int:
 	if owner < 0 or owner >= _aura_g.size():
 		return 0
+	if (_aura_g[owner] as Array).is_empty():
+		return 0
+	var ck := (t.id * 64 + owner) * 8 + int(_KIND_CODE.get(kind, 0))
+	var c = _aura_cache.get(ck)
+	if c != null:
+		return c
+	var v := _aura_gather_calc(owner, t, kind)
+	_aura_cache[ck] = v
+	return v
+
+
+func _aura_gather_calc(owner: int, t: SimEntity, kind: String) -> int:
 	var best := 0
 	for g: Array in _aura_g[owner]:
 		if g[2] != null and not (g[2] as Array).has(kind):
@@ -1721,10 +1752,15 @@ func _update_fog(pid: int) -> void:
 			if team_of(q) == team_of(pid):
 				fog.copy_from(pid, q)
 				return
+	# --- rendimiento 3 --- Por las listas de cada dueño en lugar de todo `actives`: otro orden,
+	# las mismas fuentes; la niebla pinta la unión, así que la grilla queda igual.
 	var sources: Array = []
-	for e in actives:
-		if e.alive and e.inside < 0 and e.owner >= 0 and (e.owner == pid or (shared and not enemies(pid, e.owner) and team_of(e.owner) == team_of(pid))):
-			sources.append(e)
+	for q in players.size():
+		if not (q == pid or (shared and not enemies(pid, q) and team_of(q) == team_of(pid))):
+			continue
+		for e in owned(q):
+			if e.alive and e.inside < 0:
+				sources.append(e)
 	# --- esport 3a --- La guarnición de los sitios la ven todos (reglas.sitios.vision_publica).
 	if fog.site_vision > 0:
 		for e in _sacred:
@@ -2009,9 +2045,27 @@ func _do_gather(e: SimEntity) -> void:
 	e.anchored = true
 	if t.is_building():
 		t.farmer = e.id
-	var rate_key: String = String(t.def.get("tasa_clave", "granja")) if t.is_building() else String(t.def.get("tasa_clave", kind))
-	var clay := mods.clay_bonus(e.owner, t) if t.is_resource() and t.type == "riqueza" else 0
-	var rate: int = int(e.def["tasa"].get(rate_key, e.def["tasa"].get("granja", 0))) * (100 + mod(e.owner, "tasa:" + rate_key) + _site_bonus(t) + clay + _aura_gather(e.owner, t, kind)) / 100
+	# --- rendimiento 3 --- La tasa se guarda en el aldeano mientras no cambie nada de lo que la
+	# arma: la fuente, los modificadores (`_add_mod`), las auras (`_update_players`) y el agua del
+	# mapa (bono por sitio). La arcilla (bono por caminos) se calcula siempre.
+	var rate: int
+	var ep := _rate_epoch + (map.water_ver << 32)
+	if e.rate_t == t.id and e.rate_ep == ep:
+		rate = e.rate_v
+	else:
+		var rate_key: String = String(t.def.get("tasa_clave", "granja")) if t.is_building() else String(t.def.get("tasa_clave", kind))
+		var clay := mods.clay_bonus(e.owner, t) if t.is_resource() and t.type == "riqueza" else 0
+		var tkey: String = _tasa_keys.get(rate_key, "")
+		if tkey == "":
+			tkey = "tasa:" + rate_key
+			_tasa_keys[rate_key] = tkey
+		rate = int(e.def["tasa"].get(rate_key, e.def["tasa"].get("granja", 0))) * (100 + mod(e.owner, tkey) + _site_bonus(t) + clay + _aura_gather(e.owner, t, kind)) / 100
+		if t.is_resource() and t.type == "riqueza":
+			e.rate_t = -1
+		else:
+			e.rate_t = t.id
+			e.rate_ep = ep
+			e.rate_v = rate
 	e.carry_res = kind
 	e.carry_src = "granja" if t.is_building() else t.type
 	# Arcilla ajena o del centro: con el techo de lo disputado lleno, no se extrae.
@@ -2037,10 +2091,26 @@ func _path_reaches(e: SimEntity, t: SimEntity) -> bool:
 	return end.x >= t.tx - 1 and end.x <= t.tx + t.w and end.y >= t.ty - 1 and end.y <= t.ty + t.h
 
 
+var _tasa_keys := {} # --- rendimiento 3 --- clave de tasa -> "tasa:" + clave
+
+
 ## Bonificación por sitio de una granja: ladera (andenes) o agua cercana (arrozales).
+## --- rendimiento 3 --- Se guarda por granja; el agua del mapa cambia → `map.water_ver`.
+var _site_cache := {} # id de granja -> [water_ver, bono]
 func _site_bonus(t: SimEntity) -> int:
 	if not t.is_building():
 		return 0
+	if not t.def.has("bono_ladera_pct") and not t.def.has("bono_agua_pct"):
+		return 0
+	var c: Array = _site_cache.get(t.id, _NONE)
+	if not c.is_empty() and int(c[0]) == map.water_ver:
+		return int(c[1])
+	var v := _site_bonus_calc(t)
+	_site_cache[t.id] = [map.water_ver, v]
+	return v
+
+
+func _site_bonus_calc(t: SimEntity) -> int:
 	var bonus := 0
 	if t.def.has("bono_ladera_pct"):
 		for yy in range(t.ty, t.ty + t.h):
@@ -2077,7 +2147,7 @@ func _exhaust(t: SimEntity) -> void:
 	var owner := t.owner if t.is_building() else t.res_owner
 	# Quienes trabajaban ahí siguen en el mismo lugar con lo que sigue (crítica 03b, trampa 5).
 	var workers: Array[SimEntity] = []
-	for u in actives:
+	for u in _units: # --- rendimiento 3 --- las unidades de `actives`, en el mismo orden
 		if u.alive and u.is_unit() and u.target == t.id and (u.order == O.GATHER or u.order == O.RETURN):
 			workers.append(u)
 	_kill(t)
@@ -3052,18 +3122,43 @@ func _try_move(e: SimEntity, nx: int, ny: int) -> int:
 			e.y = ny
 			return 1
 		return 0
-	var corner := tx != cx and ty != cy and (map.is_solid(tx, cy, e.owner) or map.is_solid(cx, ty, e.owner))
-	if map.is_solid(cx, cy, e.owner) or (not map.is_solid(tx, ty, e.owner) and not corner):
+	# --- rendimiento 3 --- `map.is_solid` en línea (sin puertas cerca es solo leer `solid`).
+	var n := map.n
+	var sol := map.solid
+	var gate := map.gate_owner
+	var pid := e.owner
+	var i := cy * n + cx
+	var here := cx < 0 or cy < 0 or cx >= n or cy >= n or sol[i] != 0 or (gate[i] >= 0 and not map._allied(gate[i], pid))
+	if not here:
+		i = ty * n + tx
+		var there := tx < 0 or ty < 0 or tx >= n or ty >= n or sol[i] != 0 or (gate[i] >= 0 and not map._allied(gate[i], pid))
+		if not there:
+			var corner := false
+			if tx != cx and ty != cy:
+				i = cy * n + tx
+				corner = tx < 0 or tx >= n or sol[i] != 0 or (gate[i] >= 0 and not map._allied(gate[i], pid))
+				if not corner:
+					i = ty * n + cx
+					corner = ty < 0 or ty >= n or sol[i] != 0 or (gate[i] >= 0 and not map._allied(gate[i], pid))
+			here = not corner
+	if here:
 		e.x = nx
 		e.y = ny
 		return 2
-	if not map.is_solid(nx / P, e.y / P, e.owner):
+	var ax := nx / P
+	var ay := e.y / P
+	i = ay * n + ax
+	if not (ax < 0 or ay < 0 or ax >= n or ay >= n or sol[i] != 0 or (gate[i] >= 0 and not map._allied(gate[i], pid))):
 		e.x = nx
 		return 1
-	if not map.is_solid(e.x / P, ny / P, e.owner):
+	ax = e.x / P
+	ay = ny / P
+	i = ay * n + ax
+	if not (ax < 0 or ay < 0 or ax >= n or ay >= n or sol[i] != 0 or (gate[i] >= 0 and not map._allied(gate[i], pid))):
 		e.y = ny
 		return 1
 	return 0
+	# --- fin rendimiento 3 ---
 
 
 ## Se acerca a la entidad hasta `reach`. Devuelve true si ya está en alcance.
@@ -3246,16 +3341,15 @@ func find_enemy(e: SimEntity, radius: int, units_only: bool) -> SimEntity:
 	return best
 
 
+# --- rendimiento 3 --- (proceso/32-ronda-8/08): sin crear una entidad de sonda por consulta,
+# celdas vacías sin arreglo nuevo y el techo de lo disputado una sola vez. Mismo resultado.
 func find_resource(owner: int, kind: String, x: int, y: int, max_d: int, exclude: int = -1, worker: int = -1, only_type: String = "") -> SimEntity:
 	var best: SimEntity = null
 	var best_d := max_d + 1
-	var probe := SimEntity.new()
-	probe.x = x
-	probe.y = y
 	if kind == "alimento" and only_type == "":
 		for t in buildings_of(owner):
 			if t.alive and t.is_building() and t.owner == owner and t.built and t.id != exclude and t.def.get("fuente", "") == kind and _farm_free(t, worker):
-				var d := dist_to(probe, t)
+				var d := _dist_pt(x, y, t)
 				if d < best_d:
 					best = t
 					best_d = d
@@ -3264,35 +3358,46 @@ func find_resource(owner: int, kind: String, x: int, y: int, max_d: int, exclude
 	var cy := y / P / RC
 	var max_r := max_d / P / RC + 1
 	var skip := not _unreach_res.is_empty() and owner >= 0
+	var room := -1 # disputed_room(owner), al primer uso (no cambia dentro de la consulta)
 	for r in range(0, max_r + 1):
 		if best != null and (r - 1) * RC * P > best_d:
 			break
 		for dy in range(-r, r + 1):
-			for dx in range(-r, r + 1):
-				if absi(dx) != r and absi(dy) != r:
-					continue
-				var cell: Array = _res_cells.get((cx + dx) * 1024 + cy + dy, [])
+			var full := absi(dy) == r
+			var dx := -r
+			while dx <= r:
+				var cell: Array = _res_cells.get((cx + dx) * 1024 + cy + dy, _NONE)
 				for t: SimEntity in cell:
 					if not t.alive or t.id == exclude or t.res_kind != kind or t.amount <= 0 or (only_type != "" and t.type != only_type):
 						continue
-					if kind == "riqueza" and t.res_owner != owner and disputed_room(owner) <= 0:
-						continue # techo de lo disputado lleno: no sirve ir a esa arcilla
+					if kind == "riqueza" and t.res_owner != owner:
+						if room < 0:
+							room = maxi(0, disputed_room(owner))
+						if room <= 0:
+							continue # techo de lo disputado lleno: no sirve ir a esa arcilla
 					if skip and tick < int(_unreach_res.get(t.id * 64 + owner, -1)):
 						continue # no se llega (paso 6c)
-					var d := dist_to(probe, t)
+					var d := _dist_pt(x, y, t)
 					if d < best_d or (d == best_d and best != null and t.id < best.id):
 						if not map.has_free_neighbor(t.tx, t.ty, t.w, t.h):
 							continue
 						best = t
 						best_d = d
+				# En los renglones del medio del anillo, solo las dos puntas.
+				dx = dx + 1 if full or dx == r else r
 	return best
+
+
+## dist_to(sonda en (x, y), t) sin crear la sonda.
+func _dist_pt(x: int, y: int, t: SimEntity) -> int:
+	if t.is_unit():
+		return maxi(0, dist(x, y, t.x, t.y) - t.radius)
+	return dist(x, y, clampi(x, t.tx * P, (t.tx + t.w) * P), clampi(y, t.ty * P, (t.ty + t.h) * P))
+# --- fin rendimiento 3 ---
 
 func nearest_dropoff(owner: int, kind: String, x: int, y: int) -> SimEntity:
 	var best: SimEntity = null
 	var best_d := 1 << 60
-	var probe := SimEntity.new()
-	probe.x = x
-	probe.y = y
 	for b in owned(owner):
 		if not b.alive or b.owner != owner:
 			continue
@@ -3302,7 +3407,7 @@ func nearest_dropoff(owner: int, kind: String, x: int, y: int) -> SimEntity:
 				continue
 		elif not b.is_building() or not b.built or not _accepts(b, kind):
 			continue
-		var d := dist_to(probe, b)
+		var d := _dist_pt(x, y, b)
 		if d < best_d or (d == best_d and best != null and b.id < best.id):
 			best = b
 			best_d = d
@@ -3318,9 +3423,6 @@ func _rebusca_lejos(owner: int, x: int, y: int, kind: String, only_type: String,
 	var max_d := int(cfg.get("max", 0))
 	if max_d <= 0 or kind == "":
 		return null
-	var probe := SimEntity.new()
-	probe.x = x
-	probe.y = y
 	var tipos := [only_type, ""] if only_type != "" else [""]
 	for tipo: String in tipos:
 		var best: SimEntity = null
@@ -3328,12 +3430,12 @@ func _rebusca_lejos(owner: int, x: int, y: int, kind: String, only_type: String,
 		for b in buildings_of(owner):
 			if not b.alive or b.owner != owner or not b.is_building() or not b.built or not _accepts(b, kind):
 				continue
-			if dist_to(probe, b) > max_d:
+			if _dist_pt(x, y, b) > max_d:
 				continue
 			var r := find_resource(owner, kind, b.x, b.y, int(cfg["radio_deposito"]), -1, worker, tipo)
 			if r == null or (r.is_building() and tipo == ""):
 				continue # las granjas ya las busca la rebusca de siempre
-			var d := dist_to(probe, r)
+			var d := _dist_pt(x, y, r)
 			if d < best_d or (d == best_d and r.id < best.id):
 				best = r
 				best_d = d
@@ -3346,12 +3448,9 @@ func _rebusca_lejos(owner: int, x: int, y: int, kind: String, only_type: String,
 func _nearest_unbuilt(owner: int, x: int, y: int, max_d: int) -> SimEntity:
 	var best: SimEntity = null
 	var best_d := max_d + 1
-	var probe := SimEntity.new()
-	probe.x = x
-	probe.y = y
 	for b in buildings_of(owner):
 		if b.alive and b.is_building() and b.owner == owner and not b.built:
-			var d := dist_to(probe, b)
+			var d := _dist_pt(x, y, b)
 			if d < best_d:
 				best = b
 				best_d = d
