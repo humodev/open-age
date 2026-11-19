@@ -71,4 +71,6 @@ Las dos diferencias están dentro del ruido de 15 partidas (±12 puntos). Y la I
 
 ## Commits
 
-COMMITS_AQUI
+- `2ca3eb7` datos (jinete, guardia de distancia) y la matriz antes y con los parches
+- `8ea4961` pruebas: micro, asedio, primera victoria
+- `ad6a792`, `a814deb` y este: el documento y el civ_diag
