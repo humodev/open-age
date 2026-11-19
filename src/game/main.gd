@@ -1068,6 +1068,8 @@ func save_replay() -> void:
 	# --- fluidez 6 --- la última (como antes) y una por partida en user://repeticiones/
 	var r := Guardado.datos(_replay_meta, sim)
 	Guardado.escribir(REPLAY, r)
+	if _args.has("autotest") or _args.has("shot"):
+		return # las pruebas no llenan la lista de repeticiones
 	if _nombre_repe == "":
 		_nombre_repe = "%s-%d.json" % [Time.get_datetime_string_from_system().replace(":", "-"), _seed]
 	Guardado.escribir(Guardado.DIR_REPES + _nombre_repe, r)
