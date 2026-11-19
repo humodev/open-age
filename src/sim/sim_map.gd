@@ -22,6 +22,7 @@ var path_cfg := {}
 var now := 0
 var _ver_block := 0 # sube cuando alguna casilla se tapa (construir, puertas, pesos)
 var _ver_open := 0 # sube cuando alguna casilla se abre (destruir, talar)
+var _unreach := {} # (jugador, región origen, región destino) -> [casilla más cercana alcanzable, ver_block, ver_open, tick]
 var _pcache := {} # clave (jugador, región origen, región destino) -> [camino, destino, ver_block, ver_open, tick, llega]
 var cache_hits := 0 # contadores para el perfilador (no cambian nada)
 var cache_miss := 0
@@ -125,14 +126,16 @@ func mark(tx: int, ty: int, w: int, h: int, id: int, blocks: bool, gate_pid: int
 					a.set_point_solid(cell, true)
 
 
-func clear(tx: int, ty: int, w: int, h: int) -> void:
+## `res`: era un recurso (árbol, piedra): abrirlo no invalida los destinos encerrados de la caché
+## de caminos (se talan todo el tiempo; esos vencen solos a los `vence_ticks`).
+func clear(tx: int, ty: int, w: int, h: int, res: bool = false) -> void:
 	for yy in range(ty, ty + h):
 		for xx in range(tx, tx + w):
 			if not in_bounds(xx, yy):
 				continue
 			var idx := yy * n + xx
 			var cell := Vector2i(xx, yy)
-			if solid[idx] != 0 or gate_owner[idx] >= 0:
+			if not res and (solid[idx] != 0 or gate_owner[idx] >= 0):
 				_ver_open += 1
 			occupied[idx] = -1
 			solid[idx] = 0
@@ -199,10 +202,24 @@ func find_path(from: Vector2i, to: Vector2i, pid: int = -1) -> Array[Vector2i]:
 			cache_hits += 1
 			return sp
 	cache_miss += 1
-	var r := _grid(pid).get_id_path(from, to, true)
+	# Destino encerrado (muralla, edificios): el A* parcial recorre toda la zona alcanzable (7–9 ms
+	# en un mapa de 240). Si otro de la misma región ya buscó hacia esa región y no llegó, se va directo a la casilla
+	# más cercana que él encontró, y al destino si de ahí se ve en línea recta.
+	var ukey := key # misma región de origen: si no, el origen puede estar en otra zona y el A* hacia esa casilla también recorre todo
+	var u: Array = _unreach.get(ukey, [])
+	var r: Array[Vector2i]
+	if not u.is_empty() and int(u[1]) == _ver_block and int(u[2]) == _ver_open and now - int(u[3]) <= int(path_cfg["vence_ticks"]) and not is_solid(u[0].x, u[0].y, pid):
+		r = _grid(pid).get_id_path(from, u[0], true)
+		if not r.is_empty() and r[r.size() - 1] == u[0] and r[r.size() - 1] != to and _clear_line(u[0], to, pid):
+			r.append(to)
+		return r
+	r = _grid(pid).get_id_path(from, to, true)
+	if not r.is_empty() and r[r.size() - 1] != to:
+		_unreach[ukey] = [r[r.size() - 1], _ver_block, _ver_open, now]
 	if r.size() >= 2:
 		if _pcache.size() >= int(path_cfg["max_entradas"]):
 			_pcache.clear()
+			_unreach.clear()
 		_pcache[key] = [r, to, _ver_block, _ver_open, now, r[r.size() - 1] == to]
 	return r
 

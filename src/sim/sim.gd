@@ -2399,7 +2399,7 @@ func _kill(e: SimEntity, killer: SimEntity = null) -> void:
 	if e.is_unit() and not e.garrison.is_empty(): # --- paso 6 --- la canoa se hunde: nadan a la orilla
 		_unload(e, int(data.reglas.get("canoa", {}).get("nado_casillas", 3)), true)
 	if e.is_building() or e.is_resource():
-		map.clear(e.tx, e.ty, e.w, e.h)
+		map.clear(e.tx, e.ty, e.w, e.h, e.is_resource())
 	if e.is_building():
 		_close_corridors_of(e.tx, e.ty, e.w, e.h, e.id)
 		mods.on_building_removed(e)
