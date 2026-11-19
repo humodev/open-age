@@ -73,6 +73,27 @@
     "adiestramiento": "adiestramiento"
   },
   "imagenes": {
-    "_doc": "Imagen que reemplaza a un glifo (para cuando haya arte, p. ej. de Meshy): {nombre del ícono: ruta res://}. El nombre es el del ícono, no el del comando: «hacha», «diana», «espada~guerrero~2», «guerrero^1». Si la ruta no existe, se dibuja el glifo. La imagen se atenúa igual que el glifo cuando la casilla está bloqueada o le falta recurso. Ejemplo: \"hacha\": \"res://assets/ui/iconos/hacha.png\"."
+    "_doc": "Imagen que reemplaza a un glifo (para cuando haya arte, p. ej. de Meshy): {nombre del ícono: ruta res://}. El nombre es el del ícono, no el del comando: «hacha», «diana», «espada~guerrero~2», «guerrero^1». Si la ruta no existe, se dibuja el glifo. La imagen se atenúa igual que el glifo cuando la casilla está bloqueada o le falta recurso. Ejemplo: \"hacha\": \"res://assets/ui/iconos/hacha.png\". Los genéricos de assets/ui/iconos/ salen de game-icons.net (CC BY 3.0) con tools/iconos_render.py: proceso/39-arte-interfaz.",
+    "alimento": "res://assets/ui/iconos/alimento_64.png",
+    "madera": "res://assets/ui/iconos/madera_64.png",
+    "piedra": "res://assets/ui/iconos/piedra_64.png",
+    "riqueza": "res://assets/ui/iconos/riqueza_64.png",
+    "atacar": "res://assets/ui/iconos/atacar_64.png",
+    "patrullar": "res://assets/ui/iconos/patrullar_64.png",
+    "campana": "res://assets/ui/iconos/campana_64.png",
+    "investigar": "res://assets/ui/iconos/investigar_64.png",
+    "vida": "res://assets/ui/iconos/vida_64.png",
+    "velocidad": "res://assets/ui/iconos/velocidad_64.png",
+    "escudo": "res://assets/ui/iconos/escudo_64.png",
+    "carga": "res://assets/ui/iconos/carga_64.png",
+    "hacha": "res://assets/ui/iconos/hacha_64.png",
+    "pico": "res://assets/ui/iconos/pico_64.png",
+    "canasta": "res://assets/ui/iconos/canasta_64.png",
+    "martillo": "res://assets/ui/iconos/martillo_64.png",
+    "yunque": "res://assets/ui/iconos/yunque_64.png",
+    "engranaje": "res://assets/ui/iconos/engranaje_64.png",
+    "riego": "res://assets/ui/iconos/riego_64.png",
+    "arco": "res://assets/ui/iconos/arco_64.png",
+    "vigia": "res://assets/ui/iconos/vigia_64.png"
   }
 }
