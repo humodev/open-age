@@ -585,6 +585,8 @@ func _sacred() -> void:
 		if site.holder == who:
 			site.capture = 0
 			continue
+		if not sim.can_take_sites(who): # --- esport 1a --- se toman desde la II: antes, solo se disputan
+			continue
 		if site.aux != who:
 			site.aux = who
 			site.capture = 0

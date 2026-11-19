@@ -40,6 +40,7 @@ const DESCS := {
 	# --- órdenes --- (proceso/23, parte B)
 	"mantener": "No se mueven: atacan solo lo que tengan a su alcance. Cualquier otra orden lo corta.",
 	"patrullar": "Van y vuelven entre donde están y el punto que marques (clic izquierdo), atacando lo que vean.",
+	"suelo": "El asedio de área tira al punto que marques (clic izquierdo) hasta otra orden: para cerrar un paso o pegarle a la tropa que va a pasar por ahí. Su tiro tarda en llegar: la tropa que se mueve a tiempo lo esquiva.", # --- esport 1a ---
 	"form_bloque": "Rectángulo de dos de ancho por uno de fondo: la línea adelante, la distancia atrás y los montados en las alas.",
 	"form_linea": "Dos filas, muy ancha: la distancia reparte el daño y nadie queda atrás sin disparar.",
 	"form_abierta": "Como el bloque, con el doble de espacio: sufre menos el daño en área (elefantes, andanadas).",
@@ -332,6 +333,11 @@ func commands() -> Array[Dictionary]:
 		if mil:
 			out.append({"slot": Grilla.fija("mantener", 6), "id": "mantener", "icon": "mantener", "kind": "hold", "name": "Mantener posición", "cost": {}, "desc": DESCS["mantener"], "locked": ""})
 			out.append({"slot": Grilla.fija("patrullar", 2), "id": "patrullar", "icon": "patrullar", "kind": "patrol", "name": "Patrullar", "cost": {}, "desc": DESCS["patrullar"], "locked": ""})
+			# --- esport 1a --- atacar el suelo: si hay asedio de área en la selección
+			for e in sel:
+				if e.owner == local and Sim.can_ground(e):
+					out.append({"slot": Grilla.fija("suelo", 3), "id": "suelo", "icon": "suelo", "kind": "ground", "name": "Atacar el suelo", "cost": {}, "desc": DESCS["suelo"], "locked": ""})
+					break
 			for k in FORMAS:
 				out.append({"slot": Grilla.fija(k, 8), "id": k, "icon": k, "kind": "form", "form": FORMAS[k][0], "name": "Formación: %s%s" % [FORMAS[k][1], " (elegida)" if formacion == FORMAS[k][0] else ""], "cost": {}, "desc": DESCS[k] + " Arrastrá el clic derecho para elegir hacia dónde mira.", "locked": ""})
 		# --- fin órdenes ---
@@ -824,6 +830,8 @@ func run_command(cmd: Dictionary) -> void:
 		# --- órdenes ---
 		"patrol":
 			mode = "patrol"
+		"ground": # --- esport 1a ---
+			mode = "ground"
 		"hold":
 			sim.push_command({"t": "mantener", "player": local, "ids": _own_unit_ids()})
 		"form":
@@ -1002,7 +1010,7 @@ func _process(_delta: float) -> void:
 func cursor_action(m: Vector2) -> String:
 	if _over_hud(m) or dragging:
 		return ""
-	if mode == "amove" or mode == "patrol":
+	if mode == "amove" or mode == "patrol" or mode == "ground": # --- esport 1a --- ground
 		return "atacar"
 	if mode == "place":
 		var tile: Vector2i = _ghost.get_meta("tile", Vector2i(-1, -1))
@@ -1146,6 +1154,17 @@ func _mouse_button(mb: InputEventMouseButton) -> void:
 				cancel_mode()
 			return
 		# --- órdenes ---
+		if mode == "ground": # --- esport 1a --- atacar el suelo
+			var gg := cam.ground_at(mb.position)
+			var gids: Array = []
+			for e in selected_entities():
+				if e.owner == local and Sim.can_ground(e):
+					gids.append(e.id)
+			sim.push_command({"t": "suelo", "player": local, "ids": gids, "x": int(gg.x * P), "y": int(gg.z * P)})
+			view.add_marker(gg, Palette.UI_BAD)
+			if not Input.is_key_pressed(KEY_SHIFT):
+				cancel_mode()
+			return
 		if mode == "patrol":
 			var gp := cam.ground_at(mb.position)
 			sim.push_command({"t": "patrullar", "player": local, "ids": _own_unit_ids(), "x": int(gp.x * P), "y": int(gp.z * P)})

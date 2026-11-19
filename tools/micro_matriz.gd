@@ -31,6 +31,8 @@ extends SceneTree
 ##               un cuerpo a cuerpo está a menos del 60 % del alcance, alejarse 2 casillas
 ##   mantener    la línea forma y mantiene posición; la distancia mantiene detrás y tira
 ##   mantener+escalonar  la línea mantiene y la distancia escalona detrás de ella
+##   esquivar    --- esport 1a --- cada unidad que está donde va a caer un tiro de asedio de área
+##               (Sim.shells) se corre fuera del área y vuelve al ataque cuando cae (200 ms de reacción)
 ## Formación (opcional): bloque, linea, abierta, columna (la del grupo de AoE4, data/reglas.json).
 
 const O := SimEntity.Order
@@ -72,7 +74,7 @@ func _init() -> void:
 		_apply_patch(patch_path)
 	print("# micro_matriz · civs %s / %s · edad %d%s · parche %s" % [civs[0] if civs[0] != "" else "capa común", civs[1] if civs[1] != "" else "capa común", age, " con compras" if purchases else "", patch_path if patch_path != "" else "ninguno"])
 	print("# bonos %s" % JSON.stringify(data.reglas.get("bonos", {})))
-	for t in ["guerrero", "hondero", "lancero", "jinete"]:
+	for t in ["guerrero", "hondero", "lancero", "jinete", "catapulta"]:
 		var d: Dictionary = data.for_civ(civs[0]).unidades.get(t, {})
 		if not d.is_empty():
 			print("# %s: pv %d, ataque %d, armadura %d/%d, alcance %d, cadencia %d, velocidad %d, costo %s" % [t, d["pv"], d["ataque"], d.get("armadura", 0), d.get("armadura_distancia", d.get("armadura", 0)), d["alcance"], d["cadencia_ms"], d["velocidad"], JSON.stringify(d.get("costo", {}))])
@@ -126,6 +128,20 @@ func _default_cases() -> Array:
 		["mezcla", m, h, "nada"],
 		["mezcla", m, l, "nada"],
 		["mezcla", "guerrero:5+hondero:5", m, "nada"],
+		# --- esport 1a --- el triángulo a igual costo y mano a mano (proceso/34-hacia-esport/01a)
+		["triangulo", "lancero:9", "jinete:5", "nada"],
+		["triangulo", "lancero:5", "jinete:5", "nada"],
+		["triangulo", "lancero:1", "jinete:1", "nada"],
+		["triangulo", "guerrero:9", "hondero:10", "nada"],
+		["triangulo", "hondero:10", "lancero:8", "nada"],
+		["triangulo", "guerrero:1", "hondero:1", "nada"],
+		["triangulo", "hondero:1", "lancero:1", "nada"],
+		# --- esport 1a --- contra el asedio de área: sin micro, esquivando y en formación abierta
+		["area", "hondero:10", "catapulta:2+lancero:4", "nada"],
+		["area", "hondero:10", "catapulta:2+lancero:4", "esquivar"],
+		["area", "hondero:10", "catapulta:2+lancero:4", "nada", "abierta"],
+		["area", "lancero:10", "catapulta:2+hondero:6", "nada"],
+		["area", "lancero:10", "catapulta:2+hondero:6", "esquivar"],
 	]
 
 
@@ -258,6 +274,7 @@ func _fight(c: Array, v: int) -> Dictionary:
 		s.push_command(cmd)
 	s.push_command({"t": "move", "player": 1, "ids": b, "x": (cx - 8) * P, "y": cx * P, "amove": true})
 	var hp0 := [_hp(s, a), _hp(s, b)]
+	var dodging := {} # --- esport 1a --- id -> tick en que cae el tiro que esquiva
 	var t := 0
 	while t < MAX_TICKS and _alive(s, a) > 0 and _alive(s, b) > 0:
 		if mode.begins_with("mantener") and t == 40:
@@ -275,6 +292,9 @@ func _fight(c: Array, v: int) -> Dictionary:
 			"foco":
 				if t % 5 == 0 and t > 0:
 					_focus(s, ranged_a, b)
+			"esquivar":
+				if t % 2 == 0 and t > 0:
+					_dodge(s, a, goal_a, dodging)
 		s.step()
 		t += 1
 	return {"t": t, "va": _alive(s, a), "na": a.size(), "hpa": _hp(s, a) * 100 / maxi(1, hp0[0]), "vb": _alive(s, b), "nb": b.size(), "hpb": _hp(s, b) * 100 / maxi(1, hp0[1]), "ca": _cost(s, 0, sa), "cb": _cost(s, 1, sb)}
@@ -335,6 +355,39 @@ func _away(s: Sim, u: SimEntity, foe: SimEntity, how_far: int) -> void:
 	var dy := u.y - foe.y
 	var l := maxi(1, int(sqrt(float(dx * dx + dy * dy))))
 	s.push_command({"t": "move", "player": 0, "ids": [u.id], "x": u.x + dx * how_far / l, "y": u.y + dy * how_far / l, "suelto": true})
+
+
+# --- esport 1a ---
+## Esquivar el asedio de área: quien está a `area` + 0,3 casillas de donde va a caer un tiro rival
+## se corre `area` + 0,6 casillas desde ese punto; cuando el tiro cayó, vuelve al ataque.
+func _dodge(s: Sim, ids: Array, goal: Vector2i, dodging: Dictionary) -> void:
+	for id in ids:
+		var u: SimEntity = s.by_id.get(id)
+		if u == null or not u.alive:
+			continue
+		if dodging.has(id):
+			if s.tick > int(dodging[id]):
+				dodging.erase(id)
+				s.push_command({"t": "move", "player": 0, "ids": [id], "x": goal.x, "y": goal.y, "amove": true, "suelto": true})
+			continue
+		for sh in s.shells:
+			var src: SimEntity = sh["a"]
+			if src.owner == u.owner:
+				continue
+			var r := int(src.def["area"])
+			var px := int(sh["x"])
+			var py := int(sh["y"])
+			if Sim.dist(u.x, u.y, px, py) <= r + 300:
+				var dx := u.x - px
+				var dy := u.y - py
+				if dx == 0 and dy == 0:
+					dy = 1
+				var l := maxi(1, int(sqrt(float(dx * dx + dy * dy))))
+				var go := r + 600
+				s.push_command({"t": "move", "player": 0, "ids": [id], "x": px + dx * go / l, "y": py + dy * go / l, "suelto": true})
+				dodging[id] = int(sh["tick"])
+				break
+# --- fin esport 1a ---
 
 
 ## Fuego concentrado: los de distancia, al enemigo con menos vida que esté a su alcance.
