@@ -110,10 +110,10 @@ func _formula() -> void:
 func _saturation() -> void:
 	print("Saturación por ruta (10 libres, −3 % cada uno, piso 60):")
 	var c: SimComercio = _sim().comercio
-	_check(c.saturation(10) == 100, "10 comerciantes: 100 %")
-	_check(c.saturation(11) == 97, "11: 97 %")
-	_check(c.saturation(20) == 70, "20: 70 % (rinden como 14)")
-	_check(c.saturation(30) == 60, "30: piso 60 %")
+	_check(c.saturation(7) == 100, "7 comerciantes: 100 %")
+	_check(c.saturation(8) == 90, "8: 90 %")
+	_check(c.saturation(10) == 70, "10: 70 % (rinden como 7)")
+	_check(c.saturation(20) == 40, "20: piso 40 %")
 
 
 # ------------------------------------------------------------------ viaje
@@ -227,6 +227,10 @@ func _blocked() -> void:
 	_check(s2.comercio.blocked(0, neu2), "con %d sí" % need)
 	s2.spawn_unit("guerrero", 0, t2.x * P + P / 2, t2.y * P + P / 2).order = SimEntity.Order.HOLD
 	_check(not s2.comercio.blocked(0, neu2), "con una tropa propia, no")
+	# La escolta suma (esport 3b): con una propia, corta pob_min + 1.
+	var t4 := s2.map.nearest_free(neu2.tx + 6, neu2.ty + 3, 4, 1)
+	s2.spawn_unit("guerrero", 1, t4.x * P + P / 2, t4.y * P + P / 2).order = SimEntity.Order.HOLD
+	_check(s2.comercio.blocked(0, neu2), "con una propia, %d enemigos sí cortan" % (need + 1))
 	_on_route()
 
 

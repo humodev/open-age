@@ -535,17 +535,18 @@ func _bc() -> Dictionary:
 	return cfg.get("bloqueo", {})
 
 
-## Mercado tomado por presencia: `pob_min` o más de población militar enemiga a `radio` del
-## destino (+1,5 casillas por la huella) y ninguna tropa propia o aliada.
+## Mercado tomado por presencia: población militar enemiga a `radio` del destino (+1,5 casillas
+## por la huella) que supera en `pob_min` o más a la escolta propia o aliada.
 func blocked(pid: int, dest: SimEntity) -> bool:
 	return blocked_at(pid, dest.x, dest.y, int(_bc().get("radio", 8000)) + P * 3 / 2)
 
 
-## ¿Corta la ruta de `pid` la tropa a `r` de (x, y)? `pob_min` o más de población militar
-## enemiga y ninguna tropa propia o aliada.
+## ¿Corta la ruta de `pid` la tropa a `r` de (x, y)? La población militar enemiga supera en
+## `pob_min` o más a la escolta propia o aliada del lugar (esport 3b: la escolta suma).
 func blocked_at(pid: int, x: int, y: int, r: int) -> bool:
 	var need := int(_bc().get("pob_min", 3))
 	var foes := 0
+	var escort := 0
 	for u in sim.military():
 		if not u.alive or u.inside >= 0 or u.owner < 0:
 			continue
@@ -554,8 +555,8 @@ func blocked_at(pid: int, x: int, y: int, r: int) -> bool:
 		if sim.enemies(pid, u.owner):
 			foes += int(u.def.get("pob", 1))
 		else:
-			return false
-	return foes >= need
+			escort += int(u.def.get("pob", 1))
+	return foes >= escort + need
 
 
 ## De ida: ¿hay tropa que corta la ruta cerca del comerciante, o el destino está tomado y ya
