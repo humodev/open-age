@@ -1550,6 +1550,22 @@ class SelectionPanel:
 	const MULTI_COLS := 11
 	const MULTI_LADO := 40.0
 	const MULTI_PASO := 44.0
+	# --- fluidez 5 --- fondo por función en los retratos (veterano, ronda 7, §7.2): se distingue
+	# el ejército mixto sin leer el glifo. El borde queda con el color del jugador.
+	const FONDO_FUNCION := {"civil": Color("5f8a45"), "a_pie": Color("a8443a"), "montado": Color("c48a2c"), "asedio": Color("566c92")}
+
+	static func clase_funcion(def: Dictionary) -> String:
+		var fn := str(def.get("funcion", ""))
+		if fn == "civil":
+			return "civil"
+		if fn == "asedio" or def.get("navega", false):
+			return "asedio"
+		return "montado" if def.get("montado", false) else "a_pie"
+
+	func _fondo_retrato(sb: StyleBoxFlat, def: Dictionary, owner: int) -> void:
+		sb.bg_color = Color(FONDO_FUNCION[clase_funcion(def)], 0.42)
+		sb.border_color = Color(Palette.team(owner), 0.55) if owner >= 0 else Color(1, 1, 1, 0.08)
+	# --- fin fluidez 5 ---
 
 	func _multi(sel: Array[SimEntity]) -> void:
 		var groups := {}
@@ -1574,6 +1590,7 @@ class SelectionPanel:
 					sb.bg_color = Color(Palette.team(e.owner), 0.18) if e.owner >= 0 else Color(1, 1, 1, 0.05)
 					sb.border_color = Color(1, 1, 1, 0.08)
 					sb.set_border_width_all(1)
+					_fondo_retrato(sb, e.def, e.owner) # --- fluidez 5 ---
 					draw_style_box(sb, r)
 					hud.ficha.zone(self, r, {"id": e.id}) # --- ficha ---
 					Glyphs.draw(self, Glyphs.resolve(e.def, type), r.grow(-lado * 0.18), Palette.UI_TEXT)
@@ -1595,6 +1612,7 @@ class SelectionPanel:
 				sb.bg_color = Color(Palette.team(hud.local), 0.18)
 				sb.border_color = Color(1, 1, 1, 0.08)
 				sb.set_border_width_all(1)
+				_fondo_retrato(sb, (list[0] as SimEntity).def, (list[0] as SimEntity).owner) # --- fluidez 5 ---
 				draw_style_box(sb, r)
 				hud.ficha.zone(self, r, {"id": (list[0] as SimEntity).id, "n": list.size()}) # --- ficha ---
 				Glyphs.draw(self, Glyphs.resolve((list[0] as SimEntity).def, type), r.grow(-12), Palette.UI_TEXT)

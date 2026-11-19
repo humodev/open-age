@@ -17,6 +17,8 @@ static var mapa: Dictionary = {}
 static var _por_tecla: Dictionary = {}
 ## Grupos de control exclusivos (asignar a un grupo saca de los otros, como en AoE4).
 static var grupos_exclusivos := false
+## --- fluidez 5 --- Números de daño sobre los golpes fuertes (MundoCapa). El perfil «aoe4» los apaga.
+static var numeros_danio := true
 
 
 static func cfg() -> Dictionary:
@@ -99,6 +101,7 @@ static func de_fabrica() -> void:
 	for a: Array in acciones():
 		mapa[a[0]] = codigo(a[3])
 	grupos_exclusivos = bool((cfg().get("perfiles", {}) as Dictionary).get("fabrica", {}).get("grupos_exclusivos", false))
+	numeros_danio = bool((cfg().get("perfiles", {}) as Dictionary).get("fabrica", {}).get("numeros_danio", true)) # --- fluidez 5 ---
 	_reindexar()
 
 
@@ -111,6 +114,7 @@ static func perfil(clave: String) -> void:
 	for k in cambios:
 		mapa[k] = codigo(cambios[k])
 	grupos_exclusivos = bool(p.get("grupos_exclusivos", grupos_exclusivos))
+	numeros_danio = bool(p.get("numeros_danio", numeros_danio)) # --- fluidez 5 ---
 	_reindexar()
 
 
@@ -175,6 +179,7 @@ static func cargar(cf: ConfigFile) -> void:
 					mapa[k] = 0
 					break
 	grupos_exclusivos = bool(cf.get_value("controles", "grupos_exclusivos", grupos_exclusivos))
+	numeros_danio = bool(cf.get_value("controles", "numeros_danio", numeros_danio)) # --- fluidez 5 ---
 	_reindexar()
 
 
@@ -184,4 +189,5 @@ static func guardar(cf: ConfigFile) -> void:
 		var c := int(mapa.get(a[0], 0))
 		cf.set_value("teclas", a[0], "" if c == 0 else OS.get_keycode_string(c))
 	cf.set_value("controles", "grupos_exclusivos", grupos_exclusivos)
+	cf.set_value("controles", "numeros_danio", numeros_danio) # --- fluidez 5 ---
 # --- fin veterano ronda 4 ---

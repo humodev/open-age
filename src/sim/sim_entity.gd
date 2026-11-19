@@ -3,7 +3,7 @@ extends RefCounted
 ## Una entidad de la simulación. Las capacidades salen de `def` (datos), no de subclases.
 
 enum Cat { UNIT, BUILDING, RESOURCE }
-enum Order { IDLE, MOVE, ATTACK_MOVE, ATTACK, GATHER, RETURN, BUILD, GARRISON, HOLD, GROUND, TRADE } # --- esport 1a --- GROUND: atacar el suelo; --- comercio --- TRADE: ruta
+enum Order { IDLE, MOVE, ATTACK_MOVE, ATTACK, GATHER, RETURN, BUILD, GARRISON, HOLD, GROUND, TRADE, FOLLOW } # --- esport 1a --- GROUND: atacar el suelo; --- comercio --- TRADE: ruta; --- fluidez 5 --- FOLLOW: escoltar
 
 var id: int
 var owner: int = -1 # -1 = naturaleza
@@ -47,6 +47,13 @@ var amove_y: int
 var patrol := false
 var pat_x: int
 var pat_y: int
+# --- fluidez 5 --- Patrulla de varios puntos (Mayús): la vuelta recorre pat_pts en ronda; pat_i es
+# el punto hacia el que va. Con dos puntos o menos se usa la ida y vuelta de arriba.
+var pat_pts: Array[Vector2i] = []
+var pat_i := 0
+# Escolta: id de la unidad propia que sigue (orden FOLLOW, o pelea y vuelve a ella); -1 ninguna.
+var esc := -1
+# --- fin fluidez 5 ---
 # --- esport 1a --- Atacar el suelo: el punto donde tira el asedio de área (orden GROUND).
 var gnd_x: int
 var gnd_y: int

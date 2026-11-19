@@ -76,13 +76,17 @@ static func secciones() -> Array:
 	var grilla := "%s %s %s %s · %s %s %s %s · %s %s %s %s" % [_k("grilla_0"), _k("grilla_1"), _k("grilla_2"), _k("grilla_3"), _k("grilla_4"), _k("grilla_5"), _k("grilla_6"), _k("grilla_7"), _k("grilla_8"), _k("grilla_9"), _k("grilla_10"), _k("grilla_11")]
 	return [
 		["Lo básico", [
-			["Clic izquierdo", "elegir (arrastrá para un grupo; doble clic: todos los del tipo)"],
-			["Clic derecho", "mover, atacar, juntar, construir, reparar o alojar"],
+			["Clic izquierdo", "elegir (arrastrá para un grupo; doble clic o Ctrl + clic: todos los del tipo en pantalla)"], # --- fluidez 5 ---
+			["Clic derecho", "mover, atacar, juntar, construir, reparar o alojar; sobre una unidad propia, seguirla y escoltarla"], # --- fluidez 5 ---
 			[grilla, "la grilla de órdenes: construir, entrenar, investigar"],
 			# --- ronda 6 --- la elección de blancos (proceso/24, 5d): ya no «lo primero que ven»
 			["%s y clic" % _k("grilla_4"), "atacar en movimiento: primero a los soldados, después a los aldeanos y a lo que tira flechas. Para tirar edificios: asedio y clic derecho sobre el edificio"],
 			# --- fin ronda 6 ---
 			[_k("grilla_5"), "detener"],
+			# --- fluidez 5 ---
+			["Mayús + órdenes", "encolar: mover, atacar, construir y también mantener posición"],
+			["Patrullar + Mayús + clics", "patrulla de varios puntos: recorre la ronda y vuelve a empezar"],
+			# --- fin fluidez 5 ---
 			[_k("ir_aviso"), "ir al último ataque o aviso"],
 			[_k("avisos_atras"), "recorrer los avisos anteriores"],
 			["Esc", "pausa (y cerrar esta hoja)"],
@@ -105,7 +109,7 @@ static func secciones() -> Array:
 			["Mayús + %s…%s" % [_k("grupo_1"), _k("grupo_0")], "sumar al grupo"],
 			["Ctrl + Alt + 1…8", "guardar la cámara"],
 			["Alt + 1…8 · %s %s %s" % [_k("marcador_1"), _k("marcador_2"), _k("marcador_3")], "volver a una cámara guardada"],
-			["Flechas, bordes", "mover la cámara (botón del medio: girar)"],
+			["Flechas, bordes, botón del medio", "mover la cámara (el botón del medio la arrastra); rueda: acercar y alejar"], # --- fluidez 5 --- no gira: el ángulo es fijo
 			["Mantener Alt", "ver qué es cada edificio y cada tropa (choque, distancia, línea, asedio, aldeano), los alcances y las barras de vida"], # --- ronda 6 ---
 		]],
 		["Paneles", [

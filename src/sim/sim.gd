@@ -230,7 +230,13 @@ func _apply(c: Dictionary) -> void:
 					e.group = -1
 					e.order = O.HOLD
 		"patrullar":
-			_cmd_patrol(pid, _own_units(pid, c.get("ids", [])), int(c["x"]), int(c["y"]))
+			# --- fluidez 5 --- "sumar" (Mayús): un punto más en la ronda de los que ya patrullan
+			if c.get("sumar", false):
+				_cmd_patrol_add(pid, c.get("ids", []), int(c["x"]), int(c["y"]))
+			else:
+				_cmd_patrol(pid, _own_units(pid, c.get("ids", [])), int(c["x"]), int(c["y"]))
+		"escoltar": # --- fluidez 5 --- seguir o escoltar una unidad propia
+			_cmd_escort(pid, _own_units(pid, c.get("ids", [])), int(c.get("target", -1)))
 		"suelo": # --- esport 1a --- atacar el suelo (solo el asedio de área)
 			_cmd_ground(pid, _own_units(pid, c.get("ids", [])), int(c["x"]), int(c["y"]))
 		"bengala":
@@ -351,6 +357,7 @@ func _own_units(pid: int, ids: Array) -> Array[SimEntity]:
 		var e: SimEntity = by_id.get(id)
 		if e != null and e.alive and e.owner == pid and e.is_unit() and e.inside < 0:
 			e.patrol = false # cualquier orden nueva corta la patrulla
+			e.esc = -1 # --- fluidez 5 --- y la escolta
 			out.append(e)
 	return out
 
@@ -400,6 +407,90 @@ func _cmd_patrol(pid: int, units: Array[SimEntity], x: int, y: int) -> void:
 		pu[i].patrol = true
 		pu[i].pat_x = starts[i].x
 		pu[i].pat_y = starts[i].y
+		pu[i].pat_pts = [starts[i], Vector2i(pu[i].amove_x, pu[i].amove_y)] as Array[Vector2i] # --- fluidez 5 ---
+		pu[i].pat_i = 1
+
+
+# --- fluidez 5 --- (proceso/30-fluidez/06-seleccion-y-ordenes.md)
+## Patrulla de varios puntos: suma (x, y) a la ronda de cada unidad que ya patrulla, con el mismo
+## desvío que tenía su último punto respecto del centro del grupo (se mantiene el reparto). Las que
+## no patrullan empiezan una patrulla común hacia ese punto.
+func _cmd_patrol_add(pid: int, ids: Array, x: int, y: int) -> void:
+	var sorted := ids.duplicate()
+	sorted.sort()
+	var on: Array[SimEntity] = []
+	var fresh: Array = []
+	for id in sorted:
+		var e: SimEntity = by_id.get(id)
+		if e == null or not e.alive or e.owner != pid or not e.is_unit() or e.inside >= 0:
+			continue
+		if e.patrol and e.pat_pts.size() >= 2 and e.pat_pts.size() < int(data.reglas["ordenes"]["patrulla_max_puntos"]):
+			on.append(e)
+		else:
+			fresh.append(id)
+	if not on.is_empty():
+		var cx := 0
+		var cy := 0
+		for e in on:
+			var last: Vector2i = e.pat_pts[e.pat_pts.size() - 1]
+			cx += last.x
+			cy += last.y
+		cx /= on.size()
+		cy /= on.size()
+		for e in on:
+			var last: Vector2i = e.pat_pts[e.pat_pts.size() - 1]
+			var px := clampi(x + last.x - cx, 100, map.n * P - 100)
+			var py := clampi(y + last.y - cy, 100, map.n * P - 100)
+			if e.pat_pts.size() == 2: # la ida y vuelta no movía pat_i: hacia dónde va ahora
+				e.pat_i = 0 if Vector2i(e.amove_x, e.amove_y) == e.pat_pts[0] else 1
+			e.pat_pts.append(Vector2i(px, py))
+	if not fresh.is_empty():
+		_cmd_patrol(pid, _own_units(pid, fresh), x, y)
+
+
+## Escolta: sigue a una unidad propia o aliada (no a sí misma). El militar pelea con lo que se
+## acerque a lo que escolta y vuelve a su lado (reglas.ordenes.escolta_*).
+func _cmd_escort(pid: int, units: Array[SimEntity], target_id: int) -> void:
+	var t: SimEntity = by_id.get(target_id)
+	if t == null or not t.alive or not t.is_unit() or t.owner < 0 or enemies(pid, t.owner):
+		return
+	for e in units:
+		if e.id == t.id:
+			continue
+		_set_idle(e)
+		e.group = -1
+		e.order = O.FOLLOW
+		e.esc = t.id
+
+
+func _do_escort(e: SimEntity) -> void:
+	var t: SimEntity = by_id.get(e.esc)
+	if t == null or not t.alive or t.inside >= 0:
+		e.esc = -1
+		_set_idle(e)
+		return
+	var cfg: Dictionary = data.reglas["ordenes"]
+	if e.is_military() and (tick + e.id) % 3 == 0:
+		var foe := find_enemy(e, e.def["vision"], false)
+		if foe != null and dist(foe.x, foe.y, t.x, t.y) <= int(cfg["escolta_correa"]):
+			_order_attack(e, foe, true)
+			return
+	if dist(e.x, e.y, t.x, t.y) <= int(cfg["escolta_distancia"]):
+		e.anchored = false
+		e.path.clear()
+		e.path_i = 0
+		return
+	if e.path.is_empty() or (tick + e.id) % int(cfg["escolta_rehace_ticks"]) == 0:
+		_set_goal(e, t.x, t.y)
+	if _follow(e):
+		e.path.clear()
+		e.path_i = 0
+
+
+func _escort_far(e: SimEntity) -> bool:
+	var t: SimEntity = by_id.get(e.esc)
+	return t == null or not t.alive or dist(e.x, e.y, t.x, t.y) > int(data.reglas["ordenes"]["escolta_correa"])
+# --- fin fluidez 5 ---
 
 
 ## Bengala (Alt + clic): "atacá acá", o "defendé acá" si cae cerca de lo propio o de un aliado.
@@ -1694,10 +1785,19 @@ func _update_unit(e: SimEntity) -> void:
 			_do_garrison(e)
 		O.TRADE:
 			comercio.update(e) # --- comercio ---
+		O.FOLLOW:
+			_do_escort(e) # --- fluidez 5 ---
 
 
 ## Patrulla: llegó a una punta, da la vuelta hacia la otra.
 func _patrol_turn(e: SimEntity) -> void:
+	if e.pat_pts.size() > 2: # --- fluidez 5 --- varios puntos: al siguiente de la ronda
+		e.pat_i = (e.pat_i + 1) % e.pat_pts.size()
+		var q: Vector2i = e.pat_pts[e.pat_i]
+		e.amove_x = q.x
+		e.amove_y = q.y
+		_set_goal(e, q.x, q.y)
+		return
 	var nx := e.pat_x
 	var ny := e.pat_y
 	e.pat_x = e.amove_x
@@ -1767,6 +1867,14 @@ func _order_build(e: SimEntity, b: SimEntity) -> void:
 
 func _do_attack(e: SimEntity) -> void:
 	var t: SimEntity = by_id.get(e.target)
+	# --- fluidez 5 --- el escolta vuelve con su protegido si el blanco murió o se lo lleva lejos
+	if e.esc >= 0 and (t == null or not t.alive or (e.auto_tgt and (tick + e.id) % 3 == 0 and _escort_far(e))):
+		e.order = O.FOLLOW
+		e.target = -1
+		e.path.clear()
+		e.path_i = 0
+		return
+	# --- fin fluidez 5 ---
 	if t == null or not t.alive:
 		if e.resume_amove:
 			e.order = O.ATTACK_MOVE
@@ -5558,6 +5666,12 @@ func state_hash() -> int:
 		if e.patrol or e.rumbo >= 0:
 			for v in [int(e.patrol), e.pat_x, e.pat_y, e.rumbo]:
 				h = ((h ^ (v & 0xffffffff)) * 16777619) & 0xffffffff
+		if e.patrol and e.pat_pts.size() > 2: # --- fluidez 5 ---
+			for q in e.pat_pts:
+				h = ((h ^ ((q.x * 31 + q.y) & 0xffffffff)) * 16777619) & 0xffffffff
+			h = ((h ^ e.pat_i) * 16777619) & 0xffffffff
+		if e.esc >= 0:
+			h = ((h ^ e.esc) * 16777619) & 0xffffffff
 	for f in flares:
 		for v in [f["id"], f["player"], f["x"], f["y"], f["tick"]]:
 			h = ((h ^ (int(v) & 0xffffffff)) * 16777619) & 0xffffffff

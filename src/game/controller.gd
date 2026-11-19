@@ -60,6 +60,7 @@ var local: int
 var hud: Control # HUD (zona que bloquea clics en el mapa)
 var selection: Array[int] = []
 var mode := "" # "", "place", "amove"
+var _pat_n := 0 # --- fluidez 5 --- puntos ya mandados en este modo de patrulla (con Mayús se suman)
 var place_type := ""
 var groups := {}
 var enabled := true
@@ -833,10 +834,18 @@ func run_command(cmd: Dictionary) -> void:
 		# --- órdenes ---
 		"patrol":
 			mode = "patrol"
+			_pat_n = 0 # --- fluidez 5 ---
 		"ground": # --- esport 1a ---
 			mode = "ground"
 		"hold":
-			sim.push_command({"t": "mantener", "player": local, "ids": _own_unit_ids()})
+			# --- fluidez 5 --- Mayús + mantener: entra en la cola de órdenes (después del movimiento)
+			if cola != null and Input.is_key_pressed(KEY_SHIFT):
+				cola.encolar(_own_unit_ids(), {"t": "mantener"})
+			else:
+				if cola != null:
+					cola.limpiar(_own_unit_ids())
+				sim.push_command({"t": "mantener", "player": local, "ids": _own_unit_ids()})
+			# --- fin fluidez 5 ---
 		"form":
 			formacion = cmd["form"]
 			sim.push_command({"t": "formar", "player": local, "ids": _own_unit_ids(), "form": formacion})
@@ -1169,10 +1178,17 @@ func _mouse_button(mb: InputEventMouseButton) -> void:
 				cancel_mode()
 			return
 		if mode == "patrol":
+			# --- fluidez 5 --- con Mayús sigue en el modo y cada clic suma un punto a la ronda
 			var gp := cam.ground_at(mb.position)
-			sim.push_command({"t": "patrullar", "player": local, "ids": _own_unit_ids(), "x": int(gp.x * P), "y": int(gp.z * P)})
+			var pc := {"t": "patrullar", "player": local, "ids": _own_unit_ids(), "x": int(gp.x * P), "y": int(gp.z * P)}
+			if _pat_n > 0:
+				pc["sumar"] = true
+			sim.push_command(pc)
+			_pat_n += 1
 			view.add_marker(gp, Palette.UI_BAD)
-			cancel_mode()
+			if not Input.is_key_pressed(KEY_SHIFT):
+				cancel_mode()
+			# --- fin fluidez 5 ---
 			return
 		if Input.is_key_pressed(KEY_ALT):
 			# --- fluidez 4 --- Alt + clic: bengala automática; Alt + arrastrar: rueda de intención
@@ -1205,6 +1221,19 @@ func _left_release(pos: Vector2) -> void:
 		_box_select(Rect2(press_pos, pos - press_pos).abs(), shift)
 		return
 	var id := pick(pos)
+	# --- fluidez 5 --- Ctrl + clic: todos los de ese tipo en pantalla (con Mayús, se suman)
+	if id >= 0 and Input.is_key_pressed(KEY_CTRL):
+		var prev := selection.duplicate()
+		_select_same_type_on_screen(id)
+		var ce: SimEntity = sim.by_id.get(id)
+		if shift and ce != null and ce.owner == local:
+			for p in prev:
+				if not selection.has(p):
+					selection.append(p)
+			_set_selection(selection.duplicate())
+		_last_click_ms = 0
+		return
+	# --- fin fluidez 5 ---
 	var now := Time.get_ticks_msec()
 	if id >= 0 and id == _last_click_id and now - _last_click_ms < 350:
 		# --- órdenes --- (doble clic en un edificio propio: todos los de su tipo en el mapa)
@@ -1343,6 +1372,20 @@ func _right_click(pos: Vector2, rumbo: int = -1) -> void:
 		var loose := Input.is_key_pressed(KEY_ALT)
 		# Un animal propio (llama, cabra…) no es un aliado más: el aldeano lo carnea (la simulación ya lo hace).
 		var own_animal: bool = t != null and t.is_unit() and t.owner == local and t.def.get("animal", false)
+		# --- fluidez 5 --- clic derecho en una unidad propia que no está elegida: escoltarla
+		if t != null and t.id not in ids and t.is_unit() and t.owner == local and not own_animal:
+			# la canoa con lugar (subir) y la reparación de los aldeanos siguen siendo «target»
+			if sim.garrison_cap(t) > 0 or (_has_villager() and sim.can_repair_unit(local, t)):
+				sim.push_command({"t": "target", "player": local, "ids": ids, "target": t.id, "suelto": loose})
+				view.add_marker(WorldView.to_world(t.x, t.y), Palette.UI_ACCENT)
+				return
+			if cola != null:
+				cola.limpiar(ids)
+			sim.push_command({"t": "escoltar", "player": local, "ids": ids, "target": t.id})
+			view.add_marker(WorldView.to_world(t.x, t.y), Palette.UI_GOOD)
+			Respuesta.blanco(self, t, Palette.UI_GOOD)
+			return
+		# --- fin fluidez 5 ---
 		if t != null and t.id not in ids and (not (t.is_unit() and t.owner == local) or own_animal):
 			sim.push_command({"t": "target", "player": local, "ids": ids, "target": t.id, "suelto": loose})
 			var col := Palette.UI_BAD if t.owner >= 0 and t.owner != local else Palette.UI_ACCENT

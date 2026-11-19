@@ -1,7 +1,8 @@
 extends SceneTree
 ## Órdenes y comodidades de la simulación (proceso/23, parte B):
 ##   - mantener posición: no se mueve aunque el enemigo esté a la vista, y pega al que entra en alcance;
-##   - patrullar: va y vuelve entre dos puntos;
+##   - patrullar: va y vuelve entre dos puntos; con Mayús, ronda de varios puntos (fluidez 5);
+##   - escoltar: sigue a una unidad propia y vuelve a su lado (fluidez 5);
 ##   - formaciones: línea (2 filas), columna (2 de ancho), abierta (más ancha que el bloque) y rumbo pedido;
 ##   - bengala: la IA aliada manda parte de su ejército y lo dice en el chat;
 ##   - pedido de recursos: la IA aliada da si le sobra.
@@ -16,6 +17,8 @@ var fails: Array[String] = []
 func _init() -> void:
 	_hold()
 	_patrol()
+	_patrol_multi() # --- fluidez 5 ---
+	_escort() # --- fluidez 5 ---
 	_formations()
 	_flare_and_ask()
 	_flare_wave_and_wait() # --- equipos ronda 3 ---
@@ -89,6 +92,56 @@ func _patrol() -> void:
 	s.push_command({"t": "stop", "player": 0, "ids": [u.id]})
 	s.step()
 	_check("detener corta la patrulla", not u.patrol)
+
+
+# --- fluidez 5 --- (proceso/30-fluidez/06-seleccion-y-ordenes.md)
+func _patrol_multi() -> void:
+	var s := _clear_sim()
+	var y := s.map.n / 2 * 1000
+	var u := s.spawn_unit("guerrero", 0, 20500, y)
+	s.push_command({"t": "patrullar", "player": 0, "ids": [u.id], "x": 30500, "y": y})
+	s.push_command({"t": "patrullar", "player": 0, "ids": [u.id], "x": 30500, "y": y + 8000, "sumar": true})
+	s.push_command({"t": "patrullar", "player": 0, "ids": [u.id], "x": 24500, "y": y + 8000, "sumar": true})
+	s.step()
+	_check("patrulla de 3 puntos: 4 en la ronda (%d)" % u.pat_pts.size(), u.pat_pts.size() == 4)
+	var seen := [false, false, false, false]
+	var vuelta := false
+	for i in 1500:
+		s.step()
+		for k in 4:
+			if Sim.dist(u.x, u.y, u.pat_pts[k].x, u.pat_pts[k].y) < 1200:
+				seen[k] = true
+		if seen[1] and seen[2] and seen[3] and Sim.dist(u.x, u.y, u.pat_pts[0].x, u.pat_pts[0].y) < 1200:
+			vuelta = true
+			break
+	_check("patrulla de 3 puntos: pasa por todos y vuelve a la salida (%s)" % [seen], vuelta and u.patrol)
+
+
+func _escort() -> void:
+	var s := _clear_sim()
+	var y := s.map.n / 2 * 1000
+	var lider := s.spawn_unit("guerrero", 0, 20500, y)
+	var esc := s.spawn_unit("guerrero", 0, 20500, y + 3000)
+	s.push_command({"t": "escoltar", "player": 0, "ids": [esc.id], "target": lider.id})
+	s.push_command({"t": "move", "player": 0, "ids": [lider.id], "x": 40500, "y": y})
+	for i in 500:
+		s.step()
+	var d := Sim.dist(esc.x, esc.y, lider.x, lider.y)
+	_check("escolta: sigue al otro hasta el destino (a %d, el otro en x %d)" % [d, lider.x], esc.order == SimEntity.Order.FOLLOW and d <= 3000 and lider.x > 38000)
+	var foe := s.spawn_unit("guerrero", 1, lider.x + 2500, y + 1500)
+	var pelea := false
+	for i in 300:
+		s.step()
+		if esc.order == SimEntity.Order.ATTACK and esc.target == foe.id:
+			pelea = true
+		if not foe.alive:
+			break
+	for i in 60:
+		s.step()
+	_check("escolta: pelea con el que se acerca (%s) y vuelve a seguir (%d)" % [pelea, esc.order], pelea and esc.order == SimEntity.Order.FOLLOW)
+	s.push_command({"t": "stop", "player": 0, "ids": [esc.id]})
+	s.step()
+	_check("detener corta la escolta", esc.esc == -1 and esc.order != SimEntity.Order.FOLLOW)
 
 
 func _spread(s: Sim, ids: Array) -> Vector2i:

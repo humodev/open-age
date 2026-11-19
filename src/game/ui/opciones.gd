@@ -460,6 +460,18 @@ static func _panel_teclas() -> VBoxContainer:
 	gx.button_pressed = Teclas.grupos_exclusivos
 	gx.toggled.connect(func(on: bool) -> void: Teclas.grupos_exclusivos = on)
 	arriba.add_child(gx)
+	# --- fluidez 5 --- números de daño (el perfil «aoe4» los apaga, como en AoE4)
+	var dl := Label.new()
+	dl.text = "Números de daño"
+	dl.tooltip_text = "El número que sale sobre un golpe fuerte. AoE4 no los muestra: el perfil AoE4 los apaga."
+	dl.mouse_filter = Control.MOUSE_FILTER_PASS
+	arriba.add_child(dl)
+	var dx := _interruptor()
+	dx.name = "NumerosDanio"
+	dx.button_pressed = Teclas.numeros_danio
+	dx.toggled.connect(func(on: bool) -> void: Teclas.numeros_danio = on)
+	arriba.add_child(dx)
+	# --- fin fluidez 5 ---
 	var fab := Button.new()
 	fab.name = "Fabrica"
 	fab.text = "Volver a las de fábrica"
@@ -496,6 +508,8 @@ static func _panel_teclas() -> VBoxContainer:
 			b.add_theme_color_override("font_color", Palette.UI_BAD if mal else (Palette.UI_DIM if c == 0 else Palette.UI_TEXT))
 		gx.set_pressed_no_signal(Teclas.grupos_exclusivos)
 		gx.text = "Sí" if Teclas.grupos_exclusivos else "No"
+		dx.set_pressed_no_signal(Teclas.numeros_danio) # --- fluidez 5 ---
+		dx.text = "Sí" if Teclas.numeros_danio else "No"
 	var seccion := ""
 	for a: Array in Teclas.acciones():
 		var v: VBoxContainer = colv[int(reparto.get(a[2], 2))]
