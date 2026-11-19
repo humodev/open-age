@@ -52,3 +52,4 @@ Las preguntas para el autor están en [`CONSULTAS.md`](CONSULTAS.md) y se revisa
 | [35 · Torneo de expertos](35-torneo-de-expertos/README.md) | 2026-11-19 | Pedido del autor: torneos con expertos simulados de estilos distintos (rush, boom, fast castle, tortuga, hostigador, control del mapa) jugando con todos los pueblos, puntuados por el puntaje del juego, y un nivel aparte para el jugador del día a día y el principiante. En curso |
 | 36 · Aprendizaje | 2026-11-19 | Lecciones y tutorial de las mecánicas nuevas para el jugador que no es profesional. En curso |
 | 37 · Red | 2026-11-19 | Prototipo de multijugador 1v1 en red (H5): lockstep, verificación de sincronía, sala, pausa y reconexión. En curso |
+| 38 · Alternativas a Meshy | 2026-11-19 | Servicios con créditos gratis, modelos locales para 8 GB, rigging gratis y bibliotecas CC0 para seguir generando sin esperar a Meshy. Investigación, sin cuentas creadas |
