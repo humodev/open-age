@@ -2244,7 +2244,8 @@ func counter_mult(a: SimEntity, t: SimEntity) -> int:
 	if a.def.has("contadores"):
 		mult = int((a.def["contadores"] as Dictionary).get(t.fn, mult))
 	if t.def.has("recibe"):
-		mult = int((t.def["recibe"] as Dictionary).get(a.fn, mult))
+		# --- muralla --- por tipo antes que por función (los incendiarios, contra la piedra)
+		mult = int((t.def["recibe"] as Dictionary).get(a.type, (t.def["recibe"] as Dictionary).get(a.fn, mult)))
 	if t.is_building() and a.def.has("bono_material"):
 		mult = mult * int((a.def["bono_material"] as Dictionary).get(material_of(t.def), 100)) / 100
 	return mult
@@ -3164,6 +3165,9 @@ func _own_piece_under(type: String, tx: int, ty: int, pid: int) -> SimEntity:
 func _cmd_build_line(pid: int, units: Array[SimEntity], type: String, tiles: Array) -> void:
 	var def: Dictionary = dp(pid).edificios.get(type, {})
 	if not def.get("linea", false):
+		return
+	if int(players[pid]["age"]) < int(def.get("edad_min", 1)): # --- muralla --- la de piedra, desde la II
+		_notify(pid, "Requiere edad %s" % _roman(def.get("edad_min", 1)))
 		return
 	var cost := dp(pid).cost_of(type, players[pid]["age"])
 	var first: SimEntity = null
