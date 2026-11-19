@@ -3,7 +3,7 @@
   "edades": [
     { "nombre": "Asentamiento", "bono_ataque_edificio": 0 },
     { "nombre": "Consolidación", "bono_ataque_edificio": 10, "hito_costo": { "alimento": 500, "riqueza": 300 }, "hito_tiempo_ms": 150000 },
-    { "nombre": "Apogeo", "bono_ataque_edificio": 20, "hito_costo": { "alimento": 1000, "riqueza": 600, "piedra": 100 }, "hito_tiempo_ms": 180000 },
+    { "nombre": "Apogeo", "bono_ataque_edificio": 20, "hito_costo": { "alimento": 800, "riqueza": 500, "piedra": 100 }, "_doc_costo": "--- esport 3a --- De 1000 A / 600 R a 800 A / 500 R (la piedra queda en 100): el primero en la III ganaba 9 de 12 (proceso/34-hacia-esport/04, cambio 2). Los costo_extra de cada pueblo se suman igual.", "hito_tiempo_ms": 180000 },
     { "nombre": "Pólvora y rebelión", "bono_ataque_edificio": 35, "hito_costo": { "alimento": 1800, "riqueza": 1200, "piedra": 400 }, "hito_tiempo_ms": 210000 }
   ]
 }

@@ -35,6 +35,7 @@ func _circle(r: int) -> PackedInt32Array:
 
 var map: SimMap
 var vision_per_level := 0
+var site_vision := 0 # --- esport 3a --- casillas que se ven alrededor de cada sitio sagrado, para todos
 var vision_extra := {} # --- paso 6, par 2 --- dueño -> {tipo de edificio: visión extra} (aviso de los mocambos)
 
 
@@ -49,9 +50,11 @@ func update(pid: int, sources: Array) -> void:
 		var cx := e.x / P
 		var cy := e.y / P
 		var r: int = int(e.def.get("vision", 0)) / P
-		if map != null:
+		if e.owner < 0 and e.def.get("sagrado", false):
+			r = site_vision
+		elif map != null:
 			r += map.h_at(cx, cy) * vision_per_level / P
-		if e.is_building():
+		if e.is_building() and e.owner >= 0:
 			r += maxi(e.w, e.h) / 2
 			if not vision_extra.is_empty():
 				r += int((vision_extra.get(e.owner, {}) as Dictionary).get(e.type, 0)) / P

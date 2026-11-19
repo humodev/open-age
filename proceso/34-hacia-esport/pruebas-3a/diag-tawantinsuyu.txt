@@ -1,0 +1,552 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+ayutthaya    vs tawantinsuyu montana         30:00  ganador tawantinsuyu (puntos)  edades 4-4  criterio 4828-4909  puntaje 5523-5908
+  tawantinsuyu edades II 5:59 III 16:26 IV 21:26 · primer ataque 6:39 · bajas 149 · pob 76 · ald/ejército 5':24/1 10':39/10 15':42/16 20':42/7 25':42/35 30':34/29
+     juntado 42047 (casa 18056, granja 10949, propio 4430, disputado 3667, sitios 1636, comercio 1512, mercado 1009, recoleccion 688, cumbi 100)
+     entrenó { "hondero": 90, "boleador": 17, "lancero": 17, "guerrero": 35, "ariete": 5, "galgueros": 3, "catapulta": 7, "comerciante": 5 } · productores al final { "qollqa": 3, "campo_tiro": 4, "cuartel": 2 }
+     riqueza: propio 1231, casa 3600, recoleccion 126, granja 8, sitios 1636, mercado 209, disputado 36, cumbi 100, comercio 1512
+     alimento: casa 2515, recoleccion 268, granja 10941, mercado 100, disputado 230
+     hitos ["ushnu", "kallanka_real", "qorikancha"] · perdió { "hondero": 76, "boleador": 17, "guerrero": 27, "lancero": 15, "aldeano": 14, "ariete": 5, "galgueros": 2, "catapulta": 1 } · edificios al final { "centro": 1, "casa": 8, "almacen_madera": 8, "camino": 216, "qollqa": 3, "campo_tiro": 4, "taller_tejido": 4, "almacen_mina": 4, "ushnu": 1, "granja": 18, "cuartel": 2, "mercado": 1, "torre": 2, "kallanka_real": 1, "tambo": 1, "qorikancha": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 80s/4 ed3 96s/4 ed4 113s/4 · bajas: hondero>militar 80, guerrero>militar 20, hondero>aldeano 11, lancero>militar 10, boleador>militar 7, galgueros>militar 6, catapulta>aldeano 5, torre>militar 3 · unidades muertas en el monte 14/148
+  ayutthaya    edades II 6:11 III 12:23 IV 29:35 · primer ataque 6:44 · bajas 158 · pob 67 · ald/ejército 5':18/3 10':26/19 15':36/17 20':42/19 25':39/32 30':37/19
+     juntado 36201 (casa 17062, granja 10837, propio 2192, mercado 1590, sitios 1429, comercio 1426, disputado 783, recoleccion 697, renta 185)
+     entrenó { "elefante_rey": 3, "guerrero": 72, "lancero": 3, "hondero": 42, "comerciante": 5, "ngao": 27, "chang_suek": 4, "ariete": 1, "catapulta": 1 } · productores al final { "cuartel": 5, "campo_tiro": 1, "taller": 1, "kraal": 1, "barrio_japones": 1, "barrio_portugues": 1 }
+     riqueza: casa 2569, propio 2192, recoleccion 71, sitios 1429, renta 185, mercado 490, comercio 1426, disputado 585
+     alimento: casa 3990, recoleccion 180, granja 10837, mercado 1100
+     hitos ["wat", "fortaleza_rio", "junco_tributo"] · perdió { "lancero": 3, "guerrero": 60, "hondero": 38, "ngao": 24, "chang_suek": 4, "aldeano": 17, "ariete": 1, "catapulta": 1 } · edificios al final { "centro": 1, "casa": 9, "cuartel": 5, "almacen_mina": 3, "wat": 1, "campo_tiro": 1, "taller": 1, "mercado": 1, "granja": 22, "kraal": 1, "fortaleza_rio": 1, "barrio_japones": 1, "barrio_portugues": 1, "torre": 2, "fortaleza": 1, "junco_tributo": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 70s/5 ed3 67s/8 ed4 114s/4 · bajas: guerrero>militar 67, hondero>militar 32, ngao>militar 26, hondero>aldeano 9, chang_suek>militar 8, fortaleza_rio>militar 6, guerrero>aldeano 3, lancero>militar 2 · unidades muertas en el monte 18/157
+  relevo: 0 de vida recuperada sobre 10909 de daño recibido · edificios que cuentan para la victoria al minuto 20: 3-3
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 19 % · emboscada 0 de 2521 golpes (+0 de 19233 daño)
+tawantinsuyu vs ayutthaya    sierra          30:00  ganador tawantinsuyu (puntos)  edades 4-2  criterio 4984-2807  puntaje 6442-3384
+  tawantinsuyu edades II 5:44 III 14:19 IV 19:52 · primer ataque 6:53 · bajas 124 · pob 86 · ald/ejército 5':24/2 10':39/18 15':42/28 20':42/26 25':42/24 30':42/38
+     juntado 46282 (casa 20773, granja 7703, propio 5044, disputado 4134, mercado 3383, sitios 2463, comercio 1872, recoleccion 910)
+     entrenó { "hondero": 98, "ariete": 7, "boleador": 12, "lancero": 9, "guerrero": 44, "catapulta": 6, "comerciante": 5, "galgueros": 2 } · productores al final { "qollqa": 3, "campo_tiro": 5, "cuartel": 2 }
+     riqueza: propio 1564, casa 3360, recoleccion 47, sitios 2463, mercado 483, granja 1, disputado 1070, comercio 1872
+     alimento: casa 3443, recoleccion 243, mercado 1600, granja 7696, disputado 1180
+     hitos ["ushnu", "kallanka_real", "qorikancha"] · perdió { "hondero": 77, "ariete": 7, "boleador": 10, "guerrero": 30, "lancero": 6, "catapulta": 5, "galgueros": 1 } · edificios al final { "centro": 1, "casa": 7, "almacen_madera": 8, "camino": 255, "qollqa": 3, "campo_tiro": 5, "almacen_mina": 5, "taller_tejido": 4, "ushnu": 1, "cuartel": 2, "mercado": 1, "granja": 16, "torre": 2, "kallanka_real": 1, "qorikancha": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 64s/8 ed3 84s/6 ed4 114s/4 · bajas: hondero>militar 62, guerrero>militar 17, catapulta>militar 13, hondero>aldeano 11, fortaleza>militar 6, ariete>edificio 4, boleador>militar 2, ?>edificio 2 · unidades muertas en el monte 9/115
+  ayutthaya    edades II 7:16 III --:-- IV --:-- · primer ataque 6:58 · bajas 137 · pob 67 · ald/ejército 5':18/4 10':25/0 15':27/0 20':41/8 25':42/10 30':42/15
+     juntado 22524 (casa 10677, granja 8888, recoleccion 945, propio 945, disputado 624, mercado 274, sitios 171)
+     entrenó { "elefante_rey": 2, "guerrero": 46, "lancero": 7, "hondero": 52, "chang_suek": 13 } · productores al final { "cuartel": 1, "kraal": 1, "campo_tiro": 1, "barrio_japones": 1, "barrio_portugues": 1 }
+     riqueza: casa 2306, recoleccion 94, propio 945, disputado 338, sitios 171, mercado 274
+     alimento: casa 2124, recoleccion 243, granja 8888, disputado 286
+     hitos ["wat", "fortaleza_rio"] · perdió { "guerrero": 45, "lancero": 4, "aldeano": 12, "hondero": 44, "chang_suek": 10 } · edificios al final { "centro": 1, "cuartel": 1, "almacen_mina": 3, "casa": 8, "wat": 1, "granja": 19, "kraal": 1, "campo_tiro": 1, "barrio_japones": 1, "barrio_portugues": 1, "mercado": 1, "torre": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 79s/4 · bajas: hondero>militar 51, guerrero>militar 28, ?>militar 17, centro>militar 15, chang_suek>militar 11, lancero>militar 7, torre>militar 7, guerrero>otra 1 · unidades muertas en el monte 8/136
+  relevo: 0 de vida recuperada sobre 8626 de daño recibido · edificios que cuentan para la victoria al minuto 20: 4-2
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 11 % · emboscada 0 de 2106 golpes (+0 de 19360 daño)
+ayutthaya    vs tawantinsuyu sierra          30:00  ganador ayutthaya (puntos)  edades 4-4  criterio 4918-4841  puntaje 6435-6053
+  tawantinsuyu edades II 5:42 III 15:33 IV 22:02 · primer ataque 7:43 · bajas 171 · pob 67 · ald/ejército 5':24/2 10':37/5 15':42/21 20':42/9 25':42/13 30':29/33
+     juntado 41170 (casa 18775, granja 10638, propio 4945, comercio 1857, mercado 1778, disputado 1570, sitios 1070, recoleccion 537)
+     entrenó { "hondero": 104, "boleador": 13, "guerrero": 46, "ariete": 5, "comerciante": 5, "lancero": 13, "galgueros": 5, "catapulta": 1 } · productores al final { "qollqa": 3, "campo_tiro": 5, "cuartel": 2 }
+     riqueza: propio 1636, casa 2606, recoleccion 97, granja 7, disputado 200, mercado 278, comercio 1857, sitios 1070
+     alimento: casa 3370, recoleccion 227, granja 10621, disputado 180, mercado 1100
+     hitos ["ushnu", "kallanka_real", "qorikancha"] · perdió { "hondero": 78, "boleador": 13, "guerrero": 41, "lancero": 11, "ariete": 5, "galgueros": 5, "aldeano": 22, "catapulta": 1 } · edificios al final { "centro": 1, "casa": 8, "camino": 180, "almacen_madera": 8, "qollqa": 3, "campo_tiro": 5, "taller_tejido": 4, "almacen_mina": 3, "ushnu": 1, "granja": 15, "cuartel": 2, "mercado": 1, "torre": 1, "kallanka_real": 1, "qorikancha": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 62s/8 ed3 90s/4 ed4 114s/4 · bajas: hondero>militar 88, guerrero>militar 25, fortaleza>militar 13, boleador>militar 10, lancero>militar 6, torre>militar 6, hondero>aldeano 6, guerrero>aldeano 5 · unidades muertas en el monte 36/169
+  ayutthaya    edades II 6:30 III 14:47 IV 23:38 · primer ataque 6:37 · bajas 178 · pob 74 · ald/ejército 5':18/3 10':29/16 15':41/27 20':35/27 25':42/39 30':42/18
+     juntado 44925 (casa 19826, granja 10676, disputado 3742, mercado 3084, propio 2605, sitios 1962, comercio 1899, recoleccion 908, renta 223)
+     entrenó { "elefante_rey": 4, "guerrero": 64, "lancero": 11, "hondero": 61, "comerciante": 5, "ariete": 4, "ngao": 25, "catapulta": 1, "chang_suek": 1, "defensores_suan_phlu": 6 } · productores al final { "cuartel": 4, "campo_tiro": 2, "taller": 2, "kraal": 1, "barrio_japones": 1, "barrio_portugues": 1 }
+     riqueza: casa 2683, propio 2605, recoleccion 77, sitios 1962, disputado 1274, comercio 1899, renta 223, mercado 684
+     alimento: casa 3787, recoleccion 184, granja 10676, disputado 728, mercado 1600
+     hitos ["wat", "fortaleza_rio", "junco_tributo"] · perdió { "guerrero": 56, "lancero": 9, "hondero": 56, "ariete": 3, "aldeano": 14, "ngao": 24, "chang_suek": 1, "catapulta": 1, "defensores_suan_phlu": 5 } · edificios al final { "centro": 1, "casa": 11, "cuartel": 4, "almacen_mina": 3, "wat": 1, "campo_tiro": 2, "taller": 2, "mercado": 1, "granja": 15, "kraal": 1, "barrio_japones": 1, "barrio_portugues": 1, "torre": 2, "fortaleza_rio": 1, "junco_tributo": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 70s/5 ed3 99s/4 ed4 105s/4 · bajas: hondero>militar 81, guerrero>militar 48, ngao>militar 14, guerrero>aldeano 14, lancero>militar 9, hondero>aldeano 4, ngao>aldeano 4, guerrero>otra 1 · unidades muertas en el monte 30/176
+  relevo: 0 de vida recuperada sobre 12685 de daño recibido · edificios que cuentan para la victoria al minuto 20: 3-3
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 20 % · emboscada 0 de 1862 golpes (+0 de 15910 daño)
+tawantinsuyu vs ayutthaya    delta           30:00  ganador tawantinsuyu (puntos)  edades 3-3  criterio 4112-3598  puntaje 6542-4744
+  tawantinsuyu edades II 5:47 III 17:55 IV --:-- · primer ataque 6:46 · bajas 212 · pob 90 · ald/ejército 5':24/1 10':38/22 15':42/31 20':42/21 25':42/15 30':42/41
+     juntado 43559 (casa 20898, granja 10424, propio 4231, mercado 3731, sitios 1386, disputado 1261, comercio 1044, recoleccion 484, cumbi 100)
+     entrenó { "hondero": 95, "ariete": 12, "boleador": 29, "guerrero": 64, "lancero": 11, "comerciante": 4, "catapulta": 4 } · productores al final { "qollqa": 3, "campo_tiro": 5, "cuartel": 2 }
+     riqueza: propio 1182, casa 2603, recoleccion 37, granja 4, sitios 1386, disputado 981, mercado 1231, cumbi 100, comercio 1044
+     alimento: casa 3403, recoleccion 127, granja 10420, disputado 270, mercado 2300
+     hitos ["ushnu", "kallanka_real"] · perdió { "hondero": 63, "ariete": 12, "boleador": 29, "guerrero": 57, "lancero": 11, "catapulta": 1, "aldeano": 4 } · edificios al final { "centro": 1, "casa": 10, "camino": 208, "almacen_madera": 6, "qollqa": 3, "campo_tiro": 5, "taller_tejido": 4, "almacen_mina": 5, "ushnu": 1, "granja": 18, "cuartel": 2, "mercado": 1, "torre": 2, "kallanka_real": 1, "tambo": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 68s/6 ed3 71s/7 · bajas: hondero>militar 88, guerrero>militar 56, boleador>militar 17, lancero>militar 11, hondero>aldeano 11, guerrero>aldeano 10, catapulta>aldeano 6, ariete>edificio 4 · unidades muertas en el monte 1/205
+  ayutthaya    edades II 5:53 III 24:31 IV --:-- · primer ataque 6:48 · bajas 178 · pob 42 · ald/ejército 5':17/1 10':27/10 15':38/14 20':45/2 25':39/22 30':26/6
+     juntado 30961 (casa 14741, granja 12118, propio 1476, sitios 700, recoleccion 662, mercado 638, disputado 568, renta 58)
+     entrenó { "elefante_rey": 3, "lancero": 23, "guerrero": 72, "hondero": 70, "ariete": 1, "chang_suek": 2, "ngao": 14, "comerciante": 3 } · productores al final { "cuartel": 2, "campo_tiro": 1, "taller": 1, "kraal": 1, "barrio_japones": 1, "barrio_portugues": 1 }
+     riqueza: casa 2598, recoleccion 42, propio 1476, sitios 700, renta 58, mercado 138, disputado 559
+     alimento: casa 2116, recoleccion 262, granja 12118, mercado 500
+     hitos ["wat", "fortaleza_rio", "fortaleza_rio"] · perdió { "lancero": 21, "guerrero": 70, "hondero": 69, "aldeano": 29, "ariete": 1, "ngao": 13, "chang_suek": 2 } · edificios al final { "centro": 1, "casa": 8, "cuartel": 2, "wat": 1, "campo_tiro": 1, "taller": 1, "granja": 22, "almacen_mina": 1, "mercado": 1, "torre": 1, "kraal": 1, "barrio_japones": 1, "barrio_portugues": 1, "fortaleza_rio": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 78s/4 ed3 98s/4 · bajas: hondero>militar 89, guerrero>militar 51, lancero>militar 18, fortaleza_rio>militar 6, ngao>militar 4, hondero>aldeano 3, ?>militar 2, centro>militar 1 · unidades muertas en el monte 0/177
+  relevo: 0 de vida recuperada sobre 15102 de daño recibido · edificios que cuentan para la victoria al minuto 20: 3-2
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 1 % · emboscada 0 de 2674 golpes (+0 de 25473 daño)
+ayutthaya    vs tawantinsuyu delta           30:00  ganador ayutthaya (puntos)  edades 4-3  criterio 4917-3828  puntaje 5615-4897
+  tawantinsuyu edades II 5:30 III 16:41 IV --:-- · primer ataque 8:13 · bajas 148 · pob 68 · ald/ejército 5':24/3 10':35/4 15':44/13 20':44/23 25':31/8 30':41/23
+     juntado 34040 (casa 16300, granja 10359, propio 4228, disputado 1750, recoleccion 721, sitios 512, cumbi 100, mercado 70)
+     entrenó { "hondero": 91, "boleador": 17, "guerrero": 44, "lancero": 12, "ariete": 4, "galgueros": 1, "catapulta": 3, "comerciante": 1 } · productores al final { "qollqa": 3, "campo_tiro": 4, "cuartel": 2 }
+     riqueza: propio 1270, casa 2530, recoleccion 110, disputado 540, sitios 512, cumbi 100, mercado 70
+     alimento: casa 2533, recoleccion 201, granja 10357, disputado 1200
+     hitos ["ushnu", "kallanka_real", "qorikancha"] · perdió { "hondero": 81, "guerrero": 32, "boleador": 17, "lancero": 12, "aldeano": 25, "ariete": 4, "catapulta": 2, "galgueros": 1 } · edificios al final { "centro": 1, "casa": 7, "camino": 166, "almacen_madera": 8, "qollqa": 3, "campo_tiro": 4, "almacen_mina": 5, "taller_tejido": 4, "ushnu": 1, "cuartel": 2, "granja": 19, "kallanka_real": 1, "tambo": 1, "mercado": 1, "torre": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 67s/6 ed3 96s/4 · bajas: hondero>militar 91, guerrero>militar 25, boleador>militar 23, lancero>militar 6, centro>militar 1, hondero>otra 1, hondero>hito 1 · unidades muertas en el monte 6/146
+  ayutthaya    edades II 6:26 III 24:24 IV 28:50 · primer ataque 6:25 · bajas 177 · pob 74 · ald/ejército 5':18/2 10':27/16 15':37/25 20':42/36 25':45/30 30':45/18
+     juntado 37339 (casa 19179, granja 9763, mercado 2574, propio 1660, disputado 1178, sitios 1108, comercio 853, recoleccion 832, ingenio 100, renta 92)
+     entrenó { "elefante_rey": 3, "guerrero": 83, "lancero": 9, "hondero": 67, "comerciante": 5, "ariete": 7, "chang_suek": 2, "ngao": 3 } · productores al final { "cuartel": 4, "campo_tiro": 2, "taller": 1, "kraal": 1, "barrio_japones": 1, "barrio_portugues": 1 }
+     riqueza: casa 2585, propio 1660, recoleccion 52, sitios 1108, comercio 853, mercado 1074, renta 92, disputado 1027, ingenio 100
+     alimento: casa 3914, recoleccion 286, granja 9763, mercado 1500, disputado 39
+     hitos ["wat", "fortaleza_rio", "fortaleza_rio", "junco_tributo"] · perdió { "lancero": 7, "guerrero": 71, "hondero": 59, "chang_suek": 2, "ariete": 6, "ngao": 1 } · edificios al final { "centro": 1, "casa": 11, "cuartel": 4, "almacen_mina": 3, "wat": 1, "campo_tiro": 2, "taller": 1, "mercado": 1, "kraal": 1, "barrio_japones": 1, "barrio_portugues": 1, "granja": 23, "torre": 1, "fortaleza_rio": 1, "junco_tributo": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 75s/5 ed3 95s/4 ed4 96s/6 · bajas: hondero>militar 85, guerrero>militar 57, hondero>aldeano 24, lancero>militar 4, chang_suek>militar 2, torre>militar 1, ?>edificio 1, hondero>hito 1 · unidades muertas en el monte 15/174
+  relevo: 0 de vida recuperada sobre 12016 de daño recibido · edificios que cuentan para la victoria al minuto 20: 2-3
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 3 % · emboscada 0 de 2160 golpes (+0 de 18787 daño)
+tawantinsuyu vs ayutthaya    llano           30:00  ganador tawantinsuyu (puntos)  edades 4-3  criterio 4920-3883  puntaje 6004-4665
+  tawantinsuyu edades II 5:48 III 14:15 IV 19:42 · primer ataque 7:43 · bajas 120 · pob 80 · ald/ejército 5':24/1 10':35/12 15':42/24 20':42/20 25':42/28 30':42/28
+     juntado 42997 (casa 20266, granja 10288, propio 4798, disputado 2140, sitios 2022, mercado 1887, comercio 810, recoleccion 686, cumbi 100)
+     entrenó { "hondero": 92, "ariete": 4, "lancero": 16, "boleador": 14, "guerrero": 23, "galgueros": 1, "comerciante": 9, "catapulta": 1 } · productores al final { "qollqa": 2, "campo_tiro": 5, "cuartel": 2 }
+     riqueza: propio 1528, casa 3282, recoleccion 115, granja 3, sitios 2022, mercado 487, cumbi 100, comercio 810
+     alimento: casa 2723, recoleccion 127, granja 10285, mercado 900
+     hitos ["ushnu", "kallanka_real", "qorikancha"] · perdió { "hondero": 77, "guerrero": 17, "ariete": 4, "boleador": 9, "lancero": 14, "galgueros": 1 } · edificios al final { "centro": 1, "casa": 8, "camino": 230, "almacen_madera": 8, "qollqa": 2, "campo_tiro": 5, "almacen_mina": 6, "taller_tejido": 4, "ushnu": 1, "cuartel": 2, "granja": 20, "mercado": 1, "torre": 2, "kallanka_real": 1, "tambo": 1, "qorikancha": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 69s/6 ed3 91s/5 ed4 116s/4 · bajas: hondero>militar 88, boleador>militar 15, guerrero>militar 9, lancero>militar 3, ariete>edificio 2, hondero>aldeano 2, hondero>edificio 1 · unidades muertas en el monte 12/117
+  ayutthaya    edades II 6:27 III 20:29 IV --:-- · primer ataque 7:06 · bajas 123 · pob 76 · ald/ejército 5':18/3 10':27/11 15':39/9 20':43/27 25':43/13 30':43/17
+     juntado 32077 (casa 14833, granja 10087, propio 1558, sitios 1394, disputado 1235, mercado 1143, comercio 1034, recoleccion 762, renta 31)
+     entrenó { "elefante_rey": 3, "guerrero": 73, "lancero": 1, "hondero": 47, "comerciante": 9, "ariete": 2, "ngao": 7, "chang_suek": 2 } · productores al final { "cuartel": 5, "campo_tiro": 1, "taller": 1, "kraal": 1, "barrio_portugues": 1, "barrio_japones": 1 }
+     riqueza: casa 2296, recoleccion 103, propio 1558, sitios 1394, granja 1, mercado 543, comercio 1034, renta 31
+     alimento: casa 2506, recoleccion 245, granja 10080, mercado 600, disputado 1014
+     hitos ["wat", "fortaleza_rio", "junco_tributo"] · perdió { "lancero": 1, "hondero": 43, "guerrero": 61, "aldeano": 2, "ariete": 2, "ngao": 6, "chang_suek": 2 } · edificios al final { "centro": 1, "casa": 8, "cuartel": 5, "almacen_mina": 2, "wat": 1, "campo_tiro": 1, "taller": 1, "kraal": 1, "barrio_portugues": 1, "granja": 17, "barrio_japones": 1, "mercado": 1, "torre": 2, "fortaleza_rio": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 71s/5 ed3 93s/5 · bajas: hondero>militar 58, guerrero>militar 54, centro>militar 3, ngao>militar 3, lancero>militar 2, guerrero>otra 1, ?>militar 1, torre>militar 1 · unidades muertas en el monte 10/122
+  relevo: 0 de vida recuperada sobre 9575 de daño recibido · edificios que cuentan para la victoria al minuto 20: 4-2
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 19 % · emboscada 0 de 1935 golpes (+0 de 14865 daño)
+etiopia      vs tawantinsuyu sierra          30:00  ganador etiopia (puntos)  edades 4-3  criterio 5039-3712  puntaje 6996-4566
+  tawantinsuyu edades II 5:36 III 19:35 IV --:-- · primer ataque 6:59 · bajas 102 · pob 61 · ald/ejército 5':24/2 10':27/4 15':42/0 20':44/28 25':36/28 30':42/13
+     juntado 33549 (casa 15315, granja 10450, propio 3606, mercado 1590, disputado 1060, sitios 502, recoleccion 476, comercio 450, cumbi 100)
+     entrenó { "hondero": 71, "ariete": 6, "boleador": 33, "guerrero": 63, "lancero": 12, "comerciante": 4, "galgueros": 8, "catapulta": 2 } · productores al final { "qollqa": 2, "campo_tiro": 2, "cuartel": 1 }
+     riqueza: propio 688, casa 2350, recoleccion 50, sitios 502, mercado 490, disputado 840, cumbi 100, comercio 450
+     alimento: casa 2265, recoleccion 160, granja 10450, mercado 1100, disputado 90
+     hitos ["ushnu", "kallanka_real"] · perdió { "hondero": 69, "aldeano": 26, "ariete": 6, "boleador": 28, "guerrero": 58, "lancero": 11, "galgueros": 7, "catapulta": 2 } · edificios al final { "centro": 1, "casa": 8, "camino": 245, "almacen_madera": 8, "qollqa": 2, "campo_tiro": 2, "taller_tejido": 3, "almacen_mina": 7, "ushnu": 1, "cuartel": 1, "mercado": 1, "granja": 18, "torre": 1, "kallanka_real": 1, "tambo": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 68s/6 ed3 84s/6 · bajas: hondero>militar 34, guerrero>militar 33, boleador>militar 17, lancero>militar 9, centro>militar 3, guerrero>otra 2, galgueros>militar 2, catapulta>militar 2 · unidades muertas en el monte 8/100
+  etiopia      edades II 5:21 III 14:38 IV 19:50 · primer ataque 7:02 · bajas 209 · pob 83 · ald/ejército 5':21/1 10':33/6 15':42/27 20':42/27 25':42/20 30':42/24
+     juntado 47425 (casa 18205, granja 13259, disputado 5708, propio 2955, sitios 2419, comercio 2256, mercado 1786, recoleccion 837)
+     entrenó { "guerrero": 41, "comerciante": 5, "guerrero_gasa": 14, "hondero": 48, "ariete": 9, "catapulta": 5, "farasanna": 1, "caballeria_corte": 8, "guardia_distancia": 1 } · productores al final { "establo": 4, "taller": 2, "cuartel": 2 }
+     riqueza: propio 2576, casa 2948, recoleccion 156, granja 12, comercio 2256, sitios 2419, mercado 786
+     alimento: propio 379, casa 2952, recoleccion 252, granja 13247, disputado 170, mercado 400
+     hitos ["iglesia", "remonta", "gondar"] · perdió { "guerrero": 35, "hondero": 40, "guerrero_gasa": 9, "ariete": 5, "catapulta": 4, "farasanna": 1, "caballeria_corte": 6 } · edificios al final { "casa": 8, "almacen_madera": 8, "gult": 6, "establo": 4, "almacen_mina": 5, "iglesia": 1, "mercado": 1, "taller": 2, "almacen_alimento": 1, "cuartel": 2, "granja": 22, "torre": 2, "centro": 1, "remonta": 1, "gondar": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 78s/4 ed3 93s/4 ed4 110s/4 · bajas: guerrero>militar 90, hondero>militar 66, guerrero>aldeano 18, caballeria_corte>militar 10, guerrero_gasa>militar 8, hondero>aldeano 7, catapulta>militar 4, farasanna>militar 3 · unidades muertas en el monte 25/207
+  relevo: 0 de vida recuperada sobre 14869 de daño recibido · edificios que cuentan para la victoria al minuto 20: 4-3
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 5 % · emboscada 0 de 1718 golpes (+0 de 13130 daño)
+tawantinsuyu vs etiopia      sierra          30:00  ganador etiopia (puntos)  edades 3-4  criterio 3784-4959  puntaje 4495-6042
+  tawantinsuyu edades II 5:49 III 14:43 IV --:-- · primer ataque 6:48 · bajas 94 · pob 69 · ald/ejército 5':24/3 10':37/6 15':42/7 20':45/13 25':39/29 30':38/27
+     juntado 33313 (casa 15486, granja 10722, propio 3613, disputado 1553, recoleccion 747, mercado 540, sitios 501, cumbi 100, comercio 51)
+     entrenó { "hondero": 50, "ariete": 4, "lancero": 21, "guerrero": 63, "boleador": 39, "comerciante": 8, "galgueros": 16, "catapulta": 4 } · productores al final { "qollqa": 3, "campo_tiro": 2, "cuartel": 1 }
+     riqueza: propio 620, casa 2310, recoleccion 153, sitios 501, mercado 140, cumbi 100, comercio 51, disputado 1150
+     alimento: casa 2784, recoleccion 224, granja 10718, mercado 400, disputado 380
+     hitos ["ushnu", "kallanka_real"] · perdió { "hondero": 42, "ariete": 4, "lancero": 20, "guerrero": 52, "boleador": 35, "galgueros": 15, "catapulta": 2, "aldeano": 29 } · edificios al final { "centro": 1, "casa": 7, "almacen_madera": 8, "camino": 74, "qollqa": 3, "campo_tiro": 2, "almacen_mina": 5, "taller_tejido": 1, "ushnu": 1, "cuartel": 1, "granja": 19, "mercado": 1, "torre": 1, "kallanka_real": 1, "tambo": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 80s/6 ed3 98s/4 · bajas: guerrero>militar 33, hondero>militar 26, boleador>militar 12, lancero>militar 9, centro>militar 5, ?>militar 3, galgueros>militar 3, catapulta>militar 2 · unidades muertas en el monte 9/93
+  etiopia      edades II 5:33 III 12:49 IV 22:22 · primer ataque 6:51 · bajas 209 · pob 75 · ald/ejército 5':21/0 10':33/7 15':42/10 20':42/19 25':42/24 30':42/16
+     juntado 39289 (casa 16724, granja 9775, disputado 5605, propio 2781, mercado 1749, sitios 1377, comercio 756, recoleccion 522)
+     entrenó { "guerrero": 40, "hondero": 41, "guerrero_gasa": 8, "ariete": 4, "farasanna": 10, "comerciante": 5, "catapulta": 5, "caballeria_corte": 3 } · productores al final { "establo": 5, "taller": 2, "cuartel": 1 }
+     riqueza: propio 2409, casa 2560, recoleccion 99, disputado 1404, sitios 1377, mercado 949, comercio 756
+     alimento: propio 372, casa 2194, recoleccion 210, granja 9770, disputado 1280, mercado 400
+     hitos ["iglesia", "remonta", "gondar"] · perdió { "guerrero": 34, "guerrero_gasa": 8, "hondero": 37, "ariete": 2, "farasanna": 9, "catapulta": 2, "caballeria_corte": 1 } · edificios al final { "casa": 8, "almacen_madera": 7, "gult": 6, "establo": 5, "iglesia": 1, "almacen_alimento": 3, "taller": 2, "cuartel": 1, "almacen_mina": 8, "mercado": 1, "granja": 21, "torre": 2, "remonta": 1, "fortaleza": 1, "centro": 1, "gondar": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 81s/4 ed3 96s/4 ed4 112s/4 · bajas: hondero>militar 54, guerrero>militar 53, gondar>militar 27, farasanna>militar 26, catapulta>aldeano 10, guerrero>aldeano 8, hondero>aldeano 8, guerrero_gasa>militar 6 · unidades muertas en el monte 35/199
+  relevo: 0 de vida recuperada sobre 14994 de daño recibido · edificios que cuentan para la victoria al minuto 20: 3-3
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 8 % · emboscada 0 de 1438 golpes (+0 de 11835 daño)
+etiopia      vs tawantinsuyu valle           30:00  ganador etiopia (puntos)  edades 3-3  criterio 4174-3617  puntaje 5891-4785
+  tawantinsuyu edades II 6:38 III 14:38 IV --:-- · primer ataque 7:49 · bajas 147 · pob 47 · ald/ejército 5':24/1 10':35/17 15':42/32 20':41/11 25':35/2 30':34/13
+     juntado 33381 (casa 14164, granja 7803, propio 5155, disputado 3940, mercado 705, sitios 676, recoleccion 626, comercio 212, cumbi 100)
+     entrenó { "hondero": 111, "ariete": 5, "lancero": 16, "boleador": 10, "guerrero": 16, "galgueros": 1, "catapulta": 2, "comerciante": 1 } · productores al final { "qollqa": 2, "campo_tiro": 5, "cuartel": 2 }
+     riqueza: propio 1743, casa 2354, recoleccion 43, granja 3, sitios 676, mercado 205, cumbi 100, comercio 212
+     alimento: casa 2850, recoleccion 333, granja 7800, disputado 1180, mercado 500
+     hitos ["ushnu", "kallanka_real", "qorikancha"] · perdió { "hondero": 98, "aldeano": 33, "ariete": 5, "lancero": 16, "boleador": 10, "guerrero": 16, "galgueros": 1, "catapulta": 2 } · edificios al final { "centro": 1, "casa": 6, "camino": 176, "qollqa": 2, "campo_tiro": 5, "almacen_mina": 2, "taller_tejido": 4, "ushnu": 1, "granja": 12, "almacen_madera": 6, "cuartel": 2, "mercado": 1, "torre": 1, "kallanka_real": 1, "tambo": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 83s/4 ed3 95s/4 · bajas: hondero>militar 85, centro>militar 17, boleador>militar 15, guerrero>militar 11, lancero>militar 6, ?>militar 5, catapulta>militar 2, torre>militar 2 · unidades muertas en el monte 5/145
+  etiopia      edades II 5:18 III 14:29 IV --:-- · primer ataque 7:52 · bajas 194 · pob 98 · ald/ejército 5':21/2 10':32/12 15':44/11 20':43/24 25':43/41 30':43/30
+     juntado 39323 (casa 17128, granja 8401, disputado 6050, propio 2427, mercado 1947, comercio 1560, sitios 1058, recoleccion 752)
+     entrenó { "guerrero": 70, "guerrero_gasa": 16, "hondero": 54, "ariete": 10, "comerciante": 3, "catapulta": 4, "farasanna": 20 } · productores al final { "establo": 4, "taller": 2, "cuartel": 2 }
+     riqueza: propio 2108, casa 2121, recoleccion 64, sitios 1058, granja 10, disputado 1181, mercado 1147, comercio 1560
+     alimento: propio 319, casa 3482, recoleccion 430, granja 8391, disputado 2771, mercado 800
+     hitos ["iglesia", "remonta"] · perdió { "guerrero": 68, "hondero": 45, "guerrero_gasa": 11, "ariete": 6, "aldeano": 1, "farasanna": 14 } · edificios al final { "casa": 10, "almacen_madera": 8, "gult": 4, "establo": 4, "almacen_mina": 6, "iglesia": 1, "taller": 2, "cuartel": 2, "almacen_alimento": 7, "granja": 19, "mercado": 1, "torre": 1, "remonta": 1, "fortaleza": 1, "centro": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 79s/4 ed3 93s/4 · bajas: guerrero>militar 80, hondero>militar 37, farasanna>militar 20, guerrero>aldeano 16, guerrero_gasa>militar 8, hondero>aldeano 7, ariete>edificio 4, farasanna>aldeano 4 · unidades muertas en el monte 5/181
+  relevo: 0 de vida recuperada sobre 10730 de daño recibido · edificios que cuentan para la victoria al minuto 20: 3-3
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 11 % · emboscada 0 de 2344 golpes (+0 de 14859 daño)
+tawantinsuyu vs etiopia      valle           30:00  ganador etiopia (puntos)  edades 3-4  criterio 3795-4983  puntaje 5653-5791
+  tawantinsuyu edades II 5:59 III 16:49 IV --:-- · primer ataque 7:16 · bajas 115 · pob 68 · ald/ejército 5':24/2 10':35/16 15':42/31 20':42/15 25':42/23 30':42/21
+     juntado 42033 (casa 15752, granja 12053, disputado 6351, propio 4362, mercado 1517, comercio 805, recoleccion 633, sitios 560)
+     entrenó { "hondero": 99, "lancero": 38, "ariete": 12, "guerrero": 37, "boleador": 14, "comerciante": 3, "catapulta": 5 } · productores al final { "qollqa": 2, "campo_tiro": 5, "cuartel": 2 }
+     riqueza: propio 1343, casa 2277, recoleccion 110, sitios 560, disputado 1157, mercado 617, comercio 805
+     alimento: casa 3537, recoleccion 142, granja 12053, disputado 364, mercado 900
+     hitos ["ushnu", "kallanka_real"] · perdió { "hondero": 90, "lancero": 32, "guerrero": 33, "ariete": 12, "boleador": 14, "aldeano": 8, "catapulta": 3 } · edificios al final { "centro": 1, "casa": 7, "almacen_madera": 8, "camino": 247, "qollqa": 2, "campo_tiro": 5, "almacen_mina": 4, "taller_tejido": 4, "ushnu": 1, "cuartel": 2, "granja": 18, "mercado": 1, "torre": 1, "kallanka_real": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 80s/4 ed3 85s/6 · bajas: hondero>militar 77, guerrero>militar 25, lancero>militar 8, boleador>militar 4, hondero>aldeano 1 · unidades muertas en el monte 5/115
+  etiopia      edades II 5:37 III 16:08 IV 21:17 · primer ataque 7:19 · bajas 193 · pob 79 · ald/ejército 5':21/0 10':32/15 15':42/20 20':42/16 25':42/21 30':45/23
+     juntado 38033 (casa 15337, granja 8131, disputado 7723, propio 2758, sitios 1650, mercado 1047, recoleccion 750, comercio 637)
+     entrenó { "guerrero": 56, "hondero": 43, "guerrero_gasa": 18, "comerciante": 4, "ariete": 9, "catapulta": 5, "caballeria_corte": 6 } · productores al final { "establo": 3, "taller": 1, "cuartel": 1 }
+     riqueza: propio 2396, casa 2510, recoleccion 70, disputado 1398, sitios 1650, mercado 347, comercio 637
+     alimento: propio 362, casa 3446, recoleccion 220, granja 8128, disputado 2040, mercado 700
+     hitos ["iglesia", "remonta", "gondar"] · perdió { "hondero": 35, "guerrero": 49, "guerrero_gasa": 13, "ariete": 7, "catapulta": 4, "aldeano": 1, "caballeria_corte": 6 } · edificios al final { "casa": 8, "almacen_madera": 7, "gult": 6, "establo": 3, "iglesia": 1, "almacen_alimento": 5, "taller": 1, "cuartel": 1, "almacen_mina": 6, "granja": 34, "mercado": 1, "torre": 2, "remonta": 1, "centro": 1, "gondar": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 76s/4 ed3 95s/4 ed4 93s/6 · bajas: guerrero>militar 98, hondero>militar 55, guerrero_gasa>militar 21, hondero>aldeano 5, guerrero>aldeano 3, caballeria_corte>militar 3, centro>militar 2, ?>militar 2 · unidades muertas en el monte 19/192
+  relevo: 0 de vida recuperada sobre 16059 de daño recibido · edificios que cuentan para la victoria al minuto 20: 3-3
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 2 % · emboscada 0 de 2087 golpes (+0 de 17239 daño)
+etiopia      vs tawantinsuyu sierra          25:00  ganador etiopia (destrucción)  edades 4-2  criterio 4943-2581  puntaje 5061-3511
+  tawantinsuyu edades II 5:52 III --:-- IV --:-- · primer ataque 6:56 · bajas 81 · pob 50 · ald/ejército 5':24/2 10':35/12 15':42/6 20':45/9 25':42/7
+     juntado 26904 (casa 12095, granja 8247, propio 2731, mercado 1557, disputado 1407, recoleccion 780, sitios 87)
+     entrenó { "hondero": 62, "boleador": 23, "guerrero": 19, "ariete": 21, "lancero": 23, "comerciante": 1 } · productores al final { "qollqa": 3, "campo_tiro": 2, "cuartel": 1 }
+     riqueza: propio 504, casa 2350, recoleccion 50, sitios 87, mercado 557
+     alimento: casa 2131, recoleccion 300, granja 8235, disputado 17, mercado 1000
+     hitos ["ushnu", "kallanka_real", "kallanka_real"] · perdió { "hondero": 60, "boleador": 20, "guerrero": 18, "lancero": 23, "ariete": 20, "aldeano": 20 } · edificios al final { "centro": 1, "casa": 6, "camino": 45, "almacen_madera": 7, "qollqa": 3, "campo_tiro": 2, "almacen_mina": 3, "taller_tejido": 2, "ushnu": 1, "granja": 19, "cuartel": 1, "mercado": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 65s/7 · bajas: hondero>militar 39, centro>militar 14, boleador>militar 12, lancero>militar 9, guerrero>militar 6, ariete>edificio 1 · unidades muertas en el monte 4/80
+  etiopia      edades II 5:25 III 16:14 IV 24:25 · primer ataque 6:59 · bajas 163 · pob 78 · ald/ejército 5':20/1 10':31/15 15':42/27 20':42/32 25':42/26
+     juntado 32486 (casa 12934, disputado 6748, granja 5604, mercado 1942, propio 1880, sitios 1538, recoleccion 1035, comercio 805)
+     entrenó { "guerrero": 38, "guerrero_gasa": 18, "hondero": 35, "comerciante": 3, "ariete": 6, "farasanna": 8, "catapulta": 2 } · productores al final { "establo": 4, "taller": 2, "cuartel": 2 }
+     riqueza: propio 1640, casa 2103, recoleccion 115, sitios 1538, granja 4, comercio 805, mercado 942, disputado 833
+     alimento: propio 240, casa 3837, recoleccion 405, granja 5600, mercado 1000, disputado 1482
+     hitos ["iglesia", "remonta", "gondar"] · perdió { "guerrero": 30, "guerrero_gasa": 14, "hondero": 23, "ariete": 4, "farasanna": 8, "catapulta": 1 } · edificios al final { "casa": 9, "almacen_madera": 8, "gult": 5, "establo": 4, "iglesia": 1, "taller": 2, "cuartel": 2, "almacen_mina": 4, "mercado": 1, "almacen_alimento": 3, "granja": 19, "torre": 1, "remonta": 1, "centro": 1, "gondar": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 77s/4 ed3 95s/4 ed4 110s/4 · bajas: guerrero>militar 64, hondero>militar 41, guerrero_gasa>militar 20, farasanna>militar 14, hondero>aldeano 9, farasanna>aldeano 5, guerrero>aldeano 4, guerrero_gasa>aldeano 2 · unidades muertas en el monte 9/161
+  relevo: 0 de vida recuperada sobre 11270 de daño recibido · edificios que cuentan para la victoria al minuto 20: 3-2
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 27 % · emboscada 0 de 1272 golpes (+0 de 10043 daño)
+tawantinsuyu vs etiopia      sierra          30:00  ganador etiopia (puntos)  edades 3-3  criterio 3859-4156  puntaje 5535-5078
+  tawantinsuyu edades II 5:49 III 14:04 IV --:-- · primer ataque 6:52 · bajas 129 · pob 73 · ald/ejército 5':23/2 10':36/15 15':42/10 20':38/22 25':42/22 30':42/25
+     juntado 40363 (granja 13728, casa 12683, disputado 5681, propio 4660, sitios 1606, recoleccion 933, comercio 602, mercado 370, cumbi 100)
+     entrenó { "hondero": 90, "ariete": 6, "lancero": 33, "boleador": 9, "guerrero": 55, "catapulta": 11, "comerciante": 3, "galgueros": 1 } · productores al final { "qollqa": 2, "campo_tiro": 5, "cuartel": 2 }
+     riqueza: propio 1396, casa 2340, recoleccion 60, sitios 1606, mercado 70, disputado 442, cumbi 100, comercio 602
+     alimento: casa 2879, recoleccion 265, granja 13728, mercado 300
+     hitos ["ushnu", "kallanka_real"] · perdió { "hondero": 79, "ariete": 6, "boleador": 9, "guerrero": 49, "lancero": 27, "galgueros": 1, "catapulta": 9, "aldeano": 16 } · edificios al final { "centro": 1, "casa": 8, "almacen_madera": 8, "camino": 219, "qollqa": 2, "campo_tiro": 5, "taller_tejido": 4, "almacen_mina": 3, "ushnu": 1, "cuartel": 2, "granja": 21, "mercado": 1, "torre": 1, "kallanka_real": 1, "tambo": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 80s/5 ed3 68s/8 · bajas: hondero>militar 76, guerrero>militar 20, lancero>militar 18, boleador>militar 5, catapulta>militar 5, hondero>aldeano 2, lancero>aldeano 1, lancero>edificio 1 · unidades muertas en el monte 9/128
+  etiopia      edades II 5:39 III 16:38 IV --:-- · primer ataque 6:55 · bajas 196 · pob 96 · ald/ejército 5':21/0 10':32/9 15':42/10 20':42/13 25':42/19 30':42/35
+     juntado 33224 (casa 13165, granja 8444, disputado 5661, propio 2285, mercado 1112, sitios 985, comercio 805, recoleccion 767)
+     entrenó { "guerrero": 69, "hondero": 55, "guerrero_gasa": 15, "comerciante": 3, "ariete": 7, "catapulta": 4, "lancero": 2, "farasanna": 7 } · productores al final { "establo": 3, "taller": 1, "cuartel": 1 }
+     riqueza: propio 1983, casa 2151, recoleccion 94, granja 2, sitios 985, mercado 412, comercio 805, disputado 1357
+     alimento: propio 302, casa 3093, recoleccion 274, granja 8441, mercado 700, disputado 862
+     hitos ["iglesia", "remonta"] · perdió { "guerrero": 60, "hondero": 39, "guerrero_gasa": 13, "ariete": 3, "lancero": 2, "catapulta": 1, "farasanna": 6, "aldeano": 4 } · edificios al final { "casa": 8, "almacen_madera": 6, "gult": 4, "establo": 3, "almacen_mina": 4, "iglesia": 1, "almacen_alimento": 4, "taller": 1, "cuartel": 1, "granja": 28, "mercado": 1, "torre": 1, "remonta": 1, "centro": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 77s/4 ed3 98s/4 · bajas: guerrero>militar 89, hondero>militar 48, fortaleza>militar 22, guerrero_gasa>militar 9, guerrero>aldeano 8, farasanna>militar 8, hondero>aldeano 4, catapulta>aldeano 4 · unidades muertas en el monte 7/196
+  relevo: 0 de vida recuperada sobre 15830 de daño recibido · edificios que cuentan para la victoria al minuto 20: 3-3
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 11 % · emboscada 0 de 2313 golpes (+0 de 19526 daño)
+guaranies    vs tawantinsuyu rio             30:00  ganador guaranies (puntos)  edades 3-3  criterio 3939-3835  puntaje 4594-5436
+  tawantinsuyu edades II 5:36 III 19:08 IV --:-- · primer ataque 7:09 · bajas 135 · pob 70 · ald/ejército 5':23/3 10':36/7 15':44/18 20':46/29 25':40/28 30':42/19
+     juntado 39010 (casa 14171, granja 10484, disputado 5689, propio 5174, comercio 1501, mercado 1150, recoleccion 741, cumbi 100)
+     entrenó { "hondero": 77, "boleador": 18, "guerrero": 77, "ariete": 8, "comerciante": 8, "lancero": 3, "catapulta": 6 } · productores al final { "qollqa": 3, "campo_tiro": 5, "cuartel": 2 }
+     riqueza: propio 1514, casa 2321, recoleccion 77, granja 2, disputado 1544, mercado 350, comercio 1501, cumbi 100
+     alimento: casa 2420, recoleccion 240, granja 10480, disputado 1220, mercado 800
+     hitos ["ushnu", "kallanka_real", "kallanka_real"] · perdió { "hondero": 76, "boleador": 18, "guerrero": 59, "ariete": 8, "lancero": 2, "aldeano": 9, "catapulta": 6 } · edificios al final { "centro": 1, "casa": 8, "camino": 316, "almacen_madera": 8, "qollqa": 3, "campo_tiro": 5, "almacen_mina": 6, "taller_tejido": 4, "ushnu": 1, "cuartel": 2, "granja": 21, "mercado": 1, "torre": 2, "kallanka_real": 1, "tambo": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 73s/5 ed3 96s/4 · bajas: hondero>militar 50, guerrero>militar 40, hondero>aldeano 10, catapulta>militar 10, torre>militar 7, boleador>militar 7, guerrero>aldeano 6, lancero>militar 2 · unidades muertas en el monte 18/133
+  guaranies    edades II 8:29 III 15:20 IV --:-- · primer ataque 6:43 · bajas 179 · pob 76 · ald/ejército 5':21/0 10':37/11 15':45/15 20':45/6 25':46/6 30':42/34
+     juntado 29157 (casa 13294, granja 10883, disputado 2360, propio 1525, recoleccion 617, mercado 478)
+     entrenó { "hondero": 88, "ariete": 3, "lancero": 8, "guerrero": 53 } · productores al final { "campo_tiro": 5, "taller": 2, "cuartel": 2 }
+     riqueza: casa 2320, propio 1490, granja 1, disputado 890, recoleccion 189, mercado 478
+     alimento: casa 1164, propio 35, granja 10878, disputado 1470, recoleccion 50
+     hitos ["karai_palabra", "monte", "tava"] · perdió { "hondero": 71, "ariete": 2, "lancero": 7, "guerrero": 37, "aldeano": 16 } · edificios al final { "centro": 1, "casa": 7, "almacen_madera": 3, "campo_tiro": 5, "almacen_mina": 5, "karai_palabra": 1, "taller": 2, "cuartel": 2, "monte": 1, "granja": 13, "mercado": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 120s/6 ed3 133s/7 · bajas: hondero>militar 110, guerrero>militar 56, guerrero>aldeano 8, lancero>militar 2, centro>militar 1, hondero>hito 1, lancero>aldeano 1 · unidades muertas en el monte 14/178
+  relevo: 0 de vida recuperada sobre 14997 de daño recibido · edificios que cuentan para la victoria al minuto 20: 3-3
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 11 % · emboscada 0 de 1182 golpes (+0 de 11293 daño)
+tawantinsuyu vs guaranies    selva           30:00  ganador tawantinsuyu (puntos)  edades 4-4  criterio 6040-5932  puntaje 6017-4508
+  tawantinsuyu edades II 5:32 III 14:22 IV 19:34 · primer ataque --:-- · bajas 0 · pob 204 · ald/ejército 5':23/3 10':39/21 15':42/60 20':42/80 25':42/104 30':42/156
+     juntado 48671 (casa 19977, granja 11943, propio 5242, mercado 3637, disputado 3141, comercio 2627, sitios 1547, recoleccion 457, cumbi 100)
+     entrenó { "hondero": 93, "ariete": 5, "guerrero": 41, "boleador": 15, "comerciante": 4, "catapulta": 2 } · productores al final { "qollqa": 3, "campo_tiro": 5, "cuartel": 2 }
+     riqueza: propio 1707, casa 2554, recoleccion 89, sitios 1547, disputado 1150, mercado 537, cumbi 100, comercio 2627
+     alimento: casa 2200, recoleccion 166, granja 11943, disputado 580, mercado 1500
+     hitos ["ushnu", "kallanka_real", "qorikancha"] · perdió {  } · edificios al final { "centro": 1, "casa": 18, "almacen_madera": 6, "camino": 189, "qollqa": 3, "taller_tejido": 4, "campo_tiro": 5, "almacen_mina": 8, "ushnu": 1, "cuartel": 2, "granja": 19, "mercado": 1, "torre": 2, "kallanka_real": 1, "tambo": 1, "qorikancha": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 74s/7 ed3 90s/6 ed4 115s/4 · bajas:  · unidades muertas en el monte 0/0
+  guaranies    edades II 7:56 III 12:17 IV 18:38 · primer ataque 15:54 · bajas 2 · pob 193 · ald/ejército 5':21/0 10':37/10 15':42/32 20':42/69 25':42/94 30':42/144
+     juntado 37260 (casa 16759, granja 11625, mercado 1818, comercio 1795, propio 1766, sitios 1495, disputado 1410, recoleccion 592)
+     entrenó { "hondero": 92, "guerrero": 47, "comerciante": 4, "lancero": 3, "catapulta": 2 } · productores al final { "campo_tiro": 4, "taller": 2, "cuartel": 2 }
+     riqueza: casa 2081, granja 20, propio 1710, recoleccion 129, sitios 1495, mercado 418, disputado 1150, comercio 1795
+     alimento: casa 648, granja 11605, propio 56, recoleccion 50, mercado 400, disputado 260
+     hitos ["karai_palabra", "monte", "tava"] · perdió {  } · edificios al final { "centro": 1, "casa": 18, "almacen_madera": 3, "campo_tiro": 4, "almacen_mina": 5, "karai_palabra": 1, "taller": 2, "cuartel": 2, "mercado": 1, "monte": 1, "granja": 12, "tava": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 124s/4 ed3 138s/7 ed4 175s/4 · bajas: hondero>otra 1, hondero>animal 1 · unidades muertas en el monte 0/0
+  relevo: 0 de vida recuperada sobre 0 de daño recibido · edificios que cuentan para la victoria al minuto 20: 4-4
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 37 % · emboscada 0 de 0 golpes (+0 de 0 daño)
+guaranies    vs tawantinsuyu selva           30:00  ganador tawantinsuyu (puntos)  edades 4-3  criterio 4566-5211  puntaje 4162-5711
+  tawantinsuyu edades II 5:49 III 13:53 IV --:-- · primer ataque 19:40 · bajas 191 · pob 202 · ald/ejército 5':24/4 10':37/20 15':42/60 20':42/123 25':42/147 30':42/149
+     juntado 40459 (casa 19018, granja 11145, propio 4896, disputado 1936, mercado 1180, sitios 1030, recoleccion 552, comercio 552, ingenio 150)
+     entrenó { "hondero": 75, "boleador": 14, "ariete": 5, "guerrero": 63, "comerciante": 2, "catapulta": 6, "galgueros": 2 } · productores al final { "qollqa": 3, "campo_tiro": 5, "cuartel": 2 }
+     riqueza: propio 1548, casa 2090, recoleccion 100, sitios 1030, mercado 280, ingenio 150, comercio 552, disputado 1140
+     alimento: casa 3010, recoleccion 221, granja 11144, mercado 900, disputado 680
+     hitos ["ushnu", "kallanka_real"] · perdió { "guerrero": 12, "boleador": 2, "hondero": 2 } · edificios al final { "centro": 1, "casa": 18, "camino": 281, "almacen_madera": 6, "qollqa": 3, "campo_tiro": 5, "almacen_mina": 5, "taller_tejido": 4, "ushnu": 1, "granja": 18, "cuartel": 2, "mercado": 1, "torre": 1, "kallanka_real": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 76s/4 ed3 83s/6 · bajas: hondero>militar 171, catapulta>militar 18, hondero>animal 1, catapulta>otra 1 · unidades muertas en el monte 189/189
+  guaranies    edades II 7:30 III 14:11 IV 20:35 · primer ataque 19:56 · bajas 16 · pob 55 · ald/ejército 5':21/0 10':37/13 15':42/46 20':42/52 25':42/34 30':42/13
+     juntado 33364 (casa 15551, granja 10965, propio 2213, disputado 1631, sitios 1346, mercado 900, recoleccion 758)
+     entrenó { "hondero": 140, "ariete": 3, "lancero": 3, "guerrero": 46, "kaaguygua": 13 } · productores al final { "campo_tiro": 4, "taller": 2, "cuartel": 1 }
+     riqueza: casa 2072, granja 40, propio 2150, recoleccion 159, sitios 1346, disputado 790
+     alimento: casa 1439, granja 10920, propio 63, recoleccion 102, disputado 600, mercado 900
+     hitos ["karai_palabra", "monte", "tava"] · perdió { "guerrero": 43, "hondero": 132, "kaaguygua": 10, "ariete": 2, "lancero": 2 } · edificios al final { "centro": 1, "casa": 10, "almacen_madera": 3, "almacen_mina": 4, "campo_tiro": 4, "karai_palabra": 1, "taller": 2, "cuartel": 1, "monte": 1, "granja": 10, "mercado": 1, "tava": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 110s/7 ed3 132s/7 ed4 161s/6 · bajas: hondero>militar 16 · unidades muertas en el monte 16/16
+  relevo: 0 de vida recuperada sobre 2671 de daño recibido · edificios que cuentan para la victoria al minuto 20: 3-3
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 37 % · emboscada 0 de 3313 golpes (+0 de 17045 daño)
+tawantinsuyu vs guaranies    montana         30:00  ganador guaranies (puntos)  edades 3-4  criterio 3315-5064  puntaje 2988-5662
+  tawantinsuyu edades II 5:57 III 15:00 IV --:-- · primer ataque 7:32 · bajas 95 · pob 22 · ald/ejército 5':24/1 10':38/9 15':33/1 20':21/0 25':21/0 30':22/0
+     juntado 18985 (casa 10743, propio 4210, granja 2541, mercado 600, recoleccion 440, sitios 231, disputado 120, cumbi 100)
+     entrenó { "hondero": 44, "guerrero": 15, "boleador": 11, "ariete": 3, "galgueros": 1 } · productores al final { "qollqa": 2, "campo_tiro": 2 }
+     riqueza: propio 1494, casa 1737, recoleccion 6, sitios 231, granja 5, cumbi 100
+     alimento: casa 2696, recoleccion 304, granja 2530, disputado 120, mercado 500
+     hitos ["ushnu", "kallanka_real"] · perdió { "hondero": 44, "guerrero": 15, "boleador": 11, "ariete": 3, "aldeano": 24, "galgueros": 1 } · edificios al final { "centro": 1, "casa": 5, "almacen_madera": 3, "camino": 144, "qollqa": 2, "campo_tiro": 2, "taller_tejido": 3, "almacen_mina": 2, "mercado": 1, "granja": 21, "torre": 1, "kallanka_real": 1, "tambo": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 71s/6 ed3 118s/4 · bajas: centro>militar 41, hondero>militar 29, ?>militar 23, boleador>militar 1, torre>militar 1 · unidades muertas en el monte 0/95
+  guaranies    edades II 13:01 III 16:02 IV 22:24 · primer ataque 7:16 · bajas 104 · pob 96 · ald/ejército 5':21/0 10':37/10 15':42/34 20':42/23 25':42/47 30':42/49
+     juntado 39639 (casa 13305, granja 13120, disputado 3580, propio 3368, sitios 2135, mercado 1724, recoleccion 1273, comercio 1134)
+     entrenó { "hondero": 111, "guerrero": 22, "lancero": 4, "comerciante": 4, "kaaguygua": 9 } · productores al final { "campo_tiro": 5, "taller": 2, "cuartel": 1 }
+     riqueza: casa 1150, propio 3314, granja 48, recoleccion 48, disputado 2, sitios 2135, mercado 824, comercio 1134
+     alimento: casa 1308, propio 54, granja 13070, recoleccion 50, disputado 562
+     hitos ["karai_palabra", "monte", "tava"] · perdió { "hondero": 76, "guerrero": 13, "kaaguygua": 6 } · edificios al final { "centro": 1, "casa": 9, "almacen_madera": 3, "campo_tiro": 5, "almacen_mina": 8, "karai_palabra": 1, "taller": 2, "cuartel": 1, "monte": 1, "granja": 9, "mercado": 1, "tava": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 403s/5 ed3 131s/8 ed4 173s/4 · bajas: hondero>militar 74, hondero>aldeano 24, hondero>edificio 4, hondero>otra 1, hondero>hito 1 · unidades muertas en el monte 7/98
+  relevo: 0 de vida recuperada sobre 5422 de daño recibido · edificios que cuentan para la victoria al minuto 20: 3-3
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 2 % · emboscada 0 de 184 golpes (+0 de 2128 daño)
+guaranies    vs tawantinsuyu montana         30:00  ganador guaranies (puntos)  edades 4-3  criterio 4901-3822  puntaje 5495-5853
+  tawantinsuyu edades II 5:43 III 14:39 IV --:-- · primer ataque 8:09 · bajas 142 · pob 68 · ald/ejército 5':24/2 10':39/16 15':42/24 20':42/9 25':37/27 30':42/17
+     juntado 41962 (casa 15174, granja 11800, propio 5023, disputado 4600, sitios 1537, mercado 1514, comercio 1414, recoleccion 800, cumbi 100)
+     entrenó { "hondero": 87, "boleador": 19, "guerrero": 74, "ariete": 4, "comerciante": 5, "galgueros": 1, "lancero": 5, "catapulta": 7 } · productores al final { "qollqa": 3, "campo_tiro": 5, "cuartel": 2 }
+     riqueza: propio 1553, casa 2551, recoleccion 88, granja 1, disputado 160, sitios 1537, mercado 414, comercio 1414, cumbi 100
+     alimento: casa 2208, recoleccion 328, granja 11782, disputado 1150, mercado 1100
+     hitos ["ushnu", "kallanka_real"] · perdió { "hondero": 79, "boleador": 19, "guerrero": 71, "ariete": 4, "galgueros": 1, "lancero": 2, "catapulta": 4, "aldeano": 10 } · edificios al final { "centro": 1, "casa": 8, "camino": 264, "almacen_madera": 8, "qollqa": 3, "campo_tiro": 5, "taller_tejido": 4, "almacen_mina": 3, "ushnu": 1, "granja": 22, "cuartel": 2, "mercado": 1, "torre": 2, "kallanka_real": 1, "tambo": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 73s/6 ed3 96s/5 · bajas: hondero>militar 62, guerrero>militar 48, fortaleza>militar 16, boleador>militar 7, lancero>militar 3, catapulta>militar 2, guerrero>otra 1, ariete>militar 1 · unidades muertas en el monte 0/140
+  guaranies    edades II 7:23 III 13:46 IV 20:03 · primer ataque 7:37 · bajas 191 · pob 71 · ald/ejército 5':21/0 10':37/10 15':42/31 20':42/26 25':42/43 30':42/23
+     juntado 35747 (casa 15013, granja 11099, disputado 2567, sitios 2033, propio 1898, mercado 1510, recoleccion 1072, comercio 555)
+     entrenó { "hondero": 86, "guerrero": 44, "comerciante": 2, "lancero": 7, "kaaguygua": 22, "catapulta": 4 } · productores al final { "campo_tiro": 3, "taller": 2, "cuartel": 1 }
+     riqueza: casa 2570, propio 1820, granja 75, disputado 80, recoleccion 65, sitios 2033, comercio 555, mercado 810
+     alimento: casa 1803, propio 78, granja 11020, disputado 1340, recoleccion 46
+     hitos ["karai_palabra", "monte", "tava"] · perdió { "hondero": 77, "guerrero": 37, "lancero": 7, "kaaguygua": 19 } · edificios al final { "centro": 1, "casa": 9, "almacen_madera": 3, "campo_tiro": 3, "almacen_mina": 3, "karai_palabra": 1, "taller": 2, "cuartel": 1, "monte": 1, "granja": 12, "mercado": 1, "tava": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 121s/5 ed3 158s/4 ed4 146s/8 · bajas: hondero>militar 123, guerrero>militar 44, kaaguygua>militar 11, hondero>aldeano 8, kaaguygua>aldeano 2, centro>militar 1, lancero>militar 1, ?>edificio 1 · unidades muertas en el monte 1/190
+  relevo: 0 de vida recuperada sobre 16318 de daño recibido · edificios que cuentan para la victoria al minuto 20: 3-3
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 0 % · emboscada 0 de 1507 golpes (+0 de 12187 daño)
+tawantinsuyu vs guaranies    bosque_templado 30:00  ganador guaranies (puntos)  edades 3-4  criterio 4232-4841  puntaje 5138-5060
+  tawantinsuyu edades II 6:01 III 13:47 IV --:-- · primer ataque 7:29 · bajas 92 · pob 114 · ald/ejército 5':24/1 10':34/8 15':42/22 20':42/20 25':42/14 30':39/71
+     juntado 38266 (casa 13680, granja 12105, disputado 5098, propio 4780, sitios 884, recoleccion 707, mercado 540, comercio 372, cumbi 100)
+     entrenó { "hondero": 97, "guerrero": 109, "boleador": 7, "ariete": 5, "catapulta": 8, "lancero": 7, "comerciante": 2 } · productores al final { "qollqa": 3, "campo_tiro": 5, "cuartel": 2 }
+     riqueza: propio 1431, casa 2340, recoleccion 114, sitios 884, mercado 140, cumbi 100, disputado 1240, comercio 372
+     alimento: casa 2250, recoleccion 253, granja 12090, mercado 400, disputado 800
+     hitos ["ushnu", "kallanka_real"] · perdió { "hondero": 72, "guerrero": 70, "ariete": 5, "boleador": 7, "catapulta": 7, "aldeano": 9, "lancero": 1 } · edificios al final { "centro": 1, "casa": 10, "camino": 313, "almacen_madera": 6, "qollqa": 3, "campo_tiro": 5, "taller_tejido": 4, "almacen_mina": 4, "ushnu": 1, "cuartel": 2, "mercado": 1, "granja": 19, "torre": 1, "kallanka_real": 1, "tambo": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 75s/6 ed3 62s/8 · bajas: hondero>militar 50, guerrero>militar 30, boleador>militar 7, catapulta>militar 5 · unidades muertas en el monte 7/92
+  guaranies    edades II 8:20 III 15:35 IV 21:51 · primer ataque 7:13 · bajas 171 · pob 67 · ald/ejército 5':21/0 10':37/10 15':42/11 20':42/10 25':42/21 30':42/20
+     juntado 33048 (casa 14951, granja 9686, propio 2767, disputado 1640, mercado 1591, sitios 1030, recoleccion 735, comercio 648)
+     entrenó { "hondero": 64, "ariete": 2, "guerrero": 38, "catapulta": 1, "comerciante": 4, "lancero": 5, "kaaguygua": 3 } · productores al final { "campo_tiro": 5, "taller": 2, "cuartel": 2 }
+     riqueza: casa 2342, propio 2680, granja 29, recoleccion 159, sitios 1030, mercado 791, comercio 648
+     alimento: casa 657, propio 85, granja 9655, recoleccion 42, disputado 950, mercado 400
+     hitos ["karai_palabra", "monte", "tava"] · perdió { "hondero": 57, "ariete": 2, "guerrero": 28, "lancero": 2, "kaaguygua": 3 } · edificios al final { "centro": 1, "casa": 6, "almacen_madera": 3, "campo_tiro": 5, "karai_palabra": 1, "almacen_mina": 8, "taller": 2, "cuartel": 2, "monte": 1, "granja": 14, "mercado": 1, "tava": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 131s/5 ed3 145s/4 ed4 159s/7 · bajas: hondero>militar 127, guerrero>militar 28, hondero>aldeano 6, guerrero>aldeano 3, catapulta>militar 2, fortaleza>militar 2, lancero>militar 2, kaaguygua>militar 1 · unidades muertas en el monte 15/171
+  relevo: 0 de vida recuperada sobre 15825 de daño recibido · edificios que cuentan para la victoria al minuto 20: 3-3
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 14 % · emboscada 0 de 1093 golpes (+0 de 10080 daño)
+mapuches     vs tawantinsuyu rio             25:00  ganador mapuches (destrucción)  edades 4-2  criterio 5044-2083  puntaje 4259-1537
+  tawantinsuyu edades II 5:32 III --:-- IV --:-- · primer ataque 7:01 · bajas 83 · pob 0 · ald/ejército 5':23/4 10':26/0 15':15/0 20':9/0 25':0/0
+     juntado 8292 (casa 5702, propio 1609, granja 700, recoleccion 221, disputado 60)
+     entrenó { "hondero": 30, "boleador": 6, "lancero": 1, "guerrero": 1 } · productores al final { "campo_tiro": 1, "qollqa": 1, "cuartel": 1 }
+     riqueza: propio 498, casa 964, recoleccion 11
+     alimento: casa 2260, recoleccion 140, granja 700, disputado 60
+     hitos ["ushnu"] · perdió { "hondero": 30, "boleador": 6, "aldeano": 37, "lancero": 1, "guerrero": 1 } · edificios al final { "camino": 42, "campo_tiro": 1, "casa": 2, "taller_tejido": 1, "ushnu": 1, "qollqa": 1, "granja": 3, "cuartel": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 66s/6 · bajas: centro>militar 48, hondero>militar 20, centro>ganado 7, ?>militar 6, lancero>militar 1, guerrero>militar 1 · unidades muertas en el monte 0/76
+  mapuches     edades II 6:58 III 16:17 IV 22:05 · primer ataque 6:14 · bajas 84 · pob 96 · ald/ejército 5':21/4 10':29/10 15':42/31 20':42/33 25':42/49
+     juntado 27852 (casa 13180, granja 9341, sitios 1519, propio 1208, kawin 840, recoleccion 829, mercado 480, comercio 185, arreo 180, disputado 90)
+     entrenó { "guerrero": 48, "hondero": 55, "lancero": 13, "infanteria_montada": 9, "comerciante": 4, "incendiarios": 2 } · productores al final { "lof": 3, "corral": 6, "cuartel": 5 }
+     riqueza: casa 2540, recoleccion 79, propio 1208, granja 1, sitios 1519, mercado 280, comercio 185
+     alimento: casa 2360, recoleccion 210, kawin 840, granja 9340, mercado 200, arreo 160
+     hitos ["rewe_lonko", "rewe_caballeria", "parlamento"] · perdió { "guerrero": 38, "hondero": 24, "lancero": 7, "infanteria_montada": 6, "incendiarios": 1 } · edificios al final { "lof": 3, "casa": 7, "corral": 6, "cuartel": 5, "rewe_lonko": 1, "granja": 20, "mercado": 1, "rewe_caballeria": 1, "parlamento": 1 } · arreos 20 · ganado al final 36
+     hitos (edad, obra, constructores): ed2 80s/4 ed3 94s/4 ed4 113s/4 · bajas: hondero>aldeano 31, hondero>militar 19, guerrero>militar 17, hondero>edificio 6, guerrero>aldeano 4, lancero>aldeano 2, hondero>otra 1, lancero>militar 1 · unidades muertas en el monte 15/75
+  relevo: 0 de vida recuperada sobre 2405 de daño recibido · edificios que cuentan para la victoria al minuto 20: 5-2
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 19 % · emboscada 0 de 142 golpes (+0 de 1204 daño)
+tawantinsuyu vs mapuches     rio             30:00  ganador tawantinsuyu (puntos)  edades 3-3  criterio 4209-3640  puntaje 5932-4860
+  tawantinsuyu edades II 5:32 III 14:23 IV --:-- · primer ataque 7:54 · bajas 159 · pob 105 · ald/ejército 5':23/4 10':39/13 15':42/35 20':32/71 25':42/16 30':39/61
+     juntado 41733 (casa 18010, granja 10780, propio 4681, disputado 3509, mercado 3006, sitios 1010, recoleccion 484, comercio 150, cumbi 100, ingenio 3)
+     entrenó { "hondero": 96, "ariete": 3, "guerrero": 88, "lancero": 8, "boleador": 13, "catapulta": 4, "comerciante": 2 } · productores al final { "qollqa": 2, "campo_tiro": 5, "cuartel": 2 }
+     riqueza: propio 1604, casa 2340, recoleccion 50, granja 10, sitios 1010, mercado 1706, disputado 720, cumbi 100, comercio 150, ingenio 3
+     alimento: casa 2817, recoleccion 74, granja 10770, mercado 1300, disputado 989
+     hitos ["ushnu", "kallanka_real"] · perdió { "hondero": 68, "lancero": 4, "guerrero": 61, "boleador": 13, "ariete": 3, "aldeano": 26, "catapulta": 1 } · edificios al final { "centro": 1, "casa": 10, "almacen_madera": 7, "camino": 186, "qollqa": 2, "campo_tiro": 5, "almacen_mina": 3, "taller_tejido": 4, "ushnu": 1, "cuartel": 2, "granja": 20, "mercado": 1, "torre": 1, "kallanka_real": 1, "tambo": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 69s/6 ed3 94s/4 · bajas: hondero>militar 69, guerrero>militar 58, guerrero>aldeano 10, boleador>militar 8, hondero>aldeano 4, lancero>militar 3, fortaleza>militar 3, hondero>otra 2 · unidades muertas en el monte 26/155
+  mapuches     edades II 7:13 III 14:23 IV --:-- · primer ataque 6:22 · bajas 180 · pob 46 · ald/ejército 5':21/4 10':33/15 15':42/20 20':42/7 25':42/18 30':42/3
+     juntado 31859 (casa 14810, granja 10511, propio 1422, kawin 1230, sitios 1107, mercado 983, comercio 666, recoleccion 630, disputado 500)
+     entrenó { "guerrero": 47, "hondero": 66, "lancero": 8, "comerciante": 2, "infanteria_montada": 13, "incendiarios": 12 } · productores al final { "lof": 3, "corral": 4, "cuartel": 5 }
+     riqueza: casa 2320, propio 1422, recoleccion 70, sitios 1107, mercado 683, comercio 666, disputado 350
+     alimento: casa 2740, recoleccion 160, kawin 1230, granja 10510, mercado 300
+     hitos ["rewe_lonko", "rewe_caballeria", "parlamento", "parlamento"] · perdió { "guerrero": 45, "lancero": 8, "hondero": 64, "infanteria_montada": 12, "aldeano": 14, "incendiarios": 12 } · edificios al final { "lof": 3, "casa": 6, "corral": 4, "cuartel": 5, "granja": 19, "rewe_lonko": 1, "mercado": 1, "rewe_caballeria": 1, "fortaleza": 1 } · arreos 0 · ganado al final 18
+     hitos (edad, obra, constructores): ed2 77s/4 ed3 96s/4 · bajas: hondero>militar 50, guerrero>militar 41, ?>militar 23, lof>militar 15, hondero>aldeano 10, guerrero>aldeano 9, fortaleza>militar 9, infanteria_montada>militar 8 · unidades muertas en el monte 15/176
+  relevo: 0 de vida recuperada sobre 11707 de daño recibido · edificios que cuentan para la victoria al minuto 20: 3-5
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 25 % · emboscada 0 de 1521 golpes (+0 de 14597 daño)
+mapuches     vs tawantinsuyu mesetas         30:00  ganador mapuches (puntos)  edades 4-3  criterio 4976-3644  puntaje 5588-3656
+  tawantinsuyu edades II 5:42 III 24:27 IV --:-- · primer ataque 7:29 · bajas 104 · pob 54 · ald/ejército 5':24/1 10':25/2 15':20/2 20':22/5 25':36/13 30':44/4
+     juntado 24929 (casa 13214, granja 6890, propio 2963, mercado 800, recoleccion 501, sitios 210, comercio 181, cumbi 100, disputado 70)
+     entrenó { "hondero": 51, "lancero": 6, "ariete": 3, "boleador": 19, "guerrero": 29, "comerciante": 5, "galgueros": 3, "catapulta": 1 } · productores al final { "qollqa": 3, "campo_tiro": 2, "cuartel": 1 }
+     riqueza: propio 730, casa 2350, recoleccion 50, sitios 210, cumbi 100, comercio 181
+     alimento: casa 3324, recoleccion 291, granja 6890, mercado 800, disputado 40
+     hitos ["ushnu", "kallanka_real"] · perdió { "hondero": 50, "lancero": 6, "boleador": 19, "ariete": 3, "aldeano": 37, "guerrero": 26, "galgueros": 3, "catapulta": 1 } · edificios al final { "centro": 1, "casa": 5, "camino": 164, "almacen_madera": 4, "qollqa": 3, "campo_tiro": 2, "almacen_mina": 3, "taller_tejido": 2, "ushnu": 1, "cuartel": 1, "granja": 14, "torre": 2, "mercado": 1, "kallanka_real": 1, "tambo": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 69s/6 ed3 93s/5 · bajas: hondero>militar 50, centro>militar 18, boleador>militar 14, guerrero>militar 10, ?>militar 5, lancero>militar 3, ?>ganado 2, catapulta>militar 1 · unidades muertas en el monte 17/102
+  mapuches     edades II 7:25 III 14:30 IV 19:48 · primer ataque 6:43 · bajas 146 · pob 83 · ald/ejército 5':21/4 10':32/14 15':42/28 20':42/18 25':42/16 30':42/36
+     juntado 38373 (casa 15851, granja 11263, sitios 2956, comercio 2184, propio 1921, mercado 1606, disputado 990, recoleccion 820, kawin 780, arreo 2)
+     entrenó { "guerrero": 61, "hondero": 57, "lancero": 12, "comerciante": 4, "incendiarios": 7, "infanteria_montada": 3, "kona_waiki": 3 } · productores al final { "lof": 3, "corral": 6, "cuartel": 5 }
+     riqueza: casa 2750, recoleccion 120, propio 1921, sitios 2956, mercado 406, comercio 2184
+     alimento: casa 2191, recoleccion 210, kawin 780, granja 11260, disputado 50, mercado 100
+     hitos ["rewe_lonko", "rewe_caballeria", "parlamento"] · perdió { "guerrero": 48, "hondero": 39, "lancero": 6, "infanteria_montada": 2, "incendiarios": 4, "kona_waiki": 3 } · edificios al final { "lof": 3, "casa": 7, "corral": 6, "cuartel": 5, "rewe_lonko": 1, "granja": 19, "rewe_caballeria": 1, "mercado": 1, "parlamento": 1, "fortaleza": 1, "hoyo": 6 } · arreos 2 · ganado al final 36
+     hitos (edad, obra, constructores): ed2 77s/4 ed3 94s/4 ed4 109s/4 · bajas: guerrero>militar 60, hondero>militar 35, hondero>aldeano 25, guerrero>aldeano 12, kona_waiki>militar 4, infanteria_montada>militar 4, ?>militar 4, hondero>edificio 1 · unidades muertas en el monte 42/145
+  relevo: 0 de vida recuperada sobre 8280 de daño recibido · edificios que cuentan para la victoria al minuto 20: 6-2
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 20 % · emboscada 0 de 724 golpes (+0 de 6800 daño)
+tawantinsuyu vs mapuches     mesetas         30:00  ganador mapuches (puntos)  edades 3-4  criterio 3869-4830  puntaje 5930-5546
+  tawantinsuyu edades II 5:38 III 12:44 IV --:-- · primer ataque 7:40 · bajas 129 · pob 74 · ald/ejército 5':24/3 10':39/1 15':42/31 20':42/37 25':42/21 30':42/22
+     juntado 42966 (casa 17539, granja 12949, propio 4687, disputado 3399, comercio 1554, sitios 1239, recoleccion 767, mercado 732, cumbi 100)
+     entrenó { "hondero": 70, "ariete": 3, "boleador": 16, "guerrero": 70, "catapulta": 3, "comerciante": 8, "lancero": 6 } · productores al final { "qollqa": 3, "campo_tiro": 5, "cuartel": 2 }
+     riqueza: propio 1549, casa 2310, recoleccion 90, sitios 1239, cumbi 100, comercio 1554, mercado 732
+     alimento: casa 3403, recoleccion 234, granja 12949, disputado 1141
+     hitos ["ushnu", "kallanka_real"] · perdió { "hondero": 59, "ariete": 3, "boleador": 16, "aldeano": 3, "guerrero": 61, "catapulta": 1, "lancero": 6 } · edificios al final { "centro": 1, "casa": 8, "almacen_madera": 8, "camino": 213, "qollqa": 3, "campo_tiro": 5, "almacen_mina": 4, "taller_tejido": 4, "ushnu": 1, "granja": 18, "cuartel": 2, "kallanka_real": 1, "tambo": 1, "mercado": 1, "torre": 2, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 74s/5 ed3 86s/6 · bajas: hondero>militar 56, guerrero>militar 47, boleador>militar 11, fortaleza>militar 10, centro>militar 2, lancero>militar 2, ?>militar 1 · unidades muertas en el monte 18/129
+  mapuches     edades II 7:46 III 16:14 IV 21:00 · primer ataque 6:49 · bajas 150 · pob 68 · ald/ejército 5':21/4 10':28/13 15':41/24 20':42/6 25':42/16 30':42/19
+     juntado 37369 (casa 16586, granja 10950, mercado 2529, propio 1900, comercio 1719, sitios 1697, recoleccion 968, kawin 690, disputado 330)
+     entrenó { "guerrero": 60, "hondero": 60, "lancero": 14, "infanteria_montada": 7, "comerciante": 6, "incendiarios": 9 } · productores al final { "lof": 3, "corral": 6, "cuartel": 5 }
+     riqueza: casa 3290, recoleccion 110, propio 1900, sitios 1697, mercado 629, comercio 1719
+     alimento: casa 2240, recoleccion 221, kawin 690, granja 10950, mercado 1000, disputado 330
+     hitos ["rewe_lonko", "rewe_caballeria", "parlamento"] · perdió { "guerrero": 53, "hondero": 49, "lancero": 13, "infanteria_montada": 7, "incendiarios": 7 } · edificios al final { "lof": 3, "casa": 5, "corral": 6, "cuartel": 5, "rewe_lonko": 1, "mercado": 1, "granja": 18, "rewe_caballeria": 1, "parlamento": 1, "fortaleza": 1 } · arreos 0 · ganado al final 35
+     hitos (edad, obra, constructores): ed2 78s/4 ed3 92s/4 ed4 91s/7 · bajas: guerrero>militar 67, hondero>militar 58, lancero>militar 14, infanteria_montada>militar 7, hondero>aldeano 3, hondero>otra 1 · unidades muertas en el monte 23/149
+  relevo: 0 de vida recuperada sobre 14138 de daño recibido · edificios que cuentan para la victoria al minuto 20: 3-5
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 9 % · emboscada 0 de 1568 golpes (+0 de 12758 daño)
+mapuches     vs tawantinsuyu llano           30:00  ganador mapuches (puntos)  edades 4-3  criterio 4742-3960  puntaje 5096-5175
+  tawantinsuyu edades II 5:59 III 15:18 IV --:-- · primer ataque 7:19 · bajas 140 · pob 82 · ald/ejército 5':24/2 10':33/1 15':38/16 20':42/17 25':42/35 30':42/34
+     juntado 35953 (casa 15980, granja 8547, propio 4568, disputado 3359, mercado 1118, sitios 1001, recoleccion 735, comercio 545, cumbi 100)
+     entrenó { "hondero": 71, "lancero": 21, "ariete": 2, "boleador": 8, "guerrero": 64, "comerciante": 3, "catapulta": 8, "galgueros": 1 } · productores al final { "qollqa": 3, "campo_tiro": 5, "cuartel": 2 }
+     riqueza: propio 1377, casa 2310, recoleccion 86, disputado 1139, sitios 1001, mercado 418, cumbi 100, comercio 545
+     alimento: casa 3310, recoleccion 317, disputado 650, granja 8540, mercado 700
+     hitos ["ushnu", "kallanka_real"] · perdió { "hondero": 60, "aldeano": 1, "lancero": 20, "ariete": 2, "boleador": 8, "guerrero": 44, "catapulta": 6, "galgueros": 1 } · edificios al final { "centro": 1, "casa": 9, "camino": 275, "almacen_madera": 8, "qollqa": 3, "campo_tiro": 5, "almacen_mina": 4, "taller_tejido": 4, "ushnu": 1, "cuartel": 2, "granja": 19, "mercado": 1, "torre": 1, "kallanka_real": 1, "tambo": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 57s/7 ed3 68s/7 · bajas: hondero>militar 70, guerrero>militar 37, lancero>militar 14, boleador>militar 7, hondero>aldeano 5, catapulta>militar 4, centro>militar 1, guerrero>aldeano 1 · unidades muertas en el monte 4/140
+  mapuches     edades II 7:20 III 12:09 IV 25:00 · primer ataque 6:53 · bajas 142 · pob 60 · ald/ejército 5':21/4 10':32/14 15':37/6 20':42/10 25':42/19 30':42/10
+     juntado 33742 (casa 14110, granja 8951, disputado 2270, comercio 2176, propio 1605, sitios 1525, mercado 1370, kawin 930, recoleccion 805)
+     entrenó { "guerrero": 59, "hondero": 50, "lancero": 16, "comerciante": 5, "incendiarios": 7, "infanteria_montada": 10, "jinete": 4, "kona_waiki": 1 } · productores al final { "lof": 3, "corral": 6, "cuartel": 4 }
+     riqueza: casa 3080, recoleccion 60, propio 1605, sitios 1525, disputado 70, comercio 2176, mercado 70
+     alimento: casa 3370, recoleccion 240, kawin 930, granja 8950, disputado 670, mercado 1000
+     hitos ["rewe_lonko", "rewe_caballeria", "parlamento"] · perdió { "guerrero": 53, "hondero": 46, "lancero": 16, "incendiarios": 7, "infanteria_montada": 9, "jinete": 2, "aldeano": 7 } · edificios al final { "lof": 3, "casa": 5, "corral": 6, "cuartel": 4, "rewe_lonko": 1, "mercado": 1, "rewe_caballeria": 1, "granja": 21, "hoyo": 6, "fortaleza": 1, "parlamento": 1 } · arreos 0 · ganado al final 33
+     hitos (edad, obra, constructores): ed2 78s/4 ed3 75s/6 ed4 89s/6 · bajas: guerrero>militar 53, hondero>militar 47, lancero>militar 17, infanteria_montada>militar 12, lof>militar 5, jinete>militar 3, ?>militar 2, fortaleza>militar 2 · unidades muertas en el monte 0/142
+  relevo: 0 de vida recuperada sobre 13532 de daño recibido · edificios que cuentan para la victoria al minuto 20: 5-3
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 1 % · emboscada 0 de 1442 golpes (+0 de 15925 daño)
+tawantinsuyu vs mapuches     llano           23:12  ganador tawantinsuyu (destrucción)  edades 3-3  criterio 4104-3249  puntaje 4990-3486
+  tawantinsuyu edades II 5:40 III 21:28 IV --:-- · primer ataque 6:23 · bajas 184 · pob 92 · ald/ejército 5':24/2 10':37/6 15':42/22 20':44/58
+     juntado 30019 (casa 14690, granja 7980, propio 3042, mercado 1579, disputado 1300, sitios 647, recoleccion 567, comercio 114, cumbi 100)
+     entrenó { "hondero": 73, "boleador": 43, "ariete": 13, "guerrero": 22, "lancero": 11, "comerciante": 4 } · productores al final { "qollqa": 2, "campo_tiro": 2, "cuartel": 1 }
+     riqueza: propio 669, casa 2310, recoleccion 90, sitios 647, disputado 240, mercado 479, cumbi 100, comercio 114
+     alimento: casa 2433, recoleccion 187, granja 7980, disputado 200, mercado 700
+     hitos ["ushnu", "kallanka_real"] · perdió { "hondero": 56, "boleador": 32, "ariete": 7, "guerrero": 19, "lancero": 4 } · edificios al final { "centro": 1, "casa": 10, "almacen_madera": 8, "camino": 119, "qollqa": 2, "campo_tiro": 2, "taller_tejido": 4, "almacen_mina": 5, "ushnu": 1, "granja": 18, "cuartel": 1, "mercado": 1, "torre": 2, "kallanka_real": 1, "tambo": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 61s/9 ed3 372s/8 · bajas: hondero>militar 61, guerrero>militar 38, hondero>aldeano 35, boleador>militar 26, ariete>edificio 10, boleador>aldeano 4, hondero>edificio 3, lancero>aldeano 3 · unidades muertas en el monte 8/169
+  mapuches     edades II 8:33 III 16:14 IV --:-- · primer ataque 6:26 · bajas 119 · pob 13 · ald/ejército 5':21/4 10':32/11 15':42/29 20':42/5
+     juntado 22122 (casa 10709, granja 7014, sitios 992, propio 986, recoleccion 872, disputado 820, kawin 510, comercio 218, arreo 1)
+     entrenó { "guerrero": 54, "hondero": 54, "lancero": 7, "infanteria_montada": 12, "comerciante": 3, "incendiarios": 2, "jinete": 1 } · productores al final { "lof": 2, "corral": 3, "cuartel": 2 }
+     riqueza: casa 2321, propio 986, recoleccion 79, sitios 992, comercio 218
+     alimento: casa 2432, recoleccion 243, kawin 510, granja 7011, disputado 663
+     hitos ["rewe_lonko", "rewe_caballeria"] · perdió { "guerrero": 52, "hondero": 53, "lancero": 7, "infanteria_montada": 12, "incendiarios": 2, "jinete": 1, "aldeano": 42 } · edificios al final { "lof": 2, "corral": 3, "cuartel": 2, "rewe_lonko": 1, "granja": 10, "casa": 2, "rewe_caballeria": 1, "mercado": 1 } · arreos 1 · ganado al final 18
+     hitos (edad, obra, constructores): ed2 70s/5 ed3 93s/4 · bajas: guerrero>militar 41, hondero>militar 41, lof>militar 25, infanteria_montada>militar 10, hondero>otra 1, jinete>militar 1 · unidades muertas en el monte 2/118
+  relevo: 0 de vida recuperada sobre 8091 de daño recibido · edificios que cuentan para la victoria al minuto 20: 2-5
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 2 % · emboscada 0 de 2294 golpes (+0 de 18778 daño)
+palmares     vs tawantinsuyu llano           17:03  ganador palmares (destrucción)  edades 3-1  criterio 3910-1116  puntaje 2042-422
+  tawantinsuyu edades II --:-- III --:-- IV --:-- · primer ataque 3:44 · bajas 26 · pob 9 · ald/ejército 5':18/0 10':9/0 15':9/0
+     juntado 2668 (casa 2292, propio 274, recoleccion 102)
+     entrenó { "hondero": 4 } · productores al final { "campo_tiro": 1 }
+     riqueza: casa 334
+     alimento: casa 1481, recoleccion 102
+     hitos [] · perdió { "hondero": 4, "aldeano": 30 } · edificios al final { "camino": 22, "campo_tiro": 1, "casa": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): · bajas: centro>militar 23, hondero>militar 3 · unidades muertas en el monte 0/26
+  palmares     edades II 8:56 III 15:56 IV --:-- · primer ataque 3:45 · bajas 40 · pob 87 · ald/ejército 5':14/9 10':20/21 15':37/37
+     juntado 12371 (casa 7531, granja 1941, propio 1679, sitios 553, saqueo 277, recoleccion 228, renta 162)
+     entrenó { "hondero": 42, "guerrero": 10, "lancero": 2, "zagaieiro": 9, "arcabucero": 3 } · productores al final { "mocambo": 1, "cuartel": 1 }
+     riqueza: propio 889, casa 950, recoleccion 38, sitios 553
+     alimento: casa 2330, recoleccion 70, granja 1940
+     hitos ["quilombo_central", "ferraria"] · perdió { "hondero": 13, "lancero": 2, "guerrero": 8, "zagaieiro": 3 } · edificios al final { "centro": 1, "casa": 7, "mocambo": 1, "cuartel": 1, "quilombo_central": 1, "granja": 16, "almacen_mina": 2, "ferraria": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 82s/4 ed3 92s/4 · bajas: hondero>aldeano 30, hondero>edificio 5, hondero>militar 4, hondero>otra 1 · unidades muertas en el monte 17/34
+  relevo: 0 de vida recuperada sobre 250 de daño recibido · edificios que cuentan para la victoria al minuto 20: 0-0
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 22 % · emboscada 0 de 13 golpes (+0 de 91 daño)
+tawantinsuyu vs palmares     bosque          27:22  ganador palmares (destrucción)  edades 2-2  criterio 2277-3124  puntaje 2566-3934
+  tawantinsuyu edades II 7:32 III --:-- IV --:-- · primer ataque 3:42 · bajas 127 · pob 15 · ald/ejército 5':13/0 10':26/7 15':40/5 20':15/0 25':15/0
+     juntado 15149 (casa 8583, granja 4070, propio 1993, sitios 326, recoleccion 177)
+     entrenó { "hondero": 24, "boleador": 15, "ariete": 1, "guerrero": 12 } · productores al final { "qollqa": 1, "campo_tiro": 1, "cuartel": 1 }
+     riqueza: propio 553, casa 2047, recoleccion 30, sitios 326
+     alimento: casa 2366, recoleccion 97, granja 4070
+     hitos ["ushnu"] · perdió { "hondero": 24, "aldeano": 70, "boleador": 15, "ariete": 1, "guerrero": 12 } · edificios al final { "centro": 1, "casa": 5, "almacen_madera": 2, "camino": 79, "qollqa": 1, "campo_tiro": 1, "taller_tejido": 1, "ushnu": 1, "granja": 14, "almacen_mina": 1, "cuartel": 1, "torre": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 89s/4 · bajas: centro>militar 61, hondero>militar 35, ?>militar 19, boleador>militar 7, guerrero>militar 4, ariete>militar 1 · unidades muertas en el monte 2/127
+  palmares     edades II 8:57 III --:-- IV --:-- · primer ataque 3:43 · bajas 134 · pob 99 · ald/ejército 5':14/9 10':21/7 15':34/25 20':49/48 25':52/34
+     juntado 28151 (casa 13860, granja 5280, propio 4284, disputado 2220, sitios 1149, recoleccion 810, renta 368, saqueo 180)
+     entrenó { "hondero": 173 } · productores al final { "mocambo": 3 }
+     riqueza: propio 3035, casa 1810, recoleccion 20, sitios 1149
+     alimento: casa 2090, recoleccion 60, granja 5280, disputado 1180
+     hitos ["quilombo_central"] · perdió { "hondero": 127 } · edificios al final { "centro": 1, "casa": 7, "mocambo": 3, "granja": 8, "quilombo_central": 1, "almacen_alimento": 2, "almacen_mina": 3 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 81s/4 · bajas: hondero>aldeano 70, hondero>militar 52, hondero>ganado 5, hondero>edificio 4, ?>edificio 1, hondero>animal 1, hondero>otra 1 · unidades muertas en el monte 31/122
+  relevo: 0 de vida recuperada sobre 3930 de daño recibido · edificios que cuentan para la victoria al minuto 20: 2-5
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 20 % · emboscada 0 de 325 golpes (+0 de 2490 daño)
+palmares     vs tawantinsuyu bosque          19:09  ganador palmares (destrucción)  edades 3-1  criterio 3888-1087  puntaje 2561-520
+  tawantinsuyu edades II --:-- III --:-- IV --:-- · primer ataque 4:08 · bajas 27 · pob 6 · ald/ejército 5':23/1 10':6/0 15':6/0
+     juntado 3587 (casa 2351, propio 1056, recoleccion 180)
+     entrenó { "hondero": 10 } · productores al final { "campo_tiro": 1 }
+     riqueza: propio 333, casa 161
+     alimento: casa 1430, recoleccion 170
+     hitos [] · perdió { "hondero": 10, "aldeano": 30 } · edificios al final { "camino": 23, "campo_tiro": 1, "taller_tejido": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): · bajas: centro>militar 19, hondero>militar 7, centro>aldeano 1 · unidades muertas en el monte 0/27
+  palmares     edades II 9:02 III 14:41 IV --:-- · primer ataque 4:08 · bajas 48 · pob 84 · ald/ejército 5':14/6 10':20/15 15':40/31
+     juntado 16186 (casa 9420, propio 3094, granja 2413, saqueo 336, sitios 301, renta 202, recoleccion 200, disputado 120, mercado 100)
+     entrenó { "hondero": 39, "guerrero": 8, "lancero": 2, "zagaieiro": 5, "arcabucero": 1 } · productores al final { "mocambo": 3, "cuartel": 3 }
+     riqueza: propio 1949, casa 1100, recoleccion 20, sitios 301
+     alimento: casa 3010, recoleccion 30, granja 2410, disputado 120, mercado 100
+     hitos ["quilombo_central", "ferraria", "pacto_cucau"] · perdió { "hondero": 14, "guerrero": 8, "lancero": 2, "zagaieiro": 2, "aldeano": 1 } · edificios al final { "centro": 1, "casa": 5, "mocambo": 3, "quilombo_central": 1, "cuartel": 3, "almacen_mina": 2, "granja": 19, "ferraria": 1, "mercado": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 69s/6 ed3 104s/4 · bajas: hondero>aldeano 30, hondero>militar 10, hondero>edificio 7, guerrero>otra 1 · unidades muertas en el monte 23/40
+  relevo: 0 de vida recuperada sobre 640 de daño recibido · edificios que cuentan para la victoria al minuto 20: 0-0
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 20 % · emboscada 0 de 49 golpes (+0 de 343 daño)
+tawantinsuyu vs palmares     rio             30:00  ganador palmares (puntos)  edades 3-4  criterio 3728-5054  puntaje 4483-5174
+  tawantinsuyu edades II 8:54 III 21:37 IV --:-- · primer ataque 3:30 · bajas 138 · pob 59 · ald/ejército 5':16/0 10':22/4 15':34/10 20':43/13 25':47/10 30':44/12
+     juntado 30857 (casa 15104, granja 9805, propio 2887, disputado 1206, mercado 610, sitios 606, recoleccion 539, cumbi 100)
+     entrenó { "hondero": 60, "boleador": 30, "ariete": 9, "guerrero": 72, "galgueros": 3, "catapulta": 2, "comerciante": 1 } · productores al final { "qollqa": 3, "campo_tiro": 4, "cuartel": 2 }
+     riqueza: propio 572, casa 2296, recoleccion 98, sitios 606, disputado 1090, mercado 210, cumbi 100
+     alimento: casa 3375, recoleccion 91, granja 9805, mercado 400
+     hitos ["ushnu", "kallanka_real"] · perdió { "hondero": 55, "aldeano": 25, "boleador": 29, "ariete": 9, "guerrero": 65, "galgueros": 3 } · edificios al final { "centro": 1, "casa": 8, "almacen_madera": 7, "camino": 212, "qollqa": 3, "campo_tiro": 4, "almacen_mina": 3, "ushnu": 1, "granja": 18, "cuartel": 2, "mercado": 1, "torre": 1, "kallanka_real": 1, "tambo": 1, "taller_tejido": 4 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 81s/4 ed3 89s/7 · bajas: hondero>militar 65, guerrero>militar 37, boleador>militar 20, centro>militar 6, ?>militar 3, ariete>militar 2, torre>militar 2, ariete>edificio 1 · unidades muertas en el monte 11/136
+  palmares     edades II 8:56 III 19:02 IV 29:27 · primer ataque 3:31 · bajas 194 · pob 86 · ald/ejército 5':14/8 10':21/10 15':34/22 20':50/34 25':51/28 30':51/34
+     juntado 33000 (casa 14489, granja 9700, propio 4800, disputado 1360, sitios 1139, recoleccion 577, renta 510, mercado 275, ingenio 142, saqueo 8)
+     entrenó { "hondero": 89, "guerrero": 31, "arcabucero": 13, "zagaieiro": 25, "guarnicao_cerca": 15, "lancero": 2 } · productores al final { "mocambo": 3, "cuartel": 5 }
+     riqueza: propio 3466, casa 1810, recoleccion 30, renta 90, sitios 1139, ingenio 142, mercado 275
+     alimento: casa 2287, recoleccion 147, granja 9700, disputado 1170
+     hitos ["quilombo_central", "ferraria", "pacto_cucau", "pacto_cucau"] · perdió { "hondero": 75, "guerrero": 28, "arcabucero": 7, "zagaieiro": 15, "guarnicao_cerca": 10, "lancero": 1 } · edificios al final { "centro": 1, "casa": 8, "mocambo": 3, "cuartel": 5, "quilombo_central": 1, "almacen_alimento": 2, "granja": 19, "ferraria": 1, "mercado": 1, "almacen_mina": 2, "pacto_cucau": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 84s/5 ed3 95s/4 ed4 109s/4 · bajas: hondero>militar 88, hondero>aldeano 23, guerrero>militar 22, zagaieiro>militar 21, guarnicao_cerca>militar 15, arcabucero>militar 13, hondero>ganado 6, zagaieiro>aldeano 2 · unidades muertas en el monte 28/186
+  relevo: 0 de vida recuperada sobre 13896 de daño recibido · edificios que cuentan para la victoria al minuto 20: 2-6
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 14 % · emboscada 0 de 1223 golpes (+0 de 12167 daño)
+palmares     vs tawantinsuyu rio             30:00  ganador tawantinsuyu (puntos)  edades 4-4  criterio 4920-4969  puntaje 5479-5444
+  tawantinsuyu edades II 8:38 III 18:42 IV 26:58 · primer ataque 4:42 · bajas 159 · pob 81 · ald/ejército 5':23/0 10':30/2 15':38/15 20':42/33 25':42/42 30':42/33
+     juntado 37203 (casa 15326, granja 11831, propio 4003, disputado 3170, sitios 1025, comercio 738, mercado 640, recoleccion 370, cumbi 100)
+     entrenó { "hondero": 89, "boleador": 28, "guerrero": 59, "ariete": 2, "comerciante": 4, "galgueros": 5, "catapulta": 1 } · productores al final { "qollqa": 3, "campo_tiro": 3, "cuartel": 2 }
+     riqueza: propio 1044, casa 2406, recoleccion 70, disputado 1070, sitios 1025, mercado 140, cumbi 100, comercio 738
+     alimento: casa 2430, recoleccion 170, granja 11830, disputado 680, mercado 300
+     hitos ["ushnu", "kallanka_real", "qorikancha"] · perdió { "hondero": 65, "aldeano": 18, "boleador": 27, "guerrero": 52, "ariete": 2, "galgueros": 5 } · edificios al final { "centro": 1, "casa": 10, "camino": 233, "almacen_madera": 8, "qollqa": 3, "campo_tiro": 3, "taller_tejido": 4, "almacen_mina": 4, "ushnu": 1, "granja": 19, "cuartel": 2, "mercado": 1, "torre": 2, "kallanka_real": 1, "qorikancha": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 75s/4 ed3 92s/5 ed4 115s/4 · bajas: hondero>militar 100, guerrero>militar 36, boleador>militar 12, galgueros>militar 5, hondero>aldeano 4, hondero>otra 1, catapulta>militar 1 · unidades muertas en el monte 28/158
+  palmares     edades II 9:16 III 14:52 IV 23:19 · primer ataque 4:42 · bajas 170 · pob 75 · ald/ejército 5':14/8 10':19/11 15':31/17 20':47/20 25':53/8 30':52/18
+     juntado 35848 (casa 16066, granja 7970, propio 5062, disputado 2420, comercio 1272, mercado 1003, sitios 903, recoleccion 573, renta 513, saqueo 66)
+     entrenó { "hondero": 88, "guerrero": 23, "zagaieiro": 19, "lancero": 3, "arcabucero": 22, "guarnicao_cerca": 15, "comerciante": 4, "capitao_mocambo": 3 } · productores al final { "mocambo": 3, "cuartel": 2 }
+     riqueza: propio 3541, casa 2608, recoleccion 42, renta 100, sitios 903, mercado 203, comercio 1272
+     alimento: casa 4098, recoleccion 111, granja 7970, disputado 1030, mercado 600
+     hitos ["quilombo_central", "ferraria", "pacto_cucau"] · perdió { "hondero": 75, "guerrero": 21, "zagaieiro": 18, "lancero": 3, "arcabucero": 20, "guarnicao_cerca": 15, "aldeano": 4, "capitao_mocambo": 2 } · edificios al final { "centro": 1, "casa": 4, "mocambo": 3, "cuartel": 2, "quilombo_central": 1, "granja": 17, "almacen_mina": 5, "ferraria": 1, "almacen_alimento": 1, "mercado": 1, "pacto_cucau": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 81s/4 ed3 100s/4 ed4 110s/4 · bajas: hondero>militar 83, guerrero>militar 26, hondero>aldeano 17, arcabucero>militar 17, zagaieiro>militar 16, guarnicao_cerca>militar 5, capitao_mocambo>militar 3, zagaieiro>aldeano 1 · unidades muertas en el monte 53/169
+  relevo: 0 de vida recuperada sobre 12541 de daño recibido · edificios que cuentan para la victoria al minuto 20: 6-3
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 24 % · emboscada 0 de 1636 golpes (+0 de 13598 daño)
+tawantinsuyu vs palmares     altiplano       24:18  ganador palmares (destrucción)  edades 2-4  criterio 2099-5249  puntaje 1047-3974
+  tawantinsuyu edades II 5:36 III --:-- IV --:-- · primer ataque 4:11 · bajas 39 · pob 6 · ald/ejército 5':23/0 10':9/0 15':9/0 20':6/0
+     juntado 5839 (casa 4364, propio 1414, recoleccion 61)
+     entrenó { "hondero": 10, "boleador": 2 } · productores al final { "qollqa": 1 }
+     riqueza: propio 450, casa 1267, recoleccion 25
+     alimento: casa 2257, recoleccion 36
+     hitos ["ushnu"] · perdió { "hondero": 10, "aldeano": 29, "boleador": 2 } · edificios al final { "casa": 2, "almacen_madera": 1, "camino": 22, "qollqa": 1, "almacen_mina": 1, "taller_tejido": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 77s/4 · bajas: centro>militar 35, hondero>militar 2, boleador>militar 2 · unidades muertas en el monte 0/39
+  palmares     edades II 9:09 III 14:05 IV 20:24 · primer ataque 4:12 · bajas 49 · pob 120 · ald/ejército 5':14/10 10':20/18 15':34/36 20':51/34
+     juntado 27759 (casa 12440, granja 7100, propio 3697, sitios 2055, mercado 600, comercio 468, saqueo 403, renta 366, recoleccion 340, disputado 240, ingenio 50)
+     entrenó { "hondero": 61, "guerrero": 15, "lancero": 2, "zagaieiro": 12, "arcabucero": 12, "comerciante": 4 } · productores al final { "mocambo": 3, "cuartel": 2 }
+     riqueza: propio 2572, casa 1990, recoleccion 10, renta 63, sitios 2055, ingenio 50, comercio 468
+     alimento: casa 2370, recoleccion 100, granja 7100, disputado 240, mercado 400
+     hitos ["quilombo_central", "ferraria", "pacto_cucau"] · perdió { "hondero": 20, "guerrero": 9, "lancero": 1, "zagaieiro": 8, "arcabucero": 1 } · edificios al final { "centro": 1, "casa": 8, "mocambo": 3, "cuartel": 2, "granja": 17, "quilombo_central": 1, "almacen_alimento": 1, "almacen_mina": 2, "ferraria": 1, "mercado": 1, "pacto_cucau": 1, "fortaleza": 1 } · arreos 0 · ganado al final 0
+     hitos (edad, obra, constructores): ed2 97s/3 ed3 95s/4 ed4 109s/4 · bajas: hondero>aldeano 28, hondero>militar 12, hondero>ganado 3, hondero>edificio 2, hondero>otra 1, zagaieiro>aldeano 1, hondero>animal 1, hondero>hito 1 · unidades muertas en el monte 10/41
+  relevo: 0 de vida recuperada sobre 766 de daño recibido · edificios que cuentan para la victoria al minuto 20: 2-6
+  sigilo: ejército propio oculto 0 %, oculto y sin detectar 0 % · rival en el monte 9 % · emboscada 0 de 58 golpes (+0 de 348 daño)
+
+==== TOTALES (30 partidas) ====
+tawantinsuyu gana 9 (30 %): por destrucción 1, por puntos 8 (con más edad 2, misma edad 5)
+Partidas por puntos: 23; el puntaje del juego (Sim.score) da el mismo ganador en 16
+Edad al final: tawantinsuyu I 2, II 4, III 18, IV 6 · rivales II 2, III 9, IV 19
+Por rival: ayutthaya 4/6 etiopia 0/6 guaranies 2/6 mapuches 2/6 palmares 1/6
+Por terreno: altiplano 0/1 bosque 0/2 bosque_templado 0/1 delta 1/2 llano 2/4 mesetas 0/2 montana 1/3 rio 2/5 selva 2/2 sierra 1/6 valle 0/2
+tawantinsuyu edades promedio: II 6:03 (28 de 30) III 16:26 (24 de 30) IV 21:36 (6 de 30) · primer ataque 7:03 (29) · bajas 3562
+   aldeanos/ejército promedio: 5':22/1 10':31/8 15':36/18 20':37/24 25':37/26 30':39/37
+   obra de los hitos, promedio: ed2 72s con 5 constructores (28) ed3 99s con 5 constructores (24) ed4 114s con 4 constructores (6)
+   juntado promedio 32206: casa 14216, granja 8564, propio 3810, disputado 2372, mercado 1174, sitios 810, comercio 632, recoleccion 554, cumbi 66, ingenio 5
+   por recurso: alimento 12531, madera 9404, piedra 1781, riqueza 5789
+   riqueza por origen: casa 2221, comercio 632, cumbi 66, disputado 530, granja 1, ingenio 5, mercado 341, propio 1111, recoleccion 69, sitios 810
+   bajas por tipo (atacante>víctima): hondero>militar 1734, guerrero>militar 666, centro>militar 299, boleador>militar 268, lancero>militar 124, hondero>aldeano 102, catapulta>militar 70, ?>militar 69, fortaleza>militar 50, guerrero>aldeano 33, ariete>edificio 23, torre>militar 22
+   entrenadas por partida: ariete 5, boleador 16, catapulta 3, comerciante 3, galgueros 1, guerrero 43, hondero 70, lancero 9 · productores al final (x10, promedio): campo_tiro 35, cuartel 15, qollqa 23
+   unidades que mató en el monte: 446 de 3494
+   entrenadas antes del minuto 15 (x10, por partida): ariete 37, boleador 93, comerciante 3, guerrero 78, hondero 297, lancero 24 · aldeanos perdidos antes del 15: 70 (x10)
+   unidades perdidas por partida: aldeano 18, ariete 4, boleador 14, catapulta 1, galgueros 1, guerrero 33, hondero 55, lancero 8
+   investigaciones (partidas en que la compró, minuto promedio): adiestramiento 9 (min 20), armadura_cc_1 23 (min 11), armadura_cc_2 11 (min 22), armadura_dist_1 26 (min 12), armadura_dist_2 8 (min 21), aspilleras 4 (min 24), ataque_cc_1 28 (min 6), ataque_cc_2 11 (min 21), ataque_dist_1 28 (min 6), ataque_dist_2 10 (min 20), camino_asedio 2 (min 27), canteria 2 (min 29), cestas 5 (min 14), champi 15 (min 20), chunu_charki 26 (min 12), elite_asedio 4 (min 23), elite_choque 6 (min 24), elite_distancia 6 (min 24), elite_linea 1 (min 22), escuela_asedio 1 (min 26), escuela_registros 2 (min 25), escuela_reparar 1 (min 27), fortaleza_reforzada 4 (min 25), hachas 10 (min 8), hachas_2 4 (min 25), hachas_3 1 (min 27), khipukamayuq 27 (min 7), mamposteria 10 (min 18), mamposteria_2 2 (min 24), marcha 21 (min 14), oficio_motor 3 (min 28), orfebreria 1 (min 29), qeswa_chaka 5 (min 17), reparacion_rapida 2 (min 23), riego 1 (min 29), trepanacion 12 (min 20), vel_aldeano 16 (min 21), veterano_asedio 23 (min 17), veterano_choque 22 (min 17), veterano_distancia 23 (min 17), veterano_linea 18 (min 19), vida_aldeano 13 (min 23), vigias 26 (min 9), waraka_trenzada 3 (min 26), wayrachina 2 (min 28)
+   edificios al final (x10, promedio): almacen_madera 60, almacen_mina 36, camino 1786, campo_tiro 35, casa 75, centro 8, cuartel 15, fortaleza 5, granja 158, kallanka_real 8, mercado 8, qollqa 23, qorikancha 2, taller_tejido 31, tambo 6, torre 12, ushnu 8
+   hitos levantados: kallanka_real 27, qorikancha 8, ushnu 28
+   arreos por partida 0 · ganado al final 0 · daño recibido por la tropa 9935 · edificios que cuentan para la victoria al minuto 20: 28 (x10)
+rivales edades promedio: II 7:27 (30 de 30) III 15:49 (28 de 30) IV 22:52 (19 de 30) · primer ataque 7:03 (30) · bajas 4234
+   aldeanos/ejército promedio: 5':18/3 10':29/11 15':39/22 20':43/23 25':43/28 30':42/27
+   obra de los hitos, promedio: ed2 95s con 4 constructores (30) ed3 103s con 4 constructores (28) ed4 120s con 4 constructores (19)
+   juntado promedio 32888: casa 14591, granja 9193, propio 2357, disputado 2339, sitios 1324, mercado 1195, comercio 835, recoleccion 738, kawin 166, renta 90, saqueo 42, ingenio 9, arreo 6
+   por recurso: alimento 13343, madera 9661, piedra 2029, riqueza 7509, fama 343
+   riqueza por origen: casa 2284, comercio 835, disputado 442, granja 8, ingenio 9, mercado 455, propio 2040, recoleccion 82, renta 28, sitios 1324
+   bajas por tipo (atacante>víctima): hondero>militar 1646, guerrero>militar 1234, hondero>aldeano 385, guerrero>aldeano 112, lancero>militar 84, guerrero_gasa>militar 72, farasanna>militar 71, ?>militar 53, ngao>militar 47, lof>militar 45, infanteria_montada>militar 42, zagaieiro>militar 37
+   entrenadas por partida: arcabucero 1, ariete 2, caballeria_corte 0, capitao_mocambo 0, catapulta 1, chang_suek 0, comerciante 3, defensores_suan_phlu 0, elefante_rey 0, farasanna 1, guardia_distancia 0, guarnicao_cerca 1, guerrero 46, guerrero_gasa 2, hondero 67, incendiarios 1, infanteria_montada 1, jinete 0, kaaguygua 1, kona_waiki 0, lancero 5, ngao 2, zagaieiro 2 · productores al final (x10, promedio): barrio_japones 2, barrio_portugues 2, campo_tiro 11, corral 10, cuartel 26, establo 7, kraal 2, lof 5, mocambo 5, taller 9
+   unidades que mató en el monte: 493 de 4128
+   entrenadas antes del minuto 15 (x10, por partida): arcabucero 3, ariete 8, comerciante 4, elefante_rey 4, guerrero 150, guerrero_gasa 11, hondero 290, infanteria_montada 1, lancero 18, ngao 0, zagaieiro 6 · aldeanos perdidos antes del 15: 2 (x10)
+   unidades perdidas por partida: aldeano 5, arcabucero 0, ariete 1, caballeria_corte 0, capitao_mocambo 0, catapulta 0, chang_suek 0, defensores_suan_phlu 0, farasanna 1, guarnicao_cerca 0, guerrero 38, guerrero_gasa 2, hondero 51, incendiarios 1, infanteria_montada 1, jinete 0, kaaguygua 1, kona_waiki 0, lancero 4, ngao 2, zagaieiro 1
+   investigaciones (partidas en que la compró, minuto promedio): actas_geez 6 (min 8), adiestramiento 6 (min 21), amba_fortaleza 5 (min 19), armadura_cc_1 24 (min 12), armadura_cc_2 5 (min 23), armadura_cc_3 1 (min 25), armadura_dist_1 24 (min 11), armadura_dist_2 5 (min 23), arreo_tropilla 1 (min 20), arroz_crecida 2 (min 25), aspilleras 1 (min 29), ataque_cc_1 29 (min 7), ataque_cc_2 5 (min 21), ataque_dist_1 29 (min 8), ataque_dist_2 8 (min 20), ataque_dist_3 1 (min 24), aviso_mocambos 4 (min 18), barrio_chino 3 (min 21), camino_guerra 1 (min 27), caravanas_amole 3 (min 27), ceramica_satchanalai 5 (min 14), cestas 10 (min 4), coseletes_cuero 6 (min 11), cota_malla 5 (min 21), defensa_mborore 1 (min 21), elite_asedio 6 (min 26), elite_choque 8 (min 23), elite_distancia 9 (min 22), elite_montados 1 (min 23), elite_polvora 2 (min 26), escuela_registros 7 (min 25), faws_kosso 3 (min 25), forja_mocambos 2 (min 20), fortaleza_reforzada 9 (min 26), hachas 12 (min 6), hachas_2 2 (min 26), hachas_3 1 (min 26), hoyos_estacas 3 (min 20), khotchasat 3 (min 26), kokue 6 (min 14), lawen 6 (min 20), mamposteria 11 (min 17), mamposteria_2 1 (min 23), marcha 18 (min 12), maresha_tef 6 (min 12), oga_takuara 1 (min 16), orden_katama 1 (min 26), poha_nana 5 (min 19), recetario_narai 4 (min 21), reparacion_rapida 1 (min 28), rocas_palmeiras 3 (min 20), sanguar 1 (min 19), trigo_manzana 6 (min 16), uy_hata 1 (min 21), vel_aldeano 18 (min 20), veterano_asedio 18 (min 19), veterano_choque 24 (min 17), veterano_distancia 28 (min 16), veterano_linea 7 (min 20), veterano_montados 9 (min 18), veterano_polvora 6 (min 21), vida_aldeano 11 (min 24), vigias 30 (min 10)
+   edificios al final (x10, promedio): almacen_alimento 9, almacen_madera 20, almacen_mina 32, barrio_japones 2, barrio_portugues 2, campo_tiro 11, casa 78, centro 8, corral 10, cuartel 26, establo 7, ferraria 1, fortaleza 6, fortaleza_rio 1, gondar 1, granja 178, gult 10, hoyo 4, iglesia 2, junco_tributo 1, karai_palabra 2, kraal 2, lof 5, mercado 9, mocambo 5, monte 2, pacto_cucau 1, parlamento 1, quilombo_central 2, remonta 2, rewe_caballeria 2, rewe_lonko 2, taller 9, tava 1, torre 6, wat 2
+   hitos levantados: ferraria 5, fortaleza_rio 8, gondar 4, iglesia 6, junco_tributo 4, karai_palabra 6, monte 6, pacto_cucau 5, parlamento 6, quilombo_central 6, remonta 6, rewe_caballeria 6, rewe_lonko 6, tava 6, wat 6
+   arreos por partida 0 · ganado al final 5 · daño recibido por la tropa 11560 · edificios que cuentan para la victoria al minuto 20: 37 (x10)
+Relevo: 0 de vida recuperada por partida (0 % del daño que recibió la tropa)
+Sigilo: ejército propio oculto 0 % del tiempo, oculto y sin detectar 0 % · ejército rival en el monte 16 %
+Emboscada: 0 de 42704 golpes propios a algo del rival (0 %), 0 de daño de más sobre 352092 (0 %)

@@ -22,6 +22,7 @@ var _protected: Array = [] # [dueño, x, y, radio] de los koyagtun sin enemigos 
 var traps: Array[SimEntity] = [] # --- paso 6 --- hoyos con estacas (mapuches), ver «Trampas»
 
 
+var site_guard := {} # --- esport 3a --- id de sitio -> población militar del equipo dueño a guarnicion_radio (cada segundo)
 var mando := {} # --- paso 6, par 2 --- id de unidad -> ataque extra por un capitão de mocambo cerca (cada segundo)
 
 
@@ -595,9 +596,29 @@ func _sacred() -> void:
 			site.holder = who
 			site.capture = 0
 			sim.events.append({"t": "sitio", "id": site.id, "player": who})
+	# --- esport 3a --- Guarnición (proceso/34-hacia-esport/04, §4, alternativa B): el sitio rinde
+	# solo con guarnicion_pob o más de población militar del equipo dueño a guarnicion_radio. Sin
+	# ella, la renta y la cuenta de victoria se congelan (no pasan al rival). guarnicion_pob 0 apaga la regla.
+	var need_pob := int(cfg.get("guarnicion_pob", 0))
+	var gr := int(cfg.get("guarnicion_radio", r))
+	site_guard.clear()
+	for site in sites:
+		if site.holder < 0:
+			continue
+		var tm_h := sim.team_of(site.holder)
+		var pob := 0
+		for u in sim.all_units():
+			if u.alive and u.owner >= 0 and u.inside < 0 and u.is_military() and absi(u.x - site.x) <= gr and absi(u.y - site.y) <= gr and sim.team_of(u.owner) == tm_h:
+				pob += int(u.def.get("pob", 1))
+		site_guard[site.id] = pob
+	var unguarded := {} # equipo -> sitios propios sin guarnición
 	var holds := {}
 	for site in sites:
 		if site.holder >= 0:
+			if int(site_guard.get(site.id, 0)) < need_pob:
+				var tmu := sim.team_of(site.holder)
+				unguarded[tmu] = int(unguarded.get(tmu, 0)) + 1
+				continue
 			holds[site.holder] = int(holds.get(site.holder, 0)) + 1
 			# Renta decreciente: 18 / 12 / 8 por el 1.º, 2.º y 3.º sitio del mismo jugador.
 			var rank := int(holds[site.holder]) - 1
@@ -623,7 +644,11 @@ func _sacred() -> void:
 		for q in sim.players:
 			if sim.team_of(int(q["id"])) == sim.team_of(pid) and not q["defeated"]:
 				team_age = maxi(team_age, int(q["age"]))
-		if int(team_holds.get(sim.team_of(pid), 0)) == sites.size() and not p["defeated"] and not no_win and not early and team_age >= age_min:
+		var tm_p := sim.team_of(pid)
+		var held_all := int(team_holds.get(tm_p, 0)) + int(unguarded.get(tm_p, 0)) == sites.size()
+		if held_all and int(unguarded.get(tm_p, 0)) > 0 and not p["defeated"]:
+			pass # --- esport 3a --- todos suyos, alguno sin guarnición: la cuenta se congela
+		elif held_all and not p["defeated"] and not no_win and not early and team_age >= age_min:
 			p["sitios_ms"] = int(p.get("sitios_ms", 0)) + 1000
 			if p["sitios_ms"] >= int(cfg["victoria_ms"]) and not sim.game_over:
 				sim.win(pid)
