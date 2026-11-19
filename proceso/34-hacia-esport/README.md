@@ -56,3 +56,24 @@ Al final de cada iteración se mide el balance con un torneo.
 | — | **Torneo 41** ([resultados](pruebas-it2/41-torneo-iteracion-2.txt)) | Tawantinsuyu **34**, mapuches **70**, guaraníes 50, Etiopía 38, Palmares 54, Ayutthaya 54 %.<br>• La banda se abre de 42–58 a 34–70: los hitos más cortos y la empalizada mapuche a 4 favorecen a los mapuches.<br>• La IV llega en 104 de 150 partidas (antes, 86).<br>• Los mapuches y el Tawantinsuyu se diagnostican al empezar la iteración 3. |
 | — | Sitios con +50 % de renta para el que va atrás en edad | **Consulta al autor:** es una ayuda al que va perdiendo y el autor no quiso ventajas para el 1vN |
 
+
+### Revisión de la iteración 2 ([04](04-revision-iteracion-2.md))
+
+**Notas:** diversidad 5, contrajuego 6 (antes 7), información 5, mapa 6, techo 6, ritmo 5 (antes 4), asimetría 5 (antes 6) y varianza 6. El promedio pasa de 5,6 a 5,5. Un esport anda por 8.
+
+**El problema de fondo:** la partida se decide en la carrera a la III, sin vuelta atrás.
+- El que llega primero a la III gana 9 de 12 partidas.
+- El que va atrás cobra el 4,5 % de los sitios.
+- El comercio cortado lo sufre siempre el equipo que va atrás.
+
+**Bajan dos áreas:**
+- **Contrajuego:** la guardia de distancia escalonando le gana a todo.
+- **Asimetría:** los mapuches ganan 6 de 6.
+
+## Iteración 3
+
+| Frente | Qué | Estado |
+|---|---|---|
+| 3a | Sitios que no se acumulen en el líder: rinden solo con 2 de población militar a 4 casillas, guarnición visible para todos (alternativa B de los expertos; no premia perder). Hito en obra con el 50 % de los PV y la experta que lo ataca. La III a 800 A / 500 R / 100 P. Balance de mapuches (70 %) y Tawantinsuyu (34 %) | En curso |
+| 3b | Comercio con rendimiento decreciente desde el 8.º comerciante por ruta (piso 40 %); el corte pide 3 de población más que la escolta. Guardia de distancia con alcance 5 y velocidad 1100. Emboscada guaraní y Palmares con la II antes de las 8:30 | En curso |
+| — | En qué gastar la riqueza que sobra en la IV: leva, tributo a la causa u obra de legado | **Consulta al autor** |

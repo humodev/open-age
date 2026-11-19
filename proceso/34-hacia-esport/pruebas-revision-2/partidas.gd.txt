@@ -1,0 +1,129 @@
+extends SceneTree
+## Revisión iteración 2 (34): partidas IA contra IA 1v1 con parches en memoria (no toca data/).
+## --pares=a:b,c:d --seeds=7,11 --minutes=30 --dif=experta --hitos=150,180,210 --empalizada=8 --sin_mercados
+
+func _init() -> void:
+	var pairs := [["mapuches", "guaranies"]]
+	var seeds := [7]
+	var minutes := 30
+	var dif := "experta"
+	var hitos := []
+	var emp := 0
+	var no_mk := false
+	for a in OS.get_cmdline_user_args():
+		var kv := a.trim_prefix("--").split("=")
+		match kv[0]:
+			"pares":
+				pairs = []
+				for pr in kv[1].split(","):
+					pairs.append(Array(pr.split(":")))
+			"seeds": seeds = Array(kv[1].split(",")).map(func(x): return int(x))
+			"minutes": minutes = int(kv[1])
+			"dif": dif = kv[1]
+			"hitos": hitos = Array(kv[1].split(",")).map(func(x): return int(x))
+			"empalizada": emp = int(kv[1])
+			"sin_mercados": no_mk = true
+	print("it2 · %s · %d min · hitos %s · empalizada %d · semillas %s" % [dif, minutes, hitos, emp, seeds])
+	for pr in pairs:
+		for sd in seeds:
+			var data := SimData.load_default()
+			if not hitos.is_empty():
+				for i in 3:
+					data.edades[i + 1]["hito_tiempo_ms"] = int(hitos[i]) * 1000
+			if emp > 0:
+				data.edificios["empalizada"]["costo"] = {"madera": emp}
+			if not hitos.is_empty() or emp > 0:
+				for k in data.civs.keys():
+					data.civs[k] = data._merge((data.civs[k] as SimData).civ)
+			var opts := {"civs": [pr[0], pr[1]], "terreno": "llano", "tiempo_limite_min": minutes}
+			if no_mk:
+				opts["sin_mercados"] = true
+			var s := Sim.new(sd, 2, data, opts)
+			s.ais = [SimAI.new(s, 0, dif), SimAI.new(s, 1, dif)]
+			var reach := [{}, {}]
+			var first_mil := -1
+			var site_ev := [0, 0]
+			var site_first := -1
+			var built := [{}, {}]
+			var mil_dead := [0, 0]
+			var vil_dead := [0, 0]
+			var army := ["", ""]
+			var early_mil := [0, 0]
+			var early_vil := [0, 0]
+			var site_prev := [0, 0]
+			var site_behind := [0, 0]
+			var site_tot := [0, 0]
+			while not s.game_over and s.tick < (minutes + 1) * 600:
+				s.step()
+				for ev in s.events:
+					match ev.get("t", ""):
+						"sitio":
+							var p := int(ev.get("player", -1))
+							if p >= 0 and p < 2:
+								site_ev[p] += 1
+								if site_first < 0:
+									site_first = s.tick
+						"died":
+							var o := int(ev.get("owner", -1))
+							if o >= 0 and o < 2:
+								var fn := str(s.data.for_civ(str(s.players[o]["civ"])).unidades.get(str(ev.get("type", "")), {}).get("funcion", ""))
+								if fn in ["choque", "distancia", "linea", "asedio"]:
+									mil_dead[o] += 1
+									if s.tick < 7200:
+										early_mil[o] += 1
+									if first_mil < 0:
+										first_mil = s.tick
+								elif fn == "civil" and s.tick < 7200:
+									early_vil[o] += 1
+						"built":
+							var b: SimEntity = s.by_id.get(int(ev["id"]))
+							var p2 := int(ev.get("player", -1))
+							if b != null and p2 >= 0 and p2 < 2 and b.type in ["empalizada", "muralla", "puerta", "puerta_piedra", "torre", "torre_muralla", "fortaleza", "mercado", "centro", "hito"]:
+								built[p2][b.type] = int(built[p2].get(b.type, 0)) + 1
+				if s.tick % 10 != 0:
+					continue
+				for pid in 2:
+					var sr := int((s.players[pid]["stats"].get("origen", {}).get("sitios", {}) as Dictionary).get("riqueza", 0))
+					var dlt: int = sr - int(site_prev[pid])
+					site_prev[pid] = sr
+					site_tot[pid] += dlt
+					if int(s.players[pid]["age"]) < int(s.players[1 - pid]["age"]):
+						site_behind[pid] += dlt
+				for pid in 2:
+					var age := int(s.players[pid]["age"])
+					if age >= 2 and not reach[pid].has(age):
+						reach[pid][age] = s.tick
+					if s.tick % 3000 == 0:
+						army[pid] += " %d'%d" % [s.tick / 600, _army(s, pid)]
+			var how := "nadie" if s.winner < 0 else "P%d %s" % [s.winner, s.end_reason]
+			print("\n%s:%s s%d · fin %s %s · 1.ª muerte militar %s · 1.ª toma de sitio %s" % [pr[0], pr[1], sd, _t(s.tick), how, _t(first_mil), _t(site_first)])
+			for pid in 2:
+				var book: Dictionary = s.players[pid]["stats"].get("origen", {})
+				var w := {}
+				var tot := 0
+				for k in book:
+					var r := int((book[k] as Dictionary).get("riqueza", 0))
+					if r > 0:
+						w[k] = r
+						tot += r
+				var ages := ""
+				for a2 in [2, 3, 4]:
+					ages += " " + _t(reach[pid].get(a2, -1))
+				var com: Dictionary = s.comercio.stats.get(pid, {}) if s.comercio != null else {}
+				print("  P%d %-11s edades%s · riqueza %d %s · tomas de sitio %d · sitios atrás %d/%d · bajas<12 mil %d ald %d · muertes %s · ejército%s · obras %s · comercio %s · stock %s" % [pid, pr[pid], ages, tot, w, site_ev[pid], site_behind[pid], site_tot[pid], early_mil[pid], early_vil[pid], s.players[pid]["stats"]["muertes"], army[pid], built[pid], com, s.players[pid]["res"]])
+			Sim.soltar_todas()
+	quit()
+
+
+func _army(s: Sim, pid: int) -> int:
+	var n := 0
+	for e in s.actives:
+		if e.alive and e.owner == pid and e.is_unit() and e.is_military():
+			n += 1
+	return n
+
+
+func _t(tick: int) -> String:
+	if tick < 0:
+		return "--:--"
+	return "%d:%02d" % [tick / 600, (tick / 10) % 60]

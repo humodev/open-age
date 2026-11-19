@@ -1,0 +1,17 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+Partida [0, 0, 1, 1], llano, experta, semilla 7, mapa 176, 2 neutrales, 45 min
+   5 min:  J0 e1 riq 238 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J1 e1 riq 141 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J2 e1 riq 200 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J3 e1 riq 246 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)
+  10 min:  J0 e2 riq 1204 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J1 e2 riq 1095 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J2 e2 riq 945 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J3 e2 riq 1130 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)
+  15 min:  J0 e2 riq 1696 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J1 e3 riq 3070 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J2 e2 riq 1730 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J3 e2 riq 2405 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)
+  20 min:  J0 e3 riq 3117 com 0 (3 vivos, 0 muertos, 0 esperas, 0 cortes)  J1 e4 riq 5438 com 0 (2 vivos, 0 muertos, 0 esperas, 0 cortes)  J2 e3 riq 2581 com 0 (3 vivos, 0 muertos, 3 esperas, 3 cortes)  J3 e3 riq 4084 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)
+  25 min:  J0 e4 riq 6387 com 436 (4 vivos, 0 muertos, 0 esperas, 0 cortes)  J1 e4 riq 9202 com 366 (4 vivos, 0 muertos, 0 esperas, 0 cortes)  J2 e3 riq 4036 com 219 (4 vivos, 2 muertos, 5 esperas, 4 cortes)  J3 e3 riq 7146 com 42 (4 vivos, 0 muertos, 0 esperas, 0 cortes)
+  30 min:  J0 e4 riq 11451 com 1534 (10 vivos, 0 muertos, 0 esperas, 0 cortes)  J1 e4 riq 11683 com 1053 (12 vivos, 0 muertos, 0 esperas, 0 cortes)  J2 e3 riq 5918 com 593 (3 vivos, 3 muertos, 9 esperas, 6 cortes)  J3 e3 riq 9648 com 658 (2 vivos, 5 muertos, 9 esperas, 4 cortes)
+  35 min:  J0 e4 riq 16234 com 3856 (16 vivos, 0 muertos, 0 esperas, 0 cortes)  J1 e4 riq 17026 com 3834 (16 vivos, 0 muertos, 0 esperas, 0 cortes)  J2 e3 riq 5964 com 593 (0 vivos, 6 muertos, 9 esperas, 6 cortes)  J3 e3 riq 10748 com 658 (1 vivos, 13 muertos, 16 esperas, 6 cortes)
+  40 min:  J0 e4 riq 21313 com 6706 (16 vivos, 0 muertos, 0 esperas, 0 cortes)  J1 e4 riq 22190 com 7048 (16 vivos, 0 muertos, 0 esperas, 0 cortes)  J2 e3 riq 5964 com 593 (0 vivos, 6 muertos, 9 esperas, 6 cortes)  J3 e3 riq 11542 com 658 (0 vivos, 20 muertos, 26 esperas, 8 cortes)
+  45 min:  J0 e4 riq 26704 com 10156 (16 vivos, 0 muertos, 0 esperas, 0 cortes)  J1 e4 riq 27355 com 10414 (16 vivos, 0 muertos, 0 esperas, 0 cortes)  J2 e3 riq 5964 com 593 (0 vivos, 6 muertos, 9 esperas, 6 cortes)  J3 e3 riq 11865 com 658 (0 vivos, 26 muertos, 28 esperas, 8 cortes)
+Primer cobro (min): [23, 21, 22, 22]; fin al min 45
+META 1 (antes del min 25): comercio 1063 de 26771 de riqueza = 3 % (meta ≤ 15 %)
+META 2 (del min 30 al 45): comercio 17983 de 33188 de riqueza = 54 % (meta 30–45 %)
+Comerciantes muertos en total: 32 (meta: alguna ruta atacada, > 10 en el 2v2)
+CORTES: 14 rutas cortadas (avisos), 37 esperas de comerciantes

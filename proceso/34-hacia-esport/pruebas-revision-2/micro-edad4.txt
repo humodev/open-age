@@ -1,0 +1,21 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+# micro_matriz · civs capa común / capa común · edad 4 con compras · parche ninguno
+# bonos {"choque":{"distancia":8},"distancia":{"linea":6},"linea":{"choque":6,"montado":6}}
+# guerrero: pv 120, ataque 11, armadura 1/0, alcance 450, cadencia 1250, velocidad 1350, costo {"alimento":60,"riqueza":25}
+# hondero: pv 65, ataque 7, armadura 0/0, alcance 5500, cadencia 1750, velocidad 1250, costo {"alimento":30,"madera":45}
+# lancero: pv 140, ataque 8, armadura 3/0, alcance 650, cadencia 1500, velocidad 1100, costo {"alimento":60,"madera":25,"riqueza":10}
+# jinete: pv 170, ataque 13, armadura 1/2, alcance 500, cadencia 1250, velocidad 2200, costo {"alimento":100,"riqueza":70}
+# catapulta: pv 150, ataque 16, armadura 0/1, alcance 7000, cadencia 5000, velocidad 750, costo {"madera":150,"riqueza":100}
+# 5 variantes por pelea (semilla 3..7, B corrido 0, -1, 1, -2, 2 casillas)
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+custom | guardia_distancia:5 | guardia:5 | nada | - | 24.4 s | 0/5 | 0.0/5 | 4.0/5 | 2250 / 2250
+custom | guardia_distancia:5 | guardia:5 | escalonar | - | 93.0 s | 4/5 | 2.8/5 | 0.4/5 | 2250 / 2250
+custom | guardia_distancia:5 | jinete:10 | nada | - | 22.3 s | 0/5 | 0.0/5 | 7.2/10 | 2250 / 1700
+custom | guardia_distancia:5 | jinete:10 | escalonar | - | 46.8 s | 1/5 | 0.4/5 | 6.0/10 | 2250 / 1700
+custom | guardia_distancia:5 | lancero:10 | nada | - | 29.4 s | 5/5 | 4.2/5 | 0.0/10 | 2250 / 950
+custom | guardia_distancia:5 | hondero:10 | nada | - | 21.2 s | 5/5 | 4.8/5 | 0.0/10 | 2250 / 750
+custom | guardia_distancia:5 | guerrero:10 | escalonar | - | 33.5 s | 5/5 | 5.0/5 | 0.0/10 | 2250 / 850
+custom | hondero:10 | guardia:5 | escalonar | - | 147.6 s | 1/5 | 3.0/10 | 1.6/5 | 750 / 2250
+custom | aldeano:6 | guerrero:2 | nada | - | 46.4 s | 0/5 | 0.8/6 | 2.0/2 | 300 / 170
+custom | aldeano:4 | explorador:1 | nada | - | 41.5 s | 4/5 | 4.0/4 | 0.2/1 | 200 / 80
