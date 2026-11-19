@@ -69,7 +69,8 @@
       ["pausa", "Pausa", "Paneles", "F10"],
       ["guia", "La Guía: lecciones y lo que dijo en las campañas", "Paneles", "G"],
       ["atajos", "Hoja de atajos", "Paneles", "F12"],
-      ["mi_base", "Panel «Mi base»", "Paneles", "F11"]
+      ["mi_base", "Panel «Mi base»", "Paneles", "F11"],
+      ["modo_foto", "Modo foto: oculta la interfaz", "Paneles", "O"]
     ],
     "perfiles": {
       "fabrica": { "nombre": "De fábrica", "teclas": {}, "grupos_exclusivos": false },
