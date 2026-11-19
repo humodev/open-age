@@ -20,6 +20,7 @@ const TEXTO := {
 	"tropa": "Atacan a tu tropa",
 	"edificio": "Atacan tu %s",
 	"aliado": "Atacan a %s",
+	"comerciantes": "Atacan a tus comerciantes", # --- comercio ---
 }
 
 var hud: Hud
@@ -87,6 +88,8 @@ func tipo_de(b: SimEntity) -> String:
 	if b.owner == local:
 		if b.is_building():
 			return "edificio"
+		if b.def.get("comerciante", false): # --- comercio --- uno por ruta (atacado_comerciante)
+			return "comerciantes"
 		return "tropa" if b.is_military() else "aldeanos"
 	if not sim.enemies(local, b.owner) and not sim.players[b.owner]["defeated"]:
 		return "aliado" if bool(cfg.get("avisar_aliado", true)) else ""
@@ -97,6 +100,9 @@ func on_events(events: Array) -> void:
 	if not activo():
 		return
 	for ev in events:
+		if ev["t"] == "ruta_cortada": # --- comercio ---
+			ruta_cortada(ev)
+			continue
 		if ev["t"] != "hit":
 			continue
 		var b: SimEntity = sim.by_id.get(ev["b"])
@@ -109,8 +115,58 @@ func on_events(events: Array) -> void:
 		atacado(tipo, b)
 
 
+# --- comercio --- (proceso/33-comercio, §4) avisos de las rutas, con lugar y Espacio
+var _rutas := {} # id del mercado destino -> reloj del último «Atacan a tus comerciantes»
+
+
+## Un comerciante golpeado: un aviso por ruta (mercado destino) cada reglas.comercio.aviso_ms.
+func atacado_comerciante(b: SimEntity) -> bool:
+	var rep := float(int(sim.comercio.cfg.get("aviso_ms", 30000))) / 1000.0
+	var key := b.trade_dest
+	if _clock - float(_rutas.get(key, -1000.0)) < rep:
+		return false
+	_rutas[key] = _clock
+	var dest: SimEntity = sim.by_id.get(b.trade_dest)
+	var txt: String = TEXTO["comerciantes"]
+	txt += " · " + (("en la ruta a %s" % _nombre_mercado(dest)) if dest != null else _donde(b))
+	hud.notify(txt, -1.0, "ataque", WorldView.to_world(b.x, b.y))
+	if hud._mini != null:
+		hud._mini.ping(b.x, b.y)
+	_sonar("alerta_aldeanos", "ui/ui_alerta_aldeanos.ogg")
+	_ultimo_ataque = _clock
+	_contar("ataque_comerciantes")
+	return true
+
+
+## «Ruta cortada» (suceso de la simulación, una vez hasta que se reabra), con lugar.
+func ruta_cortada(ev: Dictionary) -> void:
+	if int(ev.get("player", -1)) != local:
+		return
+	var dest: SimEntity = sim.by_id.get(int(ev.get("dest", -1)))
+	var why := "mercado tomado" if str(ev.get("motivo", "")) == "tomado" else "camino cerrado"
+	var txt := "Ruta cortada en %s (%s)" % [_nombre_mercado(dest), why]
+	hud.notify(txt, -1.0, "ataque", WorldView.to_world(int(ev["x"]), int(ev["y"])))
+	if hud._mini != null:
+		hud._mini.ping(int(ev["x"]), int(ev["y"]))
+	_sonar("alerta_edificio", "ui/ui_alerta_edificio.ogg")
+	_contar("ruta_cortada")
+
+
+func _nombre_mercado(m: SimEntity) -> String:
+	if m == null:
+		return "la ruta"
+	var nm := String(m.def.get("nombre", "mercado"))
+	if m.def.get("mercado_neutral", false):
+		nm = String(((sim.terrain_def().get("neutral", {}) as Dictionary)).get("nombre", nm))
+		return "la %s" % nm.to_lower() if not nm.begins_with("Puerto") else "el %s" % nm.to_lower()
+	return "el mercado de %s" % Palette.team_name(m.owner) if m.owner != local else "tu %s" % nm.to_lower()
+# --- fin comercio ---
+
+
 ## Un golpe de tipo `tipo` a `b`: avisa si su zona (o una vecina) no avisó hace poco.
 func atacado(tipo: String, b: SimEntity) -> bool:
+	if tipo == "comerciantes":
+		return atacado_comerciante(b)
 	var zc := maxi(1, int(cfg.get("zona_casillas", 12)))
 	var z := Vector2i(b.x / P / zc, b.y / P / zc)
 	var rep := float(cfg.get("repetir_zona_s", 20.0))
