@@ -1,0 +1,16 @@
+
+Partida [0, 0, 1, 1], llano, experta, semilla 7, mapa 176, 2 neutrales, 45 min
+   5 min:  J0 e1 riq 238 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J1 e1 riq 141 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J2 e1 riq 200 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J3 e1 riq 246 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)
+  10 min:  J0 e2 riq 1202 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J1 e2 riq 1064 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J2 e2 riq 920 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J3 e2 riq 1130 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)
+  15 min:  J0 e2 riq 1847 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J1 e3 riq 2680 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J2 e2 riq 1898 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J3 e2 riq 2495 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)
+  20 min:  J0 e3 riq 3205 com 0 (2 vivos, 0 muertos, 0 esperas, 0 cortes)  J1 e3 riq 5250 com 0 (3 vivos, 0 muertos, 3 esperas, 2 cortes)  J2 e3 riq 3100 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)  J3 e3 riq 4341 com 0 (0 vivos, 0 muertos, 0 esperas, 0 cortes)
+  25 min:  J0 e3 riq 6002 com 342 (3 vivos, 1 muertos, 0 esperas, 0 cortes)  J1 e3 riq 7826 com 261 (2 vivos, 3 muertos, 6 esperas, 4 cortes)  J2 e3 riq 4949 com 0 (4 vivos, 0 muertos, 3 esperas, 3 cortes)  J3 e3 riq 7618 com 147 (4 vivos, 0 muertos, 1 esperas, 1 cortes)
+  30 min:  J0 e4 riq 9921 com 448 (6 vivos, 1 muertos, 2 esperas, 1 cortes)  J1 e4 riq 10342 com 398 (8 vivos, 4 muertos, 10 esperas, 5 cortes)  J2 e3 riq 6820 com 242 (2 vivos, 4 muertos, 10 esperas, 5 cortes)  J3 e3 riq 10981 com 661 (2 vivos, 5 muertos, 6 esperas, 4 cortes)
+  35 min:  J0 e4 riq 12814 com 1778 (6 vivos, 1 muertos, 7 esperas, 3 cortes)  J1 e4 riq 13716 com 2353 (7 vivos, 5 muertos, 18 esperas, 8 cortes)  J2 e4 riq 10078 com 315 (8 vivos, 5 muertos, 13 esperas, 7 cortes)  J3 e3 riq 15239 com 1116 (5 vivos, 5 muertos, 6 esperas, 4 cortes)
+  40 min:  J0 e4 riq 15685 com 3159 (9 vivos, 1 muertos, 7 esperas, 3 cortes)  J1 e4 riq 16779 com 3765 (9 vivos, 5 muertos, 21 esperas, 10 cortes)  J2 e4 riq 12911 com 1303 (2 vivos, 13 muertos, 16 esperas, 10 cortes)  J3 e3 riq 18200 com 1851 (4 vivos, 8 muertos, 11 esperas, 7 cortes)
+  45 min:  J0 e4 riq 20042 com 5812 (12 vivos, 1 muertos, 7 esperas, 3 cortes)  J1 e4 riq 20445 com 5931 (12 vivos, 5 muertos, 21 esperas, 10 cortes)  J2 e4 riq 14278 com 1317 (1 vivos, 14 muertos, 16 esperas, 10 cortes)  J3 e3 riq 19374 com 1924 (0 vivos, 18 muertos, 26 esperas, 11 cortes)
+Primer cobro (min): [22, 22, 27, 25]; fin al min 45
+META 1 (antes del min 25): comercio 750 de 26395 de riqueza = 2 % (meta ≤ 15 %)
+META 2 (del min 30 al 45): comercio 13235 de 36075 de riqueza = 36 % (meta 30–45 %)
+Comerciantes muertos en total: 38 (meta: alguna ruta atacada, > 10 en el 2v2)
+CORTES: 34 rutas cortadas (avisos), 70 esperas de comerciantes

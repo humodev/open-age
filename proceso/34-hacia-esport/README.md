@@ -87,3 +87,23 @@ Al final de cada iteración se mide el balance con un torneo.
 - **Banda:** vuelve a 42–64 (en el 41 era 34–70).
 - **Edad IV:** llega en 115 de 150 partidas.
 - **Victorias por destrucción de hitos:** bajan a 26; casi todo se define por puntos en partidas que llegan al final.
+
+### Revisión de la iteración 3 ([06](06-revision-iteracion-3.md))
+
+**Notas:** diversidad 5, contrajuego 5, información 6, mapa 6, techo 6, ritmo 4, asimetría 6, varianza 6. **El promedio sigue en 5,5**, igual que en la iteración 2.
+
+**Medidas en main:**
+- El primero en llegar a la III gana 8 de 12 (el 6 de 12 de 3a era ruido).
+- El que va atrás cobra el 5,3 % de los sitios.
+- El comercio del 2v2 queda en 32–36 %, dentro de la meta, y los cortes se reparten.
+
+**Problemas nuevos:**
+- La guardia de distancia ahora pierde contra todo.
+- A igual costo, 30 honderos le ganan 5 de 5 a 13 jinetes: es un problema de escala.
+
+## Lectura del orquestador: por qué no sube
+
+Tres iteraciones en 5,5 dicen que el límite está en cómo medimos, no solo en el diseño:
+1. **El torneo puntúa la edad** (edad × 1000 en los empates por tiempo). Ahí «gana el de más edad en 93 de 95» sale en parte de la vara, no solo del juego.
+2. **La IA no juega como un rival competitivo.** No rushea, no amuralla, no busca superioridad local y llega tarde al hito en obra. Las estrategias que dan diversidad, contrajuego y ritmo nunca aparecen en las partidas que medimos.
+3. **Los lotes de 12 son ruido.** Hacen falta 24 o más.

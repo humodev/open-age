@@ -1,0 +1,12 @@
+
+2v2 [0, 1, 0, 1] ["tawantinsuyu", "mapuches", "guaranies", "etiopia"] llano experta semilla 7, mapa 176
+  25:34 j0 elige camino_asedio
+  28:10 j1 empieza la maravilla
+  34:04 j1 termina la maravilla
+  37:23 j1 elige camino_guerra
+Fin a los 45:00
+j0 tawantinsuyu eq0 edad 4 en pie | min en la IV 21 | sin gastar en la IV: alimento prom 1940 máx 3208, madera prom 86 máx 889 | al final { "alimento": 3141, "madera": 42, "piedra": 2200, "riqueza": 618, "mita": 16 } | camino camino_asedio | repetidas { "asedio_rep": 2 } | guardia 10 | pob 87/200
+j1 mapuches     eq1 edad 4 en pie | min en la IV 23 | sin gastar en la IV: alimento prom 699 máx 1780, madera prom 270 máx 1320 | al final { "alimento": 1767, "madera": 803, "piedra": 935, "riqueza": 1049 } | camino camino_guerra | repetidas { "guerra_rep": 4 } | guardia 0 | pob 209/200
+j2 guaranies    eq0 edad 3 derrotado | min en la IV 0 | sin gastar en la IV: alimento prom 0 máx 0, madera prom 0 máx 0 | al final { "alimento": 206, "madera": 1495, "piedra": 597, "riqueza": 194 } | camino - | repetidas {  } | guardia 0 | pob 4/0
+j3 etiopia      eq1 edad 4 en pie | min en la IV 2 | sin gastar en la IV: alimento prom 348 máx 507, madera prom 256 máx 368 | al final { "alimento": 507, "madera": 368, "piedra": 458, "riqueza": 73 } | camino - | repetidas {  } | guardia 0 | pob 188/200
+maravilla j1: empieza 28:10, obra 5:54, daño máximo terminada 0 %

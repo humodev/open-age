@@ -1,0 +1,14 @@
+
+# micro_matriz · civs capa común / capa común · edad 4 con compras · parche ninguno
+# reacción del micro de A: 400 ms
+# bonos {"choque":{"distancia":8},"distancia":{"linea":6},"linea":{"choque":6,"montado":6}}
+# guerrero: pv 120, ataque 11, armadura 1/0, alcance 450, cadencia 1250, velocidad 1350, costo {"alimento":60,"riqueza":25}
+# hondero: pv 65, ataque 7, armadura 0/0, alcance 5500, cadencia 1750, velocidad 1250, costo {"alimento":30,"madera":45}
+# lancero: pv 140, ataque 8, armadura 3/0, alcance 650, cadencia 1500, velocidad 1100, costo {"alimento":60,"madera":25,"riqueza":10}
+# jinete: pv 170, ataque 13, armadura 1/2, alcance 500, cadencia 1250, velocidad 2200, costo {"alimento":100,"riqueza":70}
+# catapulta: pv 150, ataque 16, armadura 0/1, alcance 7000, cadencia 5000, velocidad 750, costo {"madera":150,"riqueza":100}
+# 5 variantes por pelea (semilla 3..7, B corrido 0, -1, 1, -2, 2 casillas)
+conjunto | A | B | modo | formación | tiempo medio | gana A | A vivos (prom.) | B vivos (prom.) | costo A / B
+custom | hondero:30 | jinete:13 | nada | - | 43.4 s | 5/5 | 20.4/30 | 0.0/13 | 2250 / 2210
+custom | hondero:30 | guardia:5 | escalonar | - | 39.3 s | 5/5 | 25.8/30 | 0.0/5 | 2250 / 2250
+custom | hondero:30 | guardia:5 | nada | - | 64.7 s | 4/5 | 15.6/30 | 0.4/5 | 2250 / 2250
