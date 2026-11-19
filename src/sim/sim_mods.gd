@@ -76,7 +76,7 @@ func _own_resource(pid: int, p: Dictionary) -> void:
 	var per_min := 0
 	var cap: int = cfg.get("tope", 999999)
 	var vill := 0
-	for e in sim.actives:
+	for e in sim.owned(pid):
 		if not e.alive or e.owner != pid:
 			continue
 		if e.fn == "civil":
@@ -113,7 +113,7 @@ func _own_resource(pid: int, p: Dictionary) -> void:
 ## Tope extra de tributo por elefante (barrio chino, junco): el mayor, no se suman.
 func tribute_cap_bonus(pid: int) -> int:
 	var best := 0
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if e.alive and e.owner == pid and e.is_building() and e.built:
 			best = maxi(best, int(e.def.get("tributo_tope_extra", 0)))
 	return best
@@ -122,7 +122,7 @@ func tribute_cap_bonus(pid: int) -> int:
 ## Piezas extra de motor que dan los hitos ("maximo_extra": {"tipo": n} en el hito).
 func engine_max_bonus(pid: int, type: String) -> int:
 	var extra := 0
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if e.alive and e.owner == pid and e.is_building() and e.built and e.def.has("maximo_extra"):
 			extra += int(e.def["maximo_extra"].get(type, 0))
 	return extra
@@ -147,7 +147,7 @@ func _gain(pid: int, key: String, milli: int, origin: String = "propio") -> void
 ## La tecnología de motor suma su porcentaje (mod "motor"). Orden por id: determinista.
 func _conversions(pid: int, p: Dictionary) -> void:
 	var boost := 100 + sim.mod(pid, "motor")
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if not (e.alive and e.owner == pid and e.is_building() and e.built and e.def.has("conversion")):
 			continue
 		var cv: Dictionary = e.def["conversion"]
@@ -174,11 +174,11 @@ func _conversions(pid: int, p: Dictionary) -> void:
 ## Renta: edificios que producen sin aldeanos (gult etíope, barrios del puerto).
 func _rents(pid: int, _p: Dictionary) -> void:
 	var capital: SimEntity = null
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if e.alive and e.owner == pid and e.is_building() and e.capital:
 			capital = e
 			break
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if e.alive and e.owner == pid and e.is_building() and e.built and e.def.has("renta") and e.mode != "regimiento":
 			var r: Dictionary = e.def["renta"]
 			# Renta mejor cerca de la capital (gult etíope junto a la corte).
@@ -198,14 +198,14 @@ func _rents(pid: int, _p: Dictionary) -> void:
 	# --- paso 6 --- Renta que dan las mejoras a un tipo de edificio (makuñ: cada lof da riqueza).
 	var extra: Dictionary = sim.players[pid].get("renta_tipos", {})
 	if not extra.is_empty():
-		for e in sim.actives:
+		for e in sim.buildings_of(pid):
 			if e.alive and e.owner == pid and e.is_building() and e.built and extra.has(e.type):
 				var r2: Dictionary = extra[e.type]
 				for k in r2:
 					_gain(pid, k, int(r2[k]) * P / 60, "renta")
 	if has(pid, "corte_extrae") and capital != null:
 		var src := capital
-		for e in sim.actives:
+		for e in sim.buildings_of(pid):
 			if e.alive and e.owner == pid and e.is_building() and e.built and e.def.get("capital_fija", false):
 				src = e # Gondar extrae desde su lugar, con su propio radio y ritmo
 				break
@@ -292,10 +292,10 @@ func _herds(pid: int) -> void:
 	var boost := 100 + sim.mod(pid, "motor")
 	var heads_total := 0
 	var breed_bonus_ms := 0
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if e.alive and e.owner == pid and e.is_building() and e.built and e.def.has("cria_ms"):
 			breed_bonus_ms = int(e.def["cria_ms"])
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if not (e.alive and e.owner == pid and e.is_building() and e.def.has("ganado")):
 			continue
 		var g: Dictionary = e.def["ganado"]
@@ -313,7 +313,7 @@ func _herds(pid: int) -> void:
 		heads_total += e.heads
 	if heads_total > 0:
 		var per := 4
-		for e in sim.actives:
+		for e in sim.owned(pid):
 			if e.alive and e.owner == pid and e.def.has("ganado"):
 				per = int(e.def["ganado"]["riqueza_por_cabeza"])
 				break
@@ -321,7 +321,7 @@ func _herds(pid: int) -> void:
 	# Cabezas arreadas: al llegar a un corral propio entran, o dan alimento si no hay lugar.
 	if has(pid, "arreo"):
 		var cfg := m(pid, "arreo")
-		for u in sim.actives:
+		for u in sim.owned(pid):
 			if not (u.alive and u.owner == pid and u.type == cfg["unidad"]):
 				continue
 			var c := _nearest_corral(pid, u.x, u.y, false)
@@ -357,7 +357,7 @@ func corral_cap(e: SimEntity) -> int:
 func _nearest_corral(pid: int, x: int, y: int, with_room: bool) -> SimEntity:
 	var best: SimEntity = null
 	var best_d := 1 << 60
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if e.alive and e.owner == pid and e.is_building() and e.built and e.def.has("ganado"):
 			if with_room and e.heads >= corral_cap(e):
 				continue
@@ -398,7 +398,7 @@ func craft_assign(u: SimEntity) -> bool:
 	var cap := int(tops[clampi(int(sim.players[pid]["age"]) - 1, 0, tops.size() - 1)])
 	var total := 0
 	var cap_b: SimEntity = null
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if e.alive and e.owner == pid and e.is_building():
 			total += e.crafts.size()
 			if e.capital:
@@ -407,7 +407,7 @@ func craft_assign(u: SimEntity) -> bool:
 		return false
 	var best: SimEntity = null
 	var best_d := 1 << 60
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if not (e.alive and e.owner == pid and e.is_building() and e.built):
 			continue
 		var slots := int(cfg["puestos"].get(e.type, 0))
@@ -438,7 +438,7 @@ func _crafts_yield(pid: int) -> void:
 	var boost := 100 + sim.mod(pid, "motor") + sim.mod(pid, "oficios_pct") # --- paso 6, par 2 --- forja de los mocambos
 	var per := int(cfg["por_min"])
 	var working := 0
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if not (e.alive and e.owner == pid and e.is_building() and not e.crafts.is_empty()):
 			continue
 		if craft_stopped(e):
@@ -459,7 +459,7 @@ func craft_stopped(e: SimEntity) -> bool:
 		return true
 	var r := int(cfg.get("para_radio", 6000))
 	var n := 0
-	for o in sim.actives:
+	for o in sim.military():
 		if o.alive and o.owner >= 0 and sim.enemies(e.owner, o.owner) and o.is_military() and o.inside < 0 and absi(o.x - e.x) <= r and absi(o.y - e.y) <= r:
 			n += 1
 	return n >= int(cfg.get("para_enemigos", 3))
@@ -468,7 +468,7 @@ func craft_stopped(e: SimEntity) -> bool:
 ## Relevo: las unidades fuera de combate se curan. --- paso 6 --- El lawen mapuche cura más
 ## (`relevo_pct`); los remedios del monte guaraníes (`regen_monte`) curan a la tropa junto al monte.
 func _regen() -> void:
-	for e in sim.actives:
+	for e in sim.all_units():
 		if not e.alive or not e.is_unit() or e.hp >= e.hp_max or e.owner < 0:
 			continue
 		if has(e.owner, "relevo"):
@@ -520,7 +520,7 @@ func near_wall(e: SimEntity, r: int, fuertes := false) -> bool:
 
 ## --- paso 6, par 2 --- ¿`pid` tiene en pie alguno de esos edificios terminado?
 func _has_built(pid: int, types: Array) -> bool:
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if e.alive and e.owner == pid and e.is_building() and e.built and types.has(e.type):
 			return true
 	return false
@@ -531,12 +531,12 @@ func _command_aura() -> void:
 	if not mando.is_empty():
 		mando.clear()
 	var caps: Array[SimEntity] = []
-	for e in sim.actives:
+	for e in sim.all_units():
 		if e.alive and e.is_unit() and e.inside < 0 and e.def.has("mando"):
 			caps.append(e)
 	if caps.is_empty():
 		return
-	for u in sim.actives:
+	for u in sim.military():
 		if not u.alive or not u.is_unit() or u.owner < 0 or not u.is_military():
 			continue
 		for c in caps:
@@ -571,8 +571,8 @@ func _sacred() -> void:
 		# Presencia por equipo: los aliados no se disputan un sitio. Lo toma el jugador
 		# de menor id del equipo presente.
 		var present := {}
-		for u in sim.actives:
-			if u.alive and u.is_unit() and u.owner >= 0 and u.inside < 0 and absi(u.x - site.x) <= r and absi(u.y - site.y) <= r:
+		for u in sim.all_units(): # mismas unidades que actives, en el mismo orden; la caja primero
+			if absi(u.x - site.x) <= r and absi(u.y - site.y) <= r and u.alive and u.owner >= 0 and u.inside < 0:
 				var tm := sim.team_of(u.owner)
 				present[tm] = mini(int(present.get(tm, u.owner)), u.owner)
 		if present.size() != 1:
@@ -661,11 +661,11 @@ func on_road(e: SimEntity) -> bool:
 func _update_connection(pid: int) -> void:
 	var n := sim.map.n
 	var start: SimEntity = null
-	for e in sim.actives:
+	for e in sim.owned(pid):
 		if e.alive and e.owner == pid and e.capital:
 			start = e
 			break
-	for e in sim.actives:
+	for e in sim.buildings_of(pid):
 		if e.owner == pid and e.is_building():
 			_connected.erase(e.id)
 	var linked := {}
@@ -823,7 +823,7 @@ func cumbi_target(pid: int) -> SimEntity:
 		return null
 	var cap: SimEntity = null
 	var rivals: Array[SimEntity] = []
-	for e in sim.actives:
+	for e in sim.all_buildings():
 		if e.alive and e.is_building() and e.capital:
 			if e.owner == pid:
 				cap = e
@@ -880,7 +880,7 @@ func _respawn_neutrals() -> void:
 			continue
 		var c := Vector2i(int(r[1]) * P + P, int(r[2]) * P + P)
 		var busy := false
-		for u in sim.actives:
+		for u in sim.all_units():
 			if u.alive and u.is_unit() and u.owner >= 0 and absi(u.x - c.x) <= 12 * P and absi(u.y - c.y) <= 12 * P:
 				busy = true
 				break
@@ -942,7 +942,7 @@ func on_kill(e: SimEntity, killer: SimEntity) -> void:
 		var n: int = lib.get("por_edificio", {}).get(e.type, int(lib.get("aldeanos", 1)))
 		var kp: Dictionary = sim.players[killer.owner]
 		var home: SimEntity = null
-		for b in sim.actives:
+		for b in sim.all_buildings():
 			if b.alive and b.owner == killer.owner and b.is_building() and b.capital:
 				home = b
 				break
@@ -1065,7 +1065,7 @@ func _wonder_tick() -> void:
 	_wfx.clear()
 	_slow.clear()
 	_protected.clear()
-	for w in sim.actives:
+	for w in sim.all_buildings():
 		if not (w.alive and w.owner >= 0 and w.is_building() and w.built and w.def.get("maravilla", false)):
 			continue
 		var fx := {}
@@ -1129,7 +1129,7 @@ func _flood(w: SimEntity, cfg: Dictionary) -> void:
 		if sim.tick < int(p.get("inundacion_lista", 0)):
 			return
 		var n := 0
-		for u in sim.actives:
+		for u in sim.military():
 			if u.alive and u.is_unit() and u.inside < 0 and u.owner >= 0 and u.is_military() and sim.enemies(w.owner, u.owner) and tiles.has(u.y / P * sim.map.n + u.x / P):
 				n += 1
 		if n < int(cfg["enemigos_min"]):
@@ -1145,7 +1145,7 @@ func _flood(w: SimEntity, cfg: Dictionary) -> void:
 ## salvo a `torre_radio` casillas de una torre o un fuerte suyo (la respuesta de 1766).
 func _rising(w: SimEntity, cfg: Dictionary) -> void:
 	var cap: SimEntity = null
-	for e in sim.actives:
+	for e in sim.all_buildings():
 		if e.alive and e.owner == w.owner and e.is_building() and e.capital:
 			cap = e
 			break
@@ -1179,7 +1179,7 @@ func trepan(a: SimEntity, t: SimEntity) -> void:
 		return
 	var r := int(cfg["radio"]) * P
 	var home: SimEntity = null
-	for b in sim.actives:
+	for b in sim.all_buildings():
 		if b.alive and b.owner == t.owner and b.is_building() and b.built and (cfg["edificios"] as Array).has(b.type) and absi(b.x - t.x) <= r and absi(b.y - t.y) <= r:
 			home = b
 			break

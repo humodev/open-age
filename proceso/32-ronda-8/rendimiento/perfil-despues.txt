@@ -1,0 +1,101 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+
+=== 1v6 · semilla 42 · 7726 ticks (12.9 min de juego) en 94 s de reloj ===
+hash final 2078642622 · unidades vivas 418 · fin: conquista (ganador equipo 1)
+TICK      promedio  12.08 ms · p95  24.75 · peor   93.15 (tick 6200, min 10.3) · >25 ms: 367 · >40: 14 · >100: 0
+sistema         prom ms   p95 ms  peor ms  % total
+ia                 2.75     6.95    18.32    22.7%
+recoleccion        2.49     3.98     7.35    20.6%
+niebla             1.02     6.26    10.48     8.4%
+movimiento         0.98     1.99     2.45     8.1%
+resto              0.86     2.79     5.42     7.1%
+separacion         0.69     1.16     1.91     5.7%
+tablas             0.68     1.25     2.93     5.6%
+blancos            0.66     2.34     7.48     5.5%
+segundo            0.52     5.10     8.90     4.3%
+jugadores          0.45     0.84     1.16     3.7%
+edificios          0.33     0.54     1.03     2.7%
+combate            0.24     0.74     1.47     2.0%
+find_resource      0.22     0.76     3.03     1.8%
+caminos            0.10     0.07    66.12     0.9%
+grupos             0.03     0.10     0.21     0.3%
+ordenes            0.02     0.10     2.70     0.1%
+victoria           0.02     0.15     0.40     0.1%
+animales           0.01     0.00     0.58     0.1%
+telemetria         0.00     0.00     0.68     0.0%
+Picos (tick · min · total ms · sistema que más pesó · segundo):
+    6200   10.3    93.15  caminos           66.12 · segundo 7.08
+    6800   11.3    91.78  caminos           65.68 · segundo 7.95
+    5879    9.8    90.91  caminos           64.62 · ia 9.09
+    7379   12.3    50.62  caminos           16.78 · ia 9.40
+    7633   12.7    49.26  caminos           32.40 · recoleccion 4.18
+    6500   10.8    49.22  caminos           25.51 · segundo 7.62
+por minuto (prom/peor ms): m5 8.3/16 m10 17.0/91 m13 21.0/51
+×4 alcanza (promedio del minuto < 25 ms) hasta el minuto 13 de 13
+
+=== tct7 · semilla 42 · 24000 ticks (40.0 min de juego) en 736 s de reloj ===
+hash final 1213324295 · unidades vivas 788 · fin: sigue (ganador equipo -1)
+TICK      promedio  30.64 ms · p95  59.53 · peor  127.45 (tick 23868, min 39.8) · >25 ms: 14185 · >40: 7750 · >100: 4
+sistema         prom ms   p95 ms  peor ms  % total
+ia                 7.17    19.89    52.76    23.4%
+recoleccion        5.63     8.74    15.23    18.4%
+movimiento         2.84     6.32     9.56     9.3%
+niebla             2.35     5.49     9.93     7.7%
+resto              2.31     6.97    11.79     7.6%
+tablas             1.88     3.42    10.93     6.1%
+separacion         1.81     3.25    10.22     5.9%
+combate            1.18     3.09    12.56     3.9%
+jugadores          1.18     2.06     7.88     3.8%
+blancos            1.09     3.97    17.87     3.6%
+segundo            0.89     8.34    20.00     2.9%
+edificios          0.81     1.39     3.44     2.6%
+find_resource      0.78     2.18    20.33     2.5%
+grupos             0.29     0.86     2.72     1.0%
+ordenes            0.19     0.89    46.02     0.6%
+caminos            0.17     0.42    61.15     0.6%
+victoria           0.05     0.44     1.53     0.2%
+telemetria         0.01     0.00     1.73     0.0%
+animales           0.01     0.00     0.46     0.0%
+Picos (tick · min · total ms · sistema que más pesó · segundo):
+   23868   39.8   127.45  caminos           61.15 · ia 20.91
+   18279   30.5   105.94  caminos           36.20 · ia 23.88
+   18274   30.5   104.56  caminos           50.57 · ia 14.20
+   21720   36.2   102.15  caminos           38.98 · segundo 12.69
+   18969   31.6    95.68  ia (j1)           52.76 · recoleccion 9.41
+   17854   29.8    94.90  ordenes           46.02 · ia 11.75
+por minuto (prom/peor ms): m5 8.0/16 m10 15.8/31 m15 22.4/40 m20 30.5/51 m25 40.1/84 m30 48.4/95 m35 48.9/93 m40 47.8/127
+×4 alcanza (promedio del minuto < 25 ms) hasta el minuto 16 de 40
+
+=== 4v4 · semilla 42 · 24000 ticks (40.0 min de juego) en 858 s de reloj ===
+hash final 383809084 · unidades vivas 613 · fin: sigue (ganador equipo -1)
+TICK      promedio  35.72 ms · p95  66.53 · peor  253.43 (tick 13800, min 23.0) · >25 ms: 16732 · >40: 10459 · >100: 28
+sistema         prom ms   p95 ms  peor ms  % total
+ia                 8.54    21.45    74.06    23.9%
+recoleccion        5.87     8.68    12.90    16.4%
+movimiento         3.20     5.97     8.98     9.0%
+resto              2.65     7.87    12.01     7.4%
+niebla             2.44    11.04    19.64     6.8%
+blancos            2.38     8.76    38.70     6.7%
+tablas             2.17     3.32     5.86     6.1%
+separacion         1.76     2.88     4.53     4.9%
+jugadores          1.36     2.07     5.02     3.8%
+segundo            1.17    12.45    29.81     3.3%
+combate            1.10     3.03     6.69     3.1%
+edificios          0.93     1.38     3.50     2.6%
+find_resource      0.83     2.19    12.81     2.3%
+caminos            0.83     3.47   178.42     2.3%
+grupos             0.28     0.82     1.82     0.8%
+ordenes            0.14     0.64    43.96     0.4%
+victoria           0.06     0.74     1.42     0.2%
+telemetria         0.01     0.00     2.90     0.0%
+animales           0.01     0.00     0.55     0.0%
+Picos (tick · min · total ms · sistema que más pesó · segundo):
+   13800   23.0   253.43  caminos          178.42 · segundo 20.99
+   18874   31.5   239.06  caminos          172.40 · ia 24.80
+   18869   31.4   223.81  caminos          155.94 · ia 24.85
+   18879   31.5   217.47  caminos          144.41 · ia 24.75
+   18859   31.4   192.81  caminos          125.12 · ia 24.56
+   18864   31.4   190.25  caminos          124.40 · ia 24.95
+por minuto (prom/peor ms): m5 9.3/22 m10 19.8/33 m15 30.4/52 m20 43.0/86 m25 57.6/109 m30 48.9/111 m35 53.3/97 m40 45.0/150
+×4 alcanza (promedio del minuto < 25 ms) hasta el minuto 12 de 40

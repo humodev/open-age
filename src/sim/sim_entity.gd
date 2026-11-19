@@ -117,4 +117,5 @@ func is_resource() -> bool:
 ## Militar por lista blanca: el ganado, los elefantes de carga y otras unidades
 ## nuevas no cuentan como ejército (crítica 03b, trampa 1).
 func is_military() -> bool:
-	return cat == Cat.UNIT and fn in ["choque", "distancia", "linea", "asedio"]
+	return cat == Cat.UNIT and MILITARY_FNS.has(fn)
+const MILITARY_FNS := {"choque": true, "distancia": true, "linea": true, "asedio": true} # sin armar un arreglo por llamada

@@ -640,7 +640,7 @@ func villager_cap(pid: int) -> int:
 ## Aldeanos vivos y en cola del jugador (lo que mide el tope de la repetición).
 func villagers_and_queued(pid: int) -> int:
 	var n := 0
-	for e in actives:
+	for e in owned(pid):
 		if not e.alive or e.owner != pid:
 			continue
 		if e.fn == "civil" and e.is_unit():
@@ -950,19 +950,19 @@ func _cmd_ungarrison(pid: int, bid: int) -> void:
 func _cmd_alarm(pid: int, on: bool, max_n: int = -1) -> void:
 	players[pid]["alarm"] = on
 	if not on:
-		for e in actives:
+		for e in owned(pid):
 			if e.alive and e.owner == pid and e.fn == "civil" and e.order == O.GARRISON:
 				_set_idle(e)
 				var res := find_resource(pid, e.gather_kind, e.x, e.y, data.reglas["radio_retomar"], -1, e.id) if e.gather_kind != "" else null
 				if res != null:
 					_order_gather(e, res)
-		for b in actives:
+		for b in buildings_of(pid):
 			if b.alive and b.owner == pid and b.is_building() and not b.garrison.is_empty():
 				_eject(b)
 		return
 	var radius: int = data.reglas["radio_campana"]
 	var cands: Array[SimEntity] = []
-	for e in actives:
+	for e in owned(pid):
 		if e.alive and e.owner == pid and e.fn == "civil" and e.inside < 0:
 			cands.append(e)
 	if max_n >= 0 and cands.size() > max_n:
@@ -970,7 +970,7 @@ func _cmd_alarm(pid: int, on: bool, max_n: int = -1) -> void:
 		var danger := {}
 		for e in cands:
 			var best := 1 << 60
-			for o in actives:
+			for o in military():
 				if o.alive and o.owner >= 0 and enemies(pid, o.owner) and o.is_military():
 					best = mini(best, Sim.dist(e.x, e.y, o.x, o.y))
 			danger[e.id] = best
@@ -992,7 +992,7 @@ func garrison_cap(b: SimEntity) -> int:
 ## Edificio propio con lugar libre más cercano, contando a quienes ya van en camino.
 func nearest_shelter(pid: int, x: int, y: int, exclude_walker: int = -1) -> SimEntity:
 	var incoming := {}
-	for e in actives:
+	for e in owned(pid):
 		if e.alive and e.owner == pid and e.order == O.GARRISON and e.id != exclude_walker and e.target >= 0:
 			incoming[e.target] = incoming.get(e.target, 0) + 1
 	var best: SimEntity = null
@@ -1000,7 +1000,7 @@ func nearest_shelter(pid: int, x: int, y: int, exclude_walker: int = -1) -> SimE
 	var probe := SimEntity.new()
 	probe.x = x
 	probe.y = y
-	for b in actives:
+	for b in buildings_of(pid):
 		if not b.alive or b.owner != pid or not b.is_building():
 			continue
 		if b.garrison.size() + int(incoming.get(b.id, 0)) >= garrison_cap(b):
@@ -1211,7 +1211,7 @@ func _apply_effects(pid: int, efectos: Array) -> void:
 			"trepanacion":
 				players[pid]["trepanacion"] = {"pct": int(ef["pct"]), "radio": int(ef["radio"]), "vida_pct": int(ef["vida_pct"]), "tipos": ef["tipos"], "edificios": ef["edificios"], "n": 0}
 			# --- fin paso 6 ---
-	for e in actives:
+	for e in owned(pid):
 		if e.alive and e.owner == pid:
 			_apply_stats(e)
 
@@ -1287,13 +1287,16 @@ func step() -> void:
 	_cur_cmd = "en_marcha" # lo que se rechace después no viene de una orden de este tick
 	if not flares.is_empty() or not requests.is_empty():
 		_expire_calls()
-	for ai in ais:
-		if ai.thinks_now() and not players[ai.player]["defeated"]:
+	if _ai_of != ais:
+		_spread_ai()
+	for k in ais.size():
+		var ai = ais[k]
+		if (tick + _ai_phase[k]) % _ai_every[k] == 0 and not players[ai.player]["defeated"]:
 			ai.think()
 	groups.tick()
 	_rebuild_hashes()
 	_update_players()
-	for b in actives:
+	for b in all_buildings():
 		if b.is_building() and not b.built:
 			b.workers_prev = b.workers_now
 			b.workers_now = 0
@@ -1333,6 +1336,61 @@ func step() -> void:
 	_in_step = false
 
 
+## Turnos de la IA (proceso/32-ronda-8/04, rendimiento): cada IA piensa cada
+## `piensa_cada_ticks`, en la fase de siempre (`SimAI.thinks_now`: jugador × 5). Con 7 u 8
+## jugadores esas fases caían todas en el mismo tick (5 y 10 ticks, fase múltiplo de 5) y ese
+## tick sumaba el `think` de todas. Si la fase de siempre ya está ocupada por otra IA, se le da
+## la menos cargada: en 1 contra 1 nada cambia; con muchas, como mucho dos por tick. Al elegir,
+## el tick de «cada segundo» (tick % 10 == 0: mods, auras, maravillas) cuenta como media IA.
+var _ai_of: Array = []
+var _ai_phase := PackedInt32Array()
+var _ai_every := PackedInt32Array()
+func _spread_ai() -> void:
+	_ai_of = ais.duplicate()
+	_ai_phase.resize(ais.size())
+	_ai_every.resize(ais.size())
+	var span := 10 # el ciclo de «cada segundo»
+	for k in ais.size():
+		var ev := maxi(1, int(ais[k].level["piensa_cada_ticks"]))
+		_ai_every[k] = ev
+		var a := span
+		var b := ev
+		while b != 0:
+			var r := a % b
+			a = b
+			b = r
+		span = span / a * ev
+	var solo_ia := PackedInt32Array() # IA que piensan en cada tick del ciclo
+	solo_ia.resize(span)
+	var carga := PackedInt32Array() # en medias IA: cada IA 2, el tick de cada segundo 1
+	carga.resize(span)
+	for t in range(0, span, 10):
+		carga[t] = 1
+	for k in ais.size():
+		var ev := _ai_every[k]
+		var want := (int(ais[k].player) * 5) % ev
+		var best := want
+		if _phase_load(solo_ia, want, ev) > 0:
+			var best_max := 1 << 30
+			for ph in ev:
+				var m := _phase_load(carga, ph, ev)
+				if m < best_max:
+					best = ph
+					best_max = m
+		_ai_phase[k] = best
+		for t in range((ev - best) % ev, span, ev):
+			solo_ia[t] += 1
+			carga[t] += 2
+
+
+## Carga máxima de los ticks (dentro del ciclo) en los que piensa una IA con esa fase.
+func _phase_load(carga: PackedInt32Array, phase: int, every: int) -> int:
+	var m := 0
+	for t in range((every - phase) % every, carga.size(), every):
+		m = maxi(m, carga[t])
+	return m
+
+
 ## Bengalas y pedidos vencidos se borran (reglas.equipos.bengala.dura_ticks, pedido.dura_ticks).
 func _expire_calls() -> void:
 	var fd := int(data.reglas["equipos"]["bengala"]["dura_ticks"])
@@ -1357,9 +1415,15 @@ func _update_players() -> void:
 	_auras.resize(players.size())
 	for pid in players.size():
 		_auras[pid] = []
+	_aura_g.resize(players.size())
+	for pid in players.size():
+		_aura_g[pid] = []
 	for e in actives:
 		if e.alive and e.owner >= 0 and e.built and e.def.get("hito", false) and not aura_of(e).is_empty():
 			_auras[e.owner].append(e)
+			var a := aura_of(e)
+			if a.has("recoleccion_pct"):
+				_aura_g[e.owner].append([e, int(a["recoleccion_pct"]), a.get("recursos", null), int(a["radio"])])
 
 
 ## Aura de un hito según el lugar (C-33, como AoE4): la propia del hito o la de su eje en
@@ -1371,16 +1435,17 @@ func aura_of(b: SimEntity) -> Dictionary:
 
 
 ## Recolección extra (%) de un recurso junto a un hito propio con aura de recolección.
+## Corre por cada aldeano que junta: lee `_aura_g` (de `_update_players`, una vez por tick).
+var _aura_g: Array = [] # por jugador: [hito, recoleccion_pct, recursos o null, radio]
 func _aura_gather(owner: int, t: SimEntity, kind: String) -> int:
-	if owner >= _auras.size():
+	if owner < 0 or owner >= _aura_g.size():
 		return 0
 	var best := 0
-	for h: SimEntity in _auras[owner]:
-		var a := aura_of(h)
-		if not a.has("recoleccion_pct") or not (a.get("recursos", [kind]) as Array).has(kind):
+	for g: Array in _aura_g[owner]:
+		if g[2] != null and not (g[2] as Array).has(kind):
 			continue
-		if dist_to(t, h) <= int(a["radio"]):
-			best = maxi(best, int(a["recoleccion_pct"]))
+		if dist_to(t, g[0]) <= g[3]:
+			best = maxi(best, g[1])
 	return best
 
 
@@ -1392,7 +1457,7 @@ func _aura_heal() -> void:
 			if not a.has("cura_por_s"):
 				continue
 			var r := int(a["radio"])
-			for u in actives:
+			for u in military():
 				if u.alive and u.is_unit() and u.inside < 0 and u.owner >= 0 and u.is_military() and u.hp < u.hp_max and not enemies(pid, u.owner) and dist_to(u, h) <= r:
 					u.hp = mini(u.hp_max, u.hp + int(a["cura_por_s"]))
 
@@ -1464,7 +1529,7 @@ func _aura_combat() -> void:
 		any = any or not (lists[-1] as Array).is_empty()
 	if not any:
 		return # nadie tiene hitos militares con aura: no hay bits que limpiar
-	for u in actives:
+	for u in all_units():
 		if not u.alive or not u.is_unit() or u.owner < 0:
 			continue
 		var list: Array = lists[u.owner]
@@ -2035,7 +2100,7 @@ func _move_court(b: SimEntity) -> void:
 	var pid := b.owner
 	var fc: Dictionary = b.def["funda_corte"]
 	var old: SimEntity = null
-	for e in actives:
+	for e in buildings_of(pid):
 		if e.alive and e.owner == pid and e.is_building() and e.capital:
 			old = e
 			break
@@ -2216,7 +2281,7 @@ func _hit(a: SimEntity, t: SimEntity) -> void:
 	# Daño en área (elefantes): una fracción a los enemigos cercanos al objetivo.
 	if a.def.has("area") and t.is_unit() and not a.def.has("area_borde_pct"): # --- paso 4 --- el asedio de área va por _splash
 		var r: int = a.def["area"]
-		for o in actives:
+		for o in all_units():
 			if o != t and o.alive and o.is_unit() and o.inside < 0 and o.owner >= 0 and enemies(a.owner, o.owner) and absi(o.x - t.x) <= r and absi(o.y - t.y) <= r:
 				o.hp -= maxi(1, dmg * int(a.def.get("area_pct", 50)) / 100)
 				if o.hp <= 0:
@@ -2360,6 +2425,28 @@ func _cleanup() -> void:
 		if e.alive:
 			keep_a.append(e)
 	actives = keep_a
+	var keep_m: Array[SimEntity] = []
+	for e in _military:
+		if e.alive:
+			keep_m.append(e)
+	_military = keep_m
+	var keep_b: Array[SimEntity] = []
+	for e in _buildings:
+		if e.alive:
+			keep_b.append(e)
+	_buildings = keep_b
+	var keep_u: Array[SimEntity] = []
+	for e in _units:
+		if e.alive:
+			keep_u.append(e)
+	_units = keep_u
+	for d: Dictionary in [_owned, _owned_b]:
+		for k in d:
+			var keep_o: Array[SimEntity] = []
+			for e: SimEntity in d[k]:
+				if e.alive:
+					keep_o.append(e)
+			d[k] = keep_o
 
 
 # ---------------------------------------------------------------- Edificios
@@ -2719,7 +2806,7 @@ func _separate() -> void:
 	# la misma velocidad de separación por la mitad del trabajo (docs/11, paso 6).
 	var every := maxi(1, int(data.reglas.get("separacion_cada_ticks", 1)))
 	var cap := 160 * every
-	for e in actives:
+	for e in all_units():
 		if not e.alive or not e.is_unit() or e.inside >= 0:
 			continue
 		if (e.id + tick) % every != 0:
@@ -2848,7 +2935,7 @@ func find_resource(owner: int, kind: String, x: int, y: int, max_d: int, exclude
 	probe.x = x
 	probe.y = y
 	if kind == "alimento" and only_type == "":
-		for t in actives:
+		for t in buildings_of(owner):
 			if t.alive and t.is_building() and t.owner == owner and t.built and t.id != exclude and t.def.get("fuente", "") == kind and _farm_free(t, worker):
 				var d := dist_to(probe, t)
 				if d < best_d:
@@ -2888,7 +2975,7 @@ func nearest_dropoff(owner: int, kind: String, x: int, y: int) -> SimEntity:
 	var probe := SimEntity.new()
 	probe.x = x
 	probe.y = y
-	for b in actives:
+	for b in owned(owner):
 		if not b.alive or b.owner != owner:
 			continue
 		# Depósitos que caminan (elefante del rey de Ayutthaya): unidades con "deposito".
@@ -2920,7 +3007,7 @@ func _rebusca_lejos(owner: int, x: int, y: int, kind: String, only_type: String,
 	for tipo: String in tipos:
 		var best: SimEntity = null
 		var best_d := 1 << 60
-		for b in actives:
+		for b in buildings_of(owner):
 			if not b.alive or b.owner != owner or not b.is_building() or not b.built or not _accepts(b, kind):
 				continue
 			if dist_to(probe, b) > max_d:
@@ -2944,7 +3031,7 @@ func _nearest_unbuilt(owner: int, x: int, y: int, max_d: int) -> SimEntity:
 	var probe := SimEntity.new()
 	probe.x = x
 	probe.y = y
-	for b in actives:
+	for b in buildings_of(owner):
 		if b.alive and b.is_building() and b.owner == owner and not b.built:
 			var d := dist_to(probe, b)
 			if d < best_d:
@@ -3107,7 +3194,7 @@ func engine_room(type: String, pid: int) -> bool:
 	if maxes.is_empty():
 		return true
 	var count := 0
-	for e in actives:
+	for e in owned(pid):
 		if e.alive and e.owner == pid and e.type == type:
 			count += 1
 	var age := clampi(int(players[pid]["age"]) - 1, 0, maxes.size() - 1)
@@ -3120,7 +3207,7 @@ func _engine_slot_ok(type: String, def: Dictionary, tx: int, ty: int, pid: int) 
 	var maxes: Array = def.get("maximo_por_edad", [])
 	var sep := int(def.get("separacion", 0))
 	var count := 0
-	for e in actives:
+	for e in owned(pid):
 		if not e.alive or e.owner != pid or e.type != type:
 			continue
 		count += 1
@@ -3227,7 +3314,7 @@ func _cmd_build_line(pid: int, units: Array[SimEntity], type: String, tiles: Arr
 
 
 func hito_in_progress(pid: int) -> bool:
-	for b in actives:
+	for b in owned(pid):
 		if b.alive and b.owner == pid and b.def.get("avanza_edad", false) and not b.built:
 			return true
 	return false
@@ -3332,7 +3419,7 @@ func _check_victory() -> void:
 	var has_hito := []
 	has_hito.resize(players.size())
 	has_hito.fill(false)
-	for b in actives:
+	for b in all_buildings():
 		if b.alive and b.owner >= 0 and b.is_building() and b.built and counts_for_victory(b):
 			has_hito[b.owner] = true
 	for p in players:
@@ -3470,7 +3557,7 @@ func train_cost(pid: int, b: SimEntity, type: String) -> Dictionary:
 	if not udef.get("montado", false) or b == null:
 		return cost
 	var pct := 0
-	for g in actives:
+	for g in owned(pid):
 		if g.alive and g.owner == pid and g.mode == "regimiento" and g.built and g.def.has("regimiento"):
 			var rg: Dictionary = g.def["regimiento"]
 			if Sim.dist(g.x, g.y, b.x, b.y) <= int(rg["radio"]):
@@ -3589,7 +3676,7 @@ func _gather_origin(e: SimEntity) -> String:
 
 ## La maravilla de `pid` (en obra o terminada), o null: hay una por jugador (docs/diseno/27, §4.1).
 func wonder_of(pid: int) -> SimEntity:
-	for e in actives:
+	for e in buildings_of(pid):
 		if e.alive and e.owner == pid and e.is_building() and e.def.get("maravilla", false):
 			return e
 	return null
@@ -3599,7 +3686,7 @@ func wonder_of(pid: int) -> SimEntity:
 func has_done_hito(pid: int, type: String) -> bool:
 	if (players[pid].get("hitos_hechos", []) as Array).has(type):
 		return true
-	for e in actives:
+	for e in buildings_of(pid):
 		if e.alive and e.owner == pid and e.type == type and e.is_building() and e.built:
 			return true
 	return false
@@ -3661,7 +3748,7 @@ func wonder_left_s(pid: int) -> int:
 
 ## ¿Hay tropa enemiga de `b.owner` a `r` casillas o menos del borde de `b`?
 func _enemy_troops_near(b: SimEntity, r: int) -> bool:
-	for u in actives:
+	for u in military():
 		if u.alive and u.is_unit() and u.inside < 0 and u.owner >= 0 and u.is_military() and enemies(b.owner, u.owner):
 			var tx := u.x / P
 			var ty := u.y / P
@@ -3713,8 +3800,53 @@ func _new_entity(cat: int, type: String, owner: int, def: Dictionary) -> SimEnti
 	entities.append(e)
 	if cat != SimEntity.Cat.RESOURCE:
 		actives.append(e)
+		_own_list(_owned, owner).append(e)
+		if cat == SimEntity.Cat.BUILDING:
+			_own_list(_owned_b, owner).append(e)
+			_buildings.append(e)
+		elif cat == SimEntity.Cat.UNIT:
+			_units.append(e)
+			if SimEntity.MILITARY_FNS.has(String(def.get("funcion", ""))):
+				_military.append(e)
 	by_id[e.id] = e
 	return e
+
+
+## Rendimiento (proceso/32-ronda-8/04): lo activo de cada dueño, en el mismo orden que
+## `actives` (por id), para no recorrer las ~2000 entidades del mapa buscando las de uno.
+## Se agrega en `_new_entity` y se limpia en `_cleanup`, igual que `actives`; el dueño y la
+## categoría no cambian nunca. Recorrer `owned(pid)` es recorrer `actives` filtrado por dueño.
+var _owned := {} # dueño -> Array[SimEntity] (unidades y edificios)
+var _owned_b := {} # dueño -> Array[SimEntity] (solo edificios)
+var _units: Array[SimEntity] = [] # todas las unidades, en orden de id
+func all_units() -> Array[SimEntity]:
+	return _units
+
+
+var _buildings: Array[SimEntity] = [] # todos los edificios, en orden de id
+func all_buildings() -> Array[SimEntity]:
+	return _buildings
+
+
+var _military: Array[SimEntity] = [] # unidades militares (is_military), en orden de id
+func military() -> Array[SimEntity]:
+	return _military
+
+
+var _no_ent: Array[SimEntity] = [] # vacía: no se le agrega nada
+func owned(pid: int) -> Array[SimEntity]:
+	return _owned.get(pid, _no_ent)
+
+
+func buildings_of(pid: int) -> Array[SimEntity]:
+	return _owned_b.get(pid, _no_ent)
+
+
+static func _own_list(d: Dictionary, pid: int) -> Array[SimEntity]:
+	if not d.has(pid):
+		var a: Array[SimEntity] = []
+		d[pid] = a
+	return d[pid]
 
 
 func spawn_unit(type: String, owner: int, x: int, y: int) -> SimEntity:
