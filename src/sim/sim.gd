@@ -1471,6 +1471,19 @@ func _update_players() -> void:
 			var a := aura_of(e)
 			if a.has("recoleccion_pct"):
 				_aura_g[e.owner].append([e, int(a["recoleccion_pct"]), a.get("recursos", null), int(a["radio"])])
+	# --- rendimiento 3 --- Los hitos no se mueven: si las auras son las mismas que en el tick
+	# anterior, valen los valores guardados por fuente (`_aura_cache`).
+	var sig := []
+	for pid in _aura_g.size():
+		sig.append(-1 - pid)
+		for g: Array in _aura_g[pid]:
+			sig.append((g[0] as SimEntity).id)
+			sig.append(g[1])
+			sig.append(g[2])
+			sig.append(g[3])
+	if sig != _aura_sig:
+		_aura_sig = sig
+		_aura_cache.clear()
 
 
 ## Aura de un hito según el lugar (C-33, como AoE4): la propia del hito o la de su eje en
@@ -1484,9 +1497,24 @@ func aura_of(b: SimEntity) -> Dictionary:
 ## Recolección extra (%) de un recurso junto a un hito propio con aura de recolección.
 ## Corre por cada aldeano que junta: lee `_aura_g` (de `_update_players`, una vez por tick).
 var _aura_g: Array = [] # por jugador: [hito, recoleccion_pct, recursos o null, radio]
+var _aura_sig := []
+var _aura_cache := {} # (id de la fuente × 64 + dueño) × 8 + clase de recurso -> %
+const _KIND_CODE := {"alimento": 1, "madera": 2, "piedra": 3, "riqueza": 4}
 func _aura_gather(owner: int, t: SimEntity, kind: String) -> int:
 	if owner < 0 or owner >= _aura_g.size():
 		return 0
+	if (_aura_g[owner] as Array).is_empty():
+		return 0
+	var ck := (t.id * 64 + owner) * 8 + int(_KIND_CODE.get(kind, 0))
+	var c = _aura_cache.get(ck)
+	if c != null:
+		return c
+	var v := _aura_gather_calc(owner, t, kind)
+	_aura_cache[ck] = v
+	return v
+
+
+func _aura_gather_calc(owner: int, t: SimEntity, kind: String) -> int:
 	var best := 0
 	for g: Array in _aura_g[owner]:
 		if g[2] != null and not (g[2] as Array).has(kind):
@@ -1594,31 +1622,60 @@ func _aura_combat() -> void:
 # --- fin paso 4 ---
 
 
+# --- rendimiento 3 --- Las celdas no se borran y se vuelven a crear en cada tick: se vacían las
+# que se usaron y se vuelven a llenar en el mismo orden (`actives`). Mismo contenido, sin crear
+# un arreglo por celda ocupada en cada tick. Las celdas vacías quedan en el diccionario (todos
+# los que leen usan `get` y recorren). Los edificios guardan sus celdas (no se mueven).
+var _grid_used := PackedInt32Array()
+var _eh_used := PackedInt32Array()
+var _bcells := {} # id de edificio -> PackedInt32Array de claves de `_ehash`
 func _rebuild_hashes() -> void:
-	_grid.clear()
-	_ehash.clear()
+	for k in _grid_used:
+		(_grid[k] as Array).clear()
+	_grid_used.clear()
+	for k in _eh_used:
+		(_ehash[k] as Array).clear()
+	_eh_used.clear()
 	_emask.clear()
 	for e in actives:
 		if not e.alive or e.inside >= 0:
 			continue
 		if e.is_unit():
 			var k := (e.x / P) * 4096 + e.y / P
-			if not _grid.has(k):
-				_grid[k] = []
-			_grid[k].append(e)
+			var cell = _grid.get(k)
+			if cell == null:
+				cell = []
+				_grid[k] = cell
+			if (cell as Array).is_empty():
+				_grid_used.append(k)
+			(cell as Array).append(e)
 			var ek := (e.x / EC) * 1024 + e.y / EC
-			if not _ehash.has(ek):
-				_ehash[ek] = []
-			_ehash[ek].append(e)
+			var ec = _ehash.get(ek)
+			if ec == null:
+				ec = []
+				_ehash[ek] = ec
+			if (ec as Array).is_empty():
+				_eh_used.append(ek)
+			(ec as Array).append(e)
 			_emask[ek] = int(_emask.get(ek, 0)) | (1 << (e.owner + 1))
 		elif e.is_building():
-			for cx in range(e.tx * P / EC, ((e.tx + e.w) * P - 1) / EC + 1):
-				for cy in range(e.ty * P / EC, ((e.ty + e.h) * P - 1) / EC + 1):
-					var ek := cx * 1024 + cy
-					if not _ehash.has(ek):
-						_ehash[ek] = []
-					_ehash[ek].append(e)
-					_emask[ek] = int(_emask.get(ek, 0)) | (1 << (e.owner + 1))
+			var keys: PackedInt32Array = _bcells.get(e.id, PackedInt32Array())
+			if keys.is_empty():
+				for cx in range(e.tx * P / EC, ((e.tx + e.w) * P - 1) / EC + 1):
+					for cy in range(e.ty * P / EC, ((e.ty + e.h) * P - 1) / EC + 1):
+						keys.append(cx * 1024 + cy)
+				_bcells[e.id] = keys
+			var bit := 1 << (e.owner + 1)
+			for ek in keys:
+				var ec = _ehash.get(ek)
+				if ec == null:
+					ec = []
+					_ehash[ek] = ec
+				if (ec as Array).is_empty():
+					_eh_used.append(ek)
+				(ec as Array).append(e)
+				_emask[ek] = int(_emask.get(ek, 0)) | bit
+# --- fin rendimiento 3 ---
 
 
 func _update_fog(pid: int) -> void:
@@ -1630,10 +1687,15 @@ func _update_fog(pid: int) -> void:
 			if team_of(q) == team_of(pid):
 				fog.copy_from(pid, q)
 				return
+	# --- rendimiento 3 --- Por las listas de cada dueño en lugar de todo `actives`: otro orden,
+	# las mismas fuentes; la niebla pinta la unión, así que la grilla queda igual.
 	var sources: Array = []
-	for e in actives:
-		if e.alive and e.inside < 0 and e.owner >= 0 and (e.owner == pid or (shared and not enemies(pid, e.owner) and team_of(e.owner) == team_of(pid))):
-			sources.append(e)
+	for q in players.size():
+		if not (q == pid or (shared and not enemies(pid, q) and team_of(q) == team_of(pid))):
+			continue
+		for e in owned(q):
+			if e.alive and e.inside < 0:
+				sources.append(e)
 	# --- esport 3a --- La guarnición de los sitios la ven todos (reglas.sitios.vision_publica).
 	if fog.site_vision > 0:
 		for e in _sacred:
@@ -1990,7 +2052,7 @@ func _exhaust(t: SimEntity) -> void:
 	var owner := t.owner if t.is_building() else t.res_owner
 	# Quienes trabajaban ahí siguen en el mismo lugar con lo que sigue (crítica 03b, trampa 5).
 	var workers: Array[SimEntity] = []
-	for u in actives:
+	for u in _units: # --- rendimiento 3 --- las unidades de `actives`, en el mismo orden
 		if u.alive and u.is_unit() and u.target == t.id and (u.order == O.GATHER or u.order == O.RETURN):
 			workers.append(u)
 	_kill(t)
@@ -2965,18 +3027,43 @@ func _try_move(e: SimEntity, nx: int, ny: int) -> int:
 			e.y = ny
 			return 1
 		return 0
-	var corner := tx != cx and ty != cy and (map.is_solid(tx, cy, e.owner) or map.is_solid(cx, ty, e.owner))
-	if map.is_solid(cx, cy, e.owner) or (not map.is_solid(tx, ty, e.owner) and not corner):
+	# --- rendimiento 3 --- `map.is_solid` en línea (sin puertas cerca es solo leer `solid`).
+	var n := map.n
+	var sol := map.solid
+	var gate := map.gate_owner
+	var pid := e.owner
+	var i := cy * n + cx
+	var here := cx < 0 or cy < 0 or cx >= n or cy >= n or sol[i] != 0 or (gate[i] >= 0 and not map._allied(gate[i], pid))
+	if not here:
+		i = ty * n + tx
+		var there := tx < 0 or ty < 0 or tx >= n or ty >= n or sol[i] != 0 or (gate[i] >= 0 and not map._allied(gate[i], pid))
+		if not there:
+			var corner := false
+			if tx != cx and ty != cy:
+				i = cy * n + tx
+				corner = tx < 0 or tx >= n or sol[i] != 0 or (gate[i] >= 0 and not map._allied(gate[i], pid))
+				if not corner:
+					i = ty * n + cx
+					corner = ty < 0 or ty >= n or sol[i] != 0 or (gate[i] >= 0 and not map._allied(gate[i], pid))
+			here = not corner
+	if here:
 		e.x = nx
 		e.y = ny
 		return 2
-	if not map.is_solid(nx / P, e.y / P, e.owner):
+	var ax := nx / P
+	var ay := e.y / P
+	i = ay * n + ax
+	if not (ax < 0 or ay < 0 or ax >= n or ay >= n or sol[i] != 0 or (gate[i] >= 0 and not map._allied(gate[i], pid))):
 		e.x = nx
 		return 1
-	if not map.is_solid(e.x / P, ny / P, e.owner):
+	ax = e.x / P
+	ay = ny / P
+	i = ay * n + ax
+	if not (ax < 0 or ay < 0 or ax >= n or ay >= n or sol[i] != 0 or (gate[i] >= 0 and not map._allied(gate[i], pid))):
 		e.y = ny
 		return 1
 	return 0
+	# --- fin rendimiento 3 ---
 
 
 ## Se acerca a la entidad hasta `reach`. Devuelve true si ya está en alcance.
@@ -3216,9 +3303,6 @@ func _dist_pt(x: int, y: int, t: SimEntity) -> int:
 func nearest_dropoff(owner: int, kind: String, x: int, y: int) -> SimEntity:
 	var best: SimEntity = null
 	var best_d := 1 << 60
-	var probe := SimEntity.new()
-	probe.x = x
-	probe.y = y
 	for b in owned(owner):
 		if not b.alive or b.owner != owner:
 			continue
@@ -3228,7 +3312,7 @@ func nearest_dropoff(owner: int, kind: String, x: int, y: int) -> SimEntity:
 				continue
 		elif not b.is_building() or not b.built or not _accepts(b, kind):
 			continue
-		var d := dist_to(probe, b)
+		var d := _dist_pt(x, y, b)
 		if d < best_d or (d == best_d and best != null and b.id < best.id):
 			best = b
 			best_d = d
@@ -3244,9 +3328,6 @@ func _rebusca_lejos(owner: int, x: int, y: int, kind: String, only_type: String,
 	var max_d := int(cfg.get("max", 0))
 	if max_d <= 0 or kind == "":
 		return null
-	var probe := SimEntity.new()
-	probe.x = x
-	probe.y = y
 	var tipos := [only_type, ""] if only_type != "" else [""]
 	for tipo: String in tipos:
 		var best: SimEntity = null
@@ -3254,12 +3335,12 @@ func _rebusca_lejos(owner: int, x: int, y: int, kind: String, only_type: String,
 		for b in buildings_of(owner):
 			if not b.alive or b.owner != owner or not b.is_building() or not b.built or not _accepts(b, kind):
 				continue
-			if dist_to(probe, b) > max_d:
+			if _dist_pt(x, y, b) > max_d:
 				continue
 			var r := find_resource(owner, kind, b.x, b.y, int(cfg["radio_deposito"]), -1, worker, tipo)
 			if r == null or (r.is_building() and tipo == ""):
 				continue # las granjas ya las busca la rebusca de siempre
-			var d := dist_to(probe, r)
+			var d := _dist_pt(x, y, r)
 			if d < best_d or (d == best_d and r.id < best.id):
 				best = r
 				best_d = d
@@ -3272,12 +3353,9 @@ func _rebusca_lejos(owner: int, x: int, y: int, kind: String, only_type: String,
 func _nearest_unbuilt(owner: int, x: int, y: int, max_d: int) -> SimEntity:
 	var best: SimEntity = null
 	var best_d := max_d + 1
-	var probe := SimEntity.new()
-	probe.x = x
-	probe.y = y
 	for b in buildings_of(owner):
 		if b.alive and b.is_building() and b.owner == owner and not b.built:
-			var d := dist_to(probe, b)
+			var d := _dist_pt(x, y, b)
 			if d < best_d:
 				best = b
 				best_d = d
