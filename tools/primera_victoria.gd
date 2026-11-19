@@ -165,7 +165,7 @@ func play(seed: int, a: Dictionary) -> bool:
 	dmg_by = {}; kills_by = {}; last_hit = {}; my_bdmg = {}; ram_bdmg = 0; ram_udmg = 0; ram_dmg_by = {}
 	ram_closest = 1 << 60; ram_lost = 0; bld_lost = {}; first_bld_min = -1; ram_kill_by = {}; my_kills = {}; my_hits = {}
 	var minutes := int(a["min"])
-	s = Sim.new(seed, 2, data_over, {"civs": [a["civ"], a["rival"]], "terreno": "llano", "sitios_sin_victoria": true})
+	s = Sim.new(seed, 2, data_over, {"civs": [a["civ"], a["rival"]], "terreno": "llano", "sitios_sin_victoria": true, "sin_mercados": a.has("sin_mercados")})
 	s.ais = [SimAI.new(s, 1, a["dif"])]
 	center_id = -1
 	for e in s.actives:

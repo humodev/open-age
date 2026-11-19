@@ -23,6 +23,12 @@ var entities: Array[SimEntity] = [] # todas, en orden de id
 var actives: Array[SimEntity] = [] # unidades y edificios, en orden de id
 var by_id := {}
 var next_id := 1
+## Ids aparte para lo que el mapa agrega sin alterar la partida (los mercados neutrales,
+## proceso/34-hacia-esport/01d): si tomaran de `next_id`, corrían en 2 el id de todo lo que se
+## crea después y con él la fase de los `(tick + id) % k`; la primera victoria del principiante
+## pasaba de 6 de 8 a 3 de 8 solo por eso. Mientras `id_aparte > 0`, `_new_entity` usa este.
+const ID_APARTE := 1 << 28
+var id_aparte := 0
 var players: Array[Dictionary] = []
 var bases: Array[Vector2i] = []
 var ais: Array = []
@@ -3972,8 +3978,12 @@ func _defeat(pid: int) -> void:
 
 func _new_entity(cat: int, type: String, owner: int, def: Dictionary) -> SimEntity:
 	var e := SimEntity.new()
-	e.id = next_id
-	next_id += 1
+	if id_aparte > 0:
+		e.id = id_aparte
+		id_aparte += 1
+	else:
+		e.id = next_id
+		next_id += 1
 	e.cat = cat
 	e.type = type
 	e.owner = owner

@@ -99,7 +99,9 @@ func _spawn(t: Vector2i, fill := false) -> void:
 	for yy in range(t.y, t.y + 3):
 		for xx in range(t.x, t.x + 3):
 			sim.map.height[yy * sim.map.n + xx] = h0
+	sim.id_aparte = Sim.ID_APARTE + neutrals.size() # sin correr los ids del resto (proceso/34, 01d)
 	var b := sim.spawn_building("mercado_neutral", -1, t.x, t.y, true)
+	sim.id_aparte = 0
 	var tn := str((sim.terrain_def().get("neutral", {}) as Dictionary).get("nombre", ""))
 	if tn != "": # el nombre del terreno: feria, puerto de río, feria de altura
 		b.def = b.def.duplicate()
