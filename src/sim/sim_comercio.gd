@@ -16,6 +16,7 @@ var sim: Sim
 var cfg: Dictionary
 var neutrals: Array[SimEntity] = [] # mercados neutrales de la partida
 var cut := {} # pid * 1_000_000 + id del destino -> true: «Ruta cortada» ya avisada (una vez hasta que se reabra)
+var cut_tick := {} # igual -> tick del último aviso (un corte nuevo avisa pasados aviso_ms)
 var cuts_in_row := {} # igual, cortes seguidos (la IA cambia de destino a los dos)
 var stats := {} # pid -> {"viajes", "cobrado", "cortes", "muertos"} (mediciones; no es estado)
 
@@ -651,6 +652,10 @@ func _cut(e: SimEntity, dest: SimEntity, why: String, x: int, y: int) -> void:
 	if cut.has(k):
 		return
 	cut[k] = true
+	# Cortado otra vez antes de aviso_ms (la tropa que pasa y vuelve): el mismo corte, sin otro aviso.
+	if sim.tick - int(cut_tick.get(k, -1000000)) < int(cfg.get("aviso_ms", 30000)) / sim.tick_ms:
+		return
+	cut_tick[k] = sim.tick
 	st["episodios"] = int(st.get("episodios", 0)) + 1
 	sim.events.append({"t": "ruta_cortada", "player": e.owner, "dest": dest.id, "x": x, "y": y, "motivo": why})
 
@@ -725,7 +730,9 @@ func ai_think(ai: SimAI, p: Dictionary, by_type: Dictionary, vill: Array[SimEnti
 	if clay == 0:
 		want = maxi(want, int(ic.get("sin_arcilla", 16)))
 	want = mini(want, int(lc.get("max", 16)))
-	if not saving and traders.size() + queued < want and queued == 0:
+	# --- esport 2b --- en el 1v1, unos pocos aunque ahorre para el hito (el que va atrás también comercia)
+	var while_saving := int(ic.get("ahorrando_1v1", 0)) if duel() else 0
+	if (not saving or traders.size() + queued < while_saving) and traders.size() + queued < want and queued == 0:
 		var cost := sim.dp(pid).cost_of("comerciante", age)
 		if sim.can_afford(pid, cost) and (sim.dp(pid).edificios.get("mercado", {}).get("produce", []) as Array).has("comerciante"):
 			sim.push_command({"t": "train", "player": pid, "building": home.id, "type": "comerciante"})

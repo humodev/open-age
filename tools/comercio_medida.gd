@@ -118,7 +118,7 @@ func _match(args: Dictionary) -> void:
 				for e in s.owned(pid):
 					if e.alive and e.is_unit() and e.def.get("comerciante", false):
 						alive += 1
-				line += "  J%d e%d riq %d com %d (%d vivos, %d muertos, %d cortes)" % [pid, s.players[pid]["age"], row[pid][0], row[pid][1], alive, int(st.get("muertos", 0)), int(st.get("cortes", 0))]
+				line += "  J%d e%d riq %d com %d (%d vivos, %d muertos, %d esperas, %d cortes)" % [pid, s.players[pid]["age"], row[pid][0], row[pid][1], alive, int(st.get("muertos", 0)), int(st.get("cortes", 0)), int(st.get("episodios", 0))]
 			print(line)
 	var last: int = s.tick / 600
 	print("Primer cobro (min): %s; fin al min %d%s" % [str(first_trade), last, " (terminó: gana el equipo %d)" % s.winner_team if s.game_over else ""])
@@ -142,6 +142,12 @@ func _match(args: Dictionary) -> void:
 	for pid in np:
 		killed += int(s.comercio.stats.get(pid, {}).get("muertos", 0))
 	print("Comerciantes muertos en total: %d (meta: alguna ruta atacada, > 10 en el 2v2)" % killed)
+	var eps := 0
+	var waits := 0
+	for pid in np:
+		eps += int(s.comercio.stats.get(pid, {}).get("episodios", 0))
+		waits += int(s.comercio.stats.get(pid, {}).get("cortes", 0))
+	print("CORTES: %d rutas cortadas (avisos), %d esperas de comerciantes" % [eps, waits])
 
 
 ## [riqueza ingresada por todas las fuentes, por comercio] del libro «origen».
