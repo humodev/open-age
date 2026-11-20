@@ -2,7 +2,7 @@
 
 Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video, está en `../proceso/`. Las preguntas al autor, en `../proceso/CONSULTAS.md`.
 
-## Resumen (2026-11-17; lo último, en `proceso/29`)
+## Resumen (2026-11-19)
 
 | Hito (`02`) | Estado |
 |---|---|
@@ -23,7 +23,11 @@ Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video,
 | Animaciones (`proceso/27`) | Aldeanos animados con KayKit (CC0) en los seis pueblos, 10 estados. Faltan los soldados, y riggear los modelos de Meshy (C-98) |
 | Íconos y estados (`proceso/28`) | 69 íconos propios, color por edad, estados de color en lugar del candado, rojo de la ayuda solo si bloquea |
 | Balance (`proceso/24`, torneo 36) | Diagnósticos con causa: la casa del arco guaraní (a 150) y el weichafe barato (al costo común). Las seis entre 38 y 60 % |
-| H5 · Multijugador en red | No empezado. La simulación determinista y por comandos ya lo habilita |
+| Hacia un diseño de esport (`proceso/34`) | Tres iteraciones con revisión de expertos. Entraron: triángulo de contadores más marcado; lancero en la I; sitios con guarnición visible (60/45/30); asedio de área esquivable y ataque al suelo; comercio con mercados neutrales, rutas y bloqueo; muralla de piedra en la II; sumidero de la IV con caminos excluyentes; hitos de 150/180/210 s. Torneo 42: todas entre 42 y 64 %, la IV en 115 de 150. Nota competitiva de los expertos: 5,5 de 10. Se cambia la vara con el torneo de estilos (etapa 35) |
+| Fluidez y partidas largas (`proceso/30`, `31`, `32`) | Cola de producción siempre visible y menos mensajes; repetición de producción; Mayús en orden; muro con costo; avisos por zona; selección y órdenes finas; guardar y cargar con instantáneas (un 4v4 al minuto 30 carga en 1,6 s); repeticiones con línea de tiempo; panel «Mi base»; base linda; partida a medida con 8 jugadores. Rendimiento: el 1v6 sin ticks de más de 100 ms |
+| Multijugador en red (`proceso/37`) | Prototipo 1v1 por IP: lockstep, verificación de sincronía, sala, pausas, reconexión por instantánea, caída del anfitrión, retardo según ping y validación de mensajes. Falta NAT o relevo y un servidor de partidas |
+| Aprendizaje y arte (`proceso/36`, `38`, `39`) | Lecciones en la Guía y tutorial con las mecánicas nuevas. Fuentes gratuitas de arte 3D y 2D investigadas; 21 íconos genéricos, cursores y marcos propios; 1007 prompts para generar el arte de cada pueblo y edad (proceso/39-arte-interfaz/prompts.html) |
+| H5 · Multijugador en red | Prototipo 1v1 hecho (ver arriba) |
 | H6 · Acceso anticipado | Pendiente |
 
 ## Qué tiene el juego
