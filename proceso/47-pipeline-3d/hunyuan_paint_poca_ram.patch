@@ -1,0 +1,27 @@
+diff --git a/hy3dgen/texgen/hunyuanpaint/unet/modules.py b/hy3dgen/texgen/hunyuanpaint/unet/modules.py
+index f558cd7..6cbea9a 100644
+--- a/hy3dgen/texgen/hunyuanpaint/unet/modules.py
++++ b/hy3dgen/texgen/hunyuanpaint/unet/modules.py
+@@ -426,6 +426,22 @@ class UNet2p5DConditionModel(torch.nn.Module):
+         unet_ckpt_path = os.path.join(pretrained_model_name_or_path, 'diffusion_pytorch_model.bin')
+         with open(config_path, 'r', encoding='utf-8') as file:
+             config = json.load(file)
++        if True:
++            # Poca RAM (open-age, proceso 47): el .bin (fp32, 7 GB) se abre con mmap, el modelo se
++            # arma en el dispositivo «meta» y cada peso pasa a fp16 de a uno: pico ~4 GB en vez de 11.
++            # (El .safetensors de la carpeta es otra variante, con IP-Adapter: no calza.)
++            with torch.device('meta'):
++                unet = UNet2DConditionModel(**config)
++                unet = UNet2p5DConditionModel(unet)
++            sd = torch.load(unet_ckpt_path, map_location='cpu', weights_only=True, mmap=True)
++            for k in list(sd.keys()):
++                sd[k] = sd[k].to(torch_dtype).clone()
++            unet.load_state_dict(sd, strict=True, assign=True)
++            del sd
++            quedan = [n for n, t in list(unet.named_parameters()) + list(unet.named_buffers()) if t.is_meta]
++            if quedan:
++                raise RuntimeError(f'tensores sin cargar: {quedan[:5]}')
++            return unet
+         unet = UNet2DConditionModel(**config)
+         unet = UNet2p5DConditionModel(unet)
+         unet_ckpt = torch.load(unet_ckpt_path, map_location='cpu', weights_only=True)
