@@ -1,0 +1,612 @@
+{
+ "intro": "Equipo: Artista (legibilidad, silueta, edades), Historiadora andina (fuentes), Experta en prompting (FLUX/SDXL). Máximo 4 imágenes por ronda. La más nueva arriba. Pieza actual: hondero, retrato en 4 edades.",
+ "recetas": [
+  {
+   "pieza": "Retrato del hondero (4 edades)",
+   "estado": "Ganadora: ronda 20, dirección B (estilizado). El autor puede cambiar a A u C.",
+   "imgs": [
+    {
+     "f": "r20_1.jpg",
+     "t": "I"
+    },
+    {
+     "f": "r20_2.jpg",
+     "t": "II"
+    },
+    {
+     "f": "r20_3.jpg",
+     "t": "III"
+    },
+    {
+     "f": "r20_4.jpg",
+     "t": "IV"
+    }
+   ],
+   "texto": "Modelo: FLUX.1 schnell Q4, 4 pasos, 768×1024, semilla 7 fija para las 4 edades. Sin IP-Adapter.\nPlantilla (en este orden):\n1. ESTILO: «Stylized digital painting in the style of Age of Empires IV unit portraits, simplified shapes, bold clear silhouette, few large brushstrokes, little fine detail.» (A: «Alla prima oil sketch in the style of John Singer Sargent…»; C: «Gouache illustration in the style of a mid-century storybook…»)\n2. CARA: «A smooth hairless face … like the Inca men who plucked their facial hair with tweezers.»\n3. ACCIÓN DEL OFICIO, con el objeto que identifica en la mano junto a la cara.\n4. ROPA DE LA EDAD: un color dominante distinto por edad y piezas concretas.\n5. PERSONA: «Native American man of the Andes, Quechua, about 30 years old, smooth face, broad cheekbones…»\n6. ENCUADRE: «Chest-up portrait, dark backdrop».\nEvitar: negaciones («beardless» trae barba), «strong jaw» (trae barba), «copper» (sale oro), cordones con piedra cerca del cuello (salen collares)."
+  }
+ ],
+ "rondas": [
+  {
+   "id": "r01",
+   "titulo": "Ronda 1 · FLUX, 4 edades, semilla fija 7",
+   "meta": "FLUX schnell 4 pasos, 768×1024. Prompt: quién + ropa de la edad + honda + estilo al final.",
+   "imgs": [
+    {
+     "f": "r01_1.jpg",
+     "t": "I"
+    },
+    {
+     "f": "r01_2.jpg",
+     "t": "II"
+    },
+    {
+     "f": "r01_3.jpg",
+     "t": "III"
+    },
+    {
+     "f": "r01_4.jpg",
+     "t": "IV"
+    }
+   ],
+   "voces": {
+    "Artista": "Las edades se separan por color, pero es cuerpo entero, liso, sin pincel; lejos de los retratos elegidos.",
+    "Historiadora": "Mal: camisas europeas de manga larga bajo el unku (el unku se usaba sin nada abajo), bigotes, ¡relojes pulsera! La gorra de III parece boina. La honda sale como soga gruesa.",
+    "Prompting": "«Andean» da caras mestizas; «cords» da soga de amarre; la honda sin forma concreta FLUX no la conoce."
+   },
+   "decision": "Describir el cuerpo (brazos desnudos, unku sin mangas) y la honda como cordón fino con bolsita y piedra."
+  },
+  {
+   "id": "r02",
+   "titulo": "Ronda 2 · FLUX contra SDXL + IP-Adapter 0.35",
+   "meta": "Edades I y IV. 1-2: FLUX. 3-4: SDXL DreamShaper con dos retratos de referencia, peso 0.35 (style transfer).",
+   "imgs": [
+    {
+     "f": "r02f_1.jpg",
+     "t": "FLUX I"
+    },
+    {
+     "f": "r02f_2.jpg",
+     "t": "FLUX IV"
+    },
+    {
+     "f": "r02s_1.jpg",
+     "t": "SDXL I"
+    },
+    {
+     "f": "r02s_2.jpg",
+     "t": "SDXL IV"
+    }
+   ],
+   "voces": {
+    "Artista": "SDXL trae el pincel de los retratos, pero no la honda ni el traje de la edad. FLUX arma la honda (I) y el disco (IV), con acabado liso.",
+    "Historiadora": "FLUX I: el cordón con bolsita y piedra ya se lee como honda. Las caras de FLUX salen del sudeste asiático.",
+    "Prompting": "SDXL turbo no sigue prompts largos. FLUX sigue el contenido: conviene que FLUX componga y SDXL repinte."
+   },
+   "decision": "Seguir con FLUX para el contenido; corregir caras y pincel."
+  },
+  {
+   "id": "r03",
+   "titulo": "Ronda 3 · FLUX, 4 edades con piezas concretas",
+   "meta": "Semilla 7. III: armadura de algodón acolchado, casco de caña, escudo; IV: unku ajedrezado con canesú rojo y disco de cobre.",
+   "imgs": [
+    {
+     "f": "r03_1.jpg",
+     "t": "I"
+    },
+    {
+     "f": "r03_2.jpg",
+     "t": "II"
+    },
+    {
+     "f": "r03_3.jpg",
+     "t": "III"
+    },
+    {
+     "f": "r03_4.jpg",
+     "t": "IV"
+    }
+   ],
+   "voces": {
+    "Artista": "Ahora sí cada edad tiene su lectura: lana cruda / azul con banda / blanco acolchado / ajedrez. La honda aparece en las cuatro.",
+    "Historiadora": "Algodón acolchado y cascos de caña: Cobo (1653), libro 14 [verificar capítulo]. Unku ajedrezado con canesú rojo: túnica militar inca (Rowe 1979). El escudo redondo con estrella parece emblema; Guaman Poma dibuja escudos (pullqanqa) más bien cuadrados con fleco. Caras todavía asiáticas.",
+    "Prompting": "La bolsita con piedra a veces sale como dije. Lo mejor: honda colgando del puño (I)."
+   },
+   "decision": "Base de contenido aceptada. Falta cara y pincel."
+  },
+  {
+   "id": "r04",
+   "titulo": "Ronda 4 · caras y honda en U",
+   "meta": "Agrega «beardless», cara detallada, honda «en U hasta la rodilla».",
+   "imgs": [
+    {
+     "f": "r04_1.jpg",
+     "t": "I"
+    },
+    {
+     "f": "r04_2.jpg",
+     "t": "II"
+    },
+    {
+     "f": "r04_3.jpg",
+     "t": "III"
+    },
+    {
+     "f": "r04_4.jpg",
+     "t": "IV"
+    }
+   ],
+   "voces": {
+    "Artista": "Peor: la honda se volvió collar con piedra-medallón.",
+    "Historiadora": "Aparecieron bigotes en los cuatro.",
+    "Prompting": "Confirmado: «beardless» funciona como negación y trae barba. «Hangs from his fist» se lee como collar."
+   },
+   "decision": "Volver al texto de la ronda 3."
+  },
+  {
+   "id": "r05",
+   "titulo": "Ronda 5 · FLUX compone, SDXL + IP-Adapter repinta (img2img)",
+   "meta": "Se agrega --base/--fuerza a tools/generar_local.py. Base: ronda 3 (I y III). Peso de referencia 0.5, los 4 retratos de aldeano. Fuerza 0.45 (1, 3) y 0.6 (2, 4).",
+   "imgs": [
+    {
+     "f": "r05_e1_f0.45.jpg",
+     "t": "I · 0.45"
+    },
+    {
+     "f": "r05_e1_f0.6.jpg",
+     "t": "I · 0.6"
+    },
+    {
+     "f": "r05_e3_f0.45.jpg",
+     "t": "III · 0.45"
+    },
+    {
+     "f": "r05_e3_f0.6.jpg",
+     "t": "III · 0.6"
+    }
+   ],
+   "voces": {
+    "Artista": "Salto grande: pincel y cara de los retratos elegidos. 0.45 conserva la honda; 0.6 la pierde y mete firma.",
+    "Historiadora": "Caras andinas por fin. El escudo de 0.6 tiene umbo metálico europeo.",
+    "Prompting": "Dos pasos: FLUX para qué, SDXL para cómo. Fuerza 0.45."
+   },
+   "decision": "Adoptar el doble paso con fuerza 0.45."
+  },
+  {
+   "id": "r06",
+   "titulo": "Ronda 6 · doble paso, 4 edades, de pecho para arriba",
+   "meta": "FLUX (semilla 7) → SDXL img2img 0.45 + IP-Adapter 0.5.",
+   "imgs": [
+    {
+     "f": "r06_1.jpg",
+     "t": "I"
+    },
+    {
+     "f": "r06_2.jpg",
+     "t": "II"
+    },
+    {
+     "f": "r06_3.jpg",
+     "t": "III"
+    },
+    {
+     "f": "r06_4.jpg",
+     "t": "IV"
+    }
+   ],
+   "voces": {
+    "Artista": "Encuadre igual a los retratos y edades bien distintas. Pero la honda, en I y II, es un collar.",
+    "Historiadora": "IV lleva dos discos, uno dorado: el oro no va en un soldado común; un solo disco de cobre o plata (premio militar).",
+    "Prompting": "De pecho para arriba el puño y la bolsita quedan sobre el torso y FLUX los arma como colgante."
+   },
+   "decision": "Buen estilo, honda ilegible. Llega el pedido del autor: menos realismo, tres direcciones."
+  },
+  {
+   "id": "r07",
+   "titulo": "Ronda 7 · honda tensa entre las manos + tres estilos por repintado",
+   "meta": "Base FLUX (1) y repintado SDXL sin IP-Adapter: A óleo de caballete, B estilizado, C gouache.",
+   "imgs": [
+    {
+     "f": "r07_base.jpg",
+     "t": "base FLUX"
+    },
+    {
+     "f": "r07_A.jpg",
+     "t": "A óleo"
+    },
+    {
+     "f": "r07_B.jpg",
+     "t": "B estilizado"
+    },
+    {
+     "f": "r07_C.jpg",
+     "t": "C gouache"
+    }
+   ],
+   "voces": {
+    "Artista": "Los tres estilos casi no se distinguen: manda la base.",
+    "Historiadora": "La honda volvió a ser collar.",
+    "Prompting": "Con fuerza 0.55 el repintado no cambia el estilo; el estilo tiene que venir de FLUX."
+   },
+   "decision": "Estilo desde FLUX, con el estilo al principio del prompt."
+  },
+  {
+   "id": "r08",
+   "titulo": "Ronda 8 · tres estilos en FLUX, honda revoleada",
+   "meta": "A óleo empastado, B estilizado AoE4/Total War (semillas 7 y 23), C gouache.",
+   "imgs": [
+    {
+     "f": "r08_A.jpg",
+     "t": "A óleo"
+    },
+    {
+     "f": "r08_B.jpg",
+     "t": "B estilizado"
+    },
+    {
+     "f": "r08_C.jpg",
+     "t": "C gouache"
+    },
+    {
+     "f": "r08_B2.jpg",
+     "t": "B semilla 23"
+    }
+   ],
+   "voces": {
+    "Artista": "B es el más gráfico. El brazo en alto es buena silueta, pero el cordón parece lazo o látigo.",
+    "Historiadora": "«Sling of David» no trajo ropa bíblica; bien. Falta la bolsita con piedra.",
+    "Prompting": "FLUX schnell responde poco a palabras de estilo genéricas; hace falta un ancla concreta."
+   },
+   "decision": "Anclar cada estilo a una referencia que FLUX conozca."
+  },
+  {
+   "id": "r09",
+   "titulo": "Ronda 9 · estilos anclados (las tres direcciones lado a lado)",
+   "meta": "A: boceto al óleo alla prima tipo Sargent · B: pintura digital estilizada tipo retratos de AoE4 · C: gouache de libro ilustrado de mediados de siglo · 4: B repintado por SDXL 0.35.",
+   "imgs": [
+    {
+     "f": "r09_A.jpg",
+     "t": "A óleo de caballete"
+    },
+    {
+     "f": "r09_B.jpg",
+     "t": "B estilizado"
+    },
+    {
+     "f": "r09_C.jpg",
+     "t": "C gouache"
+    },
+    {
+     "f": "r09_B_sdxl.jpg",
+     "t": "B + SDXL 0.35"
+    }
+   ],
+   "voces": {
+    "Artista": "Ahora sí son tres direcciones distintas: A pincelada suelta, B formas simplificadas y siluetas claras, C plano y gráfico.",
+    "Historiadora": "«Native American man of the Andes» mejora las caras (B y C). La honda sigue colgando como medallón.",
+    "Prompting": "Anclas concretas funcionan. El repintado 0.35 mantiene el estilo B y afina la cara."
+   },
+   "decision": "Elegir dirección (autor). Para la honda: probar img2img de FLUX desde la pose buena de la ronda 3."
+  },
+  {
+   "id": "r10",
+   "titulo": "Ronda 10 · FLUX img2img desde la pose de la ronda 3",
+   "meta": "Base r03 I. Fuerza 0.75 (A, B, C) y 0.85 (4).",
+   "imgs": [
+    {
+     "f": "r10_A.jpg",
+     "t": "A 0.75"
+    },
+    {
+     "f": "r10_B.jpg",
+     "t": "B 0.75"
+    },
+    {
+     "f": "r10_C.jpg",
+     "t": "C 0.75"
+    },
+    {
+     "f": "r10_B85.jpg",
+     "t": "B 0.85"
+    }
+   ],
+   "voces": {
+    "Artista": "0.75 copia la base tal cual; 0.85 la ignora. No sirve con 4 pasos.",
+    "Historiadora": "Sin cambios.",
+    "Prompting": "FLUX schnell con 4 pasos tiene saltos gruesos: con denoise hay que subir los pasos para tener puntos intermedios."
+   },
+   "decision": "Descartado así; cambiar la pose para que la honda no quede sobre el torso."
+  },
+  {
+   "id": "r11",
+   "titulo": "Ronda 11 · cargando la honda, tres estilos",
+   "meta": "Pose: la mano izquierda mete la piedra en la bolsita. A óleo, B estilizado, C gouache, 4: B revoleando.",
+   "imgs": [
+    {
+     "f": "r11_A.jpg",
+     "t": "A"
+    },
+    {
+     "f": "r11_B.jpg",
+     "t": "B"
+    },
+    {
+     "f": "r11_C.jpg",
+     "t": "C"
+    },
+    {
+     "f": "r11_B_giro.jpg",
+     "t": "B revoleando"
+    }
+   ],
+   "voces": {
+    "Artista": "Los tres estilos ya se separan bien. La piedra en la mano se lee.",
+    "Historiadora": "El cordón vuelve a pasar por el cuello.",
+    "Prompting": "FLUX tiene un sesgo fuerte: cordón + piedra cerca del pecho = collar."
+   },
+   "decision": "Probar poses que saquen la honda del cuello."
+  },
+  {
+   "id": "r12",
+   "titulo": "Ronda 12 · cuatro poses",
+   "meta": "Estilo B. 1 brazo afuera, 2 de perfil a punto de tirar, 3 piedra en la mano + bolsa de piedras + honda sobre los hombros, 4 tirando.",
+   "imgs": [
+    {
+     "f": "r12_1.jpg",
+     "t": "1 brazo afuera"
+    },
+    {
+     "f": "r12_2.jpg",
+     "t": "2 perfil"
+    },
+    {
+     "f": "r12_3.jpg",
+     "t": "3 piedra y bolsa"
+    },
+    {
+     "f": "r12_4.jpg",
+     "t": "4 tirando"
+    }
+   ],
+   "voces": {
+    "Artista": "La 3 es la que mejor se lee a 64 px: mano con piedra junto a la cara y bolsa a rayas.",
+    "Historiadora": "Llevar la honda cruzada sobre el cuerpo o enrollada en la cabeza es práctica andina documentada en la etnografía [verificar la lámina de Guaman Poma]; la bolsa de piedras también. La 2 tiene buena silueta pero queda de espaldas.",
+    "Prompting": "No pelear contra el sesgo: el objeto que identifica (la piedra) en la mano, la honda como prenda."
+   },
+   "decision": "Fórmula: piedra en la mano alzada + bolsa de piedras + honda trenzada sobre los hombros."
+  },
+  {
+   "id": "r13",
+   "titulo": "Ronda 13 · edad IV en las tres direcciones",
+   "meta": "A óleo de caballete · B estilizado · C gouache. A la derecha de cada una, la miniatura a 64 px.",
+   "imgs": [
+    {
+     "f": "r13_A.jpg",
+     "t": "A óleo"
+    },
+    {
+     "f": "r13_B.jpg",
+     "t": "B estilizado"
+    },
+    {
+     "f": "r13_C.jpg",
+     "t": "C gouache"
+    }
+   ],
+   "voces": {
+    "Artista": "A 64 px manda el bloque de color (rojo y ajedrez). B y C se leen mejor que A.",
+    "Historiadora": "El disco salió dorado: tiene que ser plata o cobre opaco, un solo disco (premio militar), nada de oro en un soldado.",
+    "Prompting": "«Copper» FLUX lo pinta como oro: pedir «dull silver»."
+   },
+   "decision": "El equipo recomienda B (estilizado); queda a elección del autor."
+  },
+  {
+   "id": "r14",
+   "titulo": "Ronda 14 · fórmula en las 4 edades (B)",
+   "meta": "Orden del prompt: estilo → acción del oficio → ropa de la edad → persona → encuadre.",
+   "imgs": [
+    {
+     "f": "r14_1.jpg",
+     "t": "I"
+    },
+    {
+     "f": "r14_2.jpg",
+     "t": "II"
+    },
+    {
+     "f": "r14_3.jpg",
+     "t": "III"
+    },
+    {
+     "f": "r14_4.jpg",
+     "t": "IV"
+    }
+   ],
+   "voces": {
+    "Artista": "Por fin coherente: misma pose, cuatro edades que se separan a 64 px.",
+    "Historiadora": "Bigote o perilla en las cuatro. La bolsa salió canasta (la chuspa es tela tejida). En III asoma una camisa con cuello.",
+    "Prompting": "Poner la acción antes que la ropa la hizo aparecer en las cuatro."
+   },
+   "decision": "Corregir cara, bolsa y la camisa de III."
+  },
+  {
+   "id": "r15",
+   "titulo": "Ronda 15 · cara joven, bolsa de tela",
+   "meta": "«about 25, smooth face».",
+   "imgs": [
+    {
+     "f": "r15_1.jpg",
+     "t": "I"
+    },
+    {
+     "f": "r15_2.jpg",
+     "t": "II"
+    },
+    {
+     "f": "r15_3.jpg",
+     "t": "III"
+    },
+    {
+     "f": "r15_4.jpg",
+     "t": "IV"
+    }
+   ],
+   "voces": {
+    "Artista": "Sin barba, pero caras blandas, de modelo; pierden carácter.",
+    "Historiadora": "III todavía con cuello de camisa.",
+    "Prompting": "Edad y cara cambian juntas en FLUX."
+   },
+   "decision": "Cara de 30 años con más carácter."
+  },
+  {
+   "id": "r16",
+   "titulo": "Ronda 16 · cara con carácter, ajedrez grande",
+   "meta": "«strong jaw, stern look»; IV «cuadros grandes como tablero»; III armadura que cubre el torso.",
+   "imgs": [
+    {
+     "f": "r16_1.jpg",
+     "t": "I"
+    },
+    {
+     "f": "r16_2.jpg",
+     "t": "II"
+    },
+    {
+     "f": "r16_3.jpg",
+     "t": "III"
+    },
+    {
+     "f": "r16_4.jpg",
+     "t": "IV"
+    }
+   ],
+   "voces": {
+    "Artista": "IV ya es ajedrez claro. III perdió el acolchado.",
+    "Historiadora": "Volvieron las barbas con «strong jaw»: mal para el siglo XV (los hombres andinos se depilaban con pinzas, que aparecen en contextos arqueológicos; Cobo 1653 [verificar capítulo]).",
+    "Prompting": "«Strong jaw/stern» arrastra barba."
+   },
+   "decision": "Probar repintado SDXL con negativo de barba."
+  },
+  {
+   "id": "r17",
+   "titulo": "Ronda 17 · repintado SDXL 0.35 con negativo «beard»",
+   "meta": "SDXL sí acepta negativo.",
+   "imgs": [
+    {
+     "f": "r17_1.jpg",
+     "t": "I"
+    },
+    {
+     "f": "r17_2.jpg",
+     "t": "II"
+    },
+    {
+     "f": "r17_3.jpg",
+     "t": "III"
+    },
+    {
+     "f": "r17_4.jpg",
+     "t": "IV"
+    }
+   ],
+   "voces": {
+    "Artista": "Casi idéntico a la 16.",
+    "Historiadora": "Barbas siguen.",
+    "Prompting": "A 0.35 el negativo no alcanza; más fuerza cambia el estilo."
+   },
+   "decision": "Descartado. Resolverlo en FLUX."
+  },
+  {
+   "id": "r18",
+   "titulo": "Ronda 18 · «smooth face» y acolchado en rombos",
+   "meta": "",
+   "imgs": [
+    {
+     "f": "r18_1.jpg",
+     "t": "I"
+    },
+    {
+     "f": "r18_2.jpg",
+     "t": "II"
+    },
+    {
+     "f": "r18_3.jpg",
+     "t": "III"
+    },
+    {
+     "f": "r18_4.jpg",
+     "t": "IV"
+    }
+   ],
+   "voces": {
+    "Artista": "III recupera el acolchado. Muy cerca.",
+    "Historiadora": "Queda bigote leve en II-IV. IV tiene tres discos.",
+    "Prompting": "Lo que va primero pesa más: mover la cara al principio."
+   },
+   "decision": "Cara al principio del prompt."
+  },
+  {
+   "id": "r19",
+   "titulo": "Ronda 19 · cara depilada al principio, un solo disco",
+   "meta": "«A smooth hairless face … like the Inca men who plucked their facial hair with tweezers» justo después del estilo.",
+   "imgs": [
+    {
+     "f": "r19_1.jpg",
+     "t": "I"
+    },
+    {
+     "f": "r19_2.jpg",
+     "t": "II"
+    },
+    {
+     "f": "r19_3.jpg",
+     "t": "III"
+    },
+    {
+     "f": "r19_4.jpg",
+     "t": "IV"
+    }
+   ],
+   "voces": {
+    "Artista": "Caras limpias. La piedra quedó chica; el casco de III parece de metal.",
+    "Historiadora": "Correcto: depilación con pinzas (Cobo; pinzas de cobre en contextos incas). Un solo disco de plata en IV.",
+    "Prompting": "Explicar el porqué en positivo funciona mejor que pedir «sin barba»."
+   },
+   "decision": "Piedra más grande, casco color caña."
+  },
+  {
+   "id": "r20",
+   "titulo": "Ronda 20 · GANADORA del retrato (dirección B)",
+   "meta": "FLUX schnell, 4 pasos, 768×1024, semilla fija 7 para las 4 edades, sin IP-Adapter.",
+   "imgs": [
+    {
+     "f": "r20_1.jpg",
+     "t": "I · Ayllu"
+    },
+    {
+     "f": "r20_2.jpg",
+     "t": "II · Suyu"
+    },
+    {
+     "f": "r20_3.jpg",
+     "t": "III · Tawantinsuyu"
+    },
+    {
+     "f": "r20_4.jpg",
+     "t": "IV · Inkarri"
+    }
+   ],
+   "voces": {
+    "Artista": "Se distingue cada edad a 64 px por el bloque de color: marrón crudo / azul y rojo / blanco acolchado con casco de caña / ajedrez con disco de plata. Silueta: mano con piedra junto a la cara.",
+    "Historiadora": "Correcto para 1400-1572: unku sin mangas, llawtu, chuspa de piedras, algodón acolchado y casco de caña (Cobo), unku ajedrezado de canesú rojo (Rowe 1979), disco de plata como premio; sin oro ni nada sagrado. Detalle: la piedra parece huevo.",
+    "Prompting": "Plantilla estable: estilo → cara → acción del oficio → ropa de la edad → persona → encuadre. Misma semilla = misma cara en las cuatro edades."
+   },
+   "decision": "Aprobado en dirección B. Si el autor elige A o C, se cambia solo la primera frase del prompt.",
+   "prompts": {
+    "Prompt edad 1": "Stylized digital painting in the style of Age of Empires IV unit portraits, simplified shapes, bold clear silhouette, few large brushstrokes, little fine detail. A smooth hairless face with plucked eyebrows-clean skin, like the Inca men who plucked their facial hair with tweezers. A slinger raises his right hand beside his face holding up a big round grey-brown river stone the size of an egg, a small striped woven cloth shoulder bag full of stones hangs at his hip, and a braided wool sling with tasseled ends is draped across his shoulders. He wears a plain brown cord tied around the head and a plain undyed brown and cream striped llama wool sleeveless tunic; the sling and bag are undyed brown wool. Native American man of the Andes, Quechua, about 30 years old, smooth face, broad cheekbones, deep-set dark eyes, brown skin, straight black hair cut in a fringe, bare brown arms. Chest-up portrait, dark backdrop",
+    "Prompt edad 2": "Stylized digital painting in the style of Age of Empires IV unit portraits, simplified shapes, bold clear silhouette, few large brushstrokes, little fine detail. A smooth hairless face with plucked eyebrows-clean skin, like the Inca men who plucked their facial hair with tweezers. A slinger raises his right hand beside his face holding up a big round grey-brown river stone the size of an egg, a small striped woven cloth shoulder bag full of stones hangs at his hip, and a braided wool sling with tasseled ends is draped across his shoulders. He wears a red and cream striped headband and a sleeveless tunic of dyed dark blue wool with one red and cream band of small geometric squares across the chest; the sling is red and cream. Native American man of the Andes, Quechua, about 30 years old, smooth face, broad cheekbones, deep-set dark eyes, brown skin, straight black hair cut in a fringe, bare brown arms. Chest-up portrait, dark backdrop",
+    "Prompt edad 3": "Stylized digital painting in the style of Age of Empires IV unit portraits, simplified shapes, bold clear silhouette, few large brushstrokes, little fine detail. A smooth hairless face with plucked eyebrows-clean skin, like the Inca men who plucked their facial hair with tweezers. A slinger raises his right hand beside his face holding up a big round grey-brown river stone the size of an egg, a small striped woven cloth shoulder bag full of stones hangs at his hip, and a braided wool sling with tasseled ends is draped across his shoulders. He wears a round tan helmet of woven cane and reeds and a thick white quilted cotton armor tunic stitched in a diamond quilting pattern, sleeveless, with red trim, covering the whole torso; the sling is red and blue. Native American man of the Andes, Quechua, about 30 years old, smooth face, broad cheekbones, deep-set dark eyes, brown skin, straight black hair cut in a fringe, bare brown arms. Chest-up portrait, dark backdrop",
+    "Prompt edad 4": "Stylized digital painting in the style of Age of Empires IV unit portraits, simplified shapes, bold clear silhouette, few large brushstrokes, little fine detail. A smooth hairless face with plucked eyebrows-clean skin, like the Inca men who plucked their facial hair with tweezers. A slinger raises his right hand beside his face holding up a big round grey-brown river stone the size of an egg, a small striped woven cloth shoulder bag full of stones hangs at his hip, and a braided wool sling with tasseled ends is draped across his shoulders. He wears a headband of braided red and ochre cords with tassels and a sleeveless tunic covered entirely in large black and white squares like a chessboard, with a small red triangle at the neck, and a single large flat dull silver disc hanging alone at the center of the chest; the sling is red, ochre and black. Native American man of the Andes, Quechua, about 30 years old, smooth face, broad cheekbones, deep-set dark eyes, brown skin, straight black hair cut in a fringe, bare brown arms. Chest-up portrait, dark backdrop"
+   }
+  }
+ ]
+}

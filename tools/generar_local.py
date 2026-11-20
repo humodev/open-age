@@ -83,6 +83,11 @@ def grafo_sdxl(a, refs):
         "dec": {"class_type": "VAEDecode", "inputs": {"samples": ["ks", 0], "vae": ["ckpt", 2]}},
         "save": {"class_type": "SaveImage", "inputs": {"images": ["dec", 0], "filename_prefix": a.prefijo}},
     }
+    if a.base_subida:
+        # img2img: parte de una imagen (p. ej. la composición de FLUX) y la repinta con SDXL.
+        g["base"] = {"class_type": "LoadImage", "inputs": {"image": a.base_subida}}
+        g["lat"] = {"class_type": "VAEEncode", "inputs": {"pixels": ["base", 0], "vae": ["ckpt", 2]}}
+        g["ks"]["inputs"]["denoise"] = a.fuerza
     if refs:
         imagen = None
         for i, nombre in enumerate(refs):
@@ -105,7 +110,7 @@ def grafo_sdxl(a, refs):
 
 
 def grafo_flux(a):
-    return {
+    g = {
         "unet": {"class_type": "UnetLoaderGGUF", "inputs": {"unet_name": FLUX_UNET}},
         "clip": {"class_type": "DualCLIPLoaderGGUF",
                  "inputs": {"clip_name1": FLUX_CLIP, "clip_name2": FLUX_T5, "type": "flux"}},
@@ -121,6 +126,12 @@ def grafo_flux(a):
         "dec": {"class_type": "VAEDecode", "inputs": {"samples": ["ks", 0], "vae": ["vae", 0]}},
         "save": {"class_type": "SaveImage", "inputs": {"images": ["dec", 0], "filename_prefix": a.prefijo}},
     }
+    if a.base_subida:
+        # img2img: conserva la pose y la composición de la base (p. ej. la honda bien armada).
+        g["base"] = {"class_type": "LoadImage", "inputs": {"image": a.base_subida}}
+        g["lat"] = {"class_type": "VAEEncode", "inputs": {"pixels": ["base", 0], "vae": ["vae", 0]}}
+        g["ks"]["inputs"]["denoise"] = a.fuerza
+    return g
 
 
 def esperar(servidor, pid):
@@ -169,6 +180,8 @@ def main():
     p.add_argument("--scheduler", default="karras")
     p.add_argument("--sin-fondo", action="store_true", help="además guarda una copia sin fondo (rembg)")
     p.add_argument("--jpg", type=int, default=0, help="además guarda un JPG con este lado máximo")
+    p.add_argument("--base", default=None, help="img2img (SDXL o FLUX): imagen de partida, p. ej. una composición de FLUX")
+    p.add_argument("--fuerza", type=float, default=0.5, help="denoise del img2img: 0 deja la base, 1 la ignora")
     p.add_argument("--servidor", default=SERVIDOR)
     a = p.parse_args()
     if a.pasos is None:
@@ -182,6 +195,7 @@ def main():
         sys.exit(f"No responde ComfyUI en {a.servidor}. Arrancarlo con /mnt/games/01_Projects/comfyui/arrancar.sh")
 
     refs = [subir_imagen(a.servidor, r) for r in a.ref]
+    a.base_subida = subir_imagen(a.servidor, a.base) if a.base else None
     os.makedirs(os.path.dirname(os.path.abspath(a.salida)), exist_ok=True)
     semilla0 = a.semilla
     resumen = []
@@ -214,7 +228,7 @@ def main():
             print(f"{destino}  semilla {a.semilla}  {seg:.1f} s", flush=True)
     with open(a.salida + "_meta.json", "w") as f:
         json.dump({"prompt": a.prompt, "negativo": a.negativo, "refs": a.ref, "peso_ref": a.peso_ref,
-                   "tipo_ref": a.tipo_ref, "ancho": a.ancho, "alto": a.alto, "pasos": a.pasos,
+                   "tipo_ref": a.tipo_ref, "base": a.base, "fuerza": a.fuerza, "ancho": a.ancho, "alto": a.alto, "pasos": a.pasos,
                    "cfg": a.cfg, "imagenes": resumen}, f, ensure_ascii=False, indent=1)
 
 
