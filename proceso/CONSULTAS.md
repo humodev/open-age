@@ -682,3 +682,9 @@ Hoy la versión es `AAAA.MM.DD-commit` (por ejemplo `2026.11.20-1a2b3c4`). ¿Te 
 a) Fecha y commit *(por defecto)* · b) Número a mano, más el commit
 
 **Respuesta:**
+
+### C-105 · 3D local: ¿seguimos? (proceso/43)
+Hunyuan3D-2mini turbo da formas buenas en la PC (ver `proceso/43-3d-local/index.html`). Para seguir hacen falta cosas que no hago solo: (1) instalar el toolkit de CUDA 12.8 con un gcc 13 o 14 (para la textura propia de Hunyuan); (2) aceptar la licencia de Stable Fast 3D con tu cuenta de Hugging Face, si querés compararlo; (3) Mixamo, con tu cuenta, si el autorrig de Blender no alcanza. ¿Qué hacemos?
+a) Pasar los aldeanos y edificios de los incas a esta cadena y probar el rig en Godot *(por defecto)* · b) Primero la textura de Hunyuan (instalás el toolkit) · c) Dejarlo acá y seguir con Meshy
+
+**Respuesta:**

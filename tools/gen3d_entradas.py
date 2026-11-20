@@ -55,11 +55,10 @@ def main(dst: Path) -> None:
     dst.mkdir(parents=True, exist_ok=True)
     hoja = Image.open(SRC / "hoja_aldeano_e1_31.png").convert("RGB")
     # La *_mascara.png de proceso/42 es la de la túnica (para recolorear), no la silueta.
-    rgba = alfa_por_fondo(hoja, 18)
+    # Cada mitad por separado: el alfa se queda con la pieza más grande.
     w = hoja.width
-    cuadrar(rgba.crop((0, 0, w // 2, hoja.height))).save(dst / "aldeano_frente.png")
-    espalda = cuadrar(rgba.crop((w // 2, 0, w, hoja.height)))
-    espalda.save(dst / "aldeano_espalda.png")
+    cuadrar(alfa_por_fondo(hoja.crop((0, 0, w // 2, hoja.height)), 18)).save(dst / "aldeano_frente.png")
+    cuadrar(alfa_por_fondo(hoja.crop((w // 2, 0, w, hoja.height)), 18)).save(dst / "aldeano_espalda.png")
     for nombre, archivo in [("casa", "casa_7.png"), ("cuartel", "cuartel_7.png")]:
         cuadrar(alfa_por_fondo(Image.open(SRC / archivo).convert("RGB")), 0.06).save(dst / f"{nombre}.png")
     cab = SRC.parent / "gen3d" / "caballo_11.png"

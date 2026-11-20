@@ -62,6 +62,23 @@ scripts (`tools/gen3d*.py`), esta carpeta con renders JPG y los GLB reducidos de
     `escala_visual` (personas a 0,75 de alto; edificios con el lado = tam − 2 × margen, sin
     el estiramiento a `altura_min_cm`). [img/juego_rts.jpg](img/juego_rts.jpg) y
     [img/juego_cerca.jpg](img/juego_cerca.jpg).
+11. **Rig del aldeano** (`tools/gen3d_rig.py`, Blender): 19 huesos con los nombres de KayKit
+    Rig_Medium, articulaciones halladas en la malla (manos = lo más lejano a cada lado,
+    piernas por un corte en las canillas, el resto por proporciones), pesos automáticos sin
+    vértices sueltos y una pose de prueba ([img/aldeano_pose_frente.jpg](img/aldeano_pose_frente.jpg)).
+    Salen `gen3d/rig/aldeano_rig.glb` y `gen3d/rig/aldeano_mixamo.fbx` (malla sola, para
+    Mixamo). Falta probar el BoneMap en Godot. Caballo: pendiente (no hay cuadrúpedo en KayKit).
+12. Página [index.html](index.html), con la tabla por pieza y la recomendación. Consulta C-105.
+
+## Para el autor: Mixamo y Godot
+
+1. Mixamo (con tu cuenta): subir `gen3d/rig/aldeano_mixamo.fbx`, marcar mentón, muñecas,
+   codos, rodillas e ingle, y bajar el FBX con skin. O usar directo `gen3d/rig/aldeano_rig.glb`.
+2. En Godot, en la pestaña Importar del GLB o FBX: Skeleton3D → Retarget → nuevo `BoneMap`
+   con `SkeletonProfileHumanoid`; Rest Fixer con «Overwrite Axis» y «Fix Silhouette». Con los
+   huesos de Mixamo el mapa se completa solo; con los del autorrig, el mismo de
+   `personas_kaykit.glb` (tabla en proceso/27-animaciones/README.md).
+3. La `AnimationLibrary` de KayKit, retargeteada igual, le sirve tal cual.
 
 ## Tropiezos
 
@@ -91,6 +108,8 @@ scripts (`tools/gen3d*.py`), esta carpeta con renders JPG y los GLB reducidos de
   nuevo que el que acepta CUDA 12.8. Instalar el toolkit (paquete `cuda` de CachyOS o un
   entorno conda con `cuda-nvcc` y `gxx` 13) quedó para el autor: no se instaló nada fuera
   de gen3d. Por eso el color se proyecta con `tools/gen3d_color.py`.
+- En gen3d quedaron `cuda128/` y `mamba/` a medio armar (sin `nvcc`) de antes del cuelgue
+  por RAM; no se usan. Se pueden borrar.
 - Un caballo de perfil puro tapa las patas del otro lado: para 3D hay que pedirlo caminando.
 
 ## Licencias
@@ -104,3 +123,10 @@ scripts (`tools/gen3d*.py`), esta carpeta con renders JPG y los GLB reducidos de
 
 ## Commits
 
+- `6cfa44c` instalación, bajadas y scripts
+- `622a817` imagen del caballo y entradas
+- `6a0098b` Hunyuan3D-2mini turbo con las 4 piezas
+- `887a062` 2mini, 2mv y TripoSR; mediciones
+- `57e9fc3` reducción en Blender, color proyectado y renders
+- `d644a21` modelos de prueba en Godot
+- (este) rig del aldeano, página, índice, estado y C-105
