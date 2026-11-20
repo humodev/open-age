@@ -53,7 +53,9 @@ func _process(_d: float) -> void:
 	_last_check = sim.tick
 	if sim.game_over or hud._local_is_ai() or sim.players[hud.local]["defeated"]:
 		return
-	if Opciones.consejos:
+	# --- ronda 9 --- Mientras la Guía del tutorial habla o tiene un paso abierto, solo la cuenta de
+	# los sitios (que es una amenaza): el resto se pisaba con lo que la Guía estaba enseñando.
+	if Opciones.consejos and not hud.guia_ocupada():
 		check(dt)
 	else:
 		_sites() # --- ronda 8 --- la cuenta de sitios no es un consejo: es una amenaza (AoE4 la avisa)
@@ -130,9 +132,12 @@ func _bushes() -> void:
 
 # ---------------------------------------------------------------- Recursos sin gastar
 
+## --- ronda 9 --- Un solo aviso para todo lo que sobra («Te sobra: alimento 710, riqueza 242»):
+## los cuatro por separado eran un tercio de los mensajes y parecían un reto.
 func _floating(dt: int) -> void:
 	var p: Dictionary = hud.sim.players[hud.local]
 	var lim: Dictionary = cfg.get("flotando", {})
+	var sobra: Array = [] # [recurso, cantidad, cuánto pasa del umbral]
 	for k in lim:
 		var key := "flot_" + str(k)
 		var have := int(p["res"].get(k, 0))
@@ -140,17 +145,22 @@ func _floating(dt: int) -> void:
 			_since[key] = 0
 			continue
 		_since[key] = int(_since.get(key, 0)) + dt
-		if int(_since[key]) < int(cfg.get("flotando_s", 60)):
-			continue
-		var name: String = Palette.RES_NAMES.get(k, str(k)).to_lower()
-		var hint: String = HINTS.get(k, "")
-		# --- aprendizaje 36 --- el mercado como salida de lo que sobra, desde su edad.
-		var merc_edad := int(hud.sim.dp(hud.local).edificios.get("mercado", {}).get("edad_min", 99))
-		if int(p["age"]) >= merc_edad:
-			hint += " " + String(_mec("mercado").get("texto", ""))
-		if _say(key, "Estás juntando %s que no gastás (%d)\n%s" % [name, have, hint.strip_edges()], "decision", int(cfg.get("repetir_s", 90))):
-			_since[key] = 0
-			return # de a un recurso por revisión
+		if int(_since[key]) >= int(cfg.get("flotando_s", 60)):
+			sobra.append([str(k), have, have * 100 / maxi(1, int(lim[k]))])
+	if sobra.is_empty():
+		return
+	sobra.sort_custom(func(x: Array, y: Array) -> bool: return int(x[2]) > int(y[2]))
+	var partes: Array[String] = []
+	for r: Array in sobra:
+		partes.append("%s %d" % [String(Palette.RES_NAMES.get(r[0], r[0])).to_lower(), int(r[1])])
+	var hint: String = HINTS.get(sobra[0][0], "")
+	# --- aprendizaje 36 --- el mercado como salida de lo que sobra, desde su edad.
+	var merc_edad := int(hud.sim.dp(hud.local).edificios.get("mercado", {}).get("edad_min", 99))
+	if int(p["age"]) >= merc_edad:
+		hint += " " + String(_mec("mercado").get("texto", ""))
+	if _say("flotando", "Te sobra: %s\n%s" % [", ".join(partes), hint.strip_edges()], "decision", int(cfg.get("repetir_s", 90))):
+		for r: Array in sobra:
+			_since["flot_" + String(r[0])] = 0
 
 
 # ---------------------------------------------------------------- Sitios sagrados
@@ -642,7 +652,7 @@ func _mec_say(key: String, cond: bool, dt: int, lugar: Variant = null) -> bool:
 	var txt := GUIA.texto(String(c.get("texto", "")), hud.sim.data.reglas)
 	var lec: Dictionary = GUIA.data().get("lecciones", {}).get(c.get("leccion", ""), {})
 	if not lec.is_empty():
-		txt += "\nG: lección «%s»." % lec.get("titulo", "")
+		txt += "\n%s: lección «%s»." % [Teclas.texto("guia"), lec.get("titulo", "")]
 	var rep := int(c.get("repetir_s", 0))
 	if not _say(k, txt, "decision", rep if rep > 0 else 1 << 30, lugar):
 		return false

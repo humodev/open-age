@@ -65,6 +65,35 @@ func _init() -> void:
 		if got.has(c[2]) != c[3]:
 			print("FALLA: %s %s la lección %s" % [e.type, "no ofrece" if c[3] else "no debería ofrecer", c[2]])
 			ok = false
+	# --- ronda 9 --- El índice: solo las del pueblo, por edad.
+	for pid in [0, 1]:
+		var ids: Array = GUIA.indice(s, pid)
+		var eds := []
+		for id in ids:
+			eds.append(int(lecs[id].get("edad", 1)))
+		print("Índice %d: %s" % [pid, ", ".join(ids)])
+		var sorted_eds := eds.duplicate()
+		sorted_eds.sort()
+		if eds != sorted_eds:
+			print("FALLA: el índice %d no va por edad: %s" % [pid, str(eds)])
+			ok = false
+		if ids.has("muralla") != (pid == 1):
+			print("FALLA: la muralla %s en el índice del pueblo %d" % ["falta" if pid == 1 else "aparece", pid])
+			ok = false
+	# --- ronda 9 --- La G abre la Guía: la puerta del muro va en otra tecla y la lección la nombra.
+	var tp := Teclas.tecla("puerta_muro")
+	if tp == 0 or tp == Teclas.tecla("guia"):
+		print("FALLA: la puerta del muro no tiene tecla propia (choca con la Guía)")
+		ok = false
+	var mur := GUIA.texto(String(lecs["muralla"]["consejo"]), reglas)
+	if not mur.contains(Teclas.texto("puerta_muro") + " pone una puerta") or mur.contains(Teclas.texto("guia") + " pone"):
+		print("FALLA: la lección de muralla no nombra la tecla de la puerta: %s" % mur)
+		ok = false
+	for c in Teclas.choques():
+		for a in Teclas.choques()[c]:
+			if a in ["puerta_muro", "como_se_usa"]:
+				print("FALLA: la tecla de %s choca con %s" % [a, str(Teclas.choques()[c])])
+				ok = false
 	print("OK" if ok else "FALLA")
 	quit(0 if ok else 1)
 
