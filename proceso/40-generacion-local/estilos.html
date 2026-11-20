@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estilos locales · Raíces</title>
+<style>
+:root{--fondo:#f4efe6;--papel:#fffaf1;--tinta:#2b2520;--suave:#6f655a;--borde:#ddd2c1;--acento:#9b3d22;--ok:#3c6b3a;--mal:#9b3d22}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--fondo:#1b1815;--papel:#25211d;--tinta:#eee6da;--suave:#a89c8d;--borde:#3a332c;--acento:#e08a5f;--ok:#8fc48a;--mal:#e08a5f}}
+:root[data-theme="dark"]{--fondo:#1b1815;--papel:#25211d;--tinta:#eee6da;--suave:#a89c8d;--borde:#3a332c;--acento:#e08a5f;--ok:#8fc48a;--mal:#e08a5f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fondo);color:var(--tinta);font:15px/1.5 system-ui,sans-serif}
+main{max-width:1280px;margin:0 auto;padding:24px 16px 64px}
+h1{font-size:26px;margin:0 0 4px}h2{font-size:19px;margin:40px 0 8px;border-bottom:1px solid var(--borde);padding-bottom:6px}
+p.sub{color:var(--suave);margin:0 0 16px}
+.tabla{display:grid;grid-template-columns:200px repeat(4,1fr);gap:8px;align-items:start}
+.cab{font-weight:600;color:var(--suave);font-size:13px;text-transform:uppercase;letter-spacing:.04em}
+.estilo{background:var(--papel);border:1px solid var(--borde);border-radius:8px;padding:10px;font-size:13px}
+.estilo b{display:block;font-size:15px;margin-bottom:4px}
+figure{margin:0;background:var(--papel);border:1px solid var(--borde);border-radius:8px;overflow:hidden}
+figure img{display:block;width:100%;height:auto;cursor:zoom-in}
+figcaption{font-size:12px;color:var(--suave);padding:4px 8px}
+.fila4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.nota{background:var(--papel);border-left:3px solid var(--acento);padding:10px 14px;border-radius:4px;margin:12px 0}
+.bien{color:var(--ok)}.mal{color:var(--mal)}
+table.t{border-collapse:collapse;font-size:14px}table.t td,table.t th{border-bottom:1px solid var(--borde);padding:4px 12px;text-align:left}
+#zoom{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:9}
+#zoom img{max-width:95vw;max-height:95vh}
+@media (max-width:800px){.tabla{grid-template-columns:repeat(2,1fr)}.tabla .cab:first-child{display:none}.estilo{grid-column:1/-1}.fila4{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<main>
+<h1>Generación local: estilos para Raíces</h1>
+<p class="sub">ComfyUI en la RTX 2060 Super (8 GB). DreamShaper XL Turbo (SDXL, OpenRAIL++) con IP-Adapter Plus, y FLUX.1 schnell Q4 (Apache 2.0). Misma semilla por pieza en todos los estilos. 2026-11-20.</p>
+
+<h2>1 · Comparación con Recraft</h2>
+<p>Arriba, cuatro de los ocho retratos elegidos de Recraft (las ocho imágenes fueron la referencia de estilo para IP-Adapter). Abajo, cuatro retratos nuevos generados en local con los prompts de <code>proceso/39-arte-interfaz/prompts.html</code>, IP-Adapter en «style transfer» con peso 0,8, 896×1152, 8 pasos.</p>
+<div class="fila4">
+<figure><img src="../../assets/ui/arte/tawantinsuyu/retratos/aldeano_m_e1.png" alt=""><figcaption>Recraft · runa, edad I</figcaption></figure>
+<figure><img src="../../assets/ui/arte/tawantinsuyu/retratos/aldeano_m_e2.png" alt=""><figcaption>Recraft · runa, edad II</figcaption></figure>
+<figure><img src="../../assets/ui/arte/tawantinsuyu/retratos/aldeano_f_e2.png" alt=""><figcaption>Recraft · runa mujer, edad II</figcaption></figure>
+<figure><img src="../../assets/ui/arte/tawantinsuyu/retratos/aldeano_f_e3.png" alt=""><figcaption>Recraft · runa mujer, edad III</figcaption></figure>
+</div>
+<div class="fila4" style="margin-top:8px">
+<figure><img src="estilos/comp_lancero_inca.jpg" alt=""><figcaption>Local · lancero inca · 25,5 s (primera, carga el modelo)</figcaption></figure>
+<figure><img src="estilos/comp_hondero_inca.jpg" alt=""><figcaption>Local · hondero inca · 13,6 s</figcaption></figure>
+<figure><img src="estilos/comp_aldeana_mapuche.jpg" alt=""><figcaption>Local · aldeana mapuche · 13,4 s</figcaption></figure>
+<figure><img src="estilos/comp_aldeana_guarani.jpg" alt=""><figcaption>Local · aldeana guaraní · 13,5 s</figcaption></figure>
+</div>
+<div class="nota">
+<p><span class="bien">Bien:</span> la luz, el fondo oscuro con mancha, la paleta y la textura de pintura se parecen a Recraft. Sale en 13 a 14 s por imagen, gratis y sin cuota.</p>
+<p><span class="mal">Mal:</span> el modelo no sabe de pueblos. La mapuche y la guaraní salen vestidas de inca, porque la referencia es inca y el texto pesa poco. El lancero trae hombreras de fantasía y el guaraní plumas de «indio genérico». Con IP-Adapter en «linear» fue peor: las cuatro salieron casi iguales y copiaron la cara y la ropa de la referencia. Recraft entiende mejor el texto; la pintura local se le acerca, pero la fidelidad histórica no.</p>
+</div>
+
+<h2>2 · Cinco estilos × cuatro piezas (SDXL)</h2>
+<p>Mismo modelo, misma semilla por columna y el mismo sujeto; cambia solo el texto de estilo. El estilo A, además, usa los ocho retratos de Recraft por IP-Adapter («style transfer», 0,5). Todas a 1024 px (la pantalla de carga, a 1344×768).</p>
+<div class="tabla">
+<div class="cab">Estilo</div><div class="cab">Retrato · guerrero inca</div><div class="cab">Ícono · ariete</div><div class="cab">Edificio · casa inca</div><div class="cab">Pantalla de carga 16:9</div>
+
+<div class="estilo"><b>A · Pintado semirrealista</b>El de hoy, tipo AoE IV, con las referencias de Recraft. Es el más coherente con los retratos ya elegidos. El guerrero sale sobrio; la casa y el paisaje, creíbles. Tiempo medio: 13,6 s.</div>
+<figure><img src="estilos/A_guerrero.jpg" alt=""></figure><figure><img src="estilos/A_ariete.jpg" alt=""></figure><figure><img src="estilos/A_casa.jpg" alt=""></figure><figure><img src="estilos/A_carga.jpg" alt=""></figure>
+
+<div class="estilo"><b>B · Pintado a mano estilizado</b>Tipo Warcraft o Northgard: colores fuertes y siluetas que se leen chicas. Se va a la fantasía: orejas de elfo y hombreras en el guerrero, y techos de pagoda en el paisaje. Pide mucho trabajo de prompt para no caer en estereotipos.</div>
+<figure><img src="estilos/B_guerrero.jpg" alt=""></figure><figure><img src="estilos/B_ariete.jpg" alt=""></figure><figure><img src="estilos/B_casa.jpg" alt=""></figure><figure><img src="estilos/B_carga.jpg" alt=""></figure>
+
+<div class="estilo"><b>C · Grabado coloreado</b>Tinta con rayado y aguada sobre papel. Encaja con un tono de crónica, y la casa y el paisaje quedan lindos. El guerrero sale con el torso desnudo y un tocado de plumas: el estereotipo que los historiadores pidieron evitar.</div>
+<figure><img src="estilos/C_guerrero.jpg" alt=""></figure><figure><img src="estilos/C_ariete.jpg" alt=""></figure><figure><img src="estilos/C_casa.jpg" alt=""></figure><figure><img src="estilos/C_carga.jpg" alt=""></figure>
+
+<div class="estilo"><b>D · Low poly / render 3D</b>Se parecería a los modelos del juego. El ariete y el paisaje salen bien como piezas de juego; el guerrero, con casco romano, y la casa, con entramado europeo. Habría que guiarlo con la forma (ControlNet o el modelo 3D renderizado).</div>
+<figure><img src="estilos/D_guerrero.jpg" alt=""></figure><figure><img src="estilos/D_ariete.jpg" alt=""></figure><figure><img src="estilos/D_casa.jpg" alt=""></figure><figure><img src="estilos/D_carga.jpg" alt=""></figure>
+
+<div class="estilo"><b>E · Textil / tocapu</b>Formas planas y geométricas de tejido. Es el más propio y el más distinto a AoE, pero el modelo lo trata como decoración: el ariete y la pantalla de carga se vuelven un tapiz sin objeto. Sirve para marcos, fondos y estandartes de interfaz, no para unidades.</div>
+<figure><img src="estilos/E_guerrero.jpg" alt=""></figure><figure><img src="estilos/E_ariete.jpg" alt=""></figure><figure><img src="estilos/E_casa.jpg" alt=""></figure><figure><img src="estilos/E_carga.jpg" alt=""></figure>
+
+<div class="estilo"><b>F · FLUX.1 schnell (estilo A)</b>Segunda opción: sin IP-Adapter, solo texto. <b>Es el que mejor sigue el prompt</b>: la porra estrellada, un ariete de verdad, la kancha con techo de ichu y llamas en el paisaje. Más lento: 18 a 25 s, y 89 s la primera (carga 10 GB de modelos). Pantalla a 1024×576.</div>
+<figure><img src="estilos/F_guerrero.jpg" alt=""></figure><figure><img src="estilos/F_ariete.jpg" alt=""></figure><figure><img src="estilos/F_casa.jpg" alt=""></figure><figure><img src="estilos/F_carga.jpg" alt=""></figure>
+</div>
+
+<div class="nota"><b>El ariete costó.</b> SDXL no sabe qué es un ariete: en la primera pasada dibujó cañones en los cinco estilos. Con «battering ram» dibujó un árbol con un tronco colgado, un toro (<i>ram</i>) y una bestia (abajo). Lo de la grilla es la tercera pasada, con «máquina de asedio con una viga colgada», y aun así solo C y D se acercan. FLUX lo dibujó bien de entrada.
+<div class="fila4" style="margin-top:8px;max-width:520px;grid-template-columns:1fr 1fr"><figure><img src="estilos/intento_ariete_B.jpg" alt=""><figcaption>2.ª pasada, estilo B</figcaption></figure><figure><img src="estilos/intento_ariete_C.jpg" alt=""><figcaption>2.ª pasada, estilo C</figcaption></figure></div></div>
+
+<h2>3 · Tiempos (RTX 2060 Super, modo ahorro de memoria)</h2>
+<table class="t">
+<tr><th>Caso</th><th>Por imagen</th><th>Notas</th></tr>
+<tr><td>SDXL Turbo, 8 pasos, 1024 px, con o sin IP-Adapter</td><td>13–14 s</td><td>unos 10 s de muestreo; el resto es recargar el modelo, porque ComfyUI corre con <code>--disable-smart-memory</code></td></tr>
+<tr><td>SDXL, primera imagen de la tanda</td><td>25–75 s</td><td>lee 7 GB del disco</td></tr>
+<tr><td>FLUX schnell Q4, 4 pasos, 1024 px</td><td>18–25 s</td><td>2,8 s por paso</td></tr>
+<tr><td>FLUX, primera imagen</td><td>89 s</td><td>lee el modelo (6,8 GB) y el T5 (2,9 GB)</td></tr>
+<tr><td>Recraft (referencia)</td><td>no medido</td><td>en la nube, 2 variantes por prompt, con créditos</td></tr>
+</table>
+
+<h2>4 · Qué estilo seguir</h2>
+<div class="nota"><b>A sigue siendo el más prometedor</b>, porque ya hay retratos aprobados en ese estilo y IP-Adapter lo copia bien. Para los íconos de objetos y edificios conviene <b>FLUX</b>, que entiende el texto. El estilo <b>E</b> sirve como capa de interfaz (marcos, fondos, separadores) y le da identidad propia. El próximo paso es entrenar un LoRA de SDXL con 20 a 30 imágenes aprobadas, para fijar el estilo sin depender de IP-Adapter; ver el README.</div>
+</main>
+<div id="zoom"><img alt=""></div>
+<script>
+const z=document.getElementById('zoom'),zi=z.querySelector('img');
+document.querySelectorAll('figure img').forEach(i=>i.onclick=()=>{zi.src=i.src;z.style.display='flex'});
+z.onclick=()=>z.style.display='none';
+</script>
+</body>
+</html>
