@@ -21,6 +21,20 @@ ESTILO_RETRATO = ("Unit portrait for a historical RTS, painterly semi-realistic 
     "dark neutral vignette background, no text, no border, historically grounded, respectful, not a caricature")
 ESTILO_ESCENA = ("Painterly illustration for a historical strategy game, cinematic wide composition, "
     "atmospheric light, muted natural palette, historically grounded and respectful, no text, no logos")
+ESTILO_HOJA = ("Character reference sheet for 3D modeling, full body, standing in A-pose (arms slightly away from the body), "
+    "front view and side view of the same character side by side, neutral relaxed expression, even flat studio light, "
+    "plain light grey background, no shadows on the background, no text, painterly semi-realistic style like Age of Empires IV")
+# Ropa elegida por el autor para el aldeano inca (assets/ui/arte/tawantinsuyu/LEEME.md): la hoja 3D la copia.
+ALDEANO_INCA = {
+    ("f", 1): "brown wool acsu dress and plain cream lliklla shawl, long braid, simple headband, spinning wool with a drop spindle",
+    ("m", 1): "plain brown and cream knee-length unku tunic, short hair with fringe, simple llawtu headband, wooden digging stick",
+    ("f", 2): "dark blue acsu with red woven belt, cream lliklla with geometric border pinned with a tupu, long braid, woven headband",
+    ("m", 2): "blue unku with a red and cream tocapu band, woven llawtu headband, bronze axe, carrying bag across the chest",
+    ("f", 3): "dark blue acsu, cream lliklla with red and blue tocapu border and tupu pin, long braid, woven headband, maize basket and hoe",
+    ("m", 3): "dark unku with checkered red, blue and cream tocapu, woven headband with tassels, coiled rope on the shoulder, stone tool",
+    ("f", 4): "fine dark blue acsu, richly patterned lliklla in red, ochre and cream with tupu pin, long braid, fine headband with tassels",
+    ("m", 4): "richly woven unku covered in red, blue and ochre tocapu squares, fine headband with tassels, patterned shoulder bag",
+}
 REGLAS = ("No religious or sacred symbols as decoration or weapons, no crosses, no temples as icons, "
     "no stereotypes, no fantasy armor, no European medieval look unless stated.")
 
@@ -74,9 +88,19 @@ for civ in CIVS:
             add("Unidades", civ, "retrato", k, nombre, ed,
                 f"{ESTILO_RETRATO}. One single person: {nombre} ({k}) of the {pueblo}. {EDAD_DESC[ed-1]} ({edades[ed-1]}): clothing and equipment match this age. {REGLAS}",
                 f"assets/ui/arte/{civ}/retratos/{k}_e{ed}.png", "512×512")
-        add("Unidades", civ, "icono", k, nombre, e0,
-            f"{ESTILO_ICONO}. Subject: {nombre} ({k}), full figure, of the {pueblo}. {REGLAS}",
-            f"assets/ui/arte/{civ}/iconos/{k}.png", "256×256")
+        sexos = (("m", "a man"), ("f", "a woman")) if k in CIVILES else (("", ""),)
+        for sexo, quien in sexos:
+            suf = f"_{sexo}" if sexo else ""
+            add("Unidades", civ, "icono", k, nombre + (f" ({'mujer' if sexo == 'f' else 'hombre'})" if sexo else ""), e0,
+                f"{ESTILO_ICONO}. Subject: {quien + ', ' if quien else ''}{nombre} ({k}), full figure, of the {pueblo}. {REGLAS}",
+                f"assets/ui/arte/{civ}/iconos/{k}{suf}.png", "256×256")
+            # Hoja de referencia para el modelo 3D (imagen a 3D y rigging en Mixamo), una por edad.
+            for ed in range(e0, 5):
+                ropa = ALDEANO_INCA.get((sexo, ed)) if (civ == "tawantinsuyu" and k == "aldeano") else None
+                que = (f"wearing exactly: {ropa}" if ropa else f"clothing and equipment of {EDAD_DESC[ed-1]} ({edades[ed-1]})")
+                add("Modelos 3D (hojas)", civ, "hoja3d", k, nombre + (f" ({'mujer' if sexo == 'f' else 'hombre'})" if sexo else ""), ed,
+                    f"{ESTILO_HOJA}. One single character: {quien + ', ' if quien else ''}{CIVILES.get(k, nombre)} of the {pueblo}, {que}. {REGLAS}",
+                    f"assets/ui/arte/{civ}/hojas3d/{k}{suf}_e{ed}.png", "1536×1024")
     # Edificios: comunes con nombre del pueblo + propios. Uno por edad desde su edad mínima.
     edificios = {}
     for k, v in E.items():
