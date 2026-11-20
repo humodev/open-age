@@ -1,0 +1,10 @@
+# Mapeo de ~/Descargas/images.zip (retratos de aldeano del Tawantinsuyu, 2026-11-19).
+# imagen (nombre o número de la hoja de contacto) = destino de prompts.html
+painterly-semi-realistic-video-game-unit-portrait-.png     = assets/ui/arte/tawantinsuyu/retratos/aldeano_f_e4.png
+painterly-semi-realistic-video-game-unit-portrait- (1).png = assets/ui/arte/tawantinsuyu/retratos/aldeano_m_e4.png
+painterly-semi-realistic-video-game-unit-portrait- (2).png = assets/ui/arte/tawantinsuyu/retratos/aldeano_f_e3.png
+painterly-semi-realistic-video-game-unit-portrait- (3).png = assets/ui/arte/tawantinsuyu/retratos/aldeano_m_e3.png
+5 = assets/ui/arte/tawantinsuyu/retratos/aldeano_f_e2.png
+6 = assets/ui/arte/tawantinsuyu/retratos/aldeano_m_e2.png
+7 = assets/ui/arte/tawantinsuyu/retratos/aldeano_f_e1.png
+8 = assets/ui/arte/tawantinsuyu/retratos/aldeano_m_e1.png
