@@ -52,7 +52,7 @@ func setup(h: Hud) -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	boton = Button.new()
 	boton.focus_mode = Control.FOCUS_NONE
-	boton.add_theme_font_size_override("font_size", 13)
+	boton.add_theme_font_size_override("font_size", Hud.ts(13))
 	boton.tooltip_text = "Manda aldeanos ociosos (o los más cercanos) a las granjas vacías"
 	boton.visible = false
 	boton.pressed.connect(llenar_granjas)
@@ -438,4 +438,4 @@ func _draw() -> void:
 		draw_circle(sp, 17.0, Color(0, 0, 0, 0.55))
 		draw_arc(sp, 17.0 + pulso * 3.0, 0, TAU, 24, Color(Palette.UI_ACCENT, 0.5 + 0.5 * pulso), 2.5, true)
 		Glyphs.draw(self, "granja", Rect2(sp - Vector2(11, 11), Vector2(22, 22)), Palette.UI_ACCENT)
-		draw_string(Hud.font_b, sp + Vector2(-30, -24), "vacía", HORIZONTAL_ALIGNMENT_CENTER, 60, 12, Palette.UI_TEXT)
+		draw_string(Hud.font_b, sp + Vector2(-30, -24), "vacía", HORIZONTAL_ALIGNMENT_CENTER, 60, Hud.ts(12), Palette.UI_TEXT)

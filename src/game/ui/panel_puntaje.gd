@@ -153,7 +153,7 @@ func _draw() -> void:
 		var ally: bool = pid != hud.local and not sim.enemies(hud.local, pid) and not p["defeated"]
 		var name_w := size.x - (230.0 if ally else 150.0)
 		var f := Hud.font_b if pid == hud.local else Hud.font
-		while name.length() > 3 and f.get_string_size(name, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x > name_w - 22:
+		while name.length() > 3 and f.get_string_size(name, HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(12)).x > name_w - 22:
 			name = name.left(-2) + "…"
 		C.text(self, Vector2(22, y + 15), name, 12, Palette.UI_TEXT if pid == hud.local else Palette.UI_DIM, pid == hud.local, name_w)
 		if ally:

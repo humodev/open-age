@@ -213,5 +213,10 @@
     "banco_prom": 1200,
     "aldeanos_pct": 70,
     "edad_tarde_s": 120
+  },
+  "texto_grande": {
+    "_doc": "Opción «Texto grande» (Opciones → Interfaz; user://opciones.cfg → interfaz.texto_grande; --texto=grande para capturas). Pendiente de proceso/17, hecho en proceso/46. Hud.ts(n) multiplica cada tamaño de letra de la interfaz por factor_pct, sin pasar de tope_px: la letra chica crece más y los títulos (de tope_px para arriba) quedan como están. No cambia la escala de los paneles (eso es «Escala de la interfaz»); los textos que no entran se achican solos donde ya se ajustaban al ancho.",
+    "factor_pct": 125,
+    "tope_px": 20
   }
 }

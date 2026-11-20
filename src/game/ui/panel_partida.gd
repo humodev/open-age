@@ -208,5 +208,5 @@ class ButtonBar:
 			elif i == _hover:
 				sb.bg_color = Palette.UI_BG_2
 			draw_style_box(sb, r)
-			draw_string(Hud.font_b, Vector2(r.position.x + 8, 21), b[1], HORIZONTAL_ALIGNMENT_LEFT, r.size.x - 30, 13, Palette.UI_ACCENT if on else Palette.UI_TEXT)
-			draw_string(Hud.font, Vector2(r.position.x, 21), Teclas.texto("ayuda" if b[0] == "pueblo" else b[0]), HORIZONTAL_ALIGNMENT_RIGHT, r.size.x - 6, 11, Palette.UI_DIM)
+			draw_string(Hud.font_b, Vector2(r.position.x + 8, 21), b[1], HORIZONTAL_ALIGNMENT_LEFT, r.size.x - 30, Hud.ts(13), Palette.UI_ACCENT if on else Palette.UI_TEXT)
+			draw_string(Hud.font, Vector2(r.position.x, 21), Teclas.texto("ayuda" if b[0] == "pueblo" else b[0]), HORIZONTAL_ALIGNMENT_RIGHT, r.size.x - 6, Hud.ts(11), Palette.UI_DIM)

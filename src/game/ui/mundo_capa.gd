@@ -486,11 +486,11 @@ func _draw_tip() -> void:
 	if lines.is_empty() or (ctrl.mode != "place" and not _tip_ruta): # --- comercio --- (la ganancia esperada)
 		return
 	var m := ctrl.mouse_pos() + Vector2(22, 18)
-	var fs := 14
+	var fs := Hud.ts(14)
 	var wmax := 0.0
 	for l in lines:
 		wmax = maxf(wmax, _font.get_string_size(l[0], HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x)
-	var box := Rect2(m, Vector2(wmax + 16, lines.size() * 19 + 8))
+	var box := Rect2(m, Vector2(wmax + 16, lines.size() * (fs + 5) + 8))
 	var vs := get_viewport_rect().size
 	if box.end.x > vs.x - 8:
 		box.position.x = m.x - 44 - box.size.x
@@ -499,7 +499,7 @@ func _draw_tip() -> void:
 	_tip.draw_rect(box, Color(0.06, 0.065, 0.075, 0.9))
 	_tip.draw_rect(box, Color(1, 1, 1, 0.12), false, 1.0)
 	for i in lines.size():
-		_tip.draw_string(_font, box.position + Vector2(8, 18 + i * 19), lines[i][0], HORIZONTAL_ALIGNMENT_LEFT, -1, fs, lines[i][1])
+		_tip.draw_string(_font, box.position + Vector2(8, fs + 4 + i * (fs + 5)), lines[i][0], HORIZONTAL_ALIGNMENT_LEFT, -1, fs, lines[i][1])
 
 
 ## Punto de reunión de los edificios seleccionados y orden en curso (más la cola) de

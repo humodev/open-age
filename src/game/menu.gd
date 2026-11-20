@@ -86,14 +86,14 @@ func _ready() -> void:
 	var title := Label.new()
 	title.text = "Raíces"
 	title.add_theme_font_override("font", load("res://assets/fonts/FiraSans-Bold.ttf"))
-	title.add_theme_font_size_override("font_size", 76)
+	title.add_theme_font_size_override("font_size", Hud.ts(76))
 	title.add_theme_color_override("font_color", Palette.UI_TEXT)
 	box.add_child(title)
 
 	var sub := Label.new()
 	sub.text = "Seis pueblos del sur global, 1400–1800"
 	sub.add_theme_font_override("font", Hud.font)
-	sub.add_theme_font_size_override("font_size", 20)
+	sub.add_theme_font_size_override("font_size", Hud.ts(20))
 	sub.add_theme_color_override("font_color", Palette.UI_ACCENT)
 	box.add_child(sub)
 
@@ -180,7 +180,7 @@ func _ready() -> void:
 	_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_info.custom_minimum_size = Vector2(520, 70)
 	_info.add_theme_font_override("font", Hud.font)
-	_info.add_theme_font_size_override("font_size", 15)
+	_info.add_theme_font_size_override("font_size", Hud.ts(15))
 	_info.add_theme_color_override("font_color", Palette.UI_DIM)
 	box.add_child(_info)
 	_civ.item_selected.connect(func(_i: int) -> void: _describe(data))
@@ -257,7 +257,7 @@ func _ready() -> void:
 	hint.text = "Clic izquierdo: seleccionar · Clic derecho: ordenar · Q W E R / A S D F / Z X C V: grilla de comandos\nH: centro · . : aldeano inactivo · Ctrl+1…9: grupos · F3: velocidad · Esc: pausa"
 	# Abajo a la derecha, fuera de la columna: a 1366×768 (escala 120 %) debajo de "Salir" no entraba.
 	hint.add_theme_font_override("font", Hud.font)
-	hint.add_theme_font_size_override("font_size", 14)
+	hint.add_theme_font_size_override("font_size", Hud.ts(14))
 	hint.add_theme_color_override("font_color", Color(Palette.UI_DIM, 0.85))
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	hint.anchor_left = 1.0
@@ -342,7 +342,7 @@ func _button(text: String, cb: Callable) -> Button:
 	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	b.custom_minimum_size = Vector2(380, 54)
 	b.add_theme_font_override("font", Hud.font_b)
-	b.add_theme_font_size_override("font_size", 21)
+	b.add_theme_font_size_override("font_size", Hud.ts(21))
 	var n := StyleBoxFlat.new()
 	n.bg_color = Color(1, 1, 1, 0.07)
 	n.set_corner_radius_all(6)
@@ -452,7 +452,7 @@ func _small(items: Array, w: float, sel: int) -> OptionButton:
 	var ob := OptionButton.new()
 	ob.custom_minimum_size = Vector2(w, 32)
 	ob.add_theme_font_override("font", Hud.font)
-	ob.add_theme_font_size_override("font_size", 14)
+	ob.add_theme_font_size_override("font_size", Hud.ts(14))
 	for it in items:
 		ob.add_item(it)
 	ob.selected = sel
@@ -601,7 +601,7 @@ func _build_match_options(col: VBoxContainer) -> void:
 	_op_resumen.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_op_resumen.custom_minimum_size = Vector2(600, 0)
 	_op_resumen.add_theme_font_override("font", Hud.font)
-	_op_resumen.add_theme_font_size_override("font_size", 14)
+	_op_resumen.add_theme_font_size_override("font_size", Hud.ts(14))
 	_op_resumen.add_theme_color_override("font_color", Palette.UI_DIM)
 	col.add_child(_op_resumen)
 	_op_tiempo.item_selected.connect(func(_i: int) -> void: _ffa_auto = false) # --- equipos ronda 3 --- lo eligió el jugador
@@ -656,7 +656,7 @@ func _check(text: String, on: bool, tip: String) -> CheckButton:
 	cb.button_pressed = on
 	cb.tooltip_text = tip
 	cb.add_theme_font_override("font", Hud.font)
-	cb.add_theme_font_size_override("font_size", 15)
+	cb.add_theme_font_size_override("font_size", Hud.ts(15))
 	Opciones.interruptor_en(cb) # --- equipos ronda 3 --- apagado se veía como un punto suelto
 	return cb
 

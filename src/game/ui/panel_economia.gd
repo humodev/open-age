@@ -80,7 +80,7 @@ func _draw() -> void:
 	var lx := 14.0
 	for l in legend:
 		var label := "%s %d" % [TASK_NAMES.get(l[0], C.res_name(sim, pid, l[0])), l[1]]
-		var lw := Hud.font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x + 26
+		var lw := Hud.font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(12)).x + 26
 		if lx + lw > w - 14:
 			lx = 14.0
 			y += 18

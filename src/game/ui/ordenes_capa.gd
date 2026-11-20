@@ -55,7 +55,7 @@ func _draw_rueda() -> void:
 		var on := k == sel
 		draw_circle(p, 24, Color(Palette.UI_BAD if k == "atacar" else Palette.UI_ACCENT, 0.85) if on else Color(0.1, 0.1, 0.12, 0.85))
 		Glyphs.draw(self, RUEDA_ICONO[k], Rect2(p - Vector2(13, 17), Vector2(26, 26)), Color.WHITE if on else Palette.UI_TEXT)
-		draw_string(Hud.font_b, p + Vector2(-40, 38), k.capitalize(), HORIZONTAL_ALIGNMENT_CENTER, 80, 13, Color.WHITE)
+		draw_string(Hud.font_b, p + Vector2(-40, 38), k.capitalize(), HORIZONTAL_ALIGNMENT_CENTER, 80, Hud.ts(13), Color.WHITE)
 	draw_circle(c, 5, Color.WHITE)
 # --- fin fluidez 4 ---
 
@@ -104,9 +104,9 @@ func _draw() -> void:
 		draw_line(sp, sp + Vector2(0, -70), Color.WHITE, 3.0, true)
 		Glyphs.draw(self, "bengala", Rect2(sp + Vector2(-8, -100), Vector2(56, 56)), col.lightened(0.25))
 		var txt: String = FRASES.get(f["tipo"], "¡Mirá acá!") # --- fluidez 4 ---
-		var tw := Hud.font_b.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x
+		var tw := Hud.font_b.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(16)).x
 		draw_rect(Rect2(sp + Vector2(-tw / 2 - 8, -128), Vector2(tw + 16, 24)), Color(0, 0, 0, 0.6))
-		draw_string(Hud.font_b, sp + Vector2(-tw / 2, -110), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color.WHITE)
+		draw_string(Hud.font_b, sp + Vector2(-tw / 2, -110), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(16), Color.WHITE)
 	var ctrl: Controller = hud.ctrl
 	if not rueda.is_empty(): # --- fluidez 4 ---
 		_draw_rueda()
@@ -117,8 +117,8 @@ func _draw() -> void:
 			var d := (m - ctrl.rpress_pos).normalized()
 			draw_line(ctrl.rpress_pos, m, Color(Palette.UI_GOOD, 0.9), 4.0, true)
 			draw_colored_polygon(PackedVector2Array([m + d * 10, m - d * 12 + d.orthogonal() * 10, m - d * 12 - d.orthogonal() * 10]), Palette.UI_GOOD)
-			draw_string(Hud.font_b, ctrl.rpress_pos + Vector2(-80, 26), "Formación: %s" % ctrl.formacion, HORIZONTAL_ALIGNMENT_CENTER, 160, 13, Color.WHITE)
+			draw_string(Hud.font_b, ctrl.rpress_pos + Vector2(-80, 26), "Formación: %s" % ctrl.formacion, HORIZONTAL_ALIGNMENT_CENTER, 160, Hud.ts(13), Color.WHITE)
 	if ctrl.mode == "patrol":
-		draw_string(Hud.font_b, ctrl.mouse_pos() + Vector2(18, 30), "Patrullar hasta acá", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+		draw_string(Hud.font_b, ctrl.mouse_pos() + Vector2(18, 30), "Patrullar hasta acá", HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(13), Color.WHITE)
 	if ctrl.mode == "ground": # --- esport 1a ---
-		draw_string(Hud.font_b, ctrl.mouse_pos() + Vector2(18, 30), "Tirar acá", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color.WHITE)
+		draw_string(Hud.font_b, ctrl.mouse_pos() + Vector2(18, 30), "Tirar acá", HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(13), Color.WHITE)

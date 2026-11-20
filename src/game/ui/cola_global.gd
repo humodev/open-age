@@ -266,7 +266,7 @@ func _draw() -> void:
 			Glyphs.draw(self, hud.queue_icon(item), r.grow(-7), Color(Palette.UI_BAD.lightened(0.45), 0.95))
 			_candado(r.position + Vector2(r.size.x - 9, r.size.y - 9))
 			if b.queue.size() > 1:
-				draw_string(Hud.font_b, r.position + Vector2(0, 13), str(b.queue.size()), HORIZONTAL_ALIGNMENT_RIGHT, r.size.x - 4, 11, Palette.UI_TEXT)
+				draw_string(Hud.font_b, r.position + Vector2(0, 13), str(b.queue.size()), HORIZONTAL_ALIGNMENT_RIGHT, r.size.x - 4, Hud.ts(11), Palette.UI_TEXT)
 		elif b.queue.is_empty():
 			# --- frente 1 --- quieto: gris; el parado hace parado_s, con el borde que late
 			var late := parado(b)
@@ -292,7 +292,7 @@ func _draw() -> void:
 			draw_rect(Rect2(r.position.x + 3, r.end.y - 5, r.size.x - 6, 3), Color(0, 0, 0, 0.5))
 			draw_rect(Rect2(r.position.x + 3, r.end.y - 5, (r.size.x - 6) * clampf(k, 0, 1), 3), Palette.UI_ACCENT)
 			if b.queue.size() > 1:
-				draw_string(Hud.font_b, r.position + Vector2(0, 13), str(b.queue.size()), HORIZONTAL_ALIGNMENT_RIGHT, r.size.x - 4, 11, Palette.UI_ACCENT)
+				draw_string(Hud.font_b, r.position + Vector2(0, 13), str(b.queue.size()), HORIZONTAL_ALIGNMENT_RIGHT, r.size.x - 4, Hud.ts(11), Palette.UI_ACCENT)
 		if b.repeat != "":
 			Hud.draw_bucle(self, r.position + Vector2(9, 10), 5.0, Palette.UI_ACCENT)
 		_hits.append([r, b])

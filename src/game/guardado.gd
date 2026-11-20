@@ -269,7 +269,7 @@ static func dialogo(padre: Node, titulo: String, dir: String, al_elegir: Callabl
 	tl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	if Hud.font_b != null:
 		tl.add_theme_font_override("font", Hud.font_b)
-	tl.add_theme_font_size_override("font_size", 28)
+	tl.add_theme_font_size_override("font_size", Hud.ts(28))
 	vb.add_child(tl)
 	var sc := ScrollContainer.new()
 	sc.custom_minimum_size = Vector2(640, 360)

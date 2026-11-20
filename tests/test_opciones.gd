@@ -21,15 +21,27 @@ func _init() -> void:
 	Opciones.bordes = false
 	Opciones.velocidad_camara = 150.0
 	Opciones.barras_siempre = true
+	Opciones.texto_grande = true # --- texto grande ---
 	Opciones.guardar(PRUEBA)
 	Opciones.restablecer()
-	check.call("restablecer vuelve a los valores de fábrica", Opciones.escala == 0.0 and Opciones.paleta == "normal" and Opciones.bordes)
+	check.call("restablecer vuelve a los valores de fábrica", Opciones.escala == 0.0 and Opciones.paleta == "normal" and Opciones.bordes and not Opciones.texto_grande)
 	Opciones.cargar(PRUEBA)
 	check.call("se recupera la escala (%s)" % Opciones.escala, Opciones.escala == 1.25)
 	check.call("se recupera la paleta (%s)" % Opciones.paleta, Opciones.paleta == "tritanopia")
 	check.call("se recuperan los volúmenes", Opciones.musica == 35.0 and Opciones.ambiente == 10.0 and Opciones.efectos == 100.0)
 	check.call("se recupera la cámara", not Opciones.bordes and Opciones.velocidad_camara == 150.0)
 	check.call("se recuperan las barras siempre visibles", Opciones.barras_siempre)
+	# --- texto grande --- (proceso/46; data/interfaz.json → texto_grande)
+	check.call("se recupera el texto grande", Opciones.texto_grande)
+	var tg: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string("res://data/interfaz.json")) as Dictionary)["texto_grande"]
+	var tope := int(tg["tope_px"])
+	check.call("texto grande: la letra chica crece (11 → %d)" % Hud.ts(11), Hud.ts(11) == mini(tope, roundi(11 * float(tg["factor_pct"]) / 100.0)) and Hud.ts(11) > 11)
+	check.call("texto grande: nada pasa del tope (%d → %d)" % [tope - 1, Hud.ts(tope - 1)], Hud.ts(tope - 1) <= tope)
+	check.call("texto grande: los títulos quedan igual (34 → %d)" % Hud.ts(34), Hud.ts(34) == 34)
+	check.call("texto grande: nunca achica", range(6, 40).all(func(n: int) -> bool: return Hud.ts(n) >= n))
+	Opciones.texto_grande = false
+	check.call("sin texto grande, cada tamaño queda igual", range(6, 40).all(func(n: int) -> bool: return Hud.ts(n) == n))
+	Opciones.texto_grande = true
 	Opciones.solo_lectura = true
 	Opciones.escala = 0.8
 	Opciones.guardar(PRUEBA)

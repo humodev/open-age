@@ -19,6 +19,8 @@ const AUTO_MIN := 0.85
 const MIN_LOGICO := Vector2(1280, 720)
 
 static var escala := 0.0
+## --- texto grande --- (proceso/46) Agranda la letra de la interfaz (Hud.ts; data/interfaz.json).
+static var texto_grande := false
 static var paleta := "normal"
 static var fondo_retrato := "" # --- aldeanos por retrato --- equipo, pueblo u original; vacío: el de data/retratos.json
 static var general := 100.0
@@ -78,6 +80,7 @@ static func cargar(ruta: String = RUTA) -> void:
 	if cf.load(ruta) != OK:
 		return
 	escala = float(cf.get_value("interfaz", "escala", escala))
+	texto_grande = bool(cf.get_value("interfaz", "texto_grande", texto_grande)) # --- texto grande ---
 	paleta = str(cf.get_value("interfaz", "paleta", paleta))
 	fondo_retrato = str(cf.get_value("interfaz", "fondo_retrato", fondo_retrato))
 	barras_siempre = bool(cf.get_value("interfaz", "barras_siempre", barras_siempre))
@@ -112,6 +115,7 @@ static func guardar(ruta: String = RUTA) -> void:
 		return
 	var cf := ConfigFile.new()
 	cf.set_value("interfaz", "escala", escala)
+	cf.set_value("interfaz", "texto_grande", texto_grande) # --- texto grande ---
 	cf.set_value("interfaz", "paleta", paleta)
 	cf.set_value("interfaz", "fondo_retrato", fondo_retrato)
 	cf.set_value("interfaz", "barras_siempre", barras_siempre)
@@ -136,6 +140,7 @@ static func guardar(ruta: String = RUTA) -> void:
 
 static func restablecer() -> void:
 	escala = 0.0
+	texto_grande = false # --- texto grande ---
 	paleta = "normal"
 	fondo_retrato = ""
 	general = 100.0
@@ -185,6 +190,15 @@ static func aplicar_escala(win: Window) -> void:
 		return
 	var motor := minf(s.x / BASE.x, s.y / BASE.y)
 	win.content_scale_factor = factor(s) / motor
+
+
+## --- texto grande --- Rehace el tema del HUD (Label y botones) con el tamaño nuevo; lo que se
+## dibuja a mano (barra de arriba, panel de selección, grilla, fichas) toma Hud.ts en el cuadro siguiente.
+static func aplicar_texto(main: Node) -> void:
+	var hud: Variant = main.get("hud") if main != null else null
+	if hud is Hud and is_instance_valid(hud):
+		(hud as Hud).theme = (hud as Hud)._make_theme()
+		(hud as Hud).propagate_call("queue_redraw")
 
 
 static func aplicar_sonido(main: Node) -> void:
@@ -257,7 +271,7 @@ static func dialogo(host: Control, main: Node) -> PanelContainer:
 	tl.text = "Opciones"
 	tl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	tl.add_theme_font_override("font", Hud.font_b)
-	tl.add_theme_font_size_override("font_size", 30)
+	tl.add_theme_font_size_override("font_size", Hud.ts(30))
 	vb.add_child(tl)
 
 	var cols := HBoxContainer.new()
@@ -282,6 +296,15 @@ static func dialogo(host: Control, main: Node) -> PanelContainer:
 		escala = ESCALAS[i]
 		aplicar_escala(host.get_window()))
 	_fila(izq, "Escala de la interfaz", esc)
+	# --- texto grande --- (proceso/46) la letra crece al momento en lo que se dibuja; los
+	# paneles armados con controles (este diálogo, el menú) la toman al volver a abrirse.
+	var tg := _interruptor()
+	tg.name = "TextoGrande"
+	tg.button_pressed = texto_grande
+	tg.toggled.connect(func(on: bool) -> void:
+		texto_grande = on
+		aplicar_texto(main))
+	_fila(izq, "Texto grande", tg)
 	var pal := OptionButton.new()
 	for m in Palette.MODOS_ORDEN:
 		pal.add_item(Palette.MODOS[m]["nombre"])
@@ -371,7 +394,7 @@ static func dialogo(host: Control, main: Node) -> PanelContainer:
 
 	var nota := Label.new()
 	nota.text = "Los colores de las unidades y los edificios cambian desde la próxima partida."
-	nota.add_theme_font_size_override("font_size", 15)
+	nota.add_theme_font_size_override("font_size", Hud.ts(15))
 	nota.add_theme_color_override("font_color", Palette.UI_DIM)
 	vb.add_child(nota)
 
@@ -409,6 +432,7 @@ static func dialogo(host: Control, main: Node) -> PanelContainer:
 	rb.pressed.connect(func() -> void:
 		restablecer()
 		esc.selected = 0
+		tg.button_pressed = false # --- texto grande ---
 		pal.selected = 0
 		fondo_ret.selected = maxi(0, modos.find(Retratos.modo()))
 		barras.button_pressed = false
@@ -492,7 +516,7 @@ static func _panel_teclas() -> VBoxContainer:
 	var msg := Label.new()
 	msg.name = "Mensaje"
 	msg.text = "Clic en una tecla y apretá la nueva (Esc cancela). Mayús, Ctrl y Alt no cambian: Ctrl + grupo asigna, Alt + grupo es el marcador."
-	msg.add_theme_font_size_override("font_size", 15)
+	msg.add_theme_font_size_override("font_size", Hud.ts(15))
 	msg.add_theme_color_override("font_color", Palette.UI_DIM)
 	msg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	msg.custom_minimum_size = Vector2(1080, 0)
@@ -533,14 +557,14 @@ static func _panel_teclas() -> VBoxContainer:
 		row.add_theme_constant_override("separation", 10)
 		var l := Label.new()
 		l.text = a[1]
-		l.add_theme_font_size_override("font_size", 15)
+		l.add_theme_font_size_override("font_size", Hud.ts(15))
 		l.custom_minimum_size = Vector2(250, 0)
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(l)
 		var b := Button.new()
 		b.name = a[0]
 		b.custom_minimum_size = Vector2(96, 0)
-		b.add_theme_font_size_override("font_size", 15)
+		b.add_theme_font_size_override("font_size", Hud.ts(15))
 		var compacto := StyleBoxFlat.new()
 		compacto.bg_color = Color(1, 1, 1, 0.08)
 		compacto.set_corner_radius_all(5)
@@ -619,7 +643,7 @@ static func _seccion(vb: VBoxContainer, titulo: String) -> void:
 	var l := Label.new()
 	l.text = titulo
 	l.add_theme_font_override("font", Hud.font_b)
-	l.add_theme_font_size_override("font_size", 18)
+	l.add_theme_font_size_override("font_size", Hud.ts(18))
 	l.add_theme_color_override("font_color", Palette.UI_ACCENT)
 	if vb.get_child_count() > 0:
 		var gap := Control.new()
@@ -722,7 +746,7 @@ static func tema() -> Theme:
 	t.set_icon("unchecked", "CheckButton", interruptor(false))
 	t.set_icon("checked_disabled", "CheckButton", interruptor(true, true))
 	t.set_icon("unchecked_disabled", "CheckButton", interruptor(false, true))
-	t.default_font_size = 17
+	t.default_font_size = Hud.ts(17)
 	var btn := StyleBoxFlat.new()
 	btn.bg_color = Color(1, 1, 1, 0.08)
 	btn.set_corner_radius_all(6)
@@ -762,7 +786,7 @@ static func tema() -> Theme:
 	t.set_stylebox("grabber_area_highlight", "HSlider", fill)
 	t.set_stylebox("panel", "PopupMenu", Hud.panel_box(6))
 	t.set_font("font", "PopupMenu", Hud.font)
-	t.set_font_size("font_size", "PopupMenu", 17)
+	t.set_font_size("font_size", "PopupMenu", Hud.ts(17))
 	t.set_color("font_color", "PopupMenu", Palette.UI_TEXT)
 	t.set_color("font_hover_color", "PopupMenu", Color.WHITE)
 	return t
@@ -782,12 +806,12 @@ class Muestra:
 			var col: Color = Palette.team(i) if Palette.modo != "relativa" else [Palette.RELATIVA["yo"], Palette.RELATIVA["aliado"], Palette.RELATIVA["rival"], Palette.RELATIVA["rival"]][i]
 			var nombre: String = Palette.TEAM_NAMES[i] if Palette.modo != "relativa" else ["Vos", "Aliado", "Rival", "Rival"][i]
 			draw_rect(Rect2(x, 12, 26, 26), col)
-			draw_string(Hud.font, Vector2(x + 32, 31), nombre, HORIZONTAL_ALIGNMENT_LEFT, 74, 15, Palette.UI_TEXT)
+			draw_string(Hud.font, Vector2(x + 32, 31), nombre, HORIZONTAL_ALIGNMENT_LEFT, 74, EstadoCasilla._fit(Hud.font, nombre, Hud.ts(15), 74), Palette.UI_TEXT)
 			x += 106
 		x = 12.0
 		for k in Sim.RES_KINDS:
 			Glyphs.draw(self, k, Rect2(x, 50, 28, 28), Palette.RES[k])
-			draw_string(Hud.font, Vector2(x + 32, 70), Palette.RES_NAMES[k], HORIZONTAL_ALIGNMENT_LEFT, 74, 15, Palette.UI_TEXT)
+			draw_string(Hud.font, Vector2(x + 32, 70), Palette.RES_NAMES[k], HORIZONTAL_ALIGNMENT_LEFT, 74, EstadoCasilla._fit(Hud.font, Palette.RES_NAMES[k], Hud.ts(15), 74), Palette.UI_TEXT)
 			x += 106
 		var bw := 70.0
 		var bx := size.x - bw - 14
@@ -795,7 +819,7 @@ class Muestra:
 		draw_rect(Rect2(bx, 16, bw * 0.9, 8), Palette.UI_GOOD)
 		draw_rect(Rect2(bx, 34, bw, 8), Color(0, 0, 0, 0.5))
 		draw_rect(Rect2(bx, 34, bw * 0.2, 8), Palette.UI_BAD)
-		draw_string(Hud.font, Vector2(bx, 66), "Vida", HORIZONTAL_ALIGNMENT_LEFT, bw, 15, Palette.UI_DIM)
+		draw_string(Hud.font, Vector2(bx, 66), "Vida", HORIZONTAL_ALIGNMENT_LEFT, bw, Hud.ts(15), Palette.UI_DIM)
 
 
 # --- ronda 6 ---

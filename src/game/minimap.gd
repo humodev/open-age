@@ -264,13 +264,13 @@ func _draw_chips() -> void:
 		var on: bool = filtros.get(f[0], true)
 		draw_rect(r, Color(0, 0, 0, 0.55 if on else 0.3))
 		draw_rect(r, Color(Palette.UI_ACCENT, 0.9) if on else Color(1, 1, 1, 0.25), false, 1.0)
-		draw_string(Hud.font_b, r.position + Vector2(0, 14), f[1], HORIZONTAL_ALIGNMENT_CENTER, r.size.x, 12, Palette.UI_TEXT if on else Palette.UI_DIM)
+		draw_string(Hud.font_b, r.position + Vector2(0, 14), f[1], HORIZONTAL_ALIGNMENT_CENTER, r.size.x, Hud.ts(12), Palette.UI_TEXT if on else Palette.UI_DIM)
 		_chips.append([r, f[0]])
 		x += 23.0
 	var rt := Rect2(size.x - 28, 6, 20, 18)
 	draw_rect(rt, Color(0, 0, 0, 0.55))
 	draw_rect(rt, Color(1, 1, 1, 0.35), false, 1.0)
-	draw_string(Hud.font_b, rt.position + Vector2(0, 14), "±", HORIZONTAL_ALIGNMENT_CENTER, rt.size.x, 13, Palette.UI_TEXT)
+	draw_string(Hud.font_b, rt.position + Vector2(0, 14), "±", HORIZONTAL_ALIGNMENT_CENTER, rt.size.x, Hud.ts(13), Palette.UI_TEXT)
 	_chips.append([rt, "tamano"])
 
 
