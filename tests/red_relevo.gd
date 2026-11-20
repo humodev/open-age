@@ -95,6 +95,18 @@ func _rechazos() -> bool:
 		b.poll()
 		c.poll()
 		await process_frame
+	# La misma otra versión por la sesión: el aviso que ve el jugador en la sala (proceso/44).
+	var avisos: Array = []
+	var sd := SesionRed.nueva(self)
+	sd.aviso.connect(func(x: String) -> void: avisos.append(x))
+	sd.usar_relevo("127.0.0.1", PUERTO, a.codigo)
+	sd.unirse("", 0)
+	t = Time.get_ticks_msec()
+	while not avisos.any(func(x: String) -> bool: return x.begins_with("Tu amigo tiene otra versión")) and Time.get_ticks_msec() - t < 5000:
+		a.poll()
+		await process_frame
+	var aviso_version: String = avisos.back() if not avisos.is_empty() else ""
+	sd.cerrar()
 	RedRelevo._version = buena
 	# Un marco de 64 MB (más que --max-bytes): el relevo corta sin leerlo.
 	var g := StreamPeerTCP.new()
@@ -114,8 +126,9 @@ func _rechazos() -> bool:
 		elif mandado and st == StreamPeerTCP.STATUS_CONNECTED:
 			g.put_partial_data(PackedByteArray([0])) # escribir en un socket cerrado lo delata
 		await process_frame
+	print("relevo: aviso en la sala: «%s»" % aviso_version)
 	print("relevo: sala %s · otra versión: «%s» · código falso: «%s» · mensaje gigante cortado: %s · otra versión no se cuela: %s" % [a.codigo, b.error_relevo, c.error_relevo, cortado, not a.conectado_ahora()])
-	var ok := a.codigo.length() == 6 and b.error_relevo.contains("versión") and c.error_relevo != "" and cortado and not a.conectado_ahora()
+	var ok := a.codigo.length() == 6 and b.error_relevo.contains("versión") and aviso_version.begins_with("Tu amigo tiene otra versión") and c.error_relevo != "" and cortado and not a.conectado_ahora()
 	a.cerrar()
 	b.cerrar()
 	c.cerrar()

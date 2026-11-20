@@ -83,7 +83,8 @@ func _ready() -> void:
 	var rrow := _row(_conexion)
 	rrow.add_child(_label("Relevo", 70))
 	_relevo = _edit(_cfg_relevo(), 190)
-	_relevo.tooltip_text = "Servidor de relevo (dirección:puerto)"
+	_relevo.placeholder_text = "dirección:%d" % _cfg_relevo_puerto()
+	_relevo.tooltip_text = "Servidor de relevo (dirección:puerto). Se recuerda para la próxima vez."
 	rrow.add_child(_relevo)
 	rrow.add_child(_boton("Crear sala", _crear_relevo))
 	_codigo = _edit("", 90)
@@ -248,20 +249,65 @@ var _codigo: LineEdit
 var _codigo_sala: Label
 
 
-func _cfg_relevo() -> String:
+const CFG_RED := "user://red.cfg" # lo último que escribió este jugador (proceso/44)
+
+
+func _cfg_relevo_datos() -> Dictionary:
 	var c = JSON.parse_string(FileAccess.get_file_as_string("res://data/red.json"))
-	var r: Dictionary = (c as Dictionary).get("relevo", {}) if c is Dictionary else {}
-	return "%s:%d" % [str(r.get("servidor", "127.0.0.1")), int(r.get("puerto", 47900))]
+	return (c as Dictionary).get("relevo", {}) if c is Dictionary else {}
+
+
+func _cfg_relevo_puerto() -> int:
+	return int(_cfg_relevo_datos().get("puerto", 47900))
+
+
+## La dirección del relevo, en este orden: la última que usó el jugador (user://red.cfg),
+## relevo.txt junto al ejecutable (lo pone quien arma la versión para amigos, sin tocar data/
+## ni la versión) y relevo.servidor de data/red.json. Vacío: el jugador la escribe.
+func _cfg_relevo() -> String:
+	var cf := ConfigFile.new()
+	if cf.load(CFG_RED) == OK:
+		var g := str(cf.get_value("relevo", "direccion", "")).strip_edges()
+		if g != "":
+			return g
+	var junto := OS.get_executable_path().get_base_dir().path_join("relevo.txt")
+	if FileAccess.file_exists(junto):
+		for linea in FileAccess.get_file_as_string(junto).split("\n"):
+			var t := linea.strip_edges()
+			if t != "" and not t.begins_with("#"):
+				return t
+	var srv := str(_cfg_relevo_datos().get("servidor", "")).strip_edges()
+	return "%s:%d" % [srv, _cfg_relevo_puerto()] if srv != "" else ""
+
+
+func _guardar_relevo(dir: String) -> void:
+	var cf := ConfigFile.new()
+	cf.load(CFG_RED)
+	cf.set_value("relevo", "direccion", dir)
+	cf.save(CFG_RED)
 
 
 func _sesion_relevo(codigo: String) -> SesionRed:
-	var hp := _relevo.text.strip_edges().rsplit(":", true, 1)
+	var dir := _relevo.text.strip_edges()
+	if _auto.is_empty(): # las pruebas automáticas no pisan lo del jugador
+		_guardar_relevo(dir)
+	var hp := dir.rsplit(":", true, 1)
 	var s := _sesion()
-	s.usar_relevo(hp[0], int(hp[1]) if hp.size() > 1 and hp[1].is_valid_int() else 47900, codigo)
+	s.usar_relevo(hp[0], int(hp[1]) if hp.size() > 1 and hp[1].is_valid_int() else _cfg_relevo_puerto(), codigo)
 	return s
 
 
+func _sin_relevo() -> bool:
+	if _relevo.text.strip_edges() != "":
+		return false
+	_estado.text = "Escribí la dirección del relevo (la pasa quien armó la partida o viene en el LEEME)."
+	_relevo.grab_focus()
+	return true
+
+
 func _crear_relevo() -> void:
+	if _sin_relevo():
+		return
 	var s := _sesion_relevo("")
 	if s.crear(0) != OK:
 		_estado.text = "No se pudo conectar con el relevo %s" % _relevo.text
@@ -274,6 +320,8 @@ func _crear_relevo() -> void:
 
 
 func _unirse_relevo() -> void:
+	if _sin_relevo():
+		return
 	if _codigo.text.strip_edges().length() == 0:
 		_estado.text = "Escribí el código de la sala que te pasó el anfitrión."
 		return

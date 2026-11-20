@@ -1,0 +1,25 @@
+# Relevo y salas de Raíces como servicio de systemd (proceso/44-version-para-amigos).
+#   sudo useradd --system --no-create-home raices
+#   sudo install -D -m 644 server/relevo.py /opt/raices/relevo.py
+#   sudo install -m 644 server/raices-relevo.service /etc/systemd/system/
+#   sudo systemctl daemon-reload && sudo systemctl enable --now raices-relevo
+#   journalctl -u raices-relevo -f
+[Unit]
+Description=Relevo y salas de Raíces
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=raices
+ExecStart=/usr/bin/python3 /opt/raices/relevo.py --puerto 47900 --max-salas 200
+Restart=always
+RestartSec=2
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+MemoryMax=200M
+
+[Install]
+WantedBy=multi-user.target

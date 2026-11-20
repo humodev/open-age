@@ -660,3 +660,25 @@ a) Así *(por defecto)* · b) Otra
 
   Los hitos más cortos y la empalizada se deciden en las iteraciones, con medidas.
 - **Pedido:** «Iterá al menos dos veces, hasta que estemos cerca de un esport en cuanto a diseño». Ciclo: implementar, que los expertos revisen la competitividad, ajustar, y otra vez.
+
+## Versiones para amigos (2026-11-20, `proceso/44`)
+
+### C-102 · ¿Dónde va el relevo?
+Para jugar por internet, los dos se conectan a un relevo (`server/relevo.py`). Opciones, con los pasos en `44-version-para-amigos/guia-relevo-y-versiones.md`:
+a) En tu PC, con el puerto 47900/TCP abierto en el router: gratis, pero solo anda con la PC prendida, y si tenés CGNAT no se puede · b) Oracle Cloud Always Free: gratis y siempre prendido, pero con más vueltas para crearlo · c) Un VPS de 4–6 USD por mes (Hetzner, DigitalOcean): lo más simple y estable *(por defecto, si querés que esté siempre)*
+
+Cuando lo tengas, poné `RELEVO=host:47900` en `~/.config/raices/publicar.env`. Así los amigos solo escriben el código de la sala.
+
+**Respuesta:**
+
+### C-103 · Página de itch.io
+Para que la app de itch les actualice el juego solo, hace falta una página. Va con estos pasos: crearla en modo **Restricted** o **Draft**, correr `butler login`, poner `ITCH_TARGET=usuario/raices` en `~/.config/raices/publicar.env` y correr `tools/publicar.sh --subir`. ¿Cómo entran los amigos?
+a) Con una clave de descarga por amigo *(por defecto)* · b) Con una contraseña de página para todos · c) Nada de itch por ahora: les mando los zip a mano
+
+**Respuesta:**
+
+### C-104 · Nombre de la versión
+Hoy la versión es `AAAA.MM.DD-commit` (por ejemplo `2026.11.20-1a2b3c4`). ¿Te sirve, o preferís un número (0.1, 0.2…) que subas vos?
+a) Fecha y commit *(por defecto)* · b) Número a mano, más el commit
+
+**Respuesta:**
