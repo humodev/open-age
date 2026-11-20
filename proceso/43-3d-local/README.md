@@ -27,6 +27,13 @@ scripts (`tools/gen3d*.py`), esta carpeta con renders JPG y los GLB reducidos de
    Semilla 11 ([img/caballo_11.jpg](img/caballo_11.jpg)), «caminando, las cuatro patas
    separadas»: sirve. 54 s. Después, `POST /free` y ComfyUI apagado.
    Entradas: [img/entradas.jpg](img/entradas.jpg).
+5. **Hunyuan3D-2mini turbo** (5 pasos, octree 256, FlashVDM), las 4 piezas con
+   `tools/gen3d_correr.sh`: forma en 4–8 s, 45–100 s con la carga; VRAM 5,0 GB; RAM pico
+   8,9–9,4 GB (entra en el tope de 10). Caras crudas: aldeano 137 mil, casa 550 mil, kallanka
+   189 mil, caballo 204 mil. Vista rápida sin GPU (`tools/gen3d_vista.py`):
+   [img/crudo_hy-mini-turbo.jpg](img/crudo_hy-mini-turbo.jpg). Las formas son buenas: el
+   aldeano conserva la túnica, el cordón y los pies; la kancha, el muro bajo; la kallanka, las
+   puertas y el escudo en relieve; el caballo, las cuatro patas.
 
 ## Tropiezos
 
@@ -40,6 +47,10 @@ scripts (`tools/gen3d*.py`), esta carpeta con renders JPG y los GLB reducidos de
 - FLUX con el tope de 10 GB se trabó en el decodificado (VAE) con la RAM al tope y el swap
   lleno: sin `--cache-none`, ComfyUI guarda el T5 y FLUX en RAM a la vez. Con `--cache-none`
   la imagen sale en menos de 80 s.
+- hy3dgen 2.0 no carga con transformers 5 (cambiaron los nombres de DINOv2): se fijó
+  transformers 4.49, diffusers 0.32 y huggingface_hub 0.36.
+- En modo sin conexión, `snapshot_download` pide los `.ckpt` que no se bajaron: se apunta
+  `HY3DGEN_MODELS` a enlaces a las instantáneas (`gen3d/modelos/tencent/...`).
 - Un caballo de perfil puro tapa las patas del otro lado: para 3D hay que pedirlo caminando.
 
 ## Licencias

@@ -33,6 +33,10 @@ from pathlib import Path
 GEN3D = Path("/home/humodev/_01_Projects/gen3d")
 os.environ.setdefault("HF_HOME", str(GEN3D / "hf"))
 os.environ.setdefault("HF_HUB_OFFLINE", "1")  # todo se bajó antes con descargar.py
+# hy3dgen busca primero en HY3DGEN_MODELS/<repo>/<subcarpeta>: enlaces a las instantáneas de
+# hf/hub (gen3d/modelos/tencent/Hunyuan3D-2mini -> hf/hub/.../snapshots/<rev>), así no intenta
+# bajar los .ckpt que no hacen falta.
+os.environ.setdefault("HY3DGEN_MODELS", str(GEN3D / "modelos"))
 sys.path.insert(0, str(GEN3D / "Hunyuan3D-2"))
 sys.path.insert(0, str(GEN3D / "TripoSR"))
 
