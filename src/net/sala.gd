@@ -79,6 +79,19 @@ func _ready() -> void:
 	_puerto_unir = _edit(puerto, 90)
 	urow.add_child(_puerto_unir)
 	urow.add_child(_boton("Unirse", _unirse))
+	# --- relevo --- sin abrir puertos: por el relevo (server/relevo.py) con un código de sala
+	var rrow := _row(_conexion)
+	rrow.add_child(_label("Relevo", 70))
+	_relevo = _edit(_cfg_relevo(), 190)
+	_relevo.tooltip_text = "Servidor de relevo (dirección:puerto)"
+	rrow.add_child(_relevo)
+	rrow.add_child(_boton("Crear sala", _crear_relevo))
+	_codigo = _edit("", 90)
+	_codigo.placeholder_text = "CÓDIGO"
+	_codigo.max_length = 6
+	rrow.add_child(_codigo)
+	rrow.add_child(_boton("Unirse", _unirse_relevo))
+	# --- fin relevo ---
 
 	_estado = _label("Creá una sala o unite a la de otro.", 520)
 	_estado.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -89,6 +102,10 @@ func _ready() -> void:
 	(_juego as VBoxContainer).add_theme_constant_override("separation", 8)
 	_juego.visible = false
 	col.add_child(_juego)
+	_codigo_sala = _label("", 520) # --- relevo ---
+	_codigo_sala.add_theme_font_size_override("font_size", 20)
+	_codigo_sala.add_theme_color_override("font_color", Palette.UI_ACCENT)
+	_juego.add_child(_codigo_sala)
 	var civ_names: Array = ["Al azar"]
 	for k in _civ_keys:
 		civ_names.append(_data.civs[k].civ.get("nombre", k))
@@ -146,6 +163,7 @@ func _ready() -> void:
 ## Para probar sin tocar nada (proceso/37, «Cómo probarlo»):
 ##   --red-crear=PUERTO | --red-unirse=IP:PUERTO, --red-civ=clave, --red-color=N,
 ##   --red-terreno=clave, --red-semilla=N, --red-listo=1 (el anfitrión empieza solo).
+##   --- relevo --- --red-relevo=SERVIDOR:PUERTO con --red-relevo-crear=1 | --red-relevo-unirse=CÓDIGO.
 ## --red-salir-a, --red-shot y --red-shot-at pasan a la partida como --salir-a, --shot y --shot-at
 ## (sin el prefijo valdrían ya para la partida de fondo del menú).
 var _auto := {}
@@ -165,6 +183,17 @@ func _automatico() -> void:
 			_terreno.select(_map_keys.find(_auto["red-terreno"]) + 1)
 		_semilla.text = str(_auto.get("red-semilla", ""))
 		_crear()
+	elif _auto.has("red-relevo-crear") or _auto.has("red-relevo-unirse"): # --- relevo ---
+		if _auto.has("red-relevo"):
+			_relevo.text = str(_auto["red-relevo"])
+		if _auto.has("red-terreno"):
+			_terreno.select(_map_keys.find(_auto["red-terreno"]) + 1)
+		_semilla.text = str(_auto.get("red-semilla", ""))
+		if _auto.has("red-relevo-crear"):
+			_crear_relevo()
+		else:
+			_codigo.text = str(_auto["red-relevo-unirse"])
+			_unirse_relevo()
 	elif _auto.has("red-unirse"):
 		var ip_p := str(_auto["red-unirse"]).rsplit(":", true, 1)
 		_ip.text = ip_p[0]
@@ -211,6 +240,52 @@ func _crear() -> void:
 	_opciones() # antes que lo propio: elegir() refresca la pantalla con las opciones de la sesión
 	_mio()
 	_refrescar()
+
+
+# --- relevo ---
+var _relevo: LineEdit
+var _codigo: LineEdit
+var _codigo_sala: Label
+
+
+func _cfg_relevo() -> String:
+	var c = JSON.parse_string(FileAccess.get_file_as_string("res://data/red.json"))
+	var r: Dictionary = (c as Dictionary).get("relevo", {}) if c is Dictionary else {}
+	return "%s:%d" % [str(r.get("servidor", "127.0.0.1")), int(r.get("puerto", 47900))]
+
+
+func _sesion_relevo(codigo: String) -> SesionRed:
+	var hp := _relevo.text.strip_edges().rsplit(":", true, 1)
+	var s := _sesion()
+	s.usar_relevo(hp[0], int(hp[1]) if hp.size() > 1 and hp[1].is_valid_int() else 47900, codigo)
+	return s
+
+
+func _crear_relevo() -> void:
+	var s := _sesion_relevo("")
+	if s.crear(0) != OK:
+		_estado.text = "No se pudo conectar con el relevo %s" % _relevo.text
+		s.cerrar()
+		_s = null
+		return
+	_opciones()
+	_mio()
+	_refrescar()
+
+
+func _unirse_relevo() -> void:
+	if _codigo.text.strip_edges().length() == 0:
+		_estado.text = "Escribí el código de la sala que te pasó el anfitrión."
+		return
+	var s := _sesion_relevo(_codigo.text)
+	if s.unirse("", 0) != OK:
+		_estado.text = "No se pudo conectar con el relevo %s" % _relevo.text
+		s.cerrar()
+		_s = null
+		return
+	_mio()
+	_refrescar()
+# --- fin relevo ---
 
 
 func _unirse() -> void:
@@ -267,6 +342,9 @@ func _refrescar() -> void:
 	var abierta := _s.estado in ["sala", "conectando"]
 	_conexion.visible = not abierta
 	_juego.visible = abierta
+	var cod := _s.codigo_relevo() # --- relevo ---
+	_codigo_sala.visible = cod != ""
+	_codigo_sala.text = "Sala %s · relevo %s" % [cod, _relevo.text]
 	for i in 2:
 		var j: Dictionary = _s.sala["jugadores"][i]
 		var f: Array = _filas[i]

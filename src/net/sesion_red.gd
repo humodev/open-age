@@ -96,6 +96,41 @@ func puerto_defecto() -> int:
 	return int(cfg.get("puerto", 47800))
 
 
+# --- relevo --- (proceso/37-red/04) Cambia el transporte por el del relevo (server/relevo.py).
+## Llamar antes de crear() o unirse(). Para unirse, `codigo` es el de la sala del anfitrión.
+func usar_relevo(servidor: String, puerto: int, codigo := "") -> RedRelevo:
+	var c: Dictionary = cfg.get("relevo", {})
+	var r := RedRelevo.new()
+	r.servidor = servidor
+	r.puerto = puerto
+	r.codigo = codigo.strip_edges().to_upper()
+	r.latido_ms = int(c.get("latido_ms", 5000))
+	r.reintento_ms = int(c.get("reintento_ms", 2000))
+	r.max_bytes = transporte.max_bytes
+	r.latencia_ms = transporte.latencia_ms
+	r.vaiven_ms = transporte.vaiven_ms
+	transporte.cerrar()
+	transporte = r
+	r.conectado.connect(_al_conectar)
+	r.desconectado.connect(_al_desconectar)
+	r.codigo_listo.connect(func(cod: String) -> void:
+		if es_anfitrion() and estado == "sala":
+			_decir("Sala %s: pasale el código al rival" % cod)
+		sala_cambio.emit())
+	r.fallo.connect(func(t: String) -> void:
+		if estado != "partida":
+			estado = "nada"
+		_decir("El relevo no dejó entrar: %s" % t)
+		sala_cambio.emit())
+	return r
+
+
+## El código de la sala del relevo ("" si no hay relevo o todavía no llegó).
+func codigo_relevo() -> String:
+	return (transporte as RedRelevo).codigo if transporte is RedRelevo else ""
+# --- fin relevo ---
+
+
 func crear(puerto: int) -> Error:
 	local = 0
 	_puerto = puerto
@@ -103,7 +138,7 @@ func crear(puerto: int) -> Error:
 	var err := transporte.crear(puerto)
 	if err == OK:
 		estado = "sala"
-		_decir("Esperando rival en el puerto %d" % puerto)
+		_decir("Pidiendo sala al relevo…" if transporte is RedRelevo else "Esperando rival en el puerto %d" % puerto) # --- relevo ---
 	return err
 
 
@@ -115,7 +150,7 @@ func unirse(ip: String, puerto: int) -> Error:
 	if err == OK:
 		estado = "conectando"
 		_reintento = Time.get_ticks_msec() + int(cfg.get("espera_conexion_s", 15)) * 1000
-		_decir("Conectando con %s:%d…" % [ip, puerto])
+		_decir("Entrando a la sala %s…" % codigo_relevo() if transporte is RedRelevo else "Conectando con %s:%d…" % [ip, puerto]) # --- relevo ---
 	return err
 
 

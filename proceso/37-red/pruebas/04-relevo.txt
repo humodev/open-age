@@ -1,0 +1,36 @@
+2026-11-19 23:10:20,384 relevo en 127.0.0.1:47990 (versión exigida: la del anfitrión)
+RELEVO: escuchando en 127.0.0.1:47990
+2026-11-19 23:10:21,039 ('127.0.0.1', 39676) en la sala FBPJDK como 0 (1 salas)
+2026-11-19 23:10:21,054 ('127.0.0.1', 39686) rechazado: versión distinta de la del anfitrión: actualicen los dos al mismo commit
+2026-11-19 23:10:21,055 ('127.0.0.1', 39702) rechazado: no hay ninguna sala ZZZZZZ
+relevo: sala FBPJDK · otra versión: «versión distinta de la del anfitrión: actualicen los dos al mismo commit» · código falso: «no hay ninguna sala ZZZZZZ» · mensaje gigante cortado: true · otra versión no se cuela: true
+2026-11-19 23:10:21,076 ('127.0.0.1', 39676) dejó la sala FBPJDK
+RED: Pidiendo sala al relevo…
+2026-11-19 23:10:21,079 ('127.0.0.1', 39712) en la sala VREPCM como 0 (2 salas)
+RED: Sala VREPCM: pasale el código al rival
+anfitrión: sala VREPCM en el relevo
+RED: Entrando a la sala VREPCM…
+2026-11-19 23:10:28,645 ('127.0.0.1', 58950) en la sala VREPCM como 1 (2 salas)
+RED: Se unió un rival
+RED: ping 22 ms · retardo de entrada 3 → 2 turnos
+cliente: me caigo en el tick 400
+RED: jugador 1 · tick 400 · hashes iguales hasta el tick 350 · desincronización no · pausas { 0: 0, 1: 0 }
+2026-11-19 23:10:33,061 ('127.0.0.1', 58950) dejó la sala VREPCM
+RED: Se cortó la conexión: esperando hasta 60 s
+RED: Entrando a la sala VREPCM…
+2026-11-19 23:10:34,614 ('127.0.0.1', 58952) en la sala VREPCM como 1 (2 salas)
+RED: El rival volvió
+RED: Recuperando la partida…
+RED: Partida recuperada en el tick 402 (foto en 508 ms)
+RED: ping 522 ms · retardo de entrada 3 → 4 turnos
+RED: ping 23 ms · retardo de entrada 4 → 2 turnos
+anfitrión: tick 1200 hash 2383403676 · cliente 2383403676 · comandos por el relevo [25, 27] · retardo 3 turnos (ping 372 ms)
+cliente: tick 1200 hash 2383403676 · anfitrión 2383403676 · recuperada por foto en el tick 402
+RED: ping 37 ms · retardo de entrada 3 → 2 turnos
+RED: jugador 1 · tick 1200 · hashes iguales hasta el tick 1200 · desincronización no · pausas { 0: 0, 1: 0 }
+2026-11-19 23:10:39,859 ('127.0.0.1', 58952) dejó la sala VREPCM
+RED: Se cortó la conexión: esperando hasta 60 s
+RED: jugador 0 · tick 1200 · hashes iguales hasta el tick 1200 · desincronización no · pausas { 0: 0, 1: 0 }
+2026-11-19 23:10:40,167 ('127.0.0.1', 39712) dejó la sala VREPCM
+RELEVO: partida de 1200 ticks en 19.1 s
+RED RELEVO: OK

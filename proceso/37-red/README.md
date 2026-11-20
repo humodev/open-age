@@ -63,6 +63,7 @@ godot --path . -- --menu --abrir=red --red-unirse=127.0.0.1:47800 --red-civ=mapu
 
 ## Qué falta para jugarlo por internet
 
+- **NAT y servidor de partidas**: en parte resuelto en [04-relevo.md](04-relevo.md). Hay un relevo con salas por código (`server/relevo.py`), así que nadie abre puertos, y rechaza las versiones distintas. Faltan la perforación directa, las cuentas y el emparejamiento.
 - **NAT**: hoy el anfitrión necesita el puerto UDP abierto o redirigido en su router. Faltan: perforación de NAT (ENet no la trae; hay que hacer el intercambio de direcciones con un servidor de encuentro y mandar paquetes desde los dos lados a la vez) y un **relevo** (TURN o un servidor propio que reenvíe) para los NAT simétricos.
 - **Servidor de partidas**: un lugar donde publicar salas y encontrarlas (hoy se pasa la IP a mano), con identidad de jugador y versión del juego. Debe rechazar a quien tenga otro commit o otros `data/`. Hoy eso no se verifica: una versión distinta termina en «Desincronización».
 - **Latencia variable**: el retardo de entrada es fijo (300 ms). Por internet conviene ajustarlo según el ping medido y sincronizar el reloj de los dos, para que el más rápido no quede esperando a tirones.
