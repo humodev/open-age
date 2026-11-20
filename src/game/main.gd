@@ -1308,10 +1308,14 @@ func _maybe_shot() -> void:
 			cam.set("_zoom_target", float(c[2]))
 		if c.size() > 3:
 			cam.pitch_deg = float(c[3])
+	if _args.has("edad") and not _args.has("demo"): # --- aldeanos por retrato --- captura en esa edad
+		sim.players[local]["age"] = clampi(int(_args["edad"]), 1, 4)
 	if _args.has("select"):
+		# --select=tipo (todos) o tipo:N (los primeros N; con 1, el panel de una sola unidad)
+		var sp := (_args["select"] as String).split(":")
 		var ids: Array[int] = []
 		for e in sim.actives:
-			if e.owner == local and e.type == _args["select"]:
+			if e.owner == local and e.type == sp[0] and (sp.size() < 2 or ids.size() < int(sp[1])):
 				ids.append(e.id)
 		ctrl.select_ids(ids)
 	# --- órdenes ---
