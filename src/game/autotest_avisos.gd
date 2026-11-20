@@ -15,8 +15,15 @@ static func _hasta(m: Node, cond: Callable, max: int = 240) -> bool:
 	return cond.call()
 
 
-static func _lugar_libre(sim: Sim, cx: int, cy: int, w: int, h: int) -> Vector2i:
-	for r in range(4, 22):
+static func _lugar_libre(sim: Sim, cx: int, cy: int, w: int, h: int, sin_kind := "", lejos := 0) -> Vector2i:
+	# sin_kind: sin otro recurso de esa clase a menos de `lejos` casillas (alertas suma lo que
+	# queda en la zona: con piedra cerca, la veta de prueba no avisaba; Tawantinsuyu, de a ratos).
+	var otros: Array[SimEntity] = []
+	if sin_kind != "":
+		for e in sim.entities:
+			if e.alive and e.is_resource() and e.res_kind == sin_kind and e.amount > 0:
+				otros.append(e)
+	for r in range(4, 30):
 		for dy in range(-r, r + 1):
 			for dx in range(-r, r + 1):
 				if absi(dx) != r and absi(dy) != r:
@@ -25,7 +32,12 @@ static func _lugar_libre(sim: Sim, cx: int, cy: int, w: int, h: int) -> Vector2i
 				var ty := cy + dy
 				if tx < 2 or ty < 2 or tx + w >= sim.map.n - 2 or ty + h >= sim.map.n - 2:
 					continue
-				if sim.map.is_free_rect(tx - 1, ty - 1, w + 2, h + 2):
+				if not sim.map.is_free_rect(tx - 1, ty - 1, w + 2, h + 2):
+					continue
+				var cerca := false
+				for e in otros:
+					cerca = cerca or maxi(absi(e.tx - tx), absi(e.ty - ty)) < lejos
+				if not cerca:
 					return Vector2i(tx, ty)
 	return Vector2i(-1, -1)
 
@@ -95,7 +107,8 @@ static func correr(m: Node, check: Callable) -> void:
 			break
 	var def: Dictionary = sim.data.recursos.get(roca, {})
 	var tam: Array = def.get("tam", [1, 1])
-	var pos := _lugar_libre(sim, capital.tx, capital.ty, int(tam[0]), int(tam[1]))
+	var lejos: int = int(al.cfg.get("radio_casillas", 6)) + 2 * int(al.CELDA) + maxi(int(tam[0]), int(tam[1])) # el radio de _queda, con las celdas
+	var pos := _lugar_libre(sim, capital.tx, capital.ty, int(tam[0]), int(tam[1]), "piedra", lejos)
 	if roca == "" or pos.x < 0:
 		check.call("fluidez 4: lugar para una veta de prueba", false)
 	else:
