@@ -55,6 +55,13 @@ scripts (`tools/gen3d*.py`), esta carpeta con renders JPG y los GLB reducidos de
    ajusta por silueta (IoU 0,79–0,95). Aldeano: frente y espalda de la hoja. Edificios: la
    misma imagen para la cara opuesta (planta simétrica). Caballo: el otro costado espejado.
    Lo que no ve ninguna vista toma el color de los vértices vecinos. `img/color_*.jpg`.
+10. **En Godot** (`tools/visor_3d_local.gd`, escena aparte, sin tocar `src/sim` ni el arte del
+    juego): los GLB pintados (aldeano de 2mv, kancha, kallanka y caballo de 2mini turbo,
+    ~450 KB cada uno, textura JPG) en `assets/ui/arte/tawantinsuyu/modelos_prueba/`, junto a
+    la maqueta procedural y al GLB de hoy (Meshy), con la cámara del RTS y la escala de
+    `escala_visual` (personas a 0,75 de alto; edificios con el lado = tam − 2 × margen, sin
+    el estiramiento a `altura_min_cm`). [img/juego_rts.jpg](img/juego_rts.jpg) y
+    [img/juego_cerca.jpg](img/juego_cerca.jpg).
 
 ## Tropiezos
 
