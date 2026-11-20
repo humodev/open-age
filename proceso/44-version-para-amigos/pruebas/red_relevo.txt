@@ -1,0 +1,43 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+2026-11-20 19:11:30,377 relevo en 127.0.0.1:47990 (versión exigida: la del anfitrión)
+RELEVO: escuchando en 127.0.0.1:47990
+2026-11-20 19:11:30,687 ('127.0.0.1', 46370) en la sala BZBAJY como 0 (1 salas)
+2026-11-20 19:11:30,701 ('127.0.0.1', 46382) rechazado: versión distinta de la del anfitrión: actualicen los dos al mismo commit
+2026-11-20 19:11:30,702 ('127.0.0.1', 46390) rechazado: no hay ninguna sala ZZZZZZ
+RED: Entrando a la sala BZBAJY…
+2026-11-20 19:11:30,716 ('127.0.0.1', 46402) rechazado: versión distinta de la del anfitrión: actualicen los dos al mismo commit
+RED: Tu amigo tiene otra versión del juego: actualicen los dos a la última. La tuya es otra-version.
+relevo: aviso en la sala: «Tu amigo tiene otra versión del juego: actualicen los dos a la última. La tuya es otra-version.»
+relevo: sala BZBAJY · otra versión: «versión distinta de la del anfitrión: actualicen los dos al mismo commit» · código falso: «no hay ninguna sala ZZZZZZ» · mensaje gigante cortado: true · otra versión no se cuela: true
+2026-11-20 19:11:30,736 ('127.0.0.1', 46370) dejó la sala BZBAJY
+RED: Pidiendo sala al relevo…
+2026-11-20 19:11:30,737 ('127.0.0.1', 46424) en la sala SBVSXE como 0 (2 salas)
+RED: Sala SBVSXE: pasale el código al rival
+anfitrión: sala SBVSXE en el relevo
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+RED: Entrando a la sala SBVSXE…
+2026-11-20 19:11:34,344 ('127.0.0.1', 46430) en la sala SBVSXE como 1 (2 salas)
+RED: Se unió un rival
+RED: ping 55 ms · retardo de entrada 3 → 2 turnos
+RED: ping 12 ms · retardo de entrada 3 → 2 turnos
+cliente: me caigo en el tick 400
+RED: jugador 1 · tick 400 · hashes iguales hasta el tick 350 · desincronización no · pausas { 0: 0, 1: 0 }
+2026-11-20 19:11:36,825 ('127.0.0.1', 46430) dejó la sala SBVSXE
+RED: Se cortó la conexión: esperando hasta 60 s
+RED: Entrando a la sala SBVSXE…
+2026-11-20 19:11:38,347 ('127.0.0.1', 33596) en la sala SBVSXE como 1 (2 salas)
+RED: El rival volvió
+RED: Recuperando la partida…
+RED: Partida recuperada en el tick 402 (foto en 175 ms)
+RED: ping 177 ms · retardo de entrada 3 → 2 turnos
+cliente: tick 1200 hash 2516299682 · anfitrión 2516299682 · recuperada por foto en el tick 402
+anfitrión: tick 1200 hash 2516299682 · cliente 2516299682 · comandos por el relevo [25, 27] · retardo 2 turnos (ping 14 ms)
+RED: jugador 1 · tick 1200 · hashes iguales hasta el tick 1200 · desincronización no · pausas { 0: 0, 1: 0 }
+2026-11-20 19:11:42,720 ('127.0.0.1', 33596) dejó la sala SBVSXE
+RED: Se cortó la conexión: esperando hasta 60 s
+RED: jugador 0 · tick 1200 · hashes iguales hasta el tick 1200 · desincronización no · pausas { 0: 0, 1: 0 }
+2026-11-20 19:11:42,850 ('127.0.0.1', 46424) dejó la sala SBVSXE
+RELEVO: partida de 1200 ticks en 12.1 s
+RED RELEVO: OK

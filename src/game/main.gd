@@ -82,6 +82,10 @@ func _ready() -> void:
 	for a in OS.get_cmdline_user_args():
 		var kv := a.trim_prefix("--").split("=", true, 1)
 		_args[kv[0]] = kv[1] if kv.size() > 1 else "1"
+	if _args.has("imprimir-version"): # --- versiones --- (proceso/44: tools/publicar.sh)
+		print("VERSION: %s" % RedRelevo.version())
+		get_tree().quit()
+		return
 	_seed = int(_args.get("seed", str(randi() % 100000)))
 	speed = float(_args.get("speed", "1"))
 	_menu_mode = _args.is_empty() or _args.has("menu")

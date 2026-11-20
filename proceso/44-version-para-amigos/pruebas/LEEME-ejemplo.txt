@@ -1,0 +1,37 @@
+RAÍCES · versión de prueba 2026.11.20-8289f3b
+=====================================
+
+Gracias por probarlo. Es un juego en desarrollo: falta más de la mitad del arte
+y va a haber errores. Justamente para eso es esta versión.
+
+CÓMO ARRANCAR
+-------------
+Windows: descomprimí el zip y abrí raices.exe. Si Windows avisa «protegió su PC»,
+         tocá «Más información» y «Ejecutar de todas formas» (el juego no está firmado).
+Linux:   descomprimí el zip y abrí raices.x86_64 (si no arranca: chmod +x raices.x86_64).
+Si lo bajaste con la app de itch.io, se abre desde ahí y se actualiza solo.
+
+JUGAR CONTRA UN AMIGO POR INTERNET
+----------------------------------
+Nadie tiene que abrir puertos: los dos se conectan a un «relevo».
+1. Menú principal → Red.
+2. Fila «Relevo»: escribí la dirección del relevo.
+3. Uno toca «Crear sala» y le aparece un código de 6 letras (por ejemplo KXPBRE).
+   Se lo pasa al otro por chat.
+4. El otro escribe el código al lado del segundo botón y toca «Unirse».
+5. Cada uno elige pueblo y color, marca «Listo», y el que creó la sala empieza.
+
+Los dos tienen que tener LA MISMA versión. Si sale «Tu amigo tiene otra versión del
+juego», bajen los dos la última y vuelvan a probar.
+
+CÓMO AVISAR DE UN ERROR
+-----------------------
+Mandá por chat o por mail:
+- qué estabas haciendo y qué pasó (una captura ayuda mucho: tecla Impr Pant);
+- esta versión: 2026.11.20-8289f3b;
+- si fue en red, el código de la sala y quién la creó;
+- si se puede, la carpeta de datos del juego, que tiene la telemetría y las partidas:
+    Windows: %APPDATA%\Godot\app_userdata\Raíces
+    Linux:   ~/.local/share/godot/app_userdata/Raíces
+
+Créditos y licencias del arte, el sonido y las fuentes: carpeta «licencias».

@@ -110,7 +110,7 @@ class Relevo:
             if s is None:
                 return "no hay ninguna sala %s" % codigo
             if s.version != v:
-                return "versión distinta de la del anfitrión: actualicen los dos al mismo commit"
+                return "versión distinta de la del anfitrión: actualicen los dos a la última versión"
             if not self.libre(s, 1, hola):
                 return "la sala %s está completa" % codigo
             return s, 1

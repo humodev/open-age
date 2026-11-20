@@ -27,7 +27,8 @@ Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video,
 | Fluidez y partidas largas (`proceso/30`, `31`, `32`) | Cola de producción siempre visible y menos mensajes; repetición de producción; Mayús en orden; muro con costo; avisos por zona; selección y órdenes finas; guardar y cargar con instantáneas (un 4v4 al minuto 30 carga en 1,6 s); repeticiones con línea de tiempo; panel «Mi base»; base linda; partida a medida con 8 jugadores. Rendimiento: el 1v6 sin ticks de más de 100 ms |
 | Multijugador en red (`proceso/37`) | Prototipo 1v1 por IP: lockstep, verificación de sincronía, sala, pausas, reconexión por instantánea, caída del anfitrión, retardo según ping y validación de mensajes. Falta NAT o relevo y un servidor de partidas |
 | Aprendizaje y arte (`proceso/36`, `38`, `39`) | Lecciones en la Guía y tutorial con las mecánicas nuevas. Fuentes gratuitas de arte 3D y 2D investigadas; 21 íconos genéricos, cursores y marcos propios; 1007 prompts para generar el arte de cada pueblo y edad (proceso/39-arte-interfaz/prompts.html) |
-| H5 · Multijugador en red | Prototipo 1v1 hecho (ver arriba) |
+| Versiones para amigos (`proceso/44`) | `tools/publicar.sh [--subir]` arma, prueba y (con `--subir`) sube a itch.io las versiones de Linux y Windows, selladas con fecha y commit. Relevo con systemd y Docker, y dirección configurable en el menú. Falta: dónde va el relevo y la página de itch (C-102, C-103) |
+| H5 · Multijugador en red | Prototipo 1v1 hecho (ver arriba); relevo listo para desplegar (`proceso/44`) |
 | H6 · Acceso anticipado | Pendiente |
 
 ## Qué tiene el juego
@@ -53,6 +54,8 @@ Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video,
 | `tests/salud_ia.gd` | Cada IA en 12 minutos: edad II a tiempo, dos funciones, ejército, producción, mercado, recursos parados y madera a menos de 12 casillas del depósito |
 | `tools/viajes.gd` | Viaje medio al depósito por recurso, cada 5 minutos, y los depósitos de cada uno |
 | `--autotest` | Controles de punta a punta con eventos reales |
+| `tests/red_relevo.gd` | Dos clientes por el relevo, con el rechazo de otra versión y el aviso que ve el jugador |
+| `tools/publicar.sh` | Versión para compartir: exportación, versión igual a la del proyecto, arranque sin ventana, determinismo y relevo |
 | `tests/test_paleta.gd` | Colores de equipo, recursos y vida distinguibles con daltonismo simulado; contraste de la interfaz |
 | `tests/test_opciones.gd` | Opciones: ida y vuelta por `ConfigFile` y escala automática |
 

@@ -120,7 +120,12 @@ func usar_relevo(servidor: String, puerto: int, codigo := "") -> RedRelevo:
 	r.fallo.connect(func(t: String) -> void:
 		if estado != "partida":
 			estado = "nada"
-		_decir("El relevo no dejó entrar: %s" % t)
+		if t.contains("versión del relevo"): # --- versiones --- (proceso/44) en palabras de jugador
+			_decir("Tu versión del juego (%s) no es la que pide el relevo: bajá la última." % RedRelevo.version())
+		elif t.contains("versión"):
+			_decir("Tu amigo tiene otra versión del juego: actualicen los dos a la última. La tuya es %s." % RedRelevo.version())
+		else:
+			_decir("El relevo no dejó entrar: %s" % t)
 		sala_cambio.emit())
 	return r
 
