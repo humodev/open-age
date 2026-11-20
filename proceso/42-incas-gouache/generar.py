@@ -16,15 +16,21 @@ def disponible_gb():
 
 def reiniciar_comfyui():
     """El scope de 14 GB se llena y empieza a usar swap: las imágenes pasan de ~85 s a ~240 s.
-    Reiniciar ComfyUI (con arrancar_aislado.sh, como manda la regla de memoria) lo vuelve a 85 s."""
-    import glob, urllib.request
+    Reiniciar ComfyUI (con arrancar_aislado.sh, como manda la regla de memoria) lo vuelve a 85 s.
+    Para todos los scopes y espera a que el puerto quede libre: dos instancias juntas se pisan el puerto."""
+    import glob, socket, urllib.request
     for u in glob.glob("/sys/fs/cgroup/user.slice/user-*.slice/user@*.service/app.slice/comfyui-*.scope"):
         subprocess.run(["systemctl", "--user", "stop", os.path.basename(u)])
-    time.sleep(3)
-    subprocess.Popen(["setsid", "/mnt/games/01_Projects/comfyui/arrancar_aislado.sh"],
+    for _ in range(60):
+        with socket.socket() as so:
+            if so.connect_ex(("127.0.0.1", 8188)) != 0:
+                break
+        time.sleep(2)
+    time.sleep(15)  # que la GPU suelte la memoria del proceso anterior (si no, CUBLAS_STATUS_NOT_SUPPORTED)
+    subprocess.Popen(["/mnt/games/01_Projects/comfyui/arrancar_aislado.sh"],
                      stdout=open("/mnt/games/01_Projects/comfyui/comfyui_aislado.log", "w"), stderr=subprocess.STDOUT,
                      stdin=subprocess.DEVNULL, start_new_session=True)
-    for _ in range(100):
+    for _ in range(300):
         try:
             urllib.request.urlopen("http://127.0.0.1:8188/system_stats", timeout=2); break
         except OSError:
@@ -101,7 +107,11 @@ if __name__ == "__main__":
     for p in piezas:
         if solo and p["id"] not in solo: continue
         if p["id"] in hechos and "--rehacer" not in sys.argv: continue
-        seg = generar(p); hechos[p["id"]] = round(seg, 1)
+        try:
+            seg = generar(p)
+        except subprocess.CalledProcessError as err:  # ComfyUI se cayó o el scope lo mató: reiniciar y reintentar una vez
+            print(f"{p['id']}: falló, reinicio y reintento · {(err.stderr or b'')[-400:].decode(errors='replace')}", flush=True); reiniciar_comfyui(); seg = generar(p)
+        hechos[p["id"]] = round(seg, 1)
         json.dump(hechos, open(hechos_f, "w"), indent=0)
         pagina(piezas, hechos); print(f"{p['id']}  {seg:.0f} s", flush=True)
         nuevos = getattr(sys.modules[__name__], "_nuevos", 0) + 1; globals()["_nuevos"] = nuevos
