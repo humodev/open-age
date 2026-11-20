@@ -23,17 +23,18 @@ ESTILO_ESCENA = ("Painterly illustration for a historical strategy game, cinemat
     "atmospheric light, muted natural palette, historically grounded and respectful, no text, no logos")
 ESTILO_HOJA = ("Character reference sheet for 3D modeling, full body, standing in A-pose (arms slightly away from the body), "
     "front view and side view of the same character side by side, neutral relaxed expression, even flat studio light, "
-    "plain light grey background, no shadows on the background, no text, painterly semi-realistic style like Age of Empires IV")
+    "plain light grey background, no shadows on the background, no text, painterly semi-realistic style like Age of Empires IV, "
+    "EMPTY HANDS: holding nothing, open relaxed hands, no tools, no weapons, no shield, nothing on the back or belt (props are modeled separately)")
 # Ropa elegida por el autor para el aldeano inca (assets/ui/arte/tawantinsuyu/LEEME.md): la hoja 3D la copia.
 ALDEANO_INCA = {
-    ("f", 1): "brown wool acsu dress and plain cream lliklla shawl, long braid, simple headband, spinning wool with a drop spindle",
-    ("m", 1): "plain brown and cream knee-length unku tunic, short hair with fringe, simple llawtu headband, wooden digging stick",
+    ("f", 1): "brown wool acsu dress and plain cream lliklla shawl, long braid, simple headband",
+    ("m", 1): "plain brown and cream knee-length unku tunic, short hair with fringe, simple llawtu headband",
     ("f", 2): "dark blue acsu with red woven belt, cream lliklla with geometric border pinned with a tupu, long braid, woven headband",
-    ("m", 2): "blue unku with a red and cream tocapu band, woven llawtu headband, bronze axe, carrying bag across the chest",
-    ("f", 3): "dark blue acsu, cream lliklla with red and blue tocapu border and tupu pin, long braid, woven headband, maize basket and hoe",
-    ("m", 3): "dark unku with checkered red, blue and cream tocapu, woven headband with tassels, coiled rope on the shoulder, stone tool",
+    ("m", 2): "blue unku with a red and cream tocapu band, woven llawtu headband, woven bag across the chest",
+    ("f", 3): "dark blue acsu, cream lliklla with red and blue tocapu border and tupu pin, long braid, woven headband",
+    ("m", 3): "dark unku with checkered red, blue and cream tocapu, woven headband with tassels",
     ("f", 4): "fine dark blue acsu, richly patterned lliklla in red, ochre and cream with tupu pin, long braid, fine headband with tassels",
-    ("m", 4): "richly woven unku covered in red, blue and ochre tocapu squares, fine headband with tassels, patterned shoulder bag",
+    ("m", 4): "richly woven unku covered in red, blue and ochre tocapu squares, fine headband with tassels, patterned bag across the chest",
 }
 REGLAS = ("No religious or sacred symbols as decoration or weapons, no crosses, no temples as icons, "
     "no stereotypes, no fantasy armor, no European medieval look unless stated.")
@@ -99,7 +100,7 @@ for civ in CIVS:
                 ropa = ALDEANO_INCA.get((sexo, ed)) if (civ == "tawantinsuyu" and k == "aldeano") else None
                 que = (f"wearing exactly: {ropa}" if ropa else f"clothing and equipment of {EDAD_DESC[ed-1]} ({edades[ed-1]})")
                 add("Modelos 3D (hojas)", civ, "hoja3d", k, nombre + (f" ({'mujer' if sexo == 'f' else 'hombre'})" if sexo else ""), ed,
-                    f"{ESTILO_HOJA}. One single character: {quien + ', ' if quien else ''}{CIVILES.get(k, nombre)} of the {pueblo}, {que}. {REGLAS}",
+                    f"{ESTILO_HOJA}. One single character: {quien + ', ' if quien else ''}{"a civilian villager" if k == "aldeano" else ("a civilian trader" if k == "comerciante" else nombre)} of the {pueblo}, {que}. {REGLAS}",
                     f"assets/ui/arte/{civ}/hojas3d/{k}{suf}_e{ed}.png", "1536×1024")
     # Edificios: comunes con nombre del pueblo + propios. Uno por edad desde su edad mínima.
     edificios = {}
@@ -123,6 +124,30 @@ for civ in CIVS:
             add("Edificios", civ, "edificio", k, nombre, ed,
                 f"{ESTILO_ICONO}. Subject: the building '{nombre}' ({k}) of the {pueblo}, seen from above at three-quarter angle like an RTS building. {EDAD_DESC[ed-1]} ({edades[ed-1]}). {REGLAS}",
                 f"assets/ui/arte/{civ}/edificios/{k}_e{ed}.png", "256×256")
+    # Accesorios para el 3D: se modelan aparte y se ponen en la mano según la tarea o la unidad.
+    ESTILO_PROP = ("Prop reference for 3D modeling: a single object, isolated, shown from the side at full length, "
+        "even flat studio light, plain light grey background, no hands, no person, no text, painterly semi-realistic like Age of Empires IV")
+    HERR = {"hacha": "woodcutting axe", "pico": "mining pick", "canasta": "carrying basket for gathering", "cuchillo": "butchering knife",
+            "martillo": "building hammer or mallet", "azada": "farming hoe or foot plough", "huso": "drop spindle for spinning wool or cotton",
+            "fardo": "trader's bundle or load for the back"}
+    for h, desc in HERR.items():
+        add("Accesorios 3D", civ, "accesorio", f"herr_{h}", f"Herramienta: {h}", 1,
+            f"{ESTILO_PROP}. Object: a {desc} as used by the {pueblo}, made of local materials of the period. {REGLAS}",
+            f"assets/ui/arte/{civ}/accesorios/herr_{h}.png", "1024×1024")
+    AN = J("data/arte_animaciones.json").get("tropas", {})
+    forma = c.get("estilo", {}).get("forma", "")
+    armas = {}
+    for k in unidades:
+        d = dict(AN.get("tipos", {}).get(k, {})); d.update(AN.get("por_forma", {}).get(forma, {}).get(k, {})); d.update(AN.get("por_civ", {}).get(civ, {}).get(k, {}))
+        for campo in ("arma", "escudo", "carga"):
+            v = d.get(campo)
+            if v and v not in ("ninguno",) and (campo, v) not in armas:
+                armas[(campo, v)] = unidades[k].get("nombre", k)
+    for (campo, v), quien in armas.items():
+        que = {"arma": "weapon", "escudo": "shield", "carga": "carried load"}[campo]
+        add("Accesorios 3D", civ, "accesorio", f"{campo}_{v}", f"{que.capitalize()}: {v} ({quien})", 1,
+            f"{ESTILO_PROP}. Object: the {que} '{v}' of the {pueblo}, as carried by the {quien}, historically grounded, local materials. {REGLAS}",
+            f"assets/ui/arte/{civ}/accesorios/{campo}_{v}.png", "1024×1024")
     # Saberes propios (mejoras del pueblo) y escuela de la IV.
     for k, v in c.get("tecnologias_nuevas", {}).items():
         if not isinstance(v, dict): continue
