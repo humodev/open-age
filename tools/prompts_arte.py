@@ -48,6 +48,47 @@ PUEBLO = {
     "palmares": "Quilombo dos Palmares in Brazil (17th century): Afro-Brazilian maroon community of Bantu and Brazilian roots, cotton and palm-fiber clothing, spears, machetes and later firearms, palm-thatched mocambo houses, spiked palisades, Serra da Barriga forest",
     "ayutthaya": "Kingdom of Ayutthaya in Siam (16th-17th century): chong kraben and pha nung garments, dha swords, war elephants, brick and white stucco buildings with tiered orange-tiled roofs (secular, not temples), canals (khlong), river city",
 }
+# Cómo se ve cada edad, por pueblo: lo concreto que tiene que cambiar en la ropa, el equipo y los
+# materiales (va AL PRINCIPIO del prompt: FLUX atiende más a lo primero). Pedido del autor: «las
+# unidades no tienen la diferencia que deberían tener entre edades».
+EDAD_PUEBLO = {
+    "tawantinsuyu": [
+        "undyed brown and cream llama wool, plain weave with no patterns, wooden and stone tools, rope sandals",
+        "wool dyed red and dark blue with a single woven band of tocapu, bronze-tipped tools, woven bag",
+        "finely woven cumbi cloth with many tocapu squares in red, blue and ochre, bronze pins, quilted cotton armor for soldiers",
+        "the finest cumbi cloth fully covered in tocapu, tasselled headband, metal disc ornaments for elite soldiers, deep red, ochre and black",
+    ],
+    "mapuches": [
+        "undyed grey and brown wool poncho with no patterns, leather sandals, wooden weapons",
+        "poncho dyed dark blue and black with simple stepped patterns, woven trarilonko headband",
+        "richly woven poncho with bold geometric patterns in red, black and white, hardened cowhide armor for soldiers",
+        "fine poncho with bold patterns, silver ornaments for women, riders with long cane lances and hide armor",
+    ],
+    "guaranies": [
+        "plain undyed cotton tipoy, red and black body paint, simple feather headband for warriors, wooden tools",
+        "cotton tipoy with woven bands, more feather ornaments, bone and hardwood tools",
+        "woven cotton clothing in white and earth tones from the mission towns, iron tools",
+        "dyed cotton clothing of the mission towns, iron weapons and militia equipment",
+    ],
+    "etiopia": [
+        "plain undyed cotton shamma cloth, simple hide shield, wooden spear",
+        "white shamma with a narrow colored woven border, iron spearheads",
+        "fine shamma with wide colorful woven borders, lion-mane or leopard-skin capes for warriors, round hide shields with metal studs",
+        "court dress of Gondar, embroidered cloaks, chain mail for elite soldiers, some firearms",
+    ],
+    "palmares": [
+        "simple undyed cotton and palm-fiber clothing, wooden tools, people who just escaped",
+        "cloth dyed indigo and ochre, bead necklaces, iron tools from the community forge",
+        "well-made wrapped cloth clothing with beads, iron spears and machetes",
+        "organized defenders in mixed clothing, firearms, powder horns and leather belts",
+    ],
+    "ayutthaya": [
+        "simple undyed cotton chong kraben, bare chest for men, palm-leaf hat for workers",
+        "cotton chong kraben dyed in dark colors with a sash, bronze tools",
+        "patterned silk sash and fine cloth, red cotton jackets for soldiers, some metal helmets",
+        "fine silks with gold-thread patterns, elite guard uniforms, some firearms",
+    ],
+}
 EDAD_DESC = [
     "Age I: early settlement, simple local materials, modest and practical",
     "Age II: growing town, better crafts and organization",
@@ -83,11 +124,11 @@ for civ in CIVS:
                 # Un hombre y una mujer por edad: el aldeano y el comerciante son de todos.
                 for sexo, quien in (("m", "a man"), ("f", "a woman")):
                     add("Unidades", civ, "retrato", k, f"{nombre} ({'mujer' if sexo == 'f' else 'hombre'})", ed,
-                        f"{ESTILO_RETRATO}. One single person: {quien}, {CIVILES[k]}, {nombre} of the {pueblo}. {EDAD_DESC[ed-1]} ({edades[ed-1]}): clothing and tools match this age. {REGLAS}",
+                        f"Age {ed} of 4 look: {EDAD_PUEBLO[civ][ed-1]}. {ESTILO_RETRATO}. One single person: {quien}, {CIVILES[k]}, {nombre} of the {pueblo}. {EDAD_DESC[ed-1]} ({edades[ed-1]}): clothing and tools match this age. {REGLAS}",
                         f"assets/ui/arte/{civ}/retratos/{k}_{sexo}_e{ed}.png", "512×512")
                 continue
             add("Unidades", civ, "retrato", k, nombre, ed,
-                f"{ESTILO_RETRATO}. One single person: {nombre} ({k}) of the {pueblo}. {EDAD_DESC[ed-1]} ({edades[ed-1]}): clothing and equipment match this age. {REGLAS}",
+                f"Age {ed} of 4 look: {EDAD_PUEBLO[civ][ed-1]}. {ESTILO_RETRATO}. One single person: {nombre} ({k}) of the {pueblo}. {EDAD_DESC[ed-1]} ({edades[ed-1]}): clothing and equipment match this age. {REGLAS}",
                 f"assets/ui/arte/{civ}/retratos/{k}_e{ed}.png", "512×512")
         sexos = (("m", "a man"), ("f", "a woman")) if k in CIVILES else (("", ""),)
         for sexo, quien in sexos:
@@ -98,7 +139,7 @@ for civ in CIVS:
             # Hoja de referencia para el modelo 3D (imagen a 3D y rigging en Mixamo), una por edad.
             for ed in range(e0, 5):
                 ropa = ALDEANO_INCA.get((sexo, ed)) if (civ == "tawantinsuyu" and k == "aldeano") else None
-                que = (f"wearing exactly: {ropa}" if ropa else f"clothing and equipment of {EDAD_DESC[ed-1]} ({edades[ed-1]})")
+                que = (f"wearing exactly: {ropa}" if ropa else f"clothing and equipment of age {ed} of 4: {EDAD_PUEBLO[civ][ed-1]}")
                 add("Modelos 3D (hojas)", civ, "hoja3d", k, nombre + (f" ({'mujer' if sexo == 'f' else 'hombre'})" if sexo else ""), ed,
                     f"{ESTILO_HOJA}. One single character: {quien + ', ' if quien else ''}{"a civilian villager" if k == "aldeano" else ("a civilian trader" if k == "comerciante" else nombre)} of the {pueblo}, {que}. {REGLAS}",
                     f"assets/ui/arte/{civ}/hojas3d/{k}{suf}_e{ed}.png", "1536×1024")
@@ -253,6 +294,8 @@ its.forEach(it=>{{const v=(!c||it.dataset.civ===c)&&(!g||it.dataset.grupo===g)&&
 cuenta.textContent=n+' visibles · '+d+' hechos de '+its.length}}
 [civ,gr,q,ocultar].forEach(x=>x.oninput=filtrar);filtrar();
 </script></body></html>"""
+json.dump({i["archivo"]: [[i["nombre"], civs_nombres.get(i["civ"], i["civ"]), i["grupo"], f"Edad {i['edad']}", i["tam"]], i["prompt"]] for i in items},
+          open("/mnt/games/01_Projects/comfyui/prompts_todos.json", "w", encoding="utf-8"), ensure_ascii=False, indent=0) if os.path.isdir("/mnt/games/01_Projects/comfyui") else None
 out = os.path.join(R, "proceso/39-arte-interfaz/prompts.html")
 open(out, "w", encoding="utf-8").write(doc)
 from collections import Counter
