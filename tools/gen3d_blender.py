@@ -1,9 +1,11 @@
 """Limpia, reduce y fotografía un GLB generado (proceso/43-3d-local).
 
-    blender --background --python tools/gen3d_blender.py -- entrada.glb salida.glb caras render_prefijo
+    blender --background --python tools/gen3d_blender.py -- entrada.glb salida.glb caras render_prefijo [suelo_pct]
 
 Con caras = 0 solo saca los renders (salida se ignora).
 
+- Con suelo_pct > 0 (proceso/47), corta lo que quede por debajo de ese porcentaje del alto (la
+  losa o la sombra que Hunyuan a veces arma bajo la pieza) y cierra el corte.
 - Suelda vértices, borra piezas sueltas chicas y diezma hasta `caras` triángulos.
 - Apoya el modelo en el suelo (y = 0), lo centra en x/z y lo deja de 1 de alto (el juego lo
   escala solo: WorldView._model_for).
@@ -20,6 +22,7 @@ from mathutils import Vector
 
 argv = sys.argv[sys.argv.index("--") + 1:]
 src, dst, caras, prefijo = argv[0], argv[1], int(argv[2]), argv[3]
+suelo_pct = float(argv[4]) if len(argv) > 4 else 0.0
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=src)
@@ -43,6 +46,15 @@ if caras > 0:
     bm = bmesh.new()
     bm.from_mesh(ob.data)
     bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=size * 1e-4)
+    if suelo_pct > 0:
+        zs = [v.co.z for v in bm.verts]
+        corte = min(zs) + (max(zs) - min(zs)) * suelo_pct / 100.0
+        geom = bm.verts[:] + bm.edges[:] + bm.faces[:]
+        r = bmesh.ops.bisect_plane(bm, geom=geom, plane_co=(0, 0, corte), plane_no=(0, 0, 1), clear_inner=True)
+        borde = [e for e in r["geom_cut"] if isinstance(e, bmesh.types.BMEdge)]
+        if borde:
+            bmesh.ops.holes_fill(bm, edges=borde, sides=0)
+        print(f"SUELO cortado a {suelo_pct} % del alto")
     # Piezas sueltas de menos del 0,5 % de las caras: ruido del marching cubes.
     islas, vistos = [], set()
     for f in bm.faces:
@@ -60,8 +72,13 @@ if caras > 0:
                         pila.append(h)
         islas.append(isla)
     total = len(bm.faces)
+    zs = [v.co.z for v in bm.verts]
+    z0, alto0 = min(zs), (max(zs) - min(zs)) or 1.0
     for isla in islas:
-        if len(isla) < total * 0.005:
+        zi = [v.co.z for f in isla for v in f.verts]
+        # Chica, o una lámina chata pegada al suelo (sombra o losa que quedó suelta tras el corte).
+        chata = suelo_pct > 0 and max(zi) - min(zi) < 0.04 * alto0 and min(zi) - z0 < 0.08 * alto0
+        if len(isla) < total * 0.005 or (chata and len(isla) < total * 0.2):
             bmesh.ops.delete(bm, geom=isla, context="FACES")
     bmesh.ops.triangulate(bm, faces=bm.faces[:])
     bm.to_mesh(ob.data)

@@ -1,0 +1,67 @@
+{
+ "_doc": "Piezas del pipeline 3D local (proceso/47-pipeline-3d; tools/gen3d_pipeline.py). Solo herramientas: el juego no lee este archivo. Cada pieza: tipo (persona, edificio o animal); referencia: imagen (PNG ya hecho; si falta o con --regenerar-imagen se pinta con FLUX desde la receta: prompt, semilla, ancho, alto) y vistas (front y, si hay, back: recorte [x0, y0, x1, y1] en fracción de la imagen, umbral del alfa por color de fondo (28) y margen alrededor (0,1)); forma: modelo de Hunyuan (hy-mini-turbo con una vista, hy-mv-turbo con frente y espalda), semilla y octree; textura: paint (Hunyuan3D-Paint), proyector (tools/gen3d_color.py) o auto (paint si está compilado); caras: tope de triángulos; suelo_pct: corta lo que quede por debajo de ese porcentaje del alto (la base o la sombra que Hunyuan a veces arma como una losa) y cierra el corte; rig: humano (19 huesos KayKit) o cuadrupedo (con ciclos de caminar y quieto); tamano: persona por FIGURE_H y escala_visual.unidad_pct, edificio por la huella (edificios.json → tam, menos 2 × margen_cm) y estirado hasta escala_visual.altura_min_cm de su categoria con el tope estirar_modelo_max_pct, animal por alto_rel_persona; destino: GLB final, relativo al repo. Los modelos van a assets/generados/modelos/local/: para usarlos en el juego basta con poner el nombre «local/<archivo sin .glb>» en data/civs/<pueblo>.json → estilo.modelos.",
+ "comun": {
+  "estilo": "Gouache painting for a historical strategy game, flat opaque color shapes, simple graphic forms, matte paper texture, limited palette.",
+  "persona_alto_casillas": 1.25,
+  "textura_px": 1024
+ },
+ "piezas": {
+  "aldeano": {
+   "tipo": "persona",
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/incas_gouache/hoja_aldeano_e1_31.png",
+    "receta": {"semilla": 31, "ancho": 1152, "alto": 768, "prompt": "{estilo} Character turnaround reference sheet for 3D modeling: the same person shown side by side in front view and in side profile view, the same headwear and clothing in every view, standing in A-pose with arms held straight and out at 45 degrees from the body, open empty hands. The tunic hangs straight and loose from the shoulders. Clothing: a plain solid bright red sleeveless wool tunic, one flat uniform red color, knee-length; bare head; barefoot. The person is a grown adult Native American Quechua man from the Peruvian Andes in his early thirties, with a mature face: a very broad face, strong square jaw, defined high cheekbones, a large hooked aquiline nose, dark eyes, faint expression lines around the eyes, weathered copper-brown skin, dark brown lips the same tone as his skin, thick straight black hair cut short at the ears, a thick adult neck, broad shoulders and adult body proportions. Natural undyed tones for everything except the red tunic. Even flat studio light, plain light grey background."},
+    "vistas": {"front": {"recorte": [0, 0, 0.5, 1], "umbral": 18}, "back": {"recorte": [0.5, 0, 1, 1], "umbral": 18}}
+   },
+   "forma": {"modelo": "hy-mv-turbo", "semilla": 12345, "octree": 256},
+   "textura": "auto",
+   "caras": 4000,
+   "rig": "humano",
+   "destino": "assets/generados/modelos/local/tawantinsuyu_aldeano.glb"
+  },
+  "casa": {
+   "tipo": "edificio",
+   "edificio": "casa",
+   "categoria": "casa",
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/incas_gouache/casa_7.png",
+    "receta": {"semilla": 7, "ancho": 768, "alto": 768, "prompt": "{estilo} A small one-room fieldstone house with a steep thatched gable roof and one trapezoidal doorway, a low stone wall around a small yard. Single building, three-quarter view from above like a strategy game icon, the whole building visible and centered, plain flat pale background. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep gable roofs thatched with golden ichu grass."},
+    "vistas": {"front": {"margen": 0.06}}
+   },
+   "forma": {"modelo": "hy-mini-turbo", "semilla": 12345, "octree": 256},
+   "textura": "auto",
+   "caras": 4000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_casa.glb"
+  },
+  "kallanka": {
+   "tipo": "edificio",
+   "edificio": "cuartel",
+   "categoria": "produccion",
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/incas_gouache/cuartel_7.png",
+    "receta": {"semilla": 7, "ancho": 768, "alto": 768, "prompt": "{estilo} A long rectangular hall of fieldstone with many trapezoidal doorways along its long side and a steep thatched gable roof; long wooden spears lean against the wall and square cloth-covered shields hang beside the doors. Single building, three-quarter view from above like a strategy game icon, the whole building visible and centered, plain flat pale background. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep gable roofs thatched with golden ichu grass."},
+    "vistas": {"front": {"margen": 0.06}}
+   },
+   "forma": {"modelo": "hy-mini-turbo", "semilla": 12345, "octree": 256},
+   "textura": "auto",
+   "caras": 5000,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_kallanka.glb"
+  },
+  "caballo": {
+   "tipo": "animal",
+   "alto_rel_persona": 1.05,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/gen3d/caballo_11.png",
+    "receta": {"semilla": 11, "ancho": 1024, "alto": 768, "prompt": "{estilo} Reference for 3D modeling: one single Criollo horse, a sturdy compact South American horse with a short back, a thick neck and strong legs, seen from the side in profile, the whole body visible from the ears to the hooves and the tail, walking slowly so all four legs are clearly visible and separated, the near legs and the far legs apart, head up, no saddle, no bridle, no rider. Bay coat, warm reddish brown, with black mane, black tail and black lower legs. Even flat studio light, plain light grey background, no shadow on the ground."},
+    "vistas": {"front": {"umbral": 22, "margen": 0.06}}
+   },
+   "forma": {"modelo": "hy-mini-turbo", "semilla": 12345, "octree": 256},
+   "textura": "auto",
+   "caras": 4000,
+   "suelo_pct": 4,
+   "rig": "cuadrupedo",
+   "destino": "assets/generados/modelos/local/caballo_criollo.glb"
+  }
+ }
+}

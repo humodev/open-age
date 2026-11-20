@@ -68,5 +68,19 @@ def main(dst: Path) -> None:
         print(p)
 
 
+def vista(src: str, dst: str, recorte: list, umbral: float, margen: float) -> None:
+    """Una vista para el pipeline (tools/gen3d_pipeline.py): recorte en fracción de la imagen,
+    alfa por el color del fondo y cuadrado con el objeto centrado."""
+    im = Image.open(src).convert("RGB")
+    w, h = im.size
+    x0, y0, x1, y1 = recorte
+    im = im.crop((int(x0 * w), int(y0 * h), int(x1 * w), int(y1 * h)))
+    cuadrar(alfa_por_fondo(im, int(umbral)), margen).save(dst)
+
+
 if __name__ == "__main__":
-    main(Path(sys.argv[1]))
+    if sys.argv[1] == "--vista":
+        a = sys.argv[2:]
+        vista(a[0], a[1], [float(x) for x in a[2:6]], float(a[6]), float(a[7]))
+    else:
+        main(Path(sys.argv[1]))
