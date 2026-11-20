@@ -36,6 +36,11 @@ extends SceneTree
 ##   --reaccion=MS  --- esport 3b --- las órdenes de micro del bando A (kitear, escalonar, foco,
 ##                 esquivar) salen MS milisegundos después de decidirse, como un jugador que
 ##                 reacciona; mientras una unidad tiene una orden en camino, no decide otra
+##   --esquive=SPEC --- ronda 9 --- en lugar de la matriz: SPEC es "A|B" (por defecto
+##                 "aldeano:5|catapulta:1"); B tira al grupo A, que no pelea, durante 60 s (la vida de A
+##                 se repone cada tick para contar todo el daño). Mide el daño que recibe A quieto,
+##                 moviéndose de costado sin parar (mover) y esquivando (esquivar, con --reaccion), y
+##                 cuánto salva cada uno contra el quieto. Usa la edad que se pida (--edad=3 para la catapulta).
 ## Formación (opcional): bloque, linea, abierta, columna (la del grupo de AoE4, data/reglas.json).
 
 const O := SimEntity.Order
@@ -58,7 +63,12 @@ func _init() -> void:
 	var patch_path := ""
 	var cases_arg := ""
 	var only_set := ""
+	var esquive := ""
 	for a in OS.get_cmdline_user_args():
+		if a == "--esquive":
+			esquive = "aldeano:5|catapulta:1"
+		elif a.begins_with("--esquive="):
+			esquive = a.substr(10)
 		if a.begins_with("--civs="):
 			civs = Array(a.substr(7).split(","))
 			while civs.size() < 2:
@@ -88,6 +98,10 @@ func _init() -> void:
 		var d: Dictionary = data.for_civ(civs[0]).unidades.get(t, {})
 		if not d.is_empty():
 			print("# %s: pv %d, ataque %d, armadura %d/%d, alcance %d, cadencia %d, velocidad %d, costo %s" % [t, d["pv"], d["ataque"], d.get("armadura", 0), d.get("armadura_distancia", d.get("armadura", 0)), d["alcance"], d["cadencia_ms"], d["velocidad"], JSON.stringify(d.get("costo", {}))])
+	if esquive != "":
+		_dodge_table(esquive)
+		quit()
+		return
 	var cases: Array = []
 	if cases_arg != "":
 		for c in cases_arg.split(";"):
@@ -400,6 +414,112 @@ func _dodge(s: Sim, ids: Array, goal: Vector2i, dodging: Dictionary) -> void:
 				dodging[id] = int(sh["tick"])
 				break
 # --- fin esport 1a ---
+
+
+# --- ronda 9 --- cuánto rinde esquivar el asedio de área
+const DODGE_TICKS := 600
+
+func _dodge_table(spec: String) -> void:
+	var parts := spec.split("|")
+	print("# esquive · A %s · B %s · %d s · reacción %d ms" % [parts[0], parts[1], DODGE_TICKS / 10, reaction_ms])
+	print("modo | daño recibido (prom. %d semillas) | tiros | salva" % variants)
+	var base := 0.0
+	for mode in ["quieto", "mover", "esquivar"]:
+		var dmg := 0
+		var shots := 0
+		for v in variants:
+			var r := _dodge_run(parts[0], parts[1], mode, v)
+			dmg += r[0]
+			shots += r[1]
+		var avg := float(dmg) / variants
+		if mode == "quieto":
+			base = avg
+		print("%s | %.0f | %.1f | %s" % [mode, avg, float(shots) / variants, "-" if mode == "quieto" else "%d %%" % roundi(100.0 * (1.0 - avg / maxf(1.0, base)))])
+
+
+func _dodge_run(spec_a: String, spec_b: String, mode: String, v: int) -> Array:
+	var s := Sim.new(3 + v, 2, data, {"civs": civs, "terreno": "llano", "sin_sitios": true})
+	s.players[0]["age"] = age
+	s.players[1]["age"] = age
+	var cx := s.map.n / 2
+	var a := []
+	for g in _parse(spec_a):
+		a += _spawn(s, g[0], 0, g[1], cx - 3, cx + SHIFTS[v])
+	var b := []
+	for g in _parse(spec_b):
+		b += _spawn(s, g[0], 1, g[1], cx + 3, cx)
+	var home := {}
+	var hp := {}
+	for id in a:
+		var u: SimEntity = s.by_id[id]
+		home[id] = Vector2i(u.x, u.y)
+		hp[id] = u.hp
+	var first: SimEntity = s.by_id[a[0]]
+	s.push_command({"t": "target", "player": 1, "ids": b, "target": first.id})
+	var dodging := {}
+	var side := {}
+	_pending.clear()
+	var dmg := 0
+	var shots := 0
+	for t in DODGE_TICKS:
+		if mode == "mover" and t % 2 == 0:
+			for id in a:
+				var u: SimEntity = s.by_id[id]
+				if u.alive and u.order == O.IDLE:
+					side[id] = -int(side.get(id, -1))
+					var h: Vector2i = home[id]
+					s.push_command({"t": "move", "player": 0, "ids": [id], "x": h.x, "y": h.y + 2000 * int(side[id]), "suelto": true})
+		elif mode == "esquivar" and t % 2 == 0 and t > 0:
+			_dodge_home(s, a, home, dodging)
+		_flush(s)
+		s.step()
+		for ev in s.events:
+			if ev.get("t", "") == "hit" and hp.has(ev.get("b", -1)) and s.by_id.has(ev["a"]) and b.has(ev["a"]):
+				dmg += int(ev["dmg"])
+			elif ev.get("t", "") == "tiro" and b.has(ev["a"]):
+				shots += 1
+		for id in a:
+			var u: SimEntity = s.by_id[id]
+			if u.alive:
+				u.hp = hp[id]
+		# Si el blanco se alejó, que B vuelva a apuntarle (como un jugador que sigue tirando).
+		for bid in b:
+			var c: SimEntity = s.by_id[bid]
+			if c.alive and c.order == O.IDLE:
+				s.push_command({"t": "target", "player": 1, "ids": [bid], "target": first.id})
+	return [dmg, shots]
+
+
+## Como _dodge, pero vuelve a su lugar (no al ataque) cuando cae el tiro.
+func _dodge_home(s: Sim, ids: Array, home: Dictionary, dodging: Dictionary) -> void:
+	for id in ids:
+		var u: SimEntity = s.by_id.get(id)
+		if u == null or not u.alive:
+			continue
+		if dodging.has(id):
+			if s.tick > int(dodging[id]):
+				dodging.erase(id)
+				var h: Vector2i = home[id]
+				_cmd(s, {"t": "move", "player": 0, "ids": [id], "x": h.x, "y": h.y, "suelto": true})
+			continue
+		for sh in s.shells:
+			var src: SimEntity = sh["a"]
+			if src.owner == u.owner:
+				continue
+			var r := int(src.def["area"])
+			var px := int(sh["x"])
+			var py := int(sh["y"])
+			if Sim.dist(u.x, u.y, px, py) <= r + 300:
+				var dx := u.x - px
+				var dy := u.y - py
+				if dx == 0 and dy == 0:
+					dy = 1
+				var l := maxi(1, int(sqrt(float(dx * dx + dy * dy))))
+				var go := r + 600
+				_cmd(s, {"t": "move", "player": 0, "ids": [id], "x": px + dx * go / l, "y": py + dy * go / l, "suelto": true})
+				dodging[id] = int(sh["tick"])
+				break
+# --- fin ronda 9 ---
 
 
 ## Fuego concentrado: los de distancia, al enemigo con menos vida que esté a su alcance.
