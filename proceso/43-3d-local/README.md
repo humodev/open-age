@@ -45,6 +45,16 @@ scripts (`tools/gen3d*.py`), esta carpeta con renders JPG y los GLB reducidos de
    isométrica del ícono y se arman con la planta torcida.
    [img/crudo_triposr.jpg](img/crudo_triposr.jpg).
    Mediciones de cada corrida en [medidas/](medidas/).
+8. **Blender 5.2 headless** (`tools/gen3d_blender.py`): suelda, borra piezas sueltas, diezma
+   (aldeano y caballo 4000 caras, kancha 4000, kallanka 5000), apoya en el suelo, deja 1 de
+   alto y exporta GLB (~100 KB). 1–10 s por pieza. Renders de frente, costado, tres cuartos y
+   cámara del RTS (pitch 54°, fov 30): `img/gris_*.jpg`. A 4000 caras no se pierde nada que
+   se vea a la escala del juego.
+9. **Color sin Hunyuan-Paint** (`tools/gen3d_color.py`, solo CPU, 3–20 s): atlas UV con xatlas
+   y textura de 512 px proyectando la imagen de entrada con una cámara ortográfica que se
+   ajusta por silueta (IoU 0,79–0,95). Aldeano: frente y espalda de la hoja. Edificios: la
+   misma imagen para la cara opuesta (planta simétrica). Caballo: el otro costado espejado.
+   Lo que no ve ninguna vista toma el color de los vértices vecinos. `img/color_*.jpg`.
 
 ## Tropiezos
 
@@ -69,6 +79,11 @@ scripts (`tools/gen3d*.py`), esta carpeta con renders JPG y los GLB reducidos de
   salían acostadas. Corregido ([triposr_torchmcubes.py](triposr_torchmcubes.py)).
 - Hay otro proceso del autor (perfil_sim de Godot, en su propio scope) corriendo a la vez:
   `tools/gen3d_correr.sh` espera a tener 12 GB disponibles antes de cada corrida.
+- **Hunyuan3D-Paint** (textura) necesita compilar `custom_rasterizer` con nvcc. El paquete
+  pip `nvidia-cuda-nvcc-cu12` trae solo `ptxas`, no `nvcc`, y el gcc 16 del sistema es más
+  nuevo que el que acepta CUDA 12.8. Instalar el toolkit (paquete `cuda` de CachyOS o un
+  entorno conda con `cuda-nvcc` y `gxx` 13) quedó para el autor: no se instaló nada fuera
+  de gen3d. Por eso el color se proyecta con `tools/gen3d_color.py`.
 - Un caballo de perfil puro tapa las patas del otro lado: para 3D hay que pedirlo caminando.
 
 ## Licencias
