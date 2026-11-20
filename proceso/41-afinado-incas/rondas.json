@@ -1,6 +1,33 @@
 {
- "intro": "Equipo: Artista (legibilidad, silueta, edades), Historiadora andina (fuentes), Experta en prompting (FLUX/SDXL). Máximo 4 imágenes por ronda. La más nueva arriba. Pieza actual: hondero, retrato en 4 edades.",
+ "intro": "Equipo: Artista (legibilidad, silueta, edades), Historiadora andina (fuentes), Experta en prompting (FLUX/SDXL). Máximo 4 imágenes por ronda; la más nueva arriba. Hondero completo: retrato en 4 edades (r01-r20), ícono (i01-i07) y hoja 3D (h01-h04). FALTA QUE EL AUTOR ELIJA LA DIRECCIÓN DE ESTILO: A óleo de caballete, B estilizado, C gouache, lado a lado en las rondas 9, 11 y 13. El equipo siguió con B; cambiar de dirección es cambiar la primera frase del prompt.",
  "recetas": [
+  {
+   "pieza": "Ícono y hoja 3D del hondero",
+   "estado": "Ganadores: ícono ronda i07 (semilla 31); hojas h03_1, h03_2, h04_1, h03_4.",
+   "imgs": [
+    {
+     "f": "i07_31_rec.jpg",
+     "t": "ícono"
+    },
+    {
+     "f": "h03_1.jpg",
+     "t": "hoja I"
+    },
+    {
+     "f": "h03_2.jpg",
+     "t": "hoja II"
+    },
+    {
+     "f": "h04_1.jpg",
+     "t": "hoja III"
+    },
+    {
+     "f": "h03_4.jpg",
+     "t": "hoja IV"
+    }
+   ],
+   "texto": "ÍCONO: FLUX schnell, 4 pasos, 1024×1024, semilla 31. Estilo (igual al retrato) → cara → ACCIÓN con una comparación que el modelo conozca («whirls his sling above his head like a lasso … a woven pouch holding a big round grey stone at the far end of the loop») → ropa de la edad II → persona con «realistic adult proportions with long legs» → «Full body from head to feet, three-quarter view, plain flat light grey background». Después: recorte automático al cuerpo con 8 % de margen y --sin-fondo.\nEvitar: «game unit icon» (render 3D), brazo atrás + brazo adelante (sale arco), «big» con piedras sueltas (bolas de boliche).\n\nHOJA 3D: FLUX schnell, 4 pasos, 1344×896, semilla 31. Estilo → «Character turnaround reference sheet for 3D modeling: the same man shown side by side in front view and in side profile view, the same helmet or headband on his head in every view, identical clothing in every view, standing in A-pose … open empty hands» → «Clothing: …» de la edad → «The tunic hangs straight and loose from the shoulders» → persona → «Even flat studio light, plain light grey background». Sale con 3 o 4 vistas (frente, tres cuartos, perfil, a veces espalda).\nPendiente: FLUX agrega un cinturón de soga y deja las palmas hacia arriba."
+  },
   {
    "pieza": "Retrato del hondero (4 edades)",
    "estado": "Ganadora: ronda 20, dirección B (estilizado). El autor puede cambiar a A u C.",
@@ -607,6 +634,325 @@
     "Prompt edad 3": "Stylized digital painting in the style of Age of Empires IV unit portraits, simplified shapes, bold clear silhouette, few large brushstrokes, little fine detail. A smooth hairless face with plucked eyebrows-clean skin, like the Inca men who plucked their facial hair with tweezers. A slinger raises his right hand beside his face holding up a big round grey-brown river stone the size of an egg, a small striped woven cloth shoulder bag full of stones hangs at his hip, and a braided wool sling with tasseled ends is draped across his shoulders. He wears a round tan helmet of woven cane and reeds and a thick white quilted cotton armor tunic stitched in a diamond quilting pattern, sleeveless, with red trim, covering the whole torso; the sling is red and blue. Native American man of the Andes, Quechua, about 30 years old, smooth face, broad cheekbones, deep-set dark eyes, brown skin, straight black hair cut in a fringe, bare brown arms. Chest-up portrait, dark backdrop",
     "Prompt edad 4": "Stylized digital painting in the style of Age of Empires IV unit portraits, simplified shapes, bold clear silhouette, few large brushstrokes, little fine detail. A smooth hairless face with plucked eyebrows-clean skin, like the Inca men who plucked their facial hair with tweezers. A slinger raises his right hand beside his face holding up a big round grey-brown river stone the size of an egg, a small striped woven cloth shoulder bag full of stones hangs at his hip, and a braided wool sling with tasseled ends is draped across his shoulders. He wears a headband of braided red and ochre cords with tassels and a sleeveless tunic covered entirely in large black and white squares like a chessboard, with a small red triangle at the neck, and a single large flat dull silver disc hanging alone at the center of the chest; the sling is red, ochre and black. Native American man of the Andes, Quechua, about 30 years old, smooth face, broad cheekbones, deep-set dark eyes, brown skin, straight black hair cut in a fringe, bare brown arms. Chest-up portrait, dark backdrop"
    }
+  },
+  {
+   "id": "i01",
+   "titulo": "Ícono 1 · cuerpo entero, cuatro poses",
+   "meta": "1024×1024, fondo gris liso. Ropa de la edad II (azul y rojo): la I, de lana cruda, se confunde con el aldeano a 64 px.",
+   "imgs": [
+    {
+     "f": "i01_1.jpg",
+     "t": "revoleando"
+    },
+    {
+     "f": "i01_2.jpg",
+     "t": "por tirar"
+    },
+    {
+     "f": "i01_3.jpg",
+     "t": "piedra en alto"
+    },
+    {
+     "f": "i01_4.jpg",
+     "t": "honda colgando"
+    }
+   ],
+   "voces": {
+    "Artista": "De cuerpo entero la honda por fin se ve (2 y 4): queda lejos del cuello. Pero sale tipo muñeco 3D, piernas cortas, figura chica.",
+    "Historiadora": "Ropa correcta. En la 2 la honda cuelga de la mano que apunta, no de la que tira.",
+    "Prompting": "«Game unit icon» empuja a render 3D; mejor la frase de estilo del retrato."
+   },
+   "decision": "Estilo del retrato, proporciones adultas."
+  },
+  {
+   "id": "i02",
+   "titulo": "Ícono 2 · pintado, proporciones adultas",
+   "meta": "Semillas 7 y 11; poses «por tirar» y «honda colgando».",
+   "imgs": [
+    {
+     "f": "i02_1.jpg",
+     "t": "tirar 7"
+    },
+    {
+     "f": "i02_2.jpg",
+     "t": "tirar 11"
+    },
+    {
+     "f": "i02_3.jpg",
+     "t": "colgando 7"
+    },
+    {
+     "f": "i02_4.jpg",
+     "t": "colgando 11"
+    }
+   ],
+   "voces": {
+    "Artista": "Pincel y proporciones bien. Figura chica: se recorta en el posproceso al cuerpo con margen.",
+    "Historiadora": "La honda sigue en la mano equivocada.",
+    "Prompting": "«Fills the frame» no lo respeta; recortar con script."
+   },
+   "decision": "Recorte automático; probar giro."
+  },
+  {
+   "id": "i03",
+   "titulo": "Ícono 3 · colgando y girando en vertical",
+   "meta": "Recortadas al cuerpo.",
+   "imgs": [
+    {
+     "f": "i03_1_rec.jpg",
+     "t": "colgando 7"
+    },
+    {
+     "f": "i03_2_rec.jpg",
+     "t": "colgando 11"
+    },
+    {
+     "f": "i03_3_rec.jpg",
+     "t": "girando 7"
+    },
+    {
+     "f": "i03_4_rec.jpg",
+     "t": "girando 11"
+    }
+   ],
+   "voces": {
+    "Artista": "«Girando» salió arco: inaceptable. Colgando 11 parece incensario.",
+    "Historiadora": "Un arco sería otro pueblo, otra unidad.",
+    "Prompting": "«Cuerda tensa desde el puño» = cuerda de arco para FLUX."
+   },
+   "decision": "Descartar giro vertical."
+  },
+  {
+   "id": "i04",
+   "titulo": "Ícono 4 · piedra en alto y honda en la otra mano",
+   "meta": "Cuatro semillas (7, 11, 23, 31).",
+   "imgs": [
+    {
+     "f": "i04_7_rec.jpg",
+     "t": "7"
+    },
+    {
+     "f": "i04_11_rec.jpg",
+     "t": "11"
+    },
+    {
+     "f": "i04_23_rec.jpg",
+     "t": "23"
+    },
+    {
+     "f": "i04_31_rec.jpg",
+     "t": "31"
+    }
+   ],
+   "voces": {
+    "Artista": "Piedras como bolas de boliche; se lee «sostiene una pelota».",
+    "Historiadora": "Tamaño irreal: las piedras de honda iban de huevo a puño.",
+    "Prompting": "«big» exagera."
+   },
+   "decision": "Volver a la honda en acción."
+  },
+  {
+   "id": "i05",
+   "titulo": "Ícono 5 · por tirar (reescrito) y colgando",
+   "meta": "",
+   "imgs": [
+    {
+     "f": "i05_t7_rec.jpg",
+     "t": "tirar 7"
+    },
+    {
+     "f": "i05_t23_rec.jpg",
+     "t": "tirar 23"
+    },
+    {
+     "f": "i05_d23_rec.jpg",
+     "t": "colgando 23"
+    },
+    {
+     "f": "i05_d31_rec.jpg",
+     "t": "colgando 31"
+    }
+   ],
+   "voces": {
+    "Artista": "«Tirar» vuelve a ser arco. Colgando 31 se lee.",
+    "Historiadora": "—",
+    "Prompting": "El brazo atrás + brazo adelante = arquero, siempre."
+   },
+   "decision": "Probar «revolea como un lazo»."
+  },
+  {
+   "id": "i06",
+   "titulo": "Ícono 6 · revoleando «como un lazo»",
+   "meta": "FLUX conoce el lazo: le pedimos el lazo con una bolsita y piedra al final.",
+   "imgs": [
+    {
+     "f": "i06_d31_rec.jpg",
+     "t": "colgando 31"
+    },
+    {
+     "f": "i06_d7_rec.jpg",
+     "t": "colgando 7"
+    },
+    {
+     "f": "i06_l31_rec.jpg",
+     "t": "lazo 31"
+    },
+    {
+     "f": "i06_l7_rec.jpg",
+     "t": "lazo 7"
+    }
+   ],
+   "voces": {
+    "Artista": "Lazo 31: brazo arriba y arco de cuerda con piedra al final; silueta inconfundible a 64 px.",
+    "Historiadora": "Es el gesto real del hondero (revolear sobre la cabeza). El ruedo deshilachado no va: el unku tenía terminación tejida.",
+    "Prompting": "Comparar con algo que el modelo conoce («like a lasso») resuelve lo que la descripción no."
+   },
+   "decision": "Pulir: piedra más visible, ruedo prolijo."
+  },
+  {
+   "id": "i07",
+   "titulo": "Ícono 7 · GANADOR (lazo, piedra grande, ruedo tejido)",
+   "meta": "Semillas 31, 32, 33 (y a la izquierda, la 6 para comparar).",
+   "imgs": [
+    {
+     "f": "i06_l31_rec.jpg",
+     "t": "ronda 6"
+    },
+    {
+     "f": "i07_31_rec.jpg",
+     "t": "GANADOR · 31"
+    },
+    {
+     "f": "i07_32_rec.jpg",
+     "t": "32"
+    },
+    {
+     "f": "i07_33_rec.jpg",
+     "t": "33"
+    }
+   ],
+   "voces": {
+    "Artista": "El 31 se lee a 64 px: brazo en alto, arco de cuerda y piedra. Falta el brazo izquierdo (queda detrás).",
+    "Historiadora": "Correcto. La piedra queda grande pero dentro de lo real.",
+    "Prompting": "Semilla 31 estable para pose; 32 y 33 rompen."
+   },
+   "decision": "Aprobado. Para el juego: --sin-fondo (rembg) y recorte al cuerpo."
+  },
+  {
+   "id": "h01",
+   "titulo": "Hoja 3D 1 · dos maneras de pedirla",
+   "meta": "1344×896. «turnaround sheet … A-pose … empty hands» contra «model sheet».",
+   "imgs": [
+    {
+     "f": "h01_a7.jpg",
+     "t": "turnaround 7"
+    },
+    {
+     "f": "h01_a31.jpg",
+     "t": "turnaround 31"
+    },
+    {
+     "f": "h01_b7.jpg",
+     "t": "model sheet 7"
+    },
+    {
+     "f": "h01_b31.jpg",
+     "t": "model sheet 31"
+    }
+   ],
+   "voces": {
+    "Artista": "Turnaround 31: tres vistas coherentes (frente, tres cuartos, perfil), manos vacías.",
+    "Historiadora": "En otras, una vista sin túnica: inconsistente.",
+    "Prompting": "Semilla 31 arma las vistas; la 7 se desordena."
+   },
+   "decision": "Turnaround + semilla 31."
+  },
+  {
+   "id": "h02",
+   "titulo": "Hoja 3D 2 · ropa idéntica en cada vista",
+   "meta": "Edades II (31 y 7), I y IV con semilla 31.",
+   "imgs": [
+    {
+     "f": "h02_e2s31.jpg",
+     "t": "II · 31"
+    },
+    {
+     "f": "h02_e2s7.jpg",
+     "t": "II · 7"
+    },
+    {
+     "f": "h02_e1s31.jpg",
+     "t": "I · 31"
+    },
+    {
+     "f": "h02_e4s31.jpg",
+     "t": "IV · 31"
+    }
+   ],
+   "voces": {
+    "Artista": "Con 31 funciona en tres edades.",
+    "Historiadora": "FLUX agrega un cinturón de soga con borlas que no pedimos; el unku iba suelto. IV con varios discos.",
+    "Prompting": "Pedir la caída suelta en positivo."
+   },
+   "decision": "Las 4 edades con semilla 31."
+  },
+  {
+   "id": "h03",
+   "titulo": "Hoja 3D 3 · cuatro edades, semilla 31",
+   "meta": "«The tunic hangs straight and loose», «palms facing down».",
+   "imgs": [
+    {
+     "f": "h03_1.jpg",
+     "t": "I"
+    },
+    {
+     "f": "h03_2.jpg",
+     "t": "II"
+    },
+    {
+     "f": "h03_3.jpg",
+     "t": "III"
+    },
+    {
+     "f": "h03_4.jpg",
+     "t": "IV"
+    }
+   ],
+   "voces": {
+    "Artista": "Las cuatro coherentes. III pierde el casco en los perfiles.",
+    "Historiadora": "El cinturón sigue. II ya tiene la banda horizontal de tocapu.",
+    "Prompting": "«palms down» no lo toma: las palmas quedan hacia arriba."
+   },
+   "decision": "Arreglar el casco de III."
+  },
+  {
+   "id": "h04",
+   "titulo": "Hoja 3D 4 · GANADORA: casco en todas las vistas",
+   "meta": "III y IV con semillas 31 y 37.",
+   "imgs": [
+    {
+     "f": "h04_1.jpg",
+     "t": "III · 31 (ganadora)"
+    },
+    {
+     "f": "h04_2.jpg",
+     "t": "IV · 31"
+    },
+    {
+     "f": "h04b_1.jpg",
+     "t": "III · 37"
+    },
+    {
+     "f": "h04b_2.jpg",
+     "t": "IV · 37"
+    }
+   ],
+   "voces": {
+    "Artista": "III con 31: casco en las cuatro vistas, frente-perfil-tres cuartos-espalda. La 37 rompe (frente sin túnica).",
+    "Historiadora": "IV: el llawtu falta en un perfil; queda la de la ronda 3.",
+    "Prompting": "Nombrar el accesorio «en todas las vistas» lo sostiene."
+   },
+   "decision": "Hojas: I, II y IV de la ronda 3; III de esta."
   }
  ]
 }
