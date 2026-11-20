@@ -1,0 +1,17 @@
+# tools/micro_matriz.gd -- --esquive --edad=3 --civs=guaranies,etiopia --reaccion=400 --variantes=5 [--parche=...]
+# 1 catapulta etíope contra 5 aldeanos, 60 s (la vida se repone: cuenta todo el daño). "salva" = contra el quieto.
+parche                 | quieto | mover (salva) | esquivar (salva)
+vuelo 8 (antes)        | 314    | 166 (47 %)    | 209 (33 %)
+vuelo 10               | 314    |  92 (71 %)    | 180 (43 %)
+vuelo 12 (elegido)     | 314    |  80 (75 %)    | 136 (57 %)
+vuelo 14               | 314    |  79 (75 %)    | 110 (65 %)
+borde 20 %             | 271    | 133 (51 %)    | 192 (29 %)
+vuelo 12 + borde 25 %  | 283    |  74 (74 %)    | 120 (58 %)
+
+# --set=area --edad=3 --variantes=5 --reaccion=400 (gana A / vivos A prom. / vivos B prom.)
+caso                                            | vuelo 8          | vuelo 12
+hondero:10 vs catapulta:2+lancero:4, nada       | 0/5 · 0.0 · 2.2  | 0/5 · 0.0 · 2.2
+hondero:10 vs catapulta:2+lancero:4, esquivar   | 1/5 · 0.2 · 1.0  | 5/5 · 7.0 · 0.0
+hondero:10 vs catapulta:2+lancero:4, abierta    | 0/5 · 0.0 · 2.6  | 0/5 · 0.0 · 2.6
+lancero:10 vs catapulta:2+hondero:6, nada       | 3/5 · 1.0 · 1.4  | 3/5 · 1.2 · 1.6
+lancero:10 vs catapulta:2+hondero:6, esquivar   | 0/5 · 0.0 · 3.4  | 2/5 · 1.2 · 1.8
