@@ -1028,8 +1028,8 @@ func _draw_portrait(r: Rect2, c: Dictionary, team: Color) -> void:
 	var bot := Color(0.06, 0.065, 0.075, 0.0)
 	draw_polygon(PackedVector2Array([g.position, Vector2(g.end.x, g.position.y), g.end, Vector2(g.position.x, g.end.y)]), PackedColorArray([top, top, bot, bot]))
 	var tex: Texture2D = c.get("tex")
-	var pintado: Texture2D = c.get("retrato")
-	if pintado != null: # --- aldeanos por retrato ---
+	var pintado: Dictionary = c.get("retrato", {})
+	if not pintado.is_empty(): # --- aldeanos por retrato ---
 		Retratos.dibujar(self, pintado, r.grow(-3))
 	elif tex != null:
 		draw_texture_rect(tex, r.grow(-3), false)

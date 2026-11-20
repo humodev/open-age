@@ -1413,7 +1413,7 @@ class SelectionPanel:
 		draw_style_box(sb, r)
 		hud.ficha.zone(self, r, {"id": e.id}) # --- ficha ---
 		var rt := Retratos.de(hud.sim, e) # --- aldeanos por retrato --- el pintado, si hay
-		if rt != null:
+		if not rt.is_empty():
 			Retratos.dibujar(self, rt, r.grow(-2))
 			return
 		var icon := Glyphs.resolve(e.def, e.type) if not e.is_resource() else e.res_kind
@@ -1633,7 +1633,7 @@ class SelectionPanel:
 					draw_style_box(sb, r)
 					hud.ficha.zone(self, r, {"id": e.id}) # --- ficha ---
 					var rt := Retratos.de(hud.sim, e) # --- aldeanos por retrato ---
-					if rt != null:
+					if not rt.is_empty():
 						Retratos.dibujar(self, rt, r.grow(-2), "chico")
 					else:
 						Glyphs.draw(self, Glyphs.resolve(e.def, type), r.grow(-lado * 0.18), Palette.UI_TEXT)
@@ -1659,7 +1659,7 @@ class SelectionPanel:
 				draw_style_box(sb, r)
 				hud.ficha.zone(self, r, {"id": (list[0] as SimEntity).id, "n": list.size()}) # --- ficha ---
 				var rt := Retratos.de(hud.sim, list[0]) # --- aldeanos por retrato ---
-				if rt != null:
+				if not rt.is_empty():
 					Retratos.dibujar(self, rt, r.grow(-2), "chico")
 				else:
 					Glyphs.draw(self, Glyphs.resolve((list[0] as SimEntity).def, type), r.grow(-12), Palette.UI_TEXT)

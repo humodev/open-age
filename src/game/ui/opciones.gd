@@ -20,6 +20,7 @@ const MIN_LOGICO := Vector2(1280, 720)
 
 static var escala := 0.0
 static var paleta := "normal"
+static var fondo_retrato := "" # --- aldeanos por retrato --- equipo, pueblo u original; vacío: el de data/retratos.json
 static var general := 100.0
 static var musica := 100.0
 static var efectos := 100.0
@@ -78,6 +79,7 @@ static func cargar(ruta: String = RUTA) -> void:
 		return
 	escala = float(cf.get_value("interfaz", "escala", escala))
 	paleta = str(cf.get_value("interfaz", "paleta", paleta))
+	fondo_retrato = str(cf.get_value("interfaz", "fondo_retrato", fondo_retrato))
 	barras_siempre = bool(cf.get_value("interfaz", "barras_siempre", barras_siempre))
 	barras_pelea = bool(cf.get_value("interfaz", "barras_pelea", barras_pelea)) # --- veterano ronda 5 ---
 	banderas = str(cf.get_value("interfaz", "banderas", banderas)) # --- fluidez 7 ---
@@ -111,6 +113,7 @@ static func guardar(ruta: String = RUTA) -> void:
 	var cf := ConfigFile.new()
 	cf.set_value("interfaz", "escala", escala)
 	cf.set_value("interfaz", "paleta", paleta)
+	cf.set_value("interfaz", "fondo_retrato", fondo_retrato)
 	cf.set_value("interfaz", "barras_siempre", barras_siempre)
 	cf.set_value("interfaz", "barras_pelea", barras_pelea) # --- veterano ronda 5 ---
 	cf.set_value("interfaz", "banderas", banderas) # --- fluidez 7 ---
@@ -134,6 +137,7 @@ static func guardar(ruta: String = RUTA) -> void:
 static func restablecer() -> void:
 	escala = 0.0
 	paleta = "normal"
+	fondo_retrato = ""
 	general = 100.0
 	musica = 100.0
 	efectos = 100.0
@@ -290,6 +294,14 @@ static func dialogo(host: Control, main: Node) -> PanelContainer:
 		paleta = Palette.MODOS_ORDEN[i]
 		Palette.aplicar(paleta)
 		muestra.queue_redraw())
+	# --- aldeanos por retrato --- el fondo de los retratos pintados (data/retratos.json → fondo)
+	var fondo_ret := OptionButton.new()
+	var modos: Array = Retratos.cfg().get("fondo", {}).get("modos", ["equipo", "pueblo", "original"])
+	for m: String in modos:
+		fondo_ret.add_item(str({"equipo": "Color del jugador", "pueblo": "Tierra del pueblo", "original": "El de la imagen"}.get(m, m)))
+	fondo_ret.selected = maxi(0, modos.find(Retratos.modo()))
+	fondo_ret.item_selected.connect(func(i: int) -> void: fondo_retrato = modos[i])
+	_fila(izq, "Fondo de los retratos", fondo_ret)
 	var barras := _interruptor()
 	barras.button_pressed = barras_siempre
 	barras.toggled.connect(func(on: bool) -> void: barras_siempre = on)
@@ -398,6 +410,7 @@ static func dialogo(host: Control, main: Node) -> PanelContainer:
 		restablecer()
 		esc.selected = 0
 		pal.selected = 0
+		fondo_ret.selected = maxi(0, modos.find(Retratos.modo()))
 		barras.button_pressed = false
 		pelea.button_pressed = false # --- veterano ronda 5 ---
 		cons.button_pressed = true # --- aprender ---
