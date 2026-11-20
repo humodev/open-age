@@ -20,6 +20,9 @@ extends SceneTree
 ##               guarda (el guardado se carga con el mismo hash) y sigue contra la IA, que
 ##               toma al anfitrión y entrena aldeanos
 ##
+##   retomar_ajeno  sin cliente: un anfitrión con la sala abierta descarta el «retomar» de otra
+##               partida o de otro jugador caído, y acepta el de su última partida (proceso/30-fluidez/09)
+##
 ##   godot --headless --path . -s tests/red.gd [-- --caso=directo]
 
 const PUERTO := 47911
@@ -32,6 +35,7 @@ const CASOS := [
 	{"nombre": "basura", "ticks": 600, "lat": 0, "vaiven": 0, "caida": 0, "basura": 100},
 	{"nombre": "anfitrion_vuelve", "ticks": 900, "lat": 0, "vaiven": 0, "caida": 0, "anfitrion": 300, "vuelve": true},
 	{"nombre": "anfitrion_no_vuelve", "ticks": 900, "lat": 0, "vaiven": 0, "caida": 0, "anfitrion": 300},
+	{"nombre": "retomar_ajeno", "ticks": 0, "lat": 0, "vaiven": 0, "caida": 0, "local": true},
 ]
 const PASOS_POR_CUADRO := 200
 const ESPERA_MS := 240000
@@ -59,7 +63,7 @@ func _correr() -> void:
 		if _a.has("caso") and _a["caso"] != c["nombre"]:
 			continue
 		var t0 := Time.get_ticks_msec()
-		var r := await _anfitrion(PUERTO + i, c)
+		var r := _retomar_ajeno(PUERTO + i) if c.get("local", false) else await _anfitrion(PUERTO + i, c)
 		print("CASO %s: %s · %d ticks · %.1f s" % [c["nombre"], "OK" if r else "FALLO", int(c["ticks"]), (Time.get_ticks_msec() - t0) / 1000.0])
 		todo_ok = todo_ok and r
 	print("RED: %s" % ("OK" if todo_ok else "FALLO"))
@@ -264,6 +268,45 @@ func _sin_anfitrion(fin: int) -> bool:
 	var despues := int(sim.players[0]["stats"]["entrenadas"])
 	print("cliente: la IA tomó al anfitrión en el tick %d · entrenó %d unidades hasta el tick %d" % [t_toma, despues - antes, sim.tick])
 	return ok_g and despues > antes and SesionRed.activa == null
+
+
+# --- retomar con identificador ---
+## Un anfitrión que jugó la partida «prueba-1» como jugador 0 vuelve de cero y abre la sala.
+func _retomar_ajeno(puerto: int) -> bool:
+	var guardado := SesionRed.leer_retomable() # se deja como estaba
+	var a := SesionRed.nueva(self)
+	a._guardar_retomable("prueba-1", 0)
+	a.cerrar()
+	s = SesionRed.nueva(self)
+	if s.crear(puerto) != OK:
+		return false
+	var foto := PackedByteArray([1, 2, 3])
+	var base := {"tipo": "retomar", "log": [], "hashes": [], "reanudado": 0, "foto": foto, "inyectado": 0, "pausas": {}}
+	var malos := [
+		{"args": {"red_partida": "otra"}, "partida": "otra", "caido": 0}, # otra partida
+		{"args": {"red_partida": "prueba-1"}, "partida": "prueba-1", "caido": 1}, # otro jugador caído
+		{"args": {"red_partida": "prueba-1"}}, # sin identificador (un invitado viejo)
+		{"args": {"red_partida": "otra"}, "partida": "prueba-1", "caido": 0}, # args de otra partida
+	]
+	var antes := s.rechazados
+	for x: Dictionary in malos:
+		var m := base.duplicate(true)
+		m.merge(x, true)
+		s._recibir(m)
+	var sigue := s.estado == "sala" and s.rechazados - antes == malos.size()
+	var bueno := base.duplicate(true)
+	bueno.merge({"args": {"red_partida": "prueba-1"}, "partida": "prueba-1", "caido": 0}, true)
+	var acepta := s.retomar_aceptable(bueno)
+	print("anfitrión: descarta %d «retomar» ajenos (sigue en la sala: %s) · acepta el de su partida: %s" % [s.rechazados - antes, s.estado == "sala", acepta])
+	s.cerrar()
+	s = null
+	if guardado.is_empty():
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(SesionRed.RETOMABLE))
+	else:
+		var b := SesionRed.nueva(self)
+		b._guardar_retomable(str(guardado["partida"]), int(guardado["jugador"]))
+		b.cerrar()
+	return sigue and acepta
 
 
 ## Mensajes rotos al anfitrión (caso basura): ninguno tiene que entrar ni romper nada.

@@ -58,6 +58,10 @@ var ping_ms := -1
 var recuperada_en := -1 # tick en que se volcó la foto del anfitrión (-1: no hizo falta)
 var anfitrion_caido := false # --- caida anfitrion --- el invitado ya puede elegir qué hacer
 var foto_mandada_en := -1 # --- caida anfitrion --- tick de la foto que el invitado le mandó al anfitrión que volvió
+# --- retomar con identificador --- (proceso/30-fluidez/09) La última partida del anfitrión en
+# user://: al volver de cero, solo acepta el «retomar» de esa partida y de ese jugador caído.
+const RETOMABLE := "user://red/retomable.json"
+var retomable := {} # {partida, jugador}: lo que este anfitrión puede retomar ({} si nada)
 var _botones: HBoxContainer = null
 
 
@@ -95,6 +99,7 @@ func puerto_defecto() -> int:
 func crear(puerto: int) -> Error:
 	local = 0
 	_puerto = puerto
+	retomable = leer_retomable() # --- retomar con identificador ---
 	var err := transporte.crear(puerto)
 	if err == OK:
 		estado = "sala"
@@ -210,6 +215,7 @@ func empezar_partida() -> void:
 		pc["jugadores"][i] = {"tipo": "vos", "civ": civ, "dificultad": "normal", "estilo": "normal", "equipo": 0, "color": int(j["color"])}
 	var a := PartidaConfig.a_args(pc)
 	a["red"] = "1"
+	a["red_partida"] = "%d-%d" % [int(Time.get_unix_time_from_system()), randi() % 1000000] # --- retomar con identificador ---
 	transporte.enviar({"tipo": "empezar", "args": a})
 	_arrancar(a)
 
@@ -221,6 +227,8 @@ func _mandar_sala() -> void:
 func _arrancar(a: Dictionary) -> void:
 	args = a
 	estado = "partida"
+	if es_anfitrion(): # --- retomar con identificador --- por si me caigo y vuelvo de cero
+		_guardar_retomable(str(a.get("red_partida", "")), local)
 	var b := a.duplicate(true)
 	b["red_jugador"] = str(local)
 	empezar.emit(b)
@@ -462,7 +470,11 @@ func _recibir(m: Dictionary) -> void:
 		"retomar":
 			if es_anfitrion():
 				if estado == "sala" and m.has("foto"): # --- caida anfitrion --- vuelvo de cero
-					_retomar_de_invitado(m)
+					if retomar_aceptable(m): # --- retomar con identificador ---
+						_retomar_de_invitado(m)
+					else:
+						rechazados += 1
+						_decir("Un invitado quiso retomar otra partida: no se acepta")
 				return
 			_espera_desde = -1
 			_reanudado = int(m.get("reanudado", -1))
@@ -492,14 +504,50 @@ func _recibir(m: Dictionary) -> void:
 ## el último turno completo, el mismo estado en las dos máquinas hasta ahí) y lo suyo de después.
 func _mandar_foto() -> void:
 	var iny := lock.inyectado_hasta
+	var caido := -1 # --- retomar con identificador --- el anfitrión: el otro jugador
+	for p: int in lock.jugadores:
+		if p != local:
+			caido = p
 	transporte.enviar({"tipo": "retomar", "args": args, "log": lock.registro(false, iny + 1), "hashes": lock.hashes_de(local, (iny + 1) * lock.T),
-		"reanudado": lock.reanudado_hasta, "foto": SimEstado.tomar(sim), "inyectado": iny, "pausas": lock.pausas_usadas.duplicate()})
+		"reanudado": lock.reanudado_hasta, "foto": SimEstado.tomar(sim), "inyectado": iny, "pausas": lock.pausas_usadas.duplicate(),
+		"partida": str(args.get("red_partida", "")), "caido": caido})
 	foto_mandada_en = sim.tick
 	_espera_desde = -1
 	if anfitrion_caido:
 		anfitrion_caido = false
 		anfitrion_caido_cambio.emit(false)
 	_decir("El anfitrión volvió: sigue desde mi foto (tick %d)" % sim.tick)
+
+
+# --- retomar con identificador ---
+## Anfitrión con la sala abierta: el «retomar» de un invitado vale solo si es de la última
+## partida de este anfitrión (mismo identificador, también en sus args) y el jugador caído es
+## el que este anfitrión era en ella.
+func retomar_aceptable(m: Dictionary) -> bool:
+	var id := str(retomable.get("partida", ""))
+	if id == "" or str(m.get("partida", "")) != id:
+		return false
+	if str((m.get("args", {}) as Dictionary).get("red_partida", "")) != id:
+		return false
+	return int(m.get("caido", -1)) == int(retomable.get("jugador", -2))
+
+
+static func leer_retomable() -> Dictionary:
+	if not FileAccess.file_exists(RETOMABLE):
+		return {}
+	var d: Variant = JSON.parse_string(FileAccess.get_file_as_string(RETOMABLE))
+	return d if d is Dictionary else {}
+
+
+func _guardar_retomable(id: String, jugador: int) -> void:
+	if id == "":
+		return
+	DirAccess.make_dir_recursive_absolute(RETOMABLE.get_base_dir())
+	var f := FileAccess.open(RETOMABLE, FileAccess.WRITE)
+	if f != null:
+		f.store_string(JSON.stringify({"partida": id, "jugador": jugador}))
+	retomable = {"partida": id, "jugador": jugador}
+# --- fin retomar con identificador ---
 
 
 ## Anfitrión que volvió de cero: arma la partida con la foto del invitado (como el invitado

@@ -73,7 +73,11 @@ static func _muro(m: Node, check: Callable, muro: String) -> SimEntity:
 	m._mouse(b2, 0, false)
 	await m._frames(4)
 	var info: String = ctrl.linea_info[0][0] if not ctrl.linea_info.is_empty() else ""
-	check.call("fluidez 2: el muro dice tramos, costo y cuántos alcanzan (%s)" % info, info.contains("tramos") and info.contains("alcanzan") and info.contains("madera"))
+	# El costo en el recurso del muro de ese pueblo (madera la empalizada; el Tawantinsuyu ahora levanta uno de piedra).
+	var con_costo := false
+	for r: String in (sim.build_cost(local, muro) as Dictionary).keys():
+		con_costo = con_costo or info.contains(r)
+	check.call("fluidez 2: el muro dice tramos, costo y cuántos alcanzan (%s)" % info, info.contains("tramos") and info.contains("alcanzan") and con_costo)
 	var info2: String = ctrl.linea_info[1][0] if ctrl.linea_info.size() > 1 else ""
 	check.call("fluidez 2: el trazo avisa el hueco antes de soltar (%s)" % info2, info2.contains("hueco") and info2.contains("árboles"))
 	check.call("fluidez 2: G marca la puerta en el trazo (%s)" % str(ctrl._line_gate), ctrl._line_gate == Vector2i(arbol.tx + 2, arbol.ty))

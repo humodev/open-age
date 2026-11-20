@@ -11,7 +11,7 @@ const CAMPOS := {
 	"elijo": {"civ": TYPE_STRING, "color": TYPE_INT, "listo": TYPE_BOOL},
 	"sala": {"sala": TYPE_DICTIONARY},
 	"empezar": {"args": TYPE_DICTIONARY},
-	"retomar": {"args": TYPE_DICTIONARY, "log": TYPE_ARRAY, "hashes": TYPE_ARRAY, "reanudado": TYPE_INT, "foto?": TYPE_PACKED_BYTE_ARRAY, "inyectado?": TYPE_INT, "pausas?": TYPE_DICTIONARY},
+	"retomar": {"args": TYPE_DICTIONARY, "log": TYPE_ARRAY, "hashes": TYPE_ARRAY, "reanudado": TYPE_INT, "foto?": TYPE_PACKED_BYTE_ARRAY, "inyectado?": TYPE_INT, "pausas?": TYPE_DICTIONARY, "partida?": TYPE_STRING, "caido?": TYPE_INT},
 	"turnos": {"log": TYPE_ARRAY},
 	"turno": {"j": TYPE_INT, "n": TYPE_INT, "c": TYPE_ARRAY, "pausa?": TYPE_BOOL},
 	"hash": {"j": TYPE_INT, "t": TYPE_INT, "h": TYPE_INT},
@@ -62,6 +62,8 @@ static func motivo(m: Variant, local: int, cfg: Dictionary) -> String:
 					if r != "":
 						return r
 		"turnos", "retomar": # --- caida anfitrion --- el anfitrión que vuelve recibe «retomar» del invitado
+			if tipo == "retomar" and str(d.get("partida", "")).length() > tope_texto: # --- retomar con identificador ---
+				return "partida demasiado larga"
 			for x in (d["log"] as Array):
 				var r := motivo(x, local, cfg)
 				if r != "":
