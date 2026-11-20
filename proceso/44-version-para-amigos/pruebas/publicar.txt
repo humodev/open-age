@@ -1,0 +1,33 @@
+Raíces 2026.11.20-8289f3b · Godot 4.7.2.stable · salida /home/humodev/_01_Projects/raices-builds/2026.11.20-8289f3b
+
+== Importar recursos
+
+== Exportar Linux
+   raices.x86_64: 162 MB
+
+== Exportar Windows
+   raices.exe: 196 MB
+
+== Versión de la exportación = versión del proyecto
+   proyecto:    2026.11.20-8289f3b-godot4.7-dbc03e57bf6864c4
+   exportación: 2026.11.20-8289f3b-godot4.7-dbc03e57bf6864c4
+
+== La exportación de Linux arranca y juega 30 s sin ventana
+PARTIDA A MEDIDA: 0:30 de juego · 0:guaranies pob 7 edad 1 · 1:guaranies pob 8 edad 1 · mapa altiplano de 128
+
+== Determinismo (tests/test_determinism.gd)
+ticks=3000 hash=3059812827
+DETERMINISMO: OK
+
+== Dos clientes por el relevo (tests/red_relevo.gd, con la versión distinta rechazada)
+relevo: aviso en la sala: «Tu amigo tiene otra versión del juego: actualicen los dos a la última. La tuya es otra-version.»
+anfitrión: tick 1200 hash 2516299682 · cliente 2516299682 · comandos por el relevo [25, 27] · retardo 2 turnos (ping 18 ms)
+RED RELEVO: OK
+
+== Armar los zip
+   /home/humodev/_01_Projects/raices-builds/2026.11.20-8289f3b/raices-2026.11.20-8289f3b-linux-x86_64.zip  115 MB
+   /home/humodev/_01_Projects/raices-builds/2026.11.20-8289f3b/raices-2026.11.20-8289f3b-windows-x86_64.zip  124 MB
+
+(No se subió nada: para subir, tools/publicar.sh --subir)
+
+PUBLICAR: OK · 2026.11.20-8289f3b · /home/humodev/_01_Projects/raices-builds/2026.11.20-8289f3b

@@ -44,14 +44,19 @@ Guía para el autor: **[guia-relevo-y-versiones.md](guia-relevo-y-versiones.md)*
 | `tests/red_relevo.gd` (antes de la tubería) | OK: el aviso «Tu amigo tiene otra versión del juego…» llega a la sala; código falso y mensaje gigante rechazados; 1200 ticks por el relevo con el mismo hash en los dos (2516299682). [pruebas/red_relevo.txt](pruebas/red_relevo.txt) |
 | `--autotest --civ=guaranies --terreno=llano` (en ventana, por el cambio en el menú) | AUTOTEST: OK, sin SCRIPT ERROR. [pruebas/autotest.txt](pruebas/autotest.txt) |
 | Captura de la sala | [sala-relevo.png](sala-relevo.png): la fila «Relevo» vacía, con `dirección:47900` de ejemplo |
-| `tools/publicar.sh` de punta a punta, sin subir | (abajo) |
+| `tools/publicar.sh` de punta a punta, sin subir, sobre `8289f3b` | **PUBLICAR: OK** en unos 3 minutos. Linux 162 MB y Windows 196 MB sin comprimir; zips de 115 y 124 MB (241 MB por versión). La versión de la exportación es igual a la del proyecto (`2026.11.20-8289f3b-godot4.7-dbc03e57bf6864c4`): los `data/` del paquete son los mismos. La exportación de Linux juega 30 s sin ventana, sin SCRIPT ERROR. Determinismo OK (hash 3059812827, el de siempre) y relevo OK. El árbol quedó limpio (`project.godot` restaurado). [pruebas/publicar.txt](pruebas/publicar.txt), [LEEME de ejemplo](pruebas/LEEME-ejemplo.txt) |
+| Contenido del paquete | En el ejecutable no hay archivos de `tests/`, `tools/`, `conceptos/` ni `iconos/fuentes/`. Las menciones a `proceso/` y `docs/` que aparecen son textos dentro de los scripts y de los `_doc` de `data/`, no archivos |
+
+Después de la prueba se borraron la carpeta de la versión (241 MB) y el `.tpz` bajado (1,2 GB): las plantillas ya están instaladas. `--subir` no se probó, porque no hay página ni sesión de butler. El script revisa `ITCH_TARGET`, butler y la sesión **antes** de exportar.
 
 ## Tropiezos
 
 - La consigna pedía `data/red.json` para la dirección. Pero `data/` entra en el hash de versión, así que cambiar de relevo obligaría a todos a bajar otra versión. Por eso la dirección para los amigos va en `relevo.txt`, que no entra en el hash, y `data/` queda como respaldo.
 - Si el autor juega desde el editor contra un amigo que tiene la versión publicada, el relevo no los junta, porque el editor no lleva el sello de versión. Está en la guía: para jugar con amigos, usar la versión publicada.
+- `debug/export_console_wrapper` en «solo debug»: la versión para amigos no lleva `raices.console.exe`. Para ver la consola en Windows, se exporta en debug.
 - La conexión directa por IP (ENet, sin relevo) no compara versiones. Se usa en la red local; para internet está el relevo.
 
 ## Commits
 
-- (este) Pipeline de versiones: presets, relevo configurable, publicar.sh, systemd y Docker, guía
+- `8289f3b` Pipeline de versiones: presets, relevo configurable, publicar.sh, systemd y Docker, guía
+- (este) Resultado de la corrida de prueba de la tubería
