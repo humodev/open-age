@@ -34,3 +34,13 @@ Pendiente del autor: elegir la dirección de estilo (A óleo de caballete, B est
 - Paso 2: ícono y hoja 3D del hondero.
 - Paso 3: retrato recoloreable (regla nueva) y tools/recolorear.py.
 - Paso 4: análisis de AoE y estudio de caras.
+
+## Decisiones del autor (2026-11-20)
+
+- **Estilo: C, gouache.** Más plano y gráfico, pintado a mano. Se usa en todo el arte.
+- **Alcance: el del experto en AoE.**
+  - Un arte por unidad, sin retrato por edad (salvo el aldeano). La edad se ve en el modelo 3D y en un distintivo chico.
+  - Un ícono por edificio.
+  - Pasa de 1433 piezas a unas 670.
+- **Edad por equipo y silueta, no por color.** Arte recoloreable, porque el color del jugador cambia en cada partida.
+- **Caras andinas:** el hombre (semilla 23) y la mujer (semilla 11) están en [caras.html](caras.html), a la espera de la opinión del autor.
