@@ -12,14 +12,18 @@ extends SceneTree
 ##
 ## Uso (necesita GPU, sin --headless; antes, godot --headless --path . --import):
 ##   godot --path . -s tools/visor_3d_local.gd -- --shot=proceso/43-3d-local/img/juego.jpg [--zoom=14] [--cerca]
+##   [--antes-despues]: solo las piezas de proceso/43 junto a las del pipeline (proceso/47,
+##   assets/generados/modelos/local/), con el caballo caminando.
 
 const NUEVOS := "res://assets/ui/arte/tawantinsuyu/modelos_prueba/%s.glb"
 const HOY := "res://assets/generados/modelos/%s.glb"
+const LOCAL := "res://assets/generados/modelos/local/%s.glb"
 const TEAM := Color("c8c2b4")
 
 var _shot := "user://visor_3d_local.jpg"
 var _zoom := 15.0
 var _cerca := false
+var _antes_despues := false
 var _dd: SimData
 var _unit_h := 0.75
 
@@ -32,6 +36,8 @@ func _initialize() -> void:
 			_zoom = float(a.substr(7))
 		elif a == "--cerca":
 			_cerca = true
+		elif a == "--antes-despues":
+			_antes_despues = true
 	var reglas: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/reglas.json"))
 	_unit_h = WorldView.FIGURE_H * float(reglas["escala_visual"]["unidad_pct"]) / 100.0
 	_dd = SimData.load_default().civs["tawantinsuyu"]
@@ -82,6 +88,22 @@ func _escenario() -> void:
 		["Jinete etíope · GLB de hoy", _glb_unidad(HOY % "etiopia_jinete", _unit_h * 1.45)],
 		["Caballo · Hunyuan", _glb_unidad(NUEVOS % "caballo", _unit_h * 1.1)],
 	]
+	if _antes_despues:
+		atras = [
+			["Kancha · 43", _glb_edificio(NUEVOS % "casa", "casa")],
+			["Kancha · pipeline", _glb_edificio(LOCAL % "tawantinsuyu_casa", "casa")],
+			["Kallanka · 43", _glb_edificio(NUEVOS % "kallanka", "cuartel")],
+			["Kallanka · pipeline", _glb_edificio(LOCAL % "tawantinsuyu_kallanka", "cuartel")],
+		]
+		adelante = [
+			["Aldeano · 43", _glb_unidad(NUEVOS % "aldeano", _unit_h)],
+			["Aldeano · pipeline", _glb_unidad(LOCAL % "tawantinsuyu_aldeano", _unit_h)],
+			["Caballo · 43", _glb_unidad(NUEVOS % "caballo", _unit_h * 1.1)],
+			["Caballo · pipeline", _glb_unidad(LOCAL % "caballo_criollo", _unit_h * 1.05)],
+		]
+		var ap: AnimationPlayer = (adelante[3][1] as Node).find_child("AnimationPlayer", true, false) if adelante[3][1] != null else null
+		if ap != null and ap.has_animation("caminar"):
+			ap.play("caminar")
 	var paso_b := 3.4
 	var paso_u := 1.15 if not _cerca else 0.9
 	for i in atras.size():

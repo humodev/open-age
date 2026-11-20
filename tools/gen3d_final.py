@@ -10,8 +10,8 @@ arte_edades.json, igual que WorldView._model_for y _stretch_k):
                                     queda por debajo de h, se estira solo en alto hasta h, con
                                     tope k (como el juego con los modelos generados)
 
-Apoya en el suelo y centra en x/z. Con esqueleto, la escala va en el nodo raíz (pareja) y las
-animaciones se conservan; sin esqueleto se aplica a la malla. Texturas en JPEG (calidad 85).
+Apoya en el suelo y centra en x/z. La escala se aplica a las mallas y al esqueleto (los nodos
+quedan sin escala) y las claves de posición de los huesos se escalan igual. Texturas en JPEG (calidad 85).
 Renders Workbench de frente, costado, tres cuartos y cámara del RTS.
 """
 import json
@@ -70,9 +70,24 @@ for o in raices:
     o.location = Vector(((o.location.x - centro.x) * k, (o.location.y - centro.y) * k, (o.location.z - centro.z) * kz))
     o.scale = Vector((o.scale.x * k, o.scale.y * k, o.scale.z * kz))
 bpy.context.view_layer.update()
-if not arm:
-    bpy.ops.object.select_all(action="SELECT")
-    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+# La escala se aplica siempre (también al esqueleto y a su malla): con un nodo escalado, Godot
+# mide la caja de la malla con escala pero la dibuja deformada por el esqueleto sin ella.
+bpy.ops.object.select_all(action="SELECT")
+bpy.ops.object.transform_apply(location=True, rotation=False, scale=True)
+if arm:
+    # Las claves de posición de los huesos (el vaivén del lomo) van en unidades del hueso.
+    for act in bpy.data.actions:
+        curvas = list(getattr(act, "fcurves", []))
+        for capa in getattr(act, "layers", []):
+            for tira in capa.strips:
+                for bolsa in getattr(tira, "channelbags", []):
+                    curvas += list(bolsa.fcurves)
+        for fc in curvas:
+            if fc.data_path.endswith(".location"):
+                for kp in fc.keyframe_points:
+                    kp.co.y *= k
+                    kp.handle_left.y *= k
+                    kp.handle_right.y *= k
 mn, mx = caja()
 print(f"FINAL ancho={mx.x - mn.x:.3f} fondo={mx.y - mn.y:.3f} alto={mx.z - mn.z:.3f} k={k:.3f} kz={kz:.3f}")
 for a in arm:
