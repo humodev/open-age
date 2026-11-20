@@ -12,6 +12,8 @@ Página con todas las rondas, críticas y recetas: [`rondas.html`](rondas.html) 
 2. **Ícono** (rondas i01-i07). Ganador: i07, semilla 31, honda revoleada «como un lazo», recortado al cuerpo. Prompt en `prompts_icono_hondero.txt`.
 3. **Hoja 3D** (rondas h01-h04). Ganadoras: h03_1, h03_2, h04_1 (III, con el casco en todas las vistas) y h03_4. Prompts en `prompts_hoja3d_hondero.txt`.
 4. **Regla nueva del autor (recoloreable):** «Debemos lograr que la diferencia no esté solo en el color, porque en el juego el color cambia en cada partida…». Rondas 21-23: las edades se distinguen por el equipo (cabeza descubierta, vincha y bolsa, casco de caña con acolchado y escudo, cresta de plumas con capa y disco de plata), y la túnica va en rojo plano. Script nuevo `tools/recolorear.py`: máscara HSV (rojo saturado, solo las manchas grandes) guardada como `_mascara.png`, y una hoja original | gris | colores. Ganador: `g1` (prompts en `prompts_retrato_recoloreable.txt`, máscaras en `img/g1_N_mascara.png`).
+5. **Voz 4, experto en arte de AoE:** [`aoe-estrategias.md`](aoe-estrategias.md). En el juego el retrato se ve a 112 px y la grilla a 62 px. AoE no hace retratos por edad. Recomienda un arte por unidad, la edad en el 3D y un distintivo, y bajar de 1433 a ~670 imágenes.
+6. **Estudio de caras** (autor: «Ninguna de las caras que hemos hecho hasta ahora, desde el comienzo, parece inca»). Rondas c01-c06. El gentilicio pesa más que los rasgos, «fringe» trae Asia oriental y el IP-Adapter con óleos de dominio público copia la ropa, no la cara. Aprobadas para que opine el autor: hombre c05_m23, mujer c06_f11 (`prompts_caras.txt`). Límite: la cara no queda fija si cambia el resto del prompt.
 
 Pendiente del autor: elegir la dirección de estilo (A óleo de caballete, B estilizado, C gouache; rondas 9, 11 y 13).
 
@@ -31,3 +33,4 @@ Pendiente del autor: elegir la dirección de estilo (A óleo de caballete, B est
 - Paso 1: retrato del hondero.
 - Paso 2: ícono y hoja 3D del hondero.
 - Paso 3: retrato recoloreable (regla nueva) y tools/recolorear.py.
+- Paso 4: análisis de AoE y estudio de caras.

@@ -45,7 +45,7 @@ pre{{white-space:pre-wrap;background:#0f0d0a;padding:8px;border-radius:4px;font-
 </style></head><body><main>
 <h1>Afinado del arte inca: el hondero</h1>
 <p class="meta">{e(datos.get("intro", ""))}</p>
-{recetas}{rondas}
+{datos.get('resumen_html', '')}{recetas}{rondas}
 </main></body></html>"""
 open(os.path.join(D, "rondas.html"), "w", encoding="utf-8").write(pagina)
 print("ok", len(datos["rondas"]), "rondas")

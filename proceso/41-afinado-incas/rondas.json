@@ -1094,6 +1094,209 @@
     "Prompt edad 3": "Stylized digital painting in the style of Age of Empires IV unit portraits, simplified shapes, bold clear silhouette, few large brushstrokes, little fine detail. A young-looking smooth hairless face with a bare upper lip and bare chin, like the Inca men who plucked their facial hair with tweezers. A slinger raises his right hand beside his face holding a round grey river stone, and a thin braided cream wool sling, thin as a shoelace, hangs over his shoulder. He wears a round helmet woven from tan cane strips like a basket, thick quilted cotton armor of natural undyed cream stitched in diamonds over a plain solid bright red sleeveless wool tunic, one flat uniform red color, and the rim of a small round wooden shield shows on his back behind his shoulder. Native American man of the Andes, Quechua, about 30 years old, smooth face, broad cheekbones, deep-set dark eyes, brown skin, straight black hair cut in a fringe, bare brown arms. Natural undyed tones for everything except the tunic. Chest-up portrait, dark grey backdrop",
     "Prompt edad 4": "Stylized digital painting in the style of Age of Empires IV unit portraits, simplified shapes, bold clear silhouette, few large brushstrokes, little fine detail. A young-looking smooth hairless face with a bare upper lip and bare chin, like the Inca men who plucked their facial hair with tweezers. A slinger raises his right hand beside his face holding a round grey river stone, and a thin braided cream wool sling, thin as a shoelace, hangs over his shoulder. He wears a braided cream headband with a tall crest of upright brown and white feathers standing straight up at the front, like a fan, as a mark of rank, a short cape of undyed brown wool tied at the chest and covering both shoulders, one single flat pewter-grey silver disc on his chest, and a plain solid bright red sleeveless wool tunic, one flat uniform red color. Native American man of the Andes, Quechua, about 30 years old, smooth face, broad cheekbones, deep-set dark eyes, brown skin, straight black hair cut in a fringe, bare brown arms. Natural undyed tones for everything except the tunic. Chest-up portrait, dark grey backdrop"
    }
+  },
+  {
+   "id": "c01",
+   "titulo": "Caras 1 · rasgos solos contra rasgos + «Peruvian Andean highlander»",
+   "meta": "FLUX, semilla 7. Al costado de cada una, la miniatura a 112 px (el tamaño del retrato en el juego).",
+   "imgs": [
+    {
+     "f": "c01_m_sin.jpg",
+     "t": "Hombre · solo rasgos"
+    },
+    {
+     "f": "c01_m_and.jpg",
+     "t": "Hombre · + Peruvian Andean"
+    },
+    {
+     "f": "c01_f_sin.jpg",
+     "t": "Mujer · solo rasgos"
+    },
+    {
+     "f": "c01_f_and.jpg",
+     "t": "Mujer · + Peruvian Andean"
+    }
+   ],
+   "voces": {
+    "Artista": "Solo con los rasgos salen caras europeas: la descripción sola no alcanza.",
+    "Historiadora": "Con «Peruvian Andean highlander» se acerca, sobre todo la mujer.",
+    "Prompting": "Medido: sin gentilicio el modelo se va a Europa; el gentilicio pesa más que la lista de rasgos.",
+    "Experto AoE": "A 112 px se lee la forma de la cara y el color; los detalles de los ojos no."
+   },
+   "decision": "Mantener el gentilicio, ensanchar la cara, probar referencias."
+  },
+  {
+   "id": "c02",
+   "titulo": "Caras 2 · FLUX contra SDXL + IP-Adapter con un óleo de dominio público",
+   "meta": "SDXL con las caras recortadas del óleo «Aymara Indians» (h. 1890, Smithsonian, dominio público), peso 0.6, tipo linear.",
+   "imgs": [
+    {
+     "f": "c02_m_flux.jpg",
+     "t": "Hombre · FLUX"
+    },
+    {
+     "f": "c02_m_sdxl.jpg",
+     "t": "Hombre · SDXL + óleo 1890"
+    },
+    {
+     "f": "c02_f_flux.jpg",
+     "t": "Mujer · FLUX"
+    },
+    {
+     "f": "c02_f_sdxl.jpg",
+     "t": "Mujer · SDXL + óleo 1890"
+    }
+   ],
+   "voces": {
+    "Artista": "La mujer de FLUX es la primera que parece andina. El hombre de FLUX, con flequillo, se va a Asia oriental.",
+    "Historiadora": "El SDXL con referencia sale del sur de Asia o del Mediterráneo, con bigote: no sirve. Además copia el gorro del cuadro.",
+    "Prompting": "El corte con flequillo («fringe») arrastra a Asia oriental. Las referencias de dominio público tienen caras chicas y borrosas: el IP-Adapter copia la ropa y la luz, no los rasgos.",
+    "Experto AoE": "—"
+   },
+   "decision": "Seguir con FLUX y cambiar el pelo del hombre."
+  },
+  {
+   "id": "c03",
+   "titulo": "Caras 3 · pelo corto con vincha, «Aymara del Titicaca», otra semilla",
+   "meta": "",
+   "imgs": [
+    {
+     "f": "c03_m1.jpg",
+     "t": "Hombre · Cusco, semilla 7"
+    },
+    {
+     "f": "c03_m2.jpg",
+     "t": "Hombre · Aymara, semilla 7"
+    },
+    {
+     "f": "c03_m3.jpg",
+     "t": "Hombre · Cusco, semilla 11"
+    },
+    {
+     "f": "c03_f11.jpg",
+     "t": "Mujer · semilla 11"
+    }
+   ],
+   "voces": {
+    "Artista": "Hombre con semilla 7: parece del Himalaya. La mujer con semilla 11 se lee andina a 112 px.",
+    "Historiadora": "La mujer lleva aros dorados: van fuera.",
+    "Prompting": "«Heavy-lidded» probablemente empuja a Asia. «Aymara» y «Cusco» dan casi lo mismo.",
+    "Experto AoE": "—"
+   },
+   "decision": "Probar «Native American Quechua» y ojos con doble párpado."
+  },
+  {
+   "id": "c04",
+   "titulo": "Caras 4 · «Native American Quechua man», ancla en los huacos moche",
+   "meta": "",
+   "imgs": [
+    {
+     "f": "c04_m1.jpg",
+     "t": "Hombre · semilla 7"
+    },
+    {
+     "f": "c04_m2.jpg",
+     "t": "Hombre · + huacos moche"
+    },
+    {
+     "f": "c04_m3.jpg",
+     "t": "Hombre · semilla 11"
+    },
+    {
+     "f": "c04_f11.jpg",
+     "t": "Mujer · trenzas sobre las orejas"
+    }
+   ],
+   "voces": {
+    "Artista": "La semilla 11 da la cara más ancha y americana; la 7 se queda en su composición.",
+    "Historiadora": "Sin aros: bien.",
+    "Prompting": "«Moche portrait vessels» no cambia nada. «Native American» sí mueve la cara hacia América.",
+    "Experto AoE": "—"
+   },
+   "decision": "Probar si la descripción sostiene la cara con otra semilla."
+  },
+  {
+   "id": "c05",
+   "titulo": "Caras 5 · ¿la descripción sostiene la cara con otra semilla?",
+   "meta": "Semillas 11 y 23, cara ligeramente girada.",
+   "imgs": [
+    {
+     "f": "c05_m11.jpg",
+     "t": "Hombre · 11"
+    },
+    {
+     "f": "c05_m23.jpg",
+     "t": "Hombre · 23 (aprobado)"
+    },
+    {
+     "f": "c05_f11.jpg",
+     "t": "Mujer · 11"
+    },
+    {
+     "f": "c05_f23.jpg",
+     "t": "Mujer · 23"
+    }
+   ],
+   "voces": {
+    "Artista": "Hombre 23: cara ancha, nariz grande, piel cobriza; a 112 px se lee andino. Las dos mujeres funcionan.",
+    "Historiadora": "Plausible para quechua y aymara, sin caricatura. Sobran el suéter de cuello alto (moderno) y los aros chicos.",
+    "Prompting": "La descripción sostiene la cara en dos de cada tres semillas.",
+    "Experto AoE": "A 112 px las dos se leen."
+   },
+   "decision": "Arreglar la ropa y los labios."
+  },
+  {
+   "id": "c06",
+   "titulo": "Caras 6 · túnica y lliklla, labios oscuros",
+   "meta": "",
+   "imgs": [
+    {
+     "f": "c06_m23.jpg",
+     "t": "Hombre · 23"
+    },
+    {
+     "f": "c06_m31.jpg",
+     "t": "Hombre · 31"
+    },
+    {
+     "f": "c06_f11.jpg",
+     "t": "Mujer · 11 (aprobada)"
+    },
+    {
+     "f": "c06_f23.jpg",
+     "t": "Mujer · 23"
+    }
+   ],
+   "voces": {
+    "Artista": "Mujer 11: la mejor. El hombre 23 cambió de cara al cambiar el texto de la ropa: se angostó y rejuveneció.",
+    "Historiadora": "La mujer con manto de lana cruda es correcta.",
+    "Prompting": "Problema clave: en FLUX la cara NO queda fija con la semilla si cambia el resto del prompt. Para fijarla en todas las unidades hay que partir de la cara aprobada (img2img o IP-Adapter con ella), no solo de la descripción.",
+    "Experto AoE": "—"
+   },
+   "decision": "Aprobados para que opine el autor: hombre c05_m23 y mujer c06_f11."
+  },
+  {
+   "id": "caras",
+   "titulo": "CARAS APROBADAS (esperando al autor)",
+   "meta": "Hombre: ronda 5, semilla 23. Mujer: ronda 6, semilla 11. FLUX schnell, 768×1024. Prompts en prompts_caras.txt.",
+   "imgs": [
+    {
+     "f": "c05_m23.jpg",
+     "t": "Hombre andino · semilla 23"
+    },
+    {
+     "f": "c06_f11.jpg",
+     "t": "Mujer andina · semilla 11"
+    }
+   ],
+   "voces": {
+    "Artista": "A 112 px se leen andinos: cara ancha, nariz grande, piel cobriza y mejillas rojas. En el hombre los labios son demasiado rosados.",
+    "Historiadora": "Aprobadas, con la salvedad de que el hombre todavía es algo genérico.",
+    "Prompting": "Receta: gentilicio primero («Native American Quechua man from the Peruvian Andes» / «Peruvian Andean highlander woman … near Cusco») y después la cara ancha, la nariz aguileña, los ojos con doble párpado, la piel cobriza y las mejillas rojas. Evitar «fringe», «heavy-lidded» en hombres y «almond».",
+    "Experto AoE": "Antes de usarlas en las unidades: probar que la cara sobreviva con la ropa de cada unidad."
+   },
+   "decision": "Esperando la opinión del autor."
   }
- ]
+ ],
+ "resumen_html": "<section class=\"receta\"><h2>Voz 4 · Experto en arte de AoE: qué piezas hacen falta y a qué tamaño</h2>\n<p class=\"meta\">Análisis completo: <a href=\"aoe-estrategias.md\" style=\"color:var(--acc)\">aoe-estrategias.md</a>. Los datos de AoE marcados «aprox.» son de memoria.</p>\n<ul>\n<li><b>Tamaños reales en Raíces</b> (src/game/hud.gd): grilla de producción <b>62 px</b>, retrato de la selección <b>112 px</b>, selección múltiple 40–56 px. Con eso, la cara mide 15–20 px en la grilla y 35–45 px en el retrato: <b>la cara tiene que leerse como andina a 112 px</b>, con rasgos grandes, no con detalles.</li>\n<li><b>AoE no tiene retratos por edad.</b> En AoE2 el equipo cambia por línea de unidad; en AoE4 el veterano y el élite comparten arte y la edad se ve en el modelo 3D. Los íconos no se recolorean: el color del jugador va en el modelo y en el marco (aprox.).</li>\n<li><b>Recomendación:</b> un arte por unidad que sirva de ícono y de retrato, sin retrato por edad (salvo el aldeano). Edad: en el 3D y con un distintivo chico que dibuja el juego. Un ícono por edificio, sin variantes por edad. Una hoja 3D por unidad, con accesorios por edad. Máscara recoloreable en el 3D; en los íconos, color de jugador en el marco (lo decide el autor).</li>\n<li><b>Cuenta:</b> de <b>1433</b> imágenes a <b>~670</b>.</li>\n</ul></section>\n<section class=\"receta\"><h2>Estudio de caras · rasgos andinos (Historiadora)</h2>\n<p>Rasgos frecuentes en las poblaciones quechua y aymara de los Andes, descritos sin caricatura: cara ancha y de pómulos marcados; nariz grande, a menudo convexa o aguileña y de puente alto; ojos oscuros con el párpado superior visible (sin el pliegue epicántico marcado de Asia oriental); piel cobriza curtida por el sol de altura, con mejillas enrojecidas por el frío y la altura; pelo negro, grueso y lacio; cuerpo robusto de pecho ancho (adaptación a la altura: Beall, 2007, PNAS [verificar]). Iconografía: los huacos retrato moche (100–800 d. C., costa norte) son la referencia prehispánica más realista de rostros andinos; Guaman Poma (1615) y los keros coloniales son estilizados y sirven para la ropa, no para la cara. Referencias de dominio público usadas: «Aymara Indians», óleo anónimo hacia 1890–1892, Smithsonian American Art Museum (Commons, dominio público); Francisco Laso, «Indio alfarero» (1855) y «La hilandera» (h. 1849) (Commons, dominio público). Descartada: «Andean Man» (2007, CC BY-SA, persona identificable actual).</p></section>"
 }
