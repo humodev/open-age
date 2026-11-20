@@ -166,7 +166,7 @@ func _label(t: String, size: int, col: Color, bold: bool = false) -> Label:
 	l.text = t
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	l.add_theme_font_override("font", Hud.font_b if bold else Hud.font)
-	l.add_theme_font_size_override("font_size", size)
+	l.add_theme_font_size_override("font_size", Hud.ts(size))
 	l.add_theme_color_override("font_color", col)
 	return l
 
@@ -177,7 +177,7 @@ static func _button(text: String, cb: Callable, width: int) -> Button:
 	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	b.custom_minimum_size = Vector2(width, 46)
 	b.add_theme_font_override("font", Hud.font_b)
-	b.add_theme_font_size_override("font_size", 17)
+	b.add_theme_font_size_override("font_size", Hud.ts(17))
 	var n := StyleBoxFlat.new()
 	n.bg_color = Color(1, 1, 1, 0.07)
 	n.set_corner_radius_all(6)

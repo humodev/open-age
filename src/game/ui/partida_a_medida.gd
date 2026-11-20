@@ -72,7 +72,7 @@ func _ready() -> void:
 	var title := Label.new()
 	title.text = "Partida personalizada"
 	title.add_theme_font_override("font", Hud.font_b)
-	title.add_theme_font_size_override("font_size", 24)
+	title.add_theme_font_size_override("font_size", Hud.ts(24))
 	title.add_theme_color_override("font_color", Palette.UI_ACCENT)
 	col.add_child(title)
 
@@ -115,7 +115,7 @@ func _ready() -> void:
 	var head := _row(col)
 	for h in [["", 6], ["", 70], ["Tipo", 100], ["Pueblo", 160], ["Dificultad", 110], ["Estilo", 125], ["Equipo", 110], ["Color", 120]]:
 		var l := _label(h[0], h[1])
-		l.add_theme_font_size_override("font_size", 13)
+		l.add_theme_font_size_override("font_size", Hud.ts(13))
 		head.add_child(l)
 	var civ_names: Array = ["Al azar"]
 	for k in _civ_keys:
@@ -168,7 +168,7 @@ func _ready() -> void:
 	_estado.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_estado.custom_minimum_size = Vector2(860, 0)
 	_estado.add_theme_font_override("font", Hud.font)
-	_estado.add_theme_font_size_override("font_size", 14)
+	_estado.add_theme_font_size_override("font_size", Hud.ts(14))
 	col.add_child(_estado)
 	var brow := _row(col)
 	brow.alignment = BoxContainer.ALIGNMENT_END
@@ -336,7 +336,7 @@ func _ob(items: Array, w: float) -> OptionButton:
 	var ob := OptionButton.new()
 	ob.custom_minimum_size = Vector2(w, 30)
 	ob.add_theme_font_override("font", Hud.font)
-	ob.add_theme_font_size_override("font_size", 14)
+	ob.add_theme_font_size_override("font_size", Hud.ts(14))
 	ob.fit_to_longest_item = false
 	ob.clip_text = true
 	for it in items:
@@ -349,7 +349,7 @@ func _check(text: String, tip: String) -> CheckButton:
 	cb.text = text
 	cb.tooltip_text = tip
 	cb.add_theme_font_override("font", Hud.font)
-	cb.add_theme_font_size_override("font_size", 14)
+	cb.add_theme_font_size_override("font_size", Hud.ts(14))
 	Opciones.interruptor_en(cb)
 	return cb
 
@@ -359,7 +359,7 @@ func _small_button(text: String, cb: Callable) -> Button:
 	b.text = text
 	b.custom_minimum_size = Vector2(0, 32)
 	b.add_theme_font_override("font", Hud.font)
-	b.add_theme_font_size_override("font_size", 14)
+	b.add_theme_font_size_override("font_size", Hud.ts(14))
 	var n := StyleBoxFlat.new()
 	n.bg_color = Color(1, 1, 1, 0.07)
 	n.set_corner_radius_all(5)

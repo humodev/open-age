@@ -883,13 +883,13 @@ func _paint(paint: bool) -> float:
 	var hw := _w - hx - PAD
 	var hy := y + 20
 	if paint:
-		draw_string(Hud.font_b, Vector2(hx, hy), c["name"], HORIZONTAL_ALIGNMENT_LEFT, hw - (28 if c.has("hotkey") else 0), 19, Palette.UI_TEXT)
+		draw_string(Hud.font_b, Vector2(hx, hy), c["name"], HORIZONTAL_ALIGNMENT_LEFT, hw - (28 if c.has("hotkey") else 0), Hud.ts(19), Palette.UI_TEXT)
 		if c.has("hotkey"):
-			draw_string(Hud.font_b, Vector2(hx, hy), "[%s]" % c["hotkey"], HORIZONTAL_ALIGNMENT_RIGHT, hw, 13, Palette.UI_DIM)
+			draw_string(Hud.font_b, Vector2(hx, hy), "[%s]" % c["hotkey"], HORIZONTAL_ALIGNMENT_RIGHT, hw, Hud.ts(13), Palette.UI_DIM)
 	if c["alt"] != "":
 		hy += 19
 		if paint:
-			draw_string(Hud.font, Vector2(hx, hy), c["alt"], HORIZONTAL_ALIGNMENT_LEFT, hw, 14, Palette.UI_DIM)
+			draw_string(Hud.font, Vector2(hx, hy), c["alt"], HORIZONTAL_ALIGNMENT_LEFT, hw, Hud.ts(14), Palette.UI_DIM)
 	hy += 22
 	if paint:
 		_flag(Vector2(hx, hy - 11), team, owner < 0 and not c["is_res"])
@@ -898,15 +898,15 @@ func _paint(paint: bool) -> float:
 		var ew := 0.0
 		if edad > 0:
 			var et := "Edad %s" % Sim._roman(edad)
-			ew = Hud.font_b.get_string_size(et, HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x + 8
-			draw_string(Hud.font_b, Vector2(hx, hy), et, HORIZONTAL_ALIGNMENT_RIGHT, hw, 13, Iconos.texto_edad(edad))
+			ew = Hud.font_b.get_string_size(et, HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(13)).x + 8
+			draw_string(Hud.font_b, Vector2(hx, hy), et, HORIZONTAL_ALIGNMENT_RIGHT, hw, Hud.ts(13), Iconos.texto_edad(edad))
 		# --- fin iconos ---
-		draw_string(Hud.font, Vector2(hx + 20, hy), _people_line(c), HORIZONTAL_ALIGNMENT_LEFT, hw - 20 - ew, 14, team.lightened(0.35) if owner >= 0 else Palette.UI_DIM)
+		draw_string(Hud.font, Vector2(hx + 20, hy), _people_line(c), HORIZONTAL_ALIGNMENT_LEFT, hw - 20 - ew, Hud.ts(14), team.lightened(0.35) if owner >= 0 else Palette.UI_DIM)
 	var role: String = c.get("role", "")
 	if role != "":
-		var rh := Hud.font_b.get_multiline_string_size(role, HORIZONTAL_ALIGNMENT_LEFT, hw, 13).y
+		var rh := Hud.font_b.get_multiline_string_size(role, HORIZONTAL_ALIGNMENT_LEFT, hw, Hud.ts(13)).y
 		if paint:
-			draw_multiline_string(Hud.font_b, Vector2(hx, hy + 20), role, HORIZONTAL_ALIGNMENT_LEFT, hw, 13, -1, Palette.UI_ACCENT)
+			draw_multiline_string(Hud.font_b, Vector2(hx, hy + 20), role, HORIZONTAL_ALIGNMENT_LEFT, hw, Hud.ts(13), -1, Palette.UI_ACCENT)
 		hy += 6 + rh
 	# --- iconos --- primera línea: «Podés…», «Falta: …» o «Necesita la edad III»
 	var status: Array = c.get("status", [])
@@ -931,15 +931,15 @@ func _paint(paint: bool) -> float:
 	# Descripción.
 	var desc: String = c.get("desc", "")
 	if desc != "":
-		var dh := Hud.font.get_multiline_string_size(desc, HORIZONTAL_ALIGNMENT_LEFT, tw, 14).y
+		var dh := Hud.font.get_multiline_string_size(desc, HORIZONTAL_ALIGNMENT_LEFT, tw, Hud.ts(14)).y
 		if paint:
-			draw_multiline_string(Hud.font, Vector2(x0, y + 13), desc, HORIZONTAL_ALIGNMENT_LEFT, tw, 14, -1, Color(Palette.UI_TEXT, 0.82))
+			draw_multiline_string(Hud.font, Vector2(x0, y + 13), desc, HORIZONTAL_ALIGNMENT_LEFT, tw, Hud.ts(14), -1, Color(Palette.UI_TEXT, 0.82))
 		y += dh + 8
 	var fx: String = c.get("effects", "")
 	if fx != "":
-		var fh := Hud.font_b.get_multiline_string_size(fx, HORIZONTAL_ALIGNMENT_LEFT, tw, 14).y
+		var fh := Hud.font_b.get_multiline_string_size(fx, HORIZONTAL_ALIGNMENT_LEFT, tw, Hud.ts(14)).y
 		if paint:
-			draw_multiline_string(Hud.font_b, Vector2(x0, y + 13), fx, HORIZONTAL_ALIGNMENT_LEFT, tw, 14, -1, Palette.UI_GOOD)
+			draw_multiline_string(Hud.font_b, Vector2(x0, y + 13), fx, HORIZONTAL_ALIGNMENT_LEFT, tw, Hud.ts(14), -1, Palette.UI_GOOD)
 		y += fh + 8
 	# Estadísticas en grilla de cuatro columnas.
 	var stats: Array = c["stats"]
@@ -951,8 +951,8 @@ func _paint(paint: bool) -> float:
 			var sx := x0 + (i % 4) * cw
 			var sy := y + (i / 4) * 36
 			if paint:
-				draw_string(Hud.font, Vector2(sx, sy + 11), s[0], HORIZONTAL_ALIGNMENT_LEFT, cw - 4, 11, Palette.UI_DIM)
-				draw_string(Hud.font_b, Vector2(sx, sy + 28), s[1], HORIZONTAL_ALIGNMENT_LEFT, cw - 4, 14 if String(s[1]).length() < 9 else 12, s[2])
+				draw_string(Hud.font, Vector2(sx, sy + 11), s[0], HORIZONTAL_ALIGNMENT_LEFT, cw - 4, Hud.ts(11), Palette.UI_DIM)
+				draw_string(Hud.font_b, Vector2(sx, sy + 28), s[1], HORIZONTAL_ALIGNMENT_LEFT, cw - 4, Hud.ts(14 if String(s[1]).length() < 9 else 12), s[2])
 		y += ceili(stats.size() / 4.0) * 36 + 2
 	# Costo y tiempo.
 	var cost: Dictionary = c["cost"]
@@ -966,13 +966,13 @@ func _paint(paint: bool) -> float:
 	if not state.is_empty():
 		y = _rule(y, paint)
 		if paint:
-			draw_string(Hud.font_b, Vector2(x0, y + 12), "AHORA", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(Palette.UI_ACCENT, 0.85))
+			draw_string(Hud.font_b, Vector2(x0, y + 12), "AHORA", HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(11), Color(Palette.UI_ACCENT, 0.85))
 		y += 18
 		for s: Array in state:
-			var sh := Hud.font.get_multiline_string_size(s[0], HORIZONTAL_ALIGNMENT_LEFT, tw - 12, 14).y
+			var sh := Hud.font.get_multiline_string_size(s[0], HORIZONTAL_ALIGNMENT_LEFT, tw - 12, Hud.ts(14)).y
 			if paint:
 				draw_circle(Vector2(x0 + 3, y + 8), 2.2, s[1])
-				draw_multiline_string(Hud.font, Vector2(x0 + 12, y + 13), s[0], HORIZONTAL_ALIGNMENT_LEFT, tw - 12, 14, -1, s[1])
+				draw_multiline_string(Hud.font, Vector2(x0 + 12, y + 13), s[0], HORIZONTAL_ALIGNMENT_LEFT, tw - 12, Hud.ts(14), -1, s[1])
 			y += sh + 3
 		y += 3
 	# Fortalezas y debilidades.
@@ -980,14 +980,14 @@ func _paint(paint: bool) -> float:
 		if pair[1] == "":
 			continue
 		var txt: String = "%s: %s" % [pair[0], pair[1]]
-		var th := Hud.font.get_multiline_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, tw, 13).y
+		var th := Hud.font.get_multiline_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, tw, Hud.ts(13)).y
 		if paint:
-			draw_multiline_string(Hud.font, Vector2(x0, y + 13), txt, HORIZONTAL_ALIGNMENT_LEFT, tw, 13, -1, Color(pair[2], 0.9))
+			draw_multiline_string(Hud.font, Vector2(x0, y + 13), txt, HORIZONTAL_ALIGNMENT_LEFT, tw, Hud.ts(13), -1, Color(pair[2], 0.9))
 		y += th + 4
 	# Pie: atajos y bloqueos.
 	for f: Array in c["foot"]:
 		if paint:
-			draw_string(Hud.font_b if f[1] == Palette.UI_BAD else Hud.font, Vector2(x0, y + 14), f[0], HORIZONTAL_ALIGNMENT_LEFT, tw, 13, f[1])
+			draw_string(Hud.font_b if f[1] == Palette.UI_BAD else Hud.font, Vector2(x0, y + 14), f[0], HORIZONTAL_ALIGNMENT_LEFT, tw, Hud.ts(13), f[1])
 		y += 19
 	return y + PAD - 4
 
@@ -1061,7 +1061,7 @@ func _draw_cost(at: Vector2, cost: Dictionary, time_ms: int, check: bool, owner:
 		var col: Color = Palette.RES.get(k, Color(rp.get("color", "#cccccc")))
 		Glyphs.draw(self, k if Palette.RES.has(k) else rp.get("icono", "riqueza"), Rect2(x, at.y + 2, 18, 18), col)
 		var ok: bool = not check or int(res.get(k, 0)) >= int(cost[k])
-		draw_string(Hud.font_b, Vector2(x + 22, at.y + 17), str(cost[k]), HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Palette.UI_TEXT if ok else Iconos.color_estado("falta", Palette.UI_ACCENT)) # --- iconos --- ámbar: falta juntar
+		draw_string(Hud.font_b, Vector2(x + 22, at.y + 17), str(cost[k]), HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(15), Palette.UI_TEXT if ok else Iconos.color_estado("falta", Palette.UI_ACCENT)) # --- iconos --- ámbar: falta juntar
 		x += 70
 	if time_ms > 0:
-		draw_string(Hud.font, Vector2(at.x, at.y + 17), "Tiempo %d s" % (time_ms / 1000), HORIZONTAL_ALIGNMENT_RIGHT, _w - PAD * 2, 14, Palette.UI_DIM)
+		draw_string(Hud.font, Vector2(at.x, at.y + 17), "Tiempo %d s" % (time_ms / 1000), HORIZONTAL_ALIGNMENT_RIGHT, _w - PAD * 2, Hud.ts(14), Palette.UI_DIM)

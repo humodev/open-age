@@ -39,6 +39,7 @@ extends Node3D
 ##   --ventana=ANCHOxALTO  ventana de ese tamaño (capturas a otras resoluciones)
 ##   --escala=auto|0.8|1|1.25|1.5  escala de la interfaz (si no, la de user://opciones.cfg)
 ##   --paleta=normal|deuteranopia|protanopia|tritanopia|relativa  modo de colores
+##   --texto=grande|normal  letra de la interfaz (si no, la de user://opciones.cfg)
 ##   --barras=1         barras de vida siempre visibles
 ##   --nombres=1        nombres en la grilla de órdenes
 ##   --abrir=opciones   abre el diálogo de opciones (también campanas e intro en el menú)
@@ -123,6 +124,8 @@ func _opciones_al_arrancar() -> void:
 		Opciones.escala = 0.0 if _args["escala"] == "auto" else float(_args["escala"])
 	if _args.has("paleta"):
 		Opciones.paleta = str(_args["paleta"])
+	if _args.has("texto"): # --- texto grande --- (proceso/46)
+		Opciones.texto_grande = _args["texto"] == "grande"
 	if _args.has("barras"):
 		Opciones.barras_siempre = _args["barras"] == "1"
 	if _args.has("nombres"): # --- aprender ---
@@ -925,7 +928,7 @@ func _cargar() -> void:
 		lbl.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 		lbl.grow_horizontal = Control.GROW_DIRECTION_BOTH
 		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		lbl.add_theme_font_size_override("font_size", 26)
+		lbl.add_theme_font_size_override("font_size", Hud.ts(26))
 		capa.add_child(lbl)
 		var ms_cuadro := int(Guardado.cfg().get("carga_ms_por_cuadro", 40))
 		var t0 := Time.get_ticks_msec()

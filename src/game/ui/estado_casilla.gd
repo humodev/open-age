@@ -66,7 +66,7 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 	# Un común largo que no entra ni achicado («Hito · edad I…» parecía de la edad I; jugador
 	# nuevo, ronda 5) usa su forma corta («Edad II»).
 	var dos: Array = [] # --- ronda 6 --- «Hito» arriba y «Edad II» abajo (jugador nuevo, ronda 6)
-	if comun != "" and c.has("common_corto") and _fit(Hud.font_b, comun, 11, r.size.x - 8) < 11:
+	if comun != "" and c.has("common_corto") and _fit(Hud.font_b, comun, Hud.ts(11), r.size.x - 8) < 11:
 		comun = str(c["common_corto"])
 		dos = c.get("common_dos", [])
 	# Franja de lo que falta en varios renglones (costo real, 4k): el glifo se achica y queda un
@@ -88,8 +88,8 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 		# --- ronda 6 --- glifo más chico y dos renglones: «Hito» (tenue) y «Edad II»
 		Glyphs.draw(ci, c["icon"], Rect2(r.position.x + (r.size.x - 18) / 2.0 + 2, r.position.y + 3, 18, 18), col)
 		var tcol2 := tcol
-		ci.draw_string(Hud.font_b, Vector2(r.position.x + 2, r.position.y + 30), str(dos[0]), HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, _fit(Hud.font_b, str(dos[0]), 10, r.size.x - 4), Palette.UI_DIM.lightened(0.2))
-		ci.draw_string(Hud.font_b, Vector2(r.position.x + 2, r.position.y + 40.5), str(dos[1]), HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, _fit(Hud.font_b, str(dos[1]), 11, r.size.x - 4), tcol2)
+		ci.draw_string(Hud.font_b, Vector2(r.position.x + 2, r.position.y + 30), str(dos[0]), HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, _fit(Hud.font_b, str(dos[0]), Hud.ts(10), r.size.x - 4), Palette.UI_DIM.lightened(0.2))
+		ci.draw_string(Hud.font_b, Vector2(r.position.x + 2, r.position.y + 40.5), str(dos[1]), HORIZONTAL_ALIGNMENT_CENTER, r.size.x - 4, _fit(Hud.font_b, str(dos[1]), Hud.ts(11), r.size.x - 4), tcol2)
 	elif nombre != "":
 		var lines := 1 if (locked and (edad_pedida(str(c["locked"])) != "" or est == "tope")) or (not afford and not locked) else 2
 		# Compacto (jugador nuevo, ronda 4): sin común, un renglón no alcanza («Trabajo de la
@@ -98,7 +98,7 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 		# izquierda: «aller de asedio»): si no entra en un renglón, glifo chico y dos renglones.
 		var etq := comun if comun != "" else nombre
 		var fetq: Font = Hud.font_b if comun != "" else Hud.font
-		var compacto := lines == 1 and _fit_lineas(fetq, etq, 10, r.size.x - 4, 1) < 9
+		var compacto := lines == 1 and _fit_lineas(fetq, etq, Hud.ts(10), r.size.x - 4, 1) < 9
 		if compacto:
 			Glyphs.draw(ci, c["icon"], Rect2(r.position.x + (r.size.x - 18) / 2.0 + 2, r.position.y + 3, 18, 18), col)
 			var ajc := _ajuste(fetq, etq, 9, r.size.x - 4, 2, str(c.get("corto", "")) if comun == "" else "")
@@ -107,7 +107,7 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 			Glyphs.draw(ci, c["icon"], Rect2(r.position.x + (r.size.x - 26) / 2.0 + 2, r.position.y + 3, 26, 26), col)
 		if compacto:
 			pass
-		elif comun != "" and lines == 2 and _fit(Hud.font_b, comun, 11, r.size.x - 4) < 9:
+		elif comun != "" and lines == 2 and _fit(Hud.font_b, comun, Hud.ts(11), r.size.x - 4) < 9:
 			# --- depósitos de comida --- (4m) común largo ("Granero y leñera"): en dos renglones
 			# y sin el propio, que queda en la ayuda; achicado hasta lo ilegible no sirve.
 			var ajb := _ajuste(Hud.font_b, comun, 10, r.size.x - 4, 2) # «Depósito de piedra y riqueza»
@@ -162,7 +162,7 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 			var icol: Color = Palette.RES.get(k, Color(rp.get("color", "#cccccc")))
 			Glyphs.draw(ci, icon_k, Rect2(p.x + 3, p.y + (rh - gs) / 2.0, gs, gs), icol)
 			# --- iconos --- el número en el color del recurso que falta (no en rojo: no es un error)
-			ci.draw_string(Hud.font_b, Vector2(p.x + gs + 5, p.y + rh - (4.0 if solo else 2.5)), items[i][1], HORIZONTAL_ALIGNMENT_LEFT, band.size.x - gs - 6, 13 if solo else 12, _texto_recurso(icol))
+			ci.draw_string(Hud.font_b, Vector2(p.x + gs + 5, p.y + rh - (4.0 if solo else 2.5)), items[i][1], HORIZONTAL_ALIGNMENT_LEFT, band.size.x - gs - 6, Hud.ts(13 if solo else 12), _texto_recurso(icol))
 		# --- fin costo real ---
 	# --- ronda 7 --- estrellita de «recomendado» (arriba a la derecha, si está libre)
 	if c.get("recomendado", false) and not locked and est != "en_curso" and est != "aviso" and int(c.get("en_cola", 0)) == 0:
@@ -171,13 +171,13 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 	var cola := int(c.get("en_cola", 0))
 	if cola > 0 and not locked:
 		var txt := "×%d" % cola
-		var tw := Hud.font_b.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x + 8
+		var tw := Hud.font_b.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(12)).x + 8
 		var pr := Rect2(r.end.x - tw - 3, r.position.y + 3, tw, 17)
 		var psb := StyleBoxFlat.new()
 		psb.bg_color = FONDO_PASTILLA
 		psb.set_corner_radius_all(4)
 		ci.draw_style_box(psb, pr)
-		ci.draw_string(Hud.font_b, Vector2(pr.position.x, pr.end.y - 4), txt, HORIZONTAL_ALIGNMENT_CENTER, pr.size.x, 12, Palette.UI_ACCENT)
+		ci.draw_string(Hud.font_b, Vector2(pr.position.x, pr.end.y - 4), txt, HORIZONTAL_ALIGNMENT_CENTER, pr.size.x, Hud.ts(12), Palette.UI_ACCENT)
 
 
 ## --- iconos --- (proceso/28) Estado de una casilla, en orden de prioridad:
@@ -269,7 +269,7 @@ static func _aviso_pob(ci: CanvasItem, r: Rect2, col: Color) -> void:
 	sb.set_corner_radius_all(4)
 	ci.draw_style_box(sb, r)
 	Glyphs.draw(ci, "pob", Rect2(r.position + Vector2(1, 1), Vector2(r.size.y - 2, r.size.y - 2)), Iconos.OSCURO)
-	ci.draw_string(Hud.font_b, Vector2(r.position.x + r.size.y - 5, r.end.y - 3), "!", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Iconos.OSCURO)
+	ci.draw_string(Hud.font_b, Vector2(r.position.x + r.size.y - 5, r.end.y - 3), "!", HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(13), Iconos.OSCURO)
 
 
 ## Primera línea de la ayuda y de la ficha (proceso/28): qué pasa si hago clic ahora. Devuelve
@@ -304,7 +304,7 @@ static func lineas_ayuda(c: Dictionary, res: Dictionary, falta_txt: String) -> A
 static func dibujar_lineas(ci: CanvasItem, at: Vector2, lineas: Array, fs0: int, w: float, paint: bool) -> float:
 	var y := 0.0
 	for ln: Array in lineas:
-		var fs := fs0
+		var fs := Hud.ts(fs0)
 		while fs > 10 and ln.reduce(func(acc: float, seg: Array) -> float: return acc + Hud.font_b.get_string_size(seg[0], HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x, 0.0) > w:
 			fs -= 1
 		var x := at.x
@@ -455,7 +455,7 @@ static func _pastilla(ci: CanvasItem, r: Rect2, txt: String, col: Color) -> void
 	sb.bg_color = FONDO_PASTILLA
 	sb.set_corner_radius_all(4)
 	ci.draw_style_box(sb, r)
-	ci.draw_string(Hud.font_b, Vector2(r.position.x, r.end.y - 4), txt, HORIZONTAL_ALIGNMENT_CENTER, r.size.x, 13, col)
+	ci.draw_string(Hud.font_b, Vector2(r.position.x, r.end.y - 4), txt, HORIZONTAL_ALIGNMENT_CENTER, r.size.x, Hud.ts(13), col)
 
 
 static func _candado(ci: CanvasItem, r: Rect2, col: Color) -> void:

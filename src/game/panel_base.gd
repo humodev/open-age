@@ -40,7 +40,7 @@ func setup(h: Hud) -> void:
 	tl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	if Hud.font_b != null:
 		tl.add_theme_font_override("font", Hud.font_b)
-	tl.add_theme_font_size_override("font_size", 20)
+	tl.add_theme_font_size_override("font_size", Hud.ts(20))
 	top.add_child(tl)
 	var x := Button.new()
 	x.text = "×"
@@ -50,7 +50,7 @@ func setup(h: Hud) -> void:
 	top.add_child(x)
 	var hint := Label.new()
 	hint.text = "Clic: ir al siguiente · Mayús + clic: elegir todos"
-	hint.add_theme_font_size_override("font_size", 12)
+	hint.add_theme_font_size_override("font_size", Hud.ts(12))
 	hint.add_theme_color_override("font_color", Palette.UI_DIM)
 	vb.add_child(hint)
 	var sc := ScrollContainer.new()
@@ -162,7 +162,7 @@ func _armar(tipos: Array) -> void:
 		var h := Label.new()
 		h.text = c
 		h.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		h.add_theme_font_size_override("font_size", 12)
+		h.add_theme_font_size_override("font_size", Hud.ts(12))
 		h.add_theme_color_override("font_color", Palette.UI_DIM)
 		_grid.add_child(h)
 	for t: String in tipos:

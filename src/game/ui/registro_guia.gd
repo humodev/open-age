@@ -73,7 +73,7 @@ func setup(h) -> void:
 	boton = Button.new()
 	boton.text = "Releer la guía  G"
 	boton.focus_mode = Control.FOCUS_NONE
-	boton.add_theme_font_size_override("font_size", 14)
+	boton.add_theme_font_size_override("font_size", Hud.ts(14))
 	boton.visible = false
 	boton.pressed.connect(func() -> void: abrir("registro"))
 	add_child(boton)
@@ -83,7 +83,7 @@ func setup(h) -> void:
 	boton_como.tooltip_text = "Abre la lección de la Guía (%s) sobre lo que elegiste" % Teclas.texto("guia")
 	boton_como.focus_mode = Control.FOCUS_NONE
 	boton_como.add_theme_font_override("font", Hud.font_b)
-	boton_como.add_theme_font_size_override("font_size", 13)
+	boton_como.add_theme_font_size_override("font_size", Hud.ts(13))
 	boton_como.add_theme_color_override("font_color", Palette.UI_TEXT)
 	boton_como.add_theme_color_override("font_hover_color", Palette.UI_ACCENT)
 	for st in ["normal", "hover", "pressed"]:
@@ -119,7 +119,7 @@ func setup(h) -> void:
 	var tl := Label.new()
 	tl.text = "La Guía"
 	tl.add_theme_font_override("font", Hud.font_b)
-	tl.add_theme_font_size_override("font_size", 24)
+	tl.add_theme_font_size_override("font_size", Hud.ts(24))
 	tl.add_theme_color_override("font_color", Palette.UI_ACCENT)
 	top.add_child(tl)
 	_tab_lec = _tab_button("Lecciones", "lecciones")
@@ -151,7 +151,7 @@ func setup(h) -> void:
 			var hl := Label.new()
 			hl.text = "Edad " + ["0", "I", "II", "III", "IV", "V"][clampi(ed, 0, 5)]
 			hl.add_theme_font_override("font", Hud.font_b)
-			hl.add_theme_font_size_override("font_size", 13)
+			hl.add_theme_font_size_override("font_size", Hud.ts(13))
 			hl.add_theme_color_override("font_color", Palette.UI_DIM)
 			_indice.add_child(hl)
 		var b := Button.new()
@@ -160,7 +160,7 @@ func setup(h) -> void:
 		b.toggle_mode = true
 		b.focus_mode = Control.FOCUS_NONE
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.add_theme_font_size_override("font_size", 15)
+		b.add_theme_font_size_override("font_size", Hud.ts(15))
 		b.pressed.connect(abrir_leccion.bind(String(id), []))
 		_indice.add_child(b)
 	var cs := ScrollContainer.new()
@@ -200,7 +200,7 @@ func _tab_button(txt: String, tab: String) -> Button:
 	b.text = txt
 	b.toggle_mode = true
 	b.focus_mode = Control.FOCUS_NONE
-	b.add_theme_font_size_override("font_size", 15)
+	b.add_theme_font_size_override("font_size", Hud.ts(15))
 	b.pressed.connect(func() -> void:
 		_tab = tab
 		_rebuild())
@@ -288,21 +288,21 @@ func _rebuild_leccion() -> void:
 	var t := Label.new()
 	t.text = String(lec.get("titulo", _actual))
 	t.add_theme_font_override("font", Hud.font_b)
-	t.add_theme_font_size_override("font_size", 21)
+	t.add_theme_font_size_override("font_size", Hud.ts(21))
 	t.add_theme_color_override("font_color", Palette.UI_ACCENT)
 	_cuerpo.add_child(t)
 	for par in [["Qué es", "que"], ["Cuándo conviene", "cuando"], ["Un consejo", "consejo"]]:
 		var h := Label.new()
 		h.text = par[0]
 		h.add_theme_font_override("font", Hud.font_b)
-		h.add_theme_font_size_override("font_size", 14)
+		h.add_theme_font_size_override("font_size", Hud.ts(14))
 		h.add_theme_color_override("font_color", Palette.UI_DIM)
 		_cuerpo.add_child(h)
 		var p := Label.new()
 		p.text = texto(String(lec.get(par[1], "")), reglas)
 		p.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p.custom_minimum_size = Vector2(500, 0)
-		p.add_theme_font_size_override("font_size", 17)
+		p.add_theme_font_size_override("font_size", Hud.ts(17))
 		_cuerpo.add_child(p)
 
 
@@ -320,14 +320,14 @@ func _rebuild_registro() -> void:
 		var who := Label.new()
 		who.text = "%s · %s" % [Hud._fmt_time(int(m["t"])), m["quien"]]
 		who.add_theme_font_override("font", Hud.font_b)
-		who.add_theme_font_size_override("font_size", 14)
+		who.add_theme_font_size_override("font_size", Hud.ts(14))
 		who.add_theme_color_override("font_color", Palette.UI_ACCENT if i == mensajes.size() - 1 else Palette.UI_DIM)
 		_lista.add_child(who)
 		var txt := Label.new()
 		txt.text = m["texto"]
 		txt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		txt.custom_minimum_size = Vector2(780, 0)
-		txt.add_theme_font_size_override("font_size", 17)
+		txt.add_theme_font_size_override("font_size", Hud.ts(17))
 		_lista.add_child(txt)
 	_scroll.scroll_vertical = 0
 
@@ -465,16 +465,16 @@ func _dibujar_como() -> void:
 	var cy := b.size.y * 0.5
 	var f: Font = Hud.font_b
 	b.draw_circle(Vector2(15, cy), 9.0, Palette.UI_ACCENT)
-	var q := f.get_string_size("?", HORIZONTAL_ALIGNMENT_LEFT, -1, 13)
-	b.draw_string(f, Vector2(15 - q.x * 0.5, cy + 5), "?", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.07, 0.075, 0.085))
+	var q := f.get_string_size("?", HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(13))
+	b.draw_string(f, Vector2(15 - q.x * 0.5, cy + 5), "?", HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(13), Color(0.07, 0.075, 0.085))
 	var t := Teclas.texto("como_se_usa")
 	if t == "—":
 		return
-	var tw := maxf(18.0, f.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x + 8)
+	var tw := maxf(18.0, f.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(12)).x + 8)
 	var kr := Rect2(b.size.x - tw - 7, cy - 9, tw, 18)
 	b.draw_rect(kr, Color(1, 1, 1, 0.08))
 	b.draw_rect(kr, Color(Palette.UI_DIM, 0.8), false, 1.0)
-	b.draw_string(f, Vector2(kr.position.x + (tw - f.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x) * 0.5, cy + 4.5), t, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Palette.UI_DIM)
+	b.draw_string(f, Vector2(kr.position.x + (tw - f.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x) * 0.5, cy + 4.5), t, HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(12), Palette.UI_DIM)
 
 
 ## --- ronda 9 --- La Guía abierta va entre la barra de arriba y el panel de la selección (con el

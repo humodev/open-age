@@ -149,7 +149,7 @@ func _draw() -> void:
 		var cut := texto.find("\n")
 		var titulo := texto if cut < 0 else texto.substr(0, cut)
 		var resto := "" if cut < 0 else texto.substr(cut + 1)
-		var rh := 0.0 if resto == "" else Hud.font.get_multiline_string_size(resto, HORIZONTAL_ALIGNMENT_LEFT, ANCHO - 60, 14).y + 2
+		var rh := 0.0 if resto == "" else Hud.font.get_multiline_string_size(resto, HORIZONTAL_ALIGNMENT_LEFT, ANCHO - 60, Hud.ts(14)).y + 2
 		var renglones := renglones_de(resto) # --- ronda 6 ---
 		if not renglones.is_empty():
 			rh = alto_renglones(renglones)
@@ -166,7 +166,7 @@ func _draw() -> void:
 		draw_style_box(sb, r)
 		Glyphs.draw(self, TIPOS[a["tipo"]]["icono"], Rect2(r.position + Vector2(14, 8), Vector2(22, 22)), Color(col, alpha))
 		# Un título largo achica la letra (hasta 14) antes que cortarse ("…atacá o subí de edad", 4j).
-		var ts := maxi(14, EstadoCasilla._fit(Hud.font_b, titulo, 17, ANCHO - 140))
+		var ts := maxi(14, EstadoCasilla._fit(Hud.font_b, titulo, Hud.ts(17), ANCHO - 140))
 		draw_string(Hud.font_b, Vector2(r.position.x + 46, r.position.y + 25), titulo, HORIZONTAL_ALIGNMENT_LEFT, ANCHO - 140, ts, Color(Palette.UI_TEXT, alpha))
 		if not renglones.is_empty(): # --- ronda 6 ---
 			var ry := r.position.y + ALTO + 2.0
@@ -177,7 +177,7 @@ func _draw() -> void:
 				draw_multiline_string(Hud.font, Vector2(r.position.x + 62, base), line, HORIZONTAL_ALIGNMENT_LEFT, ANCHO - 70, RENGLON_PX, -1, Color(Palette.UI_TEXT.darkened(0.08), alpha))
 				ry += lh + RENGLON_SEP
 		elif resto != "":
-			draw_multiline_string(Hud.font, Vector2(r.position.x + 46, r.position.y + 45), resto, HORIZONTAL_ALIGNMENT_LEFT, ANCHO - 60, 14, -1, Color(Palette.UI_DIM.lightened(0.15), alpha))
+			draw_multiline_string(Hud.font, Vector2(r.position.x + 46, r.position.y + 45), resto, HORIZONTAL_ALIGNMENT_LEFT, ANCHO - 60, Hud.ts(14), -1, Color(Palette.UI_DIM.lightened(0.15), alpha))
 		var right := ""
 		if int(a["n"]) > 1:
 			right = "×%d" % int(a["n"])
@@ -185,7 +185,7 @@ func _draw() -> void:
 			right = ("%s  " % right if right != "" else "") + ("clic" if espacio else "Espacio")
 			espacio = true
 		if right != "":
-			draw_string(Hud.font_b, Vector2(r.position.x, r.position.y + 24), right, HORIZONTAL_ALIGNMENT_RIGHT, ANCHO - 14, 13, Color(col if a.get("lugar") is Vector3 else Palette.UI_DIM, alpha))
+			draw_string(Hud.font_b, Vector2(r.position.x, r.position.y + 24), right, HORIZONTAL_ALIGNMENT_RIGHT, ANCHO - 14, Hud.ts(13), Color(col if a.get("lugar") is Vector3 else Palette.UI_DIM, alpha))
 		_hits.append([r, a])
 		y += h + SEP
 

@@ -95,8 +95,8 @@ func _draw() -> void:
 		sb.border_color = Color(Palette.UI_ACCENT, 0.8) if activo else Color(1, 1, 1, 0.12)
 		sb.set_border_width_all(1)
 		draw_style_box(sb, r)
-		draw_string(Hud.font_b, r.position + Vector2(6, 15), str(g[0]), HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Palette.UI_ACCENT)
+		draw_string(Hud.font_b, r.position + Vector2(6, 15), str(g[0]), HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(13), Palette.UI_ACCENT)
 		Glyphs.draw(self, Glyphs.resolve(g[3], g[2]), Rect2(r.position + Vector2(18, 4), Vector2(22, 22)), Palette.UI_TEXT)
-		draw_string(Hud.font_b, r.position + Vector2(0, r.size.y - 4), str((g[1] as Array).size()), HORIZONTAL_ALIGNMENT_RIGHT, r.size.x - 6, 13, Palette.UI_TEXT)
+		draw_string(Hud.font_b, r.position + Vector2(0, r.size.y - 4), str((g[1] as Array).size()), HORIZONTAL_ALIGNMENT_RIGHT, r.size.x - 6, Hud.ts(13), Palette.UI_TEXT)
 		_hits.append([r, g[0]])
 		x += ANCHO + SEP

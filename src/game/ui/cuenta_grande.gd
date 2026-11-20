@@ -168,5 +168,5 @@ func _draw() -> void:
 	var big := col.lightened(0.25)
 	if secs <= 60:
 		big = big.lerp(Color.WHITE, 0.35 + 0.35 * sin(Time.get_ticks_msec() / 160.0))
-	draw_string(Hud.font_b, Vector2(r.position.x, r.position.y + 20), title, HORIZONTAL_ALIGNMENT_CENTER, r.size.x, 12, Palette.UI_TEXT)
-	draw_string(Hud.font_b, Vector2(r.position.x, r.position.y + 55), "PARADA" if paused else Hud._fmt_time(secs), HORIZONTAL_ALIGNMENT_CENTER, r.size.x, 34, big)
+	draw_string(Hud.font_b, Vector2(r.position.x, r.position.y + 20), title, HORIZONTAL_ALIGNMENT_CENTER, r.size.x, Hud.ts(12), Palette.UI_TEXT)
+	draw_string(Hud.font_b, Vector2(r.position.x, r.position.y + 55), "PARADA" if paused else Hud._fmt_time(secs), HORIZONTAL_ALIGNMENT_CENTER, r.size.x, Hud.ts(34), big)

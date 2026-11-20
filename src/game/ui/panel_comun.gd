@@ -19,11 +19,11 @@ const FN_NAMES := {"civil": "civil", "choque": "choque", "distancia": "distancia
 
 
 static func text(ci: CanvasItem, pos: Vector2, s: String, size: int = 14, col: Color = Palette.UI_TEXT, bold := false, width := -1.0, align := HORIZONTAL_ALIGNMENT_LEFT) -> void:
-	ci.draw_string(Hud.font_b if bold else Hud.font, pos, s, align, width, size, col)
+	ci.draw_string(Hud.font_b if bold else Hud.font, pos, s, align, width, Hud.ts(size), col)
 
 
 static func title(ci: CanvasItem, pos: Vector2, s: String) -> void:
-	ci.draw_string(Hud.font_b, pos, s, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Palette.UI_ACCENT)
+	ci.draw_string(Hud.font_b, pos, s, HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(13), Palette.UI_ACCENT)
 
 
 static func bar(ci: CanvasItem, r: Rect2, k: float, col: Color) -> void:
@@ -36,12 +36,12 @@ static func sep(ci: CanvasItem, y: float, w: float) -> void:
 
 
 static func multiline(ci: CanvasItem, pos: Vector2, s: String, width: float, size: int = 13, col: Color = Palette.UI_DIM) -> float:
-	ci.draw_multiline_string(Hud.font, pos, s, HORIZONTAL_ALIGNMENT_LEFT, width, size, -1, col)
-	return Hud.font.get_multiline_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, width, size).y
+	ci.draw_multiline_string(Hud.font, pos, s, HORIZONTAL_ALIGNMENT_LEFT, width, Hud.ts(size), -1, col)
+	return Hud.font.get_multiline_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, width, Hud.ts(size)).y
 
 
 static func text_h(s: String, width: float, size: int = 13) -> float:
-	return Hud.font.get_multiline_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, width, size).y
+	return Hud.font.get_multiline_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, width, Hud.ts(size)).y
 
 
 ## Color e ícono de un recurso, también los propios (mit'a, fama, kulliñ).
@@ -116,8 +116,8 @@ static func frame(ci: CanvasItem, size: Vector2, head: String, key: String) -> v
 	var sb := Hud.panel_box(8)
 	sb.bg_color = Color(Palette.UI_BG, 0.97) # opaco: puede tapar los objetivos de campaña
 	ci.draw_style_box(sb, Rect2(Vector2.ZERO, size))
-	ci.draw_string(Hud.font_b, Vector2(16, 30), head, HORIZONTAL_ALIGNMENT_LEFT, -1, 19, Palette.UI_TEXT)
-	ci.draw_string(Hud.font_b, Vector2(0, 28), "%s  ✕" % key, HORIZONTAL_ALIGNMENT_RIGHT, size.x - 14, 13, Palette.UI_DIM)
+	ci.draw_string(Hud.font_b, Vector2(16, 30), head, HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(19), Palette.UI_TEXT)
+	ci.draw_string(Hud.font_b, Vector2(0, 28), "%s  ✕" % key, HORIZONTAL_ALIGNMENT_RIGHT, size.x - 14, Hud.ts(13), Palette.UI_DIM)
 	ci.draw_line(Vector2(14, 42), Vector2(size.x - 14, 42), Palette.UI_LINE, 1)
 
 

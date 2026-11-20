@@ -108,7 +108,7 @@ func _draw() -> void:
 	var head := "Victoria" if won else ("Empate" if winner < 0 and sim.end_reason == "tiempo" else ("Fin de la partida" if winner < 0 else "Derrota"))
 	C.text(self, o + Vector2(32, 56), head, 40, Palette.UI_ACCENT if won else (Palette.UI_NEUTRAL if winner < 0 else Palette.UI_BAD), true)
 	if festejo != "": # --- ronda 6 --- al lado de «Victoria», con un destello que late
-		var hw := Hud.font_b.get_string_size(head, HORIZONTAL_ALIGNMENT_LEFT, -1, 40).x
+		var hw := Hud.font_b.get_string_size(head, HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(40)).x
 		var glow := 0.75 + 0.25 * sin(Time.get_ticks_msec() / 260.0)
 		C.text(self, o + Vector2(32 + hw + 28, 52), festejo, 28, Palette.UI_ACCENT.lightened(0.25 * glow), true)
 	var secs: int = datos.now_s()
@@ -166,7 +166,7 @@ func _table(r: Rect2) -> void:
 			var gw: float = (i1 - i0 + 1) * cw
 			draw_rect(Rect2(gx + 4, y - 8, gw - 8, 1), Palette.UI_LINE)
 			var gl := "%s · %d" % [_team_name(t), sim.team_score(t)]
-			if Hud.font_b.get_string_size(gl, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x > gw - 8:
+			if Hud.font_b.get_string_size(gl, HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(12)).x > gw - 8:
 				gl = "Equipo %d · %d" % [t + 1, sim.team_score(t)]
 			C.text(self, Vector2(gx, y + 6), gl, 12, Palette.UI_ACCENT if t == sim.team_of(hud.local) else Palette.UI_DIM, true, gw - 6, HORIZONTAL_ALIGNMENT_RIGHT)
 			i0 = i1 + 1
@@ -234,7 +234,7 @@ func _chart_box(r: Rect2) -> void:
 	var ty := r.position.y + 12
 	for i in CHARTS.size():
 		var label: String = CHARTS[i][1]
-		var tw := Hud.font_b.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x + 20
+		var tw := Hud.font_b.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(12)).x + 20
 		var tr := Rect2(x, ty, tw, 24)
 		var tsb := StyleBoxFlat.new()
 		tsb.set_corner_radius_all(5)
@@ -331,7 +331,7 @@ func _origins(r: Rect2) -> void:
 		if not used.has(o):
 			continue
 		var label: String = C.ORIGIN_NAMES[o]
-		var lw := Hud.font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x + 30
+		var lw := Hud.font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(12)).x + 30
 		if lx + lw > r.end.x:
 			lx = r.position.x
 			y += 20

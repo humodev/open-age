@@ -29,7 +29,7 @@ func setup(h) -> void:
 	var tl := Label.new()
 	tl.text = "Atajos de teclado"
 	tl.add_theme_font_override("font", Hud.font_b)
-	tl.add_theme_font_size_override("font_size", 24)
+	tl.add_theme_font_size_override("font_size", Hud.ts(24))
 	tl.add_theme_color_override("font_color", Palette.UI_ACCENT)
 	vb.add_child(tl)
 	_cols = HBoxContainer.new()
@@ -38,7 +38,7 @@ func setup(h) -> void:
 	vb.add_child(_cols)
 	var pie := Label.new()
 	pie.name = "Pie"
-	pie.add_theme_font_size_override("font_size", 13)
+	pie.add_theme_font_size_override("font_size", Hud.ts(13))
 	pie.add_theme_color_override("font_color", Palette.UI_DIM)
 	vb.add_child(pie)
 	var cb := Button.new()
@@ -135,19 +135,19 @@ func _rebuild() -> void:
 		var h := Label.new()
 		h.text = sec[0]
 		h.add_theme_font_override("font", Hud.font_b)
-		h.add_theme_font_size_override("font_size", 17)
+		h.add_theme_font_size_override("font_size", Hud.ts(17))
 		h.add_theme_color_override("font_color", Palette.UI_ACCENT)
 		col.add_child(h)
 		for row: Array in sec[1]:
 			var key := Label.new()
 			key.text = row[0]
 			key.add_theme_font_override("font", Hud.font_b)
-			key.add_theme_font_size_override("font_size", 15)
+			key.add_theme_font_size_override("font_size", Hud.ts(15))
 			key.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			col.add_child(key)
 			var what := Label.new()
 			what.text = row[1]
-			what.add_theme_font_size_override("font_size", 13)
+			what.add_theme_font_size_override("font_size", Hud.ts(13))
 			what.add_theme_color_override("font_color", Palette.UI_DIM.lightened(0.25))
 			what.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			what.custom_minimum_size = Vector2(230, 0)
