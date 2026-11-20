@@ -582,7 +582,14 @@ static func _prenda(parts: Array, kind: String, col: Color, tela: Color, P: Call
 				parts.append([_cyl(0.1, 0.14, 0.23), Transform3D(Basis.from_scale(Vector3(1, 1, 0.75)), hips + Vector3(0, -0.1, 0)), tela, B.call("hips")])
 				parts.append([_cyl(0.142, 0.142, 0.02), Transform3D(Basis.from_scale(Vector3(1, 1, 0.76)), hips + Vector3(0, -0.205, 0)), col, B.call("hips")])
 				if vest.has("tocapu"):
-					_tocapu(parts, chest + Vector3(0, 0.02, 0.07), vest["tocapu"], 0.022, B.call("chest"))
+					_tocapu(parts, chest + Vector3(0, 0.02, 0.07), vest["tocapu"], 0.019, B.call("chest"))
+					if vest.get("tocapu_falda", false): # el unku de tocapu, también abajo
+						_tocapu(parts, hips + Vector3(0, -0.12, 0.1), vest["tocapu"], 0.019, B.call("hips"))
+				elif vest.has("franjas"): # unku listado: dos franjas de arriba abajo
+					var fc := Color(str(vest["franjas"]))
+					for fx in [-0.035, 0.035]:
+						parts.append([_box(Vector3(0.028, 0.16, 0.01)), Transform3D(Basis.IDENTITY, chest + Vector3(fx, 0.0, 0.066)), fc, B.call("chest")])
+						parts.append([_box(Vector3(0.03, 0.2, 0.01)), Transform3D(Basis(Vector3.RIGHT, -0.16), hips + Vector3(fx * 1.2, -0.1, 0.092)), fc, B.call("hips")])
 				else:
 					parts.append([_box(Vector3(0.14, 0.035, 0.012)), Transform3D(Basis.IDENTITY, chest + Vector3(0, 0.02, 0.066)), col, B.call("chest")])
 				return
@@ -612,9 +619,10 @@ static func _prenda(parts: Array, kind: String, col: Color, tela: Color, P: Call
 static func _tocado(parts: Array, kind: String, col: Color, head: Vector3, bone: int, vest := {}) -> void:
 	match kind:
 		"vincha":
-			parts.append([_cyl(0.07, 0.07, 0.022, 12), Transform3D(Basis.from_scale(Vector3(0.95, 1, 1.0)), head + Vector3(0, 0.1, 0.0)), col, bone])
+			var vy := 0.115 if vest.has("pelo_forma") else 0.1 # --- aldeanos por retrato --- en el nacimiento del pelo
+			parts.append([_cyl(0.07, 0.07, 0.022, 12), Transform3D(Basis.from_scale(Vector3(0.95, 1, 1.0)), head + Vector3(0, vy, 0.0)), col, bone])
 			if vest.has("vincha_tocapu"): # --- aldeanos por retrato --- el tejido al frente y la borla
-				_tocapu(parts, head + Vector3(0, 0.1, 0.07), {"colores": vest["vincha_tocapu"], "filas": 1, "cols": 5}, 0.012, bone)
+				_tocapu(parts, head + Vector3(0, vy, 0.068), {"colores": vest["vincha_tocapu"], "filas": 1, "cols": 5}, 0.009, bone)
 			if vest.has("borla"):
 				var bc := Color(str(vest["borla"]))
 				parts.append([_cyl(0.004, 0.004, 0.06, 4), Transform3D(Basis.IDENTITY, head + Vector3(0.066, 0.07, 0.01)), bc, bone])

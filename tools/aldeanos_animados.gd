@@ -35,6 +35,8 @@ func _initialize() -> void:
 			_poses.call_deferred()
 		"tropas":
 			_tropas.call_deferred()
+		"personas":
+			_personas.call_deferred()
 		_:
 			main = load("res://src/game/main.tscn").instantiate()
 			root.add_child(main)
@@ -120,9 +122,9 @@ func _poses() -> void:
 
 
 ## Pone un aldeano de la vitrina en una acción, avanzado `t` segundos.
-func _pose(av: AldeanoAnimado.Estado, act: String, st: Dictionary, team: Color, t: float) -> void:
+func _pose(av: AldeanoAnimado.Estado, act: String, st: Dictionary, team: Color, t: float, malla := true) -> void:
 	var acts: Dictionary = AldeanoAnimado.cfg().get("acciones", {})
-	if not av.tropa:
+	if not av.tropa and malla:
 		var tool: String = acts.get(act, {}).get("herramienta", "") if not args.has("herramienta") else str(args["herramienta"])
 		av.mi.mesh = AldeanoAnimado.malla(st, team, tool, Palette.RES.get("madera", Color.WHITE) if act == "caminar" else Color(0, 0, 0, 0))
 	AldeanoAnimado._propio(av)
@@ -131,6 +133,43 @@ func _pose(av: AldeanoAnimado.Estado, act: String, st: Dictionary, team: Color, 
 	var names: Array = a.get("anims", [a.get("anim", "Idle_A")])
 	ap.play("+".join(PackedStringArray(names)))
 	ap.advance(t * ap.current_animation_length if not act.begins_with("morir") else 2.0)
+
+
+# ---------------------------------------------------------------- Aldeanos por retrato
+
+## --- aldeanos por retrato --- (proceso/27-animaciones/04) Hombres y mujeres de un pueblo, una
+## fila por edad, cada uno con el trabajo de su retrato. Una captura por edad.
+##   godot --path . -s tools/aldeanos_animados.gd -- --modo=personas [--civ=tawantinsuyu] [--edades=1,4]
+func _personas() -> void:
+	var w := _escena()
+	var cam: Camera3D = w.get_meta("cam")
+	var civ_k := str(args.get("civ", "tawantinsuyu"))
+	var civ: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/civs/%s.json" % civ_k))
+	var st: Dictionary = civ.get("estilo", {})
+	var edades: Array = str(args.get("edades", "1,4")).split(",")
+	var fila := [["f", "quieto"], ["m", "quieto"], ["f", "juntar"], ["m", "cosechar"], ["f", "cosechar"], ["m", "caminar"]]
+	var team := Color("2f6fd6")
+	var acts: Dictionary = AldeanoAnimado.cfg().get("acciones", {})
+	for i in edades.size():
+		for j in fila.size():
+			var av := AldeanoAnimado.crear(st, team, 1.0)
+			var per := AldeanoAnimado.persona(civ_k, fila[j][0], int(edades[i]))
+			var act: String = fila[j][1]
+			var tool: String = acts.get(act, {}).get("herramienta", "")
+			var hs: Dictionary = per.get("herramientas", {})
+			tool = hs.get(act, tool)
+			av.mi.mesh = AldeanoAnimado.malla(st, team, tool, Color(0, 0, 0, 0), "", per)
+			var n: Node3D = av.node
+			n.position = Vector3((j - (fila.size() - 1) / 2.0) * 0.6 + i * 5.0, 0, 0)
+			n.rotation.y = 0.35
+			w.add_child(n)
+			_pose(av, act, {}, team, 0.45, false)
+	cam.fov = 18
+	for i in edades.size():
+		cam.position = Vector3(i * 5.0, 1.2, 5.6)
+		cam.look_at(Vector3(i * 5.0, 0.5, 0))
+		await _shot("personas_%s_e%s" % [civ_k, edades[i]])
+	quit(0)
 
 
 # ---------------------------------------------------------------- Vitrina de soldados
