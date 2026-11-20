@@ -59,11 +59,20 @@ for civ in CIVS:
         unidades[k] = merge(v, c.get("unidades", {}).get(k, {}))
     for k, v in c.get("unidades_nuevas", {}).items():
         if isinstance(v, dict): unidades[k] = v
+    CIVILES = {"aldeano": "a civilian villager and worker, holding work tools of the period (no weapons)",
+               "comerciante": "a civilian trader with goods and a pack or bundle (no weapons)"}
     for k, v in unidades.items():
         nombre = v.get("nombre", k); e0 = int(v.get("edad_min", 1))
         for ed in range(e0, 5):
+            if k in CIVILES:
+                # Un hombre y una mujer por edad: el aldeano y el comerciante son de todos.
+                for sexo, quien in (("m", "a man"), ("f", "a woman")):
+                    add("Unidades", civ, "retrato", k, f"{nombre} ({'mujer' if sexo == 'f' else 'hombre'})", ed,
+                        f"{ESTILO_RETRATO}. One single person: {quien}, {CIVILES[k]}, {nombre} of the {pueblo}. {EDAD_DESC[ed-1]} ({edades[ed-1]}): clothing and tools match this age. {REGLAS}",
+                        f"assets/ui/arte/{civ}/retratos/{k}_{sexo}_e{ed}.png", "512×512")
+                continue
             add("Unidades", civ, "retrato", k, nombre, ed,
-                f"{ESTILO_RETRATO}. Subject: {nombre} ({k}) of the {pueblo}. {EDAD_DESC[ed-1]} ({edades[ed-1]}). {REGLAS}",
+                f"{ESTILO_RETRATO}. One single person: {nombre} ({k}) of the {pueblo}. {EDAD_DESC[ed-1]} ({edades[ed-1]}): clothing and equipment match this age. {REGLAS}",
                 f"assets/ui/arte/{civ}/retratos/{k}_e{ed}.png", "512×512")
         add("Unidades", civ, "icono", k, nombre, e0,
             f"{ESTILO_ICONO}. Subject: {nombre} ({k}), full figure, of the {pueblo}. {REGLAS}",
@@ -147,7 +156,7 @@ civs_nombres["común"] = "Común"
 grupos = sorted({i["grupo"] for i in items})
 filas = []
 for n, i in enumerate(items):
-    filas.append(f"""<div class="it" data-civ="{html.escape(i['civ'])}" data-grupo="{html.escape(i['grupo'])}" data-id="{n}">
+    filas.append(f"""<div class="it" data-civ="{html.escape(i['civ'])}" data-grupo="{html.escape(i['grupo'])}" data-id="{html.escape(i['archivo'])}">
 <div class="cab"><input type="checkbox" class="hecho" title="Hecho"> <b>{html.escape(i['nombre'])}</b>
 <span class="tag">{html.escape(civs_nombres.get(i['civ'], i['civ']))}</span><span class="tag">{html.escape(i['grupo'])}</span>
 {f'<span class="tag">Edad {i["edad"]}</span>' if i['edad'] else ''}<span class="tag">{i['tam']}</span></div>
@@ -177,7 +186,7 @@ button{{background:var(--ac);color:#1a140c;border:0;border-radius:6px;padding:6p
 <span class="mut" id="cuenta"></span></div>
 <details><summary class="mut">Cómo mantener un estilo único (leé antes de empezar)</summary><div class="mut">
 1. Empezá por un pueblo y generá 10 a 15 íconos y retratos; elegí los que más te gusten.<br>
-2. En Recraft, creá un <b>Style</b> propio con esas imágenes aprobadas y usalo para todo lo demás de ese pueblo (y uno común para la interfaz).<br>
+2. Recraft genera 2 variantes por prompt (se cambia en sus opciones): elegí la mejor. En Recraft, creá un <b>Style</b> propio con esas imágenes aprobadas y usalo para todo lo demás de ese pueblo (y uno común para la interfaz).<br>
 3. Íconos: fondo transparente (o liso, que el script lo quita), 256×256 o más. Retratos: 512×512. Pantallas: 16:9.<br>
 4. Banderas y estandartes NO van acá: se hacen a mano desde fuentes revisadas (proceso/38, 2D.md).<br>
 5. Si algo sale con símbolos religiosos, estereotipos o aspecto europeo medieval, descartalo: los historiadores lo pidieron así.<br>

@@ -7,3 +7,4 @@ export/
 .cache/
 .claude/
 __pycache__/
+assets/ui/arte/**/candidatos/
