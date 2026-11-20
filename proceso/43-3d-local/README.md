@@ -22,6 +22,11 @@ scripts (`tools/gen3d*.py`), esta carpeta con renders JPG y los GLB reducidos de
    turbo), Hunyuan3D-Paint turbo y delight (textura) y TripoSR.
 3. Entradas (`tools/gen3d_entradas.py`): la hoja 3D del aldeano (edad I) recortada en frente y
    espalda, la kancha (casa) y la kallanka (cuartel), con el alfa sacado del fondo liso.
+4. Caballo criollo con FLUX schnell (ComfyUI en un scope de 10 GB, con `--cache-none`).
+   Semilla 7 ([img/caballo_7.jpg](img/caballo_7.jpg)): de perfil puro, se ven solo dos patas.
+   Semilla 11 ([img/caballo_11.jpg](img/caballo_11.jpg)), «caminando, las cuatro patas
+   separadas»: sirve. 54 s. Después, `POST /free` y ComfyUI apagado.
+   Entradas: [img/entradas.jpg](img/entradas.jpg).
 
 ## Tropiezos
 
@@ -32,6 +37,10 @@ scripts (`tools/gen3d*.py`), esta carpeta con renders JPG y los GLB reducidos de
 - La `*_mascara.png` de las hojas de proceso/42 es la de la túnica (para recolorear), no la
   silueta: el alfa sale del fondo.
 - La hoja del aldeano muestra frente y **espalda**, no costado.
+- FLUX con el tope de 10 GB se trabó en el decodificado (VAE) con la RAM al tope y el swap
+  lleno: sin `--cache-none`, ComfyUI guarda el T5 y FLUX en RAM a la vez. Con `--cache-none`
+  la imagen sale en menos de 80 s.
+- Un caballo de perfil puro tapa las patas del otro lado: para 3D hay que pedirlo caminando.
 
 ## Licencias
 

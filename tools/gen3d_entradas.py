@@ -1,8 +1,8 @@
 """Prepara las imágenes de entrada para la generación 3D local (proceso/43-3d-local).
 
-    python3 tools/gen3d_entradas.py <dir_salida>
+    /home/humodev/_01_Projects/gen3d/venv_hy/bin/python tools/gen3d_entradas.py <dir_salida>
 
-Liviano (solo PIL): recorta la hoja del aldeano en frente y espalda; la hoja,
+Liviano (PIL, numpy y scipy, del entorno de gen3d): recorta la hoja del aldeano en frente y espalda; la hoja,
 los edificios y el caballo salen con fondo claro y se les arma el alfa por distancia al
 color del fondo (esquinas). Cada salida es un PNG RGBA cuadrado, con el objeto centrado.
 """
@@ -30,11 +30,22 @@ def alfa_por_fondo(rgb: Image.Image, umbral: int = 28) -> Image.Image:
     fondo = tuple(sorted(c[i] for c in esquinas)[1] for i in range(3))
     dif = ImageChops.difference(rgb, Image.new("RGB", rgb.size, fondo)).convert("L")
     mask = dif.point(lambda d: 255 if d > umbral else 0).filter(ImageFilter.MedianFilter(5))
-    # Quedarse con el contorno lleno: rellenar huecos interiores por inundación desde el borde.
-    inv = Image.eval(mask, lambda v: 255 - v)
-    from PIL import ImageDraw
-    ImageDraw.floodfill(inv, (0, 0), 128)
-    mask = inv.point(lambda v: 0 if v == 128 else 255)
+    # Rellenar solo los huecos interiores chicos (manchas claras del cuerpo), no el fondo
+    # encerrado entre las patas y la sombra del suelo.
+    import numpy as np
+    from scipy import ndimage
+    m = np.array(mask) > 0
+    etiquetas, n = ndimage.label(~m)
+    tam = ndimage.sum(np.ones_like(m), etiquetas, range(1, n + 1))
+    for i, t in enumerate(tam, 1):
+        if t < m.size * 0.002:
+            m[etiquetas == i] = True
+    # Quedarse con la pieza más grande (fuera sombras sueltas).
+    etiquetas, n = ndimage.label(m)
+    if n > 1:
+        tam = ndimage.sum(m, etiquetas, range(1, n + 1))
+        m = etiquetas == (int(np.argmax(tam)) + 1)
+    mask = Image.fromarray((m * 255).astype("uint8"))
     out = rgb.convert("RGBA")
     out.putalpha(mask.filter(ImageFilter.GaussianBlur(0.8)))
     return out
@@ -51,7 +62,7 @@ def main(dst: Path) -> None:
     espalda.save(dst / "aldeano_espalda.png")
     for nombre, archivo in [("casa", "casa_7.png"), ("cuartel", "cuartel_7.png")]:
         cuadrar(alfa_por_fondo(Image.open(SRC / archivo).convert("RGB")), 0.06).save(dst / f"{nombre}.png")
-    cab = SRC.parent / "gen3d" / "caballo.png"
+    cab = SRC.parent / "gen3d" / "caballo_11.png"
     if cab.exists():
         cuadrar(alfa_por_fondo(Image.open(cab).convert("RGB"), 22), 0.06).save(dst / "caballo.png")
     for p in sorted(dst.glob("*.png")):
