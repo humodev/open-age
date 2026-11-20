@@ -1,0 +1,14 @@
+{
+ "modelo": "hy-mini-turbo",
+ "entrada": "entradas/cuartel.png",
+ "semilla": 12345,
+ "octree": 256,
+ "textura": false,
+ "seg_forma": 7.6,
+ "seg_textura": 0.0,
+ "seg_total_con_carga": 52.8,
+ "vram_pico_mb": 5029,
+ "vram_torch_mb": 4908,
+ "ram_pico_mb": 9178,
+ "caras": 188660
+}

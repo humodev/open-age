@@ -1,0 +1,14 @@
+{
+ "modelo": "triposr",
+ "entrada": "entradas/caballo.png",
+ "semilla": 12345,
+ "octree": 256,
+ "textura": false,
+ "seg_forma": 2.7,
+ "seg_textura": 0.0,
+ "seg_total_con_carga": 9.1,
+ "vram_pico_mb": 3134,
+ "vram_torch_mb": 3018,
+ "ram_pico_mb": 4131,
+ "caras": 76884
+}

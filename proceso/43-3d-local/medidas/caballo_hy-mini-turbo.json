@@ -1,0 +1,14 @@
+{
+ "modelo": "hy-mini-turbo",
+ "entrada": "entradas/caballo.png",
+ "semilla": 12345,
+ "octree": 256,
+ "textura": false,
+ "seg_forma": 6.7,
+ "seg_textura": 0.0,
+ "seg_total_con_carga": 59.8,
+ "vram_pico_mb": 5025,
+ "vram_torch_mb": 4908,
+ "ram_pico_mb": 8924,
+ "caras": 203751
+}

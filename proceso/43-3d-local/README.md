@@ -34,6 +34,17 @@ scripts (`tools/gen3d*.py`), esta carpeta con renders JPG y los GLB reducidos de
    [img/crudo_hy-mini-turbo.jpg](img/crudo_hy-mini-turbo.jpg). Las formas son buenas: el
    aldeano conserva la túnica, el cordón y los pies; la kancha, el muro bajo; la kallanka, las
    puertas y el escudo en relieve; el caballo, las cuatro patas.
+6. Aldeano con **Hunyuan3D-2mini** normal (50 pasos): 29 s de forma, RAM 8,2 GB; apenas más
+   detalle que el turbo. Con **Hunyuan3D-2mv turbo** (frente + espalda): 5,6 s, VRAM 6,1 GB,
+   RAM 10,2 GB de pico. La espalda sale mejor resuelta (sin el relleno que inventa la vista
+   única), pero la diferencia no se ve a la escala del RTS.
+   [img/crudo_aldeano_hy-mini_y_mv.jpg](img/crudo_aldeano_hy-mini_y_mv.jpg) (arriba mini,
+   abajo mv).
+7. **TripoSR** (MIT), las 4 piezas: 3 s de forma, VRAM 3,1 GB, RAM 4,1 GB. Las personas y el
+   caballo salen blandos y con base; los edificios conservan la inclinación de la cámara
+   isométrica del ícono y se arman con la planta torcida.
+   [img/crudo_triposr.jpg](img/crudo_triposr.jpg).
+   Mediciones de cada corrida en [medidas/](medidas/).
 
 ## Tropiezos
 
@@ -51,6 +62,13 @@ scripts (`tools/gen3d*.py`), esta carpeta con renders JPG y los GLB reducidos de
   transformers 4.49, diffusers 0.32 y huggingface_hub 0.36.
 - En modo sin conexión, `snapshot_download` pide los `.ckpt` que no se bajaron: se apunta
   `HY3DGEN_MODELS` a enlaces a las instantáneas (`gen3d/modelos/tencent/...`).
+- 2mv (1,1 B) no cargaba con el tope de 10 GB: hy3dgen arma todo en fp32 en RAM antes de
+  pasarlo a la GPU. Parche: cada parte va a la GPU en fp16 apenas se carga
+  ([hunyuan_cargador_poca_ram.patch](hunyuan_cargador_poca_ram.patch)).
+- El reemplazo de torchmcubes tenía los ejes al revés (torchmcubes da z, y, x): las piezas
+  salían acostadas. Corregido ([triposr_torchmcubes.py](triposr_torchmcubes.py)).
+- Hay otro proceso del autor (perfil_sim de Godot, en su propio scope) corriendo a la vez:
+  `tools/gen3d_correr.sh` espera a tener 12 GB disponibles antes de cada corrida.
 - Un caballo de perfil puro tapa las patas del otro lado: para 3D hay que pedirlo caminando.
 
 ## Licencias

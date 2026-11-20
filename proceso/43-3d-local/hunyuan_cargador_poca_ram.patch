@@ -1,0 +1,36 @@
+diff --git a/hy3dgen/shapegen/pipelines.py b/hy3dgen/shapegen/pipelines.py
+index fc8acc6..b095030 100755
+--- a/hy3dgen/shapegen/pipelines.py
++++ b/hy3dgen/shapegen/pipelines.py
+@@ -161,7 +161,7 @@ class Hunyuan3DDiTPipeline:
+         if use_safetensors:
+             # parse safetensors
+             import safetensors.torch
+-            safetensors_ckpt = safetensors.torch.load_file(ckpt_path, device='cpu')
++            safetensors_ckpt = safetensors.torch.load_file(ckpt_path, device='cpu')  # fp16 en disco
+             ckpt = {}
+             for key, value in safetensors_ckpt.items():
+                 model_name = key.split('.')[0]
+@@ -172,13 +172,19 @@ class Hunyuan3DDiTPipeline:
+         else:
+             ckpt = torch.load(ckpt_path, map_location='cpu', weights_only=True)
+         # load model
++        # gen3d (proceso/43 de Raíces): cada parte pasa a la GPU en fp16 apenas se carga y se
++        # suelta su parte del ckpt, para no tener todo en fp32 en RAM a la vez (tope de 10 GB).
++        import gc
+         model = instantiate_from_config(config['model'])
+-        model.load_state_dict(ckpt['model'])
++        model.load_state_dict(ckpt.pop('model'))
++        model.to(device=device, dtype=dtype); gc.collect()
+         vae = instantiate_from_config(config['vae'])
+-        vae.load_state_dict(ckpt['vae'], strict=False)
++        vae.load_state_dict(ckpt.pop('vae'), strict=False)
++        vae.to(device=device, dtype=dtype); gc.collect()
+         conditioner = instantiate_from_config(config['conditioner'])
+         if 'conditioner' in ckpt:
+-            conditioner.load_state_dict(ckpt['conditioner'])
++            conditioner.load_state_dict(ckpt.pop('conditioner'))
++        conditioner.to(device=device, dtype=dtype); gc.collect()
+         image_processor = instantiate_from_config(config['image_processor'])
+         scheduler = instantiate_from_config(config['scheduler'])
+ 

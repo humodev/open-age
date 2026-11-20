@@ -1,0 +1,14 @@
+{
+ "modelo": "hy-mini",
+ "entrada": "entradas/aldeano_frente.png",
+ "semilla": 12345,
+ "octree": 256,
+ "textura": false,
+ "seg_forma": 28.9,
+ "seg_textura": 0.0,
+ "seg_total_con_carga": 126.3,
+ "vram_pico_mb": 4625,
+ "vram_torch_mb": 4596,
+ "ram_pico_mb": 8196,
+ "caras": 168656
+}

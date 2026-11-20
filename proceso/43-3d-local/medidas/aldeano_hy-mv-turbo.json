@@ -1,0 +1,14 @@
+{
+ "modelo": "hy-mv-turbo",
+ "entrada": "front=entradas/aldeano_frente.png,back=entradas/aldeano_espalda.png",
+ "semilla": 12345,
+ "octree": 256,
+ "textura": false,
+ "seg_forma": 5.6,
+ "seg_textura": 0.0,
+ "seg_total_con_carga": 37.4,
+ "vram_pico_mb": 6080,
+ "vram_torch_mb": 5960,
+ "ram_pico_mb": 10213,
+ "caras": 145084
+}

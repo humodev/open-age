@@ -1,0 +1,14 @@
+{
+ "modelo": "hy-mini-turbo",
+ "entrada": "entradas/casa.png",
+ "semilla": 12345,
+ "octree": 256,
+ "textura": false,
+ "seg_forma": 4.1,
+ "seg_textura": 0.0,
+ "seg_total_con_carga": 46.3,
+ "vram_pico_mb": 5023,
+ "vram_torch_mb": 4908,
+ "ram_pico_mb": 9417,
+ "caras": 550480
+}
