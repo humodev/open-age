@@ -33,6 +33,30 @@ static func _hasta(m: Node, cond: Callable, max: int = 300) -> bool:
 	return cond.call()
 
 
+## Punto de pantalla de suelo libre y alcanzable cerca de la casilla (cx, cy), con la cámara
+## centrada ahí: como main._suelo_libre (mapa libre, nada que el cursor tome, fuera de la interfaz)
+## y, además, con camino desde `desde`. Con mapuches, un punto fijo de la ronda caía bajo la
+## interfaz y el clic no entraba (proceso/30-fluidez/09-autotest-y-red.md).
+static func _suelo(m: Node, cx: float, cy: float, desde: Vector2i) -> Vector2:
+	m.cam.look_at_point(Vector3(cx, 0, cy))
+	await m._frames(2)
+	var mapa: SimMap = m.sim.map
+	for r in range(0, 8):
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				if maxi(absi(dx), absi(dy)) != r:
+					continue
+				var t := Vector2i(int(cx) + dx, int(cy) + dy)
+				var sp: Vector2 = m._screen(t.x + 0.5, t.y + 0.5)
+				if not mapa.is_free_rect(t.x - 1, t.y - 1, 3, 3) or m.ctrl.pick(sp) >= 0 or m.ctrl._over_hud(sp):
+					continue
+				# El A* de la grilla, sin el caché de find_path (no toca el estado de la simulación).
+				var cam_: Array[Vector2i] = mapa._grid(m.local).get_id_path(desde, t, true)
+				if not cam_.is_empty() and cam_[cam_.size() - 1] == t:
+					return sp
+	return m._suelo_libre(cx, cy)
+
+
 ## Primer tipo de unidad del pueblo con esa función en la edad I.
 static func _tipo(sim: Sim, local: int, fn: String) -> String:
 	var dd := sim.dp(local)
@@ -98,23 +122,35 @@ static func correr(m: Node, check0: Callable) -> void:
 	ctrl.run_command({"kind": "patrol"})
 	_tecla(KEY_SHIFT, true)
 	await m._frames(1)
-	var pts: Array[Vector2] = [m._suelo_libre(cx + 10.0, cy), m._suelo_libre(cx + 10.0, cy + 8.0), m._suelo_libre(cx, cy + 8.0)]
-	for p in pts:
-		await _clic(m, p)
+	# Cada punto, con la cámara encima (como el jugador) y en suelo libre y alcanzable.
+	var g_0: SimEntity = sim.by_id[ga[0]]
+	var desde := Vector2i(g_0.x / P, g_0.y / P)
+	var sp_ult := Vector2.ZERO
+	for q: Vector2 in [Vector2(cx + 10.0, cy), Vector2(cx + 10.0, cy + 8.0), Vector2(cx, cy + 8.0)]:
+		sp_ult = await _suelo(m, q.x, q.y, desde)
+		await _clic(m, sp_ult)
 	var sigue: bool = ctrl.mode == "patrol"
 	_tecla(KEY_SHIFT, false)
 	await m._frames(1)
-	await _clic(m, pts[0], MOUSE_BUTTON_RIGHT) # sale del modo
+	await _clic(m, sp_ult, MOUSE_BUTTON_RIGHT) # sale del modo
 	var ronda := await _hasta(m, func() -> bool: return (sim.by_id[ga[0]] as SimEntity).pat_pts.size() == 4, 60)
 	check.call("fluidez 5: patrulla de 3 puntos con Mayús (sigue en el modo: %s, ronda de %d)" % [sigue, (sim.by_id[ga[0]] as SimEntity).pat_pts.size()], sigue and ronda and (sim.by_id[ga[0]] as SimEntity).patrol and ctrl.mode == "")
 
 	# 3. Escolta: el otro elegido y clic derecho sobre uno de la patrulla.
 	ctrl.select_ids([escolta.id] as Array[int])
 	await m._frames(3)
+	# El líder: uno de la patrulla que el cursor tome a él y no a otro (van juntos y se tapan).
 	var lider: SimEntity = sim.by_id[ga[1]]
-	cam.look_at_point(WorldView.to_world(lider.x, lider.y))
-	await m._frames(2)
-	var spl := cam.cam.unproject_position(WorldView.to_world(lider.x, lider.y, 0.4))
+	var spl := Vector2.ZERO
+	for k in 30:
+		var cand: SimEntity = sim.by_id[ga[(1 + k) % ga.size()]]
+		cam.look_at_point(WorldView.to_world(cand.x, cand.y))
+		await m._frames(1)
+		spl = cam.cam.unproject_position(WorldView.to_world(cand.x, cand.y, 0.4))
+		if ctrl.pick(spl, true) == cand.id and not ctrl._over_hud(spl):
+			lider = cand
+			break
+		await m._frames(2)
 	await _clic(m, spl, MOUSE_BUTTON_RIGHT)
 	var sigue_lider := await _hasta(m, func() -> bool: return escolta.order == SimEntity.Order.FOLLOW and escolta.esc == lider.id, 60)
 	check.call("fluidez 5: clic derecho en una unidad propia la escolta (orden %d, sigue a %d)" % [escolta.order, escolta.esc], sigue_lider)

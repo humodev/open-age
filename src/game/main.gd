@@ -900,6 +900,7 @@ func _cargar() -> void:
 			keep[k] = _args[k]
 	_args = (d.get("args", {}) as Dictionary).duplicate(true)
 	_args.merge(keep, true)
+	local = int(_args.get("red_jugador", "0")) # --- red --- el guardado del invitado lo trae en sus args (proceso/30-fluidez/09)
 	if repe:
 		_args["replay"] = path
 	elif d.has("campana"):
@@ -1435,7 +1436,9 @@ func _suelo_libre(cx: float, cy: float) -> Vector2:
 				var tx := int(cx) + dx
 				var ty := int(cy) + dy
 				var sp := _screen(tx + 0.5, ty + 0.5)
-				if sim.map.is_free_rect(tx - 1, ty - 1, 3, 3) and ctrl.pick(sp) < 0:
+				# --- fluidez 9 --- ni bajo la interfaz ni fuera de la ventana: el clic no llegaría al mundo
+				if sim.map.is_free_rect(tx - 1, ty - 1, 3, 3) and ctrl.pick(sp) < 0 and not ctrl._over_hud(sp) \
+						and Rect2(Vector2.ZERO, get_viewport().get_visible_rect().size).grow(-40).has_point(sp):
 					return sp
 	return _screen(cx, cy)
 
