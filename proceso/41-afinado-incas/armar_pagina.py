@@ -6,7 +6,8 @@ datos = json.load(open(os.path.join(D, "rondas.json"), encoding="utf-8"))
 e = html.escape
 
 def figura(im):
-    return (f'<figure><a href="img/{e(im["f"])}"><img src="img/{e(im["f"])}" loading="lazy"></a>'
+    ancha = any(k in im["f"] for k in ("_rec", "gris", "comprobacion")) and im["f"].startswith(("r2", "g"))
+    return (f'<figure{' class="ancha"' if ancha else ''}><a href="img/{e(im["f"])}"><img src="img/{e(im["f"])}" loading="lazy"></a>'
             f'<figcaption>{e(im.get("t", ""))}</figcaption></figure>')
 
 def bloque(r, destacada=False):
@@ -34,7 +35,7 @@ h1{{font-size:24px;margin:8px 0}} h2{{font-size:18px;margin:0 0 4px;color:var(--
 section{{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px;margin:14px 0}}
 .receta{{border:2px solid var(--acc)}}
 .imgs{{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}}
-figure{{margin:0}} img{{width:100%;border-radius:4px;display:block}}
+figure{{margin:0}} figure.ancha{{grid-column:1/-1}} figure.ancha figcaption{{font-weight:600;color:var(--tx)}} img{{width:100%;border-radius:4px;display:block}}
 figcaption{{font-size:13px;color:var(--mute);text-align:center}}
 details{{margin:6px 0}} summary{{cursor:pointer;color:var(--mute)}}
 pre{{white-space:pre-wrap;background:#0f0d0a;padding:8px;border-radius:4px;font-size:12px}}

@@ -1,6 +1,21 @@
 {
- "intro": "Equipo: Artista (legibilidad, silueta, edades), Historiadora andina (fuentes), Experta en prompting (FLUX/SDXL). Máximo 4 imágenes por ronda; la más nueva arriba. Hondero completo: retrato en 4 edades (r01-r20), ícono (i01-i07) y hoja 3D (h01-h04). FALTA QUE EL AUTOR ELIJA LA DIRECCIÓN DE ESTILO: A óleo de caballete, B estilizado, C gouache, lado a lado en las rondas 9, 11 y 13. El equipo siguió con B; cambiar de dirección es cambiar la primera frase del prompt.",
+ "intro": "REGLA NUEVA (autor): las edades se distinguen por el equipo y la silueta, no por el color; la ropa principal va en rojo plano para recolorearla con el color del jugador. Cada ronda nueva muestra original | gris | dos colores. El estilo (A, B o C) se elige en elegir_estilo.html; mientras tanto se sigue con B. Rondas anteriores a la 21: con la regla vieja.",
  "recetas": [
+  {
+   "pieza": "Retrato recoloreable del hondero (regla nueva)",
+   "estado": "Ganador: g1. Reemplaza a la receta de la ronda 20 (aquella diferenciaba por color).",
+   "imgs": [
+    {
+     "f": "g1_gris.jpg",
+     "t": "en gris, I → IV"
+    },
+    {
+     "f": "g1_4_rec.jpg",
+     "t": "IV recoloreada"
+    }
+   ],
+   "texto": "FLUX schnell, 4 pasos, 768×1024, semilla 7.\nOrden: ESTILO (primera frase; solo esta cambia entre A, B y C) → CARA («A young-looking smooth hairless face with a bare upper lip and bare chin, like the Inca men who plucked their facial hair with tweezers.») → ACCIÓN (piedra en la mano junto a la cara, honda fina sobre el hombro) → EQUIPO DE LA EDAD (lo que se agrega: nada / vincha y bolsa / casco «like a basket», acolchado y escudo / cresta de plumas «like a fan», capa y un solo disco de plata «pewter-grey») → ZONA DEL EQUIPO: «a plain solid bright red sleeveless wool tunic, one flat uniform red color» → «Natural undyed tones for everything except the tunic» → persona → encuadre.\nDespués: tools/recolorear.py imagen.png --hoja x.jpg guarda imagen_mascara.png (rojo con S ≥ 0.45, solo las manchas grandes, borde suave)."
+  },
   {
    "pieza": "Ícono y hoja 3D del hondero",
    "estado": "Ganadores: ícono ronda i07 (semilla 31); hojas h03_1, h03_2, h04_1, h03_4.",
@@ -953,6 +968,132 @@
     "Prompting": "Nombrar el accesorio «en todas las vistas» lo sostiene."
    },
    "decision": "Hojas: I, II y IV de la ronda 3; III de esta."
+  },
+  {
+   "id": "r21",
+   "titulo": "Ronda 21 · RECOLOREABLE: edades por equipo, túnica roja plana",
+   "meta": "Regla nueva del autor: la edad se lee por lo que tiene puesto, no por el color. Túnica en rojo saturado plano (zona del equipo), el resto en tonos naturales. Cada imagen: original | gris | azul | verde (tools/recolorear.py).",
+   "imgs": [
+    {
+     "f": "r21_1_rec.jpg",
+     "t": "Edad I · original | gris | azul | verde"
+    },
+    {
+     "f": "r21_2_rec.jpg",
+     "t": "Edad II"
+    },
+    {
+     "f": "r21_3_rec.jpg",
+     "t": "Edad III"
+    },
+    {
+     "f": "r21_4_rec.jpg",
+     "t": "Edad IV"
+    }
+   ],
+   "voces": {
+    "Artista": "En gris ya se distinguen I, II y III por la cabeza (descubierta, vincha, casco) y lo que cargan. El rojo plano se recolorea limpio.",
+    "Historiadora": "Validación de la lista del autor: I con la cabeza descubierta es una simplificación (el llawtu era casi universal en los hombres andinos; vale como leva campesina). Descalzo, igual: el común usaba usuta. III: algodón acolchado, casco de caña y escudo, Cobo 1653 [verificar capítulo]. IV: el penacho de plumas tipo «warbonnet» de las praderas es un estereotipo ajeno a los Andes: no va. El rango inca se marcaba con unas pocas plumas erguidas en el llawtu, discos de metal y mantos (Guaman Poma dibuja capitanes con plumas sobre la cabeza [verificar lámina]).",
+    "Prompting": "La primera máscara tomaba labios, orejas y yemas de los dedos: se quedan solo las manchas grandes (scipy). «Headdress of feathers» trae el warbonnet."
+   },
+   "decision": "Penacho andino en IV; cara sin bigote."
+  },
+  {
+   "id": "r22",
+   "titulo": "Ronda 22 · cara lampiña, honda fina, plumas cortas",
+   "meta": "«bare upper lip and bare chin», «thin as a shoelace», «two short upright feathers».",
+   "imgs": [
+    {
+     "f": "r22_1_rec.jpg",
+     "t": "Edad I · original | gris | azul | verde"
+    },
+    {
+     "f": "r22_2_rec.jpg",
+     "t": "Edad II"
+    },
+    {
+     "f": "r22_3_rec.jpg",
+     "t": "Edad III"
+    },
+    {
+     "f": "r22_4_rec.jpg",
+     "t": "Edad IV"
+    }
+   ],
+   "voces": {
+    "Artista": "Caras limpias. II es la mejor: la honda fina con la piedra en la mano se lee. IV perdió el rango: las plumas casi no se ven, salieron dos discos y la capa parece capucha. El casco de III salió de metal con una joya.",
+    "Historiadora": "Un casco de metal con gema no corresponde; el de caña sí.",
+    "Prompting": "Lo que va primero manda: «bare upper lip» sacó el bigote, pero también rejuveneció las caras."
+   },
+   "decision": "Quedan I y II. Rehacer III (casco «like a basket») y IV (cresta de plumas, capa atada)."
+  },
+  {
+   "id": "r23",
+   "titulo": "Ronda 23 · III y IV corregidos",
+   "meta": "III: «helmet woven from tan cane strips like a basket». IV: «tall crest of upright feathers … like a fan», capa atada al pecho, «one single disc». IV con semillas 7 y 11.",
+   "imgs": [
+    {
+     "f": "r22_2_rec.jpg",
+     "t": "Edad II (referencia)"
+    },
+    {
+     "f": "r23_1_rec.jpg",
+     "t": "Edad III"
+    },
+    {
+     "f": "r23_2_rec.jpg",
+     "t": "Edad IV · semilla 7"
+    },
+    {
+     "f": "r23_3_rec.jpg",
+     "t": "Edad IV · semilla 11"
+    }
+   ],
+   "voces": {
+    "Artista": "III: casco de cestería, hombros acolchados y escudo; se lee en gris. IV con semilla 7: cresta, capa y un solo disco de plata; la silueta es otra.",
+    "Historiadora": "Correcto: un solo disco de plata, la capa de lana cruda, una cresta corta de plumas y nada de oro.",
+    "Prompting": "Las comparaciones («like a basket», «like a fan») vuelven a funcionar mejor que las descripciones."
+   },
+   "decision": "Ganadoras: I y II de la 22, III y IV (semilla 7) de la 23."
+  },
+  {
+   "id": "g1",
+   "titulo": "GANADOR · retrato recoloreable en 4 edades",
+   "meta": "FLUX schnell, 768×1024, semilla 7. Arriba, las cuatro en gris: la edad se lee por la cabeza (descubierta, vincha, casco, cresta) y por lo que carga. Abajo, cada una en original | gris | azul | amarillo. Las máscaras están en img/g1_N_mascara.png.",
+   "imgs": [
+    {
+     "f": "g1_gris.jpg",
+     "t": "Las 4 edades en gris (I → IV)"
+    },
+    {
+     "f": "g1_1_rec.jpg",
+     "t": "Edad I · original | gris | azul | amarillo"
+    },
+    {
+     "f": "g1_2_rec.jpg",
+     "t": "Edad II"
+    },
+    {
+     "f": "g1_3_rec.jpg",
+     "t": "Edad III"
+    },
+    {
+     "f": "g1_4_rec.jpg",
+     "t": "Edad IV"
+    }
+   ],
+   "voces": {
+    "Artista": "Cumple la regla: en gris se ve la edad, y al recolorear se cambia la túnica y nada más. Pendiente: las caras quedaron más jóvenes que en la ronda 20 y la de IV parece un adolescente; en I, III y IV la honda es un rollo de soga más que una honda.",
+    "Historiadora": "Validado con las salvedades de I (cabeza descubierta y descalzo como simplificación). Sin oro y sin nada sagrado.",
+    "Prompting": "Rojo saturado plano con «one flat uniform red color» y «Natural undyed tones for everything except the tunic»: la máscara HSV cubre del 19 al 28 % de la imagen y no toca la piel."
+   },
+   "decision": "Esperando la opinión del autor.",
+   "prompts": {
+    "Prompt edad 1": "Stylized digital painting in the style of Age of Empires IV unit portraits, simplified shapes, bold clear silhouette, few large brushstrokes, little fine detail. A young-looking smooth hairless face with a bare upper lip and bare chin, like the Inca men who plucked their facial hair with tweezers. A slinger raises his right hand beside his face holding a round grey river stone, and a thin braided cream wool sling, thin as a shoelace, hangs over his shoulder. He wears only a plain solid bright red sleeveless wool tunic, one flat uniform red color; his head is bare, with uncovered black hair. Native American man of the Andes, Quechua, about 30 years old, smooth face, broad cheekbones, deep-set dark eyes, brown skin, straight black hair cut in a fringe, bare brown arms. Natural undyed tones for everything except the tunic. Chest-up portrait, dark grey backdrop",
+    "Prompt edad 2": "Stylized digital painting in the style of Age of Empires IV unit portraits, simplified shapes, bold clear silhouette, few large brushstrokes, little fine detail. A young-looking smooth hairless face with a bare upper lip and bare chin, like the Inca men who plucked their facial hair with tweezers. A slinger raises his right hand beside his face holding a round grey river stone, and a thin braided cream wool sling, thin as a shoelace, hangs over his shoulder. He wears a cream wool headband and a plain solid bright red sleeveless wool tunic, one flat uniform red color; a strap across his chest holds a cream woven bag full of stones at his hip. Native American man of the Andes, Quechua, about 30 years old, smooth face, broad cheekbones, deep-set dark eyes, brown skin, straight black hair cut in a fringe, bare brown arms. Natural undyed tones for everything except the tunic. Chest-up portrait, dark grey backdrop",
+    "Prompt edad 3": "Stylized digital painting in the style of Age of Empires IV unit portraits, simplified shapes, bold clear silhouette, few large brushstrokes, little fine detail. A young-looking smooth hairless face with a bare upper lip and bare chin, like the Inca men who plucked their facial hair with tweezers. A slinger raises his right hand beside his face holding a round grey river stone, and a thin braided cream wool sling, thin as a shoelace, hangs over his shoulder. He wears a round helmet woven from tan cane strips like a basket, thick quilted cotton armor of natural undyed cream stitched in diamonds over a plain solid bright red sleeveless wool tunic, one flat uniform red color, and the rim of a small round wooden shield shows on his back behind his shoulder. Native American man of the Andes, Quechua, about 30 years old, smooth face, broad cheekbones, deep-set dark eyes, brown skin, straight black hair cut in a fringe, bare brown arms. Natural undyed tones for everything except the tunic. Chest-up portrait, dark grey backdrop",
+    "Prompt edad 4": "Stylized digital painting in the style of Age of Empires IV unit portraits, simplified shapes, bold clear silhouette, few large brushstrokes, little fine detail. A young-looking smooth hairless face with a bare upper lip and bare chin, like the Inca men who plucked their facial hair with tweezers. A slinger raises his right hand beside his face holding a round grey river stone, and a thin braided cream wool sling, thin as a shoelace, hangs over his shoulder. He wears a braided cream headband with a tall crest of upright brown and white feathers standing straight up at the front, like a fan, as a mark of rank, a short cape of undyed brown wool tied at the chest and covering both shoulders, one single flat pewter-grey silver disc on his chest, and a plain solid bright red sleeveless wool tunic, one flat uniform red color. Native American man of the Andes, Quechua, about 30 years old, smooth face, broad cheekbones, deep-set dark eyes, brown skin, straight black hair cut in a fringe, bare brown arms. Natural undyed tones for everything except the tunic. Chest-up portrait, dark grey backdrop"
+   }
   }
  ]
 }
