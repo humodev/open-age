@@ -49,6 +49,35 @@
     "fuerte":    { "tela": "#6a5a48", "prenda": "ninguna", "tocado": "ninguno" },
     "_otro":     { "tela": "#7e6a52", "prenda": "ninguna", "tocado": "ninguno" }
   },
+  "personas": {
+    "_doc": "Aldeanos hombre y mujer (proceso/27-animaciones/04-aldeanos-por-retrato.md). Solo imagen: el sexo sale del id de la unidad (mujeres_pct de cada 100), la simulación no lo lee. Vale para las unidades de las funciones listadas. Cada capa pisa a la anterior: vestimenta de la forma del pueblo → base[sexo] → por_civ[pueblo][sexo] → por_civ[pueblo][sexo].edades[edad] (la más alta que no pase la edad actual). Campos además de los de vestimenta: prenda unku (túnica a la rodilla), acsu (vestido largo de la mujer inca) o vestido (vestido largo genérico, del color de la prenda de hoy); prenda_color: la franja del unku o la faja del vestido; pelo_forma: corto, flequillo (corto con flequillo), trenza (larga, a la espalda) o largo; manta: color de la manta sobre los hombros (lliklla, yacolla), manta_borde: su orilla; tupu: color del alfiler que la cierra; tocapu: {colores, filas, cols}, el damero (tocapu_falda: también en la falda del unku); franjas: color de las dos listas del unku sin tocapu en el pecho del unku, la orilla de la manta y la faja del acsu; vincha_tocapu: colores del tejido de la vincha; borla: la que cuelga de la vincha; herramientas: acción → herramienta propia (quieto: la que tiene en la mano sin trabajo). Referencia: los retratos elegidos por el autor (assets/ui/arte/tawantinsuyu/LEEME.md). Los otros pueblos llevan solo lo básico (base) hasta que el autor elija sus retratos.",
+    "mujeres_pct": 50,
+    "funciones": ["civil"],
+    "base": {
+      "m": {},
+      "f": { "prenda": "vestido", "pelo_forma": "largo" }
+    },
+    "por_civ": {
+      "tawantinsuyu": {
+        "m": { "prenda": "unku", "pelo_forma": "flequillo", "tocado": "vincha", "herramientas": { "cosechar": "chakitaqlla" },
+          "edades": {
+            "1": { "tela": "#6e5038", "prenda_color": "#c8b48e", "franjas": "#c8b48e", "tocado_color": "#b8a27a", "vincha_tocapu": ["#6e5038"] },
+            "2": { "tela": "#2c3560", "prenda_color": "#8e2a26", "tocado_color": "#d8ccb0", "vincha_tocapu": ["#8e2a26", "#2c3560"], "tocapu": { "colores": ["#8e2a26", "#d8ccb0"], "filas": 1, "cols": 5 } },
+            "3": { "tela": "#7a2a28", "prenda_color": "#2c3560", "tocado_color": "#d8ccb0", "vincha_tocapu": ["#2c3560", "#8e2a26"], "borla": "#8e2a26", "tocapu": { "colores": ["#d8ccb0", "#2c3560", "#c8962e"], "filas": 2, "cols": 4 } },
+            "4": { "tela": "#2c3560", "prenda_color": "#8e2a26", "tocado_color": "#d8ccb0", "vincha_tocapu": ["#8e2a26", "#2c3560", "#c8962e"], "borla": "#8e2a26", "tocapu_falda": true, "tocapu": { "colores": ["#8e2a26", "#d8ccb0", "#c8962e", "#7a2a28"], "filas": 3, "cols": 5 } }
+          }
+        },
+        "f": { "prenda": "acsu", "pelo_forma": "trenza", "tocado": "vincha", "herramientas": { "quieto": "pushka", "juntar": "canasta", "cosechar": "azada" },
+          "edades": {
+            "1": { "tela": "#6a4c34", "prenda_color": "#5a3e2a", "manta": "#7a5a40", "manta_borde": "#c8b48e", "tupu": "#8a6a44", "tocado_color": "#b8a27a", "vincha_tocapu": ["#6e5038"] },
+            "2": { "tela": "#2a3256", "prenda_color": "#8e2a26", "manta": "#d8ccb0", "manta_borde": "#8e2a26", "tupu": "#b08a3a", "tocado_color": "#d8ccb0", "vincha_tocapu": ["#8e2a26", "#2a3256"], "tocapu": { "colores": ["#8e2a26", "#2a3256"], "filas": 1, "cols": 5 } },
+            "3": { "tela": "#2a3256", "prenda_color": "#8e2a26", "manta": "#d8ccb0", "manta_borde": "#c8962e", "tupu": "#b08a3a", "tocado_color": "#d8ccb0", "vincha_tocapu": ["#2a3256", "#8e2a26"], "tocapu": { "colores": ["#c8962e", "#2a3256", "#8e2a26"], "filas": 1, "cols": 6 } },
+            "4": { "tela": "#2a3256", "prenda_color": "#8e2a26", "manta": "#dcc390", "manta_borde": "#c8962e", "tupu": "#9a9890", "tocado_color": "#d8ccb0", "vincha_tocapu": ["#8e2a26", "#2a3256", "#c8962e"], "borla": "#8e2a26", "tocapu": { "colores": ["#8e2a26", "#2a3256", "#c8962e", "#d8ccb0"], "filas": 2, "cols": 6 } }
+          }
+        }
+      }
+    }
+  },
   "colores": { "piel": "#8c5636", "pelo": "#231c17", "madera": "#6e5034", "piedra": "#5e5c58", "fibra": "#9a7e4a", "cuero": "#4e3828", "metal": "#7c7f84", "cuerda": "#8a7552" },
   "tropas": {
     "activo": true,

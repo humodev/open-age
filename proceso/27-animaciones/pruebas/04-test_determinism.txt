@@ -1,0 +1,4 @@
+game_over=false winner=-1 entidades=2457
+DETERMINISMO: OK
+
+[exited with code 0]

@@ -1412,6 +1412,10 @@ class SelectionPanel:
 		sb.set_border_width_all(1)
 		draw_style_box(sb, r)
 		hud.ficha.zone(self, r, {"id": e.id}) # --- ficha ---
+		var rt := Retratos.de(hud.sim, e) # --- aldeanos por retrato --- el pintado, si hay
+		if not rt.is_empty():
+			Retratos.dibujar(self, rt, r.grow(-2))
+			return
 		var icon := Glyphs.resolve(e.def, e.type) if not e.is_resource() else e.res_kind
 		var col: Color = Palette.UI_TEXT if not e.is_resource() else Palette.RES[e.res_kind]
 		Glyphs.draw(self, icon, r.grow(-18), col)
@@ -1628,7 +1632,11 @@ class SelectionPanel:
 					_fondo_retrato(sb, e.def, e.owner) # --- fluidez 5 ---
 					draw_style_box(sb, r)
 					hud.ficha.zone(self, r, {"id": e.id}) # --- ficha ---
-					Glyphs.draw(self, Glyphs.resolve(e.def, type), r.grow(-lado * 0.18), Palette.UI_TEXT)
+					var rt := Retratos.de(hud.sim, e) # --- aldeanos por retrato ---
+					if not rt.is_empty():
+						Retratos.dibujar(self, rt, r.grow(-2), "chico")
+					else:
+						Glyphs.draw(self, Glyphs.resolve(e.def, type), r.grow(-lado * 0.18), Palette.UI_TEXT)
 					var k := float(e.hp) / float(maxi(1, e.hp_max))
 					_bar(Rect2(r.position.x + 2, r.end.y + 3, r.size.x - 4, 5), k, Palette.UI_GOOD if k * 3.0 > 1.0 else Palette.UI_BAD)
 					var id := e.id
@@ -1650,7 +1658,11 @@ class SelectionPanel:
 				_fondo_retrato(sb, (list[0] as SimEntity).def, (list[0] as SimEntity).owner) # --- fluidez 5 ---
 				draw_style_box(sb, r)
 				hud.ficha.zone(self, r, {"id": (list[0] as SimEntity).id, "n": list.size()}) # --- ficha ---
-				Glyphs.draw(self, Glyphs.resolve((list[0] as SimEntity).def, type), r.grow(-12), Palette.UI_TEXT)
+				var rt := Retratos.de(hud.sim, list[0]) # --- aldeanos por retrato ---
+				if not rt.is_empty():
+					Retratos.dibujar(self, rt, r.grow(-2), "chico")
+				else:
+					Glyphs.draw(self, Glyphs.resolve((list[0] as SimEntity).def, type), r.grow(-12), Palette.UI_TEXT)
 				draw_string(Hud.font_b, r.position + Vector2(0, r.size.y - 6), str(list.size()), HORIZONTAL_ALIGNMENT_RIGHT, r.size.x - 6, 16, Palette.UI_ACCENT)
 				var hp := 0
 				var hpm := 0
