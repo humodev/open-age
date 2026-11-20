@@ -187,7 +187,8 @@ static func correr(m: Node, check: Callable) -> void:
 	Opciones.consejos = consejos_antes
 	p["pob_extra"] = saved_extra + 60
 
-	# 8. Parado en gris: sin cola durante parado_s, el centro va gris a la cola global.
+	# 8. Parado en rojo (ronda 9; antes gris): sin cola durante parado_s, el centro va rojo a la cola
+	# global y suena una vez.
 	for i in 12:
 		sim.push_command({"t": "cancel", "player": local, "building": capital.id, "index": -1})
 	await _hasta(m, func() -> bool: return capital.queue.is_empty(), 30)
@@ -195,7 +196,12 @@ static func correr(m: Node, check: Callable) -> void:
 	m.speed = 8.0
 	var gris := await _hasta(m, func() -> bool: return hud.cola_global.parado(capital) and hud.cola_global.items().has(capital), 600)
 	m.speed = 1.0
-	check.call("el centro parado aparece gris en la cola global", gris)
+	check.call("el centro parado aparece rojo en la cola global (parado_rojo en data)", gris and hud.cola_global.rojo_parado())
+	var sono_antes: int = hud.cola_global.sonidos_parado
+	await _hasta(m, func() -> bool: return hud.cola_global._sonados.has(capital.id), 30)
+	for i in 30:
+		await m.get_tree().process_frame
+	check.call("el centro parado suena una vez por parada (%d sonidos)" % hud.cola_global.sonidos_parado, hud.cola_global._sonados.has(capital.id) and hud.cola_global.sonidos_parado - sono_antes <= 1)
 	# Para la captura: un edificio militar que repite su tropa (el bucle) junto al centro gris.
 	var dd := sim.dp(local)
 	var mil: SimEntity = null

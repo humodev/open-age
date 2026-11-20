@@ -10,6 +10,9 @@ extends Control
 ## producción, más chicos. El que no puede seguir (población llena, o la repetición sin recursos)
 ## queda rojo y «trabado», con el motivo al pasar el mouse; el quieto, gris. Reemplaza los avisos
 ## de «Población llena» y de parados, que ahora son solo consejos de aprendizaje.
+## --- ronda 9 --- (proceso/34-hacia-esport/08) El parado (sin cola hace parado_s) ya no es gris:
+## va rojo, con el borde que late, y suena una vez al pararse (respuesta.json → edificio_parado).
+## interfaz.json → produccion.parado_rojo en false vuelve al gris de antes.
 
 const ICON := 38.0
 const SEP := 4.0
@@ -20,6 +23,8 @@ var _hover := -1
 var _vacio_desde := {} # --- frente 1 --- id -> ms de juego desde que no tiene cola
 var _aviso_ms := -1000000 # último consejo de parados (ms de juego)
 var _parados_largos := 0
+var _sonados := {} # --- ronda 9 --- id -> true si ya sonó en esta parada
+var sonidos_parado := 0 # --- ronda 9 --- cuántas veces sonó (autotest)
 
 static var _cfg: Dictionary = {}
 
@@ -160,7 +165,7 @@ func _gui_input(ev: InputEvent) -> void:
 func alternar_aviso() -> void:
 	Opciones.aviso_parados = not Opciones.aviso_parados
 	Opciones.guardar()
-	hud.notify("Consejo de edificios parados %s (clic derecho en un ícono gris lo %s)" % ["prendido" if Opciones.aviso_parados else "apagado", "apaga" if Opciones.aviso_parados else "vuelve a prender"], 5.0, "info")
+	hud.notify("Consejo de edificios parados %s (clic derecho en un ícono parado lo %s)" % ["prendido" if Opciones.aviso_parados else "apagado", "apaga" if Opciones.aviso_parados else "vuelve a prender"], 5.0, "info")
 
 
 func _tip(b: SimEntity) -> Dictionary:
@@ -199,6 +204,7 @@ func _seguir_parados() -> void:
 		vivos[e.id] = true
 		if not e.queue.is_empty():
 			_vacio_desde.erase(e.id)
+			_sonados.erase(e.id)
 		elif not _vacio_desde.has(e.id):
 			_vacio_desde[e.id] = now
 		elif now - int(_vacio_desde[e.id]) >= int(cfg().get("aviso_parados_s", 45)) * 1000:
@@ -206,10 +212,29 @@ func _seguir_parados() -> void:
 	for id in _vacio_desde.keys():
 		if not vivos.has(id):
 			_vacio_desde.erase(id)
+			_sonados.erase(id)
+	# --- ronda 9 --- sonido breve, una vez por parada (el límite entre dos está en respuesta.json)
+	if rojo_parado():
+		for e in hud.sim.actives:
+			if _de_produccion(e) and not _sonados.has(e.id) and parado(e) and trabada(e) == "":
+				_sonados[e.id] = true
+				_sonar_parado()
 	if largos > 0 and _parados_largos == 0 and Opciones.consejos and Opciones.aviso_parados and now - _aviso_ms >= int(cfg().get("aviso_parados_cada_s", 120)) * 1000:
 		_aviso_ms = now
-		hud.notify("%s sin producir (grises en la cola de arriba)\nClic en uno: ir. Ctrl + clic en una unidad: se repite sola. Clic derecho en un gris: no avisar más." % ("Un edificio de producción" if largos == 1 else "%d edificios de producción" % largos), 9.0, "info")
+		hud.notify("%s sin producir (%s en la cola de arriba)\nClic en uno: ir. Ctrl + clic en una unidad: se repite sola. Clic derecho en uno: no avisar más." % ["Un edificio de producción" if largos == 1 else "%d edificios de producción" % largos, "rojos" if rojo_parado() else "grises"], 9.0, "info")
 	_parados_largos = largos
+
+
+## --- ronda 9 --- ¿El parado va en rojo? (interfaz.json → produccion.parado_rojo)
+static func rojo_parado() -> bool:
+	return bool(cfg().get("parado_rojo", true))
+
+
+func _sonar_parado() -> void:
+	var m: Node = hud.get("main")
+	var a := m.get("audio") as GameAudio if m != null else null
+	if a != null and a.respuesta_ui("edificio_parado", "ui/ui_aviso_parado.ogg"):
+		sonidos_parado += 1
 
 
 func _draw() -> void:
@@ -245,11 +270,19 @@ func _draw() -> void:
 		elif b.queue.is_empty():
 			# --- frente 1 --- quieto: gris; el parado hace parado_s, con el borde que late
 			var late := parado(b)
-			cell.bg_color = Color(0.5, 0.5, 0.5, 0.16 if i == _hover else 0.08)
-			cell.border_color = Color(Palette.UI_ACCENT, 0.25 + 0.6 * pulso) if late else Color(1, 1, 1, 0.12)
-			cell.set_border_width_all(2 if late else 1)
-			draw_style_box(cell, r)
-			Glyphs.draw(self, Glyphs.resolve(b.def, b.type), r.grow(-8), Color(Palette.UI_DIM, (0.55 + 0.35 * pulso) if late else 0.6))
+			if late and rojo_parado():
+				# --- ronda 9 --- parado: rojo, con el borde que late (grita, no se apaga)
+				cell.bg_color = Color(Palette.UI_BAD, (0.30 if i == _hover else 0.16) + 0.12 * pulso)
+				cell.border_color = Color(Palette.UI_BAD, 0.45 + 0.5 * pulso)
+				cell.set_border_width_all(2)
+				draw_style_box(cell, r)
+				Glyphs.draw(self, Glyphs.resolve(b.def, b.type), r.grow(-8), Color(Palette.UI_BAD.lightened(0.45), 0.75 + 0.25 * pulso))
+			else:
+				cell.bg_color = Color(0.5, 0.5, 0.5, 0.16 if i == _hover else 0.08)
+				cell.border_color = Color(Palette.UI_ACCENT, 0.25 + 0.6 * pulso) if late else Color(1, 1, 1, 0.12)
+				cell.set_border_width_all(2 if late else 1)
+				draw_style_box(cell, r)
+				Glyphs.draw(self, Glyphs.resolve(b.def, b.type), r.grow(-8), Color(Palette.UI_DIM, (0.55 + 0.35 * pulso) if late else 0.6))
 		else:
 			cell.bg_color = Color(1, 1, 1, 0.14 if i == _hover else 0.06)
 			draw_style_box(cell, r)
