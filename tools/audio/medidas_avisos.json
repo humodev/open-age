@@ -35,10 +35,24 @@
   "bytes": 11112
  },
  {
+  "archivo": "assets/audio/ui/ui_aviso_parado.ogg",
+  "lufs": -20.0,
+  "pico_dbfs": -3.8,
+  "duracion_s": 0.75,
+  "bytes": 9686
+ },
+ {
   "archivo": "assets/audio/ui/ui_aviso_recurso.ogg",
   "lufs": -20.2,
   "pico_dbfs": -1.9,
   "duracion_s": 1.05,
   "bytes": 12024
+ },
+ {
+  "archivo": "assets/audio/ui/ui_aviso_sitios.ogg",
+  "lufs": -19.9,
+  "pico_dbfs": -7.0,
+  "duracion_s": 1.68,
+  "bytes": 12777
  }
 ]

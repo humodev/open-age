@@ -12,7 +12,9 @@
     "alerta_edificio": { "activo": true, "db": -6.0, "min_s": 1.0 },
     "alerta_aliado": { "activo": true, "db": -9.0, "min_s": 1.5 },
     "aviso_recurso": { "activo": true, "db": -9.0, "min_s": 2.0 },
-    "aviso_granja": { "activo": true, "db": -10.0, "min_s": 3.0 }
+    "aviso_granja": { "activo": true, "db": -10.0, "min_s": 3.0 },
+    "edificio_parado": { "activo": true, "db": -9.0, "min_s": 6.0, "_doc": "--- ronda 9 --- Un edificio de producción se para (parado_s sin cola, interfaz.json → produccion): suena una vez por parada; min_s es el mínimo entre dos aunque se paren varios. El rojo se apaga con produccion.parado_rojo." },
+    "aviso_sitios": { "activo": true, "db": -7.0, "min_s": 5.0, "_doc": "--- ronda 9 --- Cuenta de sitios: a los 2 y al 1 minuto del final (reglas.json → sitios.avisos_s)." }
   },
   "efectos": {
     "activo": true,

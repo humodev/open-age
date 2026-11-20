@@ -3,7 +3,8 @@
 
 Uso:  python3 tools/audio/generar_avisos.py
 Sale: assets/audio/ui/ui_alerta_{aldeanos,tropa,edificio,aliado}.ogg, ui_aviso_recurso.ogg,
-      ui_aviso_granja.ogg y tools/audio/medidas_avisos.json
+      ui_aviso_granja.ogg, ui_aviso_parado.ogg, ui_aviso_sitios.ogg y tools/audio/medidas_avisos.json
+      Con nombres (python3 tools/audio/generar_avisos.py ui_aviso_parado) genera solo esos.
 
 Sintetizados con dsp.py: golpes de madera, metal genérico y notas puras. Sin instrumentos sagrados ni
 de ningún repertorio (proceso/24-tras-la-segunda-ronda/4h-sonido-con-respeto.md). Cada tipo se
@@ -86,22 +87,49 @@ def ui_aviso_granja() -> np.ndarray:
     return _fin(b, 0.1, 92)
 
 
+def ui_aviso_parado() -> np.ndarray:
+    """Ronda 9: edificio de producción parado. Dos tocs secos iguales, altos y cortos."""
+    b = silence(0.45)
+    b = place(b, _toc(520, 0.12, 100, 0.85), 0.0)
+    b = place(b, _toc(520, 0.12, 101, 0.85), 0.11)
+    return _fin(b, 0.06, 102)
+
+
+def ui_aviso_sitios() -> np.ndarray:
+    """Ronda 9: cuenta de sitios. Tres notas que suben, lentas."""
+    b = silence(1.1)
+    for i, f in enumerate((440, 554, 659)):
+        b = place(b, _nota(f, 0.4, 110 + i, 0.7), 0.2 * i)
+    return _fin(b, 0.2, 113)
+
+
 SONIDOS = {"ui_alerta_aldeanos": ui_alerta_aldeanos, "ui_alerta_tropa": ui_alerta_tropa,
            "ui_alerta_edificio": ui_alerta_edificio, "ui_alerta_aliado": ui_alerta_aliado,
-           "ui_aviso_recurso": ui_aviso_recurso, "ui_aviso_granja": ui_aviso_granja}
+           "ui_aviso_recurso": ui_aviso_recurso, "ui_aviso_granja": ui_aviso_granja,
+           "ui_aviso_parado": ui_aviso_parado, "ui_aviso_sitios": ui_aviso_sitios}
 
 
 def main() -> None:
     filas = []
+    pedidos = sys.argv[1:]
+    viejas = {}
+    ruta = os.path.join(os.path.dirname(__file__), "medidas_avisos.json")
+    if pedidos and os.path.exists(ruta):
+        with open(ruta, encoding="utf-8") as fh:
+            viejas = {f["archivo"]: f for f in json.load(fh)}
     for nombre, fn in SONIDOS.items():
+        if pedidos and nombre not in pedidos:
+            continue
         nivel = NIVEL["alerta"] if "alerta" in nombre else NIVEL["aviso"]
         filas.append(export(fn(), os.path.join(UI, f"{nombre}.ogg"), nivel))
     for f in filas:
         f["archivo"] = os.path.relpath(f["archivo"], RAIZ)
         f["bytes"] = os.path.getsize(os.path.join(RAIZ, f["archivo"]))
         print(f)
-    with open(os.path.join(os.path.dirname(__file__), "medidas_avisos.json"), "w", encoding="utf-8") as fh:
-        json.dump(sorted(filas, key=lambda f: f["archivo"]), fh, ensure_ascii=False, indent=1)
+    for f in filas:
+        viejas[f["archivo"]] = f
+    with open(ruta, "w", encoding="utf-8") as fh:
+        json.dump(sorted(viejas.values(), key=lambda f: f["archivo"]), fh, ensure_ascii=False, indent=1)
 
 
 if __name__ == "__main__":
