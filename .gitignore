@@ -8,3 +8,4 @@ export/
 .claude/
 __pycache__/
 assets/ui/arte/**/candidatos/
+assets/ui/arte/**/referencia_3d/
