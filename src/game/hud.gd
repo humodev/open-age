@@ -772,6 +772,7 @@ func _process(delta: float) -> void:
 		_place_groups()
 	_check_pop()
 	_check_pop_pronto() # --- frente 1 ---
+	_check_sitios_avisos() # --- ronda 9 ---
 	if _dialog != null and _dialog.visible:
 		_dialog.offset_top = maxf(140.0, 74.0 + avisos.alto_usado() + 10.0)
 		_dialog.offset_bottom = _dialog.offset_top + 10.0
@@ -781,6 +782,53 @@ func _process(delta: float) -> void:
 	_clock.queue_redraw()
 	_sel.queue_redraw()
 	_card.queue_redraw()
+
+
+# --- ronda 9 --- (proceso/34-hacia-esport/08) Avisos de la cuenta de sitios: a los que siguen en
+## pie, cuando a quien tiene todos los sitios le faltan reglas.sitios.avisos_s (2 y 1 minuto).
+var _sitios_holder := -1
+var _sitios_avisados := {} # umbral en s -> true, para el holder de ahora
+var sitios_avisos_dados: Array[String] = [] # para el autotest y tests/sitios.gd
+
+
+func _check_sitios_avisos() -> void:
+	if sim == null or sim.game_over or sim._opts.get("sitios_sin_victoria", false):
+		return
+	var holder := CuentaGrande.sites_holder(sim)
+	if holder != _sitios_holder:
+		_sitios_holder = holder
+		_sitios_avisados.clear()
+	if holder < 0 or sim.players[local]["defeated"]:
+		return
+	var left := CuentaGrande.sites_left_s(sim, holder)
+	for u in (sim.data.reglas["sitios"].get("avisos_s", []) as Array):
+		var lim := int(u)
+		if left > lim or _sitios_avisados.has(lim):
+			continue
+		_sitios_avisados[lim] = true
+		if left < lim - 10: # la cuenta ya venía más abajo (carga de partida): no avisar tarde
+			continue
+		var txt := texto_aviso_sitios(holder, lim)
+		sitios_avisos_dados.append(txt)
+		var at: Variant = null
+		if sim.enemies(local, holder):
+			for e in sim.actives:
+				if e.alive and e.def.get("sagrado", false):
+					at = _lugar_de(e.x, e.y)
+					break
+		notify(txt, 10.0, "ataque" if sim.enemies(local, holder) else "hito", at)
+		if main != null and main.get("audio") != null:
+			main.audio.respuesta_ui("aviso_sitios", "ui/ui_aviso_sitios.ogg")
+
+
+func texto_aviso_sitios(holder: int, lim: int) -> String:
+	var cuando := "%d minuto%s" % [lim / 60, "" if lim / 60 == 1 else "s"] if lim % 60 == 0 else "%d s" % lim
+	if holder == local:
+		return "Ganás por sitios sagrados en %s\nDefendelos: si el rival pisa uno, la cuenta se corta." % cuando
+	if not sim.enemies(local, holder):
+		return "Tu equipo gana por sitios sagrados en %s\nDefendé los sitios." % cuando
+	return "¡%s gana por sitios sagrados en %s!\nLlevá tropas a un sitio: con pisar uno se corta la cuenta." % [Palette.team_name(holder), cuando]
+# --- fin ronda 9 ---
 
 
 static func _fmt_time(seconds: int) -> String:
@@ -1118,6 +1166,13 @@ class ClockBar:
 		if total > 0:
 			var left: int = (int(sim.data.reglas["sitios"]["victoria_ms"]) - int(sim.players[hud.local].get("sitios_ms", 0))) / 1000
 			var txt := "Sitios %d/%d" % [mine, total]
+			# --- ronda 9 --- Cuántos tiene el rival (que se vea venir la cuenta).
+			var theirs := 0
+			for e in sim.actives:
+				if e.def.get("sagrado", false) and e.holder >= 0 and sim.enemies(hud.local, e.holder):
+					theirs += 1
+			if theirs > 0:
+				txt += " · rival %d" % theirs
 			# Sin victoria por sitios (opción de partida o tutorial) solo dan riqueza: que no parezca una cuenta para ganar (jugador nuevo, ronda 3).
 			var no_win: bool = sim._opts.get("sitios_sin_victoria", false)
 			if no_win:

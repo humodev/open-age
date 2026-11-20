@@ -2709,6 +2709,16 @@ func _autotest() -> void:
 	var cuenta_ok: bool = await _esperar(func() -> bool: return CuentaGrande.sites_holder(sim) == rival and hud.cuenta.visible)
 	check.call("cuenta grande de sitios del rival (jugador %d)" % CuentaGrande.sites_holder(sim), cuenta_ok)
 	check.call("aviso «perdés en M:SS»", said.call("perdés en"))
+	# --- ronda 9 --- avisos de la cuenta de sitios a los 2 y al 1 minuto, con sonido
+	var vic_ms := int(sim.data.reglas["sitios"]["victoria_ms"])
+	var dados0 := hud.sitios_avisos_dados.size()
+	sim.players[rival]["sitios_ms"] = vic_ms - 120000
+	await _frames(3)
+	sim.players[rival]["sitios_ms"] = vic_ms - 60000
+	await _frames(3)
+	var dados: Array = hud.sitios_avisos_dados.slice(dados0)
+	check.call("avisos de sitios a los 2 y al 1 minuto (%s)" % " / ".join(dados.map(func(t: String) -> String: return t.get_slice("\n", 0))), dados.size() == 2 and String(dados[0]).contains("2 minutos") and String(dados[1]).contains("1 minuto"))
+	sim.players[rival]["sitios_ms"] = 60000
 	await _frames(2)
 	get_viewport().get_texture().get_image().save_png("screenshots/autotest_sitios.png")
 	sim.players[rival]["sitios_ms"] = 0
