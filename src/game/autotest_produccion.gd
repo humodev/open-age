@@ -196,12 +196,17 @@ static func correr(m: Node, check: Callable) -> void:
 	m.speed = 8.0
 	var gris := await _hasta(m, func() -> bool: return hud.cola_global.parado(capital) and hud.cola_global.items().has(capital), 600)
 	m.speed = 1.0
-	check.call("el centro parado aparece rojo en la cola global (parado_rojo en data)", gris and hud.cola_global.rojo_parado())
+	# El autor (2026-11-20): parado no es error; va gris y callado. Rojo solo si está trabado (parado_rojo en data).
+	var rojo_on: bool = hud.cola_global.rojo_parado()
+	check.call("el centro parado aparece en la cola global (%s, parado_rojo en data)" % ("rojo" if rojo_on else "gris"), gris)
 	var sono_antes: int = hud.cola_global.sonidos_parado
 	await _hasta(m, func() -> bool: return hud.cola_global._sonados.has(capital.id), 30)
 	for i in 30:
 		await m.get_tree().process_frame
-	check.call("el centro parado suena una vez por parada (%d sonidos)" % hud.cola_global.sonidos_parado, hud.cola_global._sonados.has(capital.id) and hud.cola_global.sonidos_parado - sono_antes <= 1)
+	if rojo_on:
+		check.call("el centro parado suena una vez por parada (%d sonidos)" % hud.cola_global.sonidos_parado, hud.cola_global._sonados.has(capital.id) and hud.cola_global.sonidos_parado - sono_antes <= 1)
+	else:
+		check.call("el centro parado no suena (parado_rojo apagado)", hud.cola_global.sonidos_parado == sono_antes)
 	# Para la captura: un edificio militar que repite su tropa (el bucle) junto al centro gris.
 	var dd := sim.dp(local)
 	var mil: SimEntity = null
