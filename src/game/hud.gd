@@ -18,6 +18,8 @@ var local: int
 
 var _top: Control
 var _clock: Control
+var _guardado_icono: Control # --- ronda 9 ---
+var _guardado_t := 0.0
 var _sel: Control
 var _card: Control
 var _mini: Minimap
@@ -109,6 +111,14 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 	_anchor(_clock, Vector2(1, 0), Rect2(-342, 10, 330, 76))
 	add_child(_clock)
 	_blockers.append(_clock)
+	# --- ronda 9 --- El autoguardado es un ícono discreto en la esquina del reloj, no un mensaje.
+	_guardado_icono = Control.new()
+	_anchor(_guardado_icono, Vector2(1, 0), Rect2(-38, 60, 18, 18))
+	_guardado_icono.tooltip_text = "Autoguardado"
+	_guardado_icono.mouse_filter = Control.MOUSE_FILTER_PASS
+	_guardado_icono.visible = false
+	_guardado_icono.draw.connect(_dibujar_guardado)
+	add_child(_guardado_icono)
 
 	_mini = Minimap.new()
 	_mini.setup(sim, cam, ctrl, local)
@@ -283,6 +293,43 @@ func _build_dialog() -> void:
 	add_child(_dialog)
 
 
+## --- ronda 9 --- El cuadro de la Guía va arriba (debajo de los avisos) salvo que tape a tus
+## unidades: entonces baja, encima del panel de la selección. Cambia solo si del otro lado tapa
+## menos (así no salta de un lado al otro con cada paso de un aldeano).
+var _dialog_abajo := false
+
+func _place_dialog() -> void:
+	var h := _dialog.size.y
+	var arriba := maxf(140.0, 74.0 + avisos.alto_usado() + 10.0)
+	var piso := size.y - 24.0
+	if _sel != null and _sel.visible:
+		piso = _sel.get_global_rect().position.y - 40.0
+	var abajo := maxf(arriba, piso - h)
+	var x := size.x * 0.5 - 420.0
+	var n_arriba := _propias_en(Rect2(x, arriba, 840.0, h).grow(24.0))
+	var n_abajo := _propias_en(Rect2(x, abajo, 840.0, h).grow(24.0))
+	if _dialog_abajo and n_arriba < n_abajo:
+		_dialog_abajo = false
+	elif not _dialog_abajo and n_abajo < n_arriba:
+		_dialog_abajo = true
+	_dialog.offset_top = abajo if _dialog_abajo else arriba
+	_dialog.offset_bottom = _dialog.offset_top + 10.0
+
+
+## Unidades propias que se ven dentro de `r` (en pantalla).
+func _propias_en(r: Rect2) -> int:
+	if ctrl == null or ctrl.cam == null:
+		return 0
+	var c: Camera3D = ctrl.cam.cam
+	var n := 0
+	for e in sim.actives:
+		if e.alive and e.owner == local and e.is_unit() and e.inside < 0:
+			var wp := WorldView.to_world(e.x, e.y, 0.4)
+			if not c.is_position_behind(wp) and r.has_point(c.unproject_position(wp)):
+				n += 1
+	return n
+
+
 func _next_dialog() -> void:
 	if _dialog_queue.is_empty():
 		_dialog.visible = false
@@ -295,6 +342,27 @@ func _next_dialog() -> void:
 	# --- aprender --- (más tiempo para leer; data/interfaz.json → guia, y G los relee)
 	_dialog_t = clampf(String(d.get("texto", "")).length() / float(_guia_cfg.get("letras_por_s", 11)), float(_guia_cfg.get("min_s", 7.0)), float(_guia_cfg.get("max_s", 22.0)))
 	# --- fin aprender ---
+
+
+## --- ronda 9 --- La Guía está hablando (o tiene mensajes en espera) o, en el tutorial, tiene un
+## paso abierto: un objetivo principal activo que no es de cuidar algo. Los consejos genéricos
+## esperan (data/interfaz.json → guia.calla_consejos_misiones).
+func guia_ocupada() -> bool:
+	if _dialog != null and (_dialog.visible or not _dialog_queue.is_empty()):
+		return true
+	var sc = sim.scenario if sim != null else null
+	if sc == null:
+		return false
+	var mid := String(sc.mission.get("id", ""))
+	var calla := false
+	for pre in _guia_cfg.get("calla_consejos_misiones", []):
+		calla = calla or mid.begins_with(String(pre))
+	if not calla:
+		return false
+	for o: Dictionary in sc.objectives:
+		if o.get("estado", "") == "activo" and not bool(o.get("secundario", false)) and String(o.get("tipo", "")) != "proteger":
+			return true
+	return false
 
 
 func blocks(m: Vector2) -> bool:
@@ -758,7 +826,27 @@ func hide_tip() -> void:
 	# --- fin ficha ---
 
 
+## --- ronda 9 --- Muestra el ícono del autoguardado `secs` segundos (se apaga en el último).
+func marca_guardado(secs: float = 3.0) -> void:
+	_guardado_t = secs
+	_guardado_icono.visible = true
+	_guardado_icono.queue_redraw()
+
+
+## Un disquete chico: cuerpo, la chapa de arriba y la etiqueta.
+func _dibujar_guardado() -> void:
+	var c := _guardado_icono
+	var col := Color(Palette.UI_DIM, 0.9)
+	c.draw_rect(Rect2(1, 1, 16, 16), col, false, 1.5)
+	c.draw_rect(Rect2(5, 2, 7, 5), col)
+	c.draw_rect(Rect2(4, 10, 10, 6), Color(col, 0.45))
+
+
 func _process(delta: float) -> void:
+	if _guardado_t > 0.0:
+		_guardado_t -= delta
+		_guardado_icono.modulate.a = clampf(_guardado_t, 0.0, 1.0)
+		_guardado_icono.visible = _guardado_t > 0.0
 	if _dialog != null and _dialog.visible:
 		_dialog_t -= delta
 		if _dialog_t <= 0.0:
@@ -773,8 +861,7 @@ func _process(delta: float) -> void:
 	_check_pop()
 	_check_pop_pronto() # --- frente 1 ---
 	if _dialog != null and _dialog.visible:
-		_dialog.offset_top = maxf(140.0, 74.0 + avisos.alto_usado() + 10.0)
-		_dialog.offset_bottom = _dialog.offset_top + 10.0
+		_place_dialog()
 	# --- fin avisos ---
 	_place_top() # --- órdenes ---
 	_top.queue_redraw()

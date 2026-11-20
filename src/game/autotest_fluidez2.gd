@@ -68,7 +68,7 @@ static func _muro(m: Node, check: Callable, muro: String) -> SimEntity:
 	var puerta_sp: Vector2 = m._screen(arbol.tx + 2 + 0.5, arbol.ty + 0.5)
 	m._mouse(puerta_sp, 0, false)
 	await m._frames(2)
-	m._key_tap(KEY_G)
+	m._key_tap(Teclas.tecla("puerta_muro"))
 	await m._frames(2)
 	m._mouse(b2, 0, false)
 	await m._frames(4)

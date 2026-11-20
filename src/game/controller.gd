@@ -1117,8 +1117,9 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 	# --- fin órdenes ---
-	# --- fluidez 2 --- G mientras se arrastra el muro: la casilla bajo el cursor va de puerta
-	if _line_drag and event is InputEventKey and event.pressed and not event.echo and (event as InputEventKey).physical_keycode == KEY_G:
+	# --- fluidez 2 --- La tecla de la puerta (Teclas «puerta_muro»; ronda 9: antes G, que abre la
+	# Guía) mientras se arrastra el muro: la casilla bajo el cursor va de puerta.
+	if _line_drag and event is InputEventKey and event.pressed and not event.echo and Teclas.es((event as InputEventKey).physical_keycode, "puerta_muro"):
 		marcar_puerta()
 		get_viewport().set_input_as_handled()
 		return
@@ -2007,14 +2008,15 @@ func plan_linea(tiles: Array) -> Dictionary:
 		if refuerza > 0:
 			info.append(["Refuerza %d %s" % [refuerza, "tramo" if refuerza == 1 else "tramos"], Palette.UI_DIM])
 		if gate != "":
-			info.append(["G: puerta en la casilla del cursor" if _line_gate.x < 0 else "Puerta en el trazo (G la mueve)", Palette.UI_DIM])
+			var tg := Teclas.texto("puerta_muro")
+			info.append(["%s: puerta en la casilla del cursor" % tg if _line_gate.x < 0 else "Puerta en el trazo (%s la mueve)" % tg, Palette.UI_DIM])
 		if tiles.size() >= int(MundoColocacion.cfg().get("muro_tope", 80)):
 			info.append(["Tope de %d casillas por trazo" % int(MundoColocacion.cfg().get("muro_tope", 80)), Palette.UI_ACCENT])
 		info.append(["Mayús: seguir desde el extremo", Palette.UI_DIM])
 	return {"estados": estados, "info": info, "huecos": lista_huecos, "causas": causas, "tramos": tramos, "alcanzan": alcanzan, "total": total, "refuerza": refuerza}
 
 
-## G mientras se arrastra: la casilla del trazo más cercana al cursor va de puerta.
+## La tecla «puerta_muro» mientras se arrastra: la casilla del trazo más cercana al cursor va de puerta.
 func marcar_puerta() -> void:
 	var tile: Vector2i = _ghost.get_meta("tile", _line_start)
 	var tiles := trazo(tile)

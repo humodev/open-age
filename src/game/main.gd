@@ -988,7 +988,7 @@ func _autoguardar() -> void:
 	if sim.tick >= _prox_autoguardado:
 		_prox_autoguardado = sim.tick + _autoguardado_ticks()
 		if guardar_partida("auto") != "":
-			hud.notify("Autoguardado", 2.0)
+			hud.marca_guardado() # --- ronda 9 --- un ícono, no un mensaje
 
 
 ## Saltar a otro momento de la repetición: se arma de nuevo y se re-simula hasta `tick`.

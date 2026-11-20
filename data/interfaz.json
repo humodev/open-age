@@ -37,6 +37,7 @@
       ["produccion", "Recorrer edificios de producción (con aldeanos y tropas elegidos: cambia de grilla)", "Selección", "Tab"],
       ["centro", "Recorrer centros (doble: centra)", "Selección", "H"],
       ["borrar", "Borrar lo seleccionado", "Selección", "Delete"],
+      ["puerta_muro", "Puerta en el trazo del muro (mientras se arrastra)", "Selección", "Y"],
       ["ir_aviso", "Ir al último aviso", "Selección", "Space"],
       ["avisos_atras", "Recorrer avisos anteriores", "Selección", "Home"],
       ["campana", "Campana (otra vez: toque de calma)", "Atajos globales", "B"],
@@ -68,6 +69,7 @@
       ["puntaje", "Puntaje y tributos", "Paneles", "F6"],
       ["pausa", "Pausa", "Paneles", "F10"],
       ["guia", "La Guía: lecciones y lo que dijo en las campañas", "Paneles", "G"],
+      ["como_se_usa", "«¿Cómo se usa?»: la lección de lo elegido", "Paneles", "U"],
       ["atajos", "Hoja de atajos", "Paneles", "F12"],
       ["mi_base", "Panel «Mi base»", "Paneles", "F11"],
       ["modo_foto", "Modo foto: oculta la interfaz", "Paneles", "O"]
@@ -201,7 +203,9 @@
     "letras_por_s": 11,
     "min_s": 7.0,
     "max_s": 22.0,
-    "registro_max": 60
+    "registro_max": 60,
+    "_doc_calla": "--- ronda 9 --- Los consejos genéricos (src/game/ui/consejos.gd y el de edificios sin producir) se callan mientras la Guía habla y, en las misiones cuyo id empieza con alguno de calla_consejos_misiones, mientras haya un paso abierto (un objetivo principal activo que no sea de tipo proteger).",
+    "calla_consejos_misiones": ["tutorial"]
   },
   "fin": {
     "_doc": "Pantalla de fin (src/game/ui/panel_fin.gd): umbrales del consejo cuando perdiste. ociosos_prom: aldeanos sin trabajo en promedio; banco_prom: recursos sin gastar en promedio; aldeanos_pct: tuviste menos de este porcentaje de los aldeanos del rival; edad_tarde_s: llegaste a la edad II al menos tantos segundos después que el rival.",

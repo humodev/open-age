@@ -37,11 +37,14 @@ static func data() -> Dictionary:
 
 
 ## Reemplaza los marcadores {reglas:a.b}, {casillas:a.b}, {min:a.b} y {edad:a.b} por los
-## valores de data/reglas.json (así el texto sigue al balance).
+## valores de data/reglas.json (así el texto sigue al balance), y {tecla:acción} por su tecla.
 static func texto(s: String, reglas: Dictionary) -> String:
-	var re := RegEx.create_from_string("\\{(reglas|casillas|min|edad):([a-z0-9_.]+)\\}")
+	var re := RegEx.create_from_string("\\{(reglas|casillas|min|edad|tecla):([a-z0-9_.]+)\\}")
 	var out := s
 	for m in re.search_all(s):
+		if m.get_string(1) == "tecla": # --- ronda 9 --- la tecla que el jugador tiene ahora
+			out = out.replace(m.get_string(0), Teclas.texto(m.get_string(2)))
+			continue
 		var v: Variant = reglas
 		for k in m.get_string(2).split("."):
 			v = (v as Dictionary).get(k, null) if v is Dictionary else null
@@ -74,15 +77,28 @@ func setup(h) -> void:
 	boton.visible = false
 	boton.pressed.connect(func() -> void: abrir("registro"))
 	add_child(boton)
+	# --- ronda 9 --- Que se vea como botón: marco, un «?» en un círculo y su tecla.
 	boton_como = Button.new()
 	boton_como.text = "¿Cómo se usa?"
-	boton_como.tooltip_text = "Abre la lección de la Guía (G) sobre lo que elegiste"
+	boton_como.tooltip_text = "Abre la lección de la Guía (%s) sobre lo que elegiste" % Teclas.texto("guia")
 	boton_como.focus_mode = Control.FOCUS_NONE
+	boton_como.add_theme_font_override("font", Hud.font_b)
 	boton_como.add_theme_font_size_override("font_size", 13)
+	boton_como.add_theme_color_override("font_color", Palette.UI_TEXT)
+	boton_como.add_theme_color_override("font_hover_color", Palette.UI_ACCENT)
+	for st in ["normal", "hover", "pressed"]:
+		var bs := StyleBoxFlat.new()
+		bs.bg_color = Color(0.07, 0.075, 0.085, 0.94) if st == "normal" else Color(Palette.UI_ACCENT, 0.22)
+		bs.border_color = Color(Palette.UI_ACCENT, 0.75 if st == "normal" else 1.0)
+		bs.set_border_width_all(1)
+		bs.set_corner_radius_all(5)
+		bs.content_margin_left = 30
+		bs.content_margin_right = 34
+		boton_como.add_theme_stylebox_override(st, bs)
+	boton_como.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	boton_como.visible = false
-	boton_como.pressed.connect(func() -> void:
-		if not _como_ids.is_empty():
-			abrir_leccion(_como_ids[0], _como_ids))
+	boton_como.pressed.connect(_abrir_como)
+	boton_como.draw.connect(_dibujar_como)
 	add_child(boton_como)
 	_panel = PanelContainer.new()
 	var sb := Hud.panel_box(10)
@@ -116,15 +132,28 @@ func setup(h) -> void:
 	_lecciones_box.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_lecciones_box.add_theme_constant_override("separation", 18)
 	vb.add_child(_lecciones_box)
+	# --- ronda 9 --- El índice: solo las lecciones del pueblo del jugador, por edad, con su título.
+	var isc := ScrollContainer.new()
+	isc.custom_minimum_size = Vector2(262, 0)
+	isc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_lecciones_box.add_child(isc)
 	_indice = VBoxContainer.new()
 	_indice.custom_minimum_size = Vector2(250, 0)
 	_indice.add_theme_constant_override("separation", 4)
-	_lecciones_box.add_child(_indice)
+	isc.add_child(_indice)
 	var d := data()
-	for id in d.get("orden", []):
+	var edad_vista := 0
+	for id in indice(hud.sim, maxi(hud.local, 0)):
 		var lec: Dictionary = d.get("lecciones", {}).get(id, {})
-		if lec.is_empty():
-			continue
+		var ed := int(lec.get("edad", 1))
+		if ed != edad_vista:
+			edad_vista = ed
+			var hl := Label.new()
+			hl.text = "Edad " + ["0", "I", "II", "III", "IV", "V"][clampi(ed, 0, 5)]
+			hl.add_theme_font_override("font", Hud.font_b)
+			hl.add_theme_font_size_override("font_size", 13)
+			hl.add_theme_color_override("font_color", Palette.UI_DIM)
+			_indice.add_child(hl)
 		var b := Button.new()
 		b.text = String(lec.get("titulo", id))
 		b.name = "lec_" + String(id)
@@ -222,8 +251,10 @@ func abrir_leccion(id: String, resaltar: Array = []) -> void:
 
 func _mostrar() -> void:
 	if _actual == "":
-		_actual = String((data().get("orden", [""]) as Array)[0])
+		var ids := indice(hud.sim, maxi(hud.local, 0))
+		_actual = String(ids[0]) if not ids.is_empty() else ""
 	_panel.visible = true
+	_ubicar_panel(hud.get("_sel"))
 	_rebuild()
 	move_to_front()
 
@@ -242,7 +273,9 @@ func _rebuild() -> void:
 
 
 func _rebuild_leccion() -> void:
-	for b: Button in _indice.get_children():
+	for b in _indice.get_children():
+		if not b is Button:
+			continue
 		var id := String(b.name).substr(4)
 		b.button_pressed = id == _actual
 		b.add_theme_color_override("font_color", Palette.UI_ACCENT if id in _resaltar else Palette.UI_TEXT)
@@ -305,6 +338,49 @@ func place_button(below: float) -> void:
 	boton.size = Vector2(190, 30)
 
 
+# ---------------------------------------------------------------- Índice (ronda 9)
+
+## Lo que el pueblo `pid` tiene, para el `requiere` de las lecciones: aldeano_muro,
+## aldeano_mercado, aldeano_maravilla, area y los tipos de sus unidades y edificios.
+static func banderas_pueblo(sim: Sim, pid: int) -> Dictionary:
+	var out := {}
+	var dd := sim.dp(pid)
+	for k in dd.edificios:
+		var bd: Dictionary = dd.edificios[k]
+		out[k] = true
+		if bd.get("mercado", false) and k != "mercado_neutral":
+			out["aldeano_mercado"] = true
+		if bd.get("linea", false) and bd.has("sobre"):
+			out["aldeano_muro"] = true
+		if bd.get("maravilla", false):
+			out["aldeano_maravilla"] = true
+	for k in dd.unidades:
+		out[k] = true
+		if (dd.unidades[k] as Dictionary).has("area"):
+			out["area"] = true
+	return out
+
+
+## Las lecciones del índice para el pueblo `pid`: sin las que no puede usar (la muralla para los
+## guaraníes), ordenadas por edad y, dentro de cada edad, como en `orden`.
+static func indice(sim: Sim, pid: int) -> Array:
+	var d := data()
+	var lecs: Dictionary = d.get("lecciones", {})
+	var tiene := banderas_pueblo(sim, pid)
+	var out := []
+	for id in d.get("orden", []):
+		var lec: Dictionary = lecs.get(id, {})
+		if lec.is_empty() or (lec.has("requiere") and not tiene.has(String(lec["requiere"]))):
+			continue
+		out.append(String(id))
+	var orden: Array = d.get("orden", [])
+	out.sort_custom(func(a: String, b: String) -> bool:
+		var ea := int(lecs[a].get("edad", 1))
+		var eb := int(lecs[b].get("edad", 1))
+		return ea < eb if ea != eb else orden.find(a) < orden.find(b))
+	return out
+
+
 # ---------------------------------------------------------------- ¿Cómo se usa?
 
 ## Lecciones que tocan a una entidad, en el orden del índice.
@@ -355,7 +431,9 @@ static func lecciones_de(sim: Sim, e: SimEntity) -> Array:
 func _process(_d: float) -> void:
 	var sel: Array = hud.ctrl.selected_entities()
 	var sp: Control = hud.get("_sel")
-	if sel.is_empty() or sp == null or not sp.visible or _panel.visible:
+	if _panel.visible:
+		_ubicar_panel(sp)
+	if sel.is_empty() or sp == null or not sp.visible:
 		boton_como.visible = false
 		return
 	var e: SimEntity = sel[0]
@@ -366,18 +444,63 @@ func _process(_d: float) -> void:
 	boton_como.visible = not _como_ids.is_empty()
 	if boton_como.visible:
 		var r := sp.get_global_rect()
-		boton_como.size = Vector2(124, 26)
+		var w := ANCHO_COMO
+		boton_como.size = Vector2(w, 28)
 		# Arriba a la derecha del panel, en la fila de los grupos (que se llenan desde la izquierda):
-		# adentro tapaba las ayudas de la selección múltiple.
-		boton_como.position = Vector2(r.end.x - 124, r.position.y - 30)
+		# adentro tapaba las ayudas de la selección múltiple. La Guía abierta queda por encima.
+		boton_como.position = Vector2(r.end.x - w, r.position.y - 32)
+
+
+const ANCHO_COMO := 176.0
+
+
+func _abrir_como() -> void:
+	if not _como_ids.is_empty():
+		abrir_leccion(_como_ids[0], _como_ids)
+
+
+## El «?» en un círculo a la izquierda y la tecla en su casilla a la derecha.
+func _dibujar_como() -> void:
+	var b := boton_como
+	var cy := b.size.y * 0.5
+	var f: Font = Hud.font_b
+	b.draw_circle(Vector2(15, cy), 9.0, Palette.UI_ACCENT)
+	var q := f.get_string_size("?", HORIZONTAL_ALIGNMENT_LEFT, -1, 13)
+	b.draw_string(f, Vector2(15 - q.x * 0.5, cy + 5), "?", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.07, 0.075, 0.085))
+	var t := Teclas.texto("como_se_usa")
+	if t == "—":
+		return
+	var tw := maxf(18.0, f.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x + 8)
+	var kr := Rect2(b.size.x - tw - 7, cy - 9, tw, 18)
+	b.draw_rect(kr, Color(1, 1, 1, 0.08))
+	b.draw_rect(kr, Color(Palette.UI_DIM, 0.8), false, 1.0)
+	b.draw_string(f, Vector2(kr.position.x + (tw - f.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x) * 0.5, cy + 4.5), t, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Palette.UI_DIM)
+
+
+## --- ronda 9 --- La Guía abierta va entre la barra de arriba y el panel de la selección (con el
+## «¿Cómo se usa?» encima): antes, centrada, tapaba el botón y la selección.
+func _ubicar_panel(sp: Control) -> void:
+	var arriba := 62.0
+	var piso := size.y - 16.0
+	if sp != null and sp.visible:
+		piso = sp.get_global_rect().position.y - 38.0
+	var h := clampf(piso - arriba, 360.0, 600.0)
+	var y := arriba + maxf(0.0, (piso - arriba - h) * 0.5)
+	_panel.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	_panel.position = Vector2(roundf((size.x - 860.0) * 0.5), roundf(y))
+	_panel.size = Vector2(860.0, h)
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	var k := event as InputEventKey
 	if k == null or not k.pressed or k.echo or not hud.is_visible_in_tree():
 		return
-	# G mientras se arrastra un muro pone la puerta (controller): no abre la Guía.
-	if Teclas.es(k.physical_keycode, "guia") and hud.ctrl.get("_line_drag"):
+	# Si la tecla de la puerta es la misma, mientras se arrastra un muro pone la puerta (controller).
+	if Teclas.es(k.physical_keycode, "puerta_muro") and hud.ctrl.get("_line_drag"):
+		return
+	if Teclas.es(k.physical_keycode, "como_se_usa") and boton_como.visible: # --- ronda 9 ---
+		_abrir_como()
+		get_viewport().set_input_as_handled()
 		return
 	if Teclas.es(k.physical_keycode, "guia") or (k.physical_keycode == KEY_ESCAPE and _panel.visible):
 		toggle()

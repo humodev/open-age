@@ -71,7 +71,7 @@ static func correr(m: Node, check: Callable) -> void:
 	await m._frames(3)
 	m._mouse(m._screen(fila.x + 1.5, fila.y + 0.5), 0, false)
 	await m._frames(2)
-	m._key_tap(KEY_G)
+	m._key_tap(Teclas.tecla("puerta_muro"))
 	await m._frames(2)
 	m._mouse(b, 0, false)
 	await m._frames(4)

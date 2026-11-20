@@ -206,7 +206,7 @@ func _seguir_parados() -> void:
 	for id in _vacio_desde.keys():
 		if not vivos.has(id):
 			_vacio_desde.erase(id)
-	if largos > 0 and _parados_largos == 0 and Opciones.consejos and Opciones.aviso_parados and now - _aviso_ms >= int(cfg().get("aviso_parados_cada_s", 120)) * 1000:
+	if largos > 0 and _parados_largos == 0 and Opciones.consejos and Opciones.aviso_parados and not hud.guia_ocupada() and now - _aviso_ms >= int(cfg().get("aviso_parados_cada_s", 120)) * 1000:
 		_aviso_ms = now
 		hud.notify("%s sin producir (grises en la cola de arriba)\nClic en uno: ir. Ctrl + clic en una unidad: se repite sola. Clic derecho en un gris: no avisar más." % ("Un edificio de producción" if largos == 1 else "%d edificios de producción" % largos), 9.0, "info")
 	_parados_largos = largos
