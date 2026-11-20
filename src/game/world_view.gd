@@ -783,6 +783,12 @@ func _make_visual(e: SimEntity) -> Dictionary:
 			var tropa: Dictionary = _age_cfg(e.owner, _age_of(e.owner)).get("tropa", {})
 			var av := AldeanoAnimado.crear(sim.dp(e.owner).civ.get("estilo", {}), team, FIGURE_H * _unit_k, civ, e.type, e.def, tropa)
 			v["anim"] = av
+			var sx := AldeanoAnimado.sexo(e.id, e.def) # --- aldeanos por retrato ---
+			if sx != "" and not av.tropa:
+				AldeanoAnimado.vestir(av, civ, sx, _age_of(e.owner))
+				v["sexo"] = sx
+				v["civ"] = civ
+				v["anim_age"] = _age_of(e.owner) # la ropa cambia con la edad
 			if av.tropa:
 				v["anim_age"] = _age_of(e.owner) # el equipo cambia con la edad
 			body = av.node
@@ -1711,7 +1717,10 @@ func _render_unit(e: SimEntity, v: Dictionary, alpha: float, delta: float) -> vo
 	var body: Node3D = v["body"]
 	if v.has("anim_age") and int(v["anim_age"]) != _age_of(e.owner):
 		v["anim_age"] = _age_of(e.owner)
-		AldeanoAnimado.equipar(v["anim"], _age_cfg(e.owner, _age_of(e.owner)).get("tropa", {}))
+		if v.has("sexo"): # --- aldeanos por retrato ---
+			AldeanoAnimado.vestir(v["anim"], v["civ"], v["sexo"], _age_of(e.owner))
+		else:
+			AldeanoAnimado.equipar(v["anim"], _age_cfg(e.owner, _age_of(e.owner)).get("tropa", {}))
 	if v.has("age") and int(v["age"]) != _age_of(e.owner):
 		v["age"] = _age_of(e.owner)
 		(body as MeshInstance3D).mesh = unit_mesh_for(e)

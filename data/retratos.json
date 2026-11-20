@@ -1,0 +1,14 @@
+{
+  "_doc": "Retratos de la interfaz (proceso/27-animaciones/04-aldeanos-por-retrato.md): el panel de la selección y la ficha los muestran cuando hay uno; si no, el glifo (o el retrato pre-renderizado de la ficha). Una fila por imagen: pueblo (clave de data/civs; vacío = cualquiera), unidad (tipo de data/unidades.json), sexo (m, f o vacío = cualquiera; el del aldeano sale del id, data/arte_animaciones.json → personas), edad (1 a 4; vale desde esa edad hasta que haya otra más alta; 0 = cualquiera) y ruta del PNG. Cuando lleguen imágenes nuevas, solo se agrega una fila. recorte: qué parte de la imagen se ve (x, y, ancho, alto, en fracciones): grande en el retrato del panel y la ficha, chico en los cuadritos de una selección de varios.",
+  "recorte": { "grande": [0.0, 0.0, 1.0, 0.753], "chico": [0.17, 0.02, 0.66, 0.497] },
+  "retratos": [
+    { "pueblo": "tawantinsuyu", "unidad": "aldeano", "sexo": "m", "edad": 1, "ruta": "res://assets/ui/arte/tawantinsuyu/retratos/aldeano_m_e1.png" },
+    { "pueblo": "tawantinsuyu", "unidad": "aldeano", "sexo": "m", "edad": 2, "ruta": "res://assets/ui/arte/tawantinsuyu/retratos/aldeano_m_e2.png" },
+    { "pueblo": "tawantinsuyu", "unidad": "aldeano", "sexo": "m", "edad": 3, "ruta": "res://assets/ui/arte/tawantinsuyu/retratos/aldeano_m_e3.png" },
+    { "pueblo": "tawantinsuyu", "unidad": "aldeano", "sexo": "m", "edad": 4, "ruta": "res://assets/ui/arte/tawantinsuyu/retratos/aldeano_m_e4.png" },
+    { "pueblo": "tawantinsuyu", "unidad": "aldeano", "sexo": "f", "edad": 1, "ruta": "res://assets/ui/arte/tawantinsuyu/retratos/aldeano_f_e1.png" },
+    { "pueblo": "tawantinsuyu", "unidad": "aldeano", "sexo": "f", "edad": 2, "ruta": "res://assets/ui/arte/tawantinsuyu/retratos/aldeano_f_e2.png" },
+    { "pueblo": "tawantinsuyu", "unidad": "aldeano", "sexo": "f", "edad": 3, "ruta": "res://assets/ui/arte/tawantinsuyu/retratos/aldeano_f_e3.png" },
+    { "pueblo": "tawantinsuyu", "unidad": "aldeano", "sexo": "f", "edad": 4, "ruta": "res://assets/ui/arte/tawantinsuyu/retratos/aldeano_f_e4.png" }
+  ]
+}

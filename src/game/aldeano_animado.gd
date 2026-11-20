@@ -371,12 +371,62 @@ static func _trama() -> ImageTexture:
 
 # ---------------------------------------------------------------- Cuerpo
 
-## Colores de la gente de un pueblo (data/arte_animaciones.json → vestimenta y colores).
-static func colores(style: Dictionary) -> Dictionary:
+## --- aldeanos por retrato --- (proceso/27-animaciones/04) Sexo de la figura de una unidad:
+## «f», «m» o "" si no le toca (data/arte_animaciones.json → personas). Sale del id: la
+## simulación no lo lee. También lo usa la interfaz para elegir el retrato (Retratos).
+static func sexo(id: int, def: Dictionary) -> String:
+	var p: Dictionary = cfg().get("personas", {})
+	if not (p.get("funciones", []) as Array).has(str(def.get("funcion", ""))) or def.get("comerciante", false):
+		return ""
+	var x := (id * 2654435761) & 0xffffffff
+	x ^= x >> 15
+	return "f" if (x & 0x7fffffff) % 100 < int(p.get("mujeres_pct", 50)) else "m"
+
+
+static var _personas := {}
+
+## La ropa de un aldeano: base[sexo] → por_civ[civ][sexo] → su edad (la más alta que no pase
+## `edad`). Lleva «_key» para la caché de mallas.
+static func persona(civ: String, sx: String, edad: int) -> Dictionary:
+	if sx == "":
+		return {}
+	var key := "%s_%s_%d" % [civ, sx, edad]
+	if _personas.has(key):
+		return _personas[key]
+	var p: Dictionary = cfg().get("personas", {})
+	var out: Dictionary = (p.get("base", {}) as Dictionary).get(sx, {}).duplicate(true)
+	var pc: Dictionary = (p.get("por_civ", {}) as Dictionary).get(civ, {}).get(sx, {})
+	for k in pc:
+		if k != "edades":
+			out[k] = pc[k]
+	var eds: Dictionary = pc.get("edades", {})
+	var mejor := 0
+	for k: String in eds:
+		if int(k) <= edad and int(k) > mejor:
+			mejor = int(k)
+	if mejor > 0:
+		out.merge(eds[str(mejor)], true)
+	out["_key"] = key
+	_personas[key] = out
+	return out
+
+
+## Viste al aldeano según su sexo y la edad de su pueblo (y la vuelve a armar al cambiar de edad).
+static func vestir(st: Estado, civ: String, sx: String, edad: int) -> void:
+	st.per = persona(civ, sx, edad)
+	st.mi.mesh = malla(st.style, st.team, "" if st.tool == "-" else st.tool, st.carga, "", st.per)
+# --- fin aldeanos por retrato ---
+
+
+## Colores de la gente de un pueblo (data/arte_animaciones.json → vestimenta y colores); `per`,
+## la ropa del aldeano por sexo y edad, pisa a la de la forma.
+static func colores(style: Dictionary, per := {}) -> Dictionary:
 	var forma: String = style.get("forma", "")
 	var cols: Dictionary = cfg().get("colores", {})
 	var vest_all: Dictionary = cfg().get("vestimenta", {})
 	var vest: Dictionary = vest_all.get(forma, vest_all.get("_otro", {}))
+	if not per.is_empty():
+		vest = vest.merged(per, true)
 	var tela := Color(vest["tela"]) if vest.has("tela") else Color(style.get("arcilla", "#8a7a62")).darkened(0.3)
 	return {
 		"vest": vest, "tela": tela,
@@ -392,16 +442,16 @@ static func colores(style: Dictionary) -> Dictionary:
 ## si lleva carga, el atado a la espalda del color del recurso. `forma_carga` (comerciante):
 ## fardo, cantaro, barras, cesto o vara.
 const CARGAS := {"fardo": "8a6a44", "cantaro": "b0603a", "barras": "e8e2d0", "cesto": "a8843e", "vara": "7a5a32"} # --- comercio ---
-static func malla(style: Dictionary, team: Color, tool: String, carga: Color, forma_carga := "") -> ArrayMesh:
+static func malla(style: Dictionary, team: Color, tool: String, carga: Color, forma_carga := "", per := {}) -> ArrayMesh:
 	var forma: String = style.get("forma", "")
-	var key := "%s_%s_%s_%s_%s_%s" % [forma, style.get("arcilla", ""), team.to_html(), tool, carga.to_html(), forma_carga]
+	var key := "%s_%s_%s_%s_%s_%s_%s" % [forma, style.get("arcilla", ""), team.to_html(), tool, carga.to_html(), forma_carga, per.get("_key", "")]
 	if _meshes.has(key):
 		return _meshes[key]
 	var sk: Skeleton3D = _template()["sk"]
-	var c := colores(style)
+	var c := colores(style, per)
 	var parts: Array = [] # [malla, transform en el modelo, color, hueso, Pieza]
 	cuerpo(parts, sk, c, team, c["tela"], str(c["vest"].get("prenda", "ninguna")), Color(c["vest"].get("prenda_color", (c["tela"] as Color).to_html())), true)
-	_herramienta(parts, tool, sk, c["madera"], c["piedra"], c["fibra"])
+	_herramienta(parts, tool, sk, c["madera"], c["piedra"], c["fibra"], c["vest"])
 	if carga.a > 0.0 and forma_carga != "":
 		_carga_comercio(parts, sk, forma_carga, carga, c)
 	elif carga.a > 0.0:
@@ -471,19 +521,80 @@ static func cuerpo(parts: Array, sk: Skeleton3D, c: Dictionary, team: Color, tel
 		parts.append(_seg(P.call("upperarm." + s), P.call("lowerarm." + s), 0.036, 0.03, piel, B.call("upperarm." + s), Pieza.PIEL))
 		parts.append(_seg(P.call("lowerarm." + s), P.call("wrist." + s), 0.029, 0.024, piel, B.call("lowerarm." + s), Pieza.PIEL))
 		parts.append([_sphere(0.03), Transform3D(Basis.from_scale(Vector3(1.0, 0.8, 1.0)), P.call("hand." + s)), piel, B.call("hand." + s), Pieza.PIEL])
-	_prenda(parts, prenda, prenda_col, tela, P, B)
+	var vest: Dictionary = c["vest"]
+	_prenda(parts, prenda, prenda_col, tela, P, B, vest)
+	if vest.has("pelo_forma") or vest.has("manta"): # --- aldeanos por retrato ---
+		_persona(parts, vest, pelo, c["metal"], head, B.call("head"), P.call("chest"), B.call("chest"))
 	if tocado:
-		var vest: Dictionary = c["vest"]
-		_tocado(parts, str(vest.get("tocado", "ninguno")), Color(vest.get("tocado_color", "#8e3226")), head, B.call("head"))
+		_tocado(parts, str(vest.get("tocado", "ninguno")), Color(vest.get("tocado_color", "#8e3226")), head, B.call("head"), vest)
 
 
-static func _prenda(parts: Array, kind: String, col: Color, tela: Color, P: Callable, B: Callable) -> void:
+## --- aldeanos por retrato --- (proceso/27-animaciones/04) Damero de tocapu: `filas` × `cols`
+## cuadritos de los `colores` del retrato, en un plano frente a `centro` (mirando a +z).
+static func _tocapu(parts: Array, centro: Vector3, t: Dictionary, lado: float, bone: int) -> void:
+	var cols_c: Array = t.get("colores", [])
+	if cols_c.is_empty():
+		return
+	var filas := int(t.get("filas", 1))
+	var cols := int(t.get("cols", 4))
+	var paso := lado * 1.18
+	for j in filas:
+		for i in cols:
+			var col := Color(str(cols_c[(i + j * 2) % cols_c.size()]))
+			var pos := centro + Vector3((i - (cols - 1) * 0.5) * paso, ((filas - 1) * 0.5 - j) * paso, 0)
+			parts.append([_box(Vector3(lado, lado, 0.008)), Transform3D(Basis.IDENTITY, pos), col, bone])
+
+
+## Pelo largo o con flequillo, y la manta sobre los hombros con su orilla y su tupu.
+static func _persona(parts: Array, vest: Dictionary, pelo: Color, metal: Color, head: Vector3, hb: int, chest: Vector3, cb: int) -> void:
+	match str(vest.get("pelo_forma", "")):
+		"flequillo": # corte parejo a la altura de la oreja, con flequillo
+			parts.append([_sphere(0.074), Transform3D(Basis.from_scale(Vector3(1.0, 0.8, 1.0)), head + Vector3(0, 0.088, -0.014)), pelo, hb, Pieza.PELO])
+			parts.append([_box(Vector3(0.1, 0.026, 0.02)), Transform3D(Basis.IDENTITY, head + Vector3(0, 0.118, 0.056)), pelo, hb, Pieza.PELO])
+		"trenza": # raya al medio, recogido atrás y una trenza larga a la espalda
+			parts.append([_sphere(0.073), Transform3D(Basis.from_scale(Vector3(0.98, 0.78, 1.04)), head + Vector3(0, 0.098, -0.016)), pelo, hb, Pieza.PELO])
+			for i in 5:
+				var y := 0.07 - i * 0.045
+				parts.append([_sphere(0.021 - i * 0.0018, 6), Transform3D(Basis.from_scale(Vector3(1, 1.3, 1)), head + Vector3(0.025, y, -0.078 - i * 0.004)), pelo, hb, Pieza.PELO])
+		"largo": # suelto hasta los hombros
+			parts.append([_sphere(0.073), Transform3D(Basis.from_scale(Vector3(1.0, 0.8, 1.04)), head + Vector3(0, 0.096, -0.016)), pelo, hb, Pieza.PELO])
+			parts.append([_box(Vector3(0.12, 0.17, 0.03)), Transform3D(Basis.IDENTITY, head + Vector3(0, 0.02, -0.066)), pelo, hb, Pieza.PELO])
+	if vest.has("manta"): # lliklla (o yacolla) sobre los hombros
+		var manta := Color(str(vest["manta"]))
+		var borde := Color(str(vest.get("manta_borde", manta.darkened(0.25).to_html())))
+		parts.append([_cyl(0.085, 0.152, 0.15, 12), Transform3D(Basis.from_scale(Vector3(1, 1, 0.72)), chest + Vector3(0, 0.075, -0.004)), manta, cb])
+		parts.append([_cyl(0.154, 0.154, 0.026, 12), Transform3D(Basis.from_scale(Vector3(1, 1, 0.73)), chest + Vector3(0, 0.0, -0.004)), borde, cb])
+		if vest.has("tocapu"):
+			_tocapu(parts, chest + Vector3(0, 0.012, 0.118), vest["tocapu"], 0.016, cb)
+		if vest.has("tupu"): # el alfiler que cierra la manta al pecho
+			var tc := Color(str(vest["tupu"]))
+			parts.append([_sphere(0.017, 6), Transform3D(Basis.from_scale(Vector3(1, 1, 0.5)), chest + Vector3(0, 0.1, 0.098)), tc, cb, Pieza.METAL])
+			parts.append([_cyl(0.003, 0.004, 0.07, 4), Transform3D(Basis.IDENTITY, chest + Vector3(0, 0.07, 0.1)), tc, cb, Pieza.METAL])
+# --- fin aldeanos por retrato ---
+
+
+static func _prenda(parts: Array, kind: String, col: Color, tela: Color, P: Callable, B: Callable, vest := {}) -> void:
 	var hips: Vector3 = P.call("hips")
 	var chest: Vector3 = P.call("chest")
 	match kind:
 		"unku": # túnica hasta la rodilla con la franja de tocapus
+			if vest.has("pelo_forma"): # --- aldeanos por retrato --- el del retrato, hasta la rodilla
+				parts.append([_cyl(0.1, 0.14, 0.23), Transform3D(Basis.from_scale(Vector3(1, 1, 0.75)), hips + Vector3(0, -0.1, 0)), tela, B.call("hips")])
+				parts.append([_cyl(0.142, 0.142, 0.02), Transform3D(Basis.from_scale(Vector3(1, 1, 0.76)), hips + Vector3(0, -0.205, 0)), col, B.call("hips")])
+				if vest.has("tocapu"):
+					_tocapu(parts, chest + Vector3(0, 0.02, 0.07), vest["tocapu"], 0.022, B.call("chest"))
+				else:
+					parts.append([_box(Vector3(0.14, 0.035, 0.012)), Transform3D(Basis.IDENTITY, chest + Vector3(0, 0.02, 0.066)), col, B.call("chest")])
+				return
 			parts.append([_cyl(0.1, 0.135, 0.17), Transform3D(Basis.from_scale(Vector3(1, 1, 0.75)), hips + Vector3(0, -0.07, 0)), tela, B.call("hips")])
 			parts.append([_box(Vector3(0.14, 0.035, 0.012)), Transform3D(Basis.IDENTITY, chest + Vector3(0, 0.02, 0.066)), col, B.call("chest")])
+		"acsu", "vestido": # --- aldeanos por retrato --- vestido largo hasta el tobillo con faja
+			var cuerpo_c := tela if kind == "acsu" else col
+			var faja := col if kind == "acsu" else tela
+			parts.append([_cyl(0.1, 0.165, 0.4, 10), Transform3D(Basis.from_scale(Vector3(1, 1, 0.78)), hips + Vector3(0, -0.18, 0)), cuerpo_c, B.call("hips")])
+			parts.append([_cyl(0.1, 0.1, 0.045, 10), Transform3D(Basis.from_scale(Vector3(1, 1, 0.72)), hips + Vector3(0, 0.02, 0)), faja, B.call("hips")])
+			if kind == "acsu" and vest.has("tocapu"):
+				_tocapu(parts, hips + Vector3(0, 0.02, 0.074), vest["tocapu"], 0.014, B.call("hips"))
 		"poncho":
 			parts.append([_cyl(0.06, 0.17, 0.2, 10), Transform3D(Basis.from_scale(Vector3(1, 1, 0.68)), chest + Vector3(0, 0.05, 0)), col, B.call("chest")])
 			parts.append([_cyl(0.095, 0.12, 0.13), Transform3D(Basis.from_scale(Vector3(1, 1, 0.75)), hips + Vector3(0, -0.05, 0)), tela, B.call("hips")])
@@ -498,10 +609,16 @@ static func _prenda(parts: Array, kind: String, col: Color, tela: Color, P: Call
 			parts.append([_cyl(0.096, 0.112, 0.09), Transform3D(Basis.from_scale(Vector3(1, 1, 0.74)), hips + Vector3(0, -0.04, 0)), tela, B.call("hips")])
 
 
-static func _tocado(parts: Array, kind: String, col: Color, head: Vector3, bone: int) -> void:
+static func _tocado(parts: Array, kind: String, col: Color, head: Vector3, bone: int, vest := {}) -> void:
 	match kind:
 		"vincha":
 			parts.append([_cyl(0.07, 0.07, 0.022, 12), Transform3D(Basis.from_scale(Vector3(0.95, 1, 1.0)), head + Vector3(0, 0.1, 0.0)), col, bone])
+			if vest.has("vincha_tocapu"): # --- aldeanos por retrato --- el tejido al frente y la borla
+				_tocapu(parts, head + Vector3(0, 0.1, 0.07), {"colores": vest["vincha_tocapu"], "filas": 1, "cols": 5}, 0.012, bone)
+			if vest.has("borla"):
+				var bc := Color(str(vest["borla"]))
+				parts.append([_cyl(0.004, 0.004, 0.06, 4), Transform3D(Basis.IDENTITY, head + Vector3(0.066, 0.07, 0.01)), bc, bone])
+				parts.append([_cyl(0.008, 0.014, 0.035, 6), Transform3D(Basis.IDENTITY, head + Vector3(0.066, 0.03, 0.01)), bc, bone])
 		"plumas":
 			var amarillo := Color("c9a23e")
 			parts.append([_cyl(0.07, 0.07, 0.02, 12), Transform3D(Basis.IDENTITY, head + Vector3(0, 0.1, 0)), amarillo, bone])
@@ -515,7 +632,7 @@ static func _tocado(parts: Array, kind: String, col: Color, head: Vector3, bone:
 
 ## Herramienta en la mano derecha (hueso handslot.r): el mango sale del puño hacia adelante y
 ## arriba, como lo esperan las animaciones de KayKit.
-static func _herramienta(parts: Array, tool: String, sk: Skeleton3D, wood: Color, stone: Color, fibra: Color) -> void:
+static func _herramienta(parts: Array, tool: String, sk: Skeleton3D, wood: Color, stone: Color, fibra: Color, vest := {}) -> void:
 	if tool == "" or tool == "ninguna":
 		return
 	var slot := sk.find_bone("handslot.r")
@@ -539,6 +656,15 @@ static func _herramienta(parts: Array, tool: String, sk: Skeleton3D, wood: Color
 			parts.append([_box(Vector3(0.09, 0.014, 0.075)), X.call(Vector3(0.04, 0.45, 0)), stone, slot, M])
 		"cuchillo":
 			parts.append([_box(Vector3(0.022, 0.13, 0.01)), X.call(Vector3(0, 0.08, 0)), stone, slot, M])
+		"pushka": # --- aldeanos por retrato --- huso de hilar con su tortera y el ovillo de lana
+			var lana := Color(str(vest.get("manta_borde", "#d8ccb0")))
+			parts.append([_cyl(0.004, 0.005, 0.2, 5), X.call(Vector3(0, 0.03, 0)), wood, slot, M])
+			parts.append([_cyl(0.026, 0.026, 0.01, 8), X.call(Vector3(0, -0.06, 0)), wood, slot, M])
+			parts.append([_cyl(0.017, 0.017, 0.05, 8), X.call(Vector3(0, 0.07, 0)), lana, slot])
+		"chakitaqlla": # --- aldeanos por retrato --- arado de pie: palo largo con el estribo y la punta
+			parts.append([_cyl(0.012, 0.014, 0.72, 6), X.call(Vector3(0, 0.2, 0)), wood, slot, M])
+			parts.append([_box(Vector3(0.11, 0.022, 0.022)), X.call(Vector3(0.04, 0.42, 0)), wood, slot, M])
+			parts.append([_cyl(0.002, 0.014, 0.08, 5), X.call(Vector3(0, 0.6, 0)), stone, slot, M])
 		"ejes": # para revisar a mano la orientación de los huesos de las manos (x rojo, y verde, z azul)
 			for nm in ["handslot.r", "handslot.l"]:
 				var b2 := sk.find_bone(nm)
@@ -794,6 +920,7 @@ class Estado:
 	var team: Color
 	var tropa := false
 	var eq := {} # equipo del soldado (TropaAnimada.equipo)
+	var per := {} # ropa del aldeano por sexo y edad (personas); vacío: la de la forma
 	var golpe_act := "pegar"
 	var quieto_act := "quieto"
 	var accion := ""
@@ -1111,6 +1238,17 @@ static func _herramienta_y_carga(st: Estado, e: SimEntity, sim: Sim, act: String
 				work = "construir"
 			st.work_tool = _tool_of.get(work, "")
 		tool = st.work_tool
+	if st.per.has("herramientas"): # --- aldeanos por retrato --- las herramientas de su retrato
+		var hs: Dictionary = st.per["herramientas"]
+		if hs.has(act):
+			tool = hs[act]
+		elif tool == "" and act == "quieto":
+			tool = hs.get("quieto", "")
+		else:
+			for w: String in hs:
+				if w != "quieto" and _tool_of.get(w, "") == tool and tool != "":
+					tool = hs[w] # caminando al trabajo, la herramienta propia de ese trabajo
+					break
 	var carga := Color(0, 0, 0, 0)
 	if e.carry > 0:
 		carga = Palette.RES.get(e.carry_res, Color.WHITE)
@@ -1122,7 +1260,7 @@ static func _herramienta_y_carga(st: Estado, e: SimEntity, sim: Sim, act: String
 	if tool != st.tool or carga != st.carga:
 		st.tool = tool
 		st.carga = carga
-		st.mi.mesh = malla(st.style, st.team, tool, carga, forma)
+		st.mi.mesh = malla(st.style, st.team, tool, carga, forma, st.per)
 		n_malla += 1
 
 

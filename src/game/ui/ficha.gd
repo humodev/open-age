@@ -289,6 +289,7 @@ func _base(owner: int, type: String) -> Dictionary:
 	if base_name != "" and base_name != c["name"] and dd.clave != "":
 		c["alt"] = base_name
 	c["tex"] = portrait(dd.clave, type)
+	c["retrato"] = Retratos.de_tipo(sim, owner, type) # --- aldeanos por retrato ---
 	return c
 
 
@@ -391,6 +392,7 @@ func _entity_content(e: SimEntity) -> Dictionary:
 		return _resource_content(e, live)
 	var c := _type_content(e.owner, e.type)
 	c["entity"] = e
+	c["retrato"] = Retratos.de(sim, e) # --- aldeanos por retrato --- el de su sexo y su edad
 	if e.is_unit():
 		c["stats"] = _unit_stats(e.owner, e.def, e.hp, e.hp_max)
 	else:
@@ -1026,7 +1028,10 @@ func _draw_portrait(r: Rect2, c: Dictionary, team: Color) -> void:
 	var bot := Color(0.06, 0.065, 0.075, 0.0)
 	draw_polygon(PackedVector2Array([g.position, Vector2(g.end.x, g.position.y), g.end, Vector2(g.position.x, g.end.y)]), PackedColorArray([top, top, bot, bot]))
 	var tex: Texture2D = c.get("tex")
-	if tex != null:
+	var pintado: Texture2D = c.get("retrato")
+	if pintado != null: # --- aldeanos por retrato ---
+		Retratos.dibujar(self, pintado, r.grow(-3))
+	elif tex != null:
 		draw_texture_rect(tex, r.grow(-3), false)
 	else:
 		var icon: String = c.get("glyph", "")
