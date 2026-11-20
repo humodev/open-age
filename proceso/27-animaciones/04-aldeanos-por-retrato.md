@@ -33,5 +33,6 @@ El autor eligió dos retratos de aldeano del Tawantinsuyu por edad, uno de hombr
 
 ## Pruebas
 
-- `tests/test_determinism.gd`: el hash no cambió (ver `pruebas/04-*.txt`).
-- Autotest con `--civ=tawantinsuyu` y con `--civ=guaranies` (`--terreno=llano`): sin errores.
+- `tests/test_determinism.gd`: `DETERMINISMO: OK`. No se tocó `src/sim/` (`pruebas/04-test_determinism.txt`).
+- Autotest con guaraníes (`--terreno=llano`): `AUTOTEST: OK`, en `pruebas/04-autotest-guaranies.txt`.
+- Autotest con el Tawantinsuyu: todo OK salvo dos pruebas de la cámara con H («H dos veces centra», «Mayús + H»). Ya habían fallado en `02-autotest-mapuches.txt` y en la etapa 24, y no tienen que ver con este cambio (`pruebas/04-autotest-tawantinsuyu.txt`).
