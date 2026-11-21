@@ -3,7 +3,8 @@
  "comun": {
   "estilo": "Gouache painting for a historical strategy game, flat opaque color shapes, simple graphic forms, matte paper texture, limited palette.",
   "persona_alto_casillas": 1.25,
-  "textura_px": 1024
+  "textura_px": 1024,
+  "piel_cabeza": 0.5
  },
  "piezas": {
   "aldeano": {

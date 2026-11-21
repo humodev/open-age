@@ -2,6 +2,7 @@
 """Pipeline 3D local de punta a punta, repetible (proceso/47-pipeline-3d).
 
     tools/gen3d_pipeline.py aldeano            una pieza de data/gen3d_piezas.json
+    tools/gen3d_pipeline.py a,b,c              varias
     tools/gen3d_pipeline.py --todas            todas
     opciones: --desde PASO  --hasta PASO  --forzar PASO[,PASO]  --textura paint|proyector
               --regenerar-imagen  --lista
@@ -14,6 +15,8 @@ cambió, se saltea; cambiar la imagen o un parámetro rehace esa pieza desde ese
   3 limpieza    Blender: suelda, corta la losa del suelo, borra sueltos, diezma, alto 1
                 (tools/gen3d_blender.py)
   4 textura     Hunyuan3D-Paint (tools/gen3d_paint.py) o el proyector (tools/gen3d_color.py)
+  4b piel      personas: la piel vuelve al tono de la hoja (Paint la oscurece) y la cara vista
+                de frente mezcla el color de la hoja (tools/gen3d_piel.py, proceso/50)
   5 rig         humano: 19 huesos KayKit (tools/gen3d_rig.py); cuadrúpedo: esqueleto y ciclos
                 de caminar y quieto (tools/gen3d_rig_cuadrupedo.py)
   6 final       Blender: tamaño del juego (reglas.json → escala_visual, edificios.json → tam,
@@ -43,7 +46,7 @@ COMFY = Path("/mnt/games/01_Projects/comfyui")
 COMFY_PY = COMFY / "venv/bin/python"
 TOPE = ["-p", "MemoryMax=12G", "-p", "MemoryHigh=10G", "-p", "MemorySwapMax=1G"]
 RAM_MIN_GB = 14
-PASOS = ["referencia", "forma", "limpieza", "textura", "rig", "final"]
+PASOS = ["referencia", "forma", "limpieza", "textura", "piel", "rig", "final"]
 
 
 def log(*a):
@@ -309,6 +312,20 @@ def correr_pieza(nombre: str, pieza: dict, comun: dict, args) -> dict:
         return {"modo": modo}
     hacer("textura", p4, f4)
 
+    # 4b · piel (personas)
+    if pieza["tipo"] == "persona" and pieza.get("piel", True):
+        glb4b = d / "piel.glb"
+        cfg4b = {"cabeza": float(pieza.get("piel_cabeza", comun.get("piel_cabeza", 0.5)))}
+        p4b = Paso(d, "piel", cfg4b, [glb4, vis_png["front"]], ["gen3d_piel.py", "gen3d_color.py"], [glb4b],
+                   "piel" in forzar)
+
+        def f4b():
+            pesado([PY, REPO / "tools/gen3d_piel.py", glb4, glb4b, vis_png["front"], cfg4b["cabeza"]],
+                   d / "piel.log", cwd=GEN3D)
+            return json.loads(glb4b.with_suffix(".json").read_text())
+        hacer("piel", p4b, f4b)
+        glb4 = glb4b
+
     # 5 · rig
     rig = pieza.get("rig")
     glb5 = d / "rig.glb" if rig else glb4
@@ -359,13 +376,14 @@ def main():
         for k, v in piezas.items():
             print(f"{k:10} {v['tipo']:9} {v['forma']['modelo']:14} rig={v.get('rig', '-'):10} → {v['destino']}")
         return
-    nombres = list(piezas) if args.todas else [args.pieza]
-    resumen = {}
+    nombres = list(piezas) if args.todas else args.pieza.split(",")
+    rf = GEN3D / "pipeline" / "resumen.json"
+    resumen = json.loads(rf.read_text()) if rf.exists() else {}
     for n in nombres:
         if n not in piezas:
             sys.exit(f"no hay pieza «{n}» en {args.piezas}")
         resumen[n] = correr_pieza(n, piezas[n], comun, args)
-    (GEN3D / "pipeline" / "resumen.json").write_text(json.dumps(resumen, indent=1, ensure_ascii=False))
+    rf.write_text(json.dumps(resumen, indent=1, ensure_ascii=False))
     log("listo")
 
 

@@ -40,6 +40,30 @@ for a in arm:
 bpy.context.view_layer.update()
 mallas = [o for o in sc.objects if o.type == "MESH"]
 
+# Hunyuan3D-Paint guarda la malla sin normales: el importador la deja como triángulos sueltos y
+# sombreado plano, con facetas que brillan y tapan los rasgos de la cara (proceso/50). Se
+# sueldan los vértices (las costuras de UV quedan, en Blender van por esquina) y se suaviza por
+# ángulo: 40° en los edificios (como en la limpieza, aristas netas) y 70° en personas y
+# animales (la malla de 4–5 mil caras deja pliegues en la nariz y los ojos).
+angulo = math.radians(70 if med["modo"] == "alto" else 40)
+import bmesh  # noqa: E402
+
+for o in mallas:
+    bm = bmesh.new()
+    bm.from_mesh(o.data)
+    lado = max(o.dimensions) or 1.0
+    bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5 * lado)
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    bm.to_mesh(o.data)
+    bm.free()
+    for p in o.data.polygons:
+        p.use_smooth = True
+    bpy.context.view_layer.objects.active = o
+    o.select_set(True)
+    if hasattr(bpy.ops.object, "shade_smooth_by_angle"):
+        bpy.ops.object.shade_smooth_by_angle(angle=angulo)
+    o.select_set(False)
+
 
 def caja():
     dg = bpy.context.evaluated_depsgraph_get()
