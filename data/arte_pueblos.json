@@ -74,6 +74,24 @@
       "edificios": {"centro": "centro", "casa": "casa", "granja": "granja", "almacen_alimento": "almacen_alimento", "almacen_madera": "almacen_madera", "almacen_mina": "almacen_mina", "establo": "establo", "cuartel": "cuartel", "taller": "taller", "torre": "torre", "fortaleza": "fortaleza", "empalizada": "empalizada", "puerta": "puerta", "muralla": "muralla", "puerta_piedra": "puerta_piedra", "torre_muralla": "torre_muralla", "mercado": "mercado", "sitio_sagrado": "sitio_sagrado", "corte_nueva": "corte_nueva", "gult": "gult", "iglesia": "iglesia", "monasterio": "monasterio", "amba": "amba", "remonta": "remonta", "gondar": "gondar", "alianza": "alianza", "maravilla": "maravilla"},
       "tecnologias": {"maresha_tef": "maresha_tef", "actas_geez": "actas_geez", "faws_kosso": "faws_kosso", "cota_malla": "cota_malla", "amba_fortaleza": "amba_fortaleza", "caravanas_amole": "caravanas_amole", "polvora_massawa": "polvora_massawa", "orden_katama": "orden_katama"},
       "sin_casilla": ["corte_nueva"]
+    },
+    "palmares": {
+      "carpeta": "res://assets/ui/arte/palmares/gouache/",
+      "fuente": "/mnt/games/01_Projects/comfyui/output/palmares_gouache/",
+      "origen": "proceso/49-arte-palmares",
+      "unidades": {"aldeano": {"m": "aldeano_m", "f": "aldeano_f"}, "comerciante": {"m": "comerciante_m", "f": "comerciante_f"}, "explorador": "explorador", "guerrero": "guerrero", "hondero": "hondero", "lancero": "lancero", "ariete": "ariete", "jinete": "jinete", "arcabucero": "arcabucero", "guardia": "guardia", "guardia_distancia": "guardia_distancia", "rebano": "rebano", "zagaieiro": "zagaieiro", "guarnicao_cerca": "guarnicao_cerca", "capitao_mocambo": "capitao_mocambo"},
+      "edificios": {"mocambo": "mocambo", "centro": "centro", "casa": "casa", "granja": "granja", "almacen_alimento": "almacen_alimento", "almacen_mina": "almacen_mina", "cuartel": "cuartel", "fortaleza": "fortaleza", "empalizada": "empalizada", "puerta": "puerta", "mercado": "mercado", "hoyo": "hoyo", "sitio_sagrado": "sitio_sagrado", "quilombo_central": "quilombo_central", "mocambo_guerra": "mocambo_guerra", "cerca_real": "cerca_real", "ferraria": "ferraria", "pacto_cucau": "pacto_cucau", "guerra_zumbi": "guerra_zumbi", "maravilla": "maravilla"},
+      "tecnologias": {"rocas_palmeiras": "rocas_palmeiras", "aviso_mocambos": "aviso_mocambos", "forja_mocambos": "forja_mocambos", "sanguar": "sanguar", "kilombo": "kilombo", "trato_moradores": "trato_moradores", "hierro_angola_janga": "hierro_angola_janga", "fojos_estrepes": "fojos_estrepes"},
+      "sin_casilla": []
+    },
+    "ayutthaya": {
+      "carpeta": "res://assets/ui/arte/ayutthaya/gouache/",
+      "fuente": "/mnt/games/01_Projects/comfyui/output/ayutthaya_gouache/",
+      "origen": "proceso/49-arte-ayutthaya",
+      "unidades": {"aldeano": {"m": "aldeano_m", "f": "aldeano_f"}, "comerciante": {"m": "comerciante_m", "f": "comerciante_f"}, "explorador": "explorador", "guerrero": "guerrero", "hondero": "hondero", "lancero": "lancero", "ariete": "ariete", "catapulta": "catapulta", "jinete": "jinete", "arcabucero": "arcabucero", "guardia": "guardia", "guardia_distancia": "guardia_distancia", "rebano": "rebano", "ngao": "ngao", "defensores_suan_phlu": "defensores_suan_phlu", "elefante_rey": "elefante_rey", "chang_suek": "chang_suek", "compania_japonesa": "compania_japonesa"},
+      "edificios": {"centro": "centro", "casa": "casa", "granja": "granja", "almacen_mina": "almacen_mina", "campo_tiro": "campo_tiro", "taller": "taller", "cuartel": "cuartel", "torre": "torre", "fortaleza": "fortaleza", "empalizada": "empalizada", "puerta": "puerta", "muralla": "muralla", "puerta_piedra": "puerta_piedra", "torre_muralla": "torre_muralla", "mercado": "mercado", "sitio_sagrado": "sitio_sagrado", "kraal": "kraal", "barrio_japones": "barrio_japones", "barrio_portugues": "barrio_portugues", "wat": "wat", "kraal_real": "kraal_real", "puerto_real": "puerto_real", "fortaleza_rio": "fortaleza_rio", "junco_tributo": "junco_tributo", "guardia_extranjera": "guardia_extranjera", "maravilla": "maravilla"},
+      "tecnologias": {"khotchasat": "khotchasat", "ceramica_satchanalai": "ceramica_satchanalai", "recetario_narai": "recetario_narai", "arroz_crecida": "arroz_crecida", "barrio_chino": "barrio_chino", "khlong_lat": "khlong_lat", "fundicion_real": "fundicion_real", "astilleros_juncos": "astilleros_juncos"},
+      "sin_casilla": ["ariete"]
     }
   }
 }

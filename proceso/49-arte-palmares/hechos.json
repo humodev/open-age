@@ -1,0 +1,347 @@
+{
+"cara_m_1": {
+"s": 18.6,
+"intento": 1,
+"semilla": 23
+},
+"cara_m_2": {
+"s": 18.7,
+"intento": 1,
+"semilla": 24
+},
+"cara_m_3": {
+"s": 18.6,
+"intento": 1,
+"semilla": 25
+},
+"cara_f_1": {
+"s": 18.6,
+"intento": 1,
+"semilla": 11
+},
+"cara_f_2": {
+"s": 18.7,
+"intento": 1,
+"semilla": 12
+},
+"cara_f_3": {
+"s": 18.6,
+"intento": 1,
+"semilla": 13
+},
+"aldeano_m": {
+"s": 83.2,
+"intento": 1,
+"semilla": 7
+},
+"aldeano_f": {
+"s": 64.7,
+"intento": 1,
+"semilla": 7
+},
+"comerciante_m": {
+"s": 27.5,
+"intento": 1,
+"semilla": 7
+},
+"comerciante_f": {
+"s": 19.2,
+"intento": 1,
+"semilla": 7
+},
+"explorador": {
+"s": 21.5,
+"intento": 1,
+"semilla": 7
+},
+"guerrero": {
+"s": 22.3,
+"intento": 1,
+"semilla": 7
+},
+"hondero": {
+"s": 19.6,
+"intento": 1,
+"semilla": 7
+},
+"lancero": {
+"s": 19.6,
+"intento": 1,
+"semilla": 7
+},
+"ariete": {
+"s": 18.9,
+"intento": 1,
+"semilla": 7
+},
+"jinete": {
+"s": 19.3,
+"intento": 1,
+"semilla": 7
+},
+"arcabucero": {
+"s": 19.7,
+"intento": 1,
+"semilla": 7
+},
+"guardia": {
+"s": 19.2,
+"intento": 1,
+"semilla": 7
+},
+"guardia_distancia": {
+"s": 19.2,
+"intento": 1,
+"semilla": 7
+},
+"rebano": {
+"s": 18.5,
+"intento": 1,
+"semilla": 7
+},
+"zagaieiro": {
+"s": 19.3,
+"intento": 1,
+"semilla": 7
+},
+"guarnicao_cerca": {
+"s": 19.3,
+"intento": 1,
+"semilla": 7
+},
+"capitao_mocambo": {
+"s": 19.2,
+"intento": 1,
+"semilla": 7
+},
+"mocambo": {
+"s": 18.9,
+"intento": 1,
+"semilla": 7
+},
+"centro": {
+"s": 18.9,
+"intento": 1,
+"semilla": 7
+},
+"casa": {
+"s": 19.0,
+"intento": 1,
+"semilla": 7
+},
+"granja": {
+"s": 18.7,
+"intento": 1,
+"semilla": 7
+},
+"almacen_alimento": {
+"s": 18.7,
+"intento": 1,
+"semilla": 7
+},
+"almacen_mina": {
+"s": 18.9,
+"intento": 1,
+"semilla": 7
+},
+"cuartel": {
+"s": 19.0,
+"intento": 1,
+"semilla": 7
+},
+"fortaleza": {
+"s": 18.9,
+"intento": 1,
+"semilla": 7
+},
+"empalizada": {
+"s": 18.7,
+"intento": 1,
+"semilla": 7
+},
+"puerta": {
+"s": 18.7,
+"intento": 1,
+"semilla": 7
+},
+"mercado": {
+"s": 18.8,
+"intento": 1,
+"semilla": 7
+},
+"hoyo": {
+"s": 19.0,
+"intento": 1,
+"semilla": 7
+},
+"sitio_sagrado": {
+"s": 18.9,
+"intento": 1,
+"semilla": 7
+},
+"quilombo_central": {
+"s": 19.0,
+"intento": 1,
+"semilla": 7
+},
+"mocambo_guerra": {
+"s": 19.0,
+"intento": 1,
+"semilla": 7
+},
+"cerca_real": {
+"s": 19.0,
+"intento": 1,
+"semilla": 7
+},
+"ferraria": {
+"s": 19.0,
+"intento": 1,
+"semilla": 7
+},
+"pacto_cucau": {
+"s": 19.0,
+"intento": 1,
+"semilla": 7
+},
+"guerra_zumbi": {
+"s": 19.0,
+"intento": 1,
+"semilla": 7
+},
+"maravilla": {
+"s": 19.0,
+"intento": 1,
+"semilla": 7
+},
+"rocas_palmeiras": {
+"s": 20.2,
+"intento": 2,
+"semilla": 19
+},
+"aviso_mocambos": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"forja_mocambos": {
+"s": 18.3,
+"intento": 1,
+"semilla": 7
+},
+"sanguar": {
+"s": 18.5,
+"intento": 1,
+"semilla": 7
+},
+"kilombo": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"trato_moradores": {
+"s": 37.5,
+"intento": 2,
+"semilla": 19
+},
+"hierro_angola_janga": {
+"s": 37.1,
+"intento": 2,
+"semilla": 19
+},
+"fojos_estrepes": {
+"s": 18.5,
+"intento": 1,
+"semilla": 7
+},
+"arma_lanca": {
+"s": 18.5,
+"intento": 1,
+"semilla": 7
+},
+"arma_zagaia": {
+"s": 18.5,
+"intento": 1,
+"semilla": 7
+},
+"arma_arco": {
+"s": 18.5,
+"intento": 1,
+"semilla": 7
+},
+"arma_facao": {
+"s": 18.5,
+"intento": 1,
+"semilla": 7
+},
+"escudo_palha": {
+"s": 18.5,
+"intento": 1,
+"semilla": 7
+},
+"arma_espingarda": {
+"s": 18.5,
+"intento": 1,
+"semilla": 7
+},
+"herr_enxada": {
+"s": 26.3,
+"intento": 3,
+"semilla": 29
+},
+"herr_machado": {
+"s": 18.5,
+"intento": 1,
+"semilla": 7
+},
+"herr_pilao": {
+"s": 18.5,
+"intento": 1,
+"semilla": 7
+},
+"herr_cesto": {
+"s": 18.5,
+"intento": 1,
+"semilla": 7
+},
+"hoja_aldeano_e1": {
+"s": 23.6,
+"intento": 1,
+"semilla": 31
+},
+"hoja_aldeano_e2": {
+"s": 23.7,
+"intento": 1,
+"semilla": 31
+},
+"hoja_aldeano_e3": {
+"s": 23.6,
+"intento": 1,
+"semilla": 31
+},
+"hoja_aldeano_e4": {
+"s": 23.8,
+"intento": 1,
+"semilla": 31
+},
+"hoja_guerrero_e1": {
+"s": 23.6,
+"intento": 1,
+"semilla": 31
+},
+"hoja_guerrero_e2": {
+"s": 23.8,
+"intento": 1,
+"semilla": 31
+},
+"hoja_guerrero_e3": {
+"s": 23.7,
+"intento": 1,
+"semilla": 31
+},
+"hoja_guerrero_e4": {
+"s": 23.6,
+"intento": 1,
+"semilla": 31
+}
+}

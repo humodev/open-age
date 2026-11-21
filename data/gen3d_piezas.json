@@ -550,6 +550,286 @@
    "caras": 5000,
    "suelo_pct": 3,
    "destino": "assets/generados/modelos/local/etiopia_centro.glb"
+  },
+  "palmares_aldeano": {
+   "tipo": "persona",
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/palmares_gouache/hoja_aldeano_e1_31.png",
+    "receta": {
+     "semilla": 31,
+     "ancho": 1152,
+     "alto": 768,
+     "prompt": "{estilo} Character turnaround reference sheet for 3D modeling: the same person shown side by side in front view and in side profile view, the same headwear and clothing in every view, standing in A-pose with arms held straight and out at 45 degrees from the body, open empty hands. Clothing: a plain solid bright red cotton tunic, one flat uniform red color, reaching the knees; a palm-fiber cord belt; bare head; barefoot. The person is an Afro-Brazilian man of Central African Kongo and Mbundu descent, from the quilombo of Palmares in northeastern Brazil, a grown adult in his early thirties, with a mature face: a broad face, a strong jaw, a wide flat nose, dark eyes, faint expression lines around the eyes, deep dark brown skin, full lips, short tightly curled black hair and a short beard, a thick adult neck, broad shoulders and adult body proportions, a mature man of about thirty-five with a strong adult face and smile lines. Natural undyed cotton, palm fiber, wood and iron tones for everything except the red tunic. Even flat studio light, plain flat light grey background."
+    },
+    "vistas": {
+     "front": {
+      "recorte": [
+       0,
+       0,
+       0.5,
+       1
+      ],
+      "umbral": 18
+     },
+     "back": {
+      "recorte": [
+       0.5,
+       0,
+       1,
+       1
+      ],
+      "umbral": 18
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mv-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4000,
+   "rig": "humano",
+   "destino": "assets/generados/modelos/local/palmares_aldeano.glb"
+  },
+  "palmares_gente_de_guerra": {
+   "tipo": "persona",
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/palmares_gouache/hoja_guerrero_e3_31.png",
+    "receta": {
+     "semilla": 31,
+     "ancho": 1152,
+     "alto": 768,
+     "prompt": "{estilo} Character turnaround reference sheet for 3D modeling: the same person shown side by side in front view and in side profile view, the same headwear and clothing in every view, standing in A-pose with arms held straight and out at 45 degrees from the body, open empty hands. Clothing: a plain solid bright red cotton tunic, one flat uniform red color, reaching the knees; an ochre cloth sash; a leather belt with a long knife in a sheath; an indigo cloth band around the head; a round woven shield on the back; barefoot. The person is an Afro-Brazilian man of Central African Kongo and Mbundu descent, from the quilombo of Palmares in northeastern Brazil, a grown adult in his early thirties, with a mature face: a broad face, a strong jaw, a wide flat nose, dark eyes, faint expression lines around the eyes, deep dark brown skin, full lips, short tightly curled black hair and a short beard, a thick adult neck, broad shoulders and adult body proportions, a mature man of about thirty-five with a strong adult face and smile lines. Natural undyed cotton, palm fiber, wood and iron tones for everything except the red tunic. Even flat studio light, plain flat light grey background."
+    },
+    "vistas": {
+     "front": {
+      "recorte": [
+       0,
+       0,
+       0.5,
+       1
+      ],
+      "umbral": 18
+     },
+     "back": {
+      "recorte": [
+       0.5,
+       0,
+       1,
+       1
+      ],
+      "umbral": 18
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mv-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4000,
+   "rig": "humano",
+   "destino": "assets/generados/modelos/local/palmares_gente_de_guerra.glb"
+  },
+  "palmares_casa": {
+   "tipo": "edificio",
+   "edificio": "casa",
+   "categoria": "casa",
+   "civ": "palmares",
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/palmares_gouache/casa_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A small rectangular house with walls of wattle and daub and a steep roof thatched with palm leaves, one doorway, a palm tree beside it. Single building, three-quarter view from above like a strategy game icon, the whole building visible and centered, isolated on a plain flat light grey background. Architecture of the 17th-century quilombo of Palmares in the forested hills of the Serra da Barriga, northeastern Brazil: rectangular houses of wattle and daub (pau a pique) with steep roofs thatched with palm leaves, palisades of sharpened logs, tall native palm trees and dense green Atlantic forest around."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/palmares_casa.glb"
+  },
+  "palmares_centro": {
+   "tipo": "edificio",
+   "edificio": "centro",
+   "categoria": "capital",
+   "civ": "palmares",
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/palmares_gouache/centro_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A town enclosed by a tall palisade of sharpened logs: many palm-thatched houses inside, a larger house with a veranda in the middle, one wooden gate. Single building, three-quarter view from above like a strategy game icon, the whole building visible and centered, isolated on a plain flat light grey background. Architecture of the 17th-century quilombo of Palmares in the forested hills of the Serra da Barriga, northeastern Brazil: rectangular houses of wattle and daub (pau a pique) with steep roofs thatched with palm leaves, palisades of sharpened logs, tall native palm trees and dense green Atlantic forest around."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 5000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/palmares_centro.glb"
+  },
+  "ayutthaya_aldeano": {
+   "tipo": "persona",
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/ayutthaya_gouache/hoja_aldeano_e1_31.png",
+    "receta": {
+     "semilla": 31,
+     "ancho": 1152,
+     "alto": 768,
+     "prompt": "{estilo} Character turnaround reference sheet for 3D modeling: the same person shown side by side in front view and in side profile view, the same headwear and clothing in every view, standing in A-pose with arms held straight and out at 45 degrees from the body, open empty hands. Clothing: a plain solid bright red cotton chong kraben, the wrapped lower garment pulled up between the legs like loose knee breeches, one flat uniform red color; bare chest; bare head; barefoot. The person is a Siamese Thai man from the kingdom of Ayutthaya in central Thailand, a grown adult in his early thirties, with a mature face: a broad face, high cheekbones, a short wide nose with a low bridge, dark almond-shaped eyes, faint expression lines around the eyes, warm light-brown skin, dark brown lips, short cropped black hair, a thick adult neck, broad shoulders and adult body proportions, a mature man of about thirty-five with a strong adult face and smile lines. Natural undyed cotton, wood and bronze tones for everything except the red garment. Even flat studio light, plain flat light grey background."
+    },
+    "vistas": {
+     "front": {
+      "recorte": [
+       0,
+       0,
+       0.5,
+       1
+      ],
+      "umbral": 18
+     },
+     "back": {
+      "recorte": [
+       0.5,
+       0,
+       1,
+       1
+      ],
+      "umbral": 18
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mv-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4000,
+   "rig": "humano",
+   "destino": "assets/generados/modelos/local/ayutthaya_aldeano.glb"
+  },
+  "ayutthaya_infanteria_dap": {
+   "tipo": "persona",
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/ayutthaya_gouache/hoja_guerrero_e3_31.png",
+    "receta": {
+     "semilla": 31,
+     "ancho": 1152,
+     "alto": 768,
+     "prompt": "{estilo} Character turnaround reference sheet for 3D modeling: the same person shown side by side in front view and in side profile view, the same headwear and clothing in every view, standing in A-pose with arms held straight and out at 45 degrees from the body, open empty hands. Clothing: a plain solid bright red cotton chong kraben, the wrapped lower garment pulled up between the legs like loose knee breeches, one flat uniform red color; a short-sleeved red cotton jacket; a round metal helmet with a pointed top, worn in every view; barefoot. The person is a Siamese Thai man from the kingdom of Ayutthaya in central Thailand, a grown adult in his early thirties, with a mature face: a broad face, high cheekbones, a short wide nose with a low bridge, dark almond-shaped eyes, faint expression lines around the eyes, warm light-brown skin, dark brown lips, short cropped black hair, a thick adult neck, broad shoulders and adult body proportions, a mature man of about thirty-five with a strong adult face and smile lines. Natural undyed cotton, wood and bronze tones for everything except the red garment. Even flat studio light, plain flat light grey background."
+    },
+    "vistas": {
+     "front": {
+      "recorte": [
+       0,
+       0,
+       0.5,
+       1
+      ],
+      "umbral": 18
+     },
+     "back": {
+      "recorte": [
+       0.5,
+       0,
+       1,
+       1
+      ],
+      "umbral": 18
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mv-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4000,
+   "rig": "humano",
+   "destino": "assets/generados/modelos/local/ayutthaya_infanteria_dap.glb"
+  },
+  "ayutthaya_casa": {
+   "tipo": "edificio",
+   "edificio": "casa",
+   "categoria": "casa",
+   "civ": "ayutthaya",
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/ayutthaya_gouache/casa_19.png",
+    "receta": {
+     "semilla": 19,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A single house of teak wood planks raised on tall wooden stilts, with a steep gable roof with curved ends, a ladder to the veranda, a water jar beside the stairs. Single building, three-quarter view from above like a strategy game icon, the whole building visible and centered, isolated on a plain flat light grey background. Secular architecture of the 17th-century Siamese kingdom of Ayutthaya: whitewashed brick and teak wood, tiered roofs of orange glazed tiles. Only this one structure, alone, with a little bare ground around it."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/ayutthaya_casa.glb"
+  },
+  "ayutthaya_centro": {
+   "tipo": "edificio",
+   "edificio": "centro",
+   "categoria": "capital",
+   "civ": "ayutthaya",
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/ayutthaya_gouache/centro_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A royal palace compound: audience halls of whitewashed brick with tiered roofs of orange and green glazed tiles with curved finials, a white wall with leaf-shaped merlons around it, a courtyard. Single building, three-quarter view from above like a strategy game icon, the whole building visible and centered, isolated on a plain flat light grey background. Secular architecture of the 17th-century Siamese kingdom of Ayutthaya: houses of teak wood raised on stilts with steep gable roofs with curved ends, and brick buildings with whitewashed walls and tiered roofs of orange and green glazed tiles, by a river and canals, coconut palms and banana plants."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 5000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/ayutthaya_centro.glb"
   }
  }
 }
