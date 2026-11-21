@@ -410,6 +410,146 @@
    "caras": 5000,
    "suelo_pct": 3,
    "destino": "assets/generados/modelos/local/guaranies_centro.glb"
+  },
+  "etiopia_aldeano": {
+   "tipo": "persona",
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/etiopia_gouache/hoja_aldeano_e1_31.png",
+    "receta": {
+     "semilla": 31,
+     "ancho": 1152,
+     "alto": 768,
+     "prompt": "{estilo} Character turnaround reference sheet for 3D modeling: the same person shown side by side in front view and in side profile view, the same headwear and clothing in every view, standing in A-pose with arms held straight and out at 45 degrees from the body, open empty hands. Clothing: a long plain solid bright red cotton tunic, one flat uniform red color, reaching the knees; bare head; barefoot. The person is an Ethiopian Amhara man from the northern Ethiopian highlands, a grown adult in his early thirties, with a mature face: an oval face, high cheekbones, a slightly aquiline nose, large dark eyes, faint expression lines around the eyes, warm medium-brown skin, full dark brown lips, short tightly curled black hair and a short trimmed black beard, a thick adult neck, broad shoulders and adult body proportions, a mature man of about thirty-five with a strong adult face and smile lines. Natural white cotton, hide and leather tones for everything except the red tunic. Even flat studio light, plain flat light grey background."
+    },
+    "vistas": {
+     "front": {
+      "recorte": [
+       0,
+       0,
+       0.5,
+       1
+      ],
+      "umbral": 18
+     },
+     "back": {
+      "recorte": [
+       0.5,
+       0,
+       1,
+       1
+      ],
+      "umbral": 18
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mv-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4000,
+   "rig": "humano",
+   "destino": "assets/generados/modelos/local/etiopia_aldeano.glb"
+  },
+  "etiopia_chewa": {
+   "tipo": "persona",
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/etiopia_gouache/hoja_chewa_e2_31.png",
+    "receta": {
+     "semilla": 31,
+     "ancho": 1152,
+     "alto": 768,
+     "prompt": "{estilo} Character turnaround reference sheet for 3D modeling: the same person shown side by side in front view and in side profile view, the same headwear and clothing in every view, standing in A-pose with arms held straight and out at 45 degrees from the body, open empty hands. Clothing: a long plain solid bright red cotton tunic, one flat uniform red color, reaching the knees; a white cotton shawl (shamma) with a thin colored woven border draped over one shoulder; leather sandals; a round hide shield on the back. The person is an Ethiopian Amhara man from the northern Ethiopian highlands, a grown adult in his early thirties, with a mature face: an oval face, high cheekbones, a slightly aquiline nose, large dark eyes, faint expression lines around the eyes, warm medium-brown skin, full dark brown lips, short tightly curled black hair and a short trimmed black beard, a thick adult neck, broad shoulders and adult body proportions, a mature man of about thirty-five with a strong adult face and smile lines. Natural white cotton, hide and leather tones for everything except the red tunic. Even flat studio light, plain flat light grey background."
+    },
+    "vistas": {
+     "front": {
+      "recorte": [
+       0,
+       0,
+       0.38,
+       1
+      ],
+      "umbral": 18
+     },
+     "back": {
+      "recorte": [
+       0.64,
+       0,
+       1,
+       1
+      ],
+      "umbral": 18
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mv-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4000,
+   "rig": "humano",
+   "destino": "assets/generados/modelos/local/etiopia_chewa.glb"
+  },
+  "etiopia_casa": {
+   "tipo": "edificio",
+   "edificio": "casa",
+   "categoria": "casa",
+   "civ": "etiopia",
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/etiopia_gouache/casa_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A single round house with a low wall of brown fieldstone and mud and a steep conical thatched roof, one wooden doorway. Single building, three-quarter view from above like a strategy game icon, the whole building visible and centered, isolated on a plain flat light grey background. Ethiopian highland architecture of the 16th and 17th centuries: round houses (tukul) with walls of stone or wattle and daub and steep conical thatched roofs, walls of brown and grey fieldstone set in mud, green highland plateau with flat-topped cliffs (amba), juniper and acacia trees."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/etiopia_casa.glb"
+  },
+  "etiopia_centro": {
+   "tipo": "edificio",
+   "edificio": "centro",
+   "categoria": "capital",
+   "civ": "etiopia",
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/etiopia_gouache/centro_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A royal camp: a large red cloth tent in the center surrounded by many smaller white tents and round thatched houses in a fixed plan, inside a thorn fence, banners on tall poles. Single building, three-quarter view from above like a strategy game icon, the whole building visible and centered, isolated on a plain flat light grey background. Ethiopian highland architecture of the 16th and 17th centuries: round houses (tukul) with walls of stone or wattle and daub and steep conical thatched roofs, walls of brown and grey fieldstone set in mud, green highland plateau with flat-topped cliffs (amba), juniper and acacia trees."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 5000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/etiopia_centro.glb"
   }
  }
 }

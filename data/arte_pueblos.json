@@ -65,6 +65,15 @@
       "edificios": {"centro": "centro", "casa": "casa", "granja": "granja", "almacen_madera": "almacen_madera", "almacen_mina": "almacen_mina", "campo_tiro": "campo_tiro", "taller": "taller", "cuartel": "cuartel", "fortaleza": "fortaleza", "empalizada": "empalizada", "puerta": "puerta", "mercado": "mercado", "sitio_sagrado": "sitio_sagrado", "karai_palabra": "karai_palabra", "aty_guasu": "aty_guasu", "mision": "mision", "monte": "monte", "tava": "tava", "yvy_marane": "yvy_marane", "maravilla": "maravilla", "maravilla_monte": "maravilla_monte"},
       "tecnologias": {"kokue": "kokue", "canoas_rio": "canoas_rio", "poha_nana": "poha_nana", "oga_takuara": "oga_takuara", "defensa_mborore": "defensa_mborore", "kaa_plantada": "kaa_plantada", "kaa_kaaguy": "kaa_kaaguy", "uy_hata": "uy_hata", "imprenta": "imprenta", "aty": "aty"},
       "sin_casilla": []
+    },
+    "etiopia": {
+      "carpeta": "res://assets/ui/arte/etiopia/gouache/",
+      "fuente": "/mnt/games/01_Projects/comfyui/output/etiopia_gouache/",
+      "origen": "proceso/49-arte-etiopia",
+      "unidades": {"aldeano": {"m": "aldeano_m", "f": "aldeano_f"}, "comerciante": {"m": "comerciante_m", "f": "comerciante_f"}, "explorador": "explorador", "guerrero": "guerrero", "hondero": "hondero", "lancero": "lancero", "ariete": "ariete", "catapulta": "catapulta", "jinete": "jinete", "arcabucero": "arcabucero", "guardia": "guardia", "guardia_distancia": "guardia_distancia", "rebano": "rebano", "guerrero_gasa": "guerrero_gasa", "farasanna": "farasanna", "caballeria_corte": "caballeria_corte", "carpa_real": "carpa_real"},
+      "edificios": {"centro": "centro", "casa": "casa", "granja": "granja", "almacen_alimento": "almacen_alimento", "almacen_madera": "almacen_madera", "almacen_mina": "almacen_mina", "establo": "establo", "cuartel": "cuartel", "taller": "taller", "torre": "torre", "fortaleza": "fortaleza", "empalizada": "empalizada", "puerta": "puerta", "muralla": "muralla", "puerta_piedra": "puerta_piedra", "torre_muralla": "torre_muralla", "mercado": "mercado", "sitio_sagrado": "sitio_sagrado", "corte_nueva": "corte_nueva", "gult": "gult", "iglesia": "iglesia", "monasterio": "monasterio", "amba": "amba", "remonta": "remonta", "gondar": "gondar", "alianza": "alianza", "maravilla": "maravilla"},
+      "tecnologias": {"maresha_tef": "maresha_tef", "actas_geez": "actas_geez", "faws_kosso": "faws_kosso", "cota_malla": "cota_malla", "amba_fortaleza": "amba_fortaleza", "caravanas_amole": "caravanas_amole", "polvora_massawa": "polvora_massawa", "orden_katama": "orden_katama"},
+      "sin_casilla": ["corte_nueva"]
     }
   }
 }

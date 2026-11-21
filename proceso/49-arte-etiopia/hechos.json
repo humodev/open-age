@@ -1,0 +1,392 @@
+{
+"cara_m_1": {
+"s": 80.1,
+"intento": 1,
+"semilla": 23
+},
+"cara_m_2": {
+"s": 66.1,
+"intento": 1,
+"semilla": 24
+},
+"cara_m_3": {
+"s": 26.7,
+"intento": 1,
+"semilla": 25
+},
+"cara_f_1": {
+"s": 26.5,
+"intento": 1,
+"semilla": 11
+},
+"cara_f_2": {
+"s": 19.6,
+"intento": 1,
+"semilla": 12
+},
+"cara_f_3": {
+"s": 18.6,
+"intento": 1,
+"semilla": 13
+},
+"aldeano_m": {
+"s": 19.7,
+"intento": 1,
+"semilla": 7
+},
+"aldeano_f": {
+"s": 19.8,
+"intento": 2,
+"semilla": 19
+},
+"comerciante_m": {
+"s": 19.7,
+"intento": 1,
+"semilla": 7
+},
+"comerciante_f": {
+"s": 20.1,
+"intento": 2,
+"semilla": 19
+},
+"explorador": {
+"s": 19.7,
+"intento": 1,
+"semilla": 7
+},
+"guerrero": {
+"s": 19.3,
+"intento": 1,
+"semilla": 7
+},
+"hondero": {
+"s": 19.3,
+"intento": 1,
+"semilla": 7
+},
+"lancero": {
+"s": 19.7,
+"intento": 1,
+"semilla": 7
+},
+"ariete": {
+"s": 18.2,
+"intento": 1,
+"semilla": 7
+},
+"catapulta": {
+"s": 18.4,
+"intento": 1,
+"semilla": 7
+},
+"jinete": {
+"s": 19.7,
+"intento": 1,
+"semilla": 7
+},
+"arcabucero": {
+"s": 19.7,
+"intento": 1,
+"semilla": 7
+},
+"guardia": {
+"s": 19.4,
+"intento": 1,
+"semilla": 7
+},
+"guardia_distancia": {
+"s": 19.2,
+"intento": 1,
+"semilla": 7
+},
+"rebano": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"guerrero_gasa": {
+"s": 20.0,
+"intento": 2,
+"semilla": 19
+},
+"farasanna": {
+"s": 19.2,
+"intento": 1,
+"semilla": 7
+},
+"caballeria_corte": {
+"s": 19.5,
+"intento": 1,
+"semilla": 7
+},
+"carpa_real": {
+"s": 19.8,
+"intento": 1,
+"semilla": 7
+},
+"centro": {
+"s": 18.8,
+"intento": 1,
+"semilla": 7
+},
+"casa": {
+"s": 18.7,
+"intento": 1,
+"semilla": 7
+},
+"granja": {
+"s": 18.8,
+"intento": 1,
+"semilla": 7
+},
+"almacen_alimento": {
+"s": 18.7,
+"intento": 1,
+"semilla": 7
+},
+"almacen_madera": {
+"s": 18.7,
+"intento": 1,
+"semilla": 7
+},
+"almacen_mina": {
+"s": 18.8,
+"intento": 1,
+"semilla": 7
+},
+"establo": {
+"s": 18.8,
+"intento": 1,
+"semilla": 7
+},
+"cuartel": {
+"s": 18.8,
+"intento": 1,
+"semilla": 7
+},
+"taller": {
+"s": 18.8,
+"intento": 1,
+"semilla": 7
+},
+"torre": {
+"s": 18.8,
+"intento": 1,
+"semilla": 7
+},
+"fortaleza": {
+"s": 18.8,
+"intento": 1,
+"semilla": 7
+},
+"empalizada": {
+"s": 18.8,
+"intento": 1,
+"semilla": 7
+},
+"puerta": {
+"s": 18.7,
+"intento": 1,
+"semilla": 7
+},
+"muralla": {
+"s": 18.8,
+"intento": 1,
+"semilla": 7
+},
+"puerta_piedra": {
+"s": 18.8,
+"intento": 1,
+"semilla": 7
+},
+"torre_muralla": {
+"s": 18.8,
+"intento": 1,
+"semilla": 7
+},
+"mercado": {
+"s": 18.8,
+"intento": 1,
+"semilla": 7
+},
+"sitio_sagrado": {
+"s": 19.0,
+"intento": 1,
+"semilla": 7
+},
+"corte_nueva": {
+"s": 18.8,
+"intento": 1,
+"semilla": 7
+},
+"gult": {
+"s": 19.0,
+"intento": 1,
+"semilla": 7
+},
+"iglesia": {
+"s": 18.8,
+"intento": 1,
+"semilla": 7
+},
+"monasterio": {
+"s": 18.7,
+"intento": 1,
+"semilla": 7
+},
+"amba": {
+"s": 18.8,
+"intento": 1,
+"semilla": 7
+},
+"remonta": {
+"s": 18.8,
+"intento": 1,
+"semilla": 7
+},
+"gondar": {
+"s": 19.1,
+"intento": 1,
+"semilla": 7
+},
+"alianza": {
+"s": 19.0,
+"intento": 1,
+"semilla": 7
+},
+"maravilla": {
+"s": 18.8,
+"intento": 1,
+"semilla": 7
+},
+"maresha_tef": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"actas_geez": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"faws_kosso": {
+"s": 18.4,
+"intento": 1,
+"semilla": 7
+},
+"cota_malla": {
+"s": 18.4,
+"intento": 1,
+"semilla": 7
+},
+"amba_fortaleza": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"caravanas_amole": {
+"s": 18.8,
+"intento": 1,
+"semilla": 7
+},
+"polvora_massawa": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"orden_katama": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"arma_lanza": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"arma_jabalinas": {
+"s": 18.4,
+"intento": 1,
+"semilla": 7
+},
+"escudo_gasa": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"arma_mosquete": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"herr_maresha": {
+"s": 18.4,
+"intento": 1,
+"semilla": 7
+},
+"herr_hoz": {
+"s": 18.6,
+"intento": 2,
+"semilla": 19
+},
+"herr_hacha": {
+"s": 18.4,
+"intento": 1,
+"semilla": 7
+},
+"herr_ensera": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"herr_canasta": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"herr_huso": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"hoja_aldeano_e1": {
+"s": 23.7,
+"intento": 1,
+"semilla": 31
+},
+"hoja_aldeano_e2": {
+"s": 24.1,
+"intento": 1,
+"semilla": 31
+},
+"hoja_aldeano_e3": {
+"s": 23.7,
+"intento": 1,
+"semilla": 31
+},
+"hoja_aldeano_e4": {
+"s": 23.6,
+"intento": 1,
+"semilla": 31
+},
+"hoja_chewa_e1": {
+"s": 23.7,
+"intento": 1,
+"semilla": 31
+},
+"hoja_chewa_e2": {
+"s": 24.3,
+"intento": 1,
+"semilla": 31
+},
+"hoja_chewa_e3": {
+"s": 23.8,
+"intento": 1,
+"semilla": 31
+},
+"hoja_chewa_e4": {
+"s": 23.7,
+"intento": 1,
+"semilla": 31
+}
+}
