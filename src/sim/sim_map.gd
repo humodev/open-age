@@ -22,10 +22,11 @@ var path_cfg := {}
 var now := 0
 var _ver_block := 0 # sube cuando alguna casilla se tapa (construir, puertas, pesos)
 var _ver_open := 0 # sube cuando alguna casilla se abre (destruir, talar)
-var _unreach := {} # (jugador, región origen, región destino) -> [casilla más cercana alcanzable, ver_block, ver_open, tick]
+var _enclosed := {} # (jugador, región destino) -> [casilla más cercana alcanzada, destino, ver_open, tick] (proceso 45)
 var _pcache := {} # clave (jugador, región origen, región destino) -> [camino, destino, ver_block, ver_open, tick, llega]
 var cache_hits := 0 # contadores para el perfilador (no cambian nada)
 var cache_miss := 0
+var enclosed_hits := 0
 
 
 func _init(size: int, num_players: int = 2) -> void:
@@ -196,34 +197,45 @@ func find_path(from: Vector2i, to: Vector2i, pid: int = -1) -> Array[Vector2i]:
 	var rs := int(path_cfg["region"])
 	# Cerca no: el enganche podía dar la vuelta por la punta de otro camino (el kiteo retrocede unas
 	# casillas y salía para adelante). Un A* corto es barato.
-	if maxi(absi(to.x - from.x), absi(to.y - from.y)) <= 2 * rs:
-		return _grid(pid).get_id_path(from, to, true)
+	var near := maxi(absi(to.x - from.x), absi(to.y - from.y)) <= 2 * rs
 	var key := (((pid + 1) * 128 + from.x / rs) * 128 + from.y / rs) * 16384 + (to.x / rs) * 128 + to.y / rs
-	var ent: Array = _pcache.get(key, [])
-	if not ent.is_empty() and int(ent[2]) == _ver_block and now - int(ent[4]) <= int(path_cfg["vence_ticks"]) and (ent[5] or int(ent[3]) == _ver_open):
-		var sp := _splice(ent[0], ent[1], ent[5], from, to, pid)
-		if not sp.is_empty():
-			cache_hits += 1
-			return sp
-	cache_miss += 1
-	# Destino encerrado (muralla, edificios): el A* parcial recorre toda la zona alcanzable (7–9 ms
-	# en un mapa de 240). Si otro de la misma región ya buscó hacia esa región y no llegó, se va directo a la casilla
-	# más cercana que él encontró, y al destino si de ahí se ve en línea recta.
-	var ukey := key # misma región de origen: si no, el origen puede estar en otra zona y el A* hacia esa casilla también recorre todo
-	var u: Array = _unreach.get(ukey, [])
+	if not near:
+		var ent: Array = _pcache.get(key, [])
+		if not ent.is_empty() and int(ent[2]) == _ver_block and now - int(ent[4]) <= int(path_cfg["vence_ticks"]) and (ent[5] or int(ent[3]) == _ver_open):
+			var sp := _splice(ent[0], ent[1], ent[5], from, to, pid)
+			if not sp.is_empty():
+				cache_hits += 1
+				return sp
+		cache_miss += 1
+	var g := _grid(pid)
 	var r: Array[Vector2i]
-	if not u.is_empty() and int(u[1]) == _ver_block and int(u[2]) == _ver_open and now - int(u[3]) <= int(path_cfg["vence_ticks"]) and not is_solid(u[0].x, u[0].y, pid):
-		r = _grid(pid).get_id_path(from, u[0], true)
-		if not r.is_empty() and r[r.size() - 1] == u[0] and r[r.size() - 1] != to and _clear_line(u[0], to, pid):
-			r.append(to)
-		return r
-	r = _grid(pid).get_id_path(from, to, true)
-	if not r.is_empty() and r[r.size() - 1] != to:
-		_unreach[ukey] = [r[r.size() - 1], _ver_block, _ver_open, now]
-	if r.size() >= 2:
+	# Destino encerrado (muralla, edificios, un recurso rodeado): el A* que no llega recorre toda
+	# la zona alcanzable desde el origen (5–30 ms en un mapa de 240), aunque el camino sea corto.
+	# Proceso 45: se recuerda por (jugador, región del destino) la casilla más cercana al destino
+	# que se alcanzó (`_enclosed`). El siguiente primero prueba al revés, del destino al origen:
+	# si el destino está encerrado, ese A* solo recorre el encierro (barato). Si no llega, el
+	# destino sigue encerrado para este origen y se va directo a la casilla recordada. Tapar
+	# casillas no puede abrir un encierro ni acercar otra casilla, así que el recuerdo vale aunque
+	# se construya; si la casilla recordada ya no se alcanza, se hace el A* de siempre.
+	var ukey := ((pid + 1) * 128 + to.x / rs) * 128 + to.y / rs
+	var u: Array = _enclosed.get(ukey, [])
+	if not u.is_empty() and int(u[2]) == _ver_open and now - int(u[3]) <= int(path_cfg["vence_ticks"]) \
+			and maxi(absi(to.x - u[1].x), absi(to.y - u[1].y)) <= int(path_cfg["encierro_margen"]) \
+			and not is_solid(to.x, to.y, pid) and not is_solid(u[0].x, u[0].y, pid):
+		var probe := g.get_id_path(to, from, true)
+		if probe.is_empty() or probe[probe.size() - 1] != from:
+			var c: Vector2i = u[0]
+			r = g.get_id_path(from, c, true)
+			if not r.is_empty() and r[r.size() - 1] == c:
+				enclosed_hits += 1
+				return r
+	r = g.get_id_path(from, to, true)
+	if not r.is_empty() and r[r.size() - 1] != to and not is_solid(to.x, to.y, pid):
+		_enclosed[ukey] = [r[r.size() - 1], to, _ver_open, now]
+	if not near and r.size() >= 2:
 		if _pcache.size() >= int(path_cfg["max_entradas"]):
 			_pcache.clear()
-			_unreach.clear()
+			_enclosed.clear()
 		_pcache[key] = [r, to, _ver_block, _ver_open, now, r[r.size() - 1] == to]
 	return r
 

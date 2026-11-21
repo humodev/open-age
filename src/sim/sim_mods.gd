@@ -559,20 +559,43 @@ func near_water(e: SimEntity, r: int) -> bool:
 
 
 ## Sitios sagrados: captura por presencia exclusiva, renta de riqueza y victoria por control total.
+const _SC := 8000 # --- proceso 45 --- lado de los cubos de _sacred (milésimas)
+
+
+## Las unidades de los cubos que tocan la caja de lado 2·`rr` alrededor de `site`.
+func _cubes_near(cubes: Dictionary, site: SimEntity, rr: int) -> Array:
+	var out := []
+	for cx in range(maxi(0, site.x - rr) / _SC, (site.x + rr) / _SC + 1):
+		for cy in range(maxi(0, site.y - rr) / _SC, (site.y + rr) / _SC + 1):
+			var ck := cx * 4096 + cy
+			if cubes.has(ck):
+				out.append_array(cubes[ck])
+	return out
+
+
 func _sacred() -> void:
 	var cfg: Dictionary = sim.data.reglas["sitios"]
 	var sites: Array[SimEntity] = []
-	for b in sim.actives:
-		if b.alive and b.def.get("sagrado", false):
+	for b in sim.sacred_sites(): # --- proceso 45 --- los mismos que recorrer actives, en orden de id
+		if b.alive:
 			sites.append(b)
 	if sites.is_empty():
 		return
 	var r: int = cfg["radio"]
+	# --- proceso 45 --- Las unidades por cubos de `_SC` milésimas: cada sitio mira solo los cubos
+	# que tocan su caja, no todas las unidades (dos pasadas por sitio, picos de 19 ms en el 4v4).
+	# Lo que se calcula no depende del orden (el menor dueño por equipo, una suma).
+	var cubes := {}
+	for u in sim.all_units():
+		var ck := (u.x / _SC) * 4096 + u.y / _SC
+		if not cubes.has(ck):
+			cubes[ck] = []
+		cubes[ck].append(u)
 	for site in sites:
 		# Presencia por equipo: los aliados no se disputan un sitio. Lo toma el jugador
 		# de menor id del equipo presente.
 		var present := {}
-		for u in sim.all_units(): # mismas unidades que actives, en el mismo orden; la caja primero
+		for u in _cubes_near(cubes, site, r):
 			if absi(u.x - site.x) <= r and absi(u.y - site.y) <= r and u.alive and u.owner >= 0 and u.inside < 0:
 				var tm := sim.team_of(u.owner)
 				present[tm] = mini(int(present.get(tm, u.owner)), u.owner)
@@ -607,7 +630,7 @@ func _sacred() -> void:
 			continue
 		var tm_h := sim.team_of(site.holder)
 		var pob := 0
-		for u in sim.all_units():
+		for u in _cubes_near(cubes, site, gr):
 			if u.alive and u.owner >= 0 and u.inside < 0 and u.is_military() and absi(u.x - site.x) <= gr and absi(u.y - site.y) <= gr and sim.team_of(u.owner) == tm_h:
 				pob += int(u.def.get("pob", 1))
 		site_guard[site.id] = pob

@@ -2151,6 +2151,27 @@ func _res_near_water(t: SimEntity, r: int) -> bool:
 	return _water_near_cache[k]
 
 
+## --- proceso 45 --- Lo mismo que `_near_water`, guardado por casilla de origen para una huella
+## y un radio (la IA de Ayutthaya prueba cientos de lugares de arrozal por pensada). Vale mientras
+## no cambie el agua (`map.water_ver`); es solo una caché: no cambia ningún resultado.
+var _nw_ver := -1
+var _nw_key := -1
+var _nw := PackedByteArray() # 0 sin calcular, 1 no, 2 sí
+func near_water_cached(tx: int, ty: int, w: int, h: int, r: int) -> bool:
+	if not map.in_bounds(tx, ty):
+		return _near_water(tx, ty, w, h, r)
+	var k := (w * 64 + h) * 64 + r
+	if _nw_ver != map.water_ver or _nw_key != k:
+		_nw_ver = map.water_ver
+		_nw_key = k
+		_nw.resize(map.n * map.n)
+		_nw.fill(0)
+	var i := ty * map.n + tx
+	if _nw[i] == 0:
+		_nw[i] = 2 if _near_water(tx, ty, w, h, r) else 1
+	return _nw[i] == 2
+
+
 func _near_water(tx: int, ty: int, w: int, h: int, r: int) -> bool:
 	for yy in range(ty - r, ty + h + r):
 		for xx in range(tx - r, tx + w + r):
