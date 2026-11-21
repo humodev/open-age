@@ -229,7 +229,10 @@
     },
     "vistas": {
      "front": {
-      "margen": 0.06
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
      }
     }
    },
@@ -369,7 +372,11 @@
     },
     "vistas": {
      "front": {
-      "margen": 0.06
+      "margen": 0.06,
+      "quitar": [
+       "verde",
+       "tierra_roja"
+      ]
      }
     }
    },
@@ -398,7 +405,11 @@
     },
     "vistas": {
      "front": {
-      "margen": 0.06
+      "margen": 0.06,
+      "quitar": [
+       "verde",
+       "tierra_roja"
+      ]
      }
     }
    },
@@ -500,18 +511,22 @@
    "categoria": "casa",
    "civ": "etiopia",
    "referencia": {
-    "imagen": "/mnt/games/01_Projects/comfyui/output/etiopia_gouache/casa_7.png",
+    "imagen": null,
     "receta": {
-     "semilla": 7,
+     "semilla": 11,
      "ancho": 768,
      "alto": 768,
-     "prompt": "{estilo} A single round house with a low wall of brown fieldstone and mud and a steep conical thatched roof, one wooden doorway. Single building, three-quarter view from above like a strategy game icon, the whole building visible and centered, isolated on a plain flat light grey background. Ethiopian highland architecture of the 16th and 17th centuries: round houses (tukul) with walls of stone or wattle and daub and steep conical thatched roofs, walls of brown and grey fieldstone set in mud, green highland plateau with flat-topped cliffs (amba), juniper and acacia trees."
+     "prompt": "{estilo} A single round Ethiopian highland house (tukul) standing on its own: a cylindrical wall of brown and grey fieldstone set in mud, about as tall as a person, with one wooden doorway, under a steep conical thatched roof of golden-brown grass that overhangs the wall, with a small pointed finial on top. Single building, three-quarter view from above like a strategy game icon, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no platform, no trees, no plants."
     },
     "vistas": {
      "front": {
-      "margen": 0.06
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
      }
-    }
+    },
+    "_nota": "proceso/50: la imagen del ícono (casa_7) pone el tukul sobre un montículo de pasto; para el 3D, una referencia propia sin suelo"
    },
    "forma": {
     "modelo": "hy-mini-turbo",
@@ -649,7 +664,10 @@
     },
     "vistas": {
      "front": {
-      "margen": 0.06
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
      }
     }
    },

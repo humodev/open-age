@@ -131,3 +131,33 @@ Arriba, antes (49) y después en el phrai y los cargadores; abajo, la hoja de la
 
 `tools/arte_gouache.py` acepta `intentos={edad: n}` en `hojas()` para reintentar una hoja
 sola. La interfaz se rearmó con `tools/arte_pueblo.py --pueblo=ayutthaya`.
+
+## 3 · El paisaje del ícono pegado en los edificios 3D
+
+Hunyuan hace la forma de todo lo que tiene alfa: las palmeras, el pasto y el disco de tierra
+del ícono entraban como geometría (palmeras pegadas a la oga, la oga guasu y la casa de palha;
+el tukul sobre un montículo de pasto; la ruka sobre un disco verde). El corte del suelo al
+3 % (`suelo_pct`) no alcanza, porque la palmera o el montículo se levantan del suelo.
+
+**Arreglo en la imagen de entrada** (`tools/gen3d_entradas.py`, opción `quitar` de la vista en
+`data/gen3d_piezas.json`): antes de cuadrar la vista se saca del alfa el paisaje:
+
+- `verde`: tono 60–180° con saturación (hojas, pasto, árboles);
+- `tierra_roja`: el disco de tierra roja de los guaraníes (tono < 25°, muy saturado);
+- después, la pieza más grande y los huecos chicos rellenos.
+
+El tukul no tenía arreglo así: en el ícono del juego (`casa_7`) la casa es un techo sobre un
+montículo de pasto con un muro de piedra, y sin el verde quedaba solo el techo. Para el 3D tiene
+una referencia propia hecha por el pipeline con FLUX: muro cilíndrico de piedra, techo cónico,
+«no ground, no grass, no platform, no trees» (el ícono del juego no cambia).
+
+Además, el pipeline arranca ComfyUI solo con `arrancar_aislado.sh` (antes envolvía
+`arrancar.sh` en su propio scope) y lo baja a 12 GB.
+
+Arriba, antes; en el medio, la vista limpia que entra a Hunyuan; abajo, después (tukul, oga,
+oga guasu, casa de palha y ruka):
+
+![Edificios antes y después](img/edificios_antes_despues.jpg)
+
+Quedan como están los conjuntos (kätäma, lof, cerca real, wang): el suelo y las plantas están
+adentro del cerco y sacar el verde los parte en pedazos. La ruka sigue con el techo cónico.

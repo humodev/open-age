@@ -68,19 +68,59 @@ def main(dst: Path) -> None:
         print(p)
 
 
-def vista(src: str, dst: str, recorte: list, umbral: float, margen: float) -> None:
+def quitar_paisaje(im: Image.Image, quitar: list) -> Image.Image:
+    """Saca del alfa el paisaje del ícono (proceso/50): «verde» (palmeras, pasto, árboles: tono
+    60–180° con saturación) y «tierra_roja» (el disco de tierra roja: tono < 25° muy saturado).
+    Después se queda con la pieza más grande y rellena los huecos chicos."""
+    import numpy as np
+    from scipy import ndimage
+    a = np.asarray(im).astype(np.float32) / 255
+    c, al = a[..., :3], a[..., 3] > 0.5
+    mx, mn = c.max(-1), c.min(-1)
+    sat = (mx - mn) / (mx + 1e-6)
+    r, g, b = c[..., 0], c[..., 1], c[..., 2]
+    tono = np.degrees(np.arctan2(np.sqrt(3) * (g - b), 2 * r - g - b)) % 360
+    fuera = np.zeros_like(al)
+    if "verde" in quitar:
+        fuera |= (tono > 60) & (tono < 180) & (sat > 0.18) & (mx > 0.12)
+    if "tierra_roja" in quitar:
+        fuera |= ((tono < 25) | (tono > 345)) & (sat > 0.5) & (mx > 0.35)
+    fuera = ndimage.binary_closing(fuera, iterations=2)
+    m = al & ~ndimage.binary_dilation(fuera, iterations=2)
+    m = ndimage.binary_opening(m, iterations=3)
+    et, n = ndimage.label(m)
+    if n > 1:
+        tam = ndimage.sum(m, et, range(1, n + 1))
+        m = et == (int(np.argmax(tam)) + 1)
+    et, n = ndimage.label(~m)
+    if n > 1:
+        tam = ndimage.sum(~m, et, range(1, n + 1))
+        for i, t in enumerate(tam, 1):
+            if t < m.size * 0.003:
+                m[et == i] = True
+    out = im.copy()
+    out.putalpha(Image.fromarray((m * 255).astype("uint8")).filter(ImageFilter.GaussianBlur(0.8)))
+    return out
+
+
+def vista(src: str, dst: str, recorte: list, umbral: float, margen: float, quitar=()) -> None:
     """Una vista para el pipeline (tools/gen3d_pipeline.py): recorte en fracción de la imagen,
-    alfa por el color del fondo y cuadrado con el objeto centrado."""
+    alfa por el color del fondo (y sin el paisaje del ícono, si se pide) y cuadrado con el
+    objeto centrado."""
     im = Image.open(src).convert("RGB")
     w, h = im.size
     x0, y0, x1, y1 = recorte
     im = im.crop((int(x0 * w), int(y0 * h), int(x1 * w), int(y1 * h)))
-    cuadrar(alfa_por_fondo(im, int(umbral)), margen).save(dst)
+    im = alfa_por_fondo(im, int(umbral))
+    if quitar:
+        im = quitar_paisaje(im, quitar)
+    cuadrar(im, margen).save(dst)
 
 
 if __name__ == "__main__":
     if sys.argv[1] == "--vista":
         a = sys.argv[2:]
-        vista(a[0], a[1], [float(x) for x in a[2:6]], float(a[6]), float(a[7]))
+        vista(a[0], a[1], [float(x) for x in a[2:6]], float(a[6]), float(a[7]),
+              a[8].split(",") if len(a) > 8 and a[8] else ())
     else:
         main(Path(sys.argv[1]))

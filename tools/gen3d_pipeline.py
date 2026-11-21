@@ -131,18 +131,32 @@ def comfy_pids() -> list:
     return r.stdout.split()
 
 
+def comfy_scopes() -> list:
+    import glob
+    return [os.path.basename(u) for u in
+            glob.glob("/sys/fs/cgroup/user.slice/user-*.slice/user@*.service/app.slice/comfyui-*.scope")]
+
+
 def flux(receta: dict, comun: dict, prefijo: Path) -> Path:
     """Una imagen con FLUX schnell. Arranca ComfyUI en su scope si no está y, si lo arrancó,
     lo libera (POST /free) y lo apaga al terminar, y verifica que no quede el proceso."""
     propio = False
     if not comfy_vivo():
         esperar_ram()
-        unidad = f"comfyui-{int(time.time())}"
-        subprocess.Popen(["systemd-run", "--user", "--scope", "-q", f"--unit={unidad}", *TOPE,
-                          str(COMFY / "arrancar.sh"), "--cache-none"],
+        # Solo con arrancar_aislado.sh (su propio scope), bajado a 12 GB como todo paso pesado.
+        antes = set(comfy_scopes())
+        subprocess.Popen([str(COMFY / "arrancar_aislado.sh"), "--cache-none"],
                          stdout=open(prefijo.parent / "comfyui.log", "w"), stderr=subprocess.STDOUT,
                          stdin=subprocess.DEVNULL, start_new_session=True)
         propio = True
+        for _ in range(40):
+            if set(comfy_scopes()) - antes:
+                break
+            time.sleep(1)
+        unidades = sorted(set(comfy_scopes()) - antes)
+        for u in unidades:
+            subprocess.run(["systemctl", "--user", "set-property", "--runtime", u, "MemoryMax=12G", "MemoryHigh=10G"],
+                           capture_output=True)
         for _ in range(200):
             try:
                 urllib.request.urlopen("http://127.0.0.1:8188/system_stats", timeout=2)
@@ -167,7 +181,8 @@ def flux(receta: dict, comun: dict, prefijo: Path) -> Path:
         except OSError:
             pass
         if propio:
-            subprocess.run(["systemctl", "--user", "stop", unidad + ".scope"], capture_output=True)
+            for u in unidades:
+                subprocess.run(["systemctl", "--user", "stop", u], capture_output=True)
             for _ in range(30):
                 if not comfy_pids() and not comfy_vivo():
                     break
@@ -260,7 +275,8 @@ def correr_pieza(nombre: str, pieza: dict, comun: dict, args) -> dict:
         for k, v in vistas.items():
             subprocess.run([str(PY), str(REPO / "tools/gen3d_entradas.py"), "--vista", str(d / "referencia.png"),
                             str(vis_png[k]), *map(str, v.get("recorte", [0, 0, 1, 1])),
-                            str(v.get("umbral", 28)), str(v.get("margen", 0.1))], check=True)
+                            str(v.get("umbral", 28)), str(v.get("margen", 0.1)), ",".join(v.get("quitar", []))],
+                           check=True)
         return {"fuente": "flux" if usar_flux else str(fuente)}
     hacer("referencia", p1, f1)
 
