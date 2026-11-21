@@ -30,8 +30,8 @@
 "semilla": 13
 },
 "aldeano_m": {
-"s": 20.0,
-"intento": 2,
+"s": 19.2,
+"intento": 5,
 "semilla": 19
 },
 "aldeano_f": {
@@ -40,13 +40,13 @@
 "semilla": 7
 },
 "comerciante_m": {
-"s": 19.9,
-"intento": 2,
+"s": 19.2,
+"intento": 5,
 "semilla": 19
 },
 "comerciante_f": {
 "s": 19.7,
-"intento": 2,
+"intento": 5,
 "semilla": 19
 },
 "explorador": {
@@ -355,8 +355,8 @@
 "semilla": 31
 },
 "hoja_aldeano_e2": {
-"s": 23.6,
-"intento": 1,
+"s": 23.5,
+"intento": 3,
 "semilla": 31
 },
 "hoja_aldeano_e3": {

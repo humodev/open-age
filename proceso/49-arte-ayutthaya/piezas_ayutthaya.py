@@ -1,3 +1,8 @@
+PAKHAOMA = ("a checked cotton pha khao ma cloth in muted indigo and white, wrapped around the head and tied at the "
+            "side like a low head wrap, the hair cropped short underneath; no hat")  # proceso/50: las unidades, con el paño
+NGOB = ("a wide-brimmed woven palm-leaf sun hat whose crown is a low flat-topped drum, a short cylinder with a "
+        "perfectly flat round top, set in the middle of a broad brim that is almost flat and dips slightly at the edge, "
+        "like a flat-crowned planter's hat made of pale palm leaf and bamboo; the top of the hat is flat, never pointed")  # proceso/50: el ngob siamés, no el nón lá
 # Piezas de Ayutthaya (lo ejecuta armar_piezas.py con j, ZONA ya definidos). Lista real de
 # data/civs/ayutthaya.json. Historiadores (proceso/25, 03-asia; C-79): sin imágenes del Buda (ni de
 # decoración, ni en el piso, ni cortadas) y sin monjes combatientes; el wat solo por su arquitectura
@@ -14,10 +19,10 @@ CABALLO = "a small sturdy brown horse"
 ELEFANTE = "a large Asian elephant"
 DAP = "a straight single-edged sword (dap) with a long handle"
 
-j.unidad("aldeano_m", "Phrai (aldeano, hombre)", f"A rice farmer holding a curved iron sickle and a sheaf of ripe golden rice. He wears {Z}, a wide flat-topped woven palm-leaf hat (ngop) and a cotton cloth over one shoulder. He is a mature man of about thirty-five with a strong adult face, a defined jaw and smile lines.", semilla=19, intento=2)
+j.unidad("aldeano_m", "Phrai (aldeano, hombre)", f"A rice farmer holding a curved iron sickle and a sheaf of ripe golden rice. He wears {Z}, {PAKHAOMA}, and a cotton cloth over one shoulder. He is a mature man of about thirty-five with a strong adult face, a defined jaw and smile lines.", semilla=19, intento=5)
 j.unidad("aldeano_f", "Phrai (aldeana, mujer)", f"A woman holding a bundle of green rice seedlings ready to transplant, her other hand on a woven basket at her hip. She wears {ZF} and a plain undyed cotton breast cloth over one shoulder.", mujer=True)
-j.unidad("comerciante_m", "Cargadores del río (hombre)", f"A porter carrying a bamboo pole across his shoulder with a woven basket of goods hanging from each end, glazed jars and bolts of cloth inside. He wears {Z} and a wide flat-topped woven palm-leaf hat (ngop). He is a mature man of about thirty-five with a strong adult face, a defined jaw and smile lines.", semilla=19, intento=2)
-j.unidad("comerciante_f", "Cargadores del río (mujer)", f"A market woman carrying a bamboo pole across her shoulder with a flat basket of fruit and fish hanging from each end. She wears {ZF}, a plain undyed cotton breast cloth and a wide flat-topped woven palm-leaf hat (ngop).", mujer=True, semilla=19, intento=2, nota="El arroz y el mercado, en buena parte en manos de mujeres (Reid, 1988).")
+j.unidad("comerciante_m", "Cargadores del río (hombre)", f"A porter carrying a bamboo pole across his shoulder with a woven basket of goods hanging from each end, glazed jars and bolts of cloth inside. He wears {Z} and {PAKHAOMA}. He is a mature man of about thirty-five with a strong adult face, a defined jaw and smile lines.", semilla=19, intento=5)
+j.unidad("comerciante_f", "Cargadores del río (mujer)", f"A market woman carrying a bamboo pole across her shoulder with a flat basket of fruit and fish hanging from each end. She wears {ZF}, a plain undyed cotton breast cloth and {PAKHAOMA}.", mujer=True, semilla=19, intento=5, nota="El arroz y el mercado, en buena parte en manos de mujeres (Reid, 1988).")
 j.unidad("explorador", "Jinete explorador", f"A scout on {CABALLO}, riding with a simple saddle cloth, holding a short spear and looking ahead. He wears {Z} and a short undyed cotton jacket.", montado=True)
 j.unidad("guerrero", "Infantería de dap", f"A soldier holding two straight single-edged swords (dap), one in each hand, in a fighting stance. He wears {Z}, bare chest, and a cloth band tied around the head. He is a mature man of about thirty-five with a strong adult face, a defined jaw and smile lines.", semilla=19, intento=2)
 j.unidad("hondero", "Arquero", f"An archer drawing a short curved bow with an arrow, a quiver at his hip. He wears {Z}, bare chest, and a cloth band around the head. He is a mature man of about thirty-five with a strong adult face, a defined jaw and smile lines.", semilla=19, intento=2)
@@ -89,10 +94,10 @@ j.prop("herr_tinaja", "Tinaja martaban", "A large brown glazed stoneware storage
 ED = ["Mueang", "Krung Si", "Ekkarat", "Mueang Tha"]
 j.hojas("aldeano", "Phrai (aldeano)", ED, [
     f"Clothing: {Z}; bare chest; bare head; barefoot.",
-    f"Clothing: {Z}; bare chest; a dark cotton sash at the waist; a wide conical palm-leaf hat, worn in every view; barefoot.",
+    f"Clothing: {Z}; bare chest; a dark cotton sash at the waist; {NGOB}, worn in every view; barefoot.",
     f"Clothing: {Z}; a short undyed cotton jacket; a patterned silk sash at the waist; barefoot.",
     f"Clothing: {Z}; a short undyed cotton jacket; a fine patterned silk cloth over one shoulder; a patterned sash; leather sandals.",
-])
+], intentos={2: 3})
 j.hojas("guerrero", "Infantería de dap", ED, [
     f"Clothing: {Z}; bare chest; bare head; barefoot.",
     f"Clothing: {Z}; bare chest; a dark cotton sash; a cloth band tied around the head; barefoot.",

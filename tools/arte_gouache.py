@@ -91,12 +91,13 @@ class Juego:
     def prop(self, id, nombre, que, semilla=7, intento=1):
         self.add(A, id, nombre, f"{que} {PROP}", semilla=semilla, intento=intento)
 
-    def hojas(self, clave, nombre, edades, equipos, semilla=31, mujer=False):
+    def hojas(self, clave, nombre, edades, equipos, semilla=31, mujer=False, intentos=None):
+        """intentos: {número de edad: intento} para reintentar una hoja sola (proceso/50)."""
         cara = self.cara_f if mujer else self.cara_m
         for i, eq in enumerate(equipos):
             self.add(H, f"hoja_{clave}_e{i+1}", f"{nombre} · edad {i+1} · {edades[i]}",
                      f"{HOJA} {eq} The person is {cara}. {self.natural} {FONDO_H}", semilla=semilla,
-                     w=1152, h=768, recolor=True)
+                     w=1152, h=768, recolor=True, intento=(intentos or {}).get(i + 1, 1))
 
     def escribir(self, viejo_caras=True):
         f = os.path.join(self.D, "piezas.json")

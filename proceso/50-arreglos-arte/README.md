@@ -97,3 +97,37 @@ tono» mejoran igual por el sombreado suave.
 Queda: la cabeza sigue con pocas caras (la malla entera tiene 4–5 mil) y los rasgos son los
 de una figura de 0,75 casillas; la corona de plumas del guerrero de macana sale marrón (Paint
 pierde el rojo y el amarillo), no es de la piel.
+
+## 2 · El sombrero de Ayutthaya
+
+FLUX dibujaba el *nón lá* vietnamita (un cono de punta) en el phrai, los dos cargadores del
+río y la hoja 3D de la edad II (que además lo pedía «conical»).
+
+**Qué llevaba la gente común de Siam.** El sombrero de trabajo es el *ngob* (งอบ): hojas de
+palma sobre un armazón de tiras de bambú, con un aro interior que lo apoya sobre la cabeza y
+deja pasar el aire, de copa corta y **plana** sobre un ala ancha que cae suave; es más
+complejo que el cono del resto del sudeste asiático y hoy su centro de producción es Bang
+Pahan, en la provincia de Ayutthaya ([Wikipedia](https://en.wikipedia.org/wiki/Thai_farmer%27s_hat),
+[Google Arts & Culture: «flat top hat (ngob)»](https://artsandculture.google.com/asset/flat-top-hat-ngob-made-of-leaves-from-talipot-palm/qAFlWOJliVe2WQ)).
+La otra prenda de cabeza común es el *pha khao ma*, el paño de algodón a cuadros que sirve de
+faja, de toalla o de turbante. La Loubère (1691) describe a la gente común con la cabeza
+descubierta y el pelo muy corto; el sombrero es del trabajo al sol.
+
+Intentos (se guardan todos; el de la etapa 49 queda como `img/<id>_v2.jpg` en
+`proceso/49-arte-ayutthaya`):
+
+| Intento | Descripción | Resultado |
+|---|---|---|
+| 3 | ngob: copa «como una maceta dada vuelta», arriba plana, escalón con el ala, «not a conical Vietnamese hat» | cono otra vez en las tres unidades |
+| 4 | copa de tambor bajo, arriba plana, ala casi horizontal, «like a flat-crowned planter's hat» | conos de ala ancha en las unidades; **la hoja de la edad II sí sale con copa chata y ala ancha**: queda |
+| 5 (unidades) | el *pha khao ma* atado en la cabeza, sin sombrero | se lee bien, sin cono: queda |
+
+FLUX asocia «palm-leaf hat» con una cara del sudeste asiático y dibuja el cono aunque se le
+describa la forma. En la hoja de cuerpo entero, con la cara más chica, la descripción gana.
+
+Arriba, antes (49) y después en el phrai y los cargadores; abajo, la hoja de la edad II:
+
+![Sombrero antes y después](img/sombrero_antes_despues.jpg)
+
+`tools/arte_gouache.py` acepta `intentos={edad: n}` en `hojas()` para reintentar una hoja
+sola. La interfaz se rearmó con `tools/arte_pueblo.py --pueblo=ayutthaya`.
