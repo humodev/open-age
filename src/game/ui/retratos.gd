@@ -54,17 +54,32 @@ static func _armar(sim: Sim, owner: int, f: Dictionary) -> Dictionary:
 	var tex := textura(path)
 	if tex == null:
 		return {}
-	var fondo := Color(0, 0, 0, 0)
-	if path == alfa:
-		var civ := str(sim.players[owner].get("civ", ""))
-		var fd: Dictionary = cfg().get("fondo", {})
-		if m == "equipo":
-			fondo = Palette.team(owner)
-		elif (fd.get("por_pueblo", {}) as Dictionary).has(civ):
-			fondo = Color(str(fd["por_pueblo"][civ]))
-		else:
-			fondo = Color(str(sim.dp(owner).civ.get("estilo", {}).get("arcilla", "#8a6a44"))).darkened(0.35)
-	return {"tex": tex, "fondo": fondo}
+	return {"tex": tex, "fondo": _fondo(sim, owner, m) if path == alfa else Color(0, 0, 0, 0)}
+
+
+## Color del degradé detrás de una imagen recortada, según el modo.
+static func _fondo(sim: Sim, owner: int, m: String) -> Color:
+	var civ := str(sim.players[owner].get("civ", ""))
+	var fd: Dictionary = cfg().get("fondo", {})
+	if m == "equipo":
+		return Palette.team(owner)
+	if (fd.get("por_pueblo", {}) as Dictionary).has(civ):
+		return Color(str(fd["por_pueblo"][civ]))
+	return Color(str(sim.dp(owner).civ.get("estilo", {}).get("arcilla", "#8a6a44"))).darkened(0.35)
+
+
+## --- arte en la interfaz --- (proceso/48) El arte pintado del pueblo (data/arte_pueblos.json)
+## gana sobre las filas de data/retratos.json: un arte por unidad, el mismo en todas las edades.
+## Las unidades traen su fondo y la ropa en el color del equipo; edificios y mejoras van
+## recortados sobre el degradé.
+static func _pintado(sim: Sim, owner: int, type: String, sx: String) -> Dictionary:
+	var civ := str(sim.players[owner].get("civ", ""))
+	var g := ArtePueblo.arte(civ, type, sx, false)
+	if g.is_empty():
+		return {}
+	var c := ArtePueblo.arte(civ, type, sx, true)
+	var con_fondo := ArtePueblo.es_unidad(civ, type) # las unidades traen su fondo pintado
+	return {"tex": g["tex"], "fondo": Color(0, 0, 0, 0) if con_fondo else _fondo(sim, owner, modo() if modo() != "original" else "pueblo"), "pintado": g, "pintado_chico": c if not c.is_empty() else g, "equipo": Palette.team(owner)}
 
 
 static func textura(path: String) -> Texture2D:
@@ -88,6 +103,9 @@ static func de(sim: Sim, e: SimEntity) -> Dictionary:
 	if e == null or e.is_resource() or e.owner < 0 or e.owner >= sim.players.size():
 		return {}
 	var civ := str(sim.players[e.owner].get("civ", ""))
+	var pt := _pintado(sim, e.owner, e.type, AldeanoAnimado.sexo(e.id, e.def))
+	if not pt.is_empty():
+		return pt
 	return _armar(sim, e.owner, fila(civ, e.type, AldeanoAnimado.sexo(e.id, e.def), int(sim.players[e.owner].get("age", 1))))
 
 
@@ -95,11 +113,15 @@ static func de(sim: Sim, e: SimEntity) -> Dictionary:
 static func de_tipo(sim: Sim, owner: int, type: String) -> Dictionary:
 	if owner < 0 or owner >= sim.players.size():
 		return {}
+	var pt := _pintado(sim, owner, type, "")
+	if not pt.is_empty():
+		return pt
 	return _armar(sim, owner, fila(str(sim.players[owner].get("civ", "")), type, "", int(sim.players[owner].get("age", 1))))
 
 
 ## La parte de la imagen que se ve («grande» o «chico»), en píxeles.
 static func region(tex: Texture2D, tam: String) -> Rect2:
+	tam = "grande" if tam == "busto" else tam # el busto es del arte pintado (proceso/48)
 	var r: Array = cfg().get("recorte", {}).get(tam, [0, 0, 1, 1])
 	var s := tex.get_size()
 	return Rect2(float(r[0]) * s.x, float(r[1]) * s.y, float(r[2]) * s.x, float(r[3]) * s.y)
@@ -125,4 +147,7 @@ static func dibujar(ci: CanvasItem, ret: Dictionary, r: Rect2, tam := "grande") 
 		for k in 4:
 			var k2 := (k + 1) % 4
 			ci.draw_polygon(PackedVector2Array([o[k], o[k2], n[k2], n[k]]), PackedColorArray([v, v, t, t]))
+	if ret.has("pintado"):
+		ArtePueblo.dibujar(ci, ret["pintado"] if tam == "grande" else ret["pintado_chico"], r, ret["equipo"])
+		return
 	ci.draw_texture_rect_region(tex, r, region(tex, tam))

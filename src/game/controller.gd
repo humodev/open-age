@@ -294,6 +294,7 @@ func commands() -> Array[Dictionary]:
 			var type: String = slots[slot]
 			var def: Dictionary = sim.dp(local).edificios[type]
 			var cmd := {"slot": slot, "id": type, "icon": Glyphs.resolve(def, type), "kind": "build", "name": def["nombre"], "common": common_name(type), "cost": sim.build_cost(local, type), "desc": DESCS.get(type, def.get("desc", "")), "locked": ""}
+			_arte(cmd) # --- arte en la interfaz ---
 			if age < def.get("edad_min", 1):
 				cmd["locked"] = "Requiere edad %s" % Sim._roman(def["edad_min"])
 			# --- paso 7 --- la maravilla (una, la de la vía, sin el Pacto de Cucaú) y la corte fija
@@ -363,6 +364,7 @@ func commands() -> Array[Dictionary]:
 				slot = i
 				i += 1
 			var cmd := {"slot": slot, "id": type, "icon": Glyphs.resolve(udef, type), "kind": "train", "name": udef["nombre"], "common": common_name(type), "cost": sim.train_cost(local, first, type), "desc": DESCS.get(type, str(udef.get("desc", ""))), "locked": "", "building": first.id}
+			_arte(cmd) # --- arte en la interfaz ---
 			if udef.get("propia", false): # --- paso 6 --- el saber y su evidencia
 				cmd["desc"] = "%s\nEvidencia: %s" % [udef.get("desc", ""), udef.get("evidencia", "")]
 			if age < sim.comercio.unit_age_min(local, type): # --- esport 2b --- el comerciante del 1v1
@@ -394,6 +396,7 @@ func commands() -> Array[Dictionary]:
 			var why := sim.research_block(local, tech)
 			var pref := int(t["ranura"]) if produce.is_empty() else int((Grilla.cfg().get("investigaciones_con_tropa", {}) as Dictionary).get(tech if not t.has("requiere") else root, t["ranura"]))
 			var rc := {"slot": pref, "id": tech, "icon": Iconos.de_tecnologia(tech, t), "kind": "research", "name": tech_name(tech), "corto": str(t.get("nombre_corto", "")), "cost": sim.tech_cost(local, tech), "desc": effects_text(t["efectos"]), "locked": why, "tech": true, "building": first.id}
+			_arte(rc) # --- arte en la interfaz ---
 			if t.get("propia", false): # --- paso 6 --- el saber y su evidencia
 				rc["desc"] = "%s\n%s\nEvidencia: %s" % [rc["desc"], t.get("desc", ""), t.get("evidencia", "")]
 			elif t.has("camino_de"): # --- ronda 8, 05 ---
@@ -2089,3 +2092,13 @@ func _danados_zona() -> int:
 		return 0
 	return 1 if cola.danado_cerca(cx / n, cy / n, int(MundoColocacion.cfg().get("reparar_zona_radio", 12)) * P) != null else 0
 # --- fin fluidez 2 ---
+
+
+## --- arte en la interfaz --- (proceso/48) Si el pueblo tiene arte pintado para la casilla
+## (data/arte_pueblos.json), lo marca: EstadoCasilla lo dibuja en lugar del glifo, con la ropa en
+## el color del jugador. Solo el pueblo y el color (texto): el comando no lleva texturas.
+func _arte(cmd: Dictionary) -> void:
+	var civ := str(sim.players[local].get("civ", ""))
+	if not ArtePueblo.casilla(civ, str(cmd["id"])).is_empty():
+		cmd["arte_civ"] = civ
+		cmd["arte_equipo"] = Palette.team(local).to_html(false)

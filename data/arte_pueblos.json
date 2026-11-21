@@ -1,0 +1,52 @@
+{
+  "_doc": "hito_alto: alto en px del hito pintado arriba de cada tarjeta del panel de la edad. Arte pintado de la interfaz, por pueblo (proceso/48-arte-en-la-interfaz; src/game/ui/arte_pueblo.gd). Un arte por unidad (el mismo en todas las edades) y un ícono por edificio, hito, maravilla y mejora. Lo usan el retrato de la selección y de la ficha, las casillas de entrenar, construir e investigar y las tarjetas de los hitos al subir de edad. Un pueblo sin entrada (o un id que falte) sigue con los glifos y los retratos de data/retratos.json. Para sumar un pueblo: su entrada acá con la carpeta de los PNG originales (fuente) y el mapeo id del juego → pieza, y correr tools/arte_pueblo.py --pueblo=<clave>. Las unidades pueden tener una pieza por sexo ({m, f}; el aldeano usa el de su figura). Los archivos los arma el script en carpeta: <pieza>.webp (retrato; unidades con su fondo, el resto recortado), <pieza>_icono.webp (casilla; unidades: cabeza y torso) y, si la pieza tiene máscara del equipo, <pieza>_equipo.webp y <pieza>_icono_equipo.webp (la zona del color del jugador en gris, que el juego tiñe). sin_casilla: piezas que en una casilla de 62 px no se leen; ahí queda el glifo (el retrato y la tarjeta de hito sí las usan).",
+  "tam": { "_doc": "Lados en píxeles que escribe tools/arte_pueblo.py.", "retrato": 320, "icono": 128 },
+  "icono_unidad": { "_doc": "Recorte del ícono de una unidad: un cuadrado de lado_pct del alto, desde la coronilla menos arriba_pct, centrado en la figura.", "lado_pct": 56, "arriba_pct": 3,
+    "_doc_cajas": "cajas: recorte a mano [x, y, lado] en fracciones de la imagen, para las piezas en que cabeza y torso no alcanzan para distinguirlas (guerrero y lancero llevan el mismo escudo: el arma tiene que entrar).",
+    "cajas": { "guerrero_v2": [0.05, 0.14, 0.85], "lancero_v2": [0.0, 0.18, 0.82], "guardia_v2": [0.05, 0.04, 0.85], "jinete": [0.15, 0.02, 0.8], "jinete_manco_v2": [0.15, 0.08, 0.8] } },
+  "hito_alto": 104,
+  "casilla": { "_doc": "Casilla con arte: la imagen ocupa la casilla y el nombre va abajo sobre una franja oscura (alto en px, opacidad en %).", "franja_alto": 17, "franja_pct": 78 },
+  "pueblos": {
+    "tawantinsuyu": {
+      "carpeta": "res://assets/ui/arte/tawantinsuyu/gouache/",
+      "fuente": "/mnt/games/01_Projects/comfyui/output/incas_gouache/",
+      "origen": "proceso/42-incas-gouache",
+      "unidades": {
+        "aldeano": { "m": "aldeano_m_v2", "f": "aldeano_f_v2" },
+        "comerciante": { "m": "comerciante_m_v2", "f": "comerciante_f_v2" },
+        "explorador": "explorador_v2",
+        "awqa": "awqa_v2",
+        "hondero": "hondero_v2",
+        "boleador": "boleador_v2",
+        "lancero": "lancero_v2",
+        "guerrero": "guerrero_v2",
+        "guardia": "guardia_v2",
+        "guardia_distancia": "guardia_distancia_v2",
+        "galgueros": "galgueros",
+        "jinete": "jinete",
+        "jinete_manco": "jinete_manco_v2",
+        "arcabucero": "arcabucero",
+        "catapulta": "hondero_caliente",
+        "ariete": "hondero_caliente",
+        "rebano": "rebano"
+      },
+      "edificios": {
+        "centro": "centro", "casa": "casa", "granja": "granja", "anden": "anden",
+        "almacen_madera": "almacen_madera", "almacen_mina": "almacen_mina", "qollqa": "qollqa",
+        "cuartel": "cuartel", "campo_tiro": "campo_tiro", "taller_tejido": "taller_tejido",
+        "mercado": "mercado", "mercado_neutral": "mercado_neutral", "tambo": "tambo", "camino": "camino",
+        "muralla": "muralla", "torre_muralla": "torre_muralla", "torre": "torre", "puerta_piedra": "puerta_piedra",
+        "fortaleza": "fortaleza", "sitio_sagrado": "sitio_sagrado", "ingenio": "ingenio",
+        "ushnu": "ushnu", "pukara_mayor": "pukara_mayor", "aqllawasi": "aqllawasi",
+        "kallanka_real": "kallanka_real", "qorikancha": "qorikancha", "vilcabamba": "vilcabamba",
+        "maravilla": "maravilla"
+      },
+      "tecnologias": {
+        "khipukamayuq": "khipukamayuq", "champi": "champi", "chunu_charki": "chunu_charki",
+        "qeswa_chaka": "qeswa_chaka", "trepanacion": "trepanacion", "waraka_trenzada": "waraka_trenzada",
+        "wayrachina": "wayrachina", "chaski": "chaski"
+      },
+      "sin_casilla": ["chaski"]
+    }
+  }
+}
