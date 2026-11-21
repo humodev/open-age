@@ -1,0 +1,362 @@
+{
+"cara_m_1": {
+"s": 18.6,
+"intento": 1,
+"semilla": 23
+},
+"cara_m_2": {
+"s": 18.4,
+"intento": 1,
+"semilla": 24
+},
+"cara_m_3": {
+"s": 18.6,
+"intento": 1,
+"semilla": 25
+},
+"cara_f_1": {
+"s": 18.6,
+"intento": 1,
+"semilla": 11
+},
+"cara_f_2": {
+"s": 18.6,
+"intento": 1,
+"semilla": 12
+},
+"cara_f_3": {
+"s": 18.6,
+"intento": 1,
+"semilla": 13
+},
+"aldeano_m": {
+"s": 20.0,
+"intento": 1,
+"semilla": 7
+},
+"aldeano_f": {
+"s": 19.9,
+"intento": 2,
+"semilla": 19
+},
+"comerciante_m": {
+"s": 19.8,
+"intento": 2,
+"semilla": 19
+},
+"comerciante_f": {
+"s": 20.0,
+"intento": 2,
+"semilla": 19
+},
+"explorador": {
+"s": 20.1,
+"intento": 1,
+"semilla": 7
+},
+"guerrero": {
+"s": 20.0,
+"intento": 1,
+"semilla": 7
+},
+"hondero": {
+"s": 20.1,
+"intento": 1,
+"semilla": 7
+},
+"lancero": {
+"s": 19.9,
+"intento": 1,
+"semilla": 7
+},
+"ariete": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"jinete": {
+"s": 20.1,
+"intento": 1,
+"semilla": 7
+},
+"arcabucero": {
+"s": 19.9,
+"intento": 1,
+"semilla": 7
+},
+"guardia": {
+"s": 20.1,
+"intento": 1,
+"semilla": 7
+},
+"guardia_distancia": {
+"s": 20.0,
+"intento": 1,
+"semilla": 7
+},
+"rebano": {
+"s": 19.6,
+"intento": 1,
+"semilla": 7
+},
+"yga": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"caballeria_mision": {
+"s": 19.8,
+"intento": 1,
+"semilla": 7
+},
+"kaaguygua": {
+"s": 20.0,
+"intento": 2,
+"semilla": 19
+},
+"centro": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"casa": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"granja": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"almacen_madera": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"almacen_mina": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"campo_tiro": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"taller": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"cuartel": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"fortaleza": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"empalizada": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"puerta": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"mercado": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"sitio_sagrado": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"karai_palabra": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"aty_guasu": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"mision": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"monte": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"tava": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"yvy_marane": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"maravilla": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"maravilla_monte": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"kokue": {
+"s": 18.4,
+"intento": 2,
+"semilla": 19
+},
+"canoas_rio": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"poha_nana": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"oga_takuara": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"defensa_mborore": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"kaa_plantada": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"kaa_kaaguy": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"uy_hata": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"imprenta": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"aty": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"arma_macana": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"arma_arco": {
+"s": 18.6,
+"intento": 2,
+"semilla": 19
+},
+"arma_lanza": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"arma_arcabuz": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"herr_palo": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"herr_hacha": {
+"s": 18.6,
+"intento": 2,
+"semilla": 19
+},
+"herr_ajaka": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"herr_huso": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"herr_japepo": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"herr_remo": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"hoja_aldeano_e1": {
+"s": 24.1,
+"intento": 1,
+"semilla": 31
+},
+"hoja_aldeano_e2": {
+"s": 24.2,
+"intento": 1,
+"semilla": 31
+},
+"hoja_aldeano_e3": {
+"s": 24.5,
+"intento": 1,
+"semilla": 31
+},
+"hoja_aldeano_e4": {
+"s": 24.2,
+"intento": 1,
+"semilla": 31
+},
+"hoja_guerrero_e1": {
+"s": 24.2,
+"intento": 1,
+"semilla": 31
+},
+"hoja_guerrero_e2": {
+"s": 24.2,
+"intento": 1,
+"semilla": 31
+},
+"hoja_guerrero_e3": {
+"s": 24.3,
+"intento": 1,
+"semilla": 31
+},
+"hoja_guerrero_e4": {
+"s": 24.2,
+"intento": 1,
+"semilla": 31
+}
+}
