@@ -1,0 +1,58 @@
+Running as unit: run-p23997-i34592.scope; invocation ID: f5bebf45223f4d7c94573fcfb6f58b0e
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+
+=== 4v4 · semilla 42 · 24000 ticks (40.0 min de juego) en 869 s de reloj ===
+hash final 1993518327 · unidades vivas 1044 · fin: sigue (ganador equipo -1)
+TICK      promedio  36.19 ms · p95  72.86 · peor  197.62 (tick 19986, min 33.3) · >25 ms: 16310 · >40: 10112 · >100: 74
+sistema         prom ms   p95 ms  peor ms  % total
+ia                10.13    25.62   144.42    28.0%
+recoleccion        5.51     8.31    16.28    15.2%
+movimiento         3.42     6.77     9.86     9.4%
+resto              2.96     8.60    26.50     8.2%
+tablas             2.40     3.91    13.59     6.6%
+niebla             1.60     6.72    15.27     4.4%
+separacion         1.59     2.66    10.17     4.4%
+jugadores          1.56     2.56    11.83     4.3%
+segundo            1.49    15.30    51.92     4.1%
+combate            1.34     3.15     9.57     3.7%
+edificios          1.07     1.72     3.72     3.0%
+blancos            1.05     2.52    18.21     2.9%
+find_resource      0.95     2.73    27.60     2.6%
+caminos            0.67     1.94   143.99     1.8%
+grupos             0.27     0.70     3.12     0.7%
+ordenes            0.09     0.35    48.19     0.2%
+victoria           0.07     0.78     2.75     0.2%
+animales           0.01     0.00     1.03     0.0%
+telemetria         0.01     0.00     2.52     0.0%
+Picos (tick · min · total ms · sistema que más pesó · segundo):
+   19986   33.3   197.62  caminos          143.99 · ia 9.67
+   15756   26.3   179.88  ia (j4)          144.42 · recoleccion 6.97
+   15761   26.3   167.56  ia (j4)          132.65 · recoleccion 6.88
+   15766   26.3   161.73  ia (j4)          119.48 · resto 8.44
+   21299   35.5   155.93  ia (j5)          111.31 · resto 8.45
+   15751   26.3   147.21  ia (j4)          112.70 · recoleccion 6.97
+   20736   34.6   144.09  caminos           99.58 · resto 8.57
+   19386   32.3   139.74  caminos           92.52 · recoleccion 9.23
+   15771   26.3   139.13  ia (j4)          105.44 · recoleccion 6.80
+   15740   26.2   130.53  segundo           41.89 · ia 20.61
+   16350   27.2   130.27  caminos           44.29 · segundo 27.60
+   18050   30.1   124.92  segundo           40.18 · ia 20.67
+   18110   30.2   123.83  segundo           38.77 · ia 13.37
+   19390   32.3   123.56  caminos           48.26 · segundo 19.58
+   21530   35.9   122.51  caminos           41.44 · segundo 19.93
+   18959   31.6   117.98  caminos           50.19 · ia 30.38
+   23268   38.8   117.00  caminos           60.25 · ia 20.04
+   15700   26.2   115.88  segundo           34.21 · ia 21.70
+   23188   38.6   115.75  caminos           61.41 · ia 21.15
+   22950   38.2   115.04  segundo           30.52 · caminos 23.74
+   13129   21.9   114.58  caminos           61.38 · ia 20.68
+   20785   34.6   113.74  caminos           52.60 · ia 19.12
+   21815   36.4   113.07  caminos           53.73 · ia 13.55
+   22440   37.4   113.05  caminos           36.36 · segundo 20.14
+   21750   36.2   112.90  segundo           29.76 · caminos 17.41
+por minuto (prom/peor ms): m5 8.2/29 m10 18.9/36 m15 28.0/61 m20 36.2/75 m25 45.9/109 m30 52.8/112 m35 56.3/144 m40 60.4/111
+×4 alcanza (promedio del minuto < 25 ms) hasta el minuto 12 de 40
+caminos por resultado (llamadas · ms): llega 161810 · 6536; parcial 1557 · 8372; a_solido 46 · 391;
+caminos por orden (órdenes · caminos · ms): [move] 489 · 494 · 344; [move suelto] 62 · 378 · 43; [move amove] 7951 · 30303 · 8673; [build] 7 · 7 · 3; [move suelto amove] 5 · 5 · 0;
+caché de caminos: 17447 aciertos, 22661 búsquedas

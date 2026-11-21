@@ -1650,7 +1650,21 @@ func _site(type: String, centro: SimEntity, margin: int) -> Vector2i:
 ## Lugar para una granja: si rinde más junto al agua (arrozal de Ayutthaya), primero junto al
 ## agua a `ia_economia.granja_agua_radio` del centro o menos; si no, lo de siempre. Antes
 ## ningún arrozal de la IA tenía el bono, ni en río ni en delta (proceso/24, paso 3).
+## --- proceso 45 --- Dentro de una pensada el mapa no cambia (las órdenes se aplican en el tick
+## siguiente): cada aldeano que busca granja junto al mismo centro recibía el mismo lugar después
+## de recorrer otra vez hasta 600 casillas (picos de 130 ms). Se guarda por centro y por tick.
+var _fs_tick := -1
+var _fs := {}
 func _farm_site(centro: SimEntity) -> Vector2i:
+	if _fs_tick != sim.tick:
+		_fs_tick = sim.tick
+		_fs.clear()
+	if not _fs.has(centro.id):
+		_fs[centro.id] = _farm_site_search(centro)
+	return _fs[centro.id]
+
+
+func _farm_site_search(centro: SimEntity) -> Vector2i:
 	var def: Dictionary = sim.dp(player).edificios.get("granja", {})
 	if def.has("bono_agua_pct"):
 		var tam: Array = def["tam"]
@@ -1662,7 +1676,7 @@ func _farm_site(centro: SimEntity) -> Vector2i:
 						continue
 					var tx: int = c.x + dx - int(tam[0]) / 2
 					var ty: int = c.y + dy - int(tam[1]) / 2
-					if sim._near_water(tx, ty, tam[0], tam[1], 2) and sim.can_place("granja", tx, ty, player):
+					if sim.near_water_cached(tx, ty, tam[0], tam[1], 2) and sim.can_place("granja", tx, ty, player):
 						return Vector2i(tx, ty)
 	return _site("granja", centro, 0)
 
@@ -3742,5 +3756,23 @@ func _is_road(t: Vector2i) -> bool:
 	return e != null and e.type == "camino"
 
 
+## --- proceso 45 --- Sin piezas encima, cupo ni agua pedida, `can_place` de una casilla de camino
+## es «libre y en tierra»; se pregunta directo (mismo resultado). La búsqueda de `_road_tiles`
+## prueba miles de casillas cuando un edificio no tiene paso: picos de 130 ms con los incas.
+var _road_simple := -1 # -1 sin calcular, 0 no, 1 sí
 func _road_ok(t: Vector2i) -> bool:
+	if _road_simple < 0:
+		var def: Dictionary = sim.dp(player).edificios.get("camino", {})
+		var tam: Array = def.get("tam", [])
+		var special := false
+		for k in ["puerta", "sobre", "solo_sobre", "maximo_por_edad", "separacion", "funda_corte", "requiere_agua"]:
+			if def.has(k):
+				special = true
+		_road_simple = 1 if not def.is_empty() and tam.size() == 2 and int(tam[0]) == 1 and int(tam[1]) == 1 and not special else 0
+	if _road_simple == 1:
+		var occ := sim.map.occupant(t.x, t.y)
+		if occ == -1:
+			return not sim.map.is_water(t.x, t.y)
+		var e: SimEntity = sim.by_id.get(occ) if occ >= 0 else null
+		return e != null and e.type == "camino"
 	return _is_road(t) or sim.can_place("camino", t.x, t.y, player)

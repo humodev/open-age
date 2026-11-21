@@ -235,6 +235,19 @@ class PAIDet extends PAI:
 		Prof.enter("ia._trade"); super(p, by_type); Prof.leave()
 	func _avoid_sites(army: Array[SimEntity]) -> void:
 		Prof.enter("ia._avoid_sites"); super(army); Prof.leave()
+	# Proceso 45: los lugares para construir (picos de _economy y _buildings).
+	func _farm_site(centro: SimEntity) -> Vector2i:
+		Prof.enter("ia._farm_site"); var r = super(centro); Prof.leave(); return r
+	func _site_near(type: String, c: Vector2i, margin: int, min_r: int = 1) -> Vector2i:
+		Prof.enter("ia._site_near"); var r = super(type, c, margin, min_r); Prof.leave(); return r
+	func _expand(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_type: Dictionary, saving: bool, unbuilt: Dictionary) -> void:
+		Prof.enter("ia._expand"); super(p, vill, centro, by_type, saving, unbuilt); Prof.leave()
+	func _center_towers(p: Dictionary, vill: Array[SimEntity], by_type: Dictionary, unbuilt: Dictionary) -> void:
+		Prof.enter("ia._center_towers"); super(p, vill, by_type, unbuilt); Prof.leave()
+	func _road_tiles(from_b: SimEntity, to_b: SimEntity) -> Array:
+		Prof.enter("ia._road_tiles"); var r = super(from_b, to_b); Prof.leave(); return r
+	func _far_gatherers(vill: Array[SimEntity], kind: String) -> Array:
+		Prof.enter("ia._far_gatherers"); var r = super(vill, kind); Prof.leave(); return r
 
 
 class PMap extends SimMap:
@@ -419,6 +432,12 @@ func _run(nombre: String, semilla: int, minutos: int, n_picos: int, plano: bool,
 			for k: String in ks.slice(0, 30):
 				l += " %s %.2f·%.1f" % [k, ia_sub[k][0] / 1000.0 / hecho, ia_sub[k][1] / 1000.0]
 			print(l)
+			# Proceso 45: los que hacen picos aunque pesen poco de promedio.
+			ks.sort_custom(func(a: String, b: String) -> bool: return ia_sub[a][1] > ia_sub[b][1])
+			l = "Detalle por peor tick (peor ms · prom ms/tick):"
+			for k: String in ks.slice(0, 20):
+				l += " %s %.1f·%.2f" % [k, ia_sub[k][1] / 1000.0, ia_sub[k][0] / 1000.0 / hecho]
+			print(l)
 		print("Picos (tick · min · total ms · sistema que más pesó · segundo):")
 		for j in mini(n_picos, idx.size()):
 			var i: int = idx[j]
@@ -450,7 +469,7 @@ func _run(nombre: String, semilla: int, minutos: int, n_picos: int, plano: bool,
 		for k in PMap.por_orden:
 			lo += " [%s] %d · %d · %.0f;" % [k, PMap.por_orden[k][0], PMap.por_orden[k][1], PMap.por_orden[k][2] / 1000.0]
 		print(lo)
-		print("caché de caminos: %s aciertos, %s búsquedas" % [s.map.get("cache_hits"), s.map.get("cache_miss")])
+		print("caché de caminos: %s aciertos, %s búsquedas · destinos encerrados resueltos sin recorrer: %s" % [s.map.get("cache_hits"), s.map.get("cache_miss"), s.map.get("enclosed_hits")])
 		PMap.por_clase = {}
 		PMap.por_orden = {}
 	s.soltar()
