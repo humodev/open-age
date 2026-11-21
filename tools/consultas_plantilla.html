@@ -1,0 +1,241 @@
+<title>Consultas de Raíces</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:wght@600;700&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Una columna de fichas, como un cuaderno de consultas: contexto, lo que se hizo, tu elección. */
+:root{
+  --bg:#f1f2ec; --hoja:#fbfbf7; --tinta:#1e2621; --suave:#5a665e; --linea:#d8dccf;
+  --acento:#1f6a5f; --acento-suave:#e1eeea; --ocre:#9a5a16; --ocre-suave:#f6ead9;
+  --pend:#a3610f; --ok:#2f7a3c; --gris:#7a8178;
+  --f-titulo:"Alegreya",Georgia,serif; --f-texto:"Alegreya Sans",system-ui,sans-serif; --f-mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#151a17; --hoja:#1d2420; --tinta:#e6eae2; --suave:#a3ada5; --linea:#323b35;
+  --acento:#6cc2b3; --acento-suave:#1f3631; --ocre:#e0a35a; --ocre-suave:#3a2c1b;
+  --pend:#e0a35a; --ok:#79c48a; --gris:#8d958c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#151a17; --hoja:#1d2420; --tinta:#e6eae2; --suave:#a3ada5; --linea:#323b35;
+  --acento:#6cc2b3; --acento-suave:#1f3631; --ocre:#e0a35a; --ocre-suave:#3a2c1b;
+  --pend:#e0a35a; --ok:#79c48a; --gris:#8d958c; color-scheme:dark}
+body{background:var(--bg);color:var(--tinta);font:17px/1.5 var(--f-texto);padding-inline:16px;padding-block:0 64px}
+.marco{max-width:760px;margin:0 auto}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:16px 12px;border-bottom:1px solid var(--linea);display:grid;gap:10px}
+h1{font:700 1.7rem/1.1 var(--f-titulo);margin:0;text-wrap:balance}
+.resumen{color:var(--suave);font-size:.95rem;display:flex;flex-wrap:wrap;gap:4px 14px;font-variant-numeric:tabular-nums}
+.resumen b{color:var(--tinta)}
+.barra{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.filtros{display:flex;gap:4px;flex-wrap:wrap}
+.filtros button{font:500 .9rem var(--f-texto);border:1px solid var(--linea);background:var(--hoja);color:var(--tinta);border-radius:999px;padding:4px 12px;cursor:pointer}
+.filtros button[aria-pressed="true"]{background:var(--acento);border-color:var(--acento);color:var(--hoja)}
+input[type=search]{flex:1 1 180px;min-width:0;font:inherit;font-size:.95rem;padding:5px 10px;border:1px solid var(--linea);border-radius:8px;background:var(--hoja);color:var(--tinta)}
+.copiar{font:700 .9rem var(--f-texto);background:var(--ocre);color:var(--hoja);border:0;border-radius:8px;padding:6px 14px;cursor:pointer}
+.aviso{font-size:.85rem;color:var(--suave)}
+main{display:grid;gap:18px;padding-top:18px}
+.ficha{background:var(--hoja);border:1px solid var(--linea);border-radius:10px;padding:16px 18px;display:grid;gap:10px;min-width:0}
+.ficha.pendiente{border-left:4px solid var(--pend)}
+.ficha.tuya{border-left:4px solid var(--acento)}
+.cab{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline}
+.num{font:500 .8rem var(--f-mono);color:var(--suave)}
+.tema{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--suave)}
+.estado{margin-left:auto;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.estado.pendiente{color:var(--pend)} .estado.respondida{color:var(--ok)} .estado.reemplazada{color:var(--gris)} .estado.tuya{color:var(--acento)}
+h2{font:600 1.25rem/1.25 var(--f-titulo);margin:0;text-wrap:balance}
+.cuerpo{color:var(--tinta);min-width:0;overflow-wrap:anywhere}
+.cuerpo p,.hecho p,.resp p{margin:0 0 6px}
+.cuerpo ul,.hecho ul{margin:0 0 6px;padding-left:20px}
+code{font:500 .82em var(--f-mono);background:var(--acento-suave);padding:1px 4px;border-radius:4px;overflow-wrap:anywhere}
+.hecho{background:var(--ocre-suave);border-radius:8px;padding:10px 12px;font-size:.95rem}
+.hecho .et,.resp .et,.elige .et{display:block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ocre);margin-bottom:4px}
+.resp{background:var(--acento-suave);border-radius:8px;padding:10px 12px;font-size:.95rem}
+.resp .et{color:var(--acento)}
+.elige{display:grid;gap:6px}
+.elige .et{color:var(--acento)}
+.op{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid var(--linea);border-radius:8px;cursor:pointer}
+.op:hover{border-color:var(--acento)}
+.op input{margin-top:5px;accent-color:var(--acento);flex:none}
+.op span{min-width:0}
+.op.marcada{border-color:var(--acento);background:var(--acento-suave)}
+.def{font-size:.72rem;font-weight:700;color:var(--ocre);text-transform:uppercase;letter-spacing:.05em;margin-left:6px;white-space:nowrap}
+textarea{font:inherit;font-size:.95rem;width:100%;box-sizing:border-box;min-height:64px;padding:8px 10px;border:1px solid var(--linea);border-radius:8px;background:var(--bg);color:var(--tinta);resize:vertical}
+.pie{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.85rem;color:var(--suave)}
+.pie button{font:500 .85rem var(--f-texto);background:none;border:1px solid var(--linea);color:var(--suave);border-radius:6px;padding:3px 10px;cursor:pointer}
+details.cambiar>summary{cursor:pointer;color:var(--acento);font-size:.9rem;font-weight:500}
+details.cambiar[open]>summary{margin-bottom:8px}
+:focus-visible{outline:2px solid var(--acento);outline-offset:2px}
+.vacio{color:var(--suave);text-align:center;padding:40px 0}
+#copia{width:100%;min-height:140px}
+@media (prefers-reduced-motion:no-preference){.op,.filtros button{transition:background .15s,border-color .15s}}
+</style>
+
+<div class="marco">
+<header>
+  <h1>Consultas de Raíces</h1>
+  <div class="resumen" id="resumen"></div>
+  <div class="barra">
+    <div class="filtros" role="group" aria-label="Filtrar">
+      <button type="button" data-f="pendiente" aria-pressed="true">Pendientes</button>
+      <button type="button" data-f="tuyas" aria-pressed="false">Contestadas acá</button>
+      <button type="button" data-f="respondida" aria-pressed="false">Ya respondidas</button>
+      <button type="button" data-f="todas" aria-pressed="false">Todas</button>
+    </div>
+    <input type="search" id="buscar" placeholder="Buscar (yerba, sonido, C-69…)" aria-label="Buscar">
+    <button type="button" class="copiar" id="copiar">Copiar mis respuestas</button>
+  </div>
+  <div class="aviso" id="aviso">Conectando con el guardado…</div>
+  <textarea id="copia" hidden readonly aria-label="Tus respuestas en texto"></textarea>
+</header>
+<main id="lista"></main>
+</div>
+
+<script>
+const CONSULTAS = /*__DATOS__*/[];
+const LS = "raices_consultas_v1";
+let mias = {};           // id -> {opcion, texto, fecha}
+let db = null, col = null;
+let filtro = "pendiente", busca = "";
+try { mias = JSON.parse(localStorage.getItem(LS) || "{}") || {}; } catch (e) { mias = {}; }
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const plano = h => { const d = document.createElement("div"); d.innerHTML = h; return d.textContent; };
+
+function tieneMia(id){ const m = mias[id]; return !!(m && (m.opcion || (m.texto || "").trim())); }
+
+function resumen(){
+  const pend = CONSULTAS.filter(c => c.estado === "pendiente").length;
+  const resp = CONSULTAS.filter(c => c.estado === "respondida").length;
+  const tuyas = CONSULTAS.filter(c => tieneMia(c.id)).length;
+  $("#resumen").innerHTML = `<span><b>${CONSULTAS.length}</b> consultas</span><span><b>${pend}</b> sin respuesta</span><span><b>${resp}</b> ya respondidas</span><span><b>${tuyas}</b> contestadas acá</span>`;
+}
+
+function visible(c){
+  if (filtro === "pendiente" && c.estado !== "pendiente") return false;
+  if (filtro === "respondida" && c.estado !== "respondida") return false;
+  if (filtro === "tuyas" && !tieneMia(c.id)) return false;
+  if (!busca) return true;
+  const t = (c.id + " " + c.tema + " " + c.titulo + " " + plano(c.cuerpo) + " " + c.opciones.map(o => plano(o[1])).join(" ")).toLowerCase();
+  return busca.split(/\s+/).every(p => t.includes(p));
+}
+
+function ficha(c){
+  const m = mias[c.id] || {};
+  const tuya = tieneMia(c.id);
+  const ops = c.opciones.map(o => `
+    <label class="op${m.opcion === o[0] ? " marcada" : ""}">
+      <input type="radio" name="op-${c.id}" id="op-${c.id}-${o[0]}" value="${o[0]}"${m.opcion === o[0] ? " checked" : ""}>
+      <span><b>${o[0]})</b> ${o[1]}${o[2] ? '<span class="def">por defecto</span>' : ""}</span>
+    </label>`).join("");
+  const elegir = `
+    <div class="elige">
+      ${ops ? '<span class="et">Elegí una opción</span>' + ops : '<span class="et">Tu respuesta</span>'}
+      <textarea id="tx-${c.id}" placeholder="${ops ? "Otra respuesta, matiz o comentario (opcional)" : "Escribí tu respuesta"}">${esc(m.texto || "")}</textarea>
+      <div class="pie"><span id="st-${c.id}">${tuya ? "Guardada" + (m.fecha ? " · " + new Date(m.fecha).toLocaleString("es-AR", {dateStyle:"short", timeStyle:"short"}) : "") : ""}</span>
+      ${tuya ? `<button type="button" data-borrar="${c.id}">Borrar mi respuesta</button>` : ""}</div>
+    </div>`;
+  const estado = tuya ? "tuya" : c.estado;
+  const etEstado = {pendiente:"sin respuesta", respondida:"respondida", reemplazada:"reemplazada", tuya:"contestada acá"}[estado];
+  const ya = c.respuesta ? `<div class="resp"><span class="et">Respuesta</span>${c.respuesta}</div>` : "";
+  const hecho = c.hecho.length ? `<div class="hecho"><span class="et">${c.estado === "pendiente" ? "Mientras tanto hicimos" : "Lo que se hizo"}</span>${c.hecho.join("")}</div>` : "";
+  const cuerpoElegir = c.estado === "pendiente" || tuya ? elegir
+    : `<details class="cambiar"><summary>Cambiar la respuesta</summary>${elegir}</details>`;
+  return `<article class="ficha ${estado}" id="${c.id}" data-id="${c.id}">
+    <div class="cab"><span class="num">${c.id}</span><span class="tema">${esc(c.tema)}</span><span class="estado ${estado}">${etEstado}</span></div>
+    <h2>${esc(c.titulo)}</h2>
+    ${c.cuerpo ? `<div class="cuerpo">${c.cuerpo}</div>` : ""}
+    ${ya}${hecho}${cuerpoElegir}
+  </article>`;
+}
+
+function pintar(){
+  resumen();
+  const vis = CONSULTAS.filter(visible);
+  $("#lista").innerHTML = vis.length ? vis.map(ficha).join("")
+    : `<p class="vacio">${filtro === "tuyas" ? "Todavía no contestaste ninguna acá. Elegí una opción en «Pendientes» y queda guardada." : "No hay consultas con ese filtro."}</p>`;
+}
+
+// Guardado: una escritura por consulta a la vez; la última gana.
+const enCurso = {}, pendiente = {};
+async function guardar(id){
+  const m = mias[id];
+  try { localStorage.setItem(LS, JSON.stringify(mias)); } catch (e) {}
+  const st = document.getElementById("st-" + id);
+  if (!col) { if (st) st.textContent = "Guardada en este navegador"; resumen(); return; }
+  if (enCurso[id]) { pendiente[id] = true; return; }
+  enCurso[id] = true;
+  if (st) st.textContent = "Guardando…";
+  try {
+    if (m && (m.opcion || (m.texto || "").trim())) await col.doc(id).set({opcion: m.opcion || "", texto: m.texto || "", fecha: m.fecha});
+    else await col.doc(id).delete();
+    if (st) st.textContent = m ? "Guardada" : "";
+  } catch (e) {
+    if (st) st.textContent = "No se pudo guardar en línea (" + (e && e.code || "error") + "): quedó en este navegador; usá «Copiar mis respuestas».";
+  }
+  enCurso[id] = false;
+  if (pendiente[id]) { pendiente[id] = false; guardar(id); }
+  resumen();
+}
+
+const timers = {};
+document.addEventListener("change", e => {
+  const r = e.target;
+  if (r.type !== "radio") return;
+  const id = r.name.slice(3);
+  mias[id] = Object.assign({}, mias[id], {opcion: r.value, fecha: new Date().toISOString()});
+  r.closest(".elige").querySelectorAll(".op").forEach(l => l.classList.toggle("marcada", l.contains(r)));
+  guardar(id);
+});
+document.addEventListener("input", e => {
+  const t = e.target;
+  if (!t.id || !t.id.startsWith("tx-")) return;
+  const id = t.id.slice(3);
+  mias[id] = Object.assign({}, mias[id], {texto: t.value, fecha: new Date().toISOString()});
+  const st = document.getElementById("st-" + id); if (st) st.textContent = "Escribiendo…";
+  clearTimeout(timers[id]); timers[id] = setTimeout(() => guardar(id), 1200);
+});
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-borrar]");
+  if (b) { const id = b.dataset.borrar; delete mias[id]; guardar(id).then(pintar); return; }
+  const f = e.target.closest(".filtros button");
+  if (f) { filtro = f.dataset.f; document.querySelectorAll(".filtros button").forEach(x => x.setAttribute("aria-pressed", x === f)); pintar(); }
+});
+$("#buscar").addEventListener("input", e => { busca = e.target.value.trim().toLowerCase(); pintar(); });
+
+$("#copiar").addEventListener("click", async () => {
+  const lineas = CONSULTAS.filter(c => tieneMia(c.id)).map(c => {
+    const m = mias[c.id], o = c.opciones.find(x => x[0] === m.opcion);
+    return `${c.id} · ${c.titulo}: ${o ? o[0] + ") " + plano(o[1]) : ""}${(m.texto || "").trim() ? (o ? " — " : "") + m.texto.trim() : ""}`;
+  });
+  const txt = lineas.length ? lineas.join("\n") : "Todavía no hay respuestas.";
+  const area = $("#copia");
+  try { await navigator.clipboard.writeText(txt); $("#copiar").textContent = "¡Copiadas!"; area.hidden = true; }
+  catch (e) { area.value = txt; area.hidden = false; area.select(); $("#copiar").textContent = "Seleccioná y copiá"; }
+  setTimeout(() => $("#copiar").textContent = "Copiar mis respuestas", 2500);
+});
+
+pintar();
+
+// Base del artifact: lo que elegís queda guardado y Claude lo lee para pasarlo a CONSULTAS.md.
+(async () => {
+  const aviso = $("#aviso");
+  const corte = setTimeout(() => { if (!col) aviso.textContent = "Sin conexión al guardado: tus respuestas quedan en este navegador. Usá «Copiar mis respuestas» y pegalas en el chat."; }, 10000);
+  try { db = window.claude && await window.claude.use("db"); } catch (e) { db = null; }
+  if (!db) { clearTimeout(corte); aviso.textContent = "Tus respuestas quedan en este navegador. Usá «Copiar mis respuestas» y pegalas en el chat."; return; }
+  col = db.collection("respuestas");
+  col.onSnapshot(snap => {
+    clearTimeout(corte);
+    const remotas = {};
+    snap.docs.forEach(d => { const v = d.data(); if (v) remotas[d.id] = v; });
+    // Lo local que todavía no subió se sube; lo remoto manda en lo demás.
+    const subir = Object.keys(mias).filter(id => !remotas[id] || (mias[id].fecha || "") > (remotas[id].fecha || ""));
+    mias = Object.assign({}, remotas);
+    try { const loc = JSON.parse(localStorage.getItem(LS) || "{}"); subir.forEach(id => { if (loc[id]) mias[id] = loc[id]; }); } catch (e) {}
+    aviso.textContent = "Lo que elegís se guarda solo y Claude lo lee desde acá. También podés copiarlo y pegarlo en el chat.";
+    const activo = document.activeElement && document.activeElement.id;
+    if (!activo || !activo.startsWith("tx-")) pintar(); else resumen();
+    subir.forEach(id => guardar(id));
+  }, err => {
+    clearTimeout(corte); col = null;
+    aviso.textContent = "No se pudo leer el guardado (" + (err && err.code || "error") + "): tus respuestas quedan en este navegador; usá «Copiar mis respuestas».";
+  });
+})();
+</script>

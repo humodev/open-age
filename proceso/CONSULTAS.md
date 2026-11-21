@@ -4,6 +4,8 @@ Preguntas concretas para el autor. Contestá debajo de cada una, en la línea **
 
 Mientras no haya respuesta, sigo con la opción marcada como *(por defecto)*.
 
+Para contestar con opciones y texto libre: [página de consultas](https://claude.ai/artifact/9XkC658pZ5XkWG6v8VWfVW) (privada; la arma `tools/consultas_html.py` → `proceso/consultas.html`). Lo que elijas ahí se guarda y se pasa a este archivo.
+
 ---
 
 ### C-01 · Nombre del juego (A-005)
