@@ -10,10 +10,38 @@
    "tipo": "persona",
    "referencia": {
     "imagen": "/mnt/games/01_Projects/comfyui/output/incas_gouache/hoja_aldeano_e1_31.png",
-    "receta": {"semilla": 31, "ancho": 1152, "alto": 768, "prompt": "{estilo} Character turnaround reference sheet for 3D modeling: the same person shown side by side in front view and in side profile view, the same headwear and clothing in every view, standing in A-pose with arms held straight and out at 45 degrees from the body, open empty hands. The tunic hangs straight and loose from the shoulders. Clothing: a plain solid bright red sleeveless wool tunic, one flat uniform red color, knee-length; bare head; barefoot. The person is a grown adult Native American Quechua man from the Peruvian Andes in his early thirties, with a mature face: a very broad face, strong square jaw, defined high cheekbones, a large hooked aquiline nose, dark eyes, faint expression lines around the eyes, weathered copper-brown skin, dark brown lips the same tone as his skin, thick straight black hair cut short at the ears, a thick adult neck, broad shoulders and adult body proportions. Natural undyed tones for everything except the red tunic. Even flat studio light, plain light grey background."},
-    "vistas": {"front": {"recorte": [0, 0, 0.5, 1], "umbral": 18}, "back": {"recorte": [0.5, 0, 1, 1], "umbral": 18}}
+    "receta": {
+     "semilla": 31,
+     "ancho": 1152,
+     "alto": 768,
+     "prompt": "{estilo} Character turnaround reference sheet for 3D modeling: the same person shown side by side in front view and in side profile view, the same headwear and clothing in every view, standing in A-pose with arms held straight and out at 45 degrees from the body, open empty hands. The tunic hangs straight and loose from the shoulders. Clothing: a plain solid bright red sleeveless wool tunic, one flat uniform red color, knee-length; bare head; barefoot. The person is a grown adult Native American Quechua man from the Peruvian Andes in his early thirties, with a mature face: a very broad face, strong square jaw, defined high cheekbones, a large hooked aquiline nose, dark eyes, faint expression lines around the eyes, weathered copper-brown skin, dark brown lips the same tone as his skin, thick straight black hair cut short at the ears, a thick adult neck, broad shoulders and adult body proportions. Natural undyed tones for everything except the red tunic. Even flat studio light, plain light grey background."
+    },
+    "vistas": {
+     "front": {
+      "recorte": [
+       0,
+       0,
+       0.5,
+       1
+      ],
+      "umbral": 18
+     },
+     "back": {
+      "recorte": [
+       0.5,
+       0,
+       1,
+       1
+      ],
+      "umbral": 18
+     }
+    }
    },
-   "forma": {"modelo": "hy-mv-turbo", "semilla": 12345, "octree": 256},
+   "forma": {
+    "modelo": "hy-mv-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
    "textura": "auto",
    "caras": 4000,
    "rig": "humano",
@@ -25,10 +53,23 @@
    "categoria": "casa",
    "referencia": {
     "imagen": "/mnt/games/01_Projects/comfyui/output/incas_gouache/casa_7.png",
-    "receta": {"semilla": 7, "ancho": 768, "alto": 768, "prompt": "{estilo} A small one-room fieldstone house with a steep thatched gable roof and one trapezoidal doorway, a low stone wall around a small yard. Single building, three-quarter view from above like a strategy game icon, the whole building visible and centered, plain flat pale background. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep gable roofs thatched with golden ichu grass."},
-    "vistas": {"front": {"margen": 0.06}}
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A small one-room fieldstone house with a steep thatched gable roof and one trapezoidal doorway, a low stone wall around a small yard. Single building, three-quarter view from above like a strategy game icon, the whole building visible and centered, plain flat pale background. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep gable roofs thatched with golden ichu grass."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06
+     }
+    }
    },
-   "forma": {"modelo": "hy-mini-turbo", "semilla": 12345, "octree": 256},
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
    "textura": "auto",
    "caras": 4000,
    "suelo_pct": 3,
@@ -40,10 +81,23 @@
    "categoria": "produccion",
    "referencia": {
     "imagen": "/mnt/games/01_Projects/comfyui/output/incas_gouache/cuartel_7.png",
-    "receta": {"semilla": 7, "ancho": 768, "alto": 768, "prompt": "{estilo} A long rectangular hall of fieldstone with many trapezoidal doorways along its long side and a steep thatched gable roof; long wooden spears lean against the wall and square cloth-covered shields hang beside the doors. Single building, three-quarter view from above like a strategy game icon, the whole building visible and centered, plain flat pale background. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep gable roofs thatched with golden ichu grass."},
-    "vistas": {"front": {"margen": 0.06}}
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A long rectangular hall of fieldstone with many trapezoidal doorways along its long side and a steep thatched gable roof; long wooden spears lean against the wall and square cloth-covered shields hang beside the doors. Single building, three-quarter view from above like a strategy game icon, the whole building visible and centered, plain flat pale background. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep gable roofs thatched with golden ichu grass."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06
+     }
+    }
    },
-   "forma": {"modelo": "hy-mini-turbo", "semilla": 12345, "octree": 256},
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
    "textura": "auto",
    "caras": 5000,
    "destino": "assets/generados/modelos/local/tawantinsuyu_kallanka.glb"
@@ -53,15 +107,309 @@
    "alto_rel_persona": 1.05,
    "referencia": {
     "imagen": "/mnt/games/01_Projects/comfyui/output/gen3d/caballo_11.png",
-    "receta": {"semilla": 11, "ancho": 1024, "alto": 768, "prompt": "{estilo} Reference for 3D modeling: one single Criollo horse, a sturdy compact South American horse with a short back, a thick neck and strong legs, seen from the side in profile, the whole body visible from the ears to the hooves and the tail, walking slowly so all four legs are clearly visible and separated, the near legs and the far legs apart, head up, no saddle, no bridle, no rider. Bay coat, warm reddish brown, with black mane, black tail and black lower legs. Even flat studio light, plain light grey background, no shadow on the ground."},
-    "vistas": {"front": {"umbral": 22, "margen": 0.06}}
+    "receta": {
+     "semilla": 11,
+     "ancho": 1024,
+     "alto": 768,
+     "prompt": "{estilo} Reference for 3D modeling: one single Criollo horse, a sturdy compact South American horse with a short back, a thick neck and strong legs, seen from the side in profile, the whole body visible from the ears to the hooves and the tail, walking slowly so all four legs are clearly visible and separated, the near legs and the far legs apart, head up, no saddle, no bridle, no rider. Bay coat, warm reddish brown, with black mane, black tail and black lower legs. Even flat studio light, plain light grey background, no shadow on the ground."
+    },
+    "vistas": {
+     "front": {
+      "umbral": 22,
+      "margen": 0.06
+     }
+    }
    },
-   "forma": {"modelo": "hy-mini-turbo", "semilla": 12345, "octree": 256},
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
    "textura": "auto",
    "caras": 4000,
    "suelo_pct": 4,
    "rig": "cuadrupedo",
    "destino": "assets/generados/modelos/local/caballo_criollo.glb"
+  },
+  "mapuches_aldeano": {
+   "tipo": "persona",
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/mapuches_gouache/hoja_aldeano_e1_31.png",
+    "receta": {
+     "semilla": 31,
+     "ancho": 1152,
+     "alto": 768,
+     "prompt": "{estilo} Character turnaround reference sheet for 3D modeling: the same person shown side by side in front view and in side profile view, the same headwear and clothing in every view, standing in A-pose with arms held straight and out at 45 degrees from the body, open empty hands. Clothing: a plain solid bright red wool poncho, one flat uniform red color, reaching the knees, over a wrapped wool loincloth; bare head; barefoot. The person is a Mapuche man from Araucanía in southern Chile, a grown adult in his early thirties, with a mature face: a broad face, a strong wide jaw, high cheekbones, a straight wide nose, dark eyes, faint expression lines around the eyes, light copper-brown skin, dark brown lips the same tone as his skin, thick straight black hair to the shoulders held by a woven wool headband, a thick adult neck, broad shoulders and adult body proportions. Natural undyed wool and leather tones for everything except the red poncho. Even flat studio light, plain flat light grey background."
+    },
+    "vistas": {
+     "front": {
+      "recorte": [
+       0,
+       0,
+       0.5,
+       1
+      ],
+      "umbral": 18
+     },
+     "back": {
+      "recorte": [
+       0.5,
+       0,
+       1,
+       1
+      ],
+      "umbral": 18
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mv-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4000,
+   "rig": "humano",
+   "destino": "assets/generados/modelos/local/mapuches_aldeano.glb"
+  },
+  "mapuches_weichafe": {
+   "tipo": "persona",
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/mapuches_gouache/hoja_guerrero_e3_31.png",
+    "receta": {
+     "semilla": 31,
+     "ancho": 1152,
+     "alto": 768,
+     "prompt": "{estilo} Character turnaround reference sheet for 3D modeling: the same person shown side by side in front view and in side profile view, the same headwear and clothing in every view, standing in A-pose with arms held straight and out at 45 degrees from the body, open empty hands. Clothing: a hardened rawhide cuirass laced at the sides over a plain solid bright red wool poncho, one flat uniform red color; a rounded rawhide helmet, worn in every view; leather sandals; wool bands around the shins. The person is a Mapuche man from Araucanía in southern Chile, a grown adult in his early thirties, with a mature face: a broad face, a strong wide jaw, high cheekbones, a straight wide nose, dark eyes, faint expression lines around the eyes, light copper-brown skin, dark brown lips the same tone as his skin, thick straight black hair to the shoulders held by a woven wool headband, a thick adult neck, broad shoulders and adult body proportions. Natural undyed wool and leather tones for everything except the red poncho. Even flat studio light, plain flat light grey background."
+    },
+    "vistas": {
+     "front": {
+      "recorte": [
+       0,
+       0,
+       0.5,
+       1
+      ],
+      "umbral": 18
+     },
+     "back": {
+      "recorte": [
+       0.5,
+       0,
+       1,
+       1
+      ],
+      "umbral": 18
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mv-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4000,
+   "rig": "humano",
+   "destino": "assets/generados/modelos/local/mapuches_weichafe.glb"
+  },
+  "mapuches_casa": {
+   "tipo": "edificio",
+   "edificio": "casa",
+   "categoria": "casa",
+   "civ": "mapuches",
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/mapuches_gouache/casa_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A single large oval Mapuche house with a thick rounded thatched roof of golden grass reaching almost to the ground, a small low doorway, smoke rising from a hole at the top of the roof. Single building, three-quarter view from above like a strategy game icon, the whole building visible and centered, isolated on a plain flat light grey background. Mapuche architecture of the temperate forests of southern Chile: rounded or oval houses with a thick thatched roof of grass and reeds that reaches almost to the ground, walls of wooden poles and woven branches, a low doorway facing east, wooden pole fences, green meadows and tall forest around."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/mapuches_casa.glb"
+  },
+  "mapuches_lof": {
+   "tipo": "edificio",
+   "edificio": "lof",
+   "categoria": "capital",
+   "civ": "mapuches",
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/mapuches_gouache/lof_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A Mapuche family settlement: three large oval thatched houses around an open yard, a small wooden pole corral with a few animals, firewood stacked, a garden of potatoes and maize. Single building, three-quarter view from above like a strategy game icon, the whole building visible and centered, isolated on a plain flat light grey background. Mapuche architecture of the temperate forests of southern Chile: rounded or oval houses with a thick thatched roof of grass and reeds that reaches almost to the ground, walls of wooden poles and woven branches, a low doorway facing east, wooden pole fences, green meadows and tall forest around."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 5000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/mapuches_lof.glb"
+  },
+  "guaranies_aldeano": {
+   "tipo": "persona",
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/guaranies_gouache/hoja_aldeano_e1_31.png",
+    "receta": {
+     "semilla": 31,
+     "ancho": 1152,
+     "alto": 768,
+     "prompt": "{estilo} Character turnaround reference sheet for 3D modeling: the same person shown side by side in front view and in side profile view, the same headwear and clothing in every view, standing in A-pose with arms held straight and out at 45 degrees from the body, open empty hands. Clothing: a plain solid bright red cotton sleeveless tunic (tipoy), one flat uniform red color, reaching the knees; bare head; barefoot. The person is a Guaraní man from the subtropical forests of the Paraná river in Paraguay, a grown adult in his early thirties, with a mature face: a broad face, a wide jaw, high rounded cheekbones, a broad straight nose, dark almond-shaped eyes, faint expression lines around the eyes, warm golden-brown skin, dark brown lips the same tone as his skin, thick straight black hair cut straight across the forehead and long at the back, a thick adult neck, broad shoulders and adult body proportions. Natural undyed cotton, wood and plant fiber tones for everything except the red tunic. Even flat studio light, plain flat light grey background."
+    },
+    "vistas": {
+     "front": {
+      "recorte": [
+       0,
+       0,
+       0.5,
+       1
+      ],
+      "umbral": 18
+     },
+     "back": {
+      "recorte": [
+       0.5,
+       0,
+       1,
+       1
+      ],
+      "umbral": 18
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mv-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4000,
+   "rig": "humano",
+   "destino": "assets/generados/modelos/local/guaranies_aldeano.glb"
+  },
+  "guaranies_guerrero_macana": {
+   "tipo": "persona",
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/guaranies_gouache/hoja_guerrero_e2_31.png",
+    "receta": {
+     "semilla": 31,
+     "ancho": 1152,
+     "alto": 768,
+     "prompt": "{estilo} Character turnaround reference sheet for 3D modeling: the same person shown side by side in front view and in side profile view, the same headwear and clothing in every view, standing in A-pose with arms held straight and out at 45 degrees from the body, open empty hands. Clothing: a plain solid bright red cotton sleeveless tunic (tipoy), one flat uniform red color, short, reaching the thighs; a headband of short upright red and yellow parrot feathers; armbands of feathers; a necklace of seeds; barefoot. The person is a Guaraní man from the subtropical forests of the Paraná river in Paraguay, a grown adult in his early thirties, with a mature face: a broad face, a wide jaw, high rounded cheekbones, a broad straight nose, dark almond-shaped eyes, faint expression lines around the eyes, warm golden-brown skin, dark brown lips the same tone as his skin, thick straight black hair cut straight across the forehead and long at the back, a thick adult neck, broad shoulders and adult body proportions. Natural undyed cotton, wood and plant fiber tones for everything except the red tunic. Even flat studio light, plain flat light grey background."
+    },
+    "vistas": {
+     "front": {
+      "recorte": [
+       0,
+       0,
+       0.5,
+       1
+      ],
+      "umbral": 18
+     },
+     "back": {
+      "recorte": [
+       0.5,
+       0,
+       1,
+       1
+      ],
+      "umbral": 18
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mv-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4000,
+   "rig": "humano",
+   "destino": "assets/generados/modelos/local/guaranies_guerrero_macana.glb"
+  },
+  "guaranies_casa": {
+   "tipo": "edificio",
+   "edificio": "casa",
+   "categoria": "casa",
+   "civ": "guaranies",
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/guaranies_gouache/casa_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A small house with walls of tacuara bamboo canes and mud and a steep thatched roof of palm leaves, one low doorway, a cotton hammock tied under the eave. Single building, three-quarter view from above like a strategy game icon, the whole building visible and centered, isolated on a plain flat light grey background. Guaraní architecture of the subtropical Paraná forest: long houses with wooden posts and walls of tacuara bamboo canes and mud, steep thatched roofs of grass and palm leaves reaching almost to the ground, red earth, dense green forest with palm trees around."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/guaranies_casa.glb"
+  },
+  "guaranies_centro": {
+   "tipo": "edificio",
+   "edificio": "centro",
+   "categoria": "capital",
+   "civ": "guaranies",
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/guaranies_gouache/centro_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A very long communal house: a huge steep thatched roof of grass reaching to the ground, wooden posts, several low doorways along its side, a cleared yard of red earth in front. Single building, three-quarter view from above like a strategy game icon, the whole building visible and centered, isolated on a plain flat light grey background. Guaraní architecture of the subtropical Paraná forest: long houses with wooden posts and walls of tacuara bamboo canes and mud, steep thatched roofs of grass and palm leaves reaching almost to the ground, red earth, dense green forest with palm trees around."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 5000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/guaranies_centro.glb"
   }
  }
 }

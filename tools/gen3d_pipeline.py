@@ -189,7 +189,11 @@ def tamano(pieza: dict, comun: dict) -> dict:
         return {"modo": "alto", "alto": persona * float(pieza.get("alto_rel_persona", 1.0))}
     edificios = json.loads((REPO / "data/edificios.json").read_text())
     margen = float(json.loads((REPO / "data/arte_edades.json").read_text()).get("margen_cm", 30)) / 100.0
-    tam = edificios[pieza["edificio"]]["tam"]
+    if pieza["edificio"] in edificios:
+        tam = edificios[pieza["edificio"]]["tam"]
+    else:  # edificio propio de un pueblo (p. ej. el lof mapuche): data/civs/<civ>.json → edificios_nuevos
+        civ = json.loads((REPO / f"data/civs/{pieza['civ']}.json").read_text())
+        tam = civ["edificios_nuevos"][pieza["edificio"]]["tam"]
     lado = max(0.8, min(tam) - 2.0 * margen)
     want = float(ev.get("altura_min_cm", {}).get(pieza.get("categoria", ""), 0)) / 100.0
     tope = float(ev.get("estirar_modelo_max_pct", 150)) / 100.0
