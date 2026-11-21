@@ -688,3 +688,9 @@ Hunyuan3D-2mini turbo da formas buenas en la PC (ver `proceso/43-3d-local/index.
 a) Pasar los aldeanos y edificios de los incas a esta cadena y probar el rig en Godot *(por defecto)* · b) Primero la textura de Hunyuan (instalás el toolkit) · c) Dejarlo acá y seguir con Meshy
 
 **Respuesta:**
+
+### C-106 · Modelos del pipeline 3D en el juego (proceso/47)
+Los cuatro modelos nuevos (aldeano, kancha, kallanka y caballo, con textura de Hunyuan3D-Paint) están en `assets/generados/modelos/local/` y no se usan todavía. Ver el antes y después en `proceso/47-pipeline-3d/README.md`.
+a) Usar ya la kancha y la kallanka (estáticas) en los incas y dejar el aldeano para cuando `AldeanoAnimado` acepte modelos riggeados *(por defecto)* · b) Usar los cuatro ya, con el aldeano quieto como el GLB de hoy · c) Esperar a pasar todas las civilizaciones por el pipeline
+
+**Respuesta:**

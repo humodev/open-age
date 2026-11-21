@@ -80,6 +80,8 @@ def pesado(cmd: list, salida_log: Path, cwd=None) -> float:
 
 
 def hash_archivo(p: Path) -> str:
+    if not Path(p).exists():  # entrada de un paso que todavía no corrió (fuera de --desde/--hasta)
+        return "falta"
     h = hashlib.sha256()
     with open(p, "rb") as f:
         for bloque in iter(lambda: f.read(1 << 20), b""):
@@ -162,7 +164,7 @@ def flux(receta: dict, comun: dict, prefijo: Path) -> Path:
         except OSError:
             pass
         if propio:
-            subprocess.run(["systemctl", "--user", "stop", unidad], capture_output=True)
+            subprocess.run(["systemctl", "--user", "stop", unidad + ".scope"], capture_output=True)
             for _ in range(30):
                 if not comfy_pids() and not comfy_vivo():
                     break

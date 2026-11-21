@@ -1,0 +1,42 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>Pipeline 3D</title><style>
+:root{--bg:#1a1611;--panel:#241e17;--tx:#ece3d2;--mute:#a99c86;--acc:#d9a441;--line:#3b3228;--ok:#8fbf6a;--no:#d9735b}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,sans-serif} main{max-width:1300px;margin:0 auto;padding:16px}
+h1{font-size:24px} h2{color:var(--acc);font-size:19px;margin-top:0} small{color:var(--mute);font-weight:normal}
+section{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px;margin:14px 0}
+.imgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+figure{margin:0} figure.ancha{grid-column:1/-1} img{width:100%;border-radius:4px;display:block}
+figcaption{font-size:13px;color:var(--mute);padding-top:4px} figcaption b{color:var(--tx)}
+table{border-collapse:collapse;width:100%;font-size:14px} th,td{border-bottom:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top}
+th{color:var(--acc);font-weight:600} td.n{text-align:right;font-variant-numeric:tabular-nums}
+.tabla{overflow-x:auto} .ok{color:var(--ok)} .no{color:var(--no)} code{background:#110e0b;padding:1px 4px;border-radius:3px;font-size:13px}
+ul{padding-left:20px} li{margin:3px 0}
+</style></head><body><main>
+<h1>Pipeline 3D local <small>proceso 47 · 2026-11-20</small></h1>
+<p>Pedido del autor: un pipeline repetible para regenerar y mejorar arte y modelos más adelante. Todo armado de punta a punta.</p>
+<section><h2>Un comando</h2>
+<p><code>tools/gen3d_pipeline.py &lt;pieza|--todas&gt;</code>, con las piezas en <code>data/gen3d_piezas.json</code>. Pasos con firma (se saltean si nada cambió): referencia (imagen o FLUX) → forma (Hunyuan3D-2mini/2mv turbo) → limpieza en Blender (suelo, diezmado) → textura (Hunyuan3D-Paint o proyector) → rig (humano o cuadrúpedo) → final (tamaño del juego, GLB en <code>assets/generados/modelos/local/</code>).</p>
+<div class="tabla"><table><tr><th>Pieza</th><th>Forma</th><th>Textura</th><th>Rig</th><th>Medidas (casillas)</th><th>GLB</th></tr>
+<tr><td>Aldeano</td><td>2mv turbo, 145 mil → 4000 caras</td><td>Paint, 11 s</td><td>19 huesos KayKit</td><td class="n">alto 0,75</td><td class="n">711 KB</td></tr>
+<tr><td>Kancha</td><td>2mini turbo, 550 mil → 4000</td><td>Paint, 11 s</td><td>—</td><td class="n">1,40 × 1,26 × 1,90</td><td class="n">502 KB</td></tr>
+<tr><td>Kallanka</td><td>2mini turbo, 189 mil → 5000</td><td>Paint, 10 s</td><td>—</td><td class="n">2,40 × 0,86 × 1,41</td><td class="n">562 KB</td></tr>
+<tr><td>Caballo</td><td>2mini turbo, 204 mil → 4000</td><td>Paint, 11 s</td><td>20 huesos, caminar y quieto</td><td class="n">alto 0,79</td><td class="n">741 KB</td></tr>
+</table></div></section>
+<section><h2>Antes y después</h2><div class="imgs">
+<figure class="ancha"><a href="img/antes_despues_aldeano.jpg"><img src="img/antes_despues_aldeano.jpg" alt="Aldeano: arriba proceso 43, abajo el pipeline"></a><figcaption>Aldeano: arriba proceso 43, abajo el pipeline</figcaption></figure>
+<figure class="ancha"><a href="img/antes_despues_casa.jpg"><img src="img/antes_despues_casa.jpg" alt="Kancha"></a><figcaption>Kancha</figcaption></figure>
+<figure class="ancha"><a href="img/antes_despues_kallanka.jpg"><img src="img/antes_despues_kallanka.jpg" alt="Kallanka"></a><figcaption>Kallanka</figcaption></figure>
+<figure class="ancha"><a href="img/antes_despues_caballo.jpg"><img src="img/antes_despues_caballo.jpg" alt="Caballo"></a><figcaption>Caballo</figcaption></figure>
+<figure class="ancha"><a href="img/juego_antes_despues.jpg"><img src="img/juego_antes_despues.jpg" alt="En Godot con la cámara del RTS: 43 y pipeline lado a lado"></a><figcaption>En Godot con la cámara del RTS: 43 y pipeline lado a lado</figcaption></figure>
+</div></section>
+<section><h2>Rig en Godot</h2><div class="imgs">
+<figure class="ancha"><a href="img/rig_caminar.jpg"><img src="img/rig_caminar.jpg" alt="Aldeano con Walking_A de KayKit (retarget al vuelo, tools/visor_rig.gd)"></a><figcaption>Aldeano con Walking_A de KayKit (retarget al vuelo, tools/visor_rig.gd)</figcaption></figure>
+<figure class="ancha"><a href="img/rig_trabajo.jpg"><img src="img/rig_trabajo.jpg" alt="Aldeano con Chopping y Pickaxing"></a><figcaption>Aldeano con Chopping y Pickaxing</figcaption></figure>
+<figure class="ancha"><a href="img/rig_caballo.jpg"><img src="img/rig_caballo.jpg" alt="Caballo: caminar en 4 momentos y quieto"></a><figcaption>Caballo: caminar en 4 momentos y quieto</figcaption></figure>
+<figure class="ancha"><a href="img/caballo_caminar.jpg"><img src="img/caballo_caminar.jpg" alt="El ciclo de caminar en Blender"></a><figcaption>El ciclo de caminar en Blender</figcaption></figure>
+</div></section>
+<section><h2>Paint contra el proyector</h2><div class="imgs">
+<figure class="ancha"><a href="img/aldeano_paint_vs_proyector.jpg"><img src="img/aldeano_paint_vs_proyector.jpg" alt="Arriba Hunyuan3D-Paint, abajo el proyector: Paint deja la cara limpia y cubre el costado"></a><figcaption>Arriba Hunyuan3D-Paint, abajo el proyector: Paint deja la cara limpia y cubre el costado</figcaption></figure>
+</div><p>Paint gana en las cuatro piezas; el proyector queda de respaldo (<code>--textura proyector</code>).</p></section>
+<section><h2>Detalle</h2><p>Paso a paso, tropiezos y commits en <a href="README.md">README.md</a>.</p></section>
+</main></body></html>
