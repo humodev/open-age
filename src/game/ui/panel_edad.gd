@@ -110,6 +110,10 @@ func _draw() -> void:
 	var cw := (w - 28 - 10) / maxf(1.0, opts.size())
 	var card_h := 0.0
 	var texts: Array = []
+	# --- arte en la interfaz --- (proceso/48) el hito pintado del pueblo, arriba de cada tarjeta
+	var civ := str(p.get("civ", ""))
+	var artes: Array = opts.map(func(k: String) -> Dictionary: return ArtePueblo.arte(civ, k))
+	var ban := float(ArtePueblo.cfg().get("hito_alto", 104)) if artes.any(func(a: Dictionary) -> bool: return not a.is_empty()) else 0.0
 	for i in opts.size():
 		var key: String = opts[i]
 		var def: Dictionary = dd.edificios.get(key, {})
@@ -131,7 +135,7 @@ func _draw() -> void:
 			extra.append("Entrena: " + ", ".join(prod))
 		var full := body + ("\n" + "\n".join(extra) if not extra.is_empty() else "")
 		texts.append(full)
-		card_h = maxf(card_h, C.text_h(full, cw - 24, 13) + 96)
+		card_h = maxf(card_h, C.text_h(full, cw - 24, 13) + 96 + ban)
 	for i in opts.size():
 		var key: String = opts[i]
 		var def: Dictionary = dd.edificios.get(key, {})
@@ -143,6 +147,9 @@ func _draw() -> void:
 		sb.border_color = Color(C.eje_color(eje), 0.45)
 		sb.set_border_width_all(1)
 		draw_style_box(sb, r)
+		if not (artes[i] as Dictionary).is_empty():
+			ArtePueblo.dibujar(self, artes[i], Rect2(r.position.x, r.position.y + 4, cw, ban - 4), Palette.team(pid))
+		r = Rect2(r.position.x, r.position.y + ban, r.size.x, r.size.y - ban)
 		Glyphs.draw(self, Glyphs.resolve(def, key), Rect2(r.position.x + 10, r.position.y + 10, 30, 30), Palette.UI_TEXT)
 		C.text(self, r.position + Vector2(48, 24), def.get("nombre", key), 15, Palette.UI_TEXT, true, cw - 60)
 		C.text(self, r.position + Vector2(48, 42), C.EJE_NAMES.get(eje, eje).to_upper() + "  ·  " + Controller.etiqueta(Grilla.fija("hito_militar", 9) if eje == "militar" else Grilla.fija("hito_economia", 8)), 11, C.eje_color(eje), true) # --- grilla --- (Z economía, X militar)

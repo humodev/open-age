@@ -1577,7 +1577,7 @@ class SelectionPanel:
 		hud.ficha.zone(self, r, {"id": e.id}) # --- ficha ---
 		var rt := Retratos.de(hud.sim, e) # --- aldeanos por retrato --- el pintado, si hay
 		if not rt.is_empty():
-			Retratos.dibujar(self, rt, r.grow(-2))
+			Retratos.dibujar(self, rt, r.grow(-2), "busto") # --- arte en la interfaz --- cabeza y torso
 			return
 		var icon := Glyphs.resolve(e.def, e.type) if not e.is_resource() else e.res_kind
 		var col: Color = Palette.UI_TEXT if not e.is_resource() else Palette.RES[e.res_kind]

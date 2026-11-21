@@ -41,6 +41,16 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 		if est == "falta":
 			sb.bg_color = sb.bg_color.blend(Color(borde, 0.1))
 	ci.draw_style_box(sb, r)
+	# --- arte en la interfaz --- (proceso/48) el arte pintado del pueblo ocupa la casilla
+	var arte := ArtePueblo.casilla(str(c["arte_civ"]), str(c["id"])) if c.has("arte_civ") else {}
+	if not arte.is_empty():
+		var mod := Color(1, 1, 1, 1)
+		if locked:
+			mod = Color(0.9, 0.9, 0.9, 1) # el oscurecido y el rayado de abajo ya lo apagan
+		elif not afford:
+			mod = Color(0.85, 0.8, 0.72, 1)
+		ArtePueblo.dibujar(ci, arte, r.grow(-2), Color(str(c.get("arte_equipo", "ffffff"))), mod)
+	# --- fin arte ---
 	if locked:
 		var dark := StyleBoxFlat.new()
 		dark.set_corner_radius_all(6)
@@ -72,7 +82,10 @@ static func dibujar(ci: CanvasItem, r: Rect2, c: Dictionary, res: Dictionary, ho
 	# Franja de lo que falta en varios renglones (costo real, 4k): el glifo se achica y queda un
 	# solo nombre (el común si hay) justo encima; si no entra, solo el glifo, como sin nombres.
 	var franja := _alto_franja(falta.size()) + 2.0 if not afford and not locked and falta.size() > 1 else 0.0
-	if nombre != "" and franja > 0.0:
+	if not arte.is_empty(): # --- arte en la interfaz --- el nombre abajo, sobre una franja oscura
+		if nombre != "" and (afford or locked):
+			_nombre_arte(ci, r, comun if comun != "" else nombre, str(c.get("corto", "")) if comun == "" else "", 30.0 if locked else 0.0, tcol)
+	elif nombre != "" and franja > 0.0:
 		var label := comun if comun != "" else nombre
 		if dos.size() == 2: # --- ronda 6 --- un solo renglón: «Hito edad II»
 			label = "%s %s" % [dos[0], str(dos[1]).to_lower()]
@@ -237,6 +250,22 @@ static func _franja_edad(ci: CanvasItem, r: Rect2, c: Dictionary) -> void:
 	if edad <= 0 or (edad < 2 and c.get("kind", "") != "research"):
 		return
 	ci.draw_rect(Rect2(r.position.x + 1, r.position.y + 6, 4, r.size.y - 12), Iconos.color_edad(edad))
+
+
+## --- arte en la interfaz --- Nombre en un renglón al pie de una casilla con arte, sobre una
+## franja oscura (data/arte_pueblos.json → casilla). `menos`: lo que ocupa la pastilla de la edad.
+static func _nombre_arte(ci: CanvasItem, r: Rect2, label: String, corto: String, menos: float, tcol: Color) -> void:
+	var cc: Dictionary = ArtePueblo.cfg().get("casilla", {})
+	var h := float(cc.get("franja_alto", 17))
+	var band := Rect2(r.position.x + 2, r.end.y - 2 - h, r.size.x - 4, h)
+	var bsb := StyleBoxFlat.new()
+	bsb.bg_color = Color(0, 0, 0, float(cc.get("franja_pct", 78)) / 100.0)
+	bsb.corner_radius_bottom_left = 5
+	bsb.corner_radius_bottom_right = 5
+	ci.draw_style_box(bsb, band)
+	var w := band.size.x - 4 - menos
+	var aj := _ajuste(Hud.font_b, label, 10, w, 1, corto)
+	ci.draw_string(Hud.font_b, Vector2(band.position.x + 2, band.end.y - 4), aj[0], HORIZONTAL_ALIGNMENT_CENTER, w, aj[1], tcol)
 
 
 ## Pastilla de color abajo a la derecha («III» en el color de la edad, «Máx. 2»); si no entra,
