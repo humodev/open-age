@@ -1,0 +1,392 @@
+{
+"cara_m_1": {
+"s": 18.6,
+"intento": 1,
+"semilla": 23
+},
+"cara_m_2": {
+"s": 18.6,
+"intento": 1,
+"semilla": 24
+},
+"cara_m_3": {
+"s": 18.6,
+"intento": 1,
+"semilla": 25
+},
+"cara_f_1": {
+"s": 18.6,
+"intento": 1,
+"semilla": 11
+},
+"cara_f_2": {
+"s": 18.6,
+"intento": 1,
+"semilla": 12
+},
+"cara_f_3": {
+"s": 18.6,
+"intento": 1,
+"semilla": 13
+},
+"aldeano_m": {
+"s": 20.0,
+"intento": 2,
+"semilla": 19
+},
+"aldeano_f": {
+"s": 37.6,
+"intento": 1,
+"semilla": 7
+},
+"comerciante_m": {
+"s": 19.9,
+"intento": 2,
+"semilla": 19
+},
+"comerciante_f": {
+"s": 19.7,
+"intento": 2,
+"semilla": 19
+},
+"explorador": {
+"s": 37.1,
+"intento": 1,
+"semilla": 7
+},
+"guerrero": {
+"s": 20.1,
+"intento": 2,
+"semilla": 19
+},
+"hondero": {
+"s": 19.5,
+"intento": 2,
+"semilla": 19
+},
+"lancero": {
+"s": 19.3,
+"intento": 2,
+"semilla": 19
+},
+"ariete": {
+"s": 18.7,
+"intento": 1,
+"semilla": 7
+},
+"catapulta": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"jinete": {
+"s": 19.6,
+"intento": 1,
+"semilla": 7
+},
+"arcabucero": {
+"s": 19.2,
+"intento": 1,
+"semilla": 7
+},
+"guardia": {
+"s": 20.0,
+"intento": 1,
+"semilla": 7
+},
+"guardia_distancia": {
+"s": 19.6,
+"intento": 1,
+"semilla": 7
+},
+"rebano": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"ngao": {
+"s": 19.6,
+"intento": 1,
+"semilla": 7
+},
+"defensores_suan_phlu": {
+"s": 19.1,
+"intento": 1,
+"semilla": 7
+},
+"elefante_rey": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"chang_suek": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"compania_japonesa": {
+"s": 19.2,
+"intento": 1,
+"semilla": 7
+},
+"centro": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"casa": {
+"s": 18.3,
+"intento": 2,
+"semilla": 19
+},
+"granja": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"almacen_mina": {
+"s": 18.6,
+"intento": 2,
+"semilla": 19
+},
+"campo_tiro": {
+"s": 18.5,
+"intento": 2,
+"semilla": 19
+},
+"taller": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"cuartel": {
+"s": 18.5,
+"intento": 1,
+"semilla": 7
+},
+"torre": {
+"s": 18.5,
+"intento": 2,
+"semilla": 19
+},
+"fortaleza": {
+"s": 18.9,
+"intento": 1,
+"semilla": 7
+},
+"empalizada": {
+"s": 18.5,
+"intento": 2,
+"semilla": 19
+},
+"puerta": {
+"s": 18.6,
+"intento": 2,
+"semilla": 19
+},
+"muralla": {
+"s": 19.0,
+"intento": 2,
+"semilla": 19
+},
+"puerta_piedra": {
+"s": 18.5,
+"intento": 1,
+"semilla": 7
+},
+"torre_muralla": {
+"s": 18.5,
+"intento": 2,
+"semilla": 19
+},
+"mercado": {
+"s": 18.5,
+"intento": 1,
+"semilla": 7
+},
+"sitio_sagrado": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"kraal": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"barrio_japones": {
+"s": 18.5,
+"intento": 1,
+"semilla": 7
+},
+"barrio_portugues": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"wat": {
+"s": 18.9,
+"intento": 1,
+"semilla": 7
+},
+"kraal_real": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"puerto_real": {
+"s": 18.5,
+"intento": 1,
+"semilla": 7
+},
+"fortaleza_rio": {
+"s": 18.5,
+"intento": 1,
+"semilla": 7
+},
+"junco_tributo": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"guardia_extranjera": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"maravilla": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"khotchasat": {
+"s": 18.9,
+"intento": 1,
+"semilla": 7
+},
+"ceramica_satchanalai": {
+"s": 18.5,
+"intento": 1,
+"semilla": 7
+},
+"recetario_narai": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"arroz_crecida": {
+"s": 18.5,
+"intento": 1,
+"semilla": 7
+},
+"barrio_chino": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"khlong_lat": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"fundicion_real": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"astilleros_juncos": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"arma_dap": {
+"s": 18.5,
+"intento": 2,
+"semilla": 19
+},
+"arma_ngao": {
+"s": 18.5,
+"intento": 1,
+"semilla": 7
+},
+"arma_arco": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"arma_lanza": {
+"s": 18.5,
+"intento": 1,
+"semilla": 7
+},
+"arma_mosquete": {
+"s": 18.5,
+"intento": 1,
+"semilla": 7
+},
+"herr_hoz": {
+"s": 18.3,
+"intento": 3,
+"semilla": 29
+},
+"herr_vara": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"herr_azada": {
+"s": 18.3,
+"intento": 3,
+"semilla": 29
+},
+"herr_hacha": {
+"s": 18.6,
+"intento": 1,
+"semilla": 7
+},
+"herr_tinaja": {
+"s": 18.5,
+"intento": 1,
+"semilla": 7
+},
+"hoja_aldeano_e1": {
+"s": 23.7,
+"intento": 1,
+"semilla": 31
+},
+"hoja_aldeano_e2": {
+"s": 23.6,
+"intento": 1,
+"semilla": 31
+},
+"hoja_aldeano_e3": {
+"s": 23.8,
+"intento": 1,
+"semilla": 31
+},
+"hoja_aldeano_e4": {
+"s": 24.0,
+"intento": 1,
+"semilla": 31
+},
+"hoja_guerrero_e1": {
+"s": 23.5,
+"intento": 1,
+"semilla": 31
+},
+"hoja_guerrero_e2": {
+"s": 23.6,
+"intento": 1,
+"semilla": 31
+},
+"hoja_guerrero_e3": {
+"s": 23.6,
+"intento": 1,
+"semilla": 31
+},
+"hoja_guerrero_e4": {
+"s": 23.6,
+"intento": 1,
+"semilla": 31
+}
+}
