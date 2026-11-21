@@ -1,0 +1,50 @@
+Running as unit: run-p111419-i120409.scope; invocation ID: 608ded9dfc424fd6bfccdaf4d5e3689c
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+
+=== 4v4 · semilla 42 · 24000 ticks (40.0 min de juego) en 959 s de reloj ===
+hash final 2009769046 · unidades vivas 899 · fin: sigue (ganador equipo -1)
+TICK      promedio  39.86 ms · p95  78.58 · peor  184.42 (tick 20729, min 34.5) · >25 ms: 17081 · >40: 12218 · >100: 80
+sistema         prom ms   p95 ms  peor ms  % total
+ia                10.29    27.43   141.00    25.8%
+recoleccion        8.26    12.34    35.84    20.7%
+movimiento         3.88     7.88    15.85     9.7%
+resto              2.90     8.53    17.30     7.3%
+tablas             2.31     3.89    12.67     5.8%
+separacion         1.88     3.10     7.91     4.7%
+combate            1.76     4.16    10.76     4.4%
+niebla             1.55     6.81    12.99     3.9%
+jugadores          1.53     2.57    11.09     3.8%
+segundo            1.47    14.52    35.56     3.7%
+blancos            1.30     3.63    24.96     3.3%
+edificios          1.06     1.77     5.42     2.7%
+find_resource      0.83     2.29    13.04     2.1%
+caminos            0.43     1.42    45.24     1.1%
+grupos             0.24     0.61     3.60     0.6%
+ordenes            0.08     0.31    44.06     0.2%
+victoria           0.07     0.70     4.29     0.2%
+animales           0.01     0.00     0.82     0.0%
+telemetria         0.01     0.00     2.45     0.0%
+Detalle (prom ms/tick · peor ms): ia._military 2.64·14.5 recoleccion.follow 1.66·7.5 recoleccion.approach 1.46·5.7 ia._far_gatherers 0.95·9.4 ia._research 0.83·4.2 ia._threat 0.82·6.3 ia._production 0.77·6.9 ia._alarm 0.56·3.6 movimiento.follow 0.55·2.5 recoleccion.try_move 0.53·1.8 combate.follow 0.51·3.2 recoleccion.valid_source 0.49·2.7 ia._watch_rival_army 0.45·2.7 segundo.rents 0.42·9.6 combate.approach 0.41·2.1 ia._buildings 0.41·35.6 segundo.sacred 0.40·10.8 ia._smith 0.40·3.6 ia._levels 0.39·5.3 separacion.try_move 0.36·1.3 ia._late_buys 0.33·5.5 movimiento.try_move 0.33·1.6 ia._own_buys 0.31·4.0 combate.try_move 0.18·0.9 segundo.herds 0.10·3.0 ia._surrenders 0.09·1.9 ia._trade 0.09·2.6 ia._economy 0.09·1.2 combate.hit 0.08·3.2 movimiento.approach 0.07·0.6
+Detalle por peor tick (peor ms · prom ms/tick): ia.can_place 76.3·0.03 ia._buildings 35.6·0.41 ia._military 14.5·2.64 ia._farm_site 12.9·0.00 segundo.sacred 10.8·0.40 segundo.rents 9.6·0.42 ia._far_gatherers 9.4·0.95 ia._expand 9.2·0.01 ia._site_near 8.0·0.02 recoleccion.rebusca_lejos 7.8·0.02 recoleccion.follow 7.5·1.66 ia._engine 7.1·0.04 ia._production 6.9·0.77 ia._threat 6.3·0.82 recoleccion.exhaust 6.0·0.02 ia._animals 5.8·0.03 recoleccion.approach 5.7·1.46 ia._late_buys 5.5·0.33 ia._levels 5.3·0.39 segundo.own_resource 4.8·0.07
+Picos (tick · min · total ms · sistema que más pesó · segundo):
+   20729   34.5   184.42  ia (j5)          133.79 · recoleccion 11.72
+   20324   33.9   183.76  ia (j5)          136.76 · recoleccion 12.24
+   16194   27.0   180.93  ia (j5)          141.00 · recoleccion 11.44
+   19004   31.7   180.78  ia (j5)          136.48 · recoleccion 11.68
+   17734   29.6   173.92  ia (j5)          131.33 · recoleccion 11.37
+   16850   28.1   135.29  caminos           45.24 · segundo 27.46
+   22529   37.5   124.73  caminos           44.20 · ia 33.93
+   18804   31.3   122.26  ia (j5)           57.16 · recoleccion 14.93
+   20590   34.3   122.25  recoleccion       27.11 · segundo 20.13
+   18295   30.5   121.63  caminos           30.10 · ia 18.13
+   14390   24.0   121.00  segundo           24.99 · recoleccion 24.67
+   14640   24.4   120.77  segundo           25.61 · recoleccion 20.27
+   20659   34.4   120.07  ia (j5)           25.65 · recoleccion 16.54
+   22450   37.4   115.42  segundo           30.11 · caminos 15.99
+   23425   39.0   114.74  caminos           36.92 · ia 17.38
+por minuto (prom/peor ms): m5 9.8/23 m10 20.5/34 m15 32.7/86 m20 41.1/107 m25 51.8/121 m30 60.6/174 m35 60.3/184 m40 67.5/115
+×4 alcanza (promedio del minuto < 25 ms) hasta el minuto 11 de 40
+caminos por resultado (llamadas · ms): llega 158177 · 6566; parcial 1248 · 2594; a_solido 50 · 406;
+caminos por orden (órdenes · caminos · ms): [move] 489 · 504 · 145; [move suelto] 63 · 450 · 59; [move amove] 6561 · 24732 · 6145; [build] 9 · 9 · 3; [move suelto amove] 32 · 32 · 2;
+caché de caminos: 16282 aciertos, 20198 búsquedas · destinos encerrados resueltos sin recorrer: 906

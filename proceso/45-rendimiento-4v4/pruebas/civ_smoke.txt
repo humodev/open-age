@@ -1,0 +1,15 @@
+Running as unit: run-p168515-i126364.scope; invocation ID: b9be949806da4abfa093618407ed08d3
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+=== ["tawantinsuyu", "mapuches"] terreno=bosque ganador=-1
+tawantinsuyu edad 2 pob 60/65 res { "alimento": 32, "madera": 29, "piedra": 107, "riqueza": 147, "mita": 320 } tipos { "centro": 1, "aldeano": 42, "explorador": 1, "casa": 5, "almacen_madera": 3, "camino": 113, "qollqa": 3, "campo_tiro": 2, "almacen_mina": 2, "taller_tejido": 3, "ushnu": 1, "cuartel": 1, "mercado": 1, "hondero": 13, "granja": 9, "guerrero": 2, "boleador": 1, "torre": 1, "kallanka_real": 1, "ariete": 1 }
+mapuches edad 2 pob 55/69 res { "alimento": 25, "madera": 70, "piedra": 300, "riqueza": 610 } tipos { "lof": 3, "aldeano": 34, "explorador": 1, "casa": 4, "corral": 3, "cuartel": 2, "rewe_lonko": 1, "granja": 4, "hondero": 15, "guerrero": 3, "mercado": 1, "rebano": 1, "lancero": 2 }
+
+=== ["etiopia", "palmares"] terreno=bosque ganador=-1
+etiopia edad 2 pob 54/55 res { "alimento": 37, "madera": 97, "piedra": 357, "riqueza": 250 } tipos { "aldeano": 39, "explorador": 1, "casa": 5, "almacen_madera": 3, "gult": 3, "establo": 2, "almacen_mina": 2, "almacen_alimento": 2, "iglesia": 1, "granja": 12, "guerrero": 10, "mercado": 1, "comerciante": 2, "torre": 1, "centro": 1, "taller": 1, "cuartel": 1, "guerrero_gasa": 1, "hondero": 1 }
+palmares edad 2 pob 31/43 res { "alimento": 34, "madera": 36, "piedra": 200, "riqueza": 196, "fama": 16 } tipos { "centro": 1, "aldeano": 23, "explorador": 1, "casa": 2, "mocambo": 1, "quilombo_central": 1, "cuartel": 1, "almacen_alimento": 1, "granja": 5, "arcabucero": 1, "zagaieiro": 2, "hondero": 4 }
+
+=== ["guaranies", "ayutthaya"] terreno=bosque ganador=-1
+guaranies edad 2 pob 43/55 res { "alimento": 560, "madera": 40, "piedra": 353, "riqueza": 470 } tipos { "centro": 1, "aldeano": 41, "casa": 4, "granja": 9, "almacen_madera": 3, "almacen_mina": 2, "campo_tiro": 2, "karai_palabra": 1, "taller": 1, "cuartel": 1, "guerrero": 1, "hondero": 1 }
+ayutthaya edad 2 pob 53/65 res { "alimento": 219, "madera": 82, "piedra": 183, "riqueza": 533 } tipos { "centro": 1, "aldeano": 34, "explorador": 1, "casa": 5, "elefante_rey": 2, "cuartel": 1, "almacen_mina": 2, "wat": 1, "granja": 9, "campo_tiro": 1, "rebano": 3, "mercado": 1, "hondero": 8, "comerciante": 2, "guerrero": 4, "taller": 1, "torre": 1 }
+

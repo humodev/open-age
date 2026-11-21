@@ -1,0 +1,9 @@
+Running as unit: run-p158529-i180532.scope; invocation ID: ea663fed97834b769577685ddeee5675
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+
+=== 4v4 · semilla 42 · 24000 ticks (40.0 min de juego) en 776 s de reloj · PLANO ===
+hash final 1993518327 · unidades vivas 1044 · fin: sigue (ganador equipo -1)
+TICK      promedio  32.30 ms · p95  68.16 · peor  192.78 (tick 19986, min 33.3) · >25 ms: 14690 · >40: 7631 · >100: 65
+por minuto (prom/peor ms): m5 7.5/22 m10 16.3/30 m15 25.7/53 m20 32.2/77 m25 39.4/80 m30 44.6/87 m35 53.0/142 m40 58.9/121
+×4 alcanza (promedio del minuto < 25 ms) hasta el minuto 14 de 40
