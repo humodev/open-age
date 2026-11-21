@@ -2,8 +2,8 @@
   "_doc": "hito_alto: alto en px del hito pintado arriba de cada tarjeta del panel de la edad. Arte pintado de la interfaz, por pueblo (proceso/48-arte-en-la-interfaz; src/game/ui/arte_pueblo.gd). Un arte por unidad (el mismo en todas las edades) y un ícono por edificio, hito, maravilla y mejora. Lo usan el retrato de la selección y de la ficha, las casillas de entrenar, construir e investigar y las tarjetas de los hitos al subir de edad. Un pueblo sin entrada (o un id que falte) sigue con los glifos y los retratos de data/retratos.json. Para sumar un pueblo: su entrada acá con la carpeta de los PNG originales (fuente) y el mapeo id del juego → pieza, y correr tools/arte_pueblo.py --pueblo=<clave>. Las unidades pueden tener una pieza por sexo ({m, f}; el aldeano usa el de su figura). Los archivos los arma el script en carpeta: <pieza>.webp (retrato; unidades con su fondo, el resto recortado), <pieza>_icono.webp (casilla; unidades: cabeza y torso) y, si la pieza tiene máscara del equipo, <pieza>_equipo.webp y <pieza>_icono_equipo.webp (la zona del color del jugador en gris, que el juego tiñe). sin_casilla: piezas que en una casilla de 62 px no se leen; ahí queda el glifo (el retrato y la tarjeta de hito sí las usan).",
   "tam": { "_doc": "Lados en píxeles que escribe tools/arte_pueblo.py.", "retrato": 320, "icono": 128 },
   "icono_unidad": { "_doc": "Recorte del ícono de una unidad: un cuadrado de lado_pct del alto, desde la coronilla menos arriba_pct, centrado en la figura.", "lado_pct": 56, "arriba_pct": 3,
-    "_doc_cajas": "cajas: recorte a mano [x, y, lado] en fracciones de la imagen, para las piezas en que cabeza y torso no alcanzan para distinguirlas (guerrero y lancero llevan el mismo escudo: el arma tiene que entrar).",
-    "cajas": { "guerrero_v2": [0.05, 0.14, 0.85], "lancero_v2": [0.0, 0.18, 0.82], "guardia_v2": [0.05, 0.04, 0.85], "jinete": [0.15, 0.02, 0.8], "jinete_manco_v2": [0.15, 0.08, 0.8] } },
+    "_doc_cajas": "cajas: recorte a mano [x, y, lado] en fracciones de la imagen, para las piezas en que cabeza y torso no alcanzan para distinguirlas (guerrero y lancero llevan el mismo escudo: el arma tiene que entrar). Con «pueblo:pieza», solo para ese pueblo (el ariete mapuche es un objeto entero, proceso/50).",
+    "cajas": { "guerrero_v2": [0.05, 0.14, 0.85], "lancero_v2": [0.0, 0.18, 0.82], "guardia_v2": [0.05, 0.04, 0.85], "jinete": [0.15, 0.02, 0.8], "jinete_manco_v2": [0.15, 0.08, 0.8], "mapuches:ariete": [0.0, 0.0, 1.0] } },
   "hito_alto": 104,
   "casilla": { "_doc": "Casilla con arte: la imagen ocupa la casilla y el nombre va abajo sobre una franja oscura (alto en px, opacidad en %).", "franja_alto": 17, "franja_pct": 78 },
   "pueblos": {
@@ -46,7 +46,7 @@
         "qeswa_chaka": "qeswa_chaka", "trepanacion": "trepanacion", "waraka_trenzada": "waraka_trenzada",
         "wayrachina": "wayrachina", "chaski": "chaski"
       },
-      "sin_casilla": ["chaski"]
+      "sin_casilla": []
     },
     "mapuches": {
       "carpeta": "res://assets/ui/arte/mapuches/gouache/",
@@ -55,7 +55,7 @@
       "unidades": {"aldeano": {"m": "aldeano_m", "f": "aldeano_f"}, "comerciante": {"m": "comerciante_m", "f": "comerciante_f"}, "explorador": "explorador", "guerrero": "guerrero", "hondero": "hondero", "lancero": "lancero", "ariete": "ariete", "jinete": "jinete", "arcabucero": "arcabucero", "guardia": "guardia", "guardia_distancia": "guardia_distancia", "rebano": "rebano", "incendiarios": "incendiarios", "infanteria_montada": "infanteria_montada", "kona_waiki": "kona_waiki", "cabeza": "cabeza"},
       "edificios": {"lof": "lof", "casa": "casa", "granja": "granja", "cuartel": "cuartel", "corral": "corral", "fortaleza": "fortaleza", "empalizada": "empalizada", "puerta": "puerta", "mercado": "mercado", "hoyo": "hoyo", "sitio_sagrado": "sitio_sagrado", "rewe_malon": "rewe_malon", "rewe_lonko": "rewe_lonko", "rewe_caballeria": "rewe_caballeria", "rewe_monte": "rewe_monte", "parlamento": "parlamento", "weichan": "weichan", "maravilla": "maravilla"},
       "tecnologias": {"coseletes_cuero": "coseletes_cuero", "trigo_manzana": "trigo_manzana", "hoyos_estacas": "hoyos_estacas", "lawen": "lawen", "arreo_tropilla": "arreo_tropilla", "makun": "makun", "kawellu": "kawellu", "werken_pron": "werken_pron"},
-      "sin_casilla": ["ariete"]
+      "sin_casilla": []
     },
     "guaranies": {
       "carpeta": "res://assets/ui/arte/guaranies/gouache/",

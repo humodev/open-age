@@ -171,13 +171,13 @@
   "seccion": "1 · Unidades (un arte por unidad: ícono y retrato)",
   "id": "ariete",
   "nombre": "Ariete",
-  "prompt": "Gouache painting for a historical strategy game, flat opaque color shapes, simple graphic forms, matte paper texture, limited palette. A heavy tree trunk battering ram with a sharpened point and rawhide rope handles along its sides, lying on two log rollers. Single object centered, clear silhouette, isolated on a plain flat light grey background, three-quarter view.",
-  "semilla": 29,
+  "prompt": "Gouache painting for a historical strategy game, flat opaque color shapes, simple graphic forms, matte paper texture, limited palette. A battering ram seen from the side: a long heavy tree trunk with a sharpened point, hanging by rawhide ropes under a simple wooden frame of crossed poles shaped like a long tent, the frame standing on four solid round wooden wheels; the pointed trunk sticks out in front of the frame. Single object centered, clear silhouette, isolated on a plain flat light grey background, three-quarter view.",
+  "semilla": 37,
   "w": 768,
   "h": 768,
   "recolor": false,
   "nota": "",
-  "intento": 3
+  "intento": 4
  },
  {
   "seccion": "1 · Unidades (un arte por unidad: ícono y retrato)",

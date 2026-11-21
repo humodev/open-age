@@ -84,8 +84,10 @@ def recortado(im, tol=26):
 def caja_icono(im, cfg, pieza=""):
     """Cuadrado de cabeza y torso: desde la coronilla, centrado en la figura de esa franja."""
     w, h = im.size
-    if pieza in cfg.get("cajas", {}):
-        x, y, lado = cfg["cajas"][pieza]
+    cajas = cfg.get("cajas", {})
+    clave = next((k for k in (f"{cfg.get('_pueblo', '')}:{pieza}", pieza) if k in cajas), None)
+    if clave:
+        x, y, lado = cajas[clave]
         return (int(x * w), int(y * h), int(x * w) + int(lado * w), int(y * h) + int(lado * w))
     fondo = es_fondo(im, 30)
     filas = np.flatnonzero((~fondo).sum(axis=1) > w * 0.01)
@@ -149,7 +151,7 @@ def main():
         im = Image.open(png).convert("RGB")
         if grupo == "unidades":
             ret = guardar(im, os.path.join(dest, pz + ".webp"), tam["retrato"])
-            caja = caja_icono(im, datos["icono_unidad"], pz)
+            caja = caja_icono(im, {**datos["icono_unidad"], "_pueblo": a.pueblo}, pz)
             ico = guardar(im.crop(caja), os.path.join(dest, pz + "_icono.webp"), tam["icono"])
             if masc:
                 capa = capa_equipo(im, Image.open(masc))

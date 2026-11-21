@@ -161,3 +161,65 @@ oga guasu, casa de palha y ruka):
 
 Quedan como están los conjuntos (kätäma, lof, cerca real, wang): el suelo y las plantas están
 adentro del cerco y sacar el verde los parte en pedazos. La ruka sigue con el techo cónico.
+
+## 4 · Íconos chicos que no se leían
+
+Máximo tres intentos por pieza. La anterior queda como `img/<id>_v<n>.jpg` en su carpeta
+(`proceso/42-incas-gouache`, `proceso/49-arte-mapuches`) y su PNG como `<id>_v<n>_<semilla>.png`.
+
+| Pieza | Antes | Ahora | Intentos |
+|---|---|---|---|
+| Leñera inca (`almacen_madera`) | casa de piedra con leña adentro | una pila grande de leña cortada con un alerito de paja | 1 |
+| Depósito de piedra inca (`almacen_mina`) | casa de piedra con bloques al frente | una pila escalonada de bloques de piedra labrada | 2 (el segundo, un patio con bloques sueltos, se leía peor: queda el primero) |
+| Taller de tejido inca | casa de piedra con telares | un telar grande de pie con la tela a medio tejer | 1 |
+| Chaski en relevo (mejora) | caracola y khipu chicos sobre un camino | un pututu (caracola) grande con el khipu colgando | 1 |
+| Ariete mapuche | tronco sobre rodillos (glifo en la casilla) | el tronco colgado de un armazón sobre cuatro ruedas, de costado | 1 (el cuarto en total) |
+
+Las tres casas incas ya no se parecen: leña, piedra y telar tienen cada una su silueta. El
+chaski y el ariete mapuche salen de `sin_casilla` y muestran su arte en la casilla. El ariete es
+un objeto entero y el recorte de «cabeza y torso» de las unidades le cortaba las ruedas:
+`tools/arte_pueblo.py` acepta ahora cajas `pueblo:pieza` en `data/arte_pueblos.json →
+icono_unidad.cajas` y el ariete mapuche usa la imagen entera (el de Ayutthaya sigue con glifo).
+
+Arriba, antes; abajo, ahora (leñera, depósito de piedra, taller de tejido, chaski, ariete):
+
+![Íconos antes y después](img/iconos_antes_despues.jpg)
+
+Las mismas casillas a 62 px, como en el juego (ampliadas ×2):
+
+![Íconos a 62 px](img/iconos_62px.png)
+
+## 5 · Pruebas
+
+Con `systemd-run --user --scope -p MemoryMax=4G timeout 400 godot --headless …`, después de
+reimportar (`godot --headless --path . --import`):
+
+- `tests/iconos.gd`: 752 grillas, 145 íconos distintos, OK ([salida](pruebas/iconos.txt));
+- `tests/grilla.gd`: OK ([salida](pruebas/grilla.txt));
+- `tests/test_determinism.gd`: OK ([salida](pruebas/test_determinism.txt)).
+
+No se tocó la simulación ni el juego: los modelos 3D siguen sin usarse (C-106).
+
+## Tropiezos
+
+- La primera corrección de la piel la volvía gris: al subir la luminancia con el mismo a, b
+  baja la saturación aparente; hubo que llevar el tono al de la hoja.
+- La máscara por tono no reconoce la piel que pinta Paint (oliva oscuro): la piel de Paint se
+  etiqueta por la hoja, de frente, y por vecinos en Lab atrás.
+- Con el calce por la caja del cuerpo, la cara de la hoja quedaba corrida (caras fantasma);
+  el registro ECC global no convergía o daba corrimientos absurdos. Quedó el calce local de
+  la cara por plantilla, y solo donde Paint perdió los rasgos.
+- La cavidad de Workbench marca las aristas con líneas claras que el juego no dibuja: el
+  primer plano de las caras va sin cavidad.
+- OpenCV 5 ya no trae los clasificadores de Haar: la caja de la cara sale de la mancha de piel
+  más alta de la hoja.
+- Cambiar `gen3d_paint.py` (aunque fuera para depurar) cambiaba la firma de la textura y habría
+  rehecho Paint en las 24 piezas: la salida de depuración se usó y se sacó.
+- FLUX dibuja el sombrero cónico aunque se le describa otra forma (tres intentos).
+
+## Commits
+
+- `2b59b70` caras de piel oscura en 3D
+- `86dbe1d` el sombrero de Ayutthaya
+- `43d9231` sin el paisaje del ícono en los edificios 3D
+- (este) íconos chicos, pruebas, estado e índice

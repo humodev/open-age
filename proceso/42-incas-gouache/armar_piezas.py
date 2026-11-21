@@ -80,18 +80,21 @@ add(U, "rebano", "Llama (rebaño)", f"A single {LLAMA} standing, cream and brown
 
 # 2 · Edificios: un ícono por edificio, sin variante por edad.
 B = "2 · Edificios, hitos y maravilla (un ícono por edificio)"
-def edif(id, nombre, que, nota=""):
-    add(B, id, nombre, f"{que} {EDIF}", nota=nota)
+# proceso/50: semillas de los reintentos (7 = la primera)
+LENA, PIEDRA, TELAR, CHASKI = 11, 11, 11, 11  # piedra: el intento 3 (13, patio disperso) se leía peor que el 2
+
+def edif(id, nombre, que, nota="", semilla=7):
+    add(B, id, nombre, f"{que} {EDIF}", nota=nota, semilla=semilla)
 edif("centro", "Llaqta (centro)", "A small Inca town center: several fieldstone houses with thatched roofs around an open plaza, a larger hall on one side.")
 edif("casa", "Kancha (casa)", "A small one-room fieldstone house with a steep thatched gable roof and one trapezoidal doorway, a low stone wall around a small yard.")
 edif("granja", "Chacra (granja)", "A field of tall maize and potato plants on terraced ground, a small fieldstone hut with a thatched roof, a wooden foot plough leaning on the wall.")
 edif("anden", "Andén (terrazas)", "Agricultural terraces on a mountainside: four curved steps held by fieldstone retaining walls, green crops on each step.")
-edif("almacen_madera", "Llant'a wasi (depósito de leña)", "An open-sided fieldstone shed with a thatched roof, stacks of firewood and bundles of branches piled inside and in front.")
-edif("almacen_mina", "Kamayuq wasi (depósito de piedra y metal)", "A fieldstone workshop with a thatched roof, piles of cut stone blocks and green copper ore in front, stone hammers and baskets.")
+edif("almacen_madera", "Llant'a wasi (depósito de leña)", "A huge neat stack of split firewood logs, a long rectangular woodpile as tall as a man with the round cut log ends facing the viewer, under a small lean-to of thatch on two wooden posts; the woodpile fills most of the picture; no stone house.", semilla=LENA)  # proceso/50
+edif("almacen_mina", "Kamayuq wasi (depósito de piedra y metal)", "A big stepped pile of large cut grey stone blocks, neat rectangular ashlars stacked like a small pyramid, with a few lumps of green copper ore and a round stone hammer at its foot, on a flat stone-paved yard with a low stone wall at the back; no roof, no house.", semilla=PIEDRA)  # proceso/50
 edif("qollqa", "Qollqa (almacén)", "A row of three round fieldstone storehouses with conical thatched roofs on a hillside, small square openings.")
 edif("cuartel", "Kallanka (cuartel)", "A long rectangular hall of fieldstone with many trapezoidal doorways along its long side and a steep thatched gable roof; long wooden spears lean against the wall and square cloth-covered shields hang beside the doors.")
 edif("campo_tiro", "Warak'a kancha (campo de honderos)", "A rectangular fieldstone enclosure with a thatched hut in one corner, a big pile of round sling stones, braided slings hanging from a wooden pole.")
-edif("taller_tejido", "Taller de tejido", "A fieldstone workshop with a thatched roof and an open front, upright wooden looms with half-woven patterned cloth and colored skeins of wool hanging outside.")
+edif("taller_tejido", "Taller de tejido", "A large upright wooden frame loom standing in the open with a half-woven cloth of bold red, ochre and black step patterns stretched on it, a small thatched awning on two posts above it and colored skeins of wool hanging from a pole beside it; the loom fills most of the picture.", semilla=TELAR)  # proceso/50
 edif("mercado", "Mercado", "An open stone-walled plaza where goods are laid out on woven cloths: potatoes, maize, clay pots and folded textiles, a llama standing by.")
 edif("mercado_neutral", "Feria (neutral)", "A busy open-air fair: goods on cloths and under simple cane awnings, clay jars, baskets of produce and llamas.")
 edif("tambo", "Tambo", "A roadside waystation: two fieldstone buildings with thatched roofs beside a stone-paved road, a corral with llamas.")
@@ -114,8 +117,8 @@ edif("maravilla", "Ollantaytambo (maravilla)", "The mountainside complex of Olla
 
 # 3 · Mejoras propias: un objeto concreto cada una.
 M = "3 · Mejoras propias"
-def mejora(id, nombre, que, nota=""):
-    add(M, id, nombre, f"{que} {OBJ}", nota=nota)
+def mejora(id, nombre, que, nota="", semilla=7):
+    add(M, id, nombre, f"{que} {OBJ}", nota=nota, semilla=semilla)
 mejora("khipukamayuq", "Khipukamayuq", "A khipu: a thick main cord with many hanging cords of different colors, red, cream, brown, black and ochre, each with clusters of knots.")
 mejora("champi", "Champi, la porra de metal", "A club head of bronze shaped like a six-pointed star, mounted on a short wooden handle.")
 mejora("chunu_charki", "Ch'uñu y ch'arki", "Freeze-dried potatoes, small dark wrinkled and white, and strips of dried llama meat on a woven cloth.")
@@ -123,7 +126,7 @@ mejora("qeswa_chaka", "Q'eswa chaka", "A suspension bridge woven from thick gras
 mejora("trepanacion", "Cirugía de cráneo", "An ancient skull seen from above with a neat healed round hole, next to a small bronze knife with a half-moon blade, on a cloth.", nota="Los cráneos con hueso cicatrizado prueban que los pacientes sobrevivían.")
 mejora("waraka_trenzada", "Warak'a trenzada", "A coiled braided sling made of wool in red, cream and black with a diamond-patterned pouch.")
 mejora("wayrachina", "Wayrachina", "A small clay smelting furnace with many holes in its sides on a windy hillside, flames inside, a pile of ore beside it.")
-mejora("chaski", "Chaski en relevo", "A conch-shell trumpet and a bundle of knotted colored cords lying on a stone-paved mountain road.")
+mejora("chaski", "Chaski en relevo", "One big spiral conch-shell trumpet (pututu), pink and cream, with a long bundle of knotted colored khipu cords tied to it and trailing down, filling the frame.", semilla=CHASKI)  # proceso/50
 
 # 4 · Accesorios: herramientas y armas para el 3D.
 A = "4 · Accesorios (herramientas y armas para el 3D)"
