@@ -107,7 +107,7 @@ func motivo(b: SimEntity) -> String:
 	var dd := hud.sim.dp(b.owner)
 	if why == "pob":
 		var casa: String = String(dd.edificios.get("casa", {}).get("nombre", "Casa"))
-		if int(p["pop_cap"]) >= int(hud.sim.data.reglas["pob_max"]):
+		if int(p["pop_cap"]) >= hud.sim.pob_max():
 			return "Trabada: población llena (%d/%d), el máximo del juego." % [int(p["pop"]), int(p["pop_cap"])]
 		return "Trabada: población llena (%d/%d). Construí casas (%s)." % [int(p["pop"]), int(p["pop_cap"]), casa]
 	if why == "recursos":

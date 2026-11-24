@@ -24,6 +24,8 @@ extends Node3D
 ##   --tiempo=0|30|45|60  tiempo límite en minutos (0 = sin límite); al cumplirse gana el equipo con más puntos
 ##   --recursos=normal|medios|altos  recursos iniciales (reglas.json → opciones_partida.recursos)
 ##   --ubicacion=juntos|mezclados  en partidas de 3 o más, aliados vecinos o alternados en el círculo
+##   --pob=100|150|200|250|300  población máxima (C-50 a; reglas.json → opciones_partida.pob_max)
+##   --explorado=si|no  mapa explorado desde el principio, como «revelar mapa» de AoE4 (C-50 a)
 ##   --campana=clave --mision=N  juega una misión de campaña (N desde 0)
 ##   --dificultad=facil|normal|dificil|experta  (en el menú, la preelige)
 ##   --nofog            sin niebla de guerra (automático en --aivai)
@@ -42,7 +44,7 @@ extends Node3D
 ##   --texto=grande|normal  letra de la interfaz (si no, la de user://opciones.cfg)
 ##   --barras=1         barras de vida siempre visibles
 ##   --nombres=1        nombres en la grilla de órdenes
-##   --abrir=opciones   abre el diálogo de opciones (también campanas, arte_guerra e intro en el menú)
+##   --abrir=opciones   abre el diálogo de opciones (también campanas, arte_guerra, intro, partida, red y creditos en el menú)
 ##   --bengala=1        tira una bengala propia cerca de la base antes de la captura (con aliados)
 ##   --formacion=linea  elige la formación de la grilla y la aplica a lo seleccionado antes de la captura
 ##   --panel=a,b        abre paneles de información antes de la captura (economia, edad, pueblo, sucesos, puntaje, fin, fin-derrota, fin-tiempo, atajos)
@@ -363,6 +365,10 @@ static func match_opts(args: Dictionary) -> Dictionary:
 		out["recursos"] = str(args["recursos"])
 	if args.has("ubicacion"):
 		out["ubicacion_equipos"] = str(args["ubicacion"])
+	if int(args.get("pob", "0")) > 0: # C-50 a
+		out["pob_max"] = int(args["pob"])
+	if str(args.get("explorado", "no")) == "si":
+		out["mapa_explorado"] = true
 	if str(args.get("tamano", "normal")) != "normal": # --- partida a medida ---
 		out["tamano"] = str(args["tamano"])
 	return out
@@ -511,6 +517,8 @@ func _build_scene(aivai: bool) -> void:
 			_menu.open_custom.call_deferred()
 		if _args.get("abrir", "") == "red": # --- red ---
 			_menu.open_red.call_deferred()
+		if _args.get("abrir", "") == "creditos": # proceso 51
+			_menu.open_credits.call_deferred()
 		if _args.get("abrir", "") == "campanas":
 			_open_campaigns.call_deferred(layer)
 		elif _args.get("abrir", "") == "arte_guerra": # --- C-38 --- (capturas: -- --abrir=arte_guerra)

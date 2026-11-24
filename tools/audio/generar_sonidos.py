@@ -80,23 +80,19 @@ def tawantinsuyu_orden() -> np.ndarray:
     return trim_tail(fade(ins.quena(B5, 0.22, seed=150, vel=0.9), 0.0, 0.06))
 
 
-# =================== Mapuches: trutruka, kull-kull y kakelkultrun ===================
-# Sin kultrun (C-53 b, opción prudente): ver proceso/24-tras-la-segunda-ronda/4h-sonido-con-respeto.md.
+# =================== Mapuches: kultrun y trutruka ===================
+# C-53 a: vuelve el kultrun (partituras de 4g, commit 456a59b). Consultarlo con una organización mapuche antes de publicar.
 TRU_F0 = 58.0  # fundamental de una trutruka de ~3 m [verificar]: se tocan los armónicos 3 a 6.
-KULL = 247.0   # nota de un cuerno de ~40 cm [verificar]; salta a la octava al soplar fuerte.
 
 
 def mapuches_fanfarria() -> np.ndarray:
     b = silence(4.5)
     for i in range(10):
         at = 0.0 + i * 0.4
-        b = place(b, ins.kakelkultrun(seed=200 + i, vel=0.9 if i % 2 == 0 else 0.65, centro=i % 2 == 0), _h(at, 80 + i))
-    llamado = [(0.3, 4, 0.9), (1.3, 5, 0.35), (1.7, 6, 1.1), (3.3, 4, 1.0)]
+        b = place(b, ins.kultrun(seed=200 + i, vel=0.9 if i % 2 == 0 else 0.7), _h(at, 80 + i))
+    llamado = [(0.3, 4, 0.9), (1.3, 5, 0.35), (1.7, 6, 1.1), (2.9, 5, 0.4), (3.3, 4, 1.0)]
     for i, (at, h, d) in enumerate(llamado):
         b = place(b, ins.trutruka(TRU_F0, h, d, seed=210 + i, vel=0.85), at)
-    # El kull-kull contesta al llamado de la trutruka.
-    for i, (at, f, d) in enumerate([(2.85, KULL, 0.18), (3.05, KULL * 2, 0.35)]):
-        b = place(b, ins.kull_kull(f, d, seed=220 + i, vel=0.7), at)
     return trim_tail(reverb(b, 0.2, 0.5, seed=4))
 
 
@@ -105,25 +101,22 @@ def mapuches_alarma() -> np.ndarray:
     n = 18
     for i in range(n):
         at = i * 0.12
-        b = place(b, ins.kakelkultrun(0.4, seed=230 + i, vel=0.45 + 0.5 * i / n, centro=i % 2 == 0), _h(at, 90 + i, 0.005))
-    # Kull-kull: llamados cortos y repetidos; la trutruka sostiene abajo.
-    for i, at in enumerate([0.0, 0.3, 0.6, 1.4, 1.7, 2.0]):
-        b = place(b, ins.kull_kull(KULL * (2 if i % 3 == 2 else 1), 0.2 if i % 3 < 2 else 0.4, seed=250 + i, vel=0.85), at)
-    for i, (at, h, d) in enumerate([(0.8, 5, 0.6), (2.2, 6, 0.7)]):
-        b = place(b, ins.trutruka(TRU_F0, h, d, seed=258 + i, vel=0.8), at)
+        b = place(b, ins.kultrun(0.4, seed=230 + i, vel=0.45 + 0.5 * i / n, centro=i % 2 == 0), _h(at, 90 + i, 0.005))
+    for i, (at, h, d) in enumerate([(0.0, 6, 0.32), (0.4, 6, 0.32), (0.8, 5, 0.6), (1.5, 6, 0.32), (1.9, 6, 0.7)]):
+        b = place(b, ins.trutruka(TRU_F0, h, d, seed=250 + i, vel=0.9), at)
     return trim_tail(reverb(b, 0.16, 0.35, seed=5))
 
 
 def mapuches_entrenado() -> np.ndarray:
     b = silence(1.0)
-    b = place(b, ins.kakelkultrun(0.5, seed=260, vel=0.7, centro=False), 0.0)
-    b = place(b, ins.kakelkultrun(0.6, seed=261, vel=0.95), 0.15)
+    b = place(b, ins.kultrun(0.5, seed=260, vel=0.7, centro=False), 0.0)
+    b = place(b, ins.kultrun(0.6, seed=261, vel=0.95), 0.15)
     b = place(b, ins.trutruka(TRU_F0, 4, 0.42, seed=262, vel=0.7), 0.15)
     return trim_tail(reverb(b, 0.15, 0.3, seed=6))
 
 
 def mapuches_orden() -> np.ndarray:
-    return trim_tail(fade(ins.kull_kull(KULL, 0.16, seed=270, vel=0.8), 0.0, 0.05))
+    return trim_tail(ins.kultrun(0.35, seed=270, vel=1.0))
 
 
 # =================== Guaraníes: mimby y angu'apu ===================

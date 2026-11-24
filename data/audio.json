@@ -14,14 +14,18 @@
       "fanfarria": "civ/tawantinsuyu/tawantinsuyu_fanfarria.ogg",
       "alarma": "civ/tawantinsuyu/tawantinsuyu_alarma.ogg",
       "entrenado": "civ/tawantinsuyu/tawantinsuyu_entrenado.ogg",
-      "orden": "civ/tawantinsuyu/tawantinsuyu_orden.ogg"
+      "orden": "civ/tawantinsuyu/tawantinsuyu_orden.ogg",
+      "_nota_musica": "Sikuri de Azángaro (Puno): dos temas populares con pareja de sikus malta y bombo, CC BY-SA 4.0 (C-07 a; crédito en assets/CREDITOS.md y en la pantalla de créditos).",
+      "musica": { "paz": ["musica/tawantinsuyu/musica_tawantinsuyu_sikuri_29_de_setiembre.ogg", "musica/tawantinsuyu/musica_tawantinsuyu_sikuri_mula_lunthata.ogg"] }
     },
     "mapuches": {
-      "_nota": "Trutruka (armónicos naturales), kull-kull (cuerno) y kakelkultrun (tambor de dos parches). Sin kultrun, el tambor ceremonial de la machi (C-53 b, opción prudente; 4h).",
+      "_nota": "Kultrun y trutruka (C-53 a: se vuelve al sonido de 4g; consultarlo con una organización mapuche, junto con la pifilka, antes de publicar).",
       "fanfarria": "civ/mapuches/mapuches_fanfarria.ogg",
       "alarma": "civ/mapuches/mapuches_alarma.ogg",
       "entrenado": "civ/mapuches/mapuches_entrenado.ogg",
-      "orden": "civ/mapuches/mapuches_orden.ogg"
+      "orden": "civ/mapuches/mapuches_orden.ogg",
+      "_nota_musica": "La pifilka solo en la paz, nunca en el combate (C-08 a): tiene uso ceremonial (ngillatun).",
+      "musica": { "paz": ["musica/mapuche/musica_mapuche_pifilka_1.ogg", "musica/mapuche/musica_mapuche_pifilka_2.ogg"] }
     },
     "guaranies": {
       "_nota": "Mimby (flauta de caña o hueso) y angu'apu (tambor de tronco). Sin mbaraka ni takuapu, instrumentos rituales del opy mbyá (opción prudente; 4h).",
@@ -36,7 +40,8 @@
       "alarma": "civ/etiopia/etiopia_alarma.ogg",
       "entrenado": "civ/etiopia/etiopia_entrenado.ogg",
       "orden": "civ/etiopia/etiopia_orden.ogg",
-      "musica": { "paz": ["musica/etiopia/musica_etiopia_krar_kebero_1.ogg"] }
+      "_nota_musica": "Paz: la pista sintetizada (krar, masenqo, kebero) y un azmari con masenqo grabado en Etiopía (Miez Production, CC BY 3.0; C-24 c). No se encontró krar grabado con licencia libre.",
+      "musica": { "paz": ["musica/etiopia/musica_etiopia_krar_kebero_1.ogg", "musica/etiopia/musica_etiopia_masenqo_azmari_1.ogg"] }
     },
     "palmares": {
       "_nota": "Ngoma (tambores de raíz angoleña), ngongi (campana doble de hierro), marimba y kisanji. Sin berimbau ni toques de capoeira (C-55 b, opción prudente; 4h).",

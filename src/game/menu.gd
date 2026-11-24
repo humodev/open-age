@@ -44,6 +44,9 @@ var _op_hitos: CheckButton
 var _op_tiempo: OptionButton
 var _op_recursos: OptionButton
 var _op_ubic: OptionButton
+var _op_pob: OptionButton # C-50 a
+var _op_explorado: CheckButton # C-50 a
+var _pobs: Array = [] # reglas.opciones_partida.pob_max
 var _op_resumen: Label
 var _tiempos: Array = [] # minutos que ofrece reglas.opciones_partida.tiempo_limite_min
 # --- equipos ronda 3 --- tiempo límite por defecto en todos contra todos (opciones_partida.todos_contra_todos_tiempo_min)
@@ -251,13 +254,19 @@ func _ready() -> void:
 	var orow := HBoxContainer.new()
 	orow.add_theme_constant_override("separation", 10)
 	box.add_child(orow)
+	# Proceso 51: «Créditos» en el mismo renglón (la música CC BY-SA pide atribución; data/creditos.json).
 	var ob := _button("Opciones", func() -> void: open_options())
-	ob.custom_minimum_size.x = 185
+	ob.custom_minimum_size.x = 140
 	orow.add_child(ob)
+	var crb := _button("Créditos", func() -> void: open_credits())
+	crb.custom_minimum_size.x = 130
+	crb.tooltip_text = "Autores y licencias de la música, los íconos y los mapas."
+	orow.add_child(crb)
 	var qb := _button("Salir", _salir)
-	qb.custom_minimum_size.x = 185
+	qb.custom_minimum_size.x = 90
 	orow.add_child(qb)
 	_options = Opciones.dialogo(self, get_parent().get_parent() if get_parent() != null else null)
+	_credits = Creditos.dialogo(self)
 	# --- fin opciones ---
 
 	var hint := Label.new()
@@ -335,6 +344,14 @@ func _salir() -> void:
 
 func open_options() -> void:
 	_options.visible = true
+
+
+var _credits: PanelContainer
+
+
+## Créditos (también --abrir=creditos).
+func open_credits() -> void:
+	_credits.visible = true
 # --- fin opciones ---
 
 
@@ -603,6 +620,17 @@ func _build_match_options(col: VBoxContainer) -> void:
 		unames.append(u[1])
 	_op_ubic = _small(unames, 170, maxi(0, UBICACION.map(func(u: Array) -> String: return u[0]).find(str(cur.get("ubicacion_equipos", "juntos")))))
 	urow.add_child(_op_ubic)
+	# C-50 a: población máxima y mapa explorado («revelar mapa» de AoE4).
+	urow.add_child(_label("Población", 70))
+	_pobs = op.get("pob_max", [int(_data.reglas["pob_max"])])
+	var pnames: Array = []
+	for v in _pobs:
+		pnames.append(str(int(v)))
+	_op_pob = _small(pnames, 80, maxi(0, _pobs.find(int(cur.get("pob_max", _data.reglas["pob_max"])))))
+	_op_pob.tooltip_text = "Población máxima de cada jugador."
+	urow.add_child(_op_pob)
+	_op_explorado = _check("Mapa explorado", bool(cur.get("explorado", false)), "Todo el mapa arranca explorado: se ve el terreno y lo que había al empezar. Lo que tus unidades no ven sigue en niebla.")
+	urow.add_child(_op_explorado)
 	col.add_child(urow)
 	_op_resumen = Label.new()
 	_op_resumen.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -612,9 +640,9 @@ func _build_match_options(col: VBoxContainer) -> void:
 	_op_resumen.add_theme_color_override("font_color", Palette.UI_DIM)
 	col.add_child(_op_resumen)
 	_op_tiempo.item_selected.connect(func(_i: int) -> void: _ffa_auto = false) # --- equipos ronda 3 --- lo eligió el jugador
-	for ob: OptionButton in [_op_tiempo, _op_recursos, _op_ubic]:
+	for ob: OptionButton in [_op_tiempo, _op_recursos, _op_ubic, _op_pob]:
 		ob.item_selected.connect(func(_i: int) -> void: _refresh_match_options(true))
-	for cb: CheckButton in [_op_sitios, _op_hitos, _op_maravilla]:
+	for cb: CheckButton in [_op_sitios, _op_hitos, _op_maravilla, _op_explorado]:
 		cb.toggled.connect(func(_b: bool) -> void: _refresh_match_options(true))
 	# --sitios=no, --tiempo=30… también preeligen en el menú (para las capturas).
 	var ma := {}
@@ -633,6 +661,10 @@ func _build_match_options(col: VBoxContainer) -> void:
 		_ffa_was = true # --- equipos ronda 3 --- el tiempo pedido por argumento no se toca
 	if ma.has("recursos"):
 		_op_recursos.selected = maxi(0, RECURSOS.map(func(r: Array) -> String: return r[0]).find(ma["recursos"]))
+	if ma.has("pob"):
+		_op_pob.selected = maxi(0, _pobs.find(int(ma["pob"])))
+	if ma.has("explorado"):
+		_op_explorado.button_pressed = ma["explorado"] == "si"
 	if ma.has("ubicacion"):
 		_op_ubic.selected = maxi(0, UBICACION.map(func(u: Array) -> String: return u[0]).find(ma["ubicacion"]))
 
@@ -703,7 +735,7 @@ func _refresh_match_options(save := false) -> void:
 	if save:
 		# Lo que puso el menú por ser todos contra todos no se recuerda para la próxima partida.
 		var keep_mins := _ffa_prev if _ffa_auto else mins
-		Opciones.partida = {"sitios": _op_sitios.button_pressed, "hitos": _op_hitos.button_pressed, "maravilla": _op_maravilla.button_pressed, "tiempo_limite_min": keep_mins, "recursos": RECURSOS[maxi(0, _op_recursos.selected)][0], "ubicacion_equipos": UBICACION[maxi(0, _op_ubic.selected)][0]}
+		Opciones.partida = {"sitios": _op_sitios.button_pressed, "hitos": _op_hitos.button_pressed, "maravilla": _op_maravilla.button_pressed, "tiempo_limite_min": keep_mins, "recursos": RECURSOS[maxi(0, _op_recursos.selected)][0], "ubicacion_equipos": UBICACION[maxi(0, _op_ubic.selected)][0], "pob_max": int(_pobs[maxi(0, _op_pob.selected)]), "explorado": _op_explorado.button_pressed}
 		Opciones.guardar()
 
 
@@ -732,6 +764,8 @@ func match_args() -> Dictionary:
 		"maravilla": "si" if _op_maravilla.button_pressed else "no",
 		"tiempo": str(int(_tiempos[maxi(0, _op_tiempo.selected)])),
 		"recursos": RECURSOS[maxi(0, _op_recursos.selected)][0],
+		"pob": str(int(_pobs[maxi(0, _op_pob.selected)])),
+		"explorado": "si" if _op_explorado.button_pressed else "no",
 	}
 	if not _op_ubic.disabled:
 		out["ubicacion"] = UBICACION[maxi(0, _op_ubic.selected)][0]

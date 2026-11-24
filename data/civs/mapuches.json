@@ -164,7 +164,7 @@
   "corral": { "nombre": "Corral", "edad_min": 1, "tam": [3, 3], "pv": 600, "armadura": 0, "costo": { "madera": 120 }, "tiempo_ms": 20000, "vision": 3000, "transitable": true, "ranura": 7, "maximo_por_edad": [2, 3, 4, 5], "separacion": 8, "motor": true,
    "ganado": { "inicial": 1, "max": 5, "max_pradera": 6, "riqueza_por_cabeza": 4, "cria_ms": 50000, "fiesta_alimento": 30, "fiesta_pausa_ms": 120000 },
    "desc": "El ganado (kulliñ) es la riqueza mapuche: cada cabeza da 4 de riqueza por minuto y nace una cada 50 s, hasta 5 (6 en pradera abierta). Cada 25 % de daño mata una cabeza. El kawiñ (la fiesta) da 30 de alimento por cabeza, una vez por corral y por edad." },
-  "rewe_malon": { "eje": "militar",
+  "rewe_malon": { "nombre_comun": "Altar del toqui de malón", "eje": "militar",
    "nombre": "Rewe del toqui de malón",
    "edad_min": 1,
    "tam": [
@@ -193,7 +193,7 @@
     "riqueza": 30
    }
   },
-  "rewe_lonko": { "cria_ms": 35000, "eje": "economia",
+  "rewe_lonko": { "nombre_comun": "Altar del lonko", "cria_ms": 35000, "eje": "economia",
    "nombre": "Rewe del lonko",
    "edad_min": 1,
    "tam": [
@@ -220,7 +220,7 @@
     "riqueza": 30
    }
   },
-  "rewe_caballeria": { "eje": "militar",
+  "rewe_caballeria": { "nombre_comun": "Altar del toqui de caballería", "eje": "militar",
    "nombre": "Rewe del toqui de caballería",
    "edad_min": 1,
    "tam": [
@@ -252,7 +252,7 @@
     "riqueza": 60
    }
   },
-  "rewe_monte": { "eje": "economia",
+  "rewe_monte": { "nombre_comun": "Altar del toqui del monte", "eje": "economia",
    "nombre": "Rewe del toqui del monte",
    "edad_min": 1,
    "tam": [
@@ -307,7 +307,7 @@
   "hoyo": {"nombre": "Hoyo con estacas", "edad_min": 3, "requiere_tec": "hoyos_estacas", "tam": [1, 1], "pv": 40, "armadura": 0, "costo": {"madera": 20}, "tiempo_ms": 6000, "vision": 1000, "transitable": true, "oculto": true, "deteccion": 2000, "sin_blanco_automatico": true, "no_cuenta": true,
    "trampa": {"danio": 40, "montado_pct": 200, "frena_ms": 4000},
    "desc": "Hoyo tapado con ramas y estacas en el fondo (Peteroa y Mataquito, 1556–1557). Al que cae le hace 40 de daño (el doble a los montados) y lo frena 4 s; después queda abierto y se pierde. El rival lo ve recién a 2 casillas."},
-  "weichan": { "eje": "militar",
+  "weichan": { "nombre_comun": "Gran alzamiento", "eje": "militar",
    "nombre": "Gran weichan",
    "edad_min": 1,
    "tam": [
@@ -360,7 +360,7 @@
   "infanteria_montada": {"nombre": "Weichafe montado", "propia": true, "funcion": "choque", "edad_min": 2, "pob": 1, "costo": {"alimento": 75, "riqueza": 30}, "tiempo_ms": 20000, "pv": 120, "armadura": 1, "armadura_distancia": 0, "ataque": 11, "alcance": 450, "cadencia_ms": 1250, "velocidad": 2100, "vision": 8500, "radio": 260, "a_caballo": true, "desmonta_ms": 1000, "desmonta_tras_ms": 5000,
    "desc": "Infantería montada: el weichafe va a caballo y se baja para pelear. Anda como jinete y pelea como guerrero a pie (la lanza contra caballería no le hace el daño extra); tarda 1 s en desmontar cuando llega a pelear (después de 5 s sin combate). Una adaptación propia de fines del siglo XVI y del XVII.",
    "evidencia": "Documentado. González de Nájera (1614); Boccara, Los vencedores (2007)."},
-  "kona_waiki": {"nombre": "Kona de waiki", "propia": true, "elite": true, "funcion": "linea", "montado": true, "edad_min": 4, "pob": 2, "costo": {"alimento": 120, "riqueza": 90}, "tiempo_ms": 26000, "pv": 210, "armadura": 2, "armadura_distancia": 2, "ataque": 13, "alcance": 750, "cadencia_ms": 1500, "velocidad": 2000, "vision": 9000, "radio": 380, "bono": {"montado": 8},
+  "kona_waiki": { "nombre_comun": "Lancero montado pesado","nombre": "Kona de waiki", "propia": true, "elite": true, "funcion": "linea", "montado": true, "edad_min": 4, "pob": 2, "costo": {"alimento": 120, "riqueza": 90}, "tiempo_ms": 26000, "pv": 210, "armadura": 2, "armadura_distancia": 2, "ataque": 13, "alcance": 750, "cadencia_ms": 1500, "velocidad": 2000, "vision": 9000, "radio": 380, "bono": {"montado": 8},
    "carga_golpe": {"extra": 8, "frena_ms": 1500, "espera_ms": 5000},
    "desc": "Lancero montado pesado de la edad IV: la lanza larga de colihue (waiki; huaiqui en las crónicas) a caballo. +8 contra los montados; la carga (el primer golpe después de 5 s sin pelear) pega 8 más y derriba: frena 1,5 s. Kona es el mocetón, el guerrero joven.",
    "evidencia": "Documentado. Ovalle (1646); Rosales (c. 1674) [verificar el largo de la lanza]."},

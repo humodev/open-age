@@ -521,7 +521,7 @@ func _check_pop() -> void:
 	var antes := _pob_estado
 	_pob_estado = estado
 	var casa: String = String(sim.dp(local).edificios.get("casa", {}).get("nombre", "Casa"))
-	var tope_juego := cap >= int(sim.data.reglas["pob_max"])
+	var tope_juego := cap >= sim.pob_max()
 	if not Opciones.consejos: # --- ronda 8 --- fuera del aprendizaje lo dicen la cola roja y el contador
 		return
 	if estado == "excedida" and antes != "excedida":
@@ -550,7 +550,7 @@ func _check_pop_pronto() -> void:
 			return
 		var p: Dictionary = sim.players[local]
 		var casa: String = String(sim.dp(local).edificios.get("casa", {}).get("nombre", "Casa"))
-		if int(p["pop_cap"]) < int(sim.data.reglas["pob_max"]):
+		if int(p["pop_cap"]) < sim.pob_max():
 			notify("Población %d/%d: sin lugar en ~%d s\nConstruí casas (%s) para no frenar la producción." % [int(p["pop"]), int(p["pop_cap"]), pob_eta, casa], 8.0, "info")
 	elif pob_eta < 0 or pob_eta > aviso + 10:
 		_pob_pronto = false

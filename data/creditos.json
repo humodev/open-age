@@ -1,0 +1,42 @@
+{
+  "_doc": "Pantalla de créditos del menú (src/game/ui/creditos.gd). Lo que pide atribución por su licencia (CC BY, CC BY-SA, ODbL, Copernicus) va con autor, obra, fuente y licencia; lo demás, resumido. La lista completa, archivo por archivo: assets/CREDITOS.md. Al sumar un archivo con atribución, va en los dos lugares.",
+  "titulo": "Créditos",
+  "secciones": [
+    {
+      "titulo": "Raíces",
+      "lineas": [
+        "Un juego de Diego Maidana, hecho con agentes de IA.",
+        "Motor: Godot Engine (MIT), © Juan Linietsky, Ariel Manzur y colaboradores."
+      ]
+    },
+    {
+      "titulo": "Música con atribución",
+      "lineas": [
+        "«29 de setiembre» y «Mula Lunthata» (sikuri: pareja de sikus malta y bombo). Abel Christian Apaza Amanqui, proyecto Sikuri Sumaq Taqi, Azángaro, Puno. Wikimedia Commons, CC BY-SA 4.0 (creativecommons.org/licenses/by-sa/4.0). Recortadas, convertidas a Ogg y normalizadas; las versiones del juego se comparten con la misma licencia.",
+        "«Man Playing A Masenqo in Ethiopia» (azmari con masenqo). Miez Production. Wikimedia Commons, CC BY 3.0 (creativecommons.org/licenses/by/3.0). Solo el audio, un fragmento, con filtro de graves y normalizado."
+      ]
+    },
+    {
+      "titulo": "Íconos",
+      "lineas": [
+        "Siluetas de game-icons.net de Lorc, Delapouite, Zeromancer, Sbed y otros autores, CC BY 3.0 (creativecommons.org/licenses/by/3.0). Recoloreadas, encuadradas y con contorno."
+      ]
+    },
+    {
+      "titulo": "Mapas de lugares reales",
+      "lineas": [
+        "Elevación: Copernicus DEM GLO-30. © DLR e.V. 2010-2014 y © Airbus Defence and Space GmbH 2014-2018, provisto bajo COPERNICUS por la Unión Europea y la ESA.",
+        "Ríos, canales y lagos: © colaboradores de OpenStreetMap, ODbL (openstreetmap.org/copyright)."
+      ]
+    },
+    {
+      "titulo": "Libres de derechos (CC0 y dominio público)",
+      "lineas": [
+        "Sonido y música de OpenGameArt, Internet Archive y Wikimedia Commons; pifilkas de Juan Huichal; Phleng Maha Nimit por la Banda de la Armada Real Tailandesa (1934).",
+        "Animaciones KayKit de Kay Lousberg. Texturas de ambientCG (Lennart Demes).",
+        "Los sonidos de cada pueblo y la música de paz etíope sintetizada son obra propia del proyecto."
+      ]
+    }
+  ],
+  "pie": "La lista completa, archivo por archivo, está en assets/CREDITOS.md."
+}

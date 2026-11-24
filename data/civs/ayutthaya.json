@@ -2,7 +2,7 @@
  "nombre": "Ayutthaya",
  "adjetivo": "siamés",
  "riqueza_nombre": "Tributo del rey", "riqueza_desc": "El monte paga al rey (suai): los phrai del monte pagan en sapán, cueros y estaño en lugar de servir, y el Phra Khlang, el almacén real, lo vende. Parte de lo que se entrega a los elefantes del rey (madera, arbustos, piedra y arroz) entra como riqueza. Además, la arcilla de casa.",
- "frase": "La ciudad isla que comercia con el mundo y pelea sobre elefantes.",
+ "frase": "La ciudad isla del rey, sus elefantes y sus huéspedes.",
  "region": "Siam, 1351–1767",
  "descripcion": "Arroz de crecida que rinde junto al agua, el suai del monte que vende el Phra Khlang, barrios extranjeros que pagan y alquilan compañías, y elefantes de guerra que arrasan en área.",
  "estilo": {
@@ -66,7 +66,7 @@
   }
  },
  "unidades_nuevas": {
-  "ngao": {"nombre": "Ngao", "propia": true, "funcion": "linea", "edad_min": 3, "pob": 1, "costo": {"alimento": 60, "madera": 35, "riqueza": 20}, "tiempo_ms": 17000, "pv": 130, "armadura": 2, "armadura_distancia": 0, "ataque": 9, "alcance": 700, "cadencia_ms": 1500, "velocidad": 1150, "vision": 7500, "radio": 270, "bono": {"montado": 6}, "guja": true, "desc": "Línea con guja: una hoja curva de un filo sobre un asta (no es una alabarda), el arma de quien iba en el cuello del elefante y también de la infantería. +6 contra los montados y los elefantes.", "evidencia": "Documentado (crónicas: el combate de Nong Sarai). Cushman (2000); Terwiel, JSS 101 (2013). Las piezas de época, [verificar]: las de museo son mayormente de Bangkok."},
+  "ngao": { "nombre_comun": "Infantería de guja","nombre": "Ngao", "propia": true, "funcion": "linea", "edad_min": 3, "pob": 1, "costo": {"alimento": 60, "madera": 35, "riqueza": 20}, "tiempo_ms": 17000, "pv": 130, "armadura": 2, "armadura_distancia": 0, "ataque": 9, "alcance": 700, "cadencia_ms": 1500, "velocidad": 1150, "vision": 7500, "radio": 270, "bono": {"montado": 6}, "guja": true, "desc": "Línea con guja: una hoja curva de un filo sobre un asta (no es una alabarda), el arma de quien iba en el cuello del elefante y también de la infantería. +6 contra los montados y los elefantes.", "evidencia": "Documentado (crónicas: el combate de Nong Sarai). Cushman (2000); Terwiel, JSS 101 (2013). Las piezas de época, [verificar]: las de museo son mayormente de Bangkok."},
   "defensores_suan_phlu": {"nombre": "Defensores de Suan Phlu", "propia": true, "elite": true, "funcion": "linea", "edad_min": 4, "pob": 1, "costo": {"alimento": 80, "madera": 20, "riqueza": 60}, "tiempo_ms": 20000, "pv": 160, "armadura": 3, "armadura_distancia": 2, "ataque": 11, "alcance": 700, "cadencia_ms": 1400, "velocidad": 1150, "vision": 8000, "radio": 280, "armadura_cerca": {"n": 2, "radio": 3, "fuertes": true}, "desc": "La tropa china que defendió la muralla en Khlong Suan Phlu en 1767 y después apoyó a Taksin, con armas de asta y de fuego. +2 de armadura a 3 casillas o menos de una cerca, puerta, torre o fortaleza propias.", "evidencia": "Documentado (la defensa). Cushman (2000); Sarasin Viraphol (1977). El armamento, [verificar]."},
   "elefante_rey": { "nombre": "Elefante del rey (chang luang)", "funcion": "carga", "edad_min": 1, "pob": 2, "costo": { "alimento": 80, "madera": 80 }, "tiempo_ms": 45000, "pv": 600, "armadura": 0, "ataque": 0, "alcance": 0, "cadencia_ms": 1000, "velocidad": 850, "vision": 6000, "radio": 620, "elefante": true, "maximo_por_edad": [1, 2, 3, 4], "deposito": ["alimento", "madera", "piedra"], "tributo": { "arbol": 35, "arbusto": 35, "roca": 35, "granja": 15, "tope_por_edad": [24, 34, 42, 48], "separacion": 8 }, "desc": "Almacén que camina: recibe madera, alimento y piedra. El monte paga al rey (suai): el 35 % de la madera, los arbustos y la piedra (sapán, cueros y estaño) y el 15 % del arroz entra además como riqueza, hasta 24 por minuto por elefante (34 en la edad II, 42 en la III y 48 en la IV). Sin ataque." },
   "chang_suek": {"nombre": "Elefante de guerra (chang suek)", "funcion": "choque", "edad_min": 2, "pob": 3, "costo": {"alimento": 160, "riqueza": 120}, "tiempo_ms": 34000, "pv": 640, "armadura": 3, "armadura_distancia": 3, "ataque": 22, "alcance": 700, "cadencia_ms": 2200, "velocidad": 1050, "vision": 9000, "radio": 620, "area": 1600, "area_pct": 45, "elefante": true},
@@ -101,7 +101,7 @@
  },
  "sin_edificios": ["deposito", "hito_economia", "hito_guerra", "almacen_alimento", "almacen_madera", "establo"],
  "edificios_nuevos": {
-  "kraal": {
+  "kraal": { "nombre_comun": "Corral de elefantes",
    "nombre": "Kraal de elefantes",
    "edad_min": 2,
    "tam": [
@@ -162,7 +162,7 @@
    "ranura": 11,
    "desc": "Comerciantes y artilleros portugueses: renta y compañías de arcabuces."
   },
-  "wat": { "eje": "economia",
+  "wat": { "nombre_comun": "Templo mayor", "eje": "economia",
    "nombre": "Wat Mahathat",
    "edad_min": 1,
    "tam": [
@@ -186,7 +186,7 @@
     }
    ]
   },
-  "kraal_real": { "eje": "militar",
+  "kraal_real": { "nombre_comun": "Corral real de elefantes", "eje": "militar",
    "nombre": "Kraal real",
    "edad_min": 1,
    "tam": [

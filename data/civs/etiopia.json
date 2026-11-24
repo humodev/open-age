@@ -108,11 +108,11 @@
   }
  },
  "unidades_nuevas": {
-  "guerrero_gasa": {"nombre": "Guerrero de gaša", "propia": true, "funcion": "choque", "edad_min": 2, "pob": 1, "costo": {"alimento": 60, "madera": 15, "riqueza": 25}, "tiempo_ms": 17000, "pv": 120, "armadura": 1, "armadura_distancia": 1, "ataque": 11, "alcance": 450, "cadencia_ms": 1250, "velocidad": 1350, "vision": 8000, "radio": 260, "gasa": true,
+  "guerrero_gasa": { "nombre_comun": "Guerrero de escudo","nombre": "Guerrero de gaša", "propia": true, "funcion": "choque", "edad_min": 2, "pob": 1, "costo": {"alimento": 60, "madera": 15, "riqueza": 25}, "tiempo_ms": 17000, "pv": 120, "armadura": 1, "armadura_distancia": 1, "ataque": 11, "alcance": 450, "cadencia_ms": 1250, "velocidad": 1350, "vision": 8000, "radio": 260, "gasa": true,
    "carga_golpe": {"extra": 6, "frena_ms": 0, "espera_ms": 5000},
    "desc": "Infantería con lanza, jabalinas y escudo (gaša): arroja la jabalina al cerrar (el primer golpe después de 5 s sin pelear pega 6 más) y el escudo le da +1 de armadura a distancia. La espada curva, el šotäl, queda solo en la ficha: sus imágenes son de los siglos XVIII y XIX, y lo de que «pasa por encima del escudo» es de catálogos modernos (debatido).",
    "evidencia": "Documentado (la infantería). Futūḥ al-Ḥabaša (Stenhouse, 2003); Álvares (1540). La iconografía del šotäl, [verificar] (Institute of Ethiopian Studies)."},
-  "farasanna": {"nombre": "Färäsäñña con cota", "propia": true, "funcion": "choque", "montado": true, "edad_min": 3, "pob": 2, "costo": {"alimento": 120, "riqueza": 90}, "tiempo_ms": 26000, "pv": 220, "armadura": 3, "armadura_distancia": 2, "ataque": 13, "alcance": 500, "cadencia_ms": 1300, "velocidad": 1950, "vision": 9000, "radio": 380, "cota": true,
+  "farasanna": { "nombre_comun": "Jinete con cota","nombre": "Färäsäñña con cota", "propia": true, "funcion": "choque", "montado": true, "edad_min": 3, "pob": 2, "costo": {"alimento": 120, "riqueza": 90}, "tiempo_ms": 26000, "pv": 220, "armadura": 3, "armadura_distancia": 2, "ataque": 13, "alcance": 500, "cadencia_ms": 1300, "velocidad": 1950, "vision": 9000, "radio": 380, "cota": true,
    "desc": "Färäsäñña es «jinete»: el montado pesado con cota de malla importada, de pocos. 220 de vida y armadura 3; más lento que el jinete noble.",
    "evidencia": "Documentado. Futūḥ al-Ḥabaša (Stenhouse, 2003); Álvares (1540) [verificar los pasajes]."},
   "caballeria_corte": {"nombre": "Caballería de la corte", "propia": true, "elite": true, "funcion": "choque", "montado": true, "edad_min": 4, "pob": 2, "costo": {"alimento": 110, "riqueza": 80}, "tiempo_ms": 22000, "pv": 180, "armadura": 1, "armadura_distancia": 3, "ataque": 12, "alcance": 500, "cadencia_ms": 1100, "velocidad": 2500, "vision": 9500, "radio": 380, "bono": {"distancia": 6},
@@ -166,7 +166,7 @@
   "corte_nueva": { "nombre": "Corte nueva (cimiento)", "edad_min": 1, "tam": [4, 4], "pv": 2400, "armadura": 1, "costo": { "madera": 150 }, "tiempo_ms": 60000, "vision": 6000, "autoconstruye": true, "vida_inicial_pct": 25, "ranura": 6,
    "funda_corte": { "edificio": "centro", "cada_ms": 300000, "lejos_de": 20, "sin_combate": 15, "fiesta_distancia": 25, "fiesta_arcilla": 300, "fiesta_ms": 60000 },
    "desc": "La corte se funda en otro lugar: el cimiento se levanta solo en 60 s y, al terminar, la capital se muda ahí con su vida. Una cada 5 minutos, lejos de bases militares rivales. Si queda lejos de la anterior y junto a arcilla con riqueza, hay fiesta: los gult cercanos rinden el doble un minuto (una por arcilla)." },
-  "gult": {
+  "gult": { "nombre_comun": "Derecho de tributo",
    "nombre": "Gult",
    "edad_min": 1,
    "tam": [

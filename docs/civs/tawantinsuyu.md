@@ -16,6 +16,8 @@ Nombres y periodos son propuestas a revisar con fuentes y hablantes de quechua.
 | III | Tawantinsuyu | Apogeo, c. 1470–1530 `[verificar]` | Segunda obra estatal |
 | IV | Resistencia | Vilcabamba y rebeliones posteriores `[verificar]` | Tercera obra o levantamiento (arco tardío, `03`) |
 
+En los datos, la IV se llama *Inkarri* (en consulta: C-39 y C-70). Hitos (C-40 b, `proceso/51`): para la II, ushnu o pukara de frontera; para la III, **Qorikancha** (obra de Pachakutiq, c. 1438) o kallanka real; para la IV, **aqllawasi** o Vilcabamba.
+
 ## Presupuesto
 | Ranura | Mecánica | Módulo (`06`) | Parámetros clave |
 |---|---|---|---|

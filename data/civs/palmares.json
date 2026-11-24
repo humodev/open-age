@@ -74,14 +74,14 @@
   ]
  },
  "unidades_nuevas": {
-  "zagaieiro": {"nombre": "Zagaieiro", "propia": true, "funcion": "distancia", "edad_min": 2, "pob": 1, "costo": {"alimento": 40, "madera": 30, "riqueza": 20}, "tiempo_ms": 15000, "pv": 85, "armadura": 0, "armadura_distancia": 1, "ataque": 9, "alcance": 3000, "cadencia_ms": 1800, "velocidad": 1300, "vision": 8000, "radio": 230, "bono": {"choque": 2}, "zagaia": true,
+  "zagaieiro": { "nombre_comun": "Azagayero","nombre": "Zagaieiro", "propia": true, "funcion": "distancia", "edad_min": 2, "pob": 1, "costo": {"alimento": 40, "madera": 30, "riqueza": 20}, "tiempo_ms": 15000, "pv": 85, "armadura": 0, "armadura_distancia": 1, "ataque": 9, "alcance": 3000, "cadencia_ms": 1800, "velocidad": 1300, "vision": 8000, "radio": 230, "bono": {"choque": 2}, "zagaia": true,
    "desc": "Arroja la lanza a tiro corto (3 casillas, contra 5,5 del flecheiro) y pega más a la gente de choque (+2). Zagaia es como llamaban los portugueses a toda lanza arrojadiza africana (la palabra viene del beréber y el árabe). Las lanzas y las flechas de Palmares están en las fuentes.",
    "evidencia": "Documentado (las lanzas); a verificar la azagaya y la palabra «zagaieiro» en un documento. Thornton, Warfare in Atlantic Africa (1999)."},
-  "guarnicao_cerca": {"nombre": "Guarnição da cerca", "propia": true, "funcion": "linea", "edad_min": 3, "pob": 1, "costo": {"alimento": 60, "madera": 30, "riqueza": 15}, "tiempo_ms": 17000, "pv": 150, "armadura": 3, "armadura_distancia": 0, "ataque": 9, "alcance": 650, "cadencia_ms": 1500, "velocidad": 1100, "vision": 7500, "radio": 280,
+  "guarnicao_cerca": { "nombre_comun": "Guarnición de la cerca","nombre": "Guarnição da cerca", "propia": true, "funcion": "linea", "edad_min": 3, "pob": 1, "costo": {"alimento": 60, "madera": 30, "riqueza": 15}, "tiempo_ms": 17000, "pv": 150, "armadura": 3, "armadura_distancia": 0, "ataque": 9, "alcance": 650, "cadencia_ms": 1500, "velocidad": 1100, "vision": 7500, "radio": 280,
    "armadura_cerca": {"n": 2, "radio": 3},
    "desc": "La línea que defendía la cerca real: +2 de armadura a 3 casillas o menos de una cerca, una puerta o un baluarte propios.",
    "evidencia": "Documentado. Lara (2021); Ennes (1938)."},
-  "capitao_mocambo": {"nombre": "Capitão de mocambo", "propia": true, "elite": true, "funcion": "choque", "edad_min": 4, "pob": 2, "costo": {"alimento": 120, "riqueza": 100}, "tiempo_ms": 26000, "pv": 200, "armadura": 2, "armadura_distancia": 2, "ataque": 14, "alcance": 450, "cadencia_ms": 1250, "velocidad": 1400, "vision": 9000, "radio": 280,
+  "capitao_mocambo": { "nombre_comun": "Capitán de mocambo","nombre": "Capitão de mocambo", "propia": true, "elite": true, "funcion": "choque", "edad_min": 4, "pob": 2, "costo": {"alimento": 120, "riqueza": 100}, "tiempo_ms": 26000, "pv": 200, "armadura": 2, "armadura_distancia": 2, "ataque": 14, "alcance": 450, "cadencia_ms": 1250, "velocidad": 1400, "vision": 9000, "radio": 280,
    "mando": {"n": 1, "radio": 5000},
    "desc": "Jefes de mocambo y de guerra que las fuentes nombran con títulos portugueses (mestre de campo, capitão); los títulos ngana, en el texto. Choque y mando: la tropa propia a 5 casillas pega 1 más. Sin glorificar a una persona (consulta a la CONAQ, §7).",
    "evidencia": "Documentado. Relação das guerras feitas aos Palmares (1678); Lara y Fachin (2021)."}
@@ -90,7 +90,7 @@
   "Mocambo",
   "Palmares",
   "Angola Janga",
-  "Cucaú o Quilombo"
+  "1678"
  ],
  "unidades": {
   "comerciante": {"nombre": "Mascate", "desc": "Vendedor ambulante que iba y venía entre los mocambos y las villas de los moradores [verificar: nombre a revisar por los historiadores]. Va del mercado propio a otro mercado y vuelve con riqueza: cuanto más lejos, más gana."},
@@ -136,7 +136,7 @@
  "sin_unidades": ["catapulta"],
  "sin_edificios": ["torre", "hito_economia", "hito_guerra", "deposito", "almacen_madera", "campo_tiro", "establo", "taller", "muralla", "puerta_piedra", "torre_muralla"],
  "edificios_nuevos": {
-  "hoyo": {"nombre": "Fojo con estrepes", "edad_min": 4, "requiere_tec": "fojos_estrepes", "tam": [1, 1], "pv": 40, "armadura": 0, "costo": {"madera": 20}, "tiempo_ms": 6000, "vision": 1000, "transitable": true, "oculto": true, "deteccion": 2000, "sin_blanco_automatico": true, "no_cuenta": true,
+  "hoyo": { "nombre_comun": "Hoyo con estacas","nombre": "Fojo con estrepes", "edad_min": 4, "requiere_tec": "fojos_estrepes", "tam": [1, 1], "pv": 40, "armadura": 0, "costo": {"madera": 20}, "tiempo_ms": 6000, "vision": 1000, "transitable": true, "oculto": true, "deteccion": 2000, "sin_blanco_automatico": true, "no_cuenta": true,
    "trampa": {"danio": 40, "montado_pct": 200, "frena_ms": 4000},
    "desc": "Fojo: pozo con estrepes (estacas aguzadas) en el fondo, tapado, en los accesos de la cerca (1692–1694). Al que cae le hace 40 de daño (el doble a los montados) y lo frena 4 s; después queda abierto y se pierde. El rival lo ve recién a 2 casillas."},
   "mocambo": {
@@ -170,7 +170,7 @@
    "ranura": 7,
    "desc": "Aldea en el monte. La gente que llega trabaja en sus oficios (herrero, alfarero, cestero, tejedor de palma): 3 puestos de 20 de riqueza por minuto que paran bajo asedio."
   },
-  "quilombo_central": { "costo_extra": { "fama": 90 }, "eje": "economia",
+  "quilombo_central": { "nombre_comun": "Capital del quilombo", "costo_extra": { "fama": 90 }, "eje": "economia",
    "nombre": "Macaco",
    "edad_min": 1,
    "tam": [
@@ -189,7 +189,7 @@
    "efectos": [],
    "renta": {"fama": 20}
   },
-  "mocambo_guerra": { "costo_extra": { "fama": 90 }, "eje": "militar",
+  "mocambo_guerra": { "nombre_comun": "Aldea de guerra", "costo_extra": { "fama": 90 }, "eje": "militar",
    "nombre": "Mocambo de guerra",
    "edad_min": 1,
    "tam": [
@@ -251,7 +251,7 @@
    "cadencia_ms": 2000,
    "espinas": 6
   },
-  "ferraria": { "eje": "militar",
+  "ferraria": { "nombre_comun": "Herrería grande", "eje": "militar",
    "nombre": "Ferraria grande",
    "edad_min": 1,
    "tam": [

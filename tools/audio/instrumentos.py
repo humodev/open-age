@@ -53,8 +53,22 @@ def wankara(dur: float = 0.9, seed: int = 0, vel: float = 1.0) -> np.ndarray:
     return (body + thump) * vel
 
 
-# ============ Mapuches: trutruka, kull-kull, kakelkultrun ============
-# El kultrun (tambor de la machi) no se usa: ver proceso/24-tras-la-segunda-ronda/4h-sonido-con-respeto.md.
+# ============ Mapuches: kultrun, trutruka (y kull-kull, kakelkultrun) ============
+# C-53 a: el kultrun vuelve (modelo de 4g, commit 456a59b). Consultarlo con una organización mapuche,
+# junto con la pifilka, antes de publicar. El kull-kull y el kakelkultrun de 4h quedan sin uso.
+
+def kultrun(dur: float = 0.7, seed: int = 0, vel: float = 1.0, centro: bool = True) -> np.ndarray:
+    """Timbal de cuenco de madera con un solo parche, golpeado con una baqueta (trepuwe).
+    Modos de membrana circular (1, 1,59, 2,14, 2,30, 2,65) sobre ~118 Hz y el cuenco que resuena."""
+    f0 = 118 if centro else 128
+    ratios = [(1.0, 1.0, 0.24), (1.59, 0.55 if not centro else 0.25, 0.14), (2.14, 0.4, 0.1), (2.30, 0.28, 0.09),
+              (2.65, 0.22, 0.07), (2.92, 0.15, 0.06), (3.16, 0.1, 0.05)]
+    body = modal(dur, [(f0 * r, a, tau) for r, a, tau in ratios], seed, pitch_drop=0.06, drop_tau=0.03)
+    n = len(body)
+    stick = bandpass(noise(dur, seed + 6), 1500, 6000, 2) * expdecay(n, 0.006) * 0.5
+    bowl = modal(dur, [(310, 0.12, 0.08), (560, 0.06, 0.05)], seed + 7)
+    return (body + stick + bowl) * vel
+
 
 def kakelkultrun(dur: float = 0.7, seed: int = 0, vel: float = 1.0, centro: bool = True) -> np.ndarray:
     """Tambor de dos parches, de uso no ceremonial [verificar: Grebe], golpeado con un palo. Cuerpo cilíndrico

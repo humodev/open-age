@@ -37,7 +37,7 @@ const MUSIC := {
 ## Música propia de cada pueblo; se alterna con la general (assets/audio/musica/README.md).
 const CIV_MUSIC := {
 	"tawantinsuyu": {"paz": ["musica/tawantinsuyu/musica_andes_flauta_de_pan_1.ogg", "musica/tawantinsuyu/musica_andes_charango_1.ogg", "musica/musica_flauta_de_pan.ogg"]},
-	"mapuches": {"combate": ["musica/mapuche/musica_mapuche_pifilka_1.ogg", "musica/mapuche/musica_mapuche_pifilka_2.ogg", "musica/musica_marcha_batalla.ogg"]},
+	# Mapuches: la pifilka pasó a la paz (C-08 a), en data/audio.json; en el combate, la general.
 	"guaranies": {"paz": ["musica/guarani/musica_guarani_selva_generica_1.ogg"]},
 	# Palmares: sin pistas propias hasta tener ngoma, marimba y kisanji sintetizados. Salieron los toques
 	# de capoeira (iúna, angola), el ijexá y el "Tropical loop" genérico (revisión histórica 25, 01 R3 y 02 n.º 10).

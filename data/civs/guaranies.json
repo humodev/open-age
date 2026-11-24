@@ -84,9 +84,9 @@
  },
  "edades": [
   "Tekoha",
-  "Amundá",
+  "Tovaja",
   "Mbororé",
-  "Tava"
+  "Ñande retã"
  ],
  "unidades": {
   "comerciante": {"nombre": "Tropa de yerba", "desc": "La yerba bajaba en balsas y tropas hasta Santa Fe [verificar: nombre a revisar por los historiadores]. Va del mercado propio a otro mercado y vuelve con riqueza: cuanto más lejos, más gana."},
@@ -140,7 +140,7 @@
   "caballeria_mision": {"nombre": "Caballería de las misiones", "propia": true, "elite": true, "funcion": "choque", "montado": true, "edad_min": 4, "pob": 2, "costo": {"alimento": 110, "riqueza": 80}, "tiempo_ms": 24000, "pv": 190, "armadura": 2, "armadura_distancia": 2, "ataque": 13, "alcance": 600, "cadencia_ms": 1300, "velocidad": 2100, "vision": 9000, "radio": 380, "bono": {"distancia": 4},
    "desc": "Vía misión, élite de la IV. Jinete de lanza de las compañías de las misiones, que tenían estancias, caballada y milicias. Es la gente de la Guerra Guaranítica (1754–1756), que pelearon los siete pueblos, y de Sepé Tiaraju, corregidor de San Miguel. La frase «esta tierra tiene dueño» se le atribuye: es tradición de la literatura riograndense, sin documento de época. Se entrena en el pueblo de misión.",
    "evidencia": "Documentado. Ganson, The Guaraní under Spanish Rule (2003); Avellaneda y Quarleri (2007). La frase: Golin (1998), tradición [verificar si aparece en algún diario de 1756]."},
-  "kaaguygua": {"nombre": "Ka'aguygua", "propia": true, "elite": true, "funcion": "choque", "edad_min": 4, "pob": 1, "costo": {"alimento": 75, "riqueza": 45}, "tiempo_ms": 18000, "pv": 140, "armadura": 1, "armadura_distancia": 1, "ataque": 13, "alcance": 450, "cadencia_ms": 1250, "velocidad": 1450, "vision": 8500, "radio": 260, "armadura_monte": 2,
+  "kaaguygua": { "nombre_comun": "Gente del monte","nombre": "Ka'aguygua", "propia": true, "elite": true, "funcion": "choque", "edad_min": 4, "pob": 1, "costo": {"alimento": 75, "riqueza": 45}, "tiempo_ms": 18000, "pv": 140, "armadura": 1, "armadura_distancia": 1, "ataque": 13, "alcance": 450, "cadencia_ms": 1250, "velocidad": 1450, "vision": 8500, "radio": 260, "armadura_monte": 2,
    "desc": "Vía monte, élite de la IV. «Los del monte»: los monteses o caaiguás de las fuentes, que resistieron la reducción hasta el siglo XVIII. Choque con +2 de armadura cuando pelea junto al monte. La grafía, a verificar. Se entrena en el hito del monte libre.",
    "evidencia": "Documentado. Susnik (1979–82); Meliá (1986)."}
  },
@@ -166,7 +166,7 @@
  "sin_edificios": ["torre", "hito_economia", "hito_guerra", "deposito", "almacen_alimento", "establo", "muralla", "puerta_piedra", "torre_muralla"],
  "edificios_nuevos": {
   "maravilla_monte": {"hereda": "maravilla", "nombre": "Aldea grande del monte", "arte": "maravilla_aldea_monte", "requiere_hito": "monte", "desc": "Una gran aldea de óga guasu en el monte cerrado. Mientras está en pie, la tropa propia escondida en el monte se deja ver solo de más cerca. No se usa tekoha guasu: es una categoría de los avá guaraní y los kaiowá en los litigios por tierras de los siglos XX y XXI, y una palabra de lucha presente (C-85 a). Solo por la vía del monte. (Meliá, Grünberg y Grünberg, 1976.) Con consulta a mbyá, paĩ-tavyterã, avá guaraní y kaiowá.", "efectos_maravilla": [{"tipo": "sigilo_monte", "deteccion_pct": 50}]},
-  "karai_palabra": { "eje": "economia",
+  "karai_palabra": { "nombre_comun": "Casa del chamán", "eje": "economia",
    "nombre": "Casa del karai",
    "edad_min": 1,
    "tam": [
@@ -190,7 +190,7 @@
     }
    ]
   },
-  "aty_guasu": { "eje": "militar",
+  "aty_guasu": { "nombre_comun": "Gran asamblea", "eje": "militar",
    "nombre": "Aty guasu",
    "edad_min": 1,
    "tam": [
@@ -324,7 +324,7 @@
    "alcance": 7500,
    "cadencia_ms": 2000
   },
-  "yvy_marane": { "eje": "militar",
+  "yvy_marane": { "nombre_comun": "Nuestra tierra", "eje": "militar",
    "nombre": "Ñande retã",
    "edad_min": 1,
    "tam": [
