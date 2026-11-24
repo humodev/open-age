@@ -1,5 +1,5 @@
 extends Control
-## Panel de economía (F2): ingreso por minuto, aldeanos por tarea, riqueza por
+## Panel de economía (F5): ingreso por minuto, aldeanos por tarea, riqueza por
 ## origen, lo disputado, recurso propio y sitios sagrados. No pausa la partida.
 
 const C := preload("res://src/game/ui/panel_comun.gd")

@@ -1,0 +1,1033 @@
+{
+ "civ": "tawantinsuyu",
+ "_doc": "Arte de la guerra (C-38, proceso/52): cinco misiones cortas de una sola idea, como el Art of War de AoE4. Las arma el motor de escenarios como cualquier campaña (src/sim/sim_scenario.gd). medallas: segundos de juego hasta ganar para oro, plata y bronce; ganar después del bronce cuenta como completada, sin medalla. Las marcas se guardan en user://arte_guerra.json (src/game/ui/arte_guerra.gd). La prueba es tests/arte_guerra.gd (y campaign_smoke, que corre todo data/campanas).",
+ "titulo": "Arte de la guerra",
+ "resumen": "Cinco misiones cortas, una idea cada una. Ganá rápido para la medalla de oro.",
+ "misiones": [
+  {
+   "id": "arte-1",
+   "titulo": "Economía temprana",
+   "anio": "",
+   "lugar": "Una idea: el centro nunca para",
+   "intro": [
+    "En los primeros minutos se gana o se pierde la partida. La regla es simple: el centro entrena aldeanos sin parar, y cada aldeano nuevo va a trabajar enseguida.",
+    "Juntá lo pedido lo antes posible. Cuanto más rápido, mejor la medalla."
+   ],
+   "epilogo": [
+    "Así arranca toda partida: el centro siempre ocupado, casas antes de llenarse y aldeanos repartidos entre alimento y madera."
+   ],
+   "fuentes": [],
+   "mapa": {
+    "semilla": 3101,
+    "terreno": "llano"
+   },
+   "jugador": {
+    "edad": 1,
+    "recursos": {
+     "alimento": 200,
+     "madera": 200,
+     "piedra": 0,
+     "riqueza": 100
+    },
+    "aldeanos": 6,
+    "tropas": []
+   },
+   "rivales": [
+    {
+     "nombre": "Saqueadores",
+     "faccion": "invasores",
+     "ia": "pasiva",
+     "edad": 1,
+     "dificultad": "facil"
+    }
+   ],
+   "objetivos": [
+    {
+     "id": "o1",
+     "texto": "Entrená 8 aldeanos en el centro (H elige el centro y Q entrena; Mayús + Q pone 5 en la cola).",
+     "tipo": "entrenar",
+     "params": {
+      "tipo": "aldeano",
+      "n": 8
+     },
+     "secundario": false
+    },
+    {
+     "id": "o2",
+     "texto": "Juntá 500 de alimento, 400 de madera y 150 de riqueza.",
+     "tipo": "juntar",
+     "params": {
+      "recursos": {
+       "alimento": 500,
+       "madera": 400,
+       "riqueza": 150
+      }
+     },
+     "secundario": false
+    },
+    {
+     "id": "o3",
+     "texto": "Construí un almacén de madera junto al bosque (Q abre Economía, E elige el almacén).",
+     "tipo": "construir",
+     "params": {
+      "tipo": "almacen_madera",
+      "n": 1
+     },
+     "secundario": false
+    }
+   ],
+   "eventos": [
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 0
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Primero, el centro: elegilo con H y poné aldeanos en la cola. Después repartí a los seis que tenés: tres a los frutos y tres a los árboles."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 25
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Cada casa da lugar a más gente. Si la población se llena, el centro se frena: hacé una casa antes de que pase."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 60
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Los aldeanos caminan hasta el depósito más cercano. Un almacén pegado al bosque les ahorra el viaje."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 120
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "¿Hay alguien sin trabajo? El punto (.) lo encuentra. Un aldeano quieto es comida que no llega."
+      }
+     }
+    }
+   ],
+   "medallas": {
+    "oro": 300,
+    "plata": 390,
+    "bronce": 540
+   }
+  },
+  {
+   "id": "arte-2",
+   "titulo": "Defensa",
+   "anio": "",
+   "lugar": "Una idea: avisan antes de llegar",
+   "intro": [
+    "Tres oleadas de saqueadores van a venir, una detrás de otra. Cada una se anuncia con una cuenta arriba al centro: es el tiempo que tenés para prepararte.",
+    "Entrená tropa, peleá cerca de la torre y, si no alcanza, tocá la campana. Cuanto antes caigan las tres oleadas, mejor la medalla."
+   ],
+   "epilogo": [
+    "Defenderse es ganar tiempo: la campana salva a los aldeanos, la torre y el centro tiran, y la tropa termina el trabajo."
+   ],
+   "fuentes": [],
+   "mapa": {
+    "semilla": 3102,
+    "terreno": "llano"
+   },
+   "jugador": {
+    "edad": 1,
+    "recursos": {
+     "alimento": 700,
+     "madera": 400,
+     "piedra": 0,
+     "riqueza": 350
+    },
+    "aldeanos": 10,
+    "tropas": [
+     {
+      "tipo": "guerrero",
+      "n": 4
+     }
+    ],
+    "edificios": [
+     {
+      "tipo": "cuartel",
+      "n": 1
+     },
+     {
+      "tipo": "torre",
+      "n": 1
+     }
+    ]
+   },
+   "rivales": [
+    {
+     "nombre": "Saqueadores",
+     "faccion": "invasores",
+     "ia": "pasiva",
+     "edad": 1,
+     "dificultad": "facil"
+    }
+   ],
+   "objetivos": [
+    {
+     "id": "o1",
+     "texto": "Primera oleada: abatí a 4 saqueadores.",
+     "tipo": "matar",
+     "params": {
+      "n": 4
+     },
+     "secundario": false
+    },
+    {
+     "id": "o2",
+     "texto": "Segunda oleada: abatí a 10 en total.",
+     "tipo": "matar",
+     "params": {
+      "n": 10
+     },
+     "secundario": false,
+     "oculto": true
+    },
+    {
+     "id": "o3",
+     "texto": "Tercera oleada: abatí a 17 en total.",
+     "tipo": "matar",
+     "params": {
+      "n": 17
+     },
+     "secundario": false,
+     "oculto": true
+    },
+    {
+     "id": "pr",
+     "texto": "Cuidá a tus aldeanos: si te quedan menos de 5, se pierde.",
+     "tipo": "proteger",
+     "params": {
+      "tipo": "aldeano",
+      "jugador": 0,
+      "min": 5,
+      "texto_fallo": "Te quedaron menos de 5 aldeanos. Cuando avisen que llegan, tocá la campana (elegí el centro y Z): los aldeanos se refugian y el centro dispara."
+     },
+     "secundario": false
+    }
+   ],
+   "eventos": [
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 0
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Tenés un cuartel, cuatro guerreros y una torre junto al centro. Elegí el cuartel y entrená más: Mayús + clic pone cinco en la cola."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 15
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Primera oleada en 60 segundos. Esperalos cerca del centro y de la torre: los dos disparan."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 15
+     },
+     "accion": {
+      "tipo": "cuenta",
+      "params": {
+       "texto": "Primera oleada",
+       "segundos": 60
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 15
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "guerrero",
+       "n": 4,
+       "distancia": 84
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o1"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "¡Bien! La próxima trae honderos, que tiran de lejos. Tus guerreros los alcanzan rápido: no los dejes quietos."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o1",
+      "espera": 15
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Segunda oleada en 60 segundos."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o1",
+      "espera": 15
+     },
+     "accion": {
+      "tipo": "cuenta",
+      "params": {
+       "texto": "Segunda oleada",
+       "segundos": 60
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o1",
+      "espera": 15
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "guerrero",
+       "n": 3,
+       "distancia": 84
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o1",
+      "espera": 15
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "hondero",
+       "n": 3,
+       "distancia": 84
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o1"
+     },
+     "accion": {
+      "tipo": "objetivo_nuevo",
+      "params": {
+       "id": "o2"
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o2"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "La última es la más grande. Si ves que no alcanza, elegí el centro y tocá la campana (Z): los aldeanos se refugian. Z otra vez los devuelve al trabajo."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o2",
+      "espera": 15
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Tercera oleada en 60 segundos."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o2",
+      "espera": 15
+     },
+     "accion": {
+      "tipo": "cuenta",
+      "params": {
+       "texto": "Tercera oleada",
+       "segundos": 60
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o2",
+      "espera": 15
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "guerrero",
+       "n": 3,
+       "distancia": 84
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o2",
+      "espera": 15
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "hondero",
+       "n": 2,
+       "distancia": 84
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o2",
+      "espera": 15
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "lancero",
+       "n": 2,
+       "distancia": 84
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o2"
+     },
+     "accion": {
+      "tipo": "objetivo_nuevo",
+      "params": {
+       "id": "o3"
+      }
+     }
+    }
+   ],
+   "medallas": {
+    "oro": 330,
+    "plata": 400,
+    "bronce": 540
+   }
+  },
+  {
+   "id": "arte-3",
+   "titulo": "Contadores",
+   "anio": "",
+   "lugar": "Una idea: cada tropa vence a otra",
+   "intro": [
+    "Choque vence a distancia, distancia vence a línea, línea vence a choque. El guerrero corre sobre los honderos; los honderos tiran sobre los lanceros, que son lentos; los lanceros frenan a los guerreros.",
+    "Vienen tres grupos, cada uno de un solo tipo. Mandá contra cada uno la tropa que lo vence. Pasá el mouse sobre un enemigo para ver de qué tipo es, o mantené Alt."
+   ],
+   "epilogo": [
+    "No hay tropa que gane siempre. Mirá qué trae el rival y entrená lo que lo vence."
+   ],
+   "fuentes": [],
+   "mapa": {
+    "semilla": 3103,
+    "terreno": "llano"
+   },
+   "jugador": {
+    "edad": 1,
+    "recursos": {
+     "alimento": 600,
+     "madera": 400,
+     "piedra": 0,
+     "riqueza": 300
+    },
+    "aldeanos": 8,
+    "tropas": [
+     {
+      "tipo": "guerrero",
+      "n": 4
+     },
+     {
+      "tipo": "hondero",
+      "n": 4
+     },
+     {
+      "tipo": "lancero",
+      "n": 4
+     }
+    ],
+    "edificios": [
+     {
+      "tipo": "cuartel",
+      "n": 1
+     },
+     {
+      "tipo": "campo_tiro",
+      "n": 1
+     }
+    ]
+   },
+   "rivales": [
+    {
+     "nombre": "Saqueadores",
+     "faccion": "invasores",
+     "ia": "pasiva",
+     "edad": 1,
+     "dificultad": "facil"
+    }
+   ],
+   "objetivos": [
+    {
+     "id": "o1",
+     "texto": "Vienen honderos (distancia): vencelos con guerreros (choque).",
+     "tipo": "matar",
+     "params": {
+      "n": 6
+     },
+     "secundario": false
+    },
+    {
+     "id": "o2",
+     "texto": "Vienen lanceros (línea): vencelos con honderos (distancia).",
+     "tipo": "matar",
+     "params": {
+      "n": 12
+     },
+     "secundario": false,
+     "oculto": true
+    },
+    {
+     "id": "o3",
+     "texto": "Vienen guerreros (choque): vencelos con lanceros (línea).",
+     "tipo": "matar",
+     "params": {
+      "n": 18
+     },
+     "secundario": false,
+     "oculto": true
+    },
+    {
+     "id": "pr",
+     "texto": "Cuidá a tus aldeanos: si te quedan menos de 4, se pierde.",
+     "tipo": "proteger",
+     "params": {
+      "tipo": "aldeano",
+      "jugador": 0,
+      "min": 4,
+      "texto_fallo": "Te quedaron menos de 4 aldeanos. Cuando avisen que llegan, tocá la campana (elegí el centro y Z): los aldeanos se refugian y el centro dispara."
+     },
+     "secundario": false
+    }
+   ],
+   "eventos": [
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 0
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Tenés cuatro de cada uno. Elegí solo a los guerreros: doble clic sobre uno elige a todos los de su tipo."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 10
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Llegan seis honderos en 45 segundos. Los guerreros los alcanzan rápido; los lanceros, en cambio, caerían sin llegar."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 10
+     },
+     "accion": {
+      "tipo": "cuenta",
+      "params": {
+       "texto": "Honderos",
+       "segundos": 45
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 10
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "hondero",
+       "n": 6,
+       "distancia": 64
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o1"
+     },
+     "accion": {
+      "tipo": "objetivo_nuevo",
+      "params": {
+       "id": "o2"
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o1"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Ahora vienen lanceros: aguantan mucho de cerca, pero son lentos. Los honderos les tiran desde lejos. Mantenelos detrás de tus guerreros."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o1",
+      "espera": 10
+     },
+     "accion": {
+      "tipo": "cuenta",
+      "params": {
+       "texto": "Lanceros",
+       "segundos": 45
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o1",
+      "espera": 10
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "lancero",
+       "n": 6,
+       "distancia": 64
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o2"
+     },
+     "accion": {
+      "tipo": "objetivo_nuevo",
+      "params": {
+       "id": "o3"
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o2"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Por último, guerreros: pegan fuerte y corren. Los lanceros los frenan. Ponelos adelante."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o2",
+      "espera": 10
+     },
+     "accion": {
+      "tipo": "cuenta",
+      "params": {
+       "texto": "Guerreros",
+       "segundos": 45
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o2",
+      "espera": 10
+     },
+     "accion": {
+      "tipo": "ataque",
+      "params": {
+       "jugador": 1,
+       "tipo": "guerrero",
+       "n": 6,
+       "distancia": 64
+      }
+     }
+    }
+   ],
+   "medallas": {
+    "oro": 240,
+    "plata": 300,
+    "bronce": 420
+   }
+  },
+  {
+   "id": "arte-4",
+   "titulo": "Sitios sagrados",
+   "anio": "",
+   "lugar": "Una idea: lo que se tiene, se cuida",
+   "intro": [
+    "Los sitios sagrados dan riqueza a quien los tiene, y en una partida, quien tiene todos un buen rato, gana.",
+    "Tomá los tres sitios y dejá guardia en cada uno. Se toma uno parando una unidad al lado, sin enemigos cerca. Repartir la tropa ahorra tiempo."
+   ],
+   "epilogo": [
+    "Tomar es rápido; cuidar es lo que cuesta. Un sitio sin guardia no rinde y se pierde con cualquier patrulla."
+   ],
+   "fuentes": [],
+   "mapa": {
+    "semilla": 3104,
+    "terreno": "llano",
+    "sitios": {
+     "lugares": [
+      [
+       18,
+       6
+      ],
+      [
+       28,
+       20
+      ],
+      [
+       6,
+       28
+      ]
+     ],
+     "victoria": false,
+     "captura_edad_min": 1
+    }
+   },
+   "jugador": {
+    "edad": 1,
+    "recursos": {
+     "alimento": 300,
+     "madera": 200,
+     "piedra": 0,
+     "riqueza": 200
+    },
+    "aldeanos": 6,
+    "tropas": [
+     {
+      "tipo": "guerrero",
+      "n": 6
+     }
+    ]
+   },
+   "rivales": [
+    {
+     "nombre": "Saqueadores",
+     "faccion": "invasores",
+     "ia": "pasiva",
+     "edad": 1,
+     "dificultad": "facil"
+    }
+   ],
+   "objetivos": [
+    {
+     "id": "o1",
+     "texto": "Tomá los 3 sitios sagrados (una unidad parada al lado hasta que la bandera cambie de color).",
+     "tipo": "sitio",
+     "params": {
+      "n": 3
+     },
+     "secundario": false
+    },
+    {
+     "id": "o2",
+     "texto": "Dejá 2 guerreros de guardia en cada sitio: sin guardia no dan riqueza.",
+     "tipo": "guardia",
+     "params": {
+      "n": 3
+     },
+     "secundario": false
+    }
+   ],
+   "eventos": [
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 0
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Los tres sitios están hacia el centro del mapa. Elegí a tus guerreros y mandalos de a dos: cada pareja a un sitio distinto."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 40
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Mientras tanto, el explorador puede ir adelante: es rápido y también toma sitios."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o1"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Los tres son tuyos. Ahora, la guardia: dos guerreros parados al lado de cada uno."
+      }
+     }
+    }
+   ],
+   "medallas": {
+    "oro": 60,
+    "plata": 90,
+    "bronce": 150
+   }
+  },
+  {
+   "id": "arte-5",
+   "titulo": "Asedio",
+   "anio": "",
+   "lugar": "Una idea: el asedio tumba edificios",
+   "intro": [
+    "Las tropas comunes casi no dañan a los edificios. Para eso está el asedio: lento y frágil, pero derriba torres y muros.",
+    "El rival tiene un cuartel protegido por una torre. Tirá abajo los dos. Tus guerreros cuidan a las piezas de asedio de los soldados enemigos."
+   ],
+   "epilogo": [
+    "El asedio solo no llega a ningún lado. Con tropa que lo cuide, ninguna torre aguanta."
+   ],
+   "fuentes": [],
+   "mapa": {
+    "semilla": 3105,
+    "terreno": "llano"
+   },
+   "jugador": {
+    "edad": 2,
+    "recursos": {
+     "alimento": 400,
+     "madera": 400,
+     "piedra": 0,
+     "riqueza": 200
+    },
+    "aldeanos": 6,
+    "tropas": [
+     {
+      "tipo": "ariete",
+      "n": 4
+     },
+     {
+      "tipo": "guerrero",
+      "n": 8
+     },
+     {
+      "tipo": "hondero",
+      "n": 4
+     }
+    ]
+   },
+   "rivales": [
+    {
+     "nombre": "Plaza enemiga",
+     "faccion": "invasores",
+     "ia": "pasiva",
+     "edad": 1,
+     "dificultad": "facil",
+     "quieta": true
+    }
+   ],
+   "objetivos": [
+    {
+     "id": "o1",
+     "texto": "Derribá la torre del rival con tus honderos de piedra caliente (el asedio).",
+     "tipo": "destruir",
+     "params": {
+      "jugador": 1,
+      "tipo": "torre",
+      "n": 1
+     },
+     "secundario": false
+    },
+    {
+     "id": "o2",
+     "texto": "Derribá su cuartel.",
+     "tipo": "destruir",
+     "params": {
+      "jugador": 1,
+      "tipo": "cuartel",
+      "n": 1
+     },
+     "secundario": false,
+     "oculto": true
+    }
+   ],
+   "eventos": [
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 0
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "El rival está del otro lado del mapa. Mandá primero a los guerreros y atrás el asedio: si el asedio va solo, lo alcanzan."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 30
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "A y clic: atacar en movimiento. La tropa pelea con lo que encuentra en el camino y sigue."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "tiempo",
+      "valor": 90
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Con el asedio elegido, clic derecho sobre la torre. Los guerreros se encargan de la tropa que sale a defenderla."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o1"
+     },
+     "accion": {
+      "tipo": "objetivo_nuevo",
+      "params": {
+       "id": "o2"
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o1"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "¡La torre cayó! Ahora el cuartel: ya no hay quien lo cubra."
+      }
+     }
+    }
+   ],
+   "medallas": {
+    "oro": 180,
+    "plata": 240,
+    "bronce": 360
+   }
+  }
+ ]
+}

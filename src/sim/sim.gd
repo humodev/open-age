@@ -3911,7 +3911,7 @@ func counts_for_victory(b: SimEntity) -> bool:
 
 
 ## Puntaje (reglas.puntaje): recursos juntados, bajas, edificios enemigos destruidos, edad e
-## investigaciones. Decide la partida con tiempo límite; la interfaz lo muestra (F6).
+## investigaciones. Decide la partida con tiempo límite; la interfaz lo muestra (panel de puntaje).
 func score(pid: int) -> int:
 	var pc: Dictionary = data.reglas["puntaje"]
 	var p := players[pid]

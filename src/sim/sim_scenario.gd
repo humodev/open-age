@@ -64,6 +64,9 @@ func _setup() -> void:
 		sim.spawn_near(capital, "aldeano")
 	for t: Dictionary in j.get("tropas", []):
 		_spawn_group(0, t["tipo"], int(t["n"]), capital)
+	# --- arte de la guerra (C-38) --- edificios ya hechos al empezar: [{"tipo", "n"}].
+	for b: Dictionary in j.get("edificios", []):
+		_place_near(0, b["tipo"], capital, int(b.get("n", 1)))
 	# Rivales: edad, base, tropas y lo que haga falta para sus objetivos.
 	sim.ais = []
 	var rivals: Array = m.get("rivales", [])
@@ -77,7 +80,10 @@ func _setup() -> void:
 			sim.players[pid]["res"][k] = int(sim.players[pid]["res"][k]) + 300 * age
 		var ai := SimAI.new(sim, pid, r.get("dificultad", "normal"))
 		ai.personality = r.get("ia", "normal")
-		sim.ais.append(ai)
+		# --- arte de la guerra (C-38) --- "quieta": el rival no juega (sin IA); solo defienden su
+		# guarnición, sus torres y su centro. Una plaza fija para practicar el asedio.
+		if not bool(r.get("quieta", false)):
+			sim.ais.append(ai)
 		var cap := _capital(pid)
 		if cap == null:
 			continue
@@ -96,6 +102,16 @@ func _setup() -> void:
 			var sx := signi(sim.map.n / 2 - cap0.tx)
 			var sy := signi(sim.map.n / 2 - cap0.ty)
 			var t := sim.map.nearest_free(cap0.tx + sx * int(d[0]), cap0.ty + sy * int(d[1]), 8)
+			# --- arte de la guerra (C-38) --- si justo ahí no entra (un árbol, la orilla), el
+			# hueco de 2×2 libre más cercano, en anillos (antes el sitio no aparecía).
+			if t.x >= 0 and not sim.map.is_free_rect(t.x, t.y, 2, 2):
+				var hueco := Vector2i(-1, -1)
+				for r in range(1, 7):
+					for dy in range(-r, r + 1):
+						for dx in range(-r, r + 1):
+							if hueco.x < 0 and (absi(dx) == r or absi(dy) == r) and sim.map.in_bounds(t.x + dx, t.y + dy) and sim.map.in_bounds(t.x + dx + 1, t.y + dy + 1) and sim.map.is_free_rect(t.x + dx, t.y + dy, 2, 2):
+								hueco = Vector2i(t.x + dx, t.y + dy)
+				t = hueco
 			if t.x >= 0 and sim.map.is_free_rect(t.x, t.y, 2, 2):
 				sim.spawn_building("sitio_sagrado", -1, t.x, t.y, true)
 	for o: Dictionary in m.get("objetivos", []):
@@ -242,7 +258,9 @@ func _eval(o: Dictionary) -> String:
 			return "hecho" if kills >= int(pr.get("n", 1)) else ""
 		"proteger":
 			var have := _count(int(pr.get("jugador", 0)), pr["tipo"], false)
-			if have > 0:
+			# --- C-37 b --- "min": se pierde si quedan menos (de fábrica, 1: si caen todos).
+			var minimo := maxi(1, int(pr.get("min", 1)))
+			if have >= minimo:
 				_seen[o["id"]] = true
 			elif _seen.has(o["id"]):
 				return "fallado"

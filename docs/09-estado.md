@@ -31,6 +31,7 @@ Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video,
 | Arte de los pueblos (`proceso/49`) | El gouache de los incas llevado a los otros pueblos, de a uno, con `tools/arte_gouache.py` (un arte por unidad, un ícono por edificio, hojas 3D por edad) y su entrada en `data/arte_pueblos.json`; por pueblo, aldeano, unidad propia, casa y centro en 3D por el pipeline (sin usar, C-106). Hecho en los cinco: mapuches, guaraníes, Etiopía, Palmares y Ayutthaya; los seis pueblos tienen arte pintado en la interfaz. Arreglos (`proceso/50`): caras de piel oscura con rasgos y tono de la hoja (paso `piel` del pipeline y sombreado suave en los 24 modelos), el sombrero siamés, sin paisaje del ícono en los edificios 3D, y el ariete mapuche con arte en la casilla. Falta decidir C-106 |
 | Arte en la interfaz (`proceso/48`) | Los incas muestran su arte en gouache en el retrato, la grilla (construir, entrenar, mejoras), los hitos al subir de edad y la maravilla, con la ropa en el color del equipo. Por datos: para otro pueblo, su entrada en `data/arte_pueblos.json` y `tools/arte_pueblo.py`. Los otros cinco pueblos ya tienen su tanda (`proceso/49`). Leñera, depósito de piedra y taller de tejido rehechos con silueta propia y el chaski con arte en la casilla (`proceso/50`) |
 | Versiones para amigos (`proceso/44`) | `tools/publicar.sh [--subir]` arma, prueba y (con `--subir`) sube a itch.io las versiones de Linux y Windows, selladas con fecha y commit. Relevo con systemd y Docker, y dirección configurable en el menú. Falta: dónde va el relevo y la página de itch (C-102, C-103) |
+| Atajos, tutorial y Arte de la guerra (`proceso/52`) | Hecho (C-35 b, C-37 b, C-38 a). Marcadores de cámara como AoE4: `Ctrl + F1…F4` guarda y `F1…F4` vuelve; los paneles pasan a F5–F9 (economía, edad, sucesos, puntaje, ayuda), la velocidad a K, y los `opciones.cfg` viejos se migran solos. El tutorial se juega con el Tawantinsuyu, con un paso nuevo (almacén de madera) y derrota con motivo si quedan menos de 3 aldeanos. **Arte de la guerra**: cinco misiones cortas (economía temprana, defensa, contadores, sitios sagrados, asedio) con medallas de oro, plata y bronce por tiempo, guardadas en `user://arte_guerra.json`; entrada propia en el menú. El motor de escenarios suma edificios iniciales del jugador, rivales quietos (sin IA), `min` en `proteger` y sitios que buscan hueco |
 | H5 · Multijugador en red | Prototipo 1v1 hecho (ver arriba); relevo listo para desplegar (`proceso/44`) |
 | H6 · Acceso anticipado | Pendiente |
 
@@ -42,7 +43,7 @@ Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video,
 - **Escaramuza** contra la IA con cualquier par de civilizaciones y cuatro tipos de mapa.
 - **Sonido**: interfaz, mundo, ambiente y música CC0.
 - **Arte generado con IA** (Meshy, C-03): láminas de las seis civilizaciones y modelos 3D de capitales, casas, el elefante, el kona, los aldeanos de los seis pueblos, el hondero inca, el arquero guaraní y el jinete noble etíope (`proceso/19-arte-y-sonido`), y del paisaje (cinco especies de árbol, arbustos, piedra, arcilla con vasijas, peñascos y yerbal, `proceso/16-paisaje`); el resto es la maqueta procedural.
-- **Tutorial**, **mercado**, **sitios sagrados**, **tres dificultades**, **repeticiones**, **opciones** y **ayuda en partida (F1)**.
+- **Tutorial**, **mercado**, **sitios sagrados**, **tres dificultades**, **repeticiones**, **opciones** **ayuda en partida (F9)** y **Arte de la guerra** (cinco misiones cortas con medallas).
 
 ## Pruebas
 
@@ -51,8 +52,9 @@ Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video,
 | `tests/test_determinism.gd` | Mismo estado en 3.000 ticks con la misma semilla |
 | `tests/bench.gd` | 200 unidades peleando dentro del presupuesto del tick |
 | `tests/civ_smoke.gd` | Las seis civilizaciones juegan entre sí sin errores |
-| `tests/campaign_smoke.gd` | Las 24 misiones se arman y corren |
-| `tests/tutorial_letra.gd` | El tutorial seguido al pie de la letra se gana; sin defenderse, se pierde con motivo (`-- --modo=indefenso`) |
+| `tests/campaign_smoke.gd` | Las 24 misiones, el tutorial y las 5 del Arte de la guerra se arman y corren |
+| `tests/tutorial_letra.gd` | El tutorial (Tawantinsuyu) seguido al pie de la letra se gana; sin defenderse, se pierde con motivo (`-- --modo=indefenso`) |
+| `tests/arte_guerra.gd` | Las cinco misiones del Arte de la guerra se ganan con un jugador que sigue a la Guía, y las medallas van oro < plata < bronce (`-- --mision=arte-3` para una sola) |
 | `tests/torneo.gd` | Balance: todas contra todas |
 | `tests/salud_ia.gd` | Cada IA en 12 minutos: edad II a tiempo, dos funciones, ejército, producción, mercado, recursos parados y madera a menos de 12 casillas del depósito |
 | `tools/viajes.gd` | Viaje medio al depósito por recurso, cada 5 minutos, y los depósitos de cada uno |

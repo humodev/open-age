@@ -107,20 +107,21 @@ static func secciones() -> Array:
 			["Ctrl + %s…%s" % [_k("grupo_1"), _k("grupo_0")], "guardar lo elegido como grupo"],
 			["%s…%s" % [_k("grupo_1"), _k("grupo_0")], "elegir el grupo (dos veces: la cámara va ahí)"],
 			["Mayús + %s…%s" % [_k("grupo_1"), _k("grupo_0")], "sumar al grupo"],
-			["Ctrl + Alt + 1…8", "guardar la cámara"],
-			["Alt + 1…8 · %s %s %s" % [_k("marcador_1"), _k("marcador_2"), _k("marcador_3")], "volver a una cámara guardada"],
+			["Ctrl + %s…%s" % [_k("marcador_1"), _k("marcador_4")], "guardar la cámara (como AoE4; Ctrl + Alt + 1…8 también)"], # --- C-35 b ---
+			["%s…%s · Alt + 1…8" % [_k("marcador_1"), _k("marcador_4")], "volver a una cámara guardada"],
 			["Flechas, bordes, botón del medio", "mover la cámara (el botón del medio la arrastra); rueda: acercar y alejar"], # --- fluidez 5 --- no gira: el ángulo es fijo
 			["Mantener Alt", "ver qué es cada edificio y cada tropa (choque, distancia, línea, asedio, aldeano), los alcances y las barras de vida"], # --- ronda 6 ---
 		]],
 		["Paneles", [
-			[_k("ayuda"), "cómo juega tu pueblo"],
-			[_k("economia"), "economía"],
-			[_k("velocidad"), "velocidad del juego"],
+			[_k("economia"), "economía"], # --- C-35 b --- en el orden de las teclas (F5…F12)
 			[_k("edad"), "qué falta para la próxima edad"],
 			[_k("sucesos"), "registro de sucesos"],
 			[_k("puntaje"), "puntaje y tributos"],
+			[_k("ayuda"), "cómo juega tu pueblo"],
 			[_k("pausa"), "pausa"],
+			[_k("mi_base"), "«Mi base»: tus edificios y aldeanos"],
 			[_k("atajos"), "esta hoja"],
+			[_k("velocidad"), "velocidad del juego"],
 		]],
 	]
 

@@ -253,7 +253,7 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 	# --- paneles ---
 	paneles = PANELES.new()
 	paneles.setup(self)
-	# Los diálogos (pausa, opciones, ayuda, fin) van por encima de los paneles F1–F6.
+	# Los diálogos (pausa, opciones, ayuda, fin) van por encima de los paneles (F5–F9).
 	for d in [_menu, _options, _help, _end]:
 		if d != null and d.get_parent() == self:
 			move_child(d, -1)
@@ -658,7 +658,7 @@ func on_events(events: Array) -> void:
 				_ia_dice(ev)
 			"pedido":
 				if int(ev["a"]) == local:
-					notify("%s te pide %d de %s (botones de tributo en el puntaje, F6)" % [Palette.team_name(int(ev["de"])), int(ev["n"]), Palette.RES_NAMES.get(ev["recurso"], ev["recurso"]).to_lower()], -1.0, "decision")
+					notify("%s te pide %d de %s (botones de tributo en el puntaje, %s)" % [Palette.team_name(int(ev["de"])), int(ev["n"]), Palette.RES_NAMES.get(ev["recurso"], ev["recurso"]).to_lower(), Teclas.texto("puntaje")], -1.0, "decision")
 				elif int(ev["de"]) == local:
 					notify("Le pediste %d de %s a %s" % [int(ev["n"]), Palette.RES_NAMES.get(ev["recurso"], ev["recurso"]).to_lower(), Palette.team_name(int(ev["a"]))], -1.0, "info")
 			# --- fin órdenes ---
@@ -777,7 +777,7 @@ func _build_help() -> void:
 		if dd.has_mod("recurso_propio"):
 			civ_txt += "\nRecurso propio: %s." % dd.mod("recurso_propio")["nombre"]
 		civ_txt += "\nEdades: %s.\nDebilidad: %s" % [", ".join(c.get("edades", [])), c.get("debilidad", "")]
-	var controls := "Clic izquierdo: seleccionar (arrastrar para un grupo; doble clic: todos los del tipo)\nClic derecho: mover, atacar, recolectar, construir, reparar o alojar\nGrilla Q W E R / A S D F / Z X C V: construir, entrenar, investigar\nAldeanos: Q economía y W militar (submenús; Esc o V vuelve) · Z hito de economía · X hito militar\nLos grupos marchan en formación; Alt + clic derecho: suelto, para retirarse\nA y clic: atacar en movimiento · S: detener · F: refugiarse · Supr: eliminar\nCtrl + 0…9: asignar grupo · Mayús + 0…9: sumar al grupo · H: recorre los centros (dos veces: centra) · . : aldeano inactivo · Z en el centro: campana\nEspacio: ir al último ataque o suceso · Inicio: recorrer los avisos anteriores\n. y , : aldeano y militar ocioso (Mayús: todos) · M: militares · T: todos del tipo · Tab: producción · D: mantener · E: patrullar · Alt + 1…8: ir a la cámara guardada (Ctrl + Alt + 1…8 la guarda) · Alt + clic: bengala\nFlechas, bordes o botón del medio: cámara · F3: velocidad · Esc: pausa\nTeclas de fábrica: se cambian en Opciones → Teclas (perfil AoE4: marcadores en F1–F4)"
+	var controls := "Clic izquierdo: seleccionar (arrastrar para un grupo; doble clic: todos los del tipo)\nClic derecho: mover, atacar, recolectar, construir, reparar o alojar\nGrilla Q W E R / A S D F / Z X C V: construir, entrenar, investigar\nAldeanos: Q economía y W militar (submenús; Esc o V vuelve) · Z hito de economía · X hito militar\nLos grupos marchan en formación; Alt + clic derecho: suelto, para retirarse\nA y clic: atacar en movimiento · S: detener · F: refugiarse · Supr: eliminar\nCtrl + 0…9: asignar grupo · Mayús + 0…9: sumar al grupo · H: recorre los centros (dos veces: centra) · . : aldeano inactivo · Z en el centro: campana\nEspacio: ir al último ataque o suceso · Inicio: recorrer los avisos anteriores\n. y , : aldeano y militar ocioso (Mayús: todos) · M: militares · T: todos del tipo · Tab: producción · D: mantener · E: patrullar · Alt + clic: bengala\n%s…%s: ir a la cámara guardada (Ctrl + %s…%s la guarda, como AoE4; también Alt + 1…8)\nFlechas, bordes o botón del medio: cámara · %s: velocidad · Esc: pausa\nLas teclas se cambian en Opciones → Teclas" % [Teclas.texto("marcador_1"), Teclas.texto("marcador_4"), Teclas.texto("marcador_1"), Teclas.texto("marcador_4"), Teclas.texto("velocidad")]
 	_help = _make_dialog("Cómo se juega", civ_txt + "\n\n" + controls, [["Cerrar", func() -> void: _help.visible = false]])
 	(_help.get_meta("body") as Label).horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	(_help.get_meta("body") as Label).custom_minimum_size = Vector2(760, 0)

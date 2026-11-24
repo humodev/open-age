@@ -1,5 +1,5 @@
 extends Control
-## Puntaje en vivo (F6): chico, una fila por jugador, con su edad.
+## Puntaje en vivo (F8): chico, una fila por jugador, con su edad.
 ## La fórmula está en data/reglas.json → "puntaje" (Sim.score); con tiempo límite decide la partida.
 ## Con equipos (docs/11, paso 5) agrupa por equipo con su total, y en la fila de
 ## cada aliado hay cuatro botones de tributo: un clic manda `tributo_lote` del recurso.

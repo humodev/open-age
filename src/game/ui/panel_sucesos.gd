@@ -1,5 +1,5 @@
 extends Control
-## Registro de sucesos (F5): lista desplegable con los últimos avisos, con hora.
+## Registro de sucesos (F7): lista desplegable con los últimos avisos, con hora.
 ## Clic en un suceso con lugar: la cámara va ahí. Rueda: recorre la lista.
 
 const C := preload("res://src/game/ui/panel_comun.gd")
@@ -75,7 +75,7 @@ func _draw() -> void:
 	if unread > 0 and not expanded:
 		var badge := "%d nuevo%s" % [unread, "s" if unread > 1 else ""]
 		C.text(self, Vector2(84, 20), badge, 12, Palette.UI_ACCENT, true)
-	C.text(self, Vector2(0, 20), "F5  %s" % ("▴" if expanded else "▾"), 12, Palette.UI_DIM, false, size.x - 12, HORIZONTAL_ALIGNMENT_RIGHT)
+	C.text(self, Vector2(0, 20), "%s  %s" % [Teclas.texto("sucesos"), "▴" if expanded else "▾"], 12, Palette.UI_DIM, false, size.x - 12, HORIZONTAL_ALIGNMENT_RIGHT)
 	var list: Array = datos.log
 	if list.is_empty():
 		return

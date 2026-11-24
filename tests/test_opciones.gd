@@ -54,7 +54,8 @@ func _init() -> void:
 	Teclas.de_fabrica()
 	check.call("de fábrica: H recorre los centros", Teclas.accion(KEY_H) == "centro" and Teclas.tecla("grilla_0") == KEY_Q)
 	check.call("de fábrica: sin choques", Teclas.choques().is_empty())
-	check.call("de fábrica: F7 es el marcador 1 y 0 el grupo 0", Teclas.accion(KEY_F7) == "marcador_1" and Teclas.accion(KEY_0) == "grupo_0")
+	check.call("de fábrica (C-35 b): F1 es el marcador 1, F4 el 4 y 0 el grupo 0", Teclas.accion(KEY_F1) == "marcador_1" and Teclas.accion(KEY_F4) == "marcador_4" and Teclas.accion(KEY_0) == "grupo_0")
+	check.call("de fábrica (C-35 b): paneles en F5–F9 (economía %s, edad %s, sucesos %s, puntaje %s, ayuda %s)" % [Teclas.texto("economia"), Teclas.texto("edad"), Teclas.texto("sucesos"), Teclas.texto("puntaje"), Teclas.texto("ayuda")], Teclas.tecla("economia") == KEY_F5 and Teclas.tecla("edad") == KEY_F6 and Teclas.tecla("sucesos") == KEY_F7 and Teclas.tecla("puntaje") == KEY_F8 and Teclas.tecla("ayuda") == KEY_F9 and Teclas.tecla("pausa") == KEY_F10)
 	var otra := Teclas.asignar("centro", KEY_J)
 	check.call("asignar J al centro: J lo hace y H queda libre", otra == "" and Teclas.accion(KEY_J) == "centro" and Teclas.accion(KEY_H) == "")
 	otra = Teclas.asignar("centro", KEY_M)
@@ -68,7 +69,7 @@ func _init() -> void:
 	check.call("se recuperan los grupos exclusivos", Teclas.grupos_exclusivos)
 	var cf := ConfigFile.new()
 	cf.load(PRUEBA)
-	check.call("el archivo guarda las teclas por nombre (centro = %s)" % cf.get_value("teclas", "centro", "?"), cf.get_value("teclas", "centro", "") == "M" and cf.get_value("teclas", "marcador_4", "?") == "")
+	check.call("el archivo guarda las teclas por nombre (centro = %s)" % cf.get_value("teclas", "centro", "?"), cf.get_value("teclas", "centro", "") == "M" and cf.get_value("teclas", "marcador_5", "?") == "")
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(PRUEBA))
 	Teclas.perfil("aoe4")
 	check.call("perfil AoE4: marcadores en F1–F4", Teclas.accion(KEY_F1) == "marcador_1" and Teclas.accion(KEY_F4) == "marcador_4")
@@ -97,6 +98,24 @@ func _init() -> void:
 	vieja.save(PRUEBA)
 	Opciones.cargar(PRUEBA)
 	check.call("archivo viejo con B en los centros: B sigue en los centros, la campana sin tecla y sin choques", Teclas.tecla("centro") == KEY_B and Teclas.tecla("campana") == 0 and Teclas.tecla("todos_aldeanos") == KEY_N and Teclas.choques().is_empty())
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(PRUEBA))
+	# --- C-35 b --- Un opciones.cfg de antes (rev 1) guardaba todas las teclas: las de fábrica
+	# viejas pasan a las nuevas; la que el jugador cambió se queda.
+	var rev1 := ConfigFile.new()
+	for a: Array in Teclas.acciones():
+		rev1.set_value("teclas", a[0], a[3])
+	var viejas: Dictionary = Teclas.cfg().get("migracion", {})
+	for k in viejas:
+		rev1.set_value("teclas", k, viejas[k])
+	rev1.set_value("teclas", "edad", "L") # el jugador había movido el panel de edad
+	rev1.save(PRUEBA)
+	Opciones.cargar(PRUEBA)
+	check.call("archivo de antes: los marcadores pasan a F1–F4 y los paneles a F5–F9 (marcador 1 %s, economía %s, ayuda %s)" % [Teclas.texto("marcador_1"), Teclas.texto("economia"), Teclas.texto("ayuda")], Teclas.tecla("marcador_1") == KEY_F1 and Teclas.tecla("marcador_4") == KEY_F4 and Teclas.tecla("economia") == KEY_F5 and Teclas.tecla("ayuda") == KEY_F9)
+	check.call("archivo de antes: la tecla que eligió el jugador se queda (edad %s) y no hay choques (%s)" % [Teclas.texto("edad"), str(Teclas.choques())], Teclas.tecla("edad") == KEY_L and Teclas.choques().is_empty())
+	Opciones.guardar(PRUEBA)
+	var rev2 := ConfigFile.new()
+	rev2.load(PRUEBA)
+	check.call("al guardar queda la revisión nueva de las teclas (%s)" % str(rev2.get_value("controles", "teclas_rev", 1)), int(rev2.get_value("controles", "teclas_rev", 1)) == int(Teclas.cfg().get("rev", 1)))
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(PRUEBA))
 	Teclas.de_fabrica()
 	Opciones.restablecer()

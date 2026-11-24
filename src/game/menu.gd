@@ -5,6 +5,7 @@ extends Control
 signal play(seed_value: int, civ: String, rival: String)
 signal watch(seed_value: int, civ: String, rival: String)
 signal campaigns
+signal arte_guerra # --- C-38 ---
 signal replay
 signal play_custom(args: Dictionary) # --- partida a medida ---
 signal cargar(args: Dictionary) # --- fluidez 6 --- {"cargar": ruta} o {"replay": ruta}
@@ -194,18 +195,17 @@ func _ready() -> void:
 	var cb := _button("Campañas", func() -> void: campaigns.emit())
 	cb.custom_minimum_size.x = 185
 	crow.add_child(cb)
+	# --- C-38 --- Arte de la guerra junto a las campañas; «Red» baja al renglón de Cargar (el menú no crece).
+	var ag := _button("Arte de la guerra", func() -> void: arte_guerra.emit())
+	ag.tooltip_text = "Cinco misiones cortas, una idea cada una: economía, defensa, contadores, sitios y asedio. Medallas por tiempo."
+	crow.add_child(ag)
 	var pb := _button("A medida", open_custom)
 	pb.custom_minimum_size.x = 185
 	pb.tooltip_text = "Partida personalizada: mapa, jugadores, equipos, colores y opciones (1 contra 3, 1 contra 6…)."
 	crow.add_child(pb)
 	# --- fin partida a medida ---
-	# --- red --- «Red» en el mismo renglón: los tres más angostos, el renglón no crece
-	var red_btn := _button("Red", open_red)
-	red_btn.tooltip_text = "1 contra 1 en red local o por IP (proceso/37)."
-	crow.add_child(red_btn)
 	for b: Control in crow.get_children():
 		b.custom_minimum_size.x = 120
-	# --- fin red ---
 	box.add_child(_button("Escaramuza contra la IA", func() -> void: play.emit(_seed(), _pick(_civ), _pick(_rival))))
 	box.add_child(_button("Mirar IA contra IA", func() -> void: watch.emit(_seed(), _pick(_civ), _pick(_rival))))
 
@@ -235,6 +235,13 @@ func _ready() -> void:
 	rb.custom_minimum_size.x = 185
 	rb.tooltip_text = "Las partidas terminadas: línea de tiempo, saltar a un minuto y velocidad ×2, ×4 u ×8."
 	grow.add_child(rb)
+	# --- red --- (C-38: «Red» pasó a este renglón, los tres más angostos)
+	var red_btn := _button("Red", open_red)
+	red_btn.tooltip_text = "1 contra 1 en red local o por IP (proceso/37)."
+	grow.add_child(red_btn)
+	for b: Control in grow.get_children():
+		b.custom_minimum_size.x = 120
+	# --- fin red ---
 	# --- fin fluidez 6 ---
 	var gap2 := Control.new()
 	gap2.custom_minimum_size = Vector2(0, 10)
@@ -254,7 +261,7 @@ func _ready() -> void:
 	# --- fin opciones ---
 
 	var hint := Label.new()
-	hint.text = "Clic izquierdo: seleccionar · Clic derecho: ordenar · Q W E R / A S D F / Z X C V: grilla de comandos\nH: centro · . : aldeano inactivo · Ctrl+1…9: grupos · F3: velocidad · Esc: pausa"
+	hint.text = "Clic izquierdo: seleccionar · Clic derecho: ordenar · Q W E R / A S D F / Z X C V: grilla de comandos\nH: centro · . : aldeano inactivo · Ctrl+1…9: grupos · F1…F4: cámaras (Ctrl guarda) · Esc: pausa"
 	# Abajo a la derecha, fuera de la columna: a 1366×768 (escala 120 %) debajo de "Salir" no entraba.
 	hint.add_theme_font_override("font", Hud.font)
 	hint.add_theme_font_size_override("font_size", Hud.ts(14))
@@ -574,7 +581,7 @@ func _build_match_options(col: VBoxContainer) -> void:
 	for m in _tiempos:
 		tnames.append("Sin límite" if int(m) == 0 else "%d minutos" % int(m))
 	_op_tiempo = _small(tnames, 130, maxi(0, _tiempos.find(int(cur.get("tiempo_limite_min", 0)))))
-	_op_tiempo.tooltip_text = "Al cumplirse el tiempo gana el equipo con más puntos (F6 durante la partida)."
+	_op_tiempo.tooltip_text = "Al cumplirse el tiempo gana el equipo con más puntos (F8 durante la partida)."
 	trow.add_child(_op_tiempo)
 	trow.add_child(_label("Recursos", 70))
 	var rnames: Array = []

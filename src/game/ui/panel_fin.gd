@@ -480,7 +480,7 @@ func _explain() -> void:
 	var t_me: int = datos.age_time(me, 2)
 	var t_rv: int = datos.age_time(rv, 2)
 	if t_rv >= 0 and (t_me < 0 or t_me - t_rv >= int(cfg.get("edad_tarde_s", 120))):
-		_tips.append("el rival llegó a la edad II a los %s; vos, %s. El panel de Edad (F4) dice qué falta para el hito." % [C.fmt_time(t_rv), C.fmt_time(t_me) if t_me >= 0 else "nunca"])
+		_tips.append("el rival llegó a la edad II a los %s; vos, %s. El panel de Edad (%s) dice qué falta para el hito." % [C.fmt_time(t_rv), C.fmt_time(t_me) if t_me >= 0 else "nunca", Teclas.texto("edad")])
 	if bank_sum / n >= int(cfg.get("banco_prom", 1200)):
 		_tips.append("tuviste %d recursos sin gastar en promedio. Lo que se guarda no pelea ni junta: gastalo en aldeanos, tropas o la próxima edad." % (bank_sum / n))
 	if army_rv >= 2 * maxi(1, army_me):

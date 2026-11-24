@@ -178,13 +178,37 @@ static func cargar(cf: ConfigFile) -> void:
 				if o != k and not nuevas.has(o) and int(mapa[o]) == c and c != 0:
 					mapa[k] = 0
 					break
+		_migrar(cf)
 	grupos_exclusivos = bool(cf.get_value("controles", "grupos_exclusivos", grupos_exclusivos))
 	numeros_danio = bool(cf.get_value("controles", "numeros_danio", numeros_danio)) # --- fluidez 5 ---
 	_reindexar()
 
 
+## --- C-35 b (proceso/52) --- Un opciones.cfg de antes (rev 1) guardaba todas las teclas,
+## también las de fábrica: las que siguen en la de fábrica vieja (teclas.migracion) pasan a
+## la nueva. Las que el jugador cambió quedan; si la nueva choca con una suya, queda sin tecla.
+static func _migrar(cf: ConfigFile) -> void:
+	if int(cf.get_value("controles", "teclas_rev", 1)) >= int(cfg().get("rev", 1)):
+		return
+	var viejas: Dictionary = cfg().get("migracion", {})
+	var movidas: Array = []
+	for k in viejas:
+		if mapa.has(k) and int(mapa[k]) == codigo(str(viejas[k])):
+			movidas.append(k)
+	for k in movidas:
+		mapa[k] = 0
+	for k in movidas:
+		var c := defecto(k)
+		for o in mapa:
+			if int(mapa[o]) == c and c != 0:
+				c = 0
+				break
+		mapa[k] = c
+
+
 static func guardar(cf: ConfigFile) -> void:
 	_asegurar()
+	cf.set_value("controles", "teclas_rev", int(cfg().get("rev", 1))) # --- C-35 b ---
 	for a: Array in acciones():
 		var c := int(mapa.get(a[0], 0))
 		cf.set_value("teclas", a[0], "" if c == 0 else OS.get_keycode_string(c))

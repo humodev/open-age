@@ -1,5 +1,5 @@
 {
- "civ": "guaranies",
+ "civ": "tawantinsuyu",
  "titulo": "Primeros pasos",
  "resumen": "Aprendé a mirar el mapa, juntar los cuatro recursos, construir, explorar, tomar y cuidar un sitio sagrado, defenderte, avanzar de edad y mejorar a tu tropa.",
  "misiones": [
@@ -7,14 +7,14 @@
    "id": "tutorial-1",
    "titulo": "Primeros pasos",
    "anio": "",
-   "lugar": "Un claro junto al río",
+   "lugar": "Un valle junto al río, en los Andes",
    "intro": [
-    "Antes de las grandes historias, lo básico: un pueblo vive de lo que junta, de lo que construye y de quienes lo defienden.",
+    "Antes de las grandes historias, lo básico: un ayllu vive de lo que junta, de lo que construye y de quienes lo defienden. Vas a jugar con el Tawantinsuyu: cada edificio tiene su nombre en quechua y, al lado, el común (Kancha es la casa, Kallanka el cuartel).",
     "La cámara se mueve con las flechas o llevando el mouse al borde; la rueda acerca y aleja. Seleccioná con clic izquierdo (arrastrá para elegir varios) y da órdenes con clic derecho. La grilla de abajo a la derecha construye y entrena: cada botón tiene su tecla (Q, W, E, R…).",
     "Los objetivos aparecen de a uno, arriba a la izquierda. Con G se abre la Guía: relee lo que dijo y trae lecciones cortas de cada cosa del juego."
    ],
    "epilogo": [
-    "Ya sabés lo necesario. Cada pueblo juega distinto: elegí uno en las campañas o en una escaramuza y descubrí su forma."
+    "Ya sabés lo necesario. Cada pueblo juega distinto: elegí uno en las campañas o en una escaramuza y descubrí su forma. Para practicar una idea por vez, probá el Arte de la guerra."
    ],
    "fuentes": [],
    "mapa": {
@@ -67,10 +67,21 @@
     },
     {
      "id": "o2",
-     "texto": "Construí una casa (aldeanos seleccionados: Q abre Economía, Q otra vez elige la casa; después, clic en el suelo).",
+     "texto": "Construí una casa, la Kancha (aldeanos seleccionados: Q abre Economía, Q otra vez elige la casa; después, clic en el suelo).",
      "tipo": "construir",
      "params": {
       "tipo": "casa",
+      "n": 1
+     },
+     "secundario": false,
+     "oculto": true
+    },
+    {
+     "id": "o15",
+     "texto": "Construí un almacén de madera, la Llant'a wasi, al lado de los árboles (aldeanos seleccionados: Q abre Economía y E elige el almacén). Con el viaje corto, juntan más rápido.",
+     "tipo": "construir",
+     "params": {
+      "tipo": "almacen_madera",
       "n": 1
      },
      "secundario": false,
@@ -121,7 +132,7 @@
     },
     {
      "id": "o7",
-     "texto": "Construí un cuartel (aldeanos seleccionados: W abre Militar y Q elige el cuartel).",
+     "texto": "Construí un cuartel, la Kallanka (aldeanos seleccionados: W abre Militar y Q elige el cuartel).",
      "tipo": "construir",
      "params": {
       "tipo": "cuartel",
@@ -132,7 +143,7 @@
     },
     {
      "id": "o8",
-     "texto": "Entrená 5 guerreros en el cuartel (cuestan alimento y riqueza: dejá aldeanos en los frutos y en la riqueza).",
+     "texto": "Entrená 5 guerreros de porra en el cuartel (cuestan alimento y riqueza: dejá aldeanos en los frutos y en la riqueza).",
      "tipo": "entrenar",
      "params": {
       "tipo": "guerrero",
@@ -154,7 +165,7 @@
     },
     {
      "id": "o10",
-     "texto": "Avanzá a la edad II: con aldeanos seleccionados, construí uno de los dos hitos (Z o X). El panel de Edad (F4) dice qué falta.",
+     "texto": "Avanzá a la edad II: con aldeanos seleccionados, construí uno de los dos hitos (Z o X). El botón «Edad», arriba a la derecha, dice qué falta.",
      "tipo": "edad",
      "params": {
       "n": 2
@@ -176,7 +187,7 @@
     },
     {
      "id": "o12",
-     "texto": "Se acaban los frutos: construí una granja junto al centro (aldeanos seleccionados: Q abre Economía y W elige la Kokue). Es alimento que no se acaba: un aldeano trabaja en cada una.",
+     "texto": "Se acaban los frutos: construí una granja junto al centro (aldeanos seleccionados: Q abre Economía y W elige la Chacra). Es alimento que no se acaba: un aldeano trabaja en cada una.",
      "tipo": "construir",
      "params": {
       "tipo": "granja",
@@ -207,12 +218,13 @@
     },
     {
      "id": "pr",
-     "texto": "Cuidá a tus aldeanos: si caen todos, la misión se pierde.",
+     "texto": "Cuidá a tus aldeanos: si te quedan menos de 3, la misión se pierde.",
      "tipo": "proteger",
      "params": {
       "tipo": "aldeano",
       "jugador": 0,
-      "texto_fallo": "Perdiste a todos tus aldeanos, y sin ellos no hay hito. La próxima vez, cuando la Guía avise que llegan los saqueadores, elegí el centro (H) y tocá la campana (Z): los aldeanos se refugian y el centro dispara."
+      "texto_fallo": "Te quedaron menos de 3 aldeanos, y sin ellos no hay hito. La próxima vez, cuando la Guía avise que llegan los saqueadores, entrená guerreros o elegí el centro (H) y tocá la campana (Z): los aldeanos se refugian y el centro dispara.",
+      "min": 3
      },
      "secundario": false
     }
@@ -277,7 +289,7 @@
      "accion": {
       "tipo": "objetivo_nuevo",
       "params": {
-       "id": "o3"
+       "id": "o15"
       }
      }
     },
@@ -290,7 +302,32 @@
       "tipo": "dialogo",
       "params": {
        "quien": "Guía",
-       "texto": "Más manos, más recursos. Seleccioná el centro con H y entrená aldeanos con Q. Arriba, al lado de los recursos, está la cola: una casilla por edificio que entrena. Si se pone roja, está trabado (casi siempre faltan casas); pasá el mouse y te dice por qué."
+       "texto": "Los aldeanos llevan lo que juntan al depósito más cercano: el centro o un almacén. Si el bosque queda lejos, pierden el tiempo caminando. Poné un almacén de madera pegado a los árboles donde trabajan."
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o15"
+     },
+     "accion": {
+      "tipo": "objetivo_nuevo",
+      "params": {
+       "id": "o3"
+      }
+     }
+    },
+    {
+     "cuando": {
+      "tipo": "objetivo",
+      "valor": "o15"
+     },
+     "accion": {
+      "tipo": "dialogo",
+      "params": {
+       "quien": "Guía",
+       "texto": "Más manos, más recursos. Seleccioná el centro (la Llaqta) con H y entrená aldeanos con Q. Arriba, al lado de los recursos, está la cola: una casilla por edificio que entrena. Si se pone roja, está trabado (casi siempre faltan casas); pasá el mouse y te dice por qué."
       }
      }
     },
@@ -415,7 +452,7 @@
       "tipo": "dialogo",
       "params": {
        "quien": "Guía",
-       "texto": "Choque vence a distancia, distancia vence a línea, línea vence a choque. El guerrero es de choque: entrená cinco con el cuartel seleccionado. Truco: Ctrl + clic en el botón del guerrero lo deja entrenando solo, sin parar; otro Ctrl + clic lo corta."
+       "texto": "Choque vence a distancia, distancia vence a línea, línea vence a choque. El guerrero de porra es de choque: entrená cinco con el cuartel seleccionado. Truco: Ctrl + clic en el botón del guerrero lo deja entrenando solo, sin parar; otro Ctrl + clic lo corta."
       }
      }
     },
@@ -423,7 +460,7 @@
      "cuando": {
       "tipo": "objetivo",
       "valor": "o7",
-      "espera": 30
+      "espera": 45
      },
      "accion": {
       "tipo": "dialogo",
@@ -437,7 +474,7 @@
      "cuando": {
       "tipo": "objetivo",
       "valor": "o7",
-      "espera": 30
+      "espera": 45
      },
      "accion": {
       "tipo": "cuenta",
@@ -451,7 +488,7 @@
      "cuando": {
       "tipo": "objetivo",
       "valor": "o7",
-      "espera": 30
+      "espera": 45
      },
      "accion": {
       "tipo": "ataque",
@@ -467,7 +504,7 @@
      "cuando": {
       "tipo": "objetivo",
       "valor": "o7",
-      "espera": 60
+      "espera": 90
      },
      "accion": {
       "tipo": "dialogo",
@@ -481,7 +518,7 @@
      "cuando": {
       "tipo": "objetivo",
       "valor": "o7",
-      "espera": 30
+      "espera": 45
      },
      "accion": {
       "tipo": "objetivo_nuevo",
@@ -511,7 +548,7 @@
       "tipo": "dialogo",
       "params": {
        "quien": "Guía",
-       "texto": "Cada edad se gana con un hito, y cada pueblo tiene los suyos. El hito pide alimento y riqueza: el panel de Edad (F4) muestra cuánto falta. Elegí: economía (Z) o guerra (X)."
+       "texto": "Cada edad se gana con un hito, y cada pueblo tiene los suyos: los del Tawantinsuyu son el Ushnu y plaza (economía, Z) y el Pukara de frontera (guerra, X). El botón «Edad», arriba a la derecha, muestra cuánto falta de cada recurso."
       }
      }
     },
@@ -602,7 +639,7 @@
       "tipo": "dialogo",
       "params": {
        "quien": "Guía",
-       "texto": "Mientras tanto, abrí el panel de Edad (F4): dice qué cambia en la edad II y qué vas a poder construir y entrenar."
+       "texto": "Mientras tanto, abrí el panel de Edad (botón «Edad», arriba a la derecha): dice qué cambia en la edad II y qué vas a poder construir y entrenar."
       }
      }
     },
@@ -686,7 +723,7 @@
       "tipo": "dialogo",
       "params": {
        "quien": "Guía",
-       "texto": "Los frutos de cerca se terminan. El alimento sale de los frutos, de la caza y de las granjas, y la granja es la que dura toda la partida. Con aldeanos seleccionados, Q abre Economía y W elige la Kokue: ponela junto al centro y el aldeano que la levanta se queda a trabajarla."
+       "texto": "Los frutos de cerca se terminan. El alimento sale de los frutos, de la caza y de las granjas, y la granja es la que dura toda la partida. Con aldeanos seleccionados, Q abre Economía y W elige la Chacra: ponela junto al centro y el aldeano que la levanta se queda a trabajarla."
       }
      }
     },
@@ -705,5 +742,6 @@
     }
    ]
   }
- ]
+ ],
+ "_doc_civ": "C-37 b (proceso/52): se aprende con el Tawantinsuyu, que tiene todos los edificios comunes (casa, granja, almacenes, cuartel, torre). Los nombres propios van con el común al lado."
 }

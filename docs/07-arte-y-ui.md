@@ -119,7 +119,8 @@ Lo que pasa en la partida se lee sobre el mapa, sin abrir paneles (`src/game/ui/
 | Detener | `S` con unidades seleccionadas |
 | Grupos | `Ctrl + 1…9` para asignar, `Mayús + 1…9` para sumar la selección, `1…9` para seleccionar (doble toque centra) |
 | Ir al último ataque o suceso | `Espacio`; `Inicio` recorre los anteriores |
-| Marcadores de cámara (8) | `Ctrl + Alt + 1…8` guarda, `Alt + 1…8` vuelve; `F7…F9` son atajos de los tres primeros (`Ctrl + F7…F9` guarda). Con `Alt` porque `Ctrl + número` son los grupos |
+| Marcadores de cámara (8) | Como AoE4 (C-35 b): `Ctrl + F1…F4` guarda y `F1…F4` vuelve (también `Mayús + F`, la tecla de vuelta de AoE4). Los ocho, con `Ctrl + Alt + 1…8` y `Alt + 1…8` (con `Alt` porque `Ctrl + número` son los grupos) |
+| Paneles | `F5` economía, `F6` edad, `F7` sucesos, `F8` puntaje y tributos, `F9` ayuda (cómo juega mi pueblo), `F10` pausa, `F11` «Mi base», `F12` hoja de atajos, `K` velocidad. Se corrieron de F1–F6 para dejarle F1–F4 a la cámara (C-35 b, `proceso/52`) |
 | Submenús del aldeano | `Q` Economía, `W` Militar; `Esc`, `V` o clic derecho sobre la grilla vuelve |
 | Aldeano inactivo | `.` |
 | Centro | `H` |

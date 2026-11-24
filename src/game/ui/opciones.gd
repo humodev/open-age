@@ -457,7 +457,7 @@ static func dialogo(host: Control, main: Node) -> PanelContainer:
 			if teclas.visible: # --- veterano ronda 4 --- se vuelve a abrir en la vista general
 				tb.pressed.emit()
 		else:
-			# Encima de todo lo que se haya agregado después (paneles F1–F6, fichas).
+			# Encima de todo lo que se haya agregado después (paneles F5–F9, fichas).
 			dim.move_to_front()
 			esc.set_item_text(0, "Automática (%d %%)" % auto_pct(Vector2(host.get_window().size)))
 			cb.grab_focus())
@@ -605,7 +605,7 @@ static func _panel_teclas() -> VBoxContainer:
 		botones[acc] = b
 	perf.item_selected.connect(func(i: int) -> void:
 		Teclas.perfil(claves[i])
-		msg.text = "Perfil %s." % Teclas.perfiles()[claves[i]] + (" Marcadores de cámara en F1–F4; los paneles pasan a F5–F9." if claves[i] == "aoe4" else "")
+		msg.text = "Perfil %s." % Teclas.perfiles()[claves[i]] + (" Grupos exclusivos y sin números de daño, como AoE4." if claves[i] == "aoe4" else "")
 		refrescar.call())
 	fab.pressed.connect(func() -> void:
 		Teclas.de_fabrica()

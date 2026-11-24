@@ -42,10 +42,10 @@ extends Node3D
 ##   --texto=grande|normal  letra de la interfaz (si no, la de user://opciones.cfg)
 ##   --barras=1         barras de vida siempre visibles
 ##   --nombres=1        nombres en la grilla de órdenes
-##   --abrir=opciones   abre el diálogo de opciones (también campanas e intro en el menú)
+##   --abrir=opciones   abre el diálogo de opciones (también campanas, arte_guerra e intro en el menú)
 ##   --bengala=1        tira una bengala propia cerca de la base antes de la captura (con aliados)
 ##   --formacion=linea  elige la formación de la grilla y la aplica a lo seleccionado antes de la captura
-##   --panel=a,b        abre paneles de información antes de la captura (economia, edad, pueblo, sucesos, puntaje, fin, fin-derrota, fin-tiempo)
+##   --panel=a,b        abre paneles de información antes de la captura (economia, edad, pueblo, sucesos, puntaje, fin, fin-derrota, fin-tiempo, atajos)
 
 const MAX_STEPS_PER_FRAME := 8
 
@@ -503,6 +503,7 @@ func _build_scene(aivai: bool) -> void:
 		_menu.play.connect(func(sd: int, civ: String, rival: String) -> void: _start(_menu.match_args().merged({"seed": str(sd), "civ": civ, "rival": rival, "dificultad": _menu.difficulty(), "estilo": _menu.style(), "terreno": _menu.terrain(), "lugares": _menu.slots()})))
 		_menu.watch.connect(func(sd: int, civ: String, rival: String) -> void: _start(_menu.match_args().merged({"aivai": "1", "seed": str(sd), "civ": civ, "rival": rival, "estilo": _menu.style(), "dificultad": _menu.difficulty(), "terreno": _menu.terrain(), "lugares": _menu.slots()})))
 		_menu.campaigns.connect(_open_campaigns.bind(layer))
+		_menu.arte_guerra.connect(_open_arte_guerra.bind(layer)) # --- C-38 ---
 		_menu.replay.connect(func() -> void: _start({"replay": "1"}))
 		_menu.cargar.connect(func(a: Dictionary) -> void: _start(a)) # --- fluidez 6 ---
 		_menu.play_custom.connect(func(a: Dictionary) -> void: _start(a)) # --- partida a medida ---
@@ -512,6 +513,8 @@ func _build_scene(aivai: bool) -> void:
 			_menu.open_red.call_deferred()
 		if _args.get("abrir", "") == "campanas":
 			_open_campaigns.call_deferred(layer)
+		elif _args.get("abrir", "") == "arte_guerra": # --- C-38 --- (capturas: -- --abrir=arte_guerra)
+			_open_arte_guerra.call_deferred(layer)
 		elif _args.get("abrir", "") == "intro":
 			layer.add_child(CampaignUI.story(_mission_data("palmares", 0), false, [["Comenzar", func() -> void: pass], ["Volver", func() -> void: pass]], "palmares"))
 	if _args.get("abrir", "") in ["opciones", "teclas"]: # --- opciones --- (teclas: veterano ronda 4)
@@ -1022,6 +1025,22 @@ func _open_campaigns(layer: CanvasLayer) -> void:
 		layer.add_child(intro))
 
 
+## --- C-38 --- Arte de la guerra: cinco misiones cortas con medallas (src/game/ui/arte_guerra.gd).
+func _open_arte_guerra(layer: CanvasLayer) -> void:
+	var ui := ArteGuerraUI.new()
+	layer.add_child(ui)
+	_menu.visible = false
+	ui.back.connect(func() -> void:
+		ui.queue_free()
+		_menu.visible = true)
+	ui.start_mission.connect(func(idx: int) -> void:
+		var m: Dictionary = _mission_data(ArteGuerraUI.CLAVE, idx)
+		m = m.duplicate()
+		m["intro"] = (m.get("intro", []) as Array) + ["Medallas: " + ArteGuerraUI.umbrales(m) + "."]
+		var intro := CampaignUI.story(m, false, [["Comenzar", func() -> void: _start({"campana": ArteGuerraUI.CLAVE, "mision": str(idx)})], ["Volver", func() -> void: layer.get_child(layer.get_child_count() - 1).queue_free()]], "tawantinsuyu")
+		layer.add_child(intro))
+
+
 static func _mission_data(civ: String, idx: int) -> Dictionary:
 	var camp: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/campanas/%s.json" % civ))
 	Textos.limpiar_todo(camp) # --- ronda 7 ---
@@ -1049,6 +1068,12 @@ func mission_over(result: String) -> void:
 	var idx := int(_args.get("mision", "0"))
 	var m := _mission_data(civ, idx)
 	var buttons: Array = []
+	if result == "victoria" and civ == ArteGuerraUI.CLAVE: # --- C-38 --- medalla por tiempo
+		var seg: int = sim.tick * sim.tick_ms / 1000
+		var reg := ArteGuerraUI.registrar(m, seg)
+		m = m.duplicate()
+		m["epilogo"] = [ArteGuerraUI.texto_fin(m, seg, reg)] + (m.get("epilogo", []) as Array)
+		buttons.append(["Otra vez", func() -> void: _start({"campana": civ, "mision": str(idx)})])
 	if result == "victoria":
 		CampaignUI.mark_won(civ, idx)
 		if idx + 1 < _campaign_size(civ):
@@ -1386,6 +1411,8 @@ func _maybe_shot() -> void:
 				sim.end_by_time()
 				var tw := sim.winner
 				hud.paneles.show_end(local if tw >= 0 and not sim.enemies(local, tw) else tw)
+			elif w == "atajos": # --- C-35 b --- la hoja de atajos, para la captura
+				hud.atajos_hoja.toggle()
 			else:
 				hud.paneles.toggle(w)
 	# --- fin paneles ---
@@ -1582,16 +1609,24 @@ func _autotest_ordenes(check: Callable) -> void:
 		if sim.by_id[id].patrol:
 			patrol_left += 1
 	check.call("la orden nueva corta la patrulla", patrol_left == 0)
-	# Marcadores de cámara: Ctrl + F7 guarda, F7 vuelve (atajo del marcador 1).
+	# Marcadores de cámara como AoE4 (C-35 b): Ctrl + F1 guarda, F1 vuelve; Ctrl + F4 y F4 el cuarto.
+	check.call("de fábrica, los marcadores 1 y 4 están en F1 y F4 (%s, %s)" % [Teclas.texto("marcador_1"), Teclas.texto("marcador_4")], Teclas.tecla("marcador_1") == KEY_F1 and Teclas.tecla("marcador_4") == KEY_F4)
 	cam.look_at_point(Vector3(base.x + 3, 0, base.y + 3))
 	await _frames(2)
-	_key_mod(KEY_F7, true)
+	_key_mod(Teclas.tecla("marcador_1"), true)
+	await _frames(2)
+	cam.look_at_point(Vector3(base.x + 12, 0, base.y + 4))
+	await _frames(2)
+	_key_mod(Teclas.tecla("marcador_4"), true)
 	await _frames(2)
 	cam.look_at_point(Vector3(base.x + 30, 0, base.y + 30))
 	await _frames(2)
-	_key_tap(KEY_F7)
+	_key_tap(Teclas.tecla("marcador_1"))
 	await _frames(2)
-	check.call("Ctrl + F7 guarda la cámara y F7 vuelve (%.0f, %.0f)" % [cam.focus.x, cam.focus.z], Vector2(cam.focus.x, cam.focus.z).distance_to(Vector2(base.x + 3, base.y + 3)) < 1.5)
+	check.call("Ctrl + %s guarda la cámara y %s vuelve (%.0f, %.0f)" % [Teclas.texto("marcador_1"), Teclas.texto("marcador_1"), cam.focus.x, cam.focus.z], Vector2(cam.focus.x, cam.focus.z).distance_to(Vector2(base.x + 3, base.y + 3)) < 1.5)
+	_key_tap(Teclas.tecla("marcador_4"))
+	await _frames(2)
+	check.call("Ctrl + %s y %s: el cuarto marcador (%.0f, %.0f)" % [Teclas.texto("marcador_4"), Teclas.texto("marcador_4"), cam.focus.x, cam.focus.z], Vector2(cam.focus.x, cam.focus.z).distance_to(Vector2(base.x + 12, base.y + 4)) < 1.5)
 	# Tab recorre los edificios de producción; T todos los del tipo.
 	_key_tap(KEY_TAB)
 	await _frames(3)
@@ -1860,9 +1895,9 @@ func _autotest_veterano(check: Callable) -> void:
 	await _frames(2)
 	check.call("Ctrl + Alt + 8 guarda y Alt + 8 vuelve (%.0f, %.0f)" % [cam.focus.x, cam.focus.z], Vector2(cam.focus.x, cam.focus.z).distance_to(Vector2(base.x + 8, base.y + 2)) < 1.5)
 	check.call("Ctrl + Alt + número no pisa los grupos de control", ctrl.groups.keys() == groups_before.keys())
-	_key_tap(KEY_F7)
+	_key_tap(Teclas.tecla("marcador_1"))
 	await _frames(2)
-	check.call("F7 es atajo del marcador 1 (%.0f, %.0f)" % [cam.focus.x, cam.focus.z], Vector2(cam.focus.x, cam.focus.z).distance_to(Vector2(base.x + 1, base.y + 2)) < 1.5)
+	check.call("%s es atajo del marcador 1 (%.0f, %.0f)" % [Teclas.texto("marcador_1"), cam.focus.x, cam.focus.z], Vector2(cam.focus.x, cam.focus.z).distance_to(Vector2(base.x + 1, base.y + 2)) < 1.5)
 	# 6. Barras al pelear sin la opción: una unidad que acaba de recibir un golpe.
 	var u: SimEntity = null
 	for e in sim.actives:
@@ -2613,34 +2648,35 @@ func _autotest() -> void:
 	check.call("el toque de calma los saca (%d)" % inside, inside == 0)
 	# --- paneles --- (teclas, botón de cierre y clic en el registro)
 	var pn = hud.paneles
-	_key_tap(KEY_F2)
+	_key_tap(Teclas.tecla("economia"))
 	await _frames(3)
-	check.call("F2 abre el panel de economía", pn.economia.visible)
+	check.call("%s abre el panel de economía" % Teclas.texto("economia"), pn.economia.visible)
 	var close_at: Vector2 = pn.economia.global_position + Vector2(pn.economia.size.x - 30, 20)
 	_mouse(close_at, MOUSE_BUTTON_LEFT, true)
 	_mouse(close_at, MOUSE_BUTTON_LEFT, false)
 	await _frames(3)
 	check.call("el ✕ cierra el panel de economía", not pn.economia.visible)
-	_key_tap(KEY_F4)
+	_key_tap(Teclas.tecla("edad"))
 	await _frames(3)
-	check.call("F4 abre el avance de edad", pn.edad.visible)
-	_key_tap(KEY_F4)
-	_key_tap(KEY_F1)
+	check.call("%s abre el avance de edad" % Teclas.texto("edad"), pn.edad.visible)
+	_key_tap(Teclas.tecla("edad"))
+	_key_tap(Teclas.tecla("ayuda"))
 	await _frames(3)
-	check.call("F1 abre la ficha del pueblo", pn.pueblo.visible)
-	_key_tap(KEY_F1)
+	check.call("%s abre la ficha del pueblo" % Teclas.texto("ayuda"), pn.pueblo.visible)
+	_key_tap(Teclas.tecla("ayuda"))
 	await _frames(3)
-	check.call("F1 la cierra", not pn.pueblo.visible)
+	check.call("%s la cierra" % Teclas.texto("ayuda"), not pn.pueblo.visible)
+	check.call("los paneles dejaron F1–F4 a la cámara (economía %s, edad %s, ayuda %s)" % [Teclas.texto("economia"), Teclas.texto("edad"), Teclas.texto("ayuda")], not [Teclas.tecla("economia"), Teclas.tecla("edad"), Teclas.tecla("ayuda"), Teclas.tecla("sucesos"), Teclas.tecla("puntaje"), Teclas.tecla("velocidad")].any(func(k: int) -> bool: return k in [KEY_F1, KEY_F2, KEY_F3, KEY_F4]))
 	pn.datos.add_log("prueba", Palette.UI_TEXT, base.x * 1000 + 20000, base.y * 1000 + 20000)
-	_key_tap(KEY_F5)
+	_key_tap(Teclas.tecla("sucesos"))
 	await _frames(3)
 	var row_at: Vector2 = pn.sucesos.global_position + Vector2(100, 40)
 	_mouse(row_at, MOUSE_BUTTON_LEFT, true)
 	_mouse(row_at, MOUSE_BUTTON_LEFT, false)
 	await _frames(3)
 	var want := Vector2(base.x + 20, base.y + 20)
-	check.call("F5 despliega el registro y el clic lleva la cámara (%.0f, %.0f)" % [cam.focus.x, cam.focus.z], pn.sucesos.expanded and Vector2(cam.focus.x, cam.focus.z).distance_to(want) < 2.0)
-	_key_tap(KEY_F5)
+	check.call("%s despliega el registro y el clic lleva la cámara (%.0f, %.0f)" % [Teclas.texto("sucesos"), cam.focus.x, cam.focus.z], pn.sucesos.expanded and Vector2(cam.focus.x, cam.focus.z).distance_to(want) < 2.0)
+	_key_tap(Teclas.tecla("sucesos"))
 	await _frames(2)
 	# --- fin paneles ---
 	# --- avisos --- (Espacio va al último ataque; sin selección el panel y la grilla no tapan)

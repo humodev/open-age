@@ -4,7 +4,7 @@ extends SceneTree
 ## Un principiante hace exactamente lo que dicen los objetivos y la Guía, y nada más.
 ## Sale con código 1 si la misión no termina como se espera.
 ##
-##   --modo=letra   sigue el texto: tres a la madera y tres a los frutos, aldeanos nuevos a la
+##   --modo=letra   sigue el texto: tres a la madera y tres a los frutos, almacén junto al bosque, aldeanos nuevos a la
 ##                  riqueza, explorador al sitio, guerreros y campana si no alcanzan. Debe ganar.
 ##                  Cuando se acaban los frutos cerca, la Guía pide una granja (o12): la levanta.
 ##                  Pone 2 guerreros de guardia en el sitio (o13) y compra la herrería (o14).
@@ -129,10 +129,18 @@ func _init() -> void:
 		# "Cuando pase el peligro, Z otra vez los devuelve al trabajo".
 		# "Pasó el peligro": cayeron los saqueadores que pide o9 (o9 ya no se cumple antes que o8).
 		var raid_over: bool = s.scenario.kills >= raiders
+		# Sin defenderse, "pasa el ataque" cuando ya hizo su daño: con el Tawantinsuyu (C-37 b)
+		# el centro no alcanza a los dos últimos, que se quedan golpeando un edificio. Pasados dos
+		# minutos desde que llegaron, el indefenso recién entrena guerreros (y la misión sigue).
+		if modo == "indefenso" and att_seen >= 0 and s.tick - att_seen > 1200:
+			raid_over = true
 		if alarm and raid_over:
 			s.push_command({"t": "alarm", "player": 0, "on": false})
 			alarm = false
 			print(t(), " calma")
+		if alarm and s.tick % 600 == 0 and OS.get_environment("TUT_DEBUG") != "":
+			var en1 := s.actives.filter(func(e: SimEntity) -> bool: return e.alive and e.owner == 1 and e.is_unit())
+			print(t(), " DEBUG alarma: guerreros %d, enemigos %d, kills %d/%d, pos0 %s" % [mine("guerrero").size(), en1.size(), s.scenario.kills, raiders, str(Vector2i(en1[0].x, en1[0].y)) if not en1.is_empty() else "-"])
 		if alarm:
 			continue
 		# Aldeanos sin trabajo: vuelven a lo suyo (madera; los de la riqueza, a la riqueza).
@@ -168,6 +176,16 @@ func _init() -> void:
 			var p := place("casa", c, 4)
 			s.push_command({"t": "build", "player": 0, "ids": [v[0].id], "type": "casa", "tx": p.x, "ty": p.y})
 			step["casa"] = true
+		# "Construí un almacén de madera al lado de los árboles" (o15, C-37 b: el tutorial pasa al
+		# Tawantinsuyu, que tiene almacenes). Lo levanta uno de los leñadores, junto a su árbol.
+		if objs.get("o15") == "activo" and not step.has("almacen") and s.can_afford(0, s.dp(0).cost_of("almacen_madera", 1)):
+			var lenadores := v.filter(func(e: SimEntity) -> bool: return not food_ids.has(e.id) and not wealth_ids.has(e.id))
+			if not lenadores.is_empty():
+				var ar := nearest("arbol", cap.x, cap.y)
+				var p := place("almacen_madera", Vector2i(ar.tx, ar.ty), 2)
+				s.push_command({"t": "build", "player": 0, "ids": [lenadores[0].id], "type": "almacen_madera", "tx": p.x, "ty": p.y})
+				step["almacen"] = true
+				print(t(), " almacén de madera junto al bosque en ", p)
 		if objs.get("o3") == "activo" and cap.queue.size() < 1:
 			s.push_command({"t": "train", "player": 0, "building": cap.id, "type": "aldeano"})
 		# "Mandá a los aldeanos nuevos a la veta dorada".
@@ -226,6 +244,10 @@ func _init() -> void:
 					step["herreria"] = true
 					print(t(), " compro Armas templadas en el cuartel")
 					break
+		if s.tick % 600 == 0 and OS.get_environment("TUT_DEBUG") != "" and att_seen >= 0:
+			for e in s.actives:
+				if e.alive and e.owner == 1 and e.is_unit() and Sim.dist(e.x, e.y, cap.x, cap.y) < 60000:
+					print(t(), " DEBUG rival ", e.type, " a ", Sim.dist(e.x, e.y, cap.x, cap.y), " orden ", e.order, " hp ", e.hp, " blanco ", e.target)
 		if s.tick % 1800 == 0:
 			print(t(), " recursos ", r, " · aldeanos ", v.size(), " · guerreros ", mine("guerrero").size())
 	var res: String = s.scenario.result

@@ -3,8 +3,8 @@ extends Control
 ## botonera, puntaje en vivo, registro de sucesos, economía, avance de edad,
 ## "cómo juega mi pueblo" y la pantalla de fin con estadísticas.
 ##
-## Teclas: F1 tu pueblo (reemplaza la ayuda vieja, que ya incluía la ficha),
-## F2 economía, F4 avance de edad, F5 registro de sucesos, F6 puntaje.
+## Teclas de fábrica (C-35 b, proceso/52): F9 tu pueblo (reemplaza la ayuda vieja), F5 economía,
+## F6 avance de edad, F7 registro de sucesos, F8 puntaje; F1–F4 son los marcadores de cámara.
 ## Enganches en hud.gd, marcados con "# --- paneles ---".
 
 const C := preload("res://src/game/ui/panel_comun.gd")
@@ -17,7 +17,7 @@ const Puntaje := preload("res://src/game/ui/panel_puntaje.gd")
 const Fin := preload("res://src/game/ui/panel_fin.gd")
 
 const RIGHT_W := 330.0
-const BUTTONS := [["economia", "Economía", "F2"], ["edad", "Edad", "F4"], ["pueblo", "Mi pueblo", "F1"]]
+const BUTTONS := [["economia", "Economía"], ["edad", "Edad"], ["pueblo", "Mi pueblo"]] # la tecla sale de Teclas
 
 var hud: Hud
 var datos # PanelDatos
@@ -60,7 +60,7 @@ func setup(h: Hud) -> void:
 	economia = _side(Economia.new(), 540)
 	edad = _side(Edad.new(), 560)
 
-	# La ficha del pueblo reemplaza al diálogo de ayuda: F1 y el botón de la pausa
+	# La ficha del pueblo reemplaza al diálogo de ayuda: la tecla de ayuda (F9) y el botón de la pausa
 	# siguen llamando a Hud._toggle_help(), que ahora la abre a ella.
 	pueblo = Pueblo.new()
 	pueblo.build(hud)

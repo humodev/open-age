@@ -218,3 +218,12 @@ Todo es opcional y las misiones que no lo usan se comportan igual que antes (`sr
 - **`params.nuevos`** en un objetivo `entrenar`: cuenta solo lo entrenado desde que el objetivo aparece.
 - **Disparador `obra`** (`valor`: un tipo de edificio o `hito`): el jugador empezó a levantar uno. Con `espera`, sirve para que la Guía use la espera de una obra larga.
 - **Disparador `agotado`** (`valor`: un tipo de recurso del mapa, `radio` en casillas alrededor de la capital, `quedan`: cuántos con algo pueden quedar): se acaba esa fuente cerca de casa. El tutorial lo usa para pedir una granja cuando se acaban los frutos (proceso/24, paso 4n).
+
+## Tutorial con el Tawantinsuyu y Arte de la guerra (proceso/52)
+
+El tutorial (`data/campanas/tutorial.json`) se juega con el Tawantinsuyu desde C-37 b: tiene todos los edificios comunes, con el nombre propio y el común al lado. El **Arte de la guerra** (`data/campanas/arte_guerra.json`, C-38) son cinco misiones cortas de una sola idea (economía temprana, defensa, contadores, sitios sagrados, asedio), con medallas por tiempo (`medallas`: segundos de juego hasta ganar para oro, plata y bronce). Las marcas se guardan en `user://arte_guerra.json` (`src/game/ui/arte_guerra.gd`). Lo que se sumó al motor, también opcional:
+
+- **`jugador.edificios`** (`[{"tipo", "n"}]`): edificios del jugador ya hechos al empezar, cerca de la capital.
+- **`rivales[i].quieta`**: el rival no juega (sin IA); solo defienden su guarnición, sus torres y su centro.
+- **`params.min`** en un objetivo `proteger`: se pierde si quedan menos de `min` (por defecto 1: si caen todos).
+- **Sitios de `mapa.sitios.lugares`**: si el lugar pedido no tiene un hueco de 2×2, el sitio va al hueco libre más cercano (antes no aparecía).

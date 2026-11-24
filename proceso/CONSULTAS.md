@@ -169,7 +169,7 @@ a) Ese orden *(por defecto)* · b) Otro (decir cuál)
 AoE4 guarda la cámara con Ctrl + F1…F8. Acá F1–F6 abren los paneles y F10 es la pausa, así que los marcadores quedaron en Ctrl + F7…F9 (tres). Detalle en `proceso/23-como-aoe4/02-ordenes-y-comodidades.md`.
 a) Dejar F7–F9 *(por defecto)* · b) Pasar los paneles a otras teclas y usar F1–F4 para la cámara, como AoE4
 
-**Respuesta:** b) Pasar los paneles a otras teclas y usar F1–F4 para la cámara, como AoE4 (2026-11-21, página de consultas).
+**Respuesta:** b) Pasar los paneles a otras teclas y usar F1–F4 para la cámara, como AoE4 (2026-11-21, página de consultas). Aplicado: `Ctrl + F1…F4` guarda y `F1…F4` vuelve (AoE4 guarda con Ctrl + F1…F8 y vuelve con Mayús + F; acá Mayús + F también vale); paneles en F5 economía, F6 edad, F7 sucesos, F8 puntaje, F9 ayuda, velocidad en K; los `opciones.cfg` viejos se migran (`proceso/52`).
 
 ### C-36 · (órdenes) ¿Cuánto da la IA aliada cuando le piden?
 Hoy da 200 si después le quedan 300 (`reglas.json → equipos.pedido`), y a una bengala manda la mitad de su ejército libre, con un mínimo de 3 (`equipos.bengala`). Un aliado muy generoso se queda sin ejército; uno muy tacaño parece que no escucha.
@@ -181,11 +181,15 @@ a) Así *(por defecto)* · b) Más generosa (todo lo que le sobre, el ejército 
 El tutorial usa a los guaraníes, que no tienen torre, granero ni depósito, y cuyos edificios tienen nombre propio (Oga, Aty, Kokue). El jugador nuevo pidió aprender con un pueblo "más normal" (`proceso/22-testers/02-nuevo-en-rts.md`).
 a) Dejar a los guaraníes: los nombres propios con el común debajo ya se entienden *(por defecto)* · b) Pasar el tutorial a Tawantinsuyu, que tiene todos los edificios comunes
 
-**Respuesta:** b) Pasar el tutorial a Tawantinsuyu, que tiene todos los edificios comunes (2026-11-21, página de consultas).### C-38 · (aprender a jugar) "Arte de la guerra"
+**Respuesta:** b) Pasar el tutorial a Tawantinsuyu, que tiene todos los edificios comunes (2026-11-21, página de consultas). Aplicado: el tutorial se juega con el Tawantinsuyu, con un paso nuevo (almacén de madera) y nombres propios con el común al lado; `tests/tutorial_letra.gd` gana al pie de la letra y pierde con motivo sin defenderse (`proceso/52`).
+
+### C-38 · (aprender a jugar) "Arte de la guerra"
 AoE4 tiene misiones cortas de una sola idea (economía temprana, defensa, contadores, sitios, asedio) con medalla de bronce, plata y oro. El motor de escenarios ya alcanza para hacerlas (objetivos `juntar`, `sitio`, cuentas y ataques con aviso).
 a) Sí, cinco misiones cortas con medallas por tiempo, después de la etapa 23 *(por defecto)* · b) No por ahora
 
-**Respuesta:** a) Sí, cinco misiones cortas con medallas por tiempo, después de la etapa 23 (2026-11-21, página de consultas).### C-39 · (historia) Nombre de la edad IV del Tawantinsuyu: "Inkarri"
+**Respuesta:** a) Sí, cinco misiones cortas con medallas por tiempo, después de la etapa 23 (2026-11-21, página de consultas). Aplicado: «Arte de la guerra» en el menú, con economía temprana, defensa, contadores, sitios sagrados y asedio; medallas por tiempo guardadas en `user://arte_guerra.json`; prueba `tests/arte_guerra.gd` (`proceso/52`).
+
+### C-39 · (historia) Nombre de la edad IV del Tawantinsuyu: "Inkarri"
 El mito de Inkarrí se documenta sobre todo en el siglo XX (Arguedas lo recogió en Puquio en 1956), aunque se lo vincula con el Taki Onqoy y con la muerte de Túpac Amaru I (1572). La edad IV cubre Vilcabamba (1537–1572) y Tinta (1780). Ya la investigación lo había dejado como "a consultar" (`docs/investigacion/tawantinsuyu.md`, punto 9). Sus dos hitos son Qorikancha y Vilcabamba.
 a) Dejar Inkarri y explicarlo en el panel del pueblo como un guiño al arco de la campaña, no como un nombre de época *(por defecto)* · b) *Vilcabamba* (choca con el nombre del hito militar) · c) *Neo Inka* · d) Otro (escribilo)
 

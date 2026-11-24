@@ -9,8 +9,8 @@ extends RefCounted
 ##   T            todos los del tipo de lo seleccionado, en todo el mapa (también doble clic en un edificio)
 ##   Tab          recorre los edificios de producción
 ##   Alt + 1…8    vuelve a un marcador de cámara; Ctrl + Alt + 1…8 lo guarda (Ctrl + número
-##                es de los grupos de control, como en AoE4). F7…F9 son atajos de los
-##                marcadores 1 a 3 (Ctrl + F guarda); F1–F6 son los paneles y F10 la pausa.
+##                es de los grupos de control, como en AoE4). F1…F4 son los marcadores 1 a 4
+##                (Ctrl + F guarda, como AoE4; C-35 b, proceso/52); los paneles van de F5 a F12.
 ##   B            la campana del centro, desde cualquier lado (otra vez: toque de calma)
 ##   N            todos los aldeanos
 ##   P            todos los edificios de producción militar (como AoE4)
@@ -229,11 +229,17 @@ func campana() -> void:
 func marca(n: int, guardar: bool) -> void:
 	if guardar:
 		marcas[n] = ctrl.cam.focus
-		ctrl.hud_notify("Cámara guardada en el marcador %d (Alt + %d vuelve)" % [n, n], "info")
+		ctrl.hud_notify("Cámara guardada en el marcador %d (%s vuelve)" % [n, _tecla_marca(n)], "info")
 	elif marcas.has(n):
 		ctrl.cam.look_at_point(marcas[n])
 	else:
-		ctrl.hud_notify("El marcador %d está vacío (Ctrl + Alt + %d guarda la cámara)" % [n, n], "info")
+		ctrl.hud_notify("El marcador %d está vacío (Ctrl + %s guarda la cámara)" % [n, _tecla_marca(n)], "info")
+
+
+## --- C-35 b --- La tecla del marcador para los avisos: «F1» si tiene, si no «Alt + 1».
+func _tecla_marca(n: int) -> String:
+	var t := Teclas.tecla("marcador_%d" % n)
+	return Teclas.nombre(t) if t != 0 else "Alt + %d" % n
 
 
 ## Aldeanos que trabajan un recurso (Mayús + clic en el recurso de la barra).

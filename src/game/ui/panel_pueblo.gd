@@ -1,5 +1,5 @@
 extends PanelContainer
-## "Cómo juega mi pueblo" (F1 o desde la pausa): la ficha de la civilización en
+## "Cómo juega mi pueblo" (F9 de fábrica, acción `ayuda`, o desde la pausa): la ficha de la civilización en
 ## palabras llanas, armada desde data/civs/<clave>.json (frase, motor propio,
 ## fortalezas, debilidades, hitos y consejos), y los controles.
 
@@ -43,7 +43,7 @@ func build(h: Hud) -> void:
 	_rt.add_theme_color_override("default_color", Palette.UI_TEXT)
 	vb.add_child(_rt)
 	var close := Button.new()
-	close.text = "Cerrar (F1)"
+	close.text = "Cerrar (%s)" % Teclas.texto("ayuda")
 	close.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	close.custom_minimum_size = Vector2(260, 0)
 	close.pressed.connect(func() -> void: visible = false)
@@ -127,9 +127,9 @@ func compose() -> String:
 
 	out += _h("Controles")
 	out += "[b]Hoja de atajos en una pantalla: %s[/b] (o desde la pausa)\n" % Teclas.texto("atajos") # --- atajos --- (4q)
-	out += "Clic izquierdo: seleccionar (arrastrar para un grupo; doble clic: todos los del tipo)\nClic derecho: mover, atacar, recolectar, construir, reparar o alojar\nGrilla Q W E R / A S D F / Z X C V: construir, entrenar, investigar\nA y clic: atacar en movimiento · S: detener · Supr: eliminar\nCtrl + 0…9: grupos · H: recorre los centros (dos veces: centra) · . : aldeano inactivo · Z en el centro: campana\nFlechas, bordes o botón del medio: cámara · F3: velocidad · Esc: pausa · las teclas se cambian en Opciones → Teclas\n"
-	out += "F1: tu pueblo · F2: economía · F4: avance de edad · F5: registro de sucesos · F6: puntaje\n"
-	out += ". y , : aldeano y militar ocioso (con Mayús, todos) · M: todos los militares · T o doble clic: todos los del tipo · Tab: edificios de producción\nD: mantener posición · E y clic: patrullar · R y clic: atacar el suelo (asedio de área) · Z X C V: bloque, línea, abierta, columna · arrastrar el clic derecho: hacia dónde miran\nCtrl + Alt + 1…8: guardar la cámara; Alt + 1…8: volver (F7…F9 también, para los tres primeros) · Alt + clic (mapa o minimapa): bengala para tu aliado\n" # --- órdenes ---
+	out += "Clic izquierdo: seleccionar (arrastrar para un grupo; doble clic: todos los del tipo)\nClic derecho: mover, atacar, recolectar, construir, reparar o alojar\nGrilla Q W E R / A S D F / Z X C V: construir, entrenar, investigar\nA y clic: atacar en movimiento · S: detener · Supr: eliminar\nCtrl + 0…9: grupos · H: recorre los centros (dos veces: centra) · . : aldeano inactivo · Z en el centro: campana\nFlechas, bordes o botón del medio: cámara · %s: velocidad · Esc: pausa · las teclas se cambian en Opciones → Teclas\n" % Teclas.texto("velocidad")
+	out += "%s: tu pueblo · %s: economía · %s: avance de edad · %s: registro de sucesos · %s: puntaje · %s: «Mi base»\n" % [Teclas.texto("ayuda"), Teclas.texto("economia"), Teclas.texto("edad"), Teclas.texto("sucesos"), Teclas.texto("puntaje"), Teclas.texto("mi_base")]
+	out += ". y , : aldeano y militar ocioso (con Mayús, todos) · M: todos los militares · T o doble clic: todos los del tipo · Tab: edificios de producción\nD: mantener posición · E y clic: patrullar · R y clic: atacar el suelo (asedio de área) · Z X C V: bloque, línea, abierta, columna · arrastrar el clic derecho: hacia dónde miran\nCtrl + %s…%s: guardar la cámara; %s…%s: volver, como AoE4 (Ctrl + Alt + 1…8 y Alt + 1…8 también) · Alt + clic (mapa o minimapa): bengala para tu aliado\n" % [Teclas.texto("marcador_1"), Teclas.texto("marcador_4"), Teclas.texto("marcador_1"), Teclas.texto("marcador_4")] # --- órdenes ---
 	return out
 
 
@@ -247,7 +247,7 @@ func _tips(dd: SimData) -> Array[String]:
 		var t2 := "Gastá %s antes de que llegue al tope" % rp["nombre"]
 		if not tops.is_empty():
 			t2 += ", o subí el tope con " + ", ".join(tops)
-		out.append(t2 + ". El panel de economía (F2) muestra en qué se gasta.")
+		out.append(t2 + ". El panel de economía (%s) muestra en qué se gasta." % Teclas.texto("economia"))
 	if m.has("caminos"):
 		out.append("Trazá caminos desde la capital hasta tus talleres y cuarteles: los desconectados no reciben el bono.")
 	if m.has("acogida"):
@@ -262,6 +262,6 @@ func _tips(dd: SimData) -> Array[String]:
 		out.append("Para un hito o una defensa urgente, mandá a todos los aldeanos juntos a la misma obra.")
 	if m.has("defensa_altura"):
 		out.append("Elegí dónde pelear: defendé desde las lomas y evitá el llano.")
-	out.append("Lo disputado (riqueza del centro, sitios y botín) tiene tope por edad: mirá la barra en el panel de economía (F2).")
-	out.append("Ningún hito es mejor siempre: el de economía rinde a la larga, el militar te deja pelear antes (F4).")
+	out.append("Lo disputado (riqueza del centro, sitios y botín) tiene tope por edad: mirá la barra en el panel de economía (%s)." % Teclas.texto("economia"))
+	out.append("Ningún hito es mejor siempre: el de economía rinde a la larga, el militar te deja pelear antes (%s)." % Teclas.texto("edad"))
 	return out

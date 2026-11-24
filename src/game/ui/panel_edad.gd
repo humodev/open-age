@@ -1,5 +1,5 @@
 extends Control
-## Avance de edad (F4): qué falta para el próximo hito, las dos opciones con su
+## Avance de edad (F6): qué falta para el próximo hito, las dos opciones con su
 ## eje (economía o militar) y su efecto, y en qué edad anda cada rival.
 
 const C := preload("res://src/game/ui/panel_comun.gd")

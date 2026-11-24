@@ -28,7 +28,7 @@ var _deaths: Array = [] # bajas propias lejos de casa en la pelea en curso: [seg
 var _kills: Array[int] = [] # segundo de cada enemigo que mató la tropa propia (los últimos minutos)
 
 const HINTS := {
-	"riqueza": "Usala en tropas, investigaciones o el hito de la próxima edad (F4 dice qué falta).",
+	"riqueza": "Usala en tropas, investigaciones o el hito de la próxima edad (el panel de Edad dice qué falta).",
 	"alimento": "Entrená aldeanos y tropas, o guardalo para el hito de la próxima edad.",
 	"madera": "Construí casas, granjas, otro edificio militar o almacenes cerca de los recursos.",
 	"piedra": "Las torres, las murallas y los hitos de las edades altas piden piedra.",
