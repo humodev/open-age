@@ -75,7 +75,6 @@ details.cambiar[open]>summary{margin-bottom:8px}
     <div class="filtros" role="group" aria-label="Filtrar">
       <button type="button" data-f="pendiente" aria-pressed="true">Pendientes</button>
       <button type="button" data-f="tuyas" aria-pressed="false">Contestadas acá</button>
-      <button type="button" data-f="respondida" aria-pressed="false">Ya respondidas</button>
       <button type="button" data-f="todas" aria-pressed="false">Todas</button>
     </div>
     <input type="search" id="buscar" placeholder="Buscar (yerba, sonido, C-69…)" aria-label="Buscar">
@@ -89,11 +88,15 @@ details.cambiar[open]>summary{margin-bottom:8px}
 
 <script>
 const CONSULTAS = /*__DATOS__*/[];
+const RESPONDIDAS = /*__RESPONDIDAS__*/0; // ya pasadas a CONSULTAS.md, fuera de esta página
 const LS = "raices_consultas_v1";
 let mias = {};           // id -> {opcion, texto, fecha}
 let db = null, col = null;
 let filtro = "pendiente", busca = "";
-try { mias = JSON.parse(localStorage.getItem(LS) || "{}") || {}; } catch (e) { mias = {}; }
+const VIGENTES = new Set(CONSULTAS.map(c => c.id));
+// Lo de consultas que ya salieron de la página (respondidas y pasadas a CONSULTAS.md) se olvida.
+const soloVigentes = o => Object.fromEntries(Object.entries(o || {}).filter(([k]) => VIGENTES.has(k)));
+try { mias = soloVigentes(JSON.parse(localStorage.getItem(LS) || "{}")); localStorage.setItem(LS, JSON.stringify(mias)); } catch (e) { mias = {}; }
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -102,10 +105,8 @@ const plano = h => { const d = document.createElement("div"); d.innerHTML = h; r
 function tieneMia(id){ const m = mias[id]; return !!(m && (m.opcion || (m.texto || "").trim())); }
 
 function resumen(){
-  const pend = CONSULTAS.filter(c => c.estado === "pendiente").length;
-  const resp = CONSULTAS.filter(c => c.estado === "respondida").length;
   const tuyas = CONSULTAS.filter(c => tieneMia(c.id)).length;
-  $("#resumen").innerHTML = `<span><b>${CONSULTAS.length}</b> consultas</span><span><b>${pend}</b> sin respuesta</span><span><b>${resp}</b> ya respondidas</span><span><b>${tuyas}</b> contestadas acá</span>`;
+  $("#resumen").innerHTML = `<span><b>${CONSULTAS.length - tuyas}</b> te faltan</span><span><b>${tuyas}</b> contestadas acá desde la última pasada</span><span><b>${RESPONDIDAS}</b> ya respondidas y aplicadas (en CONSULTAS.md)</span>`;
 }
 
 function visible(c){
@@ -224,11 +225,11 @@ pintar();
   col.onSnapshot(snap => {
     clearTimeout(corte);
     const remotas = {};
-    snap.docs.forEach(d => { const v = d.data(); if (v) remotas[d.id] = v; });
+    snap.docs.forEach(d => { const v = d.data(); if (v && VIGENTES.has(d.id)) remotas[d.id] = v; });
     // Lo local que todavía no subió se sube; lo remoto manda en lo demás.
     const subir = Object.keys(mias).filter(id => !remotas[id] || (mias[id].fecha || "") > (remotas[id].fecha || ""));
     mias = Object.assign({}, remotas);
-    try { const loc = JSON.parse(localStorage.getItem(LS) || "{}"); subir.forEach(id => { if (loc[id]) mias[id] = loc[id]; }); } catch (e) {}
+    try { const loc = JSON.parse(localStorage.getItem(LS) || "{}"); subir.forEach(id => { if (loc[id] && VIGENTES.has(id)) mias[id] = loc[id]; }); } catch (e) {}
     aviso.textContent = "Lo que elegís se guarda solo y Claude lo lee desde acá. También podés copiarlo y pegarlo en el chat.";
     const activo = document.activeElement && document.activeElement.id;
     if (!activo || !activo.startsWith("tx-")) pintar(); else resumen();

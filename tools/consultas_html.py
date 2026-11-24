@@ -29,6 +29,8 @@ NOTAS = {
     "C-98": (None, "Se hizo a + c: aldeanos animados con KayKit y tonos más terrosos. El rig propio ya existe en el pipeline 3D local (`proceso/47`): el aldeano inca anda con las animaciones de KayKit en el visor, falta pasarlo a `AldeanoAnimado`."),
     "C-99": (None, "Quedó así como está. Los modelos nuevos del pipeline (`proceso/49`, `50`) toman el tono de piel del arte 2D de cada pueblo."),
     "C-105": ("respondida", "Respondida en el chat (2026-11-20/21): instalar CUDA y seguir. Hecho: textura de Hunyuan3D-Paint, `tools/gen3d_pipeline.py`, 24 modelos de los seis pueblos y el arreglo de la piel oscura (`proceso/47`, `49`, `50`)."),
+    "C-47": ("pendiente", "Seguimos con el empate. Tu pregunta (¿por qué hay tiempo límite?) está contestada en la línea de respuesta: es opcional y viene apagado."),
+    "C-70": (None, "En la página elegiste C-40 b (Qorikancha a la III), C-41 a (Tekoha → Tovaja → Mbororé → Ñande retã) y C-42 b («1678»), y dejaste C-39 (el nombre de la IV inca) para esta. Ya se aplican; acá falta lo demás (Willkapampa, birmanos, Ayutthaya) o confirmar esas tres."),
     "C-106": (None, "Los modelos no se usan todavía en el juego. Desde que se escribió la pregunta, ya pasaron por el pipeline los seis pueblos (la condición de la c) se cumplió) y se arregló la piel oscura (`proceso/50`)."),
 }
 
@@ -101,7 +103,9 @@ def leer():
         estado, nota = NOTAS.get(c["id"], (None, None))
         if nota:
             c["hecho"].append(nota)
-        if estado:
+        if estado == "pendiente":
+            c["estado"] = "pendiente"
+        elif estado:
             c["estado"] = estado
         elif c["respuesta"]:
             c["estado"] = "respondida"
@@ -145,7 +149,8 @@ def md_ligero(s):
 
 
 def main():
-    cs = leer()
+    todas = leer()
+    cs = [c for c in todas if c["estado"] == "pendiente"]  # lo respondido queda solo en CONSULTAS.md
     for c in cs:
         c["cuerpo"] = md_ligero(c["cuerpo"])
         c["hecho"] = [md_ligero(h) for h in c["hecho"]]
@@ -153,7 +158,7 @@ def main():
         c["opciones"] = [[o[0], md_ligero(o[1]).removeprefix("<p>").removesuffix("</p>"), o[2]] for o in c["opciones"]]
     plantilla = (RAIZ / "tools" / "consultas_plantilla.html").read_text(encoding="utf-8")
     datos = json.dumps(cs, ensure_ascii=False).replace("</", "<\\/")
-    SALIDA.write_text(plantilla.replace("/*__DATOS__*/[]", datos), encoding="utf-8")
+    SALIDA.write_text(plantilla.replace("/*__DATOS__*/[]", datos).replace("/*__RESPONDIDAS__*/0", str(len(todas) - len(cs))), encoding="utf-8")
     pend = sum(c["estado"] == "pendiente" for c in cs)
     print(f"{SALIDA.relative_to(RAIZ)}: {len(cs)} consultas, {pend} pendientes")
 

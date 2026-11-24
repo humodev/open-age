@@ -46,21 +46,15 @@ a) Arrancar ya con el plan de terreno y mapas (`docs/10`) · b) Cerrar antes bal
 Hay buenas grabaciones de siku y sikuri para Tawantinsuyu en Wikimedia, pero son CC BY-SA. Esa licencia obliga a dar crédito y a compartir con la misma licencia cualquier cambio que se haga a la pista, no al juego. Hoy solo se usa CC0 y dominio público.
 a) Sí, con crédito *(por defecto)* · b) No, solo CC0
 
-**Respuesta:**
-
-### C-08 · La pifilka mapuche tiene uso ceremonial (ngillatun)
+**Respuesta:** a) Sí, con crédito (2026-11-21, página de consultas).### C-08 · La pifilka mapuche tiene uso ceremonial (ngillatun)
 Las grabaciones las publicó el propio intérprete en dominio público, pero suenan en el combate.
 a) Dejarla solo en el menú o en la paz, no en el combate *(por defecto)* · b) Dejarla como está · c) Sacarla
 
-**Respuesta:**
-
-### C-09 · ¿Quedaron bien la escala y la velocidad?
+**Respuesta:** a) Dejarla solo en el menú o en la paz, no en el combate (2026-11-21, página de consultas).### C-09 · ¿Quedaron bien la escala y la velocidad?
 Ahora una casa mide unas tres veces un aldeano y todos andan un 10 % más lento. Para probarlo, jugá a velocidad ×1, no con el autotest, que corre a ×4.
 a) Están bien · b) Aldeanos todavía grandes · c) Todavía rápidos · d) Ahora demasiado lentos
 
-**Respuesta:**
-
-### C-10 · Modelo de la riqueza (resumen en `docs/diseno/revision-economia/00-sintesis.md`)
+**Respuesta:** a) Están bien (2026-11-21, página de consultas).### C-10 · Modelo de la riqueza (resumen en `docs/diseno/revision-economia/00-sintesis.md`)
 a) "Una riqueza, seis motores": un solo recurso, con nombre e ícono por civ, y que cada civ produce con su propio motor pacífico desde la edad I *(recomendado)* · b) Solo cambiar la imagen y los nombres, sin tocar las reglas · c) Un cuarto recurso distinto para cada civ
 
 **Respuesta:**
@@ -79,102 +73,75 @@ a) El kulliñ pasa a ser la riqueza mapuche: el ganado crece en el corral y el b
 Son la IA mapuche, la campana, la vida de los edificios mapuches, el costo del gult, los colores y el tooltip de riqueza. Valen para cualquier modelo.
 a) Sí, mientras decidís el resto *(recomendado)* · b) No, esperá
 
-**Respuesta:**
-
+**Respuesta:** a) Sí, mientras decidís el resto (2026-11-21, página de consultas).
 > **C-10 a C-12 quedan reemplazadas** por las preguntas del diseño final de la ronda 3 (C-14 a C-20). Resumen en palabras llanas al principio de [`docs/diseno/revision-economia/v3/04-diseno-final.md`](../docs/diseno/revision-economia/v3/04-diseno-final.md).
 
 ### C-14 · ¿Cómo medimos que el esfuerzo sea parejo?
 a) Umbrales absolutos: como máximo 0,6 órdenes por minuto y 2 pendientes cada 10 minutos por civ, y ninguna por encima de 1,5 veces la mediana *(recomendado)* · b) ×1,5 entre la que más y la que menos pide (falla porque guaraníes y Palmares piden muy poco)
 
-**Respuesta:**
-
-### C-15 · Costo del avance a la edad II
+**Respuesta:** a) Umbrales absolutos: como máximo 0,6 órdenes por minuto y 2 pendientes cada 10 minutos por civ, y ninguna por encima de 1,5 veces la mediana (2026-11-21, página de consultas).### C-15 · Costo del avance a la edad II
 a) 500 de alimento + 300 de riqueza, y se mide con la IA real; si pasa de los 9:00, vuelve a 400 + 250 *(recomendado)* · b) Dejarlo en 400 + 200 (algunas civs llegan antes de los 6:30)
 
-**Respuesta:**
-
-### C-16 · Cuando se acaba la arcilla de casa (minutos 13 a 24), el ingreso de riqueza cae a la mitad
+**Respuesta:** a) 500 de alimento + 300 de riqueza, y se mide con la IA real; si pasa de los 9:00, vuelve a 400 + 250 (2026-11-21, página de consultas).### C-16 · Cuando se acaba la arcilla de casa (minutos 13 a 24), el ingreso de riqueza cae a la mitad
 a) Aceptarlo: el final se pelea en el centro, con tope *(recomendado)* · b) Agregar una veta lenta en el flanco
 
-**Respuesta:**
-
-### C-17 · Etiopía en escaramuza: ¿la corte "se funda" en otro lugar en vez de viajar como carpa?
+**Respuesta:** a) Aceptarlo: el final se pelea en el centro, con tope (2026-11-21, página de consultas).### C-17 · Etiopía en escaramuza: ¿la corte "se funda" en otro lugar en vez de viajar como carpa?
 a) Sí: sin carpa vulnerable ni derrota por empacar; la carpa queda para la campaña *(recomendado)* · b) Volver a la carpa que viaja
 
-**Respuesta:**
-
-### C-18 · ¿Ayutthaya sin depósitos comunes, con el elefante del rey como depósito?
+**Respuesta:** a) Sí: sin carpa vulnerable ni derrota por empacar; la carpa queda para la campaña (2026-11-21, página de consultas).### C-18 · ¿Ayutthaya sin depósitos comunes, con el elefante del rey como depósito?
 a) Sí *(recomendado)* · b) Que pueda construir depósitos comunes
 
-**Respuesta:**
-
-### C-19 · Mapuches: si pierden la arcilla de casa en el minuto 10, conservan el 29 % del ingreso de riqueza (no atrasan la edad)
+**Respuesta:** a) Sí (2026-11-21, página de consultas).### C-19 · Mapuches: si pierden la arcilla de casa en el minuto 10, conservan el 29 % del ingreso de riqueza (no atrasan la edad)
 a) Aceptarlo como el precio de "no hay capital" y mirarlo en el torneo *(recomendado)* · b) Abaratar el lof de flanco de 110 a 80 de madera
 
-**Respuesta:**
-
-### C-20 · Cambiar las frases de Palmares ("se esconde") y Ayutthaya ("comercia con el mundo"), que contradicen el diseño
+**Respuesta:** a) Aceptarlo como el precio de "no hay capital" y mirarlo en el torneo (2026-11-21, página de consultas).### C-20 · Cambiar las frases de Palmares ("se esconde") y Ayutthaya ("comercia con el mundo"), que contradicen el diseño
 a) Sí, con las propuestas de la sección 11 del diseño final *(recomendado)* · b) Dejarlas
 
-**Respuesta:**
-
-### C-21 · ¿La IA "Pacífica" puede ganar por sitios sagrados?
+**Respuesta:** a) Sí, con las propuestas de la sección 11 del diseño final (2026-11-21, página de consultas).### C-21 · ¿La IA "Pacífica" puede ganar por sitios sagrados?
 Hoy controla el mapa y toma sitios, así que puede ganar por ellos sin atacarte.
 a) Sí, es parte de su juego: los sitios hay que disputarlos *(recomendado)* · b) No: toma sitios pero no cuenta para su victoria · c) No toma sitios
 
-**Respuesta:**
-
-### C-22 · (interfaz, parte B) Misión mapuche 2: se arranca con población 33/8
+**Respuesta:** a) Sí, es parte de su juego: los sitios hay que disputarlos (2026-11-21, página de consultas).### C-22 · (interfaz, parte B) Misión mapuche 2: se arranca con población 33/8
 El malón trae 10 aldeanos y 22 guerreros con un lof que da 8 de tope. Hoy se explica con un aviso al empezar ("hay más gente que lugar: construí casas"). El motor de escenarios no puede dar casas al jugador.
 a) Dejarlo explicado: es un malón, no hace falta entrenar *(recomendado)* · b) Que el motor de escenarios pueda dar rukas al jugador desde los datos de la misión · c) Bajar las tropas iniciales hasta entrar en el tope
+
+**Respuesta:** a) Dejarlo explicado: es un malón, no hace falta entrenar (2026-11-21, página de consultas).
 
 ### C-23 · (interfaz, parte A) Paleta apta para daltonismo: ¿rojo de equipo puro y alimento frambuesa?
 Para que equipos y recursos se distingan también con daltonismo (`proceso/17-interfaz-segunda-tanda/01-escala-paleta-opciones.md`, paso 2), el jugador 2 pasó de rojo terracota a rojo puro, el alimento de rojo a frambuesa y la riqueza de dorado a amarillo dorado. Los equipos 3 y 4 son violeta y ciruela (antes verde y ocre).
 a) Dejarlo así *(recomendado)* · b) Volver al terracota para el jugador 2 aunque se confunda con el alimento (ΔE 11) · c) Otra combinación (decir cuál)
 
+**Respuesta:** a) Dejarlo así (2026-11-21, página de consultas).
+
 ### C-24 · (arte) Música para Etiopía: no hay grabaciones CC0 ni de dominio público (etapa 19)
 Se revisaron Wikimedia Commons, Internet Archive (también la colección de discos de 78 rpm) y OpenGameArt; Freesound no permite descargar sin cuenta. Lo único etíope que apareció es CC-BY-SA (escala de begena, entrevistas de qene), está mal licenciado (discos comerciales subidos como CC0) o es un registro etnográfico o litúrgico (zema de estudiantes de Debre Libanos; Courlander, 1951; Leslau). Detalle en `proceso/19-arte-y-sonido/01-modelos-y-musica.md`.
 a) Seguir con las pistas genéricas hasta conseguir algo propio *(recomendado)* · b) Encargar o grabar krar y masenqo con licencia propia · c) Aceptar CC-BY-SA para la música (obliga a compartir esas pistas con la misma licencia)
 
-**Respuesta:**
-
-### C-25 · (jugabilidad) Ayutthaya y el almacén de arcilla
+**Respuesta:** c) Aceptar CC-BY-SA para la música (obliga a compartir esas pistas con la misma licencia) (2026-11-21, página de consultas).### C-25 · (jugabilidad) Ayutthaya y el almacén de arcilla
 La economía v3 dice que Ayutthaya no construye depósito: todo lo cobra el elefante. Tu ejemplo del almacén de arcilla junto a la arcilla le cabe justo. Propuesta: darle el *khlang din* (almacén solo de arcilla), sin tocar el cobro del elefante (`docs/diseno/jugabilidad/03-propuesta.md` §2.2).
 a) Darle el khlang din *(por defecto)* · b) Dejarla sin almacenes
 
-**Respuesta:**
-
-### C-26 · (jugabilidad) Mapuches: el lof como único almacén
+**Respuesta:** a) Darle el khlang din (2026-11-21, página de consultas).### C-26 · (jugabilidad) Mapuches: el lof como único almacén
 Los mapuches no levantarían almacenes baratos por recurso: llevan todo al lof (la comunidad familiar). Es parte de su identidad móvil, y además les baja el 68 % del torneo.
 a) El lof como único almacén *(por defecto)* · b) Darles almacenes como al resto
 
-**Respuesta:**
-
-### C-27 · (jugabilidad) Orden de la formación
+**Respuesta:** a) El lof como único almacén (2026-11-21, página de consultas).### C-27 · (jugabilidad) Orden de la formación
 AoE4 pone la caballería adelante. La propuesta pone adelante la línea (lanceros), después el choque, la distancia y el asedio, y a los montados en las alas, siguiendo nuestro triángulo de contadores (D-007).
 a) Nuestro orden *(por defecto)* · b) Como AoE4
 
-**Respuesta:**
-
-### C-28 · (jugabilidad) ¿Desde qué distancia los aldeanos van en bloque?
+**Respuesta:** a) Nuestro orden (2026-11-21, página de consultas).### C-28 · (jugabilidad) ¿Desde qué distancia los aldeanos van en bloque?
 Hasta 16 casillas cada aldeano va por su cuenta, corriendo al trabajo. Más lejos van en bloque y se esperan, y se sueltan a 6 casillas del destino. El 16 sale de que los recursos de casa están entre 7 y 15 casillas del centro. Se cambia en el dato.
 a) 16 casillas *(por defecto)* · b) Menos, para ver el bloque también en viajes medianos (decir cuánto)
 
-**Respuesta:**
-
-### C-29 · (jugabilidad) El ariete frena al ejército
+**Respuesta:** a) 16 casillas (2026-11-21, página de consultas).### C-29 · (jugabilidad) El ariete frena al ejército
 Con velocidad común, un ejército con ariete marcha a la velocidad del ariete (un 47 % más lento que los lanceros), como en AoE4.
 a) Aceptarlo y medir *(por defecto)* · b) Que el asedio marche aparte
 
-**Respuesta:**
-
-### C-30 · (jugabilidad) Nombres en lenguas originarias sin fuente
+**Respuesta:** a) Aceptarlo y medir (2026-11-21, página de consultas).### C-30 · (jugabilidad) Nombres en lenguas originarias sin fuente
 La propuesta nombra almacenes y edificios militares de cada pueblo, y algunos nombres están marcados `[verificar]` porque no se encontró fuente.
 a) Ponerlos y corregir cuando aparezca la fuente *(por defecto)* · b) Usar nombres en castellano hasta tener fuente
 
-**Respuesta:**
-
-### C-31 · (jugadores de prueba) Contadores más blandos para que la micro pague
+**Respuesta:** a) Ponerlos y corregir cuando aparezca la fuente — «Deberían estar los nombres en castellano y los originales» (2026-11-21, página de consultas).### C-31 · (jugadores de prueba) Contadores más blandos para que la micro pague
 Hoy un contador multiplica el daño por 2 o por 2,25. El jugador veterano midió que 10 guerreros le ganan a 10 honderos perdiendo una sola unidad, y que kitear o concentrar el fuego no cambia nada (`proceso/22-testers/01-veterano-aoe4.md`). En AoE4 los bonos son más chicos y la micro decide más.
 a) Bajar a ×1,5–×1,75 y rebalancear con torneo *(por defecto, recién después de cerrar el balance actual)* · b) Dejar los contadores fuertes: la composición decide, no la micro
 
@@ -202,170 +169,123 @@ a) Ese orden *(por defecto)* · b) Otro (decir cuál)
 AoE4 guarda la cámara con Ctrl + F1…F8. Acá F1–F6 abren los paneles y F10 es la pausa, así que los marcadores quedaron en Ctrl + F7…F9 (tres). Detalle en `proceso/23-como-aoe4/02-ordenes-y-comodidades.md`.
 a) Dejar F7–F9 *(por defecto)* · b) Pasar los paneles a otras teclas y usar F1–F4 para la cámara, como AoE4
 
+**Respuesta:** b) Pasar los paneles a otras teclas y usar F1–F4 para la cámara, como AoE4 (2026-11-21, página de consultas).
+
 ### C-36 · (órdenes) ¿Cuánto da la IA aliada cuando le piden?
 Hoy da 200 si después le quedan 300 (`reglas.json → equipos.pedido`), y a una bengala manda la mitad de su ejército libre, con un mínimo de 3 (`equipos.bengala`). Un aliado muy generoso se queda sin ejército; uno muy tacaño parece que no escucha.
 a) Así *(por defecto)* · b) Más generosa (todo lo que le sobre, el ejército entero) · c) Más prudente (solo si no la están atacando)
+
+**Respuesta:** a) Así (2026-11-21, página de consultas).
 
 ### C-37 · (aprender a jugar) ¿Con qué pueblo se aprende?
 El tutorial usa a los guaraníes, que no tienen torre, granero ni depósito, y cuyos edificios tienen nombre propio (Oga, Aty, Kokue). El jugador nuevo pidió aprender con un pueblo "más normal" (`proceso/22-testers/02-nuevo-en-rts.md`).
 a) Dejar a los guaraníes: los nombres propios con el común debajo ya se entienden *(por defecto)* · b) Pasar el tutorial a Tawantinsuyu, que tiene todos los edificios comunes
 
-**Respuesta:**
-
-### C-38 · (aprender a jugar) "Arte de la guerra"
+**Respuesta:** b) Pasar el tutorial a Tawantinsuyu, que tiene todos los edificios comunes (2026-11-21, página de consultas).### C-38 · (aprender a jugar) "Arte de la guerra"
 AoE4 tiene misiones cortas de una sola idea (economía temprana, defensa, contadores, sitios, asedio) con medalla de bronce, plata y oro. El motor de escenarios ya alcanza para hacerlas (objetivos `juntar`, `sitio`, cuentas y ataques con aviso).
 a) Sí, cinco misiones cortas con medallas por tiempo, después de la etapa 23 *(por defecto)* · b) No por ahora
 
-**Respuesta:**
-
-
-### C-39 · (historia) Nombre de la edad IV del Tawantinsuyu: "Inkarri"
+**Respuesta:** a) Sí, cinco misiones cortas con medallas por tiempo, después de la etapa 23 (2026-11-21, página de consultas).### C-39 · (historia) Nombre de la edad IV del Tawantinsuyu: "Inkarri"
 El mito de Inkarrí se documenta sobre todo en el siglo XX (Arguedas lo recogió en Puquio en 1956), aunque se lo vincula con el Taki Onqoy y con la muerte de Túpac Amaru I (1572). La edad IV cubre Vilcabamba (1537–1572) y Tinta (1780). Ya la investigación lo había dejado como "a consultar" (`docs/investigacion/tawantinsuyu.md`, punto 9). Sus dos hitos son Qorikancha y Vilcabamba.
 a) Dejar Inkarri y explicarlo en el panel del pueblo como un guiño al arco de la campaña, no como un nombre de época *(por defecto)* · b) *Vilcabamba* (choca con el nombre del hito militar) · c) *Neo Inka* · d) Otro (escribilo)
 
-**Respuesta:**
-
-### C-40 · (historia) El Qorikancha como hito de la edad IV inca
+**Respuesta:** «Contestaré en la C-70» (2026-11-21, página de consultas).### C-40 · (historia) El Qorikancha como hito de la edad IV inca
 El Qorikancha lo reconstruyó Pachakutiq hacia 1438: como obra de la última edad es anacrónico. Moverlo a la edad II o III cambia los hitos y, por lo tanto, el balance del Tawantinsuyu, que está en revisión (parte A).
 a) Cambiarle el nombre a la opción económica de la edad IV (por ejemplo, *Wak'a rehenes* o *Huacas del Cusco*), sin tocar sus números *(por defecto)* · b) Pasarlo a la edad III y llevar el aqllawasi o la kallanka real a la IV (rebalancea) · c) Dejarlo así
 
-**Respuesta:**
-
-### C-41 · (historia) Orden de las edades guaraníes y "Amundá"
+**Respuesta:** b) Pasarlo a la edad III y llevar el aqllawasi o la kallanka real a la IV (rebalancea) — «Veo más en la C-70» (2026-11-21, página de consultas).### C-41 · (historia) Orden de las edades guaraníes y "Amundá"
 Los datos dicen *Tekoha → Amundá → Mbororé → Tava*. La investigación propone *Tekoha → cuñadazgo y conquista → Tava o monte → Mbororé y Guerra Guaranítica* (`docs/investigacion/guaranies.md`, "Periodización"). En los datos, la bifurcación misión o monte está en el avance a la III y los hitos de la IV (*Tava fortificada* y *Ñande retã*) son de la Guerra Guaranítica, así que el orden de los datos tiene lógica, pero termina en "Tava" y se lee como si la meta fuera reducirse. Además, **"Amundá" no tiene fuente ni explicación** en ningún documento.
 a) *Tekoha → Tovaja (cuñadazgo) → Mbororé → Ñande retã* (la III es la de Mbororé, 1641, y la IV, la de 1754–1756) *(por defecto)* · b) Seguir la investigación: III *Tava ha ka'aguy* (pueblo y monte), IV *Mbororé* · c) Dejarlo así y explicarlo en el panel. En cualquier caso, ¿de dónde sale "Amundá"? [verificar *tovaja* con un hablante]
 
-**Respuesta:**
-
-### C-42 · (historia) "Cucaú o Quilombo" como nombre de la edad IV de Palmares
+**Respuesta:** a) *Tekoha → Tovaja (cuñadazgo) → Mbororé → Ñande retã* (la III es la de Mbororé, 1641, y la IV, la de 1754–1756) — «Veo más en la C-70» (2026-11-21, página de consultas).### C-42 · (historia) "Cucaú o Quilombo" como nombre de la edad IV de Palmares
 Se lee como una opción de menú, no como un nombre. La edad IV es la bifurcación entre el *Pacto de Cucaú* (Gana Zumba, 1678) y la *Guerra de Zumbi*, y esas ya son sus dos opciones de hito.
 a) Un solo nombre: *Macaco* (la cerca real de la Serra da Barriga, donde siguió Zumbi) *(por defecto)* · b) *1678* · c) *Angola Janga* para la IV y otro nombre para la III · d) Dejarlo y explicar la bifurcación en el panel
 
-**Respuesta:**
-
-### C-43 · (textos) Palabras en portugués en los textos en castellano
+**Respuesta:** b) *1678* — «Veo más en la C-70» (2026-11-21, página de consultas).### C-43 · (textos) Palabras en portugués en los textos en castellano
 Cambié "roças" por "rozas", "milho" por "maíz" y "farinha" por "fariña" (castellano del litoral) en las campañas de Palmares y guaraníes, porque tienen palabra propia en castellano. Dejé las que nombran instituciones o lugares sin equivalente (*mocambo*, *quilombo*, *terço*, *morador*, *bandeira*). Queda "la mata" en Palmares (en castellano rioplatense, "mata" es un arbusto; sería "el monte").
 a) Ese criterio, y "la mata" pasa a "el monte" *(por defecto)* · b) Volver al portugués de época, siempre en cursiva y con un glosario en el juego · c) Ese criterio, pero "la mata" se queda (es la *mata atlántica*)
 
-**Respuesta:**
-
-### C-44 · (historia) Rivales con civilización propia: ¿alcanza o separamos más?
+**Respuesta:** a) Ese criterio, y "la mata" pasa a "el monte" (2026-11-21, página de consultas).### C-44 · (historia) Rivales con civilización propia: ¿alcanza o separamos más?
 La parte D sumó seis civs solo de IA: Adal, Birmania (Toungoo y Konbaung juntos), chankas, caranquis y cayambes, cañaris y tupíes (`proceso/23-como-aoe4/04-rivales-propios.md`). Quedan con la civ del jugador las milicias de Pumakawa (incas), los señores de Lasta (etíopes) y los señores de Phitsanulok, Phimai y Fang (siameses), que sí son del mismo pueblo. Los holandeses, franceses, paulistas y la tropa de Jorge Velho siguen como `invasores`.
 a) Así *(por defecto)* · b) Separar también a los europeos por potencia (Castilla, Portugal, Países Bajos, Francia), con nombres de edad propios en vez de *Virreinato* para todos
 
-**Respuesta:**
-
-### C-45 · (opciones de partida) Recursos medios y altos
+**Respuesta:** a) Así (2026-11-21, página de consultas).### C-45 · (opciones de partida) Recursos medios y altos
 Hoy son 500/500/300/300 y 1000/1000/700/700 (alimento, madera, piedra, riqueza), parecidos a los de AoE2 (`proceso/24-tras-la-segunda-ronda/4b-opciones-de-partida.md`).
 a) Esos *(por defecto)* · b) Otros (decí cuáles)
 
-**Respuesta:**
-
-### C-46 · (opciones de partida) Ubicación de los equipos por defecto
+**Respuesta:** a) Esos (2026-11-21, página de consultas).### C-46 · (opciones de partida) Ubicación de los equipos por defecto
 Ahora el 2v2 y el 3v3 del menú arrancan con los aliados juntos, como el lobby de AoE4. Antes quedaban mezclados por el orden de los lugares.
 a) Juntos *(por defecto)* · b) Mezclados
 
-**Respuesta:**
-
-### C-47 · (opciones de partida) Empate al tiempo límite
+**Respuesta:** a) Juntos (2026-11-21, página de consultas).### C-47 · (opciones de partida) Empate al tiempo límite
 Si al cumplirse el tiempo los puntos empatan, hoy no gana nadie y la pantalla dice "Empate".
 a) Empate *(por defecto)* · b) Desempate por edificios en pie o por sitios
 
-**Respuesta:**
-
-### C-48 · (opciones de partida) Conquista sin hitos: ¿cuentan las unidades?
+**Respuesta:** pregunta del autor (2026-11-21): «¿Por qué hay tiempo límite?». Contestación: es opcional y viene apagado («Sin límite»). El menú lo pone solo (60 min) en los todos contra todos de 3 o más, porque sin él las partidas de 4 y 6 IA seguían abiertas a los 60–75 minutos (proceso/22). Esta consulta es solo sobre qué pasa si se usa y los puntos empatan.### C-48 · (opciones de partida) Conquista sin hitos: ¿cuentan las unidades?
 Con "Hitos: no", pierde quien se queda sin edificios terminados. No cuentan muros, puertas ni caminos; sí granjas, casas y almacenes.
 a) Solo edificios *(por defecto)* · b) También las unidades, como algunos modos de AoE4 (se alarga la caza del último aldeano)
 
-**Respuesta:**
-
-### C-49 · (opciones de partida) Hitos apagados sin tiempo límite
+**Respuesta:** a) Solo edificios — «Que esto no nos perjudique a la hora de hacer un modo nómade donde los jugadores eligen el lugar de la base» (2026-11-21, página de consultas).### C-49 · (opciones de partida) Hitos apagados sin tiempo límite
 En 4 partidas de IA contra IA de hasta 45 minutos, sin hitos ni sitios, la IA nunca termina la conquista (al mapuche le quedaban 41 edificios).
 a) El menú sugiere un tiempo límite al apagar "Hitos", y la IA aprende a cazar los últimos edificios en el paso de la IA experta *(por defecto)* · b) Solo mejorar la IA
 
-**Respuesta:**
-
-### C-50 · (opciones de partida) Opciones del lobby de AoE4 que faltan
+**Respuesta:** b) Solo mejorar la IA (2026-11-21, página de consultas).### C-50 · (opciones de partida) Opciones del lobby de AoE4 que faltan
 Faltan maravilla (no existe todavía), edad inicial, población máxima y "revelar mapa".
 a) Población máxima y revelar mapa ahora; edad inicial y maravilla después *(por defecto)* · b) Ninguna por ahora · c) Todas
 
-**Respuesta:**
-
-### C-51 · (IA experta) ¿Tiene que ganarle a la difícil?
+**Respuesta:** a) Población máxima y revelar mapa ahora; edad inicial y maravilla después (2026-11-21, página de consultas).### C-51 · (IA experta) ¿Tiene que ganarle a la difícil?
 La experta llega a 100 aldeanos a los 25 minutos en tres civs y levanta un segundo o tercer centro, pero contra la difícil pierde 2 de 6 partidas, gana 1 y 3 quedan abiertas a los 25 minutos. Su economía grande llega tarde: a los 10–15 minutos tiene igual o menos ejército (`proceso/24-tras-la-segunda-ronda/4a-ia-experta.md`).
 a) Otro paso de ajuste con torneo de la experta contra la difícil *(por defecto)* · b) Dejarla así por ahora
 
-**Respuesta:**
-
-### C-52 · (IA experta) ¿Cuenta para el balance?
+**Respuesta:** a) Otro paso de ajuste con torneo de la experta contra la difícil (2026-11-21, página de consultas).### C-52 · (IA experta) ¿Cuenta para el balance?
 El torneo de balance se juega con la normal. Palmares no crece con centros sino con la fama, así que con la experta queda abajo por diseño.
 a) El balance se mide con la normal, y la experta solo se revisa para que ninguna civ quede inútil *(por defecto)* · b) Sumar un torneo con la experta y balancear también ahí
 
-**Respuesta:**
-
-### C-53 · (sonido) El kultrun en el juego
+**Respuesta:** a) El balance se mide con la normal, y la experta solo se revisa para que ninguna civ quede inútil — «Ahora hicimos torneos entre agentes expertos y esto mejoró» (2026-11-21, página de consultas).### C-53 · (sonido) El kultrun en el juego
 El sonido mapuche (fanfarria, alarma y órdenes) usa kultrun y trutruka sintetizados (`proceso/24-tras-la-segunda-ronda/4g-sonido.md`). El kultrun es un instrumento ceremonial de la machi. Ya estaba pendiente consultar la pifilka.
 a) Dejarlo, y consultarlo con una organización mapuche junto con la pifilka antes de publicar *(por defecto)* · b) Usar solo la trutruka hasta tener esa consulta
 
 *Mientras tanto se aplicó la opción b), la prudente (paso 4h, a pedido del jugador de historia en la ronda 3). Si contestás a), se vuelve: los modelos están en `456a59b`.*
 
-**Respuesta:**
-
-### C-54 · (sonido) La begena en la música de paz etíope
+**Respuesta:** a) Dejarlo, y consultarlo con una organización mapuche junto con la pifilka antes de publicar (2026-11-21, página de consultas).### C-54 · (sonido) La begena en la música de paz etíope
 La música nueva de Etiopía (C-24) abre y cierra con begena, el arpa de la oración ortodoxa. Solo suena en la paz, nunca en combate ni en alarmas, y no hay voces ni nada que imite el zema.
 a) Así, y consultarlo con alguien de la tradición ortodoxa etíope antes de publicar *(por defecto)* · b) Reemplazar la begena por krar, que es profano
 
 *Mientras tanto se aplicó la opción b), la prudente (paso 4h, a pedido del jugador de historia en la ronda 3). Si contestás a), se vuelve: los modelos están en `456a59b`.*
 
-**Respuesta:**
-
-### C-55 · (sonido) El berimbau en Palmares
+**Respuesta:** b) Reemplazar la begena por krar, que es profano (2026-11-21, página de consultas).### C-55 · (sonido) El berimbau en Palmares
 El sonido de Palmares usa berimbau y atabaque. El berimbau de arco con calabaza está documentado en Brasil sobre todo desde el siglo XIX [verificar]; en el Palmares del siglo XVII podría ser un anacronismo.
 a) Dejarlo: es el instrumento afrobrasileño que más se reconoce *(por defecto)* · b) Solo atabaque y agogô
 
 *Mientras tanto se aplicó la opción b), la prudente (paso 4h, a pedido del jugador de historia en la ronda 3). Si contestás a), se vuelve: los modelos están en `456a59b`.*
 
-**Respuesta:**
-
-### C-56 · (sonido) Mbaraka y takuapu guaraníes
+**Respuesta:** b) Solo atabaque y agogô (2026-11-21, página de consultas).### C-56 · (sonido) Mbaraka y takuapu guaraníes
 Son instrumentos rituales del opy mbyá. Desde el paso 4h no suenan en la tropa: en su lugar, mimby (flauta de caña) y angu'apu (tambor de tronco), según Montoya, 1639 [verificar].
 a) Así, hasta consultar con una organización mbyá *(por defecto)* · b) Volver a la mbaraka
 
-**Respuesta:**
-
-### C-57 · (sonido) La música de paz de Palmares
+**Respuesta:** a) Así, hasta consultar con una organización mbyá (2026-11-21, página de consultas).### C-57 · (sonido) La música de paz de Palmares
 Tiene dos grabaciones de berimbau con toques de capoeira y una de ijexá (un ritmo del candomblé). El sonido de tropa ya es de raíz angoleña (paso 4h).
 a) Dejarlas hasta tener una música propia sintetizada de ngoma y marimba *(por defecto)* · b) Sacarlas ya
 
 *Aplicada la b) por la revisión histórica (etapa 25): la música de paz de Palmares quedó sin pistas propias. Si contestás a), se revierten dos líneas de `audio.gd`.*
 
-**Respuesta:**
-
-### C-58 · (sonido) El kebero etíope en la fanfarria, la alarma y el entrenado
+**Respuesta:** b) Sacarlas ya (2026-11-21, página de consultas).### C-58 · (sonido) El kebero etíope en la fanfarria, la alarma y el entrenado
 El kebero también es tambor litúrgico [verificar]. La orden ya pasó al krar.
 a) Dejarlo y preguntarlo junto con C-54 *(por defecto)* · b) Sacarlo también de esos tres
 
-**Respuesta:**
-
-### C-59 · (sonido) *Phleng Maha Nimit* en la música de Ayutthaya
+**Respuesta:** a) Dejarlo y preguntarlo junto con C-54 (2026-11-21, página de consultas).### C-59 · (sonido) *Phleng Maha Nimit* en la música de Ayutthaya
 Podría ser del repertorio ceremonial naphat [verificar].
 a) Dejarla hasta confirmar *(por defecto)* · b) Sacarla
 
-**Respuesta:**
-
-### C-60 · (arte) La mbaraka del karai en el hito guaraní
+**Respuesta:** a) Dejarla hasta confirmar (2026-11-21, página de consultas).### C-60 · (arte) La mbaraka del karai en el hito guaraní
 El hito "Casa del karai" muestra bastones con plumas y una mbaraka (`data/arte_hitos.json`).
 a) Dejarlo: es la casa del karai, donde corresponde *(por defecto)* · b) Sacar la mbaraka del modelo
 
-**Respuesta:**
-
-### C-61 · (IA fácil) Un solo ataque
+**Respuesta:** a) Dejarlo: es la casa del karai, donde corresponde (2026-11-21, página de consultas).### C-61 · (IA fácil) Un solo ataque
 La fácil tiene tope de 15 soldados, pero la segunda oleada pide 18 (12 + 6). Si la primera se traba, no vuelve a atacar y a veces la partida no termina (`proceso/24-tras-la-segunda-ronda/4j-jugador-nuevo-ronda-3.md`).
 a) Bajar el paso de la oleada de la fácil para que ataque varias veces, con oleadas chicas: el principiante tiene un segundo ataque que rechazar *(por defecto)* · b) Subir su tope de ejército
 
-**Respuesta:**
-
-### C-62 · (sitios) Captura que se vacía sola
+**Respuesta:** a) Bajar el paso de la oleada de la fácil para que ataque varias veces, con oleadas chicas: el principiante tiene un segundo ataque que rechazar (2026-11-21, página de consultas).### C-62 · (sitios) Captura que se vacía sola
 Hoy un sitio guarda lo que lleva de captura aunque el que lo toma se vaya, y varias pasadas cortas suman los 10 s. En AoE4, la captura se vacía de a poco sin nadie. Cambiaría la regla para todos y el balance.
 a) Que se vacíe de a poco, como AoE4, medido con torneo *(por defecto)* · b) Dejarlo como está
 
