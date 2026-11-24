@@ -81,11 +81,16 @@ Commit: `c9ab5d0` («Proceso 51: respuestas del autor C-07 a C-61», rama `workt
 - **El sandbox del worktree** rechaza los comandos con variables en algunas posiciones. Los arreglos de varios archivos se hicieron con scripts en el scratchpad.
 - **Un `pkill -f` se mató a sí mismo** porque el patrón estaba en su propia línea de comandos (la memoria ya lo advertía). Se relanzó la medición.
 
+## Regresión: alarma sin sonido
+- **Síntoma.** `tests/sonido_civ.gd` daba 6 fallas, una por pueblo: con el suceso de ataque no sonaba la alarma propia. En `proceso/24` (4h) pasaba.
+- **Causa.** La trajo el commit `aec5e83` (Frente 4 de `proceso/30`, avisos por zona). `audio.gd` dejó de llamar a `civ_sfx("alarma")` con el suceso `alert` cuando las alertas por zona están prendidas. La intención era callar la alarma **genérica**, porque cada ataque ya suena con su tipo. Pero también calló la del pueblo. En una partida real, el golpe dispara la alerta por zona en el mismo cuadro, y `cubre_alert` tapa el `alert`, así que la alarma del pueblo no sonaba nunca. La cola global del veterano no tiene que ver.
+- **Arreglo (en el juego, no en la prueba).** Con cada `alert` propio, `audio.gd` toca la alarma del pueblo, tapada o no. El freno de 15 s de la simulación y el `min_s` de 10 s de `data/audio.json` la espacian. La genérica sigue callada si hay alertas por zona. En el `alert` que no tapó, `cubre_alert` puede tocar la alarma antes que `audio.gd`, pero no se duplica: la espera de `civ_sfx` lo evita. Un pueblo sin alarma propia (los rivales de campaña) sigue igual que antes.
+- **Pruebas.** `sonido_civ`: OK, con alarma en partida para los seis pueblos. `test_determinism`: OK. Autotest con ventana (guaraníes, llano): `AUTOTEST: OK`.
+
 ## Pendiente
 - Que el autor escuche el sikuri, el masenqo y el kultrun.
 - Antes de publicar: consultar el kultrun y la pifilka con una organización mapuche (C-53), y la mbaraka con una mbyá (C-60 frente a C-74).
 - Verificar *tovaja* con un hablante.
 - C-39 y C-70 (el nombre de la IV inca).
 - Que la IA termine la conquista sin hitos contra bases desparramadas.
-- La alarma de `sonido_civ`.
 - El torneo del hito con la experta contra la difícil (C-51, C-52).

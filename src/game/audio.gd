@@ -109,7 +109,8 @@ func _civ_music(civ: String, mood: String) -> Array:
 # --- fin sonido por pueblo ---
 
 # --- fluidez 4 --- Con las alertas por zona (src/game/ui/alertas.gd) cada ataque suena con su
-## tipo; la alarma del suceso "alert" solo suena por ahí cuando ninguna alerta la tapó.
+## tipo; la alarma genérica del suceso "alert" solo suena por ahí cuando ninguna alerta la tapó.
+## La alarma propia del pueblo suena igual (regresión corregida en proceso/51).
 func _alertas_por_zona() -> bool:
 	var path := "res://data/interfaz.json"
 	if not _alertas_cfg.has("activo") and FileAccess.file_exists(path):
@@ -356,7 +357,10 @@ func on_events(events: Array) -> void:
 					ui("tech")
 			"alert":
 				if pid == local:
-					if not _alertas_por_zona() and not civ_sfx("alarma"): # --- fluidez 4 ---
+					# --- regresión alarma (proceso/51) --- la alarma propia del pueblo suena siempre al
+					# empezar un ataque (el freno de 15 s de "alert" y su min_s la espacian); las alertas
+					# por zona solo reemplazan la genérica, no la del pueblo.
+					if not civ_sfx("alarma") and not _alertas_por_zona(): # --- fluidez 4 ---
 						ui("alerta", -8.0)
 					_combat_until = _clock + 20.0
 			"trained":

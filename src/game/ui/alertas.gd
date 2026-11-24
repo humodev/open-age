@@ -225,7 +225,8 @@ func _donde(b: SimEntity) -> String:
 
 ## Suceso "alert" de la simulación (freno de 15 s): con las alertas por zona, solo avisa si
 ## no hubo una propia hace poco (los escenarios avisan sin golpe). Devuelve true si lo tapó; si
-## no, suena la alarma de siempre (audio.gd la calla cuando las alertas están prendidas).
+## no, suena la alarma de siempre. La alarma propia del pueblo la toca audio.gd con cada "alert",
+## tapado o no (proceso/51, regresión: las alertas por zona la habían callado).
 func cubre_alert(ev: Dictionary) -> bool:
 	if not activo():
 		return false
