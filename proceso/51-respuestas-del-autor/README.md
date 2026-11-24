@@ -33,7 +33,7 @@ El autor contestó C-07 a C-61 en la página de consultas (2026-11-21). Este pas
 | C-60 | a) mbaraka | Ya estaba. Choca con C-74, que propone sacarla y sigue sin contestar |
 | C-61 | a) oleadas chicas | **Hecho.** Oleadas de 10, 12 y 14 soldados, y después siempre el tope de 15 |
 
-Commit: el de este paso, «Proceso 51: respuestas del autor C-07 a C-61» (rama `worktree-agent-a87f3f08ed0821db4`).
+Commit: `c9ab5d0` («Proceso 51: respuestas del autor C-07 a C-61», rama `worktree-agent-a87f3f08ed0821db4`).
 
 ## Paso a paso
 1. **Música con atribución (C-07, C-24).** Busqué con la API de Commons y en Internet Archive. La licencia de cada archivo la verifiqué en su página.
