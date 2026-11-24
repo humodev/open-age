@@ -139,4 +139,4 @@ fijaron a partir de esos tiempos. `campaign_smoke` corre todo `data/campanas`, t
 
 ## Commits
 
-- `Proceso 52: marcadores en F1–F4 como AoE4, tutorial con el Tawantinsuyu y Arte de la guerra con medallas` (este).
+- `c86e1bb` Proceso 52: marcadores en F1–F4 como AoE4, tutorial con el Tawantinsuyu y Arte de la guerra con medallas.
