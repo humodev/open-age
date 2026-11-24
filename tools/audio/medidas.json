@@ -74,26 +74,26 @@
  {
   "archivo": "assets/audio/civ/mapuches/mapuches_alarma.ogg",
   "lufs": -16.0,
-  "pico_dbfs": -4.1,
-  "duracion_s": 4.09
+  "pico_dbfs": -4.6,
+  "duracion_s": 3.81
  },
  {
   "archivo": "assets/audio/civ/mapuches/mapuches_entrenado.ogg",
   "lufs": -18.0,
-  "pico_dbfs": -7.7,
-  "duracion_s": 1.82
+  "pico_dbfs": -5.2,
+  "duracion_s": 1.8
  },
  {
   "archivo": "assets/audio/civ/mapuches/mapuches_fanfarria.ogg",
   "lufs": -16.0,
-  "pico_dbfs": -4.3,
+  "pico_dbfs": -4.4,
   "duracion_s": 6.26
  },
  {
   "archivo": "assets/audio/civ/mapuches/mapuches_orden.ogg",
   "lufs": -70.0,
-  "pico_dbfs": -4.0,
-  "duracion_s": 0.16
+  "pico_dbfs": -4.5,
+  "duracion_s": 0.35
  },
  {
   "archivo": "assets/audio/civ/palmares/palmares_alarma.ogg",

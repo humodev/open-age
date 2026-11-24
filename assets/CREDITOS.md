@@ -1,6 +1,6 @@
 # Créditos de assets de terceros
 
-Los archivos de `audio/` y `texturas/` que vienen de terceros son **CC0 / dominio público**. No hay atribución obligatoria; se registra igual por trazabilidad. Los sonidos de los pueblos (`audio/civ/`) y la música de Etiopía (`audio/musica/etiopia/`) son **obra propia**, sintetizada con código; están al final de la sección de audio. Las fuentes de `assets/fonts/` no están en esta tabla.
+Los archivos de `audio/` y `texturas/` que vienen de terceros son **CC0 / dominio público**, salvo **tres pistas de música con licencia CC BY-SA 4.0 y CC BY 3.0** (C-07 a y C-24 c, `proceso/51-respuestas-del-autor/`), que piden atribución y van en la tabla «Música con atribución» de abajo y en la pantalla de créditos del juego (`data/creditos.json`). Para lo CC0 no hay atribución obligatoria; se registra igual por trazabilidad. Los sonidos de los pueblos (`audio/civ/`) y la música de Etiopía (`audio/musica/etiopia/`) son **obra propia**, sintetizada con código; están al final de la sección de audio. Las fuentes de `assets/fonts/` no están en esta tabla.
 
 Los archivos fueron recortados, mezclados, normalizados y convertidos a Ogg Vorbis (sonidos en mono a 44,1 kHz). Las texturas se reescalaron a 512×512.
 
@@ -66,7 +66,17 @@ Los archivos fueron recortados, mezclados, normalizados y convertidos a Ogg Vorb
 
 ## Audio: música por civilización (`audio/musica/<civ>/`)
 
-Todas CC0 o dominio público. Convertidas a Ogg Vorbis estéreo 44,1 kHz (calidad 4) y normalizadas a −16 LUFS. Qué pista va a qué momento: `audio/musica/README.md`.
+Todas CC0 o dominio público, salvo las de la tabla siguiente. Convertidas a Ogg Vorbis estéreo 44,1 kHz (calidad 4) y normalizadas a −16 LUFS. Qué pista va a qué momento: `audio/musica/README.md`.
+
+### Música con atribución (CC BY-SA 4.0 y CC BY 3.0)
+
+Aceptadas por el autor: CC BY-SA para la música (C-07 a, C-24 c). **Licencia de las versiones del juego:** las dos pistas de sikuri son obra derivada de grabaciones CC BY-SA 4.0 y se distribuyen bajo **CC BY-SA 4.0** (https://creativecommons.org/licenses/by-sa/4.0/); la licencia alcanza a esas pistas, no al resto del juego. La del masenqo deriva de una grabación CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/) y se distribuye bajo la misma. Licencias verificadas en la página de cada archivo el 2026-11-24.
+
+| archivo | obra y fuente (URL exacta) | autor | licencia | cambios |
+|---|---|---|---|---|
+| tawantinsuyu/musica_tawantinsuyu_sikuri_29_de_setiembre.ogg | «29 de setiembre», maqueta con pareja de sikus malta y bombo (proyecto Sikuri Sumaq Taqi, Azángaro, Puno, con los sikuris de la Asociación Cultural Sangre Indomable): https://commons.wikimedia.org/wiki/File:Interpretaci%C3%B3n_del_tema_%2229_de_setiembre%22_-_Maqueta_ejecutada_con_pareja_de_sikus_Malta_y_bombo.wav | Abel Christian Apaza Amanqui | CC BY-SA 4.0 | Recorte del silencio inicial y final, de WAV a Ogg Vorbis 44,1 kHz, normalizada a −16 LUFS |
+| tawantinsuyu/musica_tawantinsuyu_sikuri_mula_lunthata.ogg | «Mula Lunthata», maqueta con pareja de sikus malta y bombo (mismo proyecto): https://commons.wikimedia.org/wiki/File:Interpretaci%C3%B3n_del_tema_%22Mula_Lunthata%22_-_Maqueta_ejecutada_con_pareja_de_sikus_Malta_y_bombo.wav | Abel Christian Apaza Amanqui | CC BY-SA 4.0 | Ídem |
+| etiopia/musica_etiopia_masenqo_azmari_1.ogg | «Man Playing A Masenqo in Ethiopia» (azmari con masenqo, video de 2016): https://commons.wikimedia.org/wiki/File:Man_Playing_A_Masenqo_in_Ethiopia.webm | Miez Production (YouTube) | CC BY 3.0 | Solo el audio, de 2:50 a 4:48; filtro de graves (140 Hz) para el viento, fundidos de 2,5 s, normalizada a −16 LUFS |
 
 | archivo | fuente (URL exacta) | autor | licencia |
 |---|---|---|---|
@@ -90,7 +100,7 @@ Sin muestras grabadas ni material de terceros: osciladores, ruido y filtros escr
 | archivo | instrumentos que imita | uso |
 |---|---|---|
 | civ/tawantinsuyu/tawantinsuyu_{fanfarria,alarma,entrenado,orden}.ogg | quena, tropa de sikus, wankara | edad, ataque, unidad lista, orden |
-| civ/mapuches/mapuches_{…}.ogg | trutruka, kull-kull, kakelkultrun | ídem |
+| civ/mapuches/mapuches_{fanfarria,alarma,entrenado,orden}.ogg | kultrun y trutruka (C-53 a: vuelve el sonido de 4g; consultar con una organización mapuche antes de publicar) | ídem |
 | civ/guaranies/guaranies_{…}.ogg | mimby (flauta), angu'apu (tambor de tronco) | ídem |
 | civ/etiopia/etiopia_{…}.ogg | kebero, masenqo, krar | ídem |
 | civ/palmares/palmares_{…}.ogg | ngoma, ngongi (campana doble), marimba, kisanji | ídem |

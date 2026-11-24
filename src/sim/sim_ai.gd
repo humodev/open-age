@@ -1118,7 +1118,7 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 	var extra := maxi(0, centers.size() - 1)
 	var margin: int = 3 + (by_type.get("cuartel", []) as Array).size() * 2 + int(level.get("casas_margen_por_centro", 0)) * extra
 	var at_once: int = int(level.get("casas_a_la_vez", 1)) if extra > 0 else 1
-	if p["pop_cap"] < sim.data.reglas["pob_max"] and p["pop_cap"] - p["pop"] <= margin and houses_unbuilt < at_once:
+	if p["pop_cap"] < sim.pob_max() and p["pop_cap"] - p["pop"] <= margin and houses_unbuilt < at_once:
 		_try_build("casa", p, vill, centro, 1)
 	# Expansión (experta): segundo y tercer centro, aunque se esté ahorrando para el hito.
 	_expand(p, vill, centro, by_type, saving, unbuilt)
@@ -2207,6 +2207,9 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 	if personality == "paz": # solo para las pruebas de economía: no pelea fuera de su base
 		st = {"ataca_base": false, "incursiones": "no", "controla_mapa": false}
 	var need: int = int(st.get("ataque_base", level["ataque_base"])) + int(st.get("ataque_paso", level["ataque_paso"])) * wave
+	# C-61 a: con tope de tropa, la oleada nunca pide más que el tope (si no, la fácil atacaba una sola vez).
+	if level.has("ejercito_max"):
+		need = mini(need, int(level["ejercito_max"]))
 	var gap: int = int(st.get("ataque_espera_ticks", level["ataque_espera_ticks"]))
 	var attacks: bool = st.get("ataca_base", personality != "pasiva") and sim.tick >= int(level.get("primer_ataque_ticks", 0))
 	var home := army

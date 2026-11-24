@@ -1,0 +1,21 @@
+Running as unit: run-p2986405-i3010598.scope; invocation ID: c064abb3995747b09379caa7d6a33658
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+ayutthaya    vs tawantinsuyu terreno=montana 30:00  ganador: (tawantinsuyu por puntos)  edades 4-4
+tawantinsuyu vs ayutthaya    terreno=sierra  23:35  ganador: tawantinsuyu  edades 4-2
+etiopia      vs tawantinsuyu terreno=sierra  30:00  ganador: (etiopia por puntos)  edades 3-3
+tawantinsuyu vs etiopia      terreno=sierra  30:00  ganador: (tawantinsuyu por puntos)  edades 3-3
+guaranies    vs tawantinsuyu terreno=rio     30:00  ganador: (tawantinsuyu por puntos)  edades 3-3
+tawantinsuyu vs guaranies    terreno=selva   30:00  ganador: (tawantinsuyu por puntos)  edades 4-4
+mapuches     vs tawantinsuyu terreno=rio     25:00  ganador: mapuches  edades 4-2
+tawantinsuyu vs mapuches     terreno=rio     30:00  ganador: (mapuches por puntos)  edades 3-4
+palmares     vs tawantinsuyu terreno=llano   30:00  ganador: (tawantinsuyu por puntos)  edades 3-4
+tawantinsuyu vs palmares     terreno=bosque  18:03  ganador: tawantinsuyu  edades 3-2
+
+Victorias por destrucción de hitos:
+  ayutthaya    0 / 2
+  etiopia      0 / 2
+  guaranies    0 / 2
+  mapuches     1 / 2
+  palmares     0 / 2
+  tawantinsuyu 2 / 10

@@ -1,0 +1,16 @@
+IA contra IA, llano, semilla 321, hasta 45 minutos. edificios = en pie al final [j0, j1]; cuentan = los que cuentan para la victoria.
+Sin victoria por sitios (solo conquista):
+["tawantinsuyu", "mapuches"] hitos=no fin=45:00 motivo= ganador=-1 edificios=[55, 64] cuentan=[2, 58]
+["etiopia", "palmares"] hitos=no fin=38:55 motivo=conquista ganador=0 edificios=[94, 0] cuentan=[94, 0]
+WARNING: 5765 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 11 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+IA contra IA, llano, semilla 654, hasta 45 minutos. edificios = en pie al final [j0, j1]; cuentan = los que cuentan para la victoria.
+Sin victoria por sitios (solo conquista):
+["tawantinsuyu", "mapuches"] hitos=no fin=45:00 motivo= ganador=-1 edificios=[40, 61] cuentan=[12, 55]
+["etiopia", "palmares"] hitos=no fin=38:56 motivo=conquista ganador=0 edificios=[80, 0] cuentan=[80, 0]
+WARNING: 4984 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 11 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

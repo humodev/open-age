@@ -95,6 +95,7 @@
       ],
       "eventos": [
         { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Lautaro", "texto": "Que suban. Arriba los esperamos, y no todos a la vez." } } },
+        { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Lautaro", "texto": "Somos más de los que caben en un lof, y está bien: esto es un malón, no un asiento. No hace falta entrenar a nadie." } } },
         { "cuando": { "tipo": "tiempo", "valor": 60 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 6 } } },
         { "cuando": { "tipo": "tiempo", "valor": 65 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "arcabucero", "n": 5 } } },
         { "cuando": { "tipo": "tiempo", "valor": 200 }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "jinete", "n": 6 } } },

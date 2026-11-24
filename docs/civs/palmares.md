@@ -6,7 +6,7 @@
 "La libertad que se toma y se defiende en la sierra."
 
 ## Edades
-Mocambo · Palmares · Angola Janga `[verificar]` · Cucaú o Quilombo.
+Mocambo · Palmares · Angola Janga `[verificar]` · 1678 (C-42 b: el año de la encrucijada entre el pacto de Cucaú y la guerra de Zumbi, que son las dos opciones de hito de la edad IV).
 
 ## Presupuesto
 | Ranura | Mecánica | Módulo |

@@ -7,7 +7,7 @@
       "pukara_mayor": {"forma": "pukara_anillos", "anillos": 3, "_nota": "Fortaleza de cerro con muros concéntricos en terrazas y vigía arriba, sin almenas (pukaras del Collasuyu y de la frontera chiriguana) [verificar]."},
       "aqllawasi": {"forma": "aqllawasi", "alto_cm": 115, "_nota": "Recinto cerrado de muro alto, una sola portada de doble jamba y galpones adentro; tejido de tocapu en el muro. Aqllawasi del Cusco [verificar]."},
       "kallanka_real": {"forma": "kallanka", "puertas": 5, "_nota": "Galpón largo a dos aguas con muchas portadas trapezoidales hacia la plaza y hastiales de piedra (kallankas de Huánuco Pampa) [verificar]."},
-      "qorikancha": {"forma": "qorikancha", "alto_cm": 130, "_nota": "El muro curvo de cantería fina, con banda de oro, el templo detrás con el disco del sol y el jardín de figuras de oro que describe Garcilaso [verificar]. Lo reconstruyó Pachakutiq hacia 1438 (Betanzos): como hito de la edad IV es un anacronismo, en consulta (C-40). Es el único lugar inca con oro en el juego."},
+      "qorikancha": {"forma": "qorikancha", "alto_cm": 130, "_nota": "El muro curvo de cantería fina, con banda de oro, el templo detrás con el disco del sol y el jardín de figuras de oro que describe Garcilaso [verificar]. Lo reconstruyó Pachakutiq hacia 1438 (Betanzos): por eso es hito de la edad III desde C-40 b (proceso/51). Es el único lugar inca con oro en el juego."},
       "vilcabamba": {"forma": "vilcabamba", "_nota": "Refugio en la ceja de selva: cerro con andenes, casas de techo empinado (una con teja, como en Espíritu Pampa) y monte alrededor [verificar]."}
     },
     "mapuches": {
@@ -21,7 +21,7 @@
     },
     "guaranies": {
       "maravilla_cabildo": {"forma": "cabildo_tava", "_nota": "--- paso 7 --- Maravilla de la vía misión: la plaza, el cabildo de dos plantas con galería y los talleres; no la fachada de la iglesia (H-37)."}, "maravilla_aldea_monte": {"forma": "aldea_monte", "levantar_max_pct": 140, "_nota": "--- paso 7 --- Maravilla de la vía monte: óga guasu en ronda alrededor de la plaza, en el monte alto. Sin bastones rituales (H-23)."},
-      "karai_palabra": {"forma": "oga_guasu", "levantar_max_pct": 170, "_nota": "Oga guasu: la casa grande comunal de techo de paja hasta el suelo, con los bastones rituales (yvyra'i) y el mbaraka del karai en la plaza [verificar]."},
+      "karai_palabra": {"forma": "oga_guasu", "levantar_max_pct": 170, "_nota": "Oga guasu: la casa grande comunal de techo de paja hasta el suelo, con los bastones rituales (yvyra'i) y el mbaraka del karai en la plaza [verificar]. La mbaraka se queda (C-60 a, proceso/51); C-74 propone sacarla hasta la consulta mbyá y sigue abierta."},
       "aty_guasu": {"forma": "aty_guasu", "_nota": "Aty guasu: la plaza rodeada de casas largas, el fuego y la ronda de asientos de la gran asamblea [verificar]."},
       "mision": {"forma": "mision", "_nota": "Iglesia de reducción: nave ancha con galerías sobre columnas de madera, techo de teja, frente con frontón, campanario de madera aparte y cruz en la plaza (San Ignacio Miní, Trinidad) [verificar]."},
       "monte": {"forma": "monte", "_nota": "Monte libre: claro en la selva con refugios bajos (tapyi), hamaca y fuego, tapado por los árboles [verificar]."},

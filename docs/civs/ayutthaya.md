@@ -3,7 +3,7 @@
 > Estado: implementada en datos (`data/civs/ayutthaya.json`). Investigación en `investigacion/ayutthaya.md`.
 
 ## Frase
-"La ciudad isla que comercia con el mundo y pelea sobre elefantes."
+"La ciudad isla del rey, sus elefantes y sus huéspedes." (C-20 a; antes «que comercia con el mundo»)
 
 ## Edades
 Mueang · Krung Si · Ekkarat · Mueang Tha `[verificar]`.

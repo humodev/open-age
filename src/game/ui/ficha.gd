@@ -254,7 +254,7 @@ func _compacta_ahora() -> bool:
 ## más urgente de «Ahora». La descripción, las estadísticas y fuerte/débil quedan para Mayús o Alt.
 func _compactar(c: Dictionary) -> Dictionary:
 	c["desc"] = ""
-	c["alt"] = ""
+	# C-30 a (proceso/51): el nombre en castellano queda también en la compacta («los nombres en castellano y los originales»).
 	c["stats"] = []
 	c["strong"] = ""
 	c["weak"] = ""

@@ -150,6 +150,18 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null,
 	_update_players()
 	for pid in players.size():
 		_update_fog(pid)
+	# C-50 a: «Mapa explorado» (como el «revelar mapa» de AoE4): todo arranca explorado; lo que
+	# no se ve sigue en niebla. Las casillas ya visibles (2) no se tocan.
+	if _opts.get("mapa_explorado", false):
+		for g: PackedByteArray in fog.grids:
+			for i in g.size():
+				if g[i] == 0:
+					g[i] = 1
+
+
+## C-50 a: población máxima de la partida (opts.pob_max, del menú; si no, reglas.pob_max).
+func pob_max() -> int:
+	return int(_opts.get("pob_max", data.reglas["pob_max"]))
 
 
 ## Recursos con los que arranca cada jugador según la opción `recursos` (normal, medios,
@@ -1559,7 +1571,7 @@ func _update_players() -> void:
 		elif e.is_building() and e.built:
 			players[e.owner]["pop_cap"] += e.def.get("pob", 0)
 	for p in players:
-		p["pop_cap"] = mini(p["pop_cap"] + int(p.get("pob_extra", 0)), data.reglas["pob_max"])
+		p["pop_cap"] = mini(p["pop_cap"] + int(p.get("pob_extra", 0)), pob_max())
 	_auras.resize(players.size())
 	for pid in players.size():
 		_auras[pid] = []
@@ -3898,8 +3910,15 @@ func _check_victory() -> void:
 	for b in all_buildings():
 		if b.alive and b.owner >= 0 and b.is_building() and b.built and counts_for_victory(b):
 			has_hito[b.owner] = true
+	# C-48 (proceso/51, docs/diseno/28-modo-nomade.md): con opts.sin_base_inicial (el modo nómade, a
+	# futuro) nadie pierde por quedarse sin edificios hasta haber fundado el primero que cuenta.
+	var nomade: bool = _opts.get("sin_base_inicial", false)
 	for p in players:
+		if nomade and has_hito[p["id"]]:
+			p["fundo"] = true
 		if not p["defeated"] and not has_hito[p["id"]]:
+			if nomade and not p.get("fundo", false):
+				continue
 			_defeat(p["id"])
 
 

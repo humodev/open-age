@@ -1,6 +1,7 @@
 extends SceneTree
 ## Torneo de balance: todas contra todas, IA contra IA, con varias semillas (docs/08, "Pruebas").
-## Uso: godot --headless --path . -s tests/torneo.gd -- --minutes=30 --seeds=2 [--telemetria=carpeta] [--parte=i/n]
+## Uso: godot --headless --path . -s tests/torneo.gd -- --minutes=30 --seeds=2 [--telemetria=carpeta] [--parte=i/n] [--civ=clave]
+## --civ: solo los cruces de esa civilización (medición dirigida; proceso/51)
 
 func _init() -> void:
 	var minutes := 30
@@ -8,6 +9,7 @@ func _init() -> void:
 	var tele_dir := ""
 	var part := 0
 	var parts := 1
+	var only := ""
 	for a in OS.get_cmdline_user_args():
 		var kv := a.trim_prefix("--").split("=")
 		if kv[0] == "minutes":
@@ -16,6 +18,8 @@ func _init() -> void:
 			seeds = int(kv[1])
 		elif kv[0] == "telemetria":
 			tele_dir = kv[1]
+		elif kv[0] == "civ":
+			only = kv[1]
 		elif kv[0] == "parte":
 			part = int(kv[1].split("/")[0])
 			parts = int(kv[1].split("/")[1])
@@ -32,6 +36,8 @@ func _init() -> void:
 		played[c] = 0
 	for i in civs.size():
 		for j in range(i + 1, civs.size()):
+			if only != "" and civs[i] != only and civs[j] != only:
+				continue
 			for sd in seeds:
 				# En paralelo (tools/torneo_paralelo.sh): cada proceso juega una parte de los cruces.
 				var game_i := (i * civs.size() + j) * seeds + sd

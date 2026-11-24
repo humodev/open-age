@@ -160,7 +160,7 @@
  },
  "sin_edificios": ["empalizada", "puerta", "hito_economia", "hito_guerra", "deposito", "almacen_alimento", "establo", "taller"],
  "edificios_nuevos": {
-  "tambo": { "nombre": "Tambo", "edad_min": 3, "tam": [3, 3], "pv": 800, "armadura": 1, "costo": {}, "tiempo_ms": 0, "vision": 6000, "pob": 0, "desc": "Un señorío vecino que el Inka ganó con regalos de cumbi: ahora es un tambo del camino real. Si lo destruyen, el ingenio vuelve a los 6 minutos." },
+  "tambo": { "nombre_comun": "Posada del camino", "nombre": "Tambo", "edad_min": 3, "tam": [3, 3], "pv": 800, "armadura": 1, "costo": {}, "tiempo_ms": 0, "vision": 6000, "pob": 0, "desc": "Un señorío vecino que el Inka ganó con regalos de cumbi: ahora es un tambo del camino real. Si lo destruyen, el ingenio vuelve a los 6 minutos." },
     "taller_tejido": { "nombre": "Taller de tejido", "edad_min": 1, "tam": [2, 2], "pv": 600, "armadura": 1, "costo": { "madera": 120, "mita": 20 }, "tiempo_ms": 20000, "vision": 3000, "maximo_por_edad": [2, 3, 4, 5], "conversion": { "de": "mita", "consume_min": 30, "da": { "riqueza": 22 }, "piso_pct": 33 }, "motor": true, "desc": "Los turnos de mit'a que sobran se vuelven tela (awasqa y cumbi), que es riqueza: consume 30 de mit'a por minuto y da 22 de riqueza. Si falta mit'a, rinde un tercio." },
   "camino": {
    "nombre": "Qhapaq Ñan (camino)",
@@ -229,7 +229,7 @@
    "ranura": 7,
    "desc": "Depósito estatal: guarda turnos de mit'a y leva escuadrones al instante."
   },
-  "ushnu": { "eje": "economia",
+  "ushnu": { "nombre_comun": "Plataforma ceremonial y plaza", "eje": "economia",
    "nombre": "Ushnu y plaza",
    "edad_min": 1,
    "tam": [
@@ -296,7 +296,7 @@
     "hondero"
    ]
   },
-  "aqllawasi": { "maximo_extra": { "taller_tejido": 1 }, "eje": "economia",
+  "aqllawasi": { "nombre_comun": "Casa de las escogidas", "maximo_extra": { "taller_tejido": 1 }, "eje": "economia",
    "nombre": "Aqllawasi",
    "edad_min": 1,
    "tam": [
@@ -311,13 +311,20 @@
    "avanza_edad": true,
    "hito": true,
    "pob": 5,
-   "desc": "Casa de las tejedoras escogidas: un taller de tejido más en la edad III y cumbi fino.",
-   "efectos": [],
+   "desc": "Casa de las tejedoras escogidas: un taller de tejido más y el cumbi fino, que rinde más riqueza.",
+   "_doc_c40": "C-40 b (proceso/51): pasó de la edad III a la IV, en el lugar del Qorikancha. Con la mita de la IV (200) y, para que valga como hito de la última edad, además del taller de más, +20 % de riqueza (el cumbi fino).",
+   "efectos": [
+    {
+     "tipo": "tasa",
+     "recurso": "riqueza",
+     "pct": 20
+    }
+   ],
    "costo_extra": {
-    "mita": 120
+    "mita": 200
    }
   },
-  "kallanka_real": { "eje": "militar",
+  "kallanka_real": { "nombre_comun": "Gran galpón real", "eje": "militar",
    "nombre": "Kallanka real",
    "edad_min": 1,
    "tam": [
@@ -354,7 +361,7 @@
     "boleador"
    ]
   },
-  "qorikancha": { "eje": "economia",
+  "qorikancha": { "nombre_comun": "Templo del Sol", "eje": "economia",
    "nombre": "Qorikancha",
    "edad_min": 1,
    "tam": [
@@ -370,18 +377,19 @@
    "hito": true,
    "pob": 5,
    "desc": "Templo que reúne las huacas: recolección y caminos.",
+   "_doc_c40": "C-40 b (proceso/51): pasó de la edad IV a la III, porque lo reconstruyó Pachakutiq hacia 1438. Con la mita de la III (120) y +10 % de recolección en lugar de +15: llega antes y dura más.",
    "efectos": [
     {
      "tipo": "tasa",
      "recurso": "*",
-     "pct": 15
+     "pct": 10
     }
    ],
    "costo_extra": {
-    "mita": 200
+    "mita": 120
    }
   },
-  "vilcabamba": { "eje": "militar",
+  "vilcabamba": { "nombre_comun": "Reducto de montaña", "eje": "militar",
    "nombre": "Vilcabamba",
    "edad_min": 1,
    "tam": [
@@ -429,11 +437,11 @@
    "pukara_mayor"
   ],
   [
-   "aqllawasi",
+   "qorikancha",
    "kallanka_real"
   ],
   [
-   "qorikancha",
+   "aqllawasi",
    "vilcabamba"
   ]
  ],

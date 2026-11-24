@@ -115,6 +115,10 @@ static func icono(type: String) -> String:
 ## "Leñera" común (proceso/24, 4m). Tabla en data/interfaz.json → grilla.comunes_deposito.
 static func comun(base: SimData, dd: SimData, type: String) -> String:
 	var own: Dictionary = dd.def_of(type)
+	# C-30 a: «los nombres en castellano y los originales». Lo propio de un pueblo con nombre en su
+	# lengua lleva su nombre en castellano en los datos (`nombre_comun`), y ese manda.
+	if own.has("nombre_comun"):
+		return String(own["nombre_comun"]) if own["nombre_comun"] != own.get("nombre", "") else ""
 	var common: Dictionary = base.def_of(type)
 	var out: String = common.get("nombre", "")
 	var fixed: Dictionary = cfg().get("comunes", {})

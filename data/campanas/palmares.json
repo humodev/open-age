@@ -10,7 +10,7 @@
       "lugar": "Sertão de Alagoas, entre los ríos Paraíba y Mundaú",
       "intro": [
         "Yo nací en Palmares. Lo digo primero porque un día eso valió un papel, y porque los que llegaron después tuvieron que ganarse lo que a mí me tocó al nacer.",
-        "Mi madre llegó de un ingenio de Sirinhaém con la ropa puesta. Antes de ella habían llegado otros, y antes de ellos otros, desde que hay ingenios. En la mata de palmeras nadie los esperaba: se esperaban entre ellos. Así se hace un mocambo.",
+        "Mi madre llegó de un ingenio de Sirinhaém con la ropa puesta. Antes de ella habían llegado otros, y antes de ellos otros, desde que hay ingenios. En el monte de palmeras nadie los esperaba: se esperaban entre ellos. Así se hace un mocambo.",
         "Cuando yo era chica, en la costa mandaban los holandeses. Peleaban con los portugueses por el azúcar, y los dos se acordaban de nosotros cuando les faltaban brazos. En nuestro mocambo había rozas, una casa donde se juntaba el consejo y cuatro fraguas. El hierro no se saca de la tierra: se trae.",
         "Un día los que vigilaban el camino avisaron que subía una columna de la Compañía, con guías que conocían el monte."
       ],
@@ -35,12 +35,12 @@
         { "nombre": "Columna de la Compañía de las Indias Occidentales", "corto": "Compañía holandesa", "faccion": "invasores", "ia": "normal", "edad": 2 }
       ],
       "objetivos": [
-        { "id": "o1", "texto": "Abrí 4 rozas en la mata (granjas): maíz para ahora, mandioca para cuando haga falta.", "tipo": "construir", "params": { "tipo": "granja", "n": 4 }, "secundario": false },
+        { "id": "o1", "texto": "Abrí 4 rozas en el monte (granjas): maíz para ahora, mandioca para cuando haga falta.", "tipo": "construir", "params": { "tipo": "granja", "n": 4 }, "secundario": false },
         { "id": "o2", "texto": "Juntá 400 de alimento. La mandioca que queda enterrada no la quema nadie.", "tipo": "recolectar", "params": { "recurso": "alimento", "n": 400 }, "secundario": false },
         { "id": "o3", "texto": "Levantá 2 casas de guerra, cada una con su fragua. Cada una hace humo, y el humo se ve: cuanto más se trabaja, más fácil es encontrarnos.", "tipo": "construir", "params": { "tipo": "cuartel", "n": 2 }, "secundario": false },
         { "id": "o4", "texto": "Reuní al consejo en su casa y cerrá un anillo nuevo de la cerca (avanzá a la edad II).", "tipo": "edad", "params": { "n": 2 }, "secundario": false },
-        { "id": "o5", "texto": "La columna encontró el camino. No la esperes en la cerca: aguantá en la mata mientras la gente se va a otro mocambo. Que encuentren las casas, no a las personas.", "tipo": "sobrevivir", "params": { "segundos": 300 }, "secundario": false, "oculto": true },
-        { "id": "o6", "texto": "Hostigá la columna desde la mata sin dar batalla: matá a 12.", "tipo": "matar", "params": { "n": 12 }, "secundario": true },
+        { "id": "o5", "texto": "La columna encontró el camino. No la esperes en la cerca: aguantá en el monte mientras la gente se va a otro mocambo. Que encuentren las casas, no a las personas.", "tipo": "sobrevivir", "params": { "segundos": 300 }, "secundario": false, "oculto": true },
+        { "id": "o6", "texto": "Hostigá la columna desde el monte sin dar batalla: matá a 12.", "tipo": "matar", "params": { "n": 12 }, "secundario": true },
         { "id": "o7", "texto": "Que nadie quede atrás: protegé a los aldeanos.", "tipo": "proteger", "params": { "tipo": "aldeano", "jugador": 0 }, "secundario": true }
       ],
       "eventos": [
@@ -119,7 +119,7 @@
       "intro": [
         "El papel decía esto: que obedeceríamos al gobierno de Pernambuco; que nos darían tierras en Cucaú; que los nacidos en Palmares seríamos libres y podríamos plantar y vender como vasallos. Y que los que no habían nacido en Palmares volverían a sus dueños.",
         "Yo había nacido en Palmares. Mi marido había llegado de un ingenio de Sirinhaém. El papel me hacía libre a mí y a él lo devolvía.",
-        "Gana Zumba eligió Cucaú porque tenía palmeras para el sustento y quedaba cerca de lo nuestro. Fuimos entre trescientos y cuatrocientos, de tres mocambos, con él y con Gana Zona. Zumbi se quedó en lo más oculto de la mata con la gente de guerra. Mi marido se fue con él. Yo fui con mi hermano a Cucaú.",
+        "Gana Zumba eligió Cucaú porque tenía palmeras para el sustento y quedaba cerca de lo nuestro. Fuimos entre trescientos y cuatrocientos, de tres mocambos, con él y con Gana Zona. Zumbi se quedó en lo más oculto del monte con la gente de guerra. Mi marido se fue con él. Yo fui con mi hermano a Cucaú.",
         "Ninguno de los dos estaba del todo equivocado. Por eso dolió tanto."
       ],
       "epilogo": [
@@ -200,12 +200,12 @@
         { "nombre": "Ingenios de Porto Calvo", "faccion": "invasores", "ia": "pasiva", "edad": 2 }
       ],
       "objetivos": [
-        { "id": "o1", "texto": "Correría al ingenio: rompé su casa de molienda y su guardia (hito de economía). La gente que sale camina hacia la mata, y deja rastro.", "tipo": "destruir", "params": { "tipo": "hito_economia", "n": 1, "jugador": 3 }, "secundario": false },
+        { "id": "o1", "texto": "Correría al ingenio: rompé su casa de molienda y su guardia (hito de economía). La gente que sale camina hacia el monte, y deja rastro.", "tipo": "destruir", "params": { "tipo": "hito_economia", "n": 1, "jugador": 3 }, "secundario": false },
         { "id": "o2", "texto": "Levantá la tercera cerca de la Barriga, con estrepería por fuera (40 tramos de empalizada).", "tipo": "construir", "params": { "tipo": "empalizada", "n": 40 }, "secundario": false },
         { "id": "o3", "texto": "Quilombo: la cerca se militariza y manda la gente de guerra (avanzá a la edad IV por la vía de Zumbi).", "tipo": "edad", "params": { "n": 4 }, "secundario": false },
         { "id": "o4", "texto": "Rechazá el asalto de Velho: matá a 40.", "tipo": "matar", "params": { "n": 40 }, "secundario": false },
         { "id": "o5", "texto": "Febrero de 1694: llegaron los terços. Sostené la cerca el tiempo que haga falta para que la gente salga por el monte.", "tipo": "sobrevivir", "params": { "segundos": 300 }, "secundario": false, "oculto": true },
-        { "id": "o6", "texto": "Fundá 2 mocambos nuevos lejos de la Barriga, en lo más oculto de la mata (depósitos).", "tipo": "construir", "params": { "tipo": "deposito", "n": 2 }, "secundario": false, "oculto": true }
+        { "id": "o6", "texto": "Fundá 2 mocambos nuevos lejos de la Barriga, en lo más oculto del monte (depósitos).", "tipo": "construir", "params": { "tipo": "deposito", "n": 2 }, "secundario": false, "oculto": true }
       ],
       "eventos": [
         { "cuando": { "tipo": "inicio", "valor": 0 }, "accion": { "tipo": "dialogo", "params": { "quien": "Zumbi", "texto": "Cada correría trae hierro y trae gente. Y deja un rastro hasta acá. Las dos cosas son ciertas." } } },
@@ -224,7 +224,7 @@
         { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "arcabucero", "n": 10 } } },
         { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "ataque", "params": { "jugador": 2, "tipo": "guerrero", "n": 10 } } },
         { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "ataque", "params": { "jugador": 1, "tipo": "lancero", "n": 8 } } },
-        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "dialogo", "params": { "quien": "Zumbi", "texto": "Que la cerca aguante hasta que salga el último. Después, la mata." } } },
+        { "cuando": { "tipo": "objetivo", "valor": "o4" }, "accion": { "tipo": "dialogo", "params": { "quien": "Zumbi", "texto": "Que la cerca aguante hasta que salga el último. Después, el monte." } } },
         { "cuando": { "tipo": "objetivo", "valor": "o6" }, "accion": { "tipo": "dialogo", "params": { "quien": "Anciana de Camuanga", "texto": "Salí por el lado del monte con dos chicos que no eran míos. Ahora sí lo son." } } }
       ]
     }
