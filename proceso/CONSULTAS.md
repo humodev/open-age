@@ -277,7 +277,7 @@ a) Juntos *(por defecto)* · b) Mezclados
 Si al cumplirse el tiempo los puntos empatan, hoy no gana nadie y la pantalla dice "Empate".
 a) Empate *(por defecto)* · b) Desempate por edificios en pie o por sitios
 
-**Respuesta:** pregunta del autor (2026-11-21): «¿Por qué hay tiempo límite?». Contestación: es opcional y viene apagado («Sin límite»). El menú lo pone solo (60 min) en los todos contra todos de 3 o más, porque sin él las partidas de 4 y 6 IA seguían abiertas a los 60–75 minutos (proceso/22). Esta consulta es solo sobre qué pasa si se usa y los puntos empatan.
+**Respuesta:** b) Desempate por edificios en pie o por sitios (2026-11-26, página de consultas). (Antes preguntó por qué hay tiempo límite: es opcional y viene apagado; el menú pone 60 min solo en todos contra todos de 3 o más.)
 
 ### C-48 · (opciones de partida) Conquista sin hitos: ¿cuentan las unidades?
 Con "Hitos: no", pierde quien se queda sin edificios terminados. No cuentan muros, puertas ni caminos; sí granjas, casas y almacenes.
@@ -375,13 +375,13 @@ a) Bajar el paso de la oleada de la fácil para que ataque varias veces, con ole
 Hoy un sitio guarda lo que lleva de captura aunque el que lo toma se vaya, y varias pasadas cortas suman los 10 s. En AoE4, la captura se vacía de a poco sin nadie. Cambiaría la regla para todos y el balance.
 a) Que se vacíe de a poco, como AoE4, medido con torneo *(por defecto)* · b) Dejarlo como está
 
-**Respuesta:**
+**Respuesta:** a) Que se vacíe de a poco, como AoE4, medido con torneo (2026-11-26, página de consultas).
 
 ### C-63 · (menú) Sitios apagados para la IA contra IA
 La primera partida en Fácil arranca con los sitios apagados. En IA contra IA, desde el menú, la opción depende de la dificultad elegida para el jugador.
 a) Que IA contra IA siempre arranque con los sitios prendidos *(por defecto)* · b) Igual que la partida normal
 
-**Respuesta:**
+**Respuesta:** a) Que IA contra IA siempre arranque con los sitios prendidos (2026-11-26, página de consultas).
 
 ### C-64 · (combate) La micro: que la mezcla de línea y distancia pague
 El veterano lo pide por tercera ronda. El estudio (`proceso/24-tras-la-segunda-ronda/5a-micro-estudio.md`) encontró dos causas. El guerrero común corre más que el hondero (1600 contra 1250), así que funciona como un jinete a pie y no se lo puede kitear. Y el hondero casi no le hace daño. Lo que ya paga: la línea mantiene y la distancia escalona detrás.
@@ -390,7 +390,7 @@ El veterano lo pide por tercera ronda. El estudio (`proceso/24-tras-la-segunda-r
 
 a) Guerrero común a 1350 y la línea +6 contra el choque (antes +5), como el hombre de armas de AoE4, medido con torneo *(por defecto)* · b) Solo la línea +10 contra el choque · c) Un hostigador montado por pueblo (pide modelo, edificio e IA) · d) Dejarlo así y enseñar en el juego la micro que ya paga
 
-**Respuesta:**
+**Respuesta:** a) Guerrero común a 1350 y la línea +6 contra el choque (antes +5), como el hombre de armas de AoE4, medido con torneo (2026-11-26, página de consultas).
 
 ### C-65 · (escala) Velocidad de las unidades
 Del análisis de escala del veterano (`proceso/22-testers/ronda-4/03-escala-veterano.md`): el aldeano anda a 1,86 m/s, un trote, cerca de 35 % más rápido que en AoE4 en relación con su cuerpo. Con la persona más chica (paso 1, solo vista) va a parecer más rápido todavía. Bajar `velocidad_pct` de 90 a 72 cambia toda la simulación: viajes, economía, llegada de ataques y micro.
@@ -402,28 +402,26 @@ a) Bajarla a 72 con un torneo de 10 semillas solo para eso, y mirarlo vos a ×1 
 En AoE4 el centro y los hitos dominan la ciudad. Acá ocupan 4×4 casillas (el lof mapuche, 3×3). Pasarlos a 5×5 (el lof a 4×4) toca la colocación, la IA, el generador de mapas (quizás un mapa de 136 en vez de 128), los caminos, las 25 misiones y el balance. Las casas, granjas y almacenes no cambian.
 a) Esperar a ver el paso 1 (solo vista) y decidir después *(por defecto)* · b) Hacerlo ya, con su torneo · c) No
 
-**Respuesta:**
-
-
+**Respuesta:** a) Esperar a ver el paso 1 (solo vista) y decidir después (2026-11-26, página de consultas).
 > **C-67 a C-74 vienen de la revisión histórica** (`proceso/25-revision-historica/`): tres historiadores, de América Latina, África y Asia. Lo que no cambiaba mecánicas ya se corrigió (`04-correcciones-aplicadas.md`). Esto son las decisiones que cambian el juego o los nombres. La opción por defecto es la que recomiendan ellos.
 
 ### C-67 · (historia, guaraníes) La yerba
 Hoy la roza agotada deja un yerbal. Pero la yerba (*ka'a*) era un árbol silvestre del monte. En la colonia se cosechó con trabajo forzado de encomienda, y solo las reducciones del siglo XVIII la plantaron (Garavaglia, 1983).
 a) La yerba como recurso silvestre del monte; el yerbal plantado recién en la vía misión; la roza agotada deja capuera; ganado vacuno en la vía misión. Medido con torneo *(por defecto)* · b) Dejarlo y aclararlo en la descripción
 
-**Respuesta:**
+**Respuesta:** a) La yerba como recurso silvestre del monte; el yerbal plantado recién en la vía misión; la roza agotada deja capuera; ganado vacuno en la vía misión. Medido con torneo (2026-11-26, página de consultas).
 
 ### C-68 · (historia, Palmares) Pacto de Cucaú y liberación
 El Pacto de Cucaú promete "cerrar la puerta a quienes llegan", pero en los datos es un +25 % sin costo. La liberación "libera" gente de cualquier casa enemiga, también guaraní o etíope.
 a) El pacto apaga o reduce a la mitad la acogida y la liberación; la liberación vale solo contra los ingenios y los invasores (contra los demás pueblos, nada). Medido con torneo *(por defecto)* · b) Dejarlo
 
-**Respuesta:**
+**Respuesta:** a) El pacto apaga o reduce a la mitad la acogida y la liberación; la liberación vale solo contra los ingenios y los invasores (contra los demás pueblos, nada). Medido con torneo (2026-11-26, página de consultas).
 
 ### C-69 · (historia, Etiopía) Lalibela y la iglesia
 Lalibela es un sitio zagwe del siglo XIII con culto vivo: en el juego se construye y da +25 % de vida a los edificios. La iglesia da +5 % de vida a las tropas.
 a) Lalibela pasa a sitio sagrado neutral del mapa (no se construye) y el hito se ve como Debre Damo; la iglesia cambia su bono de combate por uno económico o de población *(por defecto)* · b) Dejarlo
 
-**Respuesta:**
+**Respuesta:** a) Lalibela pasa a sitio sagrado neutral del mapa (no se construye) y el hito se ve como Debre Damo; la iglesia cambia su bono de combate por uno económico o de población (2026-11-26, página de consultas).
 
 ### C-70 · (historia) Nombres de edad
 Las propuestas de los historiadores:
@@ -436,7 +434,7 @@ Las propuestas de los historiadores:
 
 a) Todo eso *(por defecto)* · b) Elegir de a uno (decí cuáles)
 
-**Respuesta:**
+**Respuesta:** a) Todo eso (2026-11-26, página de consultas).
 
 ### C-71 · (historia, Asia) Birmania y los extranjeros de Ayutthaya
 - *Bayingyi* (tiradores) y *kathe* (caballería) son de 1613 en adelante y de la época Konbaung; en la edad II y en Nong Sarai (1593) son anacrónicos.
@@ -444,7 +442,7 @@ a) Todo eso *(por defecto)* · b) Elegir de a uno (decí cuáles)
 
 a) Bayingyi y kathe solo en la edad IV (antes, "tiradores portugueses a sueldo" y "jinete shan"); barrio chino como tercer barrio de Ayutthaya; Birmania con monasterio de teca, pyatthat y zedi propios *(por defecto)* · b) Solo los nombres
 
-**Respuesta:**
+**Respuesta:** a) Bayingyi y kathe solo en la edad IV (antes, "tiradores portugueses a sueldo" y "jinete shan"); barrio chino como tercer barrio de Ayutthaya; Birmania con monasterio de teca, pyatthat y zedi propios (2026-11-26, página de consultas).
 
 ### C-72 · (historia) Otros nombres
 - **Hitos mapuches:** Malón del toqui, Nguillatuwe del rewe, Corral de la remonta (o *Kawellu*) y Pewenal. Hoy inventan cargos como "toqui de caballería".
@@ -455,7 +453,7 @@ a) Bayingyi y kathe solo en la edad IV (antes, "tiradores portugueses a sueldo" 
 
 a) Todo eso *(por defecto)* · b) De a uno
 
-**Respuesta:**
+**Respuesta:** a) Todo eso (2026-11-26, página de consultas).
 
 ### C-73 · (historia, sonido) Lo que quedaba abierto
 - C-58: nagarit (el timbal real de guerra) en la fanfarria y la alarma etíopes, en lugar del kebero litúrgico.
@@ -464,7 +462,7 @@ a) Todo eso *(por defecto)* · b) De a uno
 
 a) Todo eso, con música propia de paz para Palmares (ngoma y marimba) y para Ayutthaya, sintetizadas *(por defecto)* · b) De a uno
 
-**Respuesta:**
+**Respuesta:** a) Todo eso, con música propia de paz para Palmares (ngoma y marimba) y para Ayutthaya, sintetizadas (2026-11-26, página de consultas).
 
 ### C-74 · (historia) Representación y consultas
 - **Wat:** que no muestre una imagen del Buda reconocible hasta consultar, y revisar si conviene que se pueda destruir.
@@ -479,34 +477,32 @@ a) Todo eso, con música propia de paz para Palmares (ngoma y marimba) y para Ay
 
 a) Así *(por defecto)* · b) Otra cosa
 
-**Respuesta:**
-
-
+**Respuesta:** a) Así (2026-11-26, página de consultas).
 > **C-75 a C-83 vienen del diseño del juego tardío y los saberes** (`docs/diseno/27-juego-tardio-y-saberes.md`, etapa 26). Las consultas a comunidades de ese diseño se suman a C-74.
 
 ### C-75 · (juego tardío) Regla del ×2
 ¿"Una unidad de la edad IV no vale más de dos comunes" (ley cuadrada, como mide el modelo) o "ni el ataque ni la vida pasan de ×2" (más permisiva)?
 a) Valor en comunes *(por defecto)* · b) Por estadística
 
-**Respuesta:**
+**Respuesta:** a) Valor en comunes (2026-11-26, página de consultas).
 
 ### C-76 · (juego tardío) Hitos militares con aura
 En la III y la IV, el bono del hito militar vale solo cerca del hito, en lugar de ser global. Es lo que más desinfla la edad IV.
 a) Sí, en el paso 4 *(por defecto)* · b) Solo el de la IV · c) No
 
-**Respuesta:**
+**Respuesta:** a) Sí, en el paso 4 (2026-11-26, página de consultas).
 
 ### C-77 · (juego tardío) Paso 1
 Sacar el bono automático de ataque por edad y reemplazarlo por cosas que se compran: el +10 % de la II va a la herrería I, y los niveles veterano y élite se compran. El modelo da el mismo poder (0 a −2 %).
 a) Sí, arrancar por ahí *(por defecto)* · b) Primero la herrería separada
 
-**Respuesta:**
+**Respuesta:** a) Sí, arrancar por ahí (2026-11-26, página de consultas).
 
 ### C-78 · (juego tardío) Maravilla
 Costo de 1500 de madera, piedra y riqueza; 600 s de obra; una cuenta de 15 minutos para ganar; opción del menú.
 a) Así *(por defecto)* · b) Otros números
 
-**Respuesta:**
+**Respuesta:** a) Así (2026-11-26, página de consultas).
 
 ### C-79 · (juego tardío) Maravilla de Ayutthaya
 Krung, la ciudad isla con el fuerte Phom Phet (no es sagrada), o el Wat Phra Si Sanphet (con consulta).
@@ -514,7 +510,7 @@ a) Krung *(por defecto)* · b) El wat, si la consulta lo acepta
 
 *Revisión histórica (etapa 26): el historiador de Asia recomienda cerrarla en a). Hacer del Wat Phra Si Sanphet una maravilla repite el saqueo de 1767.*
 
-**Respuesta:**
+**Respuesta:** a) Krung (2026-11-26, página de consultas).
 
 ### C-80 · (juego tardío) Unidades nuevas sin modelo
 ¿Esperan al arte o entran con una maqueta de silueta propia?
@@ -528,7 +524,7 @@ a) Así *(por defecto)* · b) Solo un sanador más fuerte
 
 *Revisión histórica (etapa 26): la cifra queda corregida (en la época inca sobrevivía el 75–83 %; en la Guerra Civil de Estados Unidos moría el 46–56 %), como un saber de dos mil años que el Inka heredó. La mecánica pasa a "el 20 % de los que caen por golpe no muere y vuelve herido", para que no se lea como resurrección.*
 
-**Respuesta:**
+**Respuesta:** a) Así (2026-11-26, página de consultas).
 
 ### C-82 · (saberes) Etiopía y el *Bahrä Hasab*
 Un saber eclesiástico (el cómputo del calendario) usado en una mecánica económica.
@@ -536,101 +532,98 @@ a) Consultar a la Iglesia Tewahedo y, si no, "Cartógrafos de la corte" *(por de
 
 *Revisión histórica (etapa 26): el Bahrä Hasab es el cómputo de la Pascua, y ninguna fuente dice que ordenara las mudanzas de la corte. La opción nueva por defecto es el orden del kätäma (el campamento real armado siempre con el mismo plano), que está documentado.*
 
-**Respuesta:**
+**Respuesta:** a) Consultar a la Iglesia Tewahedo y, si no, "Cartógrafos de la corte" (2026-11-26, página de consultas).
 
 ### C-83 · (saberes) Saberes con evidencia "debatida"
 El kilombo, el shotel, los armeros de Gondar y el yachaywasi tienen evidencia debatida.
 a) Entran con la marca "debatido" en la ficha *(por defecto)* · b) Solo saberes documentados y arqueológicos
 
-**Respuesta:**
-
-
+**Respuesta:** a) Entran con la marca "debatido" en la ficha (2026-11-26, página de consultas).
 > **C-84 a C-97 vienen de la revisión histórica del diseño de saberes** (`proceso/26-juego-tardio/02` a `04`; el diseño revisado está en `docs/diseno/27-juego-tardio-y-saberes.md`, §0).
 
 ### C-84 · (saberes, guaraníes) Élite de la vía monte
 Sepé y la Guerra Guaranítica eran de los pueblos de misión. La élite de la vía monte pasa a los *ka'aguygua* ("monteses") [verificar grafía].
 a) Sí *(por defecto)* · b) Otra
 
-**Respuesta:**
+**Respuesta:** a) Sí (2026-11-26, página de consultas).
 
 ### C-85 · (saberes, guaraníes) Maravilla
 *Tekoha guasu* es una categoría del siglo XX, hoy usada en litigios por tierras. Pasa a llamarse "Aldea grande del monte" hasta la consulta.
 a) Sí *(por defecto)* · b) Otra
 
-**Respuesta:**
+**Respuesta:** a) Sí (2026-11-26, página de consultas).
 
 ### C-86 · (saberes, mapuches) Ampive y poncho
 *Lawentuchefe* es un término de fines del siglo XX y la platería, de fines del XVIII. Pasan a *ampive* [verificar] y al poncho (*makuñ*).
 a) Los dos *(por defecto)* · b) Solo uno
 
-**Respuesta:**
+**Respuesta:** a) Los dos (2026-11-26, página de consultas).
 
 ### C-87 · (saberes, incas) Pieza pesada de la IV
 Las armas capturadas en Vilcabamba, en lugar de repetir las galgas.
 a) Sí *(por defecto)* · b) Otra
 
-**Respuesta:**
+**Respuesta:** a) Sí (2026-11-26, página de consultas).
 
 ### C-88 · (saberes, incas) Huayrachina
 El horno de viento que fundió la plata de Potosí: documentado y arqueológico. Entra en la IV, y los *mitmaqkuna* quedan para retomar.
 a) Sí *(por defecto)* · b) No
 
-**Respuesta:**
+**Respuesta:** a) Sí (2026-11-26, página de consultas).
 
 ### C-89 · (saberes, Palmares) Escuela de la IV
 *Oficinas do Macaco*: herreros, alfareros y tejedores de palma.
 a) Sí *(por defecto)* · b) Otra
 
-**Respuesta:**
+**Respuesta:** a) Sí (2026-11-26, página de consultas).
 
 ### C-90 · (saberes, Etiopía) Guerrero de gaša
 El "shotel que pasa por encima del escudo" es folclore moderno. Pasa a ser el guerrero de *gaša* (escudo) con jabalinas, sin ese bono.
 a) Sí *(por defecto)* · b) Otra
 
-**Respuesta:**
+**Respuesta:** a) Sí (2026-11-26, página de consultas).
 
 ### C-91 · (saberes, Etiopía) Jinetes oromo aliados
 El *gadaa* es un sistema de grados de edad, no un cuerpo montado. La élite de la IV pasa a ser jinetes oromo aliados por un tratado que se puede romper.
 a) Sí *(por defecto)* · b) Otra
 
-**Respuesta:**
+**Respuesta:** a) Sí (2026-11-26, página de consultas).
 
 ### C-92 · (saberes, Palmares) Hierro de Angola Janga
 El hierro iba a armas y herramientas: la mejora da +1 de ataque en lugar de armadura.
 a) Sí *(por defecto)* · b) Otra
 
-**Respuesta:**
+**Respuesta:** a) Sí (2026-11-26, página de consultas).
 
 ### C-93 · (saberes, Palmares) Erveira y sanguar
 El sanador es la *erveira* (Sweet, 2003, nivel "debatido"; nunca *nganga*). La mejora de curadores pasa al *sanguar*, la técnica de esquivar proyectiles, aclarando que no es capoeira.
 a) Las dos *(por defecto)* · b) Solo una
 
-**Respuesta:**
+**Respuesta:** a) Las dos (2026-11-26, página de consultas).
 
 ### C-94 · (saberes) Saberes nuevos de Etiopía y Palmares
 *Ṭef* y *gotära*, *kosso*, los mercaderes *jabarti*, los *ṣäḥafe tə'əzaz*; tejido de palma y cerámica de los mocambos.
 a) Como quedan en el diseño *(por defecto)* · b) Elegir
 
-**Respuesta:**
+**Respuesta:** a) Como quedan en el diseño (2026-11-26, página de consultas).
 
 ### C-95 · (saberes, Ayutthaya) Sin astrología de corte
 La astrología de corte (los *hon*) se usaba como bono. Pasa a astilleros de juncos y al Phra Khlang con sus intérpretes.
 a) Sí *(por defecto)* · b) Otra
 
-**Respuesta:**
+**Respuesta:** a) Sí (2026-11-26, página de consultas).
 
 ### C-96 · (saberes, Ayutthaya) Saberes nuevos
 La cerámica de Si Satchanalai, los *khlong lat* y el *nuat*.
 a) Sí *(por defecto)* · b) Elegir
 
-**Respuesta:**
+**Respuesta:** a) Sí (2026-11-26, página de consultas).
 
 ### C-97 · (saberes, Palmares) La maravilla
 La Cerca do Outeiro da Barriga queda "sitiada" hasta consultar si se puede mostrar su caída.
 a) Así *(por defecto)* · b) Otra
 
-**Respuesta:**
-
+**Respuesta:** a) Así (2026-11-26, página de consultas).
 ## Respuestas del 2026-11-16
 
 - **Animaciones con KayKit:** "Lets start with kaykit yes." Las animaciones de los aldeanos arrancan con KayKit Character Animations (CC0). Etapa 27.
@@ -649,7 +642,7 @@ a) Así *(por defecto)* · b) Otra
 ## Decisión del 2026-11-17
 
 - **Arte de las unidades compartidas, por civ:** "Las unidades compartidas, a nivel de arte, también deben ser independientes, para poder hacer el aspecto específico de cada civ." Cada unidad (guerrero, lancero, hondero o arquero, asedio, las del paso 5) tiene su aspecto propio por pueblo: colores, tocado, arma y, cuando haya modelos de Meshy, uno por pueblo. Va en el paso 5 y en las animaciones (`tropas.por_civ` en `data/arte_animaciones.json`).
-- **C-100 · (fluidez) ¿Reparar cuesta?** En AoE4 cuesta una parte del edificio; acá hoy es gratis. Por defecto: el 50 % del costo, proporcional a lo reparado.
+- **C-100 · (fluidez) ¿Reparar cuesta?** En AoE4 cuesta una parte del edificio; acá hoy es gratis. Por defecto: el 50 % del costo, proporcional a lo reparado. **Respuesta:** a) el 50 % del costo, proporcional a lo reparado (2026-11-26, página de consultas).
 - **C-101 · (fluidez) Muralla de piedra y planos.** ¿Una muralla de piedra en la II con torres encima, y la empalizada que se refuerza? ¿Planos para dibujar la base sin pagar? Por defecto: la muralla sí; los planos, después.
 - **C-101 respondida (2026-11-18):** muralla de piedra sí, en la edad II.
 
@@ -677,19 +670,19 @@ a) En tu PC, con el puerto 47900/TCP abierto en el router: gratis, pero solo and
 
 Cuando lo tengas, poné `RELEVO=host:47900` en `~/.config/raices/publicar.env`. Así los amigos solo escriben el código de la sala.
 
-**Respuesta:**
+**Respuesta:** c) Un VPS de 4–6 USD por mes (Hetzner, DigitalOcean): lo más simple y estable (2026-11-26, página de consultas).
 
 ### C-103 · Página de itch.io
 Para que la app de itch les actualice el juego solo, hace falta una página. Va con estos pasos: crearla en modo **Restricted** o **Draft**, correr `butler login`, poner `ITCH_TARGET=usuario/raices` en `~/.config/raices/publicar.env` y correr `tools/publicar.sh --subir`. ¿Cómo entran los amigos?
 a) Con una clave de descarga por amigo *(por defecto)* · b) Con una contraseña de página para todos · c) Nada de itch por ahora: les mando los zip a mano
 
-**Respuesta:**
+**Respuesta:** a) Con una clave de descarga por amigo (2026-11-26, página de consultas).
 
 ### C-104 · Nombre de la versión
 Hoy la versión es `AAAA.MM.DD-commit` (por ejemplo `2026.11.20-1a2b3c4`). ¿Te sirve, o preferís un número (0.1, 0.2…) que subas vos?
 a) Fecha y commit *(por defecto)* · b) Número a mano, más el commit
 
-**Respuesta:**
+**Respuesta:** a) Fecha y commit (2026-11-26, página de consultas).
 
 ### C-105 · 3D local: ¿seguimos? (proceso/43)
 Hunyuan3D-2mini turbo da formas buenas en la PC (ver `proceso/43-3d-local/index.html`). Para seguir hacen falta cosas que no hago solo: (1) instalar el toolkit de CUDA 12.8 con un gcc 13 o 14 (para la textura propia de Hunyuan); (2) aceptar la licencia de Stable Fast 3D con tu cuenta de Hugging Face, si querés compararlo; (3) Mixamo, con tu cuenta, si el autorrig de Blender no alcanza. ¿Qué hacemos?
@@ -701,4 +694,4 @@ a) Pasar los aldeanos y edificios de los incas a esta cadena y probar el rig en 
 Los cuatro modelos nuevos (aldeano, kancha, kallanka y caballo, con textura de Hunyuan3D-Paint) están en `assets/generados/modelos/local/` y no se usan todavía. Ver el antes y después en `proceso/47-pipeline-3d/README.md`.
 a) Usar ya la kancha y la kallanka (estáticas) en los incas y dejar el aldeano para cuando `AldeanoAnimado` acepte modelos riggeados *(por defecto)* · b) Usar los cuatro ya, con el aldeano quieto como el GLB de hoy · c) Esperar a pasar todas las civilizaciones por el pipeline
 
-**Respuesta:**
+**Respuesta:** a) Usar ya la kancha y la kallanka (estáticas) en los incas y dejar el aldeano para cuando `AldeanoAnimado` acepte modelos riggeados (2026-11-26, página de consultas).

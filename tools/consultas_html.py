@@ -29,7 +29,7 @@ NOTAS = {
     "C-98": (None, "Se hizo a + c: aldeanos animados con KayKit y tonos más terrosos. El rig propio ya existe en el pipeline 3D local (`proceso/47`): el aldeano inca anda con las animaciones de KayKit en el visor, falta pasarlo a `AldeanoAnimado`."),
     "C-99": (None, "Quedó así como está. Los modelos nuevos del pipeline (`proceso/49`, `50`) toman el tono de piel del arte 2D de cada pueblo."),
     "C-105": ("respondida", "Respondida en el chat (2026-11-20/21): instalar CUDA y seguir. Hecho: textura de Hunyuan3D-Paint, `tools/gen3d_pipeline.py`, 24 modelos de los seis pueblos y el arreglo de la piel oscura (`proceso/47`, `49`, `50`)."),
-    "C-47": ("pendiente", "Seguimos con el empate. Tu pregunta (¿por qué hay tiempo límite?) está contestada en la línea de respuesta: es opcional y viene apagado."),
+    "C-47x": ("pendiente", "Seguimos con el empate. Tu pregunta (¿por qué hay tiempo límite?) está contestada en la línea de respuesta: es opcional y viene apagado."),
     "C-70": (None, "En la página elegiste C-40 b (Qorikancha a la III), C-41 a (Tekoha → Tovaja → Mbororé → Ñande retã) y C-42 b («1678»), y dejaste C-39 (el nombre de la IV inca) para esta. Ya se aplican; acá falta lo demás (Willkapampa, birmanos, Ayutthaya) o confirmar esas tres."),
     "C-106": (None, "Los modelos no se usan todavía en el juego. Desde que se escribió la pregunta, ya pasaron por el pipeline los seis pueblos (la condición de la c) se cumplió) y se arregló la piel oscura (`proceso/50`)."),
 }
@@ -44,7 +44,7 @@ EXTRA = {
     "C-99": {"titulo": "(animaciones) Tono y armas",
              "cuerpo": "¿Alcanza el tono del aldeano o lo oscurecemos más? ¿Un tono de piel por pueblo? ¿Están bien las armas de cada pueblo (macana a dos manos para guaraníes y mapuches, dos espadas para Ayutthaya, jabalina etíope, estólica caranqui)?",
              "opciones": [["a", "Así como está", True], ["b", "Más oscuro, con un tono por pueblo", False], ["c", "Cambiar armas (escribí cuáles)", False]]},
-    "C-100": {"titulo": "(fluidez) ¿Reparar cuesta?",
+    "C-100": {"respuesta": "a) el 50 % del costo, proporcional a lo reparado (2026-11-26).", "titulo": "(fluidez) ¿Reparar cuesta?",
               "cuerpo": "En AoE4 reparar cuesta una parte del edificio; acá hoy es gratis.",
               "opciones": [["a", "El 50 % del costo, proporcional a lo reparado", True], ["b", "Gratis, como hoy", False], ["c", "Otro porcentaje (escribilo)", False]]},
     "C-101": {"titulo": "(fluidez) Muralla de piedra y planos",
