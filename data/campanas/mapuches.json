@@ -33,7 +33,7 @@
         "tropas": [ { "tipo": "guerrero", "n": 6 }, { "tipo": "hondero", "n": 6 } ]
       },
       "rivales": [
-        { "nombre": "Fuerte de Tucapel y hueste de Valdivia", "corto": "Hueste de Valdivia", "faccion": "invasores", "ia": "normal", "edad": 2 }
+        { "nombre": "Fuerte de Tucapel y hueste de Valdivia", "corto": "Hueste de Valdivia", "faccion": "castilla", "ia": "normal", "edad": 2 }
       ],
       "objetivos": [
         { "id": "o1", "texto": "Fundá 3 lof lejos uno de otro (depósitos separados): no hay capital que tomar.", "tipo": "construir", "params": { "tipo": "deposito", "n": 3 }, "secundario": false },
@@ -84,7 +84,7 @@
         "tropas": [ { "tipo": "guerrero", "n": 10 }, { "tipo": "hondero", "n": 8 }, { "tipo": "lancero", "n": 4 } ]
       },
       "rivales": [
-        { "nombre": "Hueste de Villagra y Concepción", "corto": "Hueste de Villagra", "faccion": "invasores", "ia": "agresiva", "edad": 2 }
+        { "nombre": "Hueste de Villagra y Concepción", "corto": "Hueste de Villagra", "faccion": "castilla", "ia": "agresiva", "edad": 2 }
       ],
       "objetivos": [
         { "id": "o1", "texto": "En la cuesta de Marigüeñu, golpeá y retirate en oleadas: matá a 25 de la columna de Villagra.", "tipo": "matar", "params": { "n": 25 }, "secundario": false },
@@ -137,11 +137,11 @@
         "tropas": [ { "tipo": "guerrero", "n": 10 }, { "tipo": "hondero", "n": 8 }, { "tipo": "lancero", "n": 6 } ]
       },
       "rivales": [
-        { "nombre": "Campamento de Óñez de Loyola", "corto": "Óñez de Loyola", "faccion": "invasores", "ia": "normal", "edad": 3 },
-        { "nombre": "Ciudades del sur", "faccion": "invasores", "ia": "pasiva", "edad": 3 }
+        { "nombre": "Campamento de Óñez de Loyola", "corto": "Óñez de Loyola", "faccion": "castilla", "ia": "normal", "edad": 3 },
+        { "nombre": "Ciudades del sur", "faccion": "castilla", "ia": "pasiva", "edad": 3 }
       ],
       "objetivos": [
-        { "id": "o1", "texto": "Convocá el ayllarewe: que varios rewe elijan juntos un toqui de caballería (avanzá a la edad III).", "tipo": "edad", "params": { "n": 3 }, "secundario": false },
+        { "id": "o1", "texto": "Convocá el ayllarewe: que varios rewe elijan juntos un toqui para la guerra a caballo (avanzá a la edad III).", "tipo": "edad", "params": { "n": 3 }, "secundario": false },
         { "id": "o2", "texto": "Armá 8 lanceros más: picas largas contra los caballos de ellos.", "tipo": "entrenar", "params": { "tipo": "lancero", "n": 8 }, "secundario": false },
         { "id": "o3", "texto": "Trasnochada: caé de madrugada sobre el campamento de Curalaba.", "tipo": "destruir_hitos", "params": { "jugador": 1 }, "secundario": false },
         { "id": "o4", "texto": "Alzamiento general: que se vacíen las ciudades del sur.", "tipo": "destruir_hitos", "params": { "jugador": 2 }, "secundario": false, "oculto": true },
@@ -189,7 +189,7 @@
         "tropas": [ { "tipo": "jinete", "n": 8 }, { "tipo": "guerrero", "n": 8 }, { "tipo": "hondero", "n": 8 }, { "tipo": "lancero", "n": 6 } ]
       },
       "rivales": [
-        { "nombre": "Ejército de oficio de la frontera", "corto": "Ejército de frontera", "faccion": "invasores", "ia": "normal", "edad": 3 }
+        { "nombre": "Ejército de oficio de la frontera", "corto": "Ejército de frontera", "faccion": "castilla", "ia": "normal", "edad": 3 }
       ],
       "objetivos": [
         { "id": "o1", "texto": "Malón al otro lado del río: arrasá 5 estancias (granjas) y traé el ganado.", "tipo": "destruir", "params": { "tipo": "granja", "n": 5, "jugador": 1 }, "secundario": false },

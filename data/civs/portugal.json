@@ -1,0 +1,29 @@
+{
+ "hereda": "invasores",
+ "solo_ia": true,
+ "invasor": true,
+ "nombre": "Portugal",
+ "adjetivo": "portugués",
+ "frase": "Capitanías, ingenios y terços de la Corona portuguesa en el Brasil.",
+ "descripcion": "Facción solo de IA y de campaña (D-018, C-72 a): las tropas de Pernambuco, los terços, los ingenios de Porto Calvo, Fernão Carrilho y el ejército de Gomes Freire. Caballería y pólvora desde temprano, fuertes de piedra.",
+ "edades": [
+  "Feitoria",
+  "Capitania",
+  "Governo-Geral",
+  "Vice-Reino"
+ ],
+ "_edades": "Nombres de la administración portuguesa del Brasil: la feitoria (factoría), la capitanía hereditaria (1534), el Gobierno General (1549) y el virreinato (título desde 1640, fijo desde 1763) [verificar con un historiador del Brasil colonial].",
+ "unidades": {
+  "guerrero": {
+   "nombre": "Soldado de terço"
+  },
+  "hondero": {
+   "nombre": "Besteiro"
+  }
+ },
+ "edificios": {
+  "centro": {
+   "nombre": "Fortaleza"
+  }
+ }
+}

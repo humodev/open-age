@@ -284,7 +284,7 @@ func _content_full() -> Dictionary:
 func _base(owner: int, type: String) -> Dictionary:
 	var dd := sim.dp(owner)
 	var def: Dictionary = dd.def_of(type)
-	var c := {"owner": owner, "type": type, "def": def, "name": def.get("nombre", type), "alt": "", "lines": [], "stats": [], "cost": {}, "time": 0, "state": [], "strong": "", "weak": "", "foot": [], "is_res": false}
+	var c := {"owner": owner, "type": type, "def": def, "name": Textos.nombre_de(sim, owner, def, type), "alt": "", "lines": [], "stats": [], "cost": {}, "time": 0, "state": [], "strong": "", "weak": "", "foot": [], "is_res": false}
 	var base_name: String = Grilla.comun(sim.data, dd, type) # --- depósitos de comida --- (4m)
 	if base_name != "" and base_name != c["name"] and dd.clave != "":
 		c["alt"] = base_name
@@ -301,7 +301,7 @@ func _type_content(owner: int, type: String) -> Dictionary:
 	c["cost"] = dd.cost_of(type, age)
 	if dd.unidades.has(type):
 		c["role"] = _unit_role(def)
-		c["desc"] = Controller.DESCS.get(type, def.get("desc", ""))
+		c["desc"] = Controller.DESCS.get(type, Textos.desc_de(sim, owner, def, def.get("desc", ""))) # C-71 a
 		_saber(c, def) # --- paso 6 ---
 		c["time"] = int(def.get("tiempo_ms", 0))
 		c["stats"] = _unit_stats(owner, def, -1, -1)

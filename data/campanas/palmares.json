@@ -32,7 +32,7 @@
         "tropas": [ { "tipo": "guerrero", "n": 4 }, { "tipo": "hondero", "n": 4 } ]
       },
       "rivales": [
-        { "nombre": "Columna de la Compañía de las Indias Occidentales", "corto": "Compañía holandesa", "faccion": "invasores", "ia": "normal", "edad": 2 }
+        { "nombre": "Columna de la Compañía de las Indias Occidentales", "corto": "Compañía holandesa", "faccion": "holanda", "ia": "normal", "edad": 2 }
       ],
       "objetivos": [
         { "id": "o1", "texto": "Abrí 4 rozas en el monte (granjas): maíz para ahora, mandioca para cuando haga falta.", "tipo": "construir", "params": { "tipo": "granja", "n": 4 }, "secundario": false },
@@ -85,7 +85,7 @@
         "tropas": [ { "tipo": "guerrero", "n": 10 }, { "tipo": "hondero", "n": 8 }, { "tipo": "lancero", "n": 6 }, { "tipo": "arcabucero", "n": 2 } ]
       },
       "rivales": [
-        { "nombre": "Tropa de Fernão Carrilho", "corto": "Tropa de Carrilho", "faccion": "invasores", "ia": "agresiva", "edad": 3 }
+        { "nombre": "Tropa de Fernão Carrilho", "corto": "Tropa de Carrilho", "faccion": "portugal", "ia": "agresiva", "edad": 3 }
       ],
       "objetivos": [
         { "id": "o1", "texto": "Cerrá el anillo nuevo de la cerca real y clavá la estrepería por fuera (30 tramos de empalizada).", "tipo": "construir", "params": { "tipo": "empalizada", "n": 30 }, "secundario": false },
@@ -140,7 +140,7 @@
         "tropas": [ { "tipo": "guerrero", "n": 6 }, { "tipo": "hondero", "n": 6 }, { "tipo": "lancero", "n": 4 } ]
       },
       "rivales": [
-        { "nombre": "Tropas de Pernambuco y moradores armados", "corto": "Pernambuco", "faccion": "invasores", "ia": "pasiva", "edad": 3 }
+        { "nombre": "Tropas de Pernambuco y moradores armados", "corto": "Pernambuco", "faccion": "portugal", "ia": "pasiva", "edad": 3 }
       ],
       "objetivos": [
         { "id": "o1", "texto": "Abrí las rozas de Cucaú (6 granjas). Acá se planta a la vista: el papel lo permite.", "tipo": "construir", "params": { "tipo": "granja", "n": 6 }, "secundario": false },
@@ -195,9 +195,9 @@
         "tropas": [ { "tipo": "guerrero", "n": 12 }, { "tipo": "hondero", "n": 10 }, { "tipo": "lancero", "n": 8 }, { "tipo": "arcabucero", "n": 6 } ]
       },
       "rivales": [
-        { "nombre": "Tropa de Domingos Jorge Velho (paulistas, mamelucos e indígenas)", "corto": "Jorge Velho", "faccion": "invasores", "ia": "agresiva", "edad": 3 },
-        { "nombre": "Terços de Pernambuco (Bernardo Vieira de Melo)", "corto": "Terços", "faccion": "invasores", "ia": "pasiva", "edad": 3 },
-        { "nombre": "Ingenios de Porto Calvo", "faccion": "invasores", "ia": "pasiva", "edad": 2 }
+        { "nombre": "Tropa de Domingos Jorge Velho (paulistas, mamelucos e indígenas)", "corto": "Jorge Velho", "faccion": "paulistas", "ia": "agresiva", "edad": 3 },
+        { "nombre": "Terços de Pernambuco (Bernardo Vieira de Melo)", "corto": "Terços", "faccion": "portugal", "ia": "pasiva", "edad": 3 },
+        { "nombre": "Ingenios de Porto Calvo", "faccion": "portugal", "ia": "pasiva", "edad": 2 }
       ],
       "objetivos": [
         { "id": "o1", "texto": "Correría al ingenio: rompé su casa de molienda y su guardia (hito de economía). La gente que sale camina hacia el monte, y deja rastro.", "tipo": "destruir", "params": { "tipo": "hito_economia", "n": 1, "jugador": 3 }, "secundario": false },

@@ -128,13 +128,14 @@
    ]
   },
   "birmanos": {
-   "_nota": "Madera de teca oscura, no el ladrillo encalado de Ayutthaya: casa sobre pilotes (ein) y monasterio de teca (kyaung). Comparte la forma 'ayutthaya' porque todavía no hay mallas birmanas; lo pendiente es el pyatthat (techo de muchos pisos sobre palacios y puertas) y la zedi (estupa en campana) como remate, en lugar del prang siamés (revisión 25, informe 03, n.º 6) [verificar con un especialista].",
+   "_nota": "Madera de teca oscura, no el ladrillo encalado de Ayutthaya: casa sobre pilotes (ein) y monasterio de teca (kyaung). Comparte la forma 'ayutthaya' con piezas propias (kyaung, zedi y pyatthat: _nota_c71); antes faltaban el pyatthat (techo de muchos pisos sobre palacios y puertas) y la zedi (estupa en campana) como remate, en lugar del prang siamés (revisión 25, informe 03, n.º 6) [verificar con un especialista].",
+   "_nota_c71": "C-71 a (proceso/54): mallas propias, todavía de maqueta. kyaung: pabellón de teca sobre plataforma alta y escalera; zedi: estupa en campana encalada y dorada en el patio del centro; remate pyatthat: aguja de techos cuadrados con el hti, desde la III. Pendientes para el pipeline de arte.",
    "torre": "troncos",
    "obra_material": ["madera", "madera"],
    "edades": [
-    {"muro": "#7a5636", "techo": "#6a5236", "pisos_techo": 1},
-    {"muro": "#6a4a2e", "techo": "#4e3322", "pisos_techo": 2},
-    {"pisos_techo": 3, "dorado": true, "remate": "dorado", "cerco": {"tipo": "empalizada", "alto_cm": 120}},
+    {"muro": "#7a5636", "techo": "#6a5236", "pisos_techo": 1, "kyaung": true},
+    {"muro": "#6a4a2e", "techo": "#4e3322", "pisos_techo": 2, "zedi": true},
+    {"pisos_techo": 3, "dorado": true, "remate": "pyatthat", "cerco": {"tipo": "empalizada", "alto_cm": 120}},
     {"alto_pct": 115}
    ]
   },

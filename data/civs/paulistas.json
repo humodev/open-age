@@ -1,0 +1,32 @@
+{
+ "hereda": "invasores",
+ "solo_ia": true,
+ "invasor": true,
+ "nombre": "Paulistas",
+ "adjetivo": "paulista",
+ "frase": "Bandeiras de São Paulo: mamelucos, indígenas y esclavizadores del sertão.",
+ "descripcion": "Facción solo de IA y de campaña (D-018, C-44 b y C-72 a): las bandeiras que asaltaron las misiones del Guairá y del Tape y la tropa de Domingos Jorge Velho contra Palmares. No era el ejército de la Corona: eran expediciones privadas a sueldo y a botín, de paulistas, mamelucos y muchos indígenas.",
+ "edades": [
+  "Bandeira",
+  "Arraial",
+  "Terço",
+  "Sertão"
+ ],
+ "_edades": "Bandeira: la expedición; arraial: el campamento fortificado; terço: el cuerpo que la Corona le dio a Jorge Velho; sertão: el interior que recorrían [verificar].",
+ "unidades": {
+  "aldeano": {
+   "nombre": "Indígena de la bandeira"
+  },
+  "guerrero": {
+   "nombre": "Mameluco"
+  },
+  "hondero": {
+   "nombre": "Flechero de la bandeira"
+  }
+ },
+ "edificios": {
+  "centro": {
+   "nombre": "Arraial"
+  }
+ }
+}

@@ -676,7 +676,8 @@ static func _feather_pole(at: Vector3, h: float, gourd := false) -> void:
 		_sph(0.1, at + Vector3(0, h - 0.05, 0), Color("b8945a"), Vector3(1, 1.25, 1), 8)
 
 
-## Oga guasu: la casa grande comunal, con los bastones rituales y el mbaraka del karai.
+## Oga guasu: la casa grande comunal, con los bastones rituales. La mbaraka del karai va solo con
+## `mbaraka: true` en data/arte_hitos.json (C-74 a: fuera hasta la consulta mbyá).
 static func _oga_guasu() -> void:
 	var cz := -0.5
 	_longhouse(Vector3(0, 0, cz), _hw * 2.0 - 0.1, 1.85, 2.2)
@@ -684,7 +685,7 @@ static func _oga_guasu() -> void:
 		_box(Vector3(0.36, 0.55, 0.03), Vector3(x, 0.28, cz + 0.8), DARK, Vector3(-22, 0, 0))
 	_box(Vector3(_hw * 2.0, 0.04, 1.0), Vector3(0, 0.02, 1.05), Palette.DIRT.lightened(0.15))
 	_feather_pole(Vector3(-0.9, 0, 1.15), 1.6)
-	_feather_pole(Vector3(0.0, 0, 1.25), 1.9, true)
+	_feather_pole(Vector3(0.0, 0, 1.25), 1.9, bool(_e.get("mbaraka", false)))
 	_feather_pole(Vector3(0.9, 0, 1.15), 1.6)
 	if _cfg.get("horcones", false):
 		CivMeshes._horcones(_p, Vector3(0, 0, cz), _hw * 2.0 - 0.1, 1.9, 0.7)

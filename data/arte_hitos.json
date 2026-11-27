@@ -21,7 +21,7 @@
     },
     "guaranies": {
       "maravilla_cabildo": {"forma": "cabildo_tava", "_nota": "--- paso 7 --- Maravilla de la vía misión: la plaza, el cabildo de dos plantas con galería y los talleres; no la fachada de la iglesia (H-37)."}, "maravilla_aldea_monte": {"forma": "aldea_monte", "levantar_max_pct": 140, "_nota": "--- paso 7 --- Maravilla de la vía monte: óga guasu en ronda alrededor de la plaza, en el monte alto. Sin bastones rituales (H-23)."},
-      "karai_palabra": {"forma": "oga_guasu", "levantar_max_pct": 170, "_nota": "Oga guasu: la casa grande comunal de techo de paja hasta el suelo, con los bastones rituales (yvyra'i) y el mbaraka del karai en la plaza [verificar]. La mbaraka se queda (C-60 a, proceso/51); C-74 propone sacarla hasta la consulta mbyá y sigue abierta."},
+      "karai_palabra": {"forma": "oga_guasu", "levantar_max_pct": 170, "mbaraka": false, "_nota": "Oga guasu: la casa grande comunal de techo de paja hasta el suelo, con los bastones rituales (yvyra'i) en la plaza [verificar]. mbaraka: la sonaja del karai en el bastón del medio. Sale del modelo hasta la consulta mbyá (C-74 a, proceso/54; da vuelta la C-60 a de proceso/51). Para volver a ponerla: true."},
       "aty_guasu": {"forma": "aty_guasu", "_nota": "Aty guasu: la plaza rodeada de casas largas, el fuego y la ronda de asientos de la gran asamblea [verificar]."},
       "mision": {"forma": "mision", "_nota": "Iglesia de reducción: nave ancha con galerías sobre columnas de madera, techo de teja, frente con frontón, campanario de madera aparte y cruz en la plaza (San Ignacio Miní, Trinidad) [verificar]."},
       "monte": {"forma": "monte", "_nota": "Monte libre: claro en la selva con refugios bajos (tapyi), hamaca y fuego, tapado por los árboles [verificar]."},

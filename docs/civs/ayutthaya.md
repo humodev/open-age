@@ -6,7 +6,7 @@
 "La ciudad isla del rey, sus elefantes y sus huéspedes." (C-20 a; antes «que comercia con el mundo»)
 
 ## Edades
-Mueang · Krung Si · Ekkarat · Mueang Tha `[verificar]`.
+Mueang · Krung Si · Ekkarat · Krung Thonburi `[verificar]` (C-70 a, proceso/54: *Mueang Tha* no está documentado como nombre de época; *Ekkarat* se explica en el panel del pueblo como la palabra del siglo XX sobre Naresuan).
 
 ## Presupuesto
 | Ranura | Mecánica | Implementación |

@@ -14,7 +14,8 @@
    "aldeano": "tawantinsuyu_aldeano",
    "hondero": "tawantinsuyu_hondero",
    "centro": "tawantinsuyu_centro",
-   "casa": "tawantinsuyu_casa"
+   "casa": "local/tawantinsuyu_casa",
+   "cuartel": "local/tawantinsuyu_kallanka"
   }
  },
  "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",
@@ -32,11 +33,12 @@
   "chaski": {"propia": true, "eje": "mecanica", "nombre": "Chaski en relevo", "en": {"tipo": "qollqa"}, "edificio": "qollqa", "ranura": 6, "edad_min": 4, "costo": {"alimento": 150, "mita": 100}, "tiempo_ms": 40000, "icono": "chaski", "efectos": [{"tipo": "vision_edificio", "tipos": ["camino"], "n": 3000}], "desc": "Corredores en postas (chaskiwasi) cada pocos kilómetros que llevaban mensajes y khipus por el Qhapaq Ñan. Cada tramo de camino ve 4 casillas.", "evidencia": "Documentado. Cieza de León, El señorío de los Incas (hacia 1550) [verificar el capítulo]; Guaman Poma (c. 1615), con el dibujo del chaski; Hyslop (1984)."}
  },
  "ia_propias": {"_doc": "Orden de compra de la IA (sim_ai.gd, _own_buys), como el de Etiopía; no compra mientras ahorra para el hito (con compras, llegaba a la III en menos partidas).", "ahorrando": false, "orden": [{"tec": "chunu_charki", "granjas": 4}, {"tec": "khipukamayuq"}, {"tec": "champi", "tropa": {"n": 8}}, {"tec": "trepanacion", "tropa": {"n": 10}}, {"tec": "qeswa_chaka"}, {"tec": "waraka_trenzada", "tropa": {"tipos": ["hondero", "boleador"], "n": 6}}, {"tec": "wayrachina"}, {"tec": "chaski"}], "unidades": [{"tipo": "jinete_manco", "max_pct": 25}, {"tipo": "galgueros", "max_pct": 20, "desde_edad": 3}], "_doc_galgueros": "Los galgueros no van en la lista: priorizados, la IA ahorraba mit'a para ellos y perdía más (proceso/26-juego-tardio/13)."},
+ "edades_nota": "Willkapampa es el nombre quechua de Vilcabamba, el reino de Manco Inka y sus hijos en la selva alta (1537–1572). Su hito militar lleva el nombre del sitio arqueológico, Espíritu Pampa.",
  "edades": [
   "Ayllu",
   "Suyu",
   "Tawantinsuyu",
-  "Inkarri"
+  "Willkapampa"
  ],
  "unidades": {
   "comerciante": {"nombre": "Caravana de llamas", "desc": "Caravana de llamas cargadas, de intercambio entre pisos ecológicos más que de mercado (Murra, 1975). Si el inca comerciaba con mercados ajenos queda para los historiadores [verificar]. Va del mercado propio a otro mercado y vuelve con riqueza: cuanto más lejos, más gana."},
@@ -134,7 +136,7 @@
   "fortaleza": {"nombre": "Hatun pukara", "desc": "Hatun pukara [verificar el compuesto]: la fortaleza mayor de piedra en lo alto, con muros en terrazas y guarnición, como las del Qhapaq Ñan y la frontera (Hyslop, 1990). La defensa que aguanta de la edad III."},
   "campo_tiro": {"nombre": "Warak'a kancha", "desc": "Recinto de los honderos: hondero, boleador y el hondero de piedra caliente, el asedio inca (Cusco, 1536)."},
   "almacen_madera": {"nombre": "Llant'a wasi"},
-  "almacen_mina": {"nombre": "Kamayuq wasi"},
+  "almacen_mina": {"nombre": "Qhuya wasi"},
   "centro": {
    "nombre": "Llaqta"
   },
@@ -390,7 +392,7 @@
    }
   },
   "vilcabamba": { "nombre_comun": "Reducto de montaña", "eje": "militar",
-   "nombre": "Vilcabamba",
+   "nombre": "Espíritu Pampa",
    "edad_min": 1,
    "tam": [
     4,
@@ -404,7 +406,7 @@
    "avanza_edad": true,
    "hito": true,
    "pob": 5,
-   "desc": "Reducto de montaña: resistencia y captura de caballos y arcabuces.",
+   "desc": "Reducto de montaña: la ciudad de Manco y sus hijos en la selva alta de Vilcabamba (1537–1572), resistencia y captura de caballos y arcabuces.",
    "efectos": [
     {
      "tipo": "vida_pct",

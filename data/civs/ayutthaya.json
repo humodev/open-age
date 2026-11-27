@@ -1,7 +1,7 @@
 {
  "nombre": "Ayutthaya",
  "adjetivo": "siamés",
- "riqueza_nombre": "Tributo del rey", "riqueza_desc": "El monte paga al rey (suai): los phrai del monte pagan en sapán, cueros y estaño en lugar de servir, y el Phra Khlang, el almacén real, lo vende. Parte de lo que se entrega a los elefantes del rey (madera, arbustos, piedra y arroz) entra como riqueza. Además, la arcilla de casa.",
+ "riqueza_nombre": "Suai (pago al rey)", "riqueza_desc": "El monte paga al rey (suai): los phrai del monte pagan en sapán, cueros y estaño en lugar de servir, y el Phra Khlang, el almacén real, lo vende. Parte de lo que se entrega a los elefantes del rey (madera, arbustos, piedra y arroz) entra como riqueza. Además, la arcilla de casa.",
  "frase": "La ciudad isla del rey, sus elefantes y sus huéspedes.",
  "region": "Siam, 1351–1767",
  "descripcion": "Arroz de crecida que rinde junto al agua, el suai del monte que vende el Phra Khlang, barrios extranjeros que pagan y alquilan compañías, y elefantes de guerra que arrasan en área.",
@@ -12,9 +12,9 @@
   "acento": "#c9a227",
   "modelos": {
    "aldeano": "ayutthaya_aldeano",
-   "centro": "ayutthaya_centro",
+   "centro": "local/ayutthaya_centro",
    "chang_suek": "ayutthaya_elefante", "elefante_rey": "ayutthaya_elefante",
-   "casa": "ayutthaya_casa"
+   "casa": "local/ayutthaya_casa"
   }
  },
  "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",
@@ -32,11 +32,12 @@
   "astilleros_juncos": {"propia": true, "eje": "economia", "nombre": "Astilleros de juncos", "en": {"tipo": "mercado"}, "edificio": "mercado", "ranura": 9, "edad_min": 4, "costo": {"madera": 250, "riqueza": 100}, "tiempo_ms": 45000, "icono": "astillero", "efectos": [{"tipo": "mercado_venta_pct", "pct": 15}, {"tipo": "costo_unidad_pct", "tipos": ["comerciante"], "pct": -20}, {"tipo": "comercio_pct", "pct": 10}], "desc": "Siam construía juncos de teca más baratos que en China, con carpinteros chinos y madera siamesa; el monzón y los pilotos (nakhoda) marcaban el viaje. Lo vendido en el mercado rinde 15 % más, el comerciante cuesta 20 % menos y rinde 10 % más.", "evidencia": "Documentado (sobre todo en el siglo XVIII). Sarasin Viraphol (1977); Cushman, Fields from the Sea (1993); Ishii (ed.), The Junk Trade from Southeast Asia (1998)."}
  },
  "ia_propias": {"_doc": "Orden de compra de la IA (sim_ai.gd, _own_buys), como el de Etiopía.", "orden": [{"tec": "khotchasat", "tropa": {"tipos": ["chang_suek"], "n": 2}}, {"tec": "ceramica_satchanalai"}, {"tec": "arroz_crecida", "granjas": 4}, {"tec": "recetario_narai", "tropa": {"n": 10}}, {"tec": "barrio_chino"}, {"tec": "fundicion_real", "tropa": {"lineas": ["polvora"], "n": 4}}, {"tec": "astilleros_juncos"}, {"tec": "khlong_lat"}], "unidades": [{"tipo": "defensores_suan_phlu", "max_pct": 25}, {"tipo": "ngao", "max_pct": 25}]},
+ "edades_nota": "Ekkarat («independencia») es la palabra con que el siglo XX nombró la ruptura de Naresuan con Pegu en 1584; no es un nombre de la época, y acá marca ese giro. Krung Thonburi es la capital que Taksin fundó en la otra orilla después de 1767.",
  "edades": [
   "Mueang",
   "Krung Si",
   "Ekkarat",
-  "Mueang Tha"
+  "Krung Thonburi"
  ],
  "unidades": {
   "comerciante": {"nombre": "Cargadores del río", "desc": "En el río iba la barca (ruea, เรือ); en tierra, cargadores con la vara al hombro [verificar con los historiadores]. Va del mercado propio a otro mercado y vuelve con riqueza: cuanto más lejos, más gana."},
@@ -161,6 +162,28 @@
    ],
    "ranura": 11,
    "desc": "Comerciantes y artilleros portugueses: renta y compañías de arcabuces."
+  },
+  "barrio_chinos": {
+   "_doc": "C-71 a (proceso/54): el barrio chino como tercer barrio extranjero. Los números son los del barrio portugués, sin tocar; lo habilita la mejora «Barrio chino y puertos» de la III (requiere_tec) y en la IV entrena a los defensores de Suan Phlu, que siguen también en el cuartel. La IA todavía no lo construye (ia_edificios): queda para la pasada de balance con torneo.",
+   "nombre": "Barrio chino",
+   "edad_min": 3,
+   "requiere_tec": "barrio_chino",
+   "tam": [
+    3,
+    3
+   ],
+   "pv": 900,
+   "armadura": 1,
+   "costo": {
+    "madera": 150
+   },
+   "tiempo_ms": 30000,
+   "vision": 5000,
+   "produce": [
+    "defensores_suan_phlu"
+   ],
+   "glifo": "junco",
+   "desc": "La comunidad extranjera más grande de la ciudad: comerciantes de juncos, artesanos y la gente del puerto. En 1767 defendió Khlong Suan Phlu y después sostuvo a Taksin (Sarasin Viraphol, 1977; Baker y Pasuk, 2017)."
   },
   "wat": { "nombre_comun": "Templo mayor", "eje": "economia",
    "nombre": "Wat Mahathat",
@@ -333,7 +356,7 @@
    "guardia_extranjera"
   ]
  ],
- "construye": ["casa", "granja", "cuartel", "campo_tiro", "taller", "torre", "fortaleza", "muralla", "puerta_piedra", "torre_muralla", "centro", "kraal", "barrio_japones", "barrio_portugues", "mercado", "almacen_mina", "maravilla"],
+ "construye": ["casa", "granja", "cuartel", "campo_tiro", "taller", "torre", "fortaleza", "muralla", "puerta_piedra", "torre_muralla", "centro", "kraal", "barrio_japones", "barrio_portugues", "barrio_chinos", "mercado", "almacen_mina", "maravilla"],
  "produce": {"centro": ["aldeano", "explorador", "elefante_rey"], "cuartel": ["guerrero", "lancero", "ngao", "defensores_suan_phlu"], "campo_tiro": ["hondero"], "taller": ["ariete", "catapulta"]},
  "modulos": {"khlong": {"_doc": "Canal de agua baja junto a la base (proceso/24): el arrozal rinde +35 % a 2 casillas del agua. distancia: casillas del centro; largo y ancho del canal", "distancia": 8, "largo": 9, "ancho": 2}},
  "ia_unidades": [

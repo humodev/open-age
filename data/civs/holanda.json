@@ -1,0 +1,24 @@
+{
+ "hereda": "invasores",
+ "solo_ia": true,
+ "invasor": true,
+ "nombre": "Países Bajos",
+ "adjetivo": "neerlandés",
+ "frase": "La Compañía de las Indias Occidentales en el Brasil holandés.",
+ "descripcion": "Facción solo de IA y de campaña (D-018, C-72 a): las columnas de la West-Indische Compagnie que entraron a Palmares desde el Recife (1644–1645). Caballería y pólvora desde temprano, fuertes de piedra.",
+ "edades": [
+  "Factoría",
+  "Fuerte",
+  "Nueva Holanda",
+  "Compañía"
+ ],
+ "_edades": "Nueva Holanda: el Brasil holandés (1630–1654), con capital en Mauritsstad; Compañía: la West-Indische Compagnie, que gobernaba la colonia [verificar].",
+ "unidades": {
+  "guerrero": {
+   "nombre": "Soldado de la Compañía"
+  },
+  "hondero": {
+   "nombre": "Mosquetero"
+  }
+ }
+}

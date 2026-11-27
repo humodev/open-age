@@ -561,7 +561,7 @@
     {
      "nombre": "Hueste de Hernando Pizarro",
      "corto": "Hueste de H. Pizarro",
-     "faccion": "invasores",
+     "faccion": "castilla",
      "ia": "agresiva",
      "edad": 2
     },
@@ -836,7 +836,7 @@
     {
      "nombre": "Corregimiento y milicias del Cusco",
      "corto": "Corregimiento",
-     "faccion": "invasores",
+     "faccion": "castilla",
      "ia": "normal",
      "edad": 3
     },

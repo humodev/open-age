@@ -1,0 +1,15 @@
+{
+ "hereda": "invasores",
+ "solo_ia": true,
+ "invasor": true,
+ "nombre": "Castilla",
+ "adjetivo": "castellano",
+ "frase": "Huestes de conquista, gobernaciones y virreinatos de la Corona de Castilla.",
+ "descripcion": "Facción solo de IA y de campaña (D-018, C-72 a): las huestes de Valdivia, Pizarro y Ayolas, el ejército de la frontera de Arauco y el de Andonaegui. Caballería y pólvora desde temprano, fuertes de piedra.",
+ "edades": [
+  "Hueste",
+  "Fuerte",
+  "Gobernación",
+  "Virreinato"
+ ]
+}
