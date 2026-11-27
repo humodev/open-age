@@ -1,0 +1,19 @@
+
+OK    C-47: empate si todo es igual o gana el de más puntos 0-0
+OK    C-47: a igual puntaje, desempata el sitio sagrado ganó 1
+OK    C-62: sin nadie, la captura baja 500 por segundo 4000
+OK    C-67: yerba silvestre del monte junto a la base guaraní 3
+OK    C-67: sin la vía misión, la roza que crece deja capuera capuera
+OK    C-67: con la vía misión, deja un yerbal plantado yerbal
+OK    C-67: la misión cría ganado 
+OK    C-68: contra otro pueblo, la casa no libera a nadie 25 → 25
+OK    C-68: el pacto pone la acogida a la mitad 
+OK    C-68: el pacto libera la mitad 
+OK    C-69: Lalibela es un sitio sagrado del mapa 1
+OK    C-69: Lalibela no se construye 
+OK    C-69: la iglesia no da combate 
+OK    C-91: el tratado trae 5 jinetes oromo 5
+OK    C-91: sin agasajo, el tratado se rompe y se van 0
+OK    C-100: reparar media vida cuesta la cuarta parte del costo 37 de 37
+OK    C-100: sin recursos no se repara 
+RESPUESTAS: OK

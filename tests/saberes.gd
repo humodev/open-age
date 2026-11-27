@@ -371,20 +371,22 @@ func _etiopia(s: Sim) -> void:
 	s._finish_tech(0, "amba_fortaleza")
 	_check("amba: la altura defiende 35 %", int(s.mods.m(0, "defensa_altura")["pct"]) + s.mod(0, "altura_pct") == 35)
 	s._finish_tech(0, "caravanas_amole")
-	_check("amole: el mercado paga más", s.mod(0, "venta_pct") == 20)
+	_check("amole: el comerciante rinde 20 % más", s.mod(0, "comercio_pct") == 20) # comercio, paso 5: de venta_pct a comercio_pct
 	# Pólvora de Massawa: solo con un mercado propio en pie.
 	var mq := s.spawn_unit("arcabucero", 0, home.x + 7000, home.y)
 	var atk0 := s.effective_attack(mq)
 	s._finish_tech(0, "polvora_massawa")
 	s.mods.tick_second()
-	_check("massawa: sin mercado no suma", s.effective_attack(mq) == atk0, "%d" % s.effective_attack(mq))
+	_check("massawa: sin ruta abierta no suma", s.effective_attack(mq) == atk0, "%d" % s.effective_attack(mq))
 	var spot := _land(s, home.tx + 9, home.ty, true)
 	var mk := s.spawn_building("mercado", 0, spot.x, spot.y, true)
+	s.players[0]["ruta_tick"] = s.tick # comercio, paso 5: un viaje cobrado hace poco abre la ruta
 	s.mods.tick_second()
-	_check("massawa: con el mercado en pie, +10 %", s.effective_attack(mq) == atk0 * 110 / 100, "%d -> %d" % [atk0, s.effective_attack(mq)])
+	_check("massawa: con la ruta abierta, +10 %", s.effective_attack(mq) == atk0 * 110 / 100, "%d -> %d" % [atk0, s.effective_attack(mq)])
 	s._kill(mk)
+	s.players[0]["ruta_tick"] = s.tick - 1 - int(s.comercio.cfg.get("ruta_abierta_ms", 180000)) / s.tick_ms
 	s.mods.tick_second()
-	_check("massawa: cae el mercado, se corta", s.effective_attack(mq) == atk0)
+	_check("massawa: sin viaje en los últimos 3 minutos, se corta", s.effective_attack(mq) == atk0)
 	s._finish_tech(0, "orden_katama")
 	_check("kätäma: la corte en la mitad del tiempo", s.mod(0, "obra_t:corte_nueva") == -50)
 	# Unidades: la jabalina al cerrar y el escudo; la cota; la caballería contra la distancia.

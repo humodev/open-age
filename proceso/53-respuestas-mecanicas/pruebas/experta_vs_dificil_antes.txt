@@ -1,0 +1,23 @@
+
+experta contra dificil · 30 minutos (límite, por puntos) · semillas [41, 42] · terrenos ["llano"] · ajustes []
+tawantinsuyu  llano     s41  30:00  gana EXPERTA por puntos     pts 7492-6946 | 10' 34a13mE2 / 36a11mE2 15' 36a2mE2 / 53a20mE2 20' 51a21mE3 / 60a14mE3
+tawantinsuyu  llano     s42  30:00  gana EXPERTA por puntos     pts 8404-7814 | 10' 35a11mE2 / 40a22mE2 15' 34a1mE2 / 56a15mE3 20' 70a14mE3 / 60a34mE4
+mapuches      llano     s41  29:44  gana EXPERTA (conquista)    pts 8785-3730 | 10' 56a12mE1 / 34a14mE2 15' 78a31mE3 / 39a5mE2 20' 100a43mE4 / 45a3mE2
+mapuches      llano     s42  30:00  gana EXPERTA por puntos     pts 7690-6002 | 10' 49a8mE2 / 33a22mE2 15' 72a38mE3 / 45a18mE2 20' 88a20mE3 / 58a17mE3
+guaranies     llano     s41  30:00  gana EXPERTA por puntos     pts 8807-5831 | 10' 38a11mE2 / 38a5mE2 15' 52a8mE2 / 53a15mE2 20' 80a31mE3 / 60a14mE3
+guaranies     llano     s42  30:00  gana EXPERTA por puntos     pts 6694-6677 | 10' 36a11mE2 / 37a11mE2 15' 47a12mE2 / 50a18mE3 20' 67a22mE3 / 60a14mE3
+etiopia       llano     s41  30:00  gana EXPERTA por puntos     pts 6412-6328 | 10' 34a6mE2 / 32a13mE2 15' 60a17mE2 / 46a22mE2 20' 58a3mE3 / 57a24mE3
+etiopia       llano     s42  30:00  gana EXPERTA por puntos     pts 8401-5291 | 10' 33a11mE2 / 32a6mE2 15' 51a17mE2 / 45a10mE2 20' 87a17mE3 / 56a34mE3
+palmares      llano     s41  30:00  gana dificil por puntos     pts 5497-5663 | 10' 20a9mE2 / 20a9mE2 15' 33a21mE2 / 30a7mE2 20' 45a22mE2 / 42a15mE3
+palmares      llano     s42  30:00  gana dificil por puntos     pts 3508-5887 | 10' 20a7mE2 / 20a16mE2 15' 31a11mE2 / 32a22mE2 20' 45a15mE2 / 45a15mE2
+ayutthaya     llano     s41  30:00  gana EXPERTA por puntos     pts 6762-5128 | 10' 30a16mE2 / 31a6mE2 15' 38a23mE3 / 42a11mE2 20' 61a12mE3 / 56a30mE3
+ayutthaya     llano     s42  30:00  gana dificil por puntos     pts 6618-6641 | 10' 28a8mE2 / 30a20mE2 15' 40a10mE2 / 43a17mE3 20' 65a20mE2 / 52a11mE3
+
+% de victorias de la experta:
+  tawantinsuyu  2 / 2  100 %
+  mapuches      2 / 2  100 %
+  guaranies     2 / 2  100 %
+  etiopia       2 / 2  100 %
+  palmares      0 / 2    0 %
+  ayutthaya     1 / 2   50 %
+  total         9 / 12   75 %

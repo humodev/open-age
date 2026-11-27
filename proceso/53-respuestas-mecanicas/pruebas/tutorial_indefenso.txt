@@ -1,0 +1,45 @@
+
+00:00 guía: Primero, mirá alrededor: las flechas o el mouse contra el borde mueven la cámara
+00:10 guía: Ahora, a trabajar. Arrastrá el mouse sobre tus aldeanos para elegirlos. Con clic
+01:33 objetivo hecho o1 Juntá 100 de madera y 100 de alimento: mandá tres aldeanos a los árbol
+01:33 objetivo nuevo o2 Construí una casa, la Kancha (aldeanos seleccionados: Q abre Economía,
+01:33 guía: Bien. Arriba a la izquierda están tus recursos y, al lado de cada uno, cuántos a
+02:04 objetivo hecho o2 Construí una casa, la Kancha (aldeanos seleccionados: Q abre Economía,
+02:04 objetivo nuevo o15 Construí un almacén de madera, la Llant'a wasi, al lado de los árboles
+02:04 guía: Los aldeanos llevan lo que juntan al depósito más cercano: el centro o un almacé
+02:06 almacén de madera junto al bosque en (31, 22)
+02:35 objetivo hecho o15 Construí un almacén de madera, la Llant'a wasi, al lado de los árboles
+02:35 objetivo nuevo o3 Entrená 3 aldeanos en el centro (tecla H para seleccionarlo, después Q
+02:35 guía: Más manos, más recursos. Seleccioná el centro (la Llaqta) con H y entrená aldean
+03:00 recursos { "alimento": 450, "madera": 360, "piedra": 100, "riqueza": 150, "mita": 132 } · aldeanos 7 · guerreros 0
+03:21 objetivo hecho o3 Entrená 3 aldeanos en el centro (tecla H para seleccionarlo, después Q
+03:21 objetivo nuevo o4 Juntá 100 de riqueza: mandá a los aldeanos nuevos a la veta dorada con
+03:21 guía: Hay cuatro recursos. La riqueza (la veta dorada cerca del centro) paga guerreros
+03:40 objetivo nuevo o12 Se acaban los frutos: construí una granja junto al centro (aldeanos se
+03:40 guía: Los frutos de cerca se terminan. El alimento sale de los frutos, de la caza y de
+03:42 objetivo de la granja: la levanto con un aldeano de los frutos
+04:00 objetivo hecho o12 Se acaban los frutos: construí una granja junto al centro (aldeanos se
+04:00 guía: Eso es: una granja por aldeano. Cuando los demás se queden sin frutos, hacé más;
+04:51 objetivo hecho o4 Juntá 100 de riqueza: mandá a los aldeanos nuevos a la veta dorada con
+04:51 objetivo nuevo o5 Explorá: elegí al explorador y mandalo con clic derecho hacia el centr
+04:51 guía: Lo oscuro del mapa es lo que nadie vio todavía. El explorador es rápido y no jun
+04:51 objetivo hecho o5 Explorá: elegí al explorador y mandalo con clic derecho hacia el centr
+04:51 objetivo nuevo o6 Tomá el sitio sagrado: dejá al explorador parado al lado hasta que la 
+04:51 guía: Eso es un sitio sagrado. Se toma dejando una unidad al lado, sin enemigos cerca.
+05:13 objetivo hecho o6 Tomá el sitio sagrado: dejá al explorador parado al lado hasta que la 
+05:13 objetivo nuevo o7 Construí un cuartel, la Kallanka (aldeanos seleccionados: W abre Milit
+05:13 guía: Vas a necesitar soldados: construí un cuartel cerca del centro.
+05:50 objetivo hecho o7 Construí un cuartel, la Kallanka (aldeanos seleccionados: W abre Milit
+05:50 objetivo nuevo o8 Entrená 5 guerreros de porra en el cuartel (cuestan alimento y riqueza
+05:50 guía: Choque vence a distancia, distancia vence a línea, línea vence a choque. El guer
+06:00 se acabaron los frutos cerca: hago granjas (Chacra)
+06:00 recursos { "alimento": 662, "madera": 510, "piedra": 100, "riqueza": 350, "mita": 248 } · aldeanos 10 · guerreros 0
+06:35 guía: ¡Se juntan saqueadores al otro lado del monte! Llegan en 60 segundos: entrená gu
+06:35 objetivo nuevo o9 Defendé el pueblo: abatí a los 4 saqueadores (se cumple después de ent
+07:20 guía: Faltan 30 segundos. Si no te alcanzan los guerreros, elegí el centro (H) y tocá 
+07:45 llegan 4 saqueadores; tengo 0 guerreros y 10 aldeanos
+08:37 objetivo fallado pr Cuidá a tus aldeanos: si te quedan menos de 3, la misión se pierde.
+08:37 MISIÓN derrota · Te quedaron menos de 3 aldeanos, y sin ellos no hay hito. La próxima vez, cuando la Guía avise que llegan los saqueadores, entrená guerreros o elegí el centro (H) y tocá la campana (Z): los aldeanos se refugian y el centro dispara.
+RESULTADO modo=indefenso derrota a las 08:37 · motivo: Te quedaron menos de 3 aldeanos, y sin ellos no hay hito. La próxima vez, cuando la Guía avise que llegan los saqueadores, entrená guerreros o elegí el centro (H) y tocá la campana (Z): los aldeanos se refugian y el centro dispara.
+objetivo de la granja (o12): hecho
+OK

@@ -323,7 +323,7 @@
     }
    ],
    "costo_extra": {
-    "mita": 200
+    "mita": 150
    }
   },
   "kallanka_real": { "nombre_comun": "Gran galpón real", "eje": "militar",
@@ -419,7 +419,7 @@
     }
    ],
    "costo_extra": {
-    "mita": 200
+    "mita": 150
    },
    "produce": [
     "jinete",

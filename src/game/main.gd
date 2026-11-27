@@ -507,7 +507,7 @@ func _build_scene(aivai: bool) -> void:
 		_menu = MainMenu.new()
 		layer.add_child(_menu)
 		_menu.play.connect(func(sd: int, civ: String, rival: String) -> void: _start(_menu.match_args().merged({"seed": str(sd), "civ": civ, "rival": rival, "dificultad": _menu.difficulty(), "estilo": _menu.style(), "terreno": _menu.terrain(), "lugares": _menu.slots()})))
-		_menu.watch.connect(func(sd: int, civ: String, rival: String) -> void: _start(_menu.match_args().merged({"aivai": "1", "seed": str(sd), "civ": civ, "rival": rival, "estilo": _menu.style(), "dificultad": _menu.difficulty(), "terreno": _menu.terrain(), "lugares": _menu.slots()})))
+		_menu.watch.connect(func(sd: int, civ: String, rival: String) -> void: _start(_menu.watch_args().merged({"aivai": "1", "seed": str(sd), "civ": civ, "rival": rival, "estilo": _menu.style(), "dificultad": _menu.difficulty(), "terreno": _menu.terrain(), "lugares": _menu.slots()})))
 		_menu.campaigns.connect(_open_campaigns.bind(layer))
 		_menu.arte_guerra.connect(_open_arte_guerra.bind(layer)) # --- C-38 ---
 		_menu.replay.connect(func() -> void: _start({"replay": "1"}))

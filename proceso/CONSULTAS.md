@@ -277,7 +277,7 @@ a) Juntos *(por defecto)* · b) Mezclados
 Si al cumplirse el tiempo los puntos empatan, hoy no gana nadie y la pantalla dice "Empate".
 a) Empate *(por defecto)* · b) Desempate por edificios en pie o por sitios
 
-**Respuesta:** b) Desempate por edificios en pie o por sitios (2026-11-26, página de consultas). (Antes preguntó por qué hay tiempo límite: es opcional y viene apagado; el menú pone 60 min solo en todos contra todos de 3 o más.)
+**Respuesta:** b) Desempate por edificios en pie o por sitios (2026-11-26, página de consultas). (Antes preguntó por qué hay tiempo límite: es opcional y viene apagado; el menú pone 60 min solo en todos contra todos de 3 o más.) **Aplicado:** desempate por datos (`reglas.opciones_partida.desempate`): a igual puntaje gana quien tenga más sitios sagrados en su poder y, si siguen iguales, más edificios terminados en pie (sin muros, puertas, caminos ni trampas); si todo empata, empate (proceso/53).
 
 ### C-48 · (opciones de partida) Conquista sin hitos: ¿cuentan las unidades?
 Con "Hitos: no", pierde quien se queda sin edificios terminados. No cuentan muros, puertas ni caminos; sí granjas, casas y almacenes.
@@ -289,7 +289,7 @@ a) Solo edificios *(por defecto)* · b) También las unidades, como algunos modo
 En 4 partidas de IA contra IA de hasta 45 minutos, sin hitos ni sitios, la IA nunca termina la conquista (al mapuche le quedaban 41 edificios).
 a) El menú sugiere un tiempo límite al apagar "Hitos", y la IA aprende a cazar los últimos edificios en el paso de la IA experta *(por defecto)* · b) Solo mejorar la IA
 
-**Respuesta:** b) Solo mejorar la IA (2026-11-21, página de consultas). **Aplicado:** el menú no sugería tiempo límite (ya estaba). IA medida sin hitos ni sitios, 45 minutos y 2 semillas: Etiopía conquista a Palmares a los 39 minutos en las dos semillas; los mapuches dejan al inca con 2 y 12 edificios a los 45 (un almacén de mina en el borde y un tambo lejano). Poner la cacería antes que los sitios y las oleadas empeoró (60 edificios en pie) y se revirtió: falta un paso de IA (proceso/51).
+**Respuesta:** b) Solo mejorar la IA (2026-11-21, página de consultas). **Aplicado:** el menú no sugería tiempo límite (ya estaba). IA medida sin hitos ni sitios, 45 minutos y 2 semillas: Etiopía conquista a Palmares a los 39 minutos en las dos semillas; los mapuches dejan al inca con 2 y 12 edificios a los 45 (un almacén de mina en el borde y un tambo lejano). Poner la cacería antes que los sitios y las oleadas empeoró (60 edificios en pie) y se revirtió: falta un paso de IA (proceso/51). **Proceso 53:** la causa era la defensa: un hondero suelto junto a un almacén traía de vuelta a todo el ejército que cazaba al otro lado del mapa. Sin victoria por hitos, la IA defiende ahora con lo que hace falta (`ia_caza.defensa_proporcional`, como la experta). Etiopía conquista a Palmares a los 18 y 23 minutos (eran 39); incas contra mapuches queda pareja y sigue abierta a los 45.
 
 ### C-50 · (opciones de partida) Opciones del lobby de AoE4 que faltan
 Faltan maravilla (no existe todavía), edad inicial, población máxima y "revelar mapa".
@@ -301,13 +301,13 @@ a) Población máxima y revelar mapa ahora; edad inicial y maravilla después *(
 La experta llega a 100 aldeanos a los 25 minutos en tres civs y levanta un segundo o tercer centro, pero contra la difícil pierde 2 de 6 partidas, gana 1 y 3 quedan abiertas a los 25 minutos. Su economía grande llega tarde: a los 10–15 minutos tiene igual o menos ejército (`proceso/24-tras-la-segunda-ronda/4a-ia-experta.md`).
 a) Otro paso de ajuste con torneo de la experta contra la difícil *(por defecto)* · b) Dejarla así por ahora
 
-**Respuesta:** a) Otro paso de ajuste con torneo de la experta contra la difícil (2026-11-21, página de consultas). **Aplicado:** anotado: va al torneo del hito (etapa 35, torneo de expertos), no a este paso.
+**Respuesta:** a) Otro paso de ajuste con torneo de la experta contra la difícil (2026-11-21, página de consultas). **Aplicado:** anotado: va al torneo del hito (etapa 35, torneo de expertos), no a este paso. **Proceso 53:** medido (12 partidas, 30 min): la experta le gana a la difícil 9 de 12 (antes, 1 de 6): 2 de 2 en incas, mapuches, guaraníes y Etiopía, 1 de 2 en Ayutthaya y 0 de 2 en Palmares. No hizo falta otro ajuste.
 
 ### C-52 · (IA experta) ¿Cuenta para el balance?
 El torneo de balance se juega con la normal. Palmares no crece con centros sino con la fama, así que con la experta queda abajo por diseño.
 a) El balance se mide con la normal, y la experta solo se revisa para que ninguna civ quede inútil *(por defecto)* · b) Sumar un torneo con la experta y balancear también ahí
 
-**Respuesta:** a) El balance se mide con la normal, y la experta solo se revisa para que ninguna civ quede inútil — «Ahora hicimos torneos entre agentes expertos y esto mejoró» (2026-11-21, página de consultas). **Aplicado:** anotado: va al torneo del hito (etapa 35).
+**Respuesta:** a) El balance se mide con la normal, y la experta solo se revisa para que ninguna civ quede inútil — «Ahora hicimos torneos entre agentes expertos y esto mejoró» (2026-11-21, página de consultas). **Aplicado:** anotado: va al torneo del hito (etapa 35). **Proceso 53:** con la experta, Palmares pierde las dos contra la difícil (por puntos, 5497–5663 y 3508–5887): queda abajo por diseño (crece por la fama), sin quedar inútil.
 
 ### C-53 · (sonido) El kultrun en el juego
 El sonido mapuche (fanfarria, alarma y órdenes) usa kultrun y trutruka sintetizados (`proceso/24-tras-la-segunda-ronda/4g-sonido.md`). El kultrun es un instrumento ceremonial de la machi. Ya estaba pendiente consultar la pifilka.
@@ -375,13 +375,13 @@ a) Bajar el paso de la oleada de la fácil para que ataque varias veces, con ole
 Hoy un sitio guarda lo que lleva de captura aunque el que lo toma se vaya, y varias pasadas cortas suman los 10 s. En AoE4, la captura se vacía de a poco sin nadie. Cambiaría la regla para todos y el balance.
 a) Que se vacíe de a poco, como AoE4, medido con torneo *(por defecto)* · b) Dejarlo como está
 
-**Respuesta:** a) Que se vacíe de a poco, como AoE4, medido con torneo (2026-11-26, página de consultas).
+**Respuesta:** a) Que se vacíe de a poco, como AoE4, medido con torneo (2026-11-26, página de consultas). **Aplicado:** sin nadie junto al sitio, la captura a medias baja 500 ms por segundo (la mitad de lo que sube; `reglas.sitios.vaciado_ms`); disputado, queda como está (proceso/53).
 
 ### C-63 · (menú) Sitios apagados para la IA contra IA
 La primera partida en Fácil arranca con los sitios apagados. En IA contra IA, desde el menú, la opción depende de la dificultad elegida para el jugador.
 a) Que IA contra IA siempre arranque con los sitios prendidos *(por defecto)* · b) Igual que la partida normal
 
-**Respuesta:** a) Que IA contra IA siempre arranque con los sitios prendidos (2026-11-26, página de consultas).
+**Respuesta:** a) Que IA contra IA siempre arranque con los sitios prendidos (2026-11-26, página de consultas). **Aplicado:** «Mirar IA contra IA» arranca siempre con los sitios prendidos, salvo que los hayas apagado a mano en las opciones de partida (proceso/53).
 
 ### C-64 · (combate) La micro: que la mezcla de línea y distancia pague
 El veterano lo pide por tercera ronda. El estudio (`proceso/24-tras-la-segunda-ronda/5a-micro-estudio.md`) encontró dos causas. El guerrero común corre más que el hondero (1600 contra 1250), así que funciona como un jinete a pie y no se lo puede kitear. Y el hondero casi no le hace daño. Lo que ya paga: la línea mantiene y la distancia escalona detrás.
@@ -390,7 +390,7 @@ El veterano lo pide por tercera ronda. El estudio (`proceso/24-tras-la-segunda-r
 
 a) Guerrero común a 1350 y la línea +6 contra el choque (antes +5), como el hombre de armas de AoE4, medido con torneo *(por defecto)* · b) Solo la línea +10 contra el choque · c) Un hostigador montado por pueblo (pide modelo, edificio e IA) · d) Dejarlo así y enseñar en el juego la micro que ya paga
 
-**Respuesta:** a) Guerrero común a 1350 y la línea +6 contra el choque (antes +5), como el hombre de armas de AoE4, medido con torneo (2026-11-26, página de consultas).
+**Respuesta:** a) Guerrero común a 1350 y la línea +6 contra el choque (antes +5), como el hombre de armas de AoE4, medido con torneo (2026-11-26, página de consultas). **Aplicado:** ya estaba: el guerrero común anda a 1350 y la línea tiene +6 contra el choque (esport 1a, proceso/34).
 
 ### C-65 · (escala) Velocidad de las unidades
 Del análisis de escala del veterano (`proceso/22-testers/ronda-4/03-escala-veterano.md`): el aldeano anda a 1,86 m/s, un trote, cerca de 35 % más rápido que en AoE4 en relación con su cuerpo. Con la persona más chica (paso 1, solo vista) va a parecer más rápido todavía. Bajar `velocidad_pct` de 90 a 72 cambia toda la simulación: viajes, economía, llegada de ataques y micro.
@@ -402,26 +402,26 @@ a) Bajarla a 72 con un torneo de 10 semillas solo para eso, y mirarlo vos a ×1 
 En AoE4 el centro y los hitos dominan la ciudad. Acá ocupan 4×4 casillas (el lof mapuche, 3×3). Pasarlos a 5×5 (el lof a 4×4) toca la colocación, la IA, el generador de mapas (quizás un mapa de 136 en vez de 128), los caminos, las 25 misiones y el balance. Las casas, granjas y almacenes no cambian.
 a) Esperar a ver el paso 1 (solo vista) y decidir después *(por defecto)* · b) Hacerlo ya, con su torneo · c) No
 
-**Respuesta:** a) Esperar a ver el paso 1 (solo vista) y decidir después (2026-11-26, página de consultas).
+**Respuesta:** a) Esperar a ver el paso 1 (solo vista) y decidir después (2026-11-26, página de consultas). **Aplicado:** anotado: se decide después de ver el paso 1 (solo vista); no se tocó nada.
 > **C-67 a C-74 vienen de la revisión histórica** (`proceso/25-revision-historica/`): tres historiadores, de América Latina, África y Asia. Lo que no cambiaba mecánicas ya se corrigió (`04-correcciones-aplicadas.md`). Esto son las decisiones que cambian el juego o los nombres. La opción por defecto es la que recomiendan ellos.
 
 ### C-67 · (historia, guaraníes) La yerba
 Hoy la roza agotada deja un yerbal. Pero la yerba (*ka'a*) era un árbol silvestre del monte. En la colonia se cosechó con trabajo forzado de encomienda, y solo las reducciones del siglo XVIII la plantaron (Garavaglia, 1983).
 a) La yerba como recurso silvestre del monte; el yerbal plantado recién en la vía misión; la roza agotada deja capuera; ganado vacuno en la vía misión. Medido con torneo *(por defecto)* · b) Dejarlo y aclararlo en la descripción
 
-**Respuesta:** a) La yerba como recurso silvestre del monte; el yerbal plantado recién en la vía misión; la roza agotada deja capuera; ganado vacuno en la vía misión. Medido con torneo (2026-11-26, página de consultas).
+**Respuesta:** a) La yerba como recurso silvestre del monte; el yerbal plantado recién en la vía misión; la roza agotada deja capuera; ganado vacuno en la vía misión. Medido con torneo (2026-11-26, página de consultas). **Aplicado:** la yerba es silvestre: 3 ka'a del monte junto a la base guaraní y más en cada edad (`yerbal_silvestre`); la roza que se deja crecer queda en capuera, y solo con la vía misión deja el yerbal plantado; la misión cría ganado vacuno (mismo motor que los corrales, sin kawiñ). La IA quema las rozas hasta la misión (proceso/53).
 
 ### C-68 · (historia, Palmares) Pacto de Cucaú y liberación
 El Pacto de Cucaú promete "cerrar la puerta a quienes llegan", pero en los datos es un +25 % sin costo. La liberación "libera" gente de cualquier casa enemiga, también guaraní o etíope.
 a) El pacto apaga o reduce a la mitad la acogida y la liberación; la liberación vale solo contra los ingenios y los invasores (contra los demás pueblos, nada). Medido con torneo *(por defecto)* · b) Dejarlo
 
-**Respuesta:** a) El pacto apaga o reduce a la mitad la acogida y la liberación; la liberación vale solo contra los ingenios y los invasores (contra los demás pueblos, nada). Medido con torneo (2026-11-26, página de consultas).
+**Respuesta:** a) El pacto apaga o reduce a la mitad la acogida y la liberación; la liberación vale solo contra los ingenios y los invasores (contra los demás pueblos, nada). Medido con torneo (2026-11-26, página de consultas). **Aplicado:** el Pacto de Cucaú pone la acogida a la mitad (cada persona cuesta el doble de fama) y los ingenios liberan la mitad; la liberación de casas vale solo contra los invasores (las potencias con `invasor`), contra los demás pueblos, nada (proceso/53).
 
 ### C-69 · (historia, Etiopía) Lalibela y la iglesia
 Lalibela es un sitio zagwe del siglo XIII con culto vivo: en el juego se construye y da +25 % de vida a los edificios. La iglesia da +5 % de vida a las tropas.
 a) Lalibela pasa a sitio sagrado neutral del mapa (no se construye) y el hito se ve como Debre Damo; la iglesia cambia su bono de combate por uno económico o de población *(por defecto)* · b) Dejarlo
 
-**Respuesta:** a) Lalibela pasa a sitio sagrado neutral del mapa (no se construye) y el hito se ve como Debre Damo; la iglesia cambia su bono de combate por uno económico o de población (2026-11-26, página de consultas).
+**Respuesta:** a) Lalibela pasa a sitio sagrado neutral del mapa (no se construye) y el hito se ve como Debre Damo; la iglesia cambia su bono de combate por uno económico o de población (2026-11-26, página de consultas). **Aplicado:** Lalibela es un sitio sagrado neutral del mapa (el del centro cuando juega Etiopía; no se construye); el monasterio se ve como Debre Damo (amba con la cuerda de cuero y la iglesia aksumita); la iglesia cambió el +5 % de vida de la tropa por población: aloja 10 en lugar de 5 (proceso/53).
 
 ### C-70 · (historia) Nombres de edad
 Las propuestas de los historiadores:
@@ -484,25 +484,25 @@ a) Así *(por defecto)* · b) Otra cosa
 ¿"Una unidad de la edad IV no vale más de dos comunes" (ley cuadrada, como mide el modelo) o "ni el ataque ni la vida pasan de ×2" (más permisiva)?
 a) Valor en comunes *(por defecto)* · b) Por estadística
 
-**Respuesta:** a) Valor en comunes (2026-11-26, página de consultas).
+**Respuesta:** a) Valor en comunes (2026-11-26, página de consultas). **Aplicado:** ya estaba: la regla del ×2 se mide en valor en comunes (ley cuadrada, `tools/modelo_progreso.py`).
 
 ### C-76 · (juego tardío) Hitos militares con aura
 En la III y la IV, el bono del hito militar vale solo cerca del hito, en lugar de ser global. Es lo que más desinfla la edad IV.
 a) Sí, en el paso 4 *(por defecto)* · b) Solo el de la IV · c) No
 
-**Respuesta:** a) Sí, en el paso 4 (2026-11-26, página de consultas).
+**Respuesta:** a) Sí, en el paso 4 (2026-11-26, página de consultas). **Aplicado:** ya estaba: los hitos militares de la III y la IV dan su bono de combate solo cerca (`reglas.aura_hito.militar.combate_desde_edad`, paso 4 de la etapa 26).
 
 ### C-77 · (juego tardío) Paso 1
 Sacar el bono automático de ataque por edad y reemplazarlo por cosas que se compran: el +10 % de la II va a la herrería I, y los niveles veterano y élite se compran. El modelo da el mismo poder (0 a −2 %).
 a) Sí, arrancar por ahí *(por defecto)* · b) Primero la herrería separada
 
-**Respuesta:** a) Sí, arrancar por ahí (2026-11-26, página de consultas).
+**Respuesta:** a) Sí, arrancar por ahí (2026-11-26, página de consultas). **Aplicado:** ya estaba: sin bono automático por edad; herrería y niveles veterano y élite comprados (paso 1 de la etapa 26).
 
 ### C-78 · (juego tardío) Maravilla
 Costo de 1500 de madera, piedra y riqueza; 600 s de obra; una cuenta de 15 minutos para ganar; opción del menú.
 a) Así *(por defecto)* · b) Otros números
 
-**Respuesta:** a) Así (2026-11-26, página de consultas).
+**Respuesta:** a) Así (2026-11-26, página de consultas). **Aplicado:** ya estaba: 1500 de madera, piedra y riqueza, cuenta de 15 minutos y opción del menú; la obra quedó en 360 s con 10 constructores (ronda 8).
 
 ### C-79 · (juego tardío) Maravilla de Ayutthaya
 Krung, la ciudad isla con el fuerte Phom Phet (no es sagrada), o el Wat Phra Si Sanphet (con consulta).
@@ -524,7 +524,7 @@ a) Así *(por defecto)* · b) Solo un sanador más fuerte
 
 *Revisión histórica (etapa 26): la cifra queda corregida (en la época inca sobrevivía el 75–83 %; en la Guerra Civil de Estados Unidos moría el 46–56 %), como un saber de dos mil años que el Inka heredó. La mecánica pasa a "el 20 % de los que caen por golpe no muere y vuelve herido", para que no se lea como resurrección.*
 
-**Respuesta:** a) Así (2026-11-26, página de consultas).
+**Respuesta:** a) Así (2026-11-26, página de consultas). **Aplicado:** ya estaba: el 20 % de los que caen por golpe cerca de la kallanka no muere y vuelve con media vida («Cirugía de cráneo»).
 
 ### C-82 · (saberes) Etiopía y el *Bahrä Hasab*
 Un saber eclesiástico (el cómputo del calendario) usado en una mecánica económica.
@@ -538,92 +538,92 @@ a) Consultar a la Iglesia Tewahedo y, si no, "Cartógrafos de la corte" *(por de
 El kilombo, el shotel, los armeros de Gondar y el yachaywasi tienen evidencia debatida.
 a) Entran con la marca "debatido" en la ficha *(por defecto)* · b) Solo saberes documentados y arqueológicos
 
-**Respuesta:** a) Entran con la marca "debatido" en la ficha (2026-11-26, página de consultas).
+**Respuesta:** a) Entran con la marca "debatido" en la ficha (2026-11-26, página de consultas). **Aplicado:** ya estaba: la ficha muestra el nivel «Debatido» (kilombo, hierro de Angola Janga y otros).
 > **C-84 a C-97 vienen de la revisión histórica del diseño de saberes** (`proceso/26-juego-tardio/02` a `04`; el diseño revisado está en `docs/diseno/27-juego-tardio-y-saberes.md`, §0).
 
 ### C-84 · (saberes, guaraníes) Élite de la vía monte
 Sepé y la Guerra Guaranítica eran de los pueblos de misión. La élite de la vía monte pasa a los *ka'aguygua* ("monteses") [verificar grafía].
 a) Sí *(por defecto)* · b) Otra
 
-**Respuesta:** a) Sí (2026-11-26, página de consultas).
+**Respuesta:** a) Sí (2026-11-26, página de consultas). **Aplicado:** ya estaba: la élite de la vía monte son los *ka'aguygua*.
 
 ### C-85 · (saberes, guaraníes) Maravilla
 *Tekoha guasu* es una categoría del siglo XX, hoy usada en litigios por tierras. Pasa a llamarse "Aldea grande del monte" hasta la consulta.
 a) Sí *(por defecto)* · b) Otra
 
-**Respuesta:** a) Sí (2026-11-26, página de consultas).
+**Respuesta:** a) Sí (2026-11-26, página de consultas). **Aplicado:** ya estaba: «Aldea grande del monte».
 
 ### C-86 · (saberes, mapuches) Ampive y poncho
 *Lawentuchefe* es un término de fines del siglo XX y la platería, de fines del XVIII. Pasan a *ampive* [verificar] y al poncho (*makuñ*).
 a) Los dos *(por defecto)* · b) Solo uno
 
-**Respuesta:** a) Los dos (2026-11-26, página de consultas).
+**Respuesta:** a) Los dos (2026-11-26, página de consultas). **Aplicado:** ya estaba: *ampive* y el poncho (*makuñ*).
 
 ### C-87 · (saberes, incas) Pieza pesada de la IV
 Las armas capturadas en Vilcabamba, en lugar de repetir las galgas.
 a) Sí *(por defecto)* · b) Otra
 
-**Respuesta:** a) Sí (2026-11-26, página de consultas).
+**Respuesta:** a) Sí (2026-11-26, página de consultas). **Aplicado:** queda en el diseño: la pieza pesada de la IV es una unidad compartida del paso 5, que espera la C-80 (unidades sin modelo).
 
 ### C-88 · (saberes, incas) Huayrachina
 El horno de viento que fundió la plata de Potosí: documentado y arqueológico. Entra en la IV, y los *mitmaqkuna* quedan para retomar.
 a) Sí *(por defecto)* · b) No
 
-**Respuesta:** a) Sí (2026-11-26, página de consultas).
+**Respuesta:** a) Sí (2026-11-26, página de consultas). **Aplicado:** ya estaba: *wayrachina* en la IV (+20 % de riqueza).
 
 ### C-89 · (saberes, Palmares) Escuela de la IV
 *Oficinas do Macaco*: herreros, alfareros y tejedores de palma.
 a) Sí *(por defecto)* · b) Otra
 
-**Respuesta:** a) Sí (2026-11-26, página de consultas).
+**Respuesta:** a) Sí (2026-11-26, página de consultas). **Aplicado:** ya estaba: la escuela de Palmares son las *Oficinas do Macaco*.
 
 ### C-90 · (saberes, Etiopía) Guerrero de gaša
 El "shotel que pasa por encima del escudo" es folclore moderno. Pasa a ser el guerrero de *gaša* (escudo) con jabalinas, sin ese bono.
 a) Sí *(por defecto)* · b) Otra
 
-**Respuesta:** a) Sí (2026-11-26, página de consultas).
+**Respuesta:** a) Sí (2026-11-26, página de consultas). **Aplicado:** ya estaba: guerrero de *gaša* con jabalinas, sin el bono del shotel.
 
 ### C-91 · (saberes, Etiopía) Jinetes oromo aliados
 El *gadaa* es un sistema de grados de edad, no un cuerpo montado. La élite de la IV pasa a ser jinetes oromo aliados por un tratado que se puede romper.
 a) Sí *(por defecto)* · b) Otra
 
-**Respuesta:** a) Sí (2026-11-26, página de consultas).
+**Respuesta:** a) Sí (2026-11-26, página de consultas). **Aplicado:** los jinetes oromo aliados ya no se entrenan: llegan de a 5 por el «Tratado con los oromo» (establo, IV, 250 de riqueza) y piden 2 de riqueza por minuto cada uno; si no alcanza, el tratado se rompe y se van; si caen todos, se puede firmar otro. La IA lo firma con 12 de tropa (proceso/53).
 
 ### C-92 · (saberes, Palmares) Hierro de Angola Janga
 El hierro iba a armas y herramientas: la mejora da +1 de ataque en lugar de armadura.
 a) Sí *(por defecto)* · b) Otra
 
-**Respuesta:** a) Sí (2026-11-26, página de consultas).
+**Respuesta:** a) Sí (2026-11-26, página de consultas). **Aplicado:** ya estaba: el hierro de Angola Janga da +1 de ataque.
 
 ### C-93 · (saberes, Palmares) Erveira y sanguar
 El sanador es la *erveira* (Sweet, 2003, nivel "debatido"; nunca *nganga*). La mejora de curadores pasa al *sanguar*, la técnica de esquivar proyectiles, aclarando que no es capoeira.
 a) Las dos *(por defecto)* · b) Solo una
 
-**Respuesta:** a) Las dos (2026-11-26, página de consultas).
+**Respuesta:** a) Las dos (2026-11-26, página de consultas). **Aplicado:** el *sanguar* ya estaba; la *erveira* es el sanador, una unidad compartida del paso 5 que espera la C-80.
 
 ### C-94 · (saberes) Saberes nuevos de Etiopía y Palmares
 *Ṭef* y *gotära*, *kosso*, los mercaderes *jabarti*, los *ṣäḥafe tə'əzaz*; tejido de palma y cerámica de los mocambos.
 a) Como quedan en el diseño *(por defecto)* · b) Elegir
 
-**Respuesta:** a) Como quedan en el diseño (2026-11-26, página de consultas).
+**Respuesta:** a) Como quedan en el diseño (2026-11-26, página de consultas). **Aplicado:** ya estaba: *ṭef* con maresha, *fäws* y *kosso*, los *jabarti* (caravanas de amole), los *ṣäḥafe tə'əzaz* y el tejido de palma y la cerámica de los mocambos.
 
 ### C-95 · (saberes, Ayutthaya) Sin astrología de corte
 La astrología de corte (los *hon*) se usaba como bono. Pasa a astilleros de juncos y al Phra Khlang con sus intérpretes.
 a) Sí *(por defecto)* · b) Otra
 
-**Respuesta:** a) Sí (2026-11-26, página de consultas).
+**Respuesta:** a) Sí (2026-11-26, página de consultas). **Aplicado:** ya estaba: astilleros de juncos y la escuela del Phra Khlang.
 
 ### C-96 · (saberes, Ayutthaya) Saberes nuevos
 La cerámica de Si Satchanalai, los *khlong lat* y el *nuat*.
 a) Sí *(por defecto)* · b) Elegir
 
-**Respuesta:** a) Sí (2026-11-26, página de consultas).
+**Respuesta:** a) Sí (2026-11-26, página de consultas). **Aplicado:** ya estaba: cerámica de Si Satchanalai, *khlong lat* y el recetario de Narai con el *nuat*.
 
 ### C-97 · (saberes, Palmares) La maravilla
 La Cerca do Outeiro da Barriga queda "sitiada" hasta consultar si se puede mostrar su caída.
 a) Así *(por defecto)* · b) Otra
 
-**Respuesta:** a) Así (2026-11-26, página de consultas).
+**Respuesta:** a) Así (2026-11-26, página de consultas). **Aplicado:** ya estaba: la Cerca do Outeiro da Barriga no cae, queda sitiada.
 ## Respuestas del 2026-11-16
 
 - **Animaciones con KayKit:** "Lets start with kaykit yes." Las animaciones de los aldeanos arrancan con KayKit Character Animations (CC0). Etapa 27.
@@ -644,7 +644,7 @@ a) Así *(por defecto)* · b) Otra
 ## Decisión del 2026-11-17
 
 - **Arte de las unidades compartidas, por civ:** "Las unidades compartidas, a nivel de arte, también deben ser independientes, para poder hacer el aspecto específico de cada civ." Cada unidad (guerrero, lancero, hondero o arquero, asedio, las del paso 5) tiene su aspecto propio por pueblo: colores, tocado, arma y, cuando haya modelos de Meshy, uno por pueblo. Va en el paso 5 y en las animaciones (`tropas.por_civ` en `data/arte_animaciones.json`).
-- **C-100 · (fluidez) ¿Reparar cuesta?** En AoE4 cuesta una parte del edificio; acá hoy es gratis. Por defecto: el 50 % del costo, proporcional a lo reparado. **Respuesta:** a) el 50 % del costo, proporcional a lo reparado (2026-11-26, página de consultas).
+- **C-100 · (fluidez) ¿Reparar cuesta?** En AoE4 cuesta una parte del edificio; acá hoy es gratis. Por defecto: el 50 % del costo, proporcional a lo reparado. **Respuesta:** a) el 50 % del costo, proporcional a lo reparado (2026-11-26, página de consultas). **Aplicado:** cuesta el 50 % del costo del edificio, en proporción a la vida reparada (`reglas.reparacion_costo_pct`; los hitos, el costo de su edad; el asedio en el campo sigue gratis). Si no alcanza, se frena. Nueva decisión D-032, que reemplaza a D-024 (proceso/53).
 - **C-101 · (fluidez) Muralla de piedra y planos.** ¿Una muralla de piedra en la II con torres encima, y la empalizada que se refuerza? ¿Planos para dibujar la base sin pagar? Por defecto: la muralla sí; los planos, después.
 - **C-101 respondida (2026-11-18):** muralla de piedra sí, en la edad II.
 

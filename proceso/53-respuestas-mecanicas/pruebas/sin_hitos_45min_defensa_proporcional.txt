@@ -1,0 +1,16 @@
+
+IA contra IA, llano, semilla 321, hasta 45 minutos. edificios = en pie al final [j0, j1]; cuentan = los que cuentan para la victoria.
+
+Sin victoria por sitios (solo conquista):
+   ejército al final [15, 56] (quietos [2, 9])
+["tawantinsuyu", "mapuches"] hitos=no fin=45:00 motivo= ganador=-1 edificios=[347, 59] cuentan=[63, 53]
+   ejército al final [38, 0] (quietos [9, 0])
+["etiopia", "palmares"] hitos=no fin=17:56 motivo=conquista ganador=0 edificios=[54, 0] cuentan=[54, 0]
+
+IA contra IA, llano, semilla 654, hasta 45 minutos. edificios = en pie al final [j0, j1]; cuentan = los que cuentan para la victoria.
+
+Sin victoria por sitios (solo conquista):
+   ejército al final [0, 48] (quietos [0, 9])
+["tawantinsuyu", "mapuches"] hitos=no fin=45:00 motivo= ganador=-1 edificios=[302, 54] cuentan=[53, 48]
+   ejército al final [34, 0] (quietos [9, 0])
+["etiopia", "palmares"] hitos=no fin=22:57 motivo=conquista ganador=0 edificios=[52, 0] cuentan=[52, 0]

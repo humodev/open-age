@@ -29,7 +29,7 @@ Las decisiones cerradas no se reabren sin una entrada "Propuesta" aprobada. Form
 | D-021 | 2026-11-13 | Impacto inmediato de proyectiles (cierra A-007). Desde D-031, salvo el asedio de área contra tropa | Determinismo y rendimiento |
 | D-022 | 2026-11-13 | Los andenes son la fuente de alimento inca, no su ranura económica (cierra A-010) | Coincide la ficha con la investigación |
 | D-023 | 2026-11-13 | Los lof mapuches cuentan como centros y el rewe como hito; quien se queda sin hitos ve revelados sus centros al rival (cierra A-011) | Propuesta de `investigacion/mapuches.md` |
-| D-024 | 2026-11-13 | Reparar es gratis (cierra A-012) | Favorece la defensa económica pedida por el autor |
+| D-024 | 2026-11-13 | Reparar es gratis (cierra A-012). **Reemplazada por D-032** | Favorece la defensa económica pedida por el autor |
 | D-025 | 2026-11-13 | Se corrigen `03` y las fichas según las fuentes en las 15 contradicciones de `investigacion/README.md`, salvo donde la jugabilidad lo impida (queda anotado en la ficha) | Delegada; pilar 3 |
 | D-026 | 2026-11-13 | Se suman dos civilizaciones: Quilombo dos Palmares (Brasil) y Reino de Ayutthaya (Siam) | Pedido del autor: una de Brasil o Amazonía y otra, probablemente de Asia |
 | D-027 | 2026-11-13 | El mapa tiene relieve (alturas) y agua (ríos), porque varias mecánicas dependen de ellos (andenes, altura etíope, ríos guaraníes y siameses) | Necesario para la asimetría |
@@ -37,6 +37,7 @@ Las decisiones cerradas no se reabren sin una entrada "Propuesta" aprobada. Form
 | D-030 | 2026-11-13 | Se usa Meshy para arte generado, gastando lo necesario de forma eficiente (los créditos se renuevan cada mes) | Respuesta del autor a C-05 |
 | D-028 | 2026-11-13 | Cada civilización tiene una campaña de 4 misiones, narrada desde adentro | Pedido del autor |
 | D-031 | 2026-11-19 | El asedio de área (`area_borde_pct`) tira contra la tropa al **punto** donde está el blanco y pega ahí al llegar, `reglas.asedio_area.vuelo_ticks` (8) ticks después: entero, determinista y esquivable. Contra edificios y para todo lo demás sigue D-021. Se suma la orden de **atacar el suelo** (`suelo`, tecla R), que usa también la IA (`ia_asedio.suelo`) | Aprobado por el autor (2026-11-19, ronda 8 · 04, propuesta 6); `proceso/34-hacia-esport/01a-cambios-competitivos.md` |
+| D-032 | 2026-11-26 | Reparar un edificio cuesta el 50 % de su costo, en proporción a la vida reparada (`reglas.reparacion_costo_pct`); el asedio reparado en el campo sigue gratis. Reemplaza a D-024 | Respuesta del autor a C-100 (como AoE4); `proceso/53-respuestas-mecanicas` |
 
 ## Abiertas
 

@@ -38,6 +38,7 @@
    "efectos": [{"tipo": "armadura", "contra": "cuerpo", "funciones": ["choque"], "n": 1}],
    "desc": "Jinetes con cota de malla, importada de Egipto y del mundo otomano, y de pocos. +1 de armadura contra cuerpo a cuerpo al choque.",
    "evidencia": "Documentado. Futūḥ al-Ḥabaša (trad. Stenhouse, notas de Pankhurst, 2003); Álvares (1540) [verificar los pasajes]."},
+  "tratado_oromo": {"eje": "militar", "nombre": "Tratado con los oromo", "en": {"tipo": "establo"}, "edificio": "establo", "ranura": 7, "edad_min": 4, "costo": {"riqueza": 250}, "tiempo_ms": 30000, "icono": "jinete_corte", "efectos": [{"tipo": "tratado", "unidad": "caballeria_corte", "n": 5, "agasajo_min": 2}], "desc": "Un tratado de alianza (C-91 a): llegan 5 jinetes oromo al establo. Mientras estén, cada uno pide 2 de riqueza por minuto de agasajo; si no alcanza, el tratado se rompe y se van todos. Si caen todos, se puede firmar otro. La historia es de alianzas y de adopción (moggaasa) en las dos direcciones.", "evidencia": "Documentado. Mohammed Hassen, The Oromo and the Christian Kingdom of Ethiopia, 1300–1700 (2015)."},
   "amba_fortaleza": {"propia": true, "eje": "mecanica", "nombre": "Amba", "en": {"tipo": "centro"}, "edificio": "centro", "ranura": 8, "edad_min": 3, "costo": {"madera": 150, "piedra": 150}, "tiempo_ms": 40000, "icono": "amba",
    "efectos": [{"tipo": "altura_pct", "pct": 10}],
    "desc": "Mesetas de paredes a pique como fortaleza, prisión y tesoro: Amba Gəšän (tesoro real hasta que la tomó el imán Aḥmad, c. 1540) y Wähni, la de la época de Gondar. Debre Damo, monasterio vivo, no se usa. La defensa en altura sube de 25 % a 35 %.",
@@ -64,10 +65,10 @@
    {"tec": "amba_fortaleza", "tropa": {"n": 12}},
    {"tec": "polvora_massawa", "tropa": {"tipos": ["arcabucero"], "n": 4}},
    {"tec": "caravanas_amole"},
-   {"tec": "orden_katama"}
+   {"tec": "orden_katama"},
+   {"tec": "tratado_oromo", "tropa": {"n": 12}}
   ],
   "unidades": [
-   {"tipo": "caballeria_corte", "max_pct": 25},
    {"tipo": "farasanna", "max_pct": 25},
    {"tipo": "guerrero_gasa", "max_pct": 25}
   ]
@@ -115,8 +116,8 @@
   "farasanna": { "nombre_comun": "Jinete con cota","nombre": "Färäsäñña con cota", "propia": true, "funcion": "choque", "montado": true, "edad_min": 3, "pob": 2, "costo": {"alimento": 120, "riqueza": 90}, "tiempo_ms": 26000, "pv": 220, "armadura": 3, "armadura_distancia": 2, "ataque": 13, "alcance": 500, "cadencia_ms": 1300, "velocidad": 1950, "vision": 9000, "radio": 380, "cota": true,
    "desc": "Färäsäñña es «jinete»: el montado pesado con cota de malla importada, de pocos. 220 de vida y armadura 3; más lento que el jinete noble.",
    "evidencia": "Documentado. Futūḥ al-Ḥabaša (Stenhouse, 2003); Álvares (1540) [verificar los pasajes]."},
-  "caballeria_corte": {"nombre": "Caballería de la corte", "propia": true, "elite": true, "funcion": "choque", "montado": true, "edad_min": 4, "pob": 2, "costo": {"alimento": 110, "riqueza": 80}, "tiempo_ms": 22000, "pv": 180, "armadura": 1, "armadura_distancia": 3, "ataque": 12, "alcance": 500, "cadencia_ms": 1100, "velocidad": 2500, "vision": 9500, "radio": 380, "bono": {"distancia": 6},
-   "desc": "Montados rápidos de la edad IV: +6 contra la distancia. El diseño pide a los jinetes oromo aliados por tratado; hasta consultar a académicos y comunidades oromo (§7) entra con el nombre de reserva, «Caballería de la corte», y se entrena en el establo. La historia es de alianzas, de adopción (moggaasa) en las dos direcciones y de matrimonios: en Gondar, la guardia de Iyoas (1755–1769) era oromo. El gadaa se nombra como la institución que les dio su fuerza, no como mecánica.",
+  "caballeria_corte": {"nombre": "Jinete oromo aliado", "propia": true, "aliado_tratado": true, "elite": true, "funcion": "choque", "montado": true, "edad_min": 4, "pob": 2, "costo": {"alimento": 110, "riqueza": 80}, "tiempo_ms": 22000, "pv": 180, "armadura": 1, "armadura_distancia": 3, "ataque": 12, "alcance": 500, "cadencia_ms": 1100, "velocidad": 2500, "vision": 9500, "radio": 380, "bono": {"distancia": 6},
+   "desc": "Montados rápidos de la edad IV: +6 contra la distancia. No se entrenan: llegan de a 5 por el Tratado con los oromo (C-91 a), que cuesta riqueza al firmarlo y un agasajo por minuto; si no se paga, el tratado se rompe y se van. La historia es de alianzas, de adopción (moggaasa) en las dos direcciones y de matrimonios: en Gondar, la guardia de Iyoas (1755–1769) era oromo. El gadaa se nombra como la institución que les dio su fuerza, no como mecánica.",
    "evidencia": "Documentado. Mohammed Hassen, The Oromo and the Christian Kingdom of Ethiopia, 1300–1700 (2015); Bahrey, Zenahu lä Galla (1593), trad. en Beckingham y Huntingford (1954); Bruce (1790)."},
   "carpa_real": {
    "nombre": "Corte en marcha",
@@ -206,22 +207,14 @@
    "vision": 7000,
    "avanza_edad": true,
    "hito": true,
-   "pob": 5,
-   "desc": "Comunidad de la iglesia: recolección y vida.",
+   "pob": 10,
+   "_doc_c69": "C-69 a: lo eclesiástico no da combate. El +5 % de vida de las tropas pasa a población: aloja 10 en lugar de 5.",
+   "desc": "Comunidad de la iglesia: recolección (+10 %) y la gente que vive en sus tierras (aloja 10 de población).",
    "efectos": [
     {
      "tipo": "tasa",
      "recurso": "*",
      "pct": 10
-    },
-    {
-     "tipo": "vida_pct",
-     "funciones": [
-      "choque",
-      "distancia",
-      "linea"
-     ],
-     "pct": 5
     }
    ]
   },
@@ -385,7 +378,7 @@
   ]
  ],
  "construye": ["corte_nueva", "casa", "granja", "almacen_alimento", "almacen_madera", "almacen_mina", "cuartel", "establo", "taller", "torre", "fortaleza", "muralla", "puerta_piedra", "torre_muralla", "centro", "gult", "empalizada", "puerta", "mercado", "maravilla"],
- "produce": {"cuartel": ["lancero", "hondero", "guerrero_gasa"], "establo": ["guerrero", "jinete", "farasanna", "caballeria_corte"], "taller": ["ariete", "catapulta"]},
+ "produce": {"cuartel": ["lancero", "hondero", "guerrero_gasa"], "establo": ["guerrero", "jinete", "farasanna"], "taller": ["ariete", "catapulta"]},
  "modulos": {
   "defensa_altura": {
    "pct": 25
