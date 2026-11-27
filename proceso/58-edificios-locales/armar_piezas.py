@@ -187,12 +187,72 @@ SEMILLA.update({f"ayutthaya_{t}": 8 for t in ("casa_rojo", "centro_rojo", "cuart
 CON_VERDE = {"mapuches_rewe_monte"}
 
 
+# --- Segunda pasada (pedido del autor tras ver el Tawantinsuyu: «parece medieval europeo») ---
+# Reglas históricas por pueblo, al frente del prompt (FLUX schnell corta lo largo), un solo
+# edificio por referencia y vista de tres cuartos baja, no desde arriba.
+MARCO2 = ("One single building, three-quarter view from a low angle just above eye level, the whole building visible and "
+          "centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people.")
+REGLAS = {
+    "tawantinsuyu": ("Inca architecture: walls of grey fieldstone or finely fitted polygonal stone blocks, trapezoidal doorways "
+                     "and trapezoidal niches, steep roofs of thick bundled golden ichu straw thatch with visible thickness and "
+                     "ragged edges. No crenellations, no battlements, no round towers, no conical tower caps, no timber "
+                     "framing, no wooden shingles, no roof tiles, no chimneys, no windows with frames."),
+}
+# Tipos que la segunda pasada no rehace: recintos amurallados grandes que Hunyuan aplasta en
+# «barriles». Quedan con su maqueta y en la lista de candidatos a Meshy.
+MESHY = {"tawantinsuyu": {"qorikancha", "pukara_mayor", "aqllawasi", "vilcabamba", "kallanka_real"}}
+E2 = {
+ "tawantinsuyu": {
+  "casa": "A small rectangular one-room house of grey fieldstone with one trapezoidal doorway and two trapezoidal wall niches, a very steep gable roof of thick ichu straw thatch.",
+  "centro": "A large Inca great hall (kallanka) of finely fitted stone blocks, long and tall, with a row of four tall trapezoidal doorways on its long side and a huge steep hipped roof of thick ichu straw thatch.",
+  "cuartel": "A long rectangular barracks hall of grey fieldstone with five trapezoidal doorways along its long side and a steep gable roof of thick ichu straw thatch; long wooden spears lean against the wall.",
+  "taller_tejido": "A small square fieldstone house with a steep ichu thatch roof and an open trapezoidal doorway, a large upright wooden backstrap loom frame standing against its front wall.",
+  "almacen_madera": "A long low lean-to shed of grey fieldstone walls and a single-slope ichu thatch roof, filled with a big neat stack of split firewood logs with the round cut ends facing out.",
+  "almacen_mina": "A small fieldstone workshop with a steep ichu thatch roof beside a big stepped pile of large cut grey stone blocks, lumps of green copper ore at its foot.",
+  "qollqa": "A row of three small round fieldstone storehouses with conical ichu straw thatch roofs, standing side by side on a low stone terrace, each with one small square opening.",
+  "campo_tiro": "A small rectangular fieldstone shelter with a steep ichu thatch roof and an open front, slings hanging from a wooden pole beside it and a heap of round sling stones.",
+  "torre": "A small Inca lookout post: a square terraced platform of three stepped fieldstone levels with a stair, a small square fieldstone hut with a steep ichu thatch roof on the top level.",
+  "fortaleza": "An Inca hill fort (pukara) as a compact model: three massive stepped terrace walls of huge fitted stone blocks in a zigzag plan, a fieldstone barracks with a steep ichu thatch roof on the top terrace.",
+  "mercado": "An open market shelter: a long fieldstone building with an open front of trapezoidal pillars and a steep ichu thatch roof, woven cloths with potatoes, maize and clay jars laid out in front.",
+  "ushnu": "An ushnu: a stepped square platform of three levels of finely fitted stone blocks with a central staircase and a low stone seat on top.",
+  "maravilla": "Ollantaytambo as one compact monument: long stepped agricultural stone terraces climbing to a top platform with a wall of six enormous pink granite monoliths, a fieldstone storehouse with steep ichu thatch on one side.",
+ },
+}
+ROJO2 = {
+    "tawantinsuyu": "a wide woven cloth band wrapped around the walls just under the thatch and woven cloth curtains in the doorways",
+}
+ROJO_PIEZA2 = {"tawantinsuyu_torre": "a wide cloth band around the walls of the hut and a cloth pennant on a pole beside it"}
+# Elegidas entre las candidatas 21 y 22 (img/candidatas_tawantinsuyu.jpg): siluetas distintas entre sí.
+SEMILLA2 = {"tawantinsuyu_casa_rojo": 22, "tawantinsuyu_centro": 22, "tawantinsuyu_cuartel_rojo": 22,
+            "tawantinsuyu_taller_tejido": 21, "tawantinsuyu_almacen_madera": 21, "tawantinsuyu_almacen_mina": 21,
+            "tawantinsuyu_qollqa": 22, "tawantinsuyu_campo_tiro": 22, "tawantinsuyu_torre": 21,
+            "tawantinsuyu_fortaleza": 21, "tawantinsuyu_mercado": 22, "tawantinsuyu_ushnu": 21, "tawantinsuyu_maravilla": 21}
+TEXTURA_PX2 = 2048
+# Paint corre el rojo al carmesí (330–345°): tono más ancho donde los techos no son rojizos.
+MASCARA2 = {"tawantinsuyu": {"tono": 22}}  # Paint a 2048 para que la paja no se vuelva una lámina lisa
+
+
+def prompt2(civ, tipo, que, rojo):
+    color = SIN_ROJO if rojo is False else ROJO.format(rojo=rojo or ROJO2.get(civ, ROJO_CIV[civ]))
+    return f"{{estilo}} {que} {REGLAS[civ]} {color} {MARCO2}"
+
+
 def prompt(civ, tipo, que, rojo):
     if rojo is False:
         color = SIN_ROJO
     else:
         color = ROJO.format(rojo=rojo or ROJO_CIV[civ])
     return f"{{estilo}} {que} {color} {MARCO} {ARQ[civ]}"
+
+
+# Prueba de Hunyuan 2mv: hoja con frente y costado del mismo edificio (misma semilla de FLUX).
+MV = {
+ "tawantinsuyu_casa": ("casa", "casa", "A small rectangular one-room house of grey fieldstone with one trapezoidal doorway and two trapezoidal wall niches, a very steep gable roof of thick ichu straw thatch."),
+ "tawantinsuyu_cuartel": ("cuartel", "produccion", "A long rectangular barracks hall of grey fieldstone with five trapezoidal doorways along its long side and a steep gable roof of thick ichu straw thatch."),
+}
+HOJA_MV = ("Architectural reference sheet for 3D modeling of one building shown twice side by side at eye level, flat "
+           "orthographic views: on the left the front elevation seen straight from the front, on the right the side "
+           "elevation seen straight from its left side; the same building, same size, same materials in both views.")
 
 
 def main():
@@ -203,6 +263,9 @@ def main():
         for tipo, (que, rojo, cat) in eds.items():
             clave = f"{civ}_{tipo}" + ("_rojo" if (civ, tipo) in VIEJOS else "")
             semilla = SEMILLA.get(clave, piezas.get(clave, {}).get("referencia", {}).get("receta", {}).get("semilla", 7))
+            pasada2 = civ in E2 and tipo in E2[civ]
+            if pasada2:
+                semilla = SEMILLA2.get(clave, 21)
             pieza = {
                 "tipo": "edificio",
                 "edificio": "maravilla" if tipo.startswith("maravilla") else tipo,
@@ -211,8 +274,9 @@ def main():
                 "proceso": "58",
                 "rojo": rojo is not False,
                 "referencia": {
-                    "imagen": f"/mnt/games/01_Projects/comfyui/output/edificios_58/{clave}_{semilla}.png",
-                    "receta": {"semilla": semilla, "ancho": 768, "alto": 768, "prompt": prompt(civ, tipo, que, rojo)},
+                    "imagen": f"/mnt/games/01_Projects/comfyui/output/edificios_58{'_v2' if pasada2 else ''}/{clave}_{semilla}.png",
+                    "receta": {"semilla": semilla, "ancho": 768, "alto": 768,
+                               "prompt": prompt2(civ, tipo, E2[civ][tipo], ROJO_PIEZA2.get(clave, rojo)) if pasada2 else prompt(civ, tipo, que, rojo)},
                     # Sin el pasto o la tierra que FLUX pone igual bajo el edificio (proceso/50).
                     "vistas": {"front": {"margen": 0.06} if clave in CON_VERDE else {"margen": 0.06, "quitar": ["verde"]}},
                 },
@@ -227,8 +291,34 @@ def main():
             for k in ("intento", "suelo_pct", "caras", "forma"):
                 if k in viejo:
                     pieza[k] = viejo[k]
+            if civ in MESHY and tipo in MESHY[civ]:
+                pieza["meshy"] = True  # candidato a Meshy: no se conecta
+            if pasada2:
+                pieza["pasada"] = 2
+                pieza["textura_px"] = TEXTURA_PX2
+                pieza["mezcla"] = True  # techos de la referencia (gen3d_mezcla.py): la paja no se alisa
+                pieza["suelo_pct"] = 6  # la sombra de FLUX dejaba una lámina al pie
+                pieza["mascara"] = MASCARA2.get(civ, {})
             piezas[clave] = pieza
             n += 1
+    for clave, (tipo, cat, que) in MV.items():
+        civ = clave.split("_")[0]
+        piezas[clave + "_mv"] = {
+            "tipo": "edificio", "edificio": tipo, "categoria": cat, "civ": civ, "proceso": "58", "rojo": True,
+            "prueba": "mv",
+            "referencia": {
+                "imagen": f"/mnt/games/01_Projects/comfyui/output/edificios_58_v2/{clave}_mv_21.png",
+                "receta": {"semilla": 21, "ancho": 1152, "alto": 768,
+                           "prompt": f"{{estilo}} {HOJA_MV} {que} {REGLAS[civ]} {ROJO.format(rojo=ROJO2[civ])} "
+                                     "Plain flat light grey background, no ground, no grass."},
+                "vistas": {"front": {"recorte": [0, 0, 0.5, 1], "margen": 0.06, "quitar": ["verde"]},
+                           "left": {"recorte": [0.5, 0, 1, 1], "margen": 0.06, "quitar": ["verde"]}},
+            },
+            "forma": {"modelo": "hy-mv-turbo", "semilla": 12345, "octree": 256},
+            "textura": "auto", "caras": 4500, "suelo_pct": 6, "textura_px": TEXTURA_PX2, "mezcla": True,
+            "mascara": MASCARA2.get(civ, {}),
+            "destino": f"assets/generados/modelos/local/pruebas/{clave}_mv.glb",
+        }
     F.write_text(json.dumps(d, ensure_ascii=False, indent=1) + "\n")
     print(n, "piezas")
 

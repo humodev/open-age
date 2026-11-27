@@ -15,6 +15,8 @@ cambió, se saltea; cambiar la imagen o un parámetro rehace esa pieza desde ese
   3 limpieza    Blender: suelda, corta la losa del suelo, borra sueltos, diezma, alto 1
                 (tools/gen3d_blender.py)
   4 textura     Hunyuan3D-Paint (tools/gen3d_paint.py) o el proyector (tools/gen3d_color.py)
+  4c mezcla    edificios con "mezcla": los techos (o todo lo que mira a la cámara) de la
+                referencia sobre la textura de Paint (tools/gen3d_mezcla.py, proceso/58)
   4b piel      personas: la piel vuelve al tono de la hoja (Paint la oscurece) y la cara vista
                 de frente mezcla el color de la hoja (tools/gen3d_piel.py, proceso/50)
   5 rig         humano: 19 huesos KayKit (tools/gen3d_rig.py); cuadrúpedo: esqueleto y ciclos
@@ -52,7 +54,7 @@ RAM_MIN_GB = 14
 # Blender solo (limpieza, rig, final, máscara): tope de 4 GB y 7 disponibles (proceso/58).
 TOPE_LIVIANO = ["-p", "MemoryMax=4G", "-p", "MemorySwapMax=1G"]
 RAM_MIN_LIVIANO_GB = 7
-PASOS = ["referencia", "forma", "limpieza", "textura", "piel", "rig", "final", "mascara"]
+PASOS = ["referencia", "forma", "limpieza", "textura", "mezcla", "piel", "rig", "final", "mascara"]
 
 
 def log(*a):
@@ -343,7 +345,7 @@ def correr_pieza(nombre: str, pieza: dict, comun: dict, args) -> dict:
     if modo == "auto":
         modo = "paint" if paint_disponible() else "proyector"
     glb4 = d / "textura.glb"
-    px = int(comun.get("textura_px", 1024))
+    px = int(pieza.get("textura_px", comun.get("textura_px", 1024)))
     cfg4 = {"modo": modo, "px": px, "tipo": pieza["tipo"]}
     p4 = Paso(d, "textura", cfg4, [glb3, *vis_png.values()],
               ["gen3d_paint.py" if modo == "paint" else "gen3d_color.py"], [glb4], "textura" in forzar)
@@ -358,6 +360,21 @@ def correr_pieza(nombre: str, pieza: dict, comun: dict, args) -> dict:
         pesado([PY, REPO / "tools/gen3d_color.py", glb3, glb4, pieza["tipo"], *imgs], d / "textura.log", cwd=GEN3D)
         return {"modo": modo}
     hacer("textura", p4, f4)
+
+    # 4c · mezcla (edificios, proceso/58): los techos de la referencia sobre la textura de Paint
+    if pieza["tipo"] == "edificio" and pieza.get("mezcla"):
+        glb4c = d / "mezcla.glb"
+        cfg4c = {"mezcla": pieza["mezcla"]}
+        p4c = Paso(d, "mezcla", cfg4c, [glb4, vis_png["front"]], ["gen3d_mezcla.py", "gen3d_color.py"], [glb4c],
+                   "mezcla" in forzar)
+
+        def f4c():
+            extra = ["--todo"] if isinstance(pieza["mezcla"], dict) and pieza["mezcla"].get("todo") else []
+            pesado([PY, REPO / "tools/gen3d_mezcla.py", glb4, glb4c, vis_png["front"], *extra], d / "mezcla.log",
+                   cwd=GEN3D, liviano=True)
+            return {"log": (d / "mezcla.log").read_text().strip().splitlines()[-1][:120]}
+        hacer("mezcla", p4c, f4c)
+        glb4 = glb4c
 
     # 4b · piel (personas)
     if pieza["tipo"] == "persona" and pieza.get("piel", True):

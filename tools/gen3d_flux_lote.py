@@ -27,18 +27,22 @@ def main():
     ap.add_argument("piezas", nargs="*")
     ap.add_argument("--civ")
     ap.add_argument("--rehacer", action="store_true")
+    ap.add_argument("--semillas", help="candidatas: genera la pieza con cada una de estas semillas (21,22)")
     ap.add_argument("--extra", action="append", default=[],
                     help="comando más (con el python de ComfyUI) a correr con ComfyUI arriba, antes de apagarlo")
     a = ap.parse_args()
     d = json.loads((REPO / "data/gen3d_piezas.json").read_text())
     comun = d["comun"]
     claves = a.piezas or [k for k, v in d["piezas"].items() if v.get("proceso") == "58" and v.get("civ") == a.civ]
-    falta = []
+    falta = []  # (clave, semilla, imagen)
     for k in claves:
         ref = d["piezas"][k]["referencia"]
-        if a.rehacer or not Path(ref["imagen"]).exists():
-            falta.append(k)
-    print(len(falta), "imágenes por hacer:", " ".join(falta), flush=True)
+        sem0 = int(ref["receta"].get("semilla", 7))
+        for sem in ([int(x) for x in a.semillas.split(",")] if a.semillas else [sem0]):
+            img = Path(str(ref["imagen"]).replace(f"_{sem0}.png", f"_{sem}.png"))
+            if a.rehacer or not img.exists():
+                falta.append((k, sem, img))
+    print(len(falta), "imágenes por hacer:", " ".join(f"{k}:{s}" for k, s, _ in falta), flush=True)
     if not falta and not a.extra:
         return
     ag.comfy_arrancar()
@@ -48,12 +52,9 @@ def main():
         subprocess.run(["systemctl", "--user", "set-property", "--runtime", u, "MemoryHigh=infinity"],
                        capture_output=True)
     try:
-        for k in falta:
-            ref = d["piezas"][k]["referencia"]
-            rec = ref["receta"]
-            img = Path(ref["imagen"])
+        for k, sem, img in falta:
+            rec = d["piezas"][k]["referencia"]["receta"]
             img.parent.mkdir(parents=True, exist_ok=True)
-            sem = int(rec.get("semilla", 7))
             prefijo = str(img)[: -len(f"_{sem}.png")]
             prompt = rec["prompt"].replace("{estilo}", comun["estilo"])
             t0 = time.time()

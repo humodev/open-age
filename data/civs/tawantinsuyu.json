@@ -23,12 +23,8 @@
    "fortaleza": "local/tawantinsuyu_fortaleza",
    "mercado": "local/tawantinsuyu_mercado",
    "ushnu": "local/tawantinsuyu_ushnu",
-   "pukara_mayor": "local/tawantinsuyu_pukara_mayor",
-   "qorikancha": "local/tawantinsuyu_qorikancha",
-   "aqllawasi": "local/tawantinsuyu_aqllawasi",
-   "vilcabamba": "local/tawantinsuyu_vilcabamba",
    "maravilla": "local/tawantinsuyu_maravilla",
-   "kallanka_real": "local/tawantinsuyu_kallanka_real"
+   "campo_tiro": "local/tawantinsuyu_campo_tiro"
   }
  },
  "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",

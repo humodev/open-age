@@ -858,12 +858,12 @@
    "proceso": "58",
    "rojo": true,
    "referencia": {
-    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_casa_rojo_8.png",
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58_v2/tawantinsuyu_casa_rojo_22.png",
     "receta": {
-     "semilla": 8,
+     "semilla": 22,
      "ancho": 768,
      "alto": 768,
-     "prompt": "{estilo} A small one-room fieldstone house with a steep thatched gable roof and one trapezoidal doorway, a low stone wall around a small yard. Team-color details, large and clearly visible from above: a wide woven cloth band wrapping around all the walls just under the eaves and woven cloth curtains in the doorways, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+     "prompt": "{estilo} A small rectangular one-room house of grey fieldstone with one trapezoidal doorway and two trapezoidal wall niches, a very steep gable roof of thick ichu straw thatch. Inca architecture: walls of grey fieldstone or finely fitted polygonal stone blocks, trapezoidal doorways and trapezoidal niches, steep roofs of thick bundled golden ichu straw thatch with visible thickness and ragged edges. No crenellations, no battlements, no round towers, no conical tower caps, no timber framing, no wooden shingles, no roof tiles, no chimneys, no windows with frames. Team-color details, large and clearly visible from above: a wide woven cloth band wrapped around the walls just under the thatch and woven cloth curtains in the doorways, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people."
     },
     "vistas": {
      "front": {
@@ -881,8 +881,14 @@
    },
    "textura": "auto",
    "caras": 4500,
-   "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/tawantinsuyu_casa.glb"
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_casa.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "mascara": {
+    "tono": 22
+   }
   },
   "tawantinsuyu_centro": {
    "tipo": "edificio",
@@ -892,12 +898,12 @@
    "proceso": "58",
    "rojo": true,
    "referencia": {
-    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_centro_7.png",
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58_v2/tawantinsuyu_centro_22.png",
     "receta": {
-     "semilla": 7,
+     "semilla": 22,
      "ancho": 768,
      "alto": 768,
-     "prompt": "{estilo} An Inca administrative center: a large fieldstone hall with a huge steep thatched gable roof and a row of trapezoidal doorways, two smaller thatched houses joined at its ends forming a U around a small paved court. Team-color details, large and clearly visible from above: a wide woven cloth band wrapping around all the walls just under the eaves and woven cloth curtains in the doorways, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+     "prompt": "{estilo} A large Inca great hall (kallanka) of finely fitted stone blocks, long and tall, with a row of four tall trapezoidal doorways on its long side and a huge steep hipped roof of thick ichu straw thatch. Inca architecture: walls of grey fieldstone or finely fitted polygonal stone blocks, trapezoidal doorways and trapezoidal niches, steep roofs of thick bundled golden ichu straw thatch with visible thickness and ragged edges. No crenellations, no battlements, no round towers, no conical tower caps, no timber framing, no wooden shingles, no roof tiles, no chimneys, no windows with frames. Team-color details, large and clearly visible from above: a wide woven cloth band wrapped around the walls just under the thatch and woven cloth curtains in the doorways, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people."
     },
     "vistas": {
      "front": {
@@ -915,8 +921,14 @@
    },
    "textura": "auto",
    "caras": 6000,
-   "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/tawantinsuyu_centro.glb"
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_centro.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "mascara": {
+    "tono": 22
+   }
   },
   "tawantinsuyu_cuartel_rojo": {
    "tipo": "edificio",
@@ -926,12 +938,12 @@
    "proceso": "58",
    "rojo": true,
    "referencia": {
-    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_cuartel_rojo_8.png",
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58_v2/tawantinsuyu_cuartel_rojo_22.png",
     "receta": {
-     "semilla": 8,
+     "semilla": 22,
      "ancho": 768,
      "alto": 768,
-     "prompt": "{estilo} A long rectangular hall of fieldstone with many trapezoidal doorways along its long side and a steep thatched gable roof; long wooden spears lean against the wall. Team-color details, large and clearly visible from above: woven cloth curtains in every doorway and square cloth-covered shields hanging beside the doors, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+     "prompt": "{estilo} A long rectangular barracks hall of grey fieldstone with five trapezoidal doorways along its long side and a steep gable roof of thick ichu straw thatch; long wooden spears lean against the wall. Inca architecture: walls of grey fieldstone or finely fitted polygonal stone blocks, trapezoidal doorways and trapezoidal niches, steep roofs of thick bundled golden ichu straw thatch with visible thickness and ragged edges. No crenellations, no battlements, no round towers, no conical tower caps, no timber framing, no wooden shingles, no roof tiles, no chimneys, no windows with frames. Team-color details, large and clearly visible from above: woven cloth curtains in every doorway and square cloth-covered shields hanging beside the doors, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people."
     },
     "vistas": {
      "front": {
@@ -949,8 +961,14 @@
    },
    "textura": "auto",
    "caras": 4500,
-   "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/tawantinsuyu_cuartel.glb"
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_cuartel.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "mascara": {
+    "tono": 22
+   }
   },
   "tawantinsuyu_taller_tejido": {
    "tipo": "edificio",
@@ -960,12 +978,12 @@
    "proceso": "58",
    "rojo": true,
    "referencia": {
-    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_taller_tejido_7.png",
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58_v2/tawantinsuyu_taller_tejido_21.png",
     "receta": {
-     "semilla": 7,
+     "semilla": 21,
      "ancho": 768,
      "alto": 768,
-     "prompt": "{estilo} A small square fieldstone workshop with an open front under a thatched roof, a large upright wooden frame loom standing in front with a half-woven cloth, skeins of wool hanging from a pole. Team-color details, large and clearly visible from above: the half-woven cloth on the loom and the skeins of wool, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+     "prompt": "{estilo} A small square fieldstone house with a steep ichu thatch roof and an open trapezoidal doorway, a large upright wooden backstrap loom frame standing against its front wall. Inca architecture: walls of grey fieldstone or finely fitted polygonal stone blocks, trapezoidal doorways and trapezoidal niches, steep roofs of thick bundled golden ichu straw thatch with visible thickness and ragged edges. No crenellations, no battlements, no round towers, no conical tower caps, no timber framing, no wooden shingles, no roof tiles, no chimneys, no windows with frames. Team-color details, large and clearly visible from above: the half-woven cloth on the loom and the skeins of wool, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people."
     },
     "vistas": {
      "front": {
@@ -983,8 +1001,14 @@
    },
    "textura": "auto",
    "caras": 4500,
-   "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/tawantinsuyu_taller_tejido.glb"
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_taller_tejido.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "mascara": {
+    "tono": 22
+   }
   },
   "tawantinsuyu_almacen_madera": {
    "tipo": "edificio",
@@ -994,12 +1018,12 @@
    "proceso": "58",
    "rojo": true,
    "referencia": {
-    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_almacen_madera_7.png",
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58_v2/tawantinsuyu_almacen_madera_21.png",
     "receta": {
-     "semilla": 7,
+     "semilla": 21,
      "ancho": 768,
      "alto": 768,
-     "prompt": "{estilo} A long rectangular woodpile of split firewood logs as tall as a man, the round cut log ends facing the viewer, under a lean-to of thatch on wooden posts. Team-color details, large and clearly visible from above: a woven cloth tied over one end of the woodpile, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+     "prompt": "{estilo} A long low lean-to shed of grey fieldstone walls and a single-slope ichu thatch roof, filled with a big neat stack of split firewood logs with the round cut ends facing out. Inca architecture: walls of grey fieldstone or finely fitted polygonal stone blocks, trapezoidal doorways and trapezoidal niches, steep roofs of thick bundled golden ichu straw thatch with visible thickness and ragged edges. No crenellations, no battlements, no round towers, no conical tower caps, no timber framing, no wooden shingles, no roof tiles, no chimneys, no windows with frames. Team-color details, large and clearly visible from above: a woven cloth tied over one end of the woodpile, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people."
     },
     "vistas": {
      "front": {
@@ -1017,8 +1041,14 @@
    },
    "textura": "auto",
    "caras": 4500,
-   "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/tawantinsuyu_almacen_madera.glb"
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_almacen_madera.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "mascara": {
+    "tono": 22
+   }
   },
   "tawantinsuyu_almacen_mina": {
    "tipo": "edificio",
@@ -1028,12 +1058,12 @@
    "proceso": "58",
    "rojo": true,
    "referencia": {
-    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_almacen_mina_7.png",
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58_v2/tawantinsuyu_almacen_mina_21.png",
     "receta": {
-     "semilla": 7,
+     "semilla": 21,
      "ancho": 768,
      "alto": 768,
-     "prompt": "{estilo} A stepped pile of large cut grey stone blocks stacked like a small pyramid beside a small fieldstone hut with a thatched roof, lumps of green copper ore at its foot. Team-color details, large and clearly visible from above: a wide woven cloth band wrapping around all the walls just under the eaves and woven cloth curtains in the doorways, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+     "prompt": "{estilo} A small fieldstone workshop with a steep ichu thatch roof beside a big stepped pile of large cut grey stone blocks, lumps of green copper ore at its foot. Inca architecture: walls of grey fieldstone or finely fitted polygonal stone blocks, trapezoidal doorways and trapezoidal niches, steep roofs of thick bundled golden ichu straw thatch with visible thickness and ragged edges. No crenellations, no battlements, no round towers, no conical tower caps, no timber framing, no wooden shingles, no roof tiles, no chimneys, no windows with frames. Team-color details, large and clearly visible from above: a wide woven cloth band wrapped around the walls just under the thatch and woven cloth curtains in the doorways, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people."
     },
     "vistas": {
      "front": {
@@ -1051,8 +1081,14 @@
    },
    "textura": "auto",
    "caras": 4500,
-   "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/tawantinsuyu_almacen_mina.glb"
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_almacen_mina.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "mascara": {
+    "tono": 22
+   }
   },
   "tawantinsuyu_qollqa": {
    "tipo": "edificio",
@@ -1062,12 +1098,12 @@
    "proceso": "58",
    "rojo": true,
    "referencia": {
-    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_qollqa_7.png",
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58_v2/tawantinsuyu_qollqa_22.png",
     "receta": {
-     "semilla": 7,
+     "semilla": 22,
      "ancho": 768,
      "alto": 768,
-     "prompt": "{estilo} A row of three round fieldstone storehouses with conical thatched roofs standing side by side on one low stone platform, small square openings. Team-color details, large and clearly visible from above: woven cloth curtains over the small openings, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+     "prompt": "{estilo} A row of three small round fieldstone storehouses with conical ichu straw thatch roofs, standing side by side on a low stone terrace, each with one small square opening. Inca architecture: walls of grey fieldstone or finely fitted polygonal stone blocks, trapezoidal doorways and trapezoidal niches, steep roofs of thick bundled golden ichu straw thatch with visible thickness and ragged edges. No crenellations, no battlements, no round towers, no conical tower caps, no timber framing, no wooden shingles, no roof tiles, no chimneys, no windows with frames. Team-color details, large and clearly visible from above: woven cloth curtains over the small openings, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people."
     },
     "vistas": {
      "front": {
@@ -1085,8 +1121,14 @@
    },
    "textura": "auto",
    "caras": 4500,
-   "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/tawantinsuyu_qollqa.glb"
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_qollqa.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "mascara": {
+    "tono": 22
+   }
   },
   "tawantinsuyu_campo_tiro": {
    "tipo": "edificio",
@@ -1096,12 +1138,12 @@
    "proceso": "58",
    "rojo": true,
    "referencia": {
-    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_campo_tiro_7.png",
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58_v2/tawantinsuyu_campo_tiro_22.png",
     "receta": {
-     "semilla": 7,
+     "semilla": 22,
      "ancho": 768,
      "alto": 768,
-     "prompt": "{estilo} A rectangular enclosure of low fieldstone walls with a thatched hut in one corner, a pile of round sling stones and a wooden pole rack. Team-color details, large and clearly visible from above: braided slings and cloth hanging from the wooden pole rack, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+     "prompt": "{estilo} A small rectangular fieldstone shelter with a steep ichu thatch roof and an open front, slings hanging from a wooden pole beside it and a heap of round sling stones. Inca architecture: walls of grey fieldstone or finely fitted polygonal stone blocks, trapezoidal doorways and trapezoidal niches, steep roofs of thick bundled golden ichu straw thatch with visible thickness and ragged edges. No crenellations, no battlements, no round towers, no conical tower caps, no timber framing, no wooden shingles, no roof tiles, no chimneys, no windows with frames. Team-color details, large and clearly visible from above: braided slings and cloth hanging from the wooden pole rack, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people."
     },
     "vistas": {
      "front": {
@@ -1119,8 +1161,14 @@
    },
    "textura": "auto",
    "caras": 4500,
-   "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/tawantinsuyu_campo_tiro.glb"
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_campo_tiro.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "mascara": {
+    "tono": 22
+   }
   },
   "tawantinsuyu_torre": {
    "tipo": "edificio",
@@ -1130,12 +1178,12 @@
    "proceso": "58",
    "rojo": true,
    "referencia": {
-    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_torre_7.png",
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58_v2/tawantinsuyu_torre_21.png",
     "receta": {
-     "semilla": 7,
+     "semilla": 21,
      "ancho": 768,
      "alto": 768,
-     "prompt": "{estilo} A tall round fieldstone lookout tower with a conical thatched roof and a small doorway at the base, standing on a square stone base. Team-color details, large and clearly visible from above: a cloth band around the top of the tower wall, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+     "prompt": "{estilo} A small Inca lookout post: a square terraced platform of three stepped fieldstone levels with a stair, a small square fieldstone hut with a steep ichu thatch roof on the top level. Inca architecture: walls of grey fieldstone or finely fitted polygonal stone blocks, trapezoidal doorways and trapezoidal niches, steep roofs of thick bundled golden ichu straw thatch with visible thickness and ragged edges. No crenellations, no battlements, no round towers, no conical tower caps, no timber framing, no wooden shingles, no roof tiles, no chimneys, no windows with frames. Team-color details, large and clearly visible from above: a wide cloth band around the walls of the hut and a cloth pennant on a pole beside it, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people."
     },
     "vistas": {
      "front": {
@@ -1153,8 +1201,14 @@
    },
    "textura": "auto",
    "caras": 4500,
-   "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/tawantinsuyu_torre.glb"
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_torre.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "mascara": {
+    "tono": 22
+   }
   },
   "tawantinsuyu_fortaleza": {
    "tipo": "edificio",
@@ -1164,12 +1218,12 @@
    "proceso": "58",
    "rojo": true,
    "referencia": {
-    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_fortaleza_7.png",
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58_v2/tawantinsuyu_fortaleza_21.png",
     "receta": {
-     "semilla": 7,
+     "semilla": 21,
      "ancho": 768,
      "alto": 768,
-     "prompt": "{estilo} A fortress block of three stepped levels of massive zigzag stone walls of huge fitted blocks, with a thatched barracks on the top level. Team-color details, large and clearly visible from above: cloth curtains in the barracks doorways and two cloth pennants on poles at the top, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+     "prompt": "{estilo} An Inca hill fort (pukara) as a compact model: three massive stepped terrace walls of huge fitted stone blocks in a zigzag plan, a fieldstone barracks with a steep ichu thatch roof on the top terrace. Inca architecture: walls of grey fieldstone or finely fitted polygonal stone blocks, trapezoidal doorways and trapezoidal niches, steep roofs of thick bundled golden ichu straw thatch with visible thickness and ragged edges. No crenellations, no battlements, no round towers, no conical tower caps, no timber framing, no wooden shingles, no roof tiles, no chimneys, no windows with frames. Team-color details, large and clearly visible from above: cloth curtains in the barracks doorways and two cloth pennants on poles at the top, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people."
     },
     "vistas": {
      "front": {
@@ -1187,8 +1241,14 @@
    },
    "textura": "auto",
    "caras": 4500,
-   "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/tawantinsuyu_fortaleza.glb"
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_fortaleza.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "mascara": {
+    "tono": 22
+   }
   },
   "tawantinsuyu_mercado": {
    "tipo": "edificio",
@@ -1198,12 +1258,12 @@
    "proceso": "58",
    "rojo": true,
    "referencia": {
-    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_mercado_7.png",
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58_v2/tawantinsuyu_mercado_22.png",
     "receta": {
-     "semilla": 7,
+     "semilla": 22,
      "ancho": 768,
      "alto": 768,
-     "prompt": "{estilo} An open stone-walled market square with a thatched gateway, goods laid out on woven cloths: potatoes, maize, clay pots and folded textiles. Team-color details, large and clearly visible from above: the woven cloths under the goods, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+     "prompt": "{estilo} An open market shelter: a long fieldstone building with an open front of trapezoidal pillars and a steep ichu thatch roof, woven cloths with potatoes, maize and clay jars laid out in front. Inca architecture: walls of grey fieldstone or finely fitted polygonal stone blocks, trapezoidal doorways and trapezoidal niches, steep roofs of thick bundled golden ichu straw thatch with visible thickness and ragged edges. No crenellations, no battlements, no round towers, no conical tower caps, no timber framing, no wooden shingles, no roof tiles, no chimneys, no windows with frames. Team-color details, large and clearly visible from above: the woven cloths under the goods, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people."
     },
     "vistas": {
      "front": {
@@ -1221,8 +1281,14 @@
    },
    "textura": "auto",
    "caras": 4500,
-   "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/tawantinsuyu_mercado.glb"
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_mercado.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "mascara": {
+    "tono": 22
+   }
   },
   "tawantinsuyu_ushnu": {
    "tipo": "edificio",
@@ -1232,12 +1298,12 @@
    "proceso": "58",
    "rojo": true,
    "referencia": {
-    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_ushnu_7.png",
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58_v2/tawantinsuyu_ushnu_21.png",
     "receta": {
-     "semilla": 7,
+     "semilla": 21,
      "ancho": 768,
      "alto": 768,
-     "prompt": "{estilo} A stepped stone platform of three levels with a central staircase, a small square stone seat on top. Team-color details, large and clearly visible from above: a cloth band along the edge of each step level, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+     "prompt": "{estilo} An ushnu: a stepped square platform of three levels of finely fitted stone blocks with a central staircase and a low stone seat on top. Inca architecture: walls of grey fieldstone or finely fitted polygonal stone blocks, trapezoidal doorways and trapezoidal niches, steep roofs of thick bundled golden ichu straw thatch with visible thickness and ragged edges. No crenellations, no battlements, no round towers, no conical tower caps, no timber framing, no wooden shingles, no roof tiles, no chimneys, no windows with frames. Team-color details, large and clearly visible from above: a cloth band along the edge of each step level, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people."
     },
     "vistas": {
      "front": {
@@ -1255,8 +1321,14 @@
    },
    "textura": "auto",
    "caras": 6000,
-   "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/tawantinsuyu_ushnu.glb"
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_ushnu.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "mascara": {
+    "tono": 22
+   }
   },
   "tawantinsuyu_pukara_mayor": {
    "tipo": "edificio",
@@ -1290,7 +1362,8 @@
    "textura": "auto",
    "caras": 6000,
    "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/tawantinsuyu_pukara_mayor.glb"
+   "destino": "assets/generados/modelos/local/tawantinsuyu_pukara_mayor.glb",
+   "meshy": true
   },
   "tawantinsuyu_qorikancha": {
    "tipo": "edificio",
@@ -1324,7 +1397,8 @@
    "textura": "auto",
    "caras": 6000,
    "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/tawantinsuyu_qorikancha.glb"
+   "destino": "assets/generados/modelos/local/tawantinsuyu_qorikancha.glb",
+   "meshy": true
   },
   "tawantinsuyu_kallanka_real": {
    "tipo": "edificio",
@@ -1358,7 +1432,8 @@
    "textura": "auto",
    "caras": 6000,
    "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/tawantinsuyu_kallanka_real.glb"
+   "destino": "assets/generados/modelos/local/tawantinsuyu_kallanka_real.glb",
+   "meshy": true
   },
   "tawantinsuyu_aqllawasi": {
    "tipo": "edificio",
@@ -1392,7 +1467,8 @@
    "textura": "auto",
    "caras": 6000,
    "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/tawantinsuyu_aqllawasi.glb"
+   "destino": "assets/generados/modelos/local/tawantinsuyu_aqllawasi.glb",
+   "meshy": true
   },
   "tawantinsuyu_vilcabamba": {
    "tipo": "edificio",
@@ -1426,7 +1502,8 @@
    "textura": "auto",
    "caras": 6000,
    "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/tawantinsuyu_vilcabamba.glb"
+   "destino": "assets/generados/modelos/local/tawantinsuyu_vilcabamba.glb",
+   "meshy": true
   },
   "tawantinsuyu_maravilla": {
    "tipo": "edificio",
@@ -1436,12 +1513,12 @@
    "proceso": "58",
    "rojo": true,
    "referencia": {
-    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_maravilla_7.png",
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58_v2/tawantinsuyu_maravilla_21.png",
     "receta": {
-     "semilla": 7,
+     "semilla": 21,
      "ancho": 768,
      "alto": 768,
-     "prompt": "{estilo} Ollantaytambo as one compact monument: a block of long stone terraces climbing in steps to a top platform with a wall of six enormous pink granite blocks, stone storehouses with thatched roofs on one side. Team-color details, large and clearly visible from above: cloth bands along the terrace edges, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+     "prompt": "{estilo} Ollantaytambo as one compact monument: long stepped agricultural stone terraces climbing to a top platform with a wall of six enormous pink granite monoliths, a fieldstone storehouse with steep ichu thatch on one side. Inca architecture: walls of grey fieldstone or finely fitted polygonal stone blocks, trapezoidal doorways and trapezoidal niches, steep roofs of thick bundled golden ichu straw thatch with visible thickness and ragged edges. No crenellations, no battlements, no round towers, no conical tower caps, no timber framing, no wooden shingles, no roof tiles, no chimneys, no windows with frames. Team-color details, large and clearly visible from above: cloth bands along the terrace edges, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people."
     },
     "vistas": {
      "front": {
@@ -1459,8 +1536,14 @@
    },
    "textura": "auto",
    "caras": 6000,
-   "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/tawantinsuyu_maravilla.glb"
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_maravilla.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "mascara": {
+    "tono": 22
+   }
   },
   "mapuches_casa_rojo": {
    "tipo": "edificio",
@@ -4280,6 +4363,122 @@
    "caras": 6000,
    "suelo_pct": 3,
    "destino": "assets/generados/modelos/local/ayutthaya_maravilla.glb"
+  },
+  "tawantinsuyu_casa_mv": {
+   "tipo": "edificio",
+   "edificio": "casa",
+   "categoria": "casa",
+   "civ": "tawantinsuyu",
+   "proceso": "58",
+   "rojo": true,
+   "prueba": "mv",
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58_v2/tawantinsuyu_casa_mv_21.png",
+    "receta": {
+     "semilla": 21,
+     "ancho": 1152,
+     "alto": 768,
+     "prompt": "{estilo} Architectural reference sheet for 3D modeling of one building shown twice side by side at eye level, flat orthographic views: on the left the front elevation seen straight from the front, on the right the side elevation seen straight from its left side; the same building, same size, same materials in both views. A small rectangular one-room house of grey fieldstone with one trapezoidal doorway and two trapezoidal wall niches, a very steep gable roof of thick ichu straw thatch. Inca architecture: walls of grey fieldstone or finely fitted polygonal stone blocks, trapezoidal doorways and trapezoidal niches, steep roofs of thick bundled golden ichu straw thatch with visible thickness and ragged edges. No crenellations, no battlements, no round towers, no conical tower caps, no timber framing, no wooden shingles, no roof tiles, no chimneys, no windows with frames. Team-color details, large and clearly visible from above: a wide woven cloth band wrapped around the walls just under the thatch and woven cloth curtains in the doorways, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. Plain flat light grey background, no ground, no grass."
+    },
+    "vistas": {
+     "front": {
+      "recorte": [
+       0,
+       0,
+       0.5,
+       1
+      ],
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     },
+     "left": {
+      "recorte": [
+       0.5,
+       0,
+       1,
+       1
+      ],
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mv-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 6,
+   "textura_px": 2048,
+   "mezcla": true,
+   "mascara": {
+    "tono": 22
+   },
+   "destino": "assets/generados/modelos/local/pruebas/tawantinsuyu_casa_mv.glb"
+  },
+  "tawantinsuyu_cuartel_mv": {
+   "tipo": "edificio",
+   "edificio": "cuartel",
+   "categoria": "produccion",
+   "civ": "tawantinsuyu",
+   "proceso": "58",
+   "rojo": true,
+   "prueba": "mv",
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58_v2/tawantinsuyu_cuartel_mv_21.png",
+    "receta": {
+     "semilla": 21,
+     "ancho": 1152,
+     "alto": 768,
+     "prompt": "{estilo} Architectural reference sheet for 3D modeling of one building shown twice side by side at eye level, flat orthographic views: on the left the front elevation seen straight from the front, on the right the side elevation seen straight from its left side; the same building, same size, same materials in both views. A long rectangular barracks hall of grey fieldstone with five trapezoidal doorways along its long side and a steep gable roof of thick ichu straw thatch. Inca architecture: walls of grey fieldstone or finely fitted polygonal stone blocks, trapezoidal doorways and trapezoidal niches, steep roofs of thick bundled golden ichu straw thatch with visible thickness and ragged edges. No crenellations, no battlements, no round towers, no conical tower caps, no timber framing, no wooden shingles, no roof tiles, no chimneys, no windows with frames. Team-color details, large and clearly visible from above: a wide woven cloth band wrapped around the walls just under the thatch and woven cloth curtains in the doorways, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. Plain flat light grey background, no ground, no grass."
+    },
+    "vistas": {
+     "front": {
+      "recorte": [
+       0,
+       0,
+       0.5,
+       1
+      ],
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     },
+     "left": {
+      "recorte": [
+       0.5,
+       0,
+       1,
+       1
+      ],
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mv-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 6,
+   "textura_px": 2048,
+   "mezcla": true,
+   "mascara": {
+    "tono": 22
+   },
+   "destino": "assets/generados/modelos/local/pruebas/tawantinsuyu_cuartel_mv.glb"
   }
  }
 }

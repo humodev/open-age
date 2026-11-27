@@ -52,7 +52,75 @@ Cada edificio es **un renglón** de `data/civs/<pueblo>.json → estilo.modelos`
 
 <!-- PUEBLOS -->
 
-<!-- MESHY -->
+## Segunda pasada: reglas históricas y fidelidad del 3D
+
+**Pedido (2026-11-27, después del Tawantinsuyu):** el juego inca se leía como medieval europeo:
+- casas a dos aguas con entramado y tejas naranjas;
+- un castillo almenado y una torre redonda con techo cónico;
+- recintos redondos que parecen cisternas (qorikancha, pukara).
+
+Una parte venía de las referencias: almenas, torre cilíndrica, fuertes de forma europea. Otra parte, del 3D: Hunyuan y Paint convierten la paja en tejas, la piedra ajustada en gris barroso, y los recintos vistos desde arriba en barriles.
+
+**Pausa de la producción** hasta arreglar el Tawantinsuyu y que el autor lo apruebe. Los mapuches quedaron a medio hacer (casa, lof y cuartel generados) **sin conectar**.
+
+### Reglas por pueblo (se ponen al frente del prompt)
+
+FLUX schnell corta los prompts largos, así que las reglas van antes del encuadre. Cada referencia es **un solo edificio**, en tres cuartos desde poco más arriba de los ojos (no desde arriba), sin suelo ni paisaje. Fuentes: `docs/civs/<pueblo>.md`, `docs/investigacion/<pueblo>.md` y las fichas del arte en `proceso/42` y `proceso/49`.
+
+| Pueblo | Sí | No |
+|---|---|---|
+| Tawantinsuyu | Muros de pirca o de piedra ajustada (o adobe); puertas y hornacinas trapezoidales; techos empinados de paja de ichu, gruesos y con borde deshilachado; la *kancha* (recinto rectangular con casas alrededor de un patio); la *qollqa* en hileras de depósitos chicos, redondos o rectangulares; el *pukara* como fuerte de terrazas escalonadas en un cerro | Almenas, torres redondas con techo cónico, entramado de madera, tejas o tejuelas, chimeneas, ventanas con marco |
+| Mapuches | *Ruka* oval de varas y quincha con techo de paja hasta el suelo, puerta baja al este; empalizadas y corrales de palos sin labrar | Piedra labrada, tejas, almenas, techos a dos aguas de madera |
+| Guaraníes | *Óga* larga de horcones, paredes de tacuara y barro, techo de paja o palma hasta el suelo; doble empalizada con fosos; en la misión (II), casas de adobe con galería y **teja marrón oscura** | Tejas rojas fuera de la misión, piedra labrada, almenas |
+| Etiopía | *Gojjo bet* redondo de piedra o bajareque con techo cónico de paja; campamentos reales de tiendas; desde Gondar (IV), castillos de piedra parda con torres redondas y cúpulas | Arcos góticos, tejas, almenas de castillo europeo antes de Gondar |
+| Palmares | Casas rectangulares de pau a pique con techo empinado de palma; estacadas de troncos aguzados y fosos con estrepes | Piedra, tejas, almenas, iglesias barrocas |
+| Ayutthaya | Casas de teca sobre pilotes con techo a dos aguas de puntas curvas; ladrillo encalado con techos escalonados; las almenas en hoja (*bai sema*) de los fuertes; techos de **teja oscura o tejuela** | Techos rojos o naranjas (se confunden con el color del equipo), aldeas enteras alrededor del edificio, imágenes del Buda |
+
+Lo sagrado sigue sin rojo: qorikancha, nguillatuwe, casa del karai, iglesia, monasterio y wat.
+
+### Fidelidad del 3D
+
+- **Dos candidatas por pieza** (semillas 21 y 22). Elijo la que da siluetas distintas entre los edificios del pueblo (abajo, `candidatas_tawantinsuyu.jpg`).
+- **Paint a 2048** (antes, 1024): la paja conserva algo de hebra y el GLB pesa 470 KB.
+- **Techos de la referencia** (`tools/gen3d_mezcla.py`, paso nuevo `mezcla` del pipeline). Busca la cámara de la referencia por silueta, como el proyector. Las caras que miran hacia arriba y se ven desde esa cámara toman el color del gouache sobre el mismo atlas de Paint; el resto queda con Paint. La paja vuelve a tener hebras y las paredes del fondo no se manchan, como pasaba con el proyector solo.
+
+  ![Paint, proyector y mezcla](img/paint_proyector_mezcla.jpg)
+- **Corte del suelo al 6 %** (antes, 3 %): la sombra que pinta FLUX dejaba una lámina al pie.
+- **Máscara más ancha para el Tawantinsuyu** (±22°): Paint corre el rojo de las cortinas hacia el carmesí (330–345°). La paja queda en 30–40°.
+- **Hunyuan 2mv** con frente y costado de una misma hoja de FLUX (`tawantinsuyu_casa_mv`, `tawantinsuyu_cuartel_mv`): resultado abajo.
+- **Recintos amurallados grandes**: qorikancha, pukara mayor, aqllawasi, Vilcabamba y kallanka real **no se rehacen**. Vuelven a su maqueta y pasan a la lista de candidatos a Meshy.
+
+### Resultado en el Tawantinsuyu
+
+![Antes y después, modelo por modelo](img/antes_despues_tawantinsuyu.jpg)
+
+![Base del Tawantinsuyu, segunda pasada, azul](img/base_tawantinsuyu_p2_azul.jpg)
+
+![Base del Tawantinsuyu, segunda pasada, violeta](img/base_tawantinsuyu_p2_violeta.jpg)
+
+- **Se fueron el castillo y la torre medieval.** La torre es ahora un puesto de terrazas con una choza arriba, y la fortaleza un pukara de terrazas escalonadas. El mercado es un galpón abierto, y la casa, el centro y el cuartel son de pirca con paja de ichu y puertas trapezoidales.
+- **La paja conserva la hebra** en los techos que ve la cámara (mezcla), y no hay más láminas al pie.
+- **Conectados: 12.** Son casa, centro, cuartel, taller de tejido, almacén de piedra, qollqa, campo de tiro, torre, fortaleza, mercado, ushnu y maravilla.
+- **Sin conectar (maqueta):**
+  - el almacén de leña, que salió como un cartel plano;
+  - los cinco recintos, que pasan a la lista de Meshy.
+- **El color del equipo se lee menos que en la primera pasada:** las cortinas son chicas y cubren el 1–8 % de la superficie. El estandarte de siempre sigue en los importantes. Si hace falta más color, la faja bajo la paja hay que pedirla más ancha en el prompt.
+- **Torre y fortaleza** se parecen: las dos son terrazas escalonadas y el juego las estira al alto de torre (4,5).
+- **Hunyuan 2mv no entró en la GPU.** Con el juego abierto en el menú (830 MB de VRAM), le faltaron 20 MB. Además, la hoja de FLUX con frente y costado no salió coherente: el «costado» era otro tres cuartos, con puertas en arco. No sigo por ahí.
+- Los modelos de la primera pasada quedan en la historia de git (commit `f4eb41f`); los del proceso 54, como `_v1`.
+
+## Candidatos a Meshy
+
+Recintos amurallados y conjuntos que el pipeline local aplasta en «barriles» o en láminas; quedan con su maqueta hasta decidir:
+
+| Pueblo | Tipo | Por qué |
+|---|---|---|
+| Tawantinsuyu | `qorikancha` | Recinto curvo: sale un cilindro oscuro |
+| Tawantinsuyu | `pukara_mayor` | Anillos de muro: un barril con el interior revuelto |
+| Tawantinsuyu | `aqllawasi` | Recinto rectangular visto desde arriba |
+| Tawantinsuyu | `vilcabamba` | Conjunto de casas con muro |
+| Tawantinsuyu | `kallanka_real` | Pedido del autor junto con los recintos |
+| Tawantinsuyu | `almacen_madera` | La pila de leña sale como un cartel plano (dos intentos) |
 
 <!-- PRUEBAS -->
 

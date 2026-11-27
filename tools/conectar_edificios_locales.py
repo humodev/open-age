@@ -5,7 +5,8 @@
 
 Por cada pieza del proceso 58 de ese pueblo cuyo GLB exista, pone en data/civs/<pueblo>.json →
 estilo.modelos la línea "<tipo>": "local/<pueblo>_<tipo>" (un renglón por edificio; se vuelve atrás
-borrándolo). --sin deja esos tipos como estaban (modelos que salieron mal: candidatos a Meshy).
+borrándolo). --sin saca esos tipos (modelos que salieron mal), igual que las piezas marcadas
+"meshy": true (candidatos a Meshy); vuelve la maqueta.
 Edita el JSON como texto, solo dentro de "modelos", para no tocar el resto del archivo.
 """
 import json
@@ -26,7 +27,12 @@ for k, p in piezas.items():
     if p.get("proceso") != "58" or p["civ"] != civ:
         continue
     tipo = k[len(civ) + 1:].removesuffix("_rojo")
-    if tipo in sin or (solo is not None and tipo not in solo):
+    if solo is not None and tipo not in solo:
+        continue
+    if tipo in sin or p.get("meshy"):
+        # Sale mal o es candidato a Meshy: se saca la línea del pipeline (vuelve la maqueta).
+        if modelos.get(tipo, "").startswith(f"local/{civ}_"):
+            del modelos[tipo]
         continue
     if (REPO / p["destino"]).exists():
         modelos[tipo] = "local/" + Path(p["destino"]).stem
