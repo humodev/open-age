@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rig y color</title>
+<style>
+:root { --bg: #f6f3ec; --fg: #23211c; --muted: #6b665b; --card: #ffffff; --line: #ddd6c7; --acento: #8a4b22; --pro: #2f6b3a; --con: #9a2f22; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #1b1a17; --fg: #ece7dc; --muted: #a39d90; --card: #25231f; --line: #3a372f; --acento: #e0a070; --pro: #7fc48b; --con: #ec8a7c; } }
+:root[data-theme="dark"] { --bg: #1b1a17; --fg: #ece7dc; --muted: #a39d90; --card: #25231f; --line: #3a372f; --acento: #e0a070; --pro: #7fc48b; --con: #ec8a7c; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 1180px; margin: 0 auto; padding: 24px 16px 64px; }
+h1 { font-size: 1.9rem; margin: 0 0 4px; }
+h2 { font-size: 1.35rem; margin: 40px 0 10px; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+h3 { font-size: 1.1rem; margin: 26px 0 8px; color: var(--acento); }
+p, li { max-width: 78ch; }
+.sub { color: var(--muted); margin: 0 0 18px; }
+nav { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 14px 0 0; font-size: .95rem; }
+nav a { color: var(--acento); }
+img { width: 100%; height: auto; display: block; border-radius: 6px; border: 1px solid var(--line); background: #8a9a68; }
+.par { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 10px 0; }
+.leyenda { color: var(--muted); font-size: .9rem; margin: 4px 0 12px; }
+.opciones { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; }
+.op { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; }
+.op b { display: block; margin-bottom: 6px; }
+.pro { color: var(--pro); } .con { color: var(--con); }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; margin: 8px 0 16px; }
+th, td { text-align: left; border-bottom: 1px solid var(--line); padding: 6px 8px; vertical-align: top; }
+.reco { background: var(--card); border-left: 4px solid var(--acento); padding: 12px 16px; border-radius: 4px; }
+.clips { max-width: 700px; }
+code { font-size: .9em; }
+@media (max-width: 720px) { .par { grid-template-columns: 1fr; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<h1>Rig y color de equipo</h1>
+<p class="sub">Proceso 56 · 2026-11-26 · aldeano inca de Meshy · cero créditos gastados · nada del juego cambió.</p>
+<nav><a href="#reco">Recomendación</a><a href="#diag">Diagnóstico</a><a href="#arreglos">Arreglos</a><a href="#godot">En Godot</a><a href="#color">Color del equipo</a></nav>
+
+<h2 id="reco">Recomendación</h2>
+<div class="reco">
+<p><b>Meshy solo para la malla (30 créditos), generada desde una hoja en gouache en pose A, con las manos vacías y la ropa del equipo en rojo plano. Después, nuestro rig y las animaciones de KayKit (0 créditos).</b></p>
+<p>Respaldo, si el rig propio no aguanta una silueta: el rig de Meshy (+5) arreglado con <code>tools/meshy_repesar.py</code> en modo <code>c</code>. <b>Por aldeano: 30 créditos (de 30 a 41); los 12: 360 (máximo 492).</b> Antes de la tanda, probar con uno que Meshy respete la pose A y el rojo plano.</p>
+</div>
+<table>
+<tr><th>Paso</th><th>Cómo</th><th>Créditos</th></tr>
+<tr><td>Hoja</td><td>Gouache en pose A, manos vacías y ropa del equipo en rojo plano (<code>tools/arte_gouache.py</code>, FLUX local)</td><td>0 (6 con Meshy)</td></tr>
+<tr><td>Malla y textura</td><td>Meshy multi-image-to-3d</td><td>30</td></tr>
+<tr><td>Rig</td><td><code>tools/gen3d_rig.py</code> (KayKit) y la cabeza rígida</td><td>0</td></tr>
+<tr><td>Animación</td><td>KayKit por el retarget</td><td>0</td></tr>
+<tr><td>Color</td><td><code>tools/mascara_equipo_3d.py --metodo=rojo</code> y <code>equipo_3d.gdshader</code></td><td>0</td></tr>
+<tr><td>Respaldo</td><td>Rig de Meshy y <code>meshy_repesar.py c</code></td><td>+5</td></tr>
+</table>
+
+<h2 id="diag">Por qué se rompe</h2>
+<p>No es el esqueleto: son los pesos y la malla de entrada.</p>
+<ul>
+<li>El modelo trae la herramienta soldada y el brazo izquierdo doblado sobre el pecho.</li>
+<li>El autorrig le dio peso de la mano a la nuca, al pelo y al gorro.</li>
+<li>Cuando la mano se mueve, la cabeza se estira en punta.</li>
+</ul>
+<img src="img/01_meshy_poses_rotas.jpg" alt="Meshy tal cual en cinco poses">
+<p class="leyenda">Meshy tal cual: reposo, talar, picar, cosechar y juntar.</p>
+<img src="img/02_pesos_meshy.jpg" alt="Pesos del rig de Meshy">
+<p class="leyenda">Arriba, el hueso dominante por vértice. Abajo, el peso de la cabeza (rojo) y el de la mano (verde): la nuca tiene peso de la mano.</p>
+
+<h2 id="arreglos">Arreglos sin créditos</h2>
+<div class="par">
+<div><img src="img/03_herramienta_y_cabeza.jpg" alt="Herramienta y cabeza detectadas"><p class="leyenda">Herramienta (verde) separada por pesos y cabeza rígida (rojo).</p></div>
+<div><img src="img/06_rig_propio_prueba.jpg" alt="Rig propio sobre la malla de Meshy"><p class="leyenda">(b) <code>gen3d_rig.py</code> da por hecho que el modelo está en pose A; con el brazo sobre el pecho, no lo separa.</p></div>
+</div>
+<div class="opciones">
+<div class="op"><b>(a) Repesar los pesos de Meshy</b><span class="pro">La cabeza queda entera.</span> <span class="con">Hay que soldar las costuras antes de suavizar, si no la túnica se astilla.</span></div>
+<div class="op"><b>(c) Pesos de Blender sobre el esqueleto de Meshy</b><span class="pro">El más limpio; conserva los clips de Meshy.</span> <span class="con">El brazo sigue pegado al pecho y la capa sube con el brazo.</span></div>
+<div class="op"><b>(b) Rig propio y KayKit</b><span class="pro">Gratis, con las animaciones del juego.</span> <span class="con">Pide una malla en pose A.</span></div>
+</div>
+<img src="img/04_poses_antes_despues.jpg" alt="Antes y después en las mismas poses">
+<p class="leyenda">Las mismas poses: Meshy tal cual, (a) y (c).</p>
+<img src="img/05_cabeza_de_cerca.jpg" alt="La cabeza de cerca">
+<p class="leyenda">De cerca, talar y picar: la cara ya no se estira. Quedan el puño sobre el pecho y un resto del mango.</p>
+
+<h2 id="godot">Las cuatro en Godot</h2>
+<img src="img/07_rig_comparacion_godot.jpg" alt="Comparación en Godot">
+<p class="leyenda">Misma luz y mismo tamaño que en el juego. Las tres primeras filas usan los clips de Meshy; la última, KayKit retargeteado.</p>
+
+<h2 id="color">Color del equipo</h2>
+<p>Una máscara en el mismo atlas UV (<code>tools/mascara_equipo_3d.py</code>) y un shader (<code>src/game/shaders/equipo_3d.gdshader</code>) que tiñe con <code>equipo × luz de la textura</code>. Así se conservan los pliegues y las guardas.</p>
+<h3>Meshy de hoy, método «ropa»</h3>
+<img src="img/08_color_meshy_cerca.jpg" alt="Meshy en cuatro colores, de cerca">
+<p class="leyenda">Azul, rojo, amarillo, verde, la máscara en magenta y el original. Piel, cara, pelo, vincha y manos quedan sin teñir. Quedan manchas en la falda: sirve de puente, no para producción.</p>
+<div class="par">
+<div><img src="img/09_color_meshy_rts.jpg" alt="Meshy a la distancia del juego, 3x"><p class="leyenda">Cámara del juego, ampliada 3×.</p></div>
+<div><img src="img/10_color_meshy_rts_real.jpg" alt="Meshy a la distancia del juego, tamaño real" style="width:auto;max-width:100%;image-rendering:pixelated"><p class="leyenda">Tamaño real.</p></div>
+</div>
+<h3>Ropa en rojo plano, método «rojo»</h3>
+<img src="img/08_color_local_cerca.jpg" alt="Aldeano local en cuatro colores, de cerca">
+<p class="leyenda">El aldeano del pipeline local, con la túnica roja heredada: la túnica entera cambia de color, sin manchas. Es lo que se espera de un Meshy generado con la ropa en rojo.</p>
+<div class="par">
+<div><img src="img/09_color_local_rts.jpg" alt="Local a la distancia del juego, 3x"><p class="leyenda">Cámara del juego, ampliada 3×.</p></div>
+<div><img src="img/10_color_local_rts_real.jpg" alt="Local, tamaño real" style="width:auto;max-width:100%;image-rendering:pixelated"><p class="leyenda">Tamaño real.</p></div>
+</div>
+<div class="par">
+<div><img src="img/11_mascara_meshy_atlas.jpg" alt="Máscara del Meshy en el atlas"><p class="leyenda">Máscara del Meshy en el atlas (magenta).</p></div>
+<div><img src="img/11_mascara_local_atlas.jpg" alt="Máscara del local en el atlas"><p class="leyenda">Máscara del local en el atlas.</p></div>
+</div>
+</main>
+</body>
+</html>
