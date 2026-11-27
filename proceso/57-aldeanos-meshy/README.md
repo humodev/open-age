@@ -76,6 +76,54 @@ El autor aprobó la receta de `proceso/56` («Aldeano de prueba»): malla de Mes
 - Las herramientas caen en la mano (hacha, pico, martillo, chakitaqlla) y el atado de la carga en la espalda.
 - La túnica toma el color del equipo; piel, pelo y cordón quedan sin teñir.
 
+#### 4. Los otros cinco hombres
+
+Llegaron crudos de la sesión principal a `.cache/meshy_aldeanos/` (de 16 a 98 MB, de 460.000 a 3 millones de triángulos). Los cinco cumplen la entrada: pose A, manos vacías, ropa en rojo plano y cara adulta del pueblo (render de frente y de espalda de los crudos):
+
+![Crudos: Ayutthaya, guaraní, Palmares y mapuche, de frente y de espalda](img/crudos_hombres.jpg)
+
+Receta de `proceso/56`, de a un proceso (`optimizar_glb` a 15.000 triángulos y 2048, `gen3d_rig --normalizar --cabeza-rigida`, `mascara_equipo_3d --metodo=rojo`):
+
+| Pueblo | Triángulos | Vértices sin peso | Máscara | `luz_ref` | GLB |
+|---|---|---|---|---|---|
+| Guaraníes | 14.999 | 0 | 65 % | 0,084 | 2,7 MB |
+| Etiopía | 15.821 | 5025 → 0 (con `--calor-escala=10`) | 85 % | 0,073 | 2,8 MB |
+| Palmares | 14.999 | 5910 → 0 (con `--calor-escala=10`) | 80 % | 0,092 | 3,0 MB |
+| Ayutthaya | 17.310 | 0 | 77 % | 0,090 | 2,7 MB |
+| Mapuches | — | — | — | — | **no entra** |
+
+- **Calor de huesos que falla:** en Etiopía y Palmares, Blender no encontró solución a alto 1 y dejó dos tercios de los vértices sin peso (el cuerpo no se movía). `gen3d_rig.py --calor-escala=K` calcula los pesos con todo K veces más grande y después lo vuelve a achicar: con K = 10, 0 vértices sin peso en los dos. Si igual quedan, un respaldo les da los dos huesos más cercanos.
+- **Mapuche, salteado:** el crudo pesa 98 MB (3 millones de triángulos, seis veces más denso que los otros). `optimizar_glb` lo deja en astillas: el diezmado se traba en unos 60.000 triángulos y, al soldar más fuerte para seguir, rompe la malla. Probé rehacerlo con vóxeles y hornear el color (o pasar las UV de la original): la forma queda bien, pero el pecho, las mangas y las piernas salen con manchas oscuras, como si la malla de Meshy tuviera una segunda capa por dentro. Esos intentos no quedaron en la herramienta. Hace falta pedirlo de nuevo con `--remesh --poli=15000` (30 créditos) o revisarlo a mano en Blender. El mapuche sigue con la figura de KayKit.
+
+En partida, cada pueblo con su rival del mismo pueblo (azul y rojo): talar, picar, cosechar en la chacra y llevar la carga (abajo a la derecha, la obra o la segunda vuelta de la piedra):
+
+![Tawantinsuyu](img/base_tawantinsuyu.jpg)
+
+![Guaraníes](img/base_guaranies.jpg)
+
+![Etiopía](img/base_etiopia.jpg)
+
+![Palmares](img/base_palmares.jpg)
+
+![Ayutthaya](img/base_ayutthaya.jpg)
+
+#### 5. Las mujeres
+
+Llegaron después, también crudas (Mapuches, Palmares y Ayutthaya hechas solo con la vista de frente). Con la misma receta y `--calor-escala=10` salieron las seis sin problemas de malla: entre 15.000 y 16.000 triángulos, 0 vértices sin peso, máscara del 63 al 84 %. Las espaldas de Mapuches, Palmares y Ayutthaya están bien (lisas y del mismo vestido):
+
+![Crudas: inca, mapuche, guaraní; etíope, de Palmares y siamesa, de frente y de espalda](img/crudas_mujeres.jpg)
+
+La entrada pide «una cara adulta del pueblo»:
+
+![Caras: inca, mapuche, guaraní, etíope, de Palmares, siamesa](img/caras_mujeres.jpg)
+
+- **Conectadas:** inca, guaraní, de Palmares y siamesa (`por_civ[pueblo].f`). Las cuatro se ven de 25 a 30 años, como avisaba la parte de las hojas.
+- **Salteadas (siguen con la figura de KayKit):**
+  - **etíope:** la cara se lee como de una nena de 12 a 14 años;
+  - **mapuche:** la cara sale blanca y de muñeca, sin los rasgos de la `CARA_F` aprobada.
+
+  Las dos están riggeadas en `.cache/meshy_aldeanos/proc/` por si el autor las acepta igual: copiar el GLB y la máscara y agregar la línea en `por_civ`.
+
 ### Rendimiento (200 aldeanos en pantalla, `--modo=fps`, Tawantinsuyu, llano)
 
 | | FPS (mediana de 5 rondas) | vista (ms/cuadro) | GPU (ms) |
@@ -83,19 +131,41 @@ El autor aprobó la receta de `proceso/56` («Aldeano de prueba»): malla de Mes
 | Antes (KayKit, 50 % mujeres) | 54,6 | 5,53 | 5,7 |
 | Con el inca de Meshy (50 % hombres) | 51,7 | 6,02 | 6,5 |
 | Con el inca de Meshy (100 % hombres) | 53,2 | 5,64 | 7,4 |
+| Más tarde, otra vez y seguidas: sin modelos | 52,2 | 5,71 | 5,8–12 |
+| Más tarde: hombres e incas de Meshy (50 % y 50 %) | 45,9 | 6,17 | 7–17 |
 
 - El costo está en la GPU (16.000 triángulos con piel por figura, contra unos 1.500 de la maqueta): +1,7 ms con 200 hombres. El CPU casi no cambia, porque los coros siguen compartiendo esqueleto.
-- Armar un modelo (retarget de las 31 animaciones incluido) tarda 249 ms, una vez por partida y por modelo, cuando aparece el primer aldeano de ese pueblo.
+- Con los 200 de Meshy (hombres y mujeres), el juego pierde un 12 % de los cuadros. Si molesta, lo siguiente es una versión de 6.000–8.000 triángulos para lejos o sacar la sombra de las figuras lejanas.
+- Armar un modelo (retarget de las 31 animaciones incluido) tarda de 250 a 400 ms, una vez por partida y por modelo, cuando aparece el primer aldeano de ese pueblo.
 
 ![200 aldeanos incas en pantalla](img/fps_200_inca.jpg)
 
 ### Pruebas
 
 - `test_determinism`: OK, hash 3059812827 (igual que antes: es solo imagen).
-- `iconos`: OK. `grilla`: OK.
+- `iconos`: OK. `grilla`: OK (antes y después de sumar los otros pueblos).
+- Autotest con ventana, `--civ=tawantinsuyu --terreno=llano`: AUTOTEST OK, 258 comprobaciones.
 
 ### Tropiezos
 
 - Al empezar, la sesión principal ya había abierto `proceso/57` con las hojas de las aldeanas; pisé su README sin querer y lo recuperé de git, con esta parte agregada abajo.
 - La RAM disponible no pasó de 5–6 GB en toda la tarea (ComfyUI ocupaba 13 GB). Después de 30 minutos esperando los 7 GB, se corrió igual, de a un proceso y con el tope de 4 GB.
+- `godot --headless --import` hubo que correrlo dos veces para que importara los GLB nuevos.
 - La primera captura en partida pedía importar el proyecto: el GLB del inca no tenía su `.scn` en `.godot/`.
+
+### Cómo repetirlo
+
+```sh
+# receta de proceso/56 con --calor-escala=10 en el rig, de a un proceso y con 7 GB libres
+blender --background --python tools/optimizar_glb.py -- .cache/meshy_aldeanos/<x>.glb <x>_opt.glb 15000 2048 solo_color
+blender --background --python tools/gen3d_rig.py -- <x>_opt.glb <x>_rig.glb <x>_mixamo.fbx <x>_prueba --normalizar --cabeza-rigida --calor-escala=10
+blender --background --python tools/mascara_equipo_3d.py -- <x>_rig.glb <x>_mascara.png --metodo=rojo
+# copiar a assets/generados/modelos/meshy_aldeanos/, sumar la entrada en data/arte_animaciones.json → modelos, importar
+godot --path . -s tools/aldeanos_animados.gd -- --modo=base --civ=<pueblo> --rival=<pueblo> --terreno=llano --nofog --mute
+godot --path . -s tools/aldeanos_animados.gd -- --modo=fps --civ=<pueblo> --terreno=llano --nofog --mute
+```
+
+### Commits
+
+- Proceso 57: aldeanos de Meshy en el juego (retarget compartido, handslot, color del equipo); inca hombre conectado
+- Proceso 57: hombres de cuatro pueblos y cuatro mujeres de Meshy en el juego; rig con --calor-escala

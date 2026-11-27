@@ -82,10 +82,22 @@
     "_doc": "Aldeanos de Meshy con nuestro rig (proceso/57-aldeanos-meshy; receta en proceso/56-rig-y-color): malla texturizada, esqueleto de tools/gen3d_rig.py con los nombres de KayKit y las animaciones de arriba retargeteadas (una biblioteca por modelo, compartida). La herramienta cuelga de handslot.r y la carga del pecho; la ropa en rojo de la hoja toma el color del equipo con src/game/shaders/equipo_3d.gdshader y la máscara (tools/mascara_equipo_3d.py --metodo=rojo; luz_ref la imprime esa herramienta). por_civ[pueblo][sexo]: el modelo de ese aldeano; sin entrada (o borrando la línea), la figura de KayKit de siempre. activo: false los apaga a todos. Solo imagen.",
     "activo": true,
     "lista": {
-      "inca_m": { "glb": "res://assets/generados/modelos/meshy_aldeanos/inca_m.glb", "mascara": "res://assets/generados/modelos/meshy_aldeanos/inca_m_mascara.png", "luz_ref": 0.076 }
+      "inca_m": { "glb": "res://assets/generados/modelos/meshy_aldeanos/inca_m.glb", "mascara": "res://assets/generados/modelos/meshy_aldeanos/inca_m_mascara.png", "luz_ref": 0.076 },
+      "guaranies_m": { "glb": "res://assets/generados/modelos/meshy_aldeanos/guaranies_m.glb", "mascara": "res://assets/generados/modelos/meshy_aldeanos/guaranies_m_mascara.png", "luz_ref": 0.084 },
+      "etiopia_m": { "glb": "res://assets/generados/modelos/meshy_aldeanos/etiopia_m.glb", "mascara": "res://assets/generados/modelos/meshy_aldeanos/etiopia_m_mascara.png", "luz_ref": 0.073 },
+      "palmares_m": { "glb": "res://assets/generados/modelos/meshy_aldeanos/palmares_m.glb", "mascara": "res://assets/generados/modelos/meshy_aldeanos/palmares_m_mascara.png", "luz_ref": 0.092 },
+      "ayutthaya_m": { "glb": "res://assets/generados/modelos/meshy_aldeanos/ayutthaya_m.glb", "mascara": "res://assets/generados/modelos/meshy_aldeanos/ayutthaya_m_mascara.png", "luz_ref": 0.09 },
+      "inca_f": { "glb": "res://assets/generados/modelos/meshy_aldeanos/inca_f.glb", "mascara": "res://assets/generados/modelos/meshy_aldeanos/inca_f_mascara.png", "luz_ref": 0.069 },
+      "guaranies_f": { "glb": "res://assets/generados/modelos/meshy_aldeanos/guaranies_f.glb", "mascara": "res://assets/generados/modelos/meshy_aldeanos/guaranies_f_mascara.png", "luz_ref": 0.068 },
+      "palmares_f": { "glb": "res://assets/generados/modelos/meshy_aldeanos/palmares_f.glb", "mascara": "res://assets/generados/modelos/meshy_aldeanos/palmares_f_mascara.png", "luz_ref": 0.1 },
+      "ayutthaya_f": { "glb": "res://assets/generados/modelos/meshy_aldeanos/ayutthaya_f.glb", "mascara": "res://assets/generados/modelos/meshy_aldeanos/ayutthaya_f_mascara.png", "luz_ref": 0.078 }
     },
     "por_civ": {
-      "tawantinsuyu": { "m": "inca_m" }
+      "tawantinsuyu": { "m": "inca_m", "f": "inca_f" },
+      "guaranies": { "m": "guaranies_m", "f": "guaranies_f" },
+      "etiopia": { "m": "etiopia_m" },
+      "palmares": { "m": "palmares_m", "f": "palmares_f" },
+      "ayutthaya": { "m": "ayutthaya_m", "f": "ayutthaya_f" }
     }
   },
   "colores": { "piel": "#8c5636", "pelo": "#231c17", "madera": "#6e5034", "piedra": "#5e5c58", "fibra": "#9a7e4a", "cuero": "#4e3828", "metal": "#7c7f84", "cuerda": "#8a7552" },

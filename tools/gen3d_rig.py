@@ -1,7 +1,7 @@
 """Autorrig de un aldeano generado en pose A (proceso/43-3d-local), sin servicios externos.
 
     blender --background --python tools/gen3d_rig.py -- entrada.glb salida_rig.glb salida_mixamo.fbx render_prefijo \
-        [--normalizar] [--cabeza-rigida]
+        [--normalizar] [--cabeza-rigida] [--calor-escala=10]
 
 Opciones (proceso/56-rig-y-color, aldeanos de Meshy en pose A):
 - --normalizar: lleva la malla a alto 1, los pies en 0 y centrada (los GLB de Meshy vienen en metros
@@ -9,6 +9,10 @@ Opciones (proceso/56-rig-y-color, aldeanos de Meshy en pose A):
 - --cabeza-rigida: después de los pesos automáticos, la cabeza (con el pelo y el tocado) queda 100 %
   al hueso head y el cuello en degradé chest→head, como tools/meshy_repesar.py; así la cara no se
   estira con los brazos.
+- --calor-escala=K (proceso/57-aldeanos-meshy): los pesos automáticos se calculan con la malla y el
+  esqueleto K veces más grandes. A alto 1, el calor de huesos de Blender falla en algunas mallas
+  de Meshy («failed to find solution») y deja miles de vértices sin peso. Si igual quedan
+  vértices sin peso, cada uno toma los dos huesos más cercanos (por distancia al segmento).
 
 - Ubica las articulaciones mirando la malla (alto 1, frente −y en Blender, como la deja
   tools/gen3d_blender.py): las manos son los vértices más alejados a cada lado, las piernas
@@ -31,6 +35,10 @@ argv = sys.argv[sys.argv.index("--") + 1:]
 src, dst_rig, dst_fbx, prefijo = argv[:4]
 NORMALIZAR = "--normalizar" in argv[4:]
 CABEZA_RIGIDA = "--cabeza-rigida" in argv[4:]
+CALOR_K = 1.0
+for _a in argv[4:]:
+    if _a.startswith("--calor-escala="):
+        CALOR_K = float(_a.split("=", 1)[1])
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=src)
@@ -140,7 +148,49 @@ bpy.ops.object.select_all(action="DESELECT")
 ob.select_set(True)
 rig.select_set(True)
 bpy.context.view_layer.objects.active = rig
+
+
+def escalar(k):
+    # Malla y huesos k veces (los objetos quedan con transformación identidad).
+    for v in ob.data.vertices:
+        v.co *= k
+    bpy.ops.object.select_all(action="DESELECT")
+    bpy.context.view_layer.objects.active = rig
+    bpy.ops.object.mode_set(mode="EDIT")
+    for e in arm.edit_bones:
+        e.head *= k
+        e.tail *= k
+    bpy.ops.object.mode_set(mode="OBJECT")
+    ob.select_set(True)
+    rig.select_set(True)
+    bpy.context.view_layer.objects.active = rig
+
+
+if CALOR_K != 1.0:
+    escalar(CALOR_K)
 bpy.ops.object.parent_set(type="ARMATURE_AUTO")
+if CALOR_K != 1.0:
+    escalar(1.0 / CALOR_K)
+_sin = [v for v in ob.data.vertices if not v.groups]
+if _sin:
+    # Respaldo: los dos huesos que deforman más cercanos, por distancia al segmento.
+    from mathutils.geometry import intersect_point_line
+    segs = [(b.name, rig.matrix_world @ b.head_local, rig.matrix_world @ b.tail_local) for b in arm.bones if b.use_deform]
+    G = {g.name: g for g in ob.vertex_groups}
+    for v in _sin:
+        p = ob.matrix_world @ v.co
+        ds = []
+        for n, a, b in segs:
+            q, t = intersect_point_line(p, a, b)
+            q = a if t < 0 else (b if t > 1 else q)
+            ds.append(((p - q).length, n))
+        ds.sort()
+        w = [1.0 / max(1e-4, d) ** 4 for d, _ in ds[:2]]
+        for (d, n), wi in zip(ds[:2], w):
+            if n not in G:
+                G[n] = ob.vertex_groups.new(name=n)
+            G[n].add([v.index], wi / sum(w), "REPLACE")
+    print(f"RESPALDO_DISTANCIA vertices={len(_sin)}")
 if CABEZA_RIGIDA:
     # Cabeza rígida (como tools/meshy_repesar.py): por encima de la articulación de la cabeza y dentro
     # de un cilindro, 100 % head; entre el cuello y la cabeza, degradé chest→head. Los radios son
