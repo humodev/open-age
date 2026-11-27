@@ -154,4 +154,4 @@ En `pruebas/`:
 
 ## Commits
 
-- (este commit) Proceso 54: respuestas de nombres, historia, sonido, representación y 3D
+- `f4f9d89` Proceso 54: respuestas de nombres, historia, sonido, representación y 3D
