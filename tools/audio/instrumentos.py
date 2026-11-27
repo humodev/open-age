@@ -290,3 +290,58 @@ def ching(abierto: bool = True, dur: float = 0.9, seed: int = 0, vel: float = 1.
     x = modal(dur, parts, seed)
     hiss = bandpass(noise(dur, seed + 18), 4000, 11000, 2) * expdecay(len(x), tau * 0.4) * 0.15
     return (x + hiss) * vel
+
+
+# ============ C-73 a (proceso/54): nagarit etíope y conjunto de procesión de Ayutthaya ============
+
+def nagarit(dur: float = 1.6, seed: int = 0, vel: float = 1.0) -> np.ndarray:
+    """Nagarit: el timbal real de guerra, de cuenco grande (madera o cobre) y cuero, golpeado con un palo curvo.
+    Más grave y largo que el kebero: anunciaba al rey, la guerra y los decretos [verificar: Kebede 1971]."""
+    modes = [(48, 1.0, 0.75), (77, 0.5, 0.5), (103, 0.3, 0.32), (131, 0.18, 0.22), (164, 0.1, 0.15)]
+    body = modal(dur, modes, seed, pitch_drop=0.1, drop_tau=0.08)
+    n = len(body)
+    stick = bandpass(noise(dur, seed + 31), 400, 2500, 2) * expdecay(n, 0.006) * 0.35
+    kettle = resonances(body, [(90, 40, 0.6), (210, 90, 0.3)])
+    return (0.7 * body + 0.3 * kettle + stick) * vel
+
+
+def klong_chana(grave: bool = True, dur: float = 0.8, seed: int = 0, vel: float = 1.0) -> np.ndarray:
+    """Klong chana: tambor de barril de dos parches de la procesión real («tambor de la victoria»), tocado con
+    palillos: golpe de membrana media con ataque de palo [verificar: Morton 1976]."""
+    f0 = 96 if grave else 128
+    modes = [(f0, 1.0, 0.3), (f0 * 1.59, 0.45, 0.18), (f0 * 2.14, 0.3, 0.12), (f0 * 2.65, 0.15, 0.08)]
+    body = modal(dur, modes, seed, pitch_drop=0.08, drop_tau=0.03)
+    stick = bandpass(noise(dur, seed + 33), 1200, 5000, 2) * expdecay(len(body), 0.004) * 0.4
+    return (body + stick) * vel
+
+
+def pi_chawa(freqs: list[tuple[float, float]], dur: float, seed: int = 0, vel: float = 1.0) -> np.ndarray:
+    """Pi chawa: oboe corto de lengüeta cuádruple, de sonido nasal y penetrante, con la nota que se desliza de
+    una a otra (freqs: lista de (segundo, Hz))."""
+    n = int(dur * SR)
+    t = np.arange(n) / SR
+    f = np.full(n, freqs[0][1])
+    for (t0, f0), (t1, f1) in zip(freqs, freqs[1:] + [(dur, freqs[-1][1])]):
+        i0, i1 = int(t0 * SR), int(t1 * SR)
+        f[i0:i1] = f0
+        g = min(int(0.04 * SR), max(0, i1 - i0))
+        if i1 < n and g > 0:
+            f[i1 - g:i1] = np.linspace(f0, f1, g)
+    f = f * (1 + 0.007 * np.sin(2 * np.pi * 6.0 * t))
+    env = adsr(n, 0.03, 0.08, 0.85, min(0.12, dur * 0.2))
+    tone = additive(f, [1.0, 0.85, 0.7, 0.55, 0.42, 0.3, 0.2, 0.12, 0.07], dur, seed)
+    tone = resonances(tone, [(1400, 700, 1.0), (2800, 1200, 0.5)])
+    reed = bandpass(noise(dur, seed + 35), 1500, 6000, 1.5) * env * 0.05
+    return soft_clip((tone * env + reed) * 0.6, 1.6) * vel
+
+
+def sang(f0: float, dur: float, seed: int = 0, vel: float = 1.0) -> np.ndarray:
+    """Sang: caracola soplada como trompa: una sola nota grave y velada, que sube un poco al ataque."""
+    n = int(dur * SR)
+    t = np.arange(n) / SR
+    f = f0 * (1 - 0.05 * np.exp(-t / 0.09))
+    env = adsr(n, 0.12, 0.2, 0.8, min(0.25, dur * 0.3))
+    tone = additive(f, [1.0, 0.45, 0.22, 0.1, 0.05], dur, seed)
+    tone = resonances(tone, [(f0 * 2.2, f0, 0.8)])
+    breath = bandpass(noise(dur, seed + 37), f0, f0 * 6, 1.2) * env * 0.12
+    return lowpass(tone * env + breath, 2400, 2) * vel

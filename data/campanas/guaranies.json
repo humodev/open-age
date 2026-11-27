@@ -31,7 +31,7 @@
         "tropas": [ { "tipo": "hondero", "n": 10 }, { "tipo": "guerrero", "n": 6 } ]
       },
       "rivales": [
-        { "nombre": "Hueste de Juan de Ayolas", "corto": "Hueste de Ayolas", "faccion": "invasores", "ia": "agresiva", "edad": 2 }
+        { "nombre": "Hueste de Juan de Ayolas", "corto": "Hueste de Ayolas", "faccion": "castilla", "ia": "agresiva", "edad": 2 }
       ],
       "objetivos": [
         { "id": "o1", "texto": "Abrí 3 rozas en el monte, nunca en el campo abierto. Cuando una se canse, abrí otra: la vieja vuelve a ser monte.", "tipo": "construir", "params": { "tipo": "granja", "n": 3 }, "secundario": false },
@@ -80,7 +80,7 @@
         "tropas": [ { "tipo": "hondero", "n": 12 }, { "tipo": "guerrero", "n": 6 } ]
       },
       "rivales": [
-        { "nombre": "Bandeira paulista", "corto": "Bandeira paulista", "faccion": "invasores", "ia": "agresiva", "edad": 2 },
+        { "nombre": "Bandeira paulista", "corto": "Bandeira paulista", "faccion": "paulistas", "ia": "agresiva", "edad": 2 },
         { "nombre": "Auxiliares tupí de la bandeira", "corto": "Tupíes", "faccion": "tupies", "ia": "normal", "edad": 2 }
       ],
       "objetivos": [
@@ -130,7 +130,7 @@
         "tropas": [ { "tipo": "hondero", "n": 16 }, { "tipo": "guerrero", "n": 10 }, { "tipo": "lancero", "n": 6 }, { "tipo": "arcabucero", "n": 6 } ]
       },
       "rivales": [
-        { "nombre": "Bandeira paulista", "corto": "Bandeira paulista", "faccion": "invasores", "ia": "agresiva", "edad": 2 },
+        { "nombre": "Bandeira paulista", "corto": "Bandeira paulista", "faccion": "paulistas", "ia": "agresiva", "edad": 2 },
         { "nombre": "Auxiliares tupí de la bandeira", "corto": "Tupíes", "faccion": "tupies", "ia": "normal", "edad": 2 }
       ],
       "objetivos": [
@@ -181,8 +181,8 @@
         "tropas": [ { "tipo": "hondero", "n": 14 }, { "tipo": "guerrero", "n": 10 }, { "tipo": "lancero", "n": 10 }, { "tipo": "jinete", "n": 6 }, { "tipo": "arcabucero", "n": 4 } ]
       },
       "rivales": [
-        { "nombre": "Ejército portugués de Gomes Freire", "corto": "Gomes Freire", "faccion": "invasores", "ia": "agresiva", "edad": 4 },
-        { "nombre": "Ejército español de Andonaegui", "corto": "Andonaegui", "faccion": "invasores", "ia": "normal", "edad": 4 }
+        { "nombre": "Ejército portugués de Gomes Freire", "corto": "Gomes Freire", "faccion": "portugal", "ia": "agresiva", "edad": 4 },
+        { "nombre": "Ejército español de Andonaegui", "corto": "Andonaegui", "faccion": "castilla", "ia": "normal", "edad": 4 }
       ],
       "objetivos": [
         { "id": "o1", "texto": "Fortificá los vados con estacadas (24 tramos de empalizada).", "tipo": "construir", "params": { "tipo": "empalizada", "n": 24 }, "secundario": false },

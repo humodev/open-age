@@ -1,6 +1,6 @@
 # Créditos de assets de terceros
 
-Los archivos de `audio/` y `texturas/` que vienen de terceros son **CC0 / dominio público**, salvo **tres pistas de música con licencia CC BY-SA 4.0 y CC BY 3.0** (C-07 a y C-24 c, `proceso/51-respuestas-del-autor/`), que piden atribución y van en la tabla «Música con atribución» de abajo y en la pantalla de créditos del juego (`data/creditos.json`). Para lo CC0 no hay atribución obligatoria; se registra igual por trazabilidad. Los sonidos de los pueblos (`audio/civ/`) y la música de Etiopía (`audio/musica/etiopia/`) son **obra propia**, sintetizada con código; están al final de la sección de audio. Las fuentes de `assets/fonts/` no están en esta tabla.
+Los archivos de `audio/` y `texturas/` que vienen de terceros son **CC0 / dominio público**, salvo **tres pistas de música con licencia CC BY-SA 4.0 y CC BY 3.0** (C-07 a y C-24 c, `proceso/51-respuestas-del-autor/`), que piden atribución y van en la tabla «Música con atribución» de abajo y en la pantalla de créditos del juego (`data/creditos.json`). Para lo CC0 no hay atribución obligatoria; se registra igual por trazabilidad. Los sonidos de los pueblos (`audio/civ/`) y la música de paz sintetizada de Etiopía, Palmares y Ayutthaya son **obra propia**, sintetizada con código; están al final de la sección de audio. Las fuentes de `assets/fonts/` no están en esta tabla.
 
 Los archivos fueron recortados, mezclados, normalizados y convertidos a Ogg Vorbis (sonidos en mono a 44,1 kHz). Las texturas se reescalaron a 512×512.
 
@@ -89,11 +89,10 @@ Aceptadas por el autor: CC BY-SA para la música (C-07 a, C-24 c). **Licencia de
 | quilombo/musica_quilombo_berimbau_angola_1.ogg | https://commons.wikimedia.org/wiki/File:Toque-de-angola.ogg (mono pasado a estéreo) | Andrew (usuario Aarchiba) | Dominio público (PD-self) |
 | quilombo/musica_quilombo_ijexa_1.ogg | https://commons.wikimedia.org/wiki/File:Ixeja.ogg | LeRoc | Dominio público (PD-self) |
 | quilombo/musica_quilombo_tambores_combate_1.ogg | https://opengameart.org/content/tropical-loop (`Tropical.wav`) | wipics | CC0 |
-| ayutthaya/musica_ayutthaya_maha_nimit_1.ogg | https://commons.wikimedia.org/wiki/File:Phleng_Maha_Nimit_(Tra_Nimitr)_-_Royal_Thai_Navy_Band.ogg (sin los 8,8 s de silencio inicial) | Composición: Jangwang Tua Patayakosol; interpretación: Banda de la Armada Real Tailandesa (1934) | Dominio público (PD-Thailand) |
 | ayutthaya/musica_ayutthaya_xilofono_1.ogg | https://opengameart.org/content/kingdom-of-a-million-elephants-under-a-white-parasol | Spring Spring | CC0 |
 | ayutthaya/musica_ayutthaya_combate_xilofono_1.ogg | https://opengameart.org/content/bamboo-blitz (`bamboo_blitz.flac`) | Tsorthan Grove | CC0 |
 
-## Audio sintetizado: obra propia (`audio/civ/`, `audio/musica/etiopia/`)
+## Audio sintetizado: obra propia (`audio/civ/` y la música de paz de `audio/musica/etiopia/`, `palmares/` y `ayutthaya/`)
 
 Sin muestras grabadas ni material de terceros: osciladores, ruido y filtros escritos para el proyecto (`tools/audio/dsp.py`), un modelo por instrumento (`tools/audio/instrumentos.py`) y una partitura por sonido (`tools/audio/generar_sonidos.py`). Se regeneran con `python3 tools/audio/generar_sonidos.py [civ …]` (numpy y ffmpeg con libvorbis) y salen iguales, porque las semillas son fijas. Ogg Vorbis calidad 4, a 44,1 kHz: los efectos en mono a −16 LUFS (fanfarria y alarma), −18 (entrenado) o con pico a −4,5 dBFS (orden, demasiado corta para medir LUFS); la música en estéreo a −16 LUFS. La sonoridad de cada archivo queda en `tools/audio/medidas.json`. Son obra propia del proyecto y se distribuyen con la misma licencia que el resto del juego. Diseño y fuentes de cada instrumento: `proceso/24-tras-la-segunda-ronda/4g-sonido.md`; los instrumentos que se cambiaron para no usar objetos sagrados en sonidos de tropa, en `proceso/24-tras-la-segunda-ronda/4h-sonido-con-respeto.md`.
 
@@ -102,10 +101,12 @@ Sin muestras grabadas ni material de terceros: osciladores, ruido y filtros escr
 | civ/tawantinsuyu/tawantinsuyu_{fanfarria,alarma,entrenado,orden}.ogg | quena, tropa de sikus, wankara | edad, ataque, unidad lista, orden |
 | civ/mapuches/mapuches_{fanfarria,alarma,entrenado,orden}.ogg | kultrun y trutruka (C-53 a: vuelve el sonido de 4g; consultar con una organización mapuche antes de publicar) | ídem |
 | civ/guaranies/guaranies_{…}.ogg | mimby (flauta), angu'apu (tambor de tronco) | ídem |
-| civ/etiopia/etiopia_{…}.ogg | kebero, masenqo, krar | ídem |
+| civ/etiopia/etiopia_{…}.ogg | nagarit (fanfarria y alarma, C-73 a), kebero (entrenado), masenqo, krar | ídem |
 | civ/palmares/palmares_{…}.ogg | ngoma, ngongi (campana doble), marimba, kisanji | ídem |
-| civ/ayutthaya/ayutthaya_{…}.ogg | khong wong yai, ranat ek, ching | ídem |
+| civ/ayutthaya/ayutthaya_{…}.ogg | khong wong yai, ranat ek, ching; la alarma con sang, klong chana y pi chawa (C-73 a) | ídem |
 | musica/etiopia/musica_etiopia_krar_kebero_1.ogg | krar, masenqo, kebero (34,6 s, loop) | música de paz de Etiopía |
+| musica/palmares/musica_palmares_ngoma_marimba_1.ogg | ngongi, ngoma, marimba (27,4 s, loop; C-73 a) | música de paz de Palmares |
+| musica/ayutthaya/musica_ayutthaya_khong_ranat_1.ogg | khong wong, ranat ek, ching (32 s, loop; C-73 a) | música de paz de Ayutthaya |
 
 ## Texturas (`texturas/`)
 

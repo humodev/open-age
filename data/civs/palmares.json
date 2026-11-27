@@ -13,8 +13,8 @@
   "modelos": {
    "aldeano": "palmares_aldeano",
    "hondero": "palmares_flecheiro",
-   "centro": "palmares_centro",
-   "casa": "palmares_casa"
+   "centro": "local/palmares_centro",
+   "casa": "local/palmares_casa"
   }
  },
  "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",

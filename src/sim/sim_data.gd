@@ -29,11 +29,33 @@ static func load_default() -> SimData:
 	d._junto_a() # --- ronda 8, 05 ---
 	for f in DirAccess.get_files_at("res://data/civs"):
 		if f.ends_with(".json"):
-			var c: Dictionary = _load("res://data/civs/" + f)
+			var c: Dictionary = _civ_file(f.get_basename())
 			var key := f.get_basename()
 			c["clave"] = key
 			d.civs[key] = d._merge(c)
 	return d
+
+
+## --- C-72 a --- Un archivo de civ puede partir de otro (`"hereda": "invasores"`): las potencias
+## europeas comparten tropa y números con la facción genérica y cambian nombres, edades y textos.
+## Lo de arriba del archivo pisa lo heredado; en unidades y edificios, clave por clave.
+static func _civ_file(key: String) -> Dictionary:
+	var c: Dictionary = _load("res://data/civs/%s.json" % key)
+	var base_key: String = c.get("hereda", "")
+	if base_key == "" or base_key == key:
+		return c
+	var out: Dictionary = _civ_file(base_key).duplicate(true)
+	for k: String in c:
+		if k in ["unidades", "edificios"] and out.get(k) is Dictionary and c[k] is Dictionary:
+			for kk: String in c[k]:
+				if out[k].get(kk) is Dictionary and c[k][kk] is Dictionary:
+					out[k][kk] = (out[k][kk] as Dictionary).merged(c[k][kk], true)
+				else:
+					out[k][kk] = c[k][kk]
+		else:
+			out[k] = c[k]
+	out.erase("hereda")
+	return out
 
 
 ## --- ronda 8, 05 --- `junto_a`: la unidad se entrena en cada edificio que entrena a esa otra

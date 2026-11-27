@@ -81,6 +81,8 @@ func compose() -> String:
 		var ages: Array = c.get("edades", [])
 		if not ages.is_empty():
 			out += _dimc("Edades: " + " → ".join(ages)) + "\n"
+			if str(c.get("edades_nota", "")) != "": # C-70 a: lo que el nombre de una edad no dice solo
+				out += _dimc(str(c["edades_nota"])) + "\n"
 
 	# Motor propio.
 	var engine := _engine_lines(dd)

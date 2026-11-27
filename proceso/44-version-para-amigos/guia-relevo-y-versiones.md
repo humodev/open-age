@@ -35,6 +35,16 @@ Con la app de itch, cada versión que subís les llega sola.
 4. **Subir**: `tools/publicar.sh --subir`. Sube los canales `linux` y `windows` con `--userversion <versión>`. Butler manda solo lo que cambió, así que las versiones siguientes suben rápido.
 5. **Los amigos** instalan la app de itch (itch.io/app), entran con su clave o su contraseña e instalan Raíces. Cada versión nueva se baja sola. También pueden bajar el zip a mano desde la página.
 
+### Claves de descarga, una por amigo (C-103 a)
+
+Lo que elegiste. Cada amigo tiene su enlace; si uno lo pasa, se le saca a ese solo.
+
+1. En la página: *Edit game → Visibility & access → **Restricted*** y guardar.
+2. *Distribute* (arriba, en la página del proyecto) → **Download keys** → *Generate download keys*. Cantidad: los amigos que quieras (se pueden generar más después). En *Note* poné el nombre del amigo: así sabés de quién es cada una.
+3. Cada clave da un enlace `https://tu-usuario.itch.io/raices/download/<clave>`. Mandáselo a cada uno por privado.
+4. El amigo abre el enlace con su cuenta de itch iniciada y toca *Link to my account*: el juego le queda en la biblioteca de la app y se actualiza solo con cada `tools/publicar.sh --subir`.
+5. Para sacarle el acceso a alguien: *Download keys* → la clave → *Revoke*. Para sumar a otro: otra clave.
+
 Alternativa, sin implementar: una GitHub Action que exporte y suba a GitHub Releases o a itch al crear una etiqueta (`v*`). Sirve cuando haya más de una persona publicando. Mientras sea uno solo, el script local alcanza y no gasta minutos de CI con las plantillas de 1 GB.
 
 ## 3. Dónde poner el relevo
@@ -62,6 +72,26 @@ Queda prendido siempre y no expone tu IP.
 
   Oracle a veces recupera las VM gratis que no se usan y a veces no hay capacidad en la región. Si molesta, la opción de pago más simple es la de abajo.
 - **De pago**: Hetzner CX22 (unos 4 € por mes), DigitalOcean o Vultr (de 4 a 6 USD por mes). Con 512 MB alcanza.
+
+**Lista corta para el VPS de pago (C-102 c, lo que elegiste).** Con Hetzner; en DigitalOcean o Vultr los pasos son los mismos con otros nombres.
+
+1. **Crear la cuenta** en https://console.hetzner.cloud y un proyecto («raices»).
+2. **Subir tu clave SSH**: *Security → SSH keys → Add SSH key*, pegando `~/.ssh/id_ed25519.pub` (si no tenés una: `ssh-keygen -t ed25519`).
+3. **Crear el servidor**: *Add Server* → ubicación cercana a tus amigos (con Sudamérica, la de Estados Unidos, Ashburn o Hillsboro, da menos ping que las de Europa) → imagen **Ubuntu 24.04** → tipo **CX22** (o el más barato que haya: con 512 MB alcanza) → tu clave SSH → *Create & Buy*. Anotá la IPv4.
+4. **Entrar**: `ssh root@<ip>`. Actualizar: `apt update && apt -y upgrade` (Ubuntu ya trae Python 3).
+5. **Copiar el relevo** desde tu PC, en la raíz del repositorio: `scp server/relevo.py server/raices-relevo.service root@<ip>:/root/`.
+6. **Instalarlo con la unidad que ya está** (en el VPS):
+   ```
+   useradd --system --no-create-home raices
+   install -D -m 644 /root/relevo.py /opt/raices/relevo.py
+   install -m 644 /root/raices-relevo.service /etc/systemd/system/
+   systemctl daemon-reload && systemctl enable --now raices-relevo
+   systemctl status raices-relevo      # tiene que decir active (running)
+   ```
+7. **Abrir el puerto 47900/TCP**. En Hetzner, si le pusiste un *Firewall* al servidor, sumale la regla de entrada TCP 47900 (y la 22 para SSH). En la VM, si usás ufw: `ufw allow 22/tcp && ufw allow 47900/tcp && ufw enable`.
+8. **Probar desde tu PC**: `nc -vz <ip> 47900` tiene que decir *succeeded*; después crear una sala en el juego con `Relevo = <ip>:47900`.
+9. **Dejarlo fijo para los amigos**: `RELEVO=<ip>:47900` en `~/.config/raices/publicar.env` y una versión nueva con `tools/publicar.sh --subir`. El relevo queda dentro del zip (`relevo.txt`) y los amigos solo escriben el código de la sala.
+10. **Mantenimiento**: para actualizar el relevo, repetir 5 y `systemctl restart raices-relevo`; para ver qué pasa, `journalctl -u raices-relevo -f`. Hetzner cobra por hora hasta que borrás el servidor.
 
 **Con systemd** (en la PC o en el VPS):
 

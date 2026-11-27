@@ -153,6 +153,9 @@ static func _bovine(p: Array, e: Dictionary) -> void:
 	var by := leg + 0.19
 	p.append([Meshes.sphere(0.25, 12), Meshes.xf(Vector3(0, by, 0), Vector3.ZERO, Vector3(1.0, 0.85, 1.6)), col])
 	p.append([Meshes.sphere(0.2, 10), Meshes.xf(Vector3(0, by + 0.07, 0.2), Vector3.ZERO, Vector3(1.05, 0.9, 1.0)), col.darkened(0.05)]) # cruz
+	if e.get("giba", false): # --- C-72 a --- la giba del cebú sobre la cruz, y la papada
+		p.append([Meshes.sphere(0.11, 8), Meshes.xf(Vector3(0, by + 0.25, 0.26), Vector3.ZERO, Vector3(0.9, 1.0, 1.1)), col.darkened(0.12)])
+		p.append([Meshes.box(0.06, 0.14, 0.18), Meshes.xf(Vector3(0, by - 0.12, 0.38)), col.darkened(0.08)])
 	var hd := Vector3(0, by + 0.0, 0.5)
 	p.append([Meshes.sphere(0.1, 10), Meshes.xf(hd, Vector3(30, 0, 0), Vector3(0.95, 0.85, 1.45)), col.darkened(0.08)])
 	p.append([Meshes.box(0.13, 0.08, 0.08), Meshes.xf(hd + Vector3(0, -0.07, 0.1)), col.darkened(0.3)])

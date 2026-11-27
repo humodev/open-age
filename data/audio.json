@@ -35,7 +35,7 @@
       "orden": "civ/guaranies/guaranies_orden.ogg"
     },
     "etiopia": {
-      "_nota": "Kebero, masenqo y krar; la música de paz, krar, masenqo y kebero en ambassel. Sin begena, la lira de la oración de Cuaresma (C-54 b, opción prudente; 4h).",
+      "_nota": "Nagarit (timbal real de guerra) en la fanfarria y la alarma, en lugar del kebero litúrgico (C-73 a); masenqo y krar; el entrenado y la música de paz siguen con kebero suave. Sin begena, la lira de la oración de Cuaresma (C-54 b, opción prudente; 4h).",
       "fanfarria": "civ/etiopia/etiopia_fanfarria.ogg",
       "alarma": "civ/etiopia/etiopia_alarma.ogg",
       "entrenado": "civ/etiopia/etiopia_entrenado.ogg",
@@ -48,14 +48,18 @@
       "fanfarria": "civ/palmares/palmares_fanfarria.ogg",
       "alarma": "civ/palmares/palmares_alarma.ogg",
       "entrenado": "civ/palmares/palmares_entrenado.ogg",
-      "orden": "civ/palmares/palmares_orden.ogg"
+      "orden": "civ/palmares/palmares_orden.ogg",
+      "_nota_musica": "Paz: loop sintetizado de ngongi, ngoma y marimba (C-73 a), sin berimbau ni toques de capoeira.",
+      "musica": { "paz": ["musica/palmares/musica_palmares_ngoma_marimba_1.ogg"] }
     },
     "ayutthaya": {
-      "_nota": "Khong wong, ranat ek y ching, en la afinación de siete pasos iguales.",
+      "_nota": "Khong wong, ranat ek y ching, en la afinación de siete pasos iguales. La alarma es la de la procesión y la guerra: sang, klong chana y pi chawa (C-73 a).",
       "fanfarria": "civ/ayutthaya/ayutthaya_fanfarria.ogg",
       "alarma": "civ/ayutthaya/ayutthaya_alarma.ogg",
       "entrenado": "civ/ayutthaya/ayutthaya_entrenado.ogg",
-      "orden": "civ/ayutthaya/ayutthaya_orden.ogg"
+      "orden": "civ/ayutthaya/ayutthaya_orden.ogg",
+      "_nota_musica": "Paz: loop sintetizado de khong wong, ranat ek y ching (C-73 a). Salió Tra Nimit (Phleng Maha Nimit), del repertorio ceremonial naphat.",
+      "musica": { "paz": ["musica/ayutthaya/musica_ayutthaya_khong_ranat_1.ogg"] }
     }
   }
 }

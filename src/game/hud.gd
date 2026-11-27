@@ -1591,7 +1591,7 @@ class SelectionPanel:
 		var sim := hud.sim
 		_portrait(Rect2(14, 14, 112, 112), e)
 		var x := 142.0
-		var name: String = e.def.get("nombre", e.type)
+		var name: String = Textos.nombre_de(sim, e.owner, e.def, e.type) # C-71 a: nombre por edad
 		# --- casillas --- (jugador nuevo, ronda 4) el común delante del propio, como en la ficha y la
 		# grilla: «Centro · Oga guasu», «Aldeano · Ava». Más chico si no entra.
 		if not e.is_resource() and e.owner >= 0:

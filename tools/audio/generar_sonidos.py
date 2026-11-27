@@ -3,7 +3,8 @@
 de Etiopía. Todo sintetizado (tools/audio/instrumentos.py): no usa ninguna grabación.
 
 Uso:  python3 tools/audio/generar_sonidos.py [civ ...]      (sin argumentos, todos)
-Sale: assets/audio/civ/<civ>/<civ>_<sonido>.ogg y assets/audio/musica/etiopia/musica_etiopia_krar_kebero_1.ogg
+Sale: assets/audio/civ/<civ>/<civ>_<sonido>.ogg y los loops de paz sintetizados (MUSICA: Etiopía, Palmares y
+      Ayutthaya, en assets/audio/musica/<carpeta>/)
       tools/audio/medidas.json (sonoridad y pico de cada archivo)
 
 Requiere numpy y ffmpeg con libvorbis. Es determinista: misma semilla, mismo archivo.
@@ -183,11 +184,15 @@ def _kebero_bar(b: np.ndarray, t0: float, eighth: float, seed: int, vel: float =
 
 
 def etiopia_fanfarria() -> np.ndarray:
-    b = silence(4.6)
+    # C-73 a: el nagarit (timbal real de guerra) en lugar del kebero, que es también tambor de la liturgia.
+    # Golpes lentos y pesados, como el anuncio del rey: uno por compás y dos al final.
+    b = silence(5.0)
     e = 0.21
     for k in range(3):
-        b = _kebero_bar(b, 0.0 + k * 6 * e, e, 400 + 10 * k, 0.9)
-    b = place(b, ins.kebero(True, 1.0, seed=440, vel=1.0), 18 * e)
+        b = place(b, ins.nagarit(1.4, seed=400 + 10 * k, vel=0.85), _h(k * 6 * e, 400 + k))
+        b = place(b, ins.nagarit(1.0, seed=405 + 10 * k, vel=0.5), _h(k * 6 * e + 3 * e, 410 + k))
+    b = place(b, ins.nagarit(1.8, seed=440, vel=1.0), 18 * e)
+    b = place(b, ins.nagarit(1.8, seed=441, vel=0.8), 18 * e + 2 * e)
     frase = [(0.0, BATI["D"]), (0.42, BATI["F#"]), (0.84, BATI["A"]), (1.26, BATI["D5"]), (1.9, BATI["C#"]),
              (2.15, BATI["A"]), (2.6, BATI["G"]), (2.85, BATI["F#"]), (3.15, BATI["D"])]
     b = place(b, ins.masenqo(frase, 4.1, seed=450, vel=0.9), 0.05)
@@ -200,10 +205,11 @@ def etiopia_fanfarria() -> np.ndarray:
 
 
 def etiopia_alarma() -> np.ndarray:
-    b = silence(3.0)
-    for i in range(14):
-        at = i * 0.16 - 0.0015 * i * i
-        b = place(b, ins.kebero(i % 3 == 0, 0.5, seed=460 + i, vel=0.6 + 0.4 * (i % 3 == 0)), _h(at, 130 + i, 0.004))
+    # C-73 a: el nagarit que llama a la guerra, cada vez más rápido, en lugar del kebero.
+    b = silence(3.2)
+    for i in range(9):
+        at = i * 0.27 - 0.006 * i * i
+        b = place(b, ins.nagarit(0.9, seed=460 + i, vel=0.7 + 0.3 * (i % 3 == 0)), _h(at, 130 + i, 0.004))
     frase = [(0.0, AMB["A4"]), (0.2, AMB["Bb4"]), (0.4, AMB["A4"]), (0.6, AMB["G4"]), (0.8, AMB["A4"]),
              (1.15, AMB["A4"]), (1.35, AMB["Bb4"]), (1.55, AMB["A4"]), (1.75, AMB["Eb4"]), (1.95, AMB["D4"])]
     b = place(b, ins.masenqo(frase, 2.6, seed=480, vel=0.9), 0.0)
@@ -377,14 +383,17 @@ def ayutthaya_fanfarria() -> np.ndarray:
 
 
 def ayutthaya_alarma() -> np.ndarray:
-    b = silence(3.0)
-    # Ranat en trémolo sobre dos notas altas que se alternan, gong grave insistente y 'chap' seco.
-    for i in range(18):
-        g = 9 if (i // 3) % 2 == 0 else 8
-        b = place(b, ins.ranat(_pg(g), 0.3, seed=1200 + i, vel=0.55 + 0.1 * (i % 3 == 0)), _h(i * 0.1, 240 + i, 0.004))
-    for i, at in enumerate([0.0, 0.6, 1.2, 1.8]):
-        b = place(b, ins.khong(_pg(0), 1.2, seed=1230 + i, vel=0.85), at)
-        b = place(b, ins.ching(False, seed=1240 + i, vel=0.4), at + 0.3)
+    # C-73 a: el conjunto de la procesión y de la guerra (klong chana, pi chawa y sang) en lugar del piphat de corte.
+    # La caracola abre, el tambor de barril marca rápido y el oboe repite una llamada de dos notas [verificar: Morton 1976].
+    b = silence(3.4)
+    b = place(b, ins.sang(thai(-7), 1.1, seed=1200, vel=0.8), 0.0)
+    for i in range(16):
+        at = 0.5 + i * 0.15
+        b = place(b, ins.klong_chana(i % 4 == 0, 0.5, seed=1210 + i, vel=0.85 if i % 4 == 0 else 0.6), _h(at, 240 + i, 0.004))
+    llamada = [(0.0, _pg(7)), (0.22, _pg(8)), (0.44, _pg(7)), (0.66, _pg(8)), (0.88, _pg(9)), (1.3, _pg(8)), (1.52, _pg(7))]
+    b = place(b, ins.pi_chawa(llamada, 2.0, seed=1230, vel=0.7), 0.55)
+    for i, at in enumerate([0.5, 1.1, 1.7, 2.3]):
+        b = place(b, ins.ching(False, seed=1240 + i, vel=0.35), at)
     return trim_tail(reverb(b, 0.15, 0.35, seed=17))
 
 
@@ -400,8 +409,87 @@ def ayutthaya_orden() -> np.ndarray:
     return trim_tail(ins.ranat(_pg(8), 0.3, seed=1260, vel=1.0))
 
 
+def _suma(capas: list[np.ndarray]) -> np.ndarray:
+    """Suma capas estéreo de largo distinto (las colas de reverberación no miden lo mismo)."""
+    n = max(len(c) for c in capas)
+    out = np.zeros((n, 2))
+    for c in capas:
+        out[: len(c)] += c
+    return out
+
+
+def palmares_musica() -> np.ndarray:
+    """C-73 a: loop de paz de Palmares, 12 ciclos de 12/8 (~28 s): campana (ngongi), ngoma y marimba, sin berimbau
+    ni toques de capoeira. Ciclos 1-2: campana y ngoma; 3-10: la marimba; 11-12: vuelve la base para empalmar."""
+    e = 0.19
+    cyc = 12 * e
+    cycles = 12
+    L = cycles * cyc
+    n = int(L * SR)
+    cam = np.zeros(n + 4 * SR)
+    ngo = np.zeros(n + 4 * SR)
+    mar = np.zeros(n + 4 * SR)
+    for k in range(cycles):
+        cam = _campana(cam, k * cyc, e, 2000 + 10 * k, 0.45)
+        for j, (pos, g, grande) in enumerate([(0, "grave", True), (3, "abierto", False), (6, "abierto", True),
+                                              (8, "seco", False), (9, "abierto", False)]):
+            ngo = place(ngo, ins.ngoma(g, grande, seed=2200 + 10 * k + j, vel=0.6), _h(k * cyc + pos * e, 2300 + 10 * k + j, 0.006))
+    frases = [["G3", "A3", "C4", "D4", "C4", "A3"], ["D4", "E4", "G4", "E4", "D4", "C4"],
+              ["C4", "D4", "E4", "D4", "C4", "A3"], ["A3", "C4", "D4", "C4", "A3", "G3"]]
+    for k in range(2, 10):
+        fr = frases[(k - 2) % 4]
+        for j, nota in enumerate(fr):
+            mar = place(mar, ins.marimba(PAL[nota], 0.9, seed=2500 + 8 * k + j, vel=0.6 if j % 2 else 0.75), _h(k * cyc + 2 * j * e, 2600 + 8 * k + j, 0.008))
+        mar = place(mar, ins.marimba(PAL[fr[0]], 1.2, seed=2590 + k, vel=0.4), _h(k * cyc + 11 * e, 2690 + k, 0.008))
+    st = _suma([0.5 * pan(reverb(cam, 0.15, 0.4, seed=30), 0.25), 0.7 * pan(reverb(ngo, 0.18, 0.45, seed=31), -0.1),
+                0.55 * pan(reverb(mar, 0.25, 0.6, seed=32), -0.25)])
+    out = st[:n].copy()
+    tail = st[n:]
+    out[: len(tail)] += tail
+    return out
+
+
+def ayutthaya_musica() -> np.ndarray:
+    """C-73 a: loop de paz de Ayutthaya (~30 s), en reemplazo de Tra Nimit (C-59): khong wong con la melodía lenta,
+    ranat ek que la adorna en notas repetidas y ching que marca el ciclo (abierto, cerrado). Sin pi ni sang: eso queda
+    para la alarma."""
+    beat = 0.5
+    bars = 16
+    L = bars * 4 * beat
+    n = int(L * SR)
+    kh = np.zeros(n + 4 * SR)
+    ra = np.zeros(n + 4 * SR)
+    ch = np.zeros(n + 4 * SR)
+    # Melodía nuclear (luk tok) de 8 compases, una nota por tiempo fuerte, que se repite dos veces.
+    nucleo = [0, 2, 1, 4, 3, 2, 4, 5, 5, 4, 2, 3, 1, 2, 0, 0]
+    for k in range(bars):
+        g = nucleo[k % len(nucleo)]
+        kh = place(kh, ins.khong(_pg(g), 2.0, seed=3000 + k, vel=0.7), _h(k * 4 * beat, 3100 + k, 0.01))
+        kh = place(kh, ins.khong(_pg(g + 2), 1.6, seed=3050 + k, vel=0.45), _h(k * 4 * beat + 2 * beat, 3150 + k, 0.01))
+        if 2 <= k < 14:
+            for j in range(8):
+                gg = g + 5 + (0, 1, 2, 1, 0, 1, 2, 3)[j]
+                ra = place(ra, ins.ranat(_pg(gg), 0.4, seed=3200 + 8 * k + j, vel=0.45 if j % 2 else 0.55), _h(k * 4 * beat + j * beat / 2, 3300 + 8 * k + j, 0.006))
+        for j in range(4):
+            ch = place(ch, ins.ching(j % 2 == 1, seed=3500 + 4 * k + j, vel=0.22), k * 4 * beat + j * beat)
+    st = _suma([0.65 * pan(reverb(kh, 0.25, 0.7, seed=33), -0.2), 0.5 * pan(reverb(ra, 0.2, 0.5, seed=34), 0.25),
+                0.4 * pan(reverb(ch, 0.15, 0.4, seed=35), 0.05)])
+    out = st[:n].copy()
+    tail = st[n:]
+    out[: len(tail)] += tail
+    return out
+
+
 SONIDOS["palmares"] = {"fanfarria": palmares_fanfarria, "alarma": palmares_alarma, "entrenado": palmares_entrenado, "orden": palmares_orden}
 SONIDOS["ayutthaya"] = {"fanfarria": ayutthaya_fanfarria, "alarma": ayutthaya_alarma, "entrenado": ayutthaya_entrenado, "orden": ayutthaya_orden}
+
+
+# Loops de paz sintetizados: carpeta, archivo y función.
+MUSICA = {
+    "etiopia": ("etiopia", "musica_etiopia_krar_kebero_1.ogg", etiopia_musica),
+    "palmares": ("palmares", "musica_palmares_ngoma_marimba_1.ogg", palmares_musica),
+    "ayutthaya": ("ayutthaya", "musica_ayutthaya_khong_ranat_1.ogg", ayutthaya_musica),
+}
 
 
 def main(civs: list[str]) -> None:
@@ -414,9 +502,10 @@ def main(civs: list[str]) -> None:
             fila["archivo"] = os.path.relpath(dest, RAIZ)
             filas.append(fila)
             print(fila)
-        if civ == "etiopia":
-            dest = os.path.join(RAIZ, "assets", "audio", "musica", "etiopia", "musica_etiopia_krar_kebero_1.ogg")
-            fila = export(etiopia_musica(), dest, NIVEL["musica"])
+        if civ in MUSICA:
+            carpeta, archivo, fn = MUSICA[civ]
+            dest = os.path.join(RAIZ, "assets", "audio", "musica", carpeta, archivo)
+            fila = export(fn(), dest, NIVEL["musica"])
             fila["archivo"] = os.path.relpath(dest, RAIZ)
             filas.append(fila)
             print(fila)

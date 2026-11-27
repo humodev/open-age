@@ -22,10 +22,11 @@
  "edades": [
   "Ywa",
   "Myo",
-  "Hanthawaddy",
+  "Toungoo",
   "Konbaung"
  ],
- "_edades": "Ywa: aldea. Myo: ciudad amurallada y cabecera. Hanthawaddy: Pegu, la capital de Bayinnaung desde 1539. Konbaung: la dinastía de Alaungpaya y Hsinbyushin.",
+ "_edades": "Ywa: aldea. Myo: ciudad amurallada y cabecera. Toungoo: la dinastía de Tabinshwehti y Bayinnaung, con capital en Pegu desde 1539; no se usa Hanthawaddy, que es el reino mon de Pegu (C-70 a). Konbaung: la dinastía de Alaungpaya y Hsinbyushin.",
+ "_doc_nombre_edad": "C-71 a (proceso/54): bayingyi y kathe son posteriores a 1613 y a 1758; hasta la edad III van los nombres de la época Toungoo. nombre_edad lo lee solo la interfaz (Textos.nombre_de).",
  "unidades": {
   "aldeano": {
    "nombre": "Athi",
@@ -43,13 +44,15 @@
    "edad_min": 1
   },
   "jinete": {
-   "nombre": "Jinete kathe",
-   "desc": "Kathe: así llamaban los birmanos a los manipuríes. La caballería kathe es de la época Konbaung; en la Toungoo, la caballería era birmana y shan.",
+   "nombre": "Jinete shan",
+   "desc": "Jinete de los principados shan, que en la época Toungoo daban la caballería al rey de Pegu junto con la birmana.",
+   "nombre_edad": {"4": {"nombre": "Jinete kathe", "desc": "Kathe: así llamaban los birmanos a los manipuríes. La caballería kathe es de la época Konbaung (desde 1758)."}},
    "edad_min": 1
   },
   "arcabucero": {
-   "nombre": "Bayingyi",
-   "desc": "Bayingyi: descendientes de los portugueses tomados en Siriam (1613) y asentados en el valle del Mu; sirvieron como mosqueteros y artilleros hereditarios del rey.",
+   "nombre": "Tiradores portugueses a sueldo",
+   "desc": "Mercenarios portugueses con arcabuz, que los reyes Toungoo contrataban por paga en el siglo XVI.",
+   "nombre_edad": {"4": {"nombre": "Bayingyi", "desc": "Bayingyi: descendientes de los portugueses tomados en Siriam (1613) y asentados en el valle del Mu; sirvieron como mosqueteros y artilleros hereditarios del rey."}},
    "edad_min": 2
   }
  },

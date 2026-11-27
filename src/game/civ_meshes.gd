@@ -279,6 +279,16 @@ static func _hut(p: Array, forma: String, at: Vector3, w: float, d: float, h: fl
 			top = at.y + wall_h + rh
 		"ayutthaya":
 			# Pabellón sobre pilotes; techos escalonados (más pisos con la edad) y remates dorados.
+			if cfg.get("kyaung", false):
+				# --- C-71 a --- Kyaung birmano (monasterio de teca): plataforma alta sobre muchos
+				# pilotes y escalera al frente; sube todo el pabellón.
+				var ph := h * 0.22
+				for i in 3:
+					for j in 2:
+						p.append([Meshes.cyl(0.04, 0.045, ph, 6), Meshes.xf(at + Vector3((i - 1) * w * 0.42, ph / 2.0, (j * 2 - 1) * d * 0.4)), pal[2].darkened(0.45)])
+				p.append([Meshes.box(w * 0.95, 0.05, d * 0.88), Meshes.xf(at + Vector3(0, ph, 0)), pal[0].darkened(0.15)])
+				p.append([Meshes.box(w * 0.22, 0.04, ph * 1.5), Meshes.xf(at + Vector3(0, ph * 0.5, d * 0.5 + ph * 0.3), Vector3(35, 0, 0)), pal[0].darkened(0.25)])
+				at = at + Vector3(0, ph, 0)
 			for c in [Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, 1)]:
 				p.append([Meshes.cyl(0.05, 0.05, h * 0.3, 6), Meshes.xf(at + Vector3(c.x * w * 0.4, h * 0.15, c.y * d * 0.38)), pal[2].darkened(0.3)])
 			p.append([Meshes.box(w * 0.85, h * 0.45, d * 0.75), Meshes.xf(at + Vector3(0, h * 0.52, 0)), walls])
@@ -371,6 +381,17 @@ static func _horcones(p: Array, at: Vector3, w: float, d: float, hgt: float) -> 
 		p.append([Meshes.sphere(0.08, 6), Meshes.xf(o + Vector3(0, hgt + 0.04, 0)), Color("6e4a2a")])
 
 
+## --- C-71 a --- Zedi birmana: estupa en campana, encalada, sobre terrazas, con el hti dorado.
+## No es el prang de Ayutthaya (torre de mazorca, de tradición jemer).
+static func _zedi(p: Array, at: Vector3, r: float) -> void:
+	var white := Color("efe9dc")
+	p.append([Meshes.box(r * 2.0, 0.12, r * 2.0), Meshes.xf(at + Vector3(0, 0.06, 0)), white.darkened(0.08)])
+	p.append([Meshes.box(r * 1.6, 0.12, r * 1.6), Meshes.xf(at + Vector3(0, 0.18, 0)), white.darkened(0.04)])
+	p.append([Meshes.cyl(r * 0.45, r * 0.75, r * 0.9, 14), Meshes.xf(at + Vector3(0, 0.24 + r * 0.45, 0)), white])
+	p.append([Meshes.cyl(r * 0.05, r * 0.45, r * 1.1, 14), Meshes.xf(at + Vector3(0, 0.24 + r * 0.9 + r * 0.55, 0)), Palette.WEALTH, 0.3])
+	p.append([Meshes.cyl(0.0, 0.04, 0.3, 6), Meshes.xf(at + Vector3(0, 0.24 + r * 2.0 + 0.12, 0)), Palette.WEALTH, 0.3])
+
+
 ## Remate sobre el techo: punta de madera, cruz o aguja dorada.
 static func _remate(p: Array, kind: String, at: Vector3) -> void:
 	match kind:
@@ -382,6 +403,14 @@ static func _remate(p: Array, kind: String, at: Vector3) -> void:
 			p.append([Meshes.sphere(0.06, 6), Meshes.xf(at + Vector3(0, 0.0, 0)), Color("f2ecdf")]) # huevo de avestruz
 		"dorado":
 			p.append([Meshes.cyl(0.0, 0.07, 0.6, 6), Meshes.xf(at + Vector3(0, 0.25, 0)), Palette.WEALTH, 0.3])
+		"pyatthat":
+			# --- C-71 a --- Pyatthat birmano: aguja de techos cuadrados que se achican, de teca
+			# oscura, y el hti dorado arriba (palacios, puertas y monasterios).
+			var teak := Color("4e3322")
+			for i in 5:
+				var s := 0.5 - i * 0.085
+				p.append([Meshes.cyl(s * 0.2, s, 0.12, 4), Meshes.xf(at + Vector3(0, 0.08 + i * 0.15, 0), Vector3(0, 45, 0)), teak.lightened(i * 0.04)])
+			p.append([Meshes.cyl(0.0, 0.05, 0.4, 6), Meshes.xf(at + Vector3(0, 0.95, 0)), Palette.WEALTH, 0.3])
 
 
 static func _center(p: Array, forma: String, w: float, d: float, pal: Array, team: Color, by: float, cfg: Dictionary = {}) -> void:
@@ -415,6 +444,8 @@ static func _center(p: Array, forma: String, w: float, d: float, pal: Array, tea
 		var sz := half_d - side * 0.5
 		_hut(p, forma, Vector3(-sx, by, sz), side, side * 0.93, 0.9, pal, cfg)
 		_hut(p, forma, Vector3(sx, by, sz), side, side * 0.93, 0.9, pal, cfg)
+		if cfg.get("zedi", false):
+			_zedi(p, Vector3(0, by, sz), minf(side * 0.75, 0.75))
 	Meshes._banner(p, Vector3(w * 0.38, by, -d * 0.38), 2.6, team)
 	Meshes._banner(p, Vector3(-w * 0.38, by, -d * 0.38), 2.6, team)
 	decor_parts(p, w, d, team, cfg, true)

@@ -39,13 +39,9 @@ const CIV_MUSIC := {
 	"tawantinsuyu": {"paz": ["musica/tawantinsuyu/musica_andes_flauta_de_pan_1.ogg", "musica/tawantinsuyu/musica_andes_charango_1.ogg", "musica/musica_flauta_de_pan.ogg"]},
 	# Mapuches: la pifilka pasó a la paz (C-08 a), en data/audio.json; en el combate, la general.
 	"guaranies": {"paz": ["musica/guarani/musica_guarani_selva_generica_1.ogg"]},
-	# Palmares: sin pistas propias hasta tener ngoma, marimba y kisanji sintetizados. Salieron los toques
-	# de capoeira (iúna, angola), el ijexá y el "Tropical loop" genérico (revisión histórica 25, 01 R3 y 02 n.º 10).
-	# Ayutthaya: salieron la pista titulada como Lan Xang y "Bamboo Blitz" (25, 03 n.º 2). Maha Nimit sigue
-	# hasta que se conteste C-59.
-	"ayutthaya": {
-		"paz": ["musica/ayutthaya/musica_ayutthaya_maha_nimit_1.ogg"],
-	},
+	# Palmares y Ayutthaya: sus loops de paz sintetizados están en data/audio.json (C-73 a). De Palmares
+	# salieron los toques de capoeira (iúna, angola), el ijexá y el "Tropical loop" (25, 01 R3 y 02 n.º 10);
+	# de Ayutthaya, la pista titulada como Lan Xang, "Bamboo Blitz" (25, 03 n.º 2) y Tra Nimit (C-73 a).
 }
 
 var sim: Sim

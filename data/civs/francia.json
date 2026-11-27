@@ -1,0 +1,16 @@
+{
+ "hereda": "invasores",
+ "solo_ia": true,
+ "invasor": true,
+ "nombre": "Francia",
+ "adjetivo": "francés",
+ "frase": "La Compañía francesa de las Indias Orientales y la guarnición de Bangkok.",
+ "descripcion": "Facción solo de IA y de campaña (D-018, C-72 a): la guarnición francesa del fuerte de Bangkok (1687–1688). Caballería y pólvora desde temprano, fuertes de piedra.",
+ "edades": [
+  "Comptoir",
+  "Fuerte",
+  "Compañía",
+  "Embajada"
+ ],
+ "_edades": "Comptoir: la factoría de comercio; Compañía: la Compagnie des Indes orientales (1664); Embajada: las embajadas de Luis XIV a Narai (1685 y 1687) [verificar]."
+}

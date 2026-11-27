@@ -2,6 +2,8 @@
  "nombre": "Invasores",
  "adjetivo": "invasor",
  "solo_ia": true,
+ "invasor": true,
+ "_doc_potencias": "C-72 a (proceso/54): las campañas usan las potencias por separado (castilla, portugal, holanda, francia y paulistas), que heredan de este archivo (hereda) y cambian nombres y edades. invasor: true en todas, para las reglas que valen contra los invasores (la liberación de Palmares, C-68). Esta queda para los saqueadores del tutorial y del Arte de la guerra.",
  "frase": "Huestes, terços, bandeiras y ejércitos que llegan a conquistar o a cobrar.",
  "descripcion": "Facción solo de IA y de campaña (D-018): caballería y pólvora desde temprano, fuertes de piedra.",
  "estilo": {

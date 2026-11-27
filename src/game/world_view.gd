@@ -1069,7 +1069,9 @@ func _stretch_k(e: SimEntity, h: float) -> float:
 	var ev: Dictionary = sim.data.reglas.get("escala_visual", {})
 	# --- veterano ronda 5 --- tope propio de un modelo (la ruka: domo bajo)
 	var modelo: String = sim.dp(e.owner).civ.get("estilo", {}).get("modelos", {}).get(e.type, "")
-	var tope := float((ev.get("estirar_modelo_max_por_modelo", {}) as Dictionary).get(modelo, ev.get("estirar_modelo_max_pct", 150)))
+	# C-106: el tope vale también para el modelo del pipeline del mismo nombre («local/mapuches_casa»).
+	var topes: Dictionary = ev.get("estirar_modelo_max_por_modelo", {})
+	var tope := float(topes.get(modelo, topes.get(modelo.get_file(), ev.get("estirar_modelo_max_pct", 150))))
 	return clampf(want / h, 1.0, tope / 100.0)
 
 

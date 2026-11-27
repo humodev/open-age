@@ -1,0 +1,584 @@
+Running as unit: run-p1128718-i5333671.scope; invocation ID: b0fec9206b4747b68433920db04620cd
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+WARNING: Grilla: 'vender_alimento' choca con 'comerciante' en Q; va a A
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_alimento' choca con 'vender_alimento' en A; va a S
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'vender_alimento' choca con 'comerciante' en Q; va a A
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_alimento' choca con 'vender_alimento' en A; va a S
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'vender_alimento' choca con 'comerciante' en Q; va a A
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_alimento' choca con 'vender_alimento' en A; va a S
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'vender_alimento' choca con 'comerciante' en Q; va a A
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_alimento' choca con 'vender_alimento' en A; va a S
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'vender_alimento' choca con 'comerciante' en Q; va a A
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_alimento' choca con 'vender_alimento' en A; va a S
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'vender_alimento' choca con 'comerciante' en Q; va a A
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_alimento' choca con 'vender_alimento' en A; va a S
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'vender_alimento' choca con 'comerciante' en Q; va a A
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_alimento' choca con 'vender_alimento' en A; va a S
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'vender_alimento' choca con 'comerciante' en Q; va a A
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_alimento' choca con 'vender_alimento' en A; va a S
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'vender_alimento' choca con 'comerciante' en Q; va a A
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_alimento' choca con 'vender_alimento' en A; va a S
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'vender_alimento' choca con 'comerciante' en Q; va a A
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_alimento' choca con 'vender_alimento' en A; va a S
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'vender_alimento' choca con 'comerciante' en Q; va a A
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_alimento' choca con 'vender_alimento' en A; va a S
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'vender_alimento' choca con 'comerciante' en Q; va a A
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_alimento' choca con 'vender_alimento' en A; va a S
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'vender_alimento' choca con 'comerciante' en Q; va a A
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_alimento' choca con 'vender_alimento' en A; va a S
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'vender_alimento' choca con 'comerciante' en Q; va a A
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_alimento' choca con 'vender_alimento' en A; va a S
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'vender_alimento' choca con 'comerciante' en Q; va a A
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_alimento' choca con 'vender_alimento' en A; va a S
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'vender_alimento' choca con 'comerciante' en Q; va a A
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_alimento' choca con 'vender_alimento' en A; va a S
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'vender_alimento' choca con 'comerciante' en Q; va a A
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_alimento' choca con 'vender_alimento' en A; va a S
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'vender_alimento' choca con 'comerciante' en Q; va a A
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_alimento' choca con 'vender_alimento' en A; va a S
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'vender_alimento' choca con 'comerciante' en Q; va a A
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_alimento' choca con 'vender_alimento' en A; va a S
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'vender_alimento' choca con 'comerciante' en Q; va a A
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_alimento' choca con 'vender_alimento' en A; va a S
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'vender_alimento' choca con 'comerciante' en Q; va a A
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_alimento' choca con 'vender_alimento' en A; va a S
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'vender_alimento' choca con 'comerciante' en Q; va a A
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_alimento' choca con 'vender_alimento' en A; va a S
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'vender_alimento' choca con 'comerciante' en Q; va a A
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_alimento' choca con 'vender_alimento' en A; va a S
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'vender_alimento' choca con 'comerciante' en Q; va a A
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_alimento' choca con 'vender_alimento' en A; va a S
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/verificar.gd:47)
+VERIFICAR: 124 textos con nota en los datos; 3068 ayudas y 56 niveles revisados; OK
+WARNING: 9734 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 10 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

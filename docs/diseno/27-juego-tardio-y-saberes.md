@@ -627,31 +627,7 @@ Archivos que toca:
 
 ## Para comunidades y especialistas (suma a la tabla de C-74)
 
-Como en la etapa 25: ofrecer crédito y, si se puede, pago por la revisión.
-
-| Con quién | Qué | Pidió |
-|---|---|---|
-| Comunidades de Quehue y Huinchiri (Q'eswachaka) | Usar el puente de soga como mejora y su nombre | diseño |
-| Municipalidad y comunidades de Ollantaytambo | La llaqta como maravilla destructible y el templo inconcluso dentro de ella | AL |
-| Bioarqueólogos (John Verano o su equipo); quechuahablantes | Cifras exactas de la trepanación, instrumentos, si el dibujo del hueso cicatrizado es aceptable; *hampikamayuq*, *champi*, *liwi*, *yachaywasi*, *wayrachina* | diseño, AL |
-| Especialistas en Potosí (Peter Bakewell o Mary Van Buren) | La huayrachina y la mita minera en la ficha | AL |
-| Organizaciones mapuches; rütrafe actuales; lingüistas de mapudungun | *Ampive* o *lawentuchefe* y el límite con la machi; el poncho y la platería como mecánica; el *pron*; *koyagtun* como maravilla y su rito; *weupife*, *trawün*, *waiki* | diseño, AL |
-| Mbyá y paĩ-tavyterã; hablantes de guaraní | *Pohãnohára*, *ka'aguygua* y la separación entre el que cura y el *karai*; *pohã ñana*, *u'y hatã*, *ygá*; la frase de Sepé | diseño, AL |
-| Avá guaraní y kaiowá (Mato Grosso do Sul, Paraguay) | *Tekoha guasu* y *tekoha* en un juego | AL |
-| Eduardo Neumann (misiones) | La escritura de los cabildos y el hierro de San Juan Bautista | AL |
-| Iglesia ortodoxa Tewahedo | El *fäws* y los *däbtära* (¿se puede tomar solo la farmacopea?); confirmar que el *Bahrä Hasab* sale; las iglesias dentro de Fasil Gəbbi; las escuelas de la iglesia | diseño, AF |
-| Académicos oromo (estudios del *gadaa*) y organizaciones oromo | "Jinetes oromo aliados", la adopción (*moggaasa*), la grafía *gadaa*, el uso de Bahrey como fuente | diseño, AF |
-| Comunidad musulmana etíope y comunidad hararí | Los *jabarti* como comerciantes; el Islam Bet en la ficha de los talleres | AF |
-| Beta israel | La línea sobre los herreros y la acusación de *buda* | AF |
-| Hablantes de amhárico y ge'ez | *Gaša*, *šotäl*, *wägešša*, *maräša*, *amole*, *kätäma*, *ṣäḥafe tə'əzaz*, *färäsäñña* | diseño, AF |
-| CONAQ, Parque Memorial Quilombo dos Palmares, quilombolas de Alagoas | La Barriga como maravilla y su caída (C-97); *erveira/erveiro*; el *sanguar* (que no se lea como capoeira); capitães de mocambo y el pacto | diseño, AF |
-| Lingüistas de kimbundu y kikongo (Universidade Agostinho Neto) | *Makota*, *ngana*, "Angola Janga", *kilombo*, el nombre del fuelle si se quiere uno en kimbundu | AF |
-| Arqueólogos de la Serra da Barriga (Funari y Orser, o Scott Allen); Silvia Lara | Evidencia de forja, cerámica de almacenamiento y tejido de palma; las palmeras de la sierra; la sociedad mezclada; *Angola Janga*, *fojos* y el término de los jefes | AL, AF |
-| *Khru* de medicina tradicional tailandesa, o un historiador de la medicina (Instituto de Medicina Tradicional Tailandesa) | Contenido y datación del *Tamra Phra Osot Phra Narai*; el *nuat* y el departamento de masaje; qué parte del *wai khru* a Jivaka no se toca | diseño, AS |
-| Hablante de tailandés con formación en tailandés antiguo | *Khotchasat*, *Krom Hon* u *Horathibodi*, *khao khuen nam*, *puen lek*, *rong chang*, los nombres de los departamentos de elefantes y de puertos | AS |
-| Historiador del arte o arqueólogo del *Krom Sinlapakon* | La fecha de Pom Phet y del Khu Khue Na; los hornos de Si Satchanalai; las piezas de *ngao* | AS |
-| Comunidades kui (suai) de Surin | Si se nombra a los cazadores de elefantes kui y cómo; el culto al espíritu del lazo **no se usa** | AS |
-| ~~Comunidad theravada~~ | Ya no hace falta para la maravilla: C-79 se cierra en a) | AS |
+Están en la lista completa: [29-consultas-a-comunidades](29-consultas-a-comunidades.md).
 
 ---
 

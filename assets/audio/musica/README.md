@@ -59,10 +59,16 @@ Segunda búsqueda (2026-11-14), en Commons, Internet Archive (con los discos de 
 | musica_quilombo_ijexa_1.ogg | 0:24 | paz (loop corto) | Ritmo ijexá de afoxé, programado en MIDI |
 | musica_quilombo_tambores_combate_1.ogg | 0:18 | combate (loop corto) | **Genérica**: loop de tambores africanos, no atabaque/agogô específicamente |
 
+## Palmares (`palmares/`)
+
+| archivo | duración | momento | notas |
+|---|---|---|---|
+| musica_palmares_ngoma_marimba_1.ogg | 0:27 | paz | **Obra propia**, sintetizada: ngongi (campana doble), ngoma y marimba en 12/8, sin berimbau ni toques de capoeira (C-73 a) |
+
 ## Ayutthaya (`ayutthaya/`)
 
 | archivo | duración | momento | notas |
 |---|---|---|---|
-| musica_ayutthaya_maha_nimit_1.ogg | 1:20 | paz (única pista propia, en consulta C-59) | *Phleng Maha Nimit*, pieza tailandesa de corte, grabada en 1934 por la Banda de la Armada Real (banda de vientos, no piphat; sonido de época) |
+| musica_ayutthaya_khong_ranat_1.ogg | 0:32 | paz | **Obra propia**, sintetizada (`tools/audio/generar_sonidos.py`): khong wong, ranat ek y ching. Reemplaza a *Phleng Maha Nimit* (Tra Nimit), que salió por ser del repertorio ceremonial *naphat* (C-73 a) |
 | musica_ayutthaya_xilofono_1.ogg | 1:33 | fuera de uso | **Genérica**. Su título original («Kingdom of a million elephants under a white parasol») es el nombre de Lan Xang, el reino lao vecino: salió de `CIV_MUSIC` en la etapa 25 |
 | musica_ayutthaya_combate_xilofono_1.ogg | 1:17 | fuera de uso | **Genérica** («Bamboo Blitz»): tambores genéricos con xilofón; salió de `CIV_MUSIC` en la etapa 25 |

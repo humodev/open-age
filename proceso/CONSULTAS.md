@@ -229,7 +229,7 @@ a) Sí, cinco misiones cortas con medallas por tiempo, después de la etapa 23 *
 El mito de Inkarrí se documenta sobre todo en el siglo XX (Arguedas lo recogió en Puquio en 1956), aunque se lo vincula con el Taki Onqoy y con la muerte de Túpac Amaru I (1572). La edad IV cubre Vilcabamba (1537–1572) y Tinta (1780). Ya la investigación lo había dejado como "a consultar" (`docs/investigacion/tawantinsuyu.md`, punto 9). Sus dos hitos son Qorikancha y Vilcabamba.
 a) Dejar Inkarri y explicarlo en el panel del pueblo como un guiño al arco de la campaña, no como un nombre de época *(por defecto)* · b) *Vilcabamba* (choca con el nombre del hito militar) · c) *Neo Inka* · d) Otro (escribilo)
 
-**Respuesta:** «Contestaré en la C-70» (2026-11-21, página de consultas).
+**Respuesta:** «Contestaré en la C-70» (2026-11-21, página de consultas). **Aplicado:** con la C-70 a: *Willkapampa* para la edad y *Espíritu Pampa* para el hito (proceso/54).
 
 ### C-40 · (historia) El Qorikancha como hito de la edad IV inca
 El Qorikancha lo reconstruyó Pachakutiq hacia 1438: como obra de la última edad es anacrónico. Moverlo a la edad II o III cambia los hitos y, por lo tanto, el balance del Tawantinsuyu, que está en revisión (parte A).
@@ -363,7 +363,7 @@ a) Dejarla hasta confirmar *(por defecto)* · b) Sacarla
 El hito "Casa del karai" muestra bastones con plumas y una mbaraka (`data/arte_hitos.json`).
 a) Dejarlo: es la casa del karai, donde corresponde *(por defecto)* · b) Sacar la mbaraka del modelo
 
-**Respuesta:** a) Dejarlo: es la casa del karai, donde corresponde (2026-11-21, página de consultas). **Aplicado:** ya estaba: la mbaraka sigue en el hito (`data/arte_hitos.json`). Choca con lo que propone C-74, que sigue sin contestar.
+**Respuesta:** a) Dejarlo: es la casa del karai, donde corresponde (2026-11-21, página de consultas). **Aplicado:** ya estaba: la mbaraka sigue en el hito (`data/arte_hitos.json`). La C-74 a (2026-11-26) la dio vuelta: la mbaraka salió del modelo hasta la consulta mbyá (proceso/54).
 
 ### C-61 · (IA fácil) Un solo ataque
 La fácil tiene tope de 15 soldados, pero la segunda oleada pide 18 (12 + 6). Si la primera se traba, no vuelve a atacar y a veces la partida no termina (`proceso/24-tras-la-segunda-ronda/4j-jugador-nuevo-ronda-3.md`).
@@ -434,7 +434,7 @@ Las propuestas de los historiadores:
 
 a) Todo eso *(por defecto)* · b) Elegir de a uno (decí cuáles)
 
-**Respuesta:** a) Todo eso (2026-11-26, página de consultas).
+**Respuesta:** a) Todo eso (2026-11-26, página de consultas). **Aplicado:** incas con *Willkapampa* en la IV y el hito militar *Espíritu Pampa* (cierra C-39); la III birmana, *Toungoo*; la IV de Ayutthaya, *Krung Thonburi*, y *Ekkarat* explicado en el panel del pueblo (`edades_nota`). Ya estaban: *Tovaja* (C-41 a), *1678* (C-42 b) y el Qorikancha en la III (C-40 b) (proceso/54).
 
 ### C-71 · (historia, Asia) Birmania y los extranjeros de Ayutthaya
 - *Bayingyi* (tiradores) y *kathe* (caballería) son de 1613 en adelante y de la época Konbaung; en la edad II y en Nong Sarai (1593) son anacrónicos.
@@ -442,7 +442,7 @@ a) Todo eso *(por defecto)* · b) Elegir de a uno (decí cuáles)
 
 a) Bayingyi y kathe solo en la edad IV (antes, "tiradores portugueses a sueldo" y "jinete shan"); barrio chino como tercer barrio de Ayutthaya; Birmania con monasterio de teca, pyatthat y zedi propios *(por defecto)* · b) Solo los nombres
 
-**Respuesta:** a) Bayingyi y kathe solo en la edad IV (antes, "tiradores portugueses a sueldo" y "jinete shan"); barrio chino como tercer barrio de Ayutthaya; Birmania con monasterio de teca, pyatthat y zedi propios (2026-11-26, página de consultas).
+**Respuesta:** a) Bayingyi y kathe solo en la edad IV (antes, "tiradores portugueses a sueldo" y "jinete shan"); barrio chino como tercer barrio de Ayutthaya; Birmania con monasterio de teca, pyatthat y zedi propios (2026-11-26, página de consultas). **Aplicado:** «Tiradores portugueses a sueldo» y «Jinete shan» hasta la III, *bayingyi* y *kathe* en la IV (nombres por edad, solo en la interfaz); barrio chino como tercer barrio (`barrio_chinos`, con los números del portugués, lo habilita «Barrio chino y puertos», entrena a los defensores de Suan Phlu; la IA todavía no lo construye); Birmania con kyaung de teca, zedi y pyatthat de maqueta, en la lista del pipeline de arte (proceso/54).
 
 ### C-72 · (historia) Otros nombres
 - **Hitos mapuches:** Malón del toqui, Nguillatuwe del rewe, Corral de la remonta (o *Kawellu*) y Pewenal. Hoy inventan cargos como "toqui de caballería".
@@ -453,7 +453,7 @@ a) Bayingyi y kathe solo en la edad IV (antes, "tiradores portugueses a sueldo" 
 
 a) Todo eso *(por defecto)* · b) De a uno
 
-**Respuesta:** a) Todo eso (2026-11-26, página de consultas).
+**Respuesta:** a) Todo eso (2026-11-26, página de consultas). **Aplicado:** hitos mapuches *Malón del toqui*, *Nguillatuwe del rewe*, *Kawellu* (Corral de la remonta) y *Pewenal*; Junta de guerra, *Qhuya wasi*, *Gojjo bet*; «Suai (pago al rey)»; buey cebú en Etiopía (Palmares ya tenía cerdo); potencias europeas separadas (Castilla, Portugal, Países Bajos, Francia) y los paulistas como facción propia, que heredan de `invasores` (proceso/54).
 
 ### C-73 · (historia, sonido) Lo que quedaba abierto
 - C-58: nagarit (el timbal real de guerra) en la fanfarria y la alarma etíopes, en lugar del kebero litúrgico.
@@ -462,7 +462,7 @@ a) Todo eso *(por defecto)* · b) De a uno
 
 a) Todo eso, con música propia de paz para Palmares (ngoma y marimba) y para Ayutthaya, sintetizadas *(por defecto)* · b) De a uno
 
-**Respuesta:** a) Todo eso, con música propia de paz para Palmares (ngoma y marimba) y para Ayutthaya, sintetizadas (2026-11-26, página de consultas).
+**Respuesta:** a) Todo eso, con música propia de paz para Palmares (ngoma y marimba) y para Ayutthaya, sintetizadas (2026-11-26, página de consultas). **Aplicado:** nagarit en la fanfarria y la alarma etíopes; *Tra Nimit* fuera; alarma de Ayutthaya con sang, klong chana y pi chawa; música de paz sintetizada para Palmares (ngongi, ngoma y marimba) y Ayutthaya (khong wong, ranat y ching) (proceso/54).
 
 ### C-74 · (historia) Representación y consultas
 - **Wat:** que no muestre una imagen del Buda reconocible hasta consultar, y revisar si conviene que se pueda destruir.
@@ -477,7 +477,7 @@ a) Todo eso, con música propia de paz para Palmares (ngoma y marimba) y para Ay
 
 a) Así *(por defecto)* · b) Otra cosa
 
-**Respuesta:** a) Así (2026-11-26, página de consultas).
+**Respuesta:** a) Así (2026-11-26, página de consultas). **Aplicado:** el wat ya no mostraba imagen del Buda (ya estaba); sigue destructible como todo hito, con la pregunta en la consulta Q-14; la mbaraka sale del hito guaraní (**da vuelta la C-60 a**: confirmalo); oromo, Adal, Lan Na, Lan Xang y Camboya en `docs/diseno/26` §1.9; lista completa de consultas en `docs/diseno/29-consultas-a-comunidades.md` (proceso/54).
 > **C-75 a C-83 vienen del diseño del juego tardío y los saberes** (`docs/diseno/27-juego-tardio-y-saberes.md`, etapa 26). Las consultas a comunidades de ese diseño se suman a C-74.
 
 ### C-75 · (juego tardío) Regla del ×2
@@ -510,7 +510,7 @@ a) Krung *(por defecto)* · b) El wat, si la consulta lo acepta
 
 *Revisión histórica (etapa 26): el historiador de Asia recomienda cerrarla en a). Hacer del Wat Phra Si Sanphet una maravilla repite el saqueo de 1767.*
 
-**Respuesta:** a) Krung (2026-11-26, página de consultas).
+**Respuesta:** a) Krung (2026-11-26, página de consultas). **Aplicado:** ya estaba: la maravilla es «Krung Si Ayutthaya y Pom Phet», sin el wat del palacio (proceso/54).
 
 ### C-80 · (juego tardío) Unidades nuevas sin modelo
 ¿Esperan al arte o entran con una maqueta de silueta propia?
@@ -532,7 +532,7 @@ a) Consultar a la Iglesia Tewahedo y, si no, "Cartógrafos de la corte" *(por de
 
 *Revisión histórica (etapa 26): el Bahrä Hasab es el cómputo de la Pascua, y ninguna fuente dice que ordenara las mudanzas de la corte. La opción nueva por defecto es el orden del kätäma (el campamento real armado siempre con el mismo plano), que está documentado.*
 
-**Respuesta:** a) Consultar a la Iglesia Tewahedo y, si no, "Cartógrafos de la corte" (2026-11-26, página de consultas).
+**Respuesta:** a) Consultar a la Iglesia Tewahedo y, si no, "Cartógrafos de la corte" (2026-11-26, página de consultas). **Aplicado:** ya estaba: el saber es el «Orden del kätäma» y el *Bahrä Hasab* no figura en los datos; la confirmación con la Tewahedo queda en la consulta Q-01 (proceso/54).
 
 ### C-83 · (saberes) Saberes con evidencia "debatida"
 El kilombo, el shotel, los armeros de Gondar y el yachaywasi tienen evidencia debatida.
@@ -670,19 +670,19 @@ a) En tu PC, con el puerto 47900/TCP abierto en el router: gratis, pero solo and
 
 Cuando lo tengas, poné `RELEVO=host:47900` en `~/.config/raices/publicar.env`. Así los amigos solo escriben el código de la sala.
 
-**Respuesta:** c) Un VPS de 4–6 USD por mes (Hetzner, DigitalOcean): lo más simple y estable (2026-11-26, página de consultas).
+**Respuesta:** c) Un VPS de 4–6 USD por mes (Hetzner, DigitalOcean): lo más simple y estable (2026-11-26, página de consultas). **Aplicado:** lista corta para crear el VPS (Hetzner CX22), instalar el relevo con la unidad de systemd y abrir el 47900 en `proceso/44-version-para-amigos/guia-relevo-y-versiones.md` (proceso/54). Falta que lo crees vos.
 
 ### C-103 · Página de itch.io
 Para que la app de itch les actualice el juego solo, hace falta una página. Va con estos pasos: crearla en modo **Restricted** o **Draft**, correr `butler login`, poner `ITCH_TARGET=usuario/raices` en `~/.config/raices/publicar.env` y correr `tools/publicar.sh --subir`. ¿Cómo entran los amigos?
 a) Con una clave de descarga por amigo *(por defecto)* · b) Con una contraseña de página para todos · c) Nada de itch por ahora: les mando los zip a mano
 
-**Respuesta:** a) Con una clave de descarga por amigo (2026-11-26, página de consultas).
+**Respuesta:** a) Con una clave de descarga por amigo (2026-11-26, página de consultas). **Aplicado:** pasos de las claves de descarga en la misma guía (proceso/54). Falta que crees la página.
 
 ### C-104 · Nombre de la versión
 Hoy la versión es `AAAA.MM.DD-commit` (por ejemplo `2026.11.20-1a2b3c4`). ¿Te sirve, o preferís un número (0.1, 0.2…) que subas vos?
 a) Fecha y commit *(por defecto)* · b) Número a mano, más el commit
 
-**Respuesta:** a) Fecha y commit (2026-11-26, página de consultas).
+**Respuesta:** a) Fecha y commit (2026-11-26, página de consultas). **Aplicado:** ya estaba (proceso/54).
 
 ### C-105 · 3D local: ¿seguimos? (proceso/43)
 Hunyuan3D-2mini turbo da formas buenas en la PC (ver `proceso/43-3d-local/index.html`). Para seguir hacen falta cosas que no hago solo: (1) instalar el toolkit de CUDA 12.8 con un gcc 13 o 14 (para la textura propia de Hunyuan); (2) aceptar la licencia de Stable Fast 3D con tu cuenta de Hugging Face, si querés compararlo; (3) Mixamo, con tu cuenta, si el autorrig de Blender no alcanza. ¿Qué hacemos?
@@ -694,4 +694,4 @@ a) Pasar los aldeanos y edificios de los incas a esta cadena y probar el rig en 
 Los cuatro modelos nuevos (aldeano, kancha, kallanka y caballo, con textura de Hunyuan3D-Paint) están en `assets/generados/modelos/local/` y no se usan todavía. Ver el antes y después en `proceso/47-pipeline-3d/README.md`.
 a) Usar ya la kancha y la kallanka (estáticas) en los incas y dejar el aldeano para cuando `AldeanoAnimado` acepte modelos riggeados *(por defecto)* · b) Usar los cuatro ya, con el aldeano quieto como el GLB de hoy · c) Esperar a pasar todas las civilizaciones por el pipeline
 
-**Respuesta:** a) Usar ya la kancha y la kallanka (estáticas) en los incas y dejar el aldeano para cuando `AldeanoAnimado` acepte modelos riggeados (2026-11-26, página de consultas).
+**Respuesta:** a) Usar ya la kancha y la kallanka (estáticas) en los incas y dejar el aldeano para cuando `AldeanoAnimado` acepte modelos riggeados (2026-11-26, página de consultas). **Aplicado:** modelos del pipeline en el juego, un renglón de `estilo.modelos` por modelo: kancha y kallanka incas, y casa y capital de guaraníes, Etiopía, Palmares y Ayutthaya; la ruka mapuche también. El lof mapuche **volvió** al de Meshy porque se ve más chico que una casa. Los aldeanos siguen como estaban (proceso/54).

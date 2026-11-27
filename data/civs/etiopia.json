@@ -13,8 +13,8 @@
   "modelos": {
    "aldeano": "etiopia_aldeano",
    "guerrero": "etiopia_jinete",
-   "centro": "etiopia_centro",
-   "casa": "etiopia_casa"
+   "centro": "local/etiopia_centro",
+   "casa": "local/etiopia_casa"
   }
  },
  "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",
@@ -81,7 +81,7 @@
  "unidades": {
   "comerciante": {"nombre": "Mercader jabarti", "desc": "Mercaderes musulmanes, los jabarti, con caravanas de mulas cargadas de amole (Pankhurst, 1961). Va del mercado propio a otro mercado y vuelve con riqueza: cuanto más lejos, más gana."},
   "catapulta": {"nombre": "Pieza ligera", "ataque": 18, "alcance": 7500, "desc": "Asedio de área: cañones livianos que llegaron con los portugueses de Cristóvão da Gama en 1541 (Castanhoso, 1564; Whiteway, 1902) [verificar el pasaje]. Pega a todos los enemigos cerca del blanco; le hace poco a los edificios."},
-  "rebano": {"nombre": "Cabra", "color": "#3a3530"},
+  "rebano": {"nombre": "Buey cebú", "color": "#8a7a68", "desc": "Buey cebú de las tierras altas: el par de bueyes tiraba de la maresha y era la riqueza del campesino. Se arrea y da alimento."},
   "aldeano": {
    "nombre": "Gäbbar"
   },
@@ -152,7 +152,7 @@
    "empaca_en": "carpa_real"
   },
   "casa": {
-   "nombre": "Tukul"
+   "nombre": "Gojjo bet"
   },
   "cuartel": {
    "nombre": "Campamento de chewa"

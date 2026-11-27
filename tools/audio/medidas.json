@@ -2,8 +2,8 @@
  {
   "archivo": "assets/audio/civ/ayutthaya/ayutthaya_alarma.ogg",
   "lufs": -16.0,
-  "pico_dbfs": -3.0,
-  "duracion_s": 3.87
+  "pico_dbfs": -4.2,
+  "duracion_s": 4.13
  },
  {
   "archivo": "assets/audio/civ/ayutthaya/ayutthaya_entrenado.ogg",
@@ -26,8 +26,8 @@
  {
   "archivo": "assets/audio/civ/etiopia/etiopia_alarma.ogg",
   "lufs": -16.0,
-  "pico_dbfs": -5.1,
-  "duracion_s": 3.86
+  "pico_dbfs": -3.5,
+  "duracion_s": 3.69
  },
  {
   "archivo": "assets/audio/civ/etiopia/etiopia_entrenado.ogg",
@@ -38,8 +38,8 @@
  {
   "archivo": "assets/audio/civ/etiopia/etiopia_fanfarria.ogg",
   "lufs": -15.9,
-  "pico_dbfs": -4.0,
-  "duracion_s": 6.27
+  "pico_dbfs": -3.3,
+  "duracion_s": 6.94
  },
  {
   "archivo": "assets/audio/civ/etiopia/etiopia_orden.ogg",
@@ -144,9 +144,21 @@
   "duracion_s": 0.21
  },
  {
+  "archivo": "assets/audio/musica/ayutthaya/musica_ayutthaya_khong_ranat_1.ogg",
+  "lufs": -16.0,
+  "pico_dbfs": -4.3,
+  "duracion_s": 32.0
+ },
+ {
   "archivo": "assets/audio/musica/etiopia/musica_etiopia_krar_kebero_1.ogg",
   "lufs": -16.0,
   "pico_dbfs": -4.5,
   "duracion_s": 34.56
+ },
+ {
+  "archivo": "assets/audio/musica/palmares/musica_palmares_ngoma_marimba_1.ogg",
+  "lufs": -16.0,
+  "pico_dbfs": -2.3,
+  "duracion_s": 27.36
  }
 ]
