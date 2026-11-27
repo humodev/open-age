@@ -16,6 +16,9 @@ extends SceneTree
 ##   godot --path . -s tools/aldeanos_animados.gd -- --modo=batalla --civ=mapuches --rival=tawantinsuyu --terreno=llano --nofog --mute [--edad=3] [--zoom=10] [--seguir=S]
 ##       Batalla de cerca: los soldados a pie de los dos pueblos, en línea, chocan; capturas y,
 ##       con --seguir, S segundos más (para grabar con --write-movie).
+##   godot --path . -s tools/aldeanos_animados.gd -- --modo=base --civ=tawantinsuyu --rival=tawantinsuyu --terreno=llano --nofog --mute [--zoom=8]
+##       La base con aldeanos de los dos equipos talando, picando, cosechando en la granja,
+##       construyendo y llevando la carga (proceso/57-aldeanos-meshy); capturas de cada trabajo.
 
 var args := {}
 var dir := "screenshots/anim"
@@ -289,6 +292,10 @@ func _partida() -> void:
 		await _batalla(sim)
 		quit(0)
 		return
+	if args.get("modo") == "base":
+		await _base(sim, b)
+		quit(0)
+		return
 	# Aldeanos a cada trabajo, cerca de la base.
 	var vill: Array[int] = []
 	for e in sim.actives:
@@ -511,6 +518,7 @@ func _fps(sim: Sim, b: Vector2i) -> void:
 	await _shot("fps_%s_%s" % ["anim" if AldeanoAnimado.usa({"funcion": "civil"}) else "maqueta", "comp" if AldeanoAnimado.compartir else "sin"])
 	times.sort()
 	view_ms.sort()
+	print("modelos de Meshy armados en %.0f ms (retarget incluido)" % (AldeanoAnimado.us_retarget / 1000.0)) # --- proceso/57 ---
 	print("vista (WorldView.render) ms por cuadro: mediana=%.2f %s · GPU ms: %s" % [view_ms[view_ms.size() / 2], str(view_ms), str(gpu_ms)])
 	anim = main.view._anim_total_prev
 	var activos := {}
@@ -523,3 +531,61 @@ func _fps(sim: Sim, b: Vector2i) -> void:
 				print("   ", key, " rate=%.3f" % co.rate)
 	print("esqueletos compartidos activos por animación: ", activos)
 	print("FPS animaciones=%s compartir=%s unidades en pantalla=%d animadas=%d mediana=%.1f min=%.1f max=%.1f muestras=%s" % [args.get("animaciones", "data"), str(AldeanoAnimado.compartir), vis, anim, times[times.size() / 2], times[0], times[-1], str(times)])
+
+
+# ---------------------------------------------------------------- Base de dos equipos (proceso/57)
+
+## Aldeanos de los dos equipos trabajando juntos cerca de la base del jugador 0: talar, picar
+## piedra y riqueza, cosechar (una granja de cada uno), construir (una casa de cada uno) y
+## llevar la carga al centro. Sin IA. Capturas de cada trabajo y una general.
+func _base(sim: Sim, b: Vector2i) -> void:
+	sim.ais = []
+	for pid in 2:
+		for k in sim.players[pid]["res"]:
+			sim.players[pid]["res"][k] = 5000
+	var focos := {}
+	for pid in 2:
+		var ids: Array[int] = []
+		for i in 14:
+			var t := sim.map.nearest_free(b.x + 3 + i % 5 + pid * 2, b.y + 3 + i / 5 + pid * 3, 8, 0)
+			ids.append(sim.spawn_unit("aldeano", pid, t.x * 1000 + 500, t.y * 1000 + 500).id)
+		var plan := {"madera": ids.slice(0, 3), "piedra": ids.slice(3, 5), "riqueza": ids.slice(5, 7)}
+		for kind in plan:
+			var r: SimEntity = sim.find_resource(0, kind, b.x * 1000, b.y * 1000, 40000)
+			if r == null:
+				continue
+			focos[kind] = Vector2(r.x / 1000.0, r.y / 1000.0)
+			var g: Array = plan[kind]
+			for n in g.size():
+				var rr: SimEntity = sim.find_resource(0, kind, r.x + (n % 2) * 2500 - 1200 + pid * 1500, r.y + (n / 2) * 2500 - 1200, 4000) if kind == "madera" else r
+				sim.push_command({"t": "target", "player": pid, "ids": [g[n]], "target": (rr if rr != null else r).id})
+		var ft := sim.map.nearest_free(b.x - 7 + pid * 4, b.y + 5, 8, 0)
+		var farm := sim.spawn_building("granja", pid, ft.x, ft.y, true)
+		focos["granja"] = Vector2(farm.x / 1000.0, farm.y / 1000.0)
+		sim.push_command({"t": "target", "player": pid, "ids": ids.slice(7, 9), "target": farm.id})
+		var bt := sim.map.nearest_free(b.x + 6 + pid * 4, b.y - 5, 8, 0)
+		sim.push_command({"t": "build", "player": pid, "ids": ids.slice(9, 11), "type": "casa", "tx": bt.x, "ty": bt.y})
+		focos["obra"] = Vector2(bt.x + 1, bt.y + 1)
+		# Los últimos, con carga: caminan al centro a dejarla.
+		for id in ids.slice(11, 14):
+			var e: SimEntity = sim.by_id[id]
+			e.carry = 10
+			e.carry_res = ["madera", "piedra", "alimento"][id % 3]
+			var r2: SimEntity = sim.find_resource(0, e.carry_res, b.x * 1000, b.y * 1000, 40000)
+			if r2 != null:
+				sim.push_command({"t": "target", "player": pid, "ids": [id], "target": r2.id})
+	await _game_secs(sim, 16.0)
+	var civ: String = args.get("civ", "x")
+	main.cam.zoom = float(args.get("zoom", "8"))
+	main.cam.set("_zoom_target", main.cam.zoom)
+	for kind in ["madera", "piedra", "granja", "obra"]:
+		if focos.has(kind):
+			var f: Vector2 = focos[kind]
+			main.cam.look_at_point(Vector3(f.x, 0, f.y))
+			await _frames(8)
+			await _shot("base_%s_%s" % [civ, kind])
+	main.cam.look_at_point(Vector3(b.x + 1, 0, b.y + 1))
+	main.cam.zoom = float(args.get("zoom_general", "16"))
+	main.cam.set("_zoom_target", main.cam.zoom)
+	await _frames(10)
+	await _shot("base_%s_general" % civ)

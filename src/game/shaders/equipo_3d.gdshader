@@ -2,7 +2,7 @@
 // La máscara (tools/mascara_equipo_3d.py) está en el mismo atlas UV que la textura.
 // Lo enmascarado toma el color del jugador con la luz de la tela original:
 // equipo × (luminancia / luz_ref), así los pliegues, guardas y sombras pintadas se conservan.
-// Todavía no lo usa el juego.
+// Lo usan los aldeanos de Meshy (AldeanoAnimado, proceso/57-aldeanos-meshy): un material por color.
 shader_type spatial;
 render_mode cull_disabled;
 
@@ -14,13 +14,14 @@ uniform float fuerza : hint_range(0.0, 1.0) = 1.0;
 uniform float brillo_max = 1.8;
 uniform vec3 tinte : source_color = vec3(1.18, 1.15, 1.1); // como WorldView._matte
 uniform bool ver_mascara = false;
+instance uniform float tono = 1.0; // variación de una figura a otra (como el de AldeanoAnimado)
 
 void fragment() {
 	vec3 c = texture(textura, UV).rgb;
 	float m = texture(mascara, UV).r * fuerza;
 	float l = dot(c, vec3(0.2126, 0.7152, 0.0722));
 	vec3 t = equipo * clamp(l / max(luz_ref, 0.001), 0.15, brillo_max);
-	vec3 o = mix(c, t, m) * tinte;
+	vec3 o = mix(c, t, m) * tinte * tono;
 	if (ver_mascara) {
 		o = mix(c * 0.6, vec3(1.0, 0.0, 1.0), m);
 	}

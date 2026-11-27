@@ -84,6 +84,11 @@ static func soltar() -> void:
 	if sk is Skeleton3D and is_instance_valid(sk) and not (sk as Skeleton3D).is_inside_tree():
 		(sk as Skeleton3D).free()
 	_tpl = {}
+	for md: Dictionary in _modelos.values(): # --- aldeanos de Meshy ---
+		var msk: Variant = md.get("sk")
+		if msk is Skeleton3D and is_instance_valid(msk) and not (msk as Skeleton3D).is_inside_tree():
+			(msk as Skeleton3D).free()
+	_modelos = {}
 
 
 ## Si esta unidad se dibuja animada: los aldeanos y, con tropas.activo, los soldados a pie de
@@ -414,6 +419,11 @@ static func persona(civ: String, sx: String, edad: int) -> Dictionary:
 ## Viste al aldeano según su sexo y la edad de su pueblo (y la vuelve a armar al cambiar de edad).
 static func vestir(st: Estado, civ: String, sx: String, edad: int) -> void:
 	st.per = persona(civ, sx, edad)
+	if st.modelo.is_empty() and not st.tropa: # --- aldeanos de Meshy ---
+		_poner_modelo(st, modelo_de(civ, sx))
+	if not st.modelo.is_empty():
+		st.extra.mesh = malla_modelo(st.modelo, st.style, "" if st.tool == "-" else st.tool, st.carga, st.per)
+		return
 	st.mi.mesh = malla(st.style, st.team, "" if st.tool == "-" else st.tool, st.carga, "", st.per)
 # --- fin aldeanos por retrato ---
 
@@ -785,6 +795,242 @@ static func _skinned(parts: Array) -> ArrayMesh:
 	return mesh
 
 
+# ---------------------------------------------------------------- Aldeanos de Meshy (proceso/57)
+
+## Modelos de Meshy con nuestro rig (data/arte_animaciones.json → modelos): por id, el
+## esqueleto (con los nombres de KayKit), la biblioteca retargeteada (una sola por modelo, la
+## comparten todas las figuras y los coros), la malla con su piel y un material por color de
+## equipo. Se arma la primera vez que un aldeano lo pide.
+static var _modelos := {}
+static var us_retarget := 0 # medición: cuánto tardó armar los modelos (µs)
+
+
+## El modelo del aldeano de un pueblo y sexo, o {} (la figura de KayKit).
+static func modelo_de(civ: String, sx: String) -> Dictionary:
+	var mc: Dictionary = cfg().get("modelos", {})
+	if not mc.get("activo", false) or sx == "":
+		return {}
+	var id := str((mc.get("por_civ", {}) as Dictionary).get(civ, {}).get(sx, ""))
+	if id == "":
+		return {}
+	if _modelos.has(id):
+		return _modelos[id]
+	var t0 := Time.get_ticks_usec()
+	var md := _armar_modelo(id, (mc.get("lista", {}) as Dictionary).get(id, {}))
+	us_retarget += Time.get_ticks_usec() - t0
+	_modelos[id] = md
+	return md
+
+
+static func _armar_modelo(id: String, d: Dictionary) -> Dictionary:
+	var path := str(d.get("glb", ""))
+	if path == "" or not ResourceLoader.exists(path) or _template().is_empty():
+		push_warning("AldeanoAnimado: falta el modelo %s (%s); queda la figura de KayKit" % [id, path])
+		return {}
+	var src: Node = (load(path) as PackedScene).instantiate()
+	var sks := src.find_children("*", "Skeleton3D", true, false)
+	var mis := src.find_children("*", "MeshInstance3D", true, false)
+	if sks.is_empty() or mis.is_empty() or (mis[0] as MeshInstance3D).skin == null:
+		push_warning("AldeanoAnimado: el modelo %s no trae esqueleto ni piel" % id)
+		src.free()
+		return {}
+	var sk0: Skeleton3D = sks[0]
+	var mi0: MeshInstance3D = mis[0]
+	# Esqueleto propio (copia de huesos y reposos), con el nombre que esperan las pistas.
+	var sk := Skeleton3D.new()
+	sk.name = "Skeleton3D"
+	for i in sk0.get_bone_count():
+		sk.add_bone(sk0.get_bone_name(i))
+	for i in sk0.get_bone_count():
+		sk.set_bone_parent(i, sk0.get_bone_parent(i))
+		sk.set_bone_rest(i, sk0.get_bone_rest(i))
+	sk.reset_bone_poses()
+	var mesh: Mesh = mi0.mesh
+	var skin: Skin = mi0.skin # por nombre de hueso: sirve con cualquier copia del esqueleto
+	var base_mat := mesh.surface_get_material(0)
+	src.free()
+	var tp := _template()
+	var tsk: Skeleton3D = tp["sk"]
+	var corr := _correccion(tsk, sk)
+	var lib := AnimationLibrary.new()
+	var tlib: AnimationLibrary = tp["lib"]
+	for an in tlib.get_animation_list():
+		lib.add_animation(an, _retarget(tsk, tlib.get_animation(an), sk, corr))
+	var tex: Texture2D = (base_mat as StandardMaterial3D).albedo_texture if base_mat is StandardMaterial3D else null
+	var mask: Texture2D = load(str(d["mascara"])) if d.has("mascara") and ResourceLoader.exists(str(d["mascara"])) else null
+	return {
+		"id": id + ":", "sk": sk, "lib": lib, "skin": skin, "mesh": mesh, "corr": corr,
+		"skin_extra": sk.create_skin_from_rest_transforms(), "tex": tex, "mascara": mask,
+		"luz_ref": float(d.get("luz_ref", 0.08)), "mats": {}, "mallas": {},
+	}
+
+
+## Pone el modelo en una figura recién creada (la malla, la piel y el material del equipo) y
+## la pieza aparte para la herramienta y la carga.
+static func _poner_modelo(st: Estado, md: Dictionary) -> void:
+	if md.is_empty():
+		return
+	st.modelo = md
+	st.mi.mesh = md["mesh"]
+	st.mi.skin = md["skin"]
+	st.mi.set_surface_override_material(0, _material_modelo(md, st.team))
+	st.extra = MeshInstance3D.new()
+	st.extra.skin = md["skin_extra"]
+	st.node.add_child(st.extra)
+	st.extra.set_instance_shader_parameter("tono", 1.0)
+	st.tool = "-"
+
+
+## La malla y la pieza aparte miran al mismo esqueleto (propio o compartido).
+static func _apuntar(st: Estado, sk: Skeleton3D) -> void:
+	st.mi.skeleton = st.mi.get_path_to(sk)
+	if st.extra != null:
+		st.extra.skeleton = st.extra.get_path_to(sk)
+
+
+static func _material_modelo(md: Dictionary, team: Color) -> ShaderMaterial:
+	var key := team.to_html()
+	var mats: Dictionary = md["mats"]
+	if not mats.has(key):
+		var m := ShaderMaterial.new()
+		m.shader = load("res://src/game/shaders/equipo_3d.gdshader")
+		m.set_shader_parameter("textura", md["tex"])
+		m.set_shader_parameter("mascara", md["mascara"])
+		m.set_shader_parameter("equipo", team)
+		m.set_shader_parameter("luz_ref", md["luz_ref"])
+		mats[key] = m
+	return mats[key]
+
+
+## Herramienta y carga del modelo: las piezas de siempre (malla(), en el esqueleto de plantilla)
+## llevadas al hueso del modelo «como en el reposo de la plantilla» (corrección × reposo), así
+## reciben la misma rotación de la animación que en el juego (tools/rig_y_color.gd, _colgar).
+static func malla_modelo(md: Dictionary, style: Dictionary, tool: String, carga: Color, per := {}) -> ArrayMesh:
+	var key := "%s_%s_%s" % [tool, carga.to_html(), per.get("_key", "")]
+	var cache: Dictionary = md["mallas"]
+	if cache.has(key):
+		return cache[key]
+	var tsk: Skeleton3D = _template()["sk"]
+	var sk: Skeleton3D = md["sk"]
+	var c := colores(style, per)
+	var parts: Array = []
+	_herramienta(parts, tool, tsk, c["madera"], c["piedra"], c["fibra"], c["vest"])
+	if carga.a > 0.0:
+		var ch: Vector3 = _P(tsk, "chest")
+		var bc := tsk.find_bone("chest")
+		parts.append([_box(Vector3(0.15, 0.13, 0.1)), Transform3D(Basis.IDENTITY, ch + Vector3(0, 0.08, -0.11)), carga.darkened(0.15), bc])
+		parts.append([_box(Vector3(0.012, 0.15, 0.13)), Transform3D(Basis.IDENTITY, ch + Vector3(0.06, 0.07, -0.05)), c["cuero"], bc, Pieza.MADERA])
+	var mesh: ArrayMesh = null
+	if not parts.is_empty():
+		var corr: Dictionary = md["corr"]
+		var s := _P(sk, "head").y / maxf(0.001, _P(tsk, "head").y)
+		for p: Array in parts:
+			var nm := tsk.get_bone_name(int(p[3]))
+			var j := sk.find_bone(nm)
+			if j < 0:
+				j = sk.find_bone("chest")
+			var g := sk.get_bone_global_rest(j)
+			var ancla := _P(tsk, nm)
+			var inv := Basis((corr.get(sk.get_bone_name(j), Quaternion()) as Quaternion) * g.basis.orthonormalized().get_rotation_quaternion()).inverse()
+			var tf: Transform3D = p[1]
+			p[1] = g * Transform3D(inv * tf.basis.scaled(Vector3.ONE * s), inv * ((tf.origin - ancla) * s))
+			p[3] = j
+		mesh = _skinned(parts)
+	cache[key] = mesh
+	return mesh
+
+
+## Corrección de cada hueso del destino: la rotación que lleva su dirección en reposo (hacia el
+## primer hijo) a la del mismo hueso en la plantilla. La muñeca se orienta por el brazo, no por
+## el punto de la herramienta (handslot).
+static func _correccion(src: Skeleton3D, dst: Skeleton3D) -> Dictionary:
+	var out := {}
+	for j in dst.get_bone_count():
+		var c := Quaternion()
+		var i := src.find_bone(dst.get_bone_name(j))
+		if i >= 0:
+			for h in dst.get_bone_children(j):
+				var hi := src.find_bone(dst.get_bone_name(h))
+				if hi < 0 or dst.get_bone_name(h).begins_with("handslot"):
+					continue
+				var dt := dst.get_bone_global_rest(h).origin - dst.get_bone_global_rest(j).origin
+				var ds := src.get_bone_global_rest(hi).origin - src.get_bone_global_rest(i).origin
+				if dt.length() > 0.0001 and ds.length() > 0.0001:
+					c = Quaternion(dt.normalized(), ds.normalized())
+				break
+			if c == Quaternion() and dst.get_bone_parent(j) >= 0:
+				c = out[dst.get_bone_name(dst.get_bone_parent(j))]
+		out[dst.get_bone_name(j)] = c
+	return out
+
+
+static func _rq(b: Basis) -> Quaternion:
+	return b.orthonormalized().get_rotation_quaternion()
+
+
+## Una animación de la plantilla en el esqueleto del modelo (tools/visor_rig.gd): a 30 cuadros
+## por segundo, la rotación global de cada hueso de la plantilla respecto de su reposo, aplicada
+## al reposo corregido del hueso del modelo; la cadera, además, se mueve escalada a su altura.
+static func _retarget(src: Skeleton3D, a: Animation, dst: Skeleton3D, corr: Dictionary) -> Animation:
+	var out := Animation.new()
+	out.length = a.length
+	out.loop_mode = a.loop_mode
+	var n := dst.get_bone_count()
+	var ns := src.get_bone_count()
+	var map: Array[int] = []
+	var cq: Array[Quaternion] = []
+	var dg: Array[Quaternion] = []
+	for j in n:
+		map.append(src.find_bone(dst.get_bone_name(j)))
+		cq.append(corr[dst.get_bone_name(j)])
+		dg.append(_rq(dst.get_bone_global_rest(j).basis))
+	var sr: Array[int] = []
+	var sp: Array[int] = []
+	var sgi: Array[Quaternion] = []
+	for i in ns:
+		var np := NodePath("Skeleton3D:" + src.get_bone_name(i))
+		sr.append(a.find_track(np, Animation.TYPE_ROTATION_3D))
+		sp.append(a.find_track(np, Animation.TYPE_POSITION_3D))
+		sgi.append(_rq(src.get_bone_global_rest(i).basis).inverse())
+	var hips_s := src.find_bone("hips")
+	var hips_d := dst.find_bone("hips")
+	var k := dst.get_bone_global_rest(hips_d).origin.y / maxf(0.001, src.get_bone_global_rest(hips_s).origin.y) if hips_s >= 0 and hips_d >= 0 else 1.0
+	var tr: Array[int] = []
+	for j in n:
+		var t := out.add_track(Animation.TYPE_ROTATION_3D)
+		out.track_set_path(t, NodePath("Skeleton3D:" + dst.get_bone_name(j)))
+		tr.append(t)
+	var tp := out.add_track(Animation.TYPE_POSITION_3D)
+	out.track_set_path(tp, NodePath("Skeleton3D:hips"))
+	var frames := int(ceil(a.length * 30.0))
+	for f in frames + 1:
+		var t := minf(a.length, f / 30.0)
+		var sg: Array[Transform3D] = []
+		for i in ns:
+			var rest := src.get_bone_rest(i)
+			var q: Quaternion = a.rotation_track_interpolate(sr[i], t) if sr[i] >= 0 else rest.basis.get_rotation_quaternion()
+			var o: Vector3 = a.position_track_interpolate(sp[i], t) if sp[i] >= 0 else rest.origin
+			var loc := Transform3D(Basis(q), o)
+			var par := src.get_bone_parent(i)
+			sg.append(sg[par] * loc if par >= 0 else loc)
+		var g: Array[Quaternion] = []
+		for j in n:
+			var i := map[j]
+			var q: Quaternion
+			var par := dst.get_bone_parent(j)
+			if i >= 0:
+				q = _rq(sg[i].basis) * sgi[i] * cq[j] * dg[j]
+			else:
+				q = (g[par] if par >= 0 else Quaternion()) * _rq(dst.get_bone_rest(j).basis)
+			g.append(q)
+			out.rotation_track_insert_key(tr[j], t, ((g[par].inverse() * q) if par >= 0 else q).normalized())
+		if hips_s >= 0 and hips_d >= 0:
+			var gpos := dst.get_bone_global_rest(hips_d).origin + (sg[hips_s].origin - src.get_bone_global_rest(hips_s).origin) * k
+			var par := dst.get_bone_parent(hips_d)
+			out.position_track_insert_key(tp, t, dst.get_bone_global_rest(par).affine_inverse() * gpos if par >= 0 else gpos)
+	return out
+
+
 # ---------------------------------------------------------------- Esqueletos compartidos
 
 ## Un esqueleto que mueven todas las figuras que hacen lo mismo, en la misma fase y al mismo
@@ -847,11 +1093,11 @@ static func avanzar_coros(dt: float) -> void:
 
 ## El coro de una animación a un paso, en la fase k de n. Si estuvo parado, se pone en hora con
 ## el reloj de su grupo.
-static func _coro(anim: String, q: int, k: int, n: int, base := 0.0) -> Coro:
-	var key := "%s|%d|%d/%d" % [anim, q, k, n]
+static func _coro(anim: String, q: int, k: int, n: int, base := 0.0, md := {}) -> Coro:
+	var key := "%s%s|%d|%d/%d" % [md.get("id", ""), anim, q, k, n]
 	var c: Coro = _coros.get(key)
 	if c == null:
-		var tp := _template()
+		var tp := _template() if md.is_empty() else md
 		c = Coro.new()
 		# El AnimationPlayer busca "Skeleton3D:<hueso>" desde su root_node: cada coro cuelga de
 		# un nodo propio, con el esqueleto y el reproductor adentro.
@@ -900,7 +1146,7 @@ static func _coro_lazo(st: Estado, anim: String, rate: float, caminar: bool) -> 
 	var q := _q(rate, base)
 	if st.coro != null and st.coro.anim == anim and absi(st.coro.q - q) <= 1:
 		q = st.coro.q
-	return _coro(anim, q, st.fase, _fases, base)
+	return _coro(anim, q, st.fase, _fases, base, st.modelo)
 
 
 ## Coro para el golpe: el de la fase más cercana al ciclo de ataque de la figura.
@@ -909,7 +1155,7 @@ static func _coro_golpe(st: Estado, anim: String, rate: float) -> Coro:
 	var largo := float(_len.get(anim, 1.0))
 	var r := _reloj("%s|%d" % [anim, q], pow(_paso_q, q), largo)
 	var k := posmod(roundi((st.atk_t - float(r[0])) / largo * _fases_ataque), _fases_ataque)
-	return _coro(anim, q, k, _fases_ataque)
+	return _coro(anim, q, k, _fases_ataque, 0.0, st.modelo)
 
 
 # ---------------------------------------------------------------- Instancia
@@ -929,6 +1175,8 @@ class Estado:
 	var tropa := false
 	var eq := {} # equipo del soldado (TropaAnimada.equipo)
 	var per := {} # ropa del aldeano por sexo y edad (personas); vacío: la de la forma
+	var modelo := {} # --- aldeanos de Meshy --- el modelo (modelo_de); vacío: la figura de KayKit
+	var extra: MeshInstance3D # herramienta y carga del modelo de Meshy (piel aparte)
 	var golpe_act := "pegar"
 	var quieto_act := "quieto"
 	var accion := ""
@@ -1049,7 +1297,7 @@ static func equipar(st: Estado, tropa: Dictionary) -> void:
 ## desde la misma pose.
 static func _propio(st: Estado) -> void:
 	if st.sk == null:
-		var tp := _template()
+		var tp := _template() if st.modelo.is_empty() else st.modelo
 		st.sk = (tp["sk"] as Skeleton3D).duplicate()
 		st.node.add_child(st.sk)
 		st.ap = AnimationPlayer.new()
@@ -1061,7 +1309,7 @@ static func _propio(st: Estado) -> void:
 	if not st.en_propio:
 		st.en_propio = true
 		var from := st.coro
-		st.mi.skeleton = st.mi.get_path_to(st.sk)
+		_apuntar(st, st.sk)
 		st.coro = null
 		if from != null and from.ap.current_animation != "":
 			st.ap.play(from.ap.current_animation, 0.0)
@@ -1181,7 +1429,7 @@ static func actualizar(st: Estado, e: SimEntity, sim: Sim, moving: bool, walked:
 		if st.coro != c:
 			st.coro = c
 			st.en_propio = false
-			st.mi.skeleton = st.mi.get_path_to(c.sk)
+			_apuntar(st, c.sk)
 		st.accion = act
 		st.anim = name
 		st.acc_t = 0.0
@@ -1268,7 +1516,10 @@ static func _herramienta_y_carga(st: Estado, e: SimEntity, sim: Sim, act: String
 	if tool != st.tool or carga != st.carga:
 		st.tool = tool
 		st.carga = carga
-		st.mi.mesh = malla(st.style, st.team, tool, carga, forma, st.per)
+		if not st.modelo.is_empty(): # --- aldeanos de Meshy ---
+			st.extra.mesh = malla_modelo(st.modelo, st.style, tool, carga, st.per)
+		else:
+			st.mi.mesh = malla(st.style, st.team, tool, carga, forma, st.per)
 		n_malla += 1
 
 
