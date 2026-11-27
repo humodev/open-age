@@ -1,0 +1,32 @@
+
+arte-1 · Economía temprana
+  0:27 objetivo hecho o3
+  2:41 objetivo hecho o1
+  4:36 objetivo hecho o2
+  4:36 MISIÓN victoria 
+arte-1: victoria a los 4:36 · medalla: oro 
+arte-2 · Defensa
+  1:35 objetivo hecho o1
+  3:17 objetivo hecho o2
+  5:18 objetivo hecho o3
+  5:18 MISIÓN victoria 
+arte-2: victoria a los 5:18 · medalla: oro 
+arte-3 · Contadores
+  1:13 objetivo hecho o1
+  2:28 objetivo hecho o2
+  3:38 objetivo hecho o3
+  3:38 MISIÓN victoria 
+arte-3: victoria a los 3:38 · medalla: oro 
+arte-4 · Sitios sagrados
+  0:47 objetivo hecho o1
+  0:47 objetivo hecho o2
+  0:47 MISIÓN victoria 
+arte-4: victoria a los 0:47 · medalla: oro 
+arte-5 · Asedio
+  1:00 escolta 12, asedio 4, rivales 9, blanco torre 1000
+  1:56 objetivo hecho o1
+  2:00 escolta 11, asedio 4, rivales 1, blanco cuartel 1200
+  2:11 objetivo hecho o2
+  2:11 MISIÓN victoria 
+arte-5: victoria a los 2:11 · medalla: oro 
+OK

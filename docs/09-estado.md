@@ -2,7 +2,7 @@
 
 Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video, está en `../proceso/`. Las preguntas al autor, en `../proceso/CONSULTAS.md`.
 
-## Resumen (2026-11-26)
+## Resumen (2026-11-27)
 
 | Hito (`02`) | Estado |
 |---|---|
@@ -34,13 +34,14 @@ Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video,
 | Versiones para amigos (`proceso/44`) | `tools/publicar.sh [--subir]` arma, prueba y (con `--subir`) sube a itch.io las versiones de Linux y Windows, selladas con fecha y commit. Relevo con systemd y Docker, y dirección configurable en el menú. Elegidos (C-102 c, C-103 a): VPS de pago y claves de descarga por amigo, con los pasos en la guía; falta que el autor los cree |
 | Atajos, tutorial y Arte de la guerra (`proceso/52`) | Hecho (C-35 b, C-37 b, C-38 a). Marcadores de cámara como AoE4: `Ctrl + F1…F4` guarda y `F1…F4` vuelve; los paneles pasan a F5–F9 (economía, edad, sucesos, puntaje, ayuda), la velocidad a K, y los `opciones.cfg` viejos se migran solos. El tutorial se juega con el Tawantinsuyu, con un paso nuevo (almacén de madera) y derrota con motivo si quedan menos de 3 aldeanos. **Arte de la guerra**: cinco misiones cortas (economía temprana, defensa, contadores, sitios sagrados, asedio) con medallas de oro, plata y bronce por tiempo, guardadas en `user://arte_guerra.json`; entrada propia en el menú. El motor de escenarios suma edificios iniciales del jugador, rivales quietos (sin IA), `min` en `proteger` y sitios que buscan hueco |
 | Respuestas del autor: nombres, historia, sonido y 3D (`proceso/54`) | C-70 a C-74, C-79, C-82, C-102 a C-104 y C-106. Edades *Willkapampa* (hito *Espíritu Pampa*), *Toungoo* y *Krung Thonburi*, con *Ekkarat* explicado en el panel; nombres por edad (`nombre_edad`: *bayingyi* y *kathe* solo en la IV); barrio chino como tercer barrio de Ayutthaya (la IA todavía no lo construye); Birmania con kyaung, zedi y pyatthat de maqueta; hitos mapuches, Junta de guerra, *Qhuya wasi*, *Gojjo bet*, «Suai», buey cebú; potencias europeas y paulistas como facciones (`hereda`); nagarit, alarma siamesa de procesión y música de paz sintetizada de Palmares y Ayutthaya (sale *Tra Nimit*); la mbaraka sale del hito guaraní (da vuelta C-60, a confirmar); consultas a comunidades en `diseno/29`; modelos del pipeline en casas y capitales (el lof mapuche volvió al de Meshy). Determinismo igual (3059812827) |
+| Respuestas del autor: mecánicas y balance (`proceso/53`) | Hecho (C-47, C-49, C-51, C-52, C-62 a C-69, C-75 a C-97, C-100). Desempate al tiempo límite por sitios y edificios (`opciones_partida.desempate`); la captura de los sitios se vacía sola; IA contra IA con sitios; yerba silvestre del monte, capuera y, con la vía misión, yerbal y ganado; pacto de Cucaú que reduce la acogida y la liberación, que vale solo contra invasores; Lalibela como sitio sagrado del mapa y el monasterio como Debre Damo; iglesia con población en lugar de vida; jinetes oromo por tratado con agasajo; reparar cuesta el 50 % (D-032); la IA sin hitos defiende en proporción. La experta le gana a la difícil 9 de 12. Torneo 53 (30 partidas): el Tawantinsuyu del 20 al 40 % con la mit'a de la IV en 150; los mapuches, 70 %, quedan para la próxima ronda de balance con más semillas. Esperan la C-80: la pieza pesada inca (C-87) y la erveira (C-93) |
 | H5 · Multijugador en red | Prototipo 1v1 hecho (ver arriba); relevo listo para desplegar (`proceso/44`) |
 | H6 · Acceso anticipado | Pendiente |
 
 ## Qué tiene el juego
 
 - **Seis civilizaciones** (`data/civs/`): Tawantinsuyu, mapuches, guaraníes, Etiopía, Palmares y Ayutthaya. Cada una tiene edades propias, dos hitos por edad, unidades y edificios únicos, módulos de mecánica y arquitectura propia.
-- **Capa común**: recolección, construcción con rendimiento decreciente, población, triángulo de contadores, asedio, empalizadas y puertas, guarnición con andanadas, campana, 17 investigaciones, reparación, niebla de guerra, explorador, relieve y agua.
+- **Capa común**: recolección, construcción con rendimiento decreciente, población, triángulo de contadores, asedio, empalizadas y puertas, guarnición con andanadas, campana, 17 investigaciones, reparación con costo, niebla de guerra, explorador, relieve y agua.
 - **Seis campañas** (`data/campanas/`): 24 misiones narradas desde adentro, ejecutadas por el motor de escenarios.
 - **Escaramuza** contra la IA con cualquier par de civilizaciones y cuatro tipos de mapa.
 - **Sonido**: interfaz, mundo, ambiente y música CC0, sonidos propios sintetizados por pueblo y tres pistas con atribución (sikuri y masenqo; créditos en el menú).
