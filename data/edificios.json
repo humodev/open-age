@@ -149,5 +149,11 @@
     "nombre": "Sitio sagrado", "edad_min": 1, "tam": [2, 2], "pv": 1, "armadura": 0,
     "costo": {}, "tiempo_ms": 0, "vision": 0, "transitable": true, "sagrado": true,
     "desc": "Se controla con presencia exclusiva. Rinde riqueza; quien sostiene todos los sitios el tiempo indicado, gana."
+  },
+  "sitio_lalibela": {
+    "nombre": "Lalibela", "edad_min": 1, "tam": [2, 2], "pv": 1, "armadura": 0,
+    "costo": {}, "tiempo_ms": 0, "vision": 0, "transitable": true, "sagrado": true,
+    "_doc": "C-69 a: Lalibela es un sitio zagwe del siglo XIII con culto vivo: no se construye, es un sitio sagrado neutral del mapa (el del centro cuando juega Etiopía; reglas.sitios.centro_por_civ). Mismas reglas que cualquier sitio.",
+    "desc": "Las iglesias talladas en la roca de Lalibela (siglo XIII), con culto vivo: un sitio sagrado neutral. Se controla con presencia exclusiva, rinde riqueza y cuenta para la victoria por sitios, para cualquier pueblo."
   }
 }

@@ -54,6 +54,7 @@ func tick_second() -> void:
 		if p.has("ruta_req"): # --- paso 6, par 2 --- pólvora de Massawa: ¿la ruta sigue abierta?
 			p["ruta"] = sim.comercio.route_open(pid) if p.get("ruta_comercio", false) else _has_built(pid, p["ruta_req"]) # --- comercio ---
 		_conversions(pid, p)
+		sim.treaty_second(pid) # --- C-91 a ---
 		_crafts_yield(pid)
 		_herds(pid)
 		if has(pid, "acogida"):
@@ -259,6 +260,8 @@ func _welcome(pid: int, p: Dictionary) -> void:
 	var wa := wonder_fx(pid, "acogida_pct") # --- paso 7 --- la Cerca de la Barriga: la acogida cuesta menos
 	if not wa.is_empty():
 		cost = cost * int(wa["pct"]) / 100
+	if _pact(pid, cfg): # --- C-68 a --- el Pacto de Cucaú cierra la puerta: la acogida, a la mitad del ritmo
+		cost = cost * int(cfg.get("pacto_costo_pct", 100)) / 100
 	if int(p["res"].get(key, 0)) < cost or p["pop"] >= p["pop_cap"] or p.get("acogida_pausa", false):
 		return
 	# "Guardar fama para el hito" (prendido por defecto): no gasta la fama que pide el próximo hito.
@@ -283,6 +286,11 @@ func _welcome(pid: int, p: Dictionary) -> void:
 	sim.events.append({"t": "trained", "id": u.id, "player": pid, "type": kind})
 	if kind == "aldeano" and has(pid, "oficios"):
 		craft_assign(u)
+
+
+## --- C-68 a --- ¿Hizo el hito del pacto que pide este módulo (`pacto_hito`)?
+func _pact(pid: int, cfg: Dictionary) -> bool:
+	return cfg.has("pacto_hito") and sim.has_done_hito(pid, String(cfg["pacto_hito"]))
 
 
 # ---------------------------------------------------------------- Ganado (mapuches)
@@ -372,7 +380,7 @@ func _nearest_corral(pid: int, x: int, y: int, with_room: bool) -> SimEntity:
 ## Kawiñ: alimento por cada cabeza menos una; 120 s sin cría; una vez por corral y por
 ## edad; no en combate.
 func feast(e: SimEntity) -> void:
-	if not e.def.has("ganado") or not e.built:
+	if not e.def.has("ganado") or not e.built or not e.def["ganado"].has("fiesta_alimento"): # C-67: la misión no tiene kawiñ
 		return
 	var age := int(sim.players[e.owner]["age"])
 	if e.feast_age == age or e.heads <= 1 or sim.tick - e.last_combat < 100:
@@ -600,6 +608,10 @@ func _sacred() -> void:
 				var tm := sim.team_of(u.owner)
 				present[tm] = mini(int(present.get(tm, u.owner)), u.owner)
 		if present.size() != 1:
+			# --- C-62 a --- Sin nadie, lo que llevaba de captura se vacía de a poco, como AoE4
+			# (reglas.sitios.vaciado_ms por segundo). Disputado, queda como está.
+			if present.is_empty() and site.capture > 0:
+				site.capture = maxi(0, site.capture - int(cfg.get("vaciado_ms", 0)))
 			continue
 		var who: int = present.values()[0]
 		if _site_protected(site, who): # --- paso 7 --- el koyagtun: los rivales no toman los sitios cercanos
@@ -871,6 +883,9 @@ func _neutral_loot(e: SimEntity, pid: int) -> void:
 	if has(pid, "liberacion"):
 		var people: Array = e.def.get("liberados_por_edad", [])
 		var n := int(people[clampi(age - 1, 0, people.size() - 1)]) if not people.is_empty() else 0
+		var lcfg := m(pid, "liberacion")
+		if _pact(pid, lcfg): # --- C-68 a ---
+			n = n * int(lcfg.get("pacto_pct", 100)) / 100
 		var kp: Dictionary = sim.players[pid]
 		for i in n:
 			if int(kp["pop"]) + i < int(kp["pop_cap"]):
@@ -1004,7 +1019,14 @@ func on_kill(e: SimEntity, killer: SimEntity) -> void:
 	var inhabited: bool = e.capital or int(e.def.get("pob", 0)) > 0 or bool(e.def.get("acoge", false))
 	if has(killer.owner, "liberacion") and e.is_building() and e.built and inhabited:
 		var lib := m(killer.owner, "liberacion")
+		# --- C-68 a --- Solo contra quienes esclavizan (lib.solo_contra: los invasores); contra los
+		# demás pueblos, nada. Los ingenios liberan aparte (`ingenio_destroyed`).
+		var only: Array = lib.get("solo_contra", [])
+		if not only.is_empty() and not only.has(sim.dp(e.owner).clave):
+			return
 		var n: int = lib.get("por_edificio", {}).get(e.type, int(lib.get("aldeanos", 1)))
+		if _pact(killer.owner, lib):
+			n = n * int(lib.get("pacto_pct", 100)) / 100
 		var kp: Dictionary = sim.players[killer.owner]
 		var home: SimEntity = null
 		for b in sim.all_buildings():

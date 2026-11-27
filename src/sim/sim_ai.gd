@@ -919,6 +919,10 @@ func _engine(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_type: 
 			# Quemar (roza otra vez, sin yerbal) solo si falta alimento para el próximo hito.
 			var need := int(dd.cost_of(_hito_type(p), p["age"]).get("alimento", 0)) if p["age"] < dd.edades.size() else 0
 			var mode := "quemar" if saving and int(p["res"]["alimento"]) < need else "crecer"
+			# C-67 a: sin la vía misión, dejar crecer da capuera y no yerbal: quema siempre.
+			var g_def: Dictionary = dd.edificios.get("granja", {})
+			if g_def.has("deja_requiere_hito") and not sim.has_done_hito(player, String(g_def["deja_requiere_hito"])):
+				mode = "quemar"
 			if str(p.get("modo_monte", "crecer")) != mode:
 				sim.push_command({"t": "modo_monte", "player": player, "modo": mode})
 			# Rozas para la gente del alimento: las que se agotan pasan a yerbal o capuera.
@@ -2178,6 +2182,10 @@ func _military(army: Array[SimEntity], centro: SimEntity) -> void:
 	var prop: Dictionary = level.get("defensa_proporcional", {})
 	if prop.is_empty() and left >= 0 and not _contest_cfg().is_empty():
 		prop = _contest_cfg()["defensa_proporcional"]
+	# C-49 b (proceso/53): sin victoria por hitos, un hondero suelto junto a un almacén traía de
+	# vuelta a todo el ejército que cazaba al otro lado del mapa, y la conquista no terminaba.
+	if prop.is_empty() and sim._opts.get("hitos_sin_victoria", false):
+		prop = sim.data.reglas["ia_caza"].get("defensa_proporcional", {})
 	if threat != null and ally == null and not prop.is_empty():
 		army = _defend_some(army, threat, prop)
 		if army.is_empty():

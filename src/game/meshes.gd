@@ -434,7 +434,7 @@ static func _building_mesh(type: String, team: Color) -> ArrayMesh:
 				p.append([box(0.1, 0.35, 0.1), xf(Vector3(-0.4 + i * 0.8, 0.35, 0.75)), Color("e8dcc4")])
 			_banner(p, Vector3(1.0, 0.0, 1.0), 2.2, team)
 		# --- fin comercio ---
-		"sitio_sagrado":
+		"sitio_sagrado", "sitio_lalibela": # C-69: Lalibela, con la forma de sitio hasta su modelo
 			p.append([cyl(1.0, 1.05, 0.08, 20), xf(Vector3(0, 0.04, 0)), Palette.DIRT.darkened(0.1)])
 			for i in 9:
 				var a := TAU * i / 9.0

@@ -454,7 +454,7 @@ func commands() -> Array[Dictionary]:
 			elif int(sim.players[local]["age"]) < int(rg.get("edad", 2)):
 				why_r = "Desde la edad II"
 			out.append({"slot": 10, "id": "regimiento", "icon": "jinete", "kind": "regimiento", "name": "Dar el gult a un regimiento" if first.mode == "" else "Gult de regimiento", "cost": {}, "desc": "El gult deja de pagar tributo y, a cambio, los jinetes que se entrenan a %d casillas o menos cuestan %d %% menos (hasta %d %% con varios gult). No tiene vuelta atrás." % [int(rg["radio"]) / 1000, int(rg["descuento_pct"]), int(rg["tope_pct"])], "locked": why_r, "building": first.id})
-		if first.def.has("ganado") and first.built:
+		if first.def.has("ganado") and first.built and first.def["ganado"].has("fiesta_alimento"): # C-67: la misión cría sin kawiñ
 			var g: Dictionary = first.def["ganado"]
 			var cap := sim.mods.corral_cap(first)
 			var why := ""

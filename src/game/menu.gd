@@ -770,6 +770,16 @@ func match_args() -> Dictionary:
 	if not _op_ubic.disabled:
 		out["ubicacion"] = UBICACION[maxi(0, _op_ubic.selected)][0]
 	return out
+
+
+## C-63 a: IA contra IA arranca siempre con los sitios prendidos. Lo de Fácil sin sitios
+## (`menu_por_dificultad`) es para la primera partida de alguien nuevo, no para mirar; si el
+## jugador apagó los sitios a mano (opciones guardadas), se respeta.
+func watch_args() -> Dictionary:
+	var out := match_args()
+	if Opciones.partida.is_empty():
+		out["sitios"] = "si" if bool(_data.reglas["opciones_partida"]["menu"].get("sitios", true)) else "no"
+	return out
 # --- fin opciones de partida ---
 
 

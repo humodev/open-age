@@ -306,7 +306,7 @@
    "avanza_edad": true,
    "hito": true,
    "pob": 5,
-   "desc": "El pacto de Gana Zumba: tierras y paz, a cambio de cerrar la puerta a quienes llegan.",
+   "desc": "El pacto de Gana Zumba: tierras y paz, a cambio de cerrar la puerta a quienes llegan. Todo se junta 25 % más rápido, pero la acogida va a la mitad y los ingenios liberan la mitad de la gente.",
    "efectos": [
     {
      "tipo": "tasa",
@@ -388,10 +388,14 @@
   },
   "acogida": {
    "recurso": "fama",
-   "costo": 34
+   "costo": 34,
+   "pacto_hito": "pacto_cucau", "pacto_costo_pct": 200,
+   "_doc_pacto": "C-68 a: con el Pacto de Cucaú, cada persona que llega cuesta el doble de fama (la acogida, a la mitad)."
   },
   "liberacion": {
-   "aldeanos": 2
+   "aldeanos": 2,
+   "solo_contra": ["invasores"], "pacto_hito": "pacto_cucau", "pacto_pct": 50,
+   "_doc_c68": "C-68 a: libera solo de los ingenios y de los invasores (contra los demás pueblos, nada); con el Pacto de Cucaú, la mitad de la gente."
   },
   "saqueo": {
    "recurso": "fama",

@@ -1363,6 +1363,8 @@ func _apply_effects(pid: int, efectos: Array) -> void:
 			"regen_tropa":
 				_add_mod(pid, "regen_tropa", ef["n"])
 				players[pid]["regen_tropa_espera"] = int(ef.get("espera_ms", 0))
+			"tratado": # --- C-91 a --- jinetes oromo aliados: llegan de a `n`, no se entrenan
+				_sign_treaty(pid, ef)
 			"trepanacion":
 				players[pid]["trepanacion"] = {"pct": int(ef["pct"]), "radio": int(ef["radio"]), "vida_pct": int(ef["vida_pct"]), "tipos": ef["tipos"], "edificios": ef["edificios"], "n": 0}
 			# --- fin paso 6 ---
@@ -2192,6 +2194,134 @@ func _near_water(tx: int, ty: int, w: int, h: int, r: int) -> bool:
 	return false
 
 
+## C-67 a: un recurso propio en el borde del monte, entre dist_min y dist_max casillas de la
+## base: el primer lugar libre (anillo por anillo, en orden fijo) con un árbol a 2 casillas o menos.
+func _seed_by_forest(pid: int, base: Vector2i, type: String, amount: int, dmin: int, dmax: int) -> void:
+	var tam: Array = data.recursos[type]["tam"]
+	var c := base + Vector2i(2, 2)
+	for r in range(dmin, dmax + 1):
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				if maxi(absi(dx), absi(dy)) != r:
+					continue
+				var t := c + Vector2i(dx, dy)
+				if t.x < 2 or t.y < 2 or t.x + tam[0] > map.n - 2 or t.y + tam[1] > map.n - 2:
+					continue
+				if not map.is_free_rect(t.x - 1, t.y - 1, tam[0] + 2, tam[1] + 2) or map.is_water(t.x, t.y) or map.is_water(t.x + tam[0] - 1, t.y + tam[1] - 1):
+					continue
+				var by_trees := false
+				for o in resources_near(t.x + tam[0] / 2, t.y + tam[1] / 2, tam[0] / 2 + 3):
+					if o.type == "arbol":
+						by_trees = true
+						break
+				if not by_trees:
+					continue
+				var e := spawn_resource(type, t.x, t.y)
+				if amount > 0:
+					e.amount = amount
+				e.res_owner = pid
+				return
+
+
+## --- C-91 a --- Tratado de alianza: aparecen `n` unidades junto al edificio de la mejora
+## (o la capital) y queda el agasajo por minuto (`Sim.treaty_second`, cada segundo).
+func _sign_treaty(pid: int, ef: Dictionary) -> void:
+	var tech := ""
+	for k: String in dp(pid).tecnologias:
+		for e2: Dictionary in dp(pid).tecnologias[k].get("efectos", []):
+			if e2 == ef:
+				tech = k
+	var where: String = dp(pid).tecnologias.get(tech, {}).get("edificio", "")
+	var home: SimEntity = null
+	for b in buildings_of(pid):
+		if b.alive and b.built and (b.type == where or (home == null and b.capital)):
+			home = b
+			if b.type == where:
+				break
+	if home == null:
+		return
+	for i in int(ef["n"]):
+		var u := spawn_near(home, String(ef["unidad"]), pid)
+		events.append({"t": "trained", "id": u.id, "player": pid, "type": u.type})
+	players[pid]["tratado"] = {"tec": tech, "unidad": String(ef["unidad"]), "agasajo_min": int(ef.get("agasajo_min", 0)), "m": 0}
+
+
+## --- C-91 a --- Cada segundo: el agasajo de los aliados vivos, en milésimas. Si no alcanza la
+## riqueza, se rompe el tratado y se van; si cayeron todos, termina y se puede firmar otro.
+func treaty_second(pid: int) -> void:
+	var tr: Dictionary = players[pid].get("tratado", {})
+	if tr.is_empty():
+		return
+	var mine: Array[SimEntity] = []
+	for u in owned(pid):
+		if u.alive and u.is_unit() and u.owner == pid and u.type == tr["unidad"]:
+			mine.append(u)
+	var broken := false
+	if not mine.is_empty():
+		tr["m"] = int(tr["m"]) + mine.size() * int(tr["agasajo_min"]) * 1000 / 60
+		var whole := int(tr["m"]) / 1000
+		if whole > 0:
+			if int(players[pid]["res"].get("riqueza", 0)) < whole:
+				broken = true
+			else:
+				players[pid]["res"]["riqueza"] = int(players[pid]["res"]["riqueza"]) - whole
+				ledger(pid, "agasajo", "riqueza", -whole)
+				tr["m"] = int(tr["m"]) % 1000
+	if mine.is_empty() or broken:
+		for u in mine:
+			remove_quietly(u)
+		(players[pid]["techs"] as Dictionary).erase(tr["tec"])
+		players[pid].erase("tratado")
+		if broken:
+			events.append({"t": "notice", "player": pid, "text": "Sin agasajo, el tratado se rompió: los aliados se van"})
+
+
+## C-100 a (cierra D-024): reparar cuesta reglas.reparacion_costo_pct del costo del edificio,
+## en proporción a la vida que se repara. Lo que no llega a una unidad entera se acumula por
+## jugador y recurso en milésimas (`rep_m`). Si no alcanza, ese tick no se repara (false).
+func _pay_repair(pid: int, b: SimEntity, dh: int) -> bool:
+	var pct := int(data.reglas.get("reparacion_costo_pct", 0))
+	if pct <= 0 or pid < 0 or b.hp_max <= 0:
+		return true
+	var cost := repair_basis(b)
+	var acc: Dictionary = players[pid].get_or_add("rep_m", {})
+	var whole := {}
+	for k in cost:
+		var m := int(acc.get(k, 0)) + int(cost[k]) * pct * dh * 10 / b.hp_max # milésimas: ×1000 / 100
+		whole[k] = m / 1000
+	if not can_afford(pid, whole):
+		if tick % 50 == 0:
+			events.append({"t": "notice", "player": pid, "text": "Falta para reparar"})
+		return false
+	for k in cost:
+		var m := int(acc.get(k, 0)) + int(cost[k]) * pct * dh * 10 / b.hp_max
+		acc[k] = m % 1000
+	_pay(pid, whole)
+	return true
+
+
+## C-100 a: costo de referencia de un edificio para repararlo. Los hitos, el de su edad.
+func repair_basis(b: SimEntity) -> Dictionary:
+	var dd := dp(b.owner)
+	if dd.is_hito(b.type):
+		for i in dd.hitos.size():
+			if (dd.hitos[i] as Array).has(b.type):
+				return dd.cost_of(b.type, i + 1)
+		return {}
+	return dd.cost_of(b.type, 1)
+
+
+## C-69 a: tipo del sitio sagrado del centro: el de reglas.sitios.centro_por_civ del primer
+## jugador que lo tenga (Lalibela, con Etiopía), o el común.
+func _site_type() -> String:
+	var by_civ: Dictionary = data.reglas["sitios"].get("centro_por_civ", {})
+	for p in players:
+		var k := dp(p["id"]).clave
+		if by_civ.has(k) and data.edificios.has(String(by_civ[k])):
+			return String(by_civ[k])
+	return "sitio_sagrado"
+
+
 ## Fuente agotada. Una chacra de roza deja otra fuente en su lugar (sucesión del monte).
 func _exhaust(t: SimEntity) -> void:
 	var leaves: String = t.def.get("deja", "")
@@ -2228,6 +2358,11 @@ func _roza_follows(t: SimEntity, owner: int, tx: int, ty: int) -> SimEntity:
 		var again := spawn_building(t.type, owner, tx, ty, true)
 		again.amount = int(t.def.get("cantidad", 0)) * int(t.def.get("quemar_pct", 60)) / 100
 		return again
+	# C-67 a: el yerbal plantado es de la vía misión; sin ella, la roza que se deja crecer es capuera.
+	var need_hito: String = t.def.get("deja_requiere_hito", "")
+	if need_hito != "" and not has_done_hito(owner, need_hito):
+		var cap0: String = t.def.get("capuera", "")
+		return spawn_resource(cap0, tx, ty) if data.recursos.has(cap0) else null
 	var caps: Array = t.def.get("yerbales_por_edad", [])
 	if not caps.is_empty():
 		var active := 0
@@ -2333,9 +2468,12 @@ func _do_build(e: SimEntity) -> void:
 		return
 	e.anchored = true
 	if b.built:
-		# Reparación: a la velocidad de construcción, sin costo en H1.
+		# Reparación: a la velocidad de construcción.
 		var t_rep: int = maxi(1, dp(b.owner).build_time_of(b.type, 1))
-		b.hp = mini(b.hp_max, b.hp + maxi(1, b.hp_max * tick_ms * (100 + mod(b.owner, "reparacion")) / 100 / t_rep)) # --- paso 4 --- reparación rápida
+		var dh := mini(b.hp_max - b.hp, maxi(1, b.hp_max * tick_ms * (100 + mod(b.owner, "reparacion")) / 100 / t_rep)) # --- paso 4 --- reparación rápida
+		if dh > 0 and b.is_building() and not _pay_repair(e.owner, b, dh):
+			return
+		b.hp = mini(b.hp_max, b.hp + dh)
 		return
 	if b.build_time <= 0:
 		_complete(b)
@@ -3961,10 +4099,14 @@ func team_score(team: int) -> int:
 
 
 ## Tiempo límite (opts.tiempo_limite_min): gana el equipo con más puntos, entre los que siguen
-## en pie. Si los dos primeros empatan, no gana nadie (winner = -1).
+## en pie. C-47 b: si los primeros empatan, desempata en el orden de
+## reglas.opciones_partida.desempate ("sitios": sitios sagrados en su poder; "edificios":
+## edificios terminados en pie, sin muros, puertas, caminos ni trampas). Si siguen
+## empatados, no gana nadie (winner = -1).
 func end_by_time() -> void:
+	var order: Array = data.reglas["opciones_partida"].get("desempate", [])
 	var best := -1
-	var best_s := -1
+	var best_k: Array = []
 	var tie := false
 	var seen := {}
 	for p in players:
@@ -3972,12 +4114,15 @@ func end_by_time() -> void:
 		if p["defeated"] or seen.has(tm):
 			continue
 		seen[tm] = true
-		var ts := team_score(tm)
-		if ts > best_s:
-			best_s = ts
+		var k: Array = [team_score(tm)]
+		for crit in order:
+			k.append(_tiebreak(tm, String(crit)))
+		var c := _cmp_keys(k, best_k)
+		if best < 0 or c > 0:
+			best_k = k
 			best = tm
 			tie = false
-		elif ts == best_s:
+		elif c == 0:
 			tie = true
 	game_over = true
 	end_reason = "tiempo"
@@ -3990,6 +4135,28 @@ func end_by_time() -> void:
 				winner = p["id"]
 				break
 	events.append({"t": "victory", "player": winner, "equipo": winner_team, "motivo": "tiempo"})
+
+
+## C-47 b: valor de un criterio de desempate para un equipo (ver `end_by_time`).
+func _tiebreak(tm: int, crit: String) -> int:
+	var n := 0
+	if crit == "sitios":
+		for site in _sacred:
+			if site.alive and site.holder >= 0 and team_of(site.holder) == tm:
+				n += 1
+	elif crit == "edificios":
+		for b in all_buildings():
+			if b.alive and b.owner >= 0 and b.built and team_of(b.owner) == tm \
+					and not (b.def.get("linea", false) or b.def.get("camino", false) or b.type == "puerta" or b.def.get("sagrado", false) or b.def.has("trampa")):
+				n += 1
+	return n
+
+
+static func _cmp_keys(a: Array, b: Array) -> int:
+	for i in mini(a.size(), b.size()):
+		if a[i] != b[i]:
+			return 1 if a[i] > b[i] else -1
+	return 0
 
 
 ## El monte paga al rey (Ayutthaya, §3.5.6): parte de lo que se entrega a un elefante
@@ -4166,8 +4333,8 @@ func _gather_origin(e: SimEntity) -> String:
 		return "granja"
 	if t.type == "riqueza" and t.is_resource():
 		return "casa" if t.res_owner == e.owner else "disputado"
-	if t.is_resource() and t.def.has("reabre"):
-		return "propio" # yerbal: motor guaraní
+	if t.is_resource() and (t.def.has("reabre") or t.def.get("motor", false)):
+		return "propio" # yerbal: motor guaraní (también la yerba silvestre, C-67 a)
 	var b := bases[e.owner % bases.size()] + Vector2i(2, 2)
 	return "disputado" if Sim.dist(t.x, t.y, b.x * P, b.y * P) > 20 * P else "casa"
 
@@ -4472,10 +4639,13 @@ func _generate_map() -> void:
 			spawn_unit(dd.civ.get("explorador", "explorador"), pid, sx, sy)
 
 	_spawn_fort_walls()
-	# Recursos semilla de cada civ (yerbal viejo guaraní, §3.5.3), cerca de su base.
+	# Recursos semilla de cada civ, cerca de su base. C-67 a: la yerba guaraní es silvestre y se
+	# busca en el borde del monte (`junto_monte`, `n` lugares).
 	for pid in players.size():
 		for sem: Dictionary in dp(pid).civ.get("recursos_semilla", []):
 			var base := bases[pid % 4]
+			if sem.get("junto_monte", false):
+				continue # después de los bosques, antes de los sitios
 			var tam: Array = data.recursos[sem["tipo"]]["tam"]
 			var dirx := signi(map.n / 2 - base.x)
 			var diry := signi(map.n / 2 - base.y)
@@ -4540,6 +4710,13 @@ func _generate_map() -> void:
 		_res_sym("riqueza", ce + Vector2i(dirx.x * 9, dirx.y * 5))
 		_blob_sym(ce + Vector2i(dirx.x * 4, dirx.y * 13), 3, 80)
 
+	# C-67 a: la yerba silvestre, en el borde del monte que ya está.
+	for pid in players.size():
+		for sem: Dictionary in dp(pid).civ.get("recursos_semilla", []):
+			if sem.get("junto_monte", false):
+				for k in int(sem.get("n", 1)):
+					_seed_by_forest(pid, bases[pid % 4], String(sem["tipo"]), int(sem.get("cantidad", -1)), int(sem.get("dist_min", 7)), int(sem.get("dist_max", 22)))
+
 	# Sitios sagrados: uno al centro y pares simétricos (docs/05, "Victoria").
 	if players.size() == 2 and not _opts.get("sin_sitios", false):
 		var sites: int = data.reglas["sitios"]["cantidad"]
@@ -4547,7 +4724,7 @@ func _generate_map() -> void:
 		for i in mini(sites, spots.size()):
 			var t := map.nearest_free(spots[i].x, spots[i].y, 8)
 			if t.x >= 0 and map.is_free_rect(t.x, t.y, 2, 2):
-				spawn_building("sitio_sagrado", -1, t.x, t.y, true)
+				spawn_building(_site_type() if i == 0 else "sitio_sagrado", -1, t.x, t.y, true)
 
 	# Ingenios neutrales hostiles (§3.2): uno por jugador, en la esquina sin base de su
 	# lado, espejados. Solo en escaramuza (las campañas no tienen sitios ni ingenios).
@@ -4733,7 +4910,7 @@ func _generate_map_n() -> void:
 							continue
 						var t := c + Vector2i(dx, dy)
 						if map.in_bounds(t.x, t.y) and map.is_free_rect(t.x - 1, t.y - 1, 4, 4) and not map.is_water(t.x, t.y) and not map.is_water(t.x + 1, t.y + 1):
-							spawn_building("sitio_sagrado", -1, t.x, t.y, true)
+							spawn_building(_site_type() if sp == mid else "sitio_sagrado", -1, t.x, t.y, true)
 							placed = true
 			if placed:
 				break
@@ -5188,7 +5365,8 @@ func _res_sym_near(type: String, t: Vector2i, amount: int, owner_pair: bool) -> 
 ## casillas de la capital, en el primer rumbo libre de ocho (orden fijo). Solo en escaramuza.
 func _age_veins(pid: int, age: int) -> void:
 	var rm: Dictionary = data.reglas.get("recursos_mapa", {})
-	var list: Array = (rm.get("vetas_por_edad", {}) as Dictionary).get(str(age), [])
+	var list: Array = ((rm.get("vetas_por_edad", {}) as Dictionary).get(str(age), []) as Array).duplicate()
+	list.append_array((dp(pid).civ.get("vetas_por_edad", {}) as Dictionary).get(str(age), [])) # --- C-67 a --- yerba silvestre guaraní
 	if list.is_empty() or _opts.get("sin_sitios", false) or pid >= bases.size():
 		return
 	var c := bases[pid] + Vector2i(2, 2)
@@ -5212,7 +5390,7 @@ func _age_veins(pid: int, age: int) -> void:
 					continue
 				var e := spawn_resource(type, s.x, s.y)
 				e.amount = _min_amt(type, int(v.get("cantidad", -1)))
-				e.res_owner = pid if type == "riqueza" else -1
+				e.res_owner = pid if type == "riqueza" or data.recursos[type].get("motor", false) else -1
 				k = (k + j + 1) % dirs.size()
 				placed = true
 				break
