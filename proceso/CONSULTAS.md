@@ -634,10 +634,12 @@ a) Así *(por defecto)* · b) Otra
   - c) animados, pero con colores más oscuros y terrosos ya.
 
   Por defecto: a + c. Preguntas del agente: ¿un tono de piel por pueblo? ¿Riggear los aldeanos de Meshy antes que los soldados?
+  - **Para comparar (2026-11-26):** [`55-comparar-aldeanos/index.html`](55-comparar-aldeanos/index.html): KayKit, Meshy quieto, pipeline local y Meshy riggeado (inca) lado a lado, por pueblo.
 - **C-99 · (animaciones) Tono y armas.**
   - ¿Alcanza el tono nuevo del aldeano (`27-animaciones/capturas/11`), o lo oscurecemos más? ¿Querés un tono de piel por pueblo?
   - ¿Están bien las armas de cada pueblo (`27-animaciones/02-soldados.md`)? Por ejemplo: macana a dos manos para guaraníes y mapuches, dos espadas para Ayutthaya, jabalina etíope y estólica caranqui.
   - Por defecto: así como está, hasta que lo veas.
+  - **Para comparar (2026-11-26):** [`55-comparar-aldeanos/index.html`](55-comparar-aldeanos/index.html#soldados): soldados de cada pueblo con sus armas; hoy los seis comparten un tono de piel.
 
 ## Decisión del 2026-11-17
 
