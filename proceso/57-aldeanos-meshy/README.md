@@ -124,6 +124,38 @@ La entrada pide «una cara adulta del pueblo»:
 
   Las dos están riggeadas en `.cache/meshy_aldeanos/proc/` por si el autor las acepta igual: copiar el GLB y la máscara y agregar la línea en `por_civ`.
 
+#### 6. Los tres que faltaban (C-108)
+
+El autor eligió regenerar los tres (C-108 a). Llegaron rehechos por la sesión principal con el remesh de Meshy, ya livianos: 3,4–3,9 MB y unos 20.000 triángulos con textura de 2048. Acá **no** se llamó a Meshy.
+
+- **Mapuche (hombre):** la malla nueva está entera (el crudo viejo, de 98 MB, se rompía al diezmar). Cara adulta, trarilonko, manos vacías.
+- **Etíope (mujer):** hoja nueva con cara adulta, de frente y de espalda. Ahora se lee como de 25 a 30 años, igual que las otras.
+- **Mapuche (mujer):** hoja nueva, hecha solo con la vista de frente. La espalda está bien: lisa, del mismo vestido, con las dos trenzas. La cara es adulta y morena; el trarilonko sale de lana clara, no de plata.
+
+Ninguno tiene nada pegado a las manos. Frente, espalda, costado y cara de los tres crudos:
+
+![Crudos de C-108: hombre mapuche, mujer etíope y mujer mapuche](img/crudos_c108.jpg)
+
+Misma receta (`optimizar_glb` a 15.000 triángulos, `gen3d_rig --normalizar --cabeza-rigida --calor-escala=10`, `mascara_equipo_3d --metodo=rojo`):
+
+| Modelo | Triángulos | Vértices sin peso | Máscara | `luz_ref` | GLB |
+|---|---|---|---|---|---|
+| `mapuches_m` | 14.999 | 0 | 87 % | 0,084 | 1,4 MB |
+| `etiopia_f` | 14.999 | 0 | 45 % | 0,086 | 1,5 MB |
+| `mapuches_f` | 15.000 | 0 | 45 % | 0,087 | 1,2 MB |
+
+- Los GLB riggeados salían de 3,2 a 3,6 MB, por encima del tope de 3 MB. La textura se volvió a guardar en JPEG con calidad 80 y croma 4:2:0 (sin pasar por Blender): quedan en 1,2–1,5 MB y no se nota en el juego.
+- En las mujeres, la máscara cubre menos superficie porque los brazos, las trenzas y la faja no son rojos. El vestido se tiñe entero (ver abajo).
+- Conectados en `por_civ`: `mapuches: { m, f }` y `etiopia.f`. Ya no queda ningún aldeano con la figura de KayKit en los seis pueblos.
+
+En partida, azul contra rojo: talar, picar y cosechar. En la cuarta, la vista general mapuche; la obra etíope:
+
+![Mapuches: hombres y mujeres de Meshy en dos colores](img/base_mapuches_c108.jpg)
+
+![Etiopía: hombres y mujeres de Meshy en dos colores](img/base_etiopia_c108.jpg)
+
+Pruebas: `test_determinism` OK (hash 3059812827, el mismo); autotest con ventana, `--civ=mapuches --terreno=llano`: AUTOTEST OK, 250 comprobaciones.
+
 ### Rendimiento (200 aldeanos en pantalla, `--modo=fps`, Tawantinsuyu, llano)
 
 | | FPS (mediana de 5 rondas) | vista (ms/cuadro) | GPU (ms) |
@@ -169,3 +201,4 @@ godot --path . -s tools/aldeanos_animados.gd -- --modo=fps --civ=<pueblo> --terr
 
 - Proceso 57: aldeanos de Meshy en el juego (retarget compartido, handslot, color del equipo); inca hombre conectado
 - Proceso 57: hombres de cuatro pueblos y cuatro mujeres de Meshy en el juego; rig con --calor-escala
+- Proceso 57: los tres aldeanos que faltaban (hombre y mujer mapuches, mujer etíope) con el remesh de Meshy; cierra C-108

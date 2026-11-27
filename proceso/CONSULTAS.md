@@ -707,4 +707,6 @@ a) Generar los 11 con la receta, agregando a cada hoja el tocado de su pueblo (s
 En el juego ya están los hombres de cinco pueblos y las mujeres inca, guaraní, de Palmares y siamesa. Quedaron afuera tres: el hombre mapuche (la malla de 98 MB se rompe al diezmarla), la mujer etíope (la cara parece de una nena) y la mapuche (la cara sale blanca y de muñeca). Las dos mujeres ya están riggeadas.
 a) Regenerar los tres con Meshy, el mapuche con `--remesh --poli=15000` (90 créditos) *(por defecto)* · b) Regenerar solo el mapuche y aceptar las dos mujeres como están · c) Dejar los tres con la figura de KayKit por ahora
 
-**Respuesta:**
+**Respuesta:** a) regenerar los tres (2026-11-27).
+
+**Aplicado** (2026-11-27): los tres regenerados con el remesh de Meshy (la sesión principal) y pasados por la receta: `mapuches_m`, `mapuches_f` y `etiopia_f` en `data/arte_animaciones.json → modelos.por_civ`. Mallas enteras, caras adultas del pueblo, manos vacías; 0 vértices sin peso. Capturas en `proceso/57-aldeanos-meshy`, «Los tres que faltaban».
