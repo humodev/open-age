@@ -85,4 +85,8 @@ Pedidos del coordinador, después de juntar con main (proceso/54):
 
 ## Commits
 
-COMMITS
+- `f653b23`: las mecánicas (C-47, C-49, C-62, C-63, C-67, C-68, C-69, C-91, C-100) y la prueba nueva.
+- `233683c`: merge de main (proceso/54).
+- `6d6a506`: `invasor`, el barrio chino, Debre Damo, saberes al día y la medición de la experta.
+- `933594e`: el torneo del hito, la mit'a de la IV inca, la documentación y las consultas.
+- El commit de este README.
