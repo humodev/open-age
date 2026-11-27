@@ -440,6 +440,10 @@ static func _building_mesh(type: String, team: Color) -> ArrayMesh:
 				var a := TAU * i / 9.0
 				p.append([box(0.22, 0.55 + (i % 3) * 0.12, 0.16), xf(Vector3(cos(a) * 0.85, 0.3, sin(a) * 0.85), Vector3(0, -rad_to_deg(a), (i % 2) * 6.0)), Palette.STONE])
 			p.append([box(0.3, 1.5, 0.3), xf(Vector3(0, 0.75, 0)), Palette.STONE.lightened(0.1)])
+			if type == "sitio_lalibela": # C-69 a: Lalibela, sitio del mapa: piedra rojiza y cruz en el pilar
+				p.append([box(1.3, 0.05, 0.3), xf(Vector3(0, 0.1, 0)), Color("a26a4c")])
+				p.append([box(0.3, 0.05, 1.3), xf(Vector3(0, 0.1, 0)), Color("a26a4c")])
+				p.append([box(0.5, 0.1, 0.1), xf(Vector3(0, 1.35, 0)), Color("d8b24a")])
 		"hito_economia":
 			# Plataforma escalonada con depósitos circulares: hito de la abundancia.
 			p.append([box(3.9, 0.5, 3.9), xf(Vector3(0, 0.25, 0)), dark])

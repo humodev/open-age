@@ -1019,10 +1019,10 @@ func on_kill(e: SimEntity, killer: SimEntity) -> void:
 	var inhabited: bool = e.capital or int(e.def.get("pob", 0)) > 0 or bool(e.def.get("acoge", false))
 	if has(killer.owner, "liberacion") and e.is_building() and e.built and inhabited:
 		var lib := m(killer.owner, "liberacion")
-		# --- C-68 a --- Solo contra quienes esclavizan (lib.solo_contra: los invasores); contra los
-		# demás pueblos, nada. Los ingenios liberan aparte (`ingenio_destroyed`).
-		var only: Array = lib.get("solo_contra", [])
-		if not only.is_empty() and not only.has(sim.dp(e.owner).clave):
+		# --- C-68 a --- Solo contra quienes esclavizan (lib.solo_invasores: las civs con `invasor`,
+		# las potencias que heredan de invasores); contra los demás pueblos, nada. Los ingenios
+		# liberan aparte.
+		if lib.get("solo_invasores", false) and not sim.dp(e.owner).civ.get("invasor", false):
 			return
 		var n: int = lib.get("por_edificio", {}).get(e.type, int(lib.get("aldeanos", 1)))
 		if _pact(killer.owner, lib):

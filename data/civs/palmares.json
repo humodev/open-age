@@ -394,7 +394,7 @@
   },
   "liberacion": {
    "aldeanos": 2,
-   "solo_contra": ["invasores"], "pacto_hito": "pacto_cucau", "pacto_pct": 50,
+   "solo_invasores": true, "pacto_hito": "pacto_cucau", "pacto_pct": 50,
    "_doc_c68": "C-68 a: libera solo de los ingenios y de los invasores (contra los demás pueblos, nada); con el Pacto de Cucaú, la mitad de la gente."
   },
   "saqueo": {

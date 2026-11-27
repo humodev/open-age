@@ -73,6 +73,7 @@ static func build(p: Array, type: String, w: float, d: float, pal: Array, team: 
 		"trinchera": _trinchera()
 		"iglesia_redonda": _iglesia_redonda()
 		"lalibela": _lalibela()
+		"debre_damo": _debre_damo()
 		"amba": _amba()
 		"remonta": _remonta()
 		"gondar": _gondar()
@@ -889,6 +890,40 @@ static func _lalibela() -> void:
 	CivMeshes._hut(_p, "etiopia", Vector3(-1.2, h, -1.2), 0.55, 0.55, 0.7, _pal, {})
 	_conifer(Vector3(1.25, h, -1.25), 1.5)
 	_conifer(Vector3(-1.3, h, 0.9), 1.2)
+
+
+## C-69 a: Debre Damo, el monasterio sobre una amba al que se sube por una cuerda de cuero: la
+## meseta a pique, sin camino, con la cuerda colgando y la iglesia aksumita arriba (piedra y vigas
+## de madera en bandas, con las cabezas de las vigas a la vista).
+static func _debre_damo() -> void:
+	var rock := Color("8a6a50")
+	var h := 1.25
+	_box(Vector3(_hw * 2.0, h, _hd * 2.0), Vector3(0, h / 2.0, 0), rock)
+	_box(Vector3(_hw * 2.0 - 0.3, 0.12, _hd * 2.0 - 0.3), Vector3(0, h + 0.06, 0), rock.lightened(0.08))
+	for k in 5: # grietas de la pared
+		_box(Vector3(0.05, h * 0.8, 0.02), Vector3(-1.3 + k * 0.62, h * 0.45, _hd + 0.005), rock.darkened(0.18))
+	# La cuerda de cuero que baja por el frente, con el nudo de arriba.
+	_box(Vector3(0.035, h + 0.2, 0.035), Vector3(0.9, (h + 0.2) / 2.0, _hd + 0.04), Color("6a4a2c"))
+	_box(Vector3(0.14, 0.1, 0.14), Vector3(0.9, h + 0.2, _hd - 0.05), Color("5a3c22"))
+	# La iglesia: muros de piedra con bandas de madera, techo plano con alero.
+	var stone := Color("c9b79a")
+	var wood := Color("5a3c22")
+	var y0 := h + 0.12
+	_box(Vector3(1.5, 0.12, 1.0), Vector3(-0.15, y0 + 0.06, -0.2), stone.darkened(0.12))
+	for b in 4:
+		var y := y0 + 0.12 + b * 0.2
+		_box(Vector3(1.3, 0.14, 0.8), Vector3(-0.15, y + 0.07, -0.2), stone)
+		_box(Vector3(1.34, 0.06, 0.84), Vector3(-0.15, y + 0.17, -0.2), wood)
+		for i in 5: # cabezas de mono: las puntas de las vigas
+			_box(Vector3(0.06, 0.06, 0.04), Vector3(-0.7 + i * 0.27, y + 0.17, 0.24), wood.darkened(0.2))
+	var top := y0 + 0.12 + 4 * 0.2
+	_box(Vector3(1.5, 0.06, 1.0), Vector3(-0.15, top + 0.03, -0.2), wood.darkened(0.1))
+	_box(Vector3(0.2, 0.32, 0.03), Vector3(-0.15, y0 + 0.28, 0.215), DARK)
+	_box(Vector3(0.05, 0.28, 0.05), Vector3(-0.15, top + 0.2, -0.2), Color("d8b24a"))
+	_box(Vector3(0.18, 0.05, 0.05), Vector3(-0.15, top + 0.27, -0.2), Color("d8b24a"))
+	CivMeshes._hut(_p, "etiopia", Vector3(1.05, y0, -1.0), 0.45, 0.45, 0.6, _pal, {})
+	CivMeshes._hut(_p, "etiopia", Vector3(-1.2, y0, 1.0), 0.4, 0.4, 0.55, _pal, {})
+	_conifer(Vector3(1.2, y0, 0.9), 1.0)
 
 
 ## Amba: meseta de laderas a pique con el muro en el borde, casas arriba y un camino de subida.

@@ -1220,6 +1220,8 @@ func _buildings(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_typ
 	for t: String in wanted:
 		var have: int = (by_type.get(t, []) as Array).size()
 		var def: Dictionary = sim.dp(player).edificios.get(t, {})
+		if def.has("requiere_tec") and not (p["techs"] as Dictionary).has(def["requiere_tec"]):
+			continue # proceso/53: el barrio chino espera su mejora
 		# Piezas de motor: hasta el máximo de la edad (y no la lista fija de los datos).
 		if def.has("maximo_por_edad"):
 			var maxes: Array = def["maximo_por_edad"]
