@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comparar aldeanos</title>
+<style>
+:root { --bg: #f6f3ec; --fg: #23211c; --muted: #6b665b; --card: #ffffff; --line: #ddd6c7; --acento: #8a4b22; --pro: #2f6b3a; --con: #9a2f22; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #1b1a17; --fg: #ece7dc; --muted: #a39d90; --card: #25231f; --line: #3a372f; --acento: #e0a070; --pro: #7fc48b; --con: #ec8a7c; } }
+:root[data-theme="dark"] { --bg: #1b1a17; --fg: #ece7dc; --muted: #a39d90; --card: #25231f; --line: #3a372f; --acento: #e0a070; --pro: #7fc48b; --con: #ec8a7c; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 1180px; margin: 0 auto; padding: 24px 16px 64px; }
+h1 { font-size: 1.9rem; margin: 0 0 4px; }
+h2 { font-size: 1.35rem; margin: 40px 0 10px; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+h3 { font-size: 1.1rem; margin: 26px 0 8px; color: var(--acento); }
+p, li { max-width: 78ch; }
+.sub { color: var(--muted); margin: 0 0 18px; }
+nav { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 14px 0 0; font-size: .95rem; }
+nav a { color: var(--acento); }
+img { width: 100%; height: auto; display: block; border-radius: 6px; border: 1px solid var(--line); background: #8a9a68; }
+.par { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 10px 0; }
+.leyenda { color: var(--muted); font-size: .9rem; margin: 4px 0 12px; }
+.opciones { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; }
+.op { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; }
+.op b { display: block; margin-bottom: 6px; }
+.pro { color: var(--pro); } .con { color: var(--con); }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; margin: 8px 0 16px; }
+th, td { text-align: left; border-bottom: 1px solid var(--line); padding: 6px 8px; vertical-align: top; }
+.reco { background: var(--card); border-left: 4px solid var(--acento); padding: 12px 16px; border-radius: 4px; }
+.clips { max-width: 700px; }
+code { font-size: .9em; }
+@media (max-width: 720px) { .par { grid-template-columns: 1fr; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<h1>Comparar aldeanos (C-98 y C-99)</h1>
+<p class="sub">Proceso 55 · 2026-11-26 · misma luz, misma altura (la del juego, 0,75 casillas), cámara del juego (inclinación 54°, giro 45°, zoom 28, fov 30) y de cerca.</p>
+<nav><a href="#opciones">Opciones</a><a href="#meshy">Prueba de Meshy riggeado</a>
+<a href="#tawantinsuyu">Tawantinsuyu</a>
+<a href="#mapuches">Mapuches</a>
+<a href="#guaranies">Guaraníes</a>
+<a href="#etiopia">Etiopía</a>
+<a href="#palmares">Palmares</a>
+<a href="#ayutthaya">Ayutthaya</a>
+<a href="#soldados">Soldados y armas</a><a href="#reco">Recomendación</a></nav>
+<p>Columnas: <b>1 KayKit</b>, el aldeano animado que el juego usa hoy (hombre, edad I); <b>2 Meshy quieto</b>, el GLB de Meshy que el juego usaba antes; <b>3 Local</b>, el del pipeline local (proceso/47–50) caminando con el <code>Walking_A</code> de KayKit retargeteado; <b>4 Meshy riggeado</b>, solo en el Tawantinsuyu, el mismo Meshy riggeado por la API de Meshy, con su propia caminata. Las capturas «a la distancia del juego» están ampliadas 3× sin suavizar; al lado, el mismo recorte a tamaño real.</p>
+<h2 id="opciones">Opciones de C-98</h2><div class="opciones">
+<div class="op"><b>a) Animados (KayKit) y riggear los Meshy cuando se pueda</b><div class="pro">+ La prueba muestra que se puede: el inca de Meshy camina, trabaja y muere en el juego, con su textura.</div><div class="con">− Hay que rehacer los modelos con las manos vacías (la herramienta viene pegada y se dobla con el brazo) y recortar algunos clips.</div></div>
+<div class="op"><b>b) Volver al Meshy quieto hasta riggear</b><div class="pro">+ Es lo que mejor se ve de lejos, con la textura y la piel de cada pueblo.</div><div class="con">− Se pierde todo el movimiento: los aldeanos se deslizan quietos y los soldados no pegan.</div></div>
+<div class="op"><b>c) Animados, con colores más oscuros y terrosos</b><div class="pro">+ Es barato y se hace ya con data/arte_animaciones.json (vestimenta, aspecto y piel), sin modelos nuevos.</div><div class="con">− Sigue siendo la figura de bloques de madera: de cerca no gana textura ni cara.</div></div>
+<div class="op"><b>3) Pipeline local, riggeado y con el retarget de KayKit</b><div class="pro">+ Camina con las mismas animaciones del juego y es gratis (sin créditos).</div><div class="con">− Los seis salieron con la misma túnica roja, la cara se deforma y el de Palmares no tiene esqueleto.</div></div>
+</div>
+<h2 id="meshy">Prueba: el aldeano inca de Meshy, riggeado y animado</h2>
+<p>Con la API de Meshy (<code>tools/meshy_rig.py</code>): rig (<code>POST /openapi/v1/rigging</code>) sobre el GLB original de Meshy y diez clips de su biblioteca (<code>POST /openapi/v1/animations</code> con <code>action_ids</code>). En Godot se carga tal cual: esqueleto de 24 huesos (Hips, Spine…, sin dedos), en centímetros bajo un Armature a 0,01; la escala buena sale de la malla. La faja azul es el color del equipo, colgada del hueso de la cadera.</p>
+<table><tr><th>Paso</th><th>Créditos</th></tr>
+<tr><td>Rig con <code>input_task_id</code> de la tarea vieja (ya vencida: 400)</td><td>0</td></tr>
+<tr><td>Rig del GLB original (trae caminar y correr)</td><td>5</td></tr>
+<tr><td>Diez clips (3 cada uno)</td><td>30</td></tr>
+<tr><td><b>Total</b> (saldo 1223 → 1188)</td><td><b>35</b></td></tr></table>
+<p class="leyenda">Personaje terminado: 5 + 3 por clip, unos 35 con diez clips, más unos 30 si hay que generar el modelo. El soldado (hondero) no se riggeó: el sistema de permisos frenó el gasto extra; queda para que lo decidas vos. Registro: <code>meshy-registro.jsonl</code>.</p>
+<div class="clips"><img src="img/meshy_aldeano_clips.jpg" alt="Clips de Meshy del aldeano inca, cuatro cuadros cada uno" loading="lazy"></div>
+<p class="leyenda">Doce clips, cuatro cuadros cada uno. La forma oscura con rojo sobre la cabeza es la chaquitaclla: viene pegada al modelo, el rig la ata al brazo y a la cabeza, y en casi todos los clips se dobla o le tapa la cara.</p>
+<img src="img/meshy_aldeano_rts.jpg" alt="Seis Meshy riggeados y dos KayKit a la distancia del juego" loading="lazy">
+<p class="leyenda">A la distancia del juego (3×): seis Meshy riggeados en clips distintos y, abajo a la derecha, dos KayKit.</p>
+<table><tr><th>Estado del juego</th><th>Clip de Meshy</th><th>Cómo queda</th></tr>
+<tr><td>quieto</td><td><code>Idle</code></td><td>directo</td></tr>
+<tr><td>caminar / correr</td><td><code>walking / running (vienen con el rig)</code></td><td>directo</td></tr>
+<tr><td>talar</td><td><code>Charged_Axe_Chop</code></td><td>sustituto: golpe cargado de 7,7 s, con desplazamiento; hay que recortarlo</td></tr>
+<tr><td>picar / construir</td><td><code>Heavy_Hammer_Swing</code></td><td>sustituto: la cadera se corre; hay que dejarlo en el lugar</td></tr>
+<tr><td>cosechar</td><td><code>Pull_Radish</code></td><td>directo</td></tr>
+<tr><td>juntar / carnear</td><td><code>Collect_Object, Male_Bend_Over_Pick_Up</code></td><td>directo</td></tr>
+<tr><td>con carga</td><td><code>Carry_Heavy_Object_Walk_inplace</code></td><td>directo (el juego hoy no tiene este estado)</td></tr>
+<tr><td>pegar</td><td><code>Attack</code></td><td>directo</td></tr>
+<tr><td>golpeado</td><td><code>Hit_Reaction</code></td><td>sirve, pero se corre 85 cm; hay que dejarlo en el lugar</td></tr>
+<tr><td>morir</td><td><code>Dead</code></td><td>directo</td></tr>
+</table>
+<p>Lo que falta en la biblioteca de Meshy (talar, picar y construir de verdad, el tiro con honda o arco) puede salir del retarget de KayKit con un mapa de nombres de huesos (<code>hips</code> → <code>Hips</code>, etc.), o de su Text to Motion.</p>
+<h2 id="tawantinsuyu">Tawantinsuyu</h2><p>Único con la columna 4 (Meshy riggeado). El local viste túnica roja, lejos del unku claro del Meshy.</p>
+<div class="par"><div><img src="img/tawantinsuyu_rts.jpg" alt="Tawantinsuyu a la distancia del juego, ampliado" loading="lazy"><div class="leyenda">Distancia del juego, 3×</div></div><div><img src="img/tawantinsuyu_rts_real.jpg" alt="Tawantinsuyu a la distancia del juego, tamaño real" loading="lazy"><div class="leyenda">Distancia del juego, tamaño real</div></div></div>
+<img src="img/tawantinsuyu_cerca.jpg" alt="Tawantinsuyu de cerca" loading="lazy">
+<div class="leyenda">De cerca.</div>
+<img src="img/tawantinsuyu_caminata.jpg" alt="Tawantinsuyu: ciclo de caminar" loading="lazy">
+<div class="leyenda">Caminata: KayKit arriba, local abajo, Meshy riggeado al final; seis cuadros del ciclo.</div>
+<h2 id="mapuches">Mapuches</h2><p>El Meshy, con su poncho oscuro con guarda, es el que más se integra al pasto. El local otra vez de rojo.</p>
+<div class="par"><div><img src="img/mapuches_rts.jpg" alt="Mapuches a la distancia del juego, ampliado" loading="lazy"><div class="leyenda">Distancia del juego, 3×</div></div><div><img src="img/mapuches_rts_real.jpg" alt="Mapuches a la distancia del juego, tamaño real" loading="lazy"><div class="leyenda">Distancia del juego, tamaño real</div></div></div>
+<img src="img/mapuches_cerca.jpg" alt="Mapuches de cerca" loading="lazy">
+<div class="leyenda">De cerca.</div>
+<img src="img/mapuches_caminata.jpg" alt="Mapuches: ciclo de caminar" loading="lazy">
+<div class="leyenda">Caminata: KayKit arriba, local abajo; seis cuadros del ciclo.</div>
+<h2 id="guaranies">Guaraníes</h2><p>El Meshy con plumas y piel cobriza. El KayKit se lee claro y gris al lado.</p>
+<div class="par"><div><img src="img/guaranies_rts.jpg" alt="Guaraníes a la distancia del juego, ampliado" loading="lazy"><div class="leyenda">Distancia del juego, 3×</div></div><div><img src="img/guaranies_rts_real.jpg" alt="Guaraníes a la distancia del juego, tamaño real" loading="lazy"><div class="leyenda">Distancia del juego, tamaño real</div></div></div>
+<img src="img/guaranies_cerca.jpg" alt="Guaraníes de cerca" loading="lazy">
+<div class="leyenda">De cerca.</div>
+<img src="img/guaranies_caminata.jpg" alt="Guaraníes: ciclo de caminar" loading="lazy">
+<div class="leyenda">Caminata: KayKit arriba, local abajo; seis cuadros del ciclo.</div>
+<h2 id="etiopia">Etiopía</h2><p>El que más muestra el tono de piel: el KayKit sale casi del mismo color que el inca; el Meshy y el local, oscuros.</p>
+<div class="par"><div><img src="img/etiopia_rts.jpg" alt="Etiopía a la distancia del juego, ampliado" loading="lazy"><div class="leyenda">Distancia del juego, 3×</div></div><div><img src="img/etiopia_rts_real.jpg" alt="Etiopía a la distancia del juego, tamaño real" loading="lazy"><div class="leyenda">Distancia del juego, tamaño real</div></div></div>
+<img src="img/etiopia_cerca.jpg" alt="Etiopía de cerca" loading="lazy">
+<div class="leyenda">De cerca.</div>
+<img src="img/etiopia_caminata.jpg" alt="Etiopía: ciclo de caminar" loading="lazy">
+<div class="leyenda">Caminata: KayKit arriba, local abajo; seis cuadros del ciclo.</div>
+<h2 id="palmares">Palmares</h2><p>El aldeano local de Palmares no tiene esqueleto en el GLB (los huesos llegaron como nodos sueltos): no camina y su fila de caminata sale quieta.</p>
+<div class="par"><div><img src="img/palmares_rts.jpg" alt="Palmares a la distancia del juego, ampliado" loading="lazy"><div class="leyenda">Distancia del juego, 3×</div></div><div><img src="img/palmares_rts_real.jpg" alt="Palmares a la distancia del juego, tamaño real" loading="lazy"><div class="leyenda">Distancia del juego, tamaño real</div></div></div>
+<img src="img/palmares_cerca.jpg" alt="Palmares de cerca" loading="lazy">
+<div class="leyenda">De cerca.</div>
+<img src="img/palmares_caminata.jpg" alt="Palmares: ciclo de caminar" loading="lazy">
+<div class="leyenda">Caminata: KayKit arriba, local abajo; seis cuadros del ciclo.</div>
+<h2 id="ayutthaya">Ayutthaya</h2><p>El Meshy con el sombrero de paja y el pha khao ma. El local, rojo y con un hombro al aire.</p>
+<div class="par"><div><img src="img/ayutthaya_rts.jpg" alt="Ayutthaya a la distancia del juego, ampliado" loading="lazy"><div class="leyenda">Distancia del juego, 3×</div></div><div><img src="img/ayutthaya_rts_real.jpg" alt="Ayutthaya a la distancia del juego, tamaño real" loading="lazy"><div class="leyenda">Distancia del juego, tamaño real</div></div></div>
+<img src="img/ayutthaya_cerca.jpg" alt="Ayutthaya de cerca" loading="lazy">
+<div class="leyenda">De cerca.</div>
+<img src="img/ayutthaya_caminata.jpg" alt="Ayutthaya: ciclo de caminar" loading="lazy">
+<div class="leyenda">Caminata: KayKit arriba, local abajo; seis cuadros del ciclo.</div>
+<h2 id="soldados">C-99: piel y armas de los soldados</h2>
+<p><b>Piel:</b> hoy los seis pueblos animados comparten un solo tono (<code>colores.piel = #8c5636</code> en <code>data/arte_animaciones.json</code>; ninguna <code>vestimenta</code> lo pisa). Se nota en las fotos de Etiopía y Palmares, al lado del Meshy. El campo <code>vestimenta.&lt;forma&gt;.piel</code> ya existe: dar un tono por pueblo es un cambio de datos.</p>
+<p><b>Armas:</b> cada soldado a pie de la edad III, quieto, con su arma tal como está en <code>tropas</code>.</p>
+<h3>Tawantinsuyu</h3>
+<img src="img/soldados_tawantinsuyu.jpg" alt="Soldados de Tawantinsuyu" loading="lazy">
+<p class="leyenda">guerrero maza · hondero honda · lancero lanza + escudo cuadrado · guardia maza + escudo cuadrado · guardia a distancia honda + escudo · galgueros galga · boleador boleadoras · awqa lanza + escudo cuadrado</p>
+<h3>Mapuches</h3>
+<img src="img/soldados_mapuches.jpg" alt="Soldados de Mapuches" loading="lazy">
+<p class="leyenda">guerrero macana a dos manos · hondero arco · lancero lanza larga (150 %) sin escudo · guardia lanza (140 %) · guardia a distancia arco + escudo cuadrado · incendiarios antorcha · infantería montada maza</p>
+<h3>Guaraníes</h3>
+<img src="img/soldados_guaranies.jpg" alt="Soldados de Guaraníes" loading="lazy">
+<p class="leyenda">guerrero macana a dos manos · hondero arco · lancero lanza + escudo redondo · guardia macana · guardia a distancia arco + escudo cuadrado · kaaguygua maza</p>
+<h3>Etiopía</h3>
+<img src="img/soldados_etiopia.jpg" alt="Soldados de Etiopía" loading="lazy">
+<p class="leyenda">hondero jabalina · lancero lanza + escudo redondo · guardia espada + escudo redondo · guardia a distancia jabalina + escudo redondo · guerrero gasa maza (no hay guerrero común a pie)</p>
+<h3>Palmares</h3>
+<img src="img/soldados_palmares.jpg" alt="Soldados de Palmares" loading="lazy">
+<p class="leyenda">guerrero maza · hondero arco · lancero lanza + escudo redondo · zagaieiro honda · guarnição da cerca lanza + escudo · capitão do mocambo maza</p>
+<h3>Ayutthaya</h3>
+<img src="img/soldados_ayutthaya.jpg" alt="Soldados de Ayutthaya" loading="lazy">
+<p class="leyenda">guerrero dap (una en cada mano) · hondero arco · lancero lanza + escudo redondo · guardia guja · ngao guja + escudo · defensores de Suan Phlu lanza + escudo · compañía japonesa katana</p>
+<h2 id="reco">Recomendación (decidís vos)</h2>
+<div class="reco">
+<p><b>C-98:</b> la <b>a</b>, por el camino de Meshy, con una condición: generar los personajes con las manos vacías y en pose A, y colgar las herramientas y las armas del hueso de la mano, como hoy con KayKit. Mientras tanto, la <b>c</b> como paso barato. El pipeline local todavía no está para la gente: los seis visten igual, de rojo, y uno no tiene esqueleto.</p>
+<p><b>C-99:</b> un tono de piel por pueblo (hoy es uno solo para los seis). Las armas siguen lo de <code>02-soldados.md</code>; las fotos sirven para revisar una por una.</p>
+<p><b>Antes de gastar más:</b> riggear un soldado sin arma en la mano (unos 35 créditos) para confirmar que la honda o la lanza se pueden colgar de la mano.</p>
+</div>
+<p class="leyenda">Herramienta: <code>tools/comparar_aldeanos.gd</code> (modos: comparación, <code>--modo=meshy</code>, <code>--modo=soldados</code>). Nada del juego cambió.</p>
+</main>
+</body>
+</html>
