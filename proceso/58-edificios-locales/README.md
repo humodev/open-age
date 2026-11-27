@@ -122,8 +122,22 @@ Recintos amurallados y conjuntos que el pipeline local aplasta en «barriles» o
 | Tawantinsuyu | `kallanka_real` | Pedido del autor junto con los recintos |
 | Tawantinsuyu | `almacen_madera` | La pila de leña sale como un cartel plano (dos intentos) |
 
-<!-- PRUEBAS -->
+## Pruebas (hasta la pausa)
 
-<!-- TROPIEZOS -->
+- `test_determinism`: OK, hash 3059812827 (igual que en el proceso 54; el cambio es solo de imagen).
+- `civ_smoke`: corre sin errores.
+- `iconos`: OK (780 grillas). `grilla`: OK.
+- Pendientes para el final: el autotest con ventana (Etiopía) y los FPS de una base tardía.
+
+## Tropiezos
+
+- **ComfyUI del autor con 13 GB tomados**, aun después de `POST /free`: Hunyuan no tenía los 14 GB. El autor aprobó apagarlo, y desde entonces se arranca con `arrancar_aislado.sh` y se apaga (con `pgrep` anclado) antes de cada tanda de Hunyuan.
+- **`MemoryHigh=10G` frenaba a FLUX:** con `--cache-none`, cada imagen tardaba 60–85 s, entrando y saliendo del swap. Sin `MemoryHigh` (el tope de 12 GB sigue), tarda unos 30 s. Ahora lo hace `gen3d_flux_lote.py`.
+- **FLUX pinta pasto bajo el edificio** aunque el prompt diga «no grass»: la vista recorta el verde (`quitar: verde`), salvo en el pewenal.
+- **FLUX pone aldeas enteras alrededor del edificio** (Ayutthaya) y **tejas rojas** (guaraníes, Ayutthaya), que la máscara tomaría como color del equipo. Se rehicieron con «only this one building» y con tejas oscuras.
+- **Paint oscurece el rojo y lo corre al carmesí:** corte de tono de 15° (22° en el Tawantinsuyu).
+- **Paint pintó muros azulados** en dos edificios incas de la primera pasada: se confunden con el color del equipo.
+- **Al mover los GLB viejos a `_v1`,** los `estilo.modelos` de los otros pueblos se apuntaron a `_v1` para que el juego no perdiera sus casas y capitales.
+- **Hunyuan 2mv:** sin memoria de GPU con el juego abierto.
 
 <!-- COMMITS -->
