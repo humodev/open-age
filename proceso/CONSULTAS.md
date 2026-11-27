@@ -697,3 +697,8 @@ Los cuatro modelos nuevos (aldeano, kancha, kallanka y caballo, con textura de H
 a) Usar ya la kancha y la kallanka (estáticas) en los incas y dejar el aldeano para cuando `AldeanoAnimado` acepte modelos riggeados *(por defecto)* · b) Usar los cuatro ya, con el aldeano quieto como el GLB de hoy · c) Esperar a pasar todas las civilizaciones por el pipeline
 
 **Respuesta:** a) Usar ya la kancha y la kallanka (estáticas) en los incas y dejar el aldeano para cuando `AldeanoAnimado` acepte modelos riggeados (2026-11-26, página de consultas). **Aplicado:** modelos del pipeline en el juego, un renglón de `estilo.modelos` por modelo: kancha y kallanka incas, y casa y capital de guaraníes, Etiopía, Palmares y Ayutthaya; la ruka mapuche también. El lof mapuche **volvió** al de Meshy porque se ve más chico que una casa. Los aldeanos siguen como estaban (proceso/54).
+### C-107 · Los otros 11 aldeanos de Meshy (proceso/56, «Aldeano de prueba»)
+El aldeano inca de prueba salió bien: pose A, manos vacías, túnica roja, rig propio con KayKit, herramientas y color del equipo (ver `proceso/56-rig-y-color/index.html#prueba`). Los 11 que faltan cuestan 330 créditos (30 cada uno). La hoja del inca no tenía tocado y el modelo salió sin vincha.
+a) Generar los 11 con la receta, agregando a cada hoja el tocado de su pueblo (sin rojo) *(por defecto)* · b) Generar los 11 tal cual, sin tocado · c) Primero conectar el inca al juego y verlo en partida
+
+**Respuesta:**

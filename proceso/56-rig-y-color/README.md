@@ -161,6 +161,127 @@ No conviene comprar los clips de Meshy (3 por clip, 30 por aldeano):
 
 Antes de la tanda, conviene probar con **un** aldeano (30 créditos) que Meshy respete la pose A y el rojo plano de la hoja: es la única suposición que no se pudo comprobar sin gastar.
 
+## Aldeano de prueba (2026-11-27)
+
+**Pedido:** el autor aprobó un aldeano de prueba (30 créditos, ya generado con la receta de arriba): Meshy multi-image-to-3d con el frente y la espalda de la hoja en gouache `comfyui/output/incas_gouache/hoja_aldeano_e1_31.png`, pose A, 15.000 triángulos, con textura. Había que validarlo, pasarlo por nuestro pipeline y decir si se hacen los otros 11. **Cero créditos más:** no se llamó a Meshy.
+
+### Veredicto: **sí, seguir con los otros 11** (con la receta de abajo; la consulta es C-107)
+
+Las tres suposiciones que no se podían probar sin gastar se cumplieron:
+- **Pose A y manos vacías:** sí. Los brazos están a 45°, simétricos (las manos al 44,6 % del alto, a ±0,28 del centro), las manos abiertas y nada pegado al cuerpo.
+- **Túnica en rojo plano:** sí. La túnica sale roja en toda la textura, con pliegues y el bolsillo de la hoja. El cordón de la cintura queda marrón verdoso y no se tiñe.
+- **Cara:** se lee como un hombre andino adulto: piel cobriza, pelo negro corto, rasgos de adulto, sin deformaciones. No trae vincha ni *llawtu*, porque la hoja tampoco la tenía.
+
+![Hoja de entrada y modelo de Meshy: frente, espalda, 3/4 y costado](img/12_prueba_hoja_y_modelo.jpg)
+
+![Cabeza de frente, 3/4, costado y espalda, y las dos manos](img/13_prueba_cabeza_y_manos.jpg)
+
+### Rig propio y animaciones de KayKit
+
+`tools/gen3d_rig.py` con dos opciones nuevas:
+- `--normalizar`: el GLB de Meshy viene en metros, centrado en el origen;
+- `--cabeza-rigida`: el paso de `meshy_repesar.py` con los nombres de KayKit: 1553 vértices de la cabeza al 100 % en `head` y 149 del cuello en degradé `chest`→`head`.
+
+El esqueleto también trae ahora `handslot.l` y `handslot.r` sin peso (ver herramientas). Resultado: 21 huesos y 0 vértices sin peso de 8025. Anduvo a la primera, así que no hizo falta el respaldo de calor de huesos.
+
+Las mismas poses malas de arriba, comparadas con el rig de Meshy roto y con el repesado (c):
+
+![Rig de Meshy, repesado (c) y aldeano de prueba con rig propio](img/14_prueba_rig_comparacion.jpg)
+
+- La cara queda entera en todas las poses, y la mano levantada ya no estira la cabeza.
+- Los brazos se abren desde los hombros sin romper la túnica.
+
+Los ocho estados del aldeano, al lado del aldeano de hoy, con la misma biblioteca del juego (`--fuente=juego`: proporciones de `PROP` y brazos y piernas cerrados por `AldeanoAnimado._cerrar`). Los estados son quieto, caminar, talar, picar, construir, llevar, pegar y morir:
+
+![Ocho estados con herramientas: aldeano de hoy y de prueba](img/15_prueba_clips_y_herramientas.jpg)
+
+**Herramientas:** son las del juego (`AldeanoAnimado._herramienta`), colgadas de `handslot.r`.
+- **Tropiezo:** colgada de `wrist.r`, el hacha de talar salía bien, pero el pico, el martillo y el hacha de pegar quedaban girados. KayKit anima `handslot.r` aparte de la muñeca.
+- **Arreglo:**
+  - `gen3d_rig.py` arma `handslot.l/r` (en la palma, sin peso);
+  - el retarget no usa `handslot` para orientar la muñeca;
+  - la pieza va en el marco «corrección × reposo» del hueso.
+
+  Así quedan iguales a las del aldeano de hoy en los ocho estados.
+- El atado de «llevar» va en `chest`, como en el juego.
+
+![De cerca: caminar, picar y pegar](img/16_prueba_de_cerca.jpg)
+
+**Lo que queda:**
+- **Al caminar, la rodilla asoma por la túnica:** la falda se parte entre los dos muslos.
+  - Probé llevar la tela roja por debajo de la cintura hacia `hips`, con los muslos promediados. La rodilla asomaba igual, o un poco más, así que lo saqué.
+  - A la distancia del juego no se ve (capturas de color, abajo).
+  - Si molesta de cerca, hay que bajar el paso en el clip (`CERRAR_PIERNAS`), no tocar los pesos.
+- **La mano derecha queda abierta alrededor del mango:** viene abierta de la pose A, y el rig no tiene dedos para cerrar el puño. De lejos no se nota.
+
+### Color del equipo
+
+`tools/mascara_equipo_3d.py --metodo=rojo`: la máscara cubre el 67 % del atlas, con `luz_ref` = 0,076. Tiñe con `equipo_3d.gdshader` en azul, rojo, amarillo y verde (con la máscara en magenta y el original). A la derecha, el aldeano de hoy (KayKit) para comparar el tamaño:
+
+![De cerca: cuatro colores, máscara, original y el aldeano de hoy](img/17_prueba_color_cerca.jpg)
+
+![Cabezas de cerca: azul y máscara](img/18_prueba_color_cabezas.jpg)
+
+![A la distancia del juego (3×)](img/19_prueba_color_rts.jpg)
+
+![Tamaño real](img/20_prueba_color_rts_real.jpg)
+
+![Atlas y máscara](img/21_prueba_mascara_atlas.jpg)
+
+- La piel, la cara, el pelo, las manos, los pies y el cordón quedan sin teñir. No hay vincha (el modelo no la trae).
+- La túnica entera cambia de color, sin las manchas del método «ropa», y de lejos el color se lee bien.
+- Detalles menores:
+  - unos pocos texeles del pelo, rojizos en la textura, entran en la máscara (se ven en magenta arriba de la cabeza; con el color del equipo, casi nada);
+  - queda un borde rojo fino en la sisa, en las costuras de las islas del atlas.
+
+### Problemas concretos
+
+1. **Meshy no respetó los 15.000 triángulos:** entregó 515.842 (17,6 MB). `tools/meshy_api.py` ignora `--poli` sin `--remesh` (proceso/16). Se diezmó en local con `optimizar_glb.py` a 16.109 triángulos y textura de 2048, sin pérdida visible. Para los otros 11: pedir con `--remesh --poli=15000` o diezmar igual (es gratis).
+2. **La rodilla asoma por la túnica al caminar** (ver arriba). Es aceptable para el juego.
+3. **No trae tocado:** la hoja no lo tenía. Si el *llawtu* o la vincha tienen que estar, van en la hoja, en un color que no sea rojo.
+4. **Borde rojo en las costuras de la máscara:** son unos pocos píxeles. Se puede crecer la máscara 1–2 px dentro de las islas en `mascara_equipo_3d.py`.
+
+### Receta para cada aldeano que falta
+
+```sh
+# 0) hoja en gouache (FLUX local): pose A, manos vacías, la ropa del equipo en rojo plano, sin rojo
+#    en piel, pelo ni tocado; recortar frente y espalda.
+# 1) malla (30 créditos)
+python3 tools/meshy_api.py modelo .cache/meshy_aldeanos/<pueblo>_<sexo>.glb frente.png espalda.png \
+    --pose=a-pose --poli=15000 --remesh
+# 2) diezmar y achicar la textura (si Meshy no respetó --poli)
+blender --background --python tools/optimizar_glb.py -- .cache/meshy_aldeanos/<x>.glb <x>_opt.glb 15000 2048 solo_color
+# 3) rig propio (KayKit), cabeza rígida y handslot
+blender --background --python tools/gen3d_rig.py -- <x>_opt.glb <x>_rig.glb <x>_mixamo.fbx <x>_prueba \
+    --normalizar --cabeza-rigida
+# 4) máscara del equipo (anotar luz_ref)
+blender --background --python tools/mascara_equipo_3d.py -- <x>_rig.glb <x>_mascara.png --metodo=rojo --hoja=<x>_hoja.jpg
+# 5) revisar en Godot: poses malas, los ocho estados con herramientas y los cuatro colores
+godot --path . --resolution 1800x620 -s tools/rig_y_color.gd -- --dir=<carpeta> --modo=rig --fuente=juego \
+    "--clips=Idle_A@0.5@quieto@,Walking_A@0.25@caminar@,Chopping@0.45@talar@hacha,Pickaxing@0.5@picar@pico" \
+    "--filas=Hoy|-|juego;Nuevo|<x>_rig.glb|kaykit"
+godot --path . --resolution 1800x620 -s tools/rig_y_color.gd -- --dir=<carpeta> --modo=rig --fuente=juego \
+    "--clips=Hammering@0.5@construir@martillo,Walking_A@0.6@llevar@carga,Melee_1H_Attack_Chop@0.45@pegar@hacha,Death_A@0.95@morir@" \
+    "--filas=Hoy|-|juego;Nuevo|<x>_rig.glb|kaykit"
+godot --path . --resolution 1600x900 -s tools/rig_y_color.gd -- --dir=<carpeta> --modo=color --fuente=juego \
+    --glb=<x>_rig.glb --mascara=<x>_mascara.png --luz=<luz_ref> --nombre=<x> --kaykit_civ=<pueblo>
+# 6) copiar a assets/generados/modelos/meshy_aldeanos/<pueblo>_<sexo>.glb (+ _mascara.png); ≤ 3 MB
+```
+
+Blender y Godot van dentro de `systemd-run --user --scope -p MemoryMax=4G -p MemorySwapMax=1G`, de a uno. Cada aldeano tarda unos 5 minutos de máquina.
+
+**Qué mirar en cada uno antes de seguir:**
+- en la vista de frente: pose A y manos vacías;
+- en la máscara: que la ropa entre entera y que la piel no entre;
+- en «picar» y «pegar»: que la cara no se estire.
+
+Si un pueblo tiene poncho o falda ancha y el rig propio la rompe, el respaldo sigue siendo `meshy_rig.py` (5 créditos) más `meshy_repesar.py ... c`.
+
+**Entregado:** `assets/generados/modelos/meshy_aldeanos/inca_m.glb` (2,8 MB, 21 huesos, sin clips; los toma de KayKit) y `inca_m_mascara.png` (`luz_ref` = 0,076). Todavía no están conectados al juego. Para conectarlos:
+- `AldeanoAnimado` tiene que retargetear su biblioteca al esqueleto del GLB (como `rig_y_color.gd`, sin usar `handslot` para la muñeca);
+- la herramienta va en `handslot.r`;
+- el material es `equipo_3d.gdshader`.
+
 ## Cómo repetirlo
 
 ```sh
@@ -185,7 +306,13 @@ Los renders de Blender de las poses salieron de un script de prueba fuera del re
 - El suavizado de pesos sobre la malla sin soldar rompió la túnica en astillas. Hay que soldar las costuras del atlas antes.
 - La máscara por tono de piel fija se llevaba el 69 % de la ropa: el marrón de Meshy y la piel tienen el mismo tono. Se pasó a distancia CIELAB al color de las manos y a sacar los brazos por los huesos.
 - Godot no importa carpetas que empiezan con punto: los GLB de `.cache/` se cargan con `GLTFDocument` en tiempo de ejecución.
+- Aldeano de prueba:
+  - el worktree no tenía `.godot/`, así que sin importar, `AldeanoAnimado` no resolvía; se copió el del repositorio principal y se importó;
+  - la RAM disponible no llegaba al umbral de 10 GB (ComfyUI de otro proyecto ocupa 8 GB); se bajó el tope a 4 GB con un umbral de 7;
+  - la herramienta salía girada colgada de la muñeca (ver arriba);
+  - el intento `--falda` se descartó.
 
 ## Commits
 
 - Proceso 56: rig de Meshy y color de equipo en 3D (diagnóstico, arreglos, máscara y shader)
+- Proceso 56: aldeano de prueba (Meshy en pose A, rig propio, herramientas en handslot y color del equipo)

@@ -36,8 +36,8 @@ code { font-size: .9em; }
 <body>
 <main>
 <h1>Rig y color de equipo</h1>
-<p class="sub">Proceso 56 · 2026-11-26 · aldeano inca de Meshy · cero créditos gastados · nada del juego cambió.</p>
-<nav><a href="#reco">Recomendación</a><a href="#diag">Diagnóstico</a><a href="#arreglos">Arreglos</a><a href="#godot">En Godot</a><a href="#color">Color del equipo</a></nav>
+<p class="sub">Proceso 56 · 2026-11-26/27 · aldeano inca de Meshy · un aldeano de prueba (30 créditos, aprobado) · nada del juego cambió.</p>
+<nav><a href="#reco">Recomendación</a><a href="#diag">Diagnóstico</a><a href="#arreglos">Arreglos</a><a href="#godot">En Godot</a><a href="#color">Color del equipo</a><a href="#prueba">Aldeano de prueba</a></nav>
 
 <h2 id="reco">Recomendación</h2>
 <div class="reco">
@@ -105,6 +105,46 @@ code { font-size: .9em; }
 <div><img src="img/11_mascara_meshy_atlas.jpg" alt="Máscara del Meshy en el atlas"><p class="leyenda">Máscara del Meshy en el atlas (magenta).</p></div>
 <div><img src="img/11_mascara_local_atlas.jpg" alt="Máscara del local en el atlas"><p class="leyenda">Máscara del local en el atlas.</p></div>
 </div>
+
+<h2 id="prueba">Aldeano de prueba</h2>
+<div class="reco">
+<p><b>Veredicto: sí, seguir con los otros 11.</b> Meshy respetó la pose A, las manos vacías y la túnica en rojo plano; la cara se lee como un hombre andino adulto. El rig propio con la cabeza rígida anduvo a la primera, las herramientas del juego quedan como en el aldeano de hoy y el color del equipo tiñe la túnica entera sin tocar piel, pelo ni manos.</p>
+<p>A corregir en la receta: Meshy entregó 515.842 triángulos en lugar de 15.000 (falta <code>--remesh</code>; se diezma gratis con <code>optimizar_glb.py</code>), y la rodilla asoma por la túnica al caminar (no se ve a la distancia del juego). La hoja no traía tocado: si va, tiene que estar en la hoja, sin rojo.</p>
+</div>
+<h3>Entrada y modelo</h3>
+<img src="img/12_prueba_hoja_y_modelo.jpg" alt="Hoja en gouache y modelo de Meshy desde cuatro lados">
+<p class="leyenda">La hoja (frente y espalda) y el modelo de Meshy: frente, espalda, 3/4 y costado. Pose A, manos vacías, túnica roja.</p>
+<img src="img/13_prueba_cabeza_y_manos.jpg" alt="Cabeza desde cuatro lados y las dos manos">
+<p class="leyenda">La cabeza de frente, 3/4, costado y espalda, y las dos manos abiertas.</p>
+<h3>Rig propio y KayKit</h3>
+<img src="img/14_prueba_rig_comparacion.jpg" alt="Comparación con el rig de Meshy">
+<p class="leyenda">Las mismas poses malas: el rig de Meshy, el repesado (c) y el aldeano de prueba con <code>gen3d_rig.py --normalizar --cabeza-rigida</code>. La cara queda entera.</p>
+<img src="img/15_prueba_clips_y_herramientas.jpg" alt="Ocho estados con herramientas" class="clips">
+<p class="leyenda">Quieto, caminar, talar, picar, construir, llevar, pegar y morir: el aldeano de hoy arriba, el de prueba abajo, con la biblioteca del juego. Las herramientas cuelgan de <code>handslot.r</code>, que KayKit anima aparte de la muñeca.</p>
+<img src="img/16_prueba_de_cerca.jpg" alt="De cerca">
+<p class="leyenda">De cerca: al caminar, la rodilla asoma por la túnica; la mano queda abierta alrededor del mango.</p>
+<h3>Color del equipo</h3>
+<img src="img/17_prueba_color_cerca.jpg" alt="Cuatro colores, máscara, original y el aldeano de hoy">
+<p class="leyenda">Azul, rojo, amarillo, verde, la máscara en magenta, el original y, a la derecha, el aldeano de hoy para comparar el tamaño.</p>
+<img src="img/18_prueba_color_cabezas.jpg" alt="Cabezas de cerca">
+<p class="leyenda">Piel, cara, pelo y manos sin teñir. En la máscara entran unos pocos texeles del pelo y queda un borde rojo fino en la sisa.</p>
+<div class="par">
+<div><img src="img/19_prueba_color_rts.jpg" alt="A la distancia del juego, 3x"><p class="leyenda">Cámara del juego, ampliada 3×.</p></div>
+<div><img src="img/20_prueba_color_rts_real.jpg" alt="Tamaño real" style="width:auto;max-width:100%;image-rendering:pixelated"><p class="leyenda">Tamaño real.</p></div>
+</div>
+<img src="img/21_prueba_mascara_atlas.jpg" alt="Atlas y máscara">
+<p class="leyenda">El atlas de Meshy y la máscara del método «rojo» (67 % del atlas, <code>luz_ref</code> = 0,076).</p>
+<h3>Receta para los que faltan</h3>
+<table>
+<tr><th>Paso</th><th>Comando</th><th>Créditos</th></tr>
+<tr><td>Hoja</td><td>Gouache (FLUX local) en pose A, manos vacías, ropa del equipo en rojo plano; recortar frente y espalda</td><td>0</td></tr>
+<tr><td>Malla</td><td><code>tools/meshy_api.py modelo … frente.png espalda.png --pose=a-pose --poli=15000 --remesh</code></td><td>30</td></tr>
+<tr><td>Diezmar</td><td><code>tools/optimizar_glb.py -- x.glb x_opt.glb 15000 2048 solo_color</code></td><td>0</td></tr>
+<tr><td>Rig</td><td><code>tools/gen3d_rig.py -- x_opt.glb x_rig.glb x.fbx x --normalizar --cabeza-rigida</code></td><td>0</td></tr>
+<tr><td>Máscara</td><td><code>tools/mascara_equipo_3d.py -- x_rig.glb x_mascara.png --metodo=rojo</code></td><td>0</td></tr>
+<tr><td>Revisión</td><td><code>tools/rig_y_color.gd --modo=rig --fuente=juego --clips=…</code> y <code>--modo=color --kaykit_civ=…</code></td><td>0</td></tr>
+</table>
+<p>Los comandos completos están en el <a href="README.md">README</a>. Entregado sin conectar al juego: <code>assets/generados/modelos/meshy_aldeanos/inca_m.glb</code> (2,8 MB) y su máscara.</p>
 </main>
 </body>
 </html>
