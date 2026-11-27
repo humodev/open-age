@@ -74,7 +74,7 @@
    "textura": "auto",
    "caras": 4000,
    "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/tawantinsuyu_casa.glb"
+   "destino": "assets/generados/modelos/local/tawantinsuyu_casa_v1.glb"
   },
   "kallanka": {
    "tipo": "edificio",
@@ -244,7 +244,7 @@
    "textura": "auto",
    "caras": 4000,
    "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/mapuches_casa.glb"
+   "destino": "assets/generados/modelos/local/mapuches_casa_v1.glb"
   },
   "mapuches_lof": {
    "tipo": "edificio",
@@ -273,7 +273,7 @@
    "textura": "auto",
    "caras": 5000,
    "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/mapuches_lof.glb"
+   "destino": "assets/generados/modelos/local/mapuches_lof_v1.glb"
   },
   "guaranies_aldeano": {
    "tipo": "persona",
@@ -388,7 +388,7 @@
    "textura": "auto",
    "caras": 4000,
    "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/guaranies_casa.glb"
+   "destino": "assets/generados/modelos/local/guaranies_casa_v1.glb"
   },
   "guaranies_centro": {
    "tipo": "edificio",
@@ -421,7 +421,7 @@
    "textura": "auto",
    "caras": 5000,
    "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/guaranies_centro.glb"
+   "destino": "assets/generados/modelos/local/guaranies_centro_v1.glb"
   },
   "etiopia_aldeano": {
    "tipo": "persona",
@@ -536,7 +536,7 @@
    "textura": "auto",
    "caras": 4000,
    "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/etiopia_casa.glb"
+   "destino": "assets/generados/modelos/local/etiopia_casa_v1.glb"
   },
   "etiopia_centro": {
    "tipo": "edificio",
@@ -565,7 +565,7 @@
    "textura": "auto",
    "caras": 5000,
    "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/etiopia_centro.glb"
+   "destino": "assets/generados/modelos/local/etiopia_centro_v1.glb"
   },
   "palmares_aldeano": {
    "tipo": "persona",
@@ -679,7 +679,7 @@
    "textura": "auto",
    "caras": 4000,
    "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/palmares_casa.glb"
+   "destino": "assets/generados/modelos/local/palmares_casa_v1.glb"
   },
   "palmares_centro": {
    "tipo": "edificio",
@@ -708,7 +708,7 @@
    "textura": "auto",
    "caras": 5000,
    "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/palmares_centro.glb"
+   "destino": "assets/generados/modelos/local/palmares_centro_v1.glb"
   },
   "ayutthaya_aldeano": {
    "tipo": "persona",
@@ -819,7 +819,7 @@
    "textura": "auto",
    "caras": 4000,
    "suelo_pct": 3,
-   "destino": "assets/generados/modelos/local/ayutthaya_casa.glb"
+   "destino": "assets/generados/modelos/local/ayutthaya_casa_v1.glb"
   },
   "ayutthaya_centro": {
    "tipo": "edificio",
@@ -848,7 +848,3438 @@
    "textura": "auto",
    "caras": 5000,
    "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/ayutthaya_centro_v1.glb"
+  },
+  "tawantinsuyu_casa_rojo": {
+   "tipo": "edificio",
+   "edificio": "casa",
+   "categoria": "casa",
+   "civ": "tawantinsuyu",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_casa_rojo_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A small one-room fieldstone house with a steep thatched gable roof and one trapezoidal doorway, a low stone wall around a small yard. Team-color details, large and clearly visible from above: a wide woven cloth band wrapping around all the walls just under the eaves and woven cloth curtains in the doorways, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_casa.glb"
+  },
+  "tawantinsuyu_centro": {
+   "tipo": "edificio",
+   "edificio": "centro",
+   "categoria": "capital",
+   "civ": "tawantinsuyu",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_centro_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} An Inca administrative center: a large fieldstone hall with a huge steep thatched gable roof and a row of trapezoidal doorways, two smaller thatched houses joined at its ends forming a U around a small paved court. Team-color details, large and clearly visible from above: a wide woven cloth band wrapping around all the walls just under the eaves and woven cloth curtains in the doorways, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_centro.glb"
+  },
+  "tawantinsuyu_cuartel_rojo": {
+   "tipo": "edificio",
+   "edificio": "cuartel",
+   "categoria": "produccion",
+   "civ": "tawantinsuyu",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_cuartel_rojo_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A long rectangular hall of fieldstone with many trapezoidal doorways along its long side and a steep thatched gable roof; long wooden spears lean against the wall. Team-color details, large and clearly visible from above: woven cloth curtains in every doorway and square cloth-covered shields hanging beside the doors, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_cuartel.glb"
+  },
+  "tawantinsuyu_taller_tejido": {
+   "tipo": "edificio",
+   "edificio": "taller_tejido",
+   "categoria": "",
+   "civ": "tawantinsuyu",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_taller_tejido_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A small square fieldstone workshop with an open front under a thatched roof, a large upright wooden frame loom standing in front with a half-woven cloth, skeins of wool hanging from a pole. Team-color details, large and clearly visible from above: the half-woven cloth on the loom and the skeins of wool, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_taller_tejido.glb"
+  },
+  "tawantinsuyu_almacen_madera": {
+   "tipo": "edificio",
+   "edificio": "almacen_madera",
+   "categoria": "",
+   "civ": "tawantinsuyu",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_almacen_madera_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A long rectangular woodpile of split firewood logs as tall as a man, the round cut log ends facing the viewer, under a lean-to of thatch on wooden posts. Team-color details, large and clearly visible from above: a woven cloth tied over one end of the woodpile, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_almacen_madera.glb"
+  },
+  "tawantinsuyu_almacen_mina": {
+   "tipo": "edificio",
+   "edificio": "almacen_mina",
+   "categoria": "",
+   "civ": "tawantinsuyu",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_almacen_mina_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A stepped pile of large cut grey stone blocks stacked like a small pyramid beside a small fieldstone hut with a thatched roof, lumps of green copper ore at its foot. Team-color details, large and clearly visible from above: a wide woven cloth band wrapping around all the walls just under the eaves and woven cloth curtains in the doorways, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_almacen_mina.glb"
+  },
+  "tawantinsuyu_qollqa": {
+   "tipo": "edificio",
+   "edificio": "qollqa",
+   "categoria": "",
+   "civ": "tawantinsuyu",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_qollqa_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A row of three round fieldstone storehouses with conical thatched roofs standing side by side on one low stone platform, small square openings. Team-color details, large and clearly visible from above: woven cloth curtains over the small openings, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_qollqa.glb"
+  },
+  "tawantinsuyu_campo_tiro": {
+   "tipo": "edificio",
+   "edificio": "campo_tiro",
+   "categoria": "produccion",
+   "civ": "tawantinsuyu",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_campo_tiro_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A rectangular enclosure of low fieldstone walls with a thatched hut in one corner, a pile of round sling stones and a wooden pole rack. Team-color details, large and clearly visible from above: braided slings and cloth hanging from the wooden pole rack, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_campo_tiro.glb"
+  },
+  "tawantinsuyu_torre": {
+   "tipo": "edificio",
+   "edificio": "torre",
+   "categoria": "torre",
+   "civ": "tawantinsuyu",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_torre_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A tall round fieldstone lookout tower with a conical thatched roof and a small doorway at the base, standing on a square stone base. Team-color details, large and clearly visible from above: a cloth band around the top of the tower wall, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_torre.glb"
+  },
+  "tawantinsuyu_fortaleza": {
+   "tipo": "edificio",
+   "edificio": "fortaleza",
+   "categoria": "torre",
+   "civ": "tawantinsuyu",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_fortaleza_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A fortress block of three stepped levels of massive zigzag stone walls of huge fitted blocks, with a thatched barracks on the top level. Team-color details, large and clearly visible from above: cloth curtains in the barracks doorways and two cloth pennants on poles at the top, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_fortaleza.glb"
+  },
+  "tawantinsuyu_mercado": {
+   "tipo": "edificio",
+   "edificio": "mercado",
+   "categoria": "mercado",
+   "civ": "tawantinsuyu",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_mercado_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} An open stone-walled market square with a thatched gateway, goods laid out on woven cloths: potatoes, maize, clay pots and folded textiles. Team-color details, large and clearly visible from above: the woven cloths under the goods, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_mercado.glb"
+  },
+  "tawantinsuyu_ushnu": {
+   "tipo": "edificio",
+   "edificio": "ushnu",
+   "categoria": "hito",
+   "civ": "tawantinsuyu",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_ushnu_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A stepped stone platform of three levels with a central staircase, a small square stone seat on top. Team-color details, large and clearly visible from above: a cloth band along the edge of each step level, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_ushnu.glb"
+  },
+  "tawantinsuyu_pukara_mayor": {
+   "tipo": "edificio",
+   "edificio": "pukara_mayor",
+   "categoria": "hito",
+   "civ": "tawantinsuyu",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_pukara_mayor_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A round frontier fort: two concentric rings of fieldstone walls with a gate, a thatched barracks inside the inner ring. Team-color details, large and clearly visible from above: a wide woven cloth band wrapping around all the walls just under the eaves and woven cloth curtains in the doorways, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_pukara_mayor.glb"
+  },
+  "tawantinsuyu_qorikancha": {
+   "tipo": "edificio",
+   "edificio": "qorikancha",
+   "categoria": "hito",
+   "civ": "tawantinsuyu",
+   "proceso": "58",
+   "rojo": false,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_qorikancha_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A temple enclosure with a curved wall of perfectly fitted dark stone blocks, a thin band of gold plates along the top of the wall, thatched roofs behind. Natural tones only, no red anywhere. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_qorikancha.glb"
+  },
+  "tawantinsuyu_kallanka_real": {
+   "tipo": "edificio",
+   "edificio": "kallanka_real",
+   "categoria": "hito",
+   "civ": "tawantinsuyu",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_kallanka_real_9.png",
+    "receta": {
+     "semilla": 9,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A very long great hall of finely fitted stone blocks with a row of tall trapezoidal doorways and a huge thatched gable roof. Team-color details, large and clearly visible from above: a wide woven cloth band wrapping around all the walls just under the eaves and woven cloth curtains in the doorways, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_kallanka_real.glb"
+  },
+  "tawantinsuyu_aqllawasi": {
+   "tipo": "edificio",
+   "edificio": "aqllawasi",
+   "categoria": "hito",
+   "civ": "tawantinsuyu",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_aqllawasi_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A rectangular walled compound of finely fitted stone blocks with a single trapezoidal gate and long thatched roofs inside along the walls. Team-color details, large and clearly visible from above: folded fine textiles stacked on the walls and a cloth curtain in the gate, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_aqllawasi.glb"
+  },
+  "tawantinsuyu_vilcabamba": {
+   "tipo": "edificio",
+   "edificio": "vilcabamba",
+   "categoria": "hito",
+   "civ": "tawantinsuyu",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_vilcabamba_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A cluster of four fieldstone buildings around a small court, two with thatched roofs and two with Spanish clay tile roofs, joined by a low wall. Team-color details, large and clearly visible from above: a wide woven cloth band wrapping around all the walls just under the eaves and woven cloth curtains in the doorways, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_vilcabamba.glb"
+  },
+  "tawantinsuyu_maravilla": {
+   "tipo": "edificio",
+   "edificio": "maravilla",
+   "categoria": "maravilla",
+   "civ": "tawantinsuyu",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/tawantinsuyu_maravilla_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} Ollantaytambo as one compact monument: a block of long stone terraces climbing in steps to a top platform with a wall of six enormous pink granite blocks, stone storehouses with thatched roofs on one side. Team-color details, large and clearly visible from above: cloth bands along the terrace edges, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Inca architecture of the Andes: walls of grey fieldstone set in mud mortar or of finely fitted stone blocks, trapezoidal doorways and niches, steep roofs thatched with golden ichu grass."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_maravilla.glb"
+  },
+  "mapuches_casa_rojo": {
+   "tipo": "edificio",
+   "edificio": "casa",
+   "categoria": "casa",
+   "civ": "mapuches",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/mapuches_casa_rojo_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A single large oval Mapuche house with a thick rounded thatched roof of golden grass reaching almost to the ground, a small low doorway. Team-color details, large and clearly visible from above: large woolen blankets draped over a pole rail in front of the door and long cloth pennants on two tall cane lances, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Mapuche architecture of southern Chile: oval houses with thick rounded roofs of golden grass thatch reaching almost to the ground, walls of wooden poles and woven branches, rough wooden pole fences."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/mapuches_casa.glb"
+  },
+  "mapuches_lof_rojo": {
+   "tipo": "edificio",
+   "edificio": "lof",
+   "categoria": "capital",
+   "civ": "mapuches",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/mapuches_lof_rojo_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A Mapuche family settlement: three large oval thatched houses close together around a small yard, joined by a low wooden pole fence. Team-color details, large and clearly visible from above: large woolen blankets draped over a pole rail in front of the door and long cloth pennants on two tall cane lances, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Mapuche architecture of southern Chile: oval houses with thick rounded roofs of golden grass thatch reaching almost to the ground, walls of wooden poles and woven branches, rough wooden pole fences."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/mapuches_lof.glb"
+  },
+  "mapuches_cuartel": {
+   "tipo": "edificio",
+   "edificio": "cuartel",
+   "categoria": "produccion",
+   "civ": "mapuches",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/mapuches_cuartel_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A long open-sided shelter of wooden posts with a thatched gable roof, a rack of long cane lances leaning against it. Team-color details, large and clearly visible from above: cloth pennants on the tips of the lances and a woolen blanket over the rack, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Mapuche architecture of southern Chile: oval houses with thick rounded roofs of golden grass thatch reaching almost to the ground, walls of wooden poles and woven branches, rough wooden pole fences."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/mapuches_cuartel.glb"
+  },
+  "mapuches_fortaleza": {
+   "tipo": "edificio",
+   "edificio": "fortaleza",
+   "categoria": "torre",
+   "civ": "mapuches",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/mapuches_fortaleza_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A frontier fort of wood and earth: a round ring of sharpened log palisade on an earth bank, a lookout platform on posts and a thatched house inside. Team-color details, large and clearly visible from above: cloth pennants on two lances on the lookout platform, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Mapuche architecture of southern Chile: oval houses with thick rounded roofs of golden grass thatch reaching almost to the ground, walls of wooden poles and woven branches, rough wooden pole fences."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/mapuches_fortaleza.glb"
+  },
+  "mapuches_mercado": {
+   "tipo": "edificio",
+   "edificio": "mercado",
+   "categoria": "mercado",
+   "civ": "mapuches",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/mapuches_mercado_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A long open thatched shelter on posts, folded woven ponchos with stepped patterns, cattle hides and clay jars laid out on a low bench. Team-color details, large and clearly visible from above: the folded woven ponchos, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Mapuche architecture of southern Chile: oval houses with thick rounded roofs of golden grass thatch reaching almost to the ground, walls of wooden poles and woven branches, rough wooden pole fences."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/mapuches_mercado.glb"
+  },
+  "mapuches_rewe_malon": {
+   "tipo": "edificio",
+   "edificio": "rewe_malon",
+   "categoria": "hito",
+   "civ": "mapuches",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/mapuches_rewe_malon_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A large oval thatched house with a tall bundle of colihue cane lances leaning against it and a wooden pole corral beside it. Team-color details, large and clearly visible from above: cloth pennants on the tips of the lances, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Mapuche architecture of southern Chile: oval houses with thick rounded roofs of golden grass thatch reaching almost to the ground, walls of wooden poles and woven branches, rough wooden pole fences."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/mapuches_rewe_malon.glb"
+  },
+  "mapuches_rewe_lonko": {
+   "tipo": "edificio",
+   "edificio": "rewe_lonko",
+   "categoria": "hito",
+   "civ": "mapuches",
+   "proceso": "58",
+   "rojo": false,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/mapuches_rewe_lonko_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} The large oval thatched house of a lineage head, the biggest house of the valley, with a wide wooden pole corral beside it. Natural tones only, no red anywhere. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Mapuche architecture of southern Chile: oval houses with thick rounded roofs of golden grass thatch reaching almost to the ground, walls of wooden poles and woven branches, rough wooden pole fences."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/mapuches_rewe_lonko.glb"
+  },
+  "mapuches_rewe_caballeria": {
+   "tipo": "edificio",
+   "edificio": "rewe_caballeria",
+   "categoria": "hito",
+   "civ": "mapuches",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/mapuches_rewe_caballeria_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A large round corral of rough wooden poles with a thatched shelter on one side and a hitching rail with sheepskin saddle pads. Team-color details, large and clearly visible from above: woolen saddle blankets hanging on the hitching rail, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Mapuche architecture of southern Chile: oval houses with thick rounded roofs of golden grass thatch reaching almost to the ground, walls of wooden poles and woven branches, rough wooden pole fences."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/mapuches_rewe_caballeria.glb"
+  },
+  "mapuches_rewe_monte": {
+   "tipo": "edificio",
+   "edificio": "rewe_monte",
+   "categoria": "hito",
+   "civ": "mapuches",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/mapuches_rewe_monte_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} Three tall araucaria trees with straight bare grey trunks and flat dark green umbrella-shaped crowns only at the very top, an oval thatched house between the trunks, baskets of pine nuts. Team-color details, large and clearly visible from above: woolen blankets draped over the baskets, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Mapuche architecture of southern Chile: oval houses with thick rounded roofs of golden grass thatch reaching almost to the ground, walls of wooden poles and woven branches, rough wooden pole fences."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/mapuches_rewe_monte.glb"
+  },
+  "mapuches_parlamento": {
+   "tipo": "edificio",
+   "edificio": "parlamento",
+   "categoria": "hito",
+   "civ": "mapuches",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/mapuches_parlamento_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A long wide open shelter with a thatched roof on twelve wooden posts, two long rows of wooden benches facing each other underneath. Team-color details, large and clearly visible from above: woolen blankets laid over the benches, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Mapuche architecture of southern Chile: oval houses with thick rounded roofs of golden grass thatch reaching almost to the ground, walls of wooden poles and woven branches, rough wooden pole fences."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/mapuches_parlamento.glb"
+  },
+  "mapuches_weichan": {
+   "tipo": "edificio",
+   "edificio": "weichan",
+   "categoria": "hito",
+   "civ": "mapuches",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/mapuches_weichan_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A war council ground: a ring of long colihue cane lances stuck upright around a fire pit, a small thatched shelter at one side. Team-color details, large and clearly visible from above: cloth pennants on the tips of the lances, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Mapuche architecture of southern Chile: oval houses with thick rounded roofs of golden grass thatch reaching almost to the ground, walls of wooden poles and woven branches, rough wooden pole fences."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/mapuches_weichan.glb"
+  },
+  "mapuches_maravilla": {
+   "tipo": "edificio",
+   "edificio": "maravilla",
+   "categoria": "maravilla",
+   "civ": "mapuches",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/mapuches_maravilla_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A great treaty ground: two very long open thatched shelters on wooden posts facing each other across an open space with rows of benches, a few oval thatched houses at the ends. Team-color details, large and clearly visible from above: woolen blankets laid over the benches, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Mapuche architecture of southern Chile: oval houses with thick rounded roofs of golden grass thatch reaching almost to the ground, walls of wooden poles and woven branches, rough wooden pole fences."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/mapuches_maravilla.glb"
+  },
+  "guaranies_casa_rojo": {
+   "tipo": "edificio",
+   "edificio": "casa",
+   "categoria": "casa",
+   "civ": "guaranies",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/guaranies_casa_rojo_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A small house with walls of tacuara bamboo canes and mud and a steep thatched roof of palm leaves, one low doorway. Team-color details, large and clearly visible from above: a cotton hammock tied under the eave and a cloth awning over the doorway, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Guarani architecture of the Parana forest: long houses with wooden posts, walls of tacuara bamboo canes and mud, steep roofs thatched with grass and palm leaves reaching almost to the ground."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/guaranies_casa.glb"
+  },
+  "guaranies_centro_rojo": {
+   "tipo": "edificio",
+   "edificio": "centro",
+   "categoria": "capital",
+   "civ": "guaranies",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/guaranies_centro_rojo_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A very long communal house: a huge steep thatched roof of grass reaching to the ground over wooden posts, several low doorways along its side. Team-color details, large and clearly visible from above: wide cotton cloth awnings over the doorways and wide cloth bands tied around the main posts, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Guarani architecture of the Parana forest: long houses with wooden posts, walls of tacuara bamboo canes and mud, steep roofs thatched with grass and palm leaves reaching almost to the ground."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/guaranies_centro.glb"
+  },
+  "guaranies_almacen_madera": {
+   "tipo": "edificio",
+   "edificio": "almacen_madera",
+   "categoria": "",
+   "civ": "guaranies",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/guaranies_almacen_madera_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} An open-sided shelter of wooden posts with a thatched palm roof, stacks of firewood and hanging bundles of maize inside. Team-color details, large and clearly visible from above: wide cotton cloth awnings over the doorways and wide cloth bands tied around the main posts, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Guarani architecture of the Parana forest: long houses with wooden posts, walls of tacuara bamboo canes and mud, steep roofs thatched with grass and palm leaves reaching almost to the ground."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/guaranies_almacen_madera.glb"
+  },
+  "guaranies_almacen_mina": {
+   "tipo": "edificio",
+   "edificio": "almacen_mina",
+   "categoria": "",
+   "civ": "guaranies",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/guaranies_almacen_mina_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} An open-sided thatched shelter with large clay pots drying in rows and a heap of clay and stones. Team-color details, large and clearly visible from above: wide cotton cloth awnings over the doorways and wide cloth bands tied around the main posts, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Guarani architecture of the Parana forest: long houses with wooden posts, walls of tacuara bamboo canes and mud, steep roofs thatched with grass and palm leaves reaching almost to the ground."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/guaranies_almacen_mina.glb"
+  },
+  "guaranies_cuartel": {
+   "tipo": "edificio",
+   "edificio": "cuartel",
+   "categoria": "produccion",
+   "civ": "guaranies",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/guaranies_cuartel_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A long open-sided thatched shelter on wooden posts, long bows, spears and flat hardwood clubs leaning in racks. Team-color details, large and clearly visible from above: wide cotton cloth awnings over the doorways and wide cloth bands tied around the main posts, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Guarani architecture of the Parana forest: long houses with wooden posts, walls of tacuara bamboo canes and mud, steep roofs thatched with grass and palm leaves reaching almost to the ground."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/guaranies_cuartel.glb"
+  },
+  "guaranies_campo_tiro": {
+   "tipo": "edificio",
+   "edificio": "campo_tiro",
+   "categoria": "produccion",
+   "civ": "guaranies",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/guaranies_campo_tiro_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A small thatched shelter on four posts, long hardwood bows and bundles of cane arrows hanging under the roof, a straw target on a post beside it. Team-color details, large and clearly visible from above: wide cotton cloth awnings over the doorways and wide cloth bands tied around the main posts, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Guarani architecture of the Parana forest: long houses with wooden posts, walls of tacuara bamboo canes and mud, steep roofs thatched with grass and palm leaves reaching almost to the ground."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/guaranies_campo_tiro.glb"
+  },
+  "guaranies_taller": {
+   "tipo": "edificio",
+   "edificio": "taller",
+   "categoria": "produccion",
+   "civ": "guaranies",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/guaranies_taller_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} An open thatched workshop with piles of thick giant bamboo poles, rawhide strips on a rack and a bamboo tube cannon on a wooden frame. Team-color details, large and clearly visible from above: wide cotton cloth awnings over the doorways and wide cloth bands tied around the main posts, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Guarani architecture of the Parana forest: long houses with wooden posts, walls of tacuara bamboo canes and mud, steep roofs thatched with grass and palm leaves reaching almost to the ground."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/guaranies_taller.glb"
+  },
+  "guaranies_fortaleza": {
+   "tipo": "edificio",
+   "edificio": "fortaleza",
+   "categoria": "torre",
+   "civ": "guaranies",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/guaranies_fortaleza_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A double palisade of giant bamboo canes and logs in a square, raised wooden archer platforms behind it, a thatched house inside. Team-color details, large and clearly visible from above: cloth bands tied around the palisade gate posts and two cloth pennants on the platforms, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Guarani architecture of the Parana forest: long houses with wooden posts, walls of tacuara bamboo canes and mud, steep roofs thatched with grass and palm leaves reaching almost to the ground."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/guaranies_fortaleza.glb"
+  },
+  "guaranies_mercado": {
+   "tipo": "edificio",
+   "edificio": "mercado",
+   "categoria": "mercado",
+   "civ": "guaranies",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/guaranies_mercado_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} An open thatched shelter on posts with goods laid out on mats: clay pots, cotton cloth, baskets of manioc and bundles of yerba mate leaves. Team-color details, large and clearly visible from above: the folded cotton cloths, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Guarani architecture of the Parana forest: long houses with wooden posts, walls of tacuara bamboo canes and mud, steep roofs thatched with grass and palm leaves reaching almost to the ground."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/guaranies_mercado.glb"
+  },
+  "guaranies_karai_palabra": {
+   "tipo": "edificio",
+   "edificio": "karai_palabra",
+   "categoria": "hito",
+   "civ": "guaranies",
+   "proceso": "58",
+   "rojo": false,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/guaranies_karai_palabra_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A very large communal house with a thatched roof reaching the ground and a ring of low wooden stools in front of its door. Natural tones only, no red anywhere. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Guarani architecture of the Parana forest: long houses with wooden posts, walls of tacuara bamboo canes and mud, steep roofs thatched with grass and palm leaves reaching almost to the ground."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/guaranies_karai_palabra.glb"
+  },
+  "guaranies_aty_guasu": {
+   "tipo": "edificio",
+   "edificio": "aty_guasu",
+   "categoria": "hito",
+   "civ": "guaranies",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/guaranies_aty_guasu_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A wide round meeting ground enclosed by four long thatched communal houses at its sides, a ring of wooden benches in the middle. Team-color details, large and clearly visible from above: wide cotton cloth awnings over the doorways and wide cloth bands tied around the main posts, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Guarani architecture of the Parana forest: long houses with wooden posts, walls of tacuara bamboo canes and mud, steep roofs thatched with grass and palm leaves reaching almost to the ground."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/guaranies_aty_guasu.glb"
+  },
+  "guaranies_mision": {
+   "tipo": "edificio",
+   "edificio": "mision",
+   "categoria": "hito",
+   "civ": "guaranies",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/guaranies_mision_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A mission town row: a long building with a dark brown weathered clay tile roof (not red) and a wide veranda on wooden columns, a workshop with a loom under the veranda. Team-color details, large and clearly visible from above: cloth awnings between the veranda columns, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Guarani architecture of the Parana forest: long houses with wooden posts, walls of tacuara bamboo canes and mud, steep roofs thatched with grass and palm leaves reaching almost to the ground."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/guaranies_mision.glb"
+  },
+  "guaranies_monte": {
+   "tipo": "edificio",
+   "edificio": "monte",
+   "categoria": "hito",
+   "civ": "guaranies",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/guaranies_monte_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A hidden forest camp: three low thatched shelters on posts close together under two huge trees, a cotton hammock between the trunks. Team-color details, large and clearly visible from above: the cotton hammock and a cloth hanging on a shelter, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Guarani architecture of the Parana forest: long houses with wooden posts, walls of tacuara bamboo canes and mud, steep roofs thatched with grass and palm leaves reaching almost to the ground."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/guaranies_monte.glb"
+  },
+  "guaranies_tava": {
+   "tipo": "edificio",
+   "edificio": "tava",
+   "categoria": "hito",
+   "civ": "guaranies",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/guaranies_tava_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A fortified mission block: two rows of yellow-brown sandstone houses with dark brown weathered tile roofs (not red) and verandas, enclosed by a square log palisade with one gate. Team-color details, large and clearly visible from above: cloth bands tied around the gate posts and cloth awnings on the verandas, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Guarani architecture of the Parana forest: long houses with wooden posts, walls of tacuara bamboo canes and mud, steep roofs thatched with grass and palm leaves reaching almost to the ground."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/guaranies_tava.glb"
+  },
+  "guaranies_yvy_marane": {
+   "tipo": "edificio",
+   "edificio": "yvy_marane",
+   "categoria": "hito",
+   "civ": "guaranies",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/guaranies_yvy_marane_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A defensive earthwork: a curved earth bank topped by a log palisade, two bamboo tube cannons wrapped in rawhide aimed over it. Team-color details, large and clearly visible from above: cloth bands tied around the palisade posts, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Guarani architecture of the Parana forest: long houses with wooden posts, walls of tacuara bamboo canes and mud, steep roofs thatched with grass and palm leaves reaching almost to the ground."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/guaranies_yvy_marane.glb"
+  },
+  "guaranies_maravilla": {
+   "tipo": "edificio",
+   "edificio": "maravilla",
+   "categoria": "maravilla",
+   "civ": "guaranies",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/guaranies_maravilla_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A two-story town hall of yellow-brown sandstone with a long upper gallery on wooden columns and a dark brown weathered clay tile roof (not red), two lower workshop wings with verandas at its sides. Team-color details, large and clearly visible from above: cloth awnings along the upper gallery, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Guarani architecture of the Parana forest: long houses with wooden posts, walls of tacuara bamboo canes and mud, steep roofs thatched with grass and palm leaves reaching almost to the ground."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/guaranies_maravilla.glb"
+  },
+  "guaranies_maravilla_monte": {
+   "tipo": "edificio",
+   "edificio": "maravilla",
+   "categoria": "maravilla",
+   "civ": "guaranies",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/guaranies_maravilla_monte_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A large forest village: eight long communal houses with thatched roofs reaching the ground arranged in a ring around a round plaza. Team-color details, large and clearly visible from above: wide cotton cloth awnings over the doorways and wide cloth bands tied around the main posts, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Guarani architecture of the Parana forest: long houses with wooden posts, walls of tacuara bamboo canes and mud, steep roofs thatched with grass and palm leaves reaching almost to the ground."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/guaranies_maravilla_monte.glb"
+  },
+  "etiopia_casa_rojo": {
+   "tipo": "edificio",
+   "edificio": "casa",
+   "categoria": "casa",
+   "civ": "etiopia",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/etiopia_casa_rojo_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A single round house with a low wall of brown fieldstone and mud and a steep conical thatched roof, one wooden doorway. Team-color details, large and clearly visible from above: wide cloth awnings over the doorways and a wide cloth band around the walls below the roof, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Ethiopian highland architecture of the 16th and 17th centuries: round houses with walls of brown fieldstone or wattle and daub and steep conical thatched roofs, buildings of brown and grey stone."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/etiopia_casa.glb"
+  },
+  "etiopia_centro_rojo": {
+   "tipo": "edificio",
+   "edificio": "centro",
+   "categoria": "capital",
+   "civ": "etiopia",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/etiopia_centro_rojo_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A compact royal camp: one large round cloth pavilion tent in the center with four smaller white tents pressed tightly against its sides, all touching in one tight cluster. Team-color details, large and clearly visible from above: the large central tent, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Ethiopian highland architecture of the 16th and 17th centuries: round houses with walls of brown fieldstone or wattle and daub and steep conical thatched roofs, buildings of brown and grey stone."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/etiopia_centro.glb"
+  },
+  "etiopia_corte_nueva": {
+   "tipo": "edificio",
+   "edificio": "corte_nueva",
+   "categoria": "",
+   "civ": "etiopia",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/etiopia_corte_nueva_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A new camp being laid out, in one tight cluster: a half-raised round tent on poles with rolled tents, tent poles and bundles of supplies piled against it. Team-color details, large and clearly visible from above: the half-raised tent cloth, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Ethiopian highland architecture of the 16th and 17th centuries: round houses with walls of brown fieldstone or wattle and daub and steep conical thatched roofs, buildings of brown and grey stone."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/etiopia_corte_nueva.glb"
+  },
+  "etiopia_almacen_alimento": {
+   "tipo": "edificio",
+   "edificio": "almacen_alimento",
+   "categoria": "",
+   "civ": "etiopia",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/etiopia_almacen_alimento_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A tall woven basket granary plastered with mud standing on a round stone base, with a small conical thatched roof, sacks of grain beside it. Team-color details, large and clearly visible from above: wide cloth awnings over the doorways and a wide cloth band around the walls below the roof, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Ethiopian highland architecture of the 16th and 17th centuries: round houses with walls of brown fieldstone or wattle and daub and steep conical thatched roofs, buildings of brown and grey stone."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/etiopia_almacen_alimento.glb"
+  },
+  "etiopia_almacen_madera": {
+   "tipo": "edificio",
+   "edificio": "almacen_madera",
+   "categoria": "",
+   "civ": "etiopia",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/etiopia_almacen_madera_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} An open-sided shed with a thatched roof on wooden posts, stacks of juniper logs and bundles of branches. Team-color details, large and clearly visible from above: wide cloth awnings over the doorways and a wide cloth band around the walls below the roof, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Ethiopian highland architecture of the 16th and 17th centuries: round houses with walls of brown fieldstone or wattle and daub and steep conical thatched roofs, buildings of brown and grey stone."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/etiopia_almacen_madera.glb"
+  },
+  "etiopia_almacen_mina": {
+   "tipo": "edificio",
+   "edificio": "almacen_mina",
+   "categoria": "",
+   "civ": "etiopia",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/etiopia_almacen_mina_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A round stone workshop with a conical thatched roof, piles of cut stone blocks and baskets of rocks in front. Team-color details, large and clearly visible from above: wide cloth awnings over the doorways and a wide cloth band around the walls below the roof, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Ethiopian highland architecture of the 16th and 17th centuries: round houses with walls of brown fieldstone or wattle and daub and steep conical thatched roofs, buildings of brown and grey stone."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/etiopia_almacen_mina.glb"
+  },
+  "etiopia_cuartel": {
+   "tipo": "edificio",
+   "edificio": "cuartel",
+   "categoria": "produccion",
+   "civ": "etiopia",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/etiopia_cuartel_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A compact soldiers' camp: a round thatched house with three white cloth tents pressed tightly against it in one tight cluster, a rack of spears and round hide shields against the house. Team-color details, large and clearly visible from above: cloth pennants on the spear tips and the door flaps of the tents, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Ethiopian highland architecture of the 16th and 17th centuries: round houses with walls of brown fieldstone or wattle and daub and steep conical thatched roofs, buildings of brown and grey stone."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/etiopia_cuartel.glb"
+  },
+  "etiopia_establo": {
+   "tipo": "edificio",
+   "edificio": "establo",
+   "categoria": "produccion",
+   "civ": "etiopia",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/etiopia_establo_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A long low stable of fieldstone with a thatched roof and open stalls, a wooden rail in front with saddles on it. Team-color details, large and clearly visible from above: saddle cloths on the rail, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Ethiopian highland architecture of the 16th and 17th centuries: round houses with walls of brown fieldstone or wattle and daub and steep conical thatched roofs, buildings of brown and grey stone."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/etiopia_establo.glb"
+  },
+  "etiopia_taller": {
+   "tipo": "edificio",
+   "edificio": "taller",
+   "categoria": "produccion",
+   "civ": "etiopia",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/etiopia_taller_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} An open workshop of fieldstone and wooden beams with a thatched roof, logs, wheels and a half-built battering ram inside. Team-color details, large and clearly visible from above: wide cloth awnings over the doorways and a wide cloth band around the walls below the roof, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Ethiopian highland architecture of the 16th and 17th centuries: round houses with walls of brown fieldstone or wattle and daub and steep conical thatched roofs, buildings of brown and grey stone."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/etiopia_taller.glb"
+  },
+  "etiopia_torre": {
+   "tipo": "edificio",
+   "edificio": "torre",
+   "categoria": "torre",
+   "civ": "etiopia",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/etiopia_torre_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A tall round tower of brown fieldstone with a flat top and a small parapet, a wooden door at the base. Team-color details, large and clearly visible from above: a cloth pennant on a pole on top, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Ethiopian highland architecture of the 16th and 17th centuries: round houses with walls of brown fieldstone or wattle and daub and steep conical thatched roofs, buildings of brown and grey stone."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/etiopia_torre.glb"
+  },
+  "etiopia_fortaleza": {
+   "tipo": "edificio",
+   "edificio": "fortaleza",
+   "categoria": "torre",
+   "civ": "etiopia",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/etiopia_fortaleza_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A small flat-topped rock with sheer sides like a table, a brown stone wall along its rim, two round thatched houses on top and a narrow path with a gate. Team-color details, large and clearly visible from above: cloth pennants on poles at the gate, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Ethiopian highland architecture of the 16th and 17th centuries: round houses with walls of brown fieldstone or wattle and daub and steep conical thatched roofs, buildings of brown and grey stone."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/etiopia_fortaleza.glb"
+  },
+  "etiopia_mercado": {
+   "tipo": "edificio",
+   "edificio": "mercado",
+   "categoria": "mercado",
+   "civ": "etiopia",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/etiopia_mercado_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A compact market: one round open-sided thatched market hall on posts with low tables under it holding salt bars, sacks of grain, clay pots and cotton cloth. Team-color details, large and clearly visible from above: cloth shades over two stalls, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Ethiopian highland architecture of the 16th and 17th centuries: round houses with walls of brown fieldstone or wattle and daub and steep conical thatched roofs, buildings of brown and grey stone."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/etiopia_mercado.glb"
+  },
+  "etiopia_iglesia": {
+   "tipo": "edificio",
+   "edificio": "iglesia",
+   "categoria": "hito",
+   "civ": "etiopia",
+   "proceso": "58",
+   "rojo": false,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/etiopia_iglesia_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A round compound: a low stone wall with a gatehouse and inside it a large round building with a gallery of wooden posts and a steep conical thatched roof. Natural tones only, no red anywhere. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Ethiopian highland architecture of the 16th and 17th centuries: round houses with walls of brown fieldstone or wattle and daub and steep conical thatched roofs, buildings of brown and grey stone."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/etiopia_iglesia.glb"
+  },
+  "etiopia_monasterio": {
+   "tipo": "edificio",
+   "edificio": "monasterio",
+   "categoria": "hito",
+   "civ": "etiopia",
+   "proceso": "58",
+   "rojo": false,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/etiopia_monasterio_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A monastic community: small round stone cells with thatched roofs inside a stone wall, a library hut, terraced garden beds. Natural tones only, no red anywhere. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Ethiopian highland architecture of the 16th and 17th centuries: round houses with walls of brown fieldstone or wattle and daub and steep conical thatched roofs, buildings of brown and grey stone."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/etiopia_monasterio.glb"
+  },
+  "etiopia_amba": {
+   "tipo": "edificio",
+   "edificio": "amba",
+   "categoria": "hito",
+   "civ": "etiopia",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/etiopia_amba_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A flat-topped rock mesa with sheer cliffs as a fortress, a stone wall along the rim, round houses and a storehouse on top, a zigzag path to a gate. Team-color details, large and clearly visible from above: cloth pennants on poles along the wall, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Ethiopian highland architecture of the 16th and 17th centuries: round houses with walls of brown fieldstone or wattle and daub and steep conical thatched roofs, buildings of brown and grey stone."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/etiopia_amba.glb"
+  },
+  "etiopia_remonta": {
+   "tipo": "edificio",
+   "edificio": "remonta",
+   "categoria": "hito",
+   "civ": "etiopia",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/etiopia_remonta_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A large stone-walled corral beside a long thatched stable, grooms' round house and piles of hay. Team-color details, large and clearly visible from above: saddle cloths hanging on the corral wall, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Ethiopian highland architecture of the 16th and 17th centuries: round houses with walls of brown fieldstone or wattle and daub and steep conical thatched roofs, buildings of brown and grey stone."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/etiopia_remonta.glb"
+  },
+  "etiopia_gondar": {
+   "tipo": "edificio",
+   "edificio": "gondar",
+   "categoria": "hito",
+   "civ": "etiopia",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/etiopia_gondar_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A two-story castle of brown and grey stone with round corner towers topped by small domes and a taller square tower. Team-color details, large and clearly visible from above: cloth awnings over the windows of the upper floor, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Ethiopian highland architecture of the 16th and 17th centuries: round houses with walls of brown fieldstone or wattle and daub and steep conical thatched roofs, buildings of brown and grey stone."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/etiopia_gondar.glb"
+  },
+  "etiopia_alianza": {
+   "tipo": "edificio",
+   "edificio": "alianza",
+   "categoria": "hito",
+   "civ": "etiopia",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/etiopia_alianza_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A compact court camp: one large round royal tent with open wooden trade crates of muskets, two small bronze cannons and powder barrels piled right against its side. Team-color details, large and clearly visible from above: the large royal tent, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Ethiopian highland architecture of the 16th and 17th centuries: round houses with walls of brown fieldstone or wattle and daub and steep conical thatched roofs, buildings of brown and grey stone."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/etiopia_alianza.glb"
+  },
+  "etiopia_maravilla": {
+   "tipo": "edificio",
+   "edificio": "maravilla",
+   "categoria": "maravilla",
+   "civ": "etiopia",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/etiopia_maravilla_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} The royal enclosure of Gondar: a large two-story castle of brown and grey stone with round domed corner towers and a tall square tower, a second smaller castle beside it, inside a stone wall with a gate. Team-color details, large and clearly visible from above: cloth awnings over the upper windows and pennants on the towers, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Ethiopian highland architecture of the 16th and 17th centuries: round houses with walls of brown fieldstone or wattle and daub and steep conical thatched roofs, buildings of brown and grey stone."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/etiopia_maravilla.glb"
+  },
+  "palmares_casa_rojo": {
+   "tipo": "edificio",
+   "edificio": "casa",
+   "categoria": "casa",
+   "civ": "palmares",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/palmares_casa_rojo_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A small rectangular house with walls of wattle and daub and a steep roof thatched with palm leaves, one doorway. Team-color details, large and clearly visible from above: a wide cloth band around the walls under the eaves and cloth curtains in the doorways, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Architecture of the 17th-century quilombo of Palmares in northeastern Brazil: rectangular houses of wattle and daub with steep roofs thatched with palm leaves, palisades of sharpened logs."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/palmares_casa.glb"
+  },
+  "palmares_centro_rojo": {
+   "tipo": "edificio",
+   "edificio": "centro",
+   "categoria": "capital",
+   "civ": "palmares",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/palmares_centro_rojo_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A town enclosed by a tall palisade of sharpened logs with one wooden gate, palm-thatched roofs of houses visible inside and a larger house with a veranda in the middle. Team-color details, large and clearly visible from above: a wide cloth band around the walls under the eaves and cloth curtains in the doorways, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Architecture of the 17th-century quilombo of Palmares in northeastern Brazil: rectangular houses of wattle and daub with steep roofs thatched with palm leaves, palisades of sharpened logs."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/palmares_centro.glb"
+  },
+  "palmares_almacen_alimento": {
+   "tipo": "edificio",
+   "edificio": "almacen_alimento",
+   "categoria": "",
+   "civ": "palmares",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/palmares_almacen_alimento_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A granary of wattle and palm thatch raised on wooden stilts with a ladder, ears of maize and sacks of manioc flour beside it. Team-color details, large and clearly visible from above: a wide cloth band around the walls under the eaves and cloth curtains in the doorways, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Architecture of the 17th-century quilombo of Palmares in northeastern Brazil: rectangular houses of wattle and daub with steep roofs thatched with palm leaves, palisades of sharpened logs."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/palmares_almacen_alimento.glb"
+  },
+  "palmares_almacen_mina": {
+   "tipo": "edificio",
+   "edificio": "almacen_mina",
+   "categoria": "",
+   "civ": "palmares",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/palmares_almacen_mina_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} An open palm-thatched shed with a dome-shaped clay kiln, rows of clay pots and a pile of clay. Team-color details, large and clearly visible from above: a wide cloth band around the walls under the eaves and cloth curtains in the doorways, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Architecture of the 17th-century quilombo of Palmares in northeastern Brazil: rectangular houses of wattle and daub with steep roofs thatched with palm leaves, palisades of sharpened logs."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/palmares_almacen_mina.glb"
+  },
+  "palmares_cuartel": {
+   "tipo": "edificio",
+   "edificio": "cuartel",
+   "categoria": "produccion",
+   "civ": "palmares",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/palmares_cuartel_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A long palm-thatched house with open sides on posts, spears and bows leaning in racks, round woven shields on the posts. Team-color details, large and clearly visible from above: a wide cloth band around the walls under the eaves and cloth curtains in the doorways, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Architecture of the 17th-century quilombo of Palmares in northeastern Brazil: rectangular houses of wattle and daub with steep roofs thatched with palm leaves, palisades of sharpened logs."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/palmares_cuartel.glb"
+  },
+  "palmares_mocambo": {
+   "tipo": "edificio",
+   "edificio": "mocambo",
+   "categoria": "",
+   "civ": "palmares",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/palmares_mocambo_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} Four small palm-thatched houses of wattle and daub close together around a tiny yard with a potter's kiln. Team-color details, large and clearly visible from above: a wide cloth band around the walls under the eaves and cloth curtains in the doorways, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Architecture of the 17th-century quilombo of Palmares in northeastern Brazil: rectangular houses of wattle and daub with steep roofs thatched with palm leaves, palisades of sharpened logs."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/palmares_mocambo.glb"
+  },
+  "palmares_fortaleza": {
+   "tipo": "edificio",
+   "edificio": "fortaleza",
+   "categoria": "torre",
+   "civ": "palmares",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/palmares_fortaleza_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A bastion of thick upright logs jutting out from a short section of palisade, a raised wooden platform behind it, sharpened stakes in front. Team-color details, large and clearly visible from above: cloth bands tied around the tallest logs and a cloth pennant on the platform, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Architecture of the 17th-century quilombo of Palmares in northeastern Brazil: rectangular houses of wattle and daub with steep roofs thatched with palm leaves, palisades of sharpened logs."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/palmares_fortaleza.glb"
+  },
+  "palmares_mercado": {
+   "tipo": "edificio",
+   "edificio": "mercado",
+   "categoria": "mercado",
+   "civ": "palmares",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/palmares_mercado_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} An open palm-thatched shelter with goods laid out on mats: clay pots, palm baskets, manioc flour, maize and iron tools. Team-color details, large and clearly visible from above: cloth laid under the goods, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Architecture of the 17th-century quilombo of Palmares in northeastern Brazil: rectangular houses of wattle and daub with steep roofs thatched with palm leaves, palisades of sharpened logs."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/palmares_mercado.glb"
+  },
+  "palmares_quilombo_central": {
+   "tipo": "edificio",
+   "edificio": "quilombo_central",
+   "categoria": "hito",
+   "civ": "palmares",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/palmares_quilombo_central_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A large house with walls of wattle and daub, a long veranda on wooden posts and a high palm-thatched roof, two smaller houses at its sides. Team-color details, large and clearly visible from above: a wide cloth band around the walls under the eaves and cloth curtains in the doorways, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Architecture of the 17th-century quilombo of Palmares in northeastern Brazil: rectangular houses of wattle and daub with steep roofs thatched with palm leaves, palisades of sharpened logs."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/palmares_quilombo_central.glb"
+  },
+  "palmares_mocambo_guerra": {
+   "tipo": "edificio",
+   "edificio": "mocambo_guerra",
+   "categoria": "hito",
+   "civ": "palmares",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/palmares_mocambo_guerra_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A cluster of palm-thatched huts behind rows of sharpened stakes slanting outwards, a tall wooden lookout platform on poles. Team-color details, large and clearly visible from above: cloth pennant on the lookout platform and cloth curtains in the hut doorways, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Architecture of the 17th-century quilombo of Palmares in northeastern Brazil: rectangular houses of wattle and daub with steep roofs thatched with palm leaves, palisades of sharpened logs."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/palmares_mocambo_guerra.glb"
+  },
+  "palmares_cerca_real": {
+   "tipo": "edificio",
+   "edificio": "cerca_real",
+   "categoria": "hito",
+   "civ": "palmares",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/palmares_cerca_real_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} Three concentric rings of log palisade one inside another with offset gates, palm-thatched houses in the center. Team-color details, large and clearly visible from above: cloth bands tied around the gate posts, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Architecture of the 17th-century quilombo of Palmares in northeastern Brazil: rectangular houses of wattle and daub with steep roofs thatched with palm leaves, palisades of sharpened logs."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/palmares_cerca_real.glb"
+  },
+  "palmares_ferraria": {
+   "tipo": "edificio",
+   "edificio": "ferraria",
+   "categoria": "hito",
+   "civ": "palmares",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/palmares_ferraria_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A large open forge shed with a palm-thatched roof on posts, a charcoal forge with bowl bellows, an iron anvil and a rack of hoes and spear points. Team-color details, large and clearly visible from above: cloth tied on the roof posts, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Architecture of the 17th-century quilombo of Palmares in northeastern Brazil: rectangular houses of wattle and daub with steep roofs thatched with palm leaves, palisades of sharpened logs."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/palmares_ferraria.glb"
+  },
+  "palmares_pacto_cucau": {
+   "tipo": "edificio",
+   "edificio": "pacto_cucau",
+   "categoria": "hito",
+   "civ": "palmares",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/palmares_pacto_cucau_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} Two straight rows of palm-thatched houses side by side and a granary on stilts at the end. Team-color details, large and clearly visible from above: a wide cloth band around the walls under the eaves and cloth curtains in the doorways, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Architecture of the 17th-century quilombo of Palmares in northeastern Brazil: rectangular houses of wattle and daub with steep roofs thatched with palm leaves, palisades of sharpened logs."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/palmares_pacto_cucau.glb"
+  },
+  "palmares_guerra_zumbi": {
+   "tipo": "edificio",
+   "edificio": "guerra_zumbi",
+   "categoria": "hito",
+   "civ": "palmares",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/palmares_guerra_zumbi_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A round palisade of sharpened logs with a wooden gate and a large wooden drum beside it, palm-thatched houses inside. Team-color details, large and clearly visible from above: cloth bands tied around the gate posts, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Architecture of the 17th-century quilombo of Palmares in northeastern Brazil: rectangular houses of wattle and daub with steep roofs thatched with palm leaves, palisades of sharpened logs."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/palmares_guerra_zumbi.glb"
+  },
+  "palmares_maravilla": {
+   "tipo": "edificio",
+   "edificio": "maravilla",
+   "categoria": "maravilla",
+   "civ": "palmares",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/palmares_maravilla_7.png",
+    "receta": {
+     "semilla": 7,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A fortified hilltop town as one compact model: three rings of log palisade stepping up around a central cluster of palm-thatched houses. Team-color details, large and clearly visible from above: cloth bands tied around the gate posts of each ring, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Architecture of the 17th-century quilombo of Palmares in northeastern Brazil: rectangular houses of wattle and daub with steep roofs thatched with palm leaves, palisades of sharpened logs."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/palmares_maravilla.glb"
+  },
+  "ayutthaya_casa_rojo": {
+   "tipo": "edificio",
+   "edificio": "casa",
+   "categoria": "casa",
+   "civ": "ayutthaya",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/ayutthaya_casa_rojo_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A single house of teak wood planks raised on tall wooden stilts, with a steep gable roof with curved ends, a ladder to the veranda. Team-color details, large and clearly visible from above: a cloth awning over the veranda, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Secular architecture of 17th-century Ayutthaya in Siam: teak houses raised on stilts with steep gable roofs with curved ends, whitewashed brick buildings with tiered roofs; all roofs are covered with dark grey-brown weathered wooden shingles, never red or orange."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/ayutthaya_casa.glb"
+  },
+  "ayutthaya_centro_rojo": {
+   "tipo": "edificio",
+   "edificio": "centro",
+   "categoria": "capital",
+   "civ": "ayutthaya",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/ayutthaya_centro_rojo_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A royal palace hall: an audience hall of whitewashed brick with a tiered roof of brown and dark green glazed tiles with curved finials, a short white wall with leaf-shaped merlons in front. Team-color details, large and clearly visible from above: plain rectangular cloth flags on two tall poles and wide cloth awnings over the doors, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Secular architecture of 17th-century Ayutthaya in Siam: teak houses raised on stilts with steep gable roofs with curved ends, whitewashed brick buildings with tiered roofs; all roofs are covered with dark grey-brown weathered wooden shingles, never red or orange."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
    "destino": "assets/generados/modelos/local/ayutthaya_centro.glb"
+  },
+  "ayutthaya_cuartel": {
+   "tipo": "edificio",
+   "edificio": "cuartel",
+   "categoria": "produccion",
+   "civ": "ayutthaya",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/ayutthaya_cuartel_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A long barracks of whitewashed brick with a tiered brown tiled roof, swords and spears in racks under the veranda. Team-color details, large and clearly visible from above: plain rectangular cloth flags on two tall poles and wide cloth awnings over the doors, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Secular architecture of 17th-century Ayutthaya in Siam: teak houses raised on stilts with steep gable roofs with curved ends, whitewashed brick buildings with tiered roofs; all roofs are covered with dark grey-brown weathered wooden shingles, never red or orange."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/ayutthaya_cuartel.glb"
+  },
+  "ayutthaya_campo_tiro": {
+   "tipo": "edificio",
+   "edificio": "campo_tiro",
+   "categoria": "produccion",
+   "civ": "ayutthaya",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/ayutthaya_campo_tiro_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A teak shelter on stilts with bows and quivers hanging, two straw targets on wooden stands beside it. Team-color details, large and clearly visible from above: plain rectangular cloth flags on two tall poles and wide cloth awnings over the doors, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Secular architecture of 17th-century Ayutthaya in Siam: teak houses raised on stilts with steep gable roofs with curved ends, whitewashed brick buildings with tiered roofs; all roofs are covered with dark grey-brown weathered wooden shingles, never red or orange."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/ayutthaya_campo_tiro.glb"
+  },
+  "ayutthaya_taller": {
+   "tipo": "edificio",
+   "edificio": "taller",
+   "categoria": "produccion",
+   "civ": "ayutthaya",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/ayutthaya_taller_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} An open teak workshop with a tiled roof on posts, logs, solid wooden wheels and a half-built gun carriage inside. Team-color details, large and clearly visible from above: plain rectangular cloth flags on two tall poles and wide cloth awnings over the doors, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Secular architecture of 17th-century Ayutthaya in Siam: teak houses raised on stilts with steep gable roofs with curved ends, whitewashed brick buildings with tiered roofs; all roofs are covered with dark grey-brown weathered wooden shingles, never red or orange."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/ayutthaya_taller.glb"
+  },
+  "ayutthaya_torre": {
+   "tipo": "edificio",
+   "edificio": "torre",
+   "categoria": "torre",
+   "civ": "ayutthaya",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/ayutthaya_torre_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A small square fort of whitewashed brick with leaf-shaped merlons along the top and one small cannon. Team-color details, large and clearly visible from above: plain rectangular cloth flags on two tall poles and wide cloth awnings over the doors, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Secular architecture of 17th-century Ayutthaya in Siam: teak houses raised on stilts with steep gable roofs with curved ends, whitewashed brick buildings with tiered roofs; all roofs are covered with dark grey-brown weathered wooden shingles, never red or orange."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/ayutthaya_torre.glb"
+  },
+  "ayutthaya_fortaleza": {
+   "tipo": "edificio",
+   "edificio": "fortaleza",
+   "categoria": "torre",
+   "civ": "ayutthaya",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/ayutthaya_fortaleza_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A polygonal brick fort with whitewashed walls topped by leaf-shaped merlons and cannons in the openings, a small tiered-roof gate. Team-color details, large and clearly visible from above: plain rectangular cloth flags on two tall poles and wide cloth awnings over the doors, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Secular architecture of 17th-century Ayutthaya in Siam: teak houses raised on stilts with steep gable roofs with curved ends, whitewashed brick buildings with tiered roofs; all roofs are covered with dark grey-brown weathered wooden shingles, never red or orange."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/ayutthaya_fortaleza.glb"
+  },
+  "ayutthaya_almacen_mina": {
+   "tipo": "edificio",
+   "edificio": "almacen_mina",
+   "categoria": "",
+   "civ": "ayutthaya",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/ayutthaya_almacen_mina_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} An open-sided shed with a tiled roof on wooden posts, rows of drying bricks and a round brick kiln beside it. Team-color details, large and clearly visible from above: plain rectangular cloth flags on two tall poles and wide cloth awnings over the doors, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Secular architecture of 17th-century Ayutthaya in Siam: teak houses raised on stilts with steep gable roofs with curved ends, whitewashed brick buildings with tiered roofs; all roofs are covered with dark grey-brown weathered wooden shingles, never red or orange."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/ayutthaya_almacen_mina.glb"
+  },
+  "ayutthaya_kraal": {
+   "tipo": "edificio",
+   "edificio": "kraal",
+   "categoria": "produccion",
+   "civ": "ayutthaya",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/ayutthaya_kraal_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A square corral of thick upright teak logs with a narrow gate and a raised wooden watching platform on stilts with a small roof. Team-color details, large and clearly visible from above: plain rectangular cloth flags on two tall poles and wide cloth awnings over the doors, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Secular architecture of 17th-century Ayutthaya in Siam: teak houses raised on stilts with steep gable roofs with curved ends, whitewashed brick buildings with tiered roofs; all roofs are covered with dark grey-brown weathered wooden shingles, never red or orange."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/ayutthaya_kraal.glb"
+  },
+  "ayutthaya_barrio_japones": {
+   "tipo": "edificio",
+   "edificio": "barrio_japones",
+   "categoria": "produccion",
+   "civ": "ayutthaya",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/ayutthaya_barrio_japones_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A Japanese-style wooden house with a dark tiled roof and paper screens, a small wooden gate and a fence. Team-color details, large and clearly visible from above: noren cloth curtains hanging in the doorway, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Secular architecture of 17th-century Ayutthaya in Siam: teak houses raised on stilts with steep gable roofs with curved ends, whitewashed brick buildings with tiered roofs; all roofs are covered with dark grey-brown weathered wooden shingles, never red or orange."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/ayutthaya_barrio_japones.glb"
+  },
+  "ayutthaya_barrio_portugues": {
+   "tipo": "edificio",
+   "edificio": "barrio_portugues",
+   "categoria": "produccion",
+   "civ": "ayutthaya",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/ayutthaya_barrio_portugues_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A whitewashed Portuguese-style two-story house with a clay tile roof and wooden balconies, a small warehouse beside it. Team-color details, large and clearly visible from above: plain rectangular cloth flags on two tall poles and wide cloth awnings over the doors, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Secular architecture of 17th-century Ayutthaya in Siam: teak houses raised on stilts with steep gable roofs with curved ends, whitewashed brick buildings with tiered roofs; all roofs are covered with dark grey-brown weathered wooden shingles, never red or orange."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/ayutthaya_barrio_portugues.glb"
+  },
+  "ayutthaya_barrio_chinos": {
+   "tipo": "edificio",
+   "edificio": "barrio_chinos",
+   "categoria": "produccion",
+   "civ": "ayutthaya",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/ayutthaya_barrio_chinos_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A Chinese-style shophouse of brick with a curved grey tiled roof and wooden shutters, a small warehouse beside it. Team-color details, large and clearly visible from above: cloth lanterns and cloth banners at the door, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Secular architecture of 17th-century Ayutthaya in Siam: teak houses raised on stilts with steep gable roofs with curved ends, whitewashed brick buildings with tiered roofs; all roofs are covered with dark grey-brown weathered wooden shingles, never red or orange."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/ayutthaya_barrio_chinos.glb"
+  },
+  "ayutthaya_mercado": {
+   "tipo": "edificio",
+   "edificio": "mercado",
+   "categoria": "mercado",
+   "civ": "ayutthaya",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/ayutthaya_mercado_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A row of wooden market stalls under palm-thatched shades on posts, with fruit, rice and pottery on low tables. Team-color details, large and clearly visible from above: cloth awnings over two stalls, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Secular architecture of 17th-century Ayutthaya in Siam: teak houses raised on stilts with steep gable roofs with curved ends, whitewashed brick buildings with tiered roofs; all roofs are covered with dark grey-brown weathered wooden shingles, never red or orange."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/ayutthaya_mercado.glb"
+  },
+  "ayutthaya_wat": {
+   "tipo": "edificio",
+   "edificio": "wat",
+   "categoria": "hito",
+   "civ": "ayutthaya",
+   "proceso": "58",
+   "rojo": false,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/ayutthaya_wat_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A Khmer-style corncob-shaped central tower (prang) of brick and white stucco on a tall stepped base, four smaller prangs at the corners, a low white wall around. No statues, no images of the Buddha. Natural tones only, no red anywhere. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Secular architecture of 17th-century Ayutthaya in Siam: teak houses raised on stilts with steep gable roofs with curved ends, whitewashed brick buildings with tiered roofs; all roofs are covered with dark grey-brown weathered wooden shingles, never red or orange."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/ayutthaya_wat.glb"
+  },
+  "ayutthaya_kraal_real": {
+   "tipo": "edificio",
+   "edificio": "kraal_real",
+   "categoria": "hito",
+   "civ": "ayutthaya",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/ayutthaya_kraal_real_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A royal elephant stockade of thick teak logs in a square, a royal pavilion on tall stilts with a tiered roof at one side. Team-color details, large and clearly visible from above: plain rectangular cloth flags on two tall poles and wide cloth awnings over the doors, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Secular architecture of 17th-century Ayutthaya in Siam: teak houses raised on stilts with steep gable roofs with curved ends, whitewashed brick buildings with tiered roofs; all roofs are covered with dark grey-brown weathered wooden shingles, never red or orange."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/ayutthaya_kraal_real.glb"
+  },
+  "ayutthaya_puerto_real": {
+   "tipo": "edificio",
+   "edificio": "puerto_real",
+   "categoria": "hito",
+   "civ": "ayutthaya",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/ayutthaya_puerto_real_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A royal port warehouse of teak raised on stilts on a long wooden wharf, rows of large brown glazed storage jars and bales. Team-color details, large and clearly visible from above: plain rectangular cloth flags on two tall poles and wide cloth awnings over the doors, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Secular architecture of 17th-century Ayutthaya in Siam: teak houses raised on stilts with steep gable roofs with curved ends, whitewashed brick buildings with tiered roofs; all roofs are covered with dark grey-brown weathered wooden shingles, never red or orange."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/ayutthaya_puerto_real.glb"
+  },
+  "ayutthaya_fortaleza_rio": {
+   "tipo": "edificio",
+   "edificio": "fortaleza_rio",
+   "categoria": "hito",
+   "civ": "ayutthaya",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/ayutthaya_fortaleza_rio_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A whitewashed brick fortress: high walls with leaf-shaped merlons, a polygonal bastion with cannons and a gate with a tiered roof. Team-color details, large and clearly visible from above: plain rectangular cloth flags on two tall poles and wide cloth awnings over the doors, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Secular architecture of 17th-century Ayutthaya in Siam: teak houses raised on stilts with steep gable roofs with curved ends, whitewashed brick buildings with tiered roofs; all roofs are covered with dark grey-brown weathered wooden shingles, never red or orange."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/ayutthaya_fortaleza_rio.glb"
+  },
+  "ayutthaya_junco_tributo": {
+   "tipo": "edificio",
+   "edificio": "junco_tributo",
+   "categoria": "hito",
+   "civ": "ayutthaya",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/ayutthaya_junco_tributo_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A large Chinese-style junk ship with sails of stiff battened matting and a high stern, resting beside a short wooden wharf with stacked crates. Team-color details, large and clearly visible from above: pennants at the mast tops, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Secular architecture of 17th-century Ayutthaya in Siam: teak houses raised on stilts with steep gable roofs with curved ends, whitewashed brick buildings with tiered roofs; all roofs are covered with dark grey-brown weathered wooden shingles, never red or orange."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/ayutthaya_junco_tributo.glb"
+  },
+  "ayutthaya_guardia_extranjera": {
+   "tipo": "edificio",
+   "edificio": "guardia_extranjera",
+   "categoria": "hito",
+   "civ": "ayutthaya",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/ayutthaya_guardia_extranjera_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A barracks block: a Siamese barracks hall with a tiered roof joined to a whitewashed European-style house and a Japanese-style house around a small court, two cannons in front. Team-color details, large and clearly visible from above: plain rectangular cloth flags on two tall poles and wide cloth awnings over the doors, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Secular architecture of 17th-century Ayutthaya in Siam: teak houses raised on stilts with steep gable roofs with curved ends, whitewashed brick buildings with tiered roofs; all roofs are covered with dark grey-brown weathered wooden shingles, never red or orange."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/ayutthaya_guardia_extranjera.glb"
+  },
+  "ayutthaya_maravilla": {
+   "tipo": "edificio",
+   "edificio": "maravilla",
+   "categoria": "maravilla",
+   "civ": "ayutthaya",
+   "proceso": "58",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_58/ayutthaya_maravilla_8.png",
+    "receta": {
+     "semilla": 8,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} The walled city of Ayutthaya as one compact model: a long whitewashed brick wall with leaf-shaped merlons, an octagonal brick fort at one corner and palace halls with tiered brown roofs inside. Team-color details, large and clearly visible from above: flags on tall poles on the fort and the gate, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from slightly above, the whole building visible and centered, isolated on a plain flat light grey background. No ground, no terrain, no grass, no hill, no water, no trees, no people, no animals, no cast shadow. Only this one building: no other houses, huts or sheds around it. Secular architecture of 17th-century Ayutthaya in Siam: teak houses raised on stilts with steep gable roofs with curved ends, whitewashed brick buildings with tiered roofs; all roofs are covered with dark grey-brown weathered wooden shingles, never red or orange."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 3,
+   "destino": "assets/generados/modelos/local/ayutthaya_maravilla.glb"
   }
  }
 }

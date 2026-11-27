@@ -10,7 +10,7 @@ extends Node3D
 ##   --estilo=pacifica|normal|acosadora|agresiva  estilo de juego de la IA
 ##   --cam=x,z,zoom[,inclinación]  posición de cámara para la captura (bX,bZ: relativa a la base propia)
 ##   --select=tipo      selecciona entidades de ese tipo del jugador local antes de la captura
-##   --demo=base|obras|hitos|animales|batalla|multitud|formacion|bloque|bosque  escena armada para revisar modelos, hitos, animales, combate, el costo de 200 unidades, un grupo en marcha o la gente entre los árboles
+##   --demo=base|base_completa|obras|hitos|animales|batalla|multitud|formacion|bloque|bosque  escena armada para revisar modelos, hitos, animales, combate, el costo de 200 unidades, un grupo en marcha o la gente entre los árboles
 ##   --menu             fuerza el menú de inicio (sin argumentos se abre solo)
 ##   --terreno=<clave de reglas.json "terrenos"> tipo de mapa (llano, valle, delta…)
 ##   --civ=clave        civilización propia (tawantinsuyu, mapuches, guaranies, etiopia, palmares, ayutthaya, azar)
@@ -341,7 +341,10 @@ func _new_game() -> void:
 			ai_ids.append(pid)
 			ai_cfg[str(pid)] = {"dificultad": sl.get("dificultad", "normal"), "estilo": ai.personality}
 	opts["terreno"] = sim.terrain
-	Palette.colores = Array(_args.get("colores", [])) # --- partida a medida ---
+	var colores_arg: Variant = _args.get("colores", []) # --- partida a medida --- (y --colores=1,0 en la línea de comandos)
+	if colores_arg is String:
+		colores_arg = Array((colores_arg as String).split(",")).map(func(c: String) -> int: return int(c))
+	Palette.colores = Array(colores_arg)
 	_replay_meta = {"semilla": _seed, "opciones": opts, "ias": ai_ids, "ia_cfg": ai_cfg, "dificultad": _args.get("dificultad", "normal"), "estilo": _args.get("estilo", "normal"), "colores": Palette.colores}
 	_replay_meta["args"] = Guardado.args_limpios(_args) # --- fluidez 6 --- (para «Nueva partida» después de cargar)
 	if SesionRed.activa != null: # --- instantaneas --- el invitado que vuelve de cero sigue desde la foto
@@ -663,6 +666,38 @@ func _demo(kind: String) -> void:
 			if t.x >= 0:
 				sim.spawn_resource("venado", t.x, t.y)
 		sim.set_meta("demo_cam", Vector2(b.x + 6, b.y + 10))
+	elif kind == "base_completa":
+		# Todos los edificios del pueblo terminados (proceso/58-edificios-locales): lo que construye
+		# el aldeano (sin muros, caminos ni campos), los seis hitos y la maravilla, en la edad IV salvo
+		# --edad. Cámara: la pone sola; --colores=i,j cambia el color del jugador 0.
+		if not _args.has("edad"):
+			sim.players[0]["age"] = 4
+		var dd0 := sim.dp(0)
+		var tipos: Array = []
+		for t: String in dd0.unidades["aldeano"].get("construye", []):
+			var td: Dictionary = dd0.edificios.get(t, {})
+			if td.is_empty() or td.get("linea", false) or td.get("puerta", false) or td.get("transitable", false) or t == "torre_muralla":
+				continue
+			if not tipos.has(t) and t != dd0.civ.get("inicio_edificio", "centro"):
+				tipos.append(t)
+		for row in dd0.hitos:
+			for t: String in row:
+				if not tipos.has(t):
+					tipos.append(t)
+		var cx := b.x - 10
+		var cy := b.y + 6
+		for i in tipos.size():
+			var t: String = tipos[i]
+			var tx0: int = cx + (i % 6) * 5
+			var ty0: int = cy + (i / 6) * 5
+			var done := false
+			for r in 10:
+				for dy in range(-r, r + 1):
+					for dx in range(-r, r + 1):
+						if not done and sim.can_place(t, tx0 + dx, ty0 + dy, 0):
+							sim.spawn_building(t, 0, tx0 + dx, ty0 + dy, true)
+							done = true
+		sim.set_meta("demo_cam", Vector2(b.x + 3, b.y + 11))
 	elif kind == "base":
 		var place := func(type: String, tx0: int, ty0: int, built: bool) -> void:
 			if not sim.dp(0).edificios.has(type):

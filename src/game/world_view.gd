@@ -925,7 +925,53 @@ func _model_for(owner: int, type: String, size: float, unit: bool, team := Color
 	_each_geo(inst, func(g: GeometryInstance3D) -> void:
 		g.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 		_matte(g))
+	if not unit:
+		_equipo_edificio(inst, name, path, team)
 	return holder
+
+
+static var _equipo_cfg := {}
+static var _equipo_mats := {} # "<id del material>_<color>" -> ShaderMaterial
+static var _equipo_masks := {} # ruta -> Texture2D
+
+
+## Color del equipo en un edificio generado (proceso/58-edificios-locales): las telas, toldos y
+## fajas que la referencia pintó en rojo plano toman el color del jugador con la máscara
+## <modelo>_mascara.png (tools/mascara_equipo_3d.py --edificio) y equipo_3d.gdshader, como los
+## aldeanos de Meshy. Sin entrada en data/modelos_equipo.json, el modelo queda como está.
+static func _equipo_edificio(inst: Node3D, name: String, path: String, team: Color) -> void:
+	if _equipo_cfg.is_empty():
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/modelos_equipo.json"))
+		_equipo_cfg = raw if raw is Dictionary else {"_vacio": true}
+	var cfg: Dictionary = (_equipo_cfg.get("mascaras", {}) as Dictionary).get(name, {})
+	if cfg.is_empty():
+		return
+	var mpath := path.get_basename() + "_mascara.png"
+	if not _equipo_masks.has(mpath):
+		_equipo_masks[mpath] = load(mpath) if ResourceLoader.exists(mpath) else null
+	var mask: Texture2D = _equipo_masks[mpath]
+	if mask == null:
+		return
+	_each_geo(inst, func(g: GeometryInstance3D) -> void:
+		if not g is MeshInstance3D or (g as MeshInstance3D).mesh == null:
+			return
+		var mi := g as MeshInstance3D
+		for i in mi.mesh.get_surface_count():
+			var base := mi.get_surface_override_material(i)
+			if base == null:
+				base = mi.mesh.surface_get_material(i)
+			if not base is StandardMaterial3D or (base as StandardMaterial3D).albedo_texture == null:
+				continue
+			var key := "%d_%s" % [base.get_instance_id(), team.to_html()]
+			if not _equipo_mats.has(key):
+				var m := ShaderMaterial.new()
+				m.shader = load("res://src/game/shaders/equipo_3d.gdshader")
+				m.set_shader_parameter("textura", (base as StandardMaterial3D).albedo_texture)
+				m.set_shader_parameter("mascara", mask)
+				m.set_shader_parameter("equipo", team)
+				m.set_shader_parameter("luz_ref", float(cfg.get("luz_ref", 0.08)))
+				_equipo_mats[key] = m
+			mi.set_surface_override_material(i, _equipo_mats[key]))
 
 
 static var _waists := {} # ruta -> {c: centro xz, r: radios xz, y: alto de la cintura}, en coordenadas del modelo
@@ -1147,7 +1193,7 @@ func _build_struct(e: SimEntity, v: Dictionary, look: String) -> void:
 		# sin_modelo: en esa edad el tipo deja el modelo generado y usa la maqueta (el centro
 		# etíope en Gondar pasa de la tienda real al castillo; proceso/24, 4i).
 		if not (cfg.get("sin_modelo", []) as Array).has(e.type):
-			model = _model_for(e.owner, e.type, body * esc, false)
+			model = _model_for(e.owner, e.type, body * esc, false, team)
 		if model != null:
 			if cfg.has("modelo_tinte"):
 				_tint(model, Color(cfg["modelo_tinte"]))
@@ -1206,6 +1252,15 @@ static func _tint(n: Node, tint: Color) -> void:
 		var mi := g as MeshInstance3D
 		for i in mi.mesh.get_surface_count():
 			var m := mi.get_surface_override_material(i)
+			if m is ShaderMaterial: # color del equipo (proceso/58): el tono de la edad va en `tinte`
+				var ks := "%d_%s" % [m.get_instance_id(), tint.to_html()]
+				if not _tint_cache.has(ks):
+					var sm := (m as ShaderMaterial).duplicate() as ShaderMaterial
+					var t0: Color = sm.get_shader_parameter("tinte") if sm.get_shader_parameter("tinte") != null else Color(1.18, 1.15, 1.1)
+					sm.set_shader_parameter("tinte", t0 * tint)
+					_tint_cache[ks] = sm
+				mi.set_surface_override_material(i, _tint_cache[ks])
+				continue
 			if not m is StandardMaterial3D:
 				continue
 			var key := "%d_%s" % [m.get_instance_id(), tint.to_html()]

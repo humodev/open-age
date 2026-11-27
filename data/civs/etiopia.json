@@ -13,8 +13,8 @@
   "modelos": {
    "aldeano": "etiopia_aldeano",
    "guerrero": "etiopia_jinete",
-   "centro": "local/etiopia_centro",
-   "casa": "local/etiopia_casa"
+   "centro": "local/etiopia_centro_v1",
+   "casa": "local/etiopia_casa_v1"
   }
  },
  "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",

@@ -1,0 +1,73 @@
+{
+ "_doc": "Color del equipo en los modelos generados de edificios (proceso/58-edificios-locales). Clave: el nombre del modelo como en estilo.modelos («local/<pueblo>_<tipo>»). La máscara es assets/generados/modelos/<clave>_mascara.png (tools/mascara_equipo_3d.py --metodo=rojo --edificio: las telas y fajas pintadas en rojo plano en la referencia); luz_ref, la luminancia media de lo enmascarado, la usa src/game/shaders/equipo_3d.gdshader; cobertura, la parte de la superficie teñida. Lo escribe tools/gen3d_pipeline.py (paso mascara). Sin entrada, el modelo queda con su textura y el color va solo en el estandarte. Solo imagen.",
+ "mascaras": {
+  "local/tawantinsuyu_almacen_madera": {
+   "luz_ref": 0.0309,
+   "cobertura": 0.0203
+  },
+  "local/tawantinsuyu_almacen_mina": {
+   "luz_ref": 0.0365,
+   "cobertura": 0.0784
+  },
+  "local/tawantinsuyu_aqllawasi": {
+   "luz_ref": 0.0547,
+   "cobertura": 0.0086
+  },
+  "local/tawantinsuyu_campo_tiro": {
+   "luz_ref": 0.0929,
+   "cobertura": 0.0206
+  },
+  "local/tawantinsuyu_casa": {
+   "luz_ref": 0.0735,
+   "cobertura": 0.1015
+  },
+  "local/tawantinsuyu_centro": {
+   "luz_ref": 0.0508,
+   "cobertura": 0.0233
+  },
+  "local/tawantinsuyu_cuartel": {
+   "luz_ref": 0.0785,
+   "cobertura": 0.0135
+  },
+  "local/tawantinsuyu_fortaleza": {
+   "luz_ref": 0.0279,
+   "cobertura": 0.0112
+  },
+  "local/tawantinsuyu_kallanka_real": {
+   "luz_ref": 0.0622,
+   "cobertura": 0.0243
+  },
+  "local/tawantinsuyu_maravilla": {
+   "luz_ref": 0.1798,
+   "cobertura": 0.0115
+  },
+  "local/tawantinsuyu_mercado": {
+   "luz_ref": 0.0655,
+   "cobertura": 0.0203
+  },
+  "local/tawantinsuyu_pukara_mayor": {
+   "luz_ref": 0.14,
+   "cobertura": 0.0187
+  },
+  "local/tawantinsuyu_qollqa": {
+   "luz_ref": 0.0955,
+   "cobertura": 0.0066
+  },
+  "local/tawantinsuyu_taller_tejido": {
+   "luz_ref": 0.0108,
+   "cobertura": 0.0038
+  },
+  "local/tawantinsuyu_torre": {
+   "luz_ref": 0.1037,
+   "cobertura": 0.0782
+  },
+  "local/tawantinsuyu_ushnu": {
+   "luz_ref": 0.1133,
+   "cobertura": 0.0269
+  },
+  "local/tawantinsuyu_vilcabamba": {
+   "luz_ref": 0.0709,
+   "cobertura": 0.019
+  }
+ }
+}

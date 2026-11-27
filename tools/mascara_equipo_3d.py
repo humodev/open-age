@@ -1,7 +1,7 @@
 """Máscara del color del equipo para un modelo 3D texturizado (proceso/56-rig-y-color).
 
     blender --background --python tools/mascara_equipo_3d.py -- modelo.glb salida_mascara.png \
-        [--metodo=ropa|rojo] [--banda=0.30,0.80] [--sin-cuerpo] [--hoja=hoja.jpg]
+        [--metodo=ropa|rojo] [--banda=0.30,0.80] [--edificio] [--tono=10] [--sat=0.55] [--hoja=hoja.jpg]
 
 La máscara va en el espacio UV de la textura del modelo (mismo atlas, mismo tamaño): blanco = se
 tiñe con el color del jugador. La tiñe src/game/shaders/equipo_3d.gdshader (luz de la textura × color).
@@ -20,7 +20,9 @@ Además:
   para que el filtrado y los mipmaps no dejen un borde sin teñir;
 - imprime `luz_ref` (luminancia lineal media de lo enmascarado), que el shader usa para que el
   color del equipo salga con el brillo de la tela original;
-- --hoja arma la comprobación: atlas | máscara.
+- --hoja arma la comprobación: atlas | máscara;
+- --edificio (proceso/58-edificios-locales): sin detección de manos ni brazos y un rojo más estricto
+  (--tono, --sat, --val ajustan el corte), para las telas y fajas rojas de los edificios.
 
 Corre en el Python de Blender (trae numpy); no necesita scipy ni Pillow.
 """
@@ -67,7 +69,9 @@ import re
 mano = np.zeros(len(me.vertices), bool)
 brazo = np.zeros(len(me.vertices), bool)  # brazos y manos: no se tiñen (piel o manga)
 nombres = {g.index: g.name for g in ob.vertex_groups}
-if nombres:
+if "edificio" in opt:
+    pass  # edificios (proceso/58): sin manos ni brazos que proteger
+elif nombres:
     for vx in me.vertices:
         if vx.groups:
             gg = max(vx.groups, key=lambda e: e.weight)
@@ -128,7 +132,12 @@ h = np.where(mx == r, ((g - b) / dl) % 6, np.where(mx == g, (b - r) / dl + 2, (r
 h = np.where(mx - mn < 1e-6, 0, h)
 
 if metodo == "rojo":
-    m = ((h <= 12) | (h >= 342)) & (s >= 0.45) & (v >= 0.12)
+    # --tono: medio ancho del tono rojo en grados; --sat y --val: mínimos. Los edificios usan un
+    # rojo más estricto (--edificio: 15°, 0,55) para no tomar tejas, ladrillo ni tierra colorada.
+    tono = float(opt.get("tono", "15" if "edificio" in opt else "12"))
+    sat = float(opt.get("sat", "0.55" if "edificio" in opt else "0.45"))
+    val = float(opt.get("val", "0.12"))
+    m = ((h <= tono) | (h >= 360 - tono)) & (s >= sat) & (v >= val)
 else:
     # Piel: por parecido al color de las manos (CIELAB), no por un tono fijo: la tela marrón de
     # los Meshy cae en el mismo tono que la piel y solo se separa por luz y saturación.

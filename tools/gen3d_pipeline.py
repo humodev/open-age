@@ -19,6 +19,9 @@ cambió, se saltea; cambiar la imagen o un parámetro rehace esa pieza desde ese
                 de frente mezcla el color de la hoja (tools/gen3d_piel.py, proceso/50)
   5 rig         humano: 19 huesos KayKit (tools/gen3d_rig.py); cuadrúpedo: esqueleto y ciclos
                 de caminar y quieto (tools/gen3d_rig_cuadrupedo.py)
+  7 mascara     edificios con "rojo": máscara del color del equipo junto al GLB
+                (<destino>_mascara.png, tools/mascara_equipo_3d.py --edificio) y su luz_ref en
+                data/modelos_equipo.json, que lee el juego (proceso/58)
   6 final       Blender: tamaño del juego (reglas.json → escala_visual, edificios.json → tam,
                 arte_edades.json → margen_cm), GLB con JPEG en el destino del repo y renders
                 (tools/gen3d_final.py)
@@ -46,7 +49,10 @@ COMFY = Path("/mnt/games/01_Projects/comfyui")
 COMFY_PY = COMFY / "venv/bin/python"
 TOPE = ["-p", "MemoryMax=12G", "-p", "MemoryHigh=10G", "-p", "MemorySwapMax=1G"]
 RAM_MIN_GB = 14
-PASOS = ["referencia", "forma", "limpieza", "textura", "piel", "rig", "final"]
+# Blender solo (limpieza, rig, final, máscara): tope de 4 GB y 7 disponibles (proceso/58).
+TOPE_LIVIANO = ["-p", "MemoryMax=4G", "-p", "MemorySwapMax=1G"]
+RAM_MIN_LIVIANO_GB = 7
+PASOS = ["referencia", "forma", "limpieza", "textura", "piel", "rig", "final", "mascara"]
 
 
 def log(*a):
@@ -60,21 +66,46 @@ def disponible_gb() -> float:
     return 0.0
 
 
-def esperar_ram():
+def esperar_ram(minimo=RAM_MIN_GB):
     avisado = False
-    while disponible_gb() < RAM_MIN_GB:
+    while disponible_gb() < minimo:
         if not avisado:
-            log(f"esperando {RAM_MIN_GB} GB libres (hay {disponible_gb():.1f})")
+            log(f"esperando {minimo} GB libres (hay {disponible_gb():.1f})")
             avisado = True
         time.sleep(20)
 
 
-def pesado(cmd: list, salida_log: Path, cwd=None) -> float:
-    """Corre un comando pesado en su propio scope con tope de memoria. Devuelve los segundos."""
-    esperar_ram()
+def sin_comfy():
+    """Antes de Hunyuan: ComfyUI liberado y apagado (nunca los dos a la vez, proceso/58)."""
+    if not comfy_vivo() and not comfy_pids():
+        return
+    try:
+        urllib.request.urlopen(urllib.request.Request(
+            "http://127.0.0.1:8188/free", data=b'{"free_memory": true, "unload_models": true}',
+            headers={"Content-Type": "application/json"}), timeout=30)
+    except OSError:
+        pass
+    for u in comfy_scopes():
+        subprocess.run(["systemctl", "--user", "stop", u], capture_output=True)
+    for _ in range(40):
+        if not comfy_pids() and not comfy_vivo():
+            break
+        time.sleep(2)
+    if comfy_pids():
+        raise RuntimeError(f"ComfyUI sigue vivo: {comfy_pids()}")
+    log("ComfyUI apagado antes de Hunyuan (pgrep anclado: nada)")
+
+
+def pesado(cmd: list, salida_log: Path, cwd=None, liviano=False) -> float:
+    """Corre un comando pesado en su propio scope con tope de memoria. Devuelve los segundos.
+    liviano: Blender solo (4 GB de tope, 7 disponibles); si no, Hunyuan (12 GB, 14 y sin ComfyUI)."""
+    if not liviano:
+        sin_comfy()
+    esperar_ram(RAM_MIN_LIVIANO_GB if liviano else RAM_MIN_GB)
     t0 = time.time()
     with open(salida_log, "w") as f:
-        r = subprocess.run(["systemd-run", "--user", "--scope", "-q", *TOPE, *map(str, cmd)],
+        r = subprocess.run(["systemd-run", "--user", "--scope", "-q", *(TOPE_LIVIANO if liviano else TOPE),
+                            *map(str, cmd)],
                            stdout=f, stderr=subprocess.STDOUT, cwd=cwd)
     if r.returncode != 0:
         cola = salida_log.read_text(errors="replace")[-1500:]
@@ -302,7 +333,7 @@ def correr_pieza(nombre: str, pieza: dict, comun: dict, args) -> dict:
 
     def f3():
         pesado([BLENDER, "--background", "--python", REPO / "tools/gen3d_blender.py", "--", glb2, glb3,
-                cfg3["caras"], d / "gris", cfg3["suelo_pct"]], d / "limpieza.log")
+                cfg3["caras"], d / "gris", cfg3["suelo_pct"]], d / "limpieza.log", liviano=True)
         linea = [x for x in (d / "limpieza.log").read_text().splitlines() if x.startswith("CARAS")]
         return {"caras": linea[-1] if linea else "?"}
     hacer("limpieza", p3, f3)
@@ -352,7 +383,7 @@ def correr_pieza(nombre: str, pieza: dict, comun: dict, args) -> dict:
         def f5():
             extra = [d / "mixamo.fbx"] if rig == "humano" else []
             pesado([BLENDER, "--background", "--python", REPO / "tools" / script, "--", glb4, glb5, *extra,
-                    d / "pose"], d / "rig.log")
+                    d / "pose"], d / "rig.log", liviano=True)
             return {"rig": rig}
         hacer("rig", p5, f5)
 
@@ -365,13 +396,41 @@ def correr_pieza(nombre: str, pieza: dict, comun: dict, args) -> dict:
     def f6():
         destino.parent.mkdir(parents=True, exist_ok=True)
         pesado([BLENDER, "--background", "--python", REPO / "tools/gen3d_final.py", "--", glb5, destino,
-                json.dumps(med), d / "final"], d / "final.log")
+                json.dumps(med), d / "final"], d / "final.log", liviano=True)
         linea = [x for x in (d / "final.log").read_text().splitlines() if x.startswith("FINAL")]
         return {"kb": destino.stat().st_size // 1024, "medidas": linea[-1][6:] if linea else ""}
     hacer("final", p6, f6)
     if destino.exists() and destino.stat().st_size > 2 * 1024 * 1024:
         log(f"OJO: {destino.name} pesa más de 2 MB")
+
+    # 7 · máscara del color del equipo (edificios con elementos en rojo plano, proceso/58)
+    if pieza["tipo"] == "edificio" and pieza.get("rojo"):
+        masc = destino.with_name(destino.stem + "_mascara.png")
+        cfg7 = {"metodo": "rojo", "edificio": True, "opciones": pieza.get("mascara", {})}
+        p7 = Paso(d, "mascara", cfg7, [destino], ["mascara_equipo_3d.py"], [masc], "mascara" in forzar)
+
+        def f7():
+            extra = [f"--{k}={v}" for k, v in cfg7["opciones"].items()]
+            pesado([BLENDER, "--background", "--python", REPO / "tools/mascara_equipo_3d.py", "--", destino, masc,
+                    "--metodo=rojo", "--edificio", f"--hoja={d / 'mascara_hoja.jpg'}", *extra], d / "mascara.log",
+                   liviano=True)
+            j = json.loads(masc.with_suffix(".json").read_text())
+            masc.with_suffix(".json").unlink()  # el dato vive en data/modelos_equipo.json
+            registrar_mascara(pieza["destino"], j)
+            return {"cobertura": j["cobertura"], "luz_ref": j["luz_ref"]}
+        hacer("mascara", p7, f7)
     return info
+
+
+def registrar_mascara(destino: str, j: dict):
+    """data/modelos_equipo.json → mascaras["local/<archivo>"] = {luz_ref, cobertura}: lo lee
+    WorldView._model_for para teñir con equipo_3d.gdshader."""
+    f = REPO / "data/modelos_equipo.json"
+    datos = json.loads(f.read_text()) if f.exists() else {"_doc": "", "mascaras": {}}
+    clave = str(Path(destino).with_suffix("")).split("assets/generados/modelos/", 1)[-1]
+    datos["mascaras"][clave] = {"luz_ref": j["luz_ref"], "cobertura": j["cobertura"]}
+    datos["mascaras"] = dict(sorted(datos["mascaras"].items()))
+    f.write_text(json.dumps(datos, ensure_ascii=False, indent=1) + "\n")
 
 
 def main():

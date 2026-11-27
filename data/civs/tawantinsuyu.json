@@ -13,9 +13,22 @@
   "modelos": {
    "aldeano": "tawantinsuyu_aldeano",
    "hondero": "tawantinsuyu_hondero",
-   "centro": "tawantinsuyu_centro",
+   "centro": "local/tawantinsuyu_centro",
    "casa": "local/tawantinsuyu_casa",
-   "cuartel": "local/tawantinsuyu_kallanka"
+   "cuartel": "local/tawantinsuyu_cuartel",
+   "taller_tejido": "local/tawantinsuyu_taller_tejido",
+   "almacen_mina": "local/tawantinsuyu_almacen_mina",
+   "qollqa": "local/tawantinsuyu_qollqa",
+   "torre": "local/tawantinsuyu_torre",
+   "fortaleza": "local/tawantinsuyu_fortaleza",
+   "mercado": "local/tawantinsuyu_mercado",
+   "ushnu": "local/tawantinsuyu_ushnu",
+   "pukara_mayor": "local/tawantinsuyu_pukara_mayor",
+   "qorikancha": "local/tawantinsuyu_qorikancha",
+   "aqllawasi": "local/tawantinsuyu_aqllawasi",
+   "vilcabamba": "local/tawantinsuyu_vilcabamba",
+   "maravilla": "local/tawantinsuyu_maravilla",
+   "kallanka_real": "local/tawantinsuyu_kallanka_real"
   }
  },
  "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",
