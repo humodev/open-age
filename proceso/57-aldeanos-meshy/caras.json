@@ -1,0 +1,26 @@
+{
+ "mapuches": {
+  "cara_f": "a Mapuche woman from Araucanía in southern Chile, a grown adult in her early thirties, with a mature face: a broad round face, high cheekbones, a short wide nose with a rounded tip, dark eyes, faint expression lines, light copper-brown skin, dark brownish lips, thick straight black hair parted in the middle in two long braids wrapped with dark blue wool ribbons, adult shoulders and adult body proportions",
+  "natural": "Natural undyed wool and leather tones for everything except the red poncho."
+ },
+ "guaranies": {
+  "cara_f": "a Guaraní woman from the subtropical forests of the Paraná river in Paraguay, a grown adult in her early thirties, with a mature face: a broad round face, high rounded cheekbones, a short broad nose, dark almond-shaped eyes, faint expression lines, warm golden-brown skin, dark brownish lips, very long thick straight black hair falling loose down her back, adult shoulders and adult body proportions",
+  "natural": "Natural undyed cotton, wood and plant fiber tones for everything except the red tunic."
+ },
+ "etiopia": {
+  "cara_f": "an Ethiopian Amhara woman from the northern Ethiopian highlands, a grown adult in her early thirties, with a mature face: an oval face, high cheekbones, a long straight narrow nose, large dark eyes, faint expression lines, warm medium-brown skin, full dark brownish lips, black hair braided in many thin tight braids along the scalp (shuruba) gathered at the back, adult shoulders and adult body proportions, a mature woman of about thirty-five with a strong adult face, a defined jaw and smile lines",
+  "natural": "Natural white cotton, hide and leather tones for everything except the red tunic."
+ },
+ "palmares": {
+  "cara_f": "an Afro-Brazilian woman of Central African Kongo and Mbundu descent, from the quilombo of Palmares in northeastern Brazil, a grown adult in her early thirties, with a mature face: a broad oval face, high cheekbones, a wide nose with a rounded tip, dark eyes, faint expression lines, deep dark brown skin, full lips, black hair under a plain cloth head wrap, adult shoulders and adult body proportions, a mature woman of about thirty-five with a strong adult face, a defined jaw and smile lines",
+  "natural": "Natural undyed cotton, palm fiber, wood and iron tones for everything except the red tunic."
+ },
+ "ayutthaya": {
+  "cara_f": "a Siamese Thai woman from the kingdom of Ayutthaya in central Thailand, a grown adult in her early thirties, with a mature face: a broad oval face, high cheekbones, a small broad nose, dark almond-shaped eyes, faint expression lines, warm light-brown skin, dark brownish lips, short black hair cropped close to the head and brushed up on top, adult shoulders and adult body proportions, a mature woman of about thirty-five with a strong adult face, a defined jaw and smile lines",
+  "natural": "Natural undyed cotton, wood and bronze tones for everything except the red garment."
+ },
+ "incas": {
+  "cara_f": "a grown adult Native American Quechua woman from the Peruvian Andes in her early thirties, with a mature face: a very broad round face, defined high cheekbones, a large convex aquiline nose, dark eyes, faint expression lines, weathered copper-brown skin, dark brownish lips, thick straight black hair parted in the middle in two long braids, adult shoulders and adult body proportions",
+  "natural": "Natural undyed tones for everything except the red dress."
+ }
+}
