@@ -1,0 +1,46 @@
+FPS con --perf (cada 5 s), --demo=piezas --lado=30 --civ=tawantinsuyu --terreno=sierra --seed=5 --nofog,
+zoom inicial (24), ventana 1920x1020. Dos corridas de cada una, alternadas. En la misma GPU corrían el juego
+del autor en el menú y una prueba de FPS de otro agente (tools/montados.gd): los números absolutos son bajos
+por eso; lo que vale es la comparación.
+Escena: recinto de 30x30 con 120 tramos de pirca, 4 puertas, 4 torres y un tramo en diagonal; 60 caminos;
+44 granjas y 72 andenes con su cultivo; 5 casas; 474 entidades; bosque alrededor.
+
+== piezas=1 (corrida 1)
+perf: 31 fps · 3307 objetos dibujados
+perf: 27 fps · 3293
+perf: 25 fps · 3208
+perf: 30 fps · 2931
+perf: 31 fps · 2668
+perf: 39 fps · 2483
+perf: 34 fps · 2441
+perf: 39 fps · 2439
+== piezas=0 (corrida 1)
+perf: 31 fps · 5839
+perf: 27 fps · 5825
+perf: 29 fps · 5739
+perf: 32 fps · 5462
+perf: 36 fps · 5198
+perf: 34 fps · 5013
+perf: 34 fps · 4971
+perf: 35 fps · 4969
+== piezas=1 (corrida 2)
+perf: 29 fps · 3307
+perf: 24 fps · 3293
+perf: 26 fps · 3209
+perf: 29 fps · 2931
+perf: 37 fps · 2668
+perf: 37 fps · 2483
+perf: 33 fps · 2441
+perf: 36 fps · 2439
+== piezas=0 (corrida 2)
+perf: 21 fps · 5839
+perf: 26 fps · 5825
+perf: 25 fps · 5740
+perf: 32 fps · 5460
+perf: 36 fps · 5196
+perf: 36 fps · 5013
+perf: 31 fps · 4971
+perf: 36 fps · 4969
+
+Medias: piezas 3D 31,7 fps; maqueta 31,3 fps. Objetos dibujados: 2.400–3.300 contra 5.000–5.800
+(los caminos no tienen malla: se pintan en el suelo).

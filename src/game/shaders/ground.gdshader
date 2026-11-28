@@ -31,6 +31,18 @@ uniform vec3 rock_tint : source_color = vec3(1.0);
 uniform vec3 lush_col : source_color = vec3(0.56, 0.66, 0.38);
 uniform float wet_k = 0.55;
 uniform float tex_scale = 0.22;
+// Caminos pintados (proceso/64; WorldView._pintar_caminos): R losas del empedrado, G huella de
+// tierra; cada píxel, 0,5 en el borde y más hacia el eje.
+uniform sampler2D road_tex : filter_linear;
+uniform bool road_on = false;
+uniform vec3 road_stone : source_color = vec3(0.65, 0.6, 0.53);
+uniform vec3 road_joint : source_color = vec3(0.37, 0.34, 0.29);
+uniform vec3 road_earth : source_color = vec3(0.56, 0.45, 0.32);
+uniform float road_kerb = 0.14;
+// Valor y saturación del suelo (proceso/59, nota de arte 2: el suelo un punto más oscuro y menos
+// saturado que los edificios; data/ambiente.json → suelo).
+uniform float suelo_valor = 1.0;
+uniform float suelo_sat = 1.0;
 
 varying vec3 wpos;
 varying vec3 wnorm;
@@ -51,6 +63,34 @@ vec3 detiled(sampler2D t, vec2 uv, float n, float far) {
 
 float luma(vec3 c) {
 	return dot(c, vec3(0.3, 0.55, 0.15));
+}
+
+vec2 rh22(vec2 p) {
+	return fract(sin(vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)))) * 43758.5453);
+}
+
+// Losas: (distancia al borde de la losa, valor de la losa).
+vec2 losas(vec2 p) {
+	vec2 ip = floor(p);
+	vec2 fp = fract(p);
+	float f1 = 8.0;
+	float f2 = 8.0;
+	vec2 cell = vec2(0.0);
+	for (int j = -1; j <= 1; j++) {
+		for (int i = -1; i <= 1; i++) {
+			vec2 g = vec2(float(i), float(j));
+			vec2 o = rh22(ip + g) * 0.75 + 0.125;
+			float d = length(g + o - fp);
+			if (d < f1) {
+				f2 = f1;
+				f1 = d;
+				cell = ip + g;
+			} else if (d < f2) {
+				f2 = d;
+			}
+		}
+	}
+	return vec2(f2 - f1, rh22(cell).x);
 }
 
 void fragment() {
@@ -124,6 +164,30 @@ void fragment() {
 		col *= mix(1.0, 0.5, smoothstep(-0.45, -0.85, wpos.y));
 	}
 	col *= tint.rgb;
+	col = mix(vec3(luma(col)), col, suelo_sat) * suelo_valor;
+	// Caminos: huella de tierra con dos rodadas y empedrado de losas con cordón de piedras.
+	if (road_on) {
+		vec2 rd = texture(road_tex, p / map_size).rg;
+		float tr = smoothstep(0.5, 0.64, rd.g + (n_fine - 0.5) * 0.22);
+		if (tr > 0.001) {
+			vec3 tc = detiled(t_dirt, uv * 1.3, n_mid, far) * road_earth * 1.55;
+			float rod = smoothstep(0.62, 0.7, rd.g) * smoothstep(0.86, 0.78, rd.g);
+			tc *= 1.0 - 0.18 * rod;
+			col = mix(col, tc, tr * 0.92);
+			nrm = mix(nrm, texture(n_dirt, uv * 1.3).rgb, tr);
+		}
+		float pv = smoothstep(0.5, 0.53, rd.r + (n_fine - 0.5) * 0.03);
+		if (pv > 0.001) {
+			float kerb = 1.0 - smoothstep(0.5 + road_kerb, 0.53 + road_kerb, rd.r);
+			vec2 l = losas(p * mix(7.5, 4.5, kerb));
+			float junta = 1.0 - smoothstep(0.05, 0.13, l.x);
+			vec3 st = road_stone * (0.78 + 0.38 * l.y) * (0.75 + 0.55 * luma(texture(t_rock, p * 0.6).rgb));
+			st *= mix(1.0, 0.8, kerb);
+			vec3 pc = mix(st, road_joint, junta * 0.85);
+			col = mix(col, pc, pv);
+			nrm = mix(nrm, mix(vec3(0.5, 0.5, 1.0), texture(n_rock, p * 0.6).rgb, 0.5), pv);
+		}
+	}
 	// Grilla de construcción.
 	vec2 g = abs(fract(p) - 0.5);
 	float gw = fwidth(p.x) * 1.2;

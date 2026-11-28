@@ -104,6 +104,14 @@ func olvidar(id: int) -> void:
 	_ultimo.erase(id)
 
 
+## El suelo de un campo cambió (proceso/64): el cultivo se vuelve a armar sobre el suelo nuevo.
+func rehacer_cultivo(id: int) -> void:
+	var c: Array = _cultivo.get(id, [])
+	if not c.is_empty() and is_instance_valid(c[0]):
+		(c[0] as Node).queue_free()
+	_cultivo.erase(id)
+
+
 # ---------------------------------------------------------------- Cada cuadro
 
 func render(delta: float) -> void:
@@ -259,7 +267,7 @@ func _revisar_granjas(dt: int, gr: Dictionary) -> void:
 		_t_lista = 5000
 		_granjas.clear()
 		for e in sim.actives:
-			if e.is_building() and e.def.has("fuente") and not e.def.get("permite_ladera", false):
+			if e.is_building() and e.def.has("fuente"): # --- proceso 64 --- también los andenes
 				_granjas.append(e.id)
 	for id: int in _granjas:
 		var v: Dictionary = view.visuals.get(id, {})
@@ -271,7 +279,9 @@ func _revisar_granjas(dt: int, gr: Dictionary) -> void:
 			if not e.built:
 				continue
 			var mi := MeshInstance3D.new()
-			mi.mesh = CivMeshes.cultivo(e.w, e.h)
+			# --- proceso 64 --- matas del cultivo del pueblo, cada una sobre su suelo (Piezas.cultivo)
+			mi.mesh = view.cultivo_de(e)
+			mi.material_override = Piezas.mat_cultivo()
 			mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			(v["node"] as Node3D).add_child(mi)
 			c = [mi, 0, -2]
@@ -291,11 +301,12 @@ func _revisar_granjas(dt: int, gr: Dictionary) -> void:
 		else:
 			alto *= 0.22
 		var mi2: MeshInstance3D = c[0]
-		mi2.scale = Vector3(1.0, maxf(0.01, alto), 1.0)
-		mi2.position.y = 0.08
+		# El alto va al shader (cultivo.gdshader): la base de cada mata queda en su suelo.
+		mi2.set_instance_shader_parameter("alto", maxf(0.01, alto / 0.22))
 		if etapa != int(c[2]):
 			c[2] = etapa
-			mi2.material_override = _mat(str(colores[etapa]) if etapa >= 0 else str(gr.get("barbecho_color", "9a8a5a")))
+			mi2.set_instance_shader_parameter("tinte", Color(str(colores[etapa]) if etapa >= 0 else str(gr.get("barbecho_color", "9a8a5a"))))
+			mi2.set_instance_shader_parameter("flor", 1.0 if etapa >= 2 else 0.0)
 
 
 func _mat(hex: String) -> StandardMaterial3D:

@@ -1,0 +1,14 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+Aldeano: 0.625 casillas
+modelo             alto    ancho   alto/ald  rango/ald
+pino               2.76     0.64        4.4  3.1– 5.9
+latifoliada        2.36     1.86        3.8  2.7– 5.1
+araucaria          2.79     1.86        4.5  3.1– 6.0
+palmera            3.02     1.75        4.8  3.4– 6.5
+copa_plana         1.67     2.07        2.7  1.9– 3.6
+arbusto            0.55     0.98        0.9
+piedra             0.92     1.83        1.5
+riqueza            1.48     2.10        2.4
+yerbal             1.90     2.15        3.0
+peñasco            1.20     1.75        1.9

@@ -11,7 +11,7 @@ extends Node3D
 ##   --cam=x,z,zoom[,inclinación]  posición de cámara para la captura (bX,bZ: relativa a la base propia)
 ##   --select=tipo      selecciona entidades de ese tipo del jugador local antes de la captura
 ##   --tipos=a,b,…      con --demo=base_completa, solo esos edificios
-##   --demo=base|base_completa|obras|hitos|animales|batalla|multitud|formacion|bloque|bosque|reunion|llegada  escena armada para revisar modelos, hitos, animales, combate, el costo de 200 unidades, un grupo en marcha o la gente entre los árboles
+##   --demo=base|base_completa|obras|hitos|animales|batalla|multitud|formacion|bloque|bosque|reunion|llegada|piezas  escena armada para revisar modelos, hitos, animales, combate, el costo de 200 unidades, un grupo en marcha, la gente entre los árboles o los muros, caminos y campos en una ladera (piezas, con --lado=N)
 ##   --menu             fuerza el menú de inicio (sin argumentos se abre solo)
 ##   --terreno=<clave de reglas.json "terrenos"> tipo de mapa (llano, valle, delta…)
 ##   --civ=clave        civilización propia (tawantinsuyu, mapuches, guaranies, etiopia, palmares, ayutthaya, azar)
@@ -49,6 +49,7 @@ extends Node3D
 ##   --abrir=opciones   abre el diálogo de opciones (también campanas, arte_guerra, intro, partida, red y creditos en el menú)
 ##   --bengala=1        tira una bengala propia cerca de la base antes de la captura (con aliados)
 ##   --formacion=linea  elige la formación de la grilla y la aplica a lo seleccionado antes de la captura
+##   --piezas=0        muros, caminos y campos con la maqueta de antes (proceso/64, para comparar)
 ##   --panel=a,b        abre paneles de información antes de la captura (economia, edad, pueblo, sucesos, puntaje, fin, fin-derrota, fin-tiempo, atajos)
 
 const MAX_STEPS_PER_FRAME := 8
@@ -452,6 +453,7 @@ func _build_scene(aivai: bool) -> void:
 	if _args.has("demo"):
 		_demo(_args["demo"])
 
+	WorldView.piezas_on = str(_args.get("piezas", "1")) != "0" # --- proceso 64 --- --piezas=0 para medir
 	view = WorldView.new()
 	view.name = "World"
 	view.fog_on = not (aivai or _args.has("nofog") or _args.get("demo", "") == "batalla")
@@ -670,6 +672,8 @@ func _demo(kind: String) -> void:
 			if t.x >= 0:
 				sim.spawn_resource("venado", t.x, t.y)
 		sim.set_meta("demo_cam", Vector2(b.x + 6, b.y + 10))
+	elif kind == "piezas":
+		_demo_piezas()
 	elif kind == "base_completa":
 		# Todos los edificios del pueblo terminados (proceso/58-edificios-locales): lo que construye
 		# el aldeano (sin muros, caminos ni campos), los seis hitos y la maravilla, en la edad IV salvo
@@ -925,6 +929,137 @@ func _demo(kind: String) -> void:
 			p["pob_extra"] = int(p.get("pob_extra", 0)) + int(p["pop"]) + margen - int(p["pop_cap"])
 	sim._update_players()
 	# --- fin demos ---
+
+
+## --demo=piezas (proceso/64): lo que se arma por casillas, en la ladera más quebrada cerca de la
+## base propia: un recinto de muro (o empalizada) con puertas y torres en las esquinas, un tramo
+## en diagonal, caminos con cruce, granjas y andenes, y aldeanos al lado para la escala. Con un
+## terreno de lomas (--terreno=valle, sierra, montana) se ve cómo siguen el suelo. Si el pueblo no
+## hace caminos, se le presta el del Tawantinsuyu solo para mostrar la huella de tierra.
+func _demo_piezas() -> void:
+	var dd := sim.dp(0)
+	var b := sim.bases[0]
+	var n := sim.map.n
+	var S := int(_args.get("lado", 18)) # lado del recinto (--lado=N)
+	# La ventana con más casillas en ladera, sin agua, a menos de 30 casillas de la base.
+	var best := Vector2i(b.x + 6, b.y + 6)
+	var best_k := -999999
+	for oy in range(maxi(2, b.y - 30), mini(n - S - 10, b.y + 30), 2):
+		for ox in range(maxi(2, b.x - 30), mini(n - S - 10, b.x + 30), 2):
+			if Rect2i(ox - 2, oy - 2, S + 12, S + 12).intersects(Rect2i(b.x - 2, b.y - 2, 9, 9)):
+				continue
+			var k := 0
+			for yy in range(oy, oy + S + 8, 2):
+				for xx in range(ox, ox + S + 8, 2):
+					if sim.map.is_water(xx, yy) or sim.map.is_rock(xx, yy):
+						k -= 6
+					elif sim.map.is_slope(xx, yy):
+						k += 3
+					var oc := sim.map.occupant(xx, yy)
+					if oc >= 0 and not (sim.by_id.get(oc) as SimEntity).is_resource():
+						k -= 20
+			if k > best_k:
+				best_k = k
+				best = Vector2i(ox, oy)
+	var o := best
+	# Se despeja la ventana (árboles, piedras, animales) y se deja el bosque de alrededor.
+	for e in sim.entities:
+		if e.alive and e.is_resource() and e.tx >= o.x and e.ty >= o.y and e.tx < o.x + S + 1 and e.ty < o.y + S + 8:
+			sim.remove_quietly(e)
+			sim.map.clear(e.tx, e.ty, e.w, e.h, true)
+	sim._cleanup()
+	var muro := "muralla" if dd.edificios.has("muralla") else "empalizada"
+	var puerta := "puerta_piedra" if muro == "muralla" else "puerta"
+	var torre := "torre_muralla" if dd.edificios.has("torre_muralla") else ""
+	if not dd.edificios.has("camino"):
+		dd.edificios["camino"] = {"nombre": "Camino", "tam": [1, 1], "linea": true, "camino": true, "transitable": true, "pv": 100}
+	var put := func(type: String, x: int, y: int) -> SimEntity:
+		if type == "" or not dd.edificios.has(type):
+			return null
+		var tam: Array = dd.edificios[type]["tam"]
+		if not sim.map.is_free_rect(x, y, tam[0], tam[1]):
+			return null
+		for yy in range(y, y + int(tam[1])):
+			for xx in range(x, x + int(tam[0])):
+				if sim.map.is_water(xx, yy) or sim.map.is_rock(xx, yy):
+					return null
+		return sim.spawn_building(type, 0, x, y, true)
+	# Recinto: torres en las esquinas, una puerta en el medio de cada lado.
+	for i in S:
+		for side in 4:
+			var t: Vector2i = [Vector2i(o.x + i, o.y), Vector2i(o.x + S, o.y + i), Vector2i(o.x + S - i, o.y + S), Vector2i(o.x, o.y + S - i)][side]
+			var type := muro
+			if i == 0 and torre != "":
+				type = torre if dd.edificios.has(torre) else muro
+			elif i == S / 2:
+				type = puerta
+			if put.call(type, t.x, t.y) == null and type != muro:
+				put.call(muro, t.x, t.y)
+	# Tramo en diagonal desde la esquina de abajo, con una torre en la punta.
+	for i in range(1, 6):
+		put.call(torre if i == 5 and torre != "" else muro, o.x + S + i, o.y + S + i)
+	# Caminos: de la puerta de abajo hacia afuera, con una curva en diagonal, y un cruce adentro.
+	for i in range(1, 8):
+		put.call("camino", o.x + S / 2, o.y + S + i)
+	for i in range(1, 6):
+		put.call("camino", o.x + S / 2 - i, o.y + S + 7 + i)
+	for i in range(1, S):
+		put.call("camino", o.x + S / 2, o.y + i)
+	for i in range(1, S):
+		if i != S / 2:
+			put.call("camino", o.x + i, o.y + S / 2)
+	# Granjas y andenes en los cuatro cuartos del recinto.
+	var granjas := 0
+	var andenes := 0
+	for q in 4:
+		var qx := o.x + 2 + (q % 2) * (S / 2)
+		var qy := o.y + 2 + (q / 2) * (S / 2)
+		for yy in range(qy, qy + S / 2 - 3, 2):
+			for xx in range(qx, qx + S / 2 - 3, 2):
+				var tipo := "anden" if dd.edificios.has("anden") and q % 2 == 1 else "granja"
+				if tipo == "granja" and not sim.map.is_flat(xx, yy, 2, 2):
+					continue
+				var campo: SimEntity = put.call(tipo, xx, yy)
+				if campo != null:
+					# Un aldeano por campo, así el cultivo crece (BaseLinda: sin trabajar queda en barbecho).
+					var al := sim.spawn_near(campo, "aldeano", 0)
+					if al != null:
+						sim.push_command({"t": "target", "player": 0, "ids": [al.id], "target": campo.id})
+					if tipo == "anden":
+						andenes += 1
+					else:
+						granjas += 1
+	# Casas en la orilla y al pie de las lomas: el cimiento y el suelo pisado siguen el terreno.
+	var casa: String = dd.civ.get("casa", "casa")
+	var casas := 0
+	for pasada in 2: # primero la orilla, después la ladera
+		for yy in range(maxi(1, o.y - 24), mini(n - 3, o.y + S + 24)):
+			for xx in range(maxi(1, o.x - 24), mini(n - 3, o.x + S + 24)):
+				if casas >= 3 * (pasada + 1) or not sim.can_place(casa, xx, yy, 0):
+					continue
+				var borde := false
+				var lejos := true
+				for dy in range(-1, 3):
+					for dx in range(-1, 3):
+						if (pasada == 0 and sim.map.is_water(xx + dx, yy + dy)) or (pasada == 1 and sim.map.h_at(xx + dx, yy + dy) != sim.map.h_at(xx, yy)):
+							borde = true
+				for dy in range(-1, 3):
+					for dx in range(-1, 3):
+						var oc := sim.map.occupant(xx + dx, yy + dy)
+						if oc >= 0 and (sim.by_id.get(oc) as SimEntity).is_building():
+							lejos = false
+				if not borde or not lejos:
+					continue
+				var cb := sim.spawn_building(casa, 0, xx, yy, true)
+				sim.spawn_near(cb, "aldeano", 0)
+				casas += 1
+				print("PIEZAS: casa en %d,%d%s" % [xx, yy, " (orilla)" if sim.map.is_water(xx - 1, yy) or sim.map.is_water(xx + 2, yy) or sim.map.is_water(xx, yy - 1) or sim.map.is_water(xx, yy + 2) else ""])
+	# Aldeanos al lado de las puertas y en los campos, para la escala.
+	for i in 6:
+		var t := sim.map.nearest_free(o.x + S / 2 + 1 + i % 3, o.y + S + 2 + i / 3, 6, 0)
+		sim.spawn_unit("aldeano", 0, t.x * 1000 + 500, t.y * 1000 + 500)
+	print("PIEZAS: recinto en %s (ladera %d), %d granjas, %d andenes, %d casas en orilla o ladera" % [o, best_k, granjas, andenes, casas])
+	sim.set_meta("demo_cam", Vector2(o.x + S / 2 + 2, o.y + S / 2 + 4))
 
 
 ## Vitrina de --demo=animales: todas las especies de data/arte_animales.json en fila, con su
