@@ -1,0 +1,40 @@
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/iconos.gd:38)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/iconos.gd:38)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/iconos.gd:38)
+WARNING: Grilla: 'vender_alimento' choca con 'comerciante' en Q; va a A
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/iconos.gd:38)
+WARNING: Grilla: 'comprar_alimento' choca con 'vender_alimento' en A; va a S
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/iconos.gd:38)
+WARNING: Grilla: 'comprar_madera' choca con 'comprar_alimento' en S; va a D
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/iconos.gd:38)
+WARNING: Grilla: 'comprar_piedra' choca con 'comprar_madera' en D; va a F
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _ubicar_investigaciones (res://src/game/controller.gd:496)
+         [1] commands (res://src/game/controller.gd:477)
+         [2] _init (res://tests/iconos.gd:38)
+EDADES: luminancia 0.13 · 0.21 · 0.51 · 0.79
+ICONOS: 780 grillas, 145 íconos distintos, OK

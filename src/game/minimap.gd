@@ -146,8 +146,9 @@ func _process(delta: float) -> void:
 
 
 func _draw() -> void:
-	draw_style_box(Hud.panel_box(10), Rect2(Vector2.ZERO, size))
-	Hud.dibujar_marco(self, Rect2(Vector2.ZERO, size)) # --- arte de interfaz ---
+	# --- interfaz como AoE4 --- (proceso/67) el marco de la banda de abajo; pegado a la esquina
+	var m := Hud.MARCO.num("minimapa_margen", 12, "banda")
+	Hud.MARCO.panel(self, Rect2(Vector2.ZERO, size), ["abajo", "izq"] if m <= 0.0 else [])
 	var xf := _xf()
 	var n := float(sim.map.n)
 	draw_set_transform_matrix(xf)
@@ -250,27 +251,28 @@ func cambiar_tamano() -> void:
 
 func aplicar_tamano() -> void:
 	var s := lado()
-	offset_left = 12
-	offset_right = 12 + s
-	offset_top = -12 - s
-	offset_bottom = -12
+	var m := Hud.MARCO.num("minimapa_margen", 12, "banda") # --- interfaz como AoE4 --- (pegado a la esquina)
+	offset_left = m
+	offset_right = m + s
+	offset_top = -m - s
+	offset_bottom = -m
 
 
 func _draw_chips() -> void:
 	_chips.clear()
-	var x := 8.0
+	# --- interfaz como AoE4 --- (proceso/67) los botones son pastillas del mismo marco, corridas
+	# de las esquinas para no tapar los rombos
+	var x := 16.0
 	for f in FILTROS:
-		var r := Rect2(x, 6, 20, 18)
+		var r := Rect2(x, 6, 22, 20)
 		var on: bool = filtros.get(f[0], true)
-		draw_rect(r, Color(0, 0, 0, 0.55 if on else 0.3))
-		draw_rect(r, Color(Palette.UI_ACCENT, 0.9) if on else Color(1, 1, 1, 0.25), false, 1.0)
-		draw_string(Hud.font_b, r.position + Vector2(0, 14), f[1], HORIZONTAL_ALIGNMENT_CENTER, r.size.x, Hud.ts(12), Palette.UI_TEXT if on else Palette.UI_DIM)
+		Hud.MARCO.pastilla(self, r, Palette.UI_ACCENT, on)
+		draw_string(Hud.font_b, r.position + Vector2(0, 15), f[1], HORIZONTAL_ALIGNMENT_CENTER, r.size.x, Hud.ts(12), Palette.UI_TEXT if on else Palette.UI_DIM)
 		_chips.append([r, f[0]])
-		x += 23.0
-	var rt := Rect2(size.x - 28, 6, 20, 18)
-	draw_rect(rt, Color(0, 0, 0, 0.55))
-	draw_rect(rt, Color(1, 1, 1, 0.35), false, 1.0)
-	draw_string(Hud.font_b, rt.position + Vector2(0, 14), "±", HORIZONTAL_ALIGNMENT_CENTER, rt.size.x, Hud.ts(13), Palette.UI_TEXT)
+		x += 25.0
+	var rt := Rect2(size.x - 38, 6, 22, 20)
+	Hud.MARCO.pastilla(self, rt, Palette.UI_TEXT, false)
+	draw_string(Hud.font_b, rt.position + Vector2(0, 15), "±", HORIZONTAL_ALIGNMENT_CENTER, rt.size.x, Hud.ts(13), Palette.UI_TEXT)
 	_chips.append([rt, "tamano"])
 
 

@@ -1,0 +1,252 @@
+OK    fluidez 5: Ctrl + clic elige a los 7 guerrero en pantalla
+OK    fluidez 5: patrulla de 3 puntos con Mayús (sigue en el modo: true, ronda de 4)
+OK    fluidez 5: clic derecho en una unidad propia la escolta (orden 11, sigue a 2048)
+OK    fluidez 5: el escolta va con la patrulla (a 430)
+OK    fluidez 5: Mayús + mantener entra en la cola (en cola: true, después mantiene: true)
+OK    fluidez 5: números de daño apagados en «aoe4» (false) y prendidos de fábrica (true)
+OK    fluidez 5: ficha compacta (estadísticas 9 → 0, con el aviso de Mayús o Alt)
+OK    fluidez 5: la hoja de atajos dice que el botón del medio arrastra
+OK    fluidez 5: retratos por función (["a_pie", "civil"])
+OK    ayuda de la barra de recursos visible
+OK    selección por arrastre de los 6 aldeanos (6)
+OK    cursor de recolectar alimento sobre el arbusto (recolectar_alimento)
+OK    cursor de mover sobre el suelo (mover)
+OK    se dibujaron los cursores (12)
+OK    clic derecho en arbustos pone a recolectar (6)
+OK    cursor de juntar alimento sobre un animal propio (recolectar_alimento; bajo el cursor: rebano)
+OK    con el aldeano pegado al animal (a 49 px), el cursor sigue en juntar (recolectar_alimento; bajo el cursor: rebano)
+OK    clic derecho en un animal propio: el aldeano lo carnea (vivo false, orden 4, junta alimento)
+OK    Q abre el submenú de economía
+OK    Esc vuelve a la raíz sin deseleccionar
+OK    Q, Q entra en modo de construcción de casa
+OK    clic coloca el cimiento de la casa
+OK    se descontó la madera (150)
+OK    H selecciona la capital
+OK    la grilla del centro dibuja «Ava» en Q y «Baqueano» en W
+OK    ninguna casilla del centro tiene dos comandos (0 repetidas)
+OK    Q en el centro encola un aldeano
+OK    Ctrl+1 asigna el grupo
+OK    la fila de grupos muestra el grupo 1
+OK    los aldeanos construyen la casa (13300 ms)
+OK    entra alimento al banco (190)
+OK    arrastrar coloca una línea de empalizada (6)
+OK    la campana refugia aldeanos (6)
+OK    el toque de calma los saca (0)
+OK    F5 abre el panel de economía
+OK    el ✕ cierra el panel de economía
+OK    F6 abre el avance de edad
+OK    F9 abre la ficha del pueblo
+OK    F9 la cierra
+OK    los paneles dejaron F1–F4 a la cámara (economía F5, edad F6, ayuda F9)
+OK    F7 despliega el registro y el clic lleva la cámara (42, 42)
+OK    Espacio lleva la cámara al último ataque (40, 36)
+OK    los avisos se apilan sin pisarse (2)
+OK    sin selección se ocultan el panel y la grilla
+OK    con selección vuelven
+OK    hay aldeanos ociosos para el botón (3)
+OK    la barra de recursos tiene el botón de aldeanos ociosos
+OK    clic en el botón: selecciona un aldeano ocioso (1)
+OK    Mayús + «.»: todos los aldeanos ociosos (3 de 3)
+OK    aldeanos por recurso debajo de cada recurso (4)
+OK    M selecciona todos los militares (6)
+OK    «,» selecciona el siguiente militar ocioso
+OK    Ctrl + «,»: todos los militares ociosos (6)
+OK    la grilla militar tiene mantener, patrullar y las cuatro formaciones
+OK    X elige la formación en línea y la arma en el lugar
+OK    D: mantener posición (6 de 6)
+OK    E entra en modo patrullar
+OK    clic: patrullan (6 de 6)
+OK    se dibuja la flecha del rumbo mientras se arrastra
+OK    arrastrar el clic derecho manda mover en línea con rumbo 4 (4)
+OK    la orden nueva corta la patrulla
+OK    de fábrica, los marcadores 1 y 4 están en F1 y F4 (F1, F4)
+OK    Ctrl + F1 guarda la cámara y F1 vuelve (25, 25)
+OK    Ctrl + F4 y F4: el cuarto marcador (34, 26)
+OK    Tab selecciona un edificio de producción
+OK    T: todos los del tipo de lo seleccionado (3)
+OK    la cola global muestra lo que se produce (1)
+OK    clic en la cola global selecciona el edificio
+OK    Alt + clic sin aliados no tira bengala
+OK    la casilla del hito muestra cada recurso que falta (2 de 2, [["alimento", "−500"], ["riqueza", "−300"]])
+OK    si falta uno solo, «−40»
+OK    la ayuda dice cuánto falta de cada uno (Faltan 500 de alimento y 300 de riqueza)
+OK    al colocar el hito se ve el aura (Aura: +15 % de recolección a 9 casillas / En el aura: 4 fuentes de alimento, 2 vetas de piedra, 2 vetas de riqueza / )
+OK    la ficha del hito en obra dice cuánto falta con 4 (Faltan 1:30 con 4 constructores; esperado 1:30)
+OK    sin constructores, «Parada» (Parada: sin constructores (con uno, 1:52))
+OK    Ctrl + Alt + 8 guarda y Alt + 8 vuelve (30, 24)
+OK    Ctrl + Alt + número no pisa los grupos de control
+OK    F1 es atajo del marcador 1 (23, 24)
+OK    sin pelear, no hay barra por combate
+OK    al pelear sana y sin opciones, sin barra (como AoE4)
+OK    con «barras de las tropas sanas al pelear», se ve
+OK    dañada se ve sin opciones
+OK    dos cuarteles elegidos: una pulsación entrena UNA unidad ([1, 0])
+OK    Mayús: cinco en total, en el de cola más corta ([3, 3])
+OK    panel de varias: un retrato con su vida por unidad (6 de 6)
+OK    Mayús + clic en un retrato saca esa unidad (6 → 5)
+OK    Ctrl + clic deja solo ese tipo (hondero, 3)
+OK    M elige el ejército y centra la cámara en él
+OK    «,» elige un militar ocioso y centra la cámara
+OK    grupos exclusivos: asignar al 3 saca del 2 (2 en el 2)
+OK    sin la opción, una unidad queda en dos grupos
+OK    grupo 0: Ctrl + 0 asigna y 0 lo elige (2)
+OK    la fila de grupos muestra el 0
+OK    H elige la capital sin mover la cámara
+OK    otra H lleva al centro siguiente
+OK    H dos veces seguidas centra la cámara en ese centro
+OK    Mayús + H: vuelve a la capital y centra
+OK    Opciones → Teclas: clic en H, apretar J (Apretá una tecla… → J)
+OK    tecla reasignada: J elige el centro y H ya no
+OK    la ayuda de la grilla muestra la tecla asignada
+OK    N elige todos los aldeanos (7 de 7)
+OK    P elige toda la producción militar y no el centro (2)
+OK    B toca la campana sin elegir el centro, y otra vez la calma
+OK    Opciones → Teclas muestra los 8 marcadores (8) y la campana en B
+OK    con 7 aldeanos y 9 tropas, manda la grilla militar: Z es una formación (form_bloque)
+OK    la grilla dibuja en Z lo mismo que ejecuta la tecla
+OK    Z con selección mixta pone la formación dibujada (bloque)
+OK    Tab cambia a la grilla del aldeano: Z es el hito (karai_palabra)
+OK    …y la grilla dibuja ese hito en Z
+OK    la casilla del hito lleva «Hito» y la edad en dos renglones
+OK    Z en la grilla del aldeano coloca el hito y no toca la formación
+OK    Tab otra vez vuelve a la grilla militar
+OK    con más aldeanos que tropas, manda la grilla del aldeano
+OK    Alt muestra la función sobre cada unidad (22 íconos, 9 tropas)
+OK    sin Alt, no hay íconos de función
+OK    fluidez 3: el clic que elige suena (1, elegidos 1)
+OK    fluidez 3: categoría de los aldeanos (aldeano)
+OK    fluidez 3: categoría de un edificio
+OK    fluidez 3: clic derecho sin selección suena a error (1)
+OK    fluidez 3: función de la orden de los aldeanos (civil)
+OK    fluidez 3: el arbusto destella al ordenar juntar (1)
+OK    fluidez 3: suena la orden (1)
+OK    fluidez 3: polvo del cimiento (7 nubes)
+OK    fluidez 3: el destello se va solo (192 ms)
+OK    fluidez 3: pulso al saltar con la cámara
+OK    fluidez 3: la flecha tiene estela
+OK    fluidez 3: el destello se apaga en data/respuesta.json
+OK    sin recursos, el aldeano está en «falta» (falta)
+OK    la ayuda empieza con «Falta: …» en ámbar, no en rojo (Falta: 50 de alimento)
+OK    una investigación de la edad 2 queda «bloqueado» (canteria)
+OK    su ayuda dice «Necesita la edad II» en rojo y la edad en su color (Necesita la edad II)
+OK    la grilla dibuja lo mismo que resuelve (aldeano en Q)
+OK    con recursos, la ficha de el aldeano dice «Podés entrenarlo» aunque el mouse entró sin recursos (Podés entrenarlo)
+OK    en la edad II la misma investigación se puede: «Podés investigarlo», sin rojo
+OK    la ficha que se abrió en la edad I ya no dice «Necesita…» (Podés investigarlo)
+OK    pedida, la investigación queda «en curso» (en_curso)
+OK    …y la ayuda no lo pinta de rojo (Ya está en investigación)
+OK    con la población llena, el aldeano está en «aviso» (aviso)
+OK    …la ayuda dice «Podés entrenarlo» y avisa en ámbar, sin rojo (Podés entrenarlo / Población llena (14/14): entra a la cola y sale cuando haya lugar)
+OK    en la grilla del centro ningún ícono se repite ([])
+OK    cada casilla dice a qué edad pertenece ([])
+OK    Ctrl + clic en la casilla prende la repetición de aldeano (comando grabado)
+OK    la casilla dice que se repite
+OK    con la cola vacía, la repetición encola sola
+OK    con todo el alimento apartado, la repetición se frena (recursos)
+OK    la repetición llega al tope y no lo pasa (10 de 10)
+OK    Ctrl + clic otra vez apaga la repetición
+OK    la cola llega a 10 y no pasa (10)
+OK    clic derecho en la casilla saca una de la cola (9)
+OK    Mayús + clic derecho saca 5 (4)
+OK    el clic derecho sobre una unidad no cambia de submenú
+OK    aviso anticipado de población: sin lugar en ~35 s (17/18, cola 4)
+OK    con la población llena, el centro queda trabado en la cola global («Trabada: población llena (18/18). Construí casas (Oga).»)
+OK    sin consejos de aprendizaje no sale «Población llena»
+OK    el centro parado aparece en la cola global (gris, parado_rojo en data)
+OK    el centro parado no suena (parado_rojo apagado)
+OK    el cuartel que repite está en la cola global con el bucle
+OK    el consejo de parados se apaga y se prende
+OK    la ficha de la maravilla nombra el hito («Pide el hito Pueblo de misión: hay que haberlo elegido al subir de edad»)
+OK    la ayuda del recurso dice el ingreso por minuto
+OK    hay 2 mercados neutrales en el mapa
+OK    mercado propio puesto
+OK    Mayús + clic derecho en el suelo: punto de paso marcado ((23500, 86500))
+OK    cursor sobre el neutral: ganancia esperada junto al cursor (Ruta a mercado neutral · 80 casillas / ~108 de riqueza por viaje, ~54 por minuto cada uno / )
+OK    clic derecho en el neutral: ruta abierta (orden 10, destino 268435456)
+OK    la ruta pasa por el punto de paso (23500, 86500)
+OK    el minimapa tiene el botón «Rutas»
+OK    clic en «Rutas»: se ven todas las rutas
+OK    el comerciante carga en el neutral (108 de riqueza)
+OK    «Atacan a tus comerciantes»: avisa una vez por ruta (true, false)
+OK    fluidez 2: hay lugar para tres casas ([(32, 23), (24, 30), (13, 23)])
+OK    fluidez 2: los tres cimientos están puestos
+OK    fluidez 2: dos obras en la cola del aldeano (2)
+OK    fluidez 2: las tres casas se terminan en el orden puesto ([2021, 2022, 2023], puestas [2021, 2022, 2023])
+OK    fluidez 2: hay un árbol suelto para el muro
+OK    fluidez 2: el muro dice tramos, costo y cuántos alcanzan (6 tramos · 60 de madera · alcanzan 6)
+OK    fluidez 2: el trazo avisa el hueco antes de soltar (1 hueco: árboles)
+OK    fluidez 2: G marca la puerta en el trazo ((37, 2))
+OK    fluidez 2: el hueco queda marcado ([[35, 2]])
+OK    fluidez 2: aviso del hueco al soltar (Empalizada quedó con 1 hueco (árboles) / )
+OK    fluidez 2: la puerta quedó en el trazo (puerta)
+OK    fluidez 2: el resto del muro quedó puesto
+OK    fluidez 2: hay un lugar para la granja junto a centro
+OK    fluidez 2: la granja se pega al depósito ((19, 19) → (20, 20))
+OK    fluidez 2: la granja dice los lugares libres (11 de 12 lugares libres junto a: Oga guasu / Pegada al depósito de alimento / )
+OK    fluidez 2: queda la huella de la casa
+OK    fluidez 2: sobre la huella, el cursor es de construir (construir)
+OK    fluidez 2: la huella reconstruye el cimiento
+OK    fluidez 2: el aldeano va a levantarlo
+OK    fluidez 2: botón «Reparar (zona)» en la grilla ()
+OK    fluidez 2: reparar (zona) los manda a lo dañado (2023 en [2021, 2022, 2023])
+OK    fluidez 4: dos ataques en zonas distintas avisan los dos (2 avisos, 2 con lugar)
+OK    fluidez 4: la misma zona no repite enseguida
+OK    fluidez 4: golpe a un edificio avisa como edificio
+OK    fluidez 4: Espacio va al último ataque
+OK    fluidez 4: la veta chica avisa que se agota (1 de 1)
+OK    fluidez 4: cuando se acaba, avisa con lugar («Se acabó la veta de piedra acá: buscá otra», 1, agotada true)
+OK    fluidez 4: la granja vacía se marca (1) y aparece el botón
+OK    fluidez 4: «Llenar granjas» manda un aldeano (1)
+OK    fluidez 4: tributo ×5 con Mayús y ×10 con Ctrl
+OK    fluidez 4: el clic con Mayús manda 500
+OK    fluidez 4: el tributo periódico se prende y se apaga
+OK    fluidez 4: la rueda elige atacar, defender, juntarse, mirar o automática (["atacar", "defender", "juntarse", "mirar", ""])
+OK    fluidez 4: el filtro de recursos los saca del minimapa (0)
+OK    fluidez 4: el minimapa cambia de tamaño (250 → 320)
+OK    se puede guardar la escaramuza
+OK    guardar en el tick 15 (1 órdenes con clics) y cargar llega al mismo hash
+OK    cargar con la foto (.foto) llega al mismo tick y hash sin re-simular
+OK    la pausa ofrece «Guardar partida»
+OK    F11 abre el panel «Mi base»
+OK    «Mi base» cuenta los 20 edificios propios (20)
+OK    el clic en «Mi base» elige la capital
+OK    fluidez 5: Ctrl + clic elige a los 7 guerrero en pantalla
+OK    fluidez 5: patrulla de 3 puntos con Mayús (sigue en el modo: true, ronda de 4)
+OK    fluidez 5: clic derecho en una unidad propia la escolta (orden 11, sigue a 2048)
+OK    fluidez 5: el escolta va con la patrulla (a 430)
+OK    fluidez 5: Mayús + mantener entra en la cola (en cola: true, después mantiene: true)
+OK    fluidez 5: números de daño apagados en «aoe4» (false) y prendidos de fábrica (true)
+OK    fluidez 5: ficha compacta (estadísticas 9 → 0, con el aviso de Mayús o Alt)
+OK    fluidez 5: la hoja de atajos dice que el botón del medio arrastra
+OK    fluidez 5: retratos por función (["a_pie", "civil"])
+OK    aviso de aldeanos sin trabajo (11 de 11 quietos; Tenés 11 aldeanos sin trabajo / Truco: Ctrl + clic en una unidad la entrena sola, sin parar)
+OK    con los avisos apagados en Opciones no avisa
+OK    cuenta grande de sitios del rival (jugador 1)
+OK    aviso «perdés en M:SS»
+OK    avisos de sitios a los 2 y al 1 minuto (¡Rojo gana por sitios sagrados en 2 minutos! / ¡Rojo gana por sitios sagrados en 1 minuto!)
+OK    aviso «atacá o subí de edad» con ejército en casa y recursos de sobra
+OK    el aviso dice hacia dónde está la base rival y la marca en el minimapa
+OK    el aviso dice que los edificios caen con asedio
+OK    aviso de viaje largo con la caza a 22 casillas: nombra «Tapyi»
+OK    con Tapyi en obra junto a la caza, el aviso se calla
+OK    aviso de la pelea perdida: «Perdiste 11 soldados…»
+OK    el aviso de la pelea nombra a los honderos y al centro con guarnición
+OK    el resumen de la pelea va en un título y tres renglones (3)
+OK    el aviso de la pelea dice qué llevar: asedio y la tropa que les gana
+OK    el aviso enseña que A y clic va primero a los soldados (no «lo primero que ven»)
+OK    renglones cortos (el más largo, 80 letras)
+OK    F12 abre la hoja de atajos
+OK    la hoja dice que el ataque en movimiento va primero a los soldados y que Alt muestra qué es cada cosa
+OK    Esc cierra la hoja de atajos
+OK    nombres en la grilla sin errores
+OK    en la grilla, almacen_madera dice que recibe alimento (común «Granero y leñera», ícono +alimento+madera, «Recibe alimento y madera.»)
+OK    G abre el registro de la Guía
+OK    G lo cierra
+OK    la pantalla de fin explica por qué terminó (La partida sigue: esto es un resumen de lo jugado hasta ahora.)
+OK    la pantalla de fin tiene el gráfico de edad
+OK    la primera victoria contra la IA se festeja (¡Ganaste tu primera partida contra la IA!)
+OK    la victoria contra la Fácil queda anotada ({ "facil": 1 })
+OK    botón «Jugar contra Normal» (Jugar contra Normal)
+OK    «Jugar contra Normal» arma la misma partida: civ, semilla y terreno
+OK    la segunda victoria contra la Fácil no repite el festejo y sigue invitando
+AUTOTEST: OK

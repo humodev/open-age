@@ -1,0 +1,40 @@
+OK    texto grande: nada pasa del tope (19 → 20)
+OK    texto grande: los títulos quedan igual (34 → 34)
+OK    texto grande: nunca achica
+OK    sin texto grande, cada tamaño queda igual
+OK    en solo lectura no se escribe
+OK    de fábrica: H recorre los centros
+OK    de fábrica: sin choques
+OK    de fábrica (C-35 b): F1 es el marcador 1, F4 el 4 y 0 el grupo 0
+OK    de fábrica (C-35 b): paneles en F5–F9 (economía F5, edad F6, sucesos F7, puntaje F8, ayuda F9)
+OK    asignar J al centro: J lo hace y H queda libre
+OK    asignar una tecla usada intercambia (M era el ejército, pasa a J: J)
+OK    volver a las de fábrica deshace los cambios
+OK    se recuperan las teclas guardadas (centro M, ejército J)
+OK    se recuperan los grupos exclusivos
+OK    el archivo guarda las teclas por nombre (centro = M)
+OK    perfil AoE4: marcadores en F1–F4
+OK    perfil AoE4: los paneles siguen teniendo tecla y no hay choques ({  })
+OK    perfil AoE4: grupos exclusivos
+OK    Esc, Mayús y las flechas no se asignan
+OK    de fábrica: B campana, N todos los aldeanos y P la producción militar
+OK    de fábrica: los atajos nuevos no chocan ({  })
+OK    la lista de teclas tiene los 8 marcadores (8)
+OK    perfil AoE4: los atajos nuevos siguen y no hay choques ({  })
+OK    archivo viejo con B en los centros: B sigue en los centros, la campana sin tecla y sin choques
+OK    archivo de antes: los marcadores pasan a F1–F4 y los paneles a F5–F9 (marcador 1 F1, economía F5, ayuda F9)
+OK    archivo de antes: la tecla que eligió el jugador se queda (edad L) y no hay choques ({  })
+OK    al guardar queda la revisión nueva de las teclas (2)
+OK    de fábrica: las tropas sanas que pelean no muestran barra
+OK    se recupera «barras de las tropas sanas al pelear»
+OK    la primera victoria contra la IA es la primera (y la primera en Fácil)
+OK    se recupera la victoria contra la Fácil ({ "facil": 1 })
+OK    la segunda en Fácil ya no es la primera
+OK    la primera en Normal es primera en esa dificultad, no contra la IA
+OK    restablecer no borra las victorias
+OK    automática a 1920×1080 = 1,0
+OK    automática a 3840×2160 = 2,0
+OK    automática a 1366×768 = 0,85 (120 %)
+OK    150 % a 1366×768 deja al menos 1280×720 lógicos
+OK    la automática deja al menos 1280×720 lógicos en 1024×600 (1280×750)
+OPCIONES: OK

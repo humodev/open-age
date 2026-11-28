@@ -6,6 +6,7 @@ const O := SimEntity.Order
 const SLOT := 62.0
 const GAP := 6.0
 const Colocacion := preload("res://src/game/ui/mundo_colocacion.gd") # --- obra --- (aura del hito)
+const MARCO := preload("res://src/game/ui/marco_hud.gd") # --- interfaz como AoE4 --- (proceso/67)
 
 static var font: Font
 static var font_b: Font
@@ -154,18 +155,19 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 	_mundo.setup(sim, ctrl, cam, _mini)
 	# --- fin mundo ---
 
-	_card = CommandCard.new()
-	_card.hud = self
-	var card_size := Vector2(SLOT * 4 + GAP * 5, SLOT * 3 + GAP * 4)
-	_anchor(_card, Vector2(1, 1), Rect2(-card_size.x - 12, -card_size.y - 12, card_size.x, card_size.y))
-	add_child(_card)
-	_blockers.append(_card)
-
+	# --- interfaz como AoE4 --- (proceso/67) La selección y la grilla forman una banda pegada al
+	# borde de abajo, del mismo alto y centrada sin pisar el minimapa (_place_band).
 	_sel = SelectionPanel.new()
 	_sel.hud = self
-	_anchor(_sel, Vector2(0.5, 1), Rect2(-300, -184, 600, 172))
 	add_child(_sel)
 	_blockers.append(_sel)
+
+	_card = CommandCard.new() # después: queda encima de la sombra de la selección
+	_card.hud = self
+	add_child(_card)
+	_blockers.append(_card)
+	_place_band()
+	# --- fin interfaz como AoE4 ---
 
 	if sim.scenario != null:
 		_objectives = ObjectivesPanel.new()
@@ -507,7 +509,47 @@ func _place_groups() -> void:
 	var vacio := ctrl.selection.is_empty()
 	_sel.visible = not vacio
 	_card.visible = not vacio
-	_anchor(grupos, Vector2(0.5, 1), Rect2(-300, (-58.0 if vacio else -232.0), 600, 46))
+	# --- interfaz como AoE4 --- encima de la banda, centrados sobre el panel de la selección
+	var bh := band_height() + MARCO.num("margen_abajo", 0, "banda") + MARCO.num("grupos_sobre", 10, "banda")
+	var cx := _sel.offset_left + _sel.size.x * 0.5 - size.x * 0.5 if size.x > 0.0 else 0.0
+	_anchor(grupos, Vector2(0.5, 1), Rect2(cx - 300, (-58.0 if vacio else -bh - 46.0), 600, 46))
+
+
+## --- interfaz como AoE4 --- (proceso/67) Lados sin borde de la selección (`izq` true) o de la
+## grilla: el de abajo si la banda está pegada, y el del medio si van juntas (separacion 0).
+static func pegado_banda(es_seleccion: bool) -> Array:
+	var out: Array = []
+	if MARCO.num("margen_abajo", 0, "banda") <= 0.0:
+		out.append("abajo")
+	if MARCO.num("separacion", 0, "banda") <= 0.0:
+		out.append("der" if es_seleccion else "izq")
+	return out
+
+
+## --- interfaz como AoE4 --- (proceso/67) Alto de la banda de abajo: el de la grilla.
+static func band_height() -> float:
+	return SLOT * 3 + GAP * 4
+
+
+## Banda de abajo: [selección | grilla], pegada abajo, centrada y corrida a la derecha del
+## minimapa si no entra (escala de la interfaz grande o pantallas angostas).
+func _place_band() -> void:
+	var h := band_height()
+	var card_w := SLOT * 4 + GAP * 5
+	var sel_w := MARCO.num("ancho", 600, "seleccion")
+	var sep := MARCO.num("separacion", 2, "banda")
+	var lado := MARCO.num("margen_lado", 12, "banda")
+	var abajo := MARCO.num("margen_abajo", 0, "banda")
+	var w := sel_w + sep + card_w
+	var vw := size.x if size.x > 0.0 else get_viewport_rect().size.x
+	var mini_der := _mini.offset_right if _mini != null else 0.0
+	var x := maxf(mini_der + lado, minf((vw - w) * 0.5, vw - w - lado))
+	if is_equal_approx(_sel.offset_left, x) and is_equal_approx(_sel.offset_top, -h - abajo) and is_equal_approx(_sel.offset_right - _sel.offset_left, sel_w):
+		return
+	_anchor(_sel, Vector2(0, 1), Rect2(x, -h - abajo, sel_w, h))
+	_anchor(_card, Vector2(0, 1), Rect2(x + sel_w + sep, -h - abajo, card_w, h))
+	if grupos != null:
+		_place_groups()
 
 
 ## Población: (solo con los consejos de aprendizaje, ronda 8) aviso único cuando se llena y explicación cuando se arranca por encima del tope (P9).
@@ -886,6 +928,7 @@ func _process(delta: float) -> void:
 		_place_dialog()
 	# --- fin avisos ---
 	_place_top() # --- órdenes ---
+	_place_band() # --- interfaz como AoE4 --- (sigue al tamaño del minimapa y de la ventana)
 	_top.queue_redraw()
 	_clock.queue_redraw()
 	_sel.queue_redraw()
@@ -973,9 +1016,9 @@ func _make_theme() -> Theme:
 
 static func panel_box(radius: int = 8) -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()
-	sb.bg_color = Palette.UI_BG
+	sb.bg_color = MARCO.fondo_plano() # --- interfaz como AoE4 --- (el tono de los paneles del HUD)
 	sb.set_corner_radius_all(radius)
-	sb.border_color = Palette.UI_LINE
+	sb.border_color = MARCO.borde_plano()
 	sb.set_border_width_all(1)
 	sb.shadow_color = Color(0, 0, 0, 0.35)
 	sb.shadow_size = 10
@@ -1155,7 +1198,7 @@ class TopBar:
 					_tip_k = h[2]
 					hud.show_tip({"name": h[2], "desc": h[3], "cost": {}, "locked": ""}, Rect2(global_position + (h[0] as Rect2).position, (h[0] as Rect2).size))
 				return
-		var i := int((ev.position.x - 14.0) / 120.0)
+		var i := int((ev.position.x - 14.0) / celda()) # --- interfaz como AoE4 ---
 		var k: String = Sim.RES_KINDS[i] if i >= 0 and i < Sim.RES_KINDS.size() else ""
 		if k == _tip_k:
 			return
@@ -1177,18 +1220,21 @@ class TopBar:
 			var nv: int = int((dat.villagers(hud.local) as Dictionary).get(k, 0))
 			desc = "Ingreso: %s por minuto (últimos %d s)%s\n%s" % [("+%d" % rate) if rate >= 0 else str(rate), int(dat.window_s), (" · %d aldeano%s" % [nv, "" if nv == 1 else "s"]) if nv > 0 else "", desc]
 		# --- fin frente 1 ---
-		hud.show_tip({"name": name, "desc": desc, "cost": {}, "locked": ""}, Rect2(global_position + Vector2(14 + i * 120, 0), Vector2(110, size.y)))
+		hud.show_tip({"name": name, "desc": desc, "cost": {}, "locked": ""}, Rect2(global_position + Vector2(14 + i * celda(), 0), Vector2(celda() - 10, size.y)))
 
 	## Ancho que necesita la barra (con recurso propio y botones de ociosos). --- órdenes ---
 	func needed_width() -> float:
-		var w := 14.0 + Sim.RES_KINDS.size() * 120.0
+		var w := 14.0 + Sim.RES_KINDS.size() * celda()
 		if hud.sim.dp(hud.local).has_mod("recurso_propio"):
 			w += 130.0
 		return w + 110.0 + 2 * 74.0 + 8.0
 
+	## --- interfaz como AoE4 --- ancho de cada recurso (data/interfaz.json → hud_estilo.barra)
+	func celda() -> float:
+		return Hud.MARCO.num("celda", 150, "barra")
+
 	func _draw() -> void:
-		draw_style_box(Hud.panel_box(), Rect2(Vector2.ZERO, size))
-		Hud.dibujar_marco(self, Rect2(Vector2.ZERO, size)) # --- arte de interfaz ---
+		Hud.MARCO.panel(self, Rect2(Vector2.ZERO, size)) # --- interfaz como AoE4 ---
 		_hits.clear()
 		var sim := hud.sim
 		var p: Dictionary = sim.players[hud.local]
@@ -1197,16 +1243,26 @@ class TopBar:
 			if e.owner == hud.local and e.fn == "civil" and e.inside < 0 and (e.order == O.GATHER or e.order == O.RETURN) and workers.has(e.gather_kind):
 				workers[e.gather_kind] += 1
 		var x := 14.0
-		# --- órdenes --- (aldeanos por recurso debajo de cada recurso, como AoE4)
+		# --- órdenes --- (aldeanos por recurso, como AoE4)
+		# --- interfaz como AoE4 --- (proceso/67) la cantidad va en una pastilla al lado del número,
+		# con el color del recurso si hay alguien trabajando y apagada si no; separadores finos.
+		var c := celda()
+		var pw := Hud.MARCO.num("pastilla_ancho", 44, "barra")
+		var ph := Hud.MARCO.num("pastilla_alto", 22, "barra")
 		for k in Sim.RES_KINDS:
-			Glyphs.draw(self, k, Rect2(x, 6, 26, 26), Palette.RES[k])
-			draw_string(Hud.font_b, Vector2(x + 32, 26), str(p["res"][k]), HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(19), Palette.UI_TEXT)
-			var wr := Rect2(x + 30, 31, 70, 18)
-			Glyphs.draw(self, "aldeano", Rect2(x + 32, 32, 14, 16), Palette.UI_DIM)
-			draw_string(Hud.font, Vector2(x + 48, 46), str(workers[k]), HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(13), Palette.UI_TEXT if workers[k] > 0 else Palette.UI_DIM)
+			Glyphs.draw(self, k, Rect2(x, (size.y - 28) * 0.5, 28, 28), Palette.RES[k])
+			draw_string(Hud.font_b, Vector2(x + 34, size.y * 0.5 + 7), str(p["res"][k]), HORIZONTAL_ALIGNMENT_LEFT, c - pw - 46, Hud.ts(19), Palette.UI_TEXT)
+			var wr := Rect2(x + c - pw - 12, (size.y - ph) * 0.5, pw, ph)
+			var hay: bool = workers[k] > 0
+			Hud.MARCO.pastilla(self, wr, Palette.RES[k], hay)
+			Glyphs.draw(self, "aldeano", Rect2(wr.position.x + 4, wr.position.y + 3, 14, 16), Palette.UI_TEXT if hay else Palette.UI_DIM)
+			draw_string(Hud.font_b if hay else Hud.font, Vector2(wr.position.x, wr.position.y + ph * 0.5 + 6), str(workers[k]), HORIZONTAL_ALIGNMENT_RIGHT, pw - 5, Hud.ts(14), Palette.UI_TEXT if hay else Palette.UI_DIM)
 			var kind: String = k
 			_hits.append([wr, func(_all: bool) -> void: hud.ctrl.atajos.trabajando(kind), "Aldeanos en %s: %d" % [Palette.RES_NAMES[k].to_lower(), workers[k]], "Clic: seleccionarlos."])
-			x += 120
+			if k != Sim.RES_KINDS[Sim.RES_KINDS.size() - 1]:
+				draw_line(Vector2(x + c - 5, 14), Vector2(x + c - 5, size.y - 14), Color(Palette.UI_TEXT, 0.08), 1.0)
+			x += c
+		# --- fin interfaz como AoE4 ---
 		# --- fin órdenes ---
 		var dd := sim.dp(hud.local)
 		if dd.has_mod("recurso_propio"):
@@ -1217,7 +1273,7 @@ class TopBar:
 			draw_string(Hud.font_b, Vector2(x + 34, 34), str(p["res"].get(rp["clave"], 0)), HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(19), col.lightened(0.3))
 			draw_string(Hud.font, Vector2(x + 34 + 44, 34), "/%d" % cap if cap > 0 else "", HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(13), Palette.UI_DIM)
 			x += 130
-		draw_line(Vector2(x - 6, 10), Vector2(x - 6, size.y - 10), Palette.UI_LINE, 1)
+		Hud.MARCO.divisor(self, Vector2(x - 6, 10), Vector2(x - 6, size.y - 10)) # --- interfaz como AoE4 ---
 		var full: bool = p["pop"] >= p["pop_cap"]
 		# --- frente 1 --- ámbar antes de llenarse (aviso anticipado), rojo lleno
 		var pronto: bool = not full and hud.pob_eta > 0 and hud.pob_eta <= int(COLA_GLOBAL.cfg().get("aviso_pob_s", 40))
@@ -1234,13 +1290,14 @@ class TopBar:
 		var idle_m: int = at.ociosos_militares().size()
 		for b in [["ocioso", idle_v, false, "Aldeanos ociosos: %d" % idle_v, "Clic o «.»: el siguiente, y la cámara va hacia él. Mayús + clic o Mayús + «.»: todos."], ["guerrero", idle_m, true, "Militares ociosos: %d" % idle_m, "Clic o «,»: el siguiente. Mayús + clic o Mayús + «,»: todos. M: todos los militares."]]:
 			var r := Rect2(x, 7, 68, size.y - 14)
-			var sb := StyleBoxFlat.new()
-			sb.set_corner_radius_all(6)
 			var hot: bool = int(b[1]) > 0 and not bool(b[2])
-			sb.bg_color = Color(Palette.UI_BAD, 0.28) if hot else Color(1, 1, 1, 0.05)
-			sb.border_color = Color(Palette.UI_BAD, 0.7) if hot else Color(1, 1, 1, 0.1)
-			sb.set_border_width_all(1)
-			draw_style_box(sb, r)
+			# --- interfaz como AoE4 --- (proceso/67) pastilla del marco; con aldeanos ociosos, el
+			# borde late (reloj de la interfaz, no de la simulación) para que se vea de reojo
+			Hud.MARCO.pastilla(self, r, Palette.UI_BAD, hot)
+			if hot:
+				var per := Hud.MARCO.num("ocioso_pulso_s", 1.2)
+				var k_p := 0.5 + 0.5 * sin(float(Time.get_ticks_msec()) / 1000.0 * TAU / per)
+				draw_rect(r.grow(1.0), Color(Palette.UI_BAD, 0.25 + 0.55 * k_p), false, 2.0)
 			Glyphs.draw(self, b[0], Rect2(r.position + Vector2(4, 5), Vector2(28, 28)), Palette.UI_TEXT if int(b[1]) > 0 else Palette.UI_DIM)
 			draw_string(Hud.font_b, r.position + Vector2(0, 27), str(b[1]), HORIZONTAL_ALIGNMENT_RIGHT, r.size.x - 8, Hud.ts(18), Palette.UI_TEXT if int(b[1]) > 0 else Palette.UI_DIM)
 			var mil: bool = b[2]
@@ -1257,8 +1314,7 @@ class ClockBar:
 		mouse_filter = Control.MOUSE_FILTER_STOP
 
 	func _draw() -> void:
-		draw_style_box(Hud.panel_box(), Rect2(Vector2.ZERO, size))
-		Hud.dibujar_marco(self, Rect2(Vector2.ZERO, size)) # --- arte de interfaz ---
+		Hud.MARCO.panel(self, Rect2(Vector2.ZERO, size)) # --- interfaz como AoE4 ---
 		var sim := hud.sim
 		var age: int = sim.players[hud.local]["age"]
 		var name: String = sim.dp(hud.local).edades[age - 1]["nombre"]
@@ -1364,15 +1420,18 @@ class CommandCard:
 		# --- fin grilla ---
 
 	func _draw() -> void:
-		draw_style_box(Hud.panel_box(), Rect2(Vector2.ZERO, size))
-		Hud.dibujar_marco(self, Rect2(Vector2.ZERO, size)) # --- arte de interfaz ---
+		# --- interfaz como AoE4 --- (proceso/67) parte de la banda de abajo: pegada al borde
+		Hud.MARCO.panel(self, Rect2(Vector2.ZERO, size), Hud.pegado_banda(false), true, not Hud.pegado_banda(false).has("izq"))
+		if Hud.MARCO.num("separacion", 0, "banda") <= 0.0: # un solo panel: divisor con rombo
+			Hud.MARCO.divisor(self, Vector2(0.5, 10), Vector2(0.5, size.y), false)
+			Hud.MARCO.rombo(self, Vector2(0.5, 4 + Hud.MARCO.num("ornamento_px", 4)), Hud.MARCO.num("ornamento_px", 4))
 		var cmds := hud.ctrl.commands()
 		# --- grilla --- (pestaña con el submenú abierto, encima de la grilla)
 		if hud.ctrl.submenu != Grilla.RAIZ and (hud.ctrl.grilla_aldeano() or hud.ctrl.submenu == Controller.INVESTIGAR or hud.ctrl.submenu == Controller.ESCUELA or hud.ctrl.submenu == Controller.HERRERIA): # --- ronda 6 --- (herrería: ronda 7)
 			var title := "ECONOMÍA" if hud.ctrl.submenu == Grilla.ECONOMIA else "INVESTIGACIONES" if hud.ctrl.submenu == Controller.INVESTIGAR else "HERRERÍA" if hud.ctrl.submenu == Controller.HERRERIA else String(hud.ctrl.escuela_info()["nombre"]).to_upper() if hud.ctrl.submenu == Controller.ESCUELA else "MILITAR Y DEFENSA"
 			var tw := Hud.font_b.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(12)).x + 92
 			var tab := StyleBoxFlat.new()
-			tab.bg_color = Color(Palette.UI_BG, 0.95)
+			tab.bg_color = Hud.MARCO.fondo_plano() # --- interfaz como AoE4 ---
 			tab.border_color = Color(Palette.UI_ACCENT, 0.6)
 			tab.set_border_width_all(1)
 			tab.border_width_bottom = 0
@@ -1389,7 +1448,7 @@ class CommandCard:
 			var otra := "%s: %s" % [Teclas.texto("produccion"), "tropas" if de_ald else "aldeanos"]
 			var tw := Hud.font_b.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(12)).x + Hud.font.get_string_size(otra, HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(12)).x + 36
 			var tab := StyleBoxFlat.new()
-			tab.bg_color = Color(Palette.UI_BG, 0.95)
+			tab.bg_color = Hud.MARCO.fondo_plano() # --- interfaz como AoE4 ---
 			tab.border_color = Color(Palette.UI_ACCENT, 0.6)
 			tab.set_border_width_all(1)
 			tab.border_width_bottom = 0
@@ -1411,8 +1470,7 @@ class CommandCard:
 			var sb := StyleBoxFlat.new()
 			sb.set_corner_radius_all(6)
 			if c.is_empty():
-				sb.bg_color = Color(1, 1, 1, 0.025)
-				draw_style_box(sb, r)
+				Hud.MARCO.casilla_vacia(self, r) # --- interfaz como AoE4 --- (hundida, como AoE4)
 				continue
 			var active: bool = hud.ctrl.mode == "place" and hud.ctrl.place_type == c["id"] or hud.ctrl.mode == "amove" and c["kind"] == "amove"
 			active = active or (hud.ctrl.mode == "patrol" and c["kind"] == "patrol") or (hud.ctrl.mode == "ground" and c["kind"] == "ground") or (c["kind"] == "form" and c["form"] == hud.ctrl.formacion) # --- órdenes ---
@@ -1491,14 +1549,20 @@ class Tooltip:
 	func _draw() -> void:
 		if cmd.is_empty():
 			return
-		var sb := Hud.panel_box(8)
-		sb.bg_color = Palette.UI_BG_2
-		draw_style_box(sb, Rect2(Vector2.ZERO, size))
+		# --- interfaz como AoE4 --- (proceso/67) el marco de los paneles, el título sobre una franja
+		# apenas más clara con un divisor, y la tecla en una pastilla como la de la grilla
+		Hud.MARCO.panel(self, Rect2(Vector2.ZERO, size))
 		var y := 28.0
+		draw_rect(Rect2(1, 1, size.x - 2, y + 10), Color(Palette.UI_TEXT, 0.035))
+		Hud.MARCO.divisor(self, Vector2(10, y + 10), Vector2(size.x - 10, y + 10))
 		draw_string(Hud.font_b, Vector2(14, y), "%s  " % cmd["name"], HORIZONTAL_ALIGNMENT_LEFT, size.x - 60, Hud.ts(17), Palette.UI_TEXT)
 		# La barra de recursos también usa esta ayuda, sin casilla de grilla.
 		if int(cmd.get("slot", -1)) >= 0:
-			draw_string(Hud.font_b, Vector2(0, y), "[%s]" % Controller.etiqueta(cmd["slot"]), HORIZONTAL_ALIGNMENT_RIGHT, size.x - 14, Hud.ts(13), Palette.UI_DIM)
+			var et := Controller.etiqueta(cmd["slot"])
+			var ew := Hud.font_b.get_string_size(et, HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(13)).x + 12
+			var er := Rect2(size.x - 14 - ew, y - 16, ew, 21)
+			Hud.MARCO.pastilla(self, er, Palette.UI_ACCENT, true)
+			draw_string(Hud.font_b, er.position + Vector2(0, 15), et, HORIZONTAL_ALIGNMENT_CENTER, ew, Hud.ts(13), Palette.UI_TEXT)
 		y += 12
 		# --- iconos --- primera línea (antes el bloqueo iba al final, en rojo, y lo que faltaba
 		# también en rojo debajo del costo)
@@ -1555,8 +1619,8 @@ class SelectionPanel:
 	func _draw() -> void:
 		_hits.clear()
 		hud.ficha.zones_begin(self) # --- ficha ---
-		draw_style_box(Hud.panel_box(), Rect2(Vector2.ZERO, size))
-		Hud.dibujar_marco(self, Rect2(Vector2.ZERO, size)) # --- arte de interfaz ---
+		# --- interfaz como AoE4 --- (proceso/67) parte de la banda de abajo: pegada al borde
+		Hud.MARCO.panel(self, Rect2(Vector2.ZERO, size), Hud.pegado_banda(true))
 		var sel := hud.ctrl.selected_entities()
 		if sel.is_empty():
 			draw_string(Hud.font, Vector2(0, size.y / 2 + 6), "Nada seleccionado", HORIZONTAL_ALIGNMENT_CENTER, size.x, Hud.ts(15), Palette.UI_DIM) # --- contraste --- (antes al 60 %: 3:1)
@@ -1575,6 +1639,10 @@ class SelectionPanel:
 		sb.set_border_width_all(1)
 		draw_style_box(sb, r)
 		hud.ficha.zone(self, r, {"id": e.id}) # --- ficha ---
+		# --- interfaz como AoE4 --- (proceso/67) el retrato monta sobre la cabecera, con un filete
+		# dorado afuera y los rombos del marco, como un medallón cuadrado
+		draw_style_box(_filete_retrato(), r.grow(3))
+		Hud.MARCO.rombo(self, Vector2(r.get_center().x, r.position.y - 3), Hud.MARCO.num("ornamento_px", 4))
 		var rt := Retratos.de(hud.sim, e) # --- aldeanos por retrato --- el pintado, si hay
 		if not rt.is_empty():
 			Retratos.dibujar(self, rt, r.grow(-2), "busto") # --- arte en la interfaz --- cabeza y torso
@@ -1583,13 +1651,31 @@ class SelectionPanel:
 		var col: Color = Palette.UI_TEXT if not e.is_resource() else Palette.RES[e.res_kind]
 		Glyphs.draw(self, icon, r.grow(-18), col)
 
+	func _filete_retrato() -> StyleBoxFlat:
+		var sb := StyleBoxFlat.new()
+		sb.draw_center = false
+		sb.set_corner_radius_all(10)
+		sb.border_color = Hud.MARCO.borde_plano()
+		sb.set_border_width_all(1)
+		return sb
+
 	func _bar(r: Rect2, k: float, col: Color) -> void:
 		draw_rect(r, Color(0, 0, 0, 0.45))
 		draw_rect(Rect2(r.position, Vector2(r.size.x * clampf(k, 0, 1), r.size.y)), col)
 
+	## --- interfaz como AoE4 --- (proceso/67) Cabecera con el nombre sobre el color del dueño y
+	## cuerpo `dy` px más abajo que el panel de antes (data/interfaz.json → hud_estilo.seleccion).
+	func _cabecera(owner: int) -> float:
+		var ch := Hud.MARCO.num("cabecera_alto", 50, "seleccion")
+		Hud.MARCO.cabecera(self, Rect2(1, 1, size.x - 2, ch - 1), Palette.team(owner) if owner >= 0 else Palette.UI_DIM)
+		var o := Hud.MARCO.num("ornamento_px", 4)
+		Hud.MARCO.rombo(self, Vector2(o + 2, o + 2), o) # el rombo de la esquina, encima del color
+		return Hud.MARCO.num("cuerpo_dy", 8, "seleccion")
+
 	func _single(e: SimEntity) -> void:
 		var sim := hud.sim
-		_portrait(Rect2(14, 14, 112, 112), e)
+		var dy := _cabecera(e.owner)
+		_portrait(Rect2(14, 14 + dy, 112, 112), e)
 		var x := 142.0
 		var name: String = Textos.nombre_de(sim, e.owner, e.def, e.type) # C-71 a: nombre por edad
 		# --- casillas --- (jugador nuevo, ronda 4) el común delante del propio, como en la ficha y la
@@ -1599,68 +1685,73 @@ class SelectionPanel:
 			if comun != "":
 				name = "%s · %s" % [comun, name]
 		var name_w := size.x - x - 16 - (110 if e.is_unit() else 150)
-		draw_string(Hud.font_b, Vector2(x, 36), name, HORIZONTAL_ALIGNMENT_LEFT, name_w, EstadoCasilla._fit(Hud.font_b, name, Hud.ts(20), name_w), Palette.UI_TEXT)
+		draw_string(Hud.font_b, Vector2(x, 28), name, HORIZONTAL_ALIGNMENT_LEFT, name_w, EstadoCasilla._fit(Hud.font_b, name, Hud.ts(20), name_w), Palette.UI_TEXT)
 		var who := "Naturaleza" if e.owner < 0 else ("Tu pueblo" if e.owner == hud.local else "Rival · %s" % preload("res://src/game/ui/panel_comun.gd").player_name(sim, e.owner, hud.local))
-		draw_string(Hud.font, Vector2(x, 58), who, HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(14), Palette.UI_DIM)
+		draw_string(Hud.font, Vector2(x, 45), who, HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(14), Palette.UI_TEXT.darkened(0.18)) # --- interfaz como AoE4 --- (sobre el color del dueño)
 		if e.is_resource():
-			draw_string(Hud.font_b, Vector2(x, 96), "%d %s restantes" % [e.amount, Palette.RES_NAMES[e.res_kind].to_lower()], HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(17), Palette.RES[e.res_kind])
+			draw_string(Hud.font_b, Vector2(x, 96 + dy), "%d %s restantes" % [e.amount, Palette.RES_NAMES[e.res_kind].to_lower()], HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(17), Palette.RES[e.res_kind])
 			return
 		var hp_col := Palette.UI_GOOD if e.hp * 3 > e.hp_max else Palette.UI_BAD
-		_bar(Rect2(14, 134, 112, 7), float(e.hp) / float(e.hp_max), hp_col)
-		draw_string(Hud.font, Vector2(14, 160), "%d / %d" % [e.hp, e.hp_max], HORIZONTAL_ALIGNMENT_CENTER, 112, Hud.ts(13), Palette.UI_DIM)
+		_bar(Rect2(14, 134 + dy, 112, 7), float(e.hp) / float(e.hp_max), hp_col)
+		draw_string(Hud.font, Vector2(14, 160 + dy), "%d / %d" % [e.hp, e.hp_max], HORIZONTAL_ALIGNMENT_CENTER, 112, Hud.ts(13), Palette.UI_DIM)
 		if e.is_unit():
 			# Valores de verdad: con mejoras, niveles y velocidad real (casillas por segundo).
 			var spd := float(hud.sim.mods.speed(e)) * 1000.0 / float(hud.sim.tick_ms) / 1000.0
 			var stats := [["Ataque", str(hud.sim.effective_attack(e))], ["Armadura", "%d / %d" % [hud.sim.effective_armor(e), hud.sim.effective_armor(e, true)]], ["Alcance", "%.1f" % (e.def.get("alcance", 0) / 1000.0)], ["Velocidad", "%.2f" % spd]]
 			var sx := x
 			for s in stats:
-				draw_string(Hud.font, Vector2(sx, 92), s[0], HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(12), Palette.UI_DIM)
-				draw_string(Hud.font_b, Vector2(sx, 112), s[1], HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(17), Palette.UI_TEXT)
+				draw_string(Hud.font, Vector2(sx, 92 + dy), s[0], HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(12), Palette.UI_DIM)
+				draw_string(Hud.font_b, Vector2(sx, 112 + dy), s[1], HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(17), Palette.UI_TEXT)
 				sx += 92
 			var fn_names := {"civil": "Civil", "choque": "Choque", "distancia": "Distancia", "linea": "Línea", "explorador": "Exploración", "asedio": "Asedio"}
 			var fn_label: String = fn_names.get(e.fn, "")
 			var lvl := hud.sim.line_level(e.owner, e.def)
 			if lvl > 0:
 				fn_label += " · " + Controller.LEVEL_NAMES[lvl].capitalize()
-			draw_string(Hud.font_b, Vector2(0, 36), fn_label, HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, Hud.ts(14), Palette.UI_ACCENT)
+			draw_string(Hud.font_b, Vector2(0, 28), fn_label, HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, Hud.ts(14), Palette.UI_ACCENT)
 			var status := _status(e)
-			draw_string(Hud.font, Vector2(x, 146), status, HORIZONTAL_ALIGNMENT_LEFT, size.x - x - 16, Hud.ts(14), Palette.UI_TEXT)
+			draw_string(Hud.font, Vector2(x, 146 + dy), status, HORIZONTAL_ALIGNMENT_LEFT, size.x - x - 16, Hud.ts(14), Palette.UI_TEXT)
 			if e.carry > 0:
-				Glyphs.draw(self, e.carry_res, Rect2(size.x - 70, 128, 22, 22), Palette.RES[e.carry_res])
-				draw_string(Hud.font_b, Vector2(size.x - 44, 146), str(e.carry), HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(15), Palette.UI_TEXT)
+				Glyphs.draw(self, e.carry_res, Rect2(size.x - 70, 128 + dy, 22, 22), Palette.RES[e.carry_res])
+				draw_string(Hud.font_b, Vector2(size.x - 44, 146 + dy), str(e.carry), HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(15), Palette.UI_TEXT)
 			return
 		# Edificio.
 		if not e.built:
 			var k := float(e.progress) / float(maxi(1, e.build_time))
-			draw_string(Hud.font, Vector2(x, 92), "En construcción · %d%%" % int(k * 100), HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(15), Palette.UI_TEXT)
-			_bar(Rect2(x, 104, size.x - x - 20, 8), k, Palette.UI_ACCENT)
+			draw_string(Hud.font, Vector2(x, 92 + dy), "En construcción · %d%%" % int(k * 100), HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(15), Palette.UI_TEXT)
+			_bar(Rect2(x, 104 + dy, size.x - x - 20, 8), k, Palette.UI_ACCENT)
 			# --- obra --- (proceso/24, 4k) cuánto falta con los constructores de ahora y, en un
 			# hito, el aura que va a tener: lo que pidió el veterano en la tercera ronda.
 			if e.owner == hud.local or e.def.get("hito", false):
-				draw_string(Hud.font_b, Vector2(x, 132), Hud.obra_restante(sim, e), HORIZONTAL_ALIGNMENT_LEFT, size.x - x - 16, Hud.ts(14), Palette.UI_ACCENT)
+				draw_string(Hud.font_b, Vector2(x, 132 + dy), Hud.obra_restante(sim, e), HORIZONTAL_ALIGNMENT_LEFT, size.x - x - 16, Hud.ts(14), Palette.UI_ACCENT)
 			var aura_t := Hud.Colocacion.aura_texto(Hud.Colocacion.aura_def(sim, e.def))
 			if aura_t != "":
-				draw_string(Hud.font, Vector2(x, 152), "Al terminar, aura: " + aura_t, HORIZONTAL_ALIGNMENT_LEFT, size.x - x - 16, Hud.ts(13), Palette.UI_GOOD)
+				draw_string(Hud.font, Vector2(x, 152 + dy), "Al terminar, aura: " + aura_t, HORIZONTAL_ALIGNMENT_LEFT, size.x - x - 16, Hud.ts(13), Palette.UI_GOOD)
 			# --- fin obra ---
 			return
 		if e.def.has("pob"):
-			draw_string(Hud.font, Vector2(0, 36), "+%d población" % e.def["pob"], HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, Hud.ts(13), Palette.UI_DIM)
+			draw_string(Hud.font, Vector2(0, 28), "+%d población" % e.def["pob"], HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, Hud.ts(13), Palette.UI_DIM)
 		var cap := sim.garrison_cap(e)
 		if cap > 0:
 			var shots: int = sim.volley_shots(e) # --- paso 4 --- aspilleras
-			draw_string(Hud.font_b, Vector2(0, 58), "Guarnición %d/%d · %d flechas" % [e.garrison.size(), cap, shots], HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, Hud.ts(13), Palette.UI_ACCENT if not e.garrison.is_empty() else Palette.UI_DIM)
+			draw_string(Hud.font_b, Vector2(0, 45), "Guarnición %d/%d · %d flechas" % [e.garrison.size(), cap, shots], HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, Hud.ts(13), Palette.UI_ACCENT if not e.garrison.is_empty() else Palette.UI_DIM)
 		# --- veterano ronda 4 --- el círculo que se dibuja al elegir un centro o una torre
 		# (mundo_capa._draw_ranges) es el alcance de sus flechas: que el panel lo diga.
 		if e.def.has("ataque"):
 			var alc := (float(e.def.get("alcance", 0)) + float(sim.mod(e.owner, "b_alcance"))) / 1000.0
-			draw_string(Hud.font, Vector2(0, 82), "Círculo en el mapa:", HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, Hud.ts(12), Palette.UI_DIM)
-			draw_string(Hud.font_b, Vector2(0, 98), "alcance de las flechas", HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, Hud.ts(12), Palette.UI_TEXT)
+			# --- interfaz como AoE4 --- con texto grande, la columna se achica para no pisar la cola
+			var aw := size.x - 16.0 - (x + 5 * 58.0)
+			var l1 := "Círculo en el mapa:"
+			var l2 := "alcance de las flechas"
+			draw_string(Hud.font, Vector2(0, 82 + dy), l1, HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, EstadoCasilla._fit(Hud.font, l1, Hud.ts(12), aw), Palette.UI_DIM)
+			draw_string(Hud.font_b, Vector2(0, 98 + dy), l2, HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, EstadoCasilla._fit(Hud.font_b, l2, Hud.ts(12), aw), Palette.UI_TEXT)
 			var alc_t := str(int(alc)) if is_equal_approx(alc, roundf(alc)) else String.num(alc, 1).replace(".", ",")
-			draw_string(Hud.font, Vector2(0, 114), "%s casillas desde el borde" % alc_t, HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, Hud.ts(12), Palette.UI_DIM)
+			var l3 := "%s casillas desde el borde" % alc_t
+			draw_string(Hud.font, Vector2(0, 114 + dy), l3, HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, EstadoCasilla._fit(Hud.font, l3, Hud.ts(12), aw), Palette.UI_DIM)
 		# --- fin veterano ronda 4 ---
 		if e.def.get("fuente", "") != "":
 			var f: SimEntity = sim.by_id.get(e.farmer)
-			draw_string(Hud.font, Vector2(x, 96), "Trabajada por un aldeano" if f != null and f.alive and f.target == e.id else "Sin aldeano asignado", HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(15), Palette.UI_TEXT)
+			draw_string(Hud.font, Vector2(x, 96 + dy), "Trabajada por un aldeano" if f != null and f.alive and f.target == e.id else "Sin aldeano asignado", HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(15), Palette.UI_TEXT)
 		var dd := sim.dp(e.owner)
 		# Renglones de ayuda bajo la cola, apilados para que no se pisen (P8, capital de Palmares).
 		var hints: Array = [] # [texto, fuente, tamaño, color]
@@ -1673,11 +1764,13 @@ class SelectionPanel:
 			# --- frente 1 --- la cola llega a 10: se ven 5 casillas y la quinta dice «+n»
 			var vis := mini(int(sim.data.reglas["cola_max"]), 5)
 			for i in vis:
-				var r := Rect2(qx, 78, 52, 52)
-				var sb := StyleBoxFlat.new()
-				sb.set_corner_radius_all(6)
-				sb.bg_color = Color(1, 1, 1, 0.08 if i < e.queue.size() else 0.03)
-				draw_style_box(sb, r)
+				var r := Rect2(qx, 78 + dy, 52, 52)
+				# --- interfaz como AoE4 --- (proceso/67) vacías hundidas; ocupadas con borde, y la
+				# que se hace ahora con el borde dorado y el tiempo que le falta
+				if i < e.queue.size():
+					Hud.MARCO.pastilla(self, r, Palette.UI_ACCENT if i == 0 else Palette.UI_TEXT, true)
+				else:
+					Hud.MARCO.casilla_vacia(self, r)
 				var resto := e.queue.size() - (vis - 1)
 				if i == vis - 1 and resto > 1:
 					# Las que no entran: «+n»; el clic saca la última.
@@ -1689,8 +1782,16 @@ class SelectionPanel:
 					hud.ficha.zone(self, r, {"type": e.queue[i].trim_prefix("@"), "owner": e.owner}) # --- ficha ---
 					Glyphs.draw(self, hud.queue_icon(e.queue[i]), r.grow(-9), Palette.UI_ACCENT if e.queue[i].begins_with("@") else Palette.UI_TEXT)
 					if i == 0:
-						var k := float(e.queue_progress) / float(sim.dp(e.owner).queue_time(e.queue[0]))
-						_bar(Rect2(r.position.x + 3, r.end.y - 6, r.size.x - 6, 3), k, Palette.UI_ACCENT)
+						var qt := float(sim.dp(e.owner).queue_time(e.queue[0]))
+						var k := float(e.queue_progress) / qt
+						_bar(Rect2(r.position.x + 3, r.end.y - 6, r.size.x - 6, 4), k, Palette.UI_ACCENT)
+						# --- interfaz como AoE4 --- segundos que faltan, arriba a la derecha
+						var falta := ceili((qt - float(e.queue_progress)) * float(sim.tick_ms) / 1000.0)
+						if falta > 0:
+							var ft := "%d s" % falta
+							var fw := Hud.font_b.get_string_size(ft, HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(11)).x + 6
+							draw_rect(Rect2(r.end.x - fw - 1, r.position.y + 1, fw, 15), Color(0, 0, 0, 0.6))
+							draw_string(Hud.font_b, Vector2(r.end.x - fw - 1, r.position.y + 13), ft, HORIZONTAL_ALIGNMENT_CENTER, fw, Hud.ts(11), Palette.UI_TEXT)
 					var idx: int = i
 					var bid := e.id
 					_hits.append([r, func() -> void: sim.push_command({"t": "cancel", "player": hud.local, "building": bid, "index": idx})])
@@ -1702,11 +1803,11 @@ class SelectionPanel:
 				var frena := {"pob": " · frenada: población llena", "recursos": " · frenada: no alcanza (sin tocar lo apartado)", "tope": " · llegó al tope"}.get(why, "") as String
 				var civil := str(ud.get("funcion", "")) == "civil"
 				var txt := "Repite: %s%s%s" % [str(ud.get("nombre", e.repeat)), " · hasta %d aldeanos" % sim.villager_cap(e.owner) if civil else "", frena]
-				Hud.draw_bucle(self, Vector2(x + 6, 142), 5.5, Palette.UI_ACCENT)
+				Hud.draw_bucle(self, Vector2(x + 6, 142 + dy), 5.5, Palette.UI_ACCENT)
 				hints.insert(0, ["     " + txt, Hud.font, 13, Palette.UI_ACCENT if why == "" else Palette.UI_DIM])
 				if civil:
 					for j in 2:
-						var br := Rect2(size.x - 70 + j * 28, 133, 24, 20)
+						var br := Rect2(size.x - 70 + j * 28, 133 + dy, 24, 20)
 						var bsb := StyleBoxFlat.new()
 						bsb.set_corner_radius_all(4)
 						bsb.bg_color = Color(1, 1, 1, 0.08)
@@ -1720,7 +1821,7 @@ class SelectionPanel:
 				hints.append(["Población llena: construí casas", Hud.font_b, 14, Palette.UI_BAD])
 			elif e.queue.is_empty() and e.repeat == "":
 				hints.append(["Clic derecho en el mapa: punto de reunión", Hud.font, 13, Palette.UI_DIM])
-		var hy := 148.0 if hints.size() < 2 else 146.0
+		var hy := (148.0 if hints.size() < 2 else 146.0) + dy
 		for h in hints:
 			draw_string(h[1], Vector2(x, hy), h[0], HORIZONTAL_ALIGNMENT_LEFT, size.x - x - 16, Hud.ts(h[2]), h[3])
 			hy += 16.0
@@ -1781,8 +1882,21 @@ class SelectionPanel:
 		# Pocas: retratos más grandes (dos filas de 64 en vez de tres de 44).
 		var lado := MULTI_LADO if sel.size() > 16 else 56.0
 		var paso := MULTI_PASO if sel.size() > 16 else 61.0
+		# --- interfaz como AoE4 --- (proceso/67) cabecera: qué hay elegido y cuántas
+		var e0: SimEntity = sel[0]
+		_cabecera(e0.owner)
+		var titulo := "%d tipos" % order.size()
+		if order.size() == 1:
+			titulo = Textos.nombre_de(hud.sim, e0.owner, e0.def, e0.type)
+			var comun := Grilla.comun(hud.sim.data, hud.sim.dp(e0.owner), e0.type) if e0.owner >= 0 else ""
+			if comun != "":
+				titulo = "%s · %s" % [comun, titulo]
+		draw_string(Hud.font_b, Vector2(14, 30), titulo, HORIZONTAL_ALIGNMENT_LEFT, size.x - 180, EstadoCasilla._fit(Hud.font_b, titulo, Hud.ts(20), size.x - 180), Palette.UI_TEXT)
+		var cuantas := "%d elegidas" % sel.size()
+		draw_string(Hud.font_b, Vector2(0, 30), cuantas, HORIZONTAL_ALIGNMENT_RIGHT, size.x - 16, Hud.ts(18), Palette.UI_TEXT)
+		var y0 := Hud.MARCO.num("multi_y", 58, "seleccion")
 		var x := 14.0
-		var y := 12.0
+		var y := y0
 		if por_unidad:
 			for type in order:
 				for e: SimEntity in groups[type]:
@@ -1842,12 +1956,11 @@ class SelectionPanel:
 		# Resumen a la derecha: cuántas y qué hacen los modificadores.
 		var rx := 14.0 + MULTI_COLS * MULTI_PASO + 4.0
 		var rw := size.x - rx - 12.0
-		draw_string(Hud.font_b, Vector2(rx, 40), str(sel.size()), HORIZONTAL_ALIGNMENT_RIGHT, rw, Hud.ts(24), Palette.UI_TEXT)
-		draw_string(Hud.font, Vector2(rx, 58), "elegidas", HORIZONTAL_ALIGNMENT_RIGHT, rw, Hud.ts(13), Palette.UI_DIM)
-		draw_string(Hud.font, Vector2(rx, 104), "Mayús+clic", HORIZONTAL_ALIGNMENT_RIGHT, rw, Hud.ts(11), Palette.UI_DIM)
-		draw_string(Hud.font, Vector2(rx, 118), "saca", HORIZONTAL_ALIGNMENT_RIGHT, rw, Hud.ts(11), Palette.UI_DIM)
-		draw_string(Hud.font, Vector2(rx, 138), "Ctrl+clic", HORIZONTAL_ALIGNMENT_RIGHT, rw, Hud.ts(11), Palette.UI_DIM)
-		draw_string(Hud.font, Vector2(rx, 152), "ese tipo", HORIZONTAL_ALIGNMENT_RIGHT, rw, Hud.ts(11), Palette.UI_DIM)
+		var ry := y0 - 12.0 # --- interfaz como AoE4 --- la cantidad pasó a la cabecera
+		draw_string(Hud.font, Vector2(rx, 104 + ry), "Mayús+clic", HORIZONTAL_ALIGNMENT_RIGHT, rw, Hud.ts(11), Palette.UI_DIM)
+		draw_string(Hud.font, Vector2(rx, 118 + ry), "saca", HORIZONTAL_ALIGNMENT_RIGHT, rw, Hud.ts(11), Palette.UI_DIM)
+		draw_string(Hud.font, Vector2(rx, 138 + ry), "Ctrl+clic", HORIZONTAL_ALIGNMENT_RIGHT, rw, Hud.ts(11), Palette.UI_DIM)
+		draw_string(Hud.font, Vector2(rx, 152 + ry), "ese tipo", HORIZONTAL_ALIGNMENT_RIGHT, rw, Hud.ts(11), Palette.UI_DIM)
 		# --- casillas --- (jugador nuevo, ronda 4: con aldeanos elegidos el panel no decía qué
 		# hacer, como sí dice el centro «punto de reunión»). Abajo, si los retratos dejan lugar.
 		var fondo := y + (lado + 12.0 if por_unidad else 80.0)
