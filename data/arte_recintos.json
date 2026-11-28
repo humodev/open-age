@@ -1,0 +1,313 @@
+{
+ "_doc": "Recintos compuestos por partes (proceso/65-recintos-locales, src/game/recintos.gd). Se activan con un renglón de data/civs/<pueblo>.json → estilo.modelos: \"<tipo>\": \"recinto/<clave>\". Medidas en fracción del cuerpo del edificio (el lado menor de la huella menos el margen; 3,4 casillas en una de 4×4) salvo las que dicen _cm (altos y gruesos, en centésimas de casilla; un aldeano mide 62). Puerta en +z (el frente). materiales: cómo se arma cada muro (tipo muro|empalizada|palos; aparejo piedras|hiladas|liso; almena hoja|techo; friso: faja fija, no del equipo). anillos: forma rect|elipse|poligono|irregular|D|zigzag, escala, ancho, fondo, x, z, y_cm, alto_cm, grueso_cm, terraza (relleno arriba), faja (color del equipo en el muro), banderas (paños del equipo en la puerta), sin_puerta, puerta {ancho, x}, torres {n, desde_deg, radio_cm, mas_alto_cm, redonda, remate cupula|paja|hoja}. monte: cerro {radio, cima, alto_cm}. suelos: tipo patio|pisado con la forma de un anillo. piezas: GLB del pipeline local {modelo, x, z, lado, giro (grados o \"centro\"), y_cm, alto, escala [x,y,z], equipo (false: sin color; \"#rrggbb\": un color fijo para sus telas)}. utileria: {tipo, en: [[x, z, giro?]], escala, y_cm, equipo}. Lo sagrado no lleva color del equipo.",
+ "materiales": {
+  "pirca": {"tipo": "muro", "aparejo": "piedras", "color": "#8f8574", "alto_cm": 90, "grueso_cm": 24, "talud": 0.25, "filas": 4, "trapecio": true},
+  "pirca_terraza": {"tipo": "muro", "aparejo": "piedras", "color": "#8a806d", "alto_cm": 60, "grueso_cm": 26, "talud": 0.2, "filas": 3},
+  "piedra_fina": {"tipo": "muro", "aparejo": "hiladas", "color": "#b3a892", "junta": "#8b8270", "alto_cm": 115, "grueso_cm": 24, "talud": 0.15, "filas": 6, "trapecio": true},
+  "piedra_fina_oro": {"tipo": "muro", "aparejo": "hiladas", "color": "#b8ad97", "junta": "#8f8674", "alto_cm": 120, "grueso_cm": 26, "talud": 0.15, "filas": 6, "trapecio": true, "friso": "#d6a62e", "friso_pct": 78},
+  "pirca_parda": {"tipo": "muro", "aparejo": "piedras", "color": "#86705a", "alto_cm": 120, "grueso_cm": 28, "talud": 0.2, "filas": 5},
+  "pirca_parda_baja": {"tipo": "muro", "aparejo": "piedras", "color": "#8a7660", "alto_cm": 70, "grueso_cm": 22, "talud": 0.2, "filas": 3},
+  "ladrillo_encalado": {"tipo": "muro", "aparejo": "liso", "color": "#e6dfd0", "color_remate": "#cfc6b4", "alto_cm": 135, "grueso_cm": 28, "talud": 0.08, "almena": "hoja", "puerta_mas_cm": 35},
+  "empalizada": {"tipo": "empalizada", "color": "#7a5c40", "alto_cm": 115},
+  "empalizada_foso": {"tipo": "empalizada", "color": "#76583c", "alto_cm": 115, "foso": true, "estrepes": true, "color_foso": "#4a3a2a"},
+  "tacuara": {"tipo": "empalizada", "color": "#9a8a56", "alto_cm": 105, "foso": true, "color_foso": "#4a3a2a"},
+  "palos": {"tipo": "palos", "color": "#8a7050", "alto_cm": 38}
+ },
+ "recintos": {
+  "tawantinsuyu_qorikancha": {
+   "nota": "Templo del Sol: muro curvo de piedra fina con la faja de oro, recintos de culto alrededor de un patio enlosado con su pila. Sagrado: sin color del equipo (solo el estandarte del juego).",
+   "suelos": [
+    {"tipo": "pisado", "forma": "rect", "ancho": 1.12, "fondo": 1.12, "esquina": 0.1, "color": "#9a8a66", "borde": 0.06},
+    {"tipo": "patio", "forma": "D", "ancho": 1.0, "fondo": 1.0, "color": "#b9ae98"}
+   ],
+   "anillos": [
+    {"forma": "D", "ancho": 1.06, "fondo": 1.06, "curva": 0.5, "material": "piedra_fina_oro", "puerta": {"ancho": 0.13}}
+   ],
+   "piezas": [
+    {"modelo": "local/tawantinsuyu_casa", "x": -0.29, "z": 0.08, "lado": 0.34, "giro": 90, "equipo": "#c8a24a"},
+    {"modelo": "local/tawantinsuyu_casa", "x": 0.29, "z": 0.08, "lado": 0.34, "giro": -90, "equipo": "#c8a24a"},
+    {"modelo": "local/tawantinsuyu_kallanka", "x": 0.0, "z": -0.27, "lado": 0.56, "giro": 0, "alto": 1.15, "equipo": "#c8a24a"}
+   ],
+   "utileria": [
+    {"tipo": "fuente", "en": [[0.0, 0.14]], "escala": 1.1},
+    {"tipo": "vasijas", "en": [[-0.14, -0.06], [0.16, -0.06]], "escala": 1.0}
+   ]
+  },
+  "tawantinsuyu_pukara_mayor": {
+   "nota": "Pukara de frontera: tres anillos de pirca en terrazas sobre el cerro, casas y depósitos en las terrazas.",
+   "suelos": [
+    {"tipo": "pisado", "forma": "elipse", "ancho": 1.12, "color": "#8c7c5c", "borde": 0.06}
+   ],
+   "anillos": [
+    {"forma": "elipse", "ancho": 1.08, "material": "pirca", "alto_cm": 70, "terraza": true, "color_terraza": "#8d8a5c", "faja": true, "banderas": true, "puerta": {"ancho": 0.12}},
+    {"forma": "elipse", "ancho": 0.74, "material": "pirca", "alto_cm": 65, "y_cm": 70, "terraza": true, "color_terraza": "#949063", "puerta": {"ancho": 0.1}},
+    {"forma": "elipse", "ancho": 0.44, "material": "pirca", "alto_cm": 55, "y_cm": 135, "terraza": true, "color_terraza": "#9a9568", "sin_puerta": true}
+   ],
+   "piezas": [
+    {"modelo": "local/tawantinsuyu_casa", "x": 0.0, "z": -0.02, "lado": 0.24, "y_cm": 190, "giro": 0},
+    {"modelo": "local/tawantinsuyu_casa", "x": -0.27, "z": -0.06, "lado": 0.15, "y_cm": 135, "giro": 90},
+    {"modelo": "local/tawantinsuyu_casa", "x": 0.27, "z": -0.06, "lado": 0.15, "y_cm": 135, "giro": -90},
+    {"modelo": "local/tawantinsuyu_qollqa", "x": -0.26, "z": -0.34, "lado": 0.15, "y_cm": 70, "giro": 40},
+    {"modelo": "local/tawantinsuyu_qollqa", "x": 0.26, "z": -0.34, "lado": 0.15, "y_cm": 70, "giro": -40}
+   ],
+   "utileria": [
+    {"tipo": "estandarte", "en": [[0.12, 0.08]], "y_cm": 190, "escala": 0.9},
+    {"tipo": "piedras", "en": [[-0.42, 0.12], [0.43, 0.1]], "y_cm": 70, "escala": 0.9}
+   ]
+  },
+  "tawantinsuyu_aqllawasi": {
+   "nota": "Casa de las escogidas: kancha rectangular de piedra fina con salas alrededor del patio; telares y vasijas.",
+   "suelos": [
+    {"tipo": "pisado", "forma": "rect", "ancho": 1.14, "fondo": 1.14, "esquina": 0.1, "color": "#9a8a66", "borde": 0.06},
+    {"tipo": "patio", "forma": "rect", "ancho": 1.02, "fondo": 1.02, "color": "#a8976f"}
+   ],
+   "anillos": [
+    {"forma": "rect", "ancho": 1.08, "fondo": 1.08, "material": "piedra_fina", "faja": true, "faja_pct": 80, "banderas": true, "puerta": {"ancho": 0.12}}
+   ],
+   "piezas": [
+    {"modelo": "local/tawantinsuyu_kallanka", "x": 0.0, "z": -0.31, "lado": 0.7, "giro": 0},
+    {"modelo": "local/tawantinsuyu_taller_tejido", "x": -0.3, "z": 0.1, "lado": 0.3, "giro": 90},
+    {"modelo": "local/tawantinsuyu_casa", "x": 0.3, "z": 0.1, "lado": 0.3, "giro": -90}
+   ],
+   "utileria": [
+    {"tipo": "telar", "en": [[-0.08, 0.02, 10], [0.08, 0.06, -15]], "escala": 1.1, "color_tela": "#a86a3a"},
+    {"tipo": "telar", "en": [[0.0, 0.2, 0]], "escala": 1.1, "color_tela": "#4f6a8a"},
+    {"tipo": "vasijas", "en": [[-0.12, -0.14], [0.14, -0.14]]}
+   ]
+  },
+  "tawantinsuyu_vilcabamba": {
+   "nota": "Espíritu Pampa: conjunto de casas de pirca con paja dentro de un muro irregular, en la selva; depósitos y fogones.",
+   "suelos": [
+    {"tipo": "pisado", "forma": "irregular", "ancho": 1.12, "radios": [1, 0.92, 0.98, 0.88, 1, 0.94, 0.9, 0.96], "color": "#857a58", "borde": 0.06},
+    {"tipo": "patio", "forma": "irregular", "ancho": 1.0, "radios": [1, 0.92, 0.98, 0.88, 1, 0.94, 0.9, 0.96], "color": "#998a66"}
+   ],
+   "anillos": [
+    {"forma": "irregular", "ancho": 1.08, "radios": [1, 0.92, 0.98, 0.88, 1, 0.94, 0.9, 0.96], "material": "pirca", "alto_cm": 80, "faja": true, "banderas": true, "puerta": {"ancho": 0.12}}
+   ],
+   "piezas": [
+    {"modelo": "local/tawantinsuyu_casa", "x": -0.26, "z": -0.22, "lado": 0.26, "giro": 30},
+    {"modelo": "local/tawantinsuyu_casa", "x": 0.06, "z": -0.32, "lado": 0.26, "giro": 0},
+    {"modelo": "local/tawantinsuyu_casa", "x": 0.3, "z": -0.08, "lado": 0.24, "giro": -80},
+    {"modelo": "local/tawantinsuyu_taller_tejido", "x": -0.31, "z": 0.12, "lado": 0.24, "giro": 100},
+    {"modelo": "local/tawantinsuyu_qollqa", "x": 0.24, "z": 0.22, "lado": 0.18, "giro": -140}
+   ],
+   "utileria": [
+    {"tipo": "fogon", "en": [[0.0, 0.02], [-0.06, 0.22]]},
+    {"tipo": "vasijas", "en": [[0.1, 0.1]]},
+    {"tipo": "canelo", "en": [[-0.46, 0.34], [0.44, -0.4], [0.5, 0.3], [-0.5, -0.36]], "escala": 1.3}
+   ]
+  },
+  "tawantinsuyu_kallanka_real": {
+   "nota": "Kallanka real: un galpón muy largo de pirca y paja que da a una plaza con su ushnu, cerrada por una pirca baja.",
+   "suelos": [
+    {"tipo": "pisado", "forma": "rect", "ancho": 1.12, "fondo": 1.12, "esquina": 0.1, "color": "#8f8060", "borde": 0.06},
+    {"tipo": "patio", "forma": "rect", "ancho": 1.02, "fondo": 0.6, "z": 0.2, "color": "#a39268"}
+   ],
+   "anillos": [
+    {"forma": "rect", "ancho": 1.08, "fondo": 1.08, "material": "pirca", "alto_cm": 55, "faja": true, "faja_pct": 75, "banderas": true, "puerta": {"ancho": 0.22}}
+   ],
+   "piezas": [
+    {"modelo": "local/tawantinsuyu_kallanka", "x": 0.0, "z": -0.26, "lado": 0.98, "giro": 0, "escala": [1.0, 1.15, 1.15]}
+   ],
+   "utileria": [
+    {"tipo": "platea", "en": [[0.0, 0.22]], "escala": 1.0},
+    {"tipo": "lanza", "en": [[-0.36, 0.1], [-0.36, 0.24], [0.36, 0.1], [0.36, 0.24]], "escala": 1.0},
+    {"tipo": "estandarte", "en": [[0.0, 0.22]], "y_cm": 24}
+   ]
+  },
+  "tawantinsuyu_fortaleza": {
+   "nota": "Hatun pukara: muros en dientes como Saqsaywaman, una terraza adentro con la atalaya, casas y depósitos.",
+   "suelos": [
+    {"tipo": "pisado", "forma": "rect", "ancho": 1.14, "fondo": 1.14, "esquina": 0.1, "color": "#8c7c5c", "borde": 0.06},
+    {"tipo": "patio", "forma": "rect", "ancho": 1.0, "fondo": 0.86, "color": "#9a8a66"}
+   ],
+   "anillos": [
+    {"forma": "zigzag", "ancho": 1.04, "fondo": 0.88, "dientes": 5, "profundo": 0.07, "material": "pirca", "alto_cm": 115, "grueso_cm": 30, "faja": true, "banderas": true, "puerta": {"ancho": 0.12}},
+    {"forma": "rect", "ancho": 0.7, "fondo": 0.34, "z": -0.2, "material": "pirca_terraza", "alto_cm": 60, "terraza": true, "color_terraza": "#958f62", "sin_puerta": true}
+   ],
+   "piezas": [
+    {"modelo": "local/tawantinsuyu_torre", "x": 0.0, "z": -0.2, "lado": 0.26, "y_cm": 60, "giro": 0},
+    {"modelo": "local/tawantinsuyu_casa", "x": -0.25, "z": -0.2, "lado": 0.18, "y_cm": 60, "giro": 0},
+    {"modelo": "local/tawantinsuyu_qollqa", "x": 0.25, "z": -0.2, "lado": 0.18, "y_cm": 60, "giro": 0},
+    {"modelo": "local/tawantinsuyu_casa", "x": -0.32, "z": 0.18, "lado": 0.2, "giro": 90}
+   ],
+   "utileria": [
+    {"tipo": "piedras", "en": [[0.26, 0.16], [0.14, 0.24]]},
+    {"tipo": "lanza", "en": [[0.3, 0.06], [0.34, 0.1]]}
+   ]
+  },
+  "tawantinsuyu_mercado": {
+   "nota": "Plaza de intercambio (qhatu): suelo apisonado con puestos de paja, telas y vasijas, llamas de carga y un depósito al fondo. Sin muro.",
+   "suelos": [
+    {"tipo": "pisado", "forma": "rect", "ancho": 1.1, "fondo": 1.1, "esquina": 0.15, "color": "#9a8a62", "borde": 0.08},
+    {"tipo": "patio", "forma": "rect", "ancho": 0.6, "fondo": 0.5, "z": 0.08, "esquina": 0.05, "color": "#aa9a76"}
+   ],
+   "anillos": [
+    {"forma": "rect", "ancho": 0.5, "fondo": 0.28, "x": 0.22, "z": -0.33, "material": "pirca", "alto_cm": 45, "faja": true, "faja_pct": 60, "puerta": {"ancho": 0.1, "x": 0.22}}
+   ],
+   "piezas": [
+    {"modelo": "local/tawantinsuyu_qollqa", "x": -0.27, "z": -0.32, "lado": 0.34, "giro": 0},
+    {"modelo": "local/tawantinsuyu_qollqa", "x": 0.22, "z": -0.33, "lado": 0.22, "giro": 0}
+   ],
+   "utileria": [
+    {"tipo": "puesto", "en": [[-0.3, 0.04, 90], [-0.3, 0.3, 90], [0.3, 0.04, -90], [0.3, 0.3, -90], [0.0, -0.12, 0]], "escala": 1.25, "equipo": true, "color_techo": "#b0904e", "bienes": ["#d2b04a", "#7c4a32", "#b8c070", "#a8563a"]},
+    {"tipo": "vasijas", "en": [[-0.1, 0.16], [0.1, 0.34]]},
+    {"tipo": "fardos", "en": [[0.12, 0.08, 20]]},
+    {"tipo": "llama", "en": [[-0.1, 0.38, 30], [-0.02, 0.44, 10], [0.46, -0.08, 180]], "escala": 1.0}
+   ]
+  },
+  "mapuches_parlamento": {
+   "nota": "Parlamento (koyagtun): un campo abierto con bancos de troncos alrededor del canelo, rukas al fondo y lanzas con banderolas; cerco bajo de palos.",
+   "suelos": [
+    {"tipo": "pisado", "forma": "elipse", "ancho": 1.1, "fondo": 1.04, "color": "#7f7650", "borde": 0.07, "alfa": 0.75},
+    {"tipo": "patio", "forma": "elipse", "ancho": 0.54, "fondo": 0.46, "z": 0.12, "color": "#8c8256"}
+   ],
+   "anillos": [
+    {"forma": "elipse", "ancho": 1.06, "fondo": 1.0, "material": "palos", "puerta": {"ancho": 0.2}}
+   ],
+   "piezas": [
+    {"modelo": "local/mapuches_casa", "x": -0.32, "z": -0.24, "lado": 0.3, "giro": "centro"},
+    {"modelo": "local/mapuches_casa", "x": 0.0, "z": -0.36, "lado": 0.32, "giro": "centro"},
+    {"modelo": "local/mapuches_casa", "x": 0.32, "z": -0.24, "lado": 0.3, "giro": "centro"}
+   ],
+   "utileria": [
+    {"tipo": "canelo", "en": [[0.0, 0.1]], "escala": 1.2},
+    {"tipo": "rewe", "en": [[0.06, 0.04]], "escala": 0.9},
+    {"tipo": "tronco", "en": [[-0.22, 0.1, 80], [0.22, 0.1, -80], [-0.12, 0.3, 30], [0.12, 0.3, -30], [0.0, -0.08, 0]], "escala": 1.1},
+    {"tipo": "lanza", "en": [[-0.42, 0.04], [-0.38, 0.22], [0.42, 0.04], [0.38, 0.22]], "escala": 1.05},
+    {"tipo": "fogon", "en": [[-0.12, -0.12], [0.14, -0.12]]}
+   ]
+  },
+  "mapuches_maravilla": {
+   "nota": "El gran koyagtun: el campo grande de parlamento con seis rukas en ronda, bancos de troncos, el rewe y el canelo al centro y lanzas con banderolas de cada lof.",
+   "suelos": [
+    {"tipo": "pisado", "forma": "elipse", "ancho": 1.1, "color": "#7f7650", "borde": 0.06, "alfa": 0.75},
+    {"tipo": "patio", "forma": "elipse", "ancho": 0.56, "color": "#8c8256"}
+   ],
+   "anillos": [
+    {"forma": "elipse", "ancho": 1.06, "material": "palos", "puerta": {"ancho": 0.14}}
+   ],
+   "piezas": [
+    {"modelo": "local/mapuches_casa", "x": -0.36, "z": -0.18, "lado": 0.2, "giro": "centro"},
+    {"modelo": "local/mapuches_casa", "x": -0.16, "z": -0.38, "lado": 0.2, "giro": "centro"},
+    {"modelo": "local/mapuches_casa", "x": 0.16, "z": -0.38, "lado": 0.2, "giro": "centro"},
+    {"modelo": "local/mapuches_casa", "x": 0.36, "z": -0.18, "lado": 0.2, "giro": "centro"},
+    {"modelo": "local/mapuches_casa", "x": -0.38, "z": 0.16, "lado": 0.18, "giro": "centro"},
+    {"modelo": "local/mapuches_casa", "x": 0.38, "z": 0.16, "lado": 0.18, "giro": "centro"}
+   ],
+   "utileria": [
+    {"tipo": "canelo", "en": [[0.0, 0.0]], "escala": 1.6},
+    {"tipo": "rewe", "en": [[0.06, -0.06]], "escala": 1.3},
+    {"tipo": "tronco", "en": [[-0.2, 0.0, 90], [0.2, 0.0, -90], [-0.14, 0.17, 45], [0.14, 0.17, -45], [-0.14, -0.17, 135], [0.14, -0.17, -135]], "escala": 1.4},
+    {"tipo": "lanza", "en": [[-0.26, 0.3], [-0.12, 0.38], [0.12, 0.38], [0.26, 0.3], [-0.46, 0.0], [0.46, 0.0]], "escala": 1.2},
+    {"tipo": "fogon", "en": [[-0.26, -0.28], [0.26, -0.28]]}
+   ]
+  },
+  "guaranies_fortaleza": {
+   "nota": "Trinchera de tacuara: doble empalizada con foso y estrepes alrededor de un patio con dos óga y la casa de guerra.",
+   "suelos": [
+    {"tipo": "pisado", "forma": "rect", "ancho": 1.14, "fondo": 1.14, "esquina": 0.12, "color": "#8a6448", "borde": 0.06},
+    {"tipo": "patio", "forma": "rect", "ancho": 0.86, "fondo": 0.86, "color": "#946a4c"}
+   ],
+   "anillos": [
+    {"forma": "rect", "ancho": 1.06, "fondo": 1.06, "esquina": 0.08, "material": "empalizada_foso", "faja": true, "faja_pct": 55, "banderas": true, "puerta": {"ancho": 0.13}, "torres": {"n": 2, "desde_deg": 150, "radio_cm": 22, "mas_alto_cm": 70, "color_techo": "#9a7c4a"}},
+    {"forma": "rect", "ancho": 0.9, "fondo": 0.9, "esquina": 0.06, "material": "tacuara", "alto_cm": 90, "puerta": {"ancho": 0.13}}
+   ],
+   "piezas": [
+    {"modelo": "local/guaranies_cuartel", "x": 0.0, "z": -0.22, "lado": 0.48, "giro": 0},
+    {"modelo": "local/guaranies_casa", "x": -0.24, "z": 0.14, "lado": 0.24, "giro": 90},
+    {"modelo": "local/guaranies_casa", "x": 0.24, "z": 0.14, "lado": 0.24, "giro": -90}
+   ],
+   "utileria": [
+    {"tipo": "fogon", "en": [[0.0, 0.1]]},
+    {"tipo": "pila_lena", "en": [[0.06, 0.26, 90]], "escala": 0.9},
+    {"tipo": "vasijas", "en": [[-0.08, 0.26]]}
+   ]
+  },
+  "etiopia_fortaleza": {
+   "nota": "Fortaleza de amba: muro en anillo de piedra parda con torres redondas, gojjo bet y la torre del señor en el patio.",
+   "suelos": [
+    {"tipo": "pisado", "forma": "elipse", "ancho": 1.14, "color": "#80684e", "borde": 0.06},
+    {"tipo": "patio", "forma": "elipse", "ancho": 1.0, "color": "#9a8060"}
+   ],
+   "anillos": [
+    {"forma": "elipse", "ancho": 1.06, "material": "pirca_parda", "faja": true, "banderas": true, "puerta": {"ancho": 0.12}, "torres": {"n": 4, "desde_deg": 45, "radio_cm": 26, "mas_alto_cm": 45, "remate": "paja", "color_techo": "#6e5a40"}}
+   ],
+   "piezas": [
+    {"modelo": "local/etiopia_torre", "x": 0.0, "z": -0.22, "lado": 0.26, "giro": 0},
+    {"modelo": "local/etiopia_casa", "x": -0.26, "z": 0.02, "lado": 0.24, "giro": "centro"},
+    {"modelo": "local/etiopia_casa", "x": 0.26, "z": 0.02, "lado": 0.24, "giro": "centro"},
+    {"modelo": "local/etiopia_almacen_alimento", "x": -0.18, "z": -0.32, "lado": 0.16, "giro": "centro"}
+   ],
+   "utileria": [
+    {"tipo": "fogon", "en": [[0.04, 0.12]]},
+    {"tipo": "fardos", "en": [[0.22, -0.26, -30]]},
+    {"tipo": "lanza", "en": [[0.14, 0.2], [0.18, 0.24]]}
+   ]
+  },
+  "etiopia_remonta": {
+   "nota": "Remonta: corral de piedra parda con el establo (färäs bet) al fondo, caballos, forraje y bebedero.",
+   "suelos": [
+    {"tipo": "pisado", "forma": "rect", "ancho": 1.14, "fondo": 1.14, "esquina": 0.14, "color": "#80684e", "borde": 0.06},
+    {"tipo": "patio", "forma": "rect", "ancho": 1.0, "fondo": 1.0, "esquina": 0.12, "color": "#8f7a58"}
+   ],
+   "anillos": [
+    {"forma": "rect", "ancho": 1.06, "fondo": 1.06, "esquina": 0.14, "material": "pirca_parda_baja", "faja": true, "faja_pct": 65, "banderas": true, "puerta": {"ancho": 0.16}}
+   ],
+   "piezas": [
+    {"modelo": "local/etiopia_establo", "x": -0.14, "z": -0.26, "lado": 0.5, "giro": 90},
+    {"modelo": "local/etiopia_casa", "x": 0.32, "z": -0.32, "lado": 0.22, "giro": "centro"}
+   ],
+   "utileria": [
+    {"tipo": "caballo", "en": [[-0.2, 0.16, 70], [0.0, 0.22, 200], [0.18, 0.08, 120], [0.26, 0.3, 20], [-0.06, 0.02, 250]], "escala": 1.25},
+    {"tipo": "abrevadero", "en": [[0.3, 0.12, 90]], "escala": 1.2},
+    {"tipo": "fardos", "en": [[0.26, -0.12, 0], [-0.36, 0.3, 40]]}
+   ]
+  },
+  "palmares_maravilla": {
+   "nota": "Cerca do Outeiro da Barriga: el cerro con tres anillos de estacada aguzada, casas de pau a pique en las laderas y la casa del rey arriba.",
+   "monte": {"radio": 0.52, "cima": 0.17, "alto_cm": 140, "color": "#7a6a46", "color_cima": "#8c7a52"},
+   "suelos": [
+    {"tipo": "pisado", "forma": "elipse", "ancho": 1.12, "color": "#7a5c40", "borde": 0.05}
+   ],
+   "anillos": [
+    {"forma": "elipse", "ancho": 1.0, "material": "empalizada_foso", "faja": true, "faja_pct": 55, "banderas": true, "puerta": {"ancho": 0.08}},
+    {"forma": "elipse", "ancho": 0.72, "material": "empalizada", "alto_cm": 100, "puerta": {"ancho": 0.07}},
+    {"forma": "elipse", "ancho": 0.42, "material": "empalizada", "alto_cm": 95, "faja": true, "faja_pct": 55, "banderas": true, "puerta": {"ancho": 0.07}}
+   ],
+   "piezas": [
+    {"modelo": "local/palmares_centro", "x": 0.0, "z": -0.03, "lado": 0.26, "giro": 0},
+    {"modelo": "local/palmares_casa", "x": -0.29, "z": -0.1, "lado": 0.12, "giro": "centro"},
+    {"modelo": "local/palmares_casa", "x": 0.29, "z": -0.1, "lado": 0.12, "giro": "centro"},
+    {"modelo": "local/palmares_casa", "x": -0.12, "z": -0.3, "lado": 0.12, "giro": "centro"},
+    {"modelo": "local/palmares_casa", "x": 0.14, "z": -0.3, "lado": 0.12, "giro": "centro"},
+    {"modelo": "local/palmares_almacen_alimento", "x": 0.25, "z": 0.18, "lado": 0.1, "giro": "centro"},
+    {"modelo": "local/palmares_casa", "x": -0.25, "z": 0.18, "lado": 0.11, "giro": "centro"}
+   ],
+   "utileria": [
+    {"tipo": "pila_lena", "en": [[0.4, 0.3, 40], [-0.42, -0.28, 10]]},
+    {"tipo": "canelo", "en": [[-0.55, 0.3], [0.56, -0.2], [0.5, 0.42], [-0.52, -0.42], [0.1, -0.56]], "escala": 1.5}
+   ]
+  },
+  "ayutthaya_fortaleza": {
+   "nota": "Pom: fuerte poligonal de ladrillo encalado con almenas en hoja (bai sema) y baluartes, el cuartel de la guardia, el polvorín y cañones.",
+   "suelos": [
+    {"tipo": "pisado", "forma": "poligono", "lados": 8, "ancho": 1.14, "color": "#857158", "borde": 0.05},
+    {"tipo": "patio", "forma": "poligono", "lados": 8, "ancho": 1.0, "color": "#a18c6c"}
+   ],
+   "anillos": [
+    {"forma": "poligono", "lados": 8, "ancho": 1.06, "material": "ladrillo_encalado", "faja": true, "faja_pct": 22, "banderas": true, "puerta": {"ancho": 0.12}, "torres": {"n": 4, "desde_deg": 22.5, "radio_cm": 28, "mas_alto_cm": 30, "redonda": false, "remate": "hoja"}}
+   ],
+   "piezas": [
+    {"modelo": "local/ayutthaya_cuartel", "x": 0.0, "z": -0.24, "lado": 0.48, "giro": 0},
+    {"modelo": "local/ayutthaya_almacen_mina", "x": -0.28, "z": 0.06, "lado": 0.22, "giro": 90},
+    {"modelo": "local/ayutthaya_casa", "x": 0.28, "z": 0.06, "lado": 0.2, "giro": -90}
+   ],
+   "utileria": [
+    {"tipo": "canon", "en": [[-0.14, 0.26, 180], [0.14, 0.26, 180], [-0.38, -0.2, 240], [0.38, -0.2, 120]], "escala": 1.2},
+    {"tipo": "estandarte", "en": [[0.0, 0.08]], "escala": 1.1},
+    {"tipo": "piedras", "en": [[0.06, 0.16]], "escala": 0.7}
+   ]
+  }
+ }
+}

@@ -77,9 +77,17 @@
    "luz_ref": 0.1681,
    "cobertura": 0.1698
   },
+  "local/ayutthaya_torre_65b": {
+   "luz_ref": 0.1011,
+   "cobertura": 0.0455
+  },
   "local/etiopia_alianza": {
    "luz_ref": 0.1574,
    "cobertura": 0.4162
+  },
+  "local/etiopia_alianza_65b": {
+   "luz_ref": 0.1125,
+   "cobertura": 0.1182
   },
   "local/etiopia_almacen_alimento": {
    "luz_ref": 0.0754,
@@ -240,6 +248,10 @@
   "local/mapuches_rewe_caballeria": {
    "luz_ref": 0.1,
    "cobertura": 0.2736
+  },
+  "local/mapuches_rewe_caballeria_65b": {
+   "luz_ref": 0.1031,
+   "cobertura": 0.2371
   },
   "local/mapuches_rewe_malon": {
    "luz_ref": 0.0633,

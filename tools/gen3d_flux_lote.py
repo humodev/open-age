@@ -28,10 +28,12 @@ def main():
     ap.add_argument("--civ")
     ap.add_argument("--rehacer", action="store_true")
     ap.add_argument("--semillas", help="candidatas: genera la pieza con cada una de estas semillas (21,22)")
+    ap.add_argument("--archivo", default=str(REPO / "data/gen3d_piezas.json"),
+                    help="archivo de piezas (proceso/65: proceso/65-recintos-locales/piezas_65.json)")
     ap.add_argument("--extra", action="append", default=[],
                     help="comando más (con el python de ComfyUI) a correr con ComfyUI arriba, antes de apagarlo")
     a = ap.parse_args()
-    d = json.loads((REPO / "data/gen3d_piezas.json").read_text())
+    d = json.loads(Path(a.archivo).read_text())
     comun = d["comun"]
     claves = a.piezas or [k for k, v in d["piezas"].items() if v.get("proceso") == "58" and v.get("civ") == a.civ]
     falta = []  # (clave, semilla, imagen)

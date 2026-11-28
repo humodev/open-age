@@ -1,0 +1,351 @@
+{
+ "_doc": "Reintentos del proceso 65 para el pipeline local (como mucho dos por pieza).\n\n    python3 proceso/65-recintos-locales/piezas.py      escribe proceso/65-recintos-locales/piezas_65.json\n\nToma la pieza del proceso 58 (data/gen3d_piezas.json, sin tocarlo) y cambia la referencia:\nsemillas 31 (intento a) y 32 (intento b), prompt nuevo y la máscara donde hace falta.\n    python3 tools/gen3d_flux_lote.py --archivo proceso/65-recintos-locales/piezas_65.json <clave>\n    python3 tools/gen3d_pipeline.py --piezas proceso/65-recintos-locales/piezas_65.json <clave>\n",
+ "comun": {
+  "estilo": "Gouache painting for a historical strategy game, flat opaque color shapes, simple graphic forms, matte paper texture, limited palette.",
+  "persona_alto_casillas": 1.25,
+  "textura_px": 1024,
+  "piel_cabeza": 0.5
+ },
+ "piezas": {
+  "tawantinsuyu_almacen_madera_65a": {
+   "tipo": "edificio",
+   "edificio": "almacen_madera",
+   "categoria": "",
+   "civ": "tawantinsuyu",
+   "proceso": "65",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_65/tawantinsuyu_almacen_madera_31.png",
+    "receta": {
+     "semilla": 31,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} Inca firewood store of the Andes: a big square stack of split firewood logs, as deep as it is wide, with the round cut ends showing on the front and the side, resting on a low base of grey fieldstone, under a small low hip roof of thick bundled golden ichu straw thatch held by four rough wooden posts at the corners; the logs fill most of the picture and the roof only covers the top. No walls, no house, no crenellations, no tiles, no shingles, no chimney. Team-color details, large and clearly visible from above: a woven cloth band tied around the four posts just under the thatch, painted in one flat uniform pure bright red, the only red in the picture; everything else keeps its natural tones. One single building as a 3D model reference: three-quarter view from above at about 40 degrees, so the top, the front and one side are all visible and the depth reads clearly; the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_almacen_madera_65a.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "mascara": {
+    "tono": 22,
+    "faja": 0.12,
+    "cumbrera": 0.08
+   }
+  },
+  "tawantinsuyu_almacen_madera_65b": {
+   "tipo": "edificio",
+   "edificio": "almacen_madera",
+   "categoria": "",
+   "civ": "tawantinsuyu",
+   "proceso": "65",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_65/tawantinsuyu_almacen_madera_32.png",
+    "receta": {
+     "semilla": 32,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} Inca firewood store of the Andes: a big square stack of split firewood logs, as deep as it is wide, with the round cut ends showing on the front and the side, resting on a low base of grey fieldstone, under a small low hip roof of thick bundled golden ichu straw thatch held by four rough wooden posts at the corners; the logs fill most of the picture and the roof only covers the top. No walls, no house, no crenellations, no tiles, no shingles, no chimney. Team-color details, large and clearly visible from above: a woven cloth band tied around the four posts just under the thatch, painted in one flat uniform pure bright red, the only red in the picture; everything else keeps its natural tones. One single building as a 3D model reference: three-quarter view from above at about 40 degrees, so the top, the front and one side are all visible and the depth reads clearly; the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/tawantinsuyu_almacen_madera_65b.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "mascara": {
+    "tono": 22,
+    "faja": 0.12,
+    "cumbrera": 0.08
+   }
+  },
+  "mapuches_rewe_caballeria_65a": {
+   "tipo": "edificio",
+   "edificio": "rewe_caballeria",
+   "categoria": "hito",
+   "civ": "mapuches",
+   "proceso": "65",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_65/mapuches_rewe_caballeria_31.png",
+    "receta": {
+     "semilla": 31,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} Mapuche horse shelter of southern Chile: a long low open-sided shelter of rough unworked wooden poles with a thick rounded roof of golden grass thatch, the roof ridge smooth and plain; in front, a hitching rail of rough poles with sheepskin saddle pads and rawhide ropes. No cross, no religious symbol, no finial, no pole or ornament on top of the roof, no stone, no tiles, no planks, no windows. Team-color details, large and clearly visible from above: woolen saddle blankets hanging over the hitching rail, painted in one flat uniform pure bright red, the only red in the picture; everything else keeps its natural tones. One single building as a 3D model reference: three-quarter view from above at about 40 degrees, so the top, the front and one side are all visible and the depth reads clearly; the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/mapuches_rewe_caballeria_65a.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "mascara": {
+    "tono": 15,
+    "faja": 0.15,
+    "cumbrera": 0.08
+   }
+  },
+  "mapuches_rewe_caballeria_65b": {
+   "tipo": "edificio",
+   "edificio": "rewe_caballeria",
+   "categoria": "hito",
+   "civ": "mapuches",
+   "proceso": "65",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_65/mapuches_rewe_caballeria_32.png",
+    "receta": {
+     "semilla": 32,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} Mapuche horse shelter of southern Chile: a long low open-sided shelter of rough unworked wooden poles with a thick rounded roof of golden grass thatch, the roof ridge smooth and plain; in front, a hitching rail of rough poles with sheepskin saddle pads and rawhide ropes. No cross, no religious symbol, no finial, no pole or ornament on top of the roof, no stone, no tiles, no planks, no windows. Team-color details, large and clearly visible from above: woolen saddle blankets hanging over the hitching rail, painted in one flat uniform pure bright red, the only red in the picture; everything else keeps its natural tones. One single building as a 3D model reference: three-quarter view from above at about 40 degrees, so the top, the front and one side are all visible and the depth reads clearly; the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/mapuches_rewe_caballeria_65b.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "mascara": {
+    "tono": 15,
+    "faja": 0.15,
+    "cumbrera": 0.08
+   }
+  },
+  "ayutthaya_torre_65a": {
+   "tipo": "edificio",
+   "edificio": "torre",
+   "categoria": "torre",
+   "civ": "ayutthaya",
+   "proceso": "65",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_65/ayutthaya_torre_31.png",
+    "receta": {
+     "semilla": 31,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A small square river fort of 17th-century Ayutthaya in Siam: four thick solid whitewashed brick walls enclosing a small court, leaf-shaped merlons (bai sema) all along the top of the walls, a square corner bastion at each corner, a small gatehouse in the front wall, and inside a small hall with a two-tiered roof of dark grey-brown wooden shingles; one small bronze cannon on the wall; on a low brick platform. Roofs never red or orange. No statues, no Buddha images, no neighbouring houses, no water. Team-color details, large and clearly visible from above: plain rectangular cloth flags on two tall poles and a wide cloth band running around the outside of the walls just under the merlons, painted in one flat uniform pure bright red, the only red in the picture; everything else keeps its natural tones. One single building as a 3D model reference: three-quarter view from above at about 40 degrees, so the top, the front and one side are all visible and the depth reads clearly; the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/ayutthaya_torre_65a.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "mascara": {
+    "tono": 15,
+    "faja": 0.12,
+    "cumbrera": 0.06
+   }
+  },
+  "ayutthaya_torre_65b": {
+   "tipo": "edificio",
+   "edificio": "torre",
+   "categoria": "torre",
+   "civ": "ayutthaya",
+   "proceso": "65",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_65/ayutthaya_torre_32.png",
+    "receta": {
+     "semilla": 32,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A small square river fort of 17th-century Ayutthaya in Siam: four thick solid whitewashed brick walls enclosing a small court, leaf-shaped merlons (bai sema) all along the top of the walls, a square corner bastion at each corner, a small gatehouse in the front wall, and inside a small hall with a two-tiered roof of dark grey-brown wooden shingles; one small bronze cannon on the wall; on a low brick platform. Roofs never red or orange. No statues, no Buddha images, no neighbouring houses, no water. Team-color details, large and clearly visible from above: plain rectangular cloth flags on two tall poles and a wide cloth band running around the outside of the walls just under the merlons, painted in one flat uniform pure bright red, the only red in the picture; everything else keeps its natural tones. One single building as a 3D model reference: three-quarter view from above at about 40 degrees, so the top, the front and one side are all visible and the depth reads clearly; the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/ayutthaya_torre_65b.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "mascara": {
+    "tono": 15,
+    "faja": 0.12,
+    "cumbrera": 0.06
+   }
+  },
+  "etiopia_alianza_65a": {
+   "tipo": "edificio",
+   "edificio": "alianza",
+   "categoria": "hito",
+   "civ": "etiopia",
+   "proceso": "65",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_65/etiopia_alianza_31.png",
+    "receta": {
+     "semilla": 31,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} Ethiopian royal camp of the 17th century: one large round royal tent of plain off-white undyed cotton cloth with a conical top and a short wooden finial, the whole tent white and cream; beside it open wooden crates of muskets and two small bronze cannons on wooden carriages. No cross on the tent, no star, no gothic arches. Team-color details, large and clearly visible from above: one wide cloth band wrapped around the white tent just above the door and two cloth pennants on the tent pole, painted in one flat uniform pure bright red, the only red in the picture; everything else keeps its natural tones. The tent itself is white, never red. One single building as a 3D model reference: three-quarter view from above at about 40 degrees, so the top, the front and one side are all visible and the depth reads clearly; the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/etiopia_alianza_65a.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "mascara": {
+    "tono": 15
+   }
+  },
+  "etiopia_alianza_65b": {
+   "tipo": "edificio",
+   "edificio": "alianza",
+   "categoria": "hito",
+   "civ": "etiopia",
+   "proceso": "65",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_65/etiopia_alianza_32.png",
+    "receta": {
+     "semilla": 32,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} Ethiopian royal camp of the 17th century: one large round royal tent of plain off-white undyed cotton cloth with a conical top and a short wooden finial, the whole tent white and cream; beside it open wooden crates of muskets and two small bronze cannons on wooden carriages. No cross on the tent, no star, no gothic arches. Team-color details, large and clearly visible from above: one wide cloth band wrapped around the white tent just above the door and two cloth pennants on the tent pole, painted in one flat uniform pure bright red, the only red in the picture; everything else keeps its natural tones. The tent itself is white, never red. One single building as a 3D model reference: three-quarter view from above at about 40 degrees, so the top, the front and one side are all visible and the depth reads clearly; the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/etiopia_alianza_65b.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "mascara": {
+    "tono": 15
+   }
+  }
+ }
+}

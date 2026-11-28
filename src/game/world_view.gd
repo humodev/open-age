@@ -59,6 +59,7 @@ func setup(s: Sim, local_player: int) -> void:
 	_build_resources()
 	_build_clutter()
 	_build_crags()
+	_precalentar_recintos()
 	var n := sim.map.n
 	_fog_img = Image.create_from_data(n, n, false, Image.FORMAT_R8, sim.fog.grids[local])
 	_fog_tex = ImageTexture.create_from_image(_fog_img)
@@ -941,6 +942,10 @@ func _model_for(owner: int, type: String, size: float, unit: bool, team := Color
 	var name: String = sim.dp(owner).civ.get("estilo", {}).get("modelos", {}).get(type, "")
 	if name == "":
 		return null
+	if Recintos.es_recinto(name): # recinto armado por partes (proceso/65-recintos-locales)
+		return Recintos.armar(name, size, team)
+	if not unit:
+		return glb_edificio(name, size, team)
 	var path := "res://assets/generados/modelos/%s.glb" % name
 	if not _models.has(path):
 		_models[path] = load(path) if ResourceLoader.exists(path) else null
@@ -990,7 +995,52 @@ func _model_for(owner: int, type: String, size: float, unit: bool, team := Color
 	_each_geo(inst, func(g: GeometryInstance3D) -> void:
 		g.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 		_matte(g))
-	if not unit:
+	return holder
+
+
+## Arma una vez los recintos de los pueblos en juego (proceso/65-recintos-locales): las mallas y
+## las piezas quedan en caché y el primer recinto terminado no traba un cuadro.
+func _precalentar_recintos() -> void:
+	var mg := CivMeshes.margin()
+	for i in sim.players.size():
+		var dd := sim.dp(i)
+		var modelos: Dictionary = dd.civ.get("estilo", {}).get("modelos", {})
+		for t: String in modelos:
+			var nombre := str(modelos[t])
+			if not Recintos.es_recinto(nombre) or not dd.edificios.has(t):
+				continue
+			var tam: Array = dd.edificios[t].get("tam", [2, 2])
+			var n := Recintos.armar(nombre, maxf(0.8, minf(float(tam[0]), float(tam[1])) - 2.0 * mg), Palette.team(i))
+			if n != null:
+				n.free()
+
+
+## Edificio GLB generado, escalado a `size` en su lado horizontal mayor y apoyado en el suelo,
+## con el color del equipo de su máscara (`equipo` false: sin teñir). También lo usan las piezas
+## de los recintos (Recintos.armar).
+static func glb_edificio(name: String, size: float, team: Color, equipo := true) -> Node3D:
+	var path := "res://assets/generados/modelos/%s.glb" % name
+	if not _models.has(path):
+		_models[path] = load(path) if ResourceLoader.exists(path) else null
+	var ps: PackedScene = _models[path]
+	if ps == null:
+		return null
+	var inst: Node3D = ps.instantiate()
+	var box := _aabb(inst, Transform3D.IDENTITY)
+	var horiz := maxf(box.size.x, box.size.z)
+	if horiz <= 0.0001:
+		return null
+	var k := size / horiz
+	var center := Vector2(box.position.x + box.size.x / 2.0, box.position.z + box.size.z / 2.0)
+	var holder := Node3D.new()
+	holder.position.y = -0.08 # asentado: apenas hundido en el suelo
+	inst.scale = Vector3.ONE * k
+	inst.position = Vector3(-center.x * k, -box.position.y * k, -center.y * k)
+	holder.add_child(inst)
+	_each_geo(inst, func(g: GeometryInstance3D) -> void:
+		g.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+		_matte(g))
+	if equipo:
 		_equipo_edificio(inst, name, path, team)
 	return holder
 
@@ -1265,7 +1315,7 @@ func _build_struct(e: SimEntity, v: Dictionary, look: String) -> void:
 			var top := _aabb(model, Transform3D.IDENTITY).end.y # el techo, sin el estandarte
 			model.rotation.y = GLB_FRENTE_YAW
 			var h := _aabb(model, Transform3D.IDENTITY).size.y
-			var k := _stretch_k(e, h * esc1 / maxf(esc, 0.01))
+			var k := 1.0 if model.has_meta("recinto") else _stretch_k(e, h * esc1 / maxf(esc, 0.01))
 			var alto := float(cfg.get("alto_pct", 100)) / 100.0
 			model.scale.y *= k * alto
 			outer.add_child(model)
@@ -1277,7 +1327,7 @@ func _build_struct(e: SimEntity, v: Dictionary, look: String) -> void:
 				Meshes.team_banner(flag_at, Vector3(e.w * 0.42, 0, -e.h * 0.42), team)
 				Meshes.bandera_k = 1.0
 			outer.add_child(flag_at)
-			var dm := CivMeshes.decor(e.type, e.def, team, cfg, e.w, e.h, top * k * alto, body * esc)
+			var dm: ArrayMesh = null if model.has_meta("recinto") else CivMeshes.decor(e.type, e.def, team, cfg, e.w, e.h, top * k * alto, body * esc)
 			if dm != null:
 				var di := MeshInstance3D.new()
 				di.mesh = dm

@@ -688,6 +688,8 @@ func _demo(kind: String) -> void:
 			for t: String in row:
 				if not tipos.has(t):
 					tipos.append(t)
+		if _args.has("tipos"): # --tipos=a,b: solo esos (proceso/65-recintos-locales)
+			tipos = Array(str(_args["tipos"]).split(",")).filter(func(t: String) -> bool: return dd0.edificios.has(t))
 		var cx := b.x - 10
 		var cy := b.y + 6
 		for i in tipos.size():
