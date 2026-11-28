@@ -82,6 +82,10 @@
     "_doc": "Aldeanos de Meshy con nuestro rig (proceso/57-aldeanos-meshy; receta en proceso/56-rig-y-color): malla texturizada, esqueleto de tools/gen3d_rig.py con los nombres de KayKit y las animaciones de arriba retargeteadas (una biblioteca por modelo, compartida). La herramienta cuelga de handslot.r y la carga del pecho; la ropa en rojo de la hoja toma el color del equipo con src/game/shaders/equipo_3d.gdshader y la máscara (tools/mascara_equipo_3d.py --metodo=rojo; luz_ref la imprime esa herramienta). por_civ[pueblo][sexo]: el modelo de ese aldeano; sin entrada (o borrando la línea), la figura de KayKit de siempre. activo: false los apaga a todos. Solo imagen.",
     "activo": true,
     "lista": {
+      "sol_ayutthaya_ngao": { "glb": "res://assets/generados/modelos/meshy_soldados/ayutthaya_ngao.glb", "mascara": "res://assets/generados/modelos/meshy_soldados/ayutthaya_ngao_mascara.png", "luz_ref": 0.070 },
+      "sol_ayutthaya_hondero": { "glb": "res://assets/generados/modelos/meshy_soldados/ayutthaya_hondero.glb", "mascara": "res://assets/generados/modelos/meshy_soldados/ayutthaya_hondero_mascara.png", "luz_ref": 0.060 },
+      "sol_ayutthaya_lancero": { "glb": "res://assets/generados/modelos/meshy_soldados/ayutthaya_lancero.glb", "mascara": "res://assets/generados/modelos/meshy_soldados/ayutthaya_lancero_mascara.png", "luz_ref": 0.063 },
+      "sol_ayutthaya_guerrero": { "glb": "res://assets/generados/modelos/meshy_soldados/ayutthaya_guerrero.glb", "mascara": "res://assets/generados/modelos/meshy_soldados/ayutthaya_guerrero_mascara.png", "luz_ref": 0.067 },
       "sol_palmares_arcabucero": { "glb": "res://assets/generados/modelos/meshy_soldados/palmares_arcabucero.glb", "mascara": "res://assets/generados/modelos/meshy_soldados/palmares_arcabucero_mascara.png", "luz_ref": 0.099 },
       "sol_palmares_zagaieiro": { "glb": "res://assets/generados/modelos/meshy_soldados/palmares_zagaieiro.glb", "mascara": "res://assets/generados/modelos/meshy_soldados/palmares_zagaieiro_mascara.png", "luz_ref": 0.095 },
       "sol_palmares_hondero": { "glb": "res://assets/generados/modelos/meshy_soldados/palmares_hondero.glb", "mascara": "res://assets/generados/modelos/meshy_soldados/palmares_hondero_mascara.png", "luz_ref": 0.081 },
@@ -129,7 +133,8 @@
       "mapuches": { "guerrero": "sol_mapuches_guerrero", "lancero": "sol_mapuches_lancero", "hondero": "sol_mapuches_hondero", "incendiarios": "sol_mapuches_incendiarios" },
       "guaranies": { "guerrero": "sol_guaranies_guerrero", "lancero": "sol_guaranies_lancero", "hondero": "sol_guaranies_hondero" },
       "etiopia": { "lancero": "sol_etiopia_lancero", "hondero": "sol_etiopia_hondero", "guerrero_gasa": "sol_etiopia_guerrero_gasa" },
-      "palmares": { "guerrero": "sol_palmares_guerrero", "lancero": "sol_palmares_lancero", "hondero": "sol_palmares_hondero", "zagaieiro": "sol_palmares_zagaieiro", "arcabucero": "sol_palmares_arcabucero" }
+      "palmares": { "guerrero": "sol_palmares_guerrero", "lancero": "sol_palmares_lancero", "hondero": "sol_palmares_hondero", "zagaieiro": "sol_palmares_zagaieiro", "arcabucero": "sol_palmares_arcabucero" },
+      "ayutthaya": { "guerrero": "sol_ayutthaya_guerrero", "lancero": "sol_ayutthaya_lancero", "hondero": "sol_ayutthaya_hondero", "ngao": "sol_ayutthaya_ngao" }
     }
   },
   "colores": { "piel": "#8c5636", "pelo": "#231c17", "madera": "#6e5034", "piedra": "#5e5c58", "fibra": "#9a7e4a", "cuero": "#4e3828", "metal": "#7c7f84", "cuerda": "#8a7552" },
