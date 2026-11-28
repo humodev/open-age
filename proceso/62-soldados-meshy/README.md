@@ -84,3 +84,32 @@ El jinete noble etíope (la unidad militar más entrenada de Etiopía), la infan
 - ComfyUI se traba en el VAE a la tercera hoja: el `scope` aislado llega al tope (12 GB de `MemoryHigh` y 2 GB de swap) y el proceso queda frenado. `POST /free` no alcanza. Se lo reinició cada dos hojas.
 - Al reiniciarlo desde un script en segundo plano, la primera hoja fallaba con un `KeyError` con el nombre del `scope`. Con `setsid` dejó de pasar.
 - Varias caras salen sonrientes o con barba (inca, mapuche), por las «smile lines» del prompt. Todas son de 30 a 40 años.
+
+## 3. En el juego
+
+### Cómo se conectan
+
+- **Interruptor** (`data/arte_animaciones.json → modelos`): `soldados[pueblo][tipo]` apunta a una entrada de `lista` (`sol_<pueblo>_<tipo>`); **una línea por unidad**, y sin la línea vuelve la figura de KayKit con su equipo. `soldados_activo: false` los apaga a todos (los aldeanos siguen).
+- **`AldeanoAnimado.modelo_tropa(civ, tipo)`** arma el modelo una vez (el mismo `_armar_modelo` de los aldeanos: copia del esqueleto, biblioteca retargeteada compartida, material `equipo_3d.gdshader` por color de equipo). `crear()` se lo pone al soldado en lugar de la malla de KayKit.
+- **El arma, el escudo y el carcaj** son las piezas de siempre (`TropaAnimada._arma`, `_escudo`, `_carcaj`, con lo de `tropas.tipos`, `por_forma` y `por_civ`): se arman en la plantilla y `AldeanoAnimado.llevar()` (lo que antes hacía `malla_modelo` para las herramientas) las pasa al hueso del modelo, `handslot.r` y `handslot.l`. El centro del escudo toma el color del equipo.
+- La ropa, el tocado y el casco ya vienen en la malla: con modelo, el cambio de edad no cambia el soldado (sí en la figura de KayKit).
+- Armas nuevas en los datos: el zagaieiro tira **jabalina** (antes, la honda de su función) y el guerrero de gaša lleva **lanza y escudo redondo** (antes, maza), como en sus piezas de `proceso/49`. Vale también para la figura de KayKit.
+
+### Receta por modelo
+
+[`procesar.sh`](procesar.sh) `<pueblo>_<unidad>`: espera 7 GB libres; `optimizar_glb` a 15.000 triángulos y 2048 px; `gen3d_rig --normalizar --cabeza-rigida --calor-escala=10`; `mascara_equipo_3d --metodo=rojo`; la textura a JPEG 80 con [`glb_jpeg.py`](glb_jpeg.py) (sin Blender). Blender con tope de 4 GB, de a un proceso. [`conectar.py`](conectar.py) agrega la entrada y la línea en los datos.
+
+| Modelo | Triángulos | Vértices sin peso | Máscara | `luz_ref` | GLB |
+|---|---|---|---|---|---|
+| `tawantinsuyu_guerrero` | 15.000 | 0 | 51 % | 0,065 | 1,4 MB |
+| `tawantinsuyu_lancero` | 14.999 | 0 | 35 % | 0,071 | 1,4 MB |
+| `tawantinsuyu_hondero` | 14.999 | 0 | 36 % | 0,062 | 1,2 MB |
+| `tawantinsuyu_boleador` | 14.999 | 0 | 30 % | 0,056 | 1,4 MB |
+
+### Por pueblo
+
+Batalla de cerca de cada pueblo contra sí mismo, azul contra rojo (`tools/aldeanos_animados.gd --modo=batalla --civ=X --rival=X --terreno=llano --seed=7 --sin_hud --pitch=42 --zoom=8`). Las unidades que no son de Meshy (leva, arcabuceros, galgueros…) siguen con la figura de KayKit.
+
+**Tawantinsuyu:** guerrero con porra, lancero con lanza y escudo cuadrado, hondero con honda y boleador con las boleadoras, todos de Meshy.
+
+![Tawantinsuyu, azul contra rojo](img/batalla_tawantinsuyu.jpg)

@@ -82,6 +82,10 @@
     "_doc": "Aldeanos de Meshy con nuestro rig (proceso/57-aldeanos-meshy; receta en proceso/56-rig-y-color): malla texturizada, esqueleto de tools/gen3d_rig.py con los nombres de KayKit y las animaciones de arriba retargeteadas (una biblioteca por modelo, compartida). La herramienta cuelga de handslot.r y la carga del pecho; la ropa en rojo de la hoja toma el color del equipo con src/game/shaders/equipo_3d.gdshader y la máscara (tools/mascara_equipo_3d.py --metodo=rojo; luz_ref la imprime esa herramienta). por_civ[pueblo][sexo]: el modelo de ese aldeano; sin entrada (o borrando la línea), la figura de KayKit de siempre. activo: false los apaga a todos. Solo imagen.",
     "activo": true,
     "lista": {
+      "sol_tawantinsuyu_boleador": { "glb": "res://assets/generados/modelos/meshy_soldados/tawantinsuyu_boleador.glb", "mascara": "res://assets/generados/modelos/meshy_soldados/tawantinsuyu_boleador_mascara.png", "luz_ref": 0.056 },
+      "sol_tawantinsuyu_hondero": { "glb": "res://assets/generados/modelos/meshy_soldados/tawantinsuyu_hondero.glb", "mascara": "res://assets/generados/modelos/meshy_soldados/tawantinsuyu_hondero_mascara.png", "luz_ref": 0.062 },
+      "sol_tawantinsuyu_lancero": { "glb": "res://assets/generados/modelos/meshy_soldados/tawantinsuyu_lancero.glb", "mascara": "res://assets/generados/modelos/meshy_soldados/tawantinsuyu_lancero_mascara.png", "luz_ref": 0.071 },
+      "sol_tawantinsuyu_guerrero": { "glb": "res://assets/generados/modelos/meshy_soldados/tawantinsuyu_guerrero.glb", "mascara": "res://assets/generados/modelos/meshy_soldados/tawantinsuyu_guerrero_mascara.png", "luz_ref": 0.065 },
       "inca_m": { "glb": "res://assets/generados/modelos/meshy_aldeanos/inca_m.glb", "mascara": "res://assets/generados/modelos/meshy_aldeanos/inca_m_mascara.png", "luz_ref": 0.076 },
       "guaranies_m": { "glb": "res://assets/generados/modelos/meshy_aldeanos/guaranies_m.glb", "mascara": "res://assets/generados/modelos/meshy_aldeanos/guaranies_m_mascara.png", "luz_ref": 0.084 },
       "etiopia_m": { "glb": "res://assets/generados/modelos/meshy_aldeanos/etiopia_m.glb", "mascara": "res://assets/generados/modelos/meshy_aldeanos/etiopia_m_mascara.png", "luz_ref": 0.073 },
@@ -106,6 +110,7 @@
     "_doc_soldados": "Soldados de Meshy (proceso/62-soldados-meshy): misma receta que los aldeanos. soldados[pueblo][tipo] = id de la lista (una línea por unidad; sin la línea, la figura de KayKit con su equipo). El arma, el escudo y el carcaj siguen siendo las piezas de tropas (handslot.r / handslot.l). soldados_activo: false los apaga a todos. Solo imagen.",
     "soldados_activo": true,
     "soldados": {
+      "tawantinsuyu": { "guerrero": "sol_tawantinsuyu_guerrero", "lancero": "sol_tawantinsuyu_lancero", "hondero": "sol_tawantinsuyu_hondero", "boleador": "sol_tawantinsuyu_boleador" }
     }
   },
   "colores": { "piel": "#8c5636", "pelo": "#231c17", "madera": "#6e5034", "piedra": "#5e5c58", "fibra": "#9a7e4a", "cuero": "#4e3828", "metal": "#7c7f84", "cuerda": "#8a7552" },

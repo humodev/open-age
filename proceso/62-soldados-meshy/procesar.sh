@@ -19,5 +19,5 @@ lim blender --background --python $R/tools/gen3d_rig.py -- "$P/${x}_opt.glb" "$P
 lim blender --background --python $R/tools/mascara_equipo_3d.py -- "$P/${x}_rig.glb" "$P/${x}_mascara.png" --metodo=rojo > "$P/${x}_mascara.log" 2>&1
 $PY $R/proceso/62-soldados-meshy/glb_jpeg.py "$P/${x}_rig.glb" "$D/$x.glb" 80
 cp "$P/${x}_mascara.png" "$D/${x}_mascara.png"
-grep -iE "sin peso|tri[aá]ngulos|luz_ref|m[aá]scara" "$P/${x}_rig.log" "$P/${x}_mascara.log" "$P/${x}_opt.log" | tail -8
+grep -hE "^RIG|MASCARA|triangulos" "$P/${x}_rig.log" "$P/${x}_mascara.log" "$P/${x}_opt.log" | tail -8
 ls -la "$D/$x.glb"

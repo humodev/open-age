@@ -1,0 +1,4 @@
+J1 edad=1 pob=24/30 res={ "alimento": 76, "madera": 319, "piedra": 100, "riqueza": 0 } stats={ "recolectado": 2540, "entrenadas": 17, "bajas": 0, "muertes": 0, "edificios_destruidos": 0, "ordenes": { "target": 22, "build:casa": 2, "train:aldeano": 15, "build:deposito": 2, "build:cuartel": 1, "research": 2, "rally": 1, "train:guerrero": 1, "train:lancero": 3, "build:hito_economia": 1, "train:hondero": 1 }, "origen": { "casa": { "alimento": 1474, "madera": 751, "riqueza": 255 }, "recoleccion": { "madera": 13, "alimento": 47 } } }
+game_over=false winner=-1 entidades=2453
+DETERMINISMO: OK
+ticks=3000 hash=3617052205 (igual que antes; solo imagen)
