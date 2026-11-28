@@ -102,7 +102,7 @@ E = {
   "mercado": ("An open thatched shelter on posts with goods laid out on mats: clay pots, cotton cloth, baskets of manioc and bundles of yerba mate leaves.", "the folded cotton cloths", "mercado"),
   "karai_palabra": ("A very large communal house with a thatched roof reaching the ground and a ring of low wooden stools in front of its door.", False, "hito"),
   "aty_guasu": ("A wide round meeting ground enclosed by four long thatched communal houses at its sides, a ring of wooden benches in the middle.", None, "hito"),
-  "mision": ("A mission town row: a long building with a dark brown weathered clay tile roof (not red) and a wide veranda on wooden columns, a workshop with a loom under the veranda.", "cloth awnings between the veranda columns", "hito"),
+  "mision": ("A mission town row: a long building with a dark grey weathered tile roof and a wide veranda on wooden columns, a workshop with a loom under the veranda.", "cloth awnings between the veranda columns", "hito"),
   "monte": ("A hidden forest camp: three low thatched shelters on posts close together under two huge trees, a cotton hammock between the trunks.", "the cotton hammock and a cloth hanging on a shelter", "hito"),
   "tava": ("A fortified mission block: two rows of yellow-brown sandstone houses with dark brown weathered tile roofs (not red) and verandas, enclosed by a square log palisade with one gate.", "cloth bands tied around the gate posts and cloth awnings on the verandas", "hito"),
   "yvy_marane": ("A defensive earthwork: a curved earth bank topped by a log palisade, two bamboo tube cannons wrapped in rawhide aimed over it.", "cloth bands tied around the palisade posts", "hito"),
@@ -119,7 +119,7 @@ E = {
   "cuartel": ("A compact soldiers' camp: a round thatched house with three white cloth tents pressed tightly against it in one tight cluster, a rack of spears and round hide shields against the house.", "cloth pennants on the spear tips and the door flaps of the tents", "produccion"),
   "establo": ("A long low stable of fieldstone with a thatched roof and open stalls, a wooden rail in front with saddles on it.", "saddle cloths on the rail", "produccion"),
   "taller": ("An open workshop of fieldstone and wooden beams with a thatched roof, logs, wheels and a half-built battering ram inside.", None, "produccion"),
-  "torre": ("A tall round tower of brown fieldstone with a flat top and a small parapet, a wooden door at the base.", "a cloth pennant on a pole on top", "torre"),
+  "torre": ("A tall round tower of brown fieldstone in the Gondar style with a small stone dome on top, small windows and a wooden door at the base, no battlements.", "a cloth pennant on a pole on top", "torre"),
   "fortaleza": ("A small flat-topped rock with sheer sides like a table, a brown stone wall along its rim, two round thatched houses on top and a narrow path with a gate.", "cloth pennants on poles at the gate", "torre"),
   "mercado": ("A compact market: one round open-sided thatched market hall on posts with low tables under it holding salt bars, sacks of grain, clay pots and cotton cloth.", "cloth shades over two stalls", "mercado"),
   "iglesia": ("A round compound: a low stone wall with a gatehouse and inside it a large round building with a gallery of wooden posts and a steep conical thatched roof.", False, "hito"),
@@ -197,10 +197,28 @@ REGLAS = {
                      "and trapezoidal niches, steep roofs of thick bundled golden ichu straw thatch with visible thickness and "
                      "ragged edges. No crenellations, no battlements, no round towers, no conical tower caps, no timber "
                      "framing, no wooden shingles, no roof tiles, no chimneys, no windows with frames."),
+    "mapuches": ("Mapuche architecture of southern Chile: oval ruka houses of wooden poles and woven branches with a thick "
+                 "rounded roof of golden grass thatch reaching almost to the ground, one low doorway; rough unworked wooden "
+                 "pole fences. No stone masonry, no roof tiles, no gable roofs of planks, no crenellations, no windows."),
+    "guaranies": ("Guarani architecture of the Parana forest: long houses on forked wooden posts with walls of tacuara bamboo "
+                  "canes and mud and steep roofs of grass and palm thatch reaching almost to the ground. No stone masonry, "
+                  "no red roof tiles, no crenellations, no windows with glass."),
+    "etiopia": ("Ethiopian highland architecture of the 16th and 17th centuries: round houses with walls of brown fieldstone or "
+                "wattle and daub and steep conical grass thatch roofs; royal tents; in Gondar, castles of brown stone with "
+                "round corner towers topped by small domes. No gothic arches, no roof tiles, no European crenellated keeps."),
+    "palmares": ("Architecture of the 17th-century quilombo of Palmares in northeastern Brazil: rectangular houses of wattle "
+                 "and daub (pau a pique) with steep roofs of palm-leaf thatch, palisades of sharpened logs. No stone "
+                 "masonry, no roof tiles, no crenellations, no baroque churches."),
+    "ayutthaya": ("Secular architecture of 17th-century Ayutthaya in Siam: teak houses raised on stilts with steep gable roofs "
+                  "with curved finials, whitewashed brick buildings with tiered roofs; all roofs covered with dark grey-brown "
+                  "weathered shingles or dark tiles, never red or orange; leaf-shaped merlons (bai sema) only on forts. No "
+                  "statues, no Buddha images, no neighbouring houses."),
 }
 # Tipos que la segunda pasada no rehace: recintos amurallados grandes que Hunyuan aplasta en
 # «barriles». Quedan con su maqueta y en la lista de candidatos a Meshy.
 MESHY = {"tawantinsuyu": {"qorikancha", "pukara_mayor", "aqllawasi", "vilcabamba", "kallanka_real"}}
+# Mapuches: casa, lof y cuartel de la primera pasada se conservan (pedido del autor); se les agrega el color.
+CONSERVAR = {("mapuches", "casa"), ("mapuches", "lof"), ("mapuches", "cuartel")}
 E2 = {
  "tawantinsuyu": {
   "casa": "A small rectangular one-room house of grey fieldstone with one trapezoidal doorway and two trapezoidal wall niches, a very steep gable roof of thick ichu straw thatch.",
@@ -220,18 +238,158 @@ E2 = {
 }
 ROJO2 = {
     "tawantinsuyu": "a wide woven cloth band wrapped around the walls just under the thatch and woven cloth curtains in the doorways",
+    "mapuches": "large woven wool blankets draped over a pole rail by the door and long cloth pennants on two tall cane lances",
+    "guaranies": "a wide cotton cloth band tied around the house under the eaves and cotton cloth awnings over the doorways",
+    "etiopia": "a wide cloth band wrapped around the walls just under the thatch and cloth awnings over the doors",
+    "palmares": "a wide cloth band wrapped around the walls just under the thatch and cloth curtains in the doorways",
+    "ayutthaya": "plain rectangular cloth flags on two tall poles, a wide cloth band under the eaves and cloth awnings over the doors",
 }
-ROJO_PIEZA2 = {"tawantinsuyu_torre": "a wide cloth band around the walls of the hut and a cloth pennant on a pole beside it"}
+E2.update({
+ "mapuches": {
+  "fortaleza": "A compact Mapuche frontier fort: one tall wooden lookout platform on poles behind a short curved section of sharpened log palisade on an earth bank.",
+  "mercado": "A long open-sided shelter on wooden posts with a thick grass thatch gable roof, woven ponchos, cattle hides and clay jars on a low bench underneath.",
+  "rewe_malon": "A large oval ruka with a thick grass thatch roof and a tall bundle of colihue cane lances leaning against it.",
+  "rewe_lonko": "The largest oval ruka of the valley, long and tall, with a thick grass thatch roof reaching the ground and two low doorways.",
+  "rewe_caballeria": "A long low open stable shelter of rough poles with a thick grass thatch roof, a hitching rail in front with sheepskin saddle pads.",
+  "rewe_monte": "Three tall araucaria trees with straight bare grey trunks and flat dark green umbrella-shaped crowns only at the very top, a small oval ruka between the trunks.",
+  "parlamento": "A long wide open shelter with a thick grass thatch roof on twelve wooden posts, two long rows of wooden benches facing each other underneath.",
+  "weichan": "A war council shelter: a round open-sided shelter on posts with a conical grass thatch roof, a ring of tall colihue lances standing upright around it.",
+  "maravilla": "A great treaty hall: one very long open-sided shelter on many wooden posts with a thick grass thatch roof, long rows of benches underneath. No cross, no religious symbols.",
+ },
+ "guaranies": {
+  "casa": "A small house with walls of tacuara bamboo canes and mud and a steep palm thatch roof, one low doorway.",
+  "centro": "A very long communal house (oga guasu): a huge steep grass thatch roof reaching almost to the ground over forked wooden posts, several low doorways along its side.",
+  "almacen_madera": "An open-sided shelter on four forked posts with a steep palm thatch roof, a big neat stack of firewood logs under it.",
+  "almacen_mina": "An open-sided thatched shelter on posts with rows of large clay pots drying under it and a heap of red clay beside it.",
+  "cuartel": "A long open-sided shelter on forked posts with a steep grass thatch roof, racks of long bows, spears and flat hardwood clubs under it.",
+  "campo_tiro": "A small square thatched shelter on four posts with long hardwood bows and bundles of cane arrows hanging under the roof, a straw target on a post beside it.",
+  "taller": "An open thatched workshop on posts with piles of thick giant bamboo poles and a bamboo tube cannon on a wooden frame under it.",
+  "fortaleza": "A compact bamboo fort: a raised wooden archer platform on tall posts with a thatched roof, behind a short section of double palisade of giant bamboo canes.",
+  "mercado": "An open thatched shelter on posts with goods on mats: clay pots, cotton cloth, baskets of manioc and bundles of yerba mate leaves.",
+  "karai_palabra": "A very large communal house with a steep grass thatch roof reaching the ground and a ring of low wooden stools in front of its door.",
+  "aty_guasu": "A large round open-sided meeting house on many posts with a huge conical grass thatch roof, wooden benches in a ring underneath.",
+  "mision": "A long mission house of adobe with a dark grey weathered tile roof and a wide veranda on wooden columns, a loom under the veranda.",
+  "monte": "Three low thatched shelters on posts close together in one cluster, a cotton hammock tied between two posts.",
+  "tava": "A two-story mission house of yellow-brown sandstone with a dark grey weathered tile roof and a wooden upper gallery, behind a short log palisade with a gate.",
+  "yvy_marane": "A defensive earthwork: a short curved earth bank topped by a log palisade, two bamboo tube cannons wrapped in rawhide aimed over it.",
+  "maravilla": "A two-story town hall (cabildo) of yellow-brown sandstone with a long upper gallery on wooden columns and a dark grey weathered tile roof.",
+  "maravilla_monte": "A great communal house of the forest: a huge very long house with a steep grass thatch roof reaching the ground, many low doorways, the biggest house of all.",
+ },
+ "etiopia": {
+  "casa": "A single round house with a low wall of brown fieldstone and mud and a steep conical grass thatch roof, one wooden doorway.",
+  "centro": "A royal pavilion: one large round tent of heavy white cotton cloth on a central pole with a smaller round thatched house joined to its side.",
+  "corte_nueva": "A half-raised large round tent of white cotton cloth on poles with rolled tents, tent poles and bundles of supplies piled against it in one tight cluster, no symbols on the cloth.",
+  "almacen_alimento": "A tall woven basket granary plastered with mud on a round stone base, with a small conical grass thatch roof, sacks of grain beside it.",
+  "almacen_madera": "An open-sided shed on wooden posts with a conical grass thatch roof, stacks of juniper logs under it.",
+  "almacen_mina": "A round stone workshop with a conical grass thatch roof and piles of cut stone blocks in front.",
+  "cuartel": "A long low barracks building of brown fieldstone with a steep grass thatch roof seen from the side at a low angle, round hide shields hanging on its wall.",
+  "establo": "A long low stable building of brown fieldstone with a steep grass thatch roof and open stall doorways, seen from the side at a low angle.",
+  "taller": "A rectangular workshop building of brown fieldstone with a steep grass thatch gable roof and a wide open front, wooden wheels and logs leaning against it.",
+  "torre": "A tall round tower of brown fieldstone in the Gondar style with a small stone dome on top, small windows and a wooden door at the base, no battlements.",
+  "fortaleza": "A small flat-topped rock with sheer sides like a table, a brown stone wall along its rim and two round thatched houses on top.",
+  "mercado": "One round open-sided market hall on posts with a conical grass thatch roof, low tables with salt bars, sacks of grain and clay pots under it.",
+  "iglesia": "A round church of the highlands: a large round building with a gallery of wooden posts around it and a steep conical grass thatch roof. No cross and no symbols on the roof.",
+  "monasterio": "A group of three small round stone cells with conical thatch roofs joined by a low stone wall, close together.",
+  "amba": "A flat-topped rock mesa with sheer cliffs as a fortress, a brown stone wall along the rim and round houses on top.",
+  "remonta": "A long thatched stable of brown fieldstone with a low stone-walled corral joined to it.",
+  "gondar": "A two-story castle of brown stone with round corner towers topped by small domes and a taller square tower.",
+  "alianza": "One large round royal tent of heavy cotton cloth with open wooden crates of muskets and two small bronze cannons beside it.",
+  "maravilla": "Fasil Ghebbi: a large two-story castle of brown stone with round domed corner towers and a tall square tower with a flat roof.",
+ },
+ "palmares": {
+  "casa": "A small rectangular house of wattle and daub with a steep palm-leaf thatch roof, one doorway.",
+  "centro": "A large house of wattle and daub with a long veranda on wooden posts and a very high palm-leaf thatch roof, the biggest house of the town.",
+  "almacen_alimento": "A granary of wattle and palm thatch raised on wooden stilts with a ladder, ears of maize and sacks of manioc flour beside it.",
+  "almacen_mina": "An open palm-thatched shed on posts with a dome-shaped clay kiln and rows of clay pots.",
+  "cuartel": "A long palm-thatched house with open sides on posts, spears and bows in racks and round woven shields on the posts.",
+  "mocambo": "Two small palm-thatched houses of wattle and daub joined by a shared veranda.",
+  "fortaleza": "A wooden bastion made only of thick upright sharpened tree logs jutting out from a short section of log palisade, a raised wooden platform on log posts behind it; no stone at all, no church, no tower.",
+  "mercado": "An open palm-thatched shelter on posts with goods on mats: clay pots, palm baskets, manioc flour and iron tools.",
+  "quilombo_central": "A large house of wattle and daub with a long veranda on wooden posts and a very high palm-leaf thatch roof, a council house.",
+  "mocambo_guerra": "A tall lookout platform made only of wooden poles and lashed logs with a small palm-thatched roof on top, rows of sharpened stakes slanting out at its foot; no stone.",
+  "cerca_real": "A tall gate made only of thick sharpened tree logs with a palm-thatched lookout above it, short sections of log palisade on both sides; no stone.",
+  "ferraria": "A large open forge shed with a palm-thatched roof on posts, a charcoal forge with bowl bellows and an iron anvil under it.",
+  "pacto_cucau": "Two rectangular palm-thatched houses of wattle and daub side by side in a straight row, a granary on stilts at the end.",
+  "guerra_zumbi": "A war house of wattle and daub with a high palm-thatched roof and a large wooden drum beside its door.",
+  "maravilla": "The great house of the Serra da Barriga: a very large long house of wattle and daub with a huge palm-leaf thatch roof and a long veranda, behind a short palisade.",
+ },
+ "ayutthaya": {
+  "casa": "A single house of teak planks raised on tall wooden stilts with a steep gable roof with curved finials and a ladder to the veranda.",
+  "centro": "A royal audience hall of whitewashed brick on a raised base with a tiered roof of dark grey tiles with curved finials.",
+  "cuartel": "A long barracks of whitewashed brick with a dark tiled roof and a veranda, swords and spears in racks under it.",
+  "campo_tiro": "A teak archery pavilion on stilts with a dark shingle roof, bows and quivers hanging, two straw targets on stands beside it.",
+  "taller": "An open teak workshop on posts with a dark tiled roof, logs, solid wooden wheels and a half-built gun carriage inside.",
+  "torre": "A small square fort of whitewashed brick with leaf-shaped merlons along the top and one small cannon.",
+  "fortaleza": "A polygonal bastion of whitewashed brick with leaf-shaped merlons and cannons in the openings.",
+  "almacen_mina": "An open-sided shed on posts with a dark tiled roof and a round brick kiln, rows of drying bricks.",
+  "kraal": "A square stockade of thick upright teak logs with a narrow gate and a small raised watching pavilion with a dark roof at one corner.",
+  "barrio_japones": "A Japanese-style wooden house with a dark grey tiled roof and paper screens.",
+  "barrio_portugues": "A whitewashed Portuguese-style two-story house with a dark brown tiled roof and wooden balconies.",
+  "barrio_chinos": "A Chinese-style shophouse of grey brick with a curved dark grey tiled roof and wooden shutters.",
+  "mercado": "A row of three wooden market stalls under one long palm-thatched roof on posts, fruit, rice and pottery on low tables.",
+  "wat": "A Khmer-style corncob-shaped tower (prang) of brick and white stucco on a tall stepped base.",
+  "kraal_real": "A royal pavilion of teak on tall stilts with a tiered dark roof, beside a short section of thick teak log stockade.",
+  "puerto_real": "A royal warehouse of teak raised on stilts with a dark roof, standing on a short wooden wharf with large brown glazed jars.",
+  "fortaleza_rio": "A whitewashed brick river fort: a polygonal bastion with leaf-shaped merlons and a gate tower with a tiered dark roof.",
+  "junco_tributo": "A large Chinese-style junk ship with sails of stiff battened matting and a high stern, alone on a short wooden wharf.",
+  "guardia_extranjera": "A barracks hall of whitewashed brick with a tiered dark roof and a parade veranda, two small cannons in front.",
+  "maravilla": "Pom Phet: a large octagonal fort of whitewashed brick with leaf-shaped merlons and cannons, a tiered-roof gate tower on top.",
+ },
+})
+# proceso/59: mercado y fortaleza pasan a 4×4. Se piden con su patio (el modelo llena 60–80 % de
+# la huella) y la fortaleza baja y ancha, no una torre.
+PATIO = " Seen as a whole compound with its yard, wide and low, the buildings filling about two thirds of the yard."
+E2["tawantinsuyu"]["fortaleza"] = ("A low wide Inca pukara: a rectangular enclosure of two low stepped terrace walls of fitted "
+                                   "stone around a flat yard, a trapezoidal gateway, one small fieldstone barracks with a steep "
+                                   "ichu thatch roof at the back of the yard." + PATIO)
+E2["tawantinsuyu"]["mercado"] = ("An open Inca market plaza: a low fieldstone wall around a square yard, two small open-fronted "
+                                 "stall shelters with steep ichu thatch roofs along two sides, potatoes, maize and clay jars "
+                                 "on woven cloths in the yard." + PATIO)
+E2["guaranies"]["fortaleza"] = ("A Guarani fortified yard: a square double palisade of giant bamboo canes and logs with one "
+                                "gate, a raised wooden archer platform with a thatched roof inside at one corner." + PATIO)
+E2["guaranies"]["mercado"] = ("A market yard: two open thatched shelters on forked posts facing each other across a swept "
+                              "yard, clay pots, cotton cloth and baskets of manioc on mats." + PATIO)
+E2["etiopia"]["fortaleza"] = ("A low wide hill fort: a ring wall of brown fieldstone around a yard, a stone gatehouse with a "
+                              "small dome, two round thatched houses inside." + PATIO)
+E2["etiopia"]["mercado"] = ("A market yard: one round open-sided market hall with a conical grass thatch roof and two small "
+                            "thatched sunshades on poles, low tables with salt bars, sacks of grain and clay pots." + PATIO)
+E2["palmares"]["fortaleza"] = ("A wooden stockade fort: a square palisade of thick sharpened logs with a log gate and a raised "
+                               "wooden fighting platform inside, a palm-thatched hut in the yard; no stone at all." + PATIO)
+E2["palmares"]["mercado"] = ("A market yard: two open palm-thatched shelters on posts facing each other across a swept yard, "
+                             "clay pots, palm baskets, manioc flour and iron tools on mats." + PATIO)
+E2["ayutthaya"]["fortaleza"] = ("A low wide polygonal brick fort of whitewashed walls with leaf-shaped merlons around a yard, "
+                                "cannons in the openings, a small gate tower with a tiered dark roof." + PATIO)
+E2["ayutthaya"]["mercado"] = ("A riverside market yard: three teak market stalls under dark shingle roofs around a small "
+                              "brick-paved yard with fruit, rice and pottery on low tables." + PATIO)
+SEMILLA_PATIO = {f"{_c}_{_t}": 31 for _c in ("tawantinsuyu", "guaranies", "etiopia", "palmares", "ayutthaya")
+                 for _t in ("fortaleza", "mercado")}
+ROJO_PIEZA2 = dict({"tawantinsuyu_fortaleza": "woven cloth bands along the top of the terrace walls and a cloth curtain in the gateway",
+                    "tawantinsuyu_mercado": "the woven cloths under the goods and cloth awnings over the stalls"})
+ROJO_PIEZA2.update({"etiopia_corte_nueva": "cloth pennants on the tent poles and a wide cloth band around the tent",
+               "etiopia_centro_rojo": "cloth pennants on the tent pole and a wide cloth band around the tent",
+               "etiopia_alianza": "cloth pennants on the tent pole and a wide cloth band around the tent",
+               "tawantinsuyu_torre": "a wide cloth band around the walls of the hut and a cloth pennant on a pole beside it"})
 # Elegidas entre las candidatas 21 y 22 (img/candidatas_tawantinsuyu.jpg): siluetas distintas entre sí.
-SEMILLA2 = {"tawantinsuyu_casa_rojo": 22, "tawantinsuyu_centro": 22, "tawantinsuyu_cuartel_rojo": 22,
+SEMILLA2 = {"palmares_fortaleza": 22, "palmares_mocambo_guerra": 22, "palmares_cerca_real": 22,
+            "etiopia_corte_nueva": 22, "etiopia_cuartel": 22, "etiopia_establo": 22, "etiopia_taller": 22,
+            "etiopia_torre": 22, "etiopia_iglesia": 22,
+            "mapuches_mercado": 22, "mapuches_rewe_caballeria": 22, "mapuches_maravilla": 22,
+            "guaranies_centro_rojo": 22, "guaranies_mision": 22, "guaranies_tava": 22, "guaranies_maravilla": 22,
+            "guaranies_maravilla_monte": 22, "guaranies_monte": 22,
+            "tawantinsuyu_casa_rojo": 22, "tawantinsuyu_centro": 22, "tawantinsuyu_cuartel_rojo": 22,
             "tawantinsuyu_taller_tejido": 21, "tawantinsuyu_almacen_madera": 21, "tawantinsuyu_almacen_mina": 21,
             "tawantinsuyu_qollqa": 22, "tawantinsuyu_campo_tiro": 22, "tawantinsuyu_torre": 21,
             "tawantinsuyu_fortaleza": 21, "tawantinsuyu_mercado": 22, "tawantinsuyu_ushnu": 21, "tawantinsuyu_maravilla": 21}
+SEMILLA2.update(SEMILLA_PATIO)
 TEXTURA_PX2 = 2048
+APAGAR = 0.3
 # Terrazas sin alero: la faja no las encuentra; la cumbrera tiñe la plataforma de arriba.
 MASCARA_PIEZA = {"tawantinsuyu_fortaleza": {"cumbrera": 0.12}, "tawantinsuyu_maravilla": {"cumbrera": 0.12}}
 # Paint corre el rojo al carmesí (330–345°): tono más ancho donde los techos no son rojizos.
-MASCARA2 = {"tawantinsuyu": {"tono": 22, "faja": 0.15, "cumbrera": 0.1}}  # Paint a 2048 para que la paja no se vuelva una lámina lisa
+MASCARA2 = {"tawantinsuyu": {"tono": 22, "faja": 0.15, "cumbrera": 0.1},
+            "mapuches": {"tono": 18, "faja": 0.2}, "guaranies": {"tono": 18, "faja": 0.2, "cumbrera": 0.08},
+            "etiopia": {"tono": 18, "faja": 0.15, "cumbrera": 0.08}, "palmares": {"tono": 18, "faja": 0.15, "cumbrera": 0.08},
+            "ayutthaya": {"tono": 15, "faja": 0.15}}  # Paint a 2048 para que la paja no se vuelva una lámina lisa
 
 
 def prompt2(civ, tipo, que, rojo):
@@ -265,7 +423,7 @@ def main():
         for tipo, (que, rojo, cat) in eds.items():
             clave = f"{civ}_{tipo}" + ("_rojo" if (civ, tipo) in VIEJOS else "")
             semilla = SEMILLA.get(clave, piezas.get(clave, {}).get("referencia", {}).get("receta", {}).get("semilla", 7))
-            pasada2 = civ in E2 and tipo in E2[civ]
+            pasada2 = civ in E2 and tipo in E2[civ] and (civ, tipo) not in CONSERVAR
             if pasada2:
                 semilla = SEMILLA2.get(clave, 21)
             pieza = {
@@ -295,11 +453,14 @@ def main():
                     pieza[k] = viejo[k]
             if civ in MESHY and tipo in MESHY[civ]:
                 pieza["meshy"] = True  # candidato a Meshy: no se conecta
+            if (civ, tipo) in CONSERVAR:
+                pieza["mascara"] = {**MASCARA2.get(civ, {}), **MASCARA_PIEZA.get(clave, {})}
             if pasada2:
                 pieza["pasada"] = 2
                 pieza["textura_px"] = TEXTURA_PX2
                 pieza["mezcla"] = True  # techos de la referencia (gen3d_mezcla.py): la paja no se alisa
                 pieza["suelo_pct"] = 6  # la sombra de FLUX dejaba una lámina al pie
+                pieza["apagar"] = APAGAR  # proceso/59: menos saturación fuera del color del jugador
                 pieza["mascara"] = {**MASCARA2.get(civ, {}), **MASCARA_PIEZA.get(clave, {})}
             piezas[clave] = pieza
             n += 1

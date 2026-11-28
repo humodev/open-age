@@ -136,6 +136,9 @@ Recintos amurallados y conjuntos que el pipeline local aplasta en «barriles» o
 | Tawantinsuyu | `vilcabamba` | Conjunto de casas con muro |
 | Tawantinsuyu | `kallanka_real` | Pedido del autor junto con los recintos |
 | Tawantinsuyu | `almacen_madera` | La pila de leña sale como un cartel plano (dos intentos) |
+| Mapuches | `rewe_caballeria` | Cruz en el techo |
+| Mapuches | `parlamento` | Medio techo deforme |
+| Mapuches | `maravilla` | Campo de parlamento: en planta sale una sola ruka |
 
 ## Pruebas (hasta la pausa)
 

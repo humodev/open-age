@@ -364,12 +364,14 @@ def correr_pieza(nombre: str, pieza: dict, comun: dict, args) -> dict:
     # 4c · mezcla (edificios, proceso/58): los techos de la referencia sobre la textura de Paint
     if pieza["tipo"] == "edificio" and pieza.get("mezcla"):
         glb4c = d / "mezcla.glb"
-        cfg4c = {"mezcla": pieza["mezcla"]}
+        cfg4c = {"mezcla": pieza["mezcla"], "apagar": pieza.get("apagar", 0)}
         p4c = Paso(d, "mezcla", cfg4c, [glb4, vis_png["front"]], ["gen3d_mezcla.py", "gen3d_color.py"], [glb4c],
                    "mezcla" in forzar)
 
         def f4c():
             extra = ["--todo"] if isinstance(pieza["mezcla"], dict) and pieza["mezcla"].get("todo") else []
+            if cfg4c["apagar"]:
+                extra.append(f"--apagar={cfg4c['apagar']}")
             pesado([PY, REPO / "tools/gen3d_mezcla.py", glb4, glb4c, vis_png["front"], *extra], d / "mezcla.log",
                    cwd=GEN3D, liviano=True)
             return {"log": (d / "mezcla.log").read_text().strip().splitlines()[-1][:120]}

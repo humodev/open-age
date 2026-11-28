@@ -1,6 +1,6 @@
 """Techos de la referencia sobre la textura de Hunyuan3D-Paint (proceso/58-edificios-locales).
 
-    gen3d/venv_hy/bin/python tools/gen3d_mezcla.py <paint.glb> <salida.glb> <vista_front.png> [--todo] [--umbral=0.3]
+    gen3d/venv_hy/bin/python tools/gen3d_mezcla.py <paint.glb> <salida.glb> <vista_front.png> [--todo] [--umbral=0.3] [--apagar=0.25]
 
 Paint deja la paja como una lámina lisa naranja. El proyector (tools/gen3d_color.py) conserva el
 gouache de la referencia pero mancha lo que la imagen no ve. Esto mezcla los dos sobre el atlas UV
@@ -90,6 +90,21 @@ for fi, f in enumerate(caras):
     tex[yy, xx] = tex[yy, xx] * (1 - w) + rgb[ix[vis, 1], ix[vis, 0]] * w
     cambiados += int(vis.sum())
 
+# --apagar=a (proceso/59, notas de arte): todo lo que no es rojo del equipo baja de saturación
+# (× 1 − a) y un poco de valor (× 1 − a/2): la saturación queda para el color del jugador.
+apagar = float(opt.get("apagar", "0"))
+if apagar > 0:
+    t = tex / 255.0
+    mx, mn = t.max(-1), t.min(-1)
+    sat = (mx - mn) / np.maximum(mx, 1e-6)
+    r, g, b = t[..., 0], t[..., 1], t[..., 2]
+    hue = np.degrees(np.arctan2(np.sqrt(3) * (g - b), 2 * r - g - b)) % 360
+    rojo = ((hue < 25) | (hue > 330)) & (sat > 0.45) & (mx > 0.12)
+    gris = t.mean(-1, keepdims=True)
+    apagado = (gris + (t - gris) * (1 - apagar)) * (1 - apagar / 2)
+    t = np.where(rojo[..., None], t, apagado)
+    tex = t * 255.0
+    print(f"apagado: {1 - rojo.mean():.0%} del atlas")
 mat.baseColorTexture = Image.fromarray(tex.clip(0, 255).astype(np.uint8))
 esc.export(dst)
 print(f"listo: {dst}, {cambiados} texeles de la referencia ({cambiados / (W * H):.1%} del atlas)")

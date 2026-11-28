@@ -12,9 +12,16 @@
   "acento": "#6b5a3a",
   "modelos": {
    "aldeano": "mapuches_aldeano",
-   "lof": "mapuches_lof",
+   "lof": "local/mapuches_lof",
    "jinete": "mapuches_jinete",
-   "casa": "local/mapuches_casa_v1"
+   "casa": "local/mapuches_casa",
+   "cuartel": "local/mapuches_cuartel",
+   "fortaleza": "local/mapuches_fortaleza",
+   "mercado": "local/mapuches_mercado",
+   "rewe_malon": "local/mapuches_rewe_malon",
+   "rewe_lonko": "local/mapuches_rewe_lonko",
+   "rewe_monte": "local/mapuches_rewe_monte",
+   "weichan": "local/mapuches_weichan"
   }
  },
  "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",

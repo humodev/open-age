@@ -2,16 +2,48 @@
  "_doc": "Color del equipo en los modelos generados de edificios (proceso/58-edificios-locales). Clave: el nombre del modelo como en estilo.modelos («local/<pueblo>_<tipo>»). La máscara es assets/generados/modelos/<clave>_mascara.png (tools/mascara_equipo_3d.py --metodo=rojo --edificio: las telas y fajas pintadas en rojo plano en la referencia); luz_ref, la luminancia media de lo enmascarado, la usa src/game/shaders/equipo_3d.gdshader; cobertura, la parte de la superficie teñida. Lo escribe tools/gen3d_pipeline.py (paso mascara). Sin entrada, el modelo queda con su textura y el color va solo en el estandarte. Solo imagen.",
  "mascaras": {
   "local/mapuches_casa": {
-   "luz_ref": 0.0719,
-   "cobertura": 0.0644
+   "luz_ref": 0.1235,
+   "cobertura": 0.2756
   },
   "local/mapuches_cuartel": {
-   "luz_ref": 0.068,
-   "cobertura": 0.0007
+   "luz_ref": 0.0694,
+   "cobertura": 0.1717
+  },
+  "local/mapuches_fortaleza": {
+   "luz_ref": 0.0858,
+   "cobertura": 0.1455
   },
   "local/mapuches_lof": {
-   "luz_ref": 0.05,
-   "cobertura": 0.038
+   "luz_ref": 0.2637,
+   "cobertura": 0.1872
+  },
+  "local/mapuches_maravilla": {
+   "luz_ref": 0.0195,
+   "cobertura": 0.318
+  },
+  "local/mapuches_mercado": {
+   "luz_ref": 0.0819,
+   "cobertura": 0.1494
+  },
+  "local/mapuches_parlamento": {
+   "luz_ref": 0.0751,
+   "cobertura": 0.442
+  },
+  "local/mapuches_rewe_caballeria": {
+   "luz_ref": 0.1,
+   "cobertura": 0.2736
+  },
+  "local/mapuches_rewe_malon": {
+   "luz_ref": 0.0633,
+   "cobertura": 0.167
+  },
+  "local/mapuches_rewe_monte": {
+   "luz_ref": 0.0341,
+   "cobertura": 0.2773
+  },
+  "local/mapuches_weichan": {
+   "luz_ref": 0.0312,
+   "cobertura": 0.2968
   },
   "local/tawantinsuyu_almacen_madera": {
    "luz_ref": 0.2078,
