@@ -821,7 +821,8 @@ func _make_visual(e: SimEntity) -> Dictionary:
 		carry.visible = false
 		body.add_child(carry)
 		# Silueta del color del equipo cuando la tapa un árbol o un edificio (proceso/24, 4p).
-		var sil := _silueta(team)
+		# --- montados --- un animal grande se tapa a sí mismo más que la mano o el escudo
+		var sil := _silueta(team, maxf(0.35, cuad.s * float(cuad.md["h0"]) * 0.9) if cuad != null else 0.35)
 		_each_geo(body, func(g: GeometryInstance3D) -> void: g.material_overlay = sil)
 		var rr := maxf(0.85, e.radius / 500.0 + 0.3)
 		var ring := _ring(0, Vector2(rr, rr))
@@ -914,12 +915,13 @@ static var _siluetas := {} # color del equipo -> ShaderMaterial
 
 
 ## Material de la silueta de una unidad tapada (shaders/silueta.gdshader), uno por equipo.
-static func _silueta(team: Color) -> ShaderMaterial:
-	var key := team.to_html()
+static func _silueta(team: Color, margen := 0.35) -> ShaderMaterial:
+	var key := "%s_%.2f" % [team.to_html(), margen]
 	if not _siluetas.has(key):
 		var m := ShaderMaterial.new()
 		m.shader = preload("res://src/game/shaders/silueta.gdshader")
 		m.set_shader_parameter("color", Color(team.r, team.g, team.b, 0.6))
+		m.set_shader_parameter("margen", margen)
 		_siluetas[key] = m
 	return _siluetas[key]
 
@@ -1749,6 +1751,8 @@ func render(alpha: float, delta: float) -> void:
 	_anim_cam = get_viewport().get_camera_3d()
 	_anim_k = RtsCamera.k_dist() if _anim_cam != null and _anim_cam.get_parent() is RtsCamera else 1.0
 	# Esqueletos compartidos entre las figuras que hacen lo mismo (rendimiento.compartir).
+	_cuad_div = maxi(1, ceili(float(_cuad_vis) / float(CuadrupedoAnimado.max_por_cuadro))) # --- montados ---
+	_cuad_vis = 0
 	AldeanoAnimado.preparar_coros(self)
 	AldeanoAnimado.avanzar_coros(delta * velocidad)
 	for id in visuals:
@@ -1970,6 +1974,10 @@ func _render_anim(e: SimEntity, v: Dictionary, moving: bool, walked: float, delt
 
 
 # --- montados (proceso/63) ---
+var _cuad_vis := 0
+var _cuad_div := 1
+
+
 ## Montado o rebaño animado: fuera de la pantalla no se anima; lejos de la cámara, a la mitad de
 ## cuadros (se junta la distancia y el tiempo y se aplican juntos, como la gente).
 func _render_cuad(e: SimEntity, v: Dictionary, moving: bool, walked: float, delta: float) -> void:
@@ -1988,7 +1996,11 @@ func _render_cuad(e: SimEntity, v: Dictionary, moving: bool, walked: float, delt
 		if not _anim_cam.is_position_in_frustum(node.position + Vector3(0, 0.5, 0)):
 			return
 		dist = _anim_cam.global_position.distance_to(node.position) / _anim_k
-	if dist > CuadrupedoAnimado.lejos_m and (e.id + _anim_frame) % 2 != 0:
+	# Presupuesto: con más de montados.rendimiento.max_por_cuadro en pantalla, cada uno se
+	# actualiza cada _cuad_div cuadros (lejos, el doble); entre turnos se junta lo recorrido.
+	_cuad_vis += 1
+	var div := _cuad_div * (2 if dist > CuadrupedoAnimado.lejos_m else 1)
+	if (e.id + _anim_frame) % div != 0:
 		return
 	var lejos := dist > AldeanoAnimado.compartir_desde_m or (_anim_total_prev > AldeanoAnimado.compartir_con_mas_de and dist > AldeanoAnimado.cerca_m)
 	CuadrupedoAnimado.actualizar(st, e, sim, moving, st.walk_acc, st.dt_acc, st.golpe, st.recibe, lejos)

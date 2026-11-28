@@ -223,6 +223,8 @@ func _fps(sim: Sim) -> void:
 				caballo = k
 	if caballo == "":
 		caballo = "jinete"
+	if elefante == "" and sim.dp(0).unidades.has("chang_suek"): # --montados=0: los mismos, de maqueta
+		elefante = "chang_suek"
 	var n_cab := int(args.get("caballos", "60"))
 	var n_ele := int(args.get("elefantes", "10"))
 	var march := []

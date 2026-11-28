@@ -27,6 +27,7 @@ static var _mods := {} # clave del modelo -> {ps, h0, paso, len, tipo, silla, cu
 static var _mats := {} # color -> material de la manta
 static var forzar := -1 # --montados=0|1 (main.gd)
 static var lejos_m := 46.0
+static var max_por_cuadro := 40 # montados.rendimiento.max_por_cuadro
 static var us_actualizar := 0
 
 
@@ -35,6 +36,7 @@ static func cfg() -> Dictionary:
 		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/arte_cuadrupedos.json"))
 		_cfg = raw if raw is Dictionary else {"tipos": {}}
 		lejos_m = float(montados().get("rendimiento", {}).get("lejos_m", 46))
+		max_por_cuadro = maxi(1, int(montados().get("rendimiento", {}).get("max_por_cuadro", 40)))
 	return _cfg
 
 
