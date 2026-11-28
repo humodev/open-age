@@ -1,6 +1,74 @@
 {
  "_doc": "Color del equipo en los modelos generados de edificios (proceso/58-edificios-locales). Clave: el nombre del modelo como en estilo.modelos («local/<pueblo>_<tipo>»). La máscara es assets/generados/modelos/<clave>_mascara.png (tools/mascara_equipo_3d.py --metodo=rojo --edificio: las telas y fajas pintadas en rojo plano en la referencia); luz_ref, la luminancia media de lo enmascarado, la usa src/game/shaders/equipo_3d.gdshader; cobertura, la parte de la superficie teñida. Lo escribe tools/gen3d_pipeline.py (paso mascara). Sin entrada, el modelo queda con su textura y el color va solo en el estandarte. Solo imagen.",
  "mascaras": {
+  "local/etiopia_alianza": {
+   "luz_ref": 0.1574,
+   "cobertura": 0.4162
+  },
+  "local/etiopia_almacen_alimento": {
+   "luz_ref": 0.0754,
+   "cobertura": 0.2361
+  },
+  "local/etiopia_almacen_madera": {
+   "luz_ref": 0.0627,
+   "cobertura": 0.2252
+  },
+  "local/etiopia_almacen_mina": {
+   "luz_ref": 0.1136,
+   "cobertura": 0.1895
+  },
+  "local/etiopia_amba": {
+   "luz_ref": 0.1377,
+   "cobertura": 0.0649
+  },
+  "local/etiopia_casa": {
+   "luz_ref": 0.0951,
+   "cobertura": 0.2259
+  },
+  "local/etiopia_centro": {
+   "luz_ref": 0.086,
+   "cobertura": 0.1643
+  },
+  "local/etiopia_corte_nueva": {
+   "luz_ref": 0.1146,
+   "cobertura": 0.1065
+  },
+  "local/etiopia_cuartel": {
+   "luz_ref": 0.0628,
+   "cobertura": 0.3629
+  },
+  "local/etiopia_establo": {
+   "luz_ref": 0.1457,
+   "cobertura": 0.115
+  },
+  "local/etiopia_fortaleza": {
+   "luz_ref": 0.0904,
+   "cobertura": 0.0663
+  },
+  "local/etiopia_gondar": {
+   "luz_ref": 0.0912,
+   "cobertura": 0.1984
+  },
+  "local/etiopia_maravilla": {
+   "luz_ref": 0.052,
+   "cobertura": 0.2406
+  },
+  "local/etiopia_mercado": {
+   "luz_ref": 0.0996,
+   "cobertura": 0.2276
+  },
+  "local/etiopia_remonta": {
+   "luz_ref": 0.0538,
+   "cobertura": 0.113
+  },
+  "local/etiopia_taller": {
+   "luz_ref": 0.0823,
+   "cobertura": 0.2162
+  },
+  "local/etiopia_torre": {
+   "luz_ref": 0.1259,
+   "cobertura": 0.1589
+  },
   "local/guaranies_almacen_madera": {
    "luz_ref": 0.0474,
    "cobertura": 0.2058

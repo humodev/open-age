@@ -142,6 +142,9 @@ Recintos amurallados y conjuntos que el pipeline local aplasta en «barriles» o
 | Tawantinsuyu | `fortaleza` | Pukara con patio (4×4): una caja de muros lisos |
 | Tawantinsuyu | `mercado` | Plaza con puestos (4×4): caja con muros verde azulado |
 | Guaraníes | `fortaleza` | Patio con empalizada: sale una casa europea con ventanas |
+| Etiopía | `fortaleza` | Muro en anillo alrededor de un patio: barril |
+| Etiopía | `remonta` | Corral amurallado con establo: caja abierta |
+| Etiopía | `alianza` | La tienda real sale roja entera (se tiñe toda) |
 
 ## Pruebas (hasta la pausa)
 

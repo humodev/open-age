@@ -13,8 +13,22 @@
   "modelos": {
    "aldeano": "etiopia_aldeano",
    "guerrero": "etiopia_jinete",
-   "centro": "local/etiopia_centro_v1",
-   "casa": "local/etiopia_casa_v1"
+   "centro": "local/etiopia_centro",
+   "casa": "local/etiopia_casa",
+   "corte_nueva": "local/etiopia_corte_nueva",
+   "almacen_alimento": "local/etiopia_almacen_alimento",
+   "almacen_madera": "local/etiopia_almacen_madera",
+   "almacen_mina": "local/etiopia_almacen_mina",
+   "cuartel": "local/etiopia_cuartel",
+   "establo": "local/etiopia_establo",
+   "taller": "local/etiopia_taller",
+   "torre": "local/etiopia_torre",
+   "mercado": "local/etiopia_mercado",
+   "iglesia": "local/etiopia_iglesia",
+   "monasterio": "local/etiopia_monasterio",
+   "amba": "local/etiopia_amba",
+   "gondar": "local/etiopia_gondar",
+   "maravilla": "local/etiopia_maravilla"
   }
  },
  "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",
