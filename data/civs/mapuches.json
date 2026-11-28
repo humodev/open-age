@@ -23,7 +23,8 @@
    "rewe_monte": "local/mapuches_rewe_monte",
    "weichan": "local/mapuches_weichan",
    "parlamento": "recinto/mapuches_parlamento",
-   "maravilla": "recinto/mapuches_maravilla"
+   "maravilla": "recinto/mapuches_maravilla",
+   "rewe_caballeria": "local/mapuches_rewe_caballeria_65b"
   }
  },
  "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",
