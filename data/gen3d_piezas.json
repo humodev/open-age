@@ -130,7 +130,8 @@
    "caras": 4000,
    "suelo_pct": 4,
    "rig": "cuadrupedo",
-   "destino": "assets/generados/modelos/local/caballo_criollo.glb"
+   "destino": "assets/generados/modelos/local/caballo_criollo.glb",
+   "rig_tipo": "caballo"
   },
   "mapuches_aldeano": {
    "tipo": "persona",
@@ -5225,6 +5226,186 @@
     "cumbrera": 0.1
    },
    "destino": "assets/generados/modelos/local/pruebas/tawantinsuyu_cuartel_mv.glb"
+  },
+  "elefante_guerra": {
+   "tipo": "animal",
+   "alto_rel_persona": 1.9,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/gen3d/elefante_guerra_101.png",
+    "receta": {
+     "semilla": 101,
+     "ancho": 1024,
+     "alto": 768,
+     "prompt": "{estilo} Reference for 3D modeling: one single Asian war elephant from Siam, a large bull with long curved ivory tusks, a domed head and small ears, seen from the side in profile, the whole body visible from the tip of the trunk to the tail, walking slowly so all four legs are clearly visible and separated, the near legs and the far legs apart, head up, no howdah, no saddle, no cloth, no harness, no rider, bare back. Dark grey wrinkled skin with a few pale pink spots on the ears and trunk. Even flat studio light, plain light grey background, no shadow on the ground."
+    },
+    "vistas": {
+     "front": {
+      "umbral": 22,
+      "margen": 0.06
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 5000,
+   "suelo_pct": 4,
+   "rig": "cuadrupedo",
+   "rig_tipo": "elefante",
+   "destino": "assets/generados/modelos/local/animal_elefante_guerra.glb"
+  },
+  "llama": {
+   "tipo": "animal",
+   "alto_rel_persona": 1.0,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/gen3d/llama_21.png",
+    "receta": {
+     "semilla": 21,
+     "ancho": 1024,
+     "alto": 768,
+     "prompt": "{estilo} Reference for 3D modeling: one single Andean llama, a domestic camelid with a long upright neck, long banana-shaped ears and a thick woolly coat, seen from the side in profile, the whole body visible from the ears to the hooves and the short tail, walking slowly so all four legs are clearly visible and separated, the near legs and the far legs apart, head up, no saddle, no load, no rope, no rider. Cream white wool with a light brown head. Even flat studio light, plain light grey background, no shadow on the ground."
+    },
+    "vistas": {
+     "front": {
+      "umbral": 22,
+      "margen": 0.06
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4000,
+   "suelo_pct": 4,
+   "rig": "cuadrupedo",
+   "rig_tipo": "llama",
+   "destino": "assets/generados/modelos/local/animal_llama.glb"
+  },
+  "buey": {
+   "tipo": "animal",
+   "alto_rel_persona": 0.95,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/gen3d/buey_31.png",
+    "receta": {
+     "semilla": 31,
+     "ancho": 1024,
+     "alto": 768,
+     "prompt": "{estilo} Reference for 3D modeling: one single zebu ox, a sturdy humped working ox with a big hump over the shoulders, a hanging dewlap and short curved horns, seen from the side in profile, the whole body visible from the horns to the hooves and the tail, walking slowly so all four legs are clearly visible and separated, the near legs and the far legs apart, head up, no yoke, no saddle, no rope, no rider. Light grey-brown coat. Even flat studio light, plain light grey background, no shadow on the ground."
+    },
+    "vistas": {
+     "front": {
+      "umbral": 22,
+      "margen": 0.06
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4000,
+   "suelo_pct": 4,
+   "rig": "cuadrupedo",
+   "rig_tipo": "buey",
+   "destino": "assets/generados/modelos/local/animal_buey.glb"
+  },
+  "venado": {
+   "tipo": "animal",
+   "alto_rel_persona": 0.85,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/gen3d/venado_41.png",
+    "receta": {
+     "semilla": 41,
+     "ancho": 1024,
+     "alto": 768,
+     "prompt": "{estilo} Reference for 3D modeling: one single deer, a slender wild deer stag with branching antlers and long thin legs, seen from the side in profile, the whole body visible from the antlers to the hooves and the short tail, walking slowly so all four legs are clearly visible and separated, the near legs and the far legs apart, head up, no rider, nothing else. Warm reddish brown coat with a pale belly. Even flat studio light, plain light grey background, no shadow on the ground."
+    },
+    "vistas": {
+     "front": {
+      "umbral": 22,
+      "margen": 0.06
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4000,
+   "suelo_pct": 4,
+   "rig": "cuadrupedo",
+   "rig_tipo": "venado",
+   "destino": "assets/generados/modelos/local/animal_venado.glb"
+  },
+  "cabra": {
+   "tipo": "animal",
+   "alto_rel_persona": 0.55,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/gen3d/cabra_51.png",
+    "receta": {
+     "semilla": 51,
+     "ancho": 1024,
+     "alto": 768,
+     "prompt": "{estilo} Reference for 3D modeling: one single domestic goat with short curved horns, a small beard and a short tail, seen from the side in profile, the whole body visible from the horns to the hooves and the tail, walking slowly so all four legs are clearly visible and separated, the near legs and the far legs apart, head up, no rope, no rider. Dark brown and black coat. Even flat studio light, plain light grey background, no shadow on the ground."
+    },
+    "vistas": {
+     "front": {
+      "umbral": 22,
+      "margen": 0.06
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4000,
+   "suelo_pct": 4,
+   "rig": "cuadrupedo",
+   "rig_tipo": "cabra",
+   "destino": "assets/generados/modelos/local/animal_cabra.glb"
+  },
+  "cerdo": {
+   "tipo": "animal",
+   "alto_rel_persona": 0.45,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/gen3d/cerdo_61.png",
+    "receta": {
+     "semilla": 61,
+     "ancho": 1024,
+     "alto": 768,
+     "prompt": "{estilo} Reference for 3D modeling: one single domestic pig, a stocky village pig with a long snout, small ears and short legs, seen from the side in profile, the whole body visible from the snout to the hooves and the curly tail, walking slowly so all four legs are clearly visible and separated, the near legs and the far legs apart, head up, no rope, nothing else. Pinkish brown skin with sparse dark bristles. Even flat studio light, plain light grey background, no shadow on the ground."
+    },
+    "vistas": {
+     "front": {
+      "umbral": 22,
+      "margen": 0.06
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4000,
+   "suelo_pct": 4,
+   "rig": "cuadrupedo",
+   "rig_tipo": "cerdo",
+   "destino": "assets/generados/modelos/local/animal_cerdo.glb"
   }
  }
 }

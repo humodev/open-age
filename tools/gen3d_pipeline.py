@@ -397,12 +397,18 @@ def correr_pieza(nombre: str, pieza: dict, comun: dict, args) -> dict:
     glb5 = d / "rig.glb" if rig else glb4
     if rig:
         script = "gen3d_rig.py" if rig == "humano" else "gen3d_rig_cuadrupedo.py"
-        p5 = Paso(d, "rig", {"rig": rig}, [glb4], [script], [glb5], "rig" in forzar)
+        # Cuadrúpedo (proceso/63): el tipo de animal y sus ciclos salen de data/arte_cuadrupedos.json.
+        cuad = rig != "humano"
+        cfg5 = {"rig": rig, "tipo": pieza.get("rig_tipo", "caballo"), "modelo": pieza.get("rig_modelo", "")} if cuad \
+            else {"rig": rig}
+        p5 = Paso(d, "rig", cfg5, [glb4] + ([REPO / "data/arte_cuadrupedos.json"] if cuad else []), [script], [glb5],
+                  "rig" in forzar)
 
         def f5():
             extra = [d / "mixamo.fbx"] if rig == "humano" else []
+            opciones = [f"--tipo={cfg5['tipo']}", f"--modelo={cfg5['modelo']}", "--tiras"] if cuad else []
             pesado([BLENDER, "--background", "--python", REPO / "tools" / script, "--", glb4, glb5, *extra,
-                    d / "pose"], d / "rig.log", liviano=True)
+                    d / "pose", *opciones], d / "rig.log", liviano=True)
             return {"rig": rig}
         hacer("rig", p5, f5)
 

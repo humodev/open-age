@@ -1,0 +1,467 @@
+{
+ "_doc": "Cuadrúpedos animados (proceso/63-montados-y-animales). Solo imagen: la simulación no lo lee y el hash no cambia. Lo leen tools/gen3d_rig_cuadrupedo.py (Blender: esqueleto, arreos y ciclos) y src/game/cuadrupedo_animado.gd (el juego). tipos: anatomía y andar de cada clase de animal. silla_pct: dónde va el jinete, de las patas traseras (0) a las delanteras (1); silla_alto_pct: alto del lomo en ese punto si el modelo trae algo encima (el howdah del elefante del rey); cuello_pct: dónde va el mahout (solo elefante; más de 1 es delante de las manos); rigido_desde_pct: los vértices por encima de ese alto (en % del alto) van enteros al lomo, sin doblarse (lo que el modelo trae montado); trompa: tres huesos más; arreos: manta (la tela del color del equipo, ancho y largo en % del largo del cuerpo, caida en % del alto) y howdah (la plataforma de madera para el soldado, en % del largo; alto_pct de la baranda). clips: largo de cada animación en segundos (ciclo_s) y su forma. fases: en qué momento del ciclo (0 a 1) levanta cada pata (trasera izq., delantera izq., trasera der., delantera der.): caminar es el paso de cuatro tiempos; galope, el galope transverso (las traseras y las delanteras casi juntas); el ambladura del elefante y el paso de la llama van de a pares del mismo lado. pierna_grados: cuánto va y viene la pata; doblez_grados: cuánto se dobla al levantarla; lomo_grados: cuánto se arquea el lomo en el galope; rebote_pct: sube y baja del cuerpo (en % del alto); cabeceo_grados: el cuello. ataque: encabritar (se para en las patas de atrás y manotea), pisoton (levanta la mano y la trompa y pisa), cabezazo (baja la cabeza y embiste). juego: en el juego (cuadrupedo_animado.gd); galope_desde: casillas por segundo desde las que pasa de caminar a galope (con un 15 % de margen al volver); ataque_cada: cada cuántos golpes de la simulación hace su ataque (el resto del tiempo el jinete pega y el animal se queda en el lugar); vel_min_pct y vel_max_pct: tope de lo que se acelera o frena la animación para seguir a la distancia recorrida (el paso no patina dentro de esos topes). modelos: cada GLB riggeado; alto_persona: alto total en personas (la persona animada mide 1); tipo; tinte: multiplica el color de la textura. forma_tipo: el tipo de cada forma de data/arte_animales.json. especies: ver su _doc.",
+ "tipos": {
+  "caballo": {
+   "silla_pct": 0.62,
+   "arreos": {
+    "manta": {
+     "largo_pct": 26,
+     "caida_pct": 26
+    }
+   },
+   "ataque": "encabritar",
+   "clips": {
+    "quieto": {
+     "ciclo_s": 2.0
+    },
+    "pastar": {
+     "ciclo_s": 3.0,
+     "cuello_grados": 55
+    },
+    "caminar": {
+     "ciclo_s": 0.9,
+     "fases": [
+      0.0,
+      0.25,
+      0.5,
+      0.75
+     ],
+     "pierna_grados": 22,
+     "doblez_grados": 35,
+     "lomo_grados": 1.5,
+     "rebote_pct": 1.2,
+     "cabeceo_grados": 4
+    },
+    "galope": {
+     "ciclo_s": 0.42,
+     "fases": [
+      0.0,
+      0.1,
+      0.42,
+      0.55
+     ],
+     "pierna_grados": 40,
+     "doblez_grados": 70,
+     "lomo_grados": 6,
+     "rebote_pct": 5,
+     "cabeceo_grados": 9
+    },
+    "ataque": {
+     "ciclo_s": 1.25,
+     "alto_grados": 30
+    },
+    "golpeado": {
+     "ciclo_s": 0.45
+    },
+    "morir": {
+     "ciclo_s": 1.5
+    }
+   },
+   "juego": {
+    "galope_desde": 1.3,
+    "ataque_cada": 4,
+    "vel_min_pct": 50,
+    "vel_max_pct": 220
+   }
+  },
+  "elefante": {
+   "silla_pct": 0.45,
+   "cuello_pct": 1.32,
+   "trompa": true,
+   "rigido_desde_pct": 101,
+   "arreos": {
+    "manta": {
+     "largo_pct": 36,
+     "caida_pct": 30
+    },
+    "howdah": {
+     "largo_pct": 24,
+     "ancho_pct": 22,
+     "alto_pct": 9
+    }
+   },
+   "ataque": "pisoton",
+   "clips": {
+    "quieto": {
+     "ciclo_s": 3.0
+    },
+    "pastar": {
+     "ciclo_s": 3.5,
+     "cuello_grados": 14
+    },
+    "caminar": {
+     "ciclo_s": 1.2,
+     "fases": [
+      0.0,
+      0.25,
+      0.5,
+      0.75
+     ],
+     "pierna_grados": 20,
+     "doblez_grados": 22,
+     "lomo_grados": 1.0,
+     "rebote_pct": 0.8,
+     "cabeceo_grados": 3
+    },
+    "galope": {
+     "ciclo_s": 1.0,
+     "fases": [
+      0.0,
+      0.12,
+      0.5,
+      0.62
+     ],
+     "pierna_grados": 20,
+     "doblez_grados": 32,
+     "lomo_grados": 2.0,
+     "rebote_pct": 1.8,
+     "cabeceo_grados": 5
+    },
+    "ataque": {
+     "ciclo_s": 1.6,
+     "alto_grados": 14
+    },
+    "golpeado": {
+     "ciclo_s": 0.6
+    },
+    "morir": {
+     "ciclo_s": 2.2
+    }
+   },
+   "juego": {
+    "galope_desde": 1.3,
+    "ataque_cada": 1,
+    "vel_min_pct": 50,
+    "vel_max_pct": 200
+   }
+  },
+  "llama": {
+   "silla_pct": 0.5,
+   "ataque": "cabezazo",
+   "clips": {
+    "quieto": {
+     "ciclo_s": 2.4
+    },
+    "pastar": {
+     "ciclo_s": 3.0,
+     "cuello_grados": 70
+    },
+    "caminar": {
+     "ciclo_s": 1.0,
+     "fases": [
+      0.0,
+      0.08,
+      0.5,
+      0.58
+     ],
+     "pierna_grados": 18,
+     "doblez_grados": 32,
+     "lomo_grados": 1.0,
+     "rebote_pct": 1.0,
+     "cabeceo_grados": 3
+    },
+    "galope": {
+     "ciclo_s": 0.6,
+     "fases": [
+      0.0,
+      0.1,
+      0.42,
+      0.55
+     ],
+     "pierna_grados": 30,
+     "doblez_grados": 60,
+     "lomo_grados": 4,
+     "rebote_pct": 4,
+     "cabeceo_grados": 5
+    },
+    "ataque": {
+     "ciclo_s": 1.0,
+     "alto_grados": 20
+    },
+    "golpeado": {
+     "ciclo_s": 0.45
+    },
+    "morir": {
+     "ciclo_s": 1.4
+    }
+   },
+   "juego": {
+    "galope_desde": 0.5,
+    "ataque_cada": 1,
+    "vel_min_pct": 55,
+    "vel_max_pct": 190
+   }
+  },
+  "buey": {
+   "silla_pct": 0.5,
+   "ataque": "cabezazo",
+   "clips": {
+    "quieto": {
+     "ciclo_s": 2.6
+    },
+    "pastar": {
+     "ciclo_s": 3.2,
+     "cuello_grados": 40
+    },
+    "caminar": {
+     "ciclo_s": 1.2,
+     "fases": [
+      0.0,
+      0.25,
+      0.5,
+      0.75
+     ],
+     "pierna_grados": 15,
+     "doblez_grados": 30,
+     "lomo_grados": 1.0,
+     "rebote_pct": 0.8,
+     "cabeceo_grados": 4
+    },
+    "galope": {
+     "ciclo_s": 0.65,
+     "fases": [
+      0.0,
+      0.1,
+      0.42,
+      0.55
+     ],
+     "pierna_grados": 28,
+     "doblez_grados": 55,
+     "lomo_grados": 4,
+     "rebote_pct": 3.5,
+     "cabeceo_grados": 6
+    },
+    "ataque": {
+     "ciclo_s": 1.1,
+     "alto_grados": 18
+    },
+    "golpeado": {
+     "ciclo_s": 0.45
+    },
+    "morir": {
+     "ciclo_s": 1.6
+    }
+   },
+   "juego": {
+    "galope_desde": 0.5,
+    "ataque_cada": 1,
+    "vel_min_pct": 55,
+    "vel_max_pct": 190
+   }
+  },
+  "venado": {
+   "silla_pct": 0.5,
+   "ataque": "cabezazo",
+   "clips": {
+    "quieto": {
+     "ciclo_s": 2.2
+    },
+    "pastar": {
+     "ciclo_s": 2.8,
+     "cuello_grados": 60
+    },
+    "caminar": {
+     "ciclo_s": 0.9,
+     "fases": [
+      0.0,
+      0.25,
+      0.5,
+      0.75
+     ],
+     "pierna_grados": 18,
+     "doblez_grados": 38,
+     "lomo_grados": 1.5,
+     "rebote_pct": 1.2,
+     "cabeceo_grados": 4
+    },
+    "galope": {
+     "ciclo_s": 0.45,
+     "fases": [
+      0.0,
+      0.06,
+      0.4,
+      0.46
+     ],
+     "pierna_grados": 38,
+     "doblez_grados": 75,
+     "lomo_grados": 8,
+     "rebote_pct": 7,
+     "cabeceo_grados": 6
+    },
+    "ataque": {
+     "ciclo_s": 1.0,
+     "alto_grados": 20
+    },
+    "golpeado": {
+     "ciclo_s": 0.4
+    },
+    "morir": {
+     "ciclo_s": 1.3
+    }
+   },
+   "juego": {
+    "galope_desde": 0.5,
+    "ataque_cada": 1,
+    "vel_min_pct": 55,
+    "vel_max_pct": 190
+   }
+  },
+  "cabra": {
+   "silla_pct": 0.5,
+   "ataque": "cabezazo",
+   "clips": {
+    "quieto": {
+     "ciclo_s": 2.0
+    },
+    "pastar": {
+     "ciclo_s": 2.6,
+     "cuello_grados": 50
+    },
+    "caminar": {
+     "ciclo_s": 0.8,
+     "fases": [
+      0.0,
+      0.25,
+      0.5,
+      0.75
+     ],
+     "pierna_grados": 18,
+     "doblez_grados": 35,
+     "lomo_grados": 1.5,
+     "rebote_pct": 1.5,
+     "cabeceo_grados": 4
+    },
+    "galope": {
+     "ciclo_s": 0.45,
+     "fases": [
+      0.0,
+      0.1,
+      0.42,
+      0.55
+     ],
+     "pierna_grados": 32,
+     "doblez_grados": 60,
+     "lomo_grados": 5,
+     "rebote_pct": 6,
+     "cabeceo_grados": 6
+    },
+    "ataque": {
+     "ciclo_s": 0.9,
+     "alto_grados": 25
+    },
+    "golpeado": {
+     "ciclo_s": 0.4
+    },
+    "morir": {
+     "ciclo_s": 1.2
+    }
+   },
+   "juego": {
+    "galope_desde": 0.5,
+    "ataque_cada": 1,
+    "vel_min_pct": 55,
+    "vel_max_pct": 190
+   }
+  },
+  "cerdo": {
+   "silla_pct": 0.5,
+   "ataque": "cabezazo",
+   "clips": {
+    "quieto": {
+     "ciclo_s": 2.0
+    },
+    "pastar": {
+     "ciclo_s": 2.4,
+     "cuello_grados": 25
+    },
+    "caminar": {
+     "ciclo_s": 0.7,
+     "fases": [
+      0.0,
+      0.25,
+      0.5,
+      0.75
+     ],
+     "pierna_grados": 16,
+     "doblez_grados": 30,
+     "lomo_grados": 1.0,
+     "rebote_pct": 1.5,
+     "cabeceo_grados": 3
+    },
+    "galope": {
+     "ciclo_s": 0.4,
+     "fases": [
+      0.0,
+      0.1,
+      0.42,
+      0.55
+     ],
+     "pierna_grados": 26,
+     "doblez_grados": 50,
+     "lomo_grados": 4,
+     "rebote_pct": 5,
+     "cabeceo_grados": 4
+    },
+    "ataque": {
+     "ciclo_s": 0.9,
+     "alto_grados": 15
+    },
+    "golpeado": {
+     "ciclo_s": 0.4
+    },
+    "morir": {
+     "ciclo_s": 1.2
+    }
+   },
+   "juego": {
+    "galope_desde": 0.5,
+    "ataque_cada": 1,
+    "vel_min_pct": 55,
+    "vel_max_pct": 190
+   }
+  }
+ },
+ "modelos": {
+  "caballo_criollo": {
+   "glb": "res://assets/generados/modelos/local/caballo_criollo.glb",
+   "tipo": "caballo",
+   "alto_persona": 1.3
+  },
+  "elefante_guerra": {
+   "glb": "res://assets/generados/modelos/montados/elefante_guerra.glb",
+   "tipo": "elefante",
+   "rig": {
+    "rigido_desde_pct": 101,
+    "recortar_desde_pct": 58,
+    "recortar_x_pct": [
+     2,
+     82
+    ],
+    "cabeza": "-y"
+   },
+   "alto_persona": 2.0
+  },
+  "elefante_rey": {
+   "glb": "res://assets/generados/modelos/montados/elefante_rey.glb",
+   "tipo": "elefante",
+   "rig": {
+    "rigido_desde_pct": 60,
+    "arreos": {},
+    "cabeza": "-y"
+   },
+   "alto_persona": 2.6
+  }
+ },
+ "especies": {
+  "_doc": "Sin entrada: la silueta de la especie riggeada (assets/generados/modelos/animales/<especie>.glb, de tools/exportar_animales.gd + gen3d_rig_cuadrupedo.py), con el tipo de su forma (forma_tipo) y su alto de siempre. Con entrada {modelo, tinte, escala_pct}: un modelo de la lista de arriba (para cuando haya mallas del pipeline). activo: false deja a todos los animales con la silueta fija.",
+  "activo": true
+ },
+ "forma_tipo": {
+  "camelido": "llama",
+  "cabra": "cabra",
+  "bovino": "buey",
+  "cerdo": "cerdo",
+  "ciervo": "venado",
+  "tapir": "cerdo"
+ }
+}
