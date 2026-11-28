@@ -145,6 +145,7 @@ Recintos amurallados y conjuntos que el pipeline local aplasta en «barriles» o
 | Etiopía | `fortaleza` | Muro en anillo alrededor de un patio: barril |
 | Etiopía | `remonta` | Corral amurallado con establo: caja abierta |
 | Etiopía | `alianza` | La tienda real sale roja entera (se tiñe toda) |
+| Palmares | `maravilla` | Cerro con tres anillos de empalizada: sale una casa chica en un cerco |
 
 ## Pruebas (hasta la pausa)
 

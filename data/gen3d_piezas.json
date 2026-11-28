@@ -3660,8 +3660,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.15,
-    "cumbrera": 0.08
+    "faja": 0.1,
+    "cumbrera": 0.05
    }
   },
   "palmares_centro_rojo": {
@@ -3703,8 +3703,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.15,
-    "cumbrera": 0.08
+    "faja": 0.1,
+    "cumbrera": 0.05
    }
   },
   "palmares_almacen_alimento": {
@@ -3746,8 +3746,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.15,
-    "cumbrera": 0.08
+    "faja": 0.1,
+    "cumbrera": 0.05
    }
   },
   "palmares_almacen_mina": {
@@ -3789,8 +3789,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.15,
-    "cumbrera": 0.08
+    "faja": 0.1,
+    "cumbrera": 0.05
    }
   },
   "palmares_cuartel": {
@@ -3832,8 +3832,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.15,
-    "cumbrera": 0.08
+    "faja": 0.1,
+    "cumbrera": 0.05
    }
   },
   "palmares_mocambo": {
@@ -3875,8 +3875,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.15,
-    "cumbrera": 0.08
+    "faja": 0.1,
+    "cumbrera": 0.05
    }
   },
   "palmares_fortaleza": {
@@ -3918,8 +3918,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.15,
-    "cumbrera": 0.08
+    "faja": 0.1,
+    "cumbrera": 0.05
    }
   },
   "palmares_mercado": {
@@ -3961,8 +3961,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.15,
-    "cumbrera": 0.08
+    "faja": 0.1,
+    "cumbrera": 0.05
    }
   },
   "palmares_quilombo_central": {
@@ -4004,8 +4004,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.15,
-    "cumbrera": 0.08
+    "faja": 0.1,
+    "cumbrera": 0.05
    }
   },
   "palmares_mocambo_guerra": {
@@ -4047,8 +4047,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.15,
-    "cumbrera": 0.08
+    "faja": 0.1,
+    "cumbrera": 0.05
    }
   },
   "palmares_cerca_real": {
@@ -4090,8 +4090,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.15,
-    "cumbrera": 0.08
+    "faja": 0.1,
+    "cumbrera": 0.05
    }
   },
   "palmares_ferraria": {
@@ -4133,8 +4133,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.15,
-    "cumbrera": 0.08
+    "faja": 0.1,
+    "cumbrera": 0.05
    }
   },
   "palmares_pacto_cucau": {
@@ -4176,8 +4176,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.15,
-    "cumbrera": 0.08
+    "faja": 0.1,
+    "cumbrera": 0.05
    }
   },
   "palmares_guerra_zumbi": {
@@ -4219,8 +4219,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.15,
-    "cumbrera": 0.08
+    "faja": 0.1,
+    "cumbrera": 0.05
    }
   },
   "palmares_maravilla": {
@@ -4262,8 +4262,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.15,
-    "cumbrera": 0.08
+    "faja": 0.1,
+    "cumbrera": 0.05
    }
   },
   "ayutthaya_casa_rojo": {

@@ -177,6 +177,66 @@
    "luz_ref": 0.0312,
    "cobertura": 0.2968
   },
+  "local/palmares_almacen_alimento": {
+   "luz_ref": 0.0938,
+   "cobertura": 0.2847
+  },
+  "local/palmares_almacen_mina": {
+   "luz_ref": 0.0643,
+   "cobertura": 0.2898
+  },
+  "local/palmares_casa": {
+   "luz_ref": 0.0573,
+   "cobertura": 0.1832
+  },
+  "local/palmares_centro": {
+   "luz_ref": 0.2852,
+   "cobertura": 0.2178
+  },
+  "local/palmares_cerca_real": {
+   "luz_ref": 0.0462,
+   "cobertura": 0.2862
+  },
+  "local/palmares_cuartel": {
+   "luz_ref": 0.0991,
+   "cobertura": 0.0874
+  },
+  "local/palmares_ferraria": {
+   "luz_ref": 0.0491,
+   "cobertura": 0.3121
+  },
+  "local/palmares_fortaleza": {
+   "luz_ref": 0.0495,
+   "cobertura": 0.0616
+  },
+  "local/palmares_guerra_zumbi": {
+   "luz_ref": 0.0887,
+   "cobertura": 0.1391
+  },
+  "local/palmares_maravilla": {
+   "luz_ref": 0.1429,
+   "cobertura": 0.089
+  },
+  "local/palmares_mercado": {
+   "luz_ref": 0.0535,
+   "cobertura": 0.0921
+  },
+  "local/palmares_mocambo": {
+   "luz_ref": 0.0794,
+   "cobertura": 0.1608
+  },
+  "local/palmares_mocambo_guerra": {
+   "luz_ref": 0.0603,
+   "cobertura": 0.3004
+  },
+  "local/palmares_pacto_cucau": {
+   "luz_ref": 0.083,
+   "cobertura": 0.1201
+  },
+  "local/palmares_quilombo_central": {
+   "luz_ref": 0.1989,
+   "cobertura": 0.1951
+  },
   "local/tawantinsuyu_almacen_madera": {
    "luz_ref": 0.1468,
    "cobertura": 0.1128

@@ -13,8 +13,20 @@
   "modelos": {
    "aldeano": "palmares_aldeano",
    "hondero": "palmares_flecheiro",
-   "centro": "local/palmares_centro_v1",
-   "casa": "local/palmares_casa_v1"
+   "centro": "local/palmares_centro",
+   "casa": "local/palmares_casa",
+   "almacen_alimento": "local/palmares_almacen_alimento",
+   "almacen_mina": "local/palmares_almacen_mina",
+   "cuartel": "local/palmares_cuartel",
+   "mocambo": "local/palmares_mocambo",
+   "fortaleza": "local/palmares_fortaleza",
+   "mercado": "local/palmares_mercado",
+   "quilombo_central": "local/palmares_quilombo_central",
+   "mocambo_guerra": "local/palmares_mocambo_guerra",
+   "cerca_real": "local/palmares_cerca_real",
+   "ferraria": "local/palmares_ferraria",
+   "pacto_cucau": "local/palmares_pacto_cucau",
+   "guerra_zumbi": "local/palmares_guerra_zumbi"
   }
  },
  "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",
