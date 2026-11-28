@@ -32,7 +32,8 @@
    "junco_tributo": "local/ayutthaya_junco_tributo",
    "guardia_extranjera": "local/ayutthaya_guardia_extranjera",
    "maravilla": "local/ayutthaya_maravilla",
-   "fortaleza": "recinto/ayutthaya_fortaleza"
+   "fortaleza": "recinto/ayutthaya_fortaleza",
+   "torre": "recinto/ayutthaya_torre"
   }
  },
  "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",
