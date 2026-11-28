@@ -1,0 +1,16 @@
+Running as unit: run-p2732249-i6943159.scope; invocation ID: 4b94dec19a4e481ba6127c63783b37ec
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+caso                  trabada    racha   vaivén  temblor cumplidas   asentar extra
+deposito_40              0.0s     0.0s     8.91    0.00c      100%     -1.0s madera 2290 en 3 min
+hueco_60               116.2s     6.0s    13.19    6.32c      100%      0.1s todas en 36.4 s
+multitud_40              0.0s     0.0s     1.07    3.86c      100%      0.1s fin 31.3 s
+multitud_suelta_40       0.0s     0.0s     2.13   17.12c      100%      0.1s fin 34.8 s
+bosque_centro            0.0s     0.0s     8.16   10.00c      100%     -1.0s última en 8.3 s
+puerta_30                0.0s     0.0s     3.71    3.42c      100%      0.1s todas en 19.6 s
+reunion_izq              0.0s     0.0s     4.30    4.99c      100%      0.5s salen del lado de la reunión 12/12 · recorrido/recta 1.08
+MOVIMIENTO: OK
+WARNING: 18799 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 10 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

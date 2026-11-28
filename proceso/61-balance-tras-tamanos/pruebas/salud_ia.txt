@@ -1,0 +1,10 @@
+Running as unit: run-p2732490-i6935386.scope; invocation ID: 5ae06e3f0ff948c38a80ad189db286bf
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+tawantinsuyu  edad II 5:39 · ejército 24 · producción 6 · mercado sí · parados 1 · ociosa 11 · viajes a/m/r/p 1/1/0/0  OK
+mapuches      edad II 7:36 · ejército 10 · producción 7 · mercado sí · parados 0 · ociosa 11 · viajes a/m/r/p 3/2/6/2  OK
+guaranies     edad II 7:19 · ejército 13 · producción 3 · mercado no · parados 0 · ociosa 5 · viajes a/m/r/p 2/3/1/1  ⚠ sin mercado al minuto 15
+etiopia       edad II 5:14 · ejército 23 · producción 4 · mercado sí · parados 0 · ociosa 8 · viajes a/m/r/p 2/1/0/1  OK
+palmares      edad II 8:22 · ejército 8 · producción 3 · mercado sí · parados 9 · ociosa 5 · viajes a/m/r/p 0/2/1/0  ⚠ ejército de 8, 9 veces con recursos parados
+ayutthaya     edad II 7:55 · ejército 11 · producción 4 · mercado sí · parados 1 · ociosa 6 · viajes a/m/r/p 3/1/1/3  OK
+SALUD IA: 2 civs con problemas

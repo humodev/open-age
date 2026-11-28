@@ -1,0 +1,19 @@
+Running as unit: run-p2656196-i6858141.scope; invocation ID: d9621e1173534c178ffe0a72685336b1
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+ 5 min  etiopia        alim 0 (184, máx 3)  made 0 (79, máx 6)  riqu 6 (17, máx 7)  pied -  depósitos { "centro": 1, "almacen_madera": 1, "almacen_mina": 1 }
+ 5 min  mapuches       alim 2 (133, máx 11)  made 1 (70, máx 7)  riqu 7 (15, máx 7)  pied -  depósitos { "lof": 3 }
+10 min  etiopia        alim 2 (126, máx 17)  made 1 (155, máx 6)  riqu 1 (57, máx 13)  pied 3 (15, máx 5)  depósitos { "almacen_madera": 2, "almacen_mina": 2, "almacen_alimento": 2, "centro": 1 }
+10 min  mapuches       alim 8 (102, máx 12)  made 2 (155, máx 7)  riqu 7 (55, máx 7)  pied 1 (31, máx 3)  depósitos { "lof": 3 }
+15 min  etiopia        alim 2 (254, máx 17)  made 1 (206, máx 6)  riqu 0 (90, máx 13)  pied 1 (35, máx 7)  depósitos { "almacen_madera": 4, "almacen_mina": 4, "almacen_alimento": 2, "centro": 1 }
+15 min  mapuches       alim 1 (270, máx 12)  made 2 (228, máx 7)  riqu 6 (48, máx 7)  pied 1 (43, máx 3)  depósitos { "lof": 3 }
+20 min  etiopia        alim 4 (257, máx 27)  made 2 (193, máx 9)  riqu 0 (26, máx 13)  pied 1 (39, máx 13)  depósitos { "almacen_madera": 4, "almacen_mina": 4, "almacen_alimento": 3, "centro": 1 }
+20 min  mapuches       alim 1 (365, máx 12)  made 5 (183, máx 10)  riqu 6 (117, máx 7)  pied 1 (33, máx 3)  depósitos { "lof": 3 }
+25 min  etiopia        alim 7 (202, máx 27)  made 2 (194, máx 9)  riqu 0 (33, máx 13)  pied 3 (25, máx 13)  depósitos { "almacen_madera": 6, "almacen_mina": 4, "almacen_alimento": 3, "centro": 1 }
+25 min  mapuches       alim 1 (351, máx 59)  made 7 (169, máx 13)  riqu 14 (52, máx 32)  pied 1 (60, máx 4)  depósitos { "lof": 3 }
+30 min  etiopia        alim 7 (208, máx 27)  made 3 (184, máx 9)  riqu 0 (26, máx 13)  pied 6 (15, máx 13)  depósitos { "almacen_madera": 7, "almacen_mina": 4, "almacen_alimento": 3, "centro": 1 }
+30 min  mapuches       alim 1 (385, máx 59)  made 10 (147, máx 18)  riqu 13 (51, máx 32)  pied 2 (47, máx 5)  depósitos { "lof": 3 }
+WARNING: 2731 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 11 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

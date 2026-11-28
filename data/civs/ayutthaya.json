@@ -90,8 +90,8 @@
   },
   "granja": {
    "nombre": "Arrozal",
-   "bono_agua_pct": 35,
-   "tasa_clave": "granja", "desc": "Arroz de crecida: +35 % de alimento a 2 casillas del agua o menos, en la tierra que inunda el río. La base empieza junto a un khlong, un canal que era camino de agua más que riego."
+   "bono_agua_pct": 25,
+   "tasa_clave": "granja", "desc": "Arroz de crecida: +25 % de alimento a 2 casillas del agua o menos, en la tierra que inunda el río. La base empieza junto a un khlong, un canal que era camino de agua más que riego."
   },
   "cuartel": {
    "nombre": "Cuartel de la guardia"
@@ -358,7 +358,7 @@
  ],
  "construye": ["casa", "granja", "cuartel", "campo_tiro", "taller", "torre", "fortaleza", "muralla", "puerta_piedra", "torre_muralla", "centro", "kraal", "barrio_japones", "barrio_portugues", "barrio_chinos", "mercado", "almacen_mina", "maravilla"],
  "produce": {"centro": ["aldeano", "explorador", "elefante_rey"], "cuartel": ["guerrero", "lancero", "ngao", "defensores_suan_phlu"], "campo_tiro": ["hondero"], "taller": ["ariete", "catapulta"]},
- "modulos": {"khlong": {"_doc": "Canal de agua baja junto a la base (proceso/24): el arrozal rinde +35 % a 2 casillas del agua. distancia: casillas del centro; largo y ancho del canal", "distancia": 8, "largo": 9, "ancho": 2}},
+ "modulos": {"khlong": {"_doc": "Canal de agua baja junto a la base (proceso/24): el arrozal rinde +25 % a 2 casillas del agua (era +35 % con el arrozal de 3×3; proceso/61). distancia: casillas del centro; largo y ancho del canal", "distancia": 8, "largo": 9, "ancho": 2}},
  "ia_unidades": [
   "chang_suek"
  ],
