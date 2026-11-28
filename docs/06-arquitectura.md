@@ -76,9 +76,12 @@ Máquina de estados de unidades: `INACTIVA`, `MOVER`, `ATACAR_MOVIENDO`, `ATACAR
 
 ## Movimiento
 
-- **Caminos**: A* sobre la grilla de casillas, con diagonales solo si no cortan esquinas. Las casillas de edificios y recursos son sólidas, salvo las de edificios transitables (granjas). Hay una grilla por jugador: sus puertas son pasables para él y sólidas para los demás.
+- **Caminos**: A* sobre la grilla de casillas, con diagonales solo si no cortan esquinas. Las casillas de edificios y recursos son sólidas, salvo las de edificios transitables (granjas) y las partes pisables de la huella. Hay una grilla por jugador: sus puertas son pasables para él y sólidas para los demás.
 - **Grupo**: una orden de movimiento reparte destinos en formación alrededor del punto, en orden de `id`.
-- **Separación**: tabla espacial de celdas; las unidades superpuestas se empujan a la mitad cada una sin entrar en casillas sólidas.
+- **Separación**: tabla espacial de celdas; las unidades superpuestas se empujan sin entrar en casillas sólidas. Choques suaves (proceso/60, `reglas.movimiento.separacion`): una superposición chica se tolera, se corrige una parte por pasada, la inactiva le abre paso de costado a la que camina y dos que se cruzan de frente se esquivan por su derecha.
+- **Salida**: lo que sale de un edificio aparece en la casilla libre del borde más cerca del punto de reunión que llega a él (`Sim._spawn_tile`, `reglas.movimiento.salida`).
+- **Sin avance**: quien camina y no se acerca en `movimiento.llegada.sin_avance_ticks` llega (si está cerca del destino de una orden de mover) o recalcula el camino; en grupo, el que tiene algo sólido entre él y su lugar va por las casillas del camino del grupo (`movimiento.rodeo`).
+- **Huella pisable**: esquinas, anillo o toda la huella de un edificio se caminan según `reglas.huella_pisable` (siguen ocupadas para construir).
 - **Persecución**: contra unidades se recalcula el camino cuando el objetivo cambia de casilla, como máximo cada pocos ticks; a corta distancia se avanza en línea recta.
 - **Medición H1**: `tests/bench.gd` corre 200 unidades peleando y reporta milisegundos por tick. El criterio de H1 es que el tick promedio entre en el presupuesto (`reglas.json` → `tick_ms`) con margen para la imagen.
 

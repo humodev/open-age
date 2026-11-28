@@ -1,0 +1,4 @@
+OK    blancos: aldeano antes que la casa de al lado y militar antes que el aldeano (aldeano, hondero)
+OK    blancos: el ataque en movimiento no le pega a los caminos (llegó a x=40000)
+OK    blancos: con orden directa le pega al camino (vida 200 → 182)
+ORDENES: OK

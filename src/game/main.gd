@@ -10,7 +10,7 @@ extends Node3D
 ##   --estilo=pacifica|normal|acosadora|agresiva  estilo de juego de la IA
 ##   --cam=x,z,zoom[,inclinación]  posición de cámara para la captura (bX,bZ: relativa a la base propia)
 ##   --select=tipo      selecciona entidades de ese tipo del jugador local antes de la captura
-##   --demo=base|base_completa|obras|hitos|animales|batalla|multitud|formacion|bloque|bosque  escena armada para revisar modelos, hitos, animales, combate, el costo de 200 unidades, un grupo en marcha o la gente entre los árboles
+##   --demo=base|base_completa|obras|hitos|animales|batalla|multitud|formacion|bloque|bosque|reunion|llegada  escena armada para revisar modelos, hitos, animales, combate, el costo de 200 unidades, un grupo en marcha o la gente entre los árboles
 ##   --menu             fuerza el menú de inicio (sin argumentos se abre solo)
 ##   --terreno=<clave de reglas.json "terrenos"> tipo de mapa (llano, valle, delta…)
 ##   --civ=clave        civilización propia (tawantinsuyu, mapuches, guaranies, etiopia, palmares, ayutthaya, azar)
@@ -776,6 +776,33 @@ func _demo(kind: String) -> void:
 		sim.push_command({"t": "move", "player": 1, "ids": foes, "x": (b.x + 6) * 1000, "y": (b.y + 14) * 1000, "amove": true})
 		sim.set_meta("demo_cam", Vector2(b.x + 7, b.y + 13))
 	# --- fin paso 4 ---
+	elif kind == "reunion" or kind == "llegada":
+		# --- movimiento 60 --- (proceso/60) En el medio del mapa, despejado. La cámara mira hacia
+		# +x+y: la izquierda de la pantalla es +x −y.
+		# reunion: un cuartel con el punto de reunión a la izquierda de la pantalla entrena
+		# guerreros seguidos (tiempo de entrenamiento acortado solo en esta escena): se ve de qué
+		# lado salen. llegada: 30 de tropa mandados a un punto: cuánto tardan en quedarse quietos.
+		var c := sim.map.n / 2
+		for e in sim.entities.duplicate():
+			if e.alive and (e.is_resource() or (e.is_building() and e.owner < 0)) and absi(e.tx - c) < 16 and absi(e.ty - c) < 16:
+				sim.remove_quietly(e)
+				sim.map.clear(e.tx, e.ty, e.w, e.h, true)
+		if kind == "reunion":
+			var q := sim.spawn_building("cuartel", local, c - 1, c - 1, true)
+			sim.push_command({"t": "rally", "player": local, "building": q.id, "x": (c + 6) * 1000 + 500, "y": (c - 6) * 1000 + 500, "target": -1})
+			sim.dp(local).unidades["guerrero"]["tiempo_ms"] = 1500
+			for i in 8:
+				q.queue.append("guerrero")
+				q.queue_paid.append({})
+			sim.set_meta("demo_cam", Vector2(c + 2, c - 2))
+		else:
+			var types: Array = ["lancero", "guerrero", "hondero", "jinete", "guerrero", "hondero"]
+			var ids := []
+			for i in 30:
+				var t := sim.map.nearest_free(c - 10 + i % 6, c - 10 + i / 6, 6, local)
+				ids.append(sim.spawn_unit(types[i % types.size()], local, t.x * 1000 + 500, t.y * 1000 + 500).id)
+			sim.push_command({"t": "move", "player": local, "ids": ids, "x": (c + 3) * 1000 + 500, "y": (c + 3) * 1000 + 500, "suelto": true})
+			sim.set_meta("demo_cam", Vector2(c + 2, c + 2))
 	elif kind == "multitud":
 		# 200 aldeanos que se cruzan en el centro: mide el costo de los modelos generados
 		# (proceso/19-arte-y-sonido). Con --perf imprime los cuadros por segundo.
@@ -1367,7 +1394,24 @@ func _contar_avisos() -> void:
 	get_tree().quit(0)
 
 
+## --- movimiento 60 --- --serie=S1,S2,…: capturas intermedias (sin pausar) a esos segundos de
+## juego, en <shot>_1.png, <shot>_2.png…; la de --shot-at cierra la serie.
+var _serie_i := 0
+func _maybe_serie() -> void:
+	if not _args.has("serie") or not _args.has("shot"):
+		return
+	var ts: PackedStringArray = (_args["serie"] as String).split(",")
+	if _serie_i >= ts.size() or sim.tick * sim.tick_ms / 1000.0 < float(ts[_serie_i]):
+		return
+	_serie_i += 1
+	var img := get_viewport().get_texture().get_image()
+	var path: String = (_args["shot"] as String).get_basename() + "_%d.png" % _serie_i
+	img.save_png(path)
+	print("captura: ", path)
+
+
 func _maybe_shot() -> void:
+	_maybe_serie()
 	if not _args.has("shot") or _shot_done:
 		return
 	var at := float(_args.get("shot-at", "2"))

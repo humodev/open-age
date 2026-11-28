@@ -72,6 +72,11 @@ var _dirty := false
 var _teams := PackedInt32Array() # equipo de cada jugador (copia de players[i].equipo)
 var _emask := {} # celda de `_ehash` -> bits de dueños presentes (bit 0: naturaleza)
 var _foe_bits := PackedInt32Array() # por jugador: bits de quienes le pueden ser blanco
+var _arr_ticks := 20 # --- movimiento 60 --- reglas.movimiento.llegada (se leen una vez: corren por cada paso)
+var _arr_min := 150
+var _arr_radio := 1500
+var _arr_repath := 2
+var _work_slack := 250
 var _retarget_every := 3 # reglas.blancos.rebusca_cada_ticks (se lee una vez: corre por cada unidad que ataca)
 const _NONE: Array = [] # celda vacía de las grillas: sin crear un arreglo por consulta
 const RC := 8
@@ -85,6 +90,12 @@ func _init(seed_value: int, num_players: int = 2, data_override: SimData = null,
 	_opts = opts
 	tick_ms = data.reglas["tick_ms"]
 	_retarget_every = maxi(1, int(data.reglas["blancos"]["rebusca_cada_ticks"]))
+	var ll: Dictionary = data.reglas["movimiento"]["llegada"] # --- movimiento 60 ---
+	_arr_ticks = int(ll["sin_avance_ticks"])
+	_arr_min = int(ll["avance_min"])
+	_arr_radio = int(ll["radio"])
+	_arr_repath = int(ll["recalcula_max"])
+	_work_slack = int(ll["trabajo_holgura"])
 	rng = SimRng.new(seed_value)
 	# Escaramuza de 3 o más jugadores: mapa más grande y bases en círculo (docs/11).
 	var size: int = data.reglas["mapa_tam"]
@@ -567,6 +578,12 @@ func _cmd_move(pid: int, units: Array[SimEntity], x: int, y: int, amove: bool) -
 		cols += 1
 	var rows := (n + cols - 1) / cols
 	var sp := int(data.reglas["grupo"]["separacion"])
+	# --- movimiento 60 --- los destinos, al menos a dos radios del más grande más el hueco del
+	# grupo: con 750 fijos dos jinetes (radio 380) quedaban encimados y se empujaban al llegar.
+	var rmax := 0
+	for e in units:
+		rmax = maxi(rmax, e.radius)
+	sp = maxi(sp, 2 * rmax + int(data.reglas["grupo"]["hueco"]))
 	for i in n:
 		var e := units[i]
 		var gx := x + (i % cols) * sp - (cols - 1) * sp / 2
@@ -1192,14 +1209,16 @@ func _do_garrison(e: SimEntity) -> void:
 func eject_crafts(b: SimEntity) -> void:
 	var ids := b.crafts.duplicate()
 	b.crafts.clear()
+	var k := 0
 	for id in ids:
 		var e: SimEntity = by_id.get(id)
 		if e == null or not e.alive:
 			continue
 		e.inside = -1
-		var tile := _spawn_tile(b)
-		e.x = tile.x * P + P / 2
-		e.y = tile.y * P + P / 2
+		var sp := _spawn_pos(_spawn_tile(b, k), k)
+		k += 1
+		e.x = sp.x
+		e.y = sp.y
 		_set_idle(e)
 		var res := find_resource(e.owner, "alimento", e.x, e.y, data.reglas["radio_retomar"], -1, e.id)
 		if res != null:
@@ -1211,14 +1230,16 @@ func eject_crafts(b: SimEntity) -> void:
 func _eject(b: SimEntity) -> void:
 	var ids := b.garrison.duplicate()
 	b.garrison.clear()
+	var k := 0
 	for id in ids:
 		var e: SimEntity = by_id.get(id)
 		if e == null or not e.alive:
 			continue
 		e.inside = -1
-		var tile := _spawn_tile(b)
-		e.x = tile.x * P + P / 2
-		e.y = tile.y * P + P / 2
+		var sp := _spawn_pos(_spawn_tile(b, k), k)
+		k += 1
+		e.x = sp.x
+		e.y = sp.y
 		_set_idle(e)
 		if e.fn == "civil" and e.gather_kind != "":
 			var res := find_resource(e.owner, e.gather_kind, e.x, e.y, data.reglas["radio_retomar"], -1, e.id)
@@ -1925,6 +1946,7 @@ func _order_attack(e: SimEntity, t: SimEntity, auto := false) -> void:
 func _order_gather(e: SimEntity, t: SimEntity) -> void:
 	e.order = O.GATHER
 	e.target = t.id
+	e.anchored = false # --- movimiento 60 ---
 	e.path_target = -1
 	e.gather_kind = resource_kind_of(t)
 
@@ -1932,6 +1954,7 @@ func _order_gather(e: SimEntity, t: SimEntity) -> void:
 func _order_build(e: SimEntity, b: SimEntity) -> void:
 	e.order = O.BUILD
 	e.target = b.id
+	e.anchored = false # --- movimiento 60 ---
 	e.path_target = -1
 
 
@@ -2025,6 +2048,7 @@ func _do_gather(e: SimEntity) -> void:
 			return
 		e.target = t.id
 		e.path_target = -1
+		e.anchored = false # --- movimiento 60 --- otra fuente: sin la holgura del que ya trabajaba
 	var kind := resource_kind_of(t)
 	if e.carry >= cap or (e.carry > 0 and e.carry_res != kind):
 		if tele.on and e.carry >= cap:
@@ -2040,7 +2064,9 @@ func _do_gather(e: SimEntity) -> void:
 	if t.def.get("transitable", false):
 		in_range = _approach(e, t, 0)
 	else:
-		in_range = _approach(e, t, e.radius + INTERACT)
+		# --- movimiento 60 --- el que ya trabaja aguanta `trabajo_holgura` más antes de volver a
+		# acercarse: un empujón no lo hace caminar de nuevo (el baile alrededor del árbol).
+		in_range = _approach(e, t, e.radius + INTERACT + (_work_slack if e.anchored else 0))
 	if not in_range:
 		if fresh:
 			e.prog_d = 1 << 60
@@ -2068,6 +2094,7 @@ func _do_gather(e: SimEntity) -> void:
 			if alt != null:
 				e.target = alt.id
 				e.path_target = -1
+				e.anchored = false
 			elif e.carry > 0:
 				e.order = O.RETURN
 				e.aux = -1
@@ -2461,7 +2488,7 @@ func _do_build(e: SimEntity) -> void:
 		else:
 			_set_idle(e)
 		return
-	if not _approach(e, b, e.radius + INTERACT):
+	if not _approach(e, b, e.radius + INTERACT + (_work_slack if e.anchored else 0)): # --- movimiento 60 ---
 		if e.stuck > 25:
 			_tele_stuck(e)
 			_set_idle(e)
@@ -3128,20 +3155,86 @@ func _spawn_from(b: SimEntity, type: String) -> void:
 		_cmd_move(b.owner, [u] as Array[SimEntity], b.rally_x, b.rally_y, u.is_military())
 
 
-func _spawn_tile(b: SimEntity) -> Vector2i:
-	for r in range(1, 6):
-		for xx in range(b.tx - r, b.tx + b.w + r):
-			if not map.is_solid(xx, b.ty + b.h - 1 + r, b.owner):
-				return Vector2i(xx, b.ty + b.h - 1 + r)
+## Casilla donde sale una unidad del edificio `b` (proceso/60, como AoE4): la del borde más cerca
+## del punto de reunión, o de la salida por defecto (`reglas.movimiento.salida.defecto`, hacia
+## abajo) si no hay reunión. Tiene que estar libre y llegar al punto: si la más cercana queda en
+## un bolsillo (árboles pegados, un muro), prueba la siguiente del mismo anillo y después el
+## anillo de afuera. Entre las que llegan, prefiere una sin nadie parado encima (las que salen sin
+## reunión no se apilan). `k`: varias que salen juntas (alojadas) se reparten por las primeras.
+func _spawn_tile(b: SimEntity, k: int = 0) -> Vector2i:
+	var cfg: Dictionary = data.reglas["movimiento"]["salida"]
+	var px: int
+	var py: int
+	var rt: SimEntity = by_id.get(b.rally_target) if b.rally_set else null
+	if rt != null and rt.alive and rt != b:
+		px = rt.x
+		py = rt.y
+	elif b.rally_set:
+		px = b.rally_x
+		py = b.rally_y
+	else:
+		var dv: Array = cfg["defecto"]
+		px = b.x + int(dv[0]) * (b.w * P / 2 + int(cfg["defecto_dist"]))
+		py = b.y + int(dv[1]) * (b.h * P / 2 + int(cfg["defecto_dist"]))
+	var goal := map.nearest_free(clampi(px / P, 0, map.n - 1), clampi(py / P, 0, map.n - 1), 6, b.owner)
+	var probes := int(cfg["prueba_caminos"])
+	var first := Vector2i(-1, -1)
+	var nn := map.n
+	for r in range(1, int(cfg["anillo_max"]) + 1):
+		var cand: Array[Vector2i] = []
 		for yy in range(b.ty - r, b.ty + b.h + r):
-			if not map.is_solid(b.tx + b.w - 1 + r, yy, b.owner):
-				return Vector2i(b.tx + b.w - 1 + r, yy)
-			if not map.is_solid(b.tx - r, yy, b.owner):
-				return Vector2i(b.tx - r, yy)
-		for xx in range(b.tx - r, b.tx + b.w + r):
-			if not map.is_solid(xx, b.ty - r, b.owner):
-				return Vector2i(xx, b.ty - r)
-	return Vector2i(b.tx, b.ty + b.h)
+			for xx in range(b.tx - r, b.tx + b.w + r):
+				if xx != b.tx - r and xx != b.tx + b.w + r - 1 and yy != b.ty - r and yy != b.ty + b.h + r - 1:
+					continue
+				if not map.is_solid(xx, yy, b.owner):
+					cand.append(Vector2i(xx, yy))
+		if cand.is_empty():
+			continue
+		cand.sort_custom(func(a: Vector2i, c: Vector2i) -> bool:
+			var da := (a.x * P + P / 2 - px) * (a.x * P + P / 2 - px) + (a.y * P + P / 2 - py) * (a.y * P + P / 2 - py)
+			var dc := (c.x * P + P / 2 - px) * (c.x * P + P / 2 - px) + (c.y * P + P / 2 - py) * (c.y * P + P / 2 - py)
+			return da < dc if da != dc else (a.y < c.y if a.y != c.y else a.x < c.x))
+		if first.x < 0:
+			first = cand[0]
+		var reach: Array[Vector2i] = []
+		var tried := 0
+		for t in cand:
+			if tried >= probes and not reach.is_empty():
+				break
+			var ok := goal.x < 0 or t == goal
+			if not ok and tried < probes * 2:
+				tried += 1
+				var path := map.find_path(t, goal, b.owner)
+				ok = not path.is_empty() and path[path.size() - 1] == goal
+			if ok:
+				reach.append(t)
+		if reach.is_empty():
+			continue
+		if k > 0:
+			return reach[(k / maxi(1, int(cfg["por_casilla"]))) % reach.size()]
+		for t in reach:
+			var busy := false
+			if _cell_head.size() == nn * nn:
+				var slot := _cell_head[t.x * nn + t.y]
+				while slot >= 0:
+					var o: SimEntity = _cell_ent[slot]
+					slot = _cell_next[slot]
+					if o.alive and o.inside < 0 and o.x / P == t.x and o.y / P == t.y:
+						busy = true
+						break
+			if not busy:
+				return t
+		return reach[0]
+	return first if first.x >= 0 else Vector2i(b.tx, b.ty + b.h)
+
+
+## Lugar dentro de la casilla de salida para el `k`-ésimo que sale junto (alojados): sin
+## apilarlos en el mismo punto (la separación tardaba en abrirlos).
+func _spawn_pos(tile: Vector2i, k: int) -> Vector2i:
+	var n := maxi(1, int(data.reglas["movimiento"]["salida"]["por_casilla"]))
+	var off: Array = data.reglas["movimiento"]["salida"]["reparto"]
+	var o: Array = off[(k % n) % off.size()]
+	return Vector2i(tile.x * P + P / 2 + int(o[0]), tile.y * P + P / 2 + int(o[1]))
 
 
 # ---------------------------------------------------------------- Canoas (paso 6)
@@ -3218,6 +3311,9 @@ func _set_goal(e: SimEntity, gx: int, gy: int, target_id: int = -1) -> void:
 	e.path_target = target_id
 	e.path_tick = tick
 	e.stuck = 0
+	e.arr_d = 1 << 60 # --- movimiento 60 ---
+	e.arr_i = 1
+	e.arr_tick = tick
 	var from := Vector2i(e.x / P, e.y / P)
 	var to := Vector2i(gx / P, gy / P)
 	if solid_for(e, from.x, from.y):
@@ -3239,6 +3335,34 @@ func _follow(e: SimEntity) -> bool:
 	if e.stuck > 15:
 		_tele_stuck(e)
 		return true
+	# --- movimiento 60 --- Sin avance (reglas.movimiento.llegada): ni se acerca al destino ni pasa
+	# de casilla del camino en `sin_avance_ticks`. Cerca del destino de una orden de mover, ya
+	# llegó (la gente que llegó antes ocupa el lugar: antes empujaba hasta que la separación la
+	# dejaba pasar, segundos de empujones). Lejos, recalcula el camino desde donde está (se desliza
+	# contra una esquina o lo corrieron de su camino); después de `recalcula_max` veces sin avanzar,
+	# se rinde como el que choca.
+	var dg := dist(e.x, e.y, e.goal_x, e.goal_y)
+	if e.path_i > e.arr_i or dg < e.arr_d - _arr_min:
+		e.arr_d = dg
+		e.arr_i = e.path_i
+		e.arr_tick = tick
+		e.arr_n = 0
+	elif tick - e.arr_tick >= _arr_ticks:
+		var plain := e.path_target < 0 and (e.order == O.MOVE or e.order == O.ATTACK_MOVE)
+		if plain and dg <= _arr_radio:
+			return true
+		var n := e.arr_n + 1
+		if n > _arr_repath:
+			e.arr_tick = tick # en la cola de un paso angosto (orden de mover): sigue esperando su turno
+			if not plain:
+				e.arr_n = 0
+				_tele_stuck(e)
+				return true
+		else:
+			_set_goal(e, e.goal_x, e.goal_y, e.path_target)
+			e.arr_d = dg
+			e.arr_n = n
+			return false
 	var goal_tile := Vector2i(e.goal_x / P, e.goal_y / P)
 	while e.path_i < e.path.size():
 		var wp := e.path[e.path_i]
@@ -3277,6 +3401,9 @@ func step_toward_speed(e: SimEntity, px: int, py: int, spd: int) -> bool:
 	if d > spd:
 		nx = e.x + dx * spd / d
 		ny = e.y + dy * spd / d
+	e.mv_x = nx - e.x # --- movimiento 60 --- hacia dónde camina (la separación lo usa)
+	e.mv_y = ny - e.y
+	e.mv_tick = tick
 	var moved := _try_move(e, nx, ny)
 	if moved == 2:
 		e.stuck = 0
@@ -3379,7 +3506,10 @@ func _approach(e: SimEntity, t: SimEntity, reach: int) -> bool:
 			# "para depositar recursos hay que ir solo por un lugar específico").
 			var side := _side_tile(e, t)
 			_set_goal(e, side.x * P + P / 2, side.y * P + P / 2, t.id)
-	if _follow(e):
+	# --- movimiento 60 --- Con el camino terminado y a una casilla o menos de su final, va derecho
+	# al borde de `t`: antes volvía al centro de la casilla del costado y de ahí al borde, tick por
+	# medio (en una casilla en diagonal el centro queda fuera de alcance: vaivén junto al árbol).
+	if (e.path_i >= e.path.size() and dist(e.x, e.y, e.goal_x, e.goal_y) <= P) or _follow(e):
 		var cx := clampi(e.x, t.tx * P, (t.tx + t.w) * P)
 		var cy := clampi(e.y, t.ty * P, (t.ty + t.h) * P)
 		_step_toward(e, cx, cy)
@@ -3406,8 +3536,18 @@ func _side_tile(e: SimEntity, t: SimEntity) -> Vector2i:
 func _separate() -> void:
 	# Cada par se separa cada `separacion_cada_ticks` ticks con el empujón multiplicado:
 	# la misma velocidad de separación por la mitad del trabajo (docs/11, paso 6).
+	# --- movimiento 60 --- Choques suaves (reglas.movimiento.separacion): se tolera un poco de
+	# superposición (sin temblor de los que ya llegaron), se corrige una parte por pasada, el que
+	# está quieto le abre paso al que camina (y se corre de costado, no para adelante) y dos que se
+	# cruzan de frente se esquivan cada uno por su derecha.
 	var every := maxi(1, int(data.reglas.get("separacion_cada_ticks", 1)))
-	var cap := 160 * every
+	var sc: Dictionary = data.reglas["movimiento"]["separacion"]
+	var cap := int(sc["tope"]) * every
+	var tol := int(sc["tolerancia"])
+	var frac := int(sc["empuje_pct"])
+	var cede := int(sc["cede_pct"])
+	var lado := int(sc["lado_pct"])
+	var recent := tick - 1
 	var nn := map.n
 	for e in all_units():
 		if not e.alive or not e.is_unit() or e.inside >= 0:
@@ -3416,6 +3556,7 @@ func _separate() -> void:
 			continue
 		var cx := e.x / P
 		var cy := e.y / P
+		var e_mv := e.mv_tick >= recent and not e.anchored
 		for ox in range(cx - 1, cx + 2):
 			if ox < 0 or ox >= nn:
 				continue
@@ -3442,16 +3583,69 @@ func _separate() -> void:
 						dx = 1 if (e.id & 1) == 0 else -1
 						dy = 0
 						d = 1
-					var push := mini((rr - d), cap)
+					if rr - d <= tol:
+						continue
+					var push := mini((rr - d - tol) * frac / 100 + 1, cap)
+					var o_mv := o.mv_tick >= recent and not o.anchored
 					var we := 50
 					if e.anchored and not o.anchored:
 						we = 15
 					elif o.anchored and not e.anchored:
 						we = 85
+					elif e_mv and not o_mv and o.order == O.IDLE:
+						we = 100 - cede
+					elif o_mv and not e_mv and e.order == O.IDLE:
+						we = cede
 					var pe := push * we / 100
 					var po := push - pe
-					_try_move(o, o.x + dx * po / d, o.y + dy * po / d)
-					_try_move(e, e.x - dx * pe / d, e.y - dy * pe / d)
+					# Desvío de costado (perpendicular al paso de quien camina).
+					var lex := 0
+					var ley := 0
+					var lox := 0
+					var loy := 0
+					# Solo abre paso la quieta sin orden (la que pelea o trabaja no se corre de costado:
+					# en una pelea corrían los blancos de casilla y los perseguidores recalculaban).
+					if lado > 0 and ((e_mv and o_mv) or (e_mv and o.order == O.IDLE) or (o_mv and e.order == O.IDLE)):
+						if e_mv and o_mv:
+							if e.mv_x * o.mv_x + e.mv_y * o.mv_y < 0: # de frente: cada uno por su derecha
+								var me := maxi(1, isqrt(e.mv_x * e.mv_x + e.mv_y * e.mv_y))
+								var mo := maxi(1, isqrt(o.mv_x * o.mv_x + o.mv_y * o.mv_y))
+								lex = -e.mv_y * pe * lado / 100 / me
+								ley = e.mv_x * pe * lado / 100 / me
+								lox = -o.mv_y * po * lado / 100 / mo
+								loy = o.mv_x * po * lado / 100 / mo
+						else:
+							var w := e if e_mv else o
+							var hx := w.mv_x
+							var hy := w.mv_y
+							var hm := maxi(1, isqrt(hx * hx + hy * hy))
+							# lado del quieto respecto de la marcha (desde el que camina hacia el quieto)
+							var rx := dx if e_mv else -dx
+							var ry := dy if e_mv else -dy
+							var cr := hx * ry - hy * rx
+							var sg := 1 if cr > 0 or (cr == 0 and (w.id & 1) == 0) else -1
+							var qx := -hy * sg
+							var qy := hx * sg
+							var ps := po if e_mv else pe
+							var pw := pe if e_mv else po
+							var sx := qx * ps * lado / 100 / hm
+							var sy := qy * ps * lado / 100 / hm
+							var wx := -qx * pw * lado / 100 / hm
+							var wy := -qy * pw * lado / 100 / hm
+							if e_mv:
+								lox = sx
+								loy = sy
+								lex = wx
+								ley = wy
+							else:
+								lex = sx
+								ley = sy
+								lox = wx
+								loy = wy
+					if po > 0 or lox != 0 or loy != 0:
+						_try_move(o, o.x + dx * po / d + lox, o.y + dy * po / d + loy)
+					if pe > 0 or lex != 0 or ley != 0:
+						_try_move(e, e.x - dx * pe / d + lex, e.y - dy * pe / d + ley)
 
 
 # ---------------------------------------------------------------- Consultas
@@ -3789,6 +3983,48 @@ func _refresh_corridor(b: SimEntity) -> void:
 				if o != null and o.alive and o.id < b.id and _corridor_ok(o):
 					map.open_tile(xx, yy)
 					break
+	_open_walkable(b) # --- movimiento 60 --- el re-marcado tapó también las partes pisables
+
+
+## --- movimiento 60 --- Partes pisables de la huella (reglas.huella_pisable; en el edificio,
+## `pisable`): "esquinas" (las cuatro casillas de las puntas), "anillo" (todo el borde), "todo" o
+## "nada". Como en AoE4, no se rodea el edificio entero por una esquina. Sirve para cualquier
+## `tam`: las esquinas y el anillo salen del tamaño. Siguen ocupadas (no se construye encima).
+func walkable_mode(type: String, def: Dictionary) -> String:
+	if def.get("transitable", false):
+		return "todo"
+	if def.get("linea", false) or def.get("puerta", false):
+		return "nada"
+	if def.has("pisable"):
+		return str(def["pisable"])
+	var cfg: Dictionary = data.reglas.get("huella_pisable", {})
+	var by_type: Dictionary = cfg.get("por_tipo", {})
+	if by_type.has(type):
+		return str(by_type[type])
+	var side := mini(int(def["tam"][0]), int(def["tam"][1]))
+	if side >= int(cfg.get("anillo_desde", 1 << 20)):
+		return "anillo"
+	if side >= int(cfg.get("esquinas_desde", 1 << 20)):
+		return "esquinas"
+	return "nada"
+
+
+func _open_walkable(b: SimEntity) -> void:
+	if not b.is_building() or b.def.get("transitable", false):
+		return
+	var mode := walkable_mode(b.type, b.def)
+	if mode == "nada":
+		return
+	var x1 := b.tx + b.w - 1
+	var y1 := b.ty + b.h - 1
+	for yy in range(b.ty, b.ty + b.h):
+		for xx in range(b.tx, b.tx + b.w):
+			var edge := xx == b.tx or xx == x1 or yy == b.ty or yy == y1
+			var corner := (xx == b.tx or xx == x1) and (yy == b.ty or yy == y1)
+			if mode == "todo" or (mode == "anillo" and edge) or (mode == "esquinas" and corner):
+				if not map.is_solid(xx, yy) or map.occupant(xx, yy) != b.id:
+					continue
+				map.open_tile(xx, yy)
 
 
 ## Al sacar un edificio: los más nuevos que lo tocaban cierran el pasillo que le dejaban.
@@ -4578,6 +4814,7 @@ func spawn_building(type: String, owner: int, tx: int, ty: int, built: bool) -> 
 		e.hp_max = 1
 	map.mark(tx, ty, e.w, e.h, e.id, not def.get("transitable", false), owner if def.get("puerta", false) else -1)
 	_refresh_corridor(e)
+	_open_walkable(e) # --- movimiento 60 ---
 	if def.has("cantidad"):
 		e.amount = def["cantidad"]
 		if owner >= 0 and mod(owner, "cant_pct:" + type) != 0: # --- paso 6 --- kokue: la roza dura más
