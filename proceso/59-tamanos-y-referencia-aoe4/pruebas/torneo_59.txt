@@ -1,0 +1,40 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+ayutthaya    vs etiopia      terreno=montana 30:00  ganador: (ayutthaya por puntos)  edades 4-3
+etiopia      vs ayutthaya    terreno=fortines 30:00  ganador: (ayutthaya por puntos)  edades 3-4
+ayutthaya    vs guaranies    terreno=bosque_templado 30:00  ganador: (ayutthaya por puntos)  edades 4-4
+guaranies    vs ayutthaya    terreno=bosque_templado 30:00  ganador: (ayutthaya por puntos)  edades 3-4
+ayutthaya    vs mapuches     terreno=rio     30:00  ganador: (mapuches por puntos)  edades 3-4
+mapuches     vs ayutthaya    terreno=selva   30:00  ganador: (ayutthaya por puntos)  edades 3-4
+ayutthaya    vs palmares     terreno=sierra  30:00  ganador: (ayutthaya por puntos)  edades 4-2
+palmares     vs ayutthaya    terreno=sierra  30:00  ganador: (ayutthaya por puntos)  edades 3-4
+ayutthaya    vs tawantinsuyu terreno=montana 30:00  ganador: (ayutthaya por puntos)  edades 4-3
+tawantinsuyu vs ayutthaya    terreno=sierra  30:00  ganador: (ayutthaya por puntos)  edades 3-4
+etiopia      vs guaranies    terreno=delta   30:00  ganador: (guaranies por puntos)  edades 3-4
+guaranies    vs etiopia      terreno=llano   30:00  ganador: (guaranies por puntos)  edades 4-3
+etiopia      vs mapuches     terreno=islas   30:00  ganador: (mapuches por puntos)  edades 3-4
+mapuches     vs etiopia      terreno=islas   25:00  ganador: mapuches  edades 4-2
+etiopia      vs palmares     terreno=fortines 30:00  ganador: (palmares por puntos)  edades 3-4
+palmares     vs etiopia      terreno=islas   30:00  ganador: (etiopia por puntos)  edades 3-3
+etiopia      vs tawantinsuyu terreno=sierra  30:00  ganador: (etiopia por puntos)  edades 4-3
+tawantinsuyu vs etiopia      terreno=sierra  30:00  ganador: (etiopia por puntos)  edades 3-3
+guaranies    vs mapuches     terreno=delta   30:00  ganador: (guaranies por puntos)  edades 4-4
+mapuches     vs guaranies    terreno=montana 30:00  ganador: (guaranies por puntos)  edades 3-4
+guaranies    vs palmares     terreno=selva   30:00  ganador: (guaranies por puntos)  edades 4-3
+palmares     vs guaranies    terreno=selva   30:00  ganador: (palmares por puntos)  edades 4-3
+guaranies    vs tawantinsuyu terreno=rio     30:00  ganador: (guaranies por puntos)  edades 4-3
+tawantinsuyu vs guaranies    terreno=selva   30:00  ganador: (guaranies por puntos)  edades 3-4
+mapuches     vs palmares     terreno=delta   24:48  ganador: mapuches  edades 4-2
+palmares     vs mapuches     terreno=bosque_templado 30:00  ganador: (mapuches por puntos)  edades 2-4
+mapuches     vs tawantinsuyu terreno=rio     30:00  ganador: (mapuches por puntos)  edades 4-3
+tawantinsuyu vs mapuches     terreno=rio     30:00  ganador: (tawantinsuyu por puntos)  edades 4-4
+palmares     vs tawantinsuyu terreno=llano   30:00  ganador: (palmares por puntos)  edades 4-3
+tawantinsuyu vs palmares     terreno=bosque  30:00  ganador: (tawantinsuyu por puntos)  edades 4-2
+
+Victorias por destrucción de hitos:
+  ayutthaya    0 / 10
+  etiopia      0 / 10
+  guaranies    0 / 10
+  mapuches     2 / 10
+  palmares     0 / 10
+  tawantinsuyu 0 / 10

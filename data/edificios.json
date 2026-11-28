@@ -54,7 +54,7 @@
     "desc": "Almacén de lo que se cava, piedra y arcilla: junto a la cantera o al barreal."
   },
   "granja": {
-    "nombre": "Granja", "edad_min": 1, "tam": [3, 3], "pv": 300, "armadura": 0,
+    "nombre": "Granja", "edad_min": 1, "tam": [2, 2], "pv": 300, "armadura": 0,
     "costo": { "madera": 60 }, "tiempo_ms": 12000, "vision": 2000,
     "transitable": true, "fuente": "alimento"
   },
@@ -71,7 +71,7 @@
     "ataque": 9, "alcance": 7500, "cadencia_ms": 1500
   },
   "fortaleza": {
-    "nombre": "Fortaleza", "edad_min": 3, "tam": [3, 3], "pv": 3500, "armadura": 4,
+    "nombre": "Fortaleza", "edad_min": 3, "tam": [4, 4], "pv": 3500, "armadura": 4,
     "costo": { "madera": 200, "piedra": 450 }, "tiempo_ms": 90000, "vision": 10000,
     "guarnicion": 12, "flechas": 3,
     "ataque": 10, "alcance": 8000, "cadencia_ms": 2000,
@@ -129,7 +129,7 @@
     "arte": "sillar", "glifo": "torre_muralla"
   },
   "mercado": {
-    "nombre": "Mercado", "edad_min": 2, "tam": [3, 3], "pv": 1500, "armadura": 1,
+    "nombre": "Mercado", "edad_min": 2, "tam": [4, 4], "pv": 1500, "armadura": 1,
     "costo": { "madera": 175 }, "tiempo_ms": 35000, "vision": 6000, "mercado": true, "ranura": 5, "produce": ["comerciante"],
     "desc": "Compra y vende alimento, madera y piedra por riqueza. Los precios se mueven con cada operación."
   },

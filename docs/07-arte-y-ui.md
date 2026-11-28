@@ -64,7 +64,7 @@ Luz: un sol cálido de tarde con sombras suaves, cielo frío y oclusión ambient
 
 ## Cámara
 
-- Perspectiva con lente larga y ángulo alto, para que el mapa se lea casi como un plano sin perder volumen.
+- Perspectiva como AoE4 (D-033, `proceso/59`): lente abierta y cámara cerca, así lo lejano (arriba de la pantalla) se ve claramente más chico. Antes era una lente larga, casi un plano. Los valores están en `data/interfaz.json → camara`; el zoom se mide como la escala del centro de la pantalla, así el aldeano del centro mide lo mismo con cualquier lente.
 - Zoom limitado entre una vista de batalla y una vista táctica.
 - Desplazamiento con teclado, bordes de pantalla y arrastre con botón del medio.
 

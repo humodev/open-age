@@ -710,3 +710,29 @@ a) Regenerar los tres con Meshy, el mapuche con `--remesh --poli=15000` (90 cré
 **Respuesta:** a) regenerar los tres (2026-11-27).
 
 **Aplicado** (2026-11-27): los tres regenerados con el remesh de Meshy (la sesión principal) y pasados por la receta: `mapuches_m`, `mapuches_f` y `etiopia_f` en `data/arte_animaciones.json → modelos.por_civ`. Mallas enteras, caras adultas del pueblo, manos vacías; 0 vértices sin peso. Capturas en `proceso/57-aldeanos-meshy`, «Los tres que faltaban».
+
+## Tamaños como AoE4 (2026-11-28, `proceso/59`)
+
+### C-109 · El lof mapuche: ¿3×3 o 4×4?
+El centro pasa a 4×4 en todos lados, pero el lof es «un centro chico» a propósito: los mapuches levantan varios. Lo dejé en 3×3 (también el mocambo de Palmares, que es una aldea secundaria).
+a) Dejar el lof y el mocambo en 3×3, como centros chicos *(por defecto)* · b) Lof en 4×4 como cualquier centro · c) Los dos en 4×4
+
+**Respuesta:**
+
+### C-110 · La maravilla: ¿6×6 o 4×4?
+La regla dice «lo grande, 4×4», pero en las capturas no hay maravilla, y en AoE4 es claramente más grande que un hito. La dejé en 6×6.
+a) 6×6, más grande que los hitos *(por defecto)* · b) 5×5 · c) 4×4 como los hitos
+
+**Respuesta:**
+
+### C-111 · La casa del arco guaraní (2×2)
+El campo de tiro pasa a 3×3, pero el guaraní tiene su *guyrapa róga* en 2×2 a propósito («más chica, para levantarla entre los árboles»). La dejé así.
+a) Dejarla en 2×2 *(por defecto)* · b) 3×3 como los demás
+
+**Respuesta:**
+
+### C-112 · El mercado neutral del mapa (3×3)
+El mercado propio pasa a 4×4; el neutral (feria, puerto de río) es parte del generador de mapas y lo dejé en 3×3, como los puestos de comercio de AoE4, que son más chicos que un mercado.
+a) Dejarlo en 3×3 *(por defecto)* · b) 4×4 como el mercado propio (hay que tocar el generador)
+
+**Respuesta:**

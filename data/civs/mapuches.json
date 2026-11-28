@@ -168,8 +168,8 @@
    "nombre": "Malón del toqui",
    "edad_min": 1,
    "tam": [
-    3,
-    3
+    4,
+    4
    ],
    "pv": 1800,
    "armadura": 2,
@@ -197,8 +197,8 @@
    "nombre": "Nguillatuwe del rewe",
    "edad_min": 1,
    "tam": [
-    3,
-    3
+    4,
+    4
    ],
    "pv": 1800,
    "armadura": 2,
@@ -224,8 +224,8 @@
    "nombre": "Kawellu",
    "edad_min": 1,
    "tam": [
-    3,
-    3
+    4,
+    4
    ],
    "pv": 2000,
    "armadura": 2,
@@ -256,8 +256,8 @@
    "nombre": "Pewenal",
    "edad_min": 1,
    "tam": [
-    3,
-    3
+    4,
+    4
    ],
    "pv": 2000,
    "armadura": 2,
@@ -287,8 +287,8 @@
    "nombre": "Parlamento",
    "edad_min": 1,
    "tam": [
-    3,
-    3
+    4,
+    4
    ],
    "pv": 2200,
    "armadura": 2,
@@ -311,8 +311,8 @@
    "nombre": "Gran weichan",
    "edad_min": 1,
    "tam": [
-    3,
-    3
+    4,
+    4
    ],
    "pv": 2200,
    "armadura": 2,

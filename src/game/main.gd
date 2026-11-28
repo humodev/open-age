@@ -695,7 +695,9 @@ func _demo(kind: String) -> void:
 				for dy in range(-r, r + 1):
 					for dx in range(-r, r + 1):
 						if not done and sim.can_place(t, tx0 + dx, ty0 + dy, 0):
-							sim.spawn_building(t, 0, tx0 + dx, ty0 + dy, true)
+							var bb := sim.spawn_building(t, 0, tx0 + dx, ty0 + dy, true)
+							# Un aldeano al lado de cada edificio: la escala relativa a la vista (proceso/59).
+							sim.spawn_near(bb, "aldeano", 0)
 							done = true
 		sim.set_meta("demo_cam", Vector2(b.x + 3, b.y + 11))
 	elif kind == "base":
@@ -1626,6 +1628,10 @@ func _autotest_ordenes(check: Callable) -> void:
 	check.call("clic: patrullan (%d de 6)" % pat, pat == 6 and ctrl.mode == "")
 	# Rumbo arrastrando el clic derecho: la orden lleva el rumbo de la tabla de enteros.
 	# Un lugar libre (sin recurso ni unidad debajo): si no, el clic derecho sería recolectar o atacar.
+	# La cámara se centra en el trazo: con la lente abierta (proceso/59) el zoom inicial muestra
+	# menos casillas hacia abajo y el punto de llegada quedaba fuera de la pantalla.
+	cam.look_at_point(Vector3(base.x + 8.0, 0, base.y + 14.0))
+	await _frames(2)
 	var a := _screen(base.x + 8.0, base.y + 12.0)
 	var b := _screen(base.x + 8.0, base.y + 16.0)
 	for dx in range(-10, 11, 2):

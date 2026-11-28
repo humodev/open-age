@@ -223,7 +223,7 @@ static func correr(m: Node, check: Callable) -> void:
 			var tip := ""
 			for l in MundoColocacion.detalles(sim, local, granja, gtile.x, gtile.y):
 				tip += String(l[0]) + " / "
-			check.call("fluidez 2: la granja dice los lugares libres (%s)" % tip, tip.contains("de 8 lugares libres") and tip.contains("Pegada"))
+			check.call("fluidez 2: la granja dice los lugares libres (%s)" % tip, tip.contains(" lugares libres") and tip.contains("Pegada"))
 			ctrl.cancel_mode()
 	# El almacén informa los recursos cerca y la distancia al depósito.
 	var almacen := ""

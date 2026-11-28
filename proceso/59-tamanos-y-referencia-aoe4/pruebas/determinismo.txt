@@ -1,0 +1,7 @@
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+ticks=3000 hash=3059812827
+J0 edad=1 pob=24/30 res={ "alimento": 740, "madera": 520, "piedra": 100, "riqueza": 260 } stats={ "recolectado": 2390, "entrenadas": 17, "bajas": 0, "muertes": 0, "edificios_destruidos": 0, "ordenes": { "target": 23, "build:casa": 2, "train:aldeano": 16, "move": 10, "build:deposito": 2, "build:cuartel": 1, "rally": 1, "train:guerrero": 2 }, "origen": { "casa": { "alimento": 1430, "madera": 710, "riqueza": 210 }, "recoleccion": { "madera": 10, "alimento": 30 } } }
+J1 edad=1 pob=24/30 res={ "alimento": 30, "madera": 315, "piedra": 100, "riqueza": 35 } stats={ "recolectado": 2160, "entrenadas": 17, "bajas": 0, "muertes": 0, "edificios_destruidos": 0, "ordenes": { "target": 23, "build:casa": 2, "train:aldeano": 16, "build:deposito": 2, "build:cuartel": 1, "rally": 1, "train:guerrero": 1, "train:lancero": 1, "build:hito_economia": 1, "train:hondero": 2 }, "origen": { "casa": { "alimento": 1100, "madera": 610, "riqueza": 270 }, "recoleccion": { "alimento": 160, "madera": 20 } } }
+game_over=false winner=-1 entidades=2457
+DETERMINISMO: OK

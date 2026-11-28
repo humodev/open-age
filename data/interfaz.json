@@ -220,5 +220,21 @@
     "_doc": "Opción «Texto grande» (Opciones → Interfaz; user://opciones.cfg → interfaz.texto_grande; --texto=grande para capturas). Pendiente de proceso/17, hecho en proceso/46. Hud.ts(n) multiplica cada tamaño de letra de la interfaz por factor_pct, sin pasar de tope_px: la letra chica crece más y los títulos (de tope_px para arriba) quedan como están. No cambia la escala de los paneles (eso es «Escala de la interfaz»); los textos que no entran se achican solos donde ya se ajustaban al ancho.",
     "factor_pct": 125,
     "tope_px": 20
+  },
+  "camara": {
+    "_doc": "Cámara (src/game/rts_camera.gd; proceso/59). Perspectiva como AoE4: lente más abierta y más cerca, así lo lejano (arriba de la pantalla) se ve claramente más chico. fov_deg: ángulo vertical de la lente; pitch_deg: inclinación sobre el horizonte; yaw_deg: giro (la cámara mira hacia +x+z; las mallas tienen el frente hacia ese lado, no cambiarlo solo). zoom es la escala en el centro de la pantalla medida como la distancia que daría la lente de referencia (fov_ref_deg, la de 30° de antes): con el mismo zoom, el aldeano del centro mide lo mismo (unos 33 px a 1080p con 28) y todo lo que escala con 40/zoom (barras, carteles, alcance del sonido) sigue igual. La distancia real es zoom × tan(fov_ref/2) / tan(fov/2). zoom_min, zoom_max y zoom_inicial en esa escala; rueda: factor por muesca; pan: fracción del zoom por segundo con flechas o borde; borde_px: franja del borde de la pantalla que mueve la cámara; arrastre: casillas por píxel y por unidad de zoom con el botón del medio; cerca y lejos: planos de recorte (en casillas).",
+    "fov_deg": 55.0,
+    "fov_ref_deg": 30.0,
+    "pitch_deg": 52.0,
+    "yaw_deg": 45.0,
+    "zoom_min": 16.0,
+    "zoom_max": 70.0,
+    "zoom_inicial": 24.0,
+    "rueda": 0.88,
+    "pan": 1.1,
+    "borde_px": 6,
+    "arrastre": 0.0022,
+    "cerca": 0.5,
+    "lejos": 400.0
   }
 }

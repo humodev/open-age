@@ -290,15 +290,28 @@ static func deposito_alimento(sim: Sim, pid: int, tx: int, ty: int, rad: int) ->
 	return best
 
 
-## Las 8 posiciones de una pieza de w×h alrededor del rectángulo (bx, by, bw, bh): esquinas y lados.
+## Las posiciones de una pieza de w×h alrededor del rectángulo (bx, by, bw, bh): las cuatro
+## esquinas y, en cada lado, tantas como entren pegadas y centradas (al menos una). Con la
+## granja de 2×2 (proceso/59): 8 alrededor de un granero de 2×2 y 12 alrededor de un centro de 4×4.
 static func ocho_lugares(bx: int, by: int, bw: int, bh: int, w: int, h: int) -> Array:
-	var xs := [bx - w, bx + (bw - w) / 2, bx + bw]
-	var ys := [by - h, by + (bh - h) / 2, by + bh]
+	var xs := _filas(bx, bw, w)
+	var ys := _filas(by, bh, h)
 	var out := []
-	for j in 3:
-		for i in 3:
-			if i != 1 or j != 1:
+	for j in ys.size():
+		for i in xs.size():
+			if i == 0 or j == 0 or i == xs.size() - 1 or j == ys.size() - 1:
 				out.append(Vector2i(xs[i], ys[j]))
+	return out
+
+
+## Coordenadas de una fila de piezas de largo `w` alrededor de un lado de largo `bw` que empieza en `b`.
+static func _filas(b: int, bw: int, w: int) -> Array:
+	var n := maxi(1, bw / w)
+	var out := [b - w]
+	var x0 := b + (bw - n * w) / 2
+	for k in n:
+		out.append(x0 + k * w)
+	out.append(b + bw)
 	return out
 
 

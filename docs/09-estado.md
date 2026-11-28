@@ -2,7 +2,7 @@
 
 Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video, está en `../proceso/`. Las preguntas al autor, en `../proceso/CONSULTAS.md`.
 
-## Resumen (2026-11-27)
+## Resumen (2026-11-28)
 
 | Hito (`02`) | Estado |
 |---|---|
@@ -36,6 +36,7 @@ Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video,
 | Respuestas del autor: nombres, historia, sonido y 3D (`proceso/54`) | C-70 a C-74, C-79, C-82, C-102 a C-104 y C-106. Edades *Willkapampa* (hito *Espíritu Pampa*), *Toungoo* y *Krung Thonburi*, con *Ekkarat* explicado en el panel; nombres por edad (`nombre_edad`: *bayingyi* y *kathe* solo en la IV); barrio chino como tercer barrio de Ayutthaya (la IA todavía no lo construye); Birmania con kyaung, zedi y pyatthat de maqueta; hitos mapuches, Junta de guerra, *Qhuya wasi*, *Gojjo bet*, «Suai», buey cebú; potencias europeas y paulistas como facciones (`hereda`); nagarit, alarma siamesa de procesión y música de paz sintetizada de Palmares y Ayutthaya (sale *Tra Nimit*); la mbaraka sale del hito guaraní (da vuelta C-60, a confirmar); consultas a comunidades en `diseno/29`; modelos del pipeline en casas y capitales (el lof mapuche volvió al de Meshy). Determinismo igual (3059812827) |
 | Respuestas del autor: mecánicas y balance (`proceso/53`) | Hecho (C-47, C-49, C-51, C-52, C-62 a C-69, C-75 a C-97, C-100). Desempate al tiempo límite por sitios y edificios (`opciones_partida.desempate`); la captura de los sitios se vacía sola; IA contra IA con sitios; yerba silvestre del monte, capuera y, con la vía misión, yerbal y ganado; pacto de Cucaú que reduce la acogida y la liberación, que vale solo contra invasores; Lalibela como sitio sagrado del mapa y el monasterio como Debre Damo; iglesia con población en lugar de vida; jinetes oromo por tratado con agasajo; reparar cuesta el 50 % (D-032); la IA sin hitos defiende en proporción. La experta le gana a la difícil 9 de 12. Torneo 53 (30 partidas): el Tawantinsuyu del 20 al 40 % con la mit'a de la IV en 150; los mapuches, 70 %, quedan para la próxima ronda de balance con más semillas. Esperan la C-80: la pieza pesada inca (C-87) y la erveira (C-93) |
 | Edificios locales con color del equipo (`proceso/58`) | En pausa, esperando que el autor apruebe el Tawantinsuyu. El color del equipo en los edificios va con una referencia de FLUX con telas en rojo plano (nada sagrado), una máscara (`mascara_equipo_3d.py --edificio`, paso `mascara` del pipeline) y `equipo_3d.gdshader` en `WorldView._equipo_edificio` (`data/modelos_equipo.json`). Tawantinsuyu: 12 edificios conectados en la segunda pasada, con reglas históricas por pueblo, Paint a 2048 y techos de la referencia (`gen3d_mezcla.py`); los recintos amurallados van a la lista de candidatos a Meshy. Los otros cinco pueblos tienen las referencias hechas y esperan. Hash igual |
+| Tamaños, escala y cámara como AoE4 (`proceso/59`) | Hecho (D-033). Granja 2×2; fortaleza, mercado e hitos mapuches 4×4; kraal 3×3; andén 2×2 (el lof, el mocambo, la casa del arco guaraní, la maravilla y el mercado neutral quedan como estaban: C-109 a C-112). Gente de 0,75 a 0,625 casillas con altos mínimos sacados del AoE4. Cámara de lente abierta (55°) y más cerca, en `data/interfaz.json → camara`, con el aldeano del centro del mismo tamaño. Notas de arte por prioridad y modelos para rehacer (la fortaleza y el mercado incas) en el README. Hash igual. Torneo 59: Ayutthaya sube a 90 % (probable: más arrozales de 2×2 con el bono del agua), para la próxima ronda de balance |
 | H5 · Multijugador en red | Prototipo 1v1 hecho (ver arriba); relevo listo para desplegar (`proceso/44`) |
 | H6 · Acceso anticipado | Pendiente |
 
@@ -57,6 +58,7 @@ Qué está hecho, qué falta y qué sigue. El paso a paso, con capturas y video,
 | `tests/bench.gd` | 200 unidades peleando dentro del presupuesto del tick |
 | `tests/civ_smoke.gd` | Las seis civilizaciones juegan entre sí sin errores |
 | `tests/campaign_smoke.gd` | Las 24 misiones, el tutorial y las 5 del Arte de la guerra se arman y corren |
+| `tests/escenarios_caben.gd` | Los edificios que pone cada misión al armarse (iniciales, base de los rivales, blancos de destruir) entran en el mapa |
 | `tests/tutorial_letra.gd` | El tutorial (Tawantinsuyu) seguido al pie de la letra se gana; sin defenderse, se pierde con motivo (`-- --modo=indefenso`) |
 | `tests/arte_guerra.gd` | Las cinco misiones del Arte de la guerra se ganan con un jugador que sigue a la Guía, y las medallas van oro < plata < bronce (`-- --mision=arte-3` para una sola) |
 | `tests/torneo.gd` | Balance: todas contra todas |

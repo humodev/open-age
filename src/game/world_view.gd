@@ -43,6 +43,7 @@ var _anim_total := 0 # todas las figuras animadas en pantalla
 var _anim_total_prev := 0
 var _anim_div_comp := 1
 var _anim_cam: Camera3D
+var _anim_k := 1.0 # distancia real por unidad de zoom de la cámara (RtsCamera.k_dist)
 var render_us := 0 # tiempo acumulado en render (tools/aldeanos_animados.gd lo lee para medir)
 # --- fluidez 7 --- la base linda: tierra pisada, pilas, granjas, tocones, estandartes y modo foto
 var base_linda := BaseLinda.new()
@@ -1672,6 +1673,7 @@ func render(alpha: float, delta: float) -> void:
 	_anim_total_prev = _anim_total
 	_anim_total = 0
 	_anim_cam = get_viewport().get_camera_3d()
+	_anim_k = RtsCamera.k_dist() if _anim_cam != null and _anim_cam.get_parent() is RtsCamera else 1.0
 	# Esqueletos compartidos entre las figuras que hacen lo mismo (rendimiento.compartir).
 	AldeanoAnimado.preparar_coros(self)
 	AldeanoAnimado.avanzar_coros(delta * velocidad)
@@ -1857,7 +1859,9 @@ func _render_anim(e: SimEntity, v: Dictionary, moving: bool, walked: float, delt
 	if _anim_cam != null:
 		if not _anim_cam.is_position_in_frustum(node.position + Vector3(0, 0.4, 0)):
 			return
-		dist = _anim_cam.global_position.distance_to(node.position)
+		# En la escala de la lente de referencia (proceso/59): la cámara está más cerca con la
+		# lente abierta, pero lo que importa es cuánto mide la figura en pantalla.
+		dist = _anim_cam.global_position.distance_to(node.position) / _anim_k
 		if dist > AldeanoAnimado.lejos_m:
 			div *= 2
 	var lejos := dist > AldeanoAnimado.compartir_desde_m or (_anim_total_prev > AldeanoAnimado.compartir_con_mas_de and dist > AldeanoAnimado.cerca_m)
