@@ -113,6 +113,8 @@ func setup(m: Node, s: Sim, c: Controller, camera: RtsCamera, local_player: int)
 	ctrl = c
 	cam = camera
 	local = local_player
+	# --- interfaz pintada --- (proceso/68) la faja del HUD es la del pueblo del jugador
+	MARCO.set_pueblo(str(sim.players[local]["civ"]) if local >= 0 and local < sim.players.size() else "")
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	theme = _make_theme()
@@ -1006,6 +1008,11 @@ func _make_theme() -> Theme:
 	t.set_stylebox("normal", "Button", btn)
 	t.set_stylebox("hover", "Button", hov)
 	t.set_stylebox("pressed", "Button", prs)
+	# --- interfaz pintada --- (proceso/68) botones de papel con filete; sin texturas, los de antes
+	for par in [["normal", btn], ["hover", hov], ["pressed", prs], ["disabled", btn]]:
+		var pin := MARCO.boton(par[0], par[1])
+		if pin != null:
+			t.set_stylebox(par[0], "Button", pin)
 	t.set_stylebox("focus", "Button", StyleBoxEmpty.new())
 	t.set_color("font_color", "Button", Palette.UI_TEXT)
 	t.set_color("font_hover_color", "Button", Color.WHITE)
@@ -1014,8 +1021,8 @@ func _make_theme() -> Theme:
 	return t
 
 
-static func panel_box(radius: int = 8) -> StyleBoxFlat:
-	var sb := StyleBoxFlat.new()
+static func panel_box(radius: int = 8) -> EstiloPintado:
+	var sb := EstiloPintado.new() # --- interfaz pintada --- (proceso/68) papel y faja; sin texturas, como el StyleBoxFlat de antes
 	sb.bg_color = MARCO.fondo_plano() # --- interfaz como AoE4 --- (el tono de los paneles del HUD)
 	sb.set_corner_radius_all(radius)
 	sb.border_color = MARCO.borde_plano()
@@ -1234,7 +1241,7 @@ class TopBar:
 		return Hud.MARCO.num("celda", 150, "barra")
 
 	func _draw() -> void:
-		Hud.MARCO.panel(self, Rect2(Vector2.ZERO, size)) # --- interfaz como AoE4 ---
+		Hud.MARCO.panel(self, Rect2(Vector2.ZERO, size), [], true, true, true) # --- interfaz como AoE4 ---
 		_hits.clear()
 		var sim := hud.sim
 		var p: Dictionary = sim.players[hud.local]
@@ -1314,7 +1321,7 @@ class ClockBar:
 		mouse_filter = Control.MOUSE_FILTER_STOP
 
 	func _draw() -> void:
-		Hud.MARCO.panel(self, Rect2(Vector2.ZERO, size)) # --- interfaz como AoE4 ---
+		Hud.MARCO.panel(self, Rect2(Vector2.ZERO, size), [], true, true, true) # --- interfaz como AoE4 ---
 		var sim := hud.sim
 		var age: int = sim.players[hud.local]["age"]
 		var name: String = sim.dp(hud.local).edades[age - 1]["nombre"]
@@ -1551,7 +1558,7 @@ class Tooltip:
 			return
 		# --- interfaz como AoE4 --- (proceso/67) el marco de los paneles, el título sobre una franja
 		# apenas más clara con un divisor, y la tecla en una pastilla como la de la grilla
-		Hud.MARCO.panel(self, Rect2(Vector2.ZERO, size))
+		Hud.MARCO.panel(self, Rect2(Vector2.ZERO, size), [], true, true, true)
 		var y := 28.0
 		draw_rect(Rect2(1, 1, size.x - 2, y + 10), Color(Palette.UI_TEXT, 0.035))
 		Hud.MARCO.divisor(self, Vector2(10, y + 10), Vector2(size.x - 10, y + 10))
@@ -1599,11 +1606,28 @@ class SelectionPanel:
 	extends Control
 	var hud: Hud
 	var _hits: Array = [] # [Rect2, acción]
+	var _tips: Array = [] # --- interfaz pintada --- [Rect2, nombre del dato] de los íconos
+	var _tip_k := ""
 
 	func _ready() -> void:
 		mouse_filter = Control.MOUSE_FILTER_STOP
+		mouse_exited.connect(func() -> void:
+			if _tip_k != "":
+				_tip_k = ""
+				hud.hide_tip())
 
 	func _gui_input(event: InputEvent) -> void:
+		if event is InputEventMouseMotion: # --- interfaz pintada --- qué es cada ícono de los datos
+			var k := ""
+			for t in _tips:
+				if (t[0] as Rect2).has_point(event.position):
+					k = t[1]
+					if k != _tip_k:
+						hud.show_tip({"name": k, "desc": "", "cost": {}, "locked": ""}, Rect2(global_position + (t[0] as Rect2).position, (t[0] as Rect2).size))
+			if k == "" and _tip_k != "":
+				hud.hide_tip()
+			_tip_k = k
+			return
 		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			for h in _hits:
 				if (h[0] as Rect2).has_point(event.position):
@@ -1618,9 +1642,11 @@ class SelectionPanel:
 
 	func _draw() -> void:
 		_hits.clear()
+		_tips.clear()
 		hud.ficha.zones_begin(self) # --- ficha ---
 		# --- interfaz como AoE4 --- (proceso/67) parte de la banda de abajo: pegada al borde
 		Hud.MARCO.panel(self, Rect2(Vector2.ZERO, size), Hud.pegado_banda(true))
+		Hud.MARCO.marca(self, Rect2(Vector2.ZERO, size)) # --- interfaz pintada --- la marca de agua del pueblo
 		var sel := hud.ctrl.selected_entities()
 		if sel.is_empty():
 			draw_string(Hud.font, Vector2(0, size.y / 2 + 6), "Nada seleccionado", HORIZONTAL_ALIGNMENT_CENTER, size.x, Hud.ts(15), Palette.UI_DIM) # --- contraste --- (antes al 60 %: 3:1)
@@ -1641,15 +1667,19 @@ class SelectionPanel:
 		hud.ficha.zone(self, r, {"id": e.id}) # --- ficha ---
 		# --- interfaz como AoE4 --- (proceso/67) el retrato monta sobre la cabecera, con un filete
 		# dorado afuera y los rombos del marco, como un medallón cuadrado
-		draw_style_box(_filete_retrato(), r.grow(3))
-		Hud.MARCO.rombo(self, Vector2(r.get_center().x, r.position.y - 3), Hud.MARCO.num("ornamento_px", 4))
+		var pintado := Hud.MARCO.pintado() # --- interfaz pintada --- (proceso/68) medallón de latón encima
+		if not pintado:
+			draw_style_box(_filete_retrato(), r.grow(3))
+			Hud.MARCO.rombo(self, Vector2(r.get_center().x, r.position.y - 3), Hud.MARCO.num("ornamento_px", 4))
 		var rt := Retratos.de(hud.sim, e) # --- aldeanos por retrato --- el pintado, si hay
 		if not rt.is_empty():
 			Retratos.dibujar(self, rt, r.grow(-2), "busto") # --- arte en la interfaz --- cabeza y torso
-			return
-		var icon := Glyphs.resolve(e.def, e.type) if not e.is_resource() else e.res_kind
-		var col: Color = Palette.UI_TEXT if not e.is_resource() else Palette.RES[e.res_kind]
-		Glyphs.draw(self, icon, r.grow(-18), col)
+		else:
+			var icon := Glyphs.resolve(e.def, e.type) if not e.is_resource() else e.res_kind
+			var col: Color = Palette.UI_TEXT if not e.is_resource() else Palette.RES[e.res_kind]
+			Glyphs.draw(self, icon, r.grow(-18), col)
+		if pintado:
+			Hud.MARCO.medallon(self, r)
 
 	func _filete_retrato() -> StyleBoxFlat:
 		var sb := StyleBoxFlat.new()
@@ -1667,9 +1697,11 @@ class SelectionPanel:
 	## cuerpo `dy` px más abajo que el panel de antes (data/interfaz.json → hud_estilo.seleccion).
 	func _cabecera(owner: int) -> float:
 		var ch := Hud.MARCO.num("cabecera_alto", 50, "seleccion")
-		Hud.MARCO.cabecera(self, Rect2(1, 1, size.x - 2, ch - 1), Palette.team(owner) if owner >= 0 else Palette.UI_DIM)
-		var o := Hud.MARCO.num("ornamento_px", 4)
-		Hud.MARCO.rombo(self, Vector2(o + 2, o + 2), o) # el rombo de la esquina, encima del color
+		var bi := Hud.MARCO.borde_interior() # --- interfaz pintada --- la franja empieza debajo de la faja
+		Hud.MARCO.cabecera(self, Rect2(bi, bi, size.x - bi - 1, ch - bi), Palette.team(owner) if owner >= 0 else Palette.UI_DIM)
+		if not Hud.MARCO.pintado():
+			var o := Hud.MARCO.num("ornamento_px", 4)
+			Hud.MARCO.rombo(self, Vector2(o + 2, o + 2), o) # el rombo de la esquina, encima del color
 		return Hud.MARCO.num("cuerpo_dy", 8, "seleccion")
 
 	func _single(e: SimEntity) -> void:
@@ -1697,11 +1729,16 @@ class SelectionPanel:
 		if e.is_unit():
 			# Valores de verdad: con mejoras, niveles y velocidad real (casillas por segundo).
 			var spd := float(hud.sim.mods.speed(e)) * 1000.0 / float(hud.sim.tick_ms) / 1000.0
-			var stats := [["Ataque", str(hud.sim.effective_attack(e))], ["Armadura", "%d / %d" % [hud.sim.effective_armor(e), hud.sim.effective_armor(e, true)]], ["Alcance", "%.1f" % (e.def.get("alcance", 0) / 1000.0)], ["Velocidad", "%.2f" % spd]]
+			# --- interfaz pintada --- (proceso/67, pendiente 9) íconos en lugar de las etiquetas, como
+			# AoE4; el nombre de cada dato queda en la ayuda al pasar el ratón (zona de la ficha).
+			var stats := [["atacar", "Ataque", str(hud.sim.effective_attack(e))], ["escudo", "Armadura (cuerpo a cuerpo / distancia)", "%d / %d" % [hud.sim.effective_armor(e), hud.sim.effective_armor(e, true)]], ["arco", "Alcance (casillas)", "%.1f" % (e.def.get("alcance", 0) / 1000.0)], ["velocidad", "Velocidad (casillas por segundo)", "%.2f" % spd]]
 			var sx := x
+			var ic := float(Hud.ts(22))
 			for s in stats:
-				draw_string(Hud.font, Vector2(sx, 92 + dy), s[0], HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(12), Palette.UI_DIM)
-				draw_string(Hud.font_b, Vector2(sx, 112 + dy), s[1], HORIZONTAL_ALIGNMENT_LEFT, -1, Hud.ts(17), Palette.UI_TEXT)
+				var ir := Rect2(sx, 112 + dy - ic * 0.82, ic, ic)
+				Glyphs.draw(self, s[0], ir, Palette.UI_TEXT)
+				draw_string(Hud.font_b, Vector2(sx + ic + 5, 112 + dy), s[2], HORIZONTAL_ALIGNMENT_LEFT, 92 - ic - 7, Hud.ts(17), Palette.UI_TEXT)
+				_tips.append([Rect2(sx, ir.position.y, 88, ic), s[1]])
 				sx += 92
 			var fn_names := {"civil": "Civil", "choque": "Choque", "distancia": "Distancia", "linea": "Línea", "explorador": "Exploración", "asedio": "Asedio"}
 			var fn_label: String = fn_names.get(e.fn, "")

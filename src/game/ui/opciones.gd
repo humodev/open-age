@@ -768,6 +768,11 @@ static func tema() -> Theme:
 		t.set_stylebox("normal", cls, btn if cls != "CheckButton" else StyleBoxEmpty.new())
 		t.set_stylebox("hover", cls, hov if cls != "CheckButton" else StyleBoxEmpty.new())
 		t.set_stylebox("pressed", cls, prs if cls != "CheckButton" else StyleBoxEmpty.new())
+		if cls != "CheckButton": # --- interfaz pintada --- (proceso/68) botones de papel con filete
+			for par in [["normal", btn], ["hover", hov], ["pressed", prs], ["disabled", btn]]:
+				var pin := Hud.MARCO.boton(par[0], par[1])
+				if pin != null:
+					t.set_stylebox(par[0], cls, pin)
 		t.set_stylebox("focus", cls, foc)
 		t.set_color("font_color", cls, Palette.UI_TEXT)
 		t.set_color("font_hover_color", cls, Color.WHITE)

@@ -1,0 +1,22 @@
+{
+ "prompt": "flat top-down scan of thick handmade cotton rag paper with a dark brown earth pigment gouache wash, subtle fibres, granulating pigment, dry brush streaks, even diffuse light, no objects, no text, texture",
+ "negativo": "text, watermark, logo, signature, border, frame, blurry, deformed hands, extra fingers, extra limbs, lowres, jpeg artifacts, cross, religious symbol",
+ "refs": [],
+ "peso_ref": 0.6,
+ "tipo_ref": "style transfer",
+ "base": null,
+ "fuerza": 0.5,
+ "ancho": 768,
+ "alto": 768,
+ "pasos": 4,
+ "cfg": 2.0,
+ "imagenes": [
+  {
+   "archivo": "/mnt/games/01_Projects/open-age/.claude/worktrees/agent-abaf3cc60e925335e/proceso/68-interfaz-pintada/fuentes/papel_8.png",
+   "semilla": 8,
+   "segundos": 57.5,
+   "modelo": "flux",
+   "extra": []
+  }
+ ]
+}

@@ -155,15 +155,18 @@ func _draw() -> void:
 			rh = alto_renglones(renglones)
 		var h := ALTO + rh
 		var r := Rect2(x0, y, ANCHO, h)
-		var sb := StyleBoxFlat.new()
-		sb.bg_color = Color(0.06, 0.065, 0.075, 0.9 * alpha)
-		sb.set_corner_radius_all(7)
-		sb.border_color = Color(col, 0.55 * alpha)
-		sb.set_border_width_all(1)
-		sb.border_width_left = 5
-		sb.shadow_color = Color(0, 0, 0, 0.3 * alpha)
-		sb.shadow_size = 6
-		draw_style_box(sb, r)
+		# --- interfaz pintada --- (proceso/67, pendiente 11) el mismo marco que el HUD, con la franja
+		# del tipo a la izquierda; sin texturas, el de antes.
+		if not Hud.MARCO.aviso(self, r, col, alpha):
+			var sb := StyleBoxFlat.new()
+			sb.bg_color = Color(0.06, 0.065, 0.075, 0.9 * alpha)
+			sb.set_corner_radius_all(7)
+			sb.border_color = Color(col, 0.55 * alpha)
+			sb.set_border_width_all(1)
+			sb.border_width_left = 5
+			sb.shadow_color = Color(0, 0, 0, 0.3 * alpha)
+			sb.shadow_size = 6
+			draw_style_box(sb, r)
 		Glyphs.draw(self, TIPOS[a["tipo"]]["icono"], Rect2(r.position + Vector2(14, 8), Vector2(22, 22)), Color(col, alpha))
 		# Un título largo achica la letra (hasta 14) antes que cortarse ("…atacá o subí de edad", 4j).
 		var ts := maxi(14, EstadoCasilla._fit(Hud.font_b, titulo, Hud.ts(17), ANCHO - 140))

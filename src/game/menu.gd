@@ -60,6 +60,7 @@ const UBICACION := [["juntos", "Aliados juntos"], ["mezclados", "Aliados mezclad
 
 func _ready() -> void:
 	Hud.load_fonts()
+	Hud.MARCO.set_pueblo("") # --- interfaz pintada --- en el menú, la faja común
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 

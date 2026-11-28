@@ -1,0 +1,22 @@
+{
+ "prompt": "flat top-down macro scan of handwoven undyed cotton cloth dyed dark walnut brown, coarse plain weave, irregular handspun threads, even lighting, no objects, no text, seamless fabric texture",
+ "negativo": "text, watermark, logo, signature, border, frame, blurry, deformed hands, extra fingers, extra limbs, lowres, jpeg artifacts, cross, religious symbol",
+ "refs": [],
+ "peso_ref": 0.6,
+ "tipo_ref": "style transfer",
+ "base": null,
+ "fuerza": 0.5,
+ "ancho": 768,
+ "alto": 768,
+ "pasos": 4,
+ "cfg": 2.0,
+ "imagenes": [
+  {
+   "archivo": "/mnt/games/01_Projects/open-age/.claude/worktrees/agent-abaf3cc60e925335e/proceso/68-interfaz-pintada/fuentes/algodon_7.png",
+   "semilla": 7,
+   "segundos": 40.4,
+   "modelo": "flux",
+   "extra": []
+  }
+ ]
+}

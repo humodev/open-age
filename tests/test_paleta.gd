@@ -38,6 +38,7 @@ func _init() -> void:
 	Palette.aplicar("normal")
 	_medir_relativa()
 	_medir_vida_y_contraste()
+	_medir_texturas()
 	print("Peor caso de cada regla (ΔE, o contraste para los textos):")
 	var claves := _peor.keys()
 	claves.sort()
@@ -91,6 +92,75 @@ func _medir_vida_y_contraste() -> void:
 		_peor[nombre] = [k, "%.2f:1" % k]
 		if k < CONTRASTE_TEXTO:
 			_fallas.append("%s: %.2f:1 (mínimo %.1f)" % [nombre, k, CONTRASTE_TEXTO])
+
+
+## --- interfaz pintada --- (proceso/68) El papel de los paneles y los botones van debajo del texto:
+## ninguno puede ser más claro que el FONDO (salvo el 0,5 % más claro: motas sueltas, que no tapan
+## un trazo). Con eso, todos los contrastes de arriba valen también sobre las texturas. La marca de
+## agua se mide puesta sobre el papel con su alfa.
+func _medir_texturas() -> void:
+	var path := "res://data/interfaz.json"
+	var all: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var pc: Dictionary = (all.get("hud_estilo", {}) as Dictionary).get("pintado", {})
+	if not bool(pc.get("activo", false)):
+		return
+	var tope := luminancia(FONDO)
+	var rutas: Array = [str(pc["superficie"])]
+	for e in ["normal", "hover", "pressed", "disabled"]:
+		rutas.append(str((pc["boton"] as Dictionary)[e]))
+	var papel := _lum_media(str(pc["superficie"]))
+	for r: String in rutas:
+		var p := _percentil(r, 0.995, 0 if r == str(pc["superficie"]) else int((pc["boton"] as Dictionary).get("margen", 12)))
+		var nombre := "luminancia de la textura %s (p99,5) contra el FONDO" % r.get_file()
+		_peor[nombre] = [p, "%.4f (tope %.4f)" % [p, tope]]
+		if p > tope:
+			_fallas.append("%s: %.4f > %.4f" % [nombre, p, tope])
+	var carpeta := str(pc.get("carpeta", "res://assets/ui/hud"))
+	var alfa := float(pc.get("marca_alfa", 0.85))
+	for civ: String in (pc.get("pueblos", {}) as Dictionary):
+		var r := "%s/%s/marca.webp" % [carpeta, civ]
+		if not FileAccess.file_exists(r):
+			continue
+		var img := Image.load_from_file(ProjectSettings.globalize_path(r))
+		img.convert(Image.FORMAT_RGBA8)
+		var peor := 0.0
+		for y in range(0, img.get_height(), 2):
+			for x in range(0, img.get_width(), 2):
+				var c := img.get_pixel(x, y)
+				var a := c.a * alfa
+				var l := luminancia(Color(c.r, c.g, c.b)) * a + papel * (1.0 - a)
+				peor = maxf(peor, l)
+		var nombre := "marca de agua de %s sobre el papel" % civ
+		_peor[nombre] = [peor, "%.4f (tope %.4f)" % [peor, tope]]
+		if peor > tope:
+			_fallas.append("%s: %.4f > %.4f" % [nombre, peor, tope])
+
+
+## Luminancias de los píxeles opacos, sin los `borde` px de cada lado (el filete del botón: ahí no va texto).
+func _lums(ruta: String, borde: int = 0) -> PackedFloat32Array:
+	var img := Image.load_from_file(ProjectSettings.globalize_path(ruta))
+	img.convert(Image.FORMAT_RGBA8)
+	var out := PackedFloat32Array()
+	for y in range(borde, img.get_height() - borde, 2):
+		for x in range(borde, img.get_width() - borde, 2):
+			var c := img.get_pixel(x, y)
+			if c.a > 0.5:
+				out.append(luminancia(Color(c.r, c.g, c.b)))
+	return out
+
+
+func _percentil(ruta: String, q: float, borde: int = 0) -> float:
+	var l := _lums(ruta, borde)
+	l.sort()
+	return l[int(q * (l.size() - 1))]
+
+
+func _lum_media(ruta: String) -> float:
+	var l := _lums(ruta)
+	var s := 0.0
+	for v in l:
+		s += v
+	return s / maxf(1.0, l.size())
 
 
 func _exigir(regla: String, a: Color, b: Color, visiones: Array, minimo: float) -> void:
