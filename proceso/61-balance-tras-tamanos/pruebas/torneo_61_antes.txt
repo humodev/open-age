@@ -1,0 +1,72 @@
+Running as unit: run-p2360951-i6567452.scope; invocation ID: d02ec104d8594bd88a1d6e57332404c3
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+ayutthaya    vs etiopia      terreno=montana 30:00  ganador: (ayutthaya por puntos)  edades 4-3
+etiopia      vs ayutthaya    terreno=fortines 30:00  ganador: (ayutthaya por puntos)  edades 3-4
+ayutthaya    vs etiopia      terreno=fortines 30:00  ganador: (ayutthaya por puntos)  edades 4-3
+etiopia      vs ayutthaya    terreno=selva   30:00  ganador: (ayutthaya por puntos)  edades 3-4
+ayutthaya    vs guaranies    terreno=bosque_templado 30:00  ganador: (ayutthaya por puntos)  edades 4-4
+guaranies    vs ayutthaya    terreno=bosque_templado 30:00  ganador: (guaranies por puntos)  edades 4-4
+ayutthaya    vs guaranies    terreno=bosque  30:00  ganador: (guaranies por puntos)  edades 3-4
+guaranies    vs ayutthaya    terreno=bosque  30:00  ganador: (ayutthaya por puntos)  edades 4-4
+ayutthaya    vs mapuches     terreno=rio     30:00  ganador: (ayutthaya por puntos)  edades 4-3
+mapuches     vs ayutthaya    terreno=selva   30:00  ganador: (mapuches por puntos)  edades 4-3
+ayutthaya    vs mapuches     terreno=selva   30:00  ganador: (ayutthaya por puntos)  edades 4-3
+mapuches     vs ayutthaya    terreno=altiplano 30:00  ganador: (mapuches por puntos)  edades 4-3
+ayutthaya    vs palmares     terreno=sierra  30:00  ganador: (ayutthaya por puntos)  edades 4-3
+palmares     vs ayutthaya    terreno=sierra  30:00  ganador: (ayutthaya por puntos)  edades 4-4
+ayutthaya    vs palmares     terreno=rio     22:18  ganador: ayutthaya  edades 3-3
+palmares     vs ayutthaya    terreno=rio     25:00  ganador: palmares  edades 4-1
+ayutthaya    vs tawantinsuyu terreno=montana 30:00  ganador: (ayutthaya por puntos)  edades 4-3
+tawantinsuyu vs ayutthaya    terreno=sierra  30:00  ganador: (ayutthaya por puntos)  edades 3-4
+ayutthaya    vs tawantinsuyu terreno=sierra  30:00  ganador: (ayutthaya por puntos)  edades 4-3
+tawantinsuyu vs ayutthaya    terreno=delta   30:00  ganador: (ayutthaya por puntos)  edades 3-4
+etiopia      vs guaranies    terreno=delta   30:00  ganador: (guaranies por puntos)  edades 3-4
+guaranies    vs etiopia      terreno=llano   18:04  ganador: etiopia  edades 2-3
+etiopia      vs guaranies    terreno=llano   30:00  ganador: (guaranies por puntos)  edades 3-4
+guaranies    vs etiopia      terreno=fortines 30:00  ganador: (guaranies por puntos)  edades 4-3
+etiopia      vs mapuches     terreno=islas   25:00  ganador: mapuches  edades 2-4
+mapuches     vs etiopia      terreno=islas   30:00  ganador: (mapuches por puntos)  edades 4-3
+etiopia      vs mapuches     terreno=llano   30:00  ganador: (etiopia por puntos)  edades 4-4
+mapuches     vs etiopia      terreno=llano   30:00  ganador: (mapuches por puntos)  edades 4-3
+etiopia      vs palmares     terreno=fortines 30:00  ganador: (palmares por puntos)  edades 3-4
+palmares     vs etiopia      terreno=islas   16:53  ganador: etiopia  edades 2-3
+etiopia      vs palmares     terreno=islas   16:40  ganador: etiopia  edades 3-2
+palmares     vs etiopia      terreno=rio     30:00  ganador: (palmares por puntos)  edades 4-3
+etiopia      vs tawantinsuyu terreno=sierra  30:00  ganador: (tawantinsuyu por puntos)  edades 3-3
+tawantinsuyu vs etiopia      terreno=sierra  30:00  ganador: (tawantinsuyu por puntos)  edades 3-3
+etiopia      vs tawantinsuyu terreno=valle   30:00  ganador: (etiopia por puntos)  edades 4-3
+tawantinsuyu vs etiopia      terreno=valle   30:00  ganador: (tawantinsuyu por puntos)  edades 3-3
+guaranies    vs mapuches     terreno=delta   30:00  ganador: (guaranies por puntos)  edades 4-4
+mapuches     vs guaranies    terreno=montana 30:00  ganador: (mapuches por puntos)  edades 4-4
+guaranies    vs mapuches     terreno=montana 30:00  ganador: (guaranies por puntos)  edades 4-3
+mapuches     vs guaranies    terreno=mesetas 30:00  ganador: (mapuches por puntos)  edades 4-3
+guaranies    vs palmares     terreno=selva   30:00  ganador: (guaranies por puntos)  edades 4-2
+palmares     vs guaranies    terreno=selva   30:00  ganador: (palmares por puntos)  edades 4-3
+guaranies    vs palmares     terreno=bosque  21:27  ganador: palmares  edades 1-3
+palmares     vs guaranies    terreno=bosque  30:00  ganador: (palmares por puntos)  edades 4-4
+guaranies    vs tawantinsuyu terreno=rio     30:00  ganador: (guaranies por puntos)  edades 4-3
+tawantinsuyu vs guaranies    terreno=selva   30:00  ganador: (guaranies por puntos)  edades 3-4
+guaranies    vs tawantinsuyu terreno=selva   30:00  ganador: (guaranies por puntos)  edades 4-3
+tawantinsuyu vs guaranies    terreno=montana 30:00  ganador: (guaranies por puntos)  edades 3-4
+mapuches     vs palmares     terreno=delta   30:00  ganador: (mapuches por puntos)  edades 4-2
+palmares     vs mapuches     terreno=bosque_templado 30:00  ganador: (palmares por puntos)  edades 4-4
+mapuches     vs palmares     terreno=bosque_templado 30:00  ganador: (mapuches por puntos)  edades 4-3
+palmares     vs mapuches     terreno=islas   30:00  ganador: (palmares por puntos)  edades 4-4
+mapuches     vs tawantinsuyu terreno=rio     30:00  ganador: (mapuches por puntos)  edades 4-4
+tawantinsuyu vs mapuches     terreno=rio     30:00  ganador: (mapuches por puntos)  edades 3-4
+mapuches     vs tawantinsuyu terreno=mesetas 30:00  ganador: (mapuches por puntos)  edades 4-2
+tawantinsuyu vs mapuches     terreno=mesetas 30:00  ganador: (mapuches por puntos)  edades 3-4
+palmares     vs tawantinsuyu terreno=llano   30:00  ganador: (palmares por puntos)  edades 3-3
+tawantinsuyu vs palmares     terreno=bosque  23:45  ganador: palmares  edades 2-4
+palmares     vs tawantinsuyu terreno=bosque  19:21  ganador: tawantinsuyu  edades 3-3
+tawantinsuyu vs palmares     terreno=rio     30:00  ganador: (tawantinsuyu por puntos)  edades 3-2
+
+Victorias por destrucción de hitos:
+  ayutthaya    1 / 20
+  etiopia      3 / 20
+  guaranies    0 / 20
+  mapuches     1 / 20
+  palmares     3 / 20
+  tawantinsuyu 1 / 20
+systemd-run --user --scope -p MemoryMax=4G -p MemorySwapMax=1G timeout 7200    3943,05s user 6,76s system 99% cpu 1:06:22,28 total

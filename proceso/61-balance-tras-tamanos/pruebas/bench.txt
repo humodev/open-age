@@ -1,0 +1,4 @@
+Running as unit: run-p2728802-i6884251.scope; invocation ID: 5bfc716b84dc4d22935c37ee269f2c0f
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+200 unidades, 600 ticks: promedio 10.05 ms, peor 73.70 ms, presupuesto 100 ms; vivas al final: 122

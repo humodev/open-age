@@ -1,0 +1,8 @@
+Running as unit: run-p2727166-i6934603.scope; invocation ID: fa6d5ca3060143ac9b663676f5d21a03
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+ticks=3000 hash=3617052205
+J0 edad=1 pob=24/40 res={ "alimento": 1025, "madera": 200, "piedra": 100, "riqueza": 284 } stats={ "recolectado": 2729, "entrenadas": 17, "bajas": 0, "muertes": 0, "edificios_destruidos": 0, "ordenes": { "target": 23, "build:casa": 3, "train:aldeano": 16, "move": 10, "build:deposito": 2, "build:cuartel": 3, "rally": 1, "train:guerrero": 2 }, "origen": { "casa": { "alimento": 1680, "madera": 740, "riqueza": 234 }, "recoleccion": { "alimento": 65, "madera": 10 } } }
+J1 edad=1 pob=24/30 res={ "alimento": 76, "madera": 319, "piedra": 100, "riqueza": 0 } stats={ "recolectado": 2540, "entrenadas": 17, "bajas": 0, "muertes": 0, "edificios_destruidos": 0, "ordenes": { "target": 22, "build:casa": 2, "train:aldeano": 15, "build:deposito": 2, "build:cuartel": 1, "research": 2, "rally": 1, "train:guerrero": 1, "train:lancero": 3, "build:hito_economia": 1, "train:hondero": 1 }, "origen": { "casa": { "alimento": 1474, "madera": 751, "riqueza": 255 }, "recoleccion": { "madera": 13, "alimento": 47 } } }
+game_over=false winner=-1 entidades=2453
+DETERMINISMO: OK

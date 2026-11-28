@@ -1,0 +1,34 @@
+Running as unit: run-p2731889-i6938969.scope; invocation ID: 3d30922329584cf0813ffc2862cb1ed2
+Godot Engine v4.7.2.stable.arch_linux.ed1daf0bf (2026-08-17 01:18:38 UTC) - https://godotengine.org
+
+arte-1 · Economía temprana
+  0:27 objetivo hecho o3
+  2:39 objetivo hecho o1
+  4:23 objetivo hecho o2
+  4:23 MISIÓN victoria 
+arte-1: victoria a los 4:23 · medalla: oro 
+arte-2 · Defensa
+  1:28 objetivo hecho o1
+  3:08 objetivo hecho o2
+  5:04 objetivo hecho o3
+  5:04 MISIÓN victoria 
+arte-2: victoria a los 5:04 · medalla: oro 
+arte-3 · Contadores
+  1:09 objetivo hecho o1
+  2:23 objetivo hecho o2
+  3:38 objetivo hecho o3
+  3:38 MISIÓN victoria 
+arte-3: victoria a los 3:38 · medalla: oro 
+arte-4 · Sitios sagrados
+  0:37 objetivo hecho o1
+  0:37 objetivo hecho o2
+  0:37 MISIÓN victoria 
+arte-4: victoria a los 0:37 · medalla: oro 
+arte-5 · Asedio
+  1:00 escolta 12, asedio 4, rivales 9, blanco torre 1000
+  1:55 objetivo hecho o1
+  2:00 escolta 11, asedio 4, rivales 0, blanco cuartel 1200
+  2:11 objetivo hecho o2
+  2:11 MISIÓN victoria 
+arte-5: victoria a los 2:11 · medalla: oro 
+OK

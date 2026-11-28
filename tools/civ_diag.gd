@@ -217,6 +217,7 @@ func _play(data: SimData, pair: Array, sv: int, minutes: int, terrain: String) -
 	var trained15 := [{}, {}] # tipo -> entrenadas antes del minuto 15
 	var vill_lost15 := [0, 0] # aldeanos perdidos antes del minuto 15
 	var techs := [{}, {}] # investigación -> minuto en que terminó
+	var short_min := [{}, {}] # "edad_recurso" -> minutos sin alcanzar el hito siguiente (desde el 15)
 	while s.tick < minutes * 600 and not s.game_over:
 		# Antes del paso: qué unidades de la civ pegarían con emboscada (la condición de
 		# SimMods.damage: sin combate en 5 s y ocultas ahora).
@@ -319,6 +320,18 @@ func _play(data: SimData, pair: Array, sv: int, minutes: int, terrain: String) -
 					r_army_samples += 1
 					if _in_forest(s, e.x, e.y):
 						r_forest += 1
+		# --- proceso 61 --- Cada minuto, desde el 15, por lado: qué recurso le falta para el
+		# hito de la edad siguiente (el primero de la lista; los dos piden lo mismo de la capa
+		# común y su costo_extra).
+		if s.tick % 600 == 0 and s.tick >= 9000:
+			for pid in 2:
+				var age := int(s.players[pid]["age"])
+				var dd := s.dp(pid)
+				if age < 4 and age - 1 < dd.hitos.size() and not (dd.hitos[age - 1] as Array).is_empty():
+					var hc := dd.cost_of(str(dd.hitos[age - 1][0]), age)
+					for k in hc:
+						if int(s.players[pid]["res"].get(k, 0)) < int(hc[k]):
+							short_min[pid]["%d_%s" % [age + 1, k]] = int(short_min[pid].get("%d_%s" % [age + 1, k], 0)) + 1
 		if s.tick == 12000:
 			for e in s.actives:
 				if e.alive and e.owner >= 0 and e.is_building() and e.built and (e.def.get("hito", false) or e.capital or e.def.get("cuenta_victoria", false)):
@@ -349,6 +362,19 @@ func _play(data: SimData, pair: Array, sv: int, minutes: int, terrain: String) -
 		if e.alive and e.owner >= 0 and e.is_building() and e.built:
 			blds[e.owner][e.type] = int(blds[e.owner].get(e.type, 0)) + 1
 			heads[e.owner] += e.heads
+	# --- proceso 61 --- Granjas de la civ al final: cuántas, cuántas con bono de sitio
+	# (agua del arrozal o ladera del andén) y el bono medio.
+	var farms := {}
+	for e in s.actives:
+		if e.alive and e.owner == g and e.is_building() and e.built and (e.type == "granja" or e.def.has("bono_agua_pct") or e.def.has("bono_ladera_pct")):
+			var fb := s._site_bonus(e)
+			var fk: String = e.type
+			if not farms.has(fk):
+				farms[fk] = [0, 0, 0]
+			farms[fk][0] += 1
+			if fb > 0:
+				farms[fk][1] += 1
+				farms[fk][2] += fb
 	# Ganador.
 	var how := "destrucción"
 	var w := s.winner
@@ -373,7 +399,7 @@ func _play(data: SimData, pair: Array, sv: int, minutes: int, terrain: String) -
 		"score": [s.score(0), s.score(1)], "trained": trained, "prods": prods, "hito_obra": hito_obra, "timeline": timeline,
 		"lost": lost, "hitos_elegidos": hitos_elegidos, "arreos": arreos, "dmg_taken": dmg_taken,
 		"healed": healed, "blds": blds, "heads": heads, "vic_20": vic_20,
-		"trained15": trained15, "vill_lost15": vill_lost15, "techs": techs}
+		"trained15": trained15, "vill_lost15": vill_lost15, "techs": techs, "farms": farms, "short": short_min}
 	_print_game(s, pair, r)
 	return r
 
@@ -414,6 +440,15 @@ func _print_game(s: Sim, pair: Array, r: Dictionary) -> void:
 	print("%-12s vs %-12s %-15s %s  ganador %s (%s)  edades %d-%d  criterio %d-%d  puntaje %d-%d" % [
 		pair[0], pair[1], r["terreno"], _t(r["fin"]), pair[g] if r["gana"] else pair[rv], r["como"],
 		s.players[0]["age"], s.players[1]["age"], r["crit"][0], r["crit"][1], r["score"][0], r["score"][1]])
+	if not (r["farms"] as Dictionary).is_empty():
+		var fp := []
+		for fk in r["farms"]:
+			fp.append("%s %d (con bono %d)" % [fk, r["farms"][fk][0], r["farms"][fk][1]])
+		var gbook: Dictionary = r["book"][g]
+		var food := 0
+		for o in gbook:
+			food += int(gbook[o].get("alimento", 0))
+		print("    granjas de %s: %s · alimento juntado %d (granja %d)" % [pair[g], ", ".join(fp), food, int(gbook.get("granja", {}).get("alimento", 0))])
 	if brief:
 		return
 	for pid in [g, rv]:
@@ -469,6 +504,8 @@ func _sum(tot: Dictionary, r: Dictionary) -> void:
 				_add(tot, "%s_edad%d_n" % [side[0], k + 1], 1)
 				_add(tot, "%s_edad%d_t" % [side[0], k + 1], a[k])
 		_add(tot, "%s_bajas" % side[0], r["bajas"][side[1]])
+		for k in r["short"][side[1]]:
+			_add(tot, "%s_falta_%s" % [side[0], k], r["short"][side[1]][k])
 		for k in r["kills"][side[1]]:
 			_add(tot, "%s_k_%s" % [side[0], k], r["kills"][side[1]][k])
 		var book: Dictionary = r["book"][side[1]]
@@ -550,6 +587,13 @@ func _totals(t: Dictionary) -> void:
 			var m := int(t.get("%s_edad%d_n" % [s, k], 0))
 			ag += " %s %s (%d de %d)" % [["", "", "II", "III", "IV"][k], _t(int(t.get("%s_edad%d_t" % [s, k], 0)) / maxi(1, m)), m, n]
 		print("%s edades promedio:%s · primer ataque %s (%d) · bajas %d" % [side[1], ag, _t(int(t.get(s + "_ataque_t", 0)) / maxi(1, int(t.get(s + "_ataque_n", 0)))), t.get(s + "_ataque_n", 0), t.get(s + "_bajas", 0)])
+		var fl := []
+		for k in t:
+			if str(k).begins_with(s + "_falta_"):
+				fl.append("%s %d" % [str(k).trim_prefix(s + "_falta_"), t[k]])
+		fl.sort()
+		if not fl.is_empty():
+			print("   minutos (desde el 15) sin alcanzar el hito siguiente, por edad de destino y recurso: %s" % ", ".join(fl))
 		var tl := ""
 		for mnt in [5, 10, 15, 20, 25, 30]:
 			var c := int(t.get("%s_tl_n_%d" % [s, mnt], 0))

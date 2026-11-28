@@ -985,7 +985,13 @@ func _engine(p: Dictionary, vill: Array[SimEntity], centro: SimEntity, by_type: 
 			if bool(p.get("acogida_pausa", false)) == welcome:
 				sim.push_command({"t": "acoger", "player": player, "on": welcome})
 		"tawantinsuyu":
-			var want_res := 60 if saving else 0
+			# --- proceso 61 --- Ahorrando, aparta la mit'a que pide el hito siguiente (el más
+			# caro de los dos, de los datos). Eran 60 fijos: alcanzaban para la II, pero los
+			# talleres de tejido se comían lo que faltaba para los 120 de la III y los 150 de la IV.
+			var want_res := 0
+			if saving and int(p["age"]) - 1 < dd.hitos.size():
+				for h in dd.hitos[int(p["age"]) - 1]:
+					want_res = maxi(want_res, int(dd.cost_of(str(h), int(p["age"])).get("mita", 0)))
 			if int(p.get("reserva_mita", 0)) != want_res:
 				sim.push_command({"t": "reserve", "player": player, "res": "mita", "n": want_res})
 			# Regalo de cumbi en la edad III, si sobra mit'a por encima de la reserva.
