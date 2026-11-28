@@ -228,8 +228,10 @@ SEMILLA2 = {"tawantinsuyu_casa_rojo": 22, "tawantinsuyu_centro": 22, "tawantinsu
             "tawantinsuyu_qollqa": 22, "tawantinsuyu_campo_tiro": 22, "tawantinsuyu_torre": 21,
             "tawantinsuyu_fortaleza": 21, "tawantinsuyu_mercado": 22, "tawantinsuyu_ushnu": 21, "tawantinsuyu_maravilla": 21}
 TEXTURA_PX2 = 2048
+# Terrazas sin alero: la faja no las encuentra; la cumbrera tiñe la plataforma de arriba.
+MASCARA_PIEZA = {"tawantinsuyu_fortaleza": {"cumbrera": 0.12}, "tawantinsuyu_maravilla": {"cumbrera": 0.12}}
 # Paint corre el rojo al carmesí (330–345°): tono más ancho donde los techos no son rojizos.
-MASCARA2 = {"tawantinsuyu": {"tono": 22}}  # Paint a 2048 para que la paja no se vuelva una lámina lisa
+MASCARA2 = {"tawantinsuyu": {"tono": 22, "faja": 0.15, "cumbrera": 0.1}}  # Paint a 2048 para que la paja no se vuelva una lámina lisa
 
 
 def prompt2(civ, tipo, que, rojo):
@@ -298,7 +300,7 @@ def main():
                 pieza["textura_px"] = TEXTURA_PX2
                 pieza["mezcla"] = True  # techos de la referencia (gen3d_mezcla.py): la paja no se alisa
                 pieza["suelo_pct"] = 6  # la sombra de FLUX dejaba una lámina al pie
-                pieza["mascara"] = MASCARA2.get(civ, {})
+                pieza["mascara"] = {**MASCARA2.get(civ, {}), **MASCARA_PIEZA.get(clave, {})}
             piezas[clave] = pieza
             n += 1
     for clave, (tipo, cat, que) in MV.items():

@@ -90,6 +90,21 @@ Lo sagrado sigue sin rojo: qorikancha, nguillatuwe, casa del karai, iglesia, mon
 - **Hunyuan 2mv** con frente y costado de una misma hoja de FLUX (`tawantinsuyu_casa_mv`, `tawantinsuyu_cuartel_mv`): resultado abajo.
 - **Recintos amurallados grandes**: qorikancha, pukara mayor, aqllawasi, Vilcabamba y kallanka real **no se rehacen**. Vuelven a su maqueta y pasan a la lista de candidatos a Meshy.
 
+### Más color del equipo (pedido del autor: «tienen que tener algo más, si no ni se nota»)
+
+El autor aprobó el estilo de la segunda pasada, pero las cortinas solas (1–8 % de la superficie) no se veían. Ahora la máscara suma **superficie geométrica**, sin rehacer las formas:
+
+- `--faja=f`: una faja tejida en las paredes, justo bajo el alero o bajo una terraza. Desde cada vértice se tira un rayo hacia arriba y, si toca un alero o una terraza a menos de f × alto, la pared toma el color. Como la malla es cerrada, el rayo toca la cara de abajo del alero.
+- `--cumbrera=c`: los techos en el c × alto de más arriba (una faja en la cumbrera; la plataforma en las terrazas).
+
+En el Tawantinsuyu se usa faja 0,15 y cumbrera 0,10 (tono ±22°): la cobertura queda entre el 10 y el 23 %. Las excepciones son la fortaleza (6 %) y la maravilla (4 %): sus terrazas no tienen alero, así que llevan el estandarte. Se rehízo solo el paso `mascara`.
+
+![Color: antes y después, azul y violeta](img/color_antes_despues_tawantinsuyu.jpg)
+
+![Base del Tawantinsuyu con el color nuevo, azul](img/base_tawantinsuyu_p3_azul.jpg)
+
+![Base del Tawantinsuyu con el color nuevo, violeta](img/base_tawantinsuyu_p3_violeta.jpg)
+
 ### Resultado en el Tawantinsuyu
 
 ![Antes y después, modelo por modelo](img/antes_despues_tawantinsuyu.jpg)

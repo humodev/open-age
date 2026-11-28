@@ -887,7 +887,9 @@
    "textura_px": 2048,
    "mezcla": true,
    "mascara": {
-    "tono": 22
+    "tono": 22,
+    "faja": 0.15,
+    "cumbrera": 0.1
    }
   },
   "tawantinsuyu_centro": {
@@ -927,7 +929,9 @@
    "textura_px": 2048,
    "mezcla": true,
    "mascara": {
-    "tono": 22
+    "tono": 22,
+    "faja": 0.15,
+    "cumbrera": 0.1
    }
   },
   "tawantinsuyu_cuartel_rojo": {
@@ -967,7 +971,9 @@
    "textura_px": 2048,
    "mezcla": true,
    "mascara": {
-    "tono": 22
+    "tono": 22,
+    "faja": 0.15,
+    "cumbrera": 0.1
    }
   },
   "tawantinsuyu_taller_tejido": {
@@ -1007,7 +1013,9 @@
    "textura_px": 2048,
    "mezcla": true,
    "mascara": {
-    "tono": 22
+    "tono": 22,
+    "faja": 0.15,
+    "cumbrera": 0.1
    }
   },
   "tawantinsuyu_almacen_madera": {
@@ -1047,7 +1055,9 @@
    "textura_px": 2048,
    "mezcla": true,
    "mascara": {
-    "tono": 22
+    "tono": 22,
+    "faja": 0.15,
+    "cumbrera": 0.1
    }
   },
   "tawantinsuyu_almacen_mina": {
@@ -1087,7 +1097,9 @@
    "textura_px": 2048,
    "mezcla": true,
    "mascara": {
-    "tono": 22
+    "tono": 22,
+    "faja": 0.15,
+    "cumbrera": 0.1
    }
   },
   "tawantinsuyu_qollqa": {
@@ -1127,7 +1139,9 @@
    "textura_px": 2048,
    "mezcla": true,
    "mascara": {
-    "tono": 22
+    "tono": 22,
+    "faja": 0.15,
+    "cumbrera": 0.1
    }
   },
   "tawantinsuyu_campo_tiro": {
@@ -1167,7 +1181,9 @@
    "textura_px": 2048,
    "mezcla": true,
    "mascara": {
-    "tono": 22
+    "tono": 22,
+    "faja": 0.15,
+    "cumbrera": 0.1
    }
   },
   "tawantinsuyu_torre": {
@@ -1207,7 +1223,9 @@
    "textura_px": 2048,
    "mezcla": true,
    "mascara": {
-    "tono": 22
+    "tono": 22,
+    "faja": 0.15,
+    "cumbrera": 0.1
    }
   },
   "tawantinsuyu_fortaleza": {
@@ -1247,7 +1265,9 @@
    "textura_px": 2048,
    "mezcla": true,
    "mascara": {
-    "tono": 22
+    "tono": 22,
+    "faja": 0.15,
+    "cumbrera": 0.12
    }
   },
   "tawantinsuyu_mercado": {
@@ -1287,7 +1307,9 @@
    "textura_px": 2048,
    "mezcla": true,
    "mascara": {
-    "tono": 22
+    "tono": 22,
+    "faja": 0.15,
+    "cumbrera": 0.1
    }
   },
   "tawantinsuyu_ushnu": {
@@ -1327,7 +1349,9 @@
    "textura_px": 2048,
    "mezcla": true,
    "mascara": {
-    "tono": 22
+    "tono": 22,
+    "faja": 0.15,
+    "cumbrera": 0.1
    }
   },
   "tawantinsuyu_pukara_mayor": {
@@ -1542,7 +1566,9 @@
    "textura_px": 2048,
    "mezcla": true,
    "mascara": {
-    "tono": 22
+    "tono": 22,
+    "faja": 0.15,
+    "cumbrera": 0.12
    }
   },
   "mapuches_casa_rojo": {
@@ -4418,7 +4444,9 @@
    "textura_px": 2048,
    "mezcla": true,
    "mascara": {
-    "tono": 22
+    "tono": 22,
+    "faja": 0.15,
+    "cumbrera": 0.1
    },
    "destino": "assets/generados/modelos/local/pruebas/tawantinsuyu_casa_mv.glb"
   },
@@ -4476,7 +4504,9 @@
    "textura_px": 2048,
    "mezcla": true,
    "mascara": {
-    "tono": 22
+    "tono": 22,
+    "faja": 0.15,
+    "cumbrera": 0.1
    },
    "destino": "assets/generados/modelos/local/pruebas/tawantinsuyu_cuartel_mv.glb"
   }

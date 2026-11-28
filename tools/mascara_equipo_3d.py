@@ -21,6 +21,9 @@ Además:
 - imprime `luz_ref` (luminancia lineal media de lo enmascarado), que el shader usa para que el
   color del equipo salga con el brillo de la tela original;
 - --hoja arma la comprobación: atlas | máscara;
+- --faja=f y --cumbrera=c (edificios): además del rojo de la textura, una faja en las paredes justo
+  bajo el techo o una terraza (a menos de f × alto) y la cumbrera (los techos en el c × alto de
+  arriba), para que el color del equipo se vea desde la cámara del juego;
 - --edificio (proceso/58-edificios-locales): sin detección de manos ni brazos y un rojo más estricto
   (--tono, --sat, --val ajustan el corte), para las telas y fajas rojas de los edificios.
 
@@ -87,12 +90,36 @@ else:
 
 # Rasterizado de los triángulos en UV: qué texeles cubre alguna cara, cuáles están en la banda y
 # cuáles son de las manos.
+# Faja bajo el alero y cumbrera (edificios, proceso/58): superficie geométrica que también toma el
+# color del equipo, aunque la textura no la traiga en rojo (una faja tejida bajo la paja, una
+# cumbrera). --faja=f: paredes con un techo (o una terraza) a menos de f × alto por encima;
+# --cumbrera=c: techos en el c × alto más alto del modelo.
+faja = float(opt.get("faja", "0"))
+cumbrera = float(opt.get("cumbrera", "0"))
+dup = None
+if faja > 0 or cumbrera > 0:
+    from mathutils import Vector
+    from mathutils.bvhtree import BVHTree
+    m3 = mw.to_3x3()
+    wv = [mw @ vx.co for vx in me.vertices]
+    bvh = BVHTree.FromPolygons(wv, [pl.vertices[:] for pl in me.polygons])
+    zw = np.array([p.z for p in wv], np.float32)
+    alto = float(zw.max() - zw.min())
+    pn = [(m3 @ pl.normal).normalized() for pl in me.polygons]
+    dup = np.full(len(wv), 10.0, np.float32)  # distancia al techo de arriba, en fracción del alto
+    arriba = Vector((0, 0, 1))
+    for i, p in enumerate(wv):
+        o = p + (m3 @ me.vertices[i].normal).normalized() * (0.01 * alto) + arriba * (0.002 * alto)
+        hit = bvh.ray_cast(o, arriba, alto)
+        if hit[0] is not None and abs(pn[hit[2]].z) > 0.25:  # el alero por abajo (malla cerrada) o una terraza
+            dup[i] = hit[3] / alto
 me.calc_loop_triangles()
 uv = me.uv_layers.active.data
 cubre = np.zeros((H, W), bool)
 en_banda = np.zeros((H, W), bool)
 de_mano = np.zeros((H, W), bool)
 de_brazo = np.zeros((H, W), bool)
+geo = np.zeros((H, W), bool)  # faja y cumbrera
 for t in me.loop_triangles:
     p = np.array([uv[l].uv[:] for l in t.loops], dtype=np.float64) * [W, H]
     zz = float(np.mean(z[list(t.vertices)]))
@@ -117,6 +144,15 @@ for t in me.loop_triangles:
     cubre[sub] |= dentro
     if ok:
         en_banda[sub] |= dentro
+    if dup is not None:
+        vi = list(t.vertices)
+        nz = (m3 @ t.normal).normalized().z
+        if faja > 0 and abs(nz) < 0.5:
+            dd = l1 * dup[vi[0]] + l2 * dup[vi[1]] + l3 * dup[vi[2]]
+            geo[sub] |= dentro & (dd < faja)
+        if cumbrera > 0 and nz > 0.3:
+            zt = l1 * z[vi[0]] + l2 * z[vi[1]] + l3 * z[vi[2]]
+            geo[sub] |= dentro & (zt > 1.0 - cumbrera)
     if mano[list(t.vertices)].sum() >= 2:
         de_mano[sub] |= dentro
     if "con-brazos" not in opt and brazo[list(t.vertices)].sum() >= 2:
@@ -161,6 +197,9 @@ else:
     gris = (s < 0.10) & (v < 0.55)  # metal, piedra
     m = ~piel & ~pelo & ~gris
 m &= cubre & en_banda if banda is not None else cubre
+if dup is not None:
+    print(f"FAJA/CUMBRERA: {geo.sum() / max(1, cubre.sum()):.1%} de la superficie")
+    m |= geo & cubre
 m &= ~de_mano  # las manos nunca (palmas rojizas, la herramienta en el puño)
 if "dbg" in opt and metodo == "ropa":
     zona = cubre & en_banda

@@ -14,68 +14,68 @@
    "cobertura": 0.038
   },
   "local/tawantinsuyu_almacen_madera": {
-   "luz_ref": 0.0855,
-   "cobertura": 0.033
+   "luz_ref": 0.2078,
+   "cobertura": 0.1128
   },
   "local/tawantinsuyu_almacen_mina": {
-   "luz_ref": 0.0974,
-   "cobertura": 0.0815
+   "luz_ref": 0.1924,
+   "cobertura": 0.2249
   },
   "local/tawantinsuyu_aqllawasi": {
    "luz_ref": 0.0547,
    "cobertura": 0.0086
   },
   "local/tawantinsuyu_campo_tiro": {
-   "luz_ref": 0.0893,
-   "cobertura": 0.0418
+   "luz_ref": 0.1656,
+   "cobertura": 0.2267
   },
   "local/tawantinsuyu_casa": {
-   "luz_ref": 0.0599,
-   "cobertura": 0.0232
+   "luz_ref": 0.172,
+   "cobertura": 0.2268
   },
   "local/tawantinsuyu_centro": {
-   "luz_ref": 0.009,
-   "cobertura": 0.0211
+   "luz_ref": 0.2264,
+   "cobertura": 0.1843
   },
   "local/tawantinsuyu_cuartel": {
-   "luz_ref": 0.0261,
-   "cobertura": 0.0186
+   "luz_ref": 0.255,
+   "cobertura": 0.174
   },
   "local/tawantinsuyu_fortaleza": {
-   "luz_ref": 0.1013,
-   "cobertura": 0.0006
+   "luz_ref": 0.3466,
+   "cobertura": 0.0635
   },
   "local/tawantinsuyu_kallanka_real": {
    "luz_ref": 0.0622,
    "cobertura": 0.0243
   },
   "local/tawantinsuyu_maravilla": {
-   "luz_ref": 0.0981,
-   "cobertura": 0.0002
+   "luz_ref": 0.2234,
+   "cobertura": 0.0365
   },
   "local/tawantinsuyu_mercado": {
-   "luz_ref": 0.0437,
-   "cobertura": 0.011
+   "luz_ref": 0.1948,
+   "cobertura": 0.1817
   },
   "local/tawantinsuyu_pukara_mayor": {
    "luz_ref": 0.14,
    "cobertura": 0.0187
   },
   "local/tawantinsuyu_qollqa": {
-   "luz_ref": 0.1191,
-   "cobertura": 0.0162
+   "luz_ref": 0.1903,
+   "cobertura": 0.1034
   },
   "local/tawantinsuyu_taller_tejido": {
-   "luz_ref": 0.0939,
-   "cobertura": 0.0703
+   "luz_ref": 0.1485,
+   "cobertura": 0.1951
   },
   "local/tawantinsuyu_torre": {
-   "luz_ref": 0.0827,
-   "cobertura": 0.0312
+   "luz_ref": 0.2532,
+   "cobertura": 0.1752
   },
   "local/tawantinsuyu_ushnu": {
-   "luz_ref": 0.0697,
-   "cobertura": 0.0545
+   "luz_ref": 0.1519,
+   "cobertura": 0.1796
   },
   "local/tawantinsuyu_vilcabamba": {
    "luz_ref": 0.0709,
