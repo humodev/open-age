@@ -736,3 +736,15 @@ El mercado propio pasa a 4×4; el neutral (feria, puerto de río) es parte del g
 a) Dejarlo en 3×3 *(por defecto)* · b) 4×4 como el mercado propio (hay que tocar el generador)
 
 **Respuesta:**
+
+## Caminos, muros y árboles (2026-11-28, `proceso/64`)
+
+### C-113 · Caminos para los otros pueblos
+Solo el Tawantinsuyu construye caminos (el Qhapaq Ñan, empedrado). Dejé lista la huella de tierra para cualquier otro pueblo que tenga caminos (una misión o un cambio futuro), pero ninguno los construye hoy. En el AoE4 los senderos entre edificios salen solos del suelo pisado.
+a) Dejarlo así: caminos solo incas; los otros tienen el suelo pisado de los aldeanos *(por defecto)* · b) Senderos de tierra automáticos entre los edificios de cada base (solo imagen) · c) Que todos puedan construir caminos de tierra (cambia mecánicas)
+
+**Respuesta:**
+
+### C-114 · Alto de los árboles
+Los árboles bajaron de 4,5–5,8 aldeanos a 3,8–4,8 (el AoE4 los tiene en 3,5–5), y los arbustos de 1,2 a 0,9 aldeanos (`data/reglas.json → escala_visual`). La araucaria y la palmera quedan las más altas.
+a) Así *(por defecto)* · b) Más bajos todavía (3–4 aldeanos) · c) Volver a los de antes
