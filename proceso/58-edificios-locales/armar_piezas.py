@@ -389,7 +389,7 @@ MASCARA_PIEZA = {"tawantinsuyu_fortaleza": {"cumbrera": 0.12}, "tawantinsuyu_mar
 MASCARA2 = {"tawantinsuyu": {"tono": 22, "faja": 0.15, "cumbrera": 0.1},
             "mapuches": {"tono": 18, "faja": 0.2}, "guaranies": {"tono": 18, "faja": 0.12, "cumbrera": 0.05},
             "etiopia": {"tono": 18, "faja": 0.15, "cumbrera": 0.08}, "palmares": {"tono": 18, "faja": 0.1, "cumbrera": 0.05},
-            "ayutthaya": {"tono": 15, "faja": 0.15}}  # Paint a 2048 para que la paja no se vuelva una lámina lisa
+            "ayutthaya": {"tono": 15, "faja": 0.08}}  # Paint a 2048 para que la paja no se vuelva una lámina lisa
 
 
 def prompt2(civ, tipo, que, rojo):

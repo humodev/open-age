@@ -1,6 +1,82 @@
 {
  "_doc": "Color del equipo en los modelos generados de edificios (proceso/58-edificios-locales). Clave: el nombre del modelo como en estilo.modelos («local/<pueblo>_<tipo>»). La máscara es assets/generados/modelos/<clave>_mascara.png (tools/mascara_equipo_3d.py --metodo=rojo --edificio: las telas y fajas pintadas en rojo plano en la referencia); luz_ref, la luminancia media de lo enmascarado, la usa src/game/shaders/equipo_3d.gdshader; cobertura, la parte de la superficie teñida. Lo escribe tools/gen3d_pipeline.py (paso mascara). Sin entrada, el modelo queda con su textura y el color va solo en el estandarte. Solo imagen.",
  "mascaras": {
+  "local/ayutthaya_almacen_mina": {
+   "luz_ref": 0.0545,
+   "cobertura": 0.1641
+  },
+  "local/ayutthaya_barrio_chinos": {
+   "luz_ref": 0.136,
+   "cobertura": 0.0915
+  },
+  "local/ayutthaya_barrio_japones": {
+   "luz_ref": 0.128,
+   "cobertura": 0.1471
+  },
+  "local/ayutthaya_barrio_portugues": {
+   "luz_ref": 0.1071,
+   "cobertura": 0.1339
+  },
+  "local/ayutthaya_campo_tiro": {
+   "luz_ref": 0.0495,
+   "cobertura": 0.2603
+  },
+  "local/ayutthaya_casa": {
+   "luz_ref": 0.0683,
+   "cobertura": 0.1952
+  },
+  "local/ayutthaya_centro": {
+   "luz_ref": 0.1281,
+   "cobertura": 0.1415
+  },
+  "local/ayutthaya_cuartel": {
+   "luz_ref": 0.1293,
+   "cobertura": 0.0917
+  },
+  "local/ayutthaya_fortaleza": {
+   "luz_ref": 0.2301,
+   "cobertura": 0.0565
+  },
+  "local/ayutthaya_fortaleza_rio": {
+   "luz_ref": 0.183,
+   "cobertura": 0.1112
+  },
+  "local/ayutthaya_guardia_extranjera": {
+   "luz_ref": 0.1586,
+   "cobertura": 0.1396
+  },
+  "local/ayutthaya_junco_tributo": {
+   "luz_ref": 0.0612,
+   "cobertura": 0.0979
+  },
+  "local/ayutthaya_kraal": {
+   "luz_ref": 0.0646,
+   "cobertura": 0.1299
+  },
+  "local/ayutthaya_kraal_real": {
+   "luz_ref": 0.0729,
+   "cobertura": 0.239
+  },
+  "local/ayutthaya_maravilla": {
+   "luz_ref": 0.3442,
+   "cobertura": 0.047
+  },
+  "local/ayutthaya_mercado": {
+   "luz_ref": 0.1048,
+   "cobertura": 0.1545
+  },
+  "local/ayutthaya_puerto_real": {
+   "luz_ref": 0.0467,
+   "cobertura": 0.2619
+  },
+  "local/ayutthaya_taller": {
+   "luz_ref": 0.0421,
+   "cobertura": 0.2667
+  },
+  "local/ayutthaya_torre": {
+   "luz_ref": 0.1681,
+   "cobertura": 0.1698
+  },
   "local/etiopia_alianza": {
    "luz_ref": 0.1574,
    "cobertura": 0.4162

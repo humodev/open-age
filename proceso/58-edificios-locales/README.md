@@ -2,7 +2,174 @@
 
 > **Pedido del autor (2026-11-27):** generar con el pipeline 3D local (gratis) todos los edificios posibles de los seis pueblos y conectarlos al juego. Los soldados, después. «Acordate del color»: los edificios tienen que mostrar el color del equipo.
 
-<!-- INVENTARIO -->
+## Inventario
+
+Por pueblo, todos los edificios que el juego usa: lo que construye el aldeano y los seis hitos.
+- «Antes» es el estado al empezar este proceso.
+- «Color» es la parte de la superficie que toma el color del jugador.
+- Muros, puertas, campos, caminos y andenes se arman por casillas con la maqueta: no usan modelo.
+- Lo arma  desde los datos.
+
+#### Tawantinsuyu
+
+| Tipo | Nombre | Huella | Antes | Modelo en el juego ahora | Color | Nota |
+|---|---|---|---|---|---|---|
+| `taller_tejido` | Taller de tejido | 2×2 | maqueta | `local/tawantinsuyu_taller_tejido` (pipeline, proceso 58) | 20% |  |
+| `casa` | Kancha | 2×2 | pipeline (54) | `local/tawantinsuyu_casa` (pipeline, proceso 58) | 20% |  |
+| `granja` | Chacra | 2×2 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `almacen_madera` | Llant'a wasi | 2×2 | maqueta | maqueta procedural | — | generado, sin conectar |
+| `almacen_mina` | Qhuya wasi | 2×2 | maqueta | `local/tawantinsuyu_almacen_mina` (pipeline, proceso 58) | 22% |  |
+| `cuartel` | Kallanka | 3×3 | pipeline (kallanka, 54) | `local/tawantinsuyu_cuartel` (pipeline, proceso 58) | 17% |  |
+| `campo_tiro` | Warak'a kancha | 3×3 | maqueta | `local/tawantinsuyu_campo_tiro` (pipeline, proceso 58) | 23% |  |
+| `torre` | Pukara | 2×2 | maqueta | `local/tawantinsuyu_torre` (pipeline, proceso 58) | 18% |  |
+| `fortaleza` | Hatun pukara | 4×4 | maqueta | maqueta procedural | — | generado, sin conectar |
+| `muralla` | Pirca | 1×1 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `puerta_piedra` | Punku | 1×1 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `torre_muralla` | Torreón de pirca | 1×1 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `centro` | Llaqta | 4×4 | Meshy | `local/tawantinsuyu_centro` (pipeline, proceso 58) | 18% |  |
+| `camino` | Qhapaq Ñan (camino) | 1×1 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `anden` | Andén | 2×2 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `qollqa` | Qollqa | 2×2 | maqueta | `local/tawantinsuyu_qollqa` (pipeline, proceso 58) | 10% |  |
+| `mercado` | Mercado | 4×4 | maqueta | maqueta procedural | — | generado, sin conectar |
+| `maravilla` | Ollantaytambo | 6×6 | maqueta | `local/tawantinsuyu_maravilla` (pipeline, proceso 58) | 4% |  |
+| `ushnu` | Ushnu y plaza | 4×4 | maqueta | `local/tawantinsuyu_ushnu` (pipeline, proceso 58) | 18% |  |
+| `pukara_mayor` | Pukara de frontera | 4×4 | maqueta | maqueta procedural | — | candidato a Meshy |
+| `qorikancha` | Qorikancha | 4×4 | maqueta | maqueta procedural | estandarte | candidato a Meshy |
+| `kallanka_real` | Kallanka real | 4×4 | maqueta | maqueta procedural | — | candidato a Meshy |
+| `aqllawasi` | Aqllawasi | 4×4 | maqueta | maqueta procedural | — | candidato a Meshy |
+| `vilcabamba` | Espíritu Pampa | 4×4 | maqueta | maqueta procedural | — | candidato a Meshy |
+
+#### Mapuches
+
+| Tipo | Nombre | Huella | Antes | Modelo en el juego ahora | Color | Nota |
+|---|---|---|---|---|---|---|
+| `casa` | Ruka | 2×2 | pipeline (54) | `local/mapuches_casa` (pipeline, proceso 58) | 28% |  |
+| `granja` | Chacra | 2×2 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `cuartel` | Junta de guerra | 3×3 | maqueta | `local/mapuches_cuartel` (pipeline, proceso 58) | 17% |  |
+| `lof` | Lof | 3×3 | Meshy | `local/mapuches_lof` (pipeline, proceso 58) | 19% |  |
+| `corral` | Corral | 3×3 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `fortaleza` | Pukara | 4×4 | maqueta | `local/mapuches_fortaleza` (pipeline, proceso 58) | 15% |  |
+| `empalizada` | Empalizada con foso | 1×1 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `puerta` | Puerta | 1×1 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `mercado` | Mercado | 4×4 | maqueta | `local/mapuches_mercado` (pipeline, proceso 58) | 15% |  |
+| `hoyo` | Hoyo con estacas | 1×1 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `maravilla` | El gran koyagtun | 6×6 | maqueta | maqueta procedural | — | generado, sin conectar |
+| `rewe_malon` | Malón del toqui | 4×4 | maqueta | `local/mapuches_rewe_malon` (pipeline, proceso 58) | 17% |  |
+| `rewe_lonko` | Nguillatuwe del rewe | 4×4 | maqueta | `local/mapuches_rewe_lonko` (pipeline, proceso 58) | estandarte |  |
+| `rewe_caballeria` | Kawellu | 4×4 | maqueta | maqueta procedural | — | generado, sin conectar |
+| `rewe_monte` | Pewenal | 4×4 | maqueta | `local/mapuches_rewe_monte` (pipeline, proceso 58) | 28% |  |
+| `parlamento` | Parlamento | 4×4 | maqueta | maqueta procedural | — | generado, sin conectar |
+| `weichan` | Gran weichan | 4×4 | maqueta | `local/mapuches_weichan` (pipeline, proceso 58) | 30% |  |
+
+#### Guaraníes
+
+| Tipo | Nombre | Huella | Antes | Modelo en el juego ahora | Color | Nota |
+|---|---|---|---|---|---|---|
+| `casa` | Oga | 2×2 | pipeline (54) | `local/guaranies_casa` (pipeline, proceso 58) | 20% |  |
+| `granja` | Kokue (roza) | 2×2 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `almacen_madera` | Tapyi | 2×2 | maqueta | `local/guaranies_almacen_madera` (pipeline, proceso 58) | 21% |  |
+| `almacen_mina` | Ñai'ũ renda | 2×2 | maqueta | `local/guaranies_almacen_mina` (pipeline, proceso 58) | 17% |  |
+| `cuartel` | Aty de guerra | 3×3 | maqueta | `local/guaranies_cuartel` (pipeline, proceso 58) | 18% |  |
+| `campo_tiro` | Guyrapa róga | 2×2 | maqueta | `local/guaranies_campo_tiro` (pipeline, proceso 58) | 22% |  |
+| `taller` | Taller de tacuara | 3×3 | maqueta | `local/guaranies_taller` (pipeline, proceso 58) | 18% |  |
+| `fortaleza` | Trinchera de tacuara | 4×4 | maqueta | maqueta procedural | — | generado, sin conectar |
+| `centro` | Oga guasu | 4×4 | pipeline (54) | `local/guaranies_centro` (pipeline, proceso 58) | 13% |  |
+| `empalizada` | Empalizada | 1×1 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `puerta` | Puerta | 1×1 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `mercado` | Mercado | 4×4 | maqueta | `local/guaranies_mercado` (pipeline, proceso 58) | 15% |  |
+| `maravilla` | La plaza y el cabildo de la tava | 6×6 | maqueta | `local/guaranies_maravilla` (pipeline, proceso 58) | 24% |  |
+| `maravilla_monte` | Aldea grande del monte | 6×6 | maqueta | `local/guaranies_maravilla_monte` (pipeline, proceso 58) | 32% |  |
+| `karai_palabra` | Casa del karai | 4×4 | maqueta | `local/guaranies_karai_palabra` (pipeline, proceso 58) | estandarte |  |
+| `aty_guasu` | Aty guasu | 4×4 | maqueta | `local/guaranies_aty_guasu` (pipeline, proceso 58) | 18% |  |
+| `mision` | Pueblo de misión | 4×4 | maqueta | `local/guaranies_mision` (pipeline, proceso 58) | 20% |  |
+| `monte` | Monte libre | 4×4 | maqueta | `local/guaranies_monte` (pipeline, proceso 58) | 23% |  |
+| `tava` | Tava fortificada | 4×4 | maqueta | `local/guaranies_tava` (pipeline, proceso 58) | 20% |  |
+| `yvy_marane` | Ñande retã | 4×4 | maqueta | `local/guaranies_yvy_marane` (pipeline, proceso 58) | 8% |  |
+
+#### Etiopía
+
+| Tipo | Nombre | Huella | Antes | Modelo en el juego ahora | Color | Nota |
+|---|---|---|---|---|---|---|
+| `corte_nueva` | Corte nueva (cimiento) | 4×4 | maqueta | `local/etiopia_corte_nueva` (pipeline, proceso 58) | 11% |  |
+| `casa` | Gojjo bet | 2×2 | pipeline (54) | `local/etiopia_casa` (pipeline, proceso 58) | 23% |  |
+| `granja` | Granja | 2×2 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `almacen_alimento` | Gotära | 2×2 | maqueta | `local/etiopia_almacen_alimento` (pipeline, proceso 58) | 24% |  |
+| `almacen_madera` | Inchet bet | 2×2 | maqueta | `local/etiopia_almacen_madera` (pipeline, proceso 58) | 23% |  |
+| `almacen_mina` | Dängay bet | 2×2 | maqueta | `local/etiopia_almacen_mina` (pipeline, proceso 58) | 19% |  |
+| `cuartel` | Campamento de chewa | 3×3 | maqueta | `local/etiopia_cuartel` (pipeline, proceso 58) | 36% |  |
+| `establo` | Färäs bet | 3×3 | maqueta | `local/etiopia_establo` (pipeline, proceso 58) | 12% |  |
+| `taller` | Taller de asedio | 3×3 | maqueta | `local/etiopia_taller` (pipeline, proceso 58) | 22% |  |
+| `torre` | Torre de la amba | 2×2 | maqueta | `local/etiopia_torre` (pipeline, proceso 58) | 16% |  |
+| `fortaleza` | Fortaleza de amba | 4×4 | maqueta | maqueta procedural | — | generado, sin conectar |
+| `muralla` | Muro de la amba | 1×1 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `puerta_piedra` | Puerta de la amba | 1×1 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `torre_muralla` | Torre del muro | 1×1 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `centro` | Kätäma (corte) | 4×4 | pipeline (54) | `local/etiopia_centro` (pipeline, proceso 58) | 16% |  |
+| `gult` | Gult | 4×4 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `empalizada` | Empalizada | 1×1 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `puerta` | Puerta | 1×1 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `mercado` | Mercado | 4×4 | maqueta | `local/etiopia_mercado` (pipeline, proceso 58) | 23% |  |
+| `maravilla` | Fasil Gəbbi | 6×6 | maqueta | `local/etiopia_maravilla` (pipeline, proceso 58) | 24% |  |
+| `iglesia` | Iglesia | 4×4 | maqueta | `local/etiopia_iglesia` (pipeline, proceso 58) | estandarte |  |
+| `monasterio` | Monasterio | 4×4 | maqueta | `local/etiopia_monasterio` (pipeline, proceso 58) | estandarte |  |
+| `amba` | Amba fortificada | 4×4 | maqueta | `local/etiopia_amba` (pipeline, proceso 58) | 6% |  |
+| `remonta` | Remonta | 4×4 | maqueta | maqueta procedural | — | generado, sin conectar |
+| `gondar` | Recinto de Gondar | 4×4 | maqueta | `local/etiopia_gondar` (pipeline, proceso 58) | 20% |  |
+| `alianza` | Alianza con armas de fuego | 4×4 | maqueta | maqueta procedural | — | generado, sin conectar |
+
+#### Palmares
+
+| Tipo | Nombre | Huella | Antes | Modelo en el juego ahora | Color | Nota |
+|---|---|---|---|---|---|---|
+| `casa` | Casa de palha | 2×2 | pipeline (54) | `local/palmares_casa` (pipeline, proceso 58) | 18% |  |
+| `granja` | Roça de mandioca | 2×2 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `almacen_alimento` | Paiol | 2×2 | maqueta | `local/palmares_almacen_alimento` (pipeline, proceso 58) | 28% |  |
+| `almacen_mina` | Olaria | 2×2 | maqueta | `local/palmares_almacen_mina` (pipeline, proceso 58) | 29% |  |
+| `cuartel` | Casa de guerra | 3×3 | maqueta | `local/palmares_cuartel` (pipeline, proceso 58) | 9% |  |
+| `centro` | Cerca real | 4×4 | pipeline (54) | `local/palmares_centro` (pipeline, proceso 58) | 22% |  |
+| `mocambo` | Mocambo | 3×3 | maqueta | `local/palmares_mocambo` (pipeline, proceso 58) | 16% |  |
+| `fortaleza` | Baluarte da cerca | 4×4 | maqueta | `local/palmares_fortaleza` (pipeline, proceso 58) | 6% |  |
+| `empalizada` | Cerca con estrepes | 1×1 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `puerta` | Puerta | 1×1 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `mercado` | Mercado | 4×4 | maqueta | `local/palmares_mercado` (pipeline, proceso 58) | 9% |  |
+| `hoyo` | Fojo con estrepes | 1×1 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `maravilla` | Cerca do Outeiro da Barriga | 6×6 | maqueta | maqueta procedural | — | generado, sin conectar |
+| `quilombo_central` | Macaco | 4×4 | maqueta | `local/palmares_quilombo_central` (pipeline, proceso 58) | 20% |  |
+| `mocambo_guerra` | Mocambo de guerra | 4×4 | maqueta | `local/palmares_mocambo_guerra` (pipeline, proceso 58) | 30% |  |
+| `cerca_real` | Cerca real en anillos | 4×4 | maqueta | `local/palmares_cerca_real` (pipeline, proceso 58) | 29% |  |
+| `ferraria` | Ferraria grande | 4×4 | maqueta | `local/palmares_ferraria` (pipeline, proceso 58) | 31% |  |
+| `pacto_cucau` | Pacto de Cucaú | 4×4 | maqueta | `local/palmares_pacto_cucau` (pipeline, proceso 58) | 12% |  |
+| `guerra_zumbi` | Guerra de Zumbi | 4×4 | maqueta | `local/palmares_guerra_zumbi` (pipeline, proceso 58) | 14% |  |
+
+#### Ayutthaya
+
+| Tipo | Nombre | Huella | Antes | Modelo en el juego ahora | Color | Nota |
+|---|---|---|---|---|---|---|
+| `casa` | Ruean | 2×2 | pipeline (54) | `local/ayutthaya_casa` (pipeline, proceso 58) | 20% |  |
+| `granja` | Arrozal | 2×2 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `cuartel` | Cuartel de la guardia | 3×3 | maqueta | `local/ayutthaya_cuartel` (pipeline, proceso 58) | 9% |  |
+| `campo_tiro` | Sanam ying thanu | 3×3 | maqueta | `local/ayutthaya_campo_tiro` (pipeline, proceso 58) | 26% |  |
+| `taller` | Taller de asedio | 3×3 | maqueta | `local/ayutthaya_taller` (pipeline, proceso 58) | 27% |  |
+| `torre` | Fortín de río | 2×2 | maqueta | maqueta procedural | — | generado, sin conectar |
+| `fortaleza` | Pom | 4×4 | maqueta | maqueta procedural | — | generado, sin conectar |
+| `muralla` | Kamphaeng | 1×1 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `puerta_piedra` | Pratu | 1×1 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `torre_muralla` | Atalaya de la muralla | 1×1 | maqueta | maqueta (tramo de muro, campo o camino) | — | sin modelo: se arma por casillas |
+| `centro` | Wang (palacio) | 4×4 | pipeline (54) | `local/ayutthaya_centro` (pipeline, proceso 58) | 14% |  |
+| `kraal` | Kraal de elefantes | 3×3 | maqueta | `local/ayutthaya_kraal` (pipeline, proceso 58) | 13% |  |
+| `barrio_japones` | Barrio japonés | 3×3 | maqueta | `local/ayutthaya_barrio_japones` (pipeline, proceso 58) | 15% |  |
+| `barrio_portugues` | Barrio portugués | 3×3 | maqueta | `local/ayutthaya_barrio_portugues` (pipeline, proceso 58) | 13% |  |
+| `barrio_chinos` | Barrio chino | 3×3 | maqueta | `local/ayutthaya_barrio_chinos` (pipeline, proceso 58) | 9% |  |
+| `mercado` | Mercado | 4×4 | maqueta | `local/ayutthaya_mercado` (pipeline, proceso 58) | 15% |  |
+| `almacen_mina` | Khlang din | 2×2 | maqueta | `local/ayutthaya_almacen_mina` (pipeline, proceso 58) | 16% |  |
+| `maravilla` | Krung Si Ayutthaya y Pom Phet | 6×6 | maqueta | `local/ayutthaya_maravilla` (pipeline, proceso 58) | 5% |  |
+| `wat` | Wat Mahathat | 4×4 | maqueta | `local/ayutthaya_wat` (pipeline, proceso 58) | estandarte |  |
+| `kraal_real` | Kraal real | 4×4 | maqueta | `local/ayutthaya_kraal_real` (pipeline, proceso 58) | 24% |  |
+| `puerto_real` | Puerto real | 4×4 | maqueta | `local/ayutthaya_puerto_real` (pipeline, proceso 58) | 26% |  |
+| `fortaleza_rio` | Fortaleza de la isla | 4×4 | maqueta | `local/ayutthaya_fortaleza_rio` (pipeline, proceso 58) | 11% |  |
+| `junco_tributo` | Junco de tributo | 4×4 | maqueta | `local/ayutthaya_junco_tributo` (pipeline, proceso 58) | 10% |  |
+| `guardia_extranjera` | Guardia extranjera | 4×4 | maqueta | `local/ayutthaya_guardia_extranjera` (pipeline, proceso 58) | 14% |  |
+
 
 ## Color del equipo
 
@@ -126,26 +293,34 @@ En el Tawantinsuyu se usa faja 0,15 y cumbrera 0,10 (tono ±22°): la cobertura 
 
 ## Candidatos a Meshy
 
-Recintos amurallados y conjuntos que el pipeline local aplasta en «barriles» o en láminas; quedan con su maqueta hasta decidir:
+Recintos amurallados y conjuntos que el pipeline local aplasta en «barriles» o en láminas. Quedan con su maqueta hasta que el autor decida sobre la lista entera (los soldados tienen prioridad en los créditos):
 
-| Pueblo | Tipo | Por qué |
-|---|---|---|
-| Tawantinsuyu | `qorikancha` | Recinto curvo: sale un cilindro oscuro |
-| Tawantinsuyu | `pukara_mayor` | Anillos de muro: un barril con el interior revuelto |
-| Tawantinsuyu | `aqllawasi` | Recinto rectangular visto desde arriba |
-| Tawantinsuyu | `vilcabamba` | Conjunto de casas con muro |
-| Tawantinsuyu | `kallanka_real` | Pedido del autor junto con los recintos |
-| Tawantinsuyu | `almacen_madera` | La pila de leña sale como un cartel plano (dos intentos) |
-| Mapuches | `rewe_caballeria` | Cruz en el techo |
-| Mapuches | `parlamento` | Medio techo deforme |
-| Mapuches | `maravilla` | Campo de parlamento: en planta sale una sola ruka |
-| Tawantinsuyu | `fortaleza` | Pukara con patio (4×4): una caja de muros lisos |
-| Tawantinsuyu | `mercado` | Plaza con puestos (4×4): caja con muros verde azulado |
-| Guaraníes | `fortaleza` | Patio con empalizada: sale una casa europea con ventanas |
-| Etiopía | `fortaleza` | Muro en anillo alrededor de un patio: barril |
-| Etiopía | `remonta` | Corral amurallado con establo: caja abierta |
-| Etiopía | `alianza` | La tienda real sale roja entera (se tiñe toda) |
-| Palmares | `maravilla` | Cerro con tres anillos de empalizada: sale una casa chica en un cerco |
+| Pueblo | Tipo | Por qué | Referencia |
+|---|---|---|---|
+| Tawantinsuyu | `qorikancha` | Recinto curvo: sale un cilindro oscuro | n.º 1 |
+| Tawantinsuyu | `pukara_mayor` | Anillos de muro: un barril con el interior revuelto | n.º 2 |
+| Tawantinsuyu | `aqllawasi` | Recinto rectangular visto desde arriba | n.º 3 |
+| Tawantinsuyu | `vilcabamba` | Conjunto de casas con muro | n.º 4 |
+| Tawantinsuyu | `kallanka_real` | Pedido del autor junto con los recintos | n.º 5 |
+| Tawantinsuyu | `almacen_madera` | La pila de leña sale como un cartel plano (dos intentos) | n.º 6 |
+| Mapuches | `rewe_caballeria` | Cruz en el techo | n.º 9 |
+| Mapuches | `parlamento` | Medio techo deforme | n.º 10 |
+| Mapuches | `maravilla` | Campo de parlamento: en planta sale una sola ruka | n.º 11 |
+| Tawantinsuyu | `fortaleza` | Pukara con patio (4×4): una caja de muros lisos | n.º 7 |
+| Tawantinsuyu | `mercado` | Plaza con puestos (4×4): caja con muros verde azulado | n.º 8 |
+| Guaraníes | `fortaleza` | Patio con empalizada: sale una casa europea con ventanas | n.º 12 |
+| Etiopía | `fortaleza` | Muro en anillo alrededor de un patio: barril | n.º 13 |
+| Etiopía | `remonta` | Corral amurallado con establo: caja abierta | n.º 14 |
+| Etiopía | `alianza` | La tienda real sale roja entera (se tiñe toda) | n.º 15 |
+| Palmares | `maravilla` | Cerro con tres anillos de empalizada: sale una casa chica en un cerco | n.º 16 |
+| Ayutthaya | `torre` | El fortín sale como una cáscara de techo, sin muros | n.º 17 |
+| Ayutthaya | `fortaleza` | Fuerte poligonal con patio: barril | n.º 18 |
+
+Las referencias de todos, numeradas como en la tabla:
+
+![Candidatos a Meshy: referencias](img/candidatos_meshy.jpg)
+
+**Lo común:** recintos con patio o muro en anillo, conjuntos de piezas sueltas y referencias vistas desde arriba. Hunyuan los cierra en cajas o barriles; con una sola vista no hay cómo dar la profundidad del patio. Mientras tanto, todos usan su maqueta procedural, que sí se adapta a las huellas nuevas. No se gastaron créditos.
 
 ## Pruebas (hasta la pausa)
 
