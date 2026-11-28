@@ -252,6 +252,7 @@ static func _anillo(b: _Obra, an: Dictionary, size: float, alto_en: Callable) ->
 	var faja_h := float(an.get("faja_pct", 70)) / 100.0
 	var centro := Vector2(float(an.get("x", 0.0)), float(an.get("z", 0.0))) * size
 	var ext := Vector2.ZERO
+	var u_largo := 0.0
 	for i in pts.size():
 		var a := pts[i]
 		var c := pts[(i + 1) % pts.size()]
@@ -261,10 +262,12 @@ static func _anillo(b: _Obra, an: Dictionary, size: float, alto_en: Callable) ->
 		var ya := y0 + float(alto_en.call(a.x, a.y))
 		var yc := y0 + float(alto_en.call(c.x, c.y))
 		var salida := (mid - centro).normalized()
+		b.u_muro = u_largo
 		_tramo(b, mat, est, a, c, ya, yc, h, g, col, salida, i)
 		if faja:
 			b.equipo_tira(a, c, ya + h * faja_h, yc + h * faja_h, h * 0.16, g / 2.0 + 0.012, salida)
 		ext = ext.max(mid.abs())
+		u_largo += a.distance_to(c)
 	if an.get("terraza", false):
 		var top := PackedVector2Array()
 		for p in pts:
@@ -337,9 +340,12 @@ static func _tramo(b: _Obra, mat: String, est: Dictionary, a: Vector2, c: Vector
 			var gt := g * (1.0 - talud)
 			var y_bot := y - 0.08
 			var hh := h + (absf(ya - yc)) + 0.08
-			b.muro(a, c, y_bot, hh, gb, gt, col)
 			var junta := Color(str(est.get("junta", col.darkened(0.25).to_html())))
-			match str(est.get("aparejo", "liso")):
+			var patron := str(est.get("patron", ""))
+			# Con `patron`, la cara del muro es la de las piezas modulares de muralla (proceso/64,
+			# Piezas.mat_muro: sillar, pirca, ladrillo, revoque) y no se suman piedras sueltas.
+			b.muro(a, c, y_bot, hh, gb, gt, col, patron, junta)
+			match str(est.get("aparejo", "liso")) if patron == "" else "patron":
 				"piedras":
 					var filas := int(est.get("filas", 4))
 					for f in filas:
@@ -361,6 +367,8 @@ static func _tramo(b: _Obra, mat: String, est: Dictionary, a: Vector2, c: Vector
 					for f in range(1, filas):
 						var fy := y + h * f / filas
 						b.caja(Vector3(mid.x, fy, mid.y), Vector3(largo + 0.005, 0.012, lerpf(gb, gt, float(f) / filas) + 0.008), yaw, junta)
+				"patron":
+					pass
 				_:
 					b.caja(Vector3(mid.x, y + h + 0.025, mid.y), Vector3(largo + 0.01, 0.05, gt + 0.04), yaw, Color(str(est.get("color_remate", col.darkened(0.1).to_html()))))
 			if est.has("friso"):
@@ -641,18 +649,49 @@ class _Obra:
 	var n_base := 0
 	var n_eq := 0
 	var alto_en: Callable
+	var u_muro := 0.0 # largo recorrido del anillo: el dibujo de la piedra sigue de un tramo al otro
+	var pat := {} # "<patron>_<color>_<junta>" -> SurfaceTool (con Piezas.mat_muro)
+	var pat_mat := {}
 
 	func _init() -> void:
 		st.begin(Mesh.PRIMITIVE_TRIANGLES)
 		eq.begin(Mesh.PRIMITIVE_TRIANGLES)
 
 	func malla(m: Material) -> ArrayMesh:
-		if n_base == 0:
+		if n_base == 0 and pat.is_empty():
 			return null
-		st.generate_normals()
-		var out := st.commit()
-		out.surface_set_material(0, m)
+		var out := ArrayMesh.new()
+		if n_base > 0:
+			st.generate_normals()
+			st.commit(out)
+			out.surface_set_material(0, m)
+		for k in pat:
+			(pat[k] as SurfaceTool).generate_normals()
+			(pat[k] as SurfaceTool).commit(out)
+			out.surface_set_material(out.get_surface_count() - 1, pat_mat[k])
 		return out
+
+	func _sup(patron: String, col: Color, junta: Color) -> SurfaceTool:
+		var k := "%s_%s_%s" % [patron, col.to_html(), junta.to_html()]
+		if not pat.has(k):
+			var t := SurfaceTool.new()
+			t.begin(Mesh.PRIMITIVE_TRIANGLES)
+			pat[k] = t
+			pat_mat[k] = Piezas.mat_muro(patron, col, junta)
+		return pat[k]
+
+	## Cuadrilátero con UV (x: a lo largo del muro, y: alto en el mundo), para el dibujo del muro.
+	func quad_uv(t: SurfaceTool, q: Array, uv: Array, out: Vector3, col: Color) -> void:
+		var tris := [[0, 1, 2], [0, 2, 3]]
+		for tr: Array in tris:
+			var a: Vector3 = q[tr[0]]
+			var b: Vector3 = q[tr[1]]
+			var c: Vector3 = q[tr[2]]
+			var orden: Array = tr if (b - a).cross(c - a).dot(out) <= 0.0 else [tr[0], tr[2], tr[1]]
+			for i: int in orden:
+				t.set_color(col)
+				t.set_uv(uv[i])
+				t.add_vertex(q[i])
 
 	func malla_equipo() -> ArrayMesh:
 		if n_eq == 0:
@@ -734,13 +773,25 @@ class _Obra:
 				n_base += 1
 
 	## Muro de `a` a `c` (en planta) con talud: grueso `gb` abajo y `gt` arriba.
-	func muro(a: Vector2, c: Vector2, y: float, h: float, gb: float, gt: float, col: Color) -> void:
+	func muro(a: Vector2, c: Vector2, y: float, h: float, gb: float, gt: float, col: Color, patron := "", junta := Color.BLACK) -> void:
 		var d := (c - a).normalized()
 		var nrm := Vector2(-d.y, d.x)
 		var A := Vector3(a.x, y, a.y)
 		var C := Vector3(c.x, y, c.y)
 		var n3 := Vector3(nrm.x, 0, nrm.y)
 		var up := Vector3(0, h, 0)
+		if patron != "":
+			var t := _sup(patron, col, junta)
+			var u0 := u_muro
+			var u1 := u_muro + a.distance_to(c)
+			for s: float in [1.0, -1.0]:
+				var q := [A + n3 * s * gb / 2.0, C + n3 * s * gb / 2.0, C + up + n3 * s * gt / 2.0, A + up + n3 * s * gt / 2.0]
+				var uv := [Vector2(u0, y), Vector2(u1, y), Vector2(u1, y + h), Vector2(u0, y + h)]
+				# El pie un poco más oscuro, como las piezas modulares.
+				quad_uv(t, q, uv, n3 * s + Vector3(0, 0.2, 0), Color(1, 1, 1))
+			var qt := [A + up + n3 * gt / 2.0, C + up + n3 * gt / 2.0, C + up - n3 * gt / 2.0, A + up - n3 * gt / 2.0]
+			quad_uv(t, qt, [Vector2(u0, 0), Vector2(u1, 0), Vector2(u1, gt), Vector2(u0, gt)], Vector3.UP, Color(1.05, 1.05, 1.05))
+			return
 		var lados := [1.0, -1.0]
 		for s: float in lados:
 			var bot0 := A + n3 * s * gb / 2.0

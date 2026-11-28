@@ -29,7 +29,8 @@
    "vilcabamba": "recinto/tawantinsuyu_vilcabamba",
    "kallanka_real": "recinto/tawantinsuyu_kallanka_real",
    "fortaleza": "recinto/tawantinsuyu_fortaleza",
-   "mercado": "recinto/tawantinsuyu_mercado"
+   "mercado": "recinto/tawantinsuyu_mercado",
+   "almacen_madera": "local/tawantinsuyu_almacen_madera_65b"
   }
  },
  "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",

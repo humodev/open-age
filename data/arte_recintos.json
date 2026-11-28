@@ -1,13 +1,13 @@
 {
- "_doc": "Recintos compuestos por partes (proceso/65-recintos-locales, src/game/recintos.gd). Se activan con un renglón de data/civs/<pueblo>.json → estilo.modelos: \"<tipo>\": \"recinto/<clave>\". Medidas en fracción del cuerpo del edificio (el lado menor de la huella menos el margen; 3,4 casillas en una de 4×4) salvo las que dicen _cm (altos y gruesos, en centésimas de casilla; un aldeano mide 62). Puerta en +z (el frente). materiales: cómo se arma cada muro (tipo muro|empalizada|palos; aparejo piedras|hiladas|liso; almena hoja|techo; friso: faja fija, no del equipo). anillos: forma rect|elipse|poligono|irregular|D|zigzag, escala, ancho, fondo, x, z, y_cm, alto_cm, grueso_cm, terraza (relleno arriba), faja (color del equipo en el muro), banderas (paños del equipo en la puerta), sin_puerta, puerta {ancho, x}, torres {n, desde_deg, radio_cm, mas_alto_cm, redonda, remate cupula|paja|hoja}. monte: cerro {radio, cima, alto_cm}. suelos: tipo patio|pisado con la forma de un anillo. piezas: GLB del pipeline local {modelo, x, z, lado, giro (grados o \"centro\"), y_cm, alto, escala [x,y,z], equipo (false: sin color; \"#rrggbb\": un color fijo para sus telas)}. utileria: {tipo, en: [[x, z, giro?]], escala, y_cm, equipo}. Lo sagrado no lleva color del equipo.",
+ "_doc": "Recintos compuestos por partes (proceso/65-recintos-locales, src/game/recintos.gd). Se activan con un renglón de data/civs/<pueblo>.json → estilo.modelos: \"<tipo>\": \"recinto/<clave>\". Medidas en fracción del cuerpo del edificio (el lado menor de la huella menos el margen; 3,4 casillas en una de 4×4) salvo las que dicen _cm (altos y gruesos, en centésimas de casilla; un aldeano mide 62). Puerta en +z (el frente). materiales: cómo se arma cada muro (tipo muro|empalizada|palos; patron: la cara de las piezas modulares de muralla del proceso 64 (Piezas.mat_muro: sillar, pirca, ladrillo, revoque), sin piedras sueltas; sin patron, aparejo piedras|hiladas|liso; almena hoja|techo; friso: faja fija, no del equipo). anillos: forma rect|elipse|poligono|irregular|D|zigzag, escala, ancho, fondo, x, z, y_cm, alto_cm, grueso_cm, terraza (relleno arriba), faja (color del equipo en el muro), banderas (paños del equipo en la puerta), sin_puerta, puerta {ancho, x}, torres {n, desde_deg, radio_cm, mas_alto_cm, redonda, remate cupula|paja|hoja}. monte: cerro {radio, cima, alto_cm}. suelos: tipo patio|pisado con la forma de un anillo. piezas: GLB del pipeline local {modelo, x, z, lado, giro (grados o \"centro\"), y_cm, alto, escala [x,y,z], equipo (false: sin color; \"#rrggbb\": un color fijo para sus telas)}. utileria: {tipo, en: [[x, z, giro?]], escala, y_cm, equipo}. Lo sagrado no lleva color del equipo.",
  "materiales": {
-  "pirca": {"tipo": "muro", "aparejo": "piedras", "color": "#8f8574", "alto_cm": 90, "grueso_cm": 24, "talud": 0.25, "filas": 4, "trapecio": true},
-  "pirca_terraza": {"tipo": "muro", "aparejo": "piedras", "color": "#8a806d", "alto_cm": 60, "grueso_cm": 26, "talud": 0.2, "filas": 3},
-  "piedra_fina": {"tipo": "muro", "aparejo": "hiladas", "color": "#b3a892", "junta": "#8b8270", "alto_cm": 115, "grueso_cm": 24, "talud": 0.15, "filas": 6, "trapecio": true},
-  "piedra_fina_oro": {"tipo": "muro", "aparejo": "hiladas", "color": "#b8ad97", "junta": "#8f8674", "alto_cm": 120, "grueso_cm": 26, "talud": 0.15, "filas": 6, "trapecio": true, "friso": "#d6a62e", "friso_pct": 78},
-  "pirca_parda": {"tipo": "muro", "aparejo": "piedras", "color": "#86705a", "alto_cm": 120, "grueso_cm": 28, "talud": 0.2, "filas": 5},
-  "pirca_parda_baja": {"tipo": "muro", "aparejo": "piedras", "color": "#8a7660", "alto_cm": 70, "grueso_cm": 22, "talud": 0.2, "filas": 3},
-  "ladrillo_encalado": {"tipo": "muro", "aparejo": "liso", "color": "#e6dfd0", "color_remate": "#cfc6b4", "alto_cm": 135, "grueso_cm": 28, "talud": 0.08, "almena": "hoja", "puerta_mas_cm": 35},
+  "pirca": {"tipo": "muro", "patron": "pirca", "aparejo": "piedras", "color": "#8f8574", "alto_cm": 90, "grueso_cm": 24, "talud": 0.25, "filas": 4, "trapecio": true},
+  "pirca_terraza": {"tipo": "muro", "patron": "pirca", "aparejo": "piedras", "color": "#8a806d", "alto_cm": 60, "grueso_cm": 26, "talud": 0.2, "filas": 3},
+  "piedra_fina": {"tipo": "muro", "patron": "sillar", "aparejo": "hiladas", "color": "#b3a892", "junta": "#8b8270", "alto_cm": 115, "grueso_cm": 24, "talud": 0.15, "filas": 6, "trapecio": true},
+  "piedra_fina_oro": {"tipo": "muro", "patron": "sillar", "aparejo": "hiladas", "color": "#b8ad97", "junta": "#8f8674", "alto_cm": 120, "grueso_cm": 26, "talud": 0.15, "filas": 6, "trapecio": true, "friso": "#d6a62e", "friso_pct": 78},
+  "pirca_parda": {"tipo": "muro", "patron": "pirca", "aparejo": "piedras", "color": "#86705a", "alto_cm": 120, "grueso_cm": 28, "talud": 0.2, "filas": 5},
+  "pirca_parda_baja": {"tipo": "muro", "patron": "pirca", "aparejo": "piedras", "color": "#8a7660", "alto_cm": 70, "grueso_cm": 22, "talud": 0.2, "filas": 3},
+  "ladrillo_encalado": {"tipo": "muro", "patron": "revoque", "aparejo": "liso", "color": "#e6dfd0", "color_remate": "#cfc6b4", "alto_cm": 135, "grueso_cm": 28, "talud": 0.08, "almena": "hoja", "puerta_mas_cm": 35},
   "empalizada": {"tipo": "empalizada", "color": "#7a5c40", "alto_cm": 115},
   "empalizada_foso": {"tipo": "empalizada", "color": "#76583c", "alto_cm": 115, "foso": true, "estrepes": true, "color_foso": "#4a3a2a"},
   "tacuara": {"tipo": "empalizada", "color": "#9a8a56", "alto_cm": 105, "foso": true, "color_foso": "#4a3a2a"},
@@ -287,6 +287,23 @@
    "utileria": [
     {"tipo": "pila_lena", "en": [[0.4, 0.3, 40], [-0.42, -0.28, 10]]},
     {"tipo": "canelo", "en": [[-0.55, 0.3], [0.56, -0.2], [0.5, 0.42], [-0.52, -0.42], [0.1, -0.56]], "escala": 1.5}
+   ]
+  },
+  "ayutthaya_torre": {
+   "nota": "Fortín de río (2×2): cuadrado de ladrillo encalado con almenas en hoja y baluartes en las esquinas, la sala de la guardia adentro, un cañón y dos banderas. El pipeline lo cerró dos veces en una caja oscura (proceso/65).",
+   "suelos": [
+    {"tipo": "pisado", "forma": "rect", "ancho": 1.16, "fondo": 1.16, "esquina": 0.1, "color": "#857158", "borde": 0.08},
+    {"tipo": "patio", "forma": "rect", "ancho": 0.98, "fondo": 0.98, "color": "#a18c6c"}
+   ],
+   "anillos": [
+    {"forma": "rect", "ancho": 1.0, "fondo": 1.0, "material": "ladrillo_encalado", "alto_cm": 115, "grueso_cm": 24, "faja": true, "faja_pct": 22, "banderas": true, "puerta": {"ancho": 0.24}, "torres": {"n": 4, "desde_deg": 45, "radio_cm": 22, "mas_alto_cm": 45, "redonda": false, "remate": "hoja"}}
+   ],
+   "piezas": [
+    {"modelo": "local/ayutthaya_almacen_mina", "x": 0.0, "z": -0.12, "lado": 0.6, "giro": 0, "alto": 1.25}
+   ],
+   "utileria": [
+    {"tipo": "canon", "en": [[0.26, 0.24, 180]], "escala": 1.0},
+    {"tipo": "estandarte", "en": [[-0.3, 0.26]], "escala": 1.6}
    ]
   },
   "ayutthaya_fortaleza": {
