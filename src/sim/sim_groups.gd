@@ -21,6 +21,10 @@ enum State { MARCHA, ESPERA, COMBATE, LLEGADA }
 var sim: Sim
 var groups := {} # id -> grupo (Dictionary); se recorren en orden de id
 var _next_id := 1
+var _rc_every := -1 # --- movimiento 60 --- reglas.movimiento.rodeo y llegada.radio_grupo, leídos una vez
+var _rc_quieto := 120
+var _rc_busca := 12
+var _radio_grupo := 1800
 
 
 func _init(s: Sim) -> void:
@@ -391,6 +395,12 @@ func member_step(e: SimEntity) -> bool:
 	if g.is_empty():
 		e.group = -1
 		return true
+	if _rc_every < 0:
+		var rc: Dictionary = sim.data.reglas["movimiento"]["rodeo"]
+		_rc_every = maxi(1, int(rc["cada_ticks"]))
+		_rc_quieto = int(rc["quieto"])
+		_rc_busca = int(rc["busca_casillas"])
+		_radio_grupo = int(sim.data.reglas["movimiento"]["llegada"]["radio_grupo"])
 	var c := cfg()
 	var s: Array = g["slots"].get(e.id, [0, 0])
 	var t := slot_pos(g["ax"], g["ay"], g["rumbo"], s[0], s[1])
@@ -399,13 +409,65 @@ func member_step(e: SimEntity) -> bool:
 		if g["state"] == State.LLEGADA:
 			var f := sim.map.nearest_free(t.x / P, t.y / P, 3, e.owner)
 			t = Vector2i(f.x * P + P / 2, f.y * P + P / 2) if f.x >= 0 else Vector2i(g["ax"], g["ay"])
+		elif sim.map.is_solid(t.x / P, t.y / P, e.owner):
+			# --- movimiento 60 --- lugar sobre una pared en marcha: la casilla libre más cercana a
+			# él (con el rodeo, por camino), no el ancla: todos al ancla se apiñaban en el hueco.
+			var f2 := sim.map.nearest_free(t.x / P, t.y / P, 2, e.owner)
+			t = Vector2i(f2.x * P + P / 2, f2.y * P + P / 2) if f2.x >= 0 else Vector2i(g["ax"], g["ay"])
 		else:
 			t = Vector2i(g["ax"], g["ay"])
 	var lag := Sim.dist(e.x, e.y, t.x, t.y)
+	# --- movimiento 60 --- Llegada: el que no se acerca a su lugar en `sin_avance_ticks` (otro
+	# llegó antes y lo ocupa, o lo tapa la fila de adelante) ya llegó si está a `radio_grupo` o
+	# menos; antes empujaba hasta `llegada_max_ticks` y después iba solo a su lugar.
+	if g["state"] == State.LLEGADA:
+		if lag < e.arr_d - sim._arr_min or e.arr_i != -int(g["id"]):
+			e.arr_d = lag
+			e.arr_i = -int(g["id"])
+			e.arr_tick = sim.tick
+		elif sim.tick - e.arr_tick >= sim._arr_ticks and lag <= _radio_grupo:
+			return true
+	# --- movimiento 60 --- Rodeo: si entre la unidad y su lugar hay algo sólido (la pared al lado
+	# de un hueco, un muro con su puerta), ir en línea recta la dejaba apretada contra la pared,
+	# deslizándose sin avanzar. Entonces va a la casilla más adelantada del camino del grupo (que
+	# está libre: lo siguió el ancla) que ve en línea recta, entre las `busca_casillas` de atrás
+	# del ancla; si no ve ninguna, hacia el ancla. Se mira cada `cada_ticks`, en turnos por id.
+	var holgura := int(c["holgura"])
+	var ct := Vector2i(t.x / P, t.y / P)
+	var gp: Array = g["path"]
+	if (sim.tick + e.id) % _rc_every == 0:
+		var me := Vector2i(e.x / P, e.y / P)
+		e.rodeo = not sim.map._clear_line(me, ct, e.owner)
+		e.rodeo_wp = -1
+		if e.rodeo:
+			var pi := mini(int(g["path_i"]), gp.size() - 1)
+			for j in range(pi, maxi(-1, pi - _rc_busca - 1), -1):
+				if sim.map._clear_line(me, gp[j], e.owner):
+					e.rodeo_wp = j
+					break
+	if e.rodeo and lag > holgura:
+		if e.rodeo_wp >= 0 and e.rodeo_wp < gp.size():
+			var wp: Vector2i = gp[e.rodeo_wp]
+			var spd0 := sim.mods.speed(e)
+			if e.cooldown <= 0:
+				spd0 = spd0 * (100 + int(c["corrida_aldeano_pct"] if e.fn == "civil" else c["corrida_pct"])) / 100
+			if sim.step_toward_speed(e, wp.x * P + P / 2, wp.y * P + P / 2, spd0) and e.rodeo_wp < int(g["path_i"]):
+				e.rodeo_wp += 1
+			return false
+		# No ve ninguna: hacia el ancla, como antes (un A* por miembro costaba demasiado en las
+		# peleas entre bosques: bench).
+		t = Vector2i(g["ax"], g["ay"])
+		lag = Sim.dist(e.x, e.y, t.x, t.y)
 	var spd := sim.mods.speed(e)
 	if lag > int(c["holgura"]) and e.cooldown <= 0:
 		spd = spd * (100 + int(c["corrida_aldeano_pct"] if e.fn == "civil" else c["corrida_pct"])) / 100
-	if lag > 0:
+	# --- movimiento 60 --- Zona quieta: a `quieto` de su lugar no da pasos (antes volvía cada tick
+	# al punto exacto y la separación lo sacaba: vaivén); con el grupo esperando, tampoco a la
+	# holgura (los que ya están en su lugar no se amontonan contra los que faltan).
+	var still := _rc_quieto
+	if g["state"] == State.ESPERA:
+		still = holgura
+	if lag > still:
 		sim.step_toward_speed(e, t.x, t.y, spd)
 	return g["state"] == State.LLEGADA and lag <= int(c["holgura"])
 

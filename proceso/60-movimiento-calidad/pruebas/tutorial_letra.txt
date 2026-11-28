@@ -1,0 +1,66 @@
+
+00:00 guía: Primero, mirá alrededor: las flechas o el mouse contra el borde mueven la cámara
+00:10 guía: Ahora, a trabajar. Arrastrá el mouse sobre tus aldeanos para elegirlos. Con clic
+01:29 objetivo hecho o1 Juntá 100 de madera y 100 de alimento: mandá tres aldeanos a los árbol
+01:29 objetivo nuevo o2 Construí una casa, la Kancha (aldeanos seleccionados: Q abre Economía,
+01:29 guía: Bien. Arriba a la izquierda están tus recursos y, al lado de cada uno, cuántos a
+01:55 objetivo hecho o2 Construí una casa, la Kancha (aldeanos seleccionados: Q abre Economía,
+01:55 objetivo nuevo o15 Construí un almacén de madera, la Llant'a wasi, al lado de los árboles
+01:55 guía: Los aldeanos llevan lo que juntan al depósito más cercano: el centro o un almacé
+01:57 almacén de madera junto al bosque en (31, 22)
+02:25 objetivo hecho o15 Construí un almacén de madera, la Llant'a wasi, al lado de los árboles
+02:25 objetivo nuevo o3 Entrená 3 aldeanos en el centro (tecla H para seleccionarlo, después Q
+02:25 guía: Más manos, más recursos. Seleccioná el centro (la Llaqta) con H y entrená aldean
+03:00 recursos { "alimento": 440, "madera": 370, "piedra": 100, "riqueza": 150, "mita": 133 } · aldeanos 8 · guerreros 0
+03:12 objetivo hecho o3 Entrená 3 aldeanos en el centro (tecla H para seleccionarlo, después Q
+03:12 objetivo nuevo o4 Juntá 100 de riqueza: mandá a los aldeanos nuevos a la veta dorada con
+03:12 guía: Hay cuatro recursos. La riqueza (la veta dorada cerca del centro) paga guerreros
+03:20 objetivo nuevo o12 Se acaban los frutos: construí una granja junto al centro (aldeanos se
+03:20 guía: Los frutos de cerca se terminan. El alimento sale de los frutos, de la caza y de
+03:21 objetivo de la granja: la levanto con un aldeano de los frutos
+03:40 objetivo hecho o12 Se acaban los frutos: construí una granja junto al centro (aldeanos se
+03:40 guía: Eso es: una granja por aldeano. Cuando los demás se queden sin frutos, hacé más;
+04:36 objetivo hecho o4 Juntá 100 de riqueza: mandá a los aldeanos nuevos a la veta dorada con
+04:36 objetivo nuevo o5 Explorá: elegí al explorador y mandalo con clic derecho hacia el centr
+04:36 guía: Lo oscuro del mapa es lo que nadie vio todavía. El explorador es rápido y no jun
+04:36 objetivo hecho o5 Explorá: elegí al explorador y mandalo con clic derecho hacia el centr
+04:36 objetivo nuevo o6 Tomá el sitio sagrado: dejá al explorador parado al lado hasta que la 
+04:36 guía: Eso es un sitio sagrado. Se toma dejando una unidad al lado, sin enemigos cerca.
+04:58 objetivo hecho o6 Tomá el sitio sagrado: dejá al explorador parado al lado hasta que la 
+04:58 objetivo nuevo o7 Construí un cuartel, la Kallanka (aldeanos seleccionados: W abre Milit
+04:58 guía: Vas a necesitar soldados: construí un cuartel cerca del centro.
+05:30 se acabaron los frutos cerca: hago granjas (Chacra)
+05:35 objetivo hecho o7 Construí un cuartel, la Kallanka (aldeanos seleccionados: W abre Milit
+05:35 objetivo nuevo o8 Entrená 5 guerreros de porra en el cuartel (cuestan alimento y riqueza
+05:35 guía: Choque vence a distancia, distancia vence a línea, línea vence a choque. El guer
+06:00 recursos { "alimento": 567, "madera": 464, "piedra": 100, "riqueza": 330, "mita": 250 } · aldeanos 10 · guerreros 1
+06:20 guía: ¡Se juntan saqueadores al otro lado del monte! Llegan en 60 segundos: entrená gu
+06:20 objetivo nuevo o9 Defendé el pueblo: abatí a los 4 saqueadores (se cumple después de ent
+07:04 objetivo hecho o8 Entrená 5 guerreros de porra en el cuartel (cuestan alimento y riqueza
+07:05 guía: Faltan 30 segundos. Si no te alcanzan los guerreros, elegí el centro (H) y tocá 
+07:12 llegan 4 saqueadores; tengo 5 guerreros y 10 aldeanos
+07:38 objetivo hecho o9 Defendé el pueblo: abatí a los 4 saqueadores (se cumple después de ent
+07:38 objetivo nuevo o10 Avanzá a la edad II: con aldeanos seleccionados, construí uno de los d
+07:38 guía: Cada edad se gana con un hito, y cada pueblo tiene los suyos: los del Tawantinsu
+07:38 objetivo nuevo o13 Poné guardia en el sitio sagrado: mandá 2 guerreros a pararse al lado 
+07:38 guía: El sitio sagrado es tuyo, pero solo da riqueza con guardia. Elegí dos guerreros 
+07:39 construyo el hito ushnu con { "alimento": 547, "madera": 624, "piedra": 100, "riqueza": 415, "mita": 250 }
+07:39 mando 2 guerreros de guardia al sitio
+07:39 guía: La obra del hito tarda unos minutos. La barra sobre la obra dice cuánto falta, y
+07:53 objetivo hecho o13 Poné guardia en el sitio sagrado: mandá 2 guerreros a pararse al lado 
+07:59 guía: Mientras tanto, abrí el panel de Edad (botón «Edad», arriba a la derecha): dice 
+07:59 objetivo nuevo o11 Mientras sube el hito (opcional): entrená 3 aldeanos más y mandalos a 
+08:39 guía: Cada hito ayuda a su alrededor. El de economía hace que se junte más rápido cerc
+09:00 recursos { "alimento": 137, "madera": 624, "piedra": 100, "riqueza": 302, "mita": 244 } · aldeanos 10 · guerreros 4
+09:02 objetivo hecho o10 Avanzá a la edad II: con aldeanos seleccionados, construí uno de los d
+09:02 objetivo nuevo o14 Mejorá a tu tropa: con el cuartel seleccionado, comprá Armas templadas
+09:02 guía: ¡Edad II! Se abre la herrería: mejoras de ataque y armadura para toda tu tropa, 
+09:03 compro Armas templadas en el cuartel
+09:17 guía: Listo. Lo demás (el mercado, el comercio, las murallas, la maravilla…) está en l
+09:19 guía: Un truco para las peleas: elegí a tus guerreros y apretá Ctrl+1. Después, con so
+09:28 objetivo hecho o14 Mejorá a tu tropa: con el cuartel seleccionado, comprá Armas templadas
+09:28 MISIÓN victoria · 
+RESULTADO modo=letra victoria a las 09:28 · motivo: 
+objetivo de la granja (o12): hecho
+mensajes de la Guía mientras sube el hito: 6
+OK

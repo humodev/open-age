@@ -1,0 +1,13 @@
+
+=== ["tawantinsuyu", "mapuches"] terreno=bosque ganador=-1
+tawantinsuyu edad 2 pob 60/65 res { "alimento": 32, "madera": 139, "piedra": 190, "riqueza": 622, "mita": 234 } tipos { "centro": 1, "aldeano": 42, "casa": 6, "almacen_madera": 3, "camino": 99, "qollqa": 3, "campo_tiro": 2, "almacen_mina": 2, "taller_tejido": 3, "ushnu": 1, "cuartel": 1, "mercado": 1, "granja": 5, "guerrero": 5, "boleador": 5, "ariete": 2, "torre": 1, "hondero": 6 }
+mapuches edad 2 pob 62/69 res { "alimento": 7, "madera": 13, "piedra": 346, "riqueza": 507 } tipos { "lof": 3, "aldeano": 37, "explorador": 1, "casa": 5, "corral": 3, "cuartel": 2, "granja": 11, "rewe_lonko": 1, "hondero": 18, "rebano": 4, "guerrero": 6, "mercado": 1 }
+
+=== ["etiopia", "palmares"] terreno=bosque ganador=-1
+etiopia edad 2 pob 61/60 res { "alimento": 111, "madera": 170, "piedra": 287, "riqueza": 268 } tipos { "aldeano": 38, "explorador": 1, "casa": 5, "almacen_madera": 2, "gult": 3, "establo": 3, "almacen_mina": 2, "iglesia": 1, "almacen_alimento": 2, "granja": 10, "mercado": 1, "taller": 1, "comerciante": 2, "guerrero": 9, "cuartel": 1, "torre": 1, "centro": 1, "hondero": 3, "ariete": 2, "guerrero_gasa": 2 }
+palmares edad 2 pob 27/41 res { "alimento": 10, "madera": 15, "piedra": 220, "riqueza": 176, "fama": 5 } tipos { "centro": 1, "aldeano": 23, "explorador": 1, "casa": 1, "mocambo": 2, "quilombo_central": 1, "almacen_alimento": 2, "cuartel": 1, "granja": 2, "lancero": 1, "rebano": 3, "hondero": 1, "guerrero": 1 }
+
+=== ["guaranies", "ayutthaya"] terreno=bosque ganador=-1
+guaranies edad 2 pob 53/65 res { "alimento": 10, "madera": 29, "piedra": 532, "riqueza": 277 } tipos { "centro": 1, "aldeano": 39, "explorador": 1, "casa": 5, "granja": 11, "almacen_madera": 3, "campo_tiro": 2, "karai_palabra": 1, "almacen_mina": 4, "hondero": 12, "taller": 1, "cuartel": 1, "monte": 1, "lancero": 1 }
+ayutthaya edad 2 pob 51/55 res { "alimento": 45, "madera": 29, "piedra": 131, "riqueza": 554 } tipos { "centro": 1, "aldeano": 28, "explorador": 1, "casa": 5, "elefante_rey": 2, "cuartel": 1, "almacen_mina": 2, "wat": 1, "granja": 10, "campo_tiro": 1, "mercado": 1, "hondero": 10, "rebano": 2, "taller": 1, "comerciante": 1, "guerrero": 7, "torre": 1 }
+

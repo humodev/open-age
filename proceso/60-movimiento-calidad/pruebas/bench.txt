@@ -1,0 +1,7 @@
+Antes (código de a2aa377, misma sesión):
+200 unidades, 600 ticks: promedio 8.48 ms, peor 58.89 ms, presupuesto 100 ms; vivas al final: 148
+200 unidades, 600 ticks: promedio 8.59 ms, peor 59.03 ms, presupuesto 100 ms; vivas al final: 148
+Después:
+200 unidades, 600 ticks: promedio 10.16 ms, peor 76.70 ms, presupuesto 100 ms; vivas al final: 122
+200 unidades, 600 ticks: promedio 9.62 ms, peor 71.42 ms, presupuesto 100 ms; vivas al final: 122
+200 unidades (20 catapultas), 600 ticks: promedio 7.88 ms, peor 52.38 ms, presupuesto 100 ms; vivas al final: 121

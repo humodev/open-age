@@ -1,0 +1,7 @@
+
+
+=== 4v4 · semilla 42 · 24000 ticks (40.0 min de juego) en 855 s de reloj · PLANO ===
+hash final 1660426495 · unidades vivas 1144 · fin: sigue (ganador equipo -1)
+TICK      promedio  35.63 ms · p95  77.36 · peor  166.24 (tick 22479, min 37.5) · >25 ms: 15402 · >40: 9295 · >100: 129
+por minuto (prom/peor ms): m5 8.3/23 m10 17.7/34 m15 29.2/51 m20 32.7/64 m25 40.3/75 m30 51.9/104 m35 62.4/106 m40 67.6/126
+×4 alcanza (promedio del minuto < 25 ms) hasta el minuto 13 de 40

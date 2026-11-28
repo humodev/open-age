@@ -72,6 +72,16 @@ var stuck: int = 0
 var prog_d: int = 0 # recolección: menor distancia al recurso desde que eligió camino
 var prog_i: int = 0 # recolección: casilla del camino a la que llegó
 var prog_tick: int = 0 # recolección: último tick en que se acercó
+# --- movimiento 60 --- (proceso/60)
+var mv_x: int = 0 # último paso pedido (milésimas): hacia dónde camina, para la separación
+var mv_y: int = 0
+var mv_tick: int = -10 # tick de ese paso
+var arr_d: int = 0 # menor distancia al destino (o a la casilla siguiente) desde el último avance
+var arr_i: int = 0 # casilla del camino a la que llegó
+var arr_tick: int = 0 # último tick en que avanzó
+var arr_n: int = 0 # caminos recalculados sin avanzar
+var rodeo := false # en grupo: hay algo sólido entre ella y su lugar
+var rodeo_wp: int = -1 # en grupo, con rodeo: casilla del camino del grupo hacia la que va (-1: camino propio)
 var inside: int = -1 # id del edificio que la aloja
 var last_combat: int = -100000 # último tick en que pegó o recibió un golpe
 var slow_until: int = -1 # frenada (boleadoras) hasta este tick
