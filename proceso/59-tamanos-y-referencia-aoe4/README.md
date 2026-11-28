@@ -193,4 +193,4 @@ Partidas que terminan antes de los 30 minutos: 2 (eran 9); el resto se define po
 
 ## Commits
 
-<!-- COMMITS -->
+- `64ae6c1`: tamaños, escala, cámara, pruebas y documentación.
