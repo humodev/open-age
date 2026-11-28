@@ -268,6 +268,36 @@
     "_doc_seleccion": "Panel de la selección (alto = el de la grilla). ancho en px; cabecera_alto: franja del nombre; cuerpo_dy: cuánto bajan los renglones del cuerpo respecto del panel de antes (proceso/67); multi_y: primera fila de retratos con varias unidades.",
     "seleccion": { "ancho": 600, "cabecera_alto": 50, "cuerpo_dy": -6, "multi_y": 58 },
     "_doc_barra": "Barra de recursos: celda: ancho de cada recurso; pastilla_ancho/alto: la de aldeanos al lado del número.",
-    "barra": { "celda": 150, "pastilla_ancho": 44, "pastilla_alto": 22 }
+    "barra": { "celda": 150, "pastilla_ancho": 44, "pastilla_alto": 22 },
+    "_doc_pintado": "--- interfaz pintada --- (proceso/68; src/game/ui/marco_hud.gd y estilo_pintado.gd) Superficie de gouache sobre papel hecho a mano (FLUX, hecha sin costuras) y faja tejida del pueblo del JUGADOR en el borde. Las texturas salen de tools/interfaz_pintada.py con estos mismos datos y van al doble de resolución (escala 0,5 en pantalla: nítidas a 4K). activo false (o una textura que falte): vuelve al marco dibujado con código de proceso/67. faja_px/faja_fina_px: grosor en pantalla de la faja (paneles grandes / barra de arriba, ayudas, avisos y diálogos); faja_fuera: qué parte de la faja cae afuera del panel (0,5: la mitad), para que no tape el contenido. superficie_alfa: cuánto tapa la pintura al color de fondo de un panel oscuro; grano_alfa: el grano sobre un fondo de color (una fila elegida). marca_alfa: la marca de agua del pueblo en el panel de la selección; marca_px: su alto. Ninguna textura de fondo puede ser más clara que el FONDO de tests/test_paleta.gd (la prueba las mide). pueblos.<civ>.faja: motivo (lo dibuja el generador), filas (alto en hilos), periodo (columnas que se repiten), colores (hex) y fuente (de dónde sale el dibujo: docs/catalogo-ui.md). comun: la faja de los menús y del pueblo que no tenga la suya.",
+    "pintado": {
+      "activo": true,
+      "carpeta": "res://assets/ui/hud",
+      "superficie": "res://assets/ui/hud/superficie.webp",
+      "boton": { "normal": "res://assets/ui/hud/boton_normal.png", "hover": "res://assets/ui/hud/boton_hover.png", "pressed": "res://assets/ui/hud/boton_pressed.png", "disabled": "res://assets/ui/hud/boton_disabled.png", "margen": 12 },
+      "divisor": "res://assets/ui/hud/divisor.png",
+      "medallon": "res://assets/ui/hud/medallon.png",
+      "medallon_margen": 22,
+      "celda_px": 3,
+      "degrade_alfa": 0.28,
+      "faja_px": 20,
+      "faja_fuera": 0.5,
+      "faja_fina_px": 9,
+      "esquina_px": 30,
+      "superficie_alfa": 0.97,
+      "grano_alfa": 0.35,
+      "marca_alfa": 0.85,
+      "marca_px": 150,
+      "comun": "neutro",
+      "pueblos": {
+        "neutro": { "faja": { "motivo": "cordon", "filas": 7, "periodo": 8, "colores": ["1e1812", "4a3a2a", "b08a4a", "e0c27a"], "fuente": "Sin pueblo: cordón torcido de dos cabos, ocre y tierra (menús y diálogos fuera de la partida)." } },
+        "tawantinsuyu": { "marca": "taller_tejido", "faja": { "motivo": "pallay_rombos", "filas": 9, "periodo": 6, "colores": ["2a1712", "8e2a22", "c99a2e", "d9ccb0", "4f6b3a"], "fuente": "Pallay andino: rombos encadenados de faja de awasqa (faja y llijlla de Cusco y Q'ero). No es tocapu: sin cuadros con signos." } },
+        "mapuches": { "marca": "casa", "faja": { "motivo": "escalonado", "filas": 9, "periodo": 12, "colores": ["1c1a18", "9a2b24", "d8d0c0", "2d3a5a"], "fuente": "Telar mapuche (witral): rombo escalonado de ñimin y de trarikan makuñ. Sin lukutuwe ni wünyelfe (signos con sentido ceremonial)." } },
+        "guaranies": { "marca": "casa", "faja": { "motivo": "sarga", "filas": 9, "periodo": 8, "colores": ["c2a066", "3b2618", "7a3a22", "1e140c"], "fuente": "Cestería guaraní de tacuara (ajaka, panakú): sarga de dos colores con espiga, tiras naturales y teñidas." } },
+        "etiopia": { "marca": "casa", "faja": { "motivo": "tibeb", "filas": 11, "periodo": 10, "colores": ["ddd3bf", "a23a2c", "3f6b3e", "d1a335", "34527a", "2a2420"], "fuente": "Tibeb: guarda tejida de la netela y el gabi de algodón (tejedores de Shewa y Gondar), solo rombos y triángulos. Sin cruces (hay tibeb con cruz: no se usan)." } },
+        "palmares": { "marca": "mocambo", "faja": { "motivo": "rafia", "filas": 9, "periodo": 12, "colores": ["b99b68", "8a4a26", "2b1d14", "c58a3a"], "fuente": "Tela y estera de rafia de la tradición kongo-mbundu (África centro-occidental, de donde vino buena parte de la gente de Palmares) y cestería de palma de Pernambuco: entrelazado de rombos y zigzag. Inspiración general, no un motivo documentado en Palmares. Sin el cosmograma kongo (dikenga)." } },
+        "ayutthaya": { "marca": "casa", "faja": { "motivo": "prajam_yam", "filas": 9, "periodo": 10, "colores": ["17120f", "c9a04a", "e6c878", "5e1f1a"], "fuente": "Lai Thai: flor de cuatro pétalos (prajam yam) de los textiles (pha nung) y la cerámica benjarong, en oro sobre laca negra. Sin Buda, sin deidades, sin el kranok de los frontones de templo." } }
+      }
+    }
   }
 }

@@ -1,0 +1,22 @@
+{
+ "prompt": "flat horizontal decorative border strip, traditional Thai lai prajam yam four-petal flower pattern, gold paint on black lacquer, repeating geometric floral, textile border, no figures, no buddha, no temple, flat front view",
+ "negativo": "text, watermark, logo, signature, border, frame, blurry, deformed hands, extra fingers, extra limbs, lowres, jpeg artifacts, cross, religious symbol",
+ "refs": [],
+ "peso_ref": 0.6,
+ "tipo_ref": "style transfer",
+ "base": null,
+ "fuerza": 0.5,
+ "ancho": 1280,
+ "alto": 384,
+ "pasos": 4,
+ "cfg": 2.0,
+ "imagenes": [
+  {
+   "archivo": "/mnt/games/01_Projects/open-age/.claude/worktrees/agent-abaf3cc60e925335e/proceso/68-interfaz-pintada/fuentes/laithai_7.png",
+   "semilla": 7,
+   "segundos": 35.3,
+   "modelo": "flux",
+   "extra": []
+  }
+ ]
+}
