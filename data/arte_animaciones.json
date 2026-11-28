@@ -82,6 +82,9 @@
     "_doc": "Aldeanos de Meshy con nuestro rig (proceso/57-aldeanos-meshy; receta en proceso/56-rig-y-color): malla texturizada, esqueleto de tools/gen3d_rig.py con los nombres de KayKit y las animaciones de arriba retargeteadas (una biblioteca por modelo, compartida). La herramienta cuelga de handslot.r y la carga del pecho; la ropa en rojo de la hoja toma el color del equipo con src/game/shaders/equipo_3d.gdshader y la máscara (tools/mascara_equipo_3d.py --metodo=rojo; luz_ref la imprime esa herramienta). por_civ[pueblo][sexo]: el modelo de ese aldeano; sin entrada (o borrando la línea), la figura de KayKit de siempre. activo: false los apaga a todos. Solo imagen.",
     "activo": true,
     "lista": {
+      "sol_etiopia_guerrero_gasa": { "glb": "res://assets/generados/modelos/meshy_soldados/etiopia_guerrero_gasa.glb", "mascara": "res://assets/generados/modelos/meshy_soldados/etiopia_guerrero_gasa_mascara.png", "luz_ref": 0.052 },
+      "sol_etiopia_hondero": { "glb": "res://assets/generados/modelos/meshy_soldados/etiopia_hondero.glb", "mascara": "res://assets/generados/modelos/meshy_soldados/etiopia_hondero_mascara.png", "luz_ref": 0.087 },
+      "sol_etiopia_lancero": { "glb": "res://assets/generados/modelos/meshy_soldados/etiopia_lancero.glb", "mascara": "res://assets/generados/modelos/meshy_soldados/etiopia_lancero_mascara.png", "luz_ref": 0.069 },
       "sol_guaranies_hondero": { "glb": "res://assets/generados/modelos/meshy_soldados/guaranies_hondero.glb", "mascara": "res://assets/generados/modelos/meshy_soldados/guaranies_hondero_mascara.png", "luz_ref": 0.080 },
       "sol_guaranies_lancero": { "glb": "res://assets/generados/modelos/meshy_soldados/guaranies_lancero.glb", "mascara": "res://assets/generados/modelos/meshy_soldados/guaranies_lancero_mascara.png", "luz_ref": 0.066 },
       "sol_guaranies_guerrero": { "glb": "res://assets/generados/modelos/meshy_soldados/guaranies_guerrero.glb", "mascara": "res://assets/generados/modelos/meshy_soldados/guaranies_guerrero_mascara.png", "luz_ref": 0.094 },
@@ -119,7 +122,8 @@
     "soldados": {
       "tawantinsuyu": { "guerrero": "sol_tawantinsuyu_guerrero", "lancero": "sol_tawantinsuyu_lancero", "hondero": "sol_tawantinsuyu_hondero", "boleador": "sol_tawantinsuyu_boleador" },
       "mapuches": { "guerrero": "sol_mapuches_guerrero", "lancero": "sol_mapuches_lancero", "hondero": "sol_mapuches_hondero", "incendiarios": "sol_mapuches_incendiarios" },
-      "guaranies": { "guerrero": "sol_guaranies_guerrero", "lancero": "sol_guaranies_lancero", "hondero": "sol_guaranies_hondero" }
+      "guaranies": { "guerrero": "sol_guaranies_guerrero", "lancero": "sol_guaranies_lancero", "hondero": "sol_guaranies_hondero" },
+      "etiopia": { "lancero": "sol_etiopia_lancero", "hondero": "sol_etiopia_hondero", "guerrero_gasa": "sol_etiopia_guerrero_gasa" }
     }
   },
   "colores": { "piel": "#8c5636", "pelo": "#231c17", "madera": "#6e5034", "piedra": "#5e5c58", "fibra": "#9a7e4a", "cuero": "#4e3828", "metal": "#7c7f84", "cuerda": "#8a7552" },

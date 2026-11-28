@@ -112,6 +112,9 @@ El jinete noble etíope (la unidad militar más entrenada de Etiopía), la infan
 | `guaranies_guerrero` | 15.000 | 0 | 41 % | 0,094 | 1,3 MB |
 | `guaranies_lancero` | 15.000 | 0 | 58 % | 0,066 | 1,3 MB |
 | `guaranies_hondero` | 15.000 | 0 | 41 % | 0,080 | 1,4 MB |
+| `etiopia_lancero` | 15.000 | 0 | 58 % | 0,069 | 1,3 MB |
+| `etiopia_hondero` | 14.999 | 0 | 49 % | 0,087 | 1,2 MB |
+| `etiopia_guerrero_gasa` | 15.000 | 0 | 33 % | 0,052 | 1,1 MB |
 
 ### Por pueblo
 
@@ -128,3 +131,7 @@ Batalla de cerca de cada pueblo contra sí mismo, azul contra rojo (`tools/aldea
 **Guaraníes:** guerrero con macana a dos manos, lancero con lanza y escudo redondo, arquero con arco y carcaj. El ka'aguygua y la milicia arcabucera siguen con KayKit. (El palo grande abajo a la derecha es una flecha en vuelo, cerca de la cámara.)
 
 ![Guaraníes, azul contra rojo](img/batalla_guaranies.jpg)
+
+**Etiopía:** chewa con lanza y escudo redondo, jabalinero y guerrero de gaša, ahora con lanza y escudo redondo. Los jabalineros todavía tiran una piedra (el proyectil a distancia es el mismo para todos los que no son arqueros; ya era así). El jinete noble y los mosqueteros siguen como antes.
+
+![Etiopía, azul contra rojo](img/batalla_etiopia.jpg)
