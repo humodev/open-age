@@ -13,8 +13,22 @@
   "modelos": {
    "aldeano": "guaranies_aldeano",
    "hondero": "guaranies_arquero",
-   "centro": "local/guaranies_centro_v1",
-   "casa": "local/guaranies_casa_v1"
+   "centro": "local/guaranies_centro",
+   "casa": "local/guaranies_casa",
+   "almacen_madera": "local/guaranies_almacen_madera",
+   "almacen_mina": "local/guaranies_almacen_mina",
+   "cuartel": "local/guaranies_cuartel",
+   "campo_tiro": "local/guaranies_campo_tiro",
+   "taller": "local/guaranies_taller",
+   "mercado": "local/guaranies_mercado",
+   "karai_palabra": "local/guaranies_karai_palabra",
+   "aty_guasu": "local/guaranies_aty_guasu",
+   "mision": "local/guaranies_mision",
+   "monte": "local/guaranies_monte",
+   "tava": "local/guaranies_tava",
+   "yvy_marane": "local/guaranies_yvy_marane",
+   "maravilla": "local/guaranies_maravilla",
+   "maravilla_monte": "local/guaranies_maravilla_monte"
   }
  },
  "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",

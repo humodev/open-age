@@ -2112,8 +2112,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.2,
-    "cumbrera": 0.08
+    "faja": 0.12,
+    "cumbrera": 0.05
    }
   },
   "guaranies_centro_rojo": {
@@ -2155,8 +2155,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.2,
-    "cumbrera": 0.08
+    "faja": 0.12,
+    "cumbrera": 0.05
    }
   },
   "guaranies_almacen_madera": {
@@ -2198,8 +2198,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.2,
-    "cumbrera": 0.08
+    "faja": 0.12,
+    "cumbrera": 0.05
    }
   },
   "guaranies_almacen_mina": {
@@ -2241,8 +2241,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.2,
-    "cumbrera": 0.08
+    "faja": 0.12,
+    "cumbrera": 0.05
    }
   },
   "guaranies_cuartel": {
@@ -2284,8 +2284,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.2,
-    "cumbrera": 0.08
+    "faja": 0.12,
+    "cumbrera": 0.05
    }
   },
   "guaranies_campo_tiro": {
@@ -2327,8 +2327,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.2,
-    "cumbrera": 0.08
+    "faja": 0.12,
+    "cumbrera": 0.05
    }
   },
   "guaranies_taller": {
@@ -2370,8 +2370,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.2,
-    "cumbrera": 0.08
+    "faja": 0.12,
+    "cumbrera": 0.05
    }
   },
   "guaranies_fortaleza": {
@@ -2413,8 +2413,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.2,
-    "cumbrera": 0.08
+    "faja": 0.12,
+    "cumbrera": 0.05
    }
   },
   "guaranies_mercado": {
@@ -2456,8 +2456,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.2,
-    "cumbrera": 0.08
+    "faja": 0.12,
+    "cumbrera": 0.05
    }
   },
   "guaranies_karai_palabra": {
@@ -2499,8 +2499,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.2,
-    "cumbrera": 0.08
+    "faja": 0.12,
+    "cumbrera": 0.05
    }
   },
   "guaranies_aty_guasu": {
@@ -2542,8 +2542,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.2,
-    "cumbrera": 0.08
+    "faja": 0.12,
+    "cumbrera": 0.05
    }
   },
   "guaranies_mision": {
@@ -2585,8 +2585,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.2,
-    "cumbrera": 0.08
+    "faja": 0.12,
+    "cumbrera": 0.05
    }
   },
   "guaranies_monte": {
@@ -2628,8 +2628,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.2,
-    "cumbrera": 0.08
+    "faja": 0.12,
+    "cumbrera": 0.05
    }
   },
   "guaranies_tava": {
@@ -2671,8 +2671,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.2,
-    "cumbrera": 0.08
+    "faja": 0.12,
+    "cumbrera": 0.05
    }
   },
   "guaranies_yvy_marane": {
@@ -2714,8 +2714,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.2,
-    "cumbrera": 0.08
+    "faja": 0.12,
+    "cumbrera": 0.05
    }
   },
   "guaranies_maravilla": {
@@ -2757,8 +2757,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.2,
-    "cumbrera": 0.08
+    "faja": 0.12,
+    "cumbrera": 0.05
    }
   },
   "guaranies_maravilla_monte": {
@@ -2800,8 +2800,8 @@
    "apagar": 0.3,
    "mascara": {
     "tono": 18,
-    "faja": 0.2,
-    "cumbrera": 0.08
+    "faja": 0.12,
+    "cumbrera": 0.05
    }
   },
   "etiopia_casa_rojo": {

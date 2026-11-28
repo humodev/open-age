@@ -139,6 +139,9 @@ Recintos amurallados y conjuntos que el pipeline local aplasta en «barriles» o
 | Mapuches | `rewe_caballeria` | Cruz en el techo |
 | Mapuches | `parlamento` | Medio techo deforme |
 | Mapuches | `maravilla` | Campo de parlamento: en planta sale una sola ruka |
+| Tawantinsuyu | `fortaleza` | Pukara con patio (4×4): una caja de muros lisos |
+| Tawantinsuyu | `mercado` | Plaza con puestos (4×4): caja con muros verde azulado |
+| Guaraníes | `fortaleza` | Patio con empalizada: sale una casa europea con ventanas |
 
 ## Pruebas (hasta la pausa)
 

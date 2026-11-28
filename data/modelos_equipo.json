@@ -1,6 +1,70 @@
 {
  "_doc": "Color del equipo en los modelos generados de edificios (proceso/58-edificios-locales). Clave: el nombre del modelo como en estilo.modelos («local/<pueblo>_<tipo>»). La máscara es assets/generados/modelos/<clave>_mascara.png (tools/mascara_equipo_3d.py --metodo=rojo --edificio: las telas y fajas pintadas en rojo plano en la referencia); luz_ref, la luminancia media de lo enmascarado, la usa src/game/shaders/equipo_3d.gdshader; cobertura, la parte de la superficie teñida. Lo escribe tools/gen3d_pipeline.py (paso mascara). Sin entrada, el modelo queda con su textura y el color va solo en el estandarte. Solo imagen.",
  "mascaras": {
+  "local/guaranies_almacen_madera": {
+   "luz_ref": 0.0474,
+   "cobertura": 0.2058
+  },
+  "local/guaranies_almacen_mina": {
+   "luz_ref": 0.0863,
+   "cobertura": 0.1695
+  },
+  "local/guaranies_aty_guasu": {
+   "luz_ref": 0.079,
+   "cobertura": 0.1802
+  },
+  "local/guaranies_campo_tiro": {
+   "luz_ref": 0.0989,
+   "cobertura": 0.2226
+  },
+  "local/guaranies_casa": {
+   "luz_ref": 0.0962,
+   "cobertura": 0.1958
+  },
+  "local/guaranies_centro": {
+   "luz_ref": 0.0148,
+   "cobertura": 0.1281
+  },
+  "local/guaranies_cuartel": {
+   "luz_ref": 0.175,
+   "cobertura": 0.1751
+  },
+  "local/guaranies_fortaleza": {
+   "luz_ref": 0.0571,
+   "cobertura": 0.078
+  },
+  "local/guaranies_maravilla": {
+   "luz_ref": 0.0902,
+   "cobertura": 0.2365
+  },
+  "local/guaranies_maravilla_monte": {
+   "luz_ref": 0.03,
+   "cobertura": 0.3224
+  },
+  "local/guaranies_mercado": {
+   "luz_ref": 0.0564,
+   "cobertura": 0.1494
+  },
+  "local/guaranies_mision": {
+   "luz_ref": 0.08,
+   "cobertura": 0.2
+  },
+  "local/guaranies_monte": {
+   "luz_ref": 0.0442,
+   "cobertura": 0.229
+  },
+  "local/guaranies_taller": {
+   "luz_ref": 0.0945,
+   "cobertura": 0.1758
+  },
+  "local/guaranies_tava": {
+   "luz_ref": 0.1389,
+   "cobertura": 0.1974
+  },
+  "local/guaranies_yvy_marane": {
+   "luz_ref": 0.0784,
+   "cobertura": 0.0842
+  },
   "local/mapuches_casa": {
    "luz_ref": 0.1235,
    "cobertura": 0.2756
@@ -46,68 +110,68 @@
    "cobertura": 0.2968
   },
   "local/tawantinsuyu_almacen_madera": {
-   "luz_ref": 0.2078,
+   "luz_ref": 0.1468,
    "cobertura": 0.1128
   },
   "local/tawantinsuyu_almacen_mina": {
-   "luz_ref": 0.1924,
-   "cobertura": 0.2249
+   "luz_ref": 0.1406,
+   "cobertura": 0.2247
   },
   "local/tawantinsuyu_aqllawasi": {
    "luz_ref": 0.0547,
    "cobertura": 0.0086
   },
   "local/tawantinsuyu_campo_tiro": {
-   "luz_ref": 0.1656,
+   "luz_ref": 0.1161,
    "cobertura": 0.2267
   },
   "local/tawantinsuyu_casa": {
-   "luz_ref": 0.172,
-   "cobertura": 0.2268
+   "luz_ref": 0.1153,
+   "cobertura": 0.2008
   },
   "local/tawantinsuyu_centro": {
-   "luz_ref": 0.2264,
-   "cobertura": 0.1843
+   "luz_ref": 0.1551,
+   "cobertura": 0.1841
   },
   "local/tawantinsuyu_cuartel": {
-   "luz_ref": 0.255,
-   "cobertura": 0.174
+   "luz_ref": 0.1687,
+   "cobertura": 0.1746
   },
   "local/tawantinsuyu_fortaleza": {
-   "luz_ref": 0.3466,
-   "cobertura": 0.0635
+   "luz_ref": 0.0788,
+   "cobertura": 0.1012
   },
   "local/tawantinsuyu_kallanka_real": {
    "luz_ref": 0.0622,
    "cobertura": 0.0243
   },
   "local/tawantinsuyu_maravilla": {
-   "luz_ref": 0.2234,
-   "cobertura": 0.0365
+   "luz_ref": 0.153,
+   "cobertura": 0.0412
   },
   "local/tawantinsuyu_mercado": {
-   "luz_ref": 0.1948,
-   "cobertura": 0.1817
+   "luz_ref": 0.1511,
+   "cobertura": 0.0724
   },
   "local/tawantinsuyu_pukara_mayor": {
    "luz_ref": 0.14,
    "cobertura": 0.0187
   },
   "local/tawantinsuyu_qollqa": {
-   "luz_ref": 0.1903,
-   "cobertura": 0.1034
+   "luz_ref": 0.1308,
+   "cobertura": 0.1032
   },
   "local/tawantinsuyu_taller_tejido": {
-   "luz_ref": 0.1485,
-   "cobertura": 0.1951
+   "luz_ref": 0.1139,
+   "cobertura": 0.1954
   },
   "local/tawantinsuyu_torre": {
-   "luz_ref": 0.2532,
-   "cobertura": 0.1752
+   "luz_ref": 0.1749,
+   "cobertura": 0.1751
   },
   "local/tawantinsuyu_ushnu": {
-   "luz_ref": 0.1519,
-   "cobertura": 0.1796
+   "luz_ref": 0.1064,
+   "cobertura": 0.1813
   },
   "local/tawantinsuyu_vilcabamba": {
    "luz_ref": 0.0709,
