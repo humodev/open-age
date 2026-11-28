@@ -8,7 +8,7 @@ Por pueblo, todos los edificios que el juego usa: lo que construye el aldeano y 
 - «Antes» es el estado al empezar este proceso.
 - «Color» es la parte de la superficie que toma el color del jugador.
 - Muros, puertas, campos, caminos y andenes se arman por casillas con la maqueta: no usan modelo.
-- Lo arma  desde los datos.
+- Lo arma `inventario.py` desde los datos.
 
 #### Tawantinsuyu
 
@@ -322,12 +322,13 @@ Las referencias de todos, numeradas como en la tabla:
 
 **Lo común:** recintos con patio o muro en anillo, conjuntos de piezas sueltas y referencias vistas desde arriba. Hunyuan los cierra en cajas o barriles; con una sola vista no hay cómo dar la profundidad del patio. Mientras tanto, todos usan su maqueta procedural, que sí se adapta a las huellas nuevas. No se gastaron créditos.
 
-## Pruebas (hasta la pausa)
+## Pruebas
 
-- `test_determinism`: OK, hash 3059812827 (igual que en el proceso 54; el cambio es solo de imagen).
-- `civ_smoke`: corre sin errores.
-- `iconos`: OK (780 grillas). `grilla`: OK.
-- Pendientes para el final: el autotest con ventana (Etiopía) y los FPS de una base tardía.
+- `test_determinism`: OK. El hash es 3617052205, el mismo que dejó el proceso 60 (movimiento). Lo de acá es solo imagen.
+- `civ_smoke`: corre sin errores (0 líneas de error). `iconos`: OK (780 grillas). `grilla`: OK.
+- **Autotest con ventana** (`--autotest --civ=etiopia --terreno=llano`): OK, 260 comprobaciones y ninguna falla, a la primera.
+- **FPS de una base de la IV entera** (`--demo=base_completa --perf`, todos los edificios del pueblo con sus modelos y la cámara de la captura): 142–145 FPS en Etiopía y en Ayutthaya, con unos 1.310 objetos dibujados. Es el tope del monitor. Las texturas son de 2048, pero un material por modelo y color no se nota.
+- **GLB:** 125 en `local/`; el más pesado, 680 KB (tope pedido: 2 MB).
 
 ## Tropiezos
 
@@ -339,5 +340,23 @@ Las referencias de todos, numeradas como en la tabla:
 - **Paint pintó muros azulados** en dos edificios incas de la primera pasada: se confunden con el color del equipo.
 - **Al mover los GLB viejos a `_v1`,** los `estilo.modelos` de los otros pueblos se apuntaron a `_v1` para que el juego no perdiera sus casas y capitales.
 - **Hunyuan 2mv:** sin memoria de GPU con el juego abierto.
+- **El autor jugó al AoE4** a mitad de la tanda (2,2 GB de VRAM). Se pausó todo lo de GPU con una cola que esperaba a que cerrara el juego.
+- **ComfyUI se llenó** (12 GB, swap) después de unas 40 imágenes con `--cache-none`, y bajó a 80 s por imagen: se lo reinicia entre tandas. Dos imágenes fallaron por eso y se rehicieron.
+- **FLUX insiste con símbolos:** una cruz en la iglesia etíope y en el techo de un corral mapuche (este llegó al modelo), y una estrella en una tienda. Se rehicieron o se sacaron.
+- **Recintos con patio** (fortalezas y mercados de 4×4 del proceso 59): Hunyuan los cierra en cajas. Solo la estacada de Palmares se lee bien.
+- **Un script del scratchpad** (`shots.sh`) lo pisó otro agente que usa la misma carpeta: los de este proceso pasaron a `scratchpad/e58/`.
 
-<!-- COMMITS -->
+## Huellas nuevas (proceso 59)
+
+Los modelos se escalan con el `tam` de los datos, así que toman solos las huellas nuevas. Pueden quedar desproporcionados:
+- **maravillas de 6×6 a 4×4:** el lado baja y el alto mínimo de maravilla (620) las estira; Ollantaytambo y el Fasil Gəbbi quedan más altos que anchos;
+- **rewe, parlamento y weichan mapuches de 3×3 a 4×4:** son rukas sueltas que se agrandan parejo y quedan como una casa gigante;
+- **kraal de Ayutthaya de 4×4 a 3×3:** la estacada se achica bien.
+
+## Commits
+
+- `f4eb41f` primera pasada del Tawantinsuyu y color del equipo
+- `50dbfcc`, `8c9d642` segunda pasada (reglas históricas) y pausa
+- `a2aa377` faja y cumbrera en la máscara
+- `799f658` mapuches · `ae10ddb` guaraníes · `a7e4f10` Etiopía · `0f9dcb3` Palmares · `3cb095b` Ayutthaya
+- (este) pruebas finales, estado e índice
