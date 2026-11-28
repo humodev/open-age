@@ -712,6 +712,7 @@ func _build_resources() -> void:
 				mi.scale = Vector3.ONE * _res_k(e)
 				add_child(mi)
 				visuals[e.id] = {"node": mi, "kind": "rock", "max": e.amount, "cur": mi.position, "prev": mi.position, "k0": _res_k(e)}
+				_fauna(e, mi, visuals[e.id]) # --- montados (proceso/63) ---
 	# Árboles más altos que la gente, como en AoE4 (proceso/24, 4p; reglas.escala_visual).
 	var ev: Dictionary = sim.data.reglas.get("escala_visual", {})
 	var tk := Vector2(float(ev.get("arbol_ancho_pct", 100)), float(ev.get("arbol_alto_pct", 100))) / 100.0
@@ -777,9 +778,14 @@ func _make_visual(e: SimEntity) -> Dictionary:
 		var msize := 2.6 if e.def.get("elefante", false) else (1.7 if e.def.get("montado", false) else 0.9)
 		var body: Node3D = null
 		var bk := _unit_k
+		var cuad := _cuadrupedo(e, team) # --- montados (proceso/63) ---
+		if cuad != null:
+			v["cuad"] = cuad
+			body = cuad.node
+			bk = 1.0
 		# Gente animada (KayKit; proceso/27-animaciones): aldeanos y soldados a pie, persona de
 		# alto 1, a la escala de la gente.
-		if AldeanoAnimado.usa(e.def, e.type):
+		elif AldeanoAnimado.usa(e.def, e.type):
 			var civ := str(sim.players[e.owner].get("civ", "")) if e.owner >= 0 and e.owner < sim.players.size() else ""
 			var tropa: Dictionary = _age_cfg(e.owner, _age_of(e.owner)).get("tropa", {})
 			var av := AldeanoAnimado.crear(sim.dp(e.owner).civ.get("estilo", {}), team, FIGURE_H * _unit_k, civ, e.type, e.def, tropa)
@@ -846,6 +852,62 @@ func _make_visual(e: SimEntity) -> Dictionary:
 	v["cur"] = root.position
 	v["prev"] = root.position
 	return v
+
+
+# --- montados (proceso/63-montados-y-animales) ---
+## Caballo, elefante o animal animado de una unidad (CuadrupedoAnimado), con sus jinetes; null si
+## se dibuja como antes (sin línea en data/arte_animaciones.json → montados, o --montados=0).
+func _cuadrupedo(e: SimEntity, team: Color) -> CuadrupedoAnimado.Estado:
+	var civ := str(sim.players[e.owner].get("civ", "")) if e.owner >= 0 and e.owner < sim.players.size() else ""
+	var k := FIGURE_H * _unit_k # alto de una persona en el mundo
+	if e.def.get("animal", false):
+		var sp := Animales.rebano(civ)
+		var md := CuadrupedoAnimado.especie(sp)
+		if md.is_empty():
+			return null
+		return CuadrupedoAnimado.crear(md, _alto_especie(sp, md), team)
+	var m := CuadrupedoAnimado.montado_de(civ, e.type, e.def)
+	if m.is_empty():
+		return null
+	var md := CuadrupedoAnimado._modelo(str(m["montura"]))
+	var st := CuadrupedoAnimado.crear(md, float(md["alto_persona"]) * k, team)
+	var style: Dictionary = sim.dp(e.owner).civ.get("estilo", {})
+	if AldeanoAnimado.usa({"funcion": "civil"}):
+		var tropa: Dictionary = _age_cfg(e.owner, _age_of(e.owner)).get("tropa", {})
+		if m.has("jinete"):
+			var fn := str(e.def.get("funcion", "choque"))
+			var j := AldeanoAnimado.crear_jinete(style, team, k, civ, str(m["jinete"]), {"funcion": fn}, tropa)
+			CuadrupedoAnimado.montar(st, j, "silla", k)
+		if m.get("mahout", false):
+			var mh := AldeanoAnimado.crear_jinete(style, team, k, civ, "aldeano", {"funcion": "civil"})
+			AldeanoAnimado.vestir(mh, civ, "m", _age_of(e.owner))
+			CuadrupedoAnimado.montar(st, mh, "cuello_asiento", k)
+	return st
+
+
+## Alto en el mundo de un animal: el de su silueta de siempre (o el del modelo propio).
+func _alto_especie(sp: String, md: Dictionary) -> float:
+	var e: Dictionary = CuadrupedoAnimado.cfg().get("especies", {}).get(sp, {})
+	if e.has("modelo"):
+		return float(md["alto_persona"]) * FIGURE_H * _unit_k * float(e.get("escala_pct", 100)) / 100.0
+	return Animales.mesh(sp).get_aabb().size.y * _unit_k
+
+
+## Caza y animales sueltos del mapa con esqueleto: el animal cuelga del nodo del recurso (que
+## lleva la escala de la gente) y se queda quieto o pasta; al empezar a carnearlo, cae.
+func _fauna(e: SimEntity, mi: MeshInstance3D, v: Dictionary) -> void:
+	if e.type != "venado" and e.type != "rebano_salvaje":
+		return
+	var sp := _fauna_sp(e)
+	var md := CuadrupedoAnimado.especie(sp)
+	if md.is_empty():
+		return
+	var st := CuadrupedoAnimado.crear(md, _alto_especie(sp, md) / _unit_k, Color.WHITE)
+	if e.amount < int(v["max"]) or e.amount <= 0:
+		CuadrupedoAnimado.morir(st)
+	mi.mesh = null
+	mi.add_child(st.node)
+	v["cuad"] = st
 
 
 static var _siluetas := {} # color del equipo -> ShaderMaterial
@@ -1284,6 +1346,11 @@ func _res_k(e: SimEntity) -> float:
 func _resource_mesh(e: SimEntity) -> Mesh:
 	if e.type != "venado" and e.type != "rebano_salvaje":
 		return Meshes.rock_mesh(e.type)
+	return Animales.mesh(_fauna_sp(e))
+
+
+## Especie de la caza o del animal suelto (ver _resource_mesh).
+func _fauna_sp(e: SimEntity) -> String:
 	var civ := ""
 	var best := -1
 	for i in mini(sim.players.size(), sim.bases.size()):
@@ -1293,7 +1360,7 @@ func _resource_mesh(e: SimEntity) -> Mesh:
 		if best < 0 or dx * dx + dy * dy < best:
 			best = dx * dx + dy * dy
 			civ = str(sim.players[i].get("civ", ""))
-	return Animales.mesh(Animales.salvaje(e.type, civ, str(sim.terrain), _hash(e.id)))
+	return Animales.salvaje(e.type, civ, str(sim.terrain), _hash(e.id))
 
 
 ## Malla de unidad según la civilización del dueño (CivMeshes) o la de la capa común; las
@@ -1390,6 +1457,7 @@ func on_tick(events: Array) -> void:
 					mi.scale = Vector3.ONE * _res_k(re)
 					add_child(mi)
 					visuals[re.id] = {"node": mi, "kind": "rock", "max": re.amount, "cur": mi.position, "prev": mi.position, "k0": _res_k(re)}
+					_fauna(re, mi, visuals[re.id]) # --- montados (proceso/63) ---
 			"died":
 				_on_died(ev["id"])
 			"absorbed":
@@ -1436,7 +1504,13 @@ func _on_died(id: int) -> void:
 	var node: Node3D = v["node"]
 	if v.get("ring") != null:
 		v["ring"].visible = false
-	if v["kind"] == "unit" and v.has("anim"):
+	if v["kind"] == "unit" and v.has("cuad"): # --- montados --- cae con sus jinetes
+		var aps := CuadrupedoAnimado.morir(v["cuad"])
+		if not aps.is_empty():
+			_fx.append({"kind": "die_anim", "node": node, "t": 0.0, "dur": 3.2, "ap": aps[0], "aps": aps})
+		else:
+			_fx.append({"kind": "die_unit", "node": node, "t": 0.0, "dur": 2.2, "yaw": node.rotation.y})
+	elif v["kind"] == "unit" and v.has("anim"):
 		var ap := AldeanoAnimado.morir(v["anim"])
 		_fx.append({"kind": "die_anim", "node": node, "t": 0.0, "dur": 2.6, "ap": ap})
 	elif v["kind"] == "unit":
@@ -1455,7 +1529,7 @@ func _on_hit(ev: Dictionary) -> void:
 		return
 	if ev.get("area", false): # --- esport 1a --- el golpe de un tiro que llegó: solo la reacción
 		var vh: Dictionary = visuals.get(ev["b"], {})
-		if not vh.is_empty() and vh.has("anim"):
+		if not vh.is_empty() and (vh.has("anim") or vh.has("cuad")):
 			vh["recibe"] = true
 		return
 	if ev["ranged"] and a != null:
@@ -1473,7 +1547,7 @@ func _on_hit(ev: Dictionary) -> void:
 		va["golpe"] = true
 	# Reacción del que recibe el golpe (gente animada).
 	var vr: Dictionary = visuals.get(ev["b"], {})
-	if not vr.is_empty() and vr.has("anim"):
+	if not vr.is_empty() and (vr.has("anim") or vr.has("cuad")):
 		vr["recibe"] = true
 	if b != null and b.is_building():
 		var vb: Dictionary = visuals.get(ev["b"], {})
@@ -1695,6 +1769,8 @@ func render(alpha: float, delta: float) -> void:
 				var fs := fog_state(e)
 				rock.visible = fs > 0
 				rock.material_overlay = Meshes.fog_overlay() if fs == 1 else null
+				if v.has("cuad"): # --- montados --- la caza pasta hasta que la carnean
+					_render_fauna(e, v, rock, delta)
 	_render_rally()
 	_render_fx(delta)
 	_render_fog(delta)
@@ -1808,6 +1884,12 @@ func _render_unit(e: SimEntity, v: Dictionary, alpha: float, delta: float) -> vo
 				want = atan2(d.x, d.z)
 	v["yaw"] = lerp_angle(float(v["yaw"]), want, clampf(delta * 10.0, 0.0, 1.0))
 	node.rotation.y = v["yaw"]
+	if v.has("cuad"): # --- montados (proceso/63) ---
+		_render_cuad(e, v, moving, Vector2(node.position.x - before.x, node.position.z - before.z).length(), delta)
+		v["spawn"] = maxf(0.0, float(v["spawn"]) - delta * 3.0)
+		body.scale = Vector3.ONE * (1.0 - float(v["spawn"]) * 0.7)
+		_update_ring(e, v)
+		return
 	if v.has("anim"):
 		_render_anim(e, v, moving, Vector2(node.position.x - before.x, node.position.z - before.z).length(), delta)
 		v["spawn"] = maxf(0.0, float(v["spawn"]) - delta * 3.0)
@@ -1885,6 +1967,48 @@ func _render_anim(e: SimEntity, v: Dictionary, moving: bool, walked: float, delt
 	av.golpe = false
 	av.recibe = false
 	AldeanoAnimado.us_actualizar += Time.get_ticks_usec() - t0
+
+
+# --- montados (proceso/63) ---
+## Montado o rebaño animado: fuera de la pantalla no se anima; lejos de la cámara, a la mitad de
+## cuadros (se junta la distancia y el tiempo y se aplican juntos, como la gente).
+func _render_cuad(e: SimEntity, v: Dictionary, moving: bool, walked: float, delta: float) -> void:
+	var st: CuadrupedoAnimado.Estado = v["cuad"]
+	st.walk_acc += walked
+	st.dt_acc += delta * velocidad
+	if v.get("golpe", false):
+		v["golpe"] = false
+		st.golpe = true
+	if v.get("recibe", false):
+		v["recibe"] = false
+		st.recibe = true
+	var node: Node3D = v["node"]
+	var dist := 0.0
+	if _anim_cam != null:
+		if not _anim_cam.is_position_in_frustum(node.position + Vector3(0, 0.5, 0)):
+			return
+		dist = _anim_cam.global_position.distance_to(node.position) / _anim_k
+	if dist > CuadrupedoAnimado.lejos_m and (e.id + _anim_frame) % 2 != 0:
+		return
+	var lejos := dist > AldeanoAnimado.compartir_desde_m or (_anim_total_prev > AldeanoAnimado.compartir_con_mas_de and dist > AldeanoAnimado.cerca_m)
+	CuadrupedoAnimado.actualizar(st, e, sim, moving, st.walk_acc, st.dt_acc, st.golpe, st.recibe, lejos)
+	st.walk_acc = 0.0
+	st.dt_acc = 0.0
+	st.golpe = false
+	st.recibe = false
+
+
+func _render_fauna(e: SimEntity, v: Dictionary, rock: MeshInstance3D, delta: float) -> void:
+	var st: CuadrupedoAnimado.Estado = v["cuad"]
+	if e.amount < int(v["max"]) and not st.muerto:
+		CuadrupedoAnimado.morir(st)
+	if not rock.visible:
+		return
+	st.dt_acc += delta * velocidad
+	if _anim_cam != null and not _anim_cam.is_position_in_frustum(rock.position + Vector3(0, 0.3, 0)):
+		return
+	CuadrupedoAnimado.pasear(st, st.dt_acc)
+	st.dt_acc = 0.0
 
 
 func _render_building(e: SimEntity, v: Dictionary, delta: float) -> void:
@@ -1967,7 +2091,8 @@ func _render_fx(delta: float) -> void:
 				node.rotation = Vector3(fall * PI * 0.5 * 0.95, f["yaw"], 0)
 				node.position.y = -maxf(0.0, f["t"] - 1.2) * 0.4
 			"die_anim":
-				(f["ap"] as AnimationPlayer).advance(delta * velocidad)
+				for ap: AnimationPlayer in f.get("aps", [f["ap"]]):
+					ap.advance(delta * velocidad)
 				node.position.y = -maxf(0.0, f["t"] - 1.6) * 0.4
 			"die_building":
 				node.position.y = -k * k * 3.2

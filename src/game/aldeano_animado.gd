@@ -180,6 +180,7 @@ static func _template() -> Dictionary:
 			var joined := "+".join(PackedStringArray(names))
 			if not lib.has_animation(joined):
 				lib.add_animation(joined, _encadenar(lib, names))
+	_variantes_montado(sk, lib) # --- montados (proceso/63) ---
 	var skin := sk.create_skin_from_rest_transforms()
 	_tpl = {"sk": sk, "lib": lib, "skin": skin}
 	_tpl["paso"] = _paso(sk, lib, acts.get("caminar", {}).get("anim", "Walking_A"))
@@ -212,6 +213,63 @@ static func _encadenar(lib: AnimationLibrary, names: Array) -> Animation:
 	out.length = t0
 	out.loop_mode = Animation.LOOP_LINEAR
 	return out
+
+
+# --- montados (proceso/63-montados-y-animales) ---
+## Jinetes: de cada animación que puede hacer alguien montado (montados.jinete.acciones) se arma
+## «<animación>@m», la misma con las piernas sentadas a horcajadas (montados.jinete: muslo_grados
+## hacia adelante y abiertos piernas_abiertas_grados, la canilla colgando) y la cadera quieta en
+## su lugar: el cuerpo de arriba pega, tira o cae como de pie. El vaivén lo pone el animal (el
+## jinete cuelga del hueso «silla», CuadrupedoAnimado).
+const PIERNAS := ["upperleg.l", "lowerleg.l", "foot.l", "toes.l", "upperleg.r", "lowerleg.r", "foot.r", "toes.r"]
+
+
+static func _variantes_montado(sk: Skeleton3D, lib: AnimationLibrary) -> void:
+	var mj: Dictionary = cfg().get("montados", {}).get("jinete", {})
+	if mj.is_empty():
+		return
+	var muslo := deg_to_rad(float(mj.get("muslo_grados", 75)))
+	var abre := deg_to_rad(float(mj.get("piernas_abiertas_grados", 28)))
+	var canilla := deg_to_rad(float(mj.get("canilla_grados", 12)))
+	var sentado := {}
+	for lado: String in ["l", "r"]:
+		var sg := 1.0 if lado == "l" else -1.0
+		var u := sk.find_bone("upperleg." + lado)
+		var lo := sk.find_bone("lowerleg." + lado)
+		var fo := sk.find_bone("foot." + lado)
+		if u < 0 or lo < 0 or fo < 0:
+			return
+		var gh := sk.get_bone_global_rest(sk.get_bone_parent(u)).basis
+		var gu := Basis(Vector3.UP, sg * abre) * Basis(Vector3.RIGHT, -muslo) * sk.get_bone_global_rest(u).basis
+		var dl := Basis(Vector3.BACK, sg * abre * 0.35) * Basis(Vector3.RIGHT, canilla)
+		var gl := dl * sk.get_bone_global_rest(lo).basis
+		var gf := dl * Basis(Vector3.RIGHT, deg_to_rad(20.0)) * sk.get_bone_global_rest(fo).basis
+		sentado["upperleg." + lado] = (gh.inverse() * gu).get_rotation_quaternion()
+		sentado["lowerleg." + lado] = (gu.inverse() * gl).get_rotation_quaternion()
+		sentado["foot." + lado] = (gl.inverse() * gf).get_rotation_quaternion()
+	var hips_o := sk.get_bone_rest(sk.find_bone("hips")).origin
+	var acts: Dictionary = cfg().get("acciones", {})
+	for act: String in mj.get("acciones", []):
+		var a: Dictionary = acts.get(act, {})
+		var names: Array = a.get("anims", [])
+		var an := "+".join(PackedStringArray(names)) if names.size() > 1 else str(a.get("anim", ""))
+		if an == "" or not lib.has_animation(an) or lib.has_animation(an + "@m"):
+			continue
+		var m: Animation = lib.get_animation(an).duplicate(true)
+		for t in range(m.get_track_count() - 1, -1, -1):
+			var bone := String(m.track_get_path(t).get_concatenated_subnames())
+			var ty := m.track_get_type(t)
+			if bone in PIERNAS or (bone == "hips" and ty == Animation.TYPE_POSITION_3D):
+				m.remove_track(t)
+		for bone: String in PIERNAS:
+			var bi := sk.find_bone(bone)
+			var tr := m.add_track(Animation.TYPE_ROTATION_3D)
+			m.track_set_path(tr, NodePath("Skeleton3D:" + bone))
+			m.rotation_track_insert_key(tr, 0.0, sentado.get(bone, sk.get_bone_rest(bi).basis.get_rotation_quaternion()))
+		var th := m.add_track(Animation.TYPE_POSITION_3D)
+		m.track_set_path(th, NodePath("Skeleton3D:hips"))
+		m.position_track_insert_key(th, 0.0, hips_o)
+		lib.add_animation(an + "@m", m)
 
 
 ## El maniquí de KayKit abre piernas y brazos para esquivar su cuerpo ancho; con proporciones de
@@ -1198,6 +1256,7 @@ class Estado:
 	var eq := {} # equipo del soldado (TropaAnimada.equipo)
 	var per := {} # ropa del aldeano por sexo y edad (personas); vacío: la de la forma
 	var modelo := {} # --- aldeanos de Meshy --- el modelo (modelo_de); vacío: la figura de KayKit
+	var montado := false # --- montados --- va sentado en un animal (crear_jinete): animaciones «@m»
 	var extra: MeshInstance3D # herramienta y carga del modelo de Meshy (piel aparte)
 	var golpe_act := "pegar"
 	var quieto_act := "quieto"
@@ -1252,6 +1311,12 @@ static func _prep() -> void:
 		_tool_of[act] = str(a.get("herramienta", ""))
 		_vel_of[act] = float(a.get("vel_pct", 100)) / 100.0
 	_tool_of[""] = ""
+	var lib0: AnimationLibrary = _template()["lib"] # --- montados --- «<acción>@m»
+	for act: String in _anim_of.keys():
+		if lib0.has_animation(str(_anim_of[act]) + "@m"):
+			_anim_of[act + "@m"] = str(_anim_of[act]) + "@m"
+			_tool_of[act + "@m"] = ""
+			_vel_of[act + "@m"] = _vel_of[act]
 	_por_recurso = c.get("por_recurso", {})
 	_por_clase = c.get("por_clase", {})
 	_mezcla = float(c.get("mezcla_s", 0.18))
@@ -1266,7 +1331,7 @@ static func _prep() -> void:
 ## Momento del golpe de una acción de ataque (en segundos de su animación).
 static func _imp(act: String) -> float:
 	if not _imp_of.has(act):
-		var a: Dictionary = cfg().get("acciones", {}).get(act, {})
+		var a: Dictionary = cfg().get("acciones", {}).get(act.trim_suffix("@m"), {})
 		var an: String = _anim_of.get(act, "")
 		if a.has("impacto_pct"):
 			_imp_of[act] = float(a["impacto_pct"]) / 100.0 * float(_len.get(an, 1.0))
@@ -1314,6 +1379,20 @@ static func crear(style: Dictionary, team: Color, k: float, civ := "", type := "
 	return st
 
 
+## --- montados --- Jinete (o mahout): la figura de siempre, sentada; pega y reacciona con las
+## animaciones «@m». La mueve CuadrupedoAnimado (cuelga del hueso «silla» del animal).
+static func crear_jinete(style: Dictionary, team: Color, k: float, civ := "", type := "", def := {}, tropa := {}) -> Estado:
+	var st := crear(style, team, k, civ, type, def, tropa)
+	st.montado = true
+	for a: String in ["golpe_act", "quieto_act"]:
+		var act := str(st.get(a))
+		if _anim_of.has(act + "@m"):
+			st.set(a, act + "@m")
+		elif a == "quieto_act" and _anim_of.has("quieto@m"):
+			st.set(a, "quieto@m")
+	return st
+
+
 ## Cambia el equipo de un soldado (la edad nueva trae otro casco, otro escudo).
 static func equipar(st: Estado, tropa: Dictionary) -> void:
 	if st.tropa and st.modelo.is_empty(): # el soldado de Meshy lleva su ropa; el arma no cambia
@@ -1346,6 +1425,8 @@ static func _propio(st: Estado) -> void:
 
 ## Qué hace la figura ahora (solo lectura de la simulación).
 static func accion(e: SimEntity, sim: Sim, moving: bool, st: Estado = null) -> String:
+	if st != null and st.montado:
+		return st.golpe_act if e.order == O.ATTACK and st.tropa else st.quieto_act
 	if moving:
 		return "caminar"
 	if st != null and st.tropa:
@@ -1376,7 +1457,7 @@ static func _trabajo(e: SimEntity, sim: Sim) -> String:
 ## `recibe`: le pegaron; `lejos`: puede usar un esqueleto compartido.
 static func actualizar(st: Estado, e: SimEntity, sim: Sim, moving: bool, walked: float, dt: float, golpe: bool, recibe := false, lejos := false) -> void:
 	var act := accion(e, sim, moving, st)
-	if not st.tropa:
+	if not st.tropa and not st.montado:
 		_herramienta_y_carga(st, e, sim, act)
 	# Histéresis: en un montón las figuras se empujan y el "se mueve / está quieto" titila de un
 	# tick a otro; el estado nuevo tiene que durar cambio_s antes de cambiar de animación.
@@ -1414,7 +1495,7 @@ static func actualizar(st: Estado, e: SimEntity, sim: Sim, moving: bool, walked:
 		st.hit_left -= dt
 	elif recibe and not moving and not (lejos and compartir) and _puede_reaccionar(st, act, ataque, rate):
 		var r := "bloquear" if str(st.eq.get("escudo", "ninguno")) != "ninguno" and randf() < _bloquear else "golpeado"
-		var rn: String = _anim_of.get(r, "Hit_A")
+		var rn: String = _anim_of.get(r + "@m", _anim_of.get(r, "Hit_A")) if st.montado else _anim_of.get(r, "Hit_A")
 		if _len.has(rn):
 			_propio(st)
 			st.ap.play(rn, 0.06)
@@ -1451,7 +1532,7 @@ static func actualizar(st: Estado, e: SimEntity, sim: Sim, moving: bool, walked:
 		name = "Idle_A"
 	# Esqueleto compartido: lejos de la cámara (o con mucha gente en pantalla), en los estados
 	# que se repiten igual en todos y en el golpe (por la fase del ataque).
-	if lejos and compartir and (ataque or act in LOOPS):
+	if lejos and compartir and (ataque or act in LOOPS or act.trim_suffix("@m") in LOOPS):
 		var c := _coro_golpe(st, name, rate) if ataque else _coro_lazo(st, name, rate, act == "caminar" or act == "correr")
 		if st.coro != c:
 			st.coro = c
@@ -1555,6 +1636,8 @@ static func _herramienta_y_carga(st: Estado, e: SimEntity, sim: Sim, act: String
 static func morir(st: Estado) -> AnimationPlayer:
 	_propio(st)
 	var an: String = _anim_of.get("morir_b" if st.tropa and st.fase % 2 == 1 else "morir", "Death_A")
+	if st.montado and _len.has(an + "@m"): # --- montados --- cae sentado, con el animal
+		an += "@m"
 	if _len.has(an):
 		st.ap.play(an, 0.08)
 	return st.ap

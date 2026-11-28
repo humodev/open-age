@@ -137,6 +137,25 @@
       "ayutthaya": { "guerrero": "sol_ayutthaya_guerrero", "lancero": "sol_ayutthaya_lancero", "hondero": "sol_ayutthaya_hondero", "ngao": "sol_ayutthaya_ngao" }
     }
   },
+  "montados": {
+    "_doc": "Montados y animales animados (proceso/63-montados-y-animales). Solo imagen. activo: false vuelve a la maqueta o al modelo fijo de antes (también --montados=0). unidades: una línea por unidad montada («civ:tipo» pisa a «tipo»): montura, el modelo de data/arte_cuadrupedos.json → modelos; jinete, el tipo de soldado que va arriba (su arma, su golpe y su modelo de Meshy salen de tropas y de modelos.soldados como si fuera a pie; sin jinete, nadie); mahout: true, un aldeano del pueblo sentado en el cuello (elefantes). Sin la línea, la figura de antes. jinete: las animaciones que se arman sentadas («<animación>@m», en acciones), cuánto va el muslo hacia adelante (muslo_grados), cuánto se abren las piernas (piernas_abiertas_grados) y la canilla hacia atrás (canilla_grados). animales: rebaños y caza con su esqueleto (data/arte_cuadrupedos.json → especies); pastar_pct: de cada 100 segundos quietos, cuántos pasta. rendimiento: lejos_m, a más de esta distancia de la cámara (casillas, como la gente) el animal se anima a la mitad de cuadros; fuera de la pantalla, no se anima.",
+    "activo": true,
+    "jinete": { "muslo_grados": 72, "piernas_abiertas_grados": 30, "canilla_grados": 14,
+      "acciones": ["quieto", "golpeado", "bloquear", "morir", "morir_b", "golpe_1m", "golpe_2m", "estocada", "estocada_2m", "dos_armas", "arco", "lanzar", "fuego", "quieto_2m", "quieto_arco", "quieto_fuego"] },
+    "unidades": {
+      "jinete":            { "montura": "caballo_criollo", "jinete": "lancero" },
+      "kona_waiki":        { "montura": "caballo_criollo", "jinete": "lancero" },
+      "jinete_manco":      { "montura": "caballo_criollo", "jinete": "guerrero" },
+      "farasanna":         { "montura": "caballo_criollo", "jinete": "lancero" },
+      "caballeria_corte":  { "montura": "caballo_criollo", "jinete": "hondero" },
+      "etiopia:guerrero":  { "montura": "caballo_criollo", "jinete": "guerrero_gasa" },
+      "caballeria_mision": { "montura": "caballo_criollo", "jinete": "lancero" },
+      "chang_suek":        { "montura": "elefante_guerra", "jinete": "ngao", "mahout": true },
+      "elefante_rey":      { "montura": "elefante_rey" }
+    },
+    "animales": { "activo": true, "pastar_pct": 45 },
+    "rendimiento": { "lejos_m": 46 }
+  },
   "colores": { "piel": "#8c5636", "pelo": "#231c17", "madera": "#6e5034", "piedra": "#5e5c58", "fibra": "#9a7e4a", "cuero": "#4e3828", "metal": "#7c7f84", "cuerda": "#8a7552" },
   "tropas": {
     "activo": true,

@@ -10,6 +10,7 @@ extends Node3D
 ##   --estilo=pacifica|normal|acosadora|agresiva  estilo de juego de la IA
 ##   --cam=x,z,zoom[,inclinación]  posición de cámara para la captura (bX,bZ: relativa a la base propia)
 ##   --select=tipo      selecciona entidades de ese tipo del jugador local antes de la captura
+##   --tipos=a,b,…      con --demo=base_completa, solo esos edificios
 ##   --demo=base|base_completa|obras|hitos|animales|batalla|multitud|formacion|bloque|bosque|reunion|llegada  escena armada para revisar modelos, hitos, animales, combate, el costo de 200 unidades, un grupo en marcha o la gente entre los árboles
 ##   --menu             fuerza el menú de inicio (sin argumentos se abre solo)
 ##   --terreno=<clave de reglas.json "terrenos"> tipo de mapa (llano, valle, delta…)
@@ -33,6 +34,7 @@ extends Node3D
 ##   --contar-avisos=MIN  (con --aivai) cuenta los avisos que vería un humano en el lugar del 0 y sale
 ##   --autotest         prueba de punta a punta con eventos reales de mouse y teclado
 ##   --animaciones=0|1  gente animada (KayKit) o la figura de antes; pisa data/arte_animaciones.json
+##   --montados=0|1     caballos, elefantes, jinetes y animales animados (proceso/63) o lo de antes
 ##   --compartir=0|1    esqueletos compartidos entre la gente animada que hace lo mismo
 ##   --grilla=menu      abre el submenú del aldeano (economia, militar) antes de la captura
 ##   --banco=rec:n,…    fija recursos del jugador antes de la captura (alimento:0,mita:0)
@@ -94,6 +96,8 @@ func _ready() -> void:
 	_menu_mode = _args.is_empty() or _args.has("menu")
 	if _args.has("animaciones"): # --animaciones=0|1: aldeanos animados o la figura de antes (proceso/27)
 		AldeanoAnimado.forzar = int(_args["animaciones"])
+	if _args.has("montados"): # --montados=0|1: caballos, elefantes y animales animados (proceso/63)
+		CuadrupedoAnimado.forzar = int(_args["montados"])
 	if _args.has("compartir"): # --compartir=0|1: esqueletos compartidos (proceso/27, paso 2)
 		AldeanoAnimado.forzar_compartir = int(_args["compartir"])
 		AldeanoAnimado.cfg()
