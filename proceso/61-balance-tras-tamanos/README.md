@@ -83,4 +83,5 @@ No hubo cambios en la interfaz: no hizo falta el autotest con ventana.
 
 ## Commits
 
-- El commit de los cambios, los torneos, las mediciones y la documentación.
+- `37aa636`: los cambios, los torneos, las mediciones y la documentación.
+- El commit de este README.
