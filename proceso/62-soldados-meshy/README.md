@@ -105,6 +105,10 @@ El jinete noble etíope (la unidad militar más entrenada de Etiopía), la infan
 | `tawantinsuyu_lancero` | 14.999 | 0 | 35 % | 0,071 | 1,4 MB |
 | `tawantinsuyu_hondero` | 14.999 | 0 | 36 % | 0,062 | 1,2 MB |
 | `tawantinsuyu_boleador` | 14.999 | 0 | 30 % | 0,056 | 1,4 MB |
+| `mapuches_guerrero` | 14.999 | 0 | 34 % | 0,075 | 1,4 MB |
+| `mapuches_lancero` | 14.999 | 0 | 32 % | 0,064 | 1,3 MB |
+| `mapuches_hondero` | 14.999 | 0 | 46 % | 0,053 | 1,3 MB |
+| `mapuches_incendiarios` | 15.000 | 0 | 41 % | 0,050 | 1,4 MB |
 
 ### Por pueblo
 
@@ -113,3 +117,7 @@ Batalla de cerca de cada pueblo contra sí mismo, azul contra rojo (`tools/aldea
 **Tawantinsuyu:** guerrero con porra, lancero con lanza y escudo cuadrado, hondero con honda y boleador con las boleadoras, todos de Meshy.
 
 ![Tawantinsuyu, azul contra rojo](img/batalla_tawantinsuyu.jpg)
+
+**Mapuches:** weichafe con macana a dos manos, lanza larga de colihue sin escudo y arquero con arco y carcaj. Los incendiarios (asedio) no entran en la batalla de la herramienta; están conectados igual. El weichafe montado (que pelea a pie) sigue con la figura de KayKit.
+
+![Mapuches, azul contra rojo](img/batalla_mapuches.jpg)
