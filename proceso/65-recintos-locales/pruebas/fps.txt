@@ -1,0 +1,15 @@
+== tawantinsuyu, con recintos
+perf: 94 fps · tick 50 · 66 entidades activas · 1640 objetos dibujados
+perf: 101 fps · tick 100 · 66 entidades activas · 1640 objetos dibujados
+perf: 94 fps · tick 150 · 66 entidades activas · 1640 objetos dibujados
+perf: 95 fps · tick 200 · 67 entidades activas · 1641 objetos dibujados
+== tawantinsuyu, maquetas (antes)
+perf: 93 fps · tick 50 · 66 entidades activas · 1783 objetos dibujados
+perf: 96 fps · tick 100 · 66 entidades activas · 1783 objetos dibujados
+perf: 92 fps · tick 150 · 66 entidades activas · 1783 objetos dibujados
+perf: 93 fps · tick 200 · 67 entidades activas · 1784 objetos dibujados
+== palmares, con recinto
+perf: 95 fps · tick 50 · 61 entidades activas · 1529 objetos dibujados
+perf: 101 fps · tick 100 · 61 entidades activas · 1529 objetos dibujados
+perf: 98 fps · tick 150 · 62 entidades activas · 1528 objetos dibujados
+perf: 99 fps · tick 200 · 63 entidades activas · 1529 objetos dibujados

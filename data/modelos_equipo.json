@@ -77,17 +77,13 @@
    "luz_ref": 0.1681,
    "cobertura": 0.1698
   },
-  "local/ayutthaya_torre_65b": {
-   "luz_ref": 0.1011,
-   "cobertura": 0.0455
-  },
   "local/etiopia_alianza": {
    "luz_ref": 0.1574,
    "cobertura": 0.4162
   },
-  "local/etiopia_alianza_65b": {
-   "luz_ref": 0.1125,
-   "cobertura": 0.1182
+  "local/etiopia_alianza_65a": {
+   "luz_ref": 0.0392,
+   "cobertura": 0.0306
   },
   "local/etiopia_almacen_alimento": {
    "luz_ref": 0.0754,
@@ -328,6 +324,10 @@
   "local/tawantinsuyu_almacen_madera": {
    "luz_ref": 0.1468,
    "cobertura": 0.1128
+  },
+  "local/tawantinsuyu_almacen_madera_65b": {
+   "luz_ref": 0.085,
+   "cobertura": 0.2882
   },
   "local/tawantinsuyu_almacen_mina": {
    "luz_ref": 0.1406,
