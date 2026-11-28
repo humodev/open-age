@@ -1,0 +1,63 @@
+{
+ "_doc": "Lo que se arma por casillas en 3D (proceso/64-terreno-caminos-arboles; src/game/piezas.gd). Solo imagen: la simulación no lo lee. Todo sigue el suelo: los vértices toman la altura del terreno. Medidas en centímetros (una casilla = 100), colores en hex.",
+ "muros": {
+  "_doc": "Muros de piedra por estilo (el `arte` de la muralla; el color y el alto siguen en data/arte_edades.json → muros). patron: dibujo de la cara (sillar, pirca, ladrillo, revoque); grosor_cm: [al pie, arriba] (con talud, arriba es más angosto); hundido_cm: cuánto entra en el suelo, para que en la ladera no quede aire abajo; almena_paso_cm: distancia entre almenas; puerta: ancho del vano y si es trapecio (la portada inca); torre_extra_cm: cuánto pasa la torre al muro; torre_redonda: torre de planta redonda; revoque: color del enlucido (el muro de ladrillo encalado).",
+  "sillar": {"patron": "sillar", "grosor_cm": [62, 56], "hundido_cm": 45, "almena_paso_cm": 25, "puerta": {"vano_cm": 46, "trapecio": false}, "torre_extra_cm": 120, "torre_redonda": false},
+  "pirca": {"patron": "pirca", "grosor_cm": [78, 52], "hundido_cm": 50, "almena_paso_cm": 25, "puerta": {"vano_cm": 44, "trapecio": true}, "torre_extra_cm": 105, "torre_redonda": false},
+  "amba": {"patron": "pirca", "grosor_cm": [74, 56], "hundido_cm": 50, "almena_paso_cm": 25, "puerta": {"vano_cm": 46, "trapecio": false}, "torre_extra_cm": 120, "torre_redonda": true},
+  "ladrillo": {"patron": "ladrillo", "grosor_cm": [58, 54], "hundido_cm": 45, "almena_paso_cm": 25, "puerta": {"vano_cm": 46, "trapecio": false}, "torre_extra_cm": 120, "torre_redonda": false},
+  "jugol": {"patron": "revoque", "grosor_cm": [64, 56], "hundido_cm": 45, "almena_paso_cm": 25, "puerta": {"vano_cm": 46, "trapecio": false}, "torre_extra_cm": 120, "torre_redonda": true}
+ },
+ "empalizadas": {
+  "_doc": "Empalizadas por pueblo (proceso/58, reglas históricas): troncos (la común), palos sin labrar (mapuches: sin punta, desparejos y atados), doble de tacuara con terraplén (guaraníes) y estacada de troncos aguzados con estrepes (Palmares). radio_cm y paso_cm de cada palo; alto_cm; desparejo_pct: cuánto varía el alto; filas y separacion_cm (doble empalizada); punta: palos aguzados; estrepes: estacas chicas al pie; terraplen: tierra amontonada al pie (el foso cavado); atado_pct: altos de las ataduras.",
+  "por_pueblo": {"mapuches": "palos", "guaranies": "tacuara_doble", "palmares": "estacada", "_defecto": "troncos"},
+  "troncos": {"radio_cm": 7, "paso_cm": 14, "alto_cm": 125, "desparejo_pct": 10, "filas": 1, "punta": true, "atado_pct": [35, 75], "color": "7a5a3a"},
+  "palos": {"radio_cm": 6, "paso_cm": 13, "alto_cm": 112, "desparejo_pct": 28, "filas": 1, "punta": false, "terraplen": true, "atado_pct": [30, 70], "color": "6e5840"},
+  "tacuara_doble": {"radio_cm": 4, "paso_cm": 10, "alto_cm": 118, "desparejo_pct": 12, "filas": 2, "separacion_cm": 30, "punta": true, "terraplen": true, "atado_pct": [40, 80], "color": "8a7a4a"},
+  "estacada": {"radio_cm": 7, "paso_cm": 14, "alto_cm": 132, "desparejo_pct": 14, "filas": 1, "punta": true, "estrepes": true, "atado_pct": [50], "color": "6a4a30"},
+  "puerta": {"poste_radio_cm": 11, "vano_cm": 62, "extra_cm": 35}
+ },
+ "torre_paño": {"_doc": "Paño del color del jugador colgado en las caras de las torres y las puertas (proceso/59, notas de arte: sin mástiles sueltos). ancho y alto en cm.", "ancho_cm": 24, "alto_cm": 38},
+ "caminos": {
+  "_doc": "Caminos pintados en el suelo (siguen el terreno y se unen solos entre casillas, también en diagonal). Por pueblo: empedrado (el Qhapaq Ñan, losas con cordón de piedras al borde) o huella de tierra. ancho_cm del camino; borde_cm: el cordón; colores de la piedra y de la tierra. En obra se ve la huella de tierra.",
+  "por_pueblo": {"tawantinsuyu": "empedrado", "_defecto": "tierra"},
+  "res": 6,
+  "empedrado": {"ancho_cm": 74, "borde_cm": 9},
+  "tierra": {"ancho_cm": 64, "borde_cm": 0},
+  "piedra": "a59a86", "junta": "5f574a", "tierra_color": "8f7452"
+ },
+ "campos": {
+  "_doc": "Granjas: campo con surcos que sigue el suelo y el cultivo de cada pueblo, que crece por etapas (data/arte_base.json → granjas). suelo: color de la tierra arada (claro y oscuro); surcos_cm: distancia entre surcos; cultivo por pueblo. Por cultivo: alto_cm (maduro), paso_cm entre matas de la hilera, forma (maiz, quinua, mandioca, arroz, tef) y color de la espiga o la flor. agua: arrozal con agua entre los bordos (Ayutthaya).",
+  "suelo": ["7a6146", "5a4532"],
+  "surcos_cm": 22,
+  "por_pueblo": {"tawantinsuyu": "maiz", "mapuches": "quinua", "guaranies": "maiz", "palmares": "mandioca", "etiopia": "tef", "ayutthaya": "arroz", "_defecto": "maiz"},
+  "anden": "quinua",
+  "cultivos": {
+   "maiz": {"alto_cm": 36, "paso_cm": 20, "forma": "maiz", "flor": "d9c46a"},
+   "quinua": {"alto_cm": 24, "paso_cm": 18, "forma": "quinua", "flor": "b5482e"},
+   "mandioca": {"alto_cm": 30, "paso_cm": 26, "forma": "mandioca", "flor": "6f8f3a"},
+   "arroz": {"alto_cm": 22, "paso_cm": 14, "forma": "arroz", "flor": "c9b45a"},
+   "tef": {"alto_cm": 14, "paso_cm": 12, "forma": "tef", "flor": "c8a868"}
+  },
+  "agua": {"color": "5a6b4e", "bordo_cm": 12}
+ },
+ "andenes": {"_doc": "Andén inca (2×2): tres terrazas de pirca que suben con la ladera; en el llano, escalones de escalon_min_cm. El muro de contención usa el estilo pirca de `muros`.", "escalones": 3, "escalon_min_cm": 12, "hundido_cm": 45, "muro": "pirca"},
+ "cimiento": {
+  "_doc": "Cimiento de los edificios (no de los campos, muros ni caminos): un zócalo del tamaño de la huella (menos borde_cm por lado) que entra hondo_cm en el suelo y queda tope_cm por debajo del suelo aplanado. En el llano no se ve; donde el suelo no se pudo aplanar (la orilla, el borde de otro edificio) tapa el aire bajo el edificio. patron por pueblo (pirca, revoque, ladrillo, tierra) y su color.",
+  "borde_cm": 5, "tope_cm": -3, "hondo_cm": 140,
+  "por_pueblo": {
+   "tawantinsuyu": {"patron": "pirca", "color": "8f8470"},
+   "mapuches": {"patron": "tierra", "color": "4a3e30"},
+   "guaranies": {"patron": "tierra", "color": "8a4f32"},
+   "palmares": {"patron": "tierra", "color": "8a5236"},
+   "etiopia": {"patron": "pirca", "color": "6f5e4c"},
+   "ayutthaya": {"patron": "ladrillo", "color": "9a5a40"},
+   "_defecto": {"patron": "tierra", "color": "7a6650"}
+  }
+ },
+ "pisada": {
+  "_doc": "Suelo pisado bajo cada edificio (proceso/59, nota de arte 1): una calcomanía que sigue el terreno y sale sale_cm de la huella, del color de cada pueblo (piedra asentada y tierra apisonada en los incas, tierra negra en los mapuches, roja en guaraníes y Palmares, parda en Etiopía, ladrillo y barro en Ayutthaya). opacidad_pct.",
+  "sale_cm": 55, "opacidad_pct": 80,
+  "por_pueblo": {"tawantinsuyu": "a38f6e", "mapuches": "4e4234", "guaranies": "9a5a3a", "palmares": "93583a", "etiopia": "7e6650", "ayutthaya": "8e6248", "_defecto": "86745a"}
+ }
+}

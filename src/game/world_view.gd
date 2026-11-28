@@ -48,6 +48,18 @@ var render_us := 0 # tiempo acumulado en render (tools/aldeanos_animados.gd lo l
 # --- fluidez 7 --- la base linda: tierra pisada, pilas, granjas, tocones, estandartes y modo foto
 var base_linda := BaseLinda.new()
 var _arboles := {} # id -> true (los que dejan tocón)
+# --- proceso 64 --- piezas por casillas, suelo pisado y caminos pintados
+const CAPA_SUELO := 2 # capa visual del terreno (bit 2): solo ahí pintan las calcomanías
+var _pieza_en := {} # casilla -> id de la pieza de muro o camino que la ocupa
+var _pieza_de := {} # id -> [casilla, clase]
+var _bloqueado := PackedByteArray() # vértices del terreno ya aplanados por un edificio
+var _road_img: Image
+var _road_tex: ImageTexture
+var _road_res := 6
+var _road_sucio := false
+var _road_t := 0.0
+static var _pisada_tex: Texture2D
+static var piezas_on := true # --piezas=0: muros, caminos y campos con la maqueta de antes, sin cimiento ni suelo pisado (para comparar)
 # --- fin fluidez 7 ---
 
 
@@ -80,6 +92,27 @@ static func to_world(x: int, y: int, h: float = 0.0) -> Vector3:
 	var wx := x / P
 	var wz := y / P
 	return Vector3(wx, h + height_at(wx, wz), wz)
+
+
+## Altura exacta de la malla del terreno: los dos triángulos de cada casilla, como los arma
+## _rebuild_chunk. Lo que se apoya en el suelo (caminos, campos, muros) la usa para no flotar
+## ni hundirse entre los vértices (proceso/64).
+static func height_tri(wx: float, wz: float) -> float:
+	if _vn == 0:
+		return 0.0
+	var fx := clampf(wx, 0.0, _vn - 1.001)
+	var fz := clampf(wz, 0.0, _vn - 1.001)
+	var ix := int(fx)
+	var iz := int(fz)
+	var tx := fx - ix
+	var tz := fz - iz
+	var a := _vh[iz * _vn + ix]
+	var b := _vh[iz * _vn + ix + 1]
+	var c := _vh[(iz + 1) * _vn + ix]
+	var d := _vh[(iz + 1) * _vn + ix + 1]
+	if tx >= tz:
+		return a + (b - a) * tx + (d - b) * tz
+	return a + (c - a) * tz + (d - c) * tx
 
 
 ## Altura del terreno suavizado en un punto del mundo (interpolación bilineal).
@@ -140,6 +173,8 @@ func _build_ground() -> void:
 	ground_mat.set_shader_parameter("rock_tint", Ambiente.col(su["roca"]))
 	ground_mat.set_shader_parameter("lush_col", Ambiente.col(su["alto"]))
 	ground_mat.set_shader_parameter("wet_k", Ambiente.pct(su["humedo"]))
+	ground_mat.set_shader_parameter("suelo_valor", Ambiente.pct(su.get("valor", 100))) # --- proceso 64 ---
+	ground_mat.set_shader_parameter("suelo_sat", Ambiente.pct(su.get("saturacion", 100)))
 	_build_splat()
 	var b0 := sim.bases[0] + Vector2i(2, 2)
 	var b1 := sim.bases[1] + Vector2i(2, 2)
@@ -340,6 +375,7 @@ func _rebuild_chunk(cx: int, cz: int) -> void:
 		mi = MeshInstance3D.new()
 		mi.material_override = ground_mat
 		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+		mi.layers = 1 | CAPA_SUELO # las calcomanías del suelo pisado solo pintan el terreno
 		add_child(mi)
 		_chunks[key] = mi
 	mi.mesh = st.commit()
@@ -350,13 +386,23 @@ func _flatten_footprint(e: SimEntity) -> void:
 	if _vn == 0:
 		return
 	var vn := _vn
+	if _bloqueado.size() != vn * vn:
+		_bloqueado.resize(vn * vn)
+	# Si la huella toca la de un edificio ya asentado, toma su altura (proceso/64): así el nuevo no
+	# le mueve el suelo al viejo, que quedaba flotando o hundido de un lado.
 	var target := 0.0
 	var cnt := 0
+	var t_lock := 0.0
+	var n_lock := 0
 	for j in range(e.ty, e.ty + e.h + 1):
 		for i in range(e.tx, e.tx + e.w + 1):
-			target += _vh[clampi(j, 0, vn - 1) * vn + clampi(i, 0, vn - 1)]
+			var idx := clampi(j, 0, vn - 1) * vn + clampi(i, 0, vn - 1)
+			target += _vh[idx]
 			cnt += 1
-	target /= maxf(1.0, cnt)
+			if _bloqueado[idx] != 0:
+				t_lock += _vh[idx]
+				n_lock += 1
+	target = t_lock / n_lock if n_lock > 0 else target / maxf(1.0, cnt)
 	var m := 2 # casillas de transición
 	for j in range(e.ty - m, e.ty + e.h + m + 1):
 		for i in range(e.tx - m, e.tx + e.w + m + 1):
@@ -367,8 +413,12 @@ func _flatten_footprint(e: SimEntity) -> void:
 			var dx := maxi(maxi(e.tx - i, i - (e.tx + e.w)), 0)
 			var dz := maxi(maxi(e.ty - j, j - (e.ty + e.h)), 0)
 			var d := maxi(dx, dz)
+			if _bloqueado[j * vn + i] != 0:
+				continue # el suelo de otro edificio no se toca
 			var k := 1.0 if d == 0 else (1.0 - float(d) / (m + 1)) * 0.85
 			_vh[j * vn + i] = lerpf(_vh[j * vn + i], target, k)
+			if d == 0:
+				_bloqueado[j * vn + i] = 1
 	# El detalle del suelo de alrededor sigue a la nueva altura.
 	for j in range(e.ty - m - 1, e.ty + e.h + m + 1):
 		for i in range(e.tx - m - 1, e.tx + e.w + m + 1):
@@ -384,6 +434,42 @@ func _flatten_footprint(e: SimEntity) -> void:
 	for cz in range(c0.y, c1.y + 1):
 		for cx in range(c0.x, c1.x + 1):
 			_rebuild_chunk(cx, cz)
+	_suelo_cambio(Rect2i(e.tx - m - 1, e.ty - m - 1, e.w + 2 * m + 2, e.h + 2 * m + 2), e.id)
+
+
+## El suelo cambió en `r` (casillas): árboles, arbustos, piedras, piezas y campos vuelven a
+## apoyarse en la altura nueva (proceso/64; antes quedaban flotando o enterrados al lado de un
+## edificio nuevo).
+func _suelo_cambio(r: Rect2i, salvo: int) -> void:
+	for id in _res_slot:
+		var slot: Array = _res_slot[id]
+		if not r.has_point(Vector2i(slot[3], slot[4])):
+			continue
+		var t: Transform3D = slot[2]
+		t.origin.y = height_at(t.origin.x, t.origin.z)
+		slot[2] = t
+		if int(slot[5]) != 0:
+			(slot[0] as MultiMesh).set_instance_transform(slot[1], t)
+	var vistos := {}
+	for j in range(r.position.y, r.end.y):
+		for i in range(r.position.x, r.end.x):
+			var id := sim.map.occupant(i, j)
+			if id < 0 or id == salvo or vistos.has(id):
+				continue
+			vistos[id] = true
+			var o: SimEntity = sim.by_id.get(id)
+			var v: Dictionary = visuals.get(id, {})
+			if o == null or v.is_empty():
+				continue
+			var node: Node3D = v["node"]
+			if v["kind"] == "rock":
+				node.position.y = to_world(o.x, o.y).y
+			elif v["kind"] == "building" and Piezas.clase(o.def) != Piezas.Clase.NADA:
+				node.position = to_world(o.x, o.y)
+				v["cur"] = node.position
+				v["prev"] = node.position
+				_build_struct(o, v, v["look"])
+				base_linda.rehacer_cultivo(id)
 
 
 ## Datos del agua por vértice: R profundidad (0 orilla, 1 hondo), G río (0 lago)
@@ -502,14 +588,15 @@ func _paint_dirt(c: Vector2, r: float, strength: float) -> void:
 
 ## Edificio nuevo: tierra pisada alrededor y sombra de contacto.
 func _settle_building(e: SimEntity, root: Node3D) -> void:
-	if e.def.get("sagrado", false) or e.def.get("linea", false):
+	if e.def.get("sagrado", false):
 		return
 	for j in range(e.ty, e.ty + e.h):
 		for i in range(e.tx, e.tx + e.w):
 			var cl: Array = _clutter_at.get(Vector2i(i, j), [])
 			if not cl.is_empty():
 				(cl[0] as MultiMesh).set_instance_transform(cl[1], Transform3D(Basis().scaled(Vector3.ZERO), Vector3.ZERO))
-	if not e.def.get("transitable", false):
+	# Muros, puertas, caminos y campos siguen el suelo: no lo aplanan (proceso/64).
+	if not e.def.get("transitable", false) and Piezas.clase(e.def) == Piezas.Clase.NADA:
 		_flatten_footprint(e)
 		_paint_dirt(Vector2(e.tx + e.w / 2.0, e.ty + e.h / 2.0), maxf(e.w, e.h) * 0.85 + 0.8, 0.9 if e.capital else 0.75)
 		if _splat_tex != null:
@@ -519,11 +606,59 @@ func _settle_building(e: SimEntity, root: Node3D) -> void:
 		dec.size = Vector3(e.w * 1.25, 2.0, e.h * 1.25)
 		dec.modulate = Color(0, 0, 0, 0.55)
 		dec.position.y = 0.2
-		dec.cull_mask = 1
+		dec.cull_mask = CAPA_SUELO
 		root.add_child(dec)
+		# --- proceso 64 --- Suelo pisado del pueblo, que sigue el terreno, y cimiento hundido: en
+		# la ladera o la orilla el edificio no queda en el aire.
+		if not piezas_on:
+			return
+		var civ := _civ_de(e.owner)
+		var pz: Dictionary = Piezas.cfg()["pisada"]
+		var sale := float(pz["sale_cm"]) / 100.0
+		var pis := Decal.new()
+		pis.texture_albedo = _pisada()
+		pis.size = Vector3(e.w + 2.0 * sale, 3.0, e.h + 2.0 * sale)
+		var pc := Color(String(Piezas.por_pueblo(pz["por_pueblo"], civ)))
+		pc.a = float(pz["opacidad_pct"]) / 100.0
+		pis.modulate = pc
+		pis.cull_mask = CAPA_SUELO
+		pis.sorting_offset = -1.0
+		root.add_child(pis)
+		var cim := MeshInstance3D.new()
+		cim.mesh = Piezas.cimiento(e, civ)
+		root.add_child(cim)
 
 
 static var _contact: Texture2D
+
+
+func _civ_de(owner: int) -> String:
+	return str(sim.players[owner].get("civ", "")) if owner >= 0 and owner < sim.players.size() else ""
+
+
+## Calcomanía del suelo pisado: blanca (el color lo pone cada pueblo), con el borde irregular y
+## manchas, como pintada a mano (proceso/59, nota de arte 1).
+static func _pisada() -> Texture2D:
+	if _pisada_tex == null:
+		var nz := FastNoiseLite.new()
+		nz.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+		nz.frequency = 0.045
+		nz.fractal_octaves = 3
+		var sz := 128
+		var img := Image.create(sz, sz, false, Image.FORMAT_RGBA8)
+		for y in sz:
+			for x in sz:
+				var u := (x + 0.5) / sz * 2.0 - 1.0
+				var v := (y + 0.5) / sz * 2.0 - 1.0
+				# Rectángulo de esquinas redondas que se desvanece al borde, roto por el ruido.
+				var q := Vector2(maxf(absf(u) - 0.55, 0.0), maxf(absf(v) - 0.55, 0.0)).length() / 0.45
+				var n := nz.get_noise_2d(x, y)
+				var a := clampf(1.0 - smoothstep(0.55, 1.0, q + n * 0.35), 0.0, 1.0)
+				var l := 0.82 + 0.3 * nz.get_noise_2d(x * 3.1 + 40.0, y * 3.1)
+				img.set_pixel(x, y, Color(l, l, l, a))
+		img.generate_mipmaps()
+		_pisada_tex = ImageTexture.create_from_image(img)
+	return _pisada_tex
 
 
 static func _contact_tex() -> Texture2D:
@@ -717,7 +852,7 @@ func _build_resources() -> void:
 	var tk := Vector2(float(ev.get("arbol_ancho_pct", 100)), float(ev.get("arbol_alto_pct", 100))) / 100.0
 	for k in kinds.size():
 		_trees.append_array(_make_mm(Meshes.tree_mesh(int(kinds[k])), trees[k], tk))
-	_bushes = _make_mm(Meshes.bush_mesh(), bushes)
+	_bushes = _make_mm(Meshes.bush_mesh(), bushes, Vector2(float(ev.get("arbusto_ancho_pct", 100)), float(ev.get("arbusto_alto_pct", 100))) / 100.0) # --- proceso 64 ---
 
 
 ## Árboles y arbustos en MultiMesh partidos en trozos de CHUNK casillas: con los modelos
@@ -823,13 +958,20 @@ func _make_visual(e: SimEntity) -> Dictionary:
 		v.merge({"kind": "unit", "body": body, "carry": carry, "ring": ring, "yaw": 0.0, "lunge": 0.0, "spawn": 0.0, "phase": randf() * TAU})
 	else:
 		var found := MeshInstance3D.new()
-		found.mesh = Meshes.foundation_mesh(e.w, e.h)
+		var cls := Piezas.clase(e.def)
+		if cls == Piezas.Clase.NADA:
+			found.mesh = Meshes.foundation_mesh(e.w, e.h)
+		elif cls != Piezas.Clase.CAMPO and e.w == 1 and e.h == 1:
+			_pieza_en[Vector2i(e.tx, e.ty)] = e.id
+			_pieza_de[e.id] = [Vector2i(e.tx, e.ty), cls]
 		root.add_child(found)
 		var ring := _ring(1, Vector2(e.w + 0.3, e.h + 0.3))
 		root.add_child(ring)
 		v.merge({"kind": "building", "found": found, "ring": ring, "pop": 0.0})
 		_build_struct(e, v, _look(e))
 		_settle_building(e, root)
+		if cls == Piezas.Clase.MURO:
+			_refrescar_vecinos(Vector2i(e.tx, e.ty))
 		if e.def.get("sagrado", false):
 			var flag := MeshInstance3D.new()
 			flag.mesh = Meshes.box(0.05, 0.5, 0.6)
@@ -1180,6 +1322,10 @@ func _build_struct(e: SimEntity, v: Dictionary, look: String) -> void:
 		old.queue_free()
 	v["look"] = look
 	v["fog_drawn"] = -1
+	var cls := Piezas.clase(e.def)
+	if cls != Piezas.Clase.NADA and piezas_on:
+		_build_pieza(e, v, look, cls)
+		return
 	var age := _age_of(e.owner)
 	var cfg := _age_cfg(e.owner, age)
 	var mg := CivMeshes.margin()
@@ -1239,6 +1385,156 @@ func _build_struct(e: SimEntity, v: Dictionary, look: String) -> void:
 				outer.add_child(ex)
 	(v["node"] as Node3D).add_child(outer)
 	v["struct"] = outer
+
+
+# --- proceso 64 --- Piezas por casillas: muros, puertas, torres, caminos, campos y andenes.
+
+## Cuerpo de una pieza por casillas (Piezas): sigue el suelo y se une con sus vecinos.
+func _build_pieza(e: SimEntity, v: Dictionary, look: String, cls: int) -> void:
+	var outer := Node3D.new()
+	var o := to_world(e.x, e.y)
+	var civ := _civ_de(e.owner)
+	var obra := 1.0
+	if not e.built:
+		var cuts: Array = CivMeshes.arte().get("obra", {}).get("corte_pct", [14, 50, 82])
+		obra = float(cuts[clampi(int(look.substr(1, 1)), 0, cuts.size() - 1)]) / 100.0
+	match cls:
+		Piezas.Clase.MURO:
+			var mi := MeshInstance3D.new()
+			mi.mesh = Piezas.muro(e, _conexiones(Vector2i(e.tx, e.ty), cls, e.owner), civ, Palette.team(e.owner), o, obra)
+			outer.add_child(mi)
+		Piezas.Clase.CAMPO:
+			var mi := MeshInstance3D.new()
+			mi.mesh = Piezas.campo(e, civ, o)
+			mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF if not e.def.get("permite_ladera", false) else GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+			outer.add_child(mi)
+		Piezas.Clase.CAMINO:
+			_pintar_caminos(Rect2i(e.tx - 2, e.ty - 2, 5, 5))
+	(v["node"] as Node3D).add_child(outer)
+	v["struct"] = outer
+
+
+## ¿Hay en `t` una pieza que se une con una de clase `cls` del dueño `owner`? Los muros se unen
+## con los del mismo dueño; los caminos, con cualquier camino y con las puertas.
+func _une(t: Vector2i, cls: int, owner: int) -> bool:
+	var id: int = _pieza_en.get(t, -1)
+	if id < 0:
+		return false
+	var o: SimEntity = sim.by_id.get(id)
+	if o == null or not o.alive:
+		return false
+	var oc := Piezas.clase(o.def)
+	if cls == Piezas.Clase.CAMINO:
+		return oc == Piezas.Clase.CAMINO or (oc == Piezas.Clase.MURO and o.def.get("puerta", false))
+	return oc == Piezas.Clase.MURO and o.owner == owner
+
+
+## Direcciones hacia los vecinos unidos: los cuatro lados y las diagonales sin esquina (un trazo
+## en diagonal se une punta con punta; una esquina en L no suma la diagonal).
+func _conexiones(t: Vector2i, cls: int, owner: int) -> Array:
+	var out: Array = []
+	for d in Piezas.ORTO:
+		if _une(t + d, cls, owner):
+			out.append(d)
+	for d in Piezas.DIAG:
+		if _une(t + d, cls, owner) and not _une(t + Vector2i(d.x, 0), cls, owner) and not _une(t + Vector2i(0, d.y), cls, owner):
+			out.append(d)
+	return out
+
+
+## Los muros vecinos se rehacen para unirse (o soltarse) con la pieza de `t`.
+func _refrescar_vecinos(t: Vector2i) -> void:
+	for d in Piezas.ORTO + Piezas.DIAG:
+		var id: int = _pieza_en.get(t + d, -1)
+		var o: SimEntity = sim.by_id.get(id)
+		var v: Dictionary = visuals.get(id, {})
+		if o == null or v.is_empty() or Piezas.clase(o.def) != Piezas.Clase.MURO:
+			continue
+		_build_struct(o, v, v["look"])
+
+
+## Se fue una pieza de muro o camino: los vecinos se sueltan.
+func _quitar_pieza(id: int) -> void:
+	if not _pieza_de.has(id):
+		return
+	var pd: Array = _pieza_de[id]
+	_pieza_de.erase(id)
+	var t: Vector2i = pd[0]
+	if int(_pieza_en.get(t, -1)) != id:
+		return
+	_pieza_en.erase(t)
+	_refrescar_vecinos(t)
+	if int(pd[1]) == Piezas.Clase.CAMINO:
+		_pintar_caminos(Rect2i(t.x - 2, t.y - 2, 5, 5))
+
+
+## Caminos pintados en el suelo (ground.gdshader → road_tex): R, losas del empedrado; G, huella de
+## tierra (y los caminos en obra). Cada píxel guarda la distancia al eje del camino más cercano,
+## así los tramos se unen solos, también en diagonal, y siguen el terreno.
+func _pintar_caminos(r: Rect2i) -> void:
+	var n := sim.map.n
+	var cc: Dictionary = Piezas.cfg()["caminos"]
+	if _road_img == null:
+		_road_res = int(cc.get("res", 6))
+		_road_img = Image.create(n * _road_res, n * _road_res, false, Image.FORMAT_RG8)
+		_road_tex = ImageTexture.create_from_image(_road_img)
+		ground_mat.set_shader_parameter("road_tex", _road_tex)
+		ground_mat.set_shader_parameter("road_on", true)
+		ground_mat.set_shader_parameter("road_stone", Color(String(cc["piedra"])))
+		ground_mat.set_shader_parameter("road_joint", Color(String(cc["junta"])))
+		ground_mat.set_shader_parameter("road_earth", Color(String(cc["tierra_color"])))
+		ground_mat.set_shader_parameter("road_kerb", float(cc["empedrado"]["borde_cm"]) / 100.0 * 1.6)
+	r = r.intersection(Rect2i(0, 0, n, n))
+	# Esqueleto de cada camino del área (y su borde): segmentos del centro a cada vecino unido.
+	var esq := {}
+	for j in range(r.position.y - 1, r.end.y + 1):
+		for i in range(r.position.x - 1, r.end.x + 1):
+			var t := Vector2i(i, j)
+			var id: int = _pieza_en.get(t, -1)
+			var o: SimEntity = sim.by_id.get(id)
+			if o == null or not o.alive or Piezas.clase(o.def) != Piezas.Clase.CAMINO:
+				continue
+			var st: Dictionary = cc[String(Piezas.por_pueblo(cc["por_pueblo"], _civ_de(o.owner)))]
+			var c := Vector2(i + 0.5, j + 0.5)
+			var segs: Array = []
+			for d in _conexiones(t, Piezas.Clase.CAMINO, o.owner):
+				segs.append(c + Vector2(d) * 0.5)
+			var pav: bool = o.built and float(st.get("borde_cm", 0)) > 0.0
+			esq[t] = [c, segs, float(st["ancho_cm"]) / 200.0, pav]
+	var k := float(_road_res)
+	for py in range(r.position.y * _road_res, r.end.y * _road_res):
+		for px in range(r.position.x * _road_res, r.end.x * _road_res):
+			var p := Vector2((px + 0.5) / k, (py + 0.5) / k)
+			var tp := Vector2i(int(p.x), int(p.y))
+			var a := 0.0
+			var b := 0.0
+			for dj in range(-1, 2):
+				for di in range(-1, 2):
+					var s: Array = esq.get(tp + Vector2i(di, dj), [])
+					if s.is_empty():
+						continue
+					var c: Vector2 = s[0]
+					var dmin := p.distance_to(c)
+					for q: Vector2 in s[1]:
+						dmin = minf(dmin, _dist_seg(p, c, q))
+					var val := clampf(0.5 + (float(s[2]) - dmin) * 1.6, 0.0, 1.0)
+					if s[3]:
+						a = maxf(a, val)
+					else:
+						b = maxf(b, val)
+			_road_img.set_pixel(px, py, Color(a, b, 0.0))
+	_road_sucio = true
+
+
+static func _dist_seg(p: Vector2, a: Vector2, b: Vector2) -> float:
+	var ab := b - a
+	var t := clampf((p - a).dot(ab) / maxf(ab.length_squared(), 0.0001), 0.0, 1.0)
+	return p.distance_to(a + ab * t)
+
+
+## Matas del cultivo de un campo, cada una sobre su suelo (BaseLinda las hace crecer).
+func cultivo_de(e: SimEntity) -> Mesh:
+	return Piezas.cultivo(e, _civ_de(e.owner), (visuals[e.id]["node"] as Node3D).position)
 
 
 static var _tint_cache := {}
@@ -1395,6 +1691,7 @@ func on_tick(events: Array) -> void:
 			"absorbed":
 				# Cabeza de ganado que entró al corral: se va sin animación de muerte.
 				var av: Dictionary = visuals.get(ev["id"], {})
+				_quitar_pieza(ev["id"]) # --- proceso 64 ---
 				if not av.is_empty():
 					(av["node"] as Node3D).queue_free()
 					visuals.erase(ev["id"])
@@ -1428,6 +1725,7 @@ func _on_died(id: int) -> void:
 			base_linda.tocon(slot[2])
 		return
 	base_linda.olvidar(id) # --- fluidez 7 ---
+	_quitar_pieza(id) # --- proceso 64 ---
 	var v: Dictionary = visuals.get(id, {})
 	if v.is_empty():
 		return
@@ -1695,6 +1993,12 @@ func render(alpha: float, delta: float) -> void:
 				var fs := fog_state(e)
 				rock.visible = fs > 0
 				rock.material_overlay = Meshes.fog_overlay() if fs == 1 else null
+	if _road_sucio: # --- proceso 64 --- caminos nuevos: se sube la textura (a lo sumo 4 veces por segundo)
+		_road_t -= delta
+		if _road_t <= 0.0:
+			_road_t = 0.25
+			_road_sucio = false
+			_road_tex.update(_road_img)
 	_render_rally()
 	_render_fx(delta)
 	_render_fog(delta)

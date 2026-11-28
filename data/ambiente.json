@@ -1,5 +1,5 @@
 {
-  "_nota": "Ambiente visual por tipo de mapa (docs/10, etapa 16). Solo imagen: no lo lee la simulación ni es balance. Colores en hexadecimal; el resto, enteros (porcentajes, grados o metros). Cada mapa pisa solo lo que cambia respecto de 'base'.",
+  "_nota": "Ambiente visual por tipo de mapa (docs/10, etapa 16). Solo imagen: no lo lee la simulación ni es balance. Colores en hexadecimal; el resto, enteros (porcentajes, grados o metros). Cada mapa pisa solo lo que cambia respecto de 'base'. suelo.valor y suelo.saturacion: porcentajes de valor y saturación del suelo (proceso/64, nota de arte 2 de proceso/59: un punto más oscuro y menos saturado que los edificios).",
   "base": {
     "sol": {"color": "fff2dc", "energia": 135, "altura": 52, "rumbo": 150, "tamano": 0, "desenfoque": 220},
     "relleno": {"color": "b3ccff", "energia": 25},
@@ -10,7 +10,7 @@
     "contraste": 104,
     "niebla": {"color": "aebdcc", "desde": 55, "hasta": 260, "maxima": 45},
     "agua": {"hondo": "12334a", "bajo": "3a6b68", "turbio": "6b6b4c", "espuma": "dfe8e4", "turbidez": 25, "reflejo": 55},
-    "suelo": {"seco": "ffffff", "tierra": "ffffff", "roca": "ffffff", "alto": "8fa860", "humedo": 55},
+    "suelo": {"seco": "ffffff", "tierra": "ffffff", "roca": "ffffff", "alto": "8fa860", "humedo": 55, "valor": 92, "saturacion": 84},
     "detalle": {
       "pasto": ["5a7d36", "6e8f3e"],
       "seco": ["a39556", "b5a463"],
