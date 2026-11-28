@@ -115,6 +115,11 @@ El jinete noble etíope (la unidad militar más entrenada de Etiopía), la infan
 | `etiopia_lancero` | 15.000 | 0 | 58 % | 0,069 | 1,3 MB |
 | `etiopia_hondero` | 14.999 | 0 | 49 % | 0,087 | 1,2 MB |
 | `etiopia_guerrero_gasa` | 15.000 | 0 | 33 % | 0,052 | 1,1 MB |
+| `palmares_guerrero` | 14.999 | 0 | 42 % | 0,099 | 1,1 MB |
+| `palmares_lancero` | 15.000 | 0 | 42 % | 0,091 | 1,1 MB |
+| `palmares_hondero` | 15.000 | 0 | 44 % | 0,081 | 1,2 MB |
+| `palmares_zagaieiro` | 14.999 | 0 | 52 % | 0,095 | 1,3 MB |
+| `palmares_arcabucero` | 14.999 | 0 | 51 % | 0,099 | 1,2 MB |
 
 ### Por pueblo
 
@@ -135,3 +140,7 @@ Batalla de cerca de cada pueblo contra sí mismo, azul contra rojo (`tools/aldea
 **Etiopía:** chewa con lanza y escudo redondo, jabalinero y guerrero de gaša, ahora con lanza y escudo redondo. Los jabalineros todavía tiran una piedra (el proyectil a distancia es el mismo para todos los que no son arqueros; ya era así). El jinete noble y los mosqueteros siguen como antes.
 
 ![Etiopía, azul contra rojo](img/batalla_etiopia.jpg)
+
+**Palmares:** gente de guerra (con la maza común: su pieza de `proceso/49` lleva facão y escudo de palma, queda para `tropas.por_civ`), lanceiro, flecheiro con arco, zagaieiro con jabalina y espingardeiro con la espingarda. La guarnição y el capitão (con casco, atrás) siguen con KayKit.
+
+![Palmares, azul contra rojo](img/batalla_palmares.jpg)
