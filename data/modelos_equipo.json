@@ -1,6 +1,14 @@
 {
  "_doc": "Color del equipo en los modelos generados de edificios (proceso/58-edificios-locales). Clave: el nombre del modelo como en estilo.modelos («local/<pueblo>_<tipo>»). La máscara es assets/generados/modelos/<clave>_mascara.png (tools/mascara_equipo_3d.py --metodo=rojo --edificio: las telas y fajas pintadas en rojo plano en la referencia); luz_ref, la luminancia media de lo enmascarado, la usa src/game/shaders/equipo_3d.gdshader; cobertura, la parte de la superficie teñida. Lo escribe tools/gen3d_pipeline.py (paso mascara). Sin entrada, el modelo queda con su textura y el color va solo en el estandarte. Solo imagen.",
  "mascaras": {
+  "local/andes_casa_bahareque": {
+   "luz_ref": 0.1059,
+   "cobertura": 0.2202
+  },
+  "local/andes_casa_piedra": {
+   "luz_ref": 0.0743,
+   "cobertura": 0.217
+  },
   "local/ayutthaya_almacen_mina": {
    "luz_ref": 0.0545,
    "cobertura": 0.1641
@@ -76,6 +84,18 @@
   "local/ayutthaya_torre": {
    "luz_ref": 0.1681,
    "cobertura": 0.1698
+  },
+  "local/colonial_almacen": {
+   "luz_ref": 0.2984,
+   "cobertura": 0.1305
+  },
+  "local/colonial_casa": {
+   "luz_ref": 0.2035,
+   "cobertura": 0.0776
+  },
+  "local/colonial_ingenio": {
+   "luz_ref": 0.0468,
+   "cobertura": 0.2278
   },
   "local/etiopia_alianza": {
    "luz_ref": 0.1574,
@@ -392,6 +412,10 @@
   "local/tawantinsuyu_vilcabamba": {
    "luz_ref": 0.0709,
    "cobertura": 0.019
+  },
+  "local/tupies_mirador": {
+   "luz_ref": 0.0409,
+   "cobertura": 0.2473
   }
  }
 }

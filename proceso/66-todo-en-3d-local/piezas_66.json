@@ -1,0 +1,955 @@
+{
+ "_doc": "Piezas nuevas del pipeline local para el proceso 66 (todo lo que faltaba en 3D).\n\n    python3 proceso/66-todo-en-3d-local/piezas.py      escribe proceso/66-todo-en-3d-local/piezas_66.json\n\nCada pieza es UN edificio suelto (Hunyuan cierra los patios en cajas: los conjuntos se arman\ndespués con src/game/recintos.gd). Semilla 41 (intento a); las de INTENTO_B, 42 (intento b).\n    python3 tools/gen3d_flux_lote.py --archivo proceso/66-todo-en-3d-local/piezas_66.json <clave>\n    python3 tools/gen3d_pipeline.py --piezas proceso/66-todo-en-3d-local/piezas_66.json <clave>\nReglas históricas al frente del prompt (FLUX schnell corta los largos), como en proceso/58;\nlo que toma el color del equipo, en rojo plano; lo sagrado va sin rojo (\"rojo\": false).\n",
+ "comun": {
+  "estilo": "Gouache painting for a historical strategy game, flat opaque color shapes, simple graphic forms, matte paper texture, limited palette.",
+  "persona_alto_casillas": 1.25,
+  "textura_px": 1024,
+  "piel_cabeza": 0.5
+ },
+ "piezas": {
+  "colonial_ingenio": {
+   "tipo": "edificio",
+   "edificio": "taller",
+   "categoria": "",
+   "civ": "colonial",
+   "proceso": "66",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_66/colonial_ingenio_41.png",
+    "receta": {
+     "semilla": 41,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A colonial sugar mill house (casa da moenda): an open-sided timber shed under a big hipped roof on thick wooden posts, with a vertical three-roller wooden cane press inside turned by a long wooden beam, and a short square brick chimney of the boiling house at the back; bundles of sugar cane piled beside it. Iberian and Dutch colonial architecture of 16th and 17th century South America: thick whitewashed adobe or rubble walls, small barred windows, heavy wooden doors, roofs of weathered dark brown clay tiles (never orange or red), plain wooden beams. No gothic spires, no ornate baroque facade. Team-color details, large and clearly visible from above: cloth awnings tied over the front posts, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/colonial_ingenio.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "mascara": {
+    "tono": 8
+   }
+  },
+  "colonial_casa": {
+   "tipo": "edificio",
+   "edificio": "casa",
+   "categoria": "casa",
+   "civ": "colonial",
+   "proceso": "66",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_66/colonial_casa_43.png",
+    "receta": {
+     "semilla": 43,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A small one-storey colonial house with thick whitewashed walls, a heavy wooden door, two small barred windows and a hipped roof of dark brown weathered clay tiles. Iberian and Dutch colonial architecture of 16th and 17th century South America: thick whitewashed adobe or rubble walls, small barred windows, heavy wooden doors, roofs of weathered dark brown clay tiles (never orange or red), plain wooden beams. No gothic spires, no ornate baroque facade. Team-color details, large and clearly visible from above: a cloth awning over the door and a cloth curtain in the window, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from above at about 40 degrees, so the top, the front and one side are all visible and the depth reads clearly; the whole building visible and centered, isolated on a plain flat dark charcoal grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/colonial_casa.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "mascara": {
+    "tono": 8,
+    "faja": 0.15
+   }
+  },
+  "colonial_casa_ladrillo": {
+   "tipo": "edificio",
+   "edificio": "casa",
+   "categoria": "casa",
+   "civ": "colonial",
+   "proceso": "66",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_66/colonial_casa_ladrillo_41.png",
+    "receta": {
+     "semilla": 41,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A narrow two-storey Dutch colonial town house of dark brown-grey brick (never red brick) with a stepped gable facing the front, white window frames, a heavy wooden door and a steep roof of dark grey tiles. Iberian and Dutch colonial architecture of 16th and 17th century South America: thick whitewashed adobe or rubble walls, small barred windows, heavy wooden doors, roofs of weathered dark brown clay tiles (never orange or red), plain wooden beams. No gothic spires, no ornate baroque facade. Team-color details, large and clearly visible from above: a cloth awning over the door, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/colonial_casa_ladrillo.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "mascara": {
+    "tono": 8,
+    "faja": 0.12
+   }
+  },
+  "colonial_casa_taipa": {
+   "tipo": "edificio",
+   "edificio": "casa",
+   "categoria": "casa",
+   "civ": "colonial",
+   "proceso": "66",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_66/colonial_casa_taipa_41.png",
+    "receta": {
+     "semilla": 41,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A rural Paulista house (casa bandeirista): low thick walls of ochre rammed earth (taipa de pilao), a deep front veranda between two small rooms under one wide hipped roof of dark brown clay tiles, wooden shutters. Iberian and Dutch colonial architecture of 16th and 17th century South America: thick whitewashed adobe or rubble walls, small barred windows, heavy wooden doors, roofs of weathered dark brown clay tiles (never orange or red), plain wooden beams. No gothic spires, no ornate baroque facade. Team-color details, large and clearly visible from above: a cloth hanging over the veranda rail, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/colonial_casa_taipa.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "mascara": {
+    "tono": 8,
+    "faja": 0.15
+   }
+  },
+  "colonial_iglesia": {
+   "tipo": "edificio",
+   "edificio": "hito_economia",
+   "categoria": "hito",
+   "civ": "colonial",
+   "proceso": "66",
+   "rojo": false,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_66/colonial_iglesia_43.png",
+    "receta": {
+     "semilla": 43,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A small plain colonial chapel with whitewashed walls, a simple wooden door under a round arch, a small bell-gable (espadana) with one bell on the front and a gabled roof of dark brown tiles; only a small plain cross on the gable, no statues, no paintings. Iberian and Dutch colonial architecture of 16th and 17th century South America: thick whitewashed adobe or rubble walls, small barred windows, heavy wooden doors, roofs of weathered dark brown clay tiles (never orange or red), plain wooden beams. No gothic spires, no ornate baroque facade. Natural tones only, no red anywhere. One single building as a 3D model reference: three-quarter view from above at about 40 degrees, so the top, the front and one side are all visible and the depth reads clearly; the whole building visible and centered, isolated on a plain flat dark charcoal grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 5000,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/colonial_iglesia.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3
+  },
+  "colonial_cuartel": {
+   "tipo": "edificio",
+   "edificio": "cuartel",
+   "categoria": "",
+   "civ": "colonial",
+   "proceso": "66",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_66/colonial_cuartel_43.png",
+    "receta": {
+     "semilla": 43,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A long one-storey colonial guardhouse (corpo da guarda) with whitewashed walls, an arcade of three round arches on the front, a gabled roof of dark brown tiles, and a wooden rack of pikes and muskets by the door. Iberian and Dutch colonial architecture of 16th and 17th century South America: thick whitewashed adobe or rubble walls, small barred windows, heavy wooden doors, roofs of weathered dark brown clay tiles (never orange or red), plain wooden beams. No gothic spires, no ornate baroque facade. Team-color details, large and clearly visible from above: a flag on a pole by the door and cloth hanging under the arches, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building as a 3D model reference: three-quarter view from above at about 40 degrees, so the top, the front and one side are all visible and the depth reads clearly; the whole building visible and centered, isolated on a plain flat dark charcoal grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 5000,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/colonial_cuartel.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "mascara": {
+    "tono": 8,
+    "faja": 0.12
+   }
+  },
+  "colonial_almacen": {
+   "tipo": "edificio",
+   "edificio": "deposito",
+   "categoria": "",
+   "civ": "colonial",
+   "proceso": "66",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_66/colonial_almacen_42.png",
+    "receta": {
+     "semilla": 42,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A two-storey colonial warehouse (armazem) of whitewashed rubble stone with big double wooden doors and a hoist beam over the upper door, a hipped roof of dark brown tiles, wooden barrels and crates stacked in front. Iberian and Dutch colonial architecture of 16th and 17th century South America: thick whitewashed adobe or rubble walls, small barred windows, heavy wooden doors, roofs of weathered dark brown clay tiles (never orange or red), plain wooden beams. No gothic spires, no ornate baroque facade. Team-color details, large and clearly visible from above: a cloth awning over the big doors, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat dark charcoal grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/colonial_almacen.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "mascara": {
+    "tono": 8,
+    "faja": 0.12
+   }
+  },
+  "colonial_garita": {
+   "tipo": "edificio",
+   "edificio": "torre",
+   "categoria": "torre",
+   "civ": "colonial",
+   "proceso": "66",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_66/colonial_garita_42.png",
+    "receta": {
+     "semilla": 42,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A small square colonial bastion of grey stone masonry, as tall as two men, with a sloping base, a stone parapet with two cannon embrasures and a round stone sentry box (garita) with a little domed top on one corner. Iberian and Dutch colonial architecture of 16th and 17th century South America: thick whitewashed adobe or rubble walls, small barred windows, heavy wooden doors, roofs of weathered dark brown clay tiles (never orange or red), plain wooden beams. No gothic spires, no ornate baroque facade. Team-color details, large and clearly visible from above: a flag on a pole on the bastion, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat dark charcoal grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/colonial_garita.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "mascara": {
+    "tono": 8,
+    "faja": 0.1
+   }
+  },
+  "neutral_huanca": {
+   "tipo": "edificio",
+   "edificio": "sitio_sagrado",
+   "categoria": "",
+   "civ": "neutral",
+   "proceso": "66",
+   "rojo": false,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_66/neutral_huanca_42.png",
+    "receta": {
+     "semilla": 42,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A sacred standing stone: one tall rough weathered grey stone pillar, three times as tall as it is wide, standing upright on a low round platform of fieldstones, with small offerings of flowers and pottery at its foot. Natural grey and brown stone. Natural tones only, no red anywhere. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat dark charcoal grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 3000,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/neutral_huanca.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3
+  },
+  "neutral_lalibela": {
+   "tipo": "edificio",
+   "edificio": "sitio_lalibela",
+   "categoria": "",
+   "civ": "neutral",
+   "proceso": "66",
+   "rojo": false,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_66/neutral_lalibela_42.png",
+    "receta": {
+     "semilla": 42,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A cross-shaped monolithic church (like Bete Giyorgis): one solid block carved in the shape of a Greek cross with equal arms, on a stepped plinth, a flat roof with a stepped cross carved in relief, plain rectangular windows in two rows, reddish brown stone; the walls and the cross-shaped silhouette both visible. Medieval Ethiopian rock-cut church architecture of Lalibela: a monolith carved out of reddish volcanic tuff, flat roof, plain rectangular windows. Natural tones only, no red anywhere. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4000,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/neutral_lalibela.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "descartada": "41: losa vista desde arriba; 42: torre en T. Va procedural (utilería iglesia_cruz)"
+  },
+  "adal_casa": {
+   "tipo": "edificio",
+   "edificio": "casa",
+   "categoria": "casa",
+   "civ": "adal",
+   "proceso": "66",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_66/adal_casa_41.png",
+    "receta": {
+     "semilla": 41,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A two-storey Harari stone house (gey gar): a plain rectangular block of rough stone plastered in ochre and white, a flat roof with a low parapet, a small carved wooden door and two tiny windows. Architecture of Harar and the Adal Sultanate in the Horn of Africa, 16th century: rectangular houses of rough stone set in mud, plastered in ochre and white, flat roofs with a low parapet, small wooden doors and tiny windows; tents of woven goat hair for the army. No domes on houses, no gothic arches, no tiles. Team-color details, large and clearly visible from above: a cloth curtain in the doorway and a cloth band under the roof parapet, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/adal_casa.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "mascara": {
+    "tono": 15,
+    "faja": 0.15
+   }
+  },
+  "adal_tienda": {
+   "tipo": "edificio",
+   "edificio": "centro",
+   "categoria": "",
+   "civ": "adal",
+   "proceso": "66",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_66/adal_tienda_41.png",
+    "receta": {
+     "semilla": 41,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A large army tent of the imam: a long rectangular tent of dark brown and black woven goat hair cloth on wooden poles, ropes pegged to the ground, the front side rolled up showing carpets and wooden chests inside. Architecture of Harar and the Adal Sultanate in the Horn of Africa, 16th century: rectangular houses of rough stone set in mud, plastered in ochre and white, flat roofs with a low parapet, small wooden doors and tiny windows; tents of woven goat hair for the army. No domes on houses, no gothic arches, no tiles. Team-color details, large and clearly visible from above: pennants on the two tent poles and a wide cloth band along the front edge, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/adal_tienda.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "mascara": {
+    "tono": 15
+   }
+  },
+  "adal_torre": {
+   "tipo": "edificio",
+   "edificio": "torre",
+   "categoria": "torre",
+   "civ": "adal",
+   "proceso": "66",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_66/adal_torre_41.png",
+    "receta": {
+     "semilla": 41,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A gate tower of the Jugol wall of Harar: a square tower of rough stone plastered in ochre, flat roof with a low parapet, a big arched gateway through the bottom with a wooden door, small slit windows. Architecture of Harar and the Adal Sultanate in the Horn of Africa, 16th century: rectangular houses of rough stone set in mud, plastered in ochre and white, flat roofs with a low parapet, small wooden doors and tiny windows; tents of woven goat hair for the army. No domes on houses, no gothic arches, no tiles. Team-color details, large and clearly visible from above: a cloth band under the parapet and a flag on the roof, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/adal_torre.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "mascara": {
+    "tono": 15,
+    "faja": 0.12
+   }
+  },
+  "adal_mezquita": {
+   "tipo": "edificio",
+   "edificio": "hito_economia",
+   "categoria": "hito",
+   "civ": "adal",
+   "proceso": "66",
+   "rojo": false,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_66/adal_mezquita_42.png",
+    "receta": {
+     "semilla": 42,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A small Harar mosque: a low whitewashed rectangular hall with a flat roof and low parapet, and beside it a short plain square tower (minaret) with a flat top and a small parapet, a simple wooden door. No dome, no cross, no symbol or finial on top, no gold, no writing. Architecture of Harar and the Adal Sultanate in the Horn of Africa, 16th century: rectangular houses of rough stone set in mud, plastered in ochre and white, flat roofs with a low parapet, small wooden doors and tiny windows; tents of woven goat hair for the army. No domes on houses, no gothic arches, no tiles. Natural tones only, no red anywhere. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/adal_mezquita.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "descartada": "FLUX pintó una cruz las dos veces (41 y 42, con «no cross» en el prompt): no se genera el 3D"
+  },
+  "adal_cuartel": {
+   "tipo": "edificio",
+   "edificio": "cuartel",
+   "categoria": "",
+   "civ": "adal",
+   "proceso": "66",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_66/adal_cuartel_41.png",
+    "receta": {
+     "semilla": 41,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A walled army camp shelter: a long low building of rough ochre-plastered stone with a flat roof on wooden beams, an open front with wooden posts, spears and round hide shields leaning on the wall. Architecture of Harar and the Adal Sultanate in the Horn of Africa, 16th century: rectangular houses of rough stone set in mud, plastered in ochre and white, flat roofs with a low parapet, small wooden doors and tiny windows; tents of woven goat hair for the army. No domes on houses, no gothic arches, no tiles. Team-color details, large and clearly visible from above: cloth hanging between the front posts and a flag on the roof, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/adal_cuartel.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "mascara": {
+    "tono": 15,
+    "faja": 0.12
+   }
+  },
+  "birmanos_casa": {
+   "tipo": "edificio",
+   "edificio": "casa",
+   "categoria": "casa",
+   "civ": "birmanos",
+   "proceso": "66",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_66/birmanos_casa_41.png",
+    "receta": {
+     "semilla": 41,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A Burmese house (ein) of dark brown teak raised on wooden stilts, walls of woven bamboo mats, a steep gable roof of dark thatch, a wooden ladder up to the door, a small veranda. Burmese architecture of the Toungoo and Konbaung kingdoms on the Irrawaddy: dark brown teak wood, houses raised on stilts, steep gable roofs of dark wooden shingles or thatch, tiered roofs (pyatthat) with carved wooden finials, white and gold bell-shaped stupas. Not Thai: no prang towers. Roofs never red or orange. Team-color details, large and clearly visible from above: a cloth curtain in the doorway and a cloth hanging over the veranda rail, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/birmanos_casa.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "mascara": {
+    "tono": 15,
+    "faja": 0.15
+   }
+  },
+  "birmanos_kyaung": {
+   "tipo": "edificio",
+   "edificio": "hito_economia",
+   "categoria": "hito",
+   "civ": "birmanos",
+   "proceso": "66",
+   "rojo": false,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_66/birmanos_kyaung_41.png",
+    "receta": {
+     "semilla": 41,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A Burmese teak monastery (kyaung) on a tall platform of wooden posts with a wide wooden staircase, a long hall with several tiered roofs rising one above the other in dark weathered teak shingles, carved wooden gable finials. No statues, no Buddha images. Burmese architecture of the Toungoo and Konbaung kingdoms on the Irrawaddy: dark brown teak wood, houses raised on stilts, steep gable roofs of dark wooden shingles or thatch, tiered roofs (pyatthat) with carved wooden finials, white and gold bell-shaped stupas. Not Thai: no prang towers. Roofs never red or orange. Natural tones only, no red anywhere. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/birmanos_kyaung.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3
+  },
+  "birmanos_zedi": {
+   "tipo": "edificio",
+   "edificio": "hito_guerra",
+   "categoria": "hito",
+   "civ": "birmanos",
+   "proceso": "66",
+   "rojo": false,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_66/birmanos_zedi_42.png",
+    "receta": {
+     "semilla": 42,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A Burmese bell-shaped stupa (zedi): whitewashed brick on three square receding terraces, a smooth bell dome, a tall tapering ringed spire with a small golden umbrella (hti) on top. No statues, no Buddha images. Burmese architecture of the Toungoo and Konbaung kingdoms on the Irrawaddy: dark brown teak wood, houses raised on stilts, steep gable roofs of dark wooden shingles or thatch, tiered roofs (pyatthat) with carved wooden finials, white and gold bell-shaped stupas. Not Thai: no prang towers. Roofs never red or orange. Natural tones only, no red anywhere. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat dark charcoal grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/birmanos_zedi.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3
+  },
+  "birmanos_pyatthat": {
+   "tipo": "edificio",
+   "edificio": "centro",
+   "categoria": "",
+   "civ": "birmanos",
+   "proceso": "66",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_66/birmanos_pyatthat_41.png",
+    "receta": {
+     "semilla": 41,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A Burmese royal audience hall of dark teak on a low brick platform, with a central pyatthat: a tall spire of five square tiered roofs stacked one above the other, each with carved wooden finials, over a hall with wide eaves. Burmese architecture of the Toungoo and Konbaung kingdoms on the Irrawaddy: dark brown teak wood, houses raised on stilts, steep gable roofs of dark wooden shingles or thatch, tiered roofs (pyatthat) with carved wooden finials, white and gold bell-shaped stupas. Not Thai: no prang towers. Roofs never red or orange. Team-color details, large and clearly visible from above: cloth banners hanging from the eaves of the hall, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 6000,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/birmanos_pyatthat.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "mascara": {
+    "tono": 15,
+    "faja": 0.1
+   }
+  },
+  "birmanos_cuartel": {
+   "tipo": "edificio",
+   "edificio": "cuartel",
+   "categoria": "",
+   "civ": "birmanos",
+   "proceso": "66",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_66/birmanos_cuartel_41.png",
+    "receta": {
+     "semilla": 41,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A long Burmese barracks hall of dark teak on short stilts, open sides with wooden railings, a steep gable roof of dark thatch, spears and round shields leaning on the posts. Burmese architecture of the Toungoo and Konbaung kingdoms on the Irrawaddy: dark brown teak wood, houses raised on stilts, steep gable roofs of dark wooden shingles or thatch, tiered roofs (pyatthat) with carved wooden finials, white and gold bell-shaped stupas. Not Thai: no prang towers. Roofs never red or orange. Team-color details, large and clearly visible from above: cloth hanging along the railings and a pennant on a pole, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4500,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/birmanos_cuartel.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "mascara": {
+    "tono": 15,
+    "faja": 0.12
+   }
+  },
+  "andes_casa_piedra": {
+   "tipo": "edificio",
+   "edificio": "casa",
+   "categoria": "casa",
+   "civ": "andes",
+   "proceso": "66",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_66/andes_casa_piedra_41.png",
+    "receta": {
+     "semilla": 41,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A round house of grey fieldstone set in mud, about as tall as a person, one low trapezoidal doorway, under a steep conical roof of thick golden ichu straw thatch with a ragged edge. Pre-Inca architecture of the northern and central Andes: round houses on a circular plan, walls of fieldstone or wattle and daub, steep conical roofs of thick golden ichu straw thatch with a ragged edge, one low trapezoidal doorway. No tiles, no shingles, no windows with frames, no crenellations. Team-color details, large and clearly visible from above: a woven cloth curtain in the doorway and a woven band around the wall just under the thatch, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4000,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/andes_casa_piedra.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "mascara": {
+    "tono": 22,
+    "faja": 0.15,
+    "cumbrera": 0.08
+   }
+  },
+  "andes_casa_bahareque": {
+   "tipo": "edificio",
+   "edificio": "casa",
+   "categoria": "casa",
+   "civ": "andes",
+   "proceso": "66",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_66/andes_casa_bahareque_41.png",
+    "receta": {
+     "semilla": 41,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A round house of wattle and daub plastered in light brown mud, about as tall as a person, one low doorway, under a tall steep conical roof of thick golden straw thatch with a short wooden finial. Pre-Inca architecture of the northern and central Andes: round houses on a circular plan, walls of fieldstone or wattle and daub, steep conical roofs of thick golden ichu straw thatch with a ragged edge, one low trapezoidal doorway. No tiles, no shingles, no windows with frames, no crenellations. Team-color details, large and clearly visible from above: a woven cloth curtain in the doorway and a woven band around the wall just under the thatch, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4000,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/andes_casa_bahareque.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "mascara": {
+    "tono": 22,
+    "faja": 0.15,
+    "cumbrera": 0.08
+   }
+  },
+  "tupies_mirador": {
+   "tipo": "edificio",
+   "edificio": "torre",
+   "categoria": "torre",
+   "civ": "tupies",
+   "proceso": "66",
+   "rojo": true,
+   "referencia": {
+    "imagen": "/mnt/games/01_Projects/comfyui/output/edificios_66/tupies_mirador_41.png",
+    "receta": {
+     "semilla": 41,
+     "ancho": 768,
+     "alto": 768,
+     "prompt": "{estilo} A tall wooden lookout platform on four rough tree-trunk posts lashed with vines, a ladder of poles, a small platform with a low railing on top under a little roof of palm thatch. Tupi architecture of the Brazilian Atlantic coast forest: wooden posts, walls of palm thatch, roofs of palm leaves reaching almost to the ground. No stone, no tiles, no crenellations. Team-color details, large and clearly visible from above: a cloth band tied around the railing and a pennant on top, painted in one flat uniform pure bright red, the only red in the picture; roofs, walls, wood and stone keep their natural tones. One single building, three-quarter view from a low angle just above eye level, the whole building visible and centered, isolated on a plain flat light grey background, no ground, no grass, no terrain, no people, no cast shadow."
+    },
+    "vistas": {
+     "front": {
+      "margen": 0.06,
+      "quitar": [
+       "verde"
+      ]
+     }
+    }
+   },
+   "forma": {
+    "modelo": "hy-mini-turbo",
+    "semilla": 12345,
+    "octree": 256
+   },
+   "textura": "auto",
+   "caras": 4000,
+   "suelo_pct": 6,
+   "destino": "assets/generados/modelos/local/tupies_mirador.glb",
+   "pasada": 2,
+   "textura_px": 2048,
+   "mezcla": true,
+   "apagar": 0.3,
+   "mascara": {
+    "tono": 15,
+    "faja": 0.12
+   }
+  }
+ }
+}

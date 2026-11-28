@@ -38,5 +38,7 @@
 		"radio": 0.13,
 		"alto": 0.22,
 		"cuantos_max": 3000
-	}
+	},
+	"_doc_modelos_neutrales": "Modelos de los edificios neutrales del mapa (dueño -1; proceso/66): tipo -> local/<modelo> o recinto/<clave>; la feria va por el estilo del terreno (mercado_neutral_feria|puerto|altura). Sin renglón, la maqueta (Meshes.building_mesh).",
+	"modelos_neutrales": {"mercado_neutral_feria": "recinto/neutral_feria"}
 }

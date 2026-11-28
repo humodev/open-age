@@ -15,8 +15,20 @@
   "forma": "guarani",
   "arcilla": "#bfa577",
   "techo": "#8a6a3a",
-  "acento": "#a2452c"
- },
+  "acento": "#a2452c",
+  "modelos": {
+   "casa": "local/guaranies_casa",
+   "centro": "recinto/tupies_centro",
+   "cuartel": "local/guaranies_cuartel",
+   "torre": "local/tupies_mirador",
+   "deposito": "local/guaranies_almacen_madera",
+   "mercado": "local/guaranies_mercado",
+   "fortaleza": "recinto/tupies_fortaleza",
+   "hito_economia": "recinto/tupies_hito_economia",
+   "hito_guerra": "recinto/tupies_hito_guerra",
+   "maravilla": "recinto/tupies_maravilla"
+  }
+},
  "unidades": {
   "guerrero": {
    "nombre": "Guerrero de tacape",

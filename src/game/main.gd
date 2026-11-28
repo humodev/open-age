@@ -11,6 +11,7 @@ extends Node3D
 ##   --cam=x,z,zoom[,inclinación]  posición de cámara para la captura (bX,bZ: relativa a la base propia)
 ##   --select=tipo      selecciona entidades de ese tipo del jugador local antes de la captura
 ##   --tipos=a,b,…      con --demo=base_completa, solo esos edificios
+##   --neutrales=a,b,…  con --demo=base_completa, además esos neutrales del mapa (dueño -1)
 ##   --demo=base|base_completa|obras|hitos|animales|batalla|multitud|formacion|bloque|bosque|reunion|llegada|piezas  escena armada para revisar modelos, hitos, animales, combate, el costo de 200 unidades, un grupo en marcha, la gente entre los árboles o los muros, caminos y campos en una ladera (piezas, con --lado=N)
 ##   --menu             fuerza el menú de inicio (sin argumentos se abre solo)
 ##   --terreno=<clave de reglas.json "terrenos"> tipo de mapa (llano, valle, delta…)
@@ -696,8 +697,12 @@ func _demo(kind: String) -> void:
 			tipos = Array(str(_args["tipos"]).split(",")).filter(func(t: String) -> bool: return dd0.edificios.has(t))
 		var cx := b.x - 10
 		var cy := b.y + 6
-		for i in tipos.size():
-			var t: String = tipos[i]
+		# --neutrales=a,b (proceso/66): esos edificios neutrales del mapa (dueño -1), a la par.
+		var neutros: Array = Array(str(_args.get("neutrales", "")).split(",", false))
+		var puestos: Array[Vector2] = []
+		for i in tipos.size() + neutros.size():
+			var t: String = tipos[i] if i < tipos.size() else str(neutros[i - tipos.size()])
+			var dueno := 0 if i < tipos.size() else -1
 			var tx0: int = cx + (i % 6) * 5
 			var ty0: int = cy + (i / 6) * 5
 			var done := false
@@ -705,11 +710,19 @@ func _demo(kind: String) -> void:
 				for dy in range(-r, r + 1):
 					for dx in range(-r, r + 1):
 						if not done and sim.can_place(t, tx0 + dx, ty0 + dy, 0):
-							var bb := sim.spawn_building(t, 0, tx0 + dx, ty0 + dy, true)
+							var bb := sim.spawn_building(t, dueno, tx0 + dx, ty0 + dy, true)
 							# Un aldeano al lado de cada edificio: la escala relativa a la vista (proceso/59).
-							sim.spawn_near(bb, "aldeano", 0)
+							if dueno == 0:
+								sim.spawn_near(bb, "aldeano", 0)
+							puestos.append(Vector2(bb.tx + bb.w / 2.0, bb.ty + bb.h / 2.0))
 							done = true
-		sim.set_meta("demo_cam", Vector2(b.x + 3, b.y + 11))
+		# Con --tipos, la cámara va al medio de lo puesto (proceso/66: con pocos edificios quedaban fuera).
+		var medio := Vector2(b.x + 3, b.y + 11)
+		if _args.has("tipos") and not puestos.is_empty():
+			medio = Vector2.ZERO
+			for q: Vector2 in puestos:
+				medio += q / puestos.size()
+		sim.set_meta("demo_cam", medio)
 	elif kind == "base":
 		var place := func(type: String, tx0: int, ty0: int, built: bool) -> void:
 			if not sim.dp(0).edificios.has(type):

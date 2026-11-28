@@ -1,0 +1,2391 @@
+{
+ "tawantinsuyu": {
+  "nombre": "Tawantinsuyu",
+  "solo_ia": false,
+  "filas": [
+   {
+    "tipo": "taller_tejido",
+    "nombre": "Taller de tejido",
+    "huella": "2×2",
+    "modelo": "local/tawantinsuyu_taller_tejido",
+    "estado": "local"
+   },
+   {
+    "tipo": "casa",
+    "nombre": "Kancha",
+    "huella": "2×2",
+    "modelo": "local/tawantinsuyu_casa",
+    "estado": "local"
+   },
+   {
+    "tipo": "granja",
+    "nombre": "Chacra",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "almacen_madera",
+    "nombre": "Llant'a wasi",
+    "huella": "2×2",
+    "modelo": "local/tawantinsuyu_almacen_madera_65b",
+    "estado": "local"
+   },
+   {
+    "tipo": "almacen_mina",
+    "nombre": "Qhuya wasi",
+    "huella": "2×2",
+    "modelo": "local/tawantinsuyu_almacen_mina",
+    "estado": "local"
+   },
+   {
+    "tipo": "cuartel",
+    "nombre": "Kallanka",
+    "huella": "3×3",
+    "modelo": "local/tawantinsuyu_cuartel",
+    "estado": "local"
+   },
+   {
+    "tipo": "campo_tiro",
+    "nombre": "Warak'a kancha",
+    "huella": "3×3",
+    "modelo": "local/tawantinsuyu_campo_tiro",
+    "estado": "local"
+   },
+   {
+    "tipo": "torre",
+    "nombre": "Pukara",
+    "huella": "2×2",
+    "modelo": "local/tawantinsuyu_torre",
+    "estado": "local"
+   },
+   {
+    "tipo": "fortaleza",
+    "nombre": "Hatun pukara",
+    "huella": "4×4",
+    "modelo": "recinto/tawantinsuyu_fortaleza",
+    "estado": "recinto"
+   },
+   {
+    "tipo": "muralla",
+    "nombre": "Pirca",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta_piedra",
+    "nombre": "Punku",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "torre_muralla",
+    "nombre": "Torreón de pirca",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "centro",
+    "nombre": "Llaqta",
+    "huella": "4×4",
+    "modelo": "local/tawantinsuyu_centro",
+    "estado": "local"
+   },
+   {
+    "tipo": "camino",
+    "nombre": "Qhapaq Ñan (camino)",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "anden",
+    "nombre": "Andén",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "qollqa",
+    "nombre": "Qollqa",
+    "huella": "2×2",
+    "modelo": "local/tawantinsuyu_qollqa",
+    "estado": "local"
+   },
+   {
+    "tipo": "mercado",
+    "nombre": "Mercado",
+    "huella": "4×4",
+    "modelo": "recinto/tawantinsuyu_mercado",
+    "estado": "recinto"
+   },
+   {
+    "tipo": "maravilla",
+    "nombre": "Ollantaytambo",
+    "huella": "6×6",
+    "modelo": "local/tawantinsuyu_maravilla",
+    "estado": "local"
+   },
+   {
+    "tipo": "ushnu",
+    "nombre": "Ushnu y plaza",
+    "huella": "4×4",
+    "modelo": "local/tawantinsuyu_ushnu",
+    "estado": "local"
+   },
+   {
+    "tipo": "pukara_mayor",
+    "nombre": "Pukara de frontera",
+    "huella": "4×4",
+    "modelo": "recinto/tawantinsuyu_pukara_mayor",
+    "estado": "recinto"
+   },
+   {
+    "tipo": "qorikancha",
+    "nombre": "Qorikancha",
+    "huella": "4×4",
+    "modelo": "recinto/tawantinsuyu_qorikancha",
+    "estado": "recinto"
+   },
+   {
+    "tipo": "kallanka_real",
+    "nombre": "Kallanka real",
+    "huella": "4×4",
+    "modelo": "recinto/tawantinsuyu_kallanka_real",
+    "estado": "recinto"
+   },
+   {
+    "tipo": "aqllawasi",
+    "nombre": "Aqllawasi",
+    "huella": "4×4",
+    "modelo": "recinto/tawantinsuyu_aqllawasi",
+    "estado": "recinto"
+   },
+   {
+    "tipo": "vilcabamba",
+    "nombre": "Espíritu Pampa",
+    "huella": "4×4",
+    "modelo": "recinto/tawantinsuyu_vilcabamba",
+    "estado": "recinto"
+   }
+  ]
+ },
+ "mapuches": {
+  "nombre": "Mapuches",
+  "solo_ia": false,
+  "filas": [
+   {
+    "tipo": "casa",
+    "nombre": "Ruka",
+    "huella": "2×2",
+    "modelo": "local/mapuches_casa",
+    "estado": "local"
+   },
+   {
+    "tipo": "granja",
+    "nombre": "Chacra",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "cuartel",
+    "nombre": "Junta de guerra",
+    "huella": "3×3",
+    "modelo": "local/mapuches_cuartel",
+    "estado": "local"
+   },
+   {
+    "tipo": "lof",
+    "nombre": "Lof",
+    "huella": "3×3",
+    "modelo": "local/mapuches_lof",
+    "estado": "local"
+   },
+   {
+    "tipo": "corral",
+    "nombre": "Corral",
+    "huella": "3×3",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "fortaleza",
+    "nombre": "Pukara",
+    "huella": "4×4",
+    "modelo": "local/mapuches_fortaleza",
+    "estado": "local"
+   },
+   {
+    "tipo": "empalizada",
+    "nombre": "Empalizada con foso",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta",
+    "nombre": "Puerta",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "mercado",
+    "nombre": "Mercado",
+    "huella": "4×4",
+    "modelo": "local/mapuches_mercado",
+    "estado": "local"
+   },
+   {
+    "tipo": "hoyo",
+    "nombre": "Hoyo con estacas",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "maravilla",
+    "nombre": "El gran koyagtun",
+    "huella": "6×6",
+    "modelo": "recinto/mapuches_maravilla",
+    "estado": "recinto"
+   },
+   {
+    "tipo": "rewe_malon",
+    "nombre": "Malón del toqui",
+    "huella": "4×4",
+    "modelo": "local/mapuches_rewe_malon",
+    "estado": "local"
+   },
+   {
+    "tipo": "rewe_lonko",
+    "nombre": "Nguillatuwe del rewe",
+    "huella": "4×4",
+    "modelo": "local/mapuches_rewe_lonko",
+    "estado": "local"
+   },
+   {
+    "tipo": "rewe_caballeria",
+    "nombre": "Kawellu",
+    "huella": "4×4",
+    "modelo": "local/mapuches_rewe_caballeria_65b",
+    "estado": "local"
+   },
+   {
+    "tipo": "rewe_monte",
+    "nombre": "Pewenal",
+    "huella": "4×4",
+    "modelo": "local/mapuches_rewe_monte",
+    "estado": "local"
+   },
+   {
+    "tipo": "parlamento",
+    "nombre": "Parlamento",
+    "huella": "4×4",
+    "modelo": "recinto/mapuches_parlamento",
+    "estado": "recinto"
+   },
+   {
+    "tipo": "weichan",
+    "nombre": "Gran weichan",
+    "huella": "4×4",
+    "modelo": "local/mapuches_weichan",
+    "estado": "local"
+   }
+  ]
+ },
+ "guaranies": {
+  "nombre": "Guaraníes",
+  "solo_ia": false,
+  "filas": [
+   {
+    "tipo": "casa",
+    "nombre": "Oga",
+    "huella": "2×2",
+    "modelo": "local/guaranies_casa",
+    "estado": "local"
+   },
+   {
+    "tipo": "granja",
+    "nombre": "Kokue (roza)",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "almacen_madera",
+    "nombre": "Tapyi",
+    "huella": "2×2",
+    "modelo": "local/guaranies_almacen_madera",
+    "estado": "local"
+   },
+   {
+    "tipo": "almacen_mina",
+    "nombre": "Ñai'ũ renda",
+    "huella": "2×2",
+    "modelo": "local/guaranies_almacen_mina",
+    "estado": "local"
+   },
+   {
+    "tipo": "cuartel",
+    "nombre": "Aty de guerra",
+    "huella": "3×3",
+    "modelo": "local/guaranies_cuartel",
+    "estado": "local"
+   },
+   {
+    "tipo": "campo_tiro",
+    "nombre": "Guyrapa róga",
+    "huella": "2×2",
+    "modelo": "local/guaranies_campo_tiro",
+    "estado": "local"
+   },
+   {
+    "tipo": "taller",
+    "nombre": "Taller de tacuara",
+    "huella": "3×3",
+    "modelo": "local/guaranies_taller",
+    "estado": "local"
+   },
+   {
+    "tipo": "fortaleza",
+    "nombre": "Trinchera de tacuara",
+    "huella": "4×4",
+    "modelo": "recinto/guaranies_fortaleza",
+    "estado": "recinto"
+   },
+   {
+    "tipo": "centro",
+    "nombre": "Oga guasu",
+    "huella": "4×4",
+    "modelo": "local/guaranies_centro",
+    "estado": "local"
+   },
+   {
+    "tipo": "empalizada",
+    "nombre": "Empalizada",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta",
+    "nombre": "Puerta",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "mercado",
+    "nombre": "Mercado",
+    "huella": "4×4",
+    "modelo": "local/guaranies_mercado",
+    "estado": "local"
+   },
+   {
+    "tipo": "maravilla",
+    "nombre": "La plaza y el cabildo de la tava",
+    "huella": "6×6",
+    "modelo": "local/guaranies_maravilla",
+    "estado": "local"
+   },
+   {
+    "tipo": "maravilla_monte",
+    "nombre": "Aldea grande del monte",
+    "huella": "?",
+    "modelo": "local/guaranies_maravilla_monte",
+    "estado": "local"
+   },
+   {
+    "tipo": "karai_palabra",
+    "nombre": "Casa del karai",
+    "huella": "4×4",
+    "modelo": "local/guaranies_karai_palabra",
+    "estado": "local"
+   },
+   {
+    "tipo": "aty_guasu",
+    "nombre": "Aty guasu",
+    "huella": "4×4",
+    "modelo": "local/guaranies_aty_guasu",
+    "estado": "local"
+   },
+   {
+    "tipo": "mision",
+    "nombre": "Pueblo de misión",
+    "huella": "4×4",
+    "modelo": "local/guaranies_mision",
+    "estado": "local"
+   },
+   {
+    "tipo": "monte",
+    "nombre": "Monte libre",
+    "huella": "4×4",
+    "modelo": "local/guaranies_monte",
+    "estado": "local"
+   },
+   {
+    "tipo": "tava",
+    "nombre": "Tava fortificada",
+    "huella": "4×4",
+    "modelo": "local/guaranies_tava",
+    "estado": "local"
+   },
+   {
+    "tipo": "yvy_marane",
+    "nombre": "Ñande retã",
+    "huella": "4×4",
+    "modelo": "local/guaranies_yvy_marane",
+    "estado": "local"
+   }
+  ]
+ },
+ "etiopia": {
+  "nombre": "Etiopía",
+  "solo_ia": false,
+  "filas": [
+   {
+    "tipo": "corte_nueva",
+    "nombre": "Corte nueva (cimiento)",
+    "huella": "4×4",
+    "modelo": "local/etiopia_corte_nueva",
+    "estado": "local"
+   },
+   {
+    "tipo": "casa",
+    "nombre": "Gojjo bet",
+    "huella": "2×2",
+    "modelo": "local/etiopia_casa",
+    "estado": "local"
+   },
+   {
+    "tipo": "granja",
+    "nombre": "Granja",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "almacen_alimento",
+    "nombre": "Gotära",
+    "huella": "2×2",
+    "modelo": "local/etiopia_almacen_alimento",
+    "estado": "local"
+   },
+   {
+    "tipo": "almacen_madera",
+    "nombre": "Inchet bet",
+    "huella": "2×2",
+    "modelo": "local/etiopia_almacen_madera",
+    "estado": "local"
+   },
+   {
+    "tipo": "almacen_mina",
+    "nombre": "Dängay bet",
+    "huella": "2×2",
+    "modelo": "local/etiopia_almacen_mina",
+    "estado": "local"
+   },
+   {
+    "tipo": "cuartel",
+    "nombre": "Campamento de chewa",
+    "huella": "3×3",
+    "modelo": "local/etiopia_cuartel",
+    "estado": "local"
+   },
+   {
+    "tipo": "establo",
+    "nombre": "Färäs bet",
+    "huella": "3×3",
+    "modelo": "local/etiopia_establo",
+    "estado": "local"
+   },
+   {
+    "tipo": "taller",
+    "nombre": "Taller de asedio",
+    "huella": "3×3",
+    "modelo": "local/etiopia_taller",
+    "estado": "local"
+   },
+   {
+    "tipo": "torre",
+    "nombre": "Torre de la amba",
+    "huella": "2×2",
+    "modelo": "local/etiopia_torre",
+    "estado": "local"
+   },
+   {
+    "tipo": "fortaleza",
+    "nombre": "Fortaleza de amba",
+    "huella": "4×4",
+    "modelo": "recinto/etiopia_fortaleza",
+    "estado": "recinto"
+   },
+   {
+    "tipo": "muralla",
+    "nombre": "Muro de la amba",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta_piedra",
+    "nombre": "Puerta de la amba",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "torre_muralla",
+    "nombre": "Torre del muro",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "centro",
+    "nombre": "Kätäma (corte)",
+    "huella": "4×4",
+    "modelo": "local/etiopia_centro",
+    "estado": "local"
+   },
+   {
+    "tipo": "gult",
+    "nombre": "Gult",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "empalizada",
+    "nombre": "Empalizada",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta",
+    "nombre": "Puerta",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "mercado",
+    "nombre": "Mercado",
+    "huella": "4×4",
+    "modelo": "local/etiopia_mercado",
+    "estado": "local"
+   },
+   {
+    "tipo": "maravilla",
+    "nombre": "Fasil Gəbbi",
+    "huella": "6×6",
+    "modelo": "local/etiopia_maravilla",
+    "estado": "local"
+   },
+   {
+    "tipo": "iglesia",
+    "nombre": "Iglesia",
+    "huella": "4×4",
+    "modelo": "local/etiopia_iglesia",
+    "estado": "local"
+   },
+   {
+    "tipo": "monasterio",
+    "nombre": "Monasterio",
+    "huella": "4×4",
+    "modelo": "local/etiopia_monasterio",
+    "estado": "local"
+   },
+   {
+    "tipo": "amba",
+    "nombre": "Amba fortificada",
+    "huella": "4×4",
+    "modelo": "local/etiopia_amba",
+    "estado": "local"
+   },
+   {
+    "tipo": "remonta",
+    "nombre": "Remonta",
+    "huella": "4×4",
+    "modelo": "recinto/etiopia_remonta",
+    "estado": "recinto"
+   },
+   {
+    "tipo": "gondar",
+    "nombre": "Recinto de Gondar",
+    "huella": "4×4",
+    "modelo": "local/etiopia_gondar",
+    "estado": "local"
+   },
+   {
+    "tipo": "alianza",
+    "nombre": "Alianza con armas de fuego",
+    "huella": "4×4",
+    "modelo": "local/etiopia_alianza_65a",
+    "estado": "local"
+   }
+  ]
+ },
+ "palmares": {
+  "nombre": "Palmares",
+  "solo_ia": false,
+  "filas": [
+   {
+    "tipo": "casa",
+    "nombre": "Casa de palha",
+    "huella": "2×2",
+    "modelo": "local/palmares_casa",
+    "estado": "local"
+   },
+   {
+    "tipo": "granja",
+    "nombre": "Roça de mandioca",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "almacen_alimento",
+    "nombre": "Paiol",
+    "huella": "2×2",
+    "modelo": "local/palmares_almacen_alimento",
+    "estado": "local"
+   },
+   {
+    "tipo": "almacen_mina",
+    "nombre": "Olaria",
+    "huella": "2×2",
+    "modelo": "local/palmares_almacen_mina",
+    "estado": "local"
+   },
+   {
+    "tipo": "cuartel",
+    "nombre": "Casa de guerra",
+    "huella": "3×3",
+    "modelo": "local/palmares_cuartel",
+    "estado": "local"
+   },
+   {
+    "tipo": "centro",
+    "nombre": "Cerca real",
+    "huella": "4×4",
+    "modelo": "local/palmares_centro",
+    "estado": "local"
+   },
+   {
+    "tipo": "mocambo",
+    "nombre": "Mocambo",
+    "huella": "3×3",
+    "modelo": "local/palmares_mocambo",
+    "estado": "local"
+   },
+   {
+    "tipo": "fortaleza",
+    "nombre": "Baluarte da cerca",
+    "huella": "4×4",
+    "modelo": "local/palmares_fortaleza",
+    "estado": "local"
+   },
+   {
+    "tipo": "empalizada",
+    "nombre": "Cerca con estrepes",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta",
+    "nombre": "Puerta",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "mercado",
+    "nombre": "Mercado",
+    "huella": "4×4",
+    "modelo": "local/palmares_mercado",
+    "estado": "local"
+   },
+   {
+    "tipo": "hoyo",
+    "nombre": "Fojo con estrepes",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "maravilla",
+    "nombre": "Cerca do Outeiro da Barriga",
+    "huella": "6×6",
+    "modelo": "recinto/palmares_maravilla",
+    "estado": "recinto"
+   },
+   {
+    "tipo": "quilombo_central",
+    "nombre": "Macaco",
+    "huella": "4×4",
+    "modelo": "local/palmares_quilombo_central",
+    "estado": "local"
+   },
+   {
+    "tipo": "mocambo_guerra",
+    "nombre": "Mocambo de guerra",
+    "huella": "4×4",
+    "modelo": "local/palmares_mocambo_guerra",
+    "estado": "local"
+   },
+   {
+    "tipo": "cerca_real",
+    "nombre": "Cerca real en anillos",
+    "huella": "4×4",
+    "modelo": "local/palmares_cerca_real",
+    "estado": "local"
+   },
+   {
+    "tipo": "ferraria",
+    "nombre": "Ferraria grande",
+    "huella": "4×4",
+    "modelo": "local/palmares_ferraria",
+    "estado": "local"
+   },
+   {
+    "tipo": "pacto_cucau",
+    "nombre": "Pacto de Cucaú",
+    "huella": "4×4",
+    "modelo": "local/palmares_pacto_cucau",
+    "estado": "local"
+   },
+   {
+    "tipo": "guerra_zumbi",
+    "nombre": "Guerra de Zumbi",
+    "huella": "4×4",
+    "modelo": "local/palmares_guerra_zumbi",
+    "estado": "local"
+   }
+  ]
+ },
+ "ayutthaya": {
+  "nombre": "Ayutthaya",
+  "solo_ia": false,
+  "filas": [
+   {
+    "tipo": "casa",
+    "nombre": "Ruean",
+    "huella": "2×2",
+    "modelo": "local/ayutthaya_casa",
+    "estado": "local"
+   },
+   {
+    "tipo": "granja",
+    "nombre": "Arrozal",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "cuartel",
+    "nombre": "Cuartel de la guardia",
+    "huella": "3×3",
+    "modelo": "local/ayutthaya_cuartel",
+    "estado": "local"
+   },
+   {
+    "tipo": "campo_tiro",
+    "nombre": "Sanam ying thanu",
+    "huella": "3×3",
+    "modelo": "local/ayutthaya_campo_tiro",
+    "estado": "local"
+   },
+   {
+    "tipo": "taller",
+    "nombre": "Taller de asedio",
+    "huella": "3×3",
+    "modelo": "local/ayutthaya_taller",
+    "estado": "local"
+   },
+   {
+    "tipo": "torre",
+    "nombre": "Fortín de río",
+    "huella": "2×2",
+    "modelo": "recinto/ayutthaya_torre",
+    "estado": "recinto"
+   },
+   {
+    "tipo": "fortaleza",
+    "nombre": "Pom",
+    "huella": "4×4",
+    "modelo": "recinto/ayutthaya_fortaleza",
+    "estado": "recinto"
+   },
+   {
+    "tipo": "muralla",
+    "nombre": "Kamphaeng",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta_piedra",
+    "nombre": "Pratu",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "torre_muralla",
+    "nombre": "Atalaya de la muralla",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "centro",
+    "nombre": "Wang (palacio)",
+    "huella": "4×4",
+    "modelo": "local/ayutthaya_centro",
+    "estado": "local"
+   },
+   {
+    "tipo": "kraal",
+    "nombre": "Kraal de elefantes",
+    "huella": "3×3",
+    "modelo": "local/ayutthaya_kraal",
+    "estado": "local"
+   },
+   {
+    "tipo": "barrio_japones",
+    "nombre": "Barrio japonés",
+    "huella": "3×3",
+    "modelo": "local/ayutthaya_barrio_japones",
+    "estado": "local"
+   },
+   {
+    "tipo": "barrio_portugues",
+    "nombre": "Barrio portugués",
+    "huella": "3×3",
+    "modelo": "local/ayutthaya_barrio_portugues",
+    "estado": "local"
+   },
+   {
+    "tipo": "barrio_chinos",
+    "nombre": "Barrio chino",
+    "huella": "3×3",
+    "modelo": "local/ayutthaya_barrio_chinos",
+    "estado": "local"
+   },
+   {
+    "tipo": "mercado",
+    "nombre": "Mercado",
+    "huella": "4×4",
+    "modelo": "local/ayutthaya_mercado",
+    "estado": "local"
+   },
+   {
+    "tipo": "almacen_mina",
+    "nombre": "Khlang din",
+    "huella": "2×2",
+    "modelo": "local/ayutthaya_almacen_mina",
+    "estado": "local"
+   },
+   {
+    "tipo": "maravilla",
+    "nombre": "Krung Si Ayutthaya y Pom Phet",
+    "huella": "6×6",
+    "modelo": "local/ayutthaya_maravilla",
+    "estado": "local"
+   },
+   {
+    "tipo": "wat",
+    "nombre": "Wat Mahathat",
+    "huella": "4×4",
+    "modelo": "local/ayutthaya_wat",
+    "estado": "local"
+   },
+   {
+    "tipo": "kraal_real",
+    "nombre": "Kraal real",
+    "huella": "4×4",
+    "modelo": "local/ayutthaya_kraal_real",
+    "estado": "local"
+   },
+   {
+    "tipo": "puerto_real",
+    "nombre": "Puerto real",
+    "huella": "4×4",
+    "modelo": "local/ayutthaya_puerto_real",
+    "estado": "local"
+   },
+   {
+    "tipo": "fortaleza_rio",
+    "nombre": "Fortaleza de la isla",
+    "huella": "4×4",
+    "modelo": "local/ayutthaya_fortaleza_rio",
+    "estado": "local"
+   },
+   {
+    "tipo": "junco_tributo",
+    "nombre": "Junco de tributo",
+    "huella": "4×4",
+    "modelo": "local/ayutthaya_junco_tributo",
+    "estado": "local"
+   },
+   {
+    "tipo": "guardia_extranjera",
+    "nombre": "Guardia extranjera",
+    "huella": "4×4",
+    "modelo": "local/ayutthaya_guardia_extranjera",
+    "estado": "local"
+   }
+  ]
+ },
+ "chankas": {
+  "nombre": "Chankas",
+  "solo_ia": true,
+  "filas": [
+   {
+    "tipo": "casa",
+    "nombre": "Casa redonda",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "granja",
+    "nombre": "Granja",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "deposito",
+    "nombre": "Depósito",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "cuartel",
+    "nombre": "Cuartel",
+    "huella": "3×3",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "torre",
+    "nombre": "Torre",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "centro",
+    "nombre": "Aldea de la cumbre",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "empalizada",
+    "nombre": "Empalizada",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta",
+    "nombre": "Puerta",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "mercado",
+    "nombre": "Mercado",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "muralla",
+    "nombre": "Pirca",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta_piedra",
+    "nombre": "Portada de pirca",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "torre_muralla",
+    "nombre": "Torreón de pirca",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "fortaleza",
+    "nombre": "Fortaleza",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "hito_economia",
+    "nombre": "Hito de la abundancia",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "hito_guerra",
+    "nombre": "Imagen de Uscovilca",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "maravilla",
+    "nombre": "Maravilla",
+    "huella": "6×6",
+    "modelo": "",
+    "estado": "maqueta"
+   }
+  ]
+ },
+ "caranquis": {
+  "nombre": "Caranquis y cayambes",
+  "solo_ia": true,
+  "filas": [
+   {
+    "tipo": "casa",
+    "nombre": "Casa redonda",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "granja",
+    "nombre": "Granja",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "deposito",
+    "nombre": "Depósito",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "cuartel",
+    "nombre": "Cuartel",
+    "huella": "3×3",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "torre",
+    "nombre": "Fuerte de cresta",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "centro",
+    "nombre": "Tola",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "empalizada",
+    "nombre": "Empalizada",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta",
+    "nombre": "Puerta",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "mercado",
+    "nombre": "Mercado",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "muralla",
+    "nombre": "Pirca",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta_piedra",
+    "nombre": "Portada de pirca",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "torre_muralla",
+    "nombre": "Torreón de pirca",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "fortaleza",
+    "nombre": "Fortaleza",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "hito_economia",
+    "nombre": "Hito de la abundancia",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "hito_guerra",
+    "nombre": "Hito de la guerra",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "maravilla",
+    "nombre": "Maravilla",
+    "huella": "6×6",
+    "modelo": "",
+    "estado": "maqueta"
+   }
+  ]
+ },
+ "canaris": {
+  "nombre": "Cañaris",
+  "solo_ia": true,
+  "filas": [
+   {
+    "tipo": "casa",
+    "nombre": "Casa redonda",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "granja",
+    "nombre": "Granja",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "deposito",
+    "nombre": "Depósito",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "cuartel",
+    "nombre": "Cuartel",
+    "huella": "3×3",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "torre",
+    "nombre": "Torre",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "centro",
+    "nombre": "Guapondélig",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "empalizada",
+    "nombre": "Empalizada",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta",
+    "nombre": "Puerta",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "mercado",
+    "nombre": "Mercado",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "muralla",
+    "nombre": "Pirca",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta_piedra",
+    "nombre": "Portada de pirca",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "torre_muralla",
+    "nombre": "Torreón de pirca",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "fortaleza",
+    "nombre": "Fortaleza",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "hito_economia",
+    "nombre": "Hito de la abundancia",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "hito_guerra",
+    "nombre": "Hito de la guerra",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "maravilla",
+    "nombre": "Maravilla",
+    "huella": "6×6",
+    "modelo": "",
+    "estado": "maqueta"
+   }
+  ]
+ },
+ "tupies": {
+  "nombre": "Tupíes",
+  "solo_ia": true,
+  "filas": [
+   {
+    "tipo": "casa",
+    "nombre": "Oca",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "granja",
+    "nombre": "Granja",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "deposito",
+    "nombre": "Depósito",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "cuartel",
+    "nombre": "Cuartel",
+    "huella": "3×3",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "torre",
+    "nombre": "Torre",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "centro",
+    "nombre": "Taba",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "empalizada",
+    "nombre": "Empalizada",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta",
+    "nombre": "Puerta",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "mercado",
+    "nombre": "Mercado",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "fortaleza",
+    "nombre": "Fortaleza",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "hito_economia",
+    "nombre": "Hito de la abundancia",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "hito_guerra",
+    "nombre": "Hito de la guerra",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "maravilla",
+    "nombre": "Maravilla",
+    "huella": "6×6",
+    "modelo": "",
+    "estado": "maqueta"
+   }
+  ]
+ },
+ "invasores": {
+  "nombre": "Invasores",
+  "solo_ia": true,
+  "filas": [
+   {
+    "tipo": "casa",
+    "nombre": "Casa",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "granja",
+    "nombre": "Granja",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "deposito",
+    "nombre": "Depósito",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "cuartel",
+    "nombre": "Cuartel",
+    "huella": "3×3",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "torre",
+    "nombre": "Baluarte",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "centro",
+    "nombre": "Fuerte",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "empalizada",
+    "nombre": "Empalizada",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta",
+    "nombre": "Puerta",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "mercado",
+    "nombre": "Mercado",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "muralla",
+    "nombre": "Muralla de piedra",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta_piedra",
+    "nombre": "Puerta de piedra",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "torre_muralla",
+    "nombre": "Torre de muralla",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "fortaleza",
+    "nombre": "Fortaleza",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "hito_economia",
+    "nombre": "Hito de la abundancia",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "hito_guerra",
+    "nombre": "Hito de la guerra",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "maravilla",
+    "nombre": "Maravilla",
+    "huella": "6×6",
+    "modelo": "",
+    "estado": "maqueta"
+   }
+  ]
+ },
+ "castilla": {
+  "nombre": "Castilla",
+  "solo_ia": true,
+  "filas": [
+   {
+    "tipo": "casa",
+    "nombre": "Casa",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "granja",
+    "nombre": "Granja",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "deposito",
+    "nombre": "Depósito",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "cuartel",
+    "nombre": "Cuartel",
+    "huella": "3×3",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "torre",
+    "nombre": "Baluarte",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "centro",
+    "nombre": "Fuerte",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "empalizada",
+    "nombre": "Empalizada",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta",
+    "nombre": "Puerta",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "mercado",
+    "nombre": "Mercado",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "muralla",
+    "nombre": "Muralla de piedra",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta_piedra",
+    "nombre": "Puerta de piedra",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "torre_muralla",
+    "nombre": "Torre de muralla",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "fortaleza",
+    "nombre": "Fortaleza",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "hito_economia",
+    "nombre": "Hito de la abundancia",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "hito_guerra",
+    "nombre": "Hito de la guerra",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "maravilla",
+    "nombre": "Maravilla",
+    "huella": "6×6",
+    "modelo": "",
+    "estado": "maqueta"
+   }
+  ]
+ },
+ "portugal": {
+  "nombre": "Portugal",
+  "solo_ia": true,
+  "filas": [
+   {
+    "tipo": "casa",
+    "nombre": "Casa",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "granja",
+    "nombre": "Granja",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "deposito",
+    "nombre": "Depósito",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "cuartel",
+    "nombre": "Cuartel",
+    "huella": "3×3",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "torre",
+    "nombre": "Baluarte",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "centro",
+    "nombre": "Fortaleza",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "empalizada",
+    "nombre": "Empalizada",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta",
+    "nombre": "Puerta",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "mercado",
+    "nombre": "Mercado",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "muralla",
+    "nombre": "Muralla de piedra",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta_piedra",
+    "nombre": "Puerta de piedra",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "torre_muralla",
+    "nombre": "Torre de muralla",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "fortaleza",
+    "nombre": "Fortaleza",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "hito_economia",
+    "nombre": "Hito de la abundancia",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "hito_guerra",
+    "nombre": "Hito de la guerra",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "maravilla",
+    "nombre": "Maravilla",
+    "huella": "6×6",
+    "modelo": "",
+    "estado": "maqueta"
+   }
+  ]
+ },
+ "holanda": {
+  "nombre": "Países Bajos",
+  "solo_ia": true,
+  "filas": [
+   {
+    "tipo": "casa",
+    "nombre": "Casa",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "granja",
+    "nombre": "Granja",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "deposito",
+    "nombre": "Depósito",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "cuartel",
+    "nombre": "Cuartel",
+    "huella": "3×3",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "torre",
+    "nombre": "Baluarte",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "centro",
+    "nombre": "Fuerte",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "empalizada",
+    "nombre": "Empalizada",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta",
+    "nombre": "Puerta",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "mercado",
+    "nombre": "Mercado",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "muralla",
+    "nombre": "Muralla de piedra",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta_piedra",
+    "nombre": "Puerta de piedra",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "torre_muralla",
+    "nombre": "Torre de muralla",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "fortaleza",
+    "nombre": "Fortaleza",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "hito_economia",
+    "nombre": "Hito de la abundancia",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "hito_guerra",
+    "nombre": "Hito de la guerra",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "maravilla",
+    "nombre": "Maravilla",
+    "huella": "6×6",
+    "modelo": "",
+    "estado": "maqueta"
+   }
+  ]
+ },
+ "francia": {
+  "nombre": "Francia",
+  "solo_ia": true,
+  "filas": [
+   {
+    "tipo": "casa",
+    "nombre": "Casa",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "granja",
+    "nombre": "Granja",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "deposito",
+    "nombre": "Depósito",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "cuartel",
+    "nombre": "Cuartel",
+    "huella": "3×3",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "torre",
+    "nombre": "Baluarte",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "centro",
+    "nombre": "Fuerte",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "empalizada",
+    "nombre": "Empalizada",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta",
+    "nombre": "Puerta",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "mercado",
+    "nombre": "Mercado",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "muralla",
+    "nombre": "Muralla de piedra",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta_piedra",
+    "nombre": "Puerta de piedra",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "torre_muralla",
+    "nombre": "Torre de muralla",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "fortaleza",
+    "nombre": "Fortaleza",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "hito_economia",
+    "nombre": "Hito de la abundancia",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "hito_guerra",
+    "nombre": "Hito de la guerra",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "maravilla",
+    "nombre": "Maravilla",
+    "huella": "6×6",
+    "modelo": "",
+    "estado": "maqueta"
+   }
+  ]
+ },
+ "paulistas": {
+  "nombre": "Paulistas",
+  "solo_ia": true,
+  "filas": [
+   {
+    "tipo": "casa",
+    "nombre": "Casa",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "granja",
+    "nombre": "Granja",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "deposito",
+    "nombre": "Depósito",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "cuartel",
+    "nombre": "Cuartel",
+    "huella": "3×3",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "torre",
+    "nombre": "Baluarte",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "centro",
+    "nombre": "Arraial",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "empalizada",
+    "nombre": "Empalizada",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta",
+    "nombre": "Puerta",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "mercado",
+    "nombre": "Mercado",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "muralla",
+    "nombre": "Muralla de piedra",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta_piedra",
+    "nombre": "Puerta de piedra",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "torre_muralla",
+    "nombre": "Torre de muralla",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "fortaleza",
+    "nombre": "Fortaleza",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "hito_economia",
+    "nombre": "Hito de la abundancia",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "hito_guerra",
+    "nombre": "Hito de la guerra",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "maravilla",
+    "nombre": "Maravilla",
+    "huella": "6×6",
+    "modelo": "",
+    "estado": "maqueta"
+   }
+  ]
+ },
+ "adal": {
+  "nombre": "Adal",
+  "solo_ia": true,
+  "filas": [
+   {
+    "tipo": "casa",
+    "nombre": "Casa de patio",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "granja",
+    "nombre": "Granja",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "deposito",
+    "nombre": "Depósito",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "cuartel",
+    "nombre": "Cuartel",
+    "huella": "3×3",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "torre",
+    "nombre": "Torre del Jugol",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "centro",
+    "nombre": "Campamento del imán",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "empalizada",
+    "nombre": "Empalizada",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta",
+    "nombre": "Puerta",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "mercado",
+    "nombre": "Mercado",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "muralla",
+    "nombre": "Jugol",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta_piedra",
+    "nombre": "Puerta del Jugol",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "torre_muralla",
+    "nombre": "Torre del Jugol",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "fortaleza",
+    "nombre": "Fortaleza",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "hito_economia",
+    "nombre": "Hito de la abundancia",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "hito_guerra",
+    "nombre": "Hito de la guerra",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "maravilla",
+    "nombre": "Maravilla",
+    "huella": "6×6",
+    "modelo": "",
+    "estado": "maqueta"
+   }
+  ]
+ },
+ "birmanos": {
+  "nombre": "Birmania",
+  "solo_ia": true,
+  "filas": [
+   {
+    "tipo": "casa",
+    "nombre": "Ein",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "granja",
+    "nombre": "Granja",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "deposito",
+    "nombre": "Depósito",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "cuartel",
+    "nombre": "Cuartel",
+    "huella": "3×3",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "torre",
+    "nombre": "Fuerte de troncos",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "centro",
+    "nombre": "Myo",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "empalizada",
+    "nombre": "Empalizada",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta",
+    "nombre": "Puerta",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "mercado",
+    "nombre": "Mercado",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "muralla",
+    "nombre": "Muralla de ladrillo",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "puerta_piedra",
+    "nombre": "Puerta de ladrillo",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "torre_muralla",
+    "nombre": "Atalaya de ladrillo",
+    "huella": "1×1",
+    "modelo": "",
+    "estado": "pieza"
+   },
+   {
+    "tipo": "fortaleza",
+    "nombre": "Fortaleza",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "hito_economia",
+    "nombre": "Hito de la abundancia",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "hito_guerra",
+    "nombre": "Hito de la guerra",
+    "huella": "4×4",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "maravilla",
+    "nombre": "Maravilla",
+    "huella": "6×6",
+    "modelo": "",
+    "estado": "maqueta"
+   }
+  ]
+ },
+ "neutral": {
+  "nombre": "Neutrales del mapa",
+  "solo_ia": false,
+  "filas": [
+   {
+    "tipo": "mercado_neutral_feria",
+    "nombre": "Feria (feria)",
+    "huella": "3×3",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "mercado_neutral_puerto",
+    "nombre": "Feria (puerto)",
+    "huella": "3×3",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "mercado_neutral_altura",
+    "nombre": "Feria (altura)",
+    "huella": "3×3",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "ingenio",
+    "nombre": "Ingenio (neutral)",
+    "huella": "3×3",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "sitio_sagrado",
+    "nombre": "Sitio sagrado",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   },
+   {
+    "tipo": "sitio_lalibela",
+    "nombre": "Lalibela",
+    "huella": "2×2",
+    "modelo": "",
+    "estado": "maqueta"
+   }
+  ]
+ }
+}

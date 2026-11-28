@@ -15,8 +15,20 @@
   "forma": "redonda",
   "arcilla": "#cbbba0",
   "techo": "#857049",
-  "acento": "#a4472f"
- },
+  "acento": "#a4472f",
+  "modelos": {
+   "casa": "local/andes_casa_bahareque",
+   "centro": "recinto/canaris_centro",
+   "cuartel": "recinto/canaris_cuartel",
+   "torre": "recinto/canaris_torre",
+   "deposito": "recinto/canaris_deposito",
+   "mercado": "recinto/canaris_mercado",
+   "fortaleza": "recinto/canaris_fortaleza",
+   "hito_economia": "recinto/canaris_hito_economia",
+   "hito_guerra": "recinto/canaris_hito_guerra",
+   "maravilla": "recinto/canaris_maravilla"
+  }
+},
  "unidades": {
   "guerrero": {
    "nombre": "Guerrero de hacha",

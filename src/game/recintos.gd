@@ -115,6 +115,8 @@ static func _pieza(pz: Dictionary, size: float, team: Color, suelo_y: Callable) 
 	var esc: Array = pz.get("escala", [1, 1, 1])
 	var alto := float(pz.get("alto", 1.0))
 	n.scale = Vector3(float(esc[0]), float(esc[1]) * alto, float(esc[2]))
+	if pz.has("tinte"): # proceso/66: la misma pieza con otro material (ladrillo holandés, piedra gris francesa)
+		WorldView._tint(n, Color(str(pz["tinte"])))
 	return n
 
 
@@ -633,6 +635,109 @@ static func _prop(b: _Obra, tipo: String, at: Vector3, yaw: float, e: float, pr:
 			b.caja(P.call(Vector3(0, 0.46, 0.13)), Vector3(0.05, 0.05, 0.08) * e, yaw, lana.darkened(0.1))
 			for c: Vector2 in [Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, 1)]:
 				b.cil(P.call(Vector3(c.x * 0.03, 0, c.y * 0.08)), 0.014 * e, 0.014 * e, 0.18 * e, 4, lana.darkened(0.2))
+		# --- proceso/66-todo-en-3d-local ---
+		"bandera":
+			# Bandera de colores fijos (no del equipo): franjas `colores` horizontales o verticales
+			# (`franjas`: "h"|"v") y, si se pide, una cruz en aspa (`aspa`: color), en un mástil.
+			var cols: Array = pr.get("colores", ["#e8e2d0"])
+			var alto := float(pr.get("alto", 1.25))
+			b.cil(P.call(Vector3.ZERO), 0.018 * e, 0.014 * e, alto * e, 5, madera.darkened(0.2))
+			var fw := 0.34
+			var fh := 0.22
+			var n := cols.size()
+			for j in n:
+				var c := Color(str(cols[j]))
+				if str(pr.get("franjas", "h")) == "v":
+					b.caja(P.call(Vector3(0.02 + fw * (j + 0.5) / n, alto - 0.13, 0)), Vector3(fw / n, fh, 0.012) * e, yaw, c)
+				else:
+					b.caja(P.call(Vector3(0.02 + fw / 2.0, alto - 0.13 + fh / 2.0 - fh * (j + 0.5) / n, 0)), Vector3(fw, fh / n, 0.012) * e, yaw, c)
+			if pr.has("aspa"):
+				var ca := Color(str(pr["aspa"]))
+				var ang := atan2(fh, fw)
+				for sg: float in [1.0, -1.0]:
+					b.caja(P.call(Vector3(0.02 + fw / 2.0, alto - 0.13, 0.008)), Vector3(sqrt(fw * fw + fh * fh) * 0.95, 0.03, 0.006) * e, yaw, ca, Vector3(0, 0, sg * ang))
+		"estacas":
+			# Hoyo con estacas (trampa): un pozo oscuro con puntas afiladas que asoman apenas.
+			b.cil(P.call(Vector3(0, 0.005, 0)), 0.3 * e, 0.3 * e, 0.012 * e, 10, Color(str(pr.get("color", "#3a2e24"))))
+			for i in 7:
+				var a := TAU * i / 7.0 + 0.3
+				var r := 0.16 if i % 2 == 0 else 0.07
+				b.cil(P.call(Vector3(sin(a) * r, 0.0, cos(a) * r)), 0.018 * e, 0.0, (0.16 + 0.04 * float(i % 3)) * e, 4, Color("9a8058"), Vector3(sin(a) * 0.25, 1.0, cos(a) * 0.25).normalized())
+			for i in 5:
+				var a := TAU * i / 5.0
+				b.caja(P.call(Vector3(sin(a) * 0.3, 0.01, cos(a) * 0.3)), Vector3(0.12, 0.02, 0.05) * e, a, Color("6a5a3a"))
+		"oveja":
+			var lana := Color(str(["#e8e2d2", "#d8cfbc", "#5a4a3a"][k % 3]))
+			b.caja(P.call(Vector3(0, 0.14, 0)), Vector3(0.12, 0.1, 0.18) * e, yaw, lana)
+			b.caja(P.call(Vector3(0, 0.17, 0.11)), Vector3(0.05, 0.05, 0.06) * e, yaw, lana.darkened(0.35))
+			for c: Vector2 in [Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, 1)]:
+				b.cil(P.call(Vector3(c.x * 0.035, 0, c.y * 0.06)), 0.012 * e, 0.012 * e, 0.1 * e, 4, lana.darkened(0.4))
+		"cana":
+			# Haz de caña de azúcar: cañas verdes y amarillas acostadas.
+			for i in 7:
+				var o := Vector3(float(i % 4) * 0.05 - 0.08, 0.025 + 0.04 * float(i / 4), 0)
+				b.cil(P.call(o + Vector3(0, 0, -0.22)), 0.018 * e, 0.016 * e, 0.44 * e, 5, Color("a8b060").darkened(0.08 * float(i % 3)), rot * Vector3(0, 0, 1))
+		"barriles":
+			for i in 3:
+				var o := Vector3(float(i) * 0.11 - 0.11, 0, float(i % 2) * 0.06)
+				b.cil(P.call(o), 0.045 * e, 0.045 * e, 0.12 * e, 8, Color("7a5638"))
+				b.cil(P.call(o + Vector3(0, 0.03, 0)), 0.048 * e, 0.048 * e, 0.012 * e, 8, Color("3a3430"))
+				b.cil(P.call(o + Vector3(0, 0.09, 0)), 0.048 * e, 0.048 * e, 0.012 * e, 8, Color("3a3430"))
+		"tienda":
+			# Tienda de campaña: cono de tela clara sobre un palo, con un paño del equipo si se pide.
+			var tela := Color(str(pr.get("color", "#d8ccb0")))
+			b.cil(P.call(Vector3.ZERO), 0.2 * e, 0.0, 0.34 * e, 8, tela)
+			b.cil(P.call(Vector3(0, 0.3, 0)), 0.008 * e, 0.008 * e, 0.12 * e, 4, madera)
+			if pr.get("equipo", false):
+				b.equipo_caja(P.call(Vector3(0.05, 0.38, 0)), Vector3(0.09, 0.05, 0.008) * e, yaw)
+		"surcos":
+			# Surcos de un campo (tef, maíz chico): hileras bajas de `color` sobre el patio.
+			var col := Color(str(pr.get("color", "#9a9a4a")))
+			var nf := int(pr.get("filas", 5))
+			for i in nf:
+				b.caja(P.call(Vector3(0, 0.02, (float(i) - (nf - 1) / 2.0) * 0.12)), Vector3(0.7, 0.04, 0.06) * e, yaw, col.darkened(0.06 * float(i % 2)))
+		"monolito":
+			# Piedra parada de un círculo sagrado (sin color del equipo).
+			var alto_m := 0.4 + 0.12 * float(k % 3)
+			b.caja(P.call(Vector3(0, alto_m / 2.0, 0)), Vector3(0.11, alto_m, 0.08) * e, yaw + 0.3 * float(k % 2), Color(str(pr.get("color", "#8c8578"))).darkened(0.05 * float(k % 3)), Vector3(0, 0, deg_to_rad(4.0 * float(k % 3 - 1))))
+		"muelle":
+			# Muelle de tablas sobre pilotes, para el puerto de río.
+			b.caja(P.call(Vector3(0, 0.08, 0)), Vector3(0.3, 0.03, 0.8) * e, yaw, madera.lightened(0.1))
+			for i in 4:
+				for sx: float in [-1.0, 1.0]:
+					b.cil(P.call(Vector3(sx * 0.13, -0.1, -0.35 + i * 0.23)), 0.02 * e, 0.02 * e, 0.2 * e, 5, madera.darkened(0.2))
+		"canoa":
+			b.caja(P.call(Vector3(0, 0.04, 0)), Vector3(0.12, 0.06, 0.6) * e, yaw, Palette.TRUNK)
+			b.caja(P.call(Vector3(0, 0.065, 0)), Vector3(0.08, 0.02, 0.5) * e, yaw, Palette.TRUNK.darkened(0.35))
+		"agua":
+			# Lámina de agua (orilla del puerto): una losa baja azul verdosa.
+			b.caja(P.call(Vector3(0, 0.005, 0)), Vector3(float(pr.get("ancho", 1.0)), 0.01, float(pr.get("fondo", 0.4))) * e, yaw, Color(str(pr.get("color", "#4f6e72"))))
+		"iglesia_cruz":
+			# Iglesia monolítica en cruz griega (Bete Giyorgis, Lalibela): zócalo de tres escalones, el
+			# bloque en cruz, ventanas en dos hileras y la cruz escalonada en relieve en el techo.
+			# Sagrada: sin color del equipo. El pipeline la daba como torre o como losa (proceso/66).
+			var toba := Color(str(pr.get("color", "#9a6448")))
+			var brazo := 0.34
+			var largo := 0.86
+			var alto_i := 0.46
+			for j in 3:
+				var lj := largo + 0.12 - j * 0.04
+				b.caja(P.call(Vector3(0, 0.025 + j * 0.05, 0)), Vector3(brazo + 0.12 - j * 0.04, 0.05, lj) * e, yaw, toba.darkened(0.08))
+				b.caja(P.call(Vector3(0, 0.025 + j * 0.05, 0)), Vector3(lj, 0.05, brazo + 0.12 - j * 0.04) * e, yaw, toba.darkened(0.08))
+			b.caja(P.call(Vector3(0, 0.15 + alto_i / 2.0, 0)), Vector3(brazo, alto_i, largo) * e, yaw, toba)
+			b.caja(P.call(Vector3(0, 0.15 + alto_i / 2.0, 0)), Vector3(largo, alto_i, brazo) * e, yaw, toba)
+			var techo_y := 0.15 + alto_i
+			for sg: float in [1.0, -1.0]:
+				for fila in 2:
+					var wy := 0.27 + fila * 0.17
+					b.caja(P.call(Vector3(0, wy, sg * (largo / 2.0 + 0.002))), Vector3(0.07, 0.08, 0.01) * e, yaw, Color("2e2420"))
+					b.caja(P.call(Vector3(sg * (largo / 2.0 + 0.002), wy, 0)), Vector3(0.01, 0.08, 0.07) * e, yaw, Color("2e2420"))
+			for j in 3:
+				var w := brazo * (0.8 - j * 0.22)
+				var l := largo * (0.8 - j * 0.22)
+				b.caja(P.call(Vector3(0, techo_y + 0.006 + j * 0.012, 0)), Vector3(w, 0.012, l) * e, yaw, toba.lightened(0.04 + 0.03 * j))
+				b.caja(P.call(Vector3(0, techo_y + 0.006 + j * 0.012, 0)), Vector3(l, 0.012, w) * e, yaw, toba.lightened(0.04 + 0.03 * j))
+		# --- fin proceso/66 ---
 		"platea":
 			# Plataforma baja de piedra (ushnu chico, altar del patio).
 			b.caja(P.call(Vector3(0, 0.06, 0)), Vector3(0.5, 0.12, 0.5) * e, yaw, Color(str(pr.get("color", "#b3a690"))))

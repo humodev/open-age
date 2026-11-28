@@ -15,8 +15,20 @@
   "forma": "redonda",
   "arcilla": "#b7a58a",
   "techo": "#7b6a44",
-  "acento": "#8c4a3a"
- },
+  "acento": "#8c4a3a",
+  "modelos": {
+   "casa": "local/andes_casa_piedra",
+   "centro": "recinto/chankas_centro",
+   "cuartel": "recinto/chankas_cuartel",
+   "torre": "recinto/chankas_torre",
+   "deposito": "recinto/chankas_deposito",
+   "mercado": "recinto/chankas_mercado",
+   "fortaleza": "recinto/chankas_fortaleza",
+   "hito_economia": "recinto/chankas_hito_economia",
+   "hito_guerra": "recinto/chankas_hito_guerra",
+   "maravilla": "recinto/chankas_maravilla"
+  }
+},
  "unidades": {
   "guerrero": {
    "nombre": "Guerrero de porra estrellada",

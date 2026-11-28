@@ -17,8 +17,20 @@
   "forma": "redonda",
   "arcilla": "#c7b08a",
   "techo": "#6e5b36",
-  "acento": "#4f6b7a"
- },
+  "acento": "#4f6b7a",
+  "modelos": {
+   "casa": "local/andes_casa_bahareque",
+   "centro": "recinto/caranquis_centro",
+   "cuartel": "recinto/caranquis_cuartel",
+   "torre": "recinto/caranquis_torre",
+   "deposito": "recinto/caranquis_deposito",
+   "mercado": "recinto/caranquis_mercado",
+   "fortaleza": "recinto/caranquis_fortaleza",
+   "hito_economia": "recinto/caranquis_hito_economia",
+   "hito_guerra": "recinto/caranquis_hito_guerra",
+   "maravilla": "recinto/caranquis_maravilla"
+  }
+},
  "unidades": {
   "guerrero": {
    "nombre": "Guerrero de porra"

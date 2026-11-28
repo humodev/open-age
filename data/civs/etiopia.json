@@ -31,7 +31,8 @@
    "maravilla": "local/etiopia_maravilla",
    "fortaleza": "recinto/etiopia_fortaleza",
    "remonta": "recinto/etiopia_remonta",
-   "alianza": "local/etiopia_alianza_65a"
+   "alianza": "local/etiopia_alianza_65a",
+   "gult": "recinto/etiopia_gult"
   }
  },
  "_doc_escuela": "--- paso 3 --- Escuela de la edad IV (docs/diseno/27, §1.3): nombre, dónde se investiga (además de la capital) y la ficha. tecnologias: el nombre propio de los Registros.",

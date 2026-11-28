@@ -1081,7 +1081,7 @@ const GLB_FRENTE_YAW := PI
 ## Modelo GLB generado (assets/generados/modelos) declarado por la civilización en estilo.modelos.
 ## Se escala para que su mayor lado horizontal mida `size` y se apoya en el suelo.
 func _model_for(owner: int, type: String, size: float, unit: bool, team := Color.WHITE) -> Node3D:
-	var name: String = sim.dp(owner).civ.get("estilo", {}).get("modelos", {}).get(type, "")
+	var name: String = _modelo_de(owner, type)
 	if name == "":
 		return null
 	if Recintos.es_recinto(name): # recinto armado por partes (proceso/65-recintos-locales)
@@ -1138,6 +1138,18 @@ func _model_for(owner: int, type: String, size: float, unit: bool, team := Color
 		g.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 		_matte(g))
 	return holder
+
+
+## Nombre del modelo de un tipo: el de estilo.modelos del pueblo del dueño; para los neutrales del
+## mapa (dueño -1), el de data/arte_base.json → modelos_neutrales (la feria, por el estilo del
+## terreno: "mercado_neutral_feria|puerto|altura"; proceso/66-todo-en-3d-local).
+func _modelo_de(owner: int, type: String) -> String:
+	if owner < 0:
+		var k := type
+		if type == "mercado_neutral":
+			k += "_" + str((sim.terrain_def().get("neutral", {}) as Dictionary).get("estilo", "feria"))
+		return str(CivMeshes.base_cfg().get("modelos_neutrales", {}).get(k, ""))
+	return str(sim.dp(owner).civ.get("estilo", {}).get("modelos", {}).get(type, ""))
 
 
 ## Arma una vez los recintos de los pueblos en juego (proceso/65-recintos-locales): las mallas y
@@ -1371,7 +1383,7 @@ func _stretch_k(e: SimEntity, h: float) -> float:
 		return 1.0
 	var ev: Dictionary = sim.data.reglas.get("escala_visual", {})
 	# --- veterano ronda 5 --- tope propio de un modelo (la ruka: domo bajo)
-	var modelo: String = sim.dp(e.owner).civ.get("estilo", {}).get("modelos", {}).get(e.type, "")
+	var modelo: String = _modelo_de(e.owner, e.type)
 	# C-106: el tope vale también para el modelo del pipeline del mismo nombre («local/mapuches_casa»).
 	var topes: Dictionary = ev.get("estirar_modelo_max_por_modelo", {})
 	var tope := float(topes.get(modelo, topes.get(modelo.get_file(), ev.get("estirar_modelo_max_pct", 150))))
