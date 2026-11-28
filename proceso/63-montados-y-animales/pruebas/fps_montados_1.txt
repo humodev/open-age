@@ -1,0 +1,6 @@
+  ronda 1: 58.5 fps · vista 3.78 ms · cuadrúpedos 0.82 ms por cuadro
+  ronda 2: 58.5 fps · vista 3.85 ms · cuadrúpedos 0.83 ms por cuadro
+  ronda 3: 59.2 fps · vista 3.81 ms · cuadrúpedos 0.83 ms por cuadro
+  ronda 4: 56.9 fps · vista 3.91 ms · cuadrúpedos 0.82 ms por cuadro
+  ronda 5: 55.5 fps · vista 3.84 ms · cuadrúpedos 0.74 ms por cuadro
+FPS montados=1 caballo=jinete elefante=chang_suek en pantalla=70 animados=70 mediana=58.5 min=55.5 max=59.2 vista_ms=3.84

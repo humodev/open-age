@@ -1,0 +1,29 @@
+persona: 0.625 casillas · velocidad_pct 90
+jinete alto 0.81 · 1.98 casillas/s · caminar 0.46/s galope 1.66/s · usa galope ritmo 1.20
+kona_waiki alto 0.81 · 1.80 casillas/s · caminar 0.46/s galope 1.66/s · usa galope ritmo 1.09
+jinete_manco alto 0.81 · 2.07 casillas/s · caminar 0.46/s galope 1.66/s · usa galope ritmo 1.25
+farasanna alto 0.81 · 1.75 casillas/s · caminar 0.46/s galope 1.66/s · usa galope ritmo 1.06
+caballeria_corte alto 0.81 · 2.25 casillas/s · caminar 0.46/s galope 1.66/s · usa galope ritmo 1.36
+etiopia:guerrero alto 0.81 · 1.89 casillas/s · caminar 0.46/s galope 1.66/s · usa galope ritmo 1.14
+caballeria_mision alto 0.81 · 1.89 casillas/s · caminar 0.46/s galope 1.66/s · usa galope ritmo 1.14
+chang_suek alto 1.25 · 0.95 casillas/s · caminar 0.68/s galope 0.87/s · usa caminar ritmo 1.40
+elefante_rey alto 1.62 · 0.77 casillas/s · caminar 0.54/s galope 0.67/s · usa caminar ritmo 1.42
+rebaño llama alto 0.55 · 0.81 casillas/s · caminar 0.18/s galope 0.52/s · usa galope ritmo 1.56
+rebaño chilihueque alto 0.50 · 0.81 casillas/s · caminar 0.18/s galope 0.52/s · usa galope ritmo 1.57
+rebaño guanaco alto 0.56 · 0.81 casillas/s · caminar 0.19/s galope 0.53/s · usa galope ritmo 1.52
+rebaño cabra alto 0.31 · 0.81 casillas/s · caminar 0.18/s galope 0.51/s · usa galope ritmo 1.58
+rebaño oveja alto 0.30 · 0.81 casillas/s · caminar 0.24/s galope 0.67/s · usa galope ritmo 1.20
+rebaño bufalo alto 0.53 · 0.81 casillas/s · caminar 0.26/s galope 0.85/s · usa galope ritmo 0.95
+rebaño cebu alto 0.55 · 0.81 casillas/s · caminar 0.22/s galope 0.75/s · usa galope ritmo 1.08
+rebaño vaca alto 0.49 · 0.81 casillas/s · caminar 0.24/s galope 0.78/s · usa galope ritmo 1.03
+rebaño cerdo alto 0.26 · 0.81 casillas/s · caminar 0.23/s galope 0.61/s · usa galope ritmo 1.32
+rebaño pecari alto 0.26 · 0.81 casillas/s · caminar 0.22/s galope 0.58/s · usa galope ritmo 1.39
+rebaño venado alto 0.53 · 0.81 casillas/s · caminar 0.22/s galope 0.82/s · usa galope ritmo 0.99
+rebaño taruka alto 0.49 · 0.81 casillas/s · caminar 0.21/s galope 0.80/s · usa galope ritmo 1.01
+rebaño huemul alto 0.50 · 0.81 casillas/s · caminar 0.23/s galope 0.84/s · usa galope ritmo 0.96
+rebaño tapir alto 0.40 · 0.81 casillas/s · caminar 0.35/s galope 0.93/s · usa galope ritmo 0.87
+rebaño orix alto 0.63 · 0.81 casillas/s · caminar 0.25/s galope 0.91/s · usa galope ritmo 0.89
+rebaño walia alto 0.55 · 0.81 casillas/s · caminar 0.28/s galope 0.80/s · usa galope ritmo 1.01
+rebaño bushbuck alto 0.42 · 0.81 casillas/s · caminar 0.16/s galope 0.60/s · usa galope ritmo 1.35
+rebaño sambar alto 0.72 · 0.81 casillas/s · caminar 0.30/s galope 1.14/s · usa galope ritmo 0.71
+PASO peor patinada 0.0 %
