@@ -102,6 +102,10 @@
       "mapuches": { "m": "mapuches_m", "f": "mapuches_f" },
       "palmares": { "m": "palmares_m", "f": "palmares_f" },
       "ayutthaya": { "m": "ayutthaya_m", "f": "ayutthaya_f" }
+    },
+    "_doc_soldados": "Soldados de Meshy (proceso/62-soldados-meshy): misma receta que los aldeanos. soldados[pueblo][tipo] = id de la lista (una línea por unidad; sin la línea, la figura de KayKit con su equipo). El arma, el escudo y el carcaj siguen siendo las piezas de tropas (handslot.r / handslot.l). soldados_activo: false los apaga a todos. Solo imagen.",
+    "soldados_activo": true,
+    "soldados": {
     }
   },
   "colores": { "piel": "#8c5636", "pelo": "#231c17", "madera": "#6e5034", "piedra": "#5e5c58", "fibra": "#9a7e4a", "cuero": "#4e3828", "metal": "#7c7f84", "cuerda": "#8a7552" },
@@ -133,7 +137,7 @@
       "etiopia":   { "hondero": { "arma": "jabalina", "golpe": "lanzar" } },
       "fuerte":    { "guerrero": { "arma": "espada", "escudo": "redondo" }, "lancero": { "escudo": "ninguno", "golpe": "estocada_2m", "largo_pct": 170 }, "hondero": { "arma": "ballesta", "golpe": "fuego", "quieto": "quieto_fuego" } }
     },
-    "por_civ": { "palmares": { "comerciante": {"carga": "cesto"}, "guardia_distancia": {"arma": "arco", "golpe": "arco", "quieto": "quieto_arco", "carcaj": true, "tela": "#4a5a2a"},"guardia": {"arma": "lanza", "escudo": "redondo", "tela": "#4a5a2a"}}, "etiopia": { "comerciante": {"carga": "barras"}, "guardia_distancia": {"arma": "jabalina", "golpe": "lanzar", "escudo": "redondo", "tela": "#e8e0c8"},"guardia": {"arma": "espada", "golpe": "golpe_1m", "escudo": "redondo", "tela": "#e8e0c8"}}, "guaranies": { "comerciante": {"carga": "fardo"}, "guardia_distancia": {"arma": "arco", "golpe": "arco", "quieto": "quieto_arco", "carcaj": true, "tela": "#6a4a2a"},"guardia": {"arma": "macana", "golpe": "golpe_2m", "quieto": "quieto_2m", "escudo": "ninguno", "tela": "#6a4a2a"}}, "mapuches": { "comerciante": {"carga": "fardo"}, "guardia_distancia": {"arma": "arco", "golpe": "arco", "quieto": "quieto_arco", "carcaj": true, "tela": "#2a3a5a"},"guardia": {"arma": "lanza", "golpe": "estocada_2m", "largo_pct": 140, "escudo": "ninguno", "tela": "#2a3a5a"}},
+    "por_civ": { "palmares": { "zagaieiro": {"arma": "jabalina", "golpe": "lanzar"}, "comerciante": {"carga": "cesto"}, "guardia_distancia": {"arma": "arco", "golpe": "arco", "quieto": "quieto_arco", "carcaj": true, "tela": "#4a5a2a"},"guardia": {"arma": "lanza", "escudo": "redondo", "tela": "#4a5a2a"}}, "etiopia": { "guerrero_gasa": {"arma": "lanza", "escudo": "redondo", "golpe": "estocada"}, "comerciante": {"carga": "barras"}, "guardia_distancia": {"arma": "jabalina", "golpe": "lanzar", "escudo": "redondo", "tela": "#e8e0c8"},"guardia": {"arma": "espada", "golpe": "golpe_1m", "escudo": "redondo", "tela": "#e8e0c8"}}, "guaranies": { "comerciante": {"carga": "fardo"}, "guardia_distancia": {"arma": "arco", "golpe": "arco", "quieto": "quieto_arco", "carcaj": true, "tela": "#6a4a2a"},"guardia": {"arma": "macana", "golpe": "golpe_2m", "quieto": "quieto_2m", "escudo": "ninguno", "tela": "#6a4a2a"}}, "mapuches": { "comerciante": {"carga": "fardo"}, "guardia_distancia": {"arma": "arco", "golpe": "arco", "quieto": "quieto_arco", "carcaj": true, "tela": "#2a3a5a"},"guardia": {"arma": "lanza", "golpe": "estocada_2m", "largo_pct": 140, "escudo": "ninguno", "tela": "#2a3a5a"}},
       "canaris":   { "guerrero": { "arma": "hacha" } },
       "caranquis": { "hondero": { "arma": "estolica", "golpe": "lanzar" } },
       "tupies":    { "guerrero": { "arma": "macana", "golpe": "golpe_2m", "quieto": "quieto_2m" } },

@@ -64,6 +64,28 @@ static func malla(style: Dictionary, team: Color, eq: Dictionary, tropa: Diction
 	return mesh
 
 
+## --- soldados de Meshy (proceso/62) --- Solo el arma, el escudo (centro del color del equipo) y
+## el carcaj, armados en la plantilla y llevados al esqueleto del modelo (AldeanoAnimado.llevar).
+## La ropa, el tocado y el casco ya vienen en el modelo.
+static func malla_modelo(md: Dictionary, style: Dictionary, team: Color, eq: Dictionary) -> ArrayMesh:
+	var key := "tropa_%s_%s_%s" % [team.to_html(), str(eq).hash(), style.get("forma", "")]
+	var cache: Dictionary = md["mallas"]
+	if cache.has(key):
+		return cache[key]
+	var sk: Skeleton3D = AldeanoAnimado._template()["sk"]
+	var c := AldeanoAnimado.colores(style)
+	var parts: Array = []
+	_arma(parts, str(eq.get("arma", "maza")), sk, c, float(eq.get("largo_pct", 100)) / 100.0)
+	var esc := str(eq.get("escudo", "ninguno"))
+	if esc != "ninguno":
+		_escudo(parts, esc, sk, team, c["cuero"], c)
+	if eq.get("carcaj", false):
+		_carcaj(parts, sk, c)
+	var mesh := AldeanoAnimado.llevar(md, parts)
+	cache[key] = mesh
+	return mesh
+
+
 ## Arma en la mano derecha. Como las de KayKit Adventurers: el mango por el +y del hueso
 ## handslot.r, desde el puño, y el filo hacia +x. El arco va en la izquierda.
 ## --- paso 6, par 3 --- Tocado propio (data/arte_animaciones.json → tropas.por_civ): «llawtu» (la

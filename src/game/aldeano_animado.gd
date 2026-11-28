@@ -811,6 +811,20 @@ static func modelo_de(civ: String, sx: String) -> Dictionary:
 	if not mc.get("activo", false) or sx == "":
 		return {}
 	var id := str((mc.get("por_civ", {}) as Dictionary).get(civ, {}).get(sx, ""))
+	return _modelo_id(id)
+
+
+## --- soldados de Meshy (proceso/62) --- El modelo de un soldado: modelos.soldados[civ][tipo]
+## (una línea por unidad; sin la línea, la figura de KayKit con su equipo de siempre).
+static func modelo_tropa(civ: String, type: String) -> Dictionary:
+	var mc: Dictionary = cfg().get("modelos", {})
+	if not mc.get("activo", false) or not mc.get("soldados_activo", true):
+		return {}
+	return _modelo_id(str((mc.get("soldados", {}) as Dictionary).get(civ, {}).get(type, "")))
+
+
+static func _modelo_id(id: String) -> Dictionary:
+	var mc: Dictionary = cfg().get("modelos", {})
 	if id == "":
 		return {}
 	if _modelos.has(id):
@@ -911,7 +925,6 @@ static func malla_modelo(md: Dictionary, style: Dictionary, tool: String, carga:
 	if cache.has(key):
 		return cache[key]
 	var tsk: Skeleton3D = _template()["sk"]
-	var sk: Skeleton3D = md["sk"]
 	var c := colores(style, per)
 	var parts: Array = []
 	_herramienta(parts, tool, tsk, c["madera"], c["piedra"], c["fibra"], c["vest"])
@@ -920,7 +933,17 @@ static func malla_modelo(md: Dictionary, style: Dictionary, tool: String, carga:
 		var bc := tsk.find_bone("chest")
 		parts.append([_box(Vector3(0.15, 0.13, 0.1)), Transform3D(Basis.IDENTITY, ch + Vector3(0, 0.08, -0.11)), carga.darkened(0.15), bc])
 		parts.append([_box(Vector3(0.012, 0.15, 0.13)), Transform3D(Basis.IDENTITY, ch + Vector3(0.06, 0.07, -0.05)), c["cuero"], bc, Pieza.MADERA])
+	var mesh := llevar(md, parts)
+	cache[key] = mesh
+	return mesh
+
+
+## Lleva piezas armadas en el esqueleto de plantilla (herramienta, carga, arma, escudo) al
+## esqueleto del modelo: cada una a su hueso, en el marco «corrección × reposo».
+static func llevar(md: Dictionary, parts: Array) -> ArrayMesh:
 	var mesh: ArrayMesh = null
+	var tsk: Skeleton3D = _template()["sk"]
+	var sk: Skeleton3D = md["sk"]
 	if not parts.is_empty():
 		var corr: Dictionary = md["corr"]
 		var s := _P(sk, "head").y / maxf(0.001, _P(tsk, "head").y)
@@ -936,7 +959,6 @@ static func malla_modelo(md: Dictionary, style: Dictionary, tool: String, carga:
 			p[1] = g * Transform3D(inv * tf.basis.scaled(Vector3.ONE * s), inv * ((tf.origin - ancla) * s))
 			p[3] = j
 		mesh = _skinned(parts)
-	cache[key] = mesh
 	return mesh
 
 
@@ -1277,7 +1299,12 @@ static func crear(style: Dictionary, team: Color, k: float, civ := "", type := "
 		st.eq = TropaAnimada.equipo(civ, str(style.get("forma", "")), type, fn)
 		st.golpe_act = str(st.eq.get("golpe", "golpe_1m"))
 		st.quieto_act = str(st.eq.get("quieto", "quieto"))
-		st.mi.mesh = TropaAnimada.malla(style, team, st.eq, tropa)
+		var md := modelo_tropa(civ, type) # --- soldados de Meshy ---
+		if md.is_empty():
+			st.mi.mesh = TropaAnimada.malla(style, team, st.eq, tropa)
+		else:
+			_poner_modelo(st, md)
+			st.extra.mesh = TropaAnimada.malla_modelo(md, style, team, st.eq)
 	else:
 		st.mi.mesh = malla(style, team, "", Color(0, 0, 0, 0))
 	var var_pct := float(cfg().get("aspecto", {}).get("variacion_pct", 7)) / 100.0
@@ -1289,7 +1316,7 @@ static func crear(style: Dictionary, team: Color, k: float, civ := "", type := "
 
 ## Cambia el equipo de un soldado (la edad nueva trae otro casco, otro escudo).
 static func equipar(st: Estado, tropa: Dictionary) -> void:
-	if st.tropa:
+	if st.tropa and st.modelo.is_empty(): # el soldado de Meshy lleva su ropa; el arma no cambia
 		st.mi.mesh = TropaAnimada.malla(st.style, st.team, st.eq, tropa)
 
 
