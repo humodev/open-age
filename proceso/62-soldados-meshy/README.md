@@ -152,3 +152,61 @@ Batalla de cerca de cada pueblo contra sí mismo, azul contra rojo (`tools/aldea
 **Ayutthaya:** infantería de dap (una espada en cada mano), lancero con lanza y escudo redondo, arquero y ngao con la hoja curva sobre el asta. Los defensores de Suan Phlu, la compañía japonesa y la portuguesa siguen con KayKit (las figuras con casco).
 
 ![Ayutthaya, azul contra rojo](img/batalla_ayutthaya.jpg)
+
+## 4. Rendimiento
+
+200 soldados en pantalla (`tools/aldeanos_animados.gd --modo=fps --soldados=200 --aldeanos=0 --civ=tawantinsuyu --rival=tawantinsuyu --terreno=llano`): la mitad marcha y la mitad pelea; guerrero, lancero y hondero, que en el Tawantinsuyu ahora son todos de Meshy. Dos corridas de cinco rondas cada una ([antes](pruebas/fps_antes.txt), [después](pruebas/fps_despues.txt)):
+
+| | FPS (mediana) | Vista (ms/cuadro) | GPU (ms) |
+|---|---|---|---|
+| Antes (figura de KayKit) | 56,0 y 56,8 | 5,05 y 4,99 | 11–17 |
+| Con los soldados de Meshy | 48,2 y 49,8 | 5,51 y 5,33 | 9–20 |
+
+- Se pierde un 13 % de los cuadros, como con los aldeanos (`proceso/57`: 46 contra 52). El costo es de GPU: 15.000 triángulos con piel por figura, contra unos 1.500 de la de KayKit. Los esqueletos compartidos siguen igual (la vista sube medio milisegundo).
+- Si molesta en batallas grandes: una versión de 6.000–8.000 triángulos para lejos, o sin sombra lejos.
+
+## 5. Pruebas
+
+- `test_determinism`: **OK**, hash 3617052205, el mismo de antes ([pruebas/determinismo.txt](pruebas/determinismo.txt)): es solo imagen.
+- `civ_smoke`: sin errores ([pruebas/civ_smoke.txt](pruebas/civ_smoke.txt)). `iconos`: OK (780 grillas). `grilla`: OK.
+- Autotest con ventana, `--civ=etiopia --terreno=llano`: **AUTOTEST: OK** a la primera ([pruebas/autotest_etiopia.txt](pruebas/autotest_etiopia.txt)). Captura del inicio revisada.
+
+## Tropiezos
+
+- **No había cuentas por tipo de unidad**: el torneo y `salud_ia` cuentan el ejército entero. Un script de una vez contó el evento `trained` en seis partidas. La primera versión (12 partidas de 25 minutos) era demasiado lenta y se cortó.
+- **ComfyUI trabado en el VAE** y el `KeyError` al reiniciarlo en segundo plano (ver la sección 2).
+- **Datos rotos por una regex**: la primera versión de `conectar.py` buscaba el bloque `soldados` vacío con una expresión que se pasaba de largo y rompió el JSON. Se volvió a la versión de git y se cortó el bloque por posición.
+- **Editar un script de bash mientras corre** lo rompe (bash lo lee de a pedazos): un lote se cortó con un error de sintaxis a la mitad.
+- Las mallas llegaron de la sesión principal ya livianas (3,6–3,8 MB, con el remesh de Meshy): ninguna necesitó arreglos, y las 23 quedaron con 0 vértices sin peso.
+
+## Lo que queda
+
+- Montados y elefantes (sección 1).
+- Unidades de a pie que siguen con KayKit: leva (awqa), galgueros, arcabuceros (salvo Palmares), ka'aguygua, guarnição, capitão, Suan Phlu, compañías japonesa y portuguesa, weichafe montado, exploradores y guardias.
+- La gente de guerra de Palmares usa la maza común; su pieza lleva facão y escudo de palma.
+- Los jabalineros tiran una piedra como proyectil.
+
+## Cómo repetirlo
+
+```sh
+PY=/mnt/games/01_Projects/comfyui/venv/bin/python
+$PY proceso/62-soldados-meshy/hojas_soldados.py <pueblo> <unidad> [semilla]   # ComfyUI arriba; reiniciarlo cada dos hojas
+# Meshy (sesión principal) → .cache/meshy_soldados/<pueblo>_<unidad>.glb
+bash proceso/62-soldados-meshy/procesar.sh <pueblo>_<unidad>
+python3 proceso/62-soldados-meshy/conectar.py <pueblo>_<unidad>
+godot --headless --path . --import   # dos veces
+godot --path . -s tools/aldeanos_animados.gd -- --modo=batalla --civ=<pueblo> --rival=<pueblo> --terreno=llano --nofog --mute --seed=7 --sin_hud --pitch=42 --zoom=8
+```
+
+Para volver atrás una unidad, borrar su línea en `modelos.soldados`; todas, `soldados_activo: false`.
+
+## Commits
+
+- Proceso 62: inventario de soldados por uso, 23 hojas de FLUX para Meshy e interruptor por unidad (modelos.soldados)
+- Proceso 62: soldados de Meshy del Tawantinsuyu (guerrero, lancero, hondero, boleador) conectados
+- Proceso 62: soldados de Meshy mapuches (weichafe, lanza larga, arquero, incendiarios) conectados
+- Proceso 62: soldados de Meshy guaraníes (guerrero de macana, lancero, arquero) conectados
+- Proceso 62: soldados de Meshy de Etiopía (chewa, jabalinero, guerrero de gaša) conectados
+- Proceso 62: soldados de Meshy de Palmares (gente de guerra, lanceiro, flecheiro, zagaieiro, espingardeiro) conectados
+- Proceso 62: soldados de Meshy de Ayutthaya (dap, lancero, arquero, ngao) conectados; los 23
+- Proceso 62: rendimiento, pruebas, índice y estado
