@@ -109,6 +109,9 @@ El jinete noble etíope (la unidad militar más entrenada de Etiopía), la infan
 | `mapuches_lancero` | 14.999 | 0 | 32 % | 0,064 | 1,3 MB |
 | `mapuches_hondero` | 14.999 | 0 | 46 % | 0,053 | 1,3 MB |
 | `mapuches_incendiarios` | 15.000 | 0 | 41 % | 0,050 | 1,4 MB |
+| `guaranies_guerrero` | 15.000 | 0 | 41 % | 0,094 | 1,3 MB |
+| `guaranies_lancero` | 15.000 | 0 | 58 % | 0,066 | 1,3 MB |
+| `guaranies_hondero` | 15.000 | 0 | 41 % | 0,080 | 1,4 MB |
 
 ### Por pueblo
 
@@ -121,3 +124,7 @@ Batalla de cerca de cada pueblo contra sí mismo, azul contra rojo (`tools/aldea
 **Mapuches:** weichafe con macana a dos manos, lanza larga de colihue sin escudo y arquero con arco y carcaj. Los incendiarios (asedio) no entran en la batalla de la herramienta; están conectados igual. El weichafe montado (que pelea a pie) sigue con la figura de KayKit.
 
 ![Mapuches, azul contra rojo](img/batalla_mapuches.jpg)
+
+**Guaraníes:** guerrero con macana a dos manos, lancero con lanza y escudo redondo, arquero con arco y carcaj. El ka'aguygua y la milicia arcabucera siguen con KayKit. (El palo grande abajo a la derecha es una flecha en vuelo, cerca de la cámara.)
+
+![Guaraníes, azul contra rojo](img/batalla_guaranies.jpg)
