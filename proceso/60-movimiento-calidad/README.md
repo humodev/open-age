@@ -113,4 +113,4 @@ Se sacan con `godot --path . -- --demo=reunion --civ=guaranies --terreno=llano -
 
 ## Commits
 
-- Proceso 60: movimiento como AoE4 (salida hacia la reunión, sin trabas, choques suaves, huella pisable) y `tests/movimiento_qol.gd`.
+- `de977ad` Proceso 60: movimiento como AoE4 (salida hacia la reunión, sin trabas, choques suaves, huella pisable) y `tests/movimiento_qol.gd`.
